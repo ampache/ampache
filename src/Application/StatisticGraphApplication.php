@@ -40,7 +40,7 @@ final class StatisticGraphApplication implements ApplicationInterface
             exit;
         }
 
-        if (!AmpConfig::get('statistical_graphs') || !is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) {
+        if (!AmpConfig::get('statistical_graphs') || !is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) {
             debug_event('graph', 'Access denied, statistical graph disabled.', 1);
             exit;
         }

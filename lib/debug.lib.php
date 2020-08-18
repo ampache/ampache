@@ -342,7 +342,7 @@ function return_bytes($val)
  */
 function check_dependencies_folder()
 {
-    return file_exists(AmpConfig::get('prefix') . '/lib/vendor');
+    return file_exists(__DIR__ . '/../vendor');
 }
 
 /**

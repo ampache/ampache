@@ -111,7 +111,7 @@ $catalogs = Catalog::get_catalogs(); ?>
 <?php UI::show_box_bottom(); ?>
 
 <?php
-if (AmpConfig::get('statistical_graphs') && is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) {
+if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) {
         Graph::display_from_request();
     }
 ?>

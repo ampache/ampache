@@ -7,7 +7,6 @@
     "license": "AGPL-3.0",
     "config":
     {
-        "vendor-dir": "lib/vendor",
         "component-dir": "public/lib/components",
         "platform": {
             "ext-curl": "1.0",
@@ -331,13 +330,12 @@
             "merge-extra": false
         },
         "sort-packages": true,
-        "installer-types": ["component", "library"],
+        "installer-types": ["component"],
         "installer-paths": {
             "public/lib/components/noty/": ["needim/noty"],
             "public/lib/components/jquery-file-upload/": ["blueimp/jquery-file-upload"],
             "public/lib/components/happyworm-jplayer/": ["happyworm/jplayer"],
-            "public/lib/components/{$name}/": ["type:component"],
-            "lib/vendor/{$vendor}/{$name}": ["type:library"]
+            "public/lib/components/{$name}/": ["type:component"]
         }
     },
     "autoload": {

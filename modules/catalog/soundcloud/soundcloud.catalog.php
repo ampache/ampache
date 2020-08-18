@@ -152,7 +152,7 @@ class Catalog_soundcloud extends Catalog
             }
         }
 
-        if (!@include_once(AmpConfig::get('prefix') . '/lib/vendor/mptre/php-soundcloud/Services/Soundcloud.php')) {
+        if (!@include_once(__DIR__ . '/../../../vendor/mptre/php-soundcloud/Services/Soundcloud.php')) {
             throw new Exception('Missing php-soundcloud dependency');
         }
     }

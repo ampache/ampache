@@ -25,14 +25,14 @@ class Graph
 {
     public function __construct()
     {
-        if (!AmpConfig::get('statistical_graphs') || !is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) {
+        if (!AmpConfig::get('statistical_graphs') || !is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) {
             debug_event('graph', 'Access denied, statistical graph disabled.', 1);
 
             return false;
         }
-        require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/Data.php';
-        require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/Draw.php';
-        require_once AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/Image.php';
+        require_once __DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/Data.php';
+        require_once __DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/Draw.php';
+        require_once __DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/Image.php';
 
         return true;
     }
@@ -479,7 +479,7 @@ class Graph
         /* Add a border to the picture */
         $myPicture->drawRectangle(0, 0, $width - 1, $height - 1, array("R" => 0, "G" => 0, "B" => 0));
 
-        $font_path = AmpConfig::get('prefix') . "/lib/vendor/szymach/c-pchart/src/Resources/fonts";
+        $font_path = __DIR__ . "/../../vendor/szymach/c-pchart/src/Resources/fonts";
         /* Write the chart title */
         $myPicture->setFontProperties(array("FontName" => $font_path . "/Forgotte.ttf", "FontSize" => 11));
         $myPicture->drawText(150, 35, $title, array("FontSize" => 20, "Align" => TEXT_ALIGN_BOTTOMMIDDLE));

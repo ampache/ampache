@@ -78,7 +78,7 @@ function get_media_files($media_ids)
 function send_zip($name, $media_files)
 {
     /* Require needed library */
-    if (!@include_once(AmpConfig::get('prefix') . '/lib/vendor/maennchen/zipstream-php/src/ZipStream.php')) {
+    if (!@include_once(__DIR__ . '/../vendor/maennchen/zipstream-php/src/ZipStream.php')) {
         throw new Exception('Missing ZipStream dependency');
     }
 

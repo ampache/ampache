@@ -49,7 +49,7 @@ class AmpacheXbmc extends localplay_controller
     public function __construct()
     {
         /* Do a Require Once On the needed Libraries */
-        if (!@include_once(AmpConfig::get('prefix') . '/lib/vendor/krixon/xbmc-php-rpc/rpc/HTTPClient.php')) {
+        if (!@include_once(__DIR__ . '/../../../vendor/krixon/xbmc-php-rpc/rpc/HTTPClient.php')) {
             throw new Exception('Missing xbmc-php-rpc dependency');
         }
     } // Constructor

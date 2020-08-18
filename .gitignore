@@ -4,7 +4,6 @@
 /config/ampache.cfg.php
 /config/registration_agreement.php
 /lib/components/
-/lib/vendor/
 /log/
 /logs/
 /modules/plugins/ampache-*

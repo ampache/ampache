@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "03bb7b4a593ce7f3804b25151f0d0fff",
+    "content-hash": "6e658df4f437bdb4cfb9aee08e1c2e09",
     "packages": [
         {
             "name": "aehlke/tag-it",
