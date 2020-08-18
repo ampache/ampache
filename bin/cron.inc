@@ -20,6 +20,8 @@
  *
  */
 
+use Lib\Cron;
+
 define('NO_SESSION', '1');
 define('CLI', 1);
 
@@ -83,5 +85,5 @@ Recommendation::garbage_collection();
 require_once $prefix . '/bin/compute_cache.inc';
 
 // mark the date this cron was completed.
-set_cron_date();
+Cron::set_cron_date();
 debug_event('cron', 'finished cron process', 4);
