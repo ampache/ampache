@@ -12,14 +12,13 @@
 /play/.htaccess
 /rest/.htaccess
 /tmp/
-/src/public/lib/components
+/public/lib/components
 bootstrap/
 components/
 core/
 develop/
 master/
 node_modules/
-public/
 resources/
 storage/
 vendor/

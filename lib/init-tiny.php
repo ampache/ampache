@@ -49,7 +49,7 @@ require_once $prefix . '/lib/class/core.class.php';
 
 // Define some base level config options
 AmpConfig::set('prefix', $prefix);
-AmpConfig::set('prefix-public', $prefix . '/src/public');
+AmpConfig::set('prefix-public', $prefix . '/public');
 
 // Register autoloaders
 spl_autoload_register(array('Core', 'autoload'), true, true);

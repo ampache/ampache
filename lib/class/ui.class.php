@@ -57,7 +57,7 @@ class UI
                 return '/templates/' . $template;
             }
 
-            return '/src/public/templates/' . $template;
+            return '/public/templates/' . $template;
         }
     }
 

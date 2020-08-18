@@ -8,7 +8,7 @@
     "config":
     {
         "vendor-dir": "lib/vendor",
-        "component-dir": "src/public/lib/components",
+        "component-dir": "public/lib/components",
         "platform": {
             "ext-curl": "1.0",
             "ext-gd": "1.0",
@@ -333,10 +333,10 @@
         "sort-packages": true,
         "installer-types": ["component", "library"],
         "installer-paths": {
-            "src/public/lib/components/noty/": ["needim/noty"],
-            "src/public/lib/components/jquery-file-upload/": ["blueimp/jquery-file-upload"],
-            "src/public/lib/components/happyworm-jplayer/": ["happyworm/jplayer"],
-            "src/public/lib/components/{$name}/": ["type:component"],
+            "public/lib/components/noty/": ["needim/noty"],
+            "public/lib/components/jquery-file-upload/": ["blueimp/jquery-file-upload"],
+            "public/lib/components/happyworm-jplayer/": ["happyworm/jplayer"],
+            "public/lib/components/{$name}/": ["type:component"],
             "lib/vendor/{$vendor}/{$name}": ["type:library"]
         }
     },
