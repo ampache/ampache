@@ -306,6 +306,9 @@ class Stats
      */
     public static function has_played_history($object, $user, $agent, $date)
     {
+        if ($user == -1) {
+            return false;
+        }
         $previous  = self::get_last_play($user, $agent, $date);
         $diff      = $date - (int) $previous['date'];
         $item_time = $object->time;
@@ -376,16 +379,10 @@ class Stats
      * @param boolean $random
      * @return string
      */
-    public static function get_top_sql($input_type, $threshold = '', $count_type = 'stream', $user_id = null, $random = false)
+    public static function get_top_sql($input_type, $threshold, $count_type = 'stream', $user_id = null, $random = false)
     {
         $type = self::validate_type($input_type);
-        $sql  = "";
-        /* If they don't pass one, then use the preference */
-        if ($threshold === null || $threshold === '') {
-            $threshold = AmpConfig::get('stats_threshold');
-        }
-        $allow_group_disks = (AmpConfig::get('album_group')) ? true : false;
-        $date              = time() - (86400 * (int) $threshold);
+        $date = time() - (86400 * (int) $threshold);
         if ($type == 'playlist') {
             $sql = "SELECT `id` as `id`, `last_update` FROM `playlist`";
             if ($threshold > 0) {
@@ -401,7 +398,8 @@ class Stats
                    "WHERE `object_type` = '" . $type . "' AND `count_type` = '" . $count_type . "' AND `threshold` = '" . $threshold . "' " .
                    "GROUP BY `object_id`, `object_type`";
         } else {
-            /* Select Top objects counting by # of rows for you only */
+            $allow_group_disks = (AmpConfig::get('album_group')) ? true : false;
+            // Select Top objects counting by # of rows for you only
             $sql = "SELECT MAX(`object_id`) as `id`, COUNT(*) AS `count`";
             // Add additional columns to use the select query as insert values directly
             if (defined('NO_CRON_CACHE')) {
@@ -460,18 +458,15 @@ class Stats
      * @param boolean $random
      * @return array
      */
-    public static function get_top($type, $count = 0, $threshold = 0, $offset = 0, $user_id = null, $random = false)
+    public static function get_top($type, $count, $threshold, $offset = 0, $user_id = null, $random = false)
     {
         if ($count < 1) {
             $count = AmpConfig::get('popular_threshold', 10);
         }
         $limit = ($offset < 1) ? $count : $offset . "," . $count;
-        $sql   = '';
-        if ($user_id !== null) {
-            $sql = self::get_top_sql($type, $threshold, 'stream', $user_id, $random);
-        }
+        $sql   = self::get_top_sql($type, $threshold, 'stream', $user_id, $random);
+
         if ($user_id === null) {
-            $sql = self::get_top_sql($type, $threshold);
             $sql .= "LIMIT $limit";
         }
         //debug_event('stats.class', 'get_top ' . $sql, 5);

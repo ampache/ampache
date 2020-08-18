@@ -42,10 +42,10 @@ switch ($_REQUEST['action']) {
         }
         $duplicates  = Song::find_duplicates($search_type);
         require_once AmpConfig::get('prefix') . UI::find_template('show_duplicates.inc.php');
-    break;
+        break;
     default:
         require_once AmpConfig::get('prefix') . UI::find_template('show_duplicate.inc.php');
-    break;
+        break;
 } // end switch on action
 
 // Show the Footer

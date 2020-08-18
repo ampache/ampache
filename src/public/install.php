@@ -143,7 +143,7 @@ switch ($_REQUEST['action']) {
         Preference::update('lang', -1, AmpConfig::get('lang'));
     case 'show_create_config':
         require_once 'templates/show_install_config.inc.php';
-    break;
+        break;
     case 'create_config':
         $all  = (filter_has_var(INPUT_POST, 'create_all'));
         $skip = (filter_has_var(INPUT_POST, 'skip_config'));
@@ -191,7 +191,7 @@ switch ($_REQUEST['action']) {
         } else {
             header("Location: " . $web_path . '/login.php');
         }
-    break;
+        break;
     case 'create_account':
         $results = parse_ini_file($configfile);
         AmpConfig::set_by_array($results, true);
@@ -204,15 +204,15 @@ switch ($_REQUEST['action']) {
         }
 
         header("Location: " . $web_path . '/index.php');
-    break;
+        break;
     case 'init':
         require_once 'templates/show_install.inc.php';
-    break;
+        break;
     case 'check':
         require_once 'templates/show_install_check.inc.php';
-    break;
+        break;
     default:
         // Show the language options first
         require_once 'templates/show_install_lang.inc.php';
-    break;
+        break;
 } // end action switch

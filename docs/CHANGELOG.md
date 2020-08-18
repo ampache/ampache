@@ -39,6 +39,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
   * Report 'Catalog Size' correctly for podcasts
   * Report 'Item Count' correctly for podcasts and video catalogs
 * Searching albums for artist name
+* Mashup 'Newest' would incorrectly apply an offset missing the newest items
 
 ## 4.2.1-release
 

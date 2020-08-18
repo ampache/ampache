@@ -66,5 +66,5 @@ switch ($_REQUEST['action']) {
             // Load template
             require_once __DIR__ . '/templates/show_test.inc.php';
         }
-    break;
+        break;
 } // end switch on action

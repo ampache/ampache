@@ -92,28 +92,28 @@ class Broadcast_Server implements MessageComponentInterface
                     switch ($cmdinfo[0]) {
                         case self::BROADCAST_SONG:
                             $this->notifySong($from, (int) $cmdinfo[1]);
-                        break;
+                            break;
                         case self::BROADCAST_SONG_POSITION:
                             $this->notifySongPosition($from, (int) $cmdinfo[1]);
-                        break;
+                            break;
                         case self::BROADCAST_PLAYER_PLAY:
                             $this->notifyPlayerPlay($from, make_bool($cmdinfo[1]));
-                        break;
+                            break;
                         case self::BROADCAST_ENDED:
                             $this->notifyEnded($from);
-                        break;
+                            break;
                         case self::BROADCAST_REGISTER_BROADCAST:
                             $this->registerBroadcast($from, (int) $cmdinfo[1]);
-                        break;
+                            break;
                         case self::BROADCAST_REGISTER_LISTENER:
                             $this->registerListener($from, (int) $cmdinfo[1]);
-                        break;
+                            break;
                         case self::BROADCAST_AUTH_SID:
                             $this->authSid($from, $cmdinfo[1]);
-                        break;
+                            break;
                         default:
                             self::echo_message($this->verbose, "[" . time() . "][warning]Unknown message code." . "\r\n");
-                        break;
+                            break;
                     }
                 } else {
                     self::echo_message($this->verbose, "[" . time() . "][error]Wrong message format (" . $command . ")." . "\r\n");

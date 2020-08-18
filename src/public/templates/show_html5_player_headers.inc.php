@@ -441,8 +441,7 @@ function receiveBroadcastMessage(e)
                             jp.pause();
                         }
                     }
-                break;
-
+                    break;
                 case 'SONG':
                     addMedia($.parseJSON(atob(msg[1])));
                     brLoadingSong = true;
@@ -456,31 +455,26 @@ function receiveBroadcastMessage(e)
                         brLoadingSong = false;
                     }, 1000);
                     jplaylist.next();
-                break;
-
+                    break;
                 case 'SONG_POSITION':
                     if (brLoadingSong) {
                         brBufferingSongPos = parseFloat(msg[1]);
                     } else {
                         jp.play(parseFloat(msg[1]));
                     }
-                break;
-
+                    break;
                 case 'NB_LISTENERS':
                     $('#broadcast_listeners').html(msg[1]);
-                break;
-
+                    break;
                 case 'INFO':
                     // Display information notification to user here
-                break;
-
+                    break;
                 case 'ENDED':
                     jp.stop();
-                break;
-
+                    break;
                 default:
                     alert('Unknown message code');
-                break;
+                    break;
             }
         }
     }

@@ -41,7 +41,7 @@ switch ($_REQUEST['action']) {
         $browse->save_objects($catalog_ids);
         $browse->show_objects($catalog_ids);
         $browse->store();
-    break;
+        break;
 }
 
 // Show the Footer

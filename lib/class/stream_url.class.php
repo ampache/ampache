@@ -67,12 +67,12 @@ class Stream_URL extends memory_object
             switch ($key) {
                 case 'oid':
                     $key = 'id';
-                break;
+                    break;
                 case 'video':
                     if (make_bool($value)) {
                         $results['type'] = 'video';
                     }
-                break;
+                    break;
             }
             $results[$key] = $value;
         }

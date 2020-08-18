@@ -237,10 +237,10 @@ switch ($_REQUEST['action']) {
             }
         }
 
-    break;
+        break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 } // switch on action;
 
 // We always do this

@@ -234,10 +234,10 @@ function create_preference_input($name, $value)
             echo "\t<option value=\"1\" $is_true>" . T_("On") . "</option>\n";
             echo "\t<option value=\"0\" $is_false>" . T_("Off") . "</option>\n";
             echo "</select>\n";
-        break;
+            break;
         case 'upload_catalog':
             show_catalog_select('upload_catalog', $value, '', true);
-        break;
+            break;
         case 'play_type':
             $is_stream     = '';
             $is_localplay  = '';
@@ -269,7 +269,7 @@ function create_preference_input($name, $value)
             }
             echo "\t<option value=\"web_player\" $is_web_player>" . T_('Web Player') . "</option>\n";
             echo "</select>\n";
-        break;
+            break;
         case 'playlist_type':
             $var_name    = $value . "_type";
             ${$var_name} = "selected=\"selected\"";
@@ -281,7 +281,7 @@ function create_preference_input($name, $value)
             echo "\t<option value=\"ram\" $ram_type>" . T_('RAM') . "</option>\n";
             echo "\t<option value=\"xspf\" $xspf_type>" . T_('XSPF') . "</option>\n";
             echo "</select>\n";
-        break;
+            break;
         case 'lang':
             $languages = get_languages();
             echo '<select name="' . $name . '">' . "\n";
@@ -290,7 +290,7 @@ function create_preference_input($name, $value)
                 echo "\t<option value=\"$lang\" " . $selected . ">$tongue</option>\n";
             } // end foreach
             echo "</select>\n";
-        break;
+            break;
         case 'localplay_controller':
             $controllers = Localplay::get_controllers();
             echo "<select name=\"$name\">\n";
@@ -306,7 +306,7 @@ function create_preference_input($name, $value)
                 echo "\t<option value=\"" . $controller . "\" $is_selected>" . ucfirst($controller) . "</option>\n";
             } // end foreach
             echo "</select>\n";
-        break;
+            break;
         case 'localplay_level':
             $is_user    = '';
             $is_admin   = '';
@@ -324,7 +324,7 @@ function create_preference_input($name, $value)
             echo "<option value=\"50\" $is_manager>" . T_('Manager') . "</option>\n";
             echo "<option value=\"100\" $is_admin>" . T_('Admin') . "</option>\n";
             echo "</select>\n";
-        break;
+            break;
         case 'theme_name':
             $themes = get_themes();
             echo "<select name=\"$name\">\n";
@@ -336,7 +336,7 @@ function create_preference_input($name, $value)
                 echo "\t<option value=\"" . $theme['path'] . "\" $is_selected>" . $theme['name'] . "</option>\n";
             } // foreach themes
             echo "</select>\n";
-        break;
+            break;
         case 'theme_color':
             // This include a two-step configuration (first change theme and save, then change theme color and save)
             $theme_cfg = get_theme(AmpConfig::get('theme_name'));
@@ -351,7 +351,7 @@ function create_preference_input($name, $value)
                 } // foreach themes
                 echo "</select>\n";
             }
-        break;
+            break;
         case 'playlist_method':
             ${$value} = ' selected="selected"';
             echo "<select name=\"$name\">\n";
@@ -360,7 +360,7 @@ function create_preference_input($name, $value)
             echo "\t<option value=\"clear\"$clear>" . T_('Clear on Send') . "</option>\n";
             echo "\t<option value=\"default\"$default>" . T_('Default') . "</option>\n";
             echo "</select>\n";
-        break;
+            break;
         case 'transcode':
             ${$value} = ' selected="selected"';
             echo "<select name=\"$name\">\n";
@@ -368,7 +368,7 @@ function create_preference_input($name, $value)
             echo "\t<option value=\"default\"$default>" . T_('Default') . "</option>\n";
             echo "\t<option value=\"always\"$always>" . T_('Always') . "</option>\n";
             echo "</select>\n";
-        break;
+            break;
         case 'album_sort':
             $is_sort_year_asc  = '';
             $is_sort_year_desc = '';
@@ -394,7 +394,7 @@ function create_preference_input($name, $value)
             echo "\t<option value=\"name_asc\" $is_sort_name_asc>" . T_('Name ascending') . "</option>\n";
             echo "\t<option value=\"name_desc\" $is_sort_name_desc>" . T_('Name descending') . "</option>\n";
             echo "</select>\n";
-        break;
+            break;
         case 'disabled_custom_metadata_fields':
             $ids             = explode(',', $value);
             $options         = array();
@@ -415,13 +415,13 @@ function create_preference_input($name, $value)
             $callback    = rawurlencode(AmpConfig::get('web_path') . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
             /* HINT: Plugin Name */
             echo "<a href='$url/api/auth/?api_key=$api_key&cb=$callback'>" . UI::get_icon('plugin', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
-        break;
+            break;
         default:
             if (preg_match('/_pass$/', $name)) {
                 echo '<input type="password" name="' . $name . '" value="******" />';
             } else {
                 echo '<input type="text" name="' . $name . '" value="' . $value . '" />';
             }
-        break;
+            break;
     }
 } // create_preference_input

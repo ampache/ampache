@@ -37,7 +37,7 @@ switch ($_REQUEST['action']) {
             1,
             'delete_artist'
         );
-    break;
+        break;
     case 'confirm_delete':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -56,7 +56,7 @@ switch ($_REQUEST['action']) {
         } else {
             show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Artist."), AmpConfig::get('web_path'));
         }
-    break;
+        break;
     case 'show':
         $artist = new Artist($_REQUEST['artist']);
         $artist->format();
@@ -72,7 +72,7 @@ switch ($_REQUEST['action']) {
         } else {
             require_once AmpConfig::get('prefix') . UI::find_template('show_artist.inc.php');
         }
-    break;
+        break;
     case 'show_all_songs':
         $artist = new Artist($_REQUEST['artist']);
         $artist->format();
@@ -85,7 +85,7 @@ switch ($_REQUEST['action']) {
         $object_id  = (int) filter_input(INPUT_GET, 'artist', FILTER_SANITIZE_NUMBER_INT);
         $target_url = AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $object_id;
         require_once AmpConfig::get('prefix') . UI::find_template('show_update_items.inc.php');
-    break;
+        break;
     case 'match':
     case 'Match':
         $match = scrub_in($_REQUEST['match']);
@@ -112,14 +112,14 @@ switch ($_REQUEST['action']) {
                 show_artists($chr);
             }
         }
-    break;
+        break;
     case 'show_missing':
         set_time_limit(600);
         $mbid    = $_REQUEST['mbid'];
         $wartist = Wanted::get_missing_artist($mbid);
 
         require AmpConfig::get('prefix') . UI::find_template('show_missing_artist.inc.php');
-    break;
+        break;
 } // end switch
 
 // Show the Footer

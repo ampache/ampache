@@ -116,18 +116,18 @@ class Mailer
         switch ($filter) {
             case 'users':
                 $sql = "SELECT * FROM `user` WHERE `access`='25' AND `email` IS NOT NULL";
-            break;
+                break;
             case 'admins':
                 $sql = "SELECT * FROM `user` WHERE `access`='100' AND `email` IS NOT NULL";
-            break;
+                break;
             case 'inactive':
                 $inactive = time() - (30 * 86400);
                 $sql      = 'SELECT * FROM `user` WHERE `last_seen` <= ? AND `email` IS NOT NULL';
-            break;
+                break;
             case 'all':
             default:
                 $sql = "SELECT * FROM `user` WHERE `email` IS NOT NULL";
-            break;
+                break;
         } // end filter switch
 
         $db_results = Dba::read($sql, isset($inactive) ? array($inactive) : array());
@@ -200,15 +200,15 @@ class Mailer
                 if ($mailsecure = AmpConfig::get('mail_secure_smtp')) {
                     $mail->SMTPSecure = ($mailsecure == 'ssl') ? 'ssl' : 'tls';
                 }
-            break;
+                break;
             case 'sendmail':
                 $mail->IsSendmail();
                 $mail->Sendmail = $sendmail;
-            break;
+                break;
             case 'php':
             default:
                 $mail->IsMail();
-            break;
+                break;
         }
 
         $retval = $mail->send();

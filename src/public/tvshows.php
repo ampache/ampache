@@ -37,7 +37,7 @@ switch ($_REQUEST['action']) {
             1,
             'delete_tvshow'
         );
-    break;
+        break;
     case 'confirm_delete':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -56,7 +56,7 @@ switch ($_REQUEST['action']) {
         } else {
             show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this TV Show"), AmpConfig::get('web_path'));
         }
-    break;
+        break;
     case 'show':
         $tvshow = new TVShow($_REQUEST['tvshow']);
         $tvshow->format();
@@ -90,7 +90,7 @@ switch ($_REQUEST['action']) {
                 show_tvshows($chr);
             }
         }
-    break;
+        break;
 } // end switch
 
 // Show the Footer

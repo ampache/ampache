@@ -37,7 +37,7 @@ switch ($_REQUEST['action']) {
             1,
             'delete_label'
         );
-    break;
+        break;
     case 'confirm_delete':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -56,7 +56,7 @@ switch ($_REQUEST['action']) {
         } else {
             show_confirmation(T_("There Was a Problem"), T_("Unable to delete this Label."), AmpConfig::get('web_path'));
         }
-    break;
+        break;
     case 'add_label':
         // Must be at least a content manager or edit upload enabled
         if (!Access::check('interface', 50) && !AmpConfig::get('upload_allow_edit')) {
@@ -85,7 +85,7 @@ switch ($_REQUEST['action']) {
         } else {
             show_confirmation(T_('No Problem'), T_('The Label has been added'), AmpConfig::get('web_path') . '/browse.php?action=label');
         }
-    break;
+        break;
     case 'show':
         $label_id = (int) filter_input(INPUT_GET, 'label', FILTER_SANITIZE_NUMBER_INT);
         if (!$label_id) {
@@ -110,7 +110,7 @@ switch ($_REQUEST['action']) {
         } else {
             echo T_('The Label cannot be found');
         }
-    break;
+        break;
 } // end switch
 
 // Show the Footer

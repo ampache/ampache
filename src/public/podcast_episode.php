@@ -37,7 +37,7 @@ switch ($_REQUEST['action']) {
             1,
             'delete_podcast_episode'
         );
-    break;
+        break;
     case 'confirm_delete':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -56,13 +56,13 @@ switch ($_REQUEST['action']) {
         } else {
             show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Podcast Episode"), AmpConfig::get('web_path'));
         }
-    break;
+        break;
     case 'show':
     default:
         $episode = new Podcast_Episode($_REQUEST['podcast_episode']);
         $episode->format();
         require_once AmpConfig::get('prefix') . UI::find_template('show_podcast_episode.inc.php');
-    break;
+        break;
 }
 
 // Show the Footer
