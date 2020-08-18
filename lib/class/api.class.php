@@ -417,7 +417,7 @@ class Api
         // Check and see if we should destroy the api session (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
             $sql = 'DELETE FROM `session` WHERE `id` = ?';
-            $sql .= " and `type` = 'api'";
+            $sql .= " AND `type` = 'api'";
             Dba::write($sql, array($input['auth']));
 
             debug_event('api.class', 'Goodbye Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
@@ -2228,7 +2228,8 @@ class Api
                 break;
             case 'frequent':
                 debug_event('api.class', 'stats frequent', 4);
-                $results = Stats::get_top($type, $limit, 0, $offset);
+                $threshold = AmpConfig::get('stats_threshold');
+                $results   = Stats::get_top($type, $limit, $threshold, $offset);
                 break;
             case 'recent':
             case 'forgotten':

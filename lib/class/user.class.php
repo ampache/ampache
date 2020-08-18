@@ -192,9 +192,9 @@ class User extends database_object
 
         $time      = time();
         $last_seen = $time - 1200;
-        $sql       = 'SELECT COUNT(DISTINCT `session`.`username`) FROM `session` ' .
-            'INNER JOIN `user` ON `session`.`username` = `user`.`username` ' .
-            'WHERE `session`.`expire` > ? and `user`.`last_seen` > ?';
+        $sql       = "SELECT COUNT(DISTINCT `session`.`username`) FROM `session` " .
+            "INNER JOIN `user` ON `session`.`username` = `user`.`username` " .
+            "WHERE `session`.`expire` > ? AND `user`.`last_seen` > ?";
         $db_results           = Dba::read($sql, array($time, $last_seen));
         $data                 = Dba::fetch_row($db_results);
         $results['connected'] = $data[0];

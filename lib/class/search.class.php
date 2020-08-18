@@ -1340,7 +1340,7 @@ class Search extends playlist_object
                         // flag once per user
                         $table['favorite'] .= (!strpos($table['favorite'], "favorite_album_$other_userid")) ?
                             "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
-                            "from `user_flag` where `user` = $other_userid) AS `favorite_album_$other_userid` " .
+                            "from `user_flag` WHERE `user` = $other_userid) AS `favorite_album_$other_userid` " .
                             "ON `song`.`album`=`favorite_album_$other_userid`.`object_id` " .
                             "AND `favorite_album_$other_userid`.`object_type` = 'album' " : '';
                     } else {
@@ -1515,7 +1515,7 @@ class Search extends playlist_object
                     // flag once per user
                     $table['favorite'] .= (!strpos($table['favorite'], "favorite_artist_$userid")) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
-                        "FROM `user_flag` where `user` = $userid) AS `favorite_artist_$userid` " .
+                        "FROM `user_flag` WHERE `user` = $userid) AS `favorite_artist_$userid` " .
                         "ON `song`.`artist`=`favorite_artist_$userid`.`object_id` " .
                         "AND `favorite_artist_$userid`.`object_type` = 'artist' " : '';
                     break;
@@ -1580,7 +1580,7 @@ class Search extends playlist_object
                         // flag once per user
                         $table['favorite'] .= (!strpos($table['favorite'], "favorite_artist_$other_userid")) ?
                             "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
-                            "FROM `user_flag` where `user` = $other_userid) AS `favorite_artist_$other_userid` " .
+                            "FROM `user_flag` WHERE `user` = $other_userid) AS `favorite_artist_$other_userid` " .
                             "ON `song`.`artist`=`favorite_artist_$other_userid`.`object_id` " .
                             "AND `favorite_artist_$other_userid`.`object_type` = 'artist' " : '';
                     } else {
@@ -1939,7 +1939,7 @@ class Search extends playlist_object
                         // flag once per user
                         $table['favorite'] .= (!strpos($table['favorite'], "favorite_" . $my_type . "_" . $other_userid . "")) ?
                             "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
-                            "from `user_flag` where `user` = $other_userid) AS `favorite_" . $my_type . "_" . $other_userid . "` " .
+                            "from `user_flag` WHERE `user` = $other_userid) AS `favorite_" . $my_type . "_" . $other_userid . "` " .
                             "ON `song`.`$column`=`favorite_" . $my_type . "_" . $other_userid . "`.`object_id` " .
                             "AND `favorite_" . $my_type . "_" . $other_userid . "`.`object_type` = '$my_type' " : '';
                     } else {
