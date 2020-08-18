@@ -26,26 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Config;
 
 /**
- * The ConfigContainer is a containment for all of ampaches configuration data.
- * Once initialized, the data is immuteable
+ * This class contains constants for all available configuration keys
  */
-final class ConfigContainer implements ConfigContainerInterface
+final class ConfigurationKeyEnum
 {
-    private $configuration;
-
-    public function __construct(
-        array $configuration
-    ) {
-        $this->configuration = $configuration;
-    }
-
-    public function get(string $configKey)
-    {
-        return $this->configuration[$configKey] ?? null;
-    }
-
-    public function getSessionName(): string
-    {
-        return $this->configuration[ConfigurationKeyEnum::SESSION_NAME] ?? '';
-    }
+    public const SESSION_NAME = 'session_name';
 }

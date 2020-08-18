@@ -4,6 +4,8 @@
 # To install and use it just copy or symlink it to .git/hooks/pre-commit
 # example (project base dir): pushd .git/hooks/; ln -s ../../scripts/hooks/pre-commit .; popd
 
+./vendor/bin/phpunit
+
 if [ -e "php-cs-fixer.phar" ]
 then
     PHPCSFIXER="php php-cs-fixer.phar"

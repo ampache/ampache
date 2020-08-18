@@ -347,10 +347,12 @@
         "psr-4": {
             "Lib\\": "lib/class",
             "Beets\\": "modules/Beets",
-            "Ampache\\": ["./", "tests/"]
+            "Ampache\\": ["src/", "tests/"]
         }
     },
     "scripts": {
-        "test": "./vendor/bin/phpunit tests"
+        "test": "./vendor/bin/phpunit tests",
+	"codestyle": "./scripts/tests/codestyle.sh",
+	"syntax": "./scripts/tests/syntax.sh"
     }
 }
