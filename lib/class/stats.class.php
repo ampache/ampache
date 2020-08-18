@@ -306,6 +306,9 @@ class Stats
      */
     public static function has_played_history($object, $user, $agent, $date)
     {
+        if ($user == -1) {
+            return False;
+        }
         $previous  = self::get_last_play($user, $agent, $date);
         $diff      = $date - (int) $previous['date'];
         $item_time = $object->time;
