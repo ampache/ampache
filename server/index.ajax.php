@@ -54,7 +54,7 @@ switch ($_REQUEST['action']) {
                 }
             }
         }
-    break;
+        break;
     case 'random_videos':
         $videos = Video::get_random($moment);
         if (count($videos) && is_array($videos)) {
@@ -64,7 +64,7 @@ switch ($_REQUEST['action']) {
         } else {
             $results['random_video_selection'] = '<!-- None found -->';
         }
-    break;
+        break;
     case 'artist_info':
         if (AmpConfig::get('lastfm_api_key') && (isset($_REQUEST['artist']) || isset($_REQUEST['fullname']))) {
             if ($_REQUEST['artist']) {
@@ -78,7 +78,7 @@ switch ($_REQUEST['action']) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_artist_info.inc.php');
             $results['artist_biography'] = ob_get_clean();
         }
-    break;
+        break;
     case 'similar_artist':
         if (AmpConfig::get('show_similar') && isset($_REQUEST['artist'])) {
             $artist = new Artist($_REQUEST['artist']);
@@ -98,7 +98,7 @@ switch ($_REQUEST['action']) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_recommended_artists.inc.php');
             $results['similar_artist'] = ob_get_clean();
         }
-    break;
+        break;
     case 'similar_now_playing':
         $media_id = $_REQUEST['media_id'];
         if (AmpConfig::get('show_similar') && isset($media_id) && isset($_REQUEST['media_artist'])) {
@@ -108,7 +108,7 @@ switch ($_REQUEST['action']) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_now_playing_similar.inc.php');
             $results['similar_items_' . $media_id] = ob_get_clean();
         }
-    break;
+        break;
     case 'concerts':
         if (AmpConfig::get('show_concerts') && isset($_REQUEST['artist'])) {
             $artist = new Artist($_REQUEST['artist']);
@@ -137,7 +137,7 @@ switch ($_REQUEST['action']) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_concerts.inc.php');
             $results['concerts'] = ob_get_clean();
         }
-    break;
+        break;
     case 'labels':
         if (AmpConfig::get('label') && isset($_REQUEST['artist'])) {
             $labels     = Label::get_labels($_REQUEST['artist']);
@@ -156,7 +156,7 @@ switch ($_REQUEST['action']) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_labels.inc.php');
             $results['labels'] = ob_get_clean();
         }
-    break;
+        break;
     case 'wanted_missing_albums':
         if (AmpConfig::get('wanted') && (isset($_REQUEST['artist']) || isset($_REQUEST['artist_mbid']))) {
             if (isset($_REQUEST['artist'])) {
@@ -175,7 +175,7 @@ switch ($_REQUEST['action']) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_missing_albums.inc.php');
             $results['missing_albums'] = ob_get_clean();
         }
-    break;
+        break;
     case 'add_wanted':
         if (AmpConfig::get('wanted') && isset($_REQUEST['mbid'])) {
             $mbid = $_REQUEST['mbid'];
@@ -200,7 +200,7 @@ switch ($_REQUEST['action']) {
                 debug_event('index.ajax', 'Already wanted, skipped.', 5);
             }
         }
-    break;
+        break;
     case 'remove_wanted':
         if (AmpConfig::get('wanted') && isset($_REQUEST['mbid'])) {
             $mbid = $_REQUEST['mbid'];
@@ -213,7 +213,7 @@ switch ($_REQUEST['action']) {
             $walbum->show_action_buttons();
             $results['wanted_action_' . $mbid] = ob_get_clean();
         }
-    break;
+        break;
     case 'accept_wanted':
         if (AmpConfig::get('wanted') && isset($_REQUEST['mbid'])) {
             $mbid = $_REQUEST['mbid'];
@@ -224,7 +224,7 @@ switch ($_REQUEST['action']) {
             $walbum->show_action_buttons();
             $results['wanted_action_' . $mbid] = ob_get_clean();
         }
-    break;
+        break;
     case 'reloadnp':
         ob_start();
         show_now_playing();
@@ -234,7 +234,7 @@ switch ($_REQUEST['action']) {
         Song::build_cache(array_keys($data));
         require_once AmpConfig::get('prefix') . UI::find_template('show_recently_played.inc.php');
         $results['recently_played'] = ob_get_clean();
-    break;
+        break;
     case 'sidebar':
         switch ($_REQUEST['button']) {
             case 'home':
@@ -243,14 +243,14 @@ switch ($_REQUEST['action']) {
             case 'player':
             case 'preferences':
                 $button = $_REQUEST['button'];
-            break;
+                break;
             case 'admin':
                 if (Access::check('interface', 75)) {
                     $button = $_REQUEST['button'];
                 } else {
                     return false;
                 }
-            break;
+                break;
             default:
                 return false;
         } // end switch on button
@@ -261,7 +261,7 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . UI::find_template('sidebar.inc.php');
         $results['sidebar-content'] = ob_get_contents();
         ob_end_clean();
-    break;
+        break;
     case 'start_channel':
         if (Access::check('interface', 75)) {
             ob_start();
@@ -276,7 +276,7 @@ switch ($_REQUEST['action']) {
             }
             $results['channel_state_' . Core::get_request('id')] = ob_get_clean();
         }
-    break;
+        break;
     case 'stop_channel':
         if (Access::check('interface', 75)) {
             ob_start();
@@ -288,7 +288,7 @@ switch ($_REQUEST['action']) {
             }
             $results['channel_state_' . Core::get_request('id')] = ob_get_clean();
         }
-    break;
+        break;
     case 'slideshow':
         ob_start();
         $images = Slideshow::get_current_slideshow();
@@ -315,7 +315,7 @@ switch ($_REQUEST['action']) {
             echo "</script>";
         }
         $results['fslider_script'] = ob_get_clean();
-    break;
+        break;
     case 'songs':
         $label_id = (int) ($_REQUEST['label']);
 
@@ -337,10 +337,10 @@ switch ($_REQUEST['action']) {
 
         $results['songs'] = ob_get_contents();
         ob_end_clean();
-    break;
+        break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 } // switch on action;
 
 // We always do this

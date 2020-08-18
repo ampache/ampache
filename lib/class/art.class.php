@@ -818,17 +818,17 @@ class Art extends database_object
             case 'jpeg':
                 imagejpeg($thumbnail, null, 75);
                 $mime_type = image_type_to_mime_type(IMAGETYPE_JPEG);
-            break;
+                break;
             case 'gif':
                 imagegif($thumbnail);
                 $mime_type = image_type_to_mime_type(IMAGETYPE_GIF);
-            break;
+                break;
             // Turn bmps into pngs
             case 'bmp':
             case 'png':
                 imagepng($thumbnail);
                 $mime_type = image_type_to_mime_type(IMAGETYPE_PNG);
-            break;
+                break;
             default:
                 $mime_type = null;
         } // resized
@@ -1139,15 +1139,15 @@ class Art extends database_object
                         case 'gather_google':
                         case 'gather_musicbrainz':
                         case 'gather_lastfm':
-                        $data = $this->{$method_name}($limit, $options);
-                    break;
+                            $data = $this->{$method_name}($limit, $options);
+                            break;
                         case 'gather_spotify':
-                        $data = $this->{$method_name}($options);
-                    break;
+                            $data = $this->{$method_name}($options);
+                            break;
                         default:
-                        $data = $this->{$method_name}($limit);
-                    break;
-                }
+                            $data = $this->{$method_name}($limit);
+                            break;
+                    }
                 } else {
                     debug_event('art.class', $method_name . " not defined", 1);
                 }
@@ -1806,7 +1806,7 @@ class Art extends database_object
                 $media_info['tvshow']         = $options['tvshow'];
                 $media_info['tvshow_season']  = $options['tvshow_season'];
                 $media_info['tvshow_episode'] = $options['tvshow_episode'];
-            break;
+                break;
             case 'song':
                 $media_info['mb_trackid'] = $options['mb_trackid'];
                 $media_info['title']      = $options['title'];
@@ -1831,7 +1831,7 @@ class Art extends database_object
             case 'movie':
                 $gtypes[]            = 'movie';
                 $media_info['title'] = $options['keyword'];
-            break;
+                break;
         }
 
         $meta   = $plugin->get_metadata($gtypes, $media_info);
@@ -1870,46 +1870,46 @@ class Art extends database_object
                 /* This is used by the now_playing / browse stuff */
                 $size['height']   = 100;
                 $size['width']    = 100;
-            break;
+                break;
             case 2:
                 $size['height']    = 128;
                 $size['width']     = 128;
-            break;
+                break;
             case 3:
                 /* This is used by the embedded web player */
                 $size['height']    = 80;
                 $size['width']     = 80;
-            break;
+                break;
             case 5:
                 /* Web Player size */
                 $size['height'] = 32;
                 $size['width']  = 32;
-            break;
+                break;
             case 6:
                 /* Video browsing size */
                 $size['height'] = 150;
                 $size['width']  = 100;
-            break;
+                break;
             case 7:
                 /* Video page size */
                 $size['height'] = 300;
                 $size['width']  = 200;
-            break;
+                break;
             case 8:
                 /* Video preview size */
                  $size['height'] = 200;
                  $size['width']  = 470;
-            break;
+                break;
             case 9:
                 /* Video preview size */
                  $size['height'] = 100;
                  $size['width']  = 235;
-            break;
+                break;
             case 10:
                 /* Search preview size */
                  $size['height'] = 24;
                  $size['width']  = 24;
-            break;
+                break;
             case 4:
                 /* Popup Web Player size */
             case 11:
@@ -1918,11 +1918,11 @@ class Art extends database_object
                 /* Search preview size */
                  $size['height'] = 150;
                  $size['width']  = 150;
-            break;
+                break;
             default:
                 $size['height']   = 200;
                 $size['width']    = 200;
-            break;
+                break;
         }
 
         return $size;

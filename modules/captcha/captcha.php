@@ -1492,22 +1492,19 @@ END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END;
 
         foreach (explode('/', $url) as $comp) {
             switch ($comp) {
-
-       case '':
-       case '.':
-         break;
-
-       case '..':
-         if ($ncomp--) {
-             array_pop($path);
-             break;
-         }
-
-       default:
-         $path[] = $comp;
-         $ncomp++;
-         break;
-       }
+                case '':
+                case '.':
+                    break;
+                case '..':
+                    if ($ncomp--) {
+                        array_pop($path);
+                        break;
+                    }
+                default:
+                    $path[] = $comp;
+                    $ncomp++;
+                    break;
+            }
         }
 
         $path = $abspath . implode('/', $path);

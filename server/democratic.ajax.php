@@ -39,7 +39,7 @@ switch ($_REQUEST['action']) {
     case 'delete_vote':
         $democratic->remove_vote($_REQUEST['row_id']);
         $show_browse = true;
-    break;
+        break;
     case 'add_vote':
         $democratic->add_vote(array(
             array(
@@ -48,7 +48,7 @@ switch ($_REQUEST['action']) {
             )
         ));
         $show_browse = true;
-    break;
+        break;
     case 'delete':
         if (!Core::get_global('user')->has_access('75')) {
             echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
@@ -58,7 +58,7 @@ switch ($_REQUEST['action']) {
 
         $democratic->delete_votes($_REQUEST['row_id']);
         $show_browse = true;
-    break;
+        break;
     case 'send_playlist':
         if (!Access::check('interface', 75)) {
             echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
@@ -68,7 +68,7 @@ switch ($_REQUEST['action']) {
 
         $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=democratic&democratic_id=' . scrub_out($_REQUEST['democratic_id']);
         $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
-    break;
+        break;
     case 'clear_playlist':
         if (!Access::check('interface', 100)) {
             echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
@@ -81,10 +81,10 @@ switch ($_REQUEST['action']) {
         $democratic->clear();
 
         $show_browse = true;
-    break;
+        break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 } // switch on action;
 
 if ($show_browse) {

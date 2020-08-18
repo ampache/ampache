@@ -452,7 +452,7 @@ class Random
                         $sql .= ' WHERE ' . $search_info['where_sql'];
                     }
                 }
-            break;
+                break;
             case 'album':
                 $sql = "SELECT `album`.`id`, SUM(`song`.`size`) AS `size`, SUM(`song`.`time`) AS `time` FROM `album` ";
                 if (!$search_info || !$search_info['join']['song']) {
@@ -470,7 +470,7 @@ class Random
                     }
                 }
                 $sql .= ' GROUP BY `album`.`id`';
-            break;
+                break;
             case 'artist':
                 $sql = "SELECT `artist`.`id`, SUM(`song`.`size`) AS `size`, SUM(`song`.`time`) AS `time` FROM `artist` ";
                 if (!$search_info || !$search_info['join']['song']) {
@@ -488,7 +488,7 @@ class Random
                     }
                 }
                 $sql .= ' GROUP BY `artist`.`id`';
-            break;
+                break;
         }
         $sql .= " ORDER BY RAND() $limit_sql";
 

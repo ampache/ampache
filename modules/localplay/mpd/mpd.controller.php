@@ -482,18 +482,17 @@ class AmpacheMpd extends localplay_controller
                     $song->format();
                     $data['name']   = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
                     $data['link']   = $song->f_link;
-                break;
+                    break;
                 case 'demo_id':
                     $democratic     = new Democratic($url_data['demo_id']);
                     $data['name']   = T_('Democratic') . ' - ' . $democratic->name;
                     $data['link']   = '';
-                break;
+                    break;
                 case 'random':
                     $data['name'] = T_('Random') . ' - ' . scrub_out(ucfirst($url_data['type']));
                     $data['link'] = '';
-                break;
+                    break;
                 default:
-
                     /* If we don't know it, look up by filename */
                     $filename = Dba::escape($entry['file']);
                     $sql      = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE '%$filename' " .
@@ -508,13 +507,13 @@ class AmpacheMpd extends localplay_controller
                             case 'song':
                                 $data['name'] = $media->f_title . ' - ' . $media->f_album . ' - ' . $media->f_artist;
                                 $data['link'] = $media->f_link;
-                            break;
+                                break;
                             case 'live_stream':
                                 $frequency    = $media->frequency ? '[' . $media->frequency . ']' : '';
                                 $site_url     = $media->site_url ? '(' . $media->site_url . ')' : '';
                                 $data['name'] = "$media->name $frequency $site_url";
                                 $data['link'] = $media->site_url;
-                            break;
+                                break;
                         } // end switch on type
                     } // end if results
 
@@ -525,8 +524,7 @@ class AmpacheMpd extends localplay_controller
                         $data['name'] = $title_string;
                         $data['link'] = '';
                     }
-
-                break;
+                    break;
             } // end switch on primary key type
 
             /* Optional Elements */

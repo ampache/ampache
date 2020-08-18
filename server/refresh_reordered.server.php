@@ -38,7 +38,7 @@ switch ($_REQUEST['action']) {
         $browse->set_static_content(true);
         $browse->show_objects($object_ids);
         $browse->store();
-    break;
+        break;
     case 'refresh_album_songs':
         $browse = new Browse();
         $browse->set_show_header(true);
@@ -51,5 +51,5 @@ switch ($_REQUEST['action']) {
         $browse->show_objects(null, true); // true argument is set to show the reorder column
         $browse->store();
         echo "</div>";
-    break;
+        break;
 } // switch on the action
