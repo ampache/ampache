@@ -22,6 +22,7 @@
 
 define('NO_SESSION', '1');
 $_SESSION['login'] = true;
+
 $a_root = realpath(__DIR__);
 require_once $a_root . '/lib/init.php';
 
