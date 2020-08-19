@@ -40,10 +40,14 @@ plugins:
     checks:
       Generic Files LineLength TooLong:
         enabled: false
+      PSR1 Methods CamelCapsMethodName NotCamelCaps:
+        enabled: false
   phpmd:
     enabled: true
     checks:
       Controversial/CamelCaseVariableName:
+        enabled: false
+      CleanCode/StaticAccess:
         enabled: false
   sonar-php:
     enabled: true
