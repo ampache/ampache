@@ -8,6 +8,9 @@ Look here for the code to change your 'custom_datetime' string [(http://userguid
 
 This means Ampache now **requires** php-intl module/dll to be enabled.
 
+**DATABASE CHANGES** You can now force a default collation and charset on your database.
+If you choose to use utf8mb4 Ampache will convert your table engine to InnoDB to handle the extra bytes.
+
 ### Added
 
 * php-intl is now required for translation of date formats into your locale
@@ -21,7 +24,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Allow setting custom databse collation and charset without overwriting your changes
 * NEW database options
   * rsstoken: Identify users by token when generating RSS feeds
-* NEW config options
+* NEW config options (config_version 45)
   * database_charset: Set a default charset for your database
   * database_collation: Set a default collation for your database
 

@@ -96,7 +96,7 @@ class Catalog_soundcloud extends Catalog
             "`secret` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
             "`authtoken` VARCHAR( 255 ) COLLATE $collation NULL , " .
             "`catalog_id` INT( 11 ) NOT NULL" .
-            ") ENGINE = MYISAM DEFAULT CHARSET=$charset COLLATE=$collation";
+            ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         $db_results = Dba::query($sql);
 
         return true;

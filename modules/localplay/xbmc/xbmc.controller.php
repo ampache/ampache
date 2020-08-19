@@ -92,6 +92,7 @@ class AmpacheXbmc extends localplay_controller
     {
         $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
         $sql = "CREATE TABLE `localplay_xbmc` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
             "`name` VARCHAR( 128 ) COLLATE $collation NOT NULL , " .
@@ -100,7 +101,7 @@ class AmpacheXbmc extends localplay_controller
             "`port` INT( 11 ) UNSIGNED NOT NULL , " .
             "`user` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
             "`pass` VARCHAR( 255 ) COLLATE $collation NOT NULL" .
-            ") ENGINE = MYISAM DEFAULT CHARSET=$charset COLLATE=$collation";
+            ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
