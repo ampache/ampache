@@ -91,7 +91,9 @@ class Catalog_soundcloud extends Catalog
     {
         $collation = AmpConfig::get('database_collation', 'utf8_unicode_ci');
         $charset   = AmpConfig::get('database_charset', 'utf8');
-        $sql       = "CREATE TABLE `catalog_soundcloud` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+
+        $sql = "CREATE TABLE `catalog_soundcloud` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
             "`userid` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
             "`secret` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
             "`authtoken` VARCHAR( 255 ) COLLATE $collation NULL , " .
