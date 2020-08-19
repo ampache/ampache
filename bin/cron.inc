@@ -97,11 +97,13 @@ foreach ($channels as $channel_id) {
             debug_event('cron', 'Checking channel: ' . $channel->id, 4);
             $url = $channel->get_stream_proxy_url();
             $ch  = curl_init($url);
-            curl_setopt($ch, CURLOPT_NOBODY, true);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_exec($ch);
-            curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
+            if ($ch) {
+                curl_setopt($ch, CURLOPT_NOBODY, true);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                curl_exec($ch);
+                curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
+            }
         }
     }
 }

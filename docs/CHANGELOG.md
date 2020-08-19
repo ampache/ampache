@@ -19,6 +19,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * NEW database options
   * rsstoken: Identify users by token when generating RSS feeds
 * Add 'Original Year', 'Release Type' to Album searches
+* Ping your active channels in cron.inc to keep the socket alive
 
 ### Changed
 
@@ -26,12 +27,17 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * stats.php: Show total 'Item Count'  on Statistics page instead of trying to shoehorn songs/videos/etc into different columns
 * ampache.sql updated after about 4 years... no more updates on install!
 * Searching by "Rating (average)" now ignores private/public and always returns the average.
+* Hide '# Skipped' and 'Played/Skipped ratio' when 'Show # skipped' is Off
 
 ### Deprecated
 
 * Drop version number from the release string in develop. ('4.3.0-develop' => 'develop')
   * This should stop a bit of confusion when removing / adding requirements
-* '-release' in version number will be dropped for Ampache 5.0.0
+* The '-release' suffix in version number will be dropped for Ampache 5.0.0
+
+### Removed
+
+* Remove stat recording from channels
 
 ### Fixed
 
@@ -40,6 +46,14 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
   * Report 'Item Count' correctly for podcasts and video catalogs
 * Searching albums for artist name
 * Mashup 'Newest' would incorrectly apply an offset missing the newest items
+
+### Security
+
+Fix CVE-2020-15153 - Unauthenticated SQL injection in Ampache
+
+### API develop
+
+No functional changes from 4.2.0, 4.2.1
 
 ## 4.2.1-release
 
