@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application;
 
+use Ampache\Module\Util\InterfaceImplementationChecker;
 use AmpConfig;
 use Core;
 use UI;
@@ -36,7 +37,7 @@ final class MashupApplication implements ApplicationInterface
         session_start();
 
         $object_type = Core::get_request('action');
-        if (!Core::is_library_item($object_type)) {
+        if (!InterfaceImplementationChecker::is_library_item($object_type)) {
             UI::access_denied();
 
             return;
