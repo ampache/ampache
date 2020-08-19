@@ -113,7 +113,6 @@ class Catalog_Seafile extends Catalog
             "`api_call_delay` INT NOT NULL , " .
             "`catalog_id` INT( 11 ) NOT NULL" .
             ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
-
         Dba::query($sql);
 
         return true;

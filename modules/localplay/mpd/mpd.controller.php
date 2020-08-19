@@ -97,7 +97,7 @@ class AmpacheMpd extends localplay_controller
                 "`password` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
                 "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" .
                 ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
-        $db_results = Dba::write($sql);
+        Dba::query($sql);
 
         // Add an internal preference for the users current active instance
         Preference::insert('mpd_active', T_('MPD Active Instance'), 0, 25, 'integer', 'internal', 'mpd');

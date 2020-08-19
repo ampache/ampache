@@ -96,7 +96,7 @@ class Catalog_subsonic extends Catalog
             "`password` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
             "`catalog_id` INT( 11 ) NOT NULL" .
             ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
-        $db_results = Dba::query($sql);
+        Dba::query($sql);
 
         return true;
     } // install
