@@ -200,7 +200,7 @@ function install_rewrite_rules($file, $web_path, $download)
  * @param string $collation
  * @return boolean
  */
-function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true, $charset = 'utf8' , $collation = 'utf8_unicode_ci')
+function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true, $charset = 'utf8', $collation = 'utf8_unicode_ci')
 {
     $database = (string) AmpConfig::get('database_name');
     // Make sure that the database name is valid
