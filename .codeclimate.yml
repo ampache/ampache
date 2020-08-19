@@ -8,7 +8,7 @@ checks:
       threshold: 4
   file-lines:
     config:
-      threshold: 250
+      threshold: 500
   method-complexity:
     config:
       threshold: 5
@@ -17,7 +17,7 @@ checks:
       threshold: 20
   method-lines:
     config:
-      threshold: 100
+      threshold: 200
   nested-control-flow:
     config:
       threshold: 4
@@ -45,9 +45,13 @@ plugins:
   phpmd:
     enabled: true
     checks:
+      Controversial/CamelCaseMethodName:
+        enabled: false
       Controversial/CamelCaseVariableName:
         enabled: false
       CleanCode/StaticAccess:
+        enabled: false
+      CleanCode/BooleanArgumentFlag:
         enabled: false
   sonar-php:
     enabled: true
