@@ -20,7 +20,8 @@
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 if (!Core::get_request('action')) {
     debug_event('stream', "Asked without action. Exiting...", 5);

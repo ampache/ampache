@@ -20,7 +20,8 @@
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 // We special-case this so we can send a 302 if the delete succeeded
 if (Core::get_request('action') == 'delete_playlist') {

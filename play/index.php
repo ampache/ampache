@@ -27,7 +27,8 @@
  * This is also where it decides if you need to be downsampled.
  */
 define('NO_SESSION', '1');
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 ob_end_clean();
 
 //debug_event('play/index', print_r(apache_request_headers(), true), 5);

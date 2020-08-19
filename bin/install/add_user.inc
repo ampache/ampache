@@ -27,9 +27,10 @@ if(php_sapi_name() != 'cli') {
 define('NO_SESSION', 1);
 define('CLI', 1);
 
-$path = dirname(__FILE__);
+$path   = dirname(__FILE__);
 $prefix = realpath($path . '/../../');
-require_once $prefix . '/lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 $options = getopt('e:l:n:p:u:w:');
 if (empty($options) || !isset($options['u'])) {

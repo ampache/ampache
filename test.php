@@ -21,7 +21,9 @@
  */
 
 $prefix = dirname(__FILE__);
-require_once $prefix . '/lib/init-tiny.php';
+
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init-tiny.php';
 
 switch ($_REQUEST['action']) {
     case 'config':

@@ -23,7 +23,8 @@
 define('NO_SESSION', '1');
 $path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
-require_once $prefix . '/lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 $version = "1.0";
 
 if (count(Core::get_global('argv')) != 2) {

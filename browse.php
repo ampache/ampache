@@ -29,7 +29,8 @@
  */
 
 /* Base Require */
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 session_start();
 
