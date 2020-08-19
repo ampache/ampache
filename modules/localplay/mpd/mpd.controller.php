@@ -86,7 +86,7 @@ class AmpacheMpd extends localplay_controller
     public function install()
     {
         $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
-        $charset = (AmpConfig::get('database_charset', 'utf8'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8'));
         /* We need to create the MPD table */
         $sql = "CREATE TABLE `localplay_mpd` ( `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
                 "`name` VARCHAR( 128 ) COLLATE $collation NOT NULL , " .
