@@ -744,10 +744,10 @@ class Album extends database_object implements library_item
             }
 
             if ($this->album_artist) {
-                $Album_artist = new Artist($this->album_artist);
-                $Album_artist->format();
-                $this->album_artist_name   = $Album_artist->name;
-                $this->f_album_artist_name = $Album_artist->f_name;
+                $album_artist = new Artist($this->album_artist);
+                $album_artist->format();
+                $this->album_artist_name   = $album_artist->name;
+                $this->f_album_artist_name = $album_artist->f_name;
                 $this->f_album_artist_link = "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->album_artist_name) . "\">" . $this->f_album_artist_name . "</a>";
             }
 
