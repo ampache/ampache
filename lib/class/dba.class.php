@@ -519,40 +519,40 @@ class Dba
         switch (strtoupper((string) $charset)) {
             case 'CP1250':
             case 'WINDOWS-1250':
-                $target_charset   = 'cp1250';
-                $target_collation = 'cp1250_general_ci';
+                $target_charset   = AmpConfig::get('database_charset', 'cp1250');
+                $target_collation = AmpConfig::get('database_collation', 'cp1250_general_ci');
                 break;
             case 'ISO-8859':
             case 'ISO-8859-2':
-                $target_charset   = 'latin2';
-                $target_collation = 'latin2_general_ci';
+                $target_charset   = AmpConfig::get('database_charset', 'latin2');
+                $target_collation = AmpConfig::get('database_collation', 'latin2_general_ci');
                 break;
             case 'ISO-8859-1':
             case 'CP1252':
             case 'WINDOWS-1252':
-                $target_charset   = 'latin1';
-                $target_collation = 'latin1_general_ci';
+                $target_charset   = AmpConfig::get('database_charset', 'latin1');
+                $target_collation = AmpConfig::get('database_collation', 'latin1_general_ci');
                 break;
             case 'EUC-KR':
-                $target_charset   = 'euckr';
-                $target_collation = 'euckr_korean_ci';
+                $target_charset   = AmpConfig::get('database_charset', 'euckr');
+                $target_collation = AmpConfig::get('database_collation', 'euckr_korean_ci');
                 break;
             case 'CP932':
-                $target_charset   = 'sjis';
-                $target_collation = 'sjis_japanese_ci';
+                $target_charset   = AmpConfig::get('database_charset', 'sjis');
+                $target_collation = AmpConfig::get('database_collation', 'sjis_japanese_ci');
                 break;
             case 'KOI8-U':
-                $target_charset   = 'koi8u';
-                $target_collation = 'koi8u_general_ci';
+                $target_charset   = AmpConfig::get('database_charset', 'koi8u');
+                $target_collation = AmpConfig::get('database_collation', 'koi8u_general_ci');
                 break;
             case 'KOI8-R':
-                $target_charset   = 'koi8r';
-                $target_collation = 'koi8r_general_ci';
+                $target_charset   = AmpConfig::get('database_charset', 'koi8r');
+                $target_collation = AmpConfig::get('database_collation', 'koi8r_general_ci');
                 break;
             case 'UTF-8':
             default:
-                $target_charset   = 'utf8';
-                $target_collation = 'utf8_unicode_ci';
+                $target_charset   = AmpConfig::get('database_charset', 'utf8');
+                $target_collation = AmpConfig::get('database_collation', 'utf8_unicode_ci');
                 break;
         }
 

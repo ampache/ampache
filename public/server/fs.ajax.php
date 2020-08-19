@@ -25,6 +25,7 @@
 define('AJAX_INCLUDE', '1');
 
 require_once __DIR__ . '/../../lib/init.php';
+
 $rootdir = Upload::get_root();
 if (empty($rootdir)) {
     return false;

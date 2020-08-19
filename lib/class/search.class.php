@@ -504,10 +504,12 @@ class Search extends playlist_object
 
         /* HINT: Number of times object has been played */
         $this->type_numeric('played_times', T_('# Played'));
-        /* HINT: Number of times object has been skipped */
-        $this->type_numeric('skipped_times', T_('# Skipped'));
-        /* HINT: Percentage of (Times Played / Times skipped) * 100 */
-        $this->type_numeric('play_skip_ratio', T_('Played/Skipped ratio'));
+        if (AmpConfig::get('show_skipped_times')) {
+            /* HINT: Number of times object has been skipped */
+            $this->type_numeric('skipped_times', T_('# Skipped'));
+            /* HINT: Percentage of (Times Played / Times skipped) * 100 */
+            $this->type_numeric('play_skip_ratio', T_('Played/Skipped ratio'));
+        }
 
         $this->type_text('comment', T_('Comment'));
         $this->type_text('label', T_('Label'));

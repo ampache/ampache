@@ -2,6 +2,7 @@
 // No event subscribe support but avoid few players error (e.g. Windows Media Player).
 
 define('NO_SESSION', '1');
+
 require_once __DIR__ . '/../../lib/init.php';
 
 $headers = getallheaders();

@@ -1143,16 +1143,18 @@ class Update
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
         $retval &= Dba::write($sql, array($row_id));
 
-        $tables = [ 'cache_object_count', 'cache_object_count_run' ];
+        $tables    = [ 'cache_object_count', 'cache_object_count_run' ];
+        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8'));
         foreach ($tables as $table) {
             $sql = "CREATE TABLE IF NOT EXISTS `" . $table . "` (" .
               "`object_id` int(11) unsigned NOT NULL," .
-              "`object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast_episode') CHARACTER SET utf8 NOT NULL," .
+              "`object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast_episode') CHARACTER SET $charset NOT NULL," .
               "`count` int(11) unsigned NOT NULL DEFAULT '0'," .
               "`threshold` int(11) unsigned NOT NULL DEFAULT '0'," .
               "`count_type` varchar(16) NOT NULL," .
               "PRIMARY KEY (`object_id`, `object_type`, `threshold`, `count_type`)" .
-              ") ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+              ") ENGINE=MyISAM DEFAULT CHARSET=$charset COLLATE=$collation;";
             $retval &= Dba::write($sql);
         }
 

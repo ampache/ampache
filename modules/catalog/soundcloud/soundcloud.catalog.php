@@ -89,12 +89,14 @@ class Catalog_soundcloud extends Catalog
      */
     public function install()
     {
-        $sql = "CREATE TABLE `catalog_soundcloud` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-            "`userid` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
-            "`secret` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
-            "`authtoken` VARCHAR( 255 ) COLLATE utf8_unicode_ci NULL , " .
+        $collation = AmpConfig::get('database_collation', 'utf8_unicode_ci');
+        $charset   = AmpConfig::get('database_charset', 'utf8');
+        $sql       = "CREATE TABLE `catalog_soundcloud` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
+            "`userid` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
+            "`secret` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
+            "`authtoken` VARCHAR( 255 ) COLLATE $collation NULL , " .
             "`catalog_id` INT( 11 ) NOT NULL" .
-            ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+            ") ENGINE = MYISAM DEFAULT CHARSET=$charset COLLATE=$collation";
         $db_results = Dba::query($sql);
 
         return true;

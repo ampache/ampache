@@ -27,7 +27,8 @@ define('CLI', 1);
 
 $path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
-require_once $prefix . '/lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 ob_end_flush();
 
@@ -82,7 +83,8 @@ Recommendation::garbage_collection();
 /**
  * Run compute_cache
  */
-require_once $prefix . '/bin/compute_cache.inc';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/bin/compute_cache.inc';
 
 /**
  * ping your channels to keep them alive
@@ -95,11 +97,13 @@ foreach ($channels as $channel_id) {
             debug_event('cron', 'Checking channel: ' . $channel->id, 4);
             $url = $channel->get_stream_proxy_url();
             $ch  = curl_init($url);
-            curl_setopt($ch, CURLOPT_NOBODY, true);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_exec($ch);
-            curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
+            if ($ch) {
+                curl_setopt($ch, CURLOPT_NOBODY, true);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                curl_exec($ch);
+                curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
+            }
         }
     }
 }

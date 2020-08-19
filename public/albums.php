@@ -24,6 +24,7 @@ declare(strict_types=1);
  */
 
 require_once __DIR__ . '/../lib/init.php';
+
 use Ampache\Application\AlbumApplication;
 
 (new AlbumApplication())->run();

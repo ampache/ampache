@@ -93,10 +93,13 @@ class Catalog_local extends Catalog
      */
     public function install()
     {
+        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+
         $sql = "CREATE TABLE `catalog_local` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-            "`path` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
+            "`path` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
             "`catalog_id` INT( 11 ) NOT NULL" .
-            ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+            ") ENGINE = MYISAM DEFAULT CHARSET=$charset COLLATE=$collation";
         $db_results = Dba::query($sql);
 
         return true;

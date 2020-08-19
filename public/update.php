@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 use Ampache\Application\UpdateApplication;
 
+session_start();
+
 if (!isset($_REQUEST['type']) || (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) !== 'sources') {
     // We need this stuff
     define('NO_SESSION', 1);

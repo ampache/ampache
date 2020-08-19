@@ -28,6 +28,7 @@
 use Ampache\Module\Util\InterfaceImplementationChecker;
 
 define('AJAX_INCLUDE', '1');
+
 require_once __DIR__ . '/../../lib/init.php';
 
 xoutput_headers();
