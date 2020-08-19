@@ -20,7 +20,8 @@
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 if (!Access::check('interface', 100)) {
     UI::access_denied();

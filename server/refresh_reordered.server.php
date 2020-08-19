@@ -22,7 +22,8 @@
 
 define('AJAX_INCLUDE', '1');
 
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 debug_event('refresh_reordered.server', 'Called for action: {' . Core::get_request('action') . '}', 5);
 
@@ -38,7 +39,7 @@ switch ($_REQUEST['action']) {
         $browse->set_static_content(true);
         $browse->show_objects($object_ids);
         $browse->store();
-    break;
+        break;
     case 'refresh_album_songs':
         $browse = new Browse();
         $browse->set_show_header(true);
@@ -51,5 +52,5 @@ switch ($_REQUEST['action']) {
         $browse->show_objects(null, true); // true argument is set to show the reorder column
         $browse->store();
         echo "</div>";
-    break;
+        break;
 } // switch on the action

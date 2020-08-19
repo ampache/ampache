@@ -26,7 +26,8 @@
  */
 define('NO_SESSION', '1');
 define('OUTDATED_DATABASE_OK', 1);
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 // If it's not a handshake then we can allow it to take up lots of time
 if (Core::get_request('action') != 'handshake') {

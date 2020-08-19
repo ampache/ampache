@@ -20,7 +20,8 @@
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 UI::show_header();
 
@@ -37,7 +38,7 @@ switch ($_REQUEST['action']) {
             1,
             'delete_video'
         );
-    break;
+        break;
     case 'confirm_delete':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -56,13 +57,13 @@ switch ($_REQUEST['action']) {
         } else {
             show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Video."), AmpConfig::get('web_path'));
         }
-    break;
+        break;
     case 'show_video':
     default:
         $video = Video::create_from_id(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $video->format();
         require_once AmpConfig::get('prefix') . UI::find_template('show_video.inc.php');
-    break;
+        break;
 }
 
 // Show the Footer

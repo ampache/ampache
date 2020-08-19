@@ -27,7 +27,8 @@
 // Set that this is an ajax include
 define('AJAX_INCLUDE', '1');
 
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 $results = '';
 
@@ -76,17 +77,17 @@ switch ($_REQUEST['action']) {
         ob_start();
         require AmpConfig::get('prefix') . UI::find_template('show_edit_' . $type . '.inc.php');
         $results = ob_get_contents();
-    break;
+        break;
     case 'refresh_updated':
         require AmpConfig::get('prefix') . UI::find_template('show_' . $type . '.inc.php');
         $results = ob_get_contents();
-    break;
+        break;
     case 'show_edit_playlist':
         ob_start();
         require AmpConfig::get('prefix') . UI::find_template('show_playlists_dialog.inc.php');
         $results = ob_get_contents();
         ob_end_clean();
-    break;
+        break;
     case 'edit_object':
         // Scrub the data, walk recursive through array
         $entities = function (&$data) use (&$entities) {

@@ -21,8 +21,9 @@
  */
 
 // This is playlist.php, it does playlist things.
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
-require_once 'lib/init.php';
 // We special-case this so we can send a 302 if the delete succeeded
 if (Core::get_request('action') == 'delete_playlist') {
     // Check rights
@@ -56,20 +57,20 @@ switch ($_REQUEST['action']) {
                 /* HINT: %1 playlist name, %2 playlist type */
                 sprintf(T_('%1$s (%2$s) has been created'), $playlist_name, $playlist_type),
                 'playlist.php');
-    break;
+        break;
     case 'delete_playlist':
         // If we made it here, we didn't have sufficient rights.
         UI::access_denied();
-    break;
+        break;
     case 'show_playlist':
         $playlist = new Playlist($_REQUEST['playlist_id']);
         $playlist->format();
         $object_ids = $playlist->get_items();
         require_once AmpConfig::get('prefix') . UI::find_template('show_playlist.inc.php');
-    break;
+        break;
     case 'show_import_playlist':
         require_once AmpConfig::get('prefix') . UI::find_template('show_import_playlist.inc.php');
-    break;
+        break;
     case 'import_playlist':
         /* first we rename the file to it's original name before importing.
         Otherwise the playlist name will have the $_FILES['filename']['tmp_name'] which doesn't look right... */
@@ -92,7 +93,7 @@ switch ($_REQUEST['action']) {
             $body  = T_('The Playlist could not be imported') . ': ' . $result['error'];
         }
         show_confirmation($title, $body, AmpConfig::get('web_path') . '/playlist.php?action=' . $url);
-    break;
+        break;
     case 'set_track_numbers':
         debug_event('playlist', 'Set track numbers called.', 5);
 
@@ -119,7 +120,7 @@ switch ($_REQUEST['action']) {
                 }
             }
         }
-    break;
+        break;
     case 'add_song':
         $playlist = new Playlist($_REQUEST['playlist_id']);
         if (!$playlist->has_access()) {
@@ -128,7 +129,7 @@ switch ($_REQUEST['action']) {
         }
 
         $playlist->add_songs(array($_REQUEST['song_id']), true);
-    break;
+        break;
     case 'prune_empty':
         if (!Core::get_global('user')->has_access(100)) {
             UI::access_denied();
@@ -140,7 +141,7 @@ switch ($_REQUEST['action']) {
         $title = T_('No Problem');
         $body  = T_('Empty Playlists have been deleted');
         show_confirmation($title, $body, $url);
-    break;
+        break;
     case 'remove_duplicates':
         debug_event('playlist', 'Remove duplicates called.', 4);
 
@@ -170,7 +171,7 @@ switch ($_REQUEST['action']) {
         }
         $object_ids = $playlist->get_items();
         require_once AmpConfig::get('prefix') . UI::find_template('show_playlist.inc.php');
-    break;
+        break;
     case 'sort_tracks':
         $playlist = new Playlist($_REQUEST['playlist_id']);
         if (!$playlist->has_access()) {
@@ -182,10 +183,10 @@ switch ($_REQUEST['action']) {
         $playlist->sort_tracks();
         $object_ids = $playlist->get_items();
         require_once AmpConfig::get('prefix') . UI::find_template('show_playlist.inc.php');
-    break;
+        break;
     default:
         require_once AmpConfig::get('prefix') . UI::find_template('show_playlist.inc.php');
-    break;
+        break;
 } // switch on the action
 
 // Show the Footer

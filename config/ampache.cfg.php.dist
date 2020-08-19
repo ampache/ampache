@@ -78,6 +78,14 @@ database_username = username
 ; DEFAULT: none
 database_password = password
 
+; Set a default charset for your database
+; DEFAULT: "utf8"
+;database_charset = "utf8"
+
+; Set a default collation for your database
+; DEFAULT: "utf8_unicode_ci"
+;database_collation = "utf8_unicode_ci"
+
 
 ;#########################################################
 ; Session and Security                                   #

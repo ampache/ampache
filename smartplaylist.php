@@ -20,7 +20,8 @@
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 // We special-case this so we can send a 302 if the delete succeeded
 if (Core::get_request('action') == 'delete_playlist') {
@@ -58,10 +59,10 @@ switch ($_REQUEST['action']) {
         switch ($_REQUEST['operator']) {
             case 'or':
                 $operator = 'OR';
-            break;
+                break;
             default:
                 $operator = 'AND';
-            break;
+                break;
         } // end switch on operator
 
         $playlist_name    = (string) scrub_in($_REQUEST['playlist_name']);
@@ -72,17 +73,17 @@ switch ($_REQUEST['action']) {
         $playlist->name           = $playlist_name;
         $playlist->save();
 
-    break;
+        break;
     case 'delete_playlist':
         // If we made it here, we didn't have sufficient rights.
         UI::access_denied();
-    break;
+        break;
     case 'show_playlist':
         $playlist = new Search((int) $_REQUEST['playlist_id'], 'song');
         $playlist->format();
         $object_ids = $playlist->get_items();
         require_once AmpConfig::get('prefix') . UI::find_template('show_search.inc.php');
-    break;
+        break;
     case 'update_playlist':
         $playlist = new Search((int) $_REQUEST['playlist_id'], 'song');
         if ($playlist->has_access()) {
@@ -95,11 +96,11 @@ switch ($_REQUEST['action']) {
         }
         $object_ids = $playlist->get_items();
         require_once AmpConfig::get('prefix') . UI::find_template('show_search.inc.php');
-    break;
+        break;
     default:
         $object_ids = $playlist->get_items();
         require_once AmpConfig::get('prefix') . UI::find_template('show_search.inc.php');
-    break;
+        break;
 } // switch on the action
 
 // Show the Footer

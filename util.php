@@ -20,7 +20,8 @@
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 header("Expires: Tuesday, 27 Mar 1984 05:00:00 GMT");
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");

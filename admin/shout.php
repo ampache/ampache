@@ -20,7 +20,8 @@
  *
  */
 
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 if (!Access::check('interface', 100)) {
     UI::access_denied();
@@ -38,7 +39,7 @@ switch ($_REQUEST['action']) {
             $shout->update($_POST);
         }
         show_confirmation(T_('No Problem'), T_('Shoutbox post has been updated'), AmpConfig::get('web_path') . '/admin/shout.php');
-    break;
+        break;
     case 'show_edit':
         $shout  = new Shoutbox($_REQUEST['shout_id']);
         $object = Shoutbox::get_object($shout->object_type, $shout->object_id);
@@ -51,7 +52,7 @@ switch ($_REQUEST['action']) {
         $shout = new Shoutbox($_REQUEST['shout_id']);
         Shoutbox::delete($_REQUEST['shout_id']);
         show_confirmation(T_('No Problem'), T_('Shoutbox post has been deleted'), AmpConfig::get('web_path') . '/admin/shout.php');
-    break;
+        break;
     default:
         $browse = new Browse();
         $browse->set_type('shoutbox');
@@ -59,7 +60,7 @@ switch ($_REQUEST['action']) {
         $shoutbox_ids = $browse->get_objects();
         $browse->show_objects($shoutbox_ids);
         $browse->store();
-    break;
+        break;
 } // end switch on action
 
 // Show the Footer

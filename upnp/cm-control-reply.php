@@ -1,6 +1,7 @@
 <?php
 define('NO_SESSION', '1');
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 if (!AmpConfig::get('upnp_backend')) {
     echo T_("Disabled");
@@ -28,5 +29,5 @@ switch ($upnpRequest['action']) {
     case 'getprotocolinfo':
         $responseType = 'u:GetProtocolInfoResponse';
         //$items = Upnp_Api::cm_getProtocolInfo();
-    break;
+        break;
 }

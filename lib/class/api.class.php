@@ -124,7 +124,7 @@ class Api
                 } else {
                     self::$browse->set_filter('add_gt', strtotime($value));
                 }
-            break;
+                break;
             case 'update':
                 // Check for a range, if no range default to gt
                 if (strpos($value, '/')) {
@@ -134,19 +134,18 @@ class Api
                 } else {
                     self::$browse->set_filter('update_gt', strtotime($value));
                 }
-            break;
+                break;
             case 'alpha_match':
                 self::$browse->set_filter('alpha_match', $value);
-            break;
+                break;
             case 'exact_match':
                 self::$browse->set_filter('exact_match', $value);
-            break;
+                break;
             case 'enabled':
                 self::$browse->set_filter('enabled', $value);
-            break;
+                break;
             default:
-                // Rien a faire
-            break;
+                break;
         } // end filter
 
         return true;
@@ -418,7 +417,7 @@ class Api
         // Check and see if we should destroy the api session (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
             $sql = 'DELETE FROM `session` WHERE `id` = ?';
-            $sql .= " and `type` = 'api'";
+            $sql .= " AND `type` = 'api'";
             Dba::write($sql, array($input['auth']));
 
             debug_event('api.class', 'Goodbye Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
@@ -556,7 +555,7 @@ class Api
         switch ($type) {
             case 'artist':
                 $similar = Recommendation::get_artists_like($filter);
-            break;
+                break;
             case 'song':
                 $similar = Recommendation::get_songs_like($filter);
         }
@@ -570,7 +569,7 @@ class Api
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
                 echo JSON_Data::indexes($objects, $type);
-            break;
+                break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
@@ -2229,7 +2228,8 @@ class Api
                 break;
             case 'frequent':
                 debug_event('api.class', 'stats frequent', 4);
-                $results = Stats::get_top($type, $limit, 0, $offset);
+                $threshold = AmpConfig::get('stats_threshold');
+                $results   = Stats::get_top($type, $limit, $threshold, $offset);
                 break;
             case 'recent':
             case 'forgotten':
@@ -3396,10 +3396,10 @@ class Api
                 case 'clean_catalog':
                     $catalog->clean_catalog_proc();
                     Catalog::clean_empty_albums();
-                break;
+                    break;
                 case 'verify_catalog':
                     $catalog->verify_catalog_proc();
-                break;
+                    break;
                 case 'gather_art':
                     $catalog->gather_art();
                     break;
@@ -3409,7 +3409,7 @@ class Api
                         'parse_playlist' => false
                     );
                     $catalog->add_to_catalog($options);
-                break;
+                    break;
             }
             self::message('success', 'successfully started: ' . $task, null, $input['format']);
         } else {
@@ -4027,11 +4027,11 @@ class Api
                 switch ($input['format']) {
                     case 'json':
                         echo json_encode($xml_array, JSON_PRETTY_PRINT);
-                    break;
+                        break;
                     default:
                         echo XML_Data::keyed_array($xml_array);
                 }
-            break;
+                break;
             case 'devote':
                 $type  = 'song';
                 $media = new Song($input['oid']);
@@ -4051,7 +4051,7 @@ class Api
                     default:
                         echo XML_Data::keyed_array($xml_array);
                 }
-            break;
+                break;
             case 'playlist':
                 $objects = $democratic->get_items();
                 $user    = User::get_from_username(Session::username($input['auth']));
@@ -4064,7 +4064,7 @@ class Api
                     default:
                         echo XML_Data::democratic($objects, $user->id);
                 }
-            break;
+                break;
             case 'play':
                 $url       = $democratic->play_url();
                 $xml_array = array('url' => $url);
@@ -4075,10 +4075,10 @@ class Api
                     default:
                         echo XML_Data::keyed_array($xml_array);
                 }
-            break;
+                break;
             default:
                 self::message('error', T_('Invalid request'), '405', $input['format']);
-            break;
+                break;
         } // switch on method
         Session::extend($input['auth']);
     } // democratic

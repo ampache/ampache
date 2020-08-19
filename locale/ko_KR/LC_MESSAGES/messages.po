@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2020-07-30 21:34+0200\n"
-"PO-Revision-Date: 2020-06-20 14:27+0000\n"
+"POT-Creation-Date: 2020-08-16 20:31+0200\n"
+"PO-Revision-Date: 2020-07-31 02:34+0000\n"
 "Last-Translator: Transifex Bot <>\n"
 "Language-Team: Korean (Korea) (http://www.transifex.com/ampache/ampache/"
 "language/ko_KR/)\n"
@@ -28,26 +28,26 @@ msgstr ""
 #: ../../admin/catalog.php:138 ../../admin/catalog.php:142
 #: ../../admin/catalog.php:154 ../../admin/catalog.php:164
 #: ../../admin/catalog.php:199 ../../admin/catalog.php:211
-#: ../../admin/catalog.php:224 ../../admin/catalog.php:258
+#: ../../admin/catalog.php:224 ../../admin/catalog.php:257
 #: ../../admin/license.php:46 ../../admin/license.php:56
 #: ../../admin/mail.php:66 ../../admin/modules.php:54
 #: ../../admin/modules.php:71 ../../admin/modules.php:97
 #: ../../admin/modules.php:114 ../../admin/modules.php:140
 #: ../../admin/modules.php:166 ../../admin/modules.php:181
 #: ../../admin/shout.php:40 ../../admin/shout.php:53 ../../admin/system.php:54
-#: ../../admin/system.php:76 ../../admin/users.php:121
+#: ../../admin/system.php:75 ../../admin/users.php:121
 #: ../../admin/users.php:206 ../../admin/users.php:213
 #: ../../admin/users.php:239 ../../admin/users.php:277
-#: ../../admin/users.php:300 ../../albums.php:55 ../../artists.php:55
-#: ../../arts.php:52 ../../arts.php:70 ../../arts.php:99 ../../broadcast.php:54
-#: ../../channel.php:65 ../../channel.php:89 ../../democratic.php:58
-#: ../../labels.php:55 ../../labels.php:86 ../../playlist.php:84
-#: ../../playlist.php:140 ../../podcast_episode.php:55 ../../podcast.php:64
-#: ../../podcast.php:92 ../../preferences.php:153 ../../preferences.php:172
-#: ../../pvmsg.php:69 ../../pvmsg.php:91 ../../pvmsg.php:124
-#: ../../search.php:53 ../../share.php:88 ../../share.php:114
-#: ../../share.php:129 ../../song.php:55 ../../tvshow_seasons.php:55
-#: ../../tvshows.php:55 ../../video.php:55
+#: ../../admin/users.php:300 ../../admin/users.php:323 ../../albums.php:55
+#: ../../artists.php:55 ../../arts.php:52 ../../arts.php:70 ../../arts.php:99
+#: ../../broadcast.php:54 ../../channel.php:65 ../../channel.php:89
+#: ../../democratic.php:58 ../../labels.php:55 ../../labels.php:86
+#: ../../playlist.php:84 ../../playlist.php:140 ../../podcast_episode.php:55
+#: ../../podcast.php:64 ../../podcast.php:92 ../../preferences.php:153
+#: ../../preferences.php:172 ../../pvmsg.php:69 ../../pvmsg.php:91
+#: ../../pvmsg.php:124 ../../search.php:53 ../../share.php:88
+#: ../../share.php:114 ../../share.php:129 ../../song.php:55
+#: ../../tvshow_seasons.php:55 ../../tvshows.php:55 ../../video.php:55
 msgid "No Problem"
 msgstr "문제없음"
 
@@ -56,14 +56,14 @@ msgid "Your Access List entry has been removed"
 msgstr "접근 목록 항목이 제거됨"
 
 #: ../../admin/access.php:50 ../../admin/catalog.php:115
-#: ../../admin/catalog.php:247 ../../admin/modules.php:78
+#: ../../admin/catalog.php:246 ../../admin/modules.php:78
 #: ../../admin/modules.php:85 ../../admin/modules.php:147
 #: ../../admin/users.php:251 ../../admin/users.php:260
-#: ../../admin/users.php:283 ../../albums.php:35 ../../artists.php:35
-#: ../../broadcast.php:39 ../../channel.php:74 ../../labels.php:35
-#: ../../podcast_episode.php:35 ../../podcast.php:77 ../../pvmsg.php:99
-#: ../../share.php:99 ../../song.php:35 ../../tvshow_seasons.php:35
-#: ../../tvshows.php:35 ../../video.php:35
+#: ../../admin/users.php:283 ../../admin/users.php:306 ../../albums.php:35
+#: ../../artists.php:35 ../../broadcast.php:39 ../../channel.php:74
+#: ../../labels.php:35 ../../podcast_episode.php:35 ../../podcast.php:77
+#: ../../pvmsg.php:99 ../../share.php:99 ../../song.php:35
+#: ../../tvshow_seasons.php:35 ../../tvshows.php:35 ../../video.php:35
 msgid "Are You Sure?"
 msgstr "확실합니까?"
 
@@ -156,17 +156,17 @@ msgstr "카탈로그 통계를 삭제하였습니다"
 msgid "All Now Playing data has been cleared"
 msgstr "현재 재생 자료를 전부 삭제하였습니다"
 
-#: ../../admin/catalog.php:236
+#: ../../admin/catalog.php:235
 msgid "No disabled Songs found"
 msgstr "재생 불가능한 노래들이 없습니다"
 
 #. HINT: Catalog Name
-#: ../../admin/catalog.php:249
+#: ../../admin/catalog.php:248
 #, php-format
 msgid "This will permanently delete the catalog \"%s\""
 msgstr " \"%s\" 카탈로그를 영원히 삭제할 것입니다"
 
-#: ../../admin/catalog.php:258
+#: ../../admin/catalog.php:257
 msgid "The Catalog art search has started"
 msgstr "카탈로그 아트 검색을 시작합니다"
 
@@ -242,15 +242,15 @@ msgstr "플러그인을 사용할 수 없습니다"
 msgid "The Plugin has been upgraded"
 msgstr "플러그인을 갱신하였습니다"
 
-#: ../../admin/modules.php:187 ../../templates/sidebar_admin.inc.php:73
+#: ../../admin/modules.php:187 ../../templates/sidebar_admin.inc.php:75
 msgid "Manage Plugins"
 msgstr "플러그인 관리하기"
 
-#: ../../admin/modules.php:193 ../../templates/sidebar_admin.inc.php:71
+#: ../../admin/modules.php:193 ../../templates/sidebar_admin.inc.php:73
 msgid "Localplay Controllers"
 msgstr "내부 재생 컨트롤러들"
 
-#: ../../admin/modules.php:199 ../../templates/sidebar_admin.inc.php:72
+#: ../../admin/modules.php:199 ../../templates/sidebar_admin.inc.php:74
 msgid "Catalog Types"
 msgstr "카탈로그 유형들"
 
@@ -269,7 +269,7 @@ msgid ""
 msgstr ""
 "현재 구성된 문자집합과 일치하도록 데이타베이스와 연관 표들을 갱신하였습니다"
 
-#: ../../admin/system.php:76
+#: ../../admin/system.php:75
 msgid "Your cache has been cleared successfully"
 msgstr "캐시를 성공적으로 삭제함"
 
@@ -305,15 +305,15 @@ msgstr "수정됨"
 msgid "The new User was not created"
 msgstr "새 사용자를 만들지 못하였습니다"
 
-#: ../../admin/users.php:180 ../../lib/class/shoutbox.class.php:356
-#: ../../lib/class/user.class.php:1174 ../../templates/show_add_user.inc.php:84
+#: ../../admin/users.php:180 ../../lib/class/shoutbox.class.php:354
+#: ../../lib/class/user.class.php:1220 ../../templates/show_add_user.inc.php:84
 #: ../../templates/show_edit_user.inc.php:108
 #: ../../templates/show_preference_admin.inc.php:42
-#: ../../templates/show_preference_box.inc.php:75
+#: ../../templates/show_preference_box.inc.php:74
 msgid "Guest"
 msgstr "손님"
 
-#: ../../admin/users.php:183 ../../lib/class/user.class.php:1172
+#: ../../admin/users.php:183 ../../lib/class/user.class.php:1218
 #: ../../lib/preferences.php:323
 #: ../../modules/plugins/Flattr/Flattr.plugin.php:94
 #: ../../modules/plugins/Paypal/Paypal.plugin.php:97
@@ -328,29 +328,29 @@ msgstr "손님"
 #: ../../templates/show_manage_shoutbox.inc.php:58
 #: ../../templates/show_missing_albums.inc.php:29
 #: ../../templates/show_preference_admin.inc.php:43
-#: ../../templates/show_preference_box.inc.php:76
+#: ../../templates/show_preference_box.inc.php:75
 #: ../../templates/show_shared_objects.inc.php:27
 #: ../../templates/show_wanted_albums.inc.php:28
 msgid "User"
 msgstr "사용자"
 
-#: ../../admin/users.php:186 ../../lib/class/user.class.php:1170
+#: ../../admin/users.php:186 ../../lib/class/user.class.php:1216
 #: ../../templates/show_add_user.inc.php:86
 #: ../../templates/show_create_democratic.inc.php:47
 #: ../../templates/show_edit_user.inc.php:110
-#: ../../templates/show_preference_box.inc.php:77
+#: ../../templates/show_preference_box.inc.php:76
 msgid "Content Manager"
 msgstr ""
 
-#: ../../admin/users.php:189 ../../lib/class/user.class.php:1168
+#: ../../admin/users.php:189 ../../lib/class/user.class.php:1214
 #: ../../templates/show_add_user.inc.php:87
 #: ../../templates/show_create_democratic.inc.php:50
 #: ../../templates/show_edit_user.inc.php:111
-#: ../../templates/show_preference_box.inc.php:78
+#: ../../templates/show_preference_box.inc.php:77
 msgid "Catalog Manager"
 msgstr "카탈로그 관리자"
 
-#: ../../admin/users.php:192 ../../lib/class/user.class.php:1166
+#: ../../admin/users.php:192 ../../lib/class/user.class.php:1212
 #: ../../lib/preferences.php:325 ../../templates/show_add_user.inc.php:88
 #: ../../templates/show_create_democratic.inc.php:53
 #: ../../templates/show_democratic_playlist.inc.php:62
@@ -358,7 +358,7 @@ msgstr "카탈로그 관리자"
 #: ../../templates/show_edit_user.inc.php:112
 #: ../../templates/show_mail_users.inc.php:32
 #: ../../templates/show_preference_admin.inc.php:44
-#: ../../templates/show_preference_box.inc.php:79
+#: ../../templates/show_preference_box.inc.php:78
 #: ../../templates/sidebar.inc.php:37
 msgid "Admin"
 msgstr "관리자"
@@ -415,6 +415,17 @@ msgstr "이전 API 키를 대체합니다"
 
 #: ../../admin/users.php:300
 msgid "A new user API Key has been generated"
+msgstr "새 사용자용 API키를 생성하였습니다"
+
+#: ../../admin/users.php:306
+msgid ""
+"This will replace your existing RSS token. Feeds with the old token might "
+"not work properly"
+msgstr ""
+
+#: ../../admin/users.php:323
+#, fuzzy
+msgid "A new user RSS token has been generated"
 msgstr "새 사용자용 API키를 생성하였습니다"
 
 #: ../../albums.php:35
@@ -740,12 +751,11 @@ msgid "Ampache"
 msgstr "암파치"
 
 #: ../../bin/delete_disabled.inc:40
-#, fuzzy
 msgid "Running in Debug Mode. Use -x to execute"
-msgstr "테스트 모드에서 동작 중. 실행하려면 -x 를 사용"
+msgstr ""
 
 #: ../../bin/delete_disabled.inc:42 ../../bin/sort_files.inc:61
-#: ../../lib/debug.lib.php:411
+#: ../../lib/debug.lib.php:421
 msgid "WARNING"
 msgstr "경고"
 
@@ -890,7 +900,7 @@ msgstr "파일을 이동함..."
 
 #: ../../bin/install/add_user.inc:37 ../../lib/class/registration.class.php:70
 #: ../../lib/class/registration.class.php:84
-#: ../../lib/class/search.class.php:1072
+#: ../../lib/class/search.class.php:1103
 #: ../../modules/catalog/remote/remote.catalog.php:106
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:106
 #: ../../modules/localplay/xbmc/xbmc.controller.php:195
@@ -903,13 +913,13 @@ msgstr "파일을 이동함..."
 #: ../../templates/show_recently_played.inc.php:34
 #: ../../templates/show_recently_played.inc.php:142
 #: ../../templates/show_user_registration.inc.php:83
-#: ../../templates/show_users.inc.php:46 ../../templates/show_users.inc.php:81
+#: ../../templates/show_users.inc.php:46 ../../templates/show_users.inc.php:80
 msgid "Username"
 msgstr "사용자이름"
 
 #: ../../bin/install/add_user.inc:38
 #: ../../templates/show_preference_box.inc.php:46
-#: ../../templates/show_preference_box.inc.php:95
+#: ../../templates/show_preference_box.inc.php:94
 msgid "Access Level"
 msgstr "접근 수준"
 
@@ -957,8 +967,8 @@ msgstr "이메일"
 msgid "Website"
 msgstr "웹사이트"
 
-#: ../../bin/install/add_user.inc:42 ../../lib/class/search.class.php:884
-#: ../../lib/class/search.class.php:1036 ../../lib/class/search.class.php:1051
+#: ../../bin/install/add_user.inc:42 ../../lib/class/search.class.php:902
+#: ../../lib/class/search.class.php:1067 ../../lib/class/search.class.php:1082
 #: ../../templates/cookie_disclaimer.inc.php:16
 #: ../../templates/show_access_list.inc.php:48
 #: ../../templates/show_add_access.inc.php:31
@@ -995,7 +1005,7 @@ msgstr "웹사이트"
 #: ../../templates/show_manage_license.inc.php:56
 #: ../../templates/show_plugins.inc.php:28
 #: ../../templates/show_plugins.inc.php:69
-#: ../../templates/show_stats.inc.php:75
+#: ../../templates/show_stats.inc.php:84
 msgid "Name"
 msgstr "이름"
 
@@ -1068,7 +1078,7 @@ msgid "MySQL Password"
 msgstr "MySQL 암호"
 
 #: ../../bin/install/install_db.inc:129
-#: ../../templates/show_test_table.inc.php:238
+#: ../../templates/show_test_table.inc.php:247
 msgid "Web path"
 msgstr "웹 경로"
 
@@ -1105,7 +1115,7 @@ msgstr "초기결과:"
 msgid "Final results seen by Ampache using %s:"
 msgstr "%s 이용하여 나온 암파치 최종 결과"
 
-#: ../../bin/print_tags.inc:89 ../../lib/class/update.class.php:240
+#: ../../bin/print_tags.inc:89 ../../lib/class/update.class.php:244
 #: ../../templates/show_catalog_types.inc.php:30
 #: ../../templates/show_catalog_types.inc.php:67
 #: ../../templates/show_localplay_controllers.inc.php:30
@@ -1218,7 +1228,7 @@ msgstr " \"%s\" 재생목록을 만듦"
 msgid "This will dump a collection of playlists files based on type"
 msgstr "유형에 따라 재생목록 파일군을 생성할 예정임"
 
-#: ../../bin/write_playlists.inc:104 ../../lib/class/browse.class.php:241
+#: ../../bin/write_playlists.inc:104 ../../lib/class/browse.class.php:240
 #: ../../lib/class/upnp_api.class.php:441 ../../server/search.ajax.php:149
 #: ../../templates/header.inc.php:36
 #: ../../templates/show_search_form.inc.php:43
@@ -1252,7 +1262,7 @@ msgstr "이 방송은 삭제하겠습니다"
 msgid "Broadcast has been deleted"
 msgstr "이 방송은 삭제되었습니다"
 
-#: ../../browse.php:96 ../../lib/class/browse.class.php:267
+#: ../../browse.php:96 ../../lib/class/browse.class.php:266
 #: ../../templates/header.inc.php:37 ../../templates/sidebar_home.inc.php:28
 msgid "Tag Cloud"
 msgstr "태크 클라우드"
@@ -1273,8 +1283,9 @@ msgstr "이 채널은 삭제할 것입니다"
 msgid "The Channel has been deleted"
 msgstr "채널이 삭제되었습니다"
 
-#: ../../daap/index.php:27 ../../lib/preferences.php:322
-#: ../../rest/index.php:28 ../../templates/show_install_config.inc.php:263
+#: ../../daap/index.php:27 ../../lib/preferences.php:142
+#: ../../lib/preferences.php:322 ../../rest/index.php:28
+#: ../../templates/show_install_config.inc.php:263
 #: ../../upnp/cm-control-reply.php:6 ../../upnp/control-reply.php:6
 #: ../../upnp/index.php:6 ../../upnp/MediaServerServiceDesc.php:6
 #: ../../webdav/index.php:27
@@ -1386,7 +1397,7 @@ msgstr "스트림 액세스"
 msgid "Unknown (Orphaned)"
 msgstr "알수없음 (끊어짐)"
 
-#: ../../lib/class/album.class.php:762
+#: ../../lib/class/album.class.php:766
 #: ../../lib/class/subsonic_xml_data.class.php:820 ../../lib/ui.lib.php:254
 #: ../../server/search.ajax.php:88 ../../templates/show_add_catalog.inc.php:42
 #: ../../templates/show_album_group_disks.inc.php:124
@@ -1397,7 +1408,7 @@ msgstr "알수없음 (끊어짐)"
 msgid "Disk"
 msgstr "디스크"
 
-#: ../../lib/class/album.class.php:774 ../../lib/class/browse.class.php:231
+#: ../../lib/class/album.class.php:778 ../../lib/class/browse.class.php:230
 #: ../../lib/class/upnp_api.class.php:369 ../../lib/ui.lib.php:187
 #: ../../server/search.ajax.php:58 ../../templates/header.inc.php:34
 #: ../../templates/show_browse_form.inc.php:37
@@ -1414,23 +1425,23 @@ msgstr "디스크"
 msgid "Artists"
 msgstr "아티스트들"
 
-#: ../../lib/class/album.class.php:774 ../../lib/class/album.class.php:775
+#: ../../lib/class/album.class.php:778 ../../lib/class/album.class.php:779
 #: ../../templates/show_edit_album_row.inc.php:37
 #: ../../templates/show_install_config.inc.php:63
 msgid "Various"
 msgstr "다양"
 
-#: ../../lib/class/album.class.php:795
+#: ../../lib/class/album.class.php:799
 msgid "Album MusicBrainzID"
 msgstr "앨범 MusicBrainzID"
 
-#: ../../lib/class/album.class.php:798
+#: ../../lib/class/album.class.php:802
 msgid "Release Group MusicBrainzID"
 msgstr "MusicBrainzID 군 배포"
 
-#: ../../lib/class/album.class.php:801 ../../lib/class/artist.class.php:616
-#: ../../lib/class/clip.class.php:168 ../../lib/class/search.class.php:609
-#: ../../lib/class/search.class.php:951 ../../lib/class/song.class.php:1710
+#: ../../lib/class/album.class.php:805 ../../lib/class/artist.class.php:616
+#: ../../lib/class/clip.class.php:168 ../../lib/class/search.class.php:618
+#: ../../lib/class/search.class.php:969 ../../lib/class/song.class.php:1710
 #: ../../templates/browse_filters.inc.php:72
 #: ../../templates/show_add_catalog.inc.php:38
 #: ../../templates/show_add_upload.inc.php:177
@@ -1465,11 +1476,11 @@ msgstr "MusicBrainzID 군 배포"
 #: ../../templates/show_songs.inc.php:34 ../../templates/show_songs.inc.php:96
 #: ../../templates/show_tagcloud.inc.php:24
 #: ../../templates/show_wanted_albums.inc.php:26
-#: ../../templates/sidebar_home.inc.php:99
+#: ../../templates/sidebar_home.inc.php:105
 msgid "Artist"
 msgstr "아티스트"
 
-#: ../../lib/class/album.class.php:804 ../../lib/class/search.class.php:602
+#: ../../lib/class/album.class.php:808 ../../lib/class/search.class.php:611
 #: ../../templates/show_add_catalog.inc.php:37
 #: ../../templates/show_add_upload.inc.php:186
 #: ../../templates/show_albums.inc.php:39
@@ -1495,11 +1506,11 @@ msgstr "아티스트"
 #: ../../templates/show_songs.inc.php:35 ../../templates/show_songs.inc.php:97
 #: ../../templates/show_tagcloud.inc.php:25
 #: ../../templates/show_wanted_albums.inc.php:25
-#: ../../templates/sidebar_home.inc.php:98
+#: ../../templates/sidebar_home.inc.php:104
 msgid "Album"
 msgstr "앨범"
 
-#: ../../lib/class/ampache_rss.class.php:94
+#: ../../lib/class/ampache_rss.class.php:104
 #: ../../lib/class/localplay.class.php:650 ../../now_playing.php:36
 #: ../../templates/header.inc.php:48
 #: ../../templates/show_localplay_status.inc.php:30
@@ -1508,60 +1519,32 @@ msgstr "앨범"
 msgid "Now Playing"
 msgstr "지금 재생합니다"
 
-#: ../../lib/class/ampache_rss.class.php:95 ../../templates/header.inc.php:49
+#: ../../lib/class/ampache_rss.class.php:105 ../../templates/header.inc.php:49
 #: ../../templates/show_recently_played.inc.php:24
 #: ../../templates/show_user.inc.php:110
 msgid "Recently Played"
 msgstr "최근 재성함"
 
-#: ../../lib/class/ampache_rss.class.php:96 ../../templates/header.inc.php:50
+#: ../../lib/class/ampache_rss.class.php:106 ../../templates/header.inc.php:50
 msgid "Newest Albums"
 msgstr "새 앨범들"
 
-#: ../../lib/class/ampache_rss.class.php:97 ../../templates/header.inc.php:51
+#: ../../lib/class/ampache_rss.class.php:107 ../../templates/header.inc.php:51
 msgid "Newest Artists"
 msgstr "새 아티스트들"
 
-#: ../../lib/class/ampache_rss.class.php:98 ../../templates/header.inc.php:54
+#: ../../lib/class/ampache_rss.class.php:108 ../../templates/header.inc.php:54
 msgid "Newest Shouts"
 msgstr "새 샤우츠"
 
-#: ../../lib/class/ampache_rss.class.php:152
+#: ../../lib/class/ampache_rss.class.php:172
 #: ../../templates/show_album.inc.php:146
 #: ../../templates/show_artist.inc.php:147
 #: ../../templates/show_podcast.inc.php:82
 msgid "RSS Feed"
 msgstr "RSS 피드"
 
-#: ../../lib/class/ampache_rss.class.php:229
-msgid "seconds ago"
-msgstr "초 전"
-
-#: ../../lib/class/ampache_rss.class.php:229
-msgid "minutes ago"
-msgstr "분 전"
-
-#: ../../lib/class/ampache_rss.class.php:229
-msgid "hours ago"
-msgstr "시간 전"
-
-#: ../../lib/class/ampache_rss.class.php:229
-msgid "days ago"
-msgstr "일 전"
-
-#: ../../lib/class/ampache_rss.class.php:229
-msgid "weeks ago"
-msgstr "주 전"
-
-#: ../../lib/class/ampache_rss.class.php:229
-msgid "months ago"
-msgstr "개월 전"
-
-#: ../../lib/class/ampache_rss.class.php:229
-msgid "years ago"
-msgstr "년 전"
-
-#: ../../lib/class/ampache_rss.class.php:356
+#: ../../lib/class/ampache_rss.class.php:346
 #: ../../modules/plugins/Flattr/Flattr.plugin.php:94
 #: ../../modules/plugins/Paypal/Paypal.plugin.php:97
 msgid "on"
@@ -1586,156 +1569,156 @@ msgid "Login failed, timestamp is out of range"
 msgstr "로그인 실패함, 타임스탬프가 범위를 벗어남"
 
 #: ../../lib/class/api.class.php:273 ../../lib/class/api.class.php:286
-#: ../../lib/class/api.class.php:391
+#: ../../lib/class/api.class.php:366
 msgid "Received Invalid Handshake"
 msgstr "유효하지 않은 핸드쉐이크를 받음"
 
-#: ../../lib/class/api.class.php:285 ../../lib/class/api.class.php:391
+#: ../../lib/class/api.class.php:285 ../../lib/class/api.class.php:366
 #: ../../lib/login.php:81
 msgid "Incorrect username or password"
 msgstr "유효하지 않은 사용자명이나 암호"
 
-#: ../../lib/class/api.class.php:515 ../../lib/class/api.class.php:574
-#: ../../lib/class/api.class.php:3093 ../../lib/class/api.class.php:3156
-#: ../../lib/class/api.class.php:3641 ../../lib/class/api.class.php:3726
-#: ../../lib/class/api.class.php:3916
+#: ../../lib/class/api.class.php:490 ../../lib/class/api.class.php:549
+#: ../../lib/class/api.class.php:3068 ../../lib/class/api.class.php:3131
+#: ../../lib/class/api.class.php:3616 ../../lib/class/api.class.php:3701
+#: ../../lib/class/api.class.php:3891
 msgid "Incorrect object type"
 msgstr ""
 
-#: ../../lib/class/api.class.php:984 ../../lib/class/api.class.php:1027
-#: ../../lib/class/api.class.php:1061
+#: ../../lib/class/api.class.php:959 ../../lib/class/api.class.php:1002
+#: ../../lib/class/api.class.php:1036
 msgid "Access Denied: licensing features are not enabled."
 msgstr ""
 
-#: ../../lib/class/api.class.php:1416 ../../lib/class/api.class.php:1461
-#: ../../lib/class/api.class.php:1564 ../../lib/class/api.class.php:1617
-#: ../../lib/class/api.class.php:1649 ../../lib/class/api.class.php:1691
+#: ../../lib/class/api.class.php:1391 ../../lib/class/api.class.php:1436
+#: ../../lib/class/api.class.php:1539 ../../lib/class/api.class.php:1592
+#: ../../lib/class/api.class.php:1624 ../../lib/class/api.class.php:1666
 msgid "Access denied to this playlist"
 msgstr "이 재생목록에 접근 거부됨"
 
-#: ../../lib/class/api.class.php:1589
+#: ../../lib/class/api.class.php:1564
 msgid "Nothing was changed"
 msgstr ""
 
-#: ../../lib/class/api.class.php:1654
+#: ../../lib/class/api.class.php:1629
 msgid "Can't add a duplicate item when check is enabled"
 msgstr "중복 확인 상태여서 중복된 항목을 추가할 수 없음"
 
-#: ../../lib/class/api.class.php:1699
+#: ../../lib/class/api.class.php:1674
 msgid "Song not found in playlist"
 msgstr "재생목록에서 노래를 찾을 수 없음"
 
-#: ../../lib/class/api.class.php:1709
+#: ../../lib/class/api.class.php:1684
 msgid "Track ID not found in playlist"
 msgstr "재생목록에서 Track ID를 찾을 수 없음"
 
-#: ../../lib/class/api.class.php:1915 ../../lib/class/api.class.php:1963
-#: ../../lib/class/api.class.php:2001 ../../lib/class/api.class.php:2058
-#: ../../lib/class/api.class.php:2098
+#: ../../lib/class/api.class.php:1890 ../../lib/class/api.class.php:1938
+#: ../../lib/class/api.class.php:1976 ../../lib/class/api.class.php:2033
+#: ../../lib/class/api.class.php:2073
 msgid "Access Denied: sharing features are not enabled."
 msgstr ""
 
-#: ../../lib/class/api.class.php:2015 ../../lib/class/json_data.class.php:179
+#: ../../lib/class/api.class.php:1990 ../../lib/class/json_data.class.php:179
 msgid "Wrong object type "
 msgstr "잘못된 객체 유형"
 
-#: ../../lib/class/api.class.php:2021 ../../lib/class/api.class.php:3104
-#: ../../lib/class/api.class.php:3162
+#: ../../lib/class/api.class.php:1996 ../../lib/class/api.class.php:3079
+#: ../../lib/class/api.class.php:3137
 msgid "Wrong library item type"
 msgstr "잘못된 라이브러리 아이템 유형"
 
-#: ../../lib/class/api.class.php:2025 ../../lib/class/api.class.php:3108
-#: ../../lib/class/api.class.php:3166 ../../lib/class/api.class.php:3224
-#: ../../lib/class/api.class.php:3306
+#: ../../lib/class/api.class.php:2000 ../../lib/class/api.class.php:3083
+#: ../../lib/class/api.class.php:3141 ../../lib/class/api.class.php:3199
+#: ../../lib/class/api.class.php:3281
 msgid "Library item not found"
 msgstr "라이브러리 아이템을 찾을 수 없음"
 
-#: ../../lib/class/api.class.php:2343 ../../lib/class/api.class.php:2390
-#: ../../lib/class/api.class.php:2432 ../../lib/class/api.class.php:2477
-#: ../../lib/class/api.class.php:2520 ../../lib/class/api.class.php:2574
-#: ../../lib/class/api.class.php:2617 ../../lib/class/api.class.php:2657
+#: ../../lib/class/api.class.php:2318 ../../lib/class/api.class.php:2365
+#: ../../lib/class/api.class.php:2407 ../../lib/class/api.class.php:2452
+#: ../../lib/class/api.class.php:2495 ../../lib/class/api.class.php:2549
+#: ../../lib/class/api.class.php:2592 ../../lib/class/api.class.php:2632
 msgid "Access Denied: podcast features are not enabled."
 msgstr ""
 
-#: ../../lib/class/api.class.php:2456
+#: ../../lib/class/api.class.php:2431
 msgid "Failed: podcast was not created."
 msgstr ""
 
-#: ../../lib/class/api.class.php:2900 ../../lib/class/api.class.php:2949
-#: ../../lib/class/api.class.php:2997 ../../lib/class/api.class.php:3033
+#: ../../lib/class/api.class.php:2875 ../../lib/class/api.class.php:2924
+#: ../../lib/class/api.class.php:2972 ../../lib/class/api.class.php:3008
 msgid "Access Denied: social features are not enabled."
 msgstr ""
 
-#: ../../lib/class/api.class.php:3079
+#: ../../lib/class/api.class.php:3054
 msgid "Access Denied: Rating features are not enabled."
 msgstr ""
 
-#: ../../lib/class/api.class.php:3098
+#: ../../lib/class/api.class.php:3073
 msgid "Ratings must be between [0-5]. "
 msgstr ""
 
-#: ../../lib/class/api.class.php:3138
+#: ../../lib/class/api.class.php:3113
 msgid "Access Denied: UserFlag features are not enabled."
 msgstr ""
 
-#: ../../lib/class/api.class.php:3210 ../../lib/class/api.class.php:3280
+#: ../../lib/class/api.class.php:3185 ../../lib/class/api.class.php:3255
 msgid "User_id not found"
 msgstr "User_id를 찾을 수 없음"
 
-#: ../../lib/class/api.class.php:3288
+#: ../../lib/class/api.class.php:3263
 msgid "Invalid input options"
 msgstr "유효하지 않은 입력 옵션"
 
-#: ../../lib/class/api.class.php:3302
+#: ../../lib/class/api.class.php:3277
 msgid "Failed to scrobble: No item found!"
 msgstr "설정 실패: 아이템 없음"
 
-#: ../../lib/class/api.class.php:3411
+#: ../../lib/class/api.class.php:3386
 msgid "Incorrect catalog task"
 msgstr "잘못된 카탈로그 작업"
 
-#: ../../lib/class/api.class.php:3441 ../../lib/class/api.class.php:3647
-#: ../../lib/class/api.class.php:3682 ../../lib/class/api.class.php:3732
+#: ../../lib/class/api.class.php:3416 ../../lib/class/api.class.php:3622
+#: ../../lib/class/api.class.php:3657 ../../lib/class/api.class.php:3707
 msgid "The requested item was not found"
 msgstr "요청한 아이템이 없음"
 
-#: ../../lib/class/api.class.php:3466
+#: ../../lib/class/api.class.php:3441
 msgid "Access Denied: delete from disk is not enabled."
 msgstr ""
 
-#: ../../lib/class/api.class.php:3479
+#: ../../lib/class/api.class.php:3454
 msgid "Incorrect file task"
 msgstr "잘못된 카탈로그 작업입니다. "
 
-#: ../../lib/class/api.class.php:3484
+#: ../../lib/class/api.class.php:3459
 msgid "File not found"
 msgstr "퍼알울 찾을 수 없습니다."
 
-#: ../../lib/class/api.class.php:3491
+#: ../../lib/class/api.class.php:3466
 msgid "Catalog not found"
 msgstr "카탈로그를 찾을 수 없습니다. "
 
-#: ../../lib/class/api.class.php:3533
+#: ../../lib/class/api.class.php:3508
 msgid "The requested catalog was not found"
 msgstr "요청한 카탈로그를 찾을 수 없습니다. "
 
-#: ../../lib/class/api.class.php:3693
+#: ../../lib/class/api.class.php:3668
 msgid "Failed to update_artist_info or recommendations for "
 msgstr "artist_info 또는 recommendations 를 업데이틀 할 수 없습니다."
 
-#: ../../lib/class/api.class.php:3742
+#: ../../lib/class/api.class.php:3717
 msgid "Failed to update_art for "
 msgstr "art를 업데이트 할 수 없습니다. "
 
-#: ../../lib/class/api.class.php:3772
+#: ../../lib/class/api.class.php:3747
 msgid "Failed to sync episodes for podcast: "
 msgstr ""
 
-#: ../../lib/class/api.class.php:4013 ../../lib/class/api.class.php:4105
+#: ../../lib/class/api.class.php:3988 ../../lib/class/api.class.php:4080
 msgid "Invalid request"
 msgstr "잘못된 요청"
 
-#: ../../lib/class/api.class.php:4040 ../../lib/class/api.class.php:4064
+#: ../../lib/class/api.class.php:4015 ../../lib/class/api.class.php:4039
 msgid "Media object invalid or not specified"
 msgstr "미디어 객체 오류 혹은 미지정"
 
@@ -1743,7 +1726,7 @@ msgstr "미디어 객체 오류 혹은 미지정"
 msgid "Unable to open"
 msgstr "열 수 없음"
 
-#: ../../lib/class/art.class.php:1999 ../../lib/class/shoutbox.class.php:337
+#: ../../lib/class/art.class.php:1998 ../../lib/class/shoutbox.class.php:335
 #: ../../modules/plugins/CatalogFavorites/CatalogFavorites.plugin.php:123
 #: ../../templates/header.inc.php:33
 #: ../../templates/show_album_group_disks.inc.php:76
@@ -1778,15 +1761,15 @@ msgstr "열 수 없음"
 msgid "Play"
 msgstr "재생"
 
-#: ../../lib/class/art.class.php:2008
+#: ../../lib/class/art.class.php:2007
 msgid "Edit/Find Art"
 msgstr "아트 편집/찾기"
 
-#: ../../lib/class/art.class.php:2011
+#: ../../lib/class/art.class.php:2010
 msgid "Do you really want to reset art?"
 msgstr "아트를 재설정하시겠습니까"
 
-#: ../../lib/class/art.class.php:2012
+#: ../../lib/class/art.class.php:2011
 msgid "Reset Art"
 msgstr "아트 재설정"
 
@@ -1930,7 +1913,7 @@ msgstr "방송"
 msgid "Unbroadcast"
 msgstr "방송하지않기"
 
-#: ../../lib/class/browse.class.php:207 ../../lib/class/browse.class.php:289
+#: ../../lib/class/browse.class.php:206 ../../lib/class/browse.class.php:288
 #: ../../lib/class/upnp_api.class.php:417 ../../server/index.ajax.php:333
 #: ../../server/search.ajax.php:120 ../../templates/show_albums.inc.php:42
 #: ../../templates/show_albums.inc.php:111
@@ -1947,12 +1930,12 @@ msgstr "방송하지않기"
 #: ../../templates/show_recommended_artists.inc.php:98
 #: ../../templates/show_search_form.inc.php:28
 #: ../../templates/show_search_form.inc.php:30
-#: ../../templates/show_stats.inc.php:34 ../../templates/show_stats.inc.php:80
+#: ../../templates/show_stats.inc.php:34
 #: ../../templates/sidebar_home.inc.php:24
 msgid "Songs"
 msgstr "노래들"
 
-#: ../../lib/class/browse.class.php:213 ../../lib/class/upnp_api.class.php:393
+#: ../../lib/class/browse.class.php:212 ../../lib/class/upnp_api.class.php:393
 #: ../../lib/ui.lib.php:183 ../../server/search.ajax.php:91
 #: ../../templates/browse_filters.inc.php:69 ../../templates/header.inc.php:35
 #: ../../templates/show_artist.inc.php:215
@@ -1972,102 +1955,102 @@ msgstr "노래들"
 msgid "Albums"
 msgstr "앨범들"
 
-#: ../../lib/class/browse.class.php:227
-#: ../../templates/sidebar_admin.inc.php:42
+#: ../../lib/class/browse.class.php:226
+#: ../../templates/sidebar_admin.inc.php:48
 msgid "Browse Users"
 msgstr "사용자 탐색"
 
-#: ../../lib/class/browse.class.php:236 ../../lib/class/upnp_api.class.php:489
+#: ../../lib/class/browse.class.php:235 ../../lib/class/upnp_api.class.php:489
 #: ../../templates/show_browse_form.inc.php:66
 #: ../../templates/show_browse_form.inc.php:68
 #: ../../templates/show_mashup_browse_form.inc.php:30
-#: ../../templates/sidebar_home.inc.php:55
+#: ../../templates/sidebar_home.inc.php:61
 #: ../../templates/sidebar.light.inc.php:32
 msgid "Radio Stations"
 msgstr "라디오 방송국들"
 
-#: ../../lib/class/browse.class.php:245
+#: ../../lib/class/browse.class.php:244
 msgid "Playlist Items"
 msgstr "재생목록 아이템들"
 
-#: ../../lib/class/browse.class.php:249
+#: ../../lib/class/browse.class.php:248
 msgid "Current Playlist"
 msgstr "현재 재생목록"
 
-#: ../../lib/class/browse.class.php:254 ../../lib/class/upnp_api.class.php:465
+#: ../../lib/class/browse.class.php:253 ../../lib/class/upnp_api.class.php:465
 #: ../../templates/sidebar_home.inc.php:131
 msgid "Smart Playlists"
 msgstr "지능형 재생목록들"
 
-#: ../../lib/class/browse.class.php:258 ../../templates/show_stats.inc.php:26
-#: ../../templates/sidebar_admin.inc.php:25
+#: ../../lib/class/browse.class.php:257 ../../templates/show_stats.inc.php:26
+#: ../../templates/sidebar_admin.inc.php:31
 msgid "Catalogs"
 msgstr "카탈로그"
 
-#: ../../lib/class/browse.class.php:262
+#: ../../lib/class/browse.class.php:261
 msgid "Shoutbox Records"
 msgstr "샤우트박스 기록"
 
-#: ../../lib/class/browse.class.php:273
+#: ../../lib/class/browse.class.php:272
 #: ../../templates/show_browse_form.inc.php:80
 #: ../../templates/show_browse_form.inc.php:82
 #: ../../templates/show_mashup_browse_form.inc.php:40
 #: ../../templates/show_search_form.inc.php:49
 #: ../../templates/show_search_form.inc.php:51
-#: ../../templates/show_stats.inc.php:36 ../../templates/show_stats.inc.php:82
-#: ../../templates/sidebar_home.inc.php:114
+#: ../../templates/show_stats.inc.php:36
+#: ../../templates/sidebar_home.inc.php:120
 msgid "Videos"
 msgstr "비디오들"
 
-#: ../../lib/class/browse.class.php:277
+#: ../../lib/class/browse.class.php:276
 #: ../../templates/show_democratic.inc.php:24
 msgid "Democratic Playlist"
 msgstr "대중적인 재생목록"
 
-#: ../../lib/class/browse.class.php:281
+#: ../../lib/class/browse.class.php:280
 msgid "Wanted Albums"
 msgstr "희망 앨범들"
 
-#: ../../lib/class/browse.class.php:285 ../../templates/show_shares.inc.php:22
+#: ../../lib/class/browse.class.php:284 ../../templates/show_shares.inc.php:22
 #: ../../templates/sidebar_home.inc.php:172
 msgid "Shares"
 msgstr "공유"
 
-#: ../../lib/class/browse.class.php:293
+#: ../../lib/class/browse.class.php:292
 #: ../../templates/show_browse_form.inc.php:51
 #: ../../templates/show_browse_form.inc.php:53
 #: ../../templates/show_mashup_browse_form.inc.php:20
 #: ../../templates/show_song.inc.php:165 ../../templates/show_video.inc.php:137
-#: ../../templates/sidebar_home.inc.php:47
+#: ../../templates/sidebar_home.inc.php:53
 msgid "Channels"
 msgstr "채널"
 
-#: ../../lib/class/browse.class.php:297
+#: ../../lib/class/browse.class.php:296
 #: ../../templates/show_browse_form.inc.php:59
 #: ../../templates/show_browse_form.inc.php:61
 #: ../../templates/show_mashup_browse_form.inc.php:25
-#: ../../templates/sidebar_home.inc.php:51
+#: ../../templates/sidebar_home.inc.php:57
 msgid "Broadcasts"
 msgstr "방송"
 
-#: ../../lib/class/browse.class.php:301
+#: ../../lib/class/browse.class.php:300
 msgid "Media Licenses"
 msgstr "미디어 라이센스"
 
-#: ../../lib/class/browse.class.php:305 ../../lib/class/upnp_api.class.php:799
+#: ../../lib/class/browse.class.php:304 ../../lib/class/upnp_api.class.php:799
 #: ../../templates/show_add_catalog.inc.php:50
 #: ../../templates/show_edit_catalog.inc.php:45
-#: ../../templates/sidebar_home.inc.php:76
+#: ../../templates/sidebar_home.inc.php:82
 msgid "TV Shows"
 msgstr "TV 쇼"
 
-#: ../../lib/class/browse.class.php:309 ../../templates/show_tvshow.inc.php:97
+#: ../../lib/class/browse.class.php:308 ../../templates/show_tvshow.inc.php:97
 #: ../../templates/show_tvshows.inc.php:41
 #: ../../templates/show_tvshows.inc.php:94
 msgid "Seasons"
 msgstr "시즌"
 
-#: ../../lib/class/browse.class.php:313
+#: ../../lib/class/browse.class.php:312
 #: ../../templates/show_podcast.inc.php:114
 #: ../../templates/show_podcasts.inc.php:46
 #: ../../templates/show_podcasts.inc.php:95
@@ -2079,21 +2062,21 @@ msgstr "시즌"
 msgid "Episodes"
 msgstr "에피소드"
 
-#: ../../lib/class/browse.class.php:318 ../../lib/class/upnp_api.class.php:863
-#: ../../templates/sidebar_home.inc.php:80
+#: ../../lib/class/browse.class.php:317 ../../lib/class/upnp_api.class.php:863
+#: ../../templates/sidebar_home.inc.php:86
 msgid "Movies"
 msgstr "영화"
 
-#: ../../lib/class/browse.class.php:323 ../../lib/class/upnp_api.class.php:839
+#: ../../lib/class/browse.class.php:322 ../../lib/class/upnp_api.class.php:839
 msgid "Clips"
 msgstr "단편들"
 
-#: ../../lib/class/browse.class.php:328 ../../lib/class/upnp_api.class.php:887
-#: ../../templates/sidebar_home.inc.php:84
+#: ../../lib/class/browse.class.php:327 ../../lib/class/upnp_api.class.php:887
+#: ../../templates/sidebar_home.inc.php:90
 msgid "Personal Videos"
 msgstr "개인 비디오"
 
-#: ../../lib/class/browse.class.php:333 ../../server/search.ajax.php:179
+#: ../../lib/class/browse.class.php:332 ../../server/search.ajax.php:179
 #: ../../templates/show_artist.inc.php:229
 #: ../../templates/show_artist.inc.php:289
 #: ../../templates/show_browse_form.inc.php:43
@@ -2101,27 +2084,28 @@ msgstr "개인 비디오"
 #: ../../templates/show_edit_artist_row.inc.php:58
 #: ../../templates/show_mashup_browse_form.inc.php:15
 #: ../../templates/show_search_bar.inc.php:38
-#: ../../templates/sidebar_home.inc.php:43
+#: ../../templates/sidebar_home.inc.php:49
 msgid "Labels"
 msgstr "레이블"
 
-#: ../../lib/class/browse.class.php:337
+#: ../../lib/class/browse.class.php:336
 msgid "Private Messages"
 msgstr "개인 메시지"
 
-#: ../../lib/class/browse.class.php:341 ../../lib/class/upnp_api.class.php:513
+#: ../../lib/class/browse.class.php:340 ../../lib/class/upnp_api.class.php:513
 #: ../../templates/show_browse_form.inc.php:73
 #: ../../templates/show_browse_form.inc.php:75
 #: ../../templates/show_mashup_browse_form.inc.php:35
-#: ../../templates/sidebar_home.inc.php:59
+#: ../../templates/show_stats.inc.php:40
+#: ../../templates/sidebar_home.inc.php:65
 msgid "Podcasts"
 msgstr "팻캐스트"
 
-#: ../../lib/class/browse.class.php:345
+#: ../../lib/class/browse.class.php:344 ../../templates/show_stats.inc.php:41
 msgid "Podcast Episodes"
 msgstr "팟캐스트 에피소드"
 
-#: ../../lib/class/browse.class.php:389 ../../templates/rightbar.inc.php:141
+#: ../../lib/class/browse.class.php:388 ../../templates/rightbar.inc.php:141
 #: ../../templates/show_recently_played.inc.php:153
 msgid "More"
 msgstr "더 보기"
@@ -2133,48 +2117,48 @@ msgstr "더 보기"
 msgid "Select"
 msgstr "선택"
 
-#: ../../lib/class/catalog.class.php:576 ../../lib/class/catalog.class.php:577
-#: ../../lib/class/catalog.class.php:578 ../../lib/class/user.class.php:1081
+#: ../../lib/class/catalog.class.php:575 ../../lib/class/catalog.class.php:576
+#: ../../lib/class/catalog.class.php:577 ../../lib/class/user.class.php:1127
 #: ../../lib/preferences.php:367 ../../templates/show_user.inc.php:23
-#: ../../templates/show_users.inc.php:71
+#: ../../templates/show_users.inc.php:70
 msgid "Never"
 msgstr "아니오"
 
-#: ../../lib/class/catalog.class.php:659
+#: ../../lib/class/catalog.class.php:657
 msgid "day"
 msgid_plural "days"
 msgstr[0] "일"
 
-#: ../../lib/class/catalog.class.php:661
+#: ../../lib/class/catalog.class.php:659
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "시간"
 
-#: ../../lib/class/catalog.class.php:706
+#: ../../lib/class/catalog.class.php:704
 msgid "Failed to create the catalog, check the debug logs"
 msgstr "카탈로그 생성 실패, 디버그 기록을 보시오"
 
-#: ../../lib/class/catalog.class.php:1547
+#: ../../lib/class/catalog.class.php:1555
 msgid "Starting Album Art Dump"
 msgstr "앨범 아트 내려받기 시작"
 
 #. HINT: count of files written
-#: ../../lib/class/catalog.class.php:1598
+#: ../../lib/class/catalog.class.php:1606
 #, php-format
 msgid "Art files written: %s"
 msgstr "아트 파일 쓰기: %s"
 
 #. HINT: filename (file path)
-#: ../../lib/class/catalog.class.php:1605
+#: ../../lib/class/catalog.class.php:1613
 #, php-format
 msgid "Couldn't get write to create art file: %s"
 msgstr " %s 아트 파일을 만들어 쓸 수 없음"
 
-#: ../../lib/class/catalog.class.php:1612
+#: ../../lib/class/catalog.class.php:1620
 msgid "Album Art Dump Complete"
 msgstr "앨범 아트 내려받기 완료"
 
-#: ../../lib/class/catalog.class.php:1698
+#: ../../lib/class/catalog.class.php:1706
 #: ../../templates/show_duplicates_filtered.inc.php:27
 #: ../../templates/show_duplicates_filtered.inc.php:65
 #: ../../templates/show_duplicates.inc.php:27
@@ -2188,52 +2172,52 @@ msgstr "앨범 아트 내려받기 완료"
 msgid "Song"
 msgstr "노래"
 
-#: ../../lib/class/catalog.class.php:1698 ../../lib/class/channel.class.php:243
+#: ../../lib/class/catalog.class.php:1706 ../../lib/class/channel.class.php:243
 #: ../../templates/show_install_check.inc.php:44
 #: ../../templates/show_test.inc.php:59 ../../templates/show_user.inc.php:94
 msgid "Status"
 msgstr "상태"
 
-#: ../../lib/class/catalog.class.php:1712 ../../lib/class/search.class.php:757
+#: ../../lib/class/catalog.class.php:1720 ../../lib/class/search.class.php:775
 #: ../../modules/catalog/remote/remote.catalog.php:298
 #: ../../modules/catalog/soundcloud/soundcloud.catalog.php:326
 #: ../../modules/catalog/subsonic/subsonic.catalog.php:285
 msgid "Updated"
 msgstr "수정됨"
 
-#: ../../lib/class/catalog.class.php:1718 ../../lib/class/update.class.php:257
+#: ../../lib/class/catalog.class.php:1726 ../../lib/class/update.class.php:261
 msgid "No Update Needed"
 msgstr "갱신 필요없음"
 
-#: ../../lib/class/catalog.class.php:2142
+#: ../../lib/class/catalog.class.php:2176
 msgid "Catalog Cleaned"
 msgstr "카탈로그 정리됨"
 
-#: ../../lib/class/catalog.class.php:2142
+#: ../../lib/class/catalog.class.php:2176
 #, php-format
 msgid "%d file removed."
 msgid_plural "%d files removed."
 msgstr[0] "%d 파일 제거됨"
 
-#: ../../lib/class/catalog.class.php:2167
+#: ../../lib/class/catalog.class.php:2201
 msgid "Catalog Verified"
 msgstr "카탈로그 확인됨"
 
-#: ../../lib/class/catalog.class.php:2167
+#: ../../lib/class/catalog.class.php:2201
 #, php-format
 msgid "%d file updated."
 msgid_plural "%d files updated."
 msgstr[0] "%d 파일 갱신됨"
 
-#: ../../lib/class/catalog.class.php:2444
+#: ../../lib/class/catalog.class.php:2478
 msgid "Failed to create playlist"
 msgstr "재생목록 생성 실패"
 
-#: ../../lib/class/catalog.class.php:2465
+#: ../../lib/class/catalog.class.php:2499
 msgid "No valid songs found in playlist file"
 msgstr "재생목록에 유효한 노래가 없음"
 
-#: ../../lib/class/catalog.class.php:2837
+#: ../../lib/class/catalog.class.php:2870
 msgid ""
 "This subdirectory is not inside an existing Catalog. The update can not be "
 "processed."
@@ -2269,7 +2253,7 @@ msgstr "분"
 msgid "Primary"
 msgstr "1차"
 
-#: ../../lib/class/label.class.php:180 ../../lib/class/search.class.php:680
+#: ../../lib/class/label.class.php:180 ../../lib/class/search.class.php:696
 #: ../../templates/show_edit_song_row.inc.php:80
 #: ../../templates/show_labels.inc.php:43
 #: ../../templates/show_labels.inc.php:73 ../../templates/show_song.inc.php:160
@@ -2304,13 +2288,13 @@ msgid "Paused"
 msgstr "잠시 멈추었습니다"
 
 #: ../../lib/class/localplay.class.php:656
-#: ../../lib/class/playlist.class.php:207
-#: ../../lib/class/playlist.class.php:208 ../../lib/class/podcast.class.php:347
+#: ../../lib/class/playlist.class.php:206
+#: ../../lib/class/playlist.class.php:207 ../../lib/class/podcast.class.php:346
 #: ../../lib/class/tvshow_episode.class.php:77
-#: ../../lib/class/user.class.php:1088 ../../lib/class/user.class.php:1176
-#: ../../lib/class/video.class.php:824
+#: ../../lib/class/user.class.php:1134 ../../lib/class/user.class.php:1222
+#: ../../lib/class/video.class.php:823
 #: ../../modules/localplay/mpd/mpd.controller.php:524
-#: ../../templates/show_user.inc.php:24 ../../templates/show_users.inc.php:72
+#: ../../templates/show_user.inc.php:24 ../../templates/show_users.inc.php:71
 msgid "Unknown"
 msgstr "알수없음"
 
@@ -2321,37 +2305,37 @@ msgstr "알수없음"
 msgid "Private"
 msgstr "개인적인"
 
-#: ../../lib/class/podcast.class.php:186
-#: ../../lib/class/podcast_episode.class.php:168
+#: ../../lib/class/podcast.class.php:185
+#: ../../lib/class/podcast_episode.class.php:167
 #: ../../templates/show_add_catalog.inc.php:93
 #: ../../templates/show_podcast_episodes.inc.php:32
 #: ../../templates/show_podcast_episodes.inc.php:85
 msgid "Podcast"
 msgstr "팟캐스트"
 
-#: ../../lib/class/podcast.class.php:330
+#: ../../lib/class/podcast.class.php:329
 msgid "Feed URL is invalid"
 msgstr "피드 URL이 유효하지 않음"
 
-#: ../../lib/class/podcast.class.php:335
+#: ../../lib/class/podcast.class.php:334
 msgid "Target Catalog is required"
 msgstr "대상 카탈로그가 필요함"
 
-#: ../../lib/class/podcast.class.php:339
+#: ../../lib/class/podcast.class.php:338
 msgid "Wrong target Catalog type"
 msgstr "카탈로그 유형 설정이 다릅니다"
 
-#: ../../lib/class/podcast.class.php:359
+#: ../../lib/class/podcast.class.php:358
 msgid "Can not access the feed"
 msgstr "피드에 접근할 수 없음"
 
-#: ../../lib/class/podcast.class.php:363
+#: ../../lib/class/podcast.class.php:362
 msgid "Can not read the feed"
 msgstr "피드를 읽을 수 없음"
 
-#: ../../lib/class/podcast_episode.class.php:171
-#: ../../lib/class/search.class.php:595 ../../lib/class/search.class.php:944
-#: ../../lib/class/song.class.php:1713 ../../lib/class/video.class.php:319
+#: ../../lib/class/podcast_episode.class.php:170
+#: ../../lib/class/search.class.php:604 ../../lib/class/search.class.php:962
+#: ../../lib/class/song.class.php:1713 ../../lib/class/video.class.php:318
 #: ../../templates/show_add_catalog.inc.php:54
 #: ../../templates/show_democratic_playlist.inc.php:57
 #: ../../templates/show_democratic_playlist.inc.php:106
@@ -2376,20 +2360,20 @@ msgstr "피드를 읽을 수 없음"
 msgid "Title"
 msgstr "제목"
 
-#: ../../lib/class/privatemsg.class.php:170
+#: ../../lib/class/privatemsg.class.php:169
 msgid "Subject is required"
 msgstr "주제가 필요함"
 
-#: ../../lib/class/privatemsg.class.php:175
+#: ../../lib/class/privatemsg.class.php:174
 msgid "Unknown user"
 msgstr "알 수 없는 사용자"
 
-#: ../../lib/class/privatemsg.class.php:195
+#: ../../lib/class/privatemsg.class.php:194
 msgid "Private Message"
 msgstr "개별 메세지"
 
 #. HINT: User fullname
-#: ../../lib/class/privatemsg.class.php:197
+#: ../../lib/class/privatemsg.class.php:196
 #, php-format
 msgid "You received a new private message from %s."
 msgstr "%s 에서 새 메시지를 받음"
@@ -2564,44 +2548,85 @@ msgstr "평점 2점."
 msgid "has rated 1 star"
 msgstr "평점 1점."
 
-#: ../../lib/class/search.class.php:378
+#: ../../lib/class/search.class.php:368
+#, fuzzy
+msgid "has not rated"
+msgstr "아직 등급 매기지 않음"
+
+#: ../../lib/class/search.class.php:383
 msgid "Length (in minutes)"
 msgstr "길이(분)"
 
-#: ../../lib/class/search.class.php:393
+#: ../../lib/class/search.class.php:398
 msgid "My Rating (Artist)"
 msgstr "평가(아티스트)"
 
-#: ../../lib/class/search.class.php:417
+#: ../../lib/class/search.class.php:403 ../../lib/class/search.class.php:428
+#: ../../lib/class/search.class.php:513 ../../lib/class/search.class.php:538
+#, fuzzy
+msgid "0 Stars"
+msgstr "시작"
+
+#: ../../lib/class/search.class.php:404 ../../lib/class/search.class.php:429
+#: ../../lib/class/search.class.php:514 ../../lib/class/search.class.php:539
+#, fuzzy
+msgid "1 Star"
+msgstr "시작"
+
+#: ../../lib/class/search.class.php:405 ../../lib/class/search.class.php:430
+#: ../../lib/class/search.class.php:515 ../../lib/class/search.class.php:540
+#, fuzzy
+msgid "2 Stars"
+msgstr "시작"
+
+#: ../../lib/class/search.class.php:406 ../../lib/class/search.class.php:431
+#: ../../lib/class/search.class.php:516 ../../lib/class/search.class.php:541
+#, fuzzy
+msgid "3 Stars"
+msgstr "시작"
+
+#: ../../lib/class/search.class.php:407 ../../lib/class/search.class.php:432
+#: ../../lib/class/search.class.php:517 ../../lib/class/search.class.php:542
+#, fuzzy
+msgid "4 Stars"
+msgstr "시작"
+
+#: ../../lib/class/search.class.php:408 ../../lib/class/search.class.php:433
+#: ../../lib/class/search.class.php:518 ../../lib/class/search.class.php:543
+#, fuzzy
+msgid "5 Stars"
+msgstr "시작"
+
+#: ../../lib/class/search.class.php:423
 msgid "My Rating (Album)"
 msgstr "평가(앨범)"
 
-#: ../../lib/class/search.class.php:441 ../../templates/show_get_art.inc.php:49
+#: ../../lib/class/search.class.php:448 ../../templates/show_get_art.inc.php:49
 msgid "Local Image"
 msgstr "내부 이미지"
 
-#: ../../lib/class/search.class.php:456
+#: ../../lib/class/search.class.php:463
 msgid "Image Height"
 msgstr "이미지 크기"
 
-#: ../../lib/class/search.class.php:471
+#: ../../lib/class/search.class.php:478
 msgid "Image Width"
 msgstr "이미지 폭"
 
-#: ../../lib/class/search.class.php:486
+#: ../../lib/class/search.class.php:493
 msgid "My Last Play"
 msgstr "최근 재생"
 
-#: ../../lib/class/search.class.php:501
+#: ../../lib/class/search.class.php:508
 msgid "Rating (Average)"
 msgstr "평가(평균)"
 
-#: ../../lib/class/search.class.php:525
+#: ../../lib/class/search.class.php:533
 msgid "My Rating"
 msgstr "평가"
 
 #. HINT: Number of times object has been played
-#: ../../lib/class/search.class.php:550 ../../templates/show_albums.inc.php:45
+#: ../../lib/class/search.class.php:559 ../../templates/show_albums.inc.php:45
 #: ../../templates/show_albums.inc.php:114
 #: ../../templates/show_artists.inc.php:45
 #: ../../templates/show_artists.inc.php:115
@@ -2614,28 +2639,28 @@ msgid "# Played"
 msgstr "# 재생됨"
 
 #. HINT: Number of times object has been skipped
-#: ../../lib/class/search.class.php:558 ../../templates/show_song.inc.php:183
+#: ../../lib/class/search.class.php:567 ../../templates/show_song.inc.php:183
 #: ../../templates/show_songs.inc.php:47 ../../templates/show_songs.inc.php:108
 msgid "# Skipped"
 msgstr ""
 
-#: ../../lib/class/search.class.php:573 ../../templates/header.inc.php:38
+#: ../../lib/class/search.class.php:582 ../../templates/header.inc.php:38
 #: ../../templates/sidebar_home.inc.php:163
 msgid "Favorites"
 msgstr "선호"
 
-#: ../../lib/class/search.class.php:588
+#: ../../lib/class/search.class.php:597
 msgid "Any searchable text"
 msgstr "찾을 만한 문서"
 
-#: ../../lib/class/search.class.php:616
+#: ../../lib/class/search.class.php:625
 #: ../../templates/show_edit_song_row.inc.php:72
 #: ../../templates/show_song.inc.php:147
 msgid "Composer"
 msgstr "작곡자"
 
-#: ../../lib/class/search.class.php:623 ../../lib/class/search.class.php:890
-#: ../../lib/class/search.class.php:958
+#: ../../lib/class/search.class.php:632 ../../lib/class/search.class.php:908
+#: ../../lib/class/search.class.php:976
 #: ../../templates/show_add_catalog.inc.php:45
 #: ../../templates/show_albums.inc.php:43
 #: ../../templates/show_albums.inc.php:112
@@ -2656,20 +2681,20 @@ msgstr "작곡자"
 msgid "Year"
 msgstr "년"
 
-#: ../../lib/class/search.class.php:637 ../../lib/class/search.class.php:906
-#: ../../lib/class/search.class.php:990 ../../lib/class/tag.class.php:850
+#: ../../lib/class/search.class.php:646 ../../lib/class/search.class.php:924
+#: ../../lib/class/search.class.php:1021 ../../lib/class/tag.class.php:850
 msgid "Tag"
 msgstr "태그"
 
-#: ../../lib/class/search.class.php:644
+#: ../../lib/class/search.class.php:653
 msgid "Album tag"
 msgstr "앨범 태그"
 
-#: ../../lib/class/search.class.php:651
+#: ../../lib/class/search.class.php:660
 msgid "Artist tag"
 msgstr "아티스트 태그"
 
-#: ../../lib/class/search.class.php:658 ../../lib/class/search.class.php:1021
+#: ../../lib/class/search.class.php:667 ../../lib/class/search.class.php:1052
 #: ../../templates/show_disabled_songs.inc.php:31
 #: ../../templates/show_disabled_songs.inc.php:59
 #: ../../templates/show_duplicates_filtered.inc.php:33
@@ -2681,7 +2706,12 @@ msgstr "아티스트 태그"
 msgid "Filename"
 msgstr "파일명"
 
-#: ../../lib/class/search.class.php:673
+#. HINT: Percentage of (Times Played / Times skipped) * 100
+#: ../../lib/class/search.class.php:682
+msgid "Played/Skipped ratio"
+msgstr ""
+
+#: ../../lib/class/search.class.php:689
 #: ../../templates/show_add_catalog.inc.php:39
 #: ../../templates/show_edit_catalog.inc.php:34
 #: ../../templates/show_edit_song_row.inc.php:76
@@ -2691,11 +2721,11 @@ msgstr "파일명"
 msgid "Comment"
 msgstr "언급"
 
-#: ../../lib/class/search.class.php:687 ../../templates/show_song.inc.php:187
+#: ../../lib/class/search.class.php:703 ../../templates/show_song.inc.php:187
 msgid "Lyrics"
 msgstr "가사"
 
-#: ../../lib/class/search.class.php:695
+#: ../../lib/class/search.class.php:711
 #: ../../templates/show_add_channel.inc.php:101
 #: ../../templates/show_channels.inc.php:38
 #: ../../templates/show_duplicates_filtered.inc.php:31
@@ -2707,37 +2737,37 @@ msgstr "가사"
 msgid "Bitrate"
 msgstr "비트레이트"
 
-#: ../../lib/class/search.class.php:722 ../../templates/show_album.inc.php:84
+#: ../../lib/class/search.class.php:740 ../../templates/show_album.inc.php:84
 #: ../../templates/show_artist.inc.php:77
 msgid "Played"
 msgstr "재생됨"
 
-#: ../../lib/class/search.class.php:729
+#: ../../lib/class/search.class.php:747
 msgid "Played by Me"
 msgstr "사용자가 재생함"
 
-#: ../../lib/class/search.class.php:736
+#: ../../lib/class/search.class.php:754
 msgid "Played by Me (Album)"
 msgstr "사용자가 재생함(앨범)"
 
-#: ../../lib/class/search.class.php:743
+#: ../../lib/class/search.class.php:761
 msgid "Played by Me (Artist)"
 msgstr "사용자가 재생함(아티스트)"
 
-#: ../../lib/class/search.class.php:750 ../../templates/show_song.inc.php:178
+#: ../../lib/class/search.class.php:768 ../../templates/show_song.inc.php:178
 #: ../../templates/show_video.inc.php:144
 msgid "Added"
 msgstr "추가됨"
 
-#: ../../lib/class/search.class.php:764
+#: ../../lib/class/search.class.php:782
 msgid "Recently added"
 msgstr "최근에 추가됨"
 
-#: ../../lib/class/search.class.php:771
+#: ../../lib/class/search.class.php:789
 msgid "Recently updated"
 msgstr "최근에 업데이트 됨"
 
-#: ../../lib/class/search.class.php:784 ../../lib/class/search.class.php:1003
+#: ../../lib/class/search.class.php:802 ../../lib/class/search.class.php:1034
 #: ../../templates/browse_filters.inc.php:79
 #: ../../templates/show_add_live_stream.inc.php:54
 #: ../../templates/show_add_podcast.inc.php:33
@@ -2745,29 +2775,29 @@ msgstr "최근에 업데이트 됨"
 msgid "Catalog"
 msgstr "카탈로그"
 
-#: ../../lib/class/search.class.php:797 ../../lib/ui.lib.php:145
+#: ../../lib/class/search.class.php:815 ../../lib/ui.lib.php:145
 #: ../../templates/show_manage_democratic.inc.php:26
 #: ../../templates/show_playlist_title.inc.php:23
-#: ../../templates/sidebar_home.inc.php:100
+#: ../../templates/sidebar_home.inc.php:106
 #: ../../templates/sidebar_home.inc.php:127
-#: ../../templates/sidebar_preferences.inc.php:50
+#: ../../templates/sidebar_preferences.inc.php:56
 msgid "Playlist"
 msgstr "재생목록"
 
-#: ../../lib/class/search.class.php:809 ../../lib/class/search.class.php:922
-#: ../../lib/class/search.class.php:983
+#: ../../lib/class/search.class.php:827 ../../lib/class/search.class.php:940
+#: ../../lib/class/search.class.php:1015
 msgid "Another User"
 msgstr "다른 사용자"
 
-#: ../../lib/class/search.class.php:815
+#: ../../lib/class/search.class.php:833
 msgid "Another User (Album)"
 msgstr "다른 사용자 (앨범)"
 
-#: ../../lib/class/search.class.php:821
+#: ../../lib/class/search.class.php:839
 msgid "Another User (Artist)"
 msgstr "다른 사용자 (아티스트)"
 
-#: ../../lib/class/search.class.php:828
+#: ../../lib/class/search.class.php:846
 #: ../../templates/show_playlists_dialog.inc.php:25
 #: ../../templates/show_playlists.inc.php:33
 #: ../../templates/show_playlists.inc.php:81
@@ -2776,27 +2806,42 @@ msgstr "다른 사용자 (아티스트)"
 msgid "Playlist Name"
 msgstr "재생목록 이름"
 
-#: ../../lib/class/search.class.php:842
+#: ../../lib/class/search.class.php:860
 msgid "Smart Playlist"
 msgstr "지능형 재생목록"
 
-#: ../../lib/class/search.class.php:854
+#: ../../lib/class/search.class.php:872
 msgid "Metadata"
 msgstr "메타데이타"
 
-#: ../../lib/class/search.class.php:868
+#: ../../lib/class/search.class.php:886
 #: ../../templates/show_add_upload.inc.php:198
 #: ../../templates/show_edit_song_row.inc.php:96
 msgid "Music License"
 msgstr "음악 라이센스"
 
-#: ../../lib/class/search.class.php:900
+#: ../../lib/class/search.class.php:918
 #: ../../templates/show_concerts.inc.php:27
 #: ../../templates/show_concerts.inc.php:53
 msgid "Place"
 msgstr "장소"
 
-#: ../../lib/class/search.class.php:1057
+#: ../../lib/class/search.class.php:983
+#: ../../templates/show_add_catalog.inc.php:46
+#: ../../templates/show_edit_album_row.inc.php:102
+#: ../../templates/show_edit_catalog.inc.php:41
+#: ../../templates/show_song.inc.php:150
+msgid "Original Year"
+msgstr "원년"
+
+#: ../../lib/class/search.class.php:999
+#: ../../templates/show_add_catalog.inc.php:47
+#: ../../templates/show_edit_album_row.inc.php:90
+#: ../../templates/show_edit_catalog.inc.php:42
+msgid "Release Type"
+msgstr "배포 형태"
+
+#: ../../lib/class/search.class.php:1088
 #: ../../templates/show_add_label.inc.php:33
 #: ../../templates/show_edit_label_row.inc.php:30
 #: ../../templates/show_edit_podcast_episode_row.inc.php:42
@@ -2810,17 +2855,17 @@ msgstr "분류"
 msgid "Share Edit"
 msgstr "편집 공유"
 
-#: ../../lib/class/share.class.php:473 ../../lib/class/share.class.php:475
+#: ../../lib/class/share.class.php:472 ../../lib/class/share.class.php:474
 #: ../../templates/show_add_share.inc.php:28
 #: ../../templates/show_edit_share_row.inc.php:26
 msgid "Share"
 msgstr "공유"
 
-#: ../../lib/class/share.class.php:487
+#: ../../lib/class/share.class.php:486
 msgid "Advanced Share"
 msgstr "확장형 공유"
 
-#: ../../lib/class/share.class.php:502
+#: ../../lib/class/share.class.php:501
 msgid "Temporary direct link"
 msgstr "임시 직접 링크"
 
@@ -2834,7 +2879,7 @@ msgstr "컨텐츠의 새 샤우트"
 msgid "You just received a new shout from %1$s on your content %2$s"
 msgstr " 컨텐츠 %2$s 의 %1$s 에서 새 샤우트를 받음"
 
-#: ../../lib/class/shoutbox.class.php:338
+#: ../../lib/class/shoutbox.class.php:336
 #: ../../templates/show_add_label.inc.php:79
 #: ../../templates/show_add_live_stream.inc.php:62
 #: ../../templates/show_catalog_row.inc.php:46
@@ -2846,7 +2891,7 @@ msgstr " 컨텐츠 %2$s 의 %1$s 에서 새 샤우트를 받음"
 msgid "Add"
 msgstr "추가하기"
 
-#: ../../lib/class/shoutbox.class.php:341
+#: ../../lib/class/shoutbox.class.php:339
 #: ../../templates/show_album.inc.php:152
 #: ../../templates/show_album_row.inc.php:91
 #: ../../templates/show_artist.inc.php:153
@@ -2862,7 +2907,7 @@ msgstr "추가하기"
 msgid "Post Shout"
 msgstr "샤우트 등록하기"
 
-#: ../../lib/class/shoutbox.class.php:345
+#: ../../lib/class/shoutbox.class.php:343
 msgid "by"
 msgstr "에"
 
@@ -2920,810 +2965,810 @@ msgstr "시즌"
 msgid "Episode"
 msgstr "에피소드"
 
-#: ../../lib/class/update.class.php:259
+#: ../../lib/class/update.class.php:263
 msgid "Return to main page"
 msgstr "메인 페이지로 돌아가기"
 
 #: ../../lib/class/upnp_api.class.php:542
 #: ../../templates/show_add_catalog.inc.php:84
-#: ../../templates/sidebar_home.inc.php:32
+#: ../../templates/sidebar_home.inc.php:38
 msgid "Music"
 msgstr "음악"
 
 #: ../../lib/class/upnp_api.class.php:908
 #: ../../templates/show_now_playing_video_row.inc.php:39
 #: ../../templates/show_tagcloud.inc.php:27
-#: ../../templates/sidebar_home.inc.php:69
+#: ../../templates/sidebar_home.inc.php:75
 msgid "Video"
 msgstr "비디오"
 
-#: ../../lib/class/useractivity.class.php:286
+#: ../../lib/class/useractivity.class.php:285
 msgid "commented on"
 msgstr "에 언급됨"
 
-#: ../../lib/class/useractivity.class.php:289
+#: ../../lib/class/useractivity.class.php:288
 msgid "uploaded"
 msgstr "등록됨"
 
-#: ../../lib/class/useractivity.class.php:292
+#: ../../lib/class/useractivity.class.php:291
 msgid "played"
 msgstr "재생됨"
 
-#: ../../lib/class/useractivity.class.php:295
+#: ../../lib/class/useractivity.class.php:294
 msgid "favorited"
 msgstr "선호됨"
 
-#: ../../lib/class/useractivity.class.php:298
+#: ../../lib/class/useractivity.class.php:297
 msgid "started to follow"
 msgstr "이어서 시작함"
 
-#: ../../lib/class/useractivity.class.php:301
+#: ../../lib/class/useractivity.class.php:300
 msgid "did something on"
 msgstr "에 뭔가를 함"
 
-#: ../../lib/class/user.class.php:631
+#: ../../lib/class/user.class.php:654
 msgid "Username is required"
 msgstr "사용자 이름이 필요함"
 
-#: ../../lib/class/user.class.php:635 ../../lib/install.lib.php:381
+#: ../../lib/class/user.class.php:658 ../../lib/install.lib.php:381
 #: ../../register.php:127
 msgid "Passwords do not match"
 msgstr "암호가 일치하지 않음"
 
-#: ../../lib/class/user.class.php:1113 ../../templates/show_arts.inc.php:55
+#: ../../lib/class/user.class.php:1159 ../../templates/show_arts.inc.php:55
 #: ../../templates/show_ip_history.inc.php:55
 msgid "Invalid"
 msgstr "유효하지 않은"
 
-#: ../../lib/class/user.class.php:1115 ../../templates/show_tagcloud.inc.php:83
+#: ../../lib/class/user.class.php:1161 ../../templates/show_tagcloud.inc.php:83
 msgid "Not Enough Data"
 msgstr "자료가 충분하지 않음"
 
-#: ../../lib/class/user.class.php:1415
+#: ../../lib/class/user.class.php:1461
 msgid "User avatar"
 msgstr "사용자 아바타"
 
-#: ../../lib/class/user.class.php:1643
+#: ../../lib/class/user.class.php:1689
 msgid "Unfollow"
 msgstr "추적 해제"
 
-#: ../../lib/class/user.class.php:1643
+#: ../../lib/class/user.class.php:1689
 msgid "Follow"
 msgstr "추적"
 
-#: ../../lib/class/video.class.php:849
+#: ../../lib/class/video.class.php:848
 msgid "Afar"
 msgstr ""
 
-#: ../../lib/class/video.class.php:850
+#: ../../lib/class/video.class.php:849
 msgid "Abkhazian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:851
+#: ../../lib/class/video.class.php:850
 msgid "Avestan"
 msgstr "아베스타 어"
 
-#: ../../lib/class/video.class.php:852
+#: ../../lib/class/video.class.php:851
 msgid "Afrikaans"
 msgstr "아프리칸스어"
 
-#: ../../lib/class/video.class.php:853
+#: ../../lib/class/video.class.php:852
 msgid "Akan"
 msgstr ""
 
-#: ../../lib/class/video.class.php:854
+#: ../../lib/class/video.class.php:853
 msgid "Amharic"
 msgstr "암하라어"
 
-#: ../../lib/class/video.class.php:855
+#: ../../lib/class/video.class.php:854
 msgid "Aragonese"
 msgstr "아라곤어"
 
-#: ../../lib/class/video.class.php:856
+#: ../../lib/class/video.class.php:855
 msgid "Arabic"
 msgstr "아랍어"
 
-#: ../../lib/class/video.class.php:857
+#: ../../lib/class/video.class.php:856
 msgid "Assamese"
 msgstr ""
 
-#: ../../lib/class/video.class.php:858
+#: ../../lib/class/video.class.php:857
 msgid "Avaric"
 msgstr ""
 
-#: ../../lib/class/video.class.php:859
+#: ../../lib/class/video.class.php:858
 msgid "Aymara"
 msgstr ""
 
-#: ../../lib/class/video.class.php:860
+#: ../../lib/class/video.class.php:859
 msgid "Azerbaijani"
 msgstr ""
 
-#: ../../lib/class/video.class.php:861
+#: ../../lib/class/video.class.php:860
 msgid "Bashkir"
 msgstr ""
 
-#: ../../lib/class/video.class.php:862
+#: ../../lib/class/video.class.php:861
 msgid "Belarusian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:863
+#: ../../lib/class/video.class.php:862
 msgid "Bulgarian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:864
+#: ../../lib/class/video.class.php:863
 msgid "Bihari"
 msgstr ""
 
-#: ../../lib/class/video.class.php:865
+#: ../../lib/class/video.class.php:864
 msgid "Bislama"
 msgstr ""
 
-#: ../../lib/class/video.class.php:866
+#: ../../lib/class/video.class.php:865
 msgid "Bambara"
 msgstr ""
 
-#: ../../lib/class/video.class.php:867
+#: ../../lib/class/video.class.php:866
 msgid "Bengali"
 msgstr ""
 
-#: ../../lib/class/video.class.php:868
+#: ../../lib/class/video.class.php:867
 msgid "Tibetan"
 msgstr ""
 
-#: ../../lib/class/video.class.php:869
+#: ../../lib/class/video.class.php:868
 msgid "Breton"
 msgstr ""
 
-#: ../../lib/class/video.class.php:870
+#: ../../lib/class/video.class.php:869
 msgid "Bosnian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:871
+#: ../../lib/class/video.class.php:870
 msgid "Catalan"
 msgstr ""
 
-#: ../../lib/class/video.class.php:872
+#: ../../lib/class/video.class.php:871
 msgid "Chechen"
 msgstr ""
 
-#: ../../lib/class/video.class.php:873
+#: ../../lib/class/video.class.php:872
 msgid "Chamorro"
 msgstr ""
 
-#: ../../lib/class/video.class.php:874
+#: ../../lib/class/video.class.php:873
 msgid "Corsican"
 msgstr ""
 
-#: ../../lib/class/video.class.php:875
+#: ../../lib/class/video.class.php:874
 msgid "Cree"
 msgstr ""
 
-#: ../../lib/class/video.class.php:876
+#: ../../lib/class/video.class.php:875
 msgid "Czech"
 msgstr ""
 
-#: ../../lib/class/video.class.php:877
+#: ../../lib/class/video.class.php:876
 msgid "Church Slavic"
 msgstr ""
 
-#: ../../lib/class/video.class.php:878
+#: ../../lib/class/video.class.php:877
 msgid "Chuvash"
 msgstr ""
 
-#: ../../lib/class/video.class.php:879
+#: ../../lib/class/video.class.php:878
 msgid "Welsh"
 msgstr ""
 
-#: ../../lib/class/video.class.php:880
+#: ../../lib/class/video.class.php:879
 msgid "Danish"
 msgstr ""
 
-#: ../../lib/class/video.class.php:881
+#: ../../lib/class/video.class.php:880
 msgid "German"
 msgstr ""
 
-#: ../../lib/class/video.class.php:882
+#: ../../lib/class/video.class.php:881
 msgid "Divehi"
 msgstr ""
 
-#: ../../lib/class/video.class.php:883
+#: ../../lib/class/video.class.php:882
 msgid "Dzongkha"
 msgstr ""
 
-#: ../../lib/class/video.class.php:884
+#: ../../lib/class/video.class.php:883
 msgid "Ewe"
 msgstr ""
 
-#: ../../lib/class/video.class.php:885
+#: ../../lib/class/video.class.php:884
 msgid "Greek"
 msgstr ""
 
-#: ../../lib/class/video.class.php:886
+#: ../../lib/class/video.class.php:885
 msgid "English"
 msgstr ""
 
-#: ../../lib/class/video.class.php:887
+#: ../../lib/class/video.class.php:886
 msgid "Esperanto"
 msgstr ""
 
-#: ../../lib/class/video.class.php:888
+#: ../../lib/class/video.class.php:887
 msgid "Spanish"
 msgstr ""
 
-#: ../../lib/class/video.class.php:889
+#: ../../lib/class/video.class.php:888
 msgid "Estonian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:890
+#: ../../lib/class/video.class.php:889
 msgid "Basque"
 msgstr ""
 
-#: ../../lib/class/video.class.php:891
+#: ../../lib/class/video.class.php:890
 msgid "Persian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:892
+#: ../../lib/class/video.class.php:891
 msgid "Fulah"
 msgstr ""
 
-#: ../../lib/class/video.class.php:893
+#: ../../lib/class/video.class.php:892
 msgid "Finnish"
 msgstr ""
 
-#: ../../lib/class/video.class.php:894
+#: ../../lib/class/video.class.php:893
 msgid "Fijian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:895
+#: ../../lib/class/video.class.php:894
 msgid "Faroese"
 msgstr ""
 
-#: ../../lib/class/video.class.php:896
+#: ../../lib/class/video.class.php:895
 msgid "French"
 msgstr ""
 
-#: ../../lib/class/video.class.php:897
+#: ../../lib/class/video.class.php:896
 msgid "Western Frisian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:898
+#: ../../lib/class/video.class.php:897
 msgid "Irish"
 msgstr ""
 
-#: ../../lib/class/video.class.php:899
+#: ../../lib/class/video.class.php:898
 msgid "Scottish Gaelic"
 msgstr ""
 
-#: ../../lib/class/video.class.php:900
+#: ../../lib/class/video.class.php:899
 msgid "Galician"
 msgstr ""
 
-#: ../../lib/class/video.class.php:901
+#: ../../lib/class/video.class.php:900
 msgid "Guarani"
 msgstr ""
 
-#: ../../lib/class/video.class.php:902
+#: ../../lib/class/video.class.php:901
 msgid "Gujarati"
 msgstr ""
 
-#: ../../lib/class/video.class.php:903
+#: ../../lib/class/video.class.php:902
 msgid "Manx"
 msgstr ""
 
-#: ../../lib/class/video.class.php:904
+#: ../../lib/class/video.class.php:903
 msgid "Hausa"
 msgstr ""
 
-#: ../../lib/class/video.class.php:905
+#: ../../lib/class/video.class.php:904
 msgid "Hebrew"
 msgstr ""
 
-#: ../../lib/class/video.class.php:906
+#: ../../lib/class/video.class.php:905
 msgid "Hindi"
 msgstr ""
 
-#: ../../lib/class/video.class.php:907
+#: ../../lib/class/video.class.php:906
 msgid "Hiri Motu"
 msgstr ""
 
-#: ../../lib/class/video.class.php:908
+#: ../../lib/class/video.class.php:907
 msgid "Croatian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:909
+#: ../../lib/class/video.class.php:908
 msgid "Haitian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:910
+#: ../../lib/class/video.class.php:909
 msgid "Hungarian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:911
+#: ../../lib/class/video.class.php:910
 msgid "Armenian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:912
+#: ../../lib/class/video.class.php:911
 msgid "Herero"
 msgstr ""
 
-#: ../../lib/class/video.class.php:913
+#: ../../lib/class/video.class.php:912
 msgid "Interlingua (International Auxiliary Language Association)"
 msgstr ""
 
-#: ../../lib/class/video.class.php:914
+#: ../../lib/class/video.class.php:913
 msgid "Indonesian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:915
+#: ../../lib/class/video.class.php:914
 msgid "Interlingue"
 msgstr ""
 
-#: ../../lib/class/video.class.php:916
+#: ../../lib/class/video.class.php:915
 msgid "Igbo"
 msgstr ""
 
-#: ../../lib/class/video.class.php:917
+#: ../../lib/class/video.class.php:916
 msgid "Sichuan Yi"
 msgstr ""
 
-#: ../../lib/class/video.class.php:918
+#: ../../lib/class/video.class.php:917
 msgid "Inupiaq"
 msgstr ""
 
-#: ../../lib/class/video.class.php:919
+#: ../../lib/class/video.class.php:918
 msgid "Ido"
 msgstr ""
 
-#: ../../lib/class/video.class.php:920
+#: ../../lib/class/video.class.php:919
 msgid "Icelandic"
 msgstr ""
 
-#: ../../lib/class/video.class.php:921
+#: ../../lib/class/video.class.php:920
 msgid "Italian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:922
+#: ../../lib/class/video.class.php:921
 msgid "Inuktitut"
 msgstr ""
 
-#: ../../lib/class/video.class.php:923
+#: ../../lib/class/video.class.php:922
 msgid "Japanese"
 msgstr ""
 
-#: ../../lib/class/video.class.php:924
+#: ../../lib/class/video.class.php:923
 msgid "Javanese"
 msgstr ""
 
-#: ../../lib/class/video.class.php:925
+#: ../../lib/class/video.class.php:924
 msgid "Georgian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:926
+#: ../../lib/class/video.class.php:925
 msgid "Kongo"
 msgstr ""
 
-#: ../../lib/class/video.class.php:927
+#: ../../lib/class/video.class.php:926
 msgid "Kikuyu"
 msgstr ""
 
-#: ../../lib/class/video.class.php:928
+#: ../../lib/class/video.class.php:927
 msgid "Kwanyama"
 msgstr ""
 
-#: ../../lib/class/video.class.php:929
+#: ../../lib/class/video.class.php:928
 msgid "Kazakh"
 msgstr ""
 
-#: ../../lib/class/video.class.php:930
+#: ../../lib/class/video.class.php:929
 msgid "Kalaallisut"
 msgstr ""
 
-#: ../../lib/class/video.class.php:931
+#: ../../lib/class/video.class.php:930
 msgid "Khmer"
 msgstr ""
 
-#: ../../lib/class/video.class.php:932
+#: ../../lib/class/video.class.php:931
 msgid "Kannada"
 msgstr ""
 
-#: ../../lib/class/video.class.php:933
+#: ../../lib/class/video.class.php:932
 msgid "Korean"
 msgstr ""
 
-#: ../../lib/class/video.class.php:934
+#: ../../lib/class/video.class.php:933
 msgid "Kanuri"
 msgstr ""
 
-#: ../../lib/class/video.class.php:935
+#: ../../lib/class/video.class.php:934
 msgid "Kashmiri"
 msgstr ""
 
-#: ../../lib/class/video.class.php:936
+#: ../../lib/class/video.class.php:935
 msgid "Kurdish"
 msgstr ""
 
-#: ../../lib/class/video.class.php:937
+#: ../../lib/class/video.class.php:936
 msgid "Komi"
 msgstr ""
 
-#: ../../lib/class/video.class.php:938
+#: ../../lib/class/video.class.php:937
 msgid "Cornish"
 msgstr ""
 
-#: ../../lib/class/video.class.php:939
+#: ../../lib/class/video.class.php:938
 msgid "Kirghiz"
 msgstr ""
 
-#: ../../lib/class/video.class.php:940
+#: ../../lib/class/video.class.php:939
 msgid "Latin"
 msgstr ""
 
-#: ../../lib/class/video.class.php:941
+#: ../../lib/class/video.class.php:940
 msgid "Luxembourgish"
 msgstr ""
 
-#: ../../lib/class/video.class.php:942
+#: ../../lib/class/video.class.php:941
 msgid "Ganda"
 msgstr ""
 
-#: ../../lib/class/video.class.php:943
+#: ../../lib/class/video.class.php:942
 msgid "Limburgish"
 msgstr ""
 
-#: ../../lib/class/video.class.php:944
+#: ../../lib/class/video.class.php:943
 msgid "Lingala"
 msgstr ""
 
-#: ../../lib/class/video.class.php:945
+#: ../../lib/class/video.class.php:944
 msgid "Lao"
 msgstr ""
 
-#: ../../lib/class/video.class.php:946
+#: ../../lib/class/video.class.php:945
 msgid "Lithuanian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:947
+#: ../../lib/class/video.class.php:946
 msgid "Luba-Katanga"
 msgstr ""
 
-#: ../../lib/class/video.class.php:948
+#: ../../lib/class/video.class.php:947
 msgid "Latvian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:949
+#: ../../lib/class/video.class.php:948
 msgid "Malagasy"
 msgstr ""
 
-#: ../../lib/class/video.class.php:950
+#: ../../lib/class/video.class.php:949
 msgid "Marshallese"
 msgstr ""
 
-#: ../../lib/class/video.class.php:951
+#: ../../lib/class/video.class.php:950
 msgid "Maori"
 msgstr ""
 
-#: ../../lib/class/video.class.php:952
+#: ../../lib/class/video.class.php:951
 msgid "Macedonian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:953
+#: ../../lib/class/video.class.php:952
 msgid "Malayalam"
 msgstr ""
 
-#: ../../lib/class/video.class.php:954
+#: ../../lib/class/video.class.php:953
 msgid "Mongolian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:955
+#: ../../lib/class/video.class.php:954
 msgid "Marathi"
 msgstr ""
 
-#: ../../lib/class/video.class.php:956
+#: ../../lib/class/video.class.php:955
 msgid "Malay"
 msgstr ""
 
-#: ../../lib/class/video.class.php:957
+#: ../../lib/class/video.class.php:956
 msgid "Maltese"
 msgstr ""
 
-#: ../../lib/class/video.class.php:958
+#: ../../lib/class/video.class.php:957
 msgid "Burmese"
 msgstr ""
 
-#: ../../lib/class/video.class.php:959
+#: ../../lib/class/video.class.php:958
 msgid "Nauru"
 msgstr ""
 
-#: ../../lib/class/video.class.php:960
+#: ../../lib/class/video.class.php:959
 msgid "Norwegian Bokmal"
 msgstr ""
 
-#: ../../lib/class/video.class.php:961
+#: ../../lib/class/video.class.php:960
 msgid "North Ndebele"
 msgstr ""
 
-#: ../../lib/class/video.class.php:962
+#: ../../lib/class/video.class.php:961
 msgid "Nepali"
 msgstr ""
 
-#: ../../lib/class/video.class.php:963
+#: ../../lib/class/video.class.php:962
 msgid "Ndonga"
 msgstr ""
 
-#: ../../lib/class/video.class.php:964
+#: ../../lib/class/video.class.php:963
 msgid "Dutch"
 msgstr ""
 
-#: ../../lib/class/video.class.php:965
+#: ../../lib/class/video.class.php:964
 msgid "Norwegian Nynorsk"
 msgstr ""
 
-#: ../../lib/class/video.class.php:966
+#: ../../lib/class/video.class.php:965
 msgid "Norwegian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:967
+#: ../../lib/class/video.class.php:966
 msgid "South Ndebele"
 msgstr ""
 
-#: ../../lib/class/video.class.php:968
+#: ../../lib/class/video.class.php:967
 msgid "Navajo"
 msgstr ""
 
-#: ../../lib/class/video.class.php:969
+#: ../../lib/class/video.class.php:968
 msgid "Chichewa"
 msgstr ""
 
-#: ../../lib/class/video.class.php:970
+#: ../../lib/class/video.class.php:969
 msgid "Occitan"
 msgstr ""
 
-#: ../../lib/class/video.class.php:971
+#: ../../lib/class/video.class.php:970
 msgid "Ojibwa"
 msgstr ""
 
-#: ../../lib/class/video.class.php:972
+#: ../../lib/class/video.class.php:971
 msgid "Oromo"
 msgstr ""
 
-#: ../../lib/class/video.class.php:973
+#: ../../lib/class/video.class.php:972
 msgid "Oriya"
 msgstr ""
 
-#: ../../lib/class/video.class.php:974
+#: ../../lib/class/video.class.php:973
 msgid "Ossetian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:975
+#: ../../lib/class/video.class.php:974
 msgid "Panjabi"
 msgstr ""
 
-#: ../../lib/class/video.class.php:976
+#: ../../lib/class/video.class.php:975
 msgid "Pali"
 msgstr ""
 
-#: ../../lib/class/video.class.php:977
+#: ../../lib/class/video.class.php:976
 msgid "Polish"
 msgstr ""
 
-#: ../../lib/class/video.class.php:978
+#: ../../lib/class/video.class.php:977
 msgid "Pashto"
 msgstr ""
 
-#: ../../lib/class/video.class.php:979
+#: ../../lib/class/video.class.php:978
 msgid "Portuguese"
 msgstr ""
 
-#: ../../lib/class/video.class.php:980
+#: ../../lib/class/video.class.php:979
 msgid "Quechua"
 msgstr ""
 
-#: ../../lib/class/video.class.php:981
+#: ../../lib/class/video.class.php:980
 msgid "Raeto-Romance"
 msgstr ""
 
-#: ../../lib/class/video.class.php:982
+#: ../../lib/class/video.class.php:981
 msgid "Kirundi"
 msgstr ""
 
-#: ../../lib/class/video.class.php:983
+#: ../../lib/class/video.class.php:982
 msgid "Romanian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:984
+#: ../../lib/class/video.class.php:983
 msgid "Russian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:985
+#: ../../lib/class/video.class.php:984
 msgid "Kinyarwanda"
 msgstr ""
 
-#: ../../lib/class/video.class.php:986
+#: ../../lib/class/video.class.php:985
 msgid "Sanskrit"
 msgstr ""
 
-#: ../../lib/class/video.class.php:987
+#: ../../lib/class/video.class.php:986
 msgid "Sardinian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:988
+#: ../../lib/class/video.class.php:987
 msgid "Sindhi"
 msgstr ""
 
-#: ../../lib/class/video.class.php:989
+#: ../../lib/class/video.class.php:988
 msgid "Northern Sami"
 msgstr ""
 
-#: ../../lib/class/video.class.php:990
+#: ../../lib/class/video.class.php:989
 msgid "Sango"
 msgstr ""
 
-#: ../../lib/class/video.class.php:991
+#: ../../lib/class/video.class.php:990
 msgid "Sinhala"
 msgstr ""
 
-#: ../../lib/class/video.class.php:992
+#: ../../lib/class/video.class.php:991
 msgid "Slovak"
 msgstr ""
 
-#: ../../lib/class/video.class.php:993
+#: ../../lib/class/video.class.php:992
 msgid "Slovenian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:994
+#: ../../lib/class/video.class.php:993
 msgid "Samoan"
 msgstr ""
 
-#: ../../lib/class/video.class.php:995
+#: ../../lib/class/video.class.php:994
 msgid "Shona"
 msgstr ""
 
-#: ../../lib/class/video.class.php:996
+#: ../../lib/class/video.class.php:995
 msgid "Somali"
 msgstr ""
 
-#: ../../lib/class/video.class.php:997
+#: ../../lib/class/video.class.php:996
 msgid "Albanian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:998
+#: ../../lib/class/video.class.php:997
 msgid "Serbian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:999
+#: ../../lib/class/video.class.php:998
 msgid "Swati"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1000
+#: ../../lib/class/video.class.php:999
 msgid "Southern Sotho"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1001
+#: ../../lib/class/video.class.php:1000
 msgid "Sundanese"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1002
+#: ../../lib/class/video.class.php:1001
 msgid "Swedish"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1003
+#: ../../lib/class/video.class.php:1002
 msgid "Swahili"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1004
+#: ../../lib/class/video.class.php:1003
 msgid "Tamil"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1005
+#: ../../lib/class/video.class.php:1004
 msgid "Telugu"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1006
+#: ../../lib/class/video.class.php:1005
 msgid "Tajik"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1007
+#: ../../lib/class/video.class.php:1006
 msgid "Thai"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1008
+#: ../../lib/class/video.class.php:1007
 msgid "Tigrinya"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1009
+#: ../../lib/class/video.class.php:1008
 msgid "Turkmen"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1010
+#: ../../lib/class/video.class.php:1009
 msgid "Tagalog"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1011
+#: ../../lib/class/video.class.php:1010
 msgid "Tswana"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1012
+#: ../../lib/class/video.class.php:1011
 msgid "Tonga"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1013
+#: ../../lib/class/video.class.php:1012
 msgid "Turkish"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1014
+#: ../../lib/class/video.class.php:1013
 msgid "Tsonga"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1015
+#: ../../lib/class/video.class.php:1014
 msgid "Tatar"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1016
+#: ../../lib/class/video.class.php:1015
 msgid "Twi"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1017
+#: ../../lib/class/video.class.php:1016
 msgid "Tahitian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1018
+#: ../../lib/class/video.class.php:1017
 msgid "Uighur"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1019
+#: ../../lib/class/video.class.php:1018
 msgid "Ukrainian"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1020
+#: ../../lib/class/video.class.php:1019
 msgid "Urdu"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1021
+#: ../../lib/class/video.class.php:1020
 msgid "Uzbek"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1022
+#: ../../lib/class/video.class.php:1021
 msgid "Venda"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1023
+#: ../../lib/class/video.class.php:1022
 msgid "Vietnamese"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1024
+#: ../../lib/class/video.class.php:1023
 msgid "Volapuk"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1025
+#: ../../lib/class/video.class.php:1024
 msgid "Walloon"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1026
+#: ../../lib/class/video.class.php:1025
 msgid "Wolof"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1027
+#: ../../lib/class/video.class.php:1026
 msgid "Xhosa"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1028
+#: ../../lib/class/video.class.php:1027
 msgid "Yiddish"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1029
+#: ../../lib/class/video.class.php:1028
 msgid "Yoruba"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1030
+#: ../../lib/class/video.class.php:1029
 msgid "Zhuang"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1031
+#: ../../lib/class/video.class.php:1030
 msgid "Chinese"
 msgstr ""
 
-#: ../../lib/class/video.class.php:1032
+#: ../../lib/class/video.class.php:1031
 msgid "Zulu"
 msgstr ""
 
@@ -3747,11 +3792,11 @@ msgstr "희망 목록에 추가하기"
 msgid "Ampache XSPF Playlist"
 msgstr "Ampache XSPF 재생목록"
 
-#: ../../lib/debug.lib.php:390 ../../lib/debug.lib.php:411
+#: ../../lib/debug.lib.php:400 ../../lib/debug.lib.php:421
 msgid "OK"
 msgstr "확인"
 
-#: ../../lib/debug.lib.php:390 ../../templates/error_page.inc.php:51
+#: ../../lib/debug.lib.php:400 ../../templates/error_page.inc.php:51
 #: ../../templates/test_error_page.inc.php:49
 msgid "Error"
 msgstr "오류"
@@ -3871,6 +3916,11 @@ msgstr "사용자가 이미 로그인함"
 msgid "Unable to create a local account"
 msgstr "내부 계정 생성할 수 없음"
 
+#: ../../lib/preferences.php:140
+#, fuzzy
+msgid "Enabled"
+msgstr "사용가능"
+
 #: ../../lib/preferences.php:234 ../../lib/ui.lib.php:710
 msgid "On"
 msgstr "방송"
@@ -3886,11 +3936,11 @@ msgstr "끔"
 #: ../../templates/show_install_config.inc.php:140
 #: ../../templates/show_search_row.inc.php:45
 #: ../../templates/show_video.inc.php:38
-#: ../../templates/sidebar_localplay.inc.php:49
+#: ../../templates/sidebar_localplay.inc.php:55
 msgid "None"
 msgstr "없음"
 
-#: ../../lib/preferences.php:262 ../../templates/show_edit_user.inc.php:155
+#: ../../lib/preferences.php:262 ../../templates/show_edit_user.inc.php:182
 #: ../../templates/show_live_stream.inc.php:47
 #: ../../templates/show_playtype_switch.inc.php:33
 msgid "Stream"
@@ -3900,17 +3950,17 @@ msgstr "스트림"
 #: ../../modules/localplay/httpq/httpq.controller.php:493
 #: ../../modules/localplay/mpd/mpd.controller.php:488
 #: ../../modules/localplay/vlc/vlc.controller.php:505
-#: ../../templates/show_edit_user.inc.php:152
+#: ../../templates/show_edit_user.inc.php:179
 #: ../../templates/show_playtype_switch.inc.php:45
 #: ../../templates/sidebar_home.inc.php:133
 msgid "Democratic"
 msgstr "대중적인"
 
 #: ../../lib/preferences.php:268 ../../lib/ui.lib.php:139
-#: ../../templates/show_edit_user.inc.php:153
+#: ../../templates/show_edit_user.inc.php:180
 #: ../../templates/show_playtype_switch.inc.php:39
 #: ../../templates/sidebar_home.inc.php:142 ../../templates/sidebar.inc.php:34
-#: ../../templates/sidebar_localplay.inc.php:35
+#: ../../templates/sidebar_localplay.inc.php:41
 msgid "Localplay"
 msgstr "내부 재생"
 
@@ -4028,7 +4078,7 @@ msgstr "홈"
 #: ../../templates/show_add_upload.inc.php:25
 #: ../../templates/show_album.inc.php:192
 #: ../../templates/show_artist.inc.php:181
-#: ../../templates/sidebar_home.inc.php:63
+#: ../../templates/sidebar_home.inc.php:69
 msgid "Upload"
 msgstr "올리기"
 
@@ -4073,7 +4123,7 @@ msgstr "관리-사이트 설정"
 msgid "Admin-Manage Modules"
 msgstr "관리-모듈 관리하기"
 
-#: ../../lib/ui.lib.php:179 ../../templates/sidebar_home.inc.php:32
+#: ../../lib/ui.lib.php:179 ../../templates/sidebar_home.inc.php:38
 msgid "Browse Music"
 msgstr "음악 탐색"
 
@@ -4185,7 +4235,7 @@ msgstr "액세스 토큰"
 #: ../../modules/catalog/local/local.catalog.php:110
 #: ../../templates/show_catalogs.inc.php:29
 #: ../../templates/show_catalogs.inc.php:58
-#: ../../templates/show_stats.inc.php:76
+#: ../../templates/show_stats.inc.php:85
 msgid "Path"
 msgstr "경로"
 
@@ -4594,7 +4644,7 @@ msgstr "호스트이름"
 #: ../../templates/show_localplay_status.inc.php:44
 #: ../../templates/show_searches.inc.php:43
 #: ../../templates/show_searches.inc.php:72
-#: ../../templates/sidebar_home.inc.php:93
+#: ../../templates/sidebar_home.inc.php:99
 msgid "Random"
 msgstr "임의"
 
@@ -5204,7 +5254,7 @@ msgstr "사용할 수 없음"
 #: ../../templates/show_localplay_controllers.inc.php:47
 #: ../../templates/show_song.inc.php:29
 #: ../../templates/show_song_row.inc.php:120
-#: ../../templates/show_test_table.inc.php:242
+#: ../../templates/show_test_table.inc.php:251
 #: ../../templates/show_user_row.inc.php:72
 msgid "Enable"
 msgstr "사용가능"
@@ -5234,7 +5284,7 @@ msgstr "유효하지 않은 요청"
 msgid "My Broadcast"
 msgstr "내 방송"
 
-#: ../../server/playlist.ajax.php:107
+#: ../../server/playlist.ajax.php:104
 msgid "Added to playlist"
 msgstr "재생목록에 추가하였습니다"
 
@@ -5570,12 +5620,13 @@ msgid "Limit"
 msgstr "제한"
 
 #: ../../templates/list_header.inc.php:147
-#: ../../templates/show_random.inc.php:45
+#: ../../templates/show_random.inc.php:45 ../../templates/show_stats.inc.php:89
 msgid "Item Count"
 msgstr "아이템 세기"
 
 #: ../../templates/rightbar.inc.php:41
-msgid "Add to new playlist"
+#: ../../templates/show_playlists_dialog.inc.php:26
+msgid "Add to New Playlist"
 msgstr "새 재생목록에 추가하기"
 
 #: ../../templates/rightbar.inc.php:61
@@ -5614,7 +5665,7 @@ msgid "No items"
 msgstr "아이템 없음"
 
 #: ../../templates/show_access_list.inc.php:22
-#: ../../templates/sidebar_admin.inc.php:56
+#: ../../templates/sidebar_admin.inc.php:62
 msgid "Access Control"
 msgstr "접근 제어"
 
@@ -5705,7 +5756,7 @@ msgstr "형태"
 #: ../../templates/show_song.inc.php:74 ../../templates/show_songs.inc.php:65
 #: ../../templates/show_tvshows.inc.php:56
 #: ../../templates/show_tvshows.inc.php:107
-#: ../../templates/show_users.inc.php:61 ../../templates/show_users.inc.php:96
+#: ../../templates/show_users.inc.php:61 ../../templates/show_users.inc.php:95
 #: ../../templates/show_video.inc.php:77 ../../templates/show_videos.inc.php:61
 #: ../../templates/show_videos.inc.php:119
 msgid "Action"
@@ -5715,7 +5766,7 @@ msgstr "실행"
 #: ../../templates/show_add_user.inc.php:53
 #: ../../templates/show_edit_user.inc.php:39
 #: ../../templates/show_user_registration.inc.php:92
-#: ../../templates/show_users.inc.php:46 ../../templates/show_users.inc.php:81
+#: ../../templates/show_users.inc.php:46 ../../templates/show_users.inc.php:80
 msgid "Full Name"
 msgstr "전체 이름"
 
@@ -5754,17 +5805,28 @@ msgstr "암호 확인"
 msgid "Avatar"
 msgstr "아바타"
 
-#: ../../templates/show_account.inc.php:106
+#: ../../templates/show_account.inc.php:107
 msgid "Generate new API key"
 msgstr "새 API키 생성"
 
-#: ../../templates/show_account.inc.php:133
-#: ../../templates/show_edit_user.inc.php:166
+#: ../../templates/show_account.inc.php:128
+#: ../../templates/show_edit_user.inc.php:161
+msgid "RSS Token"
+msgstr ""
+
+#: ../../templates/show_account.inc.php:130
+#: ../../templates/show_edit_user.inc.php:163
+#, fuzzy
+msgid "Generate new RSS token"
+msgstr "새 API키 생성"
+
+#: ../../templates/show_account.inc.php:141
+#: ../../templates/show_edit_user.inc.php:193
 #: ../../templates/show_manage_catalogs.inc.php:44
 msgid "Clear Stats"
 msgstr "통계 삭제"
 
-#: ../../templates/show_account.inc.php:143
+#: ../../templates/show_account.inc.php:151
 msgid "Update Account"
 msgstr "계정 갱신하기"
 
@@ -5793,7 +5855,7 @@ msgstr "ACL 만들기"
 
 #: ../../templates/show_add_catalog.inc.php:25
 #: ../../templates/show_add_catalog.inc.php:105
-#: ../../templates/sidebar_admin.inc.php:27
+#: ../../templates/sidebar_admin.inc.php:33
 msgid "Add Catalog"
 msgstr "카탈로그 추가하기"
 
@@ -5832,19 +5894,6 @@ msgstr "트랙"
 #: ../../templates/show_song.inc.php:148
 msgid "Genre"
 msgstr "장르"
-
-#: ../../templates/show_add_catalog.inc.php:46
-#: ../../templates/show_edit_album_row.inc.php:102
-#: ../../templates/show_edit_catalog.inc.php:41
-#: ../../templates/show_song.inc.php:150
-msgid "Original Year"
-msgstr "원년"
-
-#: ../../templates/show_add_catalog.inc.php:47
-#: ../../templates/show_edit_album_row.inc.php:90
-#: ../../templates/show_edit_catalog.inc.php:42
-msgid "Release Type"
-msgstr "배포 형태"
 
 #: ../../templates/show_add_catalog.inc.php:48
 #: ../../templates/show_edit_album_row.inc.php:98
@@ -6183,7 +6232,7 @@ msgstr "탐색하기"
 
 #: ../../templates/show_add_user.inc.php:22
 #: ../../templates/show_add_user.inc.php:104
-#: ../../templates/sidebar_admin.inc.php:41
+#: ../../templates/sidebar_admin.inc.php:47
 msgid "Add User"
 msgstr "사용자 추가"
 
@@ -6378,7 +6427,7 @@ msgstr "아트"
 #: ../../templates/show_recommended_artists.inc.php:101
 #: ../../templates/show_search_bar.inc.php:36
 #: ../../templates/show_songs.inc.php:37 ../../templates/show_songs.inc.php:98
-#: ../../templates/show_stats.inc.php:39
+#: ../../templates/show_stats.inc.php:44
 #: ../../templates/show_tvshows.inc.php:42
 #: ../../templates/show_tvshows.inc.php:95
 #: ../../templates/show_videos.inc.php:49
@@ -6624,19 +6673,19 @@ msgstr "가기"
 
 #: ../../templates/show_catalogs.inc.php:30
 #: ../../templates/show_catalogs.inc.php:59
-#: ../../templates/show_stats.inc.php:77
+#: ../../templates/show_stats.inc.php:86
 msgid "Last Verify"
 msgstr "마지막 검증"
 
 #: ../../templates/show_catalogs.inc.php:31
 #: ../../templates/show_catalogs.inc.php:60
-#: ../../templates/show_stats.inc.php:78
+#: ../../templates/show_stats.inc.php:87
 msgid "Last Add"
 msgstr "마지막 추가"
 
 #: ../../templates/show_catalogs.inc.php:32
 #: ../../templates/show_catalogs.inc.php:61
-#: ../../templates/show_stats.inc.php:79
+#: ../../templates/show_stats.inc.php:88
 msgid "Last Clean"
 msgstr "마지막 청소"
 
@@ -6745,7 +6794,7 @@ msgid "Force Democratic Play"
 msgstr "민주적 재생 강제하기"
 
 #: ../../templates/show_debug.inc.php:22 ../../templates/show_test.inc.php:44
-#: ../../templates/sidebar_admin.inc.php:80
+#: ../../templates/sidebar_admin.inc.php:82
 msgid "Ampache Debug"
 msgstr "Ampache 디버그"
 
@@ -6812,7 +6861,7 @@ msgstr "설정"
 
 #: ../../templates/show_debug.inc.php:75 ../../templates/show_debug.inc.php:128
 #: ../../templates/show_preference_box.inc.php:43
-#: ../../templates/show_preference_box.inc.php:92
+#: ../../templates/show_preference_box.inc.php:91
 #: ../../templates/show_user_preferences.inc.php:37
 msgid "Value"
 msgstr "값"
@@ -6838,28 +6887,30 @@ msgid "Succeeded"
 msgstr "성공함"
 
 #: ../../templates/show_debug.inc.php:92
-msgid "Safe Mode"
-msgstr "안전 모드"
-
-#: ../../templates/show_debug.inc.php:96
 msgid "Open Basedir"
 msgstr "기본 디렉토리 열기"
 
-#: ../../templates/show_debug.inc.php:100
+#: ../../templates/show_debug.inc.php:96
 msgid "Zlib Support"
 msgstr "Zlib 지원"
 
-#: ../../templates/show_debug.inc.php:104
+#: ../../templates/show_debug.inc.php:100
 msgid "GD Support"
 msgstr "GD 지원"
 
-#: ../../templates/show_debug.inc.php:108
+#: ../../templates/show_debug.inc.php:104
 msgid "Iconv Support"
 msgstr "Iconv 지원"
 
-#: ../../templates/show_debug.inc.php:112
+#: ../../templates/show_debug.inc.php:108
 msgid "Gettext Support"
 msgstr "Gettext 지원"
+
+#: ../../templates/show_debug.inc.php:112
+#: ../../templates/show_test_table.inc.php:109
+#, fuzzy
+msgid "PHP intl extension"
+msgstr "PHP iconv 익스텐션"
 
 #: ../../templates/show_debug.inc.php:119
 msgid "Current Configuration"
@@ -6869,7 +6920,7 @@ msgstr "현재 설정"
 #: ../../templates/show_preference_admin.inc.php:31
 #: ../../templates/show_preference_admin.inc.php:51
 #: ../../templates/show_preference_box.inc.php:42
-#: ../../templates/show_preference_box.inc.php:91
+#: ../../templates/show_preference_box.inc.php:90
 #: ../../templates/show_user_preferences.inc.php:36
 msgid "Preference"
 msgstr "선호"
@@ -6921,7 +6972,7 @@ msgid "Debug Page"
 msgstr "디버그 페이지"
 
 #: ../../templates/show_denied.inc.php:53
-#: ../../templates/sidebar_localplay.inc.php:74
+#: ../../templates/sidebar_localplay.inc.php:80
 msgid "Access Denied"
 msgstr "접근 거부됨"
 
@@ -6957,7 +7008,7 @@ msgstr "추가 시간"
 
 #: ../../templates/show_duplicate.inc.php:23
 #: ../../templates/show_duplicate.inc.php:33
-#: ../../templates/sidebar_admin.inc.php:30
+#: ../../templates/sidebar_admin.inc.php:36
 msgid "Find Duplicates"
 msgstr "중복 찾기"
 
@@ -7143,23 +7194,23 @@ msgstr "다른 옵션"
 msgid "Generate new API Key"
 msgstr "새 API 키 생성"
 
-#: ../../templates/show_edit_user.inc.php:148
+#: ../../templates/show_edit_user.inc.php:175
 msgid "Config Preset"
 msgstr "미리 설정하기"
 
-#: ../../templates/show_edit_user.inc.php:154
+#: ../../templates/show_edit_user.inc.php:181
 msgid "Flash"
 msgstr "플래시"
 
-#: ../../templates/show_edit_user.inc.php:160
+#: ../../templates/show_edit_user.inc.php:187
 msgid "Prevent Preset Override"
 msgstr "Preset 오버라이드 막기"
 
-#: ../../templates/show_edit_user.inc.php:162
+#: ../../templates/show_edit_user.inc.php:189
 msgid "This affects all non-admin accounts"
 msgstr "관리자 아닌 계정에 영향을 줌"
 
-#: ../../templates/show_edit_user.inc.php:174
+#: ../../templates/show_edit_user.inc.php:201
 msgid "Update User"
 msgstr "사용자 갱신"
 
@@ -7171,7 +7222,7 @@ msgid "Release Date"
 msgstr "배포 날짜"
 
 #: ../../templates/show_export.inc.php:29
-#: ../../templates/sidebar_admin.inc.php:29
+#: ../../templates/sidebar_admin.inc.php:35
 msgid "Export Catalog"
 msgstr "카탈로그 내보내기"
 
@@ -7303,6 +7354,11 @@ msgstr "반복"
 #: ../../templates/show_html5_player.inc.php:23
 msgid "Repeat Off"
 msgstr "반복 끄기"
+
+#: ../../templates/show_html5_player.inc.php:158
+#, fuzzy
+msgid "Show Album"
+msgstr "앨범 보기"
 
 #: ../../templates/show_html5_player.inc.php:166
 msgid "Double click to post a new shout"
@@ -7466,13 +7522,10 @@ msgid "\"ampache.cfg.php\" is writable"
 msgstr " \"ampache.cfg.php\" 은 쓰기 가능함"
 
 #: ../../templates/show_install_check.inc.php:61
-#, fuzzy
 msgid ""
 "This tests whether PHP can write to config. This is not strictly necessary, "
 "but will help streamline the installation process."
 msgstr ""
-"이 과정은 php가 설정 파일을 쓸 수 있는지 검증한다. 엄밀히 필요한 과정은 아니"
-"지만 설치 절차를 한번에 끝낼 수 있게 돕는다."
 
 #: ../../templates/show_install_config.inc.php:54
 #, php-format
@@ -7797,7 +7850,7 @@ msgid "Add Localplay Instance"
 msgstr "내부 재생 인스턴스 추가하기"
 
 #: ../../templates/show_localplay_add_instance.inc.php:34
-#: ../../templates/sidebar_localplay.inc.php:38
+#: ../../templates/sidebar_localplay.inc.php:44
 msgid "Add Instance"
 msgstr "인스턴스 추가하기"
 
@@ -7854,7 +7907,7 @@ msgid "Show more"
 msgstr "더 보기"
 
 #: ../../templates/show_mail_users.inc.php:23
-#: ../../templates/sidebar_admin.inc.php:45
+#: ../../templates/sidebar_admin.inc.php:51
 msgid "E-mail Users"
 msgstr "이메일 사용자"
 
@@ -7903,7 +7956,7 @@ msgid "Send e-mail"
 msgstr "이메일 보내기"
 
 #: ../../templates/show_manage_catalogs.inc.php:22
-#: ../../templates/sidebar_admin.inc.php:28
+#: ../../templates/sidebar_admin.inc.php:34
 msgid "Show Catalogs"
 msgstr "카탈로그 보기"
 
@@ -8062,10 +8115,6 @@ msgstr "기록기"
 msgid "Playlist Edit"
 msgstr "재생목록 편집"
 
-#: ../../templates/show_playlists_dialog.inc.php:26
-msgid "Add to New Playlist"
-msgstr "새 재생목록에 추가하기"
-
 #: ../../templates/show_playlists.inc.php:35
 #: ../../templates/show_playlists.inc.php:83
 msgid "Last Update"
@@ -8147,7 +8196,7 @@ msgid "No podcast found"
 msgstr "팟캐스트 없음"
 
 #: ../../templates/show_preference_box.inc.php:45
-#: ../../templates/show_preference_box.inc.php:94
+#: ../../templates/show_preference_box.inc.php:93
 msgid "Apply to All"
 msgstr "전체 적용"
 
@@ -8489,11 +8538,11 @@ msgstr "연결된 사용자들"
 msgid "Total Users"
 msgstr "전체 사용자"
 
-#: ../../templates/show_stats.inc.php:40 ../../templates/show_stats.inc.php:85
+#: ../../templates/show_stats.inc.php:45 ../../templates/show_stats.inc.php:90
 msgid "Catalog Size"
 msgstr "카탈로그 크기"
 
-#: ../../templates/show_stats.inc.php:41
+#: ../../templates/show_stats.inc.php:46
 msgid "Catalog Time"
 msgstr "카탈로그 시간"
 
@@ -8535,7 +8584,7 @@ msgstr ""
 "세요."
 
 #: ../../templates/show_test.inc.php:50
-#: ../../templates/show_test_table.inc.php:198
+#: ../../templates/show_test_table.inc.php:207
 msgid "Web Installation"
 msgstr "웹 설치"
 
@@ -8634,81 +8683,88 @@ msgid ""
 "required by Ampache."
 msgstr "PHP JSON 익스텐션이 사용가능한지 확인합니다"
 
-#: ../../templates/show_test_table.inc.php:109
+#: ../../templates/show_test_table.inc.php:114
+#, fuzzy
+msgid ""
+"This tests whether you have the intl extension enabled. This extension is "
+"required by Ampache."
+msgstr "Ampache 에서 필요한 PHP iconv 익스텐션이 사용가능한지 확인합니다"
+
+#: ../../templates/show_test_table.inc.php:118
 msgid "PHP cURL extension"
 msgstr "PHP cURL 익스텐션"
 
-#: ../../templates/show_test_table.inc.php:114
+#: ../../templates/show_test_table.inc.php:123
 msgid ""
 "This tests whether you have the cURL extension enabled. This is not strictly "
 "necessary, but may result in a better experience."
 msgstr "PHP cURL 익스텐션이 사용가능한지 확인합니다"
 
-#: ../../templates/show_test_table.inc.php:118
+#: ../../templates/show_test_table.inc.php:127
 msgid "PHP zlib extension"
 msgstr "PHP zlib 익스텐션"
 
-#: ../../templates/show_test_table.inc.php:123
+#: ../../templates/show_test_table.inc.php:132
 msgid ""
 "This tests whether you have the zlib extension enabled. This is not strictly "
 "necessary, but may result in a better experience (zip download)."
 msgstr "PHP zlib 익스텐션이 사용가능한지 확인합니다"
 
-#: ../../templates/show_test_table.inc.php:127
+#: ../../templates/show_test_table.inc.php:136
 msgid "PHP SimpleXML extension"
 msgstr "PHP SimpleXML 익스텐션"
 
-#: ../../templates/show_test_table.inc.php:132
+#: ../../templates/show_test_table.inc.php:141
 msgid ""
 "This tests whether you have the SimpleXML extension enabled. This is not "
 "strictly necessary, but may result in a better experience."
 msgstr "PHP SimpleXML 익스텐션이 사용가능한지 확인합니다"
 
-#: ../../templates/show_test_table.inc.php:136
+#: ../../templates/show_test_table.inc.php:145
 msgid "PHP GD extension"
 msgstr "PHP GD 익스텐션"
 
-#: ../../templates/show_test_table.inc.php:141
+#: ../../templates/show_test_table.inc.php:150
 msgid ""
 "This tests whether you have the GD extension enabled. This is not strictly "
 "necessary, but may result in a better experience."
 msgstr "GD 익스텐션이 사용가능한지 확인합니다."
 
-#: ../../templates/show_test_table.inc.php:145
+#: ../../templates/show_test_table.inc.php:154
 msgid "PHP memory limit override"
 msgstr "PHP 메모리 제한 달성"
 
-#: ../../templates/show_test_table.inc.php:150
+#: ../../templates/show_test_table.inc.php:159
 msgid ""
 "This tests whether Ampache can override the memory limit. This is not "
 "strictly necessary, but may result in a better experience."
 msgstr "Ampache 가 메모리 제한을 달성할 수 있는지 확인합니다"
 
-#: ../../templates/show_test_table.inc.php:154
+#: ../../templates/show_test_table.inc.php:163
 msgid "PHP execution time override"
 msgstr "PHP 실행 시간 달성"
 
-#: ../../templates/show_test_table.inc.php:159
+#: ../../templates/show_test_table.inc.php:168
 msgid ""
 "This tests whether Ampache can override the limit on maximum execution time. "
 "This is not strictly necessary, but may result in a better experience."
 msgstr "Ampache 가 최대 실행 시간 제한을 달성할 수 있는지 확인합니다."
 
-#: ../../templates/show_test_table.inc.php:163
+#: ../../templates/show_test_table.inc.php:172
 msgid "PHP max upload size"
 msgstr "PHP 최대 업로드 크기"
 
-#: ../../templates/show_test_table.inc.php:168
+#: ../../templates/show_test_table.inc.php:177
 msgid ""
 "This tests whether Ampache can upload medium files (>= 20M). This is not "
 "strictly necessary, but may result in a better experience."
 msgstr "Ampache 가 20M 이상 파일을 올릴 수 있는지 확인합니다."
 
-#: ../../templates/show_test_table.inc.php:172
+#: ../../templates/show_test_table.inc.php:181
 msgid "PHP integer size"
 msgstr "PHP 정수 크기"
 
-#: ../../templates/show_test_table.inc.php:177
+#: ../../templates/show_test_table.inc.php:186
 msgid ""
 "This tests whether Ampache can manage large files (> 2GB). This is not "
 "strictly necessary, but may result in a better experience. This generally "
@@ -8717,12 +8773,12 @@ msgstr ""
 "Ampache 가 2GB 넘는 파일을 관리할 수 있는지 확인합니다. 꼭 필요한 것은 아니"
 "며 성능을 잘 낼 수 있도록 해 줍니다."
 
-#: ../../templates/show_test_table.inc.php:181
+#: ../../templates/show_test_table.inc.php:190
 msgid "PHP mbstring.func_overload"
 msgstr "PHP mbstring.func_overload"
 
 #. HINT: Shows mbstring.func_overload
-#: ../../templates/show_test_table.inc.php:186
+#: ../../templates/show_test_table.inc.php:195
 #, php-format
 msgid ""
 "This tests whether PHP %s is set as it may break the ID3 tag support. This "
@@ -8731,54 +8787,54 @@ msgid ""
 "irreversible corruption of your music files."
 msgstr " PHP %s 이 제대로 설정되었는지 확인합니다."
 
-#: ../../templates/show_test_table.inc.php:192
+#: ../../templates/show_test_table.inc.php:201
 msgid "Configuration file readability"
 msgstr "설정 파일 읽기 가능"
 
-#: ../../templates/show_test_table.inc.php:197
+#: ../../templates/show_test_table.inc.php:206
 msgid ""
 "This test attempts to read config/ampache.cfg.php. If this fails the file is "
 "either not in the correct location, or not readable."
 msgstr "config/ampache.cfg.php 파일을 읽을 수 있는지 확인합니다."
 
-#: ../../templates/show_test_table.inc.php:198
+#: ../../templates/show_test_table.inc.php:207
 msgid ""
 "If you are installing Ampache for the first time you can ignore this warning "
 "and proceed to the installer."
 msgstr ""
 
-#: ../../templates/show_test_table.inc.php:204
+#: ../../templates/show_test_table.inc.php:213
 msgid "Configuration file validity"
 msgstr "설정 파일 유효성"
 
-#: ../../templates/show_test_table.inc.php:215
+#: ../../templates/show_test_table.inc.php:224
 msgid ""
 "This test makes sure that you have set all of the required configuration "
 "variables and that Ampache is able to completely parse your config file."
 msgstr "Ampache 가 설정 파일을 제대로 접근할 수 있는지 확인합니다."
 
-#: ../../templates/show_test_table.inc.php:219
+#: ../../templates/show_test_table.inc.php:228
 msgid "Database connection"
 msgstr "데이타베이스 연결"
 
-#: ../../templates/show_test_table.inc.php:224
+#: ../../templates/show_test_table.inc.php:233
 msgid ""
 "This attempts to connect to your database using the values read from your "
 "configuration file."
 msgstr ""
 "설정 파일에서 값을 읽어 데이타베이스에 제대로 접속할 수 있는지 확인합니다"
 
-#: ../../templates/show_test_table.inc.php:228
+#: ../../templates/show_test_table.inc.php:237
 msgid "Database tables"
 msgstr "데이타베이스 테이블"
 
-#: ../../templates/show_test_table.inc.php:233
+#: ../../templates/show_test_table.inc.php:242
 msgid ""
 "This checks a few key tables to make sure that the Ampache database exists, "
 "and the user has access to the database"
 msgstr "Ampache 데이타베이스가 존재하는지 확인합니다."
 
-#: ../../templates/show_test_table.inc.php:248
+#: ../../templates/show_test_table.inc.php:257
 msgid ""
 "This test makes sure that your web_path variable is set correctly and that "
 "we are able to get to the index page. If you do not see a check mark here "
@@ -8866,12 +8922,12 @@ msgid "Member Since"
 msgstr "이후 회원"
 
 #: ../../templates/show_user.inc.php:79 ../../templates/show_users.inc.php:47
-#: ../../templates/show_users.inc.php:82
+#: ../../templates/show_users.inc.php:81
 msgid "Last Seen"
 msgstr "마지막에 본 것"
 
 #: ../../templates/show_user.inc.php:83 ../../templates/show_users.inc.php:50
-#: ../../templates/show_users.inc.php:85
+#: ../../templates/show_users.inc.php:84
 msgid "Activity"
 msgstr "활동"
 
@@ -8884,7 +8940,7 @@ msgid "User is Offline Now"
 msgstr "사용자가 접속해 있지 않음"
 
 #: ../../templates/show_user.inc.php:117 ../../templates/show_users.inc.php:58
-#: ../../templates/show_users.inc.php:93
+#: ../../templates/show_users.inc.php:92
 msgid "Following"
 msgstr "팔로잉"
 
@@ -8912,15 +8968,15 @@ msgstr "요구 항목"
 msgid "I Accept"
 msgstr "동의"
 
-#: ../../templates/show_users.inc.php:48 ../../templates/show_users.inc.php:83
+#: ../../templates/show_users.inc.php:48 ../../templates/show_users.inc.php:82
 msgid "Registration Date"
 msgstr "등록 날짜"
 
-#: ../../templates/show_users.inc.php:52 ../../templates/show_users.inc.php:87
+#: ../../templates/show_users.inc.php:52 ../../templates/show_users.inc.php:86
 msgid "Last IP"
 msgstr "마지막 접속 IP"
 
-#: ../../templates/show_users.inc.php:62 ../../templates/show_users.inc.php:97
+#: ../../templates/show_users.inc.php:62 ../../templates/show_users.inc.php:96
 msgid "Online"
 msgstr "온라인"
 
@@ -8982,61 +9038,61 @@ msgstr "비디오 없음"
 msgid "Wanted"
 msgstr "희망사항"
 
-#: ../../templates/sidebar_admin.inc.php:25
-#: ../../templates/sidebar_admin.inc.php:39
-#: ../../templates/sidebar_admin.inc.php:56
-#: ../../templates/sidebar_admin.inc.php:69
-#: ../../templates/sidebar_admin.inc.php:78
+#: ../../templates/sidebar_admin.inc.php:31
+#: ../../templates/sidebar_admin.inc.php:45
+#: ../../templates/sidebar_admin.inc.php:62
+#: ../../templates/sidebar_admin.inc.php:71
+#: ../../templates/sidebar_admin.inc.php:80
 #: ../../templates/sidebar_home.inc.php:29
-#: ../../templates/sidebar_localplay.inc.php:35
-#: ../../templates/sidebar_localplay.inc.php:47
-#: ../../templates/sidebar_localplay.inc.php:66
-#: ../../templates/sidebar_preferences.inc.php:31
-#: ../../templates/sidebar_preferences.inc.php:50
+#: ../../templates/sidebar_localplay.inc.php:41
+#: ../../templates/sidebar_localplay.inc.php:53
+#: ../../templates/sidebar_localplay.inc.php:72
+#: ../../templates/sidebar_preferences.inc.php:37
+#: ../../templates/sidebar_preferences.inc.php:56
 msgid "Expand/Collapse"
 msgstr "펴기/접기"
 
-#: ../../templates/sidebar_admin.inc.php:32
+#: ../../templates/sidebar_admin.inc.php:38
 msgid "Manage Licenses"
 msgstr "라이센스 관리"
 
-#: ../../templates/sidebar_admin.inc.php:39
+#: ../../templates/sidebar_admin.inc.php:45
 msgid "User Tools"
 msgstr "사용자 도구"
 
-#: ../../templates/sidebar_admin.inc.php:49
+#: ../../templates/sidebar_admin.inc.php:55
 msgid "Manage Shoutbox"
 msgstr "Shoutbox 관리"
 
-#: ../../templates/sidebar_admin.inc.php:52
+#: ../../templates/sidebar_admin.inc.php:58
 msgid "Clear Now Playing"
 msgstr "현재 재생 지우기"
 
-#: ../../templates/sidebar_admin.inc.php:58
+#: ../../templates/sidebar_admin.inc.php:64
 msgid "Add ACL"
 msgstr "ACL 추가하기"
 
-#: ../../templates/sidebar_admin.inc.php:59
+#: ../../templates/sidebar_admin.inc.php:65
 msgid "Show ACL(s)"
 msgstr "ACL 보여주기"
 
-#: ../../templates/sidebar_admin.inc.php:69
+#: ../../templates/sidebar_admin.inc.php:71
 msgid "Modules"
 msgstr "모듈"
 
-#: ../../templates/sidebar_admin.inc.php:78
+#: ../../templates/sidebar_admin.inc.php:80
 msgid "Server Config"
 msgstr "서버 설정"
 
-#: ../../templates/sidebar_home.inc.php:39
+#: ../../templates/sidebar_home.inc.php:45
 msgid "Browse Library"
 msgstr "라이브러리 탐색"
 
-#: ../../templates/sidebar_home.inc.php:72
+#: ../../templates/sidebar_home.inc.php:78
 msgid "Music Clips"
 msgstr "음악 클립"
 
-#: ../../templates/sidebar_home.inc.php:101
+#: ../../templates/sidebar_home.inc.php:107
 msgid "Advanced"
 msgstr "확장"
 
@@ -9056,35 +9112,35 @@ msgstr "스마트 리스트"
 msgid "Radio"
 msgstr "라디오"
 
-#: ../../templates/sidebar_localplay.inc.php:39
+#: ../../templates/sidebar_localplay.inc.php:45
 msgid "Show Instances"
 msgstr "인스턴스 보기"
 
-#: ../../templates/sidebar_localplay.inc.php:42
+#: ../../templates/sidebar_localplay.inc.php:48
 msgid "Show Playlist"
 msgstr "재생목록 보기"
 
-#: ../../templates/sidebar_localplay.inc.php:47
+#: ../../templates/sidebar_localplay.inc.php:53
 msgid "Active Instance"
 msgstr "활성 인스턴스"
 
-#: ../../templates/sidebar_localplay.inc.php:66
+#: ../../templates/sidebar_localplay.inc.php:72
 msgid "Localplay Disabled"
 msgstr "내부 재생 중단됨"
 
-#: ../../templates/sidebar_localplay.inc.php:68
+#: ../../templates/sidebar_localplay.inc.php:74
 msgid "Allow Localplay Set to False"
 msgstr "내부 재생 세트를 가짜로 허용하기"
 
-#: ../../templates/sidebar_localplay.inc.php:71
+#: ../../templates/sidebar_localplay.inc.php:77
 msgid "Localplay Controller Not Defined"
 msgstr "내부 재생 컨트롤러를 정의하지 못함"
 
-#: ../../templates/sidebar_preferences.inc.php:42
+#: ../../templates/sidebar_preferences.inc.php:48
 msgid "Account"
 msgstr "계정"
 
-#: ../../templates/sidebar_preferences.inc.php:52
+#: ../../templates/sidebar_preferences.inc.php:58
 msgid "Import"
 msgstr "들여오기"
 
@@ -9172,7 +9228,7 @@ msgstr "이 비디오를 삭제할 수 없습니다"
 # Please do not delete or modify the content by yourself. It will be
 # automatically (re)generated
 # if you run './gather-messages.sh [-gu|--getutds].
-# Last Update: 20.06.2020 12:46:26 CEST
+# Last Update: 30.07.2020 21:34:18 CEST
 #
 #: Database preference table id 1
 msgid "Allow Downloads"

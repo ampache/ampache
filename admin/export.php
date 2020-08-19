@@ -20,7 +20,8 @@
  *
  */
 
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 if (!Access::check('interface', 75)) {
     UI::access_denied();
@@ -54,19 +55,19 @@ switch ($_REQUEST['action']) {
                 header("Content-Type: application/itunes+xml; charset=utf-8");
                 header("Content-Disposition: attachment; filename=\"ampache-itunes-$date.xml\"");
                 Catalog::export('itunes', $_REQUEST['export_catalog']);
-            break;
+                break;
             case 'csv':
                 header("Content-Type: application/vnd.ms-excel");
                 header("Content-Disposition: filename=\"ampache-export-$date.csv\"");
                 Catalog::export('csv', $_REQUEST['export_catalog']);
-            break;
+                break;
         } // end switch on format
 
         // We don't want the footer so we're done here
         return false;
     default:
         require_once AmpConfig::get('prefix') . UI::find_template('show_export.inc.php');
-    break;
+        break;
 } // end switch on action
 
 // Show the Footer

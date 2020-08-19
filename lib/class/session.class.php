@@ -207,7 +207,7 @@ class Session
                 break;
             case 'stream':
                 $key = (isset($data['sid'])) ? $data['sid'] : md5(uniqid((string) rand(), true));
-            break;
+                break;
             case 'mysql':
             default:
                 session_regenerate_id();
@@ -215,7 +215,7 @@ class Session
                 // Before refresh we don't have the cookie so we
                 // have to use session ID
                 $key = session_id();
-            break;
+                break;
         } // end switch on data type
 
         $username = '';
@@ -331,7 +331,7 @@ class Session
                 if (Dba::num_rows($db_results)) {
                     return true;
                 }
-            break;
+                break;
             case 'interface':
                 $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ?';
                 if (AmpConfig::get('use_auth')) {
@@ -345,7 +345,7 @@ class Session
                 if (Dba::num_rows($db_results)) {
                     return true;
                 }
-            break;
+                break;
             default:
                 return false;
         }

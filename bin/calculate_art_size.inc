@@ -23,20 +23,23 @@
 define('NO_SESSION', '1');
 $path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
-require_once $prefix . '/lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 // Turn off output buffering we don't need it for a command line script
 ob_end_clean();
 
-$inDisk = AmpConfig::get('album_art_store_disk');
+$inDisk   = AmpConfig::get('album_art_store_disk');
+$localDir = AmpConfig::get('local_metadata_dir');
 
 $sql        = "SELECT `image`, `id`, `object_id`, `object_type`, `size` FROM `image`";
 $db_results = Dba::read($sql);
 $results    = array();
 
 while ($row = Dba::fetch_assoc($db_results)) {
-    if ($inDisk) {
-        $source = Art::get_from_source(array('file' => Art::get_dir_on_disk($row['object_type'], $row['object_id'], 'default') . 'art-' . $row['size'] . '.jpg'), $row['object_type']);
+    $folder = Art::get_dir_on_disk($row['object_type'], $row['object_id'], 'default');
+    if ($inDisk && $localDir && $folder) {
+        $source = Art::get_from_source(array('file' => $folder . 'art-' . $row['size'] . '.jpg'), $row['object_type']);
     } else {
         $source = $row['image'];
     }

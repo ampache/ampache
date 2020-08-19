@@ -54,7 +54,7 @@ switch ($_REQUEST['action']) {
             $results['broadcast'] = Broadcast::get_unbroadcast_link((int) $broadcast_id) . '' .
                 '<script>startBroadcast(\'' . $key . '\');</script>';
         }
-    break;
+        break;
     case 'unbroadcast':
         $broadcast_id = Core::get_get('broadcast_id');
         $broadcast    = new Broadcast((int) $broadcast_id);
@@ -63,10 +63,10 @@ switch ($_REQUEST['action']) {
             $results['broadcast'] = Broadcast::get_broadcast_link() . '' .
                 '<script>stopBroadcast();</script>';
         }
-    break;
+        break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 } // switch on action;
 
 // We always do this

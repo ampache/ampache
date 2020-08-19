@@ -20,12 +20,15 @@
  *
  */
 
+use Lib\Cron;
+
 define('NO_SESSION', '1');
 define('CLI', 1);
 
 $path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
-require_once $prefix . '/lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 ob_end_flush();
 
@@ -80,8 +83,31 @@ Recommendation::garbage_collection();
 /**
  * Run compute_cache
  */
-require_once $prefix . '/bin/compute_cache.inc';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/bin/compute_cache.inc';
+
+/**
+ * ping your channels to keep them alive
+ */
+$channels = Channel::get_channel_list();
+foreach ($channels as $channel_id) {
+    $channel = new Channel($channel_id);
+    if ($channel->id) {
+        if ($channel->check_channel()) {
+            debug_event('cron', 'Checking channel: ' . $channel->id, 4);
+            $url = $channel->get_stream_proxy_url();
+            $ch  = curl_init($url);
+            if ($ch) {
+                curl_setopt($ch, CURLOPT_NOBODY, true);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                curl_exec($ch);
+                curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
+            }
+        }
+    }
+}
 
 // mark the date this cron was completed.
-set_cron_date();
+Cron::set_cron_date();
 debug_event('cron', 'finished cron process', 4);

@@ -1169,26 +1169,26 @@ class Song extends database_object implements media, library_item
                     $new_artist_id = Artist::check($value);
                     $this->artist  = $new_artist_id;
                     self::update_artist($new_artist_id, $this->id, $old_artist_id);
-                break;
+                    break;
                 case 'album_name':
                     // Create new album name and id
                     $old_album_id = $this->album;
                     $new_album_id = Album::check($value);
                     $this->album  = $new_album_id;
                     self::update_album($new_album_id, $this->id, $old_album_id);
-                break;
+                    break;
                 case 'artist':
                     // Change artist the song is assigned to
                     $old_artist_id = $this->artist;
                     $new_artist_id = $value;
                     self::update_artist($new_artist_id, $this->id, $old_artist_id);
-                break;
+                    break;
                 case 'album':
                     // Change album the song is assigned to
                     $old_album_id = $this->album;
                     $new_album_id = $value;
                     self::update_album($new_album_id, $this->id, $old_album_id);
-                break;
+                    break;
                 case 'year':
                 case 'title':
                 case 'track':
@@ -1204,18 +1204,18 @@ class Song extends database_object implements media, library_item
                         self::$function($value, $this->id);
                         $this->$key = $value;
                     }
-                break;
+                    break;
                 case 'edit_tags':
                     Tag::update_tag_list($value, 'song', $this->id, true);
                     $this->tags = Tag::get_top_tags('song', $this->id);
-                break;
+                    break;
                 case 'metadata':
                     if (self::isCustomMetadataEnabled()) {
                         $this->updateMetadata($value);
                     }
-                break;
+                    break;
                 default:
-                break;
+                    break;
             } // end whitelist
         } // end foreach
 

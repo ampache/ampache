@@ -21,7 +21,8 @@
  */
 
 define('NO_SESSION', '1');
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 /* Check Perms */
 if (!AmpConfig::get('use_now_playing_embedded') || AmpConfig::get('demo_mode')) {

@@ -27,7 +27,8 @@
  * This is also where it decides if you need to be downsampled.
  */
 define('NO_SESSION', '1');
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 ob_end_clean();
 
 //debug_event('play/index', print_r(apache_request_headers(), true), 5);
@@ -189,7 +190,7 @@ if (!$share_id) {
 
         // If require session is set then we need to make sure we're legit
         if ($use_auth && AmpConfig::get('require_session')) {
-            if (!AmpConfig::get('require_localnet_session') && Access::check_network('network', Core::get_global('user')->id, '5')) {
+            if (!AmpConfig::get('require_localnet_session') && Access::check_network('network', Core::get_global('user')->id, 5)) {
                 debug_event('play/index', 'Streaming access allowed for local network IP ' . Core::get_server('REMOTE_ADDR'), 4);
             } else {
                 if (!Session::exists('stream', $sid)) {
@@ -250,8 +251,8 @@ if (!$prefs) {
 
 // If they are using access lists let's make sure that they have enough access to play this mojo
 if (AmpConfig::get('access_control')) {
-    if (!Access::check_network('stream', Core::get_global('user')->id, '25') &&
-        !Access::check_network('network', Core::get_global('user')->id, '25')) {
+    if (!Access::check_network('stream', Core::get_global('user')->id, 25) &&
+        !Access::check_network('network', Core::get_global('user')->id, 25)) {
         debug_event('play/index', "Streaming Access Denied: " . Core::get_user_ip() . " does not have stream level access", 3);
         UI::access_denied();
 
@@ -490,7 +491,7 @@ if (AmpConfig::get('track_user_ip')) {
 
 $force_downsample = false;
 if (AmpConfig::get('downsample_remote')) {
-    if (!Access::check_network('network', Core::get_global('user')->id, '0')) {
+    if (!Access::check_network('network', Core::get_global('user')->id, 0)) {
         debug_event('play/index', 'Downsampling enabled for non-local address ' . Core::get_server('REMOTE_ADDR'), 5);
         $force_downsample = true;
     }

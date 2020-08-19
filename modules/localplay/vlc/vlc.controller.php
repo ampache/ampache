@@ -84,14 +84,17 @@ class AmpacheVlc extends localplay_controller
      */
     public function install()
     {
+        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+
         $sql = "CREATE TABLE `localplay_vlc` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-                "`name` VARCHAR( 128 ) COLLATE utf8_unicode_ci NOT NULL , " .
+                "`name` VARCHAR( 128 ) COLLATE $collation NOT NULL , " .
                 "`owner` INT( 11 ) NOT NULL, " .
-                "`host` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
+                "`host` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
                 "`port` INT( 11 ) UNSIGNED NOT NULL , " .
-                "`password` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
+                "`password` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
                 "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" .
-                ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+                ") ENGINE = MYISAM DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
@@ -499,16 +502,16 @@ class AmpacheVlc extends localplay_controller
                         $song->format();
                         $data['name']   = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
                         $data['link']   = $song->f_link;
-                break;
+                    break;
                 case 'demo_id':
                         $democratic     = new Democratic($url_data['demo_id']);
                         $data['name']   = T_('Democratic') . ' - ' . $democratic->name;
                         $data['link']   = '';
-                break;
+                    break;
                 case 'random':
                     $data['name'] = T_('Random') . ' - ' . scrub_out(ucfirst($url_data['type']));
                     $data['link'] = '';
-                break;
+                    break;
                 default:
                     // If we don't know it, look up by filename
                     $filename = Dba::escape($entry);
@@ -527,7 +530,7 @@ class AmpacheVlc extends localplay_controller
                         $lastis       = count($getlast) - 1;
                         $data['name'] = htmlspecialchars("(VLC local) " . substr($getlast[$lastis], 0, 50));
                     } // end if loop
-                break;
+                    break;
             } // end switch on primary key type
 
             $data['track']    = $key + 1;
