@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -20,65 +23,12 @@
  *
  */
 
+use Ampache\Application\Api\SseApplication;
+
 require_once __DIR__ . '/../../lib/init.php';
 
 require_once AmpConfig::get('prefix') . '/modules/catalog/local/local.catalog.php';
 
-if (!Access::check('interface', 75)) {
-    UI::access_denied();
+$dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
 
-    return false;
-}
-if (AmpConfig::get('demo_mode')) {
-    return false;
-}
-
-ob_end_clean();
-set_time_limit(0);
-
-if (!$_REQUEST['html']) {
-    define('SSE_OUTPUT', true);
-    header('Content-Type: text/event-stream; charset=utf-8');
-    header('Cache-Control: no-cache');
-}
-
-$worker = isset($_REQUEST['worker']) ? $_REQUEST['worker'] : null;
-if (isset($_REQUEST['options'])) {
-    $options = json_decode(urldecode($_REQUEST['options']), true);
-} else {
-    $options = null;
-}
-if (isset($_REQUEST['catalogs'])) {
-    $catalogs = scrub_in(json_decode(urldecode($_REQUEST['catalogs']), true));
-} else {
-    $catalogs = null;
-}
-
-// Free the session write lock
-// Warning: Do not change any session variable after this call
-session_write_close();
-
-switch ($worker) {
-    case 'catalog':
-        if (defined('SSE_OUTPUT')) {
-            echo "data: toggleVisible('ajax-loading')\n\n";
-            ob_flush();
-            flush();
-        }
-
-        Catalog::process_action(Core::get_request('action'), $catalogs, $options);
-
-        if (defined('SSE_OUTPUT')) {
-            echo "data: toggleVisible('ajax-loading')\n\n";
-            ob_flush();
-            flush();
-
-            echo "data: stop_sse_worker()\n\n";
-            ob_flush();
-            flush();
-        } else {
-            AmpError::display('general');
-        }
-
-        break;
-}
+$dic->get(SseApplication::class)->run();

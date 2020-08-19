@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -20,48 +23,10 @@
  *
  */
 
+use Ampache\Application\Admin\ShoutApplication;
+
 require_once __DIR__ . '/../../lib/init.php';
 
-if (!Access::check('interface', 100)) {
-    UI::access_denied();
+$dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
 
-    return false;
-}
-
-UI::show_header();
-
-// Switch on the actions
-switch ($_REQUEST['action']) {
-    case 'edit_shout':
-        $shout = new Shoutbox($_REQUEST['shout_id']);
-        if ($shout->id) {
-            $shout->update($_POST);
-        }
-        show_confirmation(T_('No Problem'), T_('Shoutbox post has been updated'), AmpConfig::get('web_path') . '/admin/shout.php');
-        break;
-    case 'show_edit':
-        $shout  = new Shoutbox($_REQUEST['shout_id']);
-        $object = Shoutbox::get_object($shout->object_type, $shout->object_id);
-        $object->format();
-        $client = new User($shout->user);
-        $client->format();
-        require_once AmpConfig::get('prefix') . UI::find_template('show_edit_shout.inc.php');
-        break;
-    case 'delete':
-        $shout = new Shoutbox($_REQUEST['shout_id']);
-        Shoutbox::delete($_REQUEST['shout_id']);
-        show_confirmation(T_('No Problem'), T_('Shoutbox post has been deleted'), AmpConfig::get('web_path') . '/admin/shout.php');
-        break;
-    default:
-        $browse = new Browse();
-        $browse->set_type('shoutbox');
-        $browse->set_simple_browse(true);
-        $shoutbox_ids = $browse->get_objects();
-        $browse->show_objects($shoutbox_ids);
-        $browse->store();
-        break;
-} // end switch on action
-
-// Show the Footer
-UI::show_query_stats();
-UI::show_footer();
+$dic->get(ShoutApplication::class)->run();

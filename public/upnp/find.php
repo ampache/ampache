@@ -5,6 +5,8 @@ ini_set('display_errors', '1');
 
 /**
  * Class UPnPFind
+ *
+ * @deprecated looks like some debugging tool
  */
 class UPnPFind
 {
@@ -12,6 +14,8 @@ class UPnPFind
      * Find devices by UPnP multicast message and stores them to cache
      *
      * @return array  Parsed device list
+     *
+     * Requires socket extension
      */
     public static function findDevices()
     {

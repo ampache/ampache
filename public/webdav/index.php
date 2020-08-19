@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -20,28 +23,12 @@
  *
  */
 
+use Ampache\Application\Api\WebDavApplication;
+
 define('NO_SESSION', '1');
 
 require_once __DIR__ . '/../../lib/init.php';
 
-if (!AmpConfig::get('webdav_backend')) {
-    echo T_("Disabled");
+$dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
 
-    return false;
-}
-
-use Sabre\DAV;
-
-$rootDir = new WebDAV_Catalog();
-$server  = new DAV\Server($rootDir);
-
-$baseUri = ((AmpConfig::get('raw_web_path') !== "/") ? AmpConfig::get('raw_web_path') : "") . '/webdav/index.php';
-$server->setBaseUri($baseUri);
-if (AmpConfig::get('use_auth')) {
-    $authBackend = new WebDAV_Auth();
-    $authBackend->setRealm('Ampache');
-    $authPlugin  = new DAV\Auth\Plugin($authBackend);
-    $server->addPlugin($authPlugin);
-}
-
-$server->exec();
+$dic->get(WebDavApplication::class)->run();

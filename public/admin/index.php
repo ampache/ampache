@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -20,30 +23,10 @@
  *
  */
 
+use Ampache\Application\Admin\IndexApplication;
+
 require_once __DIR__ . '/../../lib/init.php';
 
-if (!Access::check('interface', 75)) {
-    UI::access_denied();
+$dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
 
-    return false;
-}
-
-UI::show_header();
-
-// Switch on the actions
-switch ($_REQUEST['action']) {
-    default:
-        // Show Catalogs
-        $catalog_ids = Catalog::get_catalogs();
-        $browse      = new Browse();
-        $browse->set_type('catalog');
-        $browse->set_static_content(true);
-        $browse->save_objects($catalog_ids);
-        $browse->show_objects($catalog_ids);
-        $browse->store();
-        break;
-}
-
-// Show the Footer
-UI::show_query_stats();
-UI::show_footer();
+$dic->get(IndexApplication::class)->run();

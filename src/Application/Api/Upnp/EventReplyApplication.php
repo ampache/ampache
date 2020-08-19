@@ -1,9 +1,9 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types=0);
 
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,10 +23,24 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Application\Admin\ExportApplication;
+namespace Ampache\Application\Api\Upnp;
 
-require_once __DIR__ . '/../../lib/init.php';
+use Ampache\Application\ApplicationInterface;
 
-$dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
+final class EventReplyApplication implements ApplicationInterface
+{
+    public function run(): void
+    {
+        $headers = getallheaders();
+        //$callback = $headers['Callback'];
+        //$nt = $headers['NT'];
+        $timeout = $headers['Timeout'];
+        if (empty($timeout)) {
+            $timeout = "Second-3600";
+        }
 
-$dic->get(ExportApplication::class)->run();
+        header("SID: uuid:" . uniqid());
+        header("TIMEOUT:" . $timeout);
+        header("Connection: close");
+    }
+}

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -20,36 +23,12 @@
  *
  */
 
+use Ampache\Application\Api\RefreshReorderedApplication;
+
 define('AJAX_INCLUDE', '1');
 
 require_once __DIR__ . '/../../lib/init.php';
 
-debug_event('refresh_reordered.server', 'Called for action: {' . Core::get_request('action') . '}', 5);
+$dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
 
-// Switch on the actions
-switch ($_REQUEST['action']) {
-    case 'refresh_playlist_medias':
-        $playlist = new Playlist((int) Core::get_request('id'));
-        $playlist->format();
-        $object_ids = $playlist->get_items();
-        $browse     = new Browse();
-        $browse->set_type('playlist_media');
-        $browse->add_supplemental_object('playlist', $playlist->id);
-        $browse->set_static_content(true);
-        $browse->show_objects($object_ids);
-        $browse->store();
-        break;
-    case 'refresh_album_songs':
-        $browse = new Browse();
-        $browse->set_show_header(true);
-        $browse->set_type('song');
-        $browse->set_simple_browse(true);
-        $browse->set_filter('album', Core::get_request('id'));
-        $browse->set_sort('track', 'ASC');
-        $browse->get_objects();
-        echo "<div id='browse_content_song' class='browse_content'>";
-        $browse->show_objects(null, true); // true argument is set to show the reorder column
-        $browse->store();
-        echo "</div>";
-        break;
-} // switch on the action
+$dic->get(RefreshReorderedApplication::class)->run();

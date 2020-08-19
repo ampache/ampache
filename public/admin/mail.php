@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -20,65 +23,10 @@
  *
  */
 
+use Ampache\Application\Admin\MailApplication;
+
 require_once __DIR__ . '/../../lib/init.php';
 
-if (!Access::check('interface', 75)) {
-    UI::access_denied();
+$dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
 
-    return false;
-}
-
-UI::show_header();
-
-// Switch on the actions
-switch ($_REQUEST['action']) {
-    case 'send_mail':
-        if (AmpConfig::get('demo_mode')) {
-            UI::access_denied();
-
-            return false;
-        }
-
-        // Multi-byte Character Mail
-        if (function_exists('mb_language')) {
-            $ini_default_charset = 'default_charset';
-            if (ini_get($ini_default_charset)) {
-                ini_set($ini_default_charset, "UTF-8");
-            }
-            mb_language("uni");
-        }
-
-        if (Mailer::is_mail_enabled()) {
-            $mailer = new Mailer();
-
-            // Set the vars on the object
-            $mailer->subject = $_REQUEST['subject'];
-            $mailer->message = $_REQUEST['message'];
-
-            if (Core::get_request('from') == 'system') {
-                $mailer->set_default_sender();
-            } else {
-                $mailer->sender      = Core::get_global('user')->email;
-                $mailer->sender_name = Core::get_global('user')->fullname;
-            }
-
-            if ($mailer->send_to_group($_REQUEST['to'])) {
-                $title  = T_('No Problem');
-                $body   = T_('Your e-mail has been sent');
-            } else {
-                $title     = T_("There Was a Problem");
-                $body      = T_('Your e-mail has not been sent');
-            }
-            $url = AmpConfig::get('web_path') . '/admin/mail.php';
-            show_confirmation($title, $body, $url);
-        }
-
-        break;
-    default:
-        require_once AmpConfig::get('prefix') . UI::find_template('show_mail_users.inc.php');
-        break;
-} // end switch
-
-// Show the Footer
-UI::show_query_stats();
-UI::show_footer();
+$dic->get(MailApplication::class)->run();

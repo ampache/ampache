@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=0);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -27,116 +30,12 @@
  * This is also where it decides if you need to be downsampled.
  */
 
+use Ampache\Application\Playback\ChannelApplication;
+
 define('NO_SESSION', '1');
 
 require_once __DIR__ . '/../../lib/init.php';
 
-ob_end_clean();
+$dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
 
-set_time_limit(0);
-
-$channel = new Channel((int) Core::get_request('channel'));
-if (!$channel->id) {
-    debug_event('channel/index', 'Unknown channel.', 1);
-
-    return false;
-}
-
-if (!function_exists('curl_version')) {
-    debug_event('channel/index', 'Error: Curl is required for this feature.', 2);
-
-    return false;
-}
-
-// Authenticate the user here
-if ($channel->is_private) {
-    $is_auth = false;
-    if (filter_has_var(INPUT_SERVER, 'PHP_AUTH_USER')) {
-        $htusername = Core::get_server('PHP_AUTH_USER');
-        $htpassword = Core::get_server('PHP_AUTH_PW');
-
-        $auth = Auth::login($htusername, $htpassword);
-        debug_event('channel/index', 'Auth Attempt for ' . $htusername, 5);
-        if ($auth['success']) {
-            debug_event('channel/index', 'Auth SUCCESS', 3);
-            $username        = $auth['username'];
-            $GLOBALS['user'] = User::get_from_username($username);
-            $is_auth         = true;
-            Preference::init();
-
-            if (AmpConfig::get('access_control')) {
-                if (!Access::check_network('stream', Core::get_global('user')->id, 25) &&
-                    !Access::check_network('network', Core::get_global('user')->id, 25)) {
-                    debug_event('channel/index', "UI::access_denied: Streaming Access Denied: " . Core::get_user_ip() . " does not have stream level access", 2);
-                    UI::access_denied();
-
-                    return false;
-                }
-            }
-        }
-    }
-
-    if (!$is_auth) {
-        debug_event('channel/index', 'Auth FAILURE', 3);
-        header('WWW-Authenticate: Basic realm="Ampache Channel Authentication"');
-        header('HTTP/1.0 401 Unauthorized');
-        echo T_('Unauthorized');
-
-        return false;
-    }
-}
-
-$url = 'http://' . $channel->interface . ':' . $channel->port . '/' . $_REQUEST['target'];
-// Redirect request to the real channel server
-$headers         = getallheaders();
-$headers['Host'] = $channel->interface;
-$reqheaders      = array();
-foreach ($headers as $key => $value) {
-    $reqheaders[] = $key . ': ' . $value;
-}
-
-$curl = curl_init($url);
-if ($curl) {
-    curl_setopt_array($curl, array(
-        CURLOPT_HTTPHEADER => $reqheaders,
-        CURLOPT_HEADER => false,
-        CURLOPT_RETURNTRANSFER => false,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HEADERFUNCTION => 'output_header',
-        CURLOPT_NOPROGRESS => false,
-        CURLOPT_PROGRESSFUNCTION => 'progress',
-    ));
-    curl_exec($curl);
-    curl_close($curl);
-}
-
-/**
- *
- * @SuppressWarnings(PHPMD.UnusedFormalParameter)
- * @param $totaldownload
- * @param $downloaded
- * @param $us
- * @param $ud
- */
-function progress($totaldownload, $downloaded, $us, $ud)
-{
-    flush();
-    ob_flush();
-}
-
-/**
- *
- * @SuppressWarnings(PHPMD.UnusedFormalParameter)
- * @param $curl
- * @param $header
- * @return integer
- */
-function output_header($curl, $header)
-{
-    $trimheader = trim($header);
-    if (!empty($trimheader)) {
-        header($trimheader);
-    }
-
-    return strlen($header);
-}
+$dic->get(ChannelApplication::class)->run();

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -20,51 +23,10 @@
  *
  */
 
+use Ampache\Application\Admin\CatalogApplication;
+
 require_once __DIR__ . '/../../lib/init.php';
 
-if (!Access::check('interface', 75)) {
-    UI::access_denied();
+$dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
 
-    return false;
-}
-
-UI::show_header();
-
-// Switch on the actions
-switch ($_REQUEST['action']) {
-    case 'edit':
-        if ((filter_has_var(INPUT_POST, 'license_id'))) {
-            $license = new License(filter_input(INPUT_POST, 'license_id', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-            if ($license->id) {
-                $license->update($_POST);
-            }
-            $text = T_('The License has been updated');
-        } else {
-            License::create($_POST);
-            $text = T_('A new License has been created');
-        }
-        show_confirmation(T_('No Problem'), $text, AmpConfig::get('web_path') . '/admin/license.php');
-        break;
-    case 'show_edit':
-        $license = new License($_REQUEST['license_id']);
-        // intentional fall through
-    case 'show_create':
-        require_once AmpConfig::get('prefix') . UI::find_template('show_edit_license.inc.php');
-        break;
-    case 'delete':
-        License::delete($_REQUEST['license_id']);
-        show_confirmation(T_('No Problem'), T_('The License has been deleted'), AmpConfig::get('web_path') . '/admin/license.php');
-        break;
-    default:
-        $browse = new Browse();
-        $browse->set_type('license');
-        $browse->set_simple_browse(true);
-        $license_ids = $browse->get_objects();
-        $browse->show_objects($license_ids);
-        $browse->store();
-        break;
-}
-
-// Show the Footer
-UI::show_query_stats();
-UI::show_footer();
+$dic->get(CatalogApplication::class)->run();
