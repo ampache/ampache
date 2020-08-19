@@ -16,10 +16,14 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
   * ```100```: Equal plays and skips
   * ```> 100```: Played more than skipped
 * Generate rsstokens for each user allowing unique feed URLs
-* NEW database options
-  * rsstoken: Identify users by token when generating RSS feeds
 * Add 'Original Year', 'Release Type' to Album searches
 * Ping your active channels in cron.inc to keep the socket alive
+* Allow setting custom databse collation and charset without overwriting your changes
+* NEW database options
+  * rsstoken: Identify users by token when generating RSS feeds
+* NEW config options
+  * database_charset: Set a default charset for your database
+  * database_collation: Set a default collation for your database
 
 ### Changed
 

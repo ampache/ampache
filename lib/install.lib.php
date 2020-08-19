@@ -196,9 +196,11 @@ function install_rewrite_rules($file, $web_path, $download)
  * @param boolean $create_db
  * @param boolean $overwrite
  * @param boolean $create_tables
+ * @param string $charset
+ * @param string $collation
  * @return boolean
  */
-function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true)
+function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true, $charset = 'utf8' , $collation = 'utf8_unicode_ci')
 {
     $database = (string) AmpConfig::get('database_name');
     // Make sure that the database name is valid
@@ -289,8 +291,14 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
     }
 
     if ($create_db) {
-        $sql = 'ALTER DATABASE `' . $database . '` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci';
+        $sql = "ALTER DATABASE `" . $database . "` DEFAULT CHARACTER SET $charset COLLATE ". $collation;
         Dba::write($sql);
+        // if you've set a custom collation we need to change it
+        $tables = array("access_list", "album", "artist", "bookmark", "broadcast", "cache_object_count", "cache_object_count_run", "catalog", "catalog_local", "catalog_remote", "channel", "clip", "daap_session", "democratic", "image", "ip_history", "label", "label_asso", "license", "live_stream", "localplay_httpq", "localplay_mpd", "metadata", "metadata_field", "movie", "now_playing", "object_count", "personal_video", "player_control", "playlist", "playlist_data", "podcast", "podcast_episode", "preference", "rating", "recommendation", "recommendation_item", "search", "session", "session_remember", "session_stream", "share", "song", "song_data", "song_preview", "stream_playlist", "tag", "tag_map", "tag_merge", "tmp_browse", "tmp_playlist", "tmp_playlist_data", "tvshow", "tvshow_episode", "tvshow_season", "update_info", "user", "user_activity", "user_catalog", "user_flag", "user_follower", "user_preference", "user_pvmsg", "user_shout", "user_vote", "video", "wanted");
+        foreach ($tables AS $table_name) {
+            $sql = "ALTER TABLE `" . $table_name . "` CHARACTER SET $charset COLLATE ". $collation;
+            Dba::write($sql);
+        }
     }
 
     // If they've picked something other than English update default preferences
