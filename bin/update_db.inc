@@ -41,7 +41,7 @@ echo "\n-----------------\n" .
 $translated_charset = Dba::translate_to_mysqlcharset(AmpConfig::get('site_charset'));
 $target_charset     = $translated_charset['charset'];
 $target_collation   = $translated_charset['collation'];
-$table_engine       = ($target_charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+$table_engine       = ($target_charset == 'utf8mb4') ? 'InnoDB' : 'MyISAM';
 
 echo T_('This script makes changes to your database based on your config settings') . "\n\n";
 echo T_('Target charset') . ":   $target_charset\n";
