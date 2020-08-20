@@ -36,7 +36,7 @@ use Song;
 use User;
 use Wanted;
 
-final class SearchHandler implements AjaxHandlerInterface
+final class SearchAjaxHandler implements AjaxHandlerInterface
 {
     public function handle(): void
     {

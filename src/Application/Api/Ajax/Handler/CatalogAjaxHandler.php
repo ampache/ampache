@@ -26,45 +26,44 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Access;
-use Core;
-use Podcast;
-use Podcast_Episode;
+use Ajax;
+use Catalog;
 
-final class PodcastHandler implements AjaxHandlerInterface
+final class CatalogAjaxHandler implements AjaxHandlerInterface
 {
     public function handle(): void
     {
-
         // Switch on the actions
         switch ($_REQUEST['action']) {
-            case 'sync':
+            case 'flip_state':
                 if (!Access::check('interface', 75)) {
-                    debug_event('podcast.ajax', Core::get_global('user')->username . ' attempted to sync podcast', 1);
+                    debug_event('catalog.ajax', Core::get_global('user')->username . ' attempted to change the state of a catalog', 1);
 
                     return;
                 }
 
-                if (isset($_REQUEST['podcast_id'])) {
-                    $podcast = new Podcast($_REQUEST['podcast_id']);
-                    if ($podcast->id) {
-                        $podcast->sync_episodes(true);
-                    } else {
-                        debug_event('podcast.ajax', 'Cannot find podcast', 1);
-                    }
-                } elseif (isset($_REQUEST['podcast_episode_id'])) {
-                    $episode = new Podcast_Episode($_REQUEST['podcast_episode_id']);
-                    if ($episode->id !== null) {
-                        $episode->gather();
-                    } else {
-                        debug_event('podcast.ajax', 'Cannot find podcast episode', 1);
-                    }
+                $catalog     = Catalog::create_from_id($_REQUEST['catalog_id']);
+                $new_enabled = $catalog->enabled ? '0' : '1';
+                Catalog::update_enabled($new_enabled, $catalog->id);
+                $catalog->enabled = (int) $new_enabled;
+                $catalog->format();
+
+                // Return the new Ajax::button
+                $id  = 'button_flip_state_' . $catalog->id;
+                if ($catalog->enabled) {
+                    $button     = 'disable';
+                    $buttontext = T_('Disable');
+                } else {
+                    $button     = 'enable';
+                    $buttontext = T_('Enable');
                 }
-                $results['rfc3514'] = '0x1';
+                $results[$id] = Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $catalog->id, $button, $buttontext, 'flip_state_' . $catalog->id);
+
                 break;
             default:
                 $results['rfc3514'] = '0x1';
                 break;
-        }
+        } // switch on action;
 
         // We always do this
         echo (string) xoutput_from_array($results);

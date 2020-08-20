@@ -30,7 +30,7 @@ use Broadcast;
 use Core;
 use UI;
 
-final class PlayerHandler implements AjaxHandlerInterface
+final class PlayerAjaxHandler implements AjaxHandlerInterface
 {
     public function handle(): void
     {

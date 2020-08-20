@@ -31,7 +31,7 @@ use Plugin;
 use Session;
 use Stats;
 
-final class StatsHandler implements AjaxHandlerInterface
+final class StatsAjaxHandler implements AjaxHandlerInterface
 {
     public function handle(): void
     {

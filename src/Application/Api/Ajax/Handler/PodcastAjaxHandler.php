@@ -26,31 +26,45 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Access;
-use AmpConfig;
 use Core;
-use User;
+use Podcast;
+use Podcast_Episode;
 
-final class UserHandler implements AjaxHandlerInterface
+final class PodcastAjaxHandler implements AjaxHandlerInterface
 {
     public function handle(): void
     {
-        $user_id = (int) (Core::get_request('user_id'));
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
-            case 'flip_follow':
-                if (Access::check('interface', 25) && AmpConfig::get('sociable')) {
-                    $fuser = new User($user_id);
-                    if ($fuser->id > 0 && $user_id !== (int) Core::get_global('user')->id) {
-                        Core::get_global('user')->toggle_follow($user_id);
-                        $results['button_follow_' . $user_id] = $fuser->get_display_follow();
+            case 'sync':
+                if (!Access::check('interface', 75)) {
+                    debug_event('podcast.ajax', Core::get_global('user')->username . ' attempted to sync podcast', 1);
+
+                    return;
+                }
+
+                if (isset($_REQUEST['podcast_id'])) {
+                    $podcast = new Podcast($_REQUEST['podcast_id']);
+                    if ($podcast->id) {
+                        $podcast->sync_episodes(true);
+                    } else {
+                        debug_event('podcast.ajax', 'Cannot find podcast', 1);
+                    }
+                } elseif (isset($_REQUEST['podcast_episode_id'])) {
+                    $episode = new Podcast_Episode($_REQUEST['podcast_episode_id']);
+                    if ($episode->id !== null) {
+                        $episode->gather();
+                    } else {
+                        debug_event('podcast.ajax', 'Cannot find podcast episode', 1);
                     }
                 }
+                $results['rfc3514'] = '0x1';
                 break;
             default:
                 $results['rfc3514'] = '0x1';
                 break;
-        } // switch on action;
+        }
 
         // We always do this
         echo (string) xoutput_from_array($results);

@@ -37,7 +37,7 @@ use UI;
 use User;
 use Userflag;
 
-final class DefaultHandler implements AjaxHandlerInterface
+final class DefaultAjaxHandler implements AjaxHandlerInterface
 {
     public function handle(): void
     {

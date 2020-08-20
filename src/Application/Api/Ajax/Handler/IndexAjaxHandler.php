@@ -43,7 +43,7 @@ use UI;
 use Video;
 use Wanted;
 
-final class IndexHandler implements AjaxHandlerInterface
+final class IndexAjaxHandler implements AjaxHandlerInterface
 {
     public function handle(): void
     {

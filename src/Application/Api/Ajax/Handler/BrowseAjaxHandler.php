@@ -35,7 +35,7 @@ use Playlist;
 use Search;
 use Share;
 
-final class BrowseHandler implements AjaxHandlerInterface
+final class BrowseAjaxHandler implements AjaxHandlerInterface
 {
     public function handle(): void
     {

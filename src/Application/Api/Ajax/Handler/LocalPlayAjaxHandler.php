@@ -33,7 +33,7 @@ use Localplay;
 use Preference;
 use UI;
 
-final class LocalplayHandler implements AjaxHandlerInterface
+final class LocalPlayAjaxHandler implements AjaxHandlerInterface
 {
     public function handle(): void
     {

@@ -32,7 +32,7 @@ use Browse;
 use Core;
 use Playlist;
 
-final class PlaylistHandler implements AjaxHandlerInterface
+final class PlaylistAjaxHandler implements AjaxHandlerInterface
 {
     public function handle(): void
     {

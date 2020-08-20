@@ -31,7 +31,7 @@ use Browse;
 use Core;
 use Democratic;
 
-final class DemocraticHandler implements AjaxHandlerInterface
+final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
 {
     public function handle(): void
     {

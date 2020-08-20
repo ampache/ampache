@@ -34,7 +34,7 @@ use Playlist;
 use Random;
 use UI;
 
-final class RandomHandler implements AjaxHandlerInterface
+final class RandomAjaxHandler implements AjaxHandlerInterface
 {
     public function handle(): void
     {

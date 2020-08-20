@@ -26,39 +26,26 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Access;
-use Ajax;
-use Catalog;
+use AmpConfig;
+use Core;
+use User;
 
-final class CatalogHandler implements AjaxHandlerInterface
+final class UserAjaxHandler implements AjaxHandlerInterface
 {
     public function handle(): void
     {
+        $user_id = (int) (Core::get_request('user_id'));
+
         // Switch on the actions
         switch ($_REQUEST['action']) {
-            case 'flip_state':
-                if (!Access::check('interface', 75)) {
-                    debug_event('catalog.ajax', Core::get_global('user')->username . ' attempted to change the state of a catalog', 1);
-
-                    return;
+            case 'flip_follow':
+                if (Access::check('interface', 25) && AmpConfig::get('sociable')) {
+                    $fuser = new User($user_id);
+                    if ($fuser->id > 0 && $user_id !== (int) Core::get_global('user')->id) {
+                        Core::get_global('user')->toggle_follow($user_id);
+                        $results['button_follow_' . $user_id] = $fuser->get_display_follow();
+                    }
                 }
-
-                $catalog     = Catalog::create_from_id($_REQUEST['catalog_id']);
-                $new_enabled = $catalog->enabled ? '0' : '1';
-                Catalog::update_enabled($new_enabled, $catalog->id);
-                $catalog->enabled = (int) $new_enabled;
-                $catalog->format();
-
-                // Return the new Ajax::button
-                $id  = 'button_flip_state_' . $catalog->id;
-                if ($catalog->enabled) {
-                    $button     = 'disable';
-                    $buttontext = T_('Disable');
-                } else {
-                    $button     = 'enable';
-                    $buttontext = T_('Enable');
-                }
-                $results[$id] = Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $catalog->id, $button, $buttontext, 'flip_state_' . $catalog->id);
-
                 break;
             default:
                 $results['rfc3514'] = '0x1';

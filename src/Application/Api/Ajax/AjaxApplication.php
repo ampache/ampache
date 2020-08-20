@@ -26,22 +26,22 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax;
 
 use Ampache\Application\Api\Ajax\Handler\AjaxHandlerInterface;
-use Ampache\Application\Api\Ajax\Handler\BrowseHandler;
-use Ampache\Application\Api\Ajax\Handler\CatalogHandler;
-use Ampache\Application\Api\Ajax\Handler\DefaultHandler;
-use Ampache\Application\Api\Ajax\Handler\DemocraticHandler;
-use Ampache\Application\Api\Ajax\Handler\IndexHandler;
-use Ampache\Application\Api\Ajax\Handler\LocalplayHandler;
-use Ampache\Application\Api\Ajax\Handler\PlayerHandler;
-use Ampache\Application\Api\Ajax\Handler\PlaylistHandler;
-use Ampache\Application\Api\Ajax\Handler\PodcastHandler;
-use Ampache\Application\Api\Ajax\Handler\RandomHandler;
-use Ampache\Application\Api\Ajax\Handler\SearchHandler;
-use Ampache\Application\Api\Ajax\Handler\SongHandler;
-use Ampache\Application\Api\Ajax\Handler\StatsHandler;
-use Ampache\Application\Api\Ajax\Handler\StreamHandler;
-use Ampache\Application\Api\Ajax\Handler\TagHandler;
-use Ampache\Application\Api\Ajax\Handler\UserHandler;
+use Ampache\Application\Api\Ajax\Handler\BrowseAjaxHandler;
+use Ampache\Application\Api\Ajax\Handler\CatalogAjaxHandler;
+use Ampache\Application\Api\Ajax\Handler\DefaultAjaxHandler;
+use Ampache\Application\Api\Ajax\Handler\DemocraticPlaybackAjaxHandler;
+use Ampache\Application\Api\Ajax\Handler\IndexAjaxHandler;
+use Ampache\Application\Api\Ajax\Handler\LocalPlayAjaxHandler;
+use Ampache\Application\Api\Ajax\Handler\PlayerAjaxHandler;
+use Ampache\Application\Api\Ajax\Handler\PlaylistAjaxHandler;
+use Ampache\Application\Api\Ajax\Handler\PodcastAjaxHandler;
+use Ampache\Application\Api\Ajax\Handler\RandomAjaxHandler;
+use Ampache\Application\Api\Ajax\Handler\SearchAjaxHandler;
+use Ampache\Application\Api\Ajax\Handler\SongAjaxHandler;
+use Ampache\Application\Api\Ajax\Handler\StatsAjaxHandler;
+use Ampache\Application\Api\Ajax\Handler\StreamAjaxHandler;
+use Ampache\Application\Api\Ajax\Handler\TagAjaxHandler;
+use Ampache\Application\Api\Ajax\Handler\UserAjaxHandler;
 use Ampache\Application\ApplicationInterface;
 use Psr\Container\ContainerInterface;
 
@@ -58,21 +58,21 @@ final class AjaxApplication implements ApplicationInterface
     public function run(): void
     {
         $handlerList = [
-            'browser' => BrowseHandler::class,
-            'catalog' => CatalogHandler::class,
-            'democratic' => DemocraticHandler::class,
-            'index' => IndexHandler::class,
-            'localplay' => LocalplayHandler::class,
-            'player' => PlayerHandler::class,
-            'playlist' => PlaylistHandler::class,
-            'podcast' => PodcastHandler::class,
-            'random' => RandomHandler::class,
-            'search' => SearchHandler::class,
-            'song' => SongHandler::class,
-            'stats' => StatsHandler::class,
-            'stream' => StreamHandler::class,
-            'tag' => TagHandler::class,
-            'user' => UserHandler::class,
+            'browser' => BrowseAjaxHandler::class,
+            'catalog' => CatalogAjaxHandler::class,
+            'democratic' => DemocraticPlaybackAjaxHandler::class,
+            'index' => IndexAjaxHandler::class,
+            'localplay' => LocalPlayAjaxHandler::class,
+            'player' => PlayerAjaxHandler::class,
+            'playlist' => PlaylistAjaxHandler::class,
+            'podcast' => PodcastAjaxHandler::class,
+            'random' => RandomAjaxHandler::class,
+            'search' => SearchAjaxHandler::class,
+            'song' => SongAjaxHandler::class,
+            'stats' => StatsAjaxHandler::class,
+            'stream' => StreamAjaxHandler::class,
+            'tag' => TagAjaxHandler::class,
+            'user' => UserAjaxHandler::class,
         ];
 
         xoutput_headers();
@@ -82,7 +82,7 @@ final class AjaxApplication implements ApplicationInterface
             debug_event('ajax.server', 'Called for page: {' . $page . '}', 5);
         }
 
-        $handlerClassName = $handlerList[$page] ?? DefaultHandler::class;
+        $handlerClassName = $handlerList[$page] ?? DefaultAjaxHandler::class;
 
         /** @var AjaxHandlerInterface $handler */
         $handler = $this->dic->get($handlerClassName);

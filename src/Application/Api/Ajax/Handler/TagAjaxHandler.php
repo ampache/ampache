@@ -32,7 +32,7 @@ use Core;
 use Label;
 use Tag;
 
-final class TagHandler implements AjaxHandlerInterface
+final class TagAjaxHandler implements AjaxHandlerInterface
 {
     public function handle(): void
     {

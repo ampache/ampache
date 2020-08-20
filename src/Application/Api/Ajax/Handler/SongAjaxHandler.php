@@ -31,7 +31,7 @@ use Core;
 use Shoutbox;
 use Song;
 
-final class SongHandler implements AjaxHandlerInterface
+final class SongAjaxHandler implements AjaxHandlerInterface
 {
     public function handle(): void
     {

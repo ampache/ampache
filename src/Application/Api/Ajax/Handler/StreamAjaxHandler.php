@@ -31,7 +31,7 @@ use Core;
 use Preference;
 use UI;
 
-final class StreamHandler implements AjaxHandlerInterface
+final class StreamAjaxHandler implements AjaxHandlerInterface
 {
     public function handle(): void
     {
