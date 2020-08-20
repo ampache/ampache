@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,10 +21,11 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Application\SearchDataApplication;
+declare(strict_types=1);
 
-require_once __DIR__ . '/../../../lib/init.php';
+namespace Ampache\Application\Api\Ajax\Handler;
 
-$dic = require __DIR__ . '/../../../src/Config/Bootstrap.php';
-
-$dic->get(SearchDataApplication::class)->run();
+interface AjaxHandlerInterface
+{
+    public function handle(): void;
+}

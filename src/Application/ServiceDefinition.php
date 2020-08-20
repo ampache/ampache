@@ -36,6 +36,23 @@ use Ampache\Application\Admin\ModulesApplication;
 use Ampache\Application\Admin\ShoutApplication as AdminShoutApplication;
 use Ampache\Application\Admin\SystemApplication;
 use Ampache\Application\Admin\UsersApplication;
+use Ampache\Application\Api\Ajax\AjaxApplication;
+use Ampache\Application\Api\Ajax\Handler\BrowseHandler;
+use Ampache\Application\Api\Ajax\Handler\CatalogHandler;
+use Ampache\Application\Api\Ajax\Handler\DefaultHandler;
+use Ampache\Application\Api\Ajax\Handler\DemocraticHandler;
+use Ampache\Application\Api\Ajax\Handler\IndexHandler;
+use Ampache\Application\Api\Ajax\Handler\LocalplayHandler;
+use Ampache\Application\Api\Ajax\Handler\PlayerHandler;
+use Ampache\Application\Api\Ajax\Handler\PlaylistHandler;
+use Ampache\Application\Api\Ajax\Handler\PodcastHandler;
+use Ampache\Application\Api\Ajax\Handler\RandomHandler;
+use Ampache\Application\Api\Ajax\Handler\SearchHandler;
+use Ampache\Application\Api\Ajax\Handler\SongHandler;
+use Ampache\Application\Api\Ajax\Handler\StatsHandler;
+use Ampache\Application\Api\Ajax\Handler\StreamHandler;
+use Ampache\Application\Api\Ajax\Handler\TagHandler;
+use Ampache\Application\Api\Ajax\Handler\UserHandler;
 use Ampache\Application\Api\DaapApplication;
 use Ampache\Application\Api\EditApplication;
 use Ampache\Application\Api\JsonApplication;
@@ -60,6 +77,7 @@ use function DI\autowire;
 return [
     LoginApplication::class => autowire(LoginApplication::class),
     LogoutApplication::class => autowire(LogoutApplication::class),
+    SearchDataApplication::class => autowire(SearchDataApplication::class),
     AdminIndexApplication::class => autowire(AdminIndexApplication::class),
     AccessApplication::class => autowire(AccessApplication::class),
     CatalogApplication::class => autowire(CatalogApplication::class),
@@ -87,4 +105,21 @@ return [
     JsonApplication::class => autowire(JsonApplication::class),
     EditApplication::class => autowire(EditApplication::class),
     RefreshReorderedApplication::class => autowire(RefreshReorderedApplication::class),
+    AjaxApplication::class => autowire(AjaxApplication::class),
+    BrowseHandler::class => autowire(BrowseHandler::class),
+    DefaultHandler::class => autowire(DefaultHandler::class),
+    CatalogHandler::class => autowire(CatalogHandler::class),
+    DemocraticHandler::class => autowire(DemocraticHandler::class),
+    IndexHandler::class => autowire(IndexHandler::class),
+    LocalplayHandler::class => autowire(LocalplayHandler::class),
+    PlayerHandler::class => autowire(PlayerHandler::class),
+    PlaylistHandler::class => autowire(PlaylistHandler::class),
+    PodcastHandler::class => autowire(PodcastHandler::class),
+    RandomHandler::class => autowire(RandomHandler::class),
+    SearchHandler::class => autowire(SearchHandler::class),
+    SongHandler::class => autowire(SongHandler::class),
+    StatsHandler::class => autowire(StatsHandler::class),
+    StreamHandler::class => autowire(StreamHandler::class),
+    TagHandler::class => autowire(TagHandler::class),
+    UserHandler::class => autowire(UserHandler::class),
 ];
