@@ -574,6 +574,7 @@ class Dba
     {
         $translated_charset = self::translate_to_mysqlcharset(AmpConfig::get('site_charset'));
         $target_charset     = $translated_charset['charset'];
+        $engine_sql         = ($translated_charset['charset'] == 'utf8mb4') ? 'ENGINE=InnoDB' : 'ENGINE=MYISAM';
         $target_collation   = $translated_charset['collation'];
 
         // Alter the charset for the entire database
@@ -589,7 +590,7 @@ class Dba
             $describe_results = self::read($sql);
 
             // Change the tables default charset and colliation
-            $sql = "ALTER TABLE `" . $row['0'] . "`  DEFAULT CHARACTER SET $target_charset COLLATE $target_collation";
+            $sql = "ALTER TABLE `" . $row['0'] . "` DEFAULT CHARACTER SET $target_charset COLLATE $target_collation $engine_sql";
             self::write($sql);
 
             // Iterate through the columns of the table

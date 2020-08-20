@@ -825,7 +825,7 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `apikey` = ? WHERE `id` = ?";
 
-        debug_event('user.class', 'Updating apikey', 4);
+        debug_event('user.class', 'Updating apikey for ' . $this->id, 4);
 
         Dba::write($sql, array($new_apikey, $this->id));
     } // update_apikey
@@ -839,7 +839,7 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `rsstoken` = ? WHERE `id` = ?";
 
-        debug_event('user.class', 'Updating rsstoken', 4);
+        debug_event('user.class', 'Updating rsstoken for ' . $this->id, 4);
 
         Dba::write($sql, array($new_rsstoken, $this->id));
     } // update_rsstoken
@@ -933,7 +933,7 @@ class User extends database_object
         $new_access = Dba::escape($new_access);
         $sql        = "UPDATE `user` SET `access`='$new_access' WHERE `id`='$this->id'";
 
-        debug_event('user.class', 'Updating access level', 4);
+        debug_event('user.class', 'Updating access level for ' . $this->id, 4);
 
         Dba::write($sql);
 
@@ -1497,7 +1497,7 @@ class User extends database_object
      */
     public function update_avatar($data, $mime = '')
     {
-        debug_event('user.class', 'Updating avatar', 4);
+        debug_event('user.class', 'Updating avatar for ' . $this->id, 4);
 
         $art = new Art($this->id, 'user');
 

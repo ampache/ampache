@@ -86,6 +86,7 @@ class AmpacheHttpq extends localplay_controller
     {
         $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
         $sql = "CREATE TABLE `localplay_httpq` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
             "`name` VARCHAR( 128 ) COLLATE $collation NOT NULL , " .
@@ -94,8 +95,8 @@ class AmpacheHttpq extends localplay_controller
             "`port` INT( 11 ) UNSIGNED NOT NULL , " .
             "`password` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
             "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" .
-            ") ENGINE = MYISAM DEFAULT CHARSET=$charset COLLATE=$collation";
-        $db_results = Dba::write($sql);
+            ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        Dba::query($sql);
 
         // Add an internal preference for the users current active instance
         Preference::insert('httpq_active', T_('HTTPQ Active Instance'), 0, 25, 'integer', 'internal', 'httpq');

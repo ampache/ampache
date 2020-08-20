@@ -87,6 +87,7 @@ class AmpacheMpd extends localplay_controller
     {
         $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
         /* We need to create the MPD table */
         $sql = "CREATE TABLE `localplay_mpd` ( `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
                 "`name` VARCHAR( 128 ) COLLATE $collation NOT NULL , " .
@@ -95,8 +96,8 @@ class AmpacheMpd extends localplay_controller
                 "`port` INT( 11 ) UNSIGNED NOT NULL DEFAULT '6600', " .
                 "`password` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
                 "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" .
-                ") ENGINE = MYISAM DEFAULT CHARSET=$charset COLLATE=$collation";
-        $db_results = Dba::write($sql);
+                ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        Dba::query($sql);
 
         // Add an internal preference for the users current active instance
         Preference::insert('mpd_active', T_('MPD Active Instance'), 0, 25, 'integer', 'internal', 'mpd');

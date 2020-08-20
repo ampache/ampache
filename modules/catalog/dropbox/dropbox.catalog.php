@@ -99,6 +99,7 @@ class Catalog_dropbox extends Catalog
     {
         $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
         $sql = "CREATE TABLE `catalog_dropbox` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
             "`apikey` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
@@ -107,7 +108,7 @@ class Catalog_dropbox extends Catalog
             "`authtoken` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
             "`getchunk` TINYINT(1) NOT NULL, " .
             "`catalog_id` INT( 11 ) NOT NULL" .
-            ") ENGINE = MYISAM DEFAULT CHARSET=$charset COLLATE=$collation";
+            ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;
