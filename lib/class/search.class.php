@@ -389,12 +389,12 @@ class Search extends playlist_object
      * @param string $name
      * @param string $label
      */
-    private function type_numeric($name, $label)
+    private function type_numeric($name, $label, $type = 'numeric')
     {
         $this->types[] = array(
             'name' => $name,
             'label' => $label,
-            'type' => 'numeric',
+            'type' => $type,
             'widget' => array('input', 'number')
         );
     }
@@ -490,14 +490,6 @@ class Search extends playlist_object
             $this->type_select('albumrating', T_('My Rating (Album)'), 'numeric', $this->stars);
             $this->type_select('artistrating', T_('My Rating (Artist)'), 'numeric', $this->stars);
         }
-
-        $this->type_text('tag', T_('Tags'));
-        $this->type_text('album_tag', T_('Album Tag'));
-        $this->type_text('artist_tag', T_('Artist Tag'));
-        $this->type_text('file', T_('filename'));
-
-        $this->type_numeric('time', T_('Length (in minutes)'));
-
         if (AmpConfig::get('userflags')) {
             $this->type_text('favorite', T_('Favorites'));
         }
@@ -510,10 +502,57 @@ class Search extends playlist_object
             /* HINT: Percentage of (Times Played / Times skipped) * 100 */
             $this->type_numeric('play_skip_ratio', T_('Played/Skipped ratio'));
         }
+        $this->type_numeric('last_play', T_('My Last Play'), 'days');
+        $this->type_boolean('played', T_('Played'));
+        $this->type_boolean('myplayed', T_('Played by Me'));
+        $this->type_boolean('myplayedalbum', T_('Played by Me (Album)'));
+        $this->type_boolean('myplayedartist', T_('Played by Me (Artist)'));
+        $this->type_numeric('time', T_('Length (in minutes)'));
+
+        $this->type_text('tag', T_('Tags'));
+        $this->type_text('album_tag', T_('Album Tag'));
+        $this->type_text('artist_tag', T_('Artist Tag'));
+
+        $users = array();
+        foreach (User::get_valid_users() as $userid) {
+            $user           = new User($userid);
+            $users[$userid] = $user->username;
+        }
+        $this->type_select('other_user', T_('Another User'), 'user_numeric', $users);
+        $this->type_select('other_user_album', T_('Another User (Album)'), 'user_numeric', $users);
+        $this->type_select('other_user_artist', T_('Another User (Artist)'), 'user_numeric', $users);
+
+        $this->type_text('label', T_('Label'));
+        if (AmpConfig::get('licensing')) {
+            $licenses = array();
+            foreach (License::get_licenses() as $license_id) {
+                $license               = new License($license_id);
+                $licenses[$license_id] = $license->name;
+            }
+            $this->type_select('license', T_('Music License'), 'boolean_numeric', $licenses);
+        }
+
+        $playlists = array();
+        foreach (Playlist::get_playlists() as $playlistid) {
+            $playlist = new Playlist($playlistid);
+            $playlist->format(false);
+            $playlists[$playlistid] = $playlist->f_name;
+        }
+        $this->type_select('playlist', T_('Playlist'), 'boolean_numeric', $playlists);
+
+        $playlists = array();
+        $searches  = self::get_searches();
+        foreach ($searches as $playlistid) {
+            // Slightly different from the above so we don't instigate a vicious loop.
+            $playlists[$playlistid] = self::get_name_byid($playlistid);
+        }
+        $this->type_select('smartplaylist', T_('Smart Playlist'), 'boolean_subsearch', $playlists);
+
+        $this->type_text('playlist_name', T_('Playlist Name'));
 
         $this->type_text('comment', T_('Comment'));
-        $this->type_text('label', T_('Label'));
         $this->type_text('lyrics', T_('Lyrics'));
+        $this->type_text('file', T_('filename'));
         $bitrate_array = array(
             '32',
             '40',
@@ -533,13 +572,6 @@ class Search extends playlist_object
             '1280'
         );
         $this->type_select('bitrate', T_('Bitrate'), 'numeric', $bitrate_array);
-
-        $this->type_numeric('last_play', T_('My Last Play'));
-        $this->type_boolean('played', T_('Played'));
-        $this->type_boolean('myplayed', T_('Played by Me'));
-        $this->type_boolean('myplayedalbum', T_('Played by Me (Album)'));
-        $this->type_boolean('myplayedartist', T_('Played by Me (Artist)'));
-
         $this->type_date('added', T_('Added'));
         $this->type_date('updated', T_('Updated'));
 
@@ -554,33 +586,6 @@ class Search extends playlist_object
         }
         $this->type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs);
 
-        $playlists = array();
-        foreach (Playlist::get_playlists() as $playlistid) {
-            $playlist = new Playlist($playlistid);
-            $playlist->format(false);
-            $playlists[$playlistid] = $playlist->f_name;
-        }
-        $this->type_select('playlist', T_('Playlist'), 'boolean_numeric', $playlists);
-
-        $users = array();
-        foreach (User::get_valid_users() as $userid) {
-            $user           = new User($userid);
-            $users[$userid] = $user->username;
-        }
-        $this->type_select('other_user', T_('Another User'), 'user_numeric', $users);
-        $this->type_select('other_user_album', T_('Another User (Album)'), 'user_numeric', $users);
-        $this->type_select('other_user_artist', T_('Another User (Artist)'), 'user_numeric', $users);
-
-        $this->type_text('playlist_name', T_('Playlist Name'));
-
-        $playlists = array();
-        $searches  = self::get_searches();
-        foreach ($searches as $playlistid) {
-            // Slightly different from the above so we don't instigate a vicious loop.
-            $playlists[$playlistid] = self::get_name_byid($playlistid);
-        }
-        $this->type_select('smartplaylist', T_('Smart Playlist'), 'boolean_subsearch', $playlists);
-
         $metadataFields          = array();
         $metadataFieldRepository = new MetadataField();
         foreach ($metadataFieldRepository->findAll() as $metadata) {
@@ -593,15 +598,6 @@ class Search extends playlist_object
             'subtypes' => $metadataFields,
             'widget' => array('subtypes', array('input', 'text'))
         );
-
-        if (AmpConfig::get('licensing')) {
-            $licenses = array();
-            foreach (License::get_licenses() as $license_id) {
-                $license               = new License($license_id);
-                $licenses[$license_id] = $license->name;
-            }
-            $this->type_select('license', T_('Music License'), 'boolean_numeric', $licenses);
-        }
     }
 
     /**
@@ -612,18 +608,28 @@ class Search extends playlist_object
     private function artist_types()
     {
         $this->type_text('title', T_('Name'));
+
         $this->type_numeric('yearformed', T_('Year'));
+        $this->type_text('placeformed', T_('Place'));
 
         if (AmpConfig::get('ratings')) {
             $this->type_select('myrating', T_('My Rating'), 'numeric', $this->stars);
             $this->type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars);
         }
-        $this->type_text('placeformed', T_('Place'));
-        $this->type_text('tag', T_('Tag'));
 
         if (AmpConfig::get('userflags')) {
             $this->type_text('favorite', T_('Favorites'));
         }
+
+        /* HINT: Number of times object has been played */
+        $this->type_numeric('played_times', T_('# Played'));
+
+        $this->type_numeric('last_play', T_('My Last Play'), 'days');
+        $this->type_boolean('played', T_('Played'));
+        $this->type_boolean('myplayed', T_('Played by Me'));
+        $this->type_numeric('time', T_('Length (in minutes)'));
+
+        $this->type_text('tag', T_('Tag'));
 
         $users = array();
         foreach (User::get_valid_users() as $userid) {
@@ -631,12 +637,6 @@ class Search extends playlist_object
             $users[$userid] = $user->username;
         }
         $this->type_select('other_user', T_('Another User'), 'user_numeric', $users);
-
-        $this->type_numeric('last_play', T_('My Last Play'));
-        $this->type_numeric('time', T_('Length (in minutes)'));
-
-        /* HINT: Number of times object has been played */
-        $this->type_numeric('played_times', T_('# Played'));
 
         $this->type_boolean('has image', T_('Local Image'));
         $this->type_numeric('image width', T_('Image Width'));
@@ -655,23 +655,26 @@ class Search extends playlist_object
 
         $this->type_numeric('year', T_('Year'));
         $this->type_numeric('original_year', T_('Original Year'));
+        $this->type_text('release_type', T_('Release Type'));
 
         if (AmpConfig::get('ratings')) {
             $this->type_select('myrating', T_('My Rating'), 'numeric', $this->stars);
             $this->type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars);
             $this->type_select('artistrating', T_('Rating (Artist)'), 'numeric', $this->stars);
         }
-        /* HINT: Number of times object has been played */
-        $this->type_numeric('played_times', T_('# Played'));
-
-        $this->type_numeric('last_play', T_('My Last Play'));
-        $this->type_numeric('time', T_('Length (in minutes)'));
-
-        $this->type_text('release_type', T_('Release Type'));
-
         if (AmpConfig::get('userflags')) {
             $this->type_text('favorite', T_('Favorites'));
         }
+
+        /* HINT: Number of times object has been played */
+        $this->type_numeric('played_times', T_('# Played'));
+
+        $this->type_numeric('last_play', T_('My Last Play'), 'days');
+        $this->type_boolean('played', T_('Played'));
+        $this->type_boolean('myplayed', T_('Played by Me'));
+        $this->type_numeric('time', T_('Length (in minutes)'));
+
+        $this->type_text('tag', T_('Tag'));
 
         $users = array();
         foreach (User::get_valid_users() as $userid) {
@@ -679,8 +682,6 @@ class Search extends playlist_object
             $users[$userid] = $user->username;
         }
         $this->type_select('other_user', T_('Another User'), 'user_numeric', $users);
-
-        $this->type_text('tag', T_('Tag'));
 
         $catalogs = array();
         foreach (Catalog::get_catalogs() as $catid) {
@@ -1315,16 +1316,28 @@ class Search extends playlist_object
                         "`rating_" . $my_type . "_" . $userid . "`.`user` = $userid " : '';
                     break;
                 case 'myplayed':
-                    $group[]       = "`song`.`id`";
-                    $having[]      = "COUNT(`object_count`.`object_id`) = " . $sql_match_operator;
-                    $join['count'] = true;
+                    $column       = 'id';
+                    $my_type      = 'album';
+                    $operator_sql = ((int) $sql_match_operator == 0) ? 'IS NULL' : 'IS NOT NULL';
+                    // played once per user
+                    $table['myplayed'] .= (!strpos($table['myplayed'], "myplayed_" . $my_type . "_" . $userid)) ?
+                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` " .
+                        "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
+                        "AND `object_count`.`user`=$userid GROUP BY `object_count`.`object_id`) AS " .
+                        "`myplayed_" . $my_type . "_" . $userid . "` " .
+                        "ON `album`.`$column`=`myplayed_" . $my_type . "_" . $userid . "`.`object_id` " .
+                        "AND `myplayed_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : '';
+                    $where[] = "`myplayed_" . $my_type . "_" . $userid . "`.`object_id` $operator_sql";
                     break;
                 case 'last_play':
-                    $where[]       = "`object_count`.`date` IN (SELECT MAX(`object_count`.`date`) FROM `object_count`  " .
-                        "WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream'  " .
-                        "GROUP BY `object_count`.`object_id`) AND " .
-                        "`object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
-                    $join['count'] = true;
+                    $my_type = 'album';
+                    $table['last_play'] .= (!strpos($table['last_play'], "last_play_" . $my_type . "_" . $userid)) ?
+                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
+                        "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
+                        "AND `object_count`.`user`=$userid GROUP BY `object_count`.`object_id`) AS `last_play_" . $my_type . "_" . $userid . "` " .
+                        "ON `album`.`id`=`last_play_" . $my_type . "_" . $userid . "`.`object_id` " .
+                        "AND `last_play_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : '';
+                    $where[] = "`last_play_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     break;
                 case 'played_times':
                     $where[] = "`album`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
@@ -1559,15 +1572,28 @@ class Search extends playlist_object
                         "`rating_" . $my_type . "_" . $userid . "`.`user` = $userid " : '';
                     break;
                 case 'myplayed':
-                    $group[]       = "`song`.`id`";
-                    $having[]      = "COUNT(`object_count`.`object_id`) = " . $sql_match_operator;
-                    $join['count'] = true;
+                    $column       = 'id';
+                    $my_type      = 'artist';
+                    $operator_sql = ((int) $sql_match_operator == 0) ? 'IS NULL' : 'IS NOT NULL';
+                    // played once per user
+                    $table['myplayed'] .= (!strpos($table['myplayed'], "myplayed_" . $my_type . "_" . $userid)) ?
+                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` " .
+                        "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
+                        "AND `object_count`.`user`=$userid GROUP BY `object_count`.`object_id`) AS " .
+                        "`myplayed_" . $my_type . "_" . $userid . "` " .
+                        "ON `artist`.`$column`=`myplayed_" . $my_type . "_" . $userid . "`.`object_id` " .
+                        "AND `myplayed_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : '';
+                    $where[] = "`myplayed_" . $my_type . "_" . $userid . "`.`object_id` $operator_sql";
                     break;
                 case 'last_play':
-                    $where[]       = "`object_count`.`date` IN (SELECT MAX(`object_count`.`date`) FROM `object_count` " .
-                        "WHERE `object_count`.`object_type` = 'artist' AND `object_count`.`count_type` = 'stream' " .
-                        "GROUP BY `object_count`.`object_id`) AND `object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
-                    $join['count'] = true;
+                    $my_type = 'artist';
+                    $table['last_play'] .= (!strpos($table['last_play'], "last_play_" . $my_type . "_" . $userid)) ?
+                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
+                        "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
+                        "AND `object_count`.`user`=$userid GROUP BY `object_count`.`object_id`) AS `last_play_" . $my_type . "_" . $userid . "` " .
+                        "ON `artist`.`id`=`last_play_" . $my_type . "_" . $userid . "`.`object_id` " .
+                        "AND `last_play_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : '';
+                    $where[] = "`last_play_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     break;
                 case 'played_times':
                     $where[] = "`artist`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
@@ -1832,8 +1858,14 @@ class Search extends playlist_object
                     $where[] = "`song`.`played` = '$sql_match_operator'";
                     break;
                 case 'last_play':
-                    $where[]       = "`object_count`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
-                    $join['count'] = true;
+                    $my_type = 'song';
+                    $table['last_play'] .= (!strpos($table['last_play'], "last_play_" . $my_type . "_" . $userid)) ?
+                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
+                        "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
+                        "AND `object_count`.`user`=$userid GROUP BY `object_count`.`object_id`) AS `last_play_" . $my_type . "_" . $userid . "` " .
+                        "ON `song`.`id`=`last_play_" . $my_type . "_" . $userid . "`.`object_id` " .
+                        "AND `last_play_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : '';
+                    $where[] = "`last_play_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
                     break;
                 case 'played_times':
                     $where[] = "`song`.`id` IN (SELECT `object_count`.`object_id` FROM `object_count` " .
@@ -1857,21 +1889,22 @@ class Search extends playlist_object
                         "$sql_match_operator '$input' GROUP BY `song`.`id`)";
                     break;
                 case 'myplayed':
-                    $group[]       = "`song`.`id`";
-                    $having[]      = "COUNT(`object_count`.`object_id`) = " . $sql_match_operator;
-                    $join['count'] = true;
-                    break;
                 case 'myplayedalbum':
-                    $group[]                    = "`song`.`id`";
-                    $having[]                   = "COUNT(`object_count_album`.`object_id`) = " . $sql_match_operator;
-                    $table['album']             = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
-                    $join['object_count_album'] = true;
-                    break;
                 case 'myplayedartist':
-                    $group[]                     = "`song`.`id`";
-                    $having[]                    = "COUNT(`object_count_artist`.`object_id`) = " . $sql_match_operator;
-                    $table['artist']             = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
-                    $join['object_count_artist'] = true;
+                // combine these as they all do the same thing just different tables
+                $looking      = str_replace('myplayed', '', $rule[0]);
+                $column       = ($looking == '') ? 'id' : $looking;
+                $my_type      = ($looking == '') ? 'song' : $looking;
+                $operator_sql = ((int) $sql_match_operator == 0) ? 'IS NULL' : 'IS NOT NULL';
+                // played once per user
+                $table['myplayed'] .= (!strpos($table['myplayed'], "myplayed_" . $my_type . "_" . $userid)) ?
+                    "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` " .
+                    "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
+                    "AND `object_count`.`user`=$userid GROUP BY `object_count`.`object_id`) AS " .
+                    "`myplayed_" . $my_type . "_" . $userid . "` " .
+                    "ON `song`.`$column`=`myplayed_" . $my_type . "_" . $userid . "`.`object_id` " .
+                    "AND `myplayed_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : '';
+                $where[] = "`myplayed_" . $my_type . "_" . $userid . "`.`object_id` $operator_sql";
                     break;
                 case 'bitrate':
                     $input   = $input * 1000;
@@ -1976,8 +2009,11 @@ class Search extends playlist_object
                         foreach ($results as $item) {
                             $itemstring .= ' ' . $item['object_id'] . ',';
                         }
-
-                        $where[]      = "$sql_match_operator `song`.`id` IN (" . substr($itemstring, 0, -1) . ")";
+                        $table['smart'] .= (!strpos($table['smart'], "smart_" . $input)) ?
+                            "LEFT JOIN (SELECT `id` FROM `song` " .
+                            "WHERE `id` $sql_match_operator IN (" . substr($itemstring, 0, -1) . ")) " .
+                            "AS `smartlist_$input` ON `smartlist_$input`.`id` = `song`.`id`" : '';
+                        $where[]  = "`smartlist_$input`.`id` IS NOT NULL";
                         // HACK: array_merge would potentially lose tags, since it
                         // overwrites. Save our merged tag joins in a temp variable,
                         // even though that's ugly.
@@ -2084,24 +2120,6 @@ class Search extends playlist_object
         if ($join['rating']) {
             // average ratings only
             $table['rating'] = "LEFT JOIN `rating` ON `rating`.`object_type`='song' AND `rating`.`object_id`=`song`.`id`";
-        }
-        if ($join['count']) {
-            $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " .
-                    "`date` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND " .
-                    "`object_count`.`user`='" . $userid . "' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS " .
-                    "`object_count` ON `object_count`.`object_id`=`song`.`id`";
-        }
-        if ($join['object_count_album']) {
-            $table['object_count_album'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " .
-                    "`date` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND " .
-                    "`object_count`.`user`='" . $userid . "' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS " .
-                    "`object_count_album` ON `object_count_album`.`object_id`=`album`.`id`";
-        }
-        if ($join['object_count_artist']) {
-            $table['object_count_artist'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS " .
-                    "`date` FROM `object_count` WHERE `object_count`.`object_type` = 'artist' AND " .
-                    "`object_count`.`user`='" . $userid . "' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS " .
-                    "`object_count_artist` ON `object_count_artist`.`object_id`=`artist`.`id`";
         }
         if ($join['playlist_data']) {
             $table['playlist_data'] = "LEFT JOIN `playlist_data` ON `song`.`id`=`playlist_data`.`object_id` AND `playlist_data`.`object_type`='song'";

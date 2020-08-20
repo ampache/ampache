@@ -37,6 +37,7 @@ If you choose to use utf8mb4 Ampache will convert your table engine to InnoDB to
 * ampache.sql updated after about 4 years... no more updates on install!
 * Searching by "Rating (average)" now ignores private/public and always returns the average.
 * Hide '# Skipped' and 'Played/Skipped ratio' when 'Show # skipped' is Off
+* Search items rearranged to try to match each other
 
 ### Deprecated
 
@@ -56,6 +57,8 @@ If you choose to use utf8mb4 Ampache will convert your table engine to InnoDB to
   * Report 'Item Count' correctly for podcasts and video catalogs
 * Searching albums for artist name
 * Mashup 'Newest' would incorrectly apply an offset missing the newest items
+* Search by 'Smart Playlist' rules fixed when added with other rules
+* Use LEFT JOIN instead of having for search rules to allow mor complicated lists
 
 ### Security
 
