@@ -322,12 +322,6 @@ class Update
             }
         } // end foreach version
 
-        // Once we've run all of the updates let's re-sync the character set as
-        // the user can change this between updates and cause mis-matches on any
-        // new tables.
-        debug_event('update.class', 'run_update: starting reset_db_charset', 5);
-        Dba::reset_db_charset();
-
         // Let's also clean up the preferences unconditionally
         debug_event('update.class', 'run_update: starting rebuild_all_preferences', 5);
         User::rebuild_all_preferences();
