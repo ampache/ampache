@@ -47,6 +47,24 @@ use Psr\Container\ContainerInterface;
 
 final class AjaxApplication implements ApplicationInterface
 {
+    private const HANDLER_LIST = [
+        'browse' => BrowseAjaxHandler::class,
+        'catalog' => CatalogAjaxHandler::class,
+        'democratic' => DemocraticPlaybackAjaxHandler::class,
+        'index' => IndexAjaxHandler::class,
+        'localplay' => LocalPlayAjaxHandler::class,
+        'player' => PlayerAjaxHandler::class,
+        'playlist' => PlaylistAjaxHandler::class,
+        'podcast' => PodcastAjaxHandler::class,
+        'random' => RandomAjaxHandler::class,
+        'search' => SearchAjaxHandler::class,
+        'song' => SongAjaxHandler::class,
+        'stats' => StatsAjaxHandler::class,
+        'stream' => StreamAjaxHandler::class,
+        'tag' => TagAjaxHandler::class,
+        'user' => UserAjaxHandler::class,
+    ];
+
     private $dic;
 
     public function __construct(
@@ -57,24 +75,6 @@ final class AjaxApplication implements ApplicationInterface
 
     public function run(): void
     {
-        $handlerList = [
-            'browser' => BrowseAjaxHandler::class,
-            'catalog' => CatalogAjaxHandler::class,
-            'democratic' => DemocraticPlaybackAjaxHandler::class,
-            'index' => IndexAjaxHandler::class,
-            'localplay' => LocalPlayAjaxHandler::class,
-            'player' => PlayerAjaxHandler::class,
-            'playlist' => PlaylistAjaxHandler::class,
-            'podcast' => PodcastAjaxHandler::class,
-            'random' => RandomAjaxHandler::class,
-            'search' => SearchAjaxHandler::class,
-            'song' => SongAjaxHandler::class,
-            'stats' => StatsAjaxHandler::class,
-            'stream' => StreamAjaxHandler::class,
-            'tag' => TagAjaxHandler::class,
-            'user' => UserAjaxHandler::class,
-        ];
-
         xoutput_headers();
 
         $page = $_REQUEST['page'] ?? null;
@@ -82,7 +82,7 @@ final class AjaxApplication implements ApplicationInterface
             debug_event('ajax.server', 'Called for page: {' . $page . '}', 5);
         }
 
-        $handlerClassName = $handlerList[$page] ?? DefaultAjaxHandler::class;
+        $handlerClassName = static::HANDLER_LIST[$page] ?? DefaultAjaxHandler::class;
 
         /** @var AjaxHandlerInterface $handler */
         $handler = $this->dic->get($handlerClassName);
