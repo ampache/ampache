@@ -107,3 +107,11 @@ git clone -b develop https://github.com/ampache/ampache-docker.git ampache-docke
 cd ampache-docker-develop
 docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/ampache:develop --push .
 ```
+
+Build nosql images and push to docker hub.
+
+```bash
+git clone -b nosql https://github.com/ampache/ampache-docker.git ampache-docker-nosql/
+cd ampache-docker-nosql
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/ampache:nosql --push .
+```
