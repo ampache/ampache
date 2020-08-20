@@ -7,6 +7,7 @@
 
 **News:**
 
+* Develop **DATABASE CHANGES** You can now force a default collation and charset on your database. (Read the changelog!)
 * Get your docker images without sql using the new ampache/ampache:nosql image!
 * Develop branch now has a **mandatory** requirement of php-intl for date formatting.
 * Get your album/artist art right from Spotify's web API. Go to the [dashboard](https://developer.spotify.com/dashboard/)
