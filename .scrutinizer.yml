@@ -1,7 +1,7 @@
 filter:
     excluded_paths:
-        - 'lib/components/*'
-        - 'lib/vendor/*'
+        - 'public/lib/components/*'
+        - 'vendor/*'
         - 'modules/*'
     paths: {  }
 
@@ -10,10 +10,10 @@ tools:
         enabled: true
         filter:
             excluded_paths:
-                - 'lib/components/*'
-                - 'lib/vendor/*'
+                - 'public/lib/components/*'
+                - 'vendor/*'
                 - 'modules/*'
-                - 'themes/*'
+                - 'public/themes/*'
             paths: {  }
     php_code_sniffer:
         enabled: false
@@ -25,8 +25,8 @@ tools:
         excluded_dirs: {  }
         filter:
             excluded_paths:
-                - 'lib/components/*'
-                - 'lib/vendor/*'
+                - 'public/lib/components/*'
+                - 'vendor/*'
                 - 'modules/*'
             paths: {  }
     php_analyzer:
@@ -34,15 +34,15 @@ tools:
         extensions:
             - php
         dependency_paths:
-            - 'lib/components/*'
-            - 'lib/vendor/*'
+            - 'public/lib/components/*'
+            - 'vendor/*'
             - 'modules/*'
         filter:
             excluded_paths:
-                - 'lib/components/*'
-                - 'lib/vendor/*'
+                - 'public/lib/components/*'
+                - 'vendor/*'
                 - 'modules/*'
-                - 'themes/*'
+                - 'public/themes/*'
             paths: {  }
         path_configs: {  }
     php_changetracking:
@@ -54,22 +54,22 @@ tools:
             - '\bimplement(?:s|ed)?\b'
         filter:
             excluded_paths:
-                - 'lib/components/*'
-                - 'lib/vendor/*'
+                - 'public/lib/components/*'
+                - 'vendor/*'
                 - 'modules/*'
             paths: {  }
     php_loc:
         enabled: true
         excluded_dirs:
-            - 'lib/components/*'
-            - 'lib/vendor/*'
+            - 'public/lib/components/*'
+            - 'vendor/*'
             - 'modules/*'
     php_cpd:
         enabled: true
         excluded_dirs: {  }
         filter:
             excluded_paths:
-                - 'lib/components/*'
-                - 'lib/vendor/*'
+                - 'public/lib/components/*'
+                - 'vendor/*'
                 - 'modules/*'
             paths: {  }
