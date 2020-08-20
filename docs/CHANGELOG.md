@@ -27,6 +27,8 @@ If you choose to use utf8mb4 Ampache will convert your table engine to InnoDB to
 * NEW config options (config_version 45)
   * database_charset: Set a default charset for your database
   * database_collation: Set a default collation for your database
+* NEW files
+  * bin/update_db.inc: Update your database collation, charset and table engine from the cli
 
 ### Changed
 
