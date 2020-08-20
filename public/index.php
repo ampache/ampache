@@ -27,4 +27,6 @@ require_once __DIR__ . '/../lib/init.php';
 
 use Ampache\Application\IndexApplication;
 
-(new IndexApplication())->run();
+$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+
+$dic->get(IndexApplication::class)->run();

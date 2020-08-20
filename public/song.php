@@ -27,4 +27,6 @@ require_once __DIR__ . '/../lib/init.php';
 
 use Ampache\Application\SongApplication;
 
-(new SongApplication())->run();
+$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+
+$dic->get(SongApplication::class)->run();

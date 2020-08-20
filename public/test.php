@@ -27,4 +27,6 @@ require_once  __DIR__ . '/../lib/init-tiny.php';
 
 use Ampache\Application\TestApplication;
 
-(new TestApplication())->run();
+$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+
+$dic->get(TestApplication::class)->run();

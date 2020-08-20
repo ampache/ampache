@@ -27,4 +27,6 @@ require_once __DIR__ . '/../lib/init.php';
 
 use Ampache\Application\TvShowSeasonApplication;
 
-(new TvShowSeasonApplication())->run();
+$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+
+$dic->get(TvShowSeasonApplication::class)->run();

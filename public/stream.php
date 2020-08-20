@@ -27,4 +27,6 @@ require_once __DIR__ . '/../lib/init.php';
 
 use Ampache\Application\StreamApplication;
 
-(new StreamApplication())->run();
+$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+
+$dic->get(StreamApplication::class)->run();

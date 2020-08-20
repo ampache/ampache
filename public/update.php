@@ -35,4 +35,6 @@ if (!isset($_REQUEST['type']) || (string) filter_input(INPUT_GET, 'type', FILTER
 
 require_once __DIR__ . '/../lib/init.php';
 
-(new UpdateApplication())->run();
+$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+
+$dic->get(UpdateApplication::class)->run();

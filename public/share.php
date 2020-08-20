@@ -32,4 +32,6 @@ if (empty($action) || $action == 'stream' || $action == 'download') {
 }
 require_once __DIR__ . '/../lib/init.php';
 
-(new ShareApplication())->run();
+$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+
+$dic->get(ShareApplication::class)->run();

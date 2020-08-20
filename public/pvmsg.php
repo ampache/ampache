@@ -26,4 +26,6 @@ require_once __DIR__ . '/../lib/init.php';
 
 use Ampache\Application\PrivateMessageApplication;
 
-(new PrivateMessageApplication())->run();
+$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+
+$dic->get(PrivateMessageApplication::class)->run();

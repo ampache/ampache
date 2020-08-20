@@ -30,4 +30,6 @@ $_SESSION['login'] = true;
 
 require_once __DIR__ . '/../lib/init.php';
 
-(new RegisterApplication())->run();
+$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+
+$dic->get(RegisterApplication::class)->run();

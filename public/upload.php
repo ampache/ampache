@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../lib/init.php';
 
-use Ampache\Application\UpdateApplication;
+use Ampache\Application\UploadApplication;
 
-(new UpdateApplication())->run();
+$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+
+$dic->get(UploadApplication::class)->run();

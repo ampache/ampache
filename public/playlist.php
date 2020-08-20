@@ -29,4 +29,6 @@ require_once __DIR__ . '/../lib/init.php';
 
 use Ampache\Application\PlaylistApplication;
 
-(new PlaylistApplication())->run();
+$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+
+$dic->get(PlaylistApplication::class)->run();

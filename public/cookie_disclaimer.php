@@ -27,4 +27,6 @@ require_once __DIR__ . '/../lib/init.php';
 
 use Ampache\Application\CookieDisclaimerApplication;
 
-(new CookieDisclaimerApplication())->run();
+$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+
+$dic->get(CookieDisclaimerApplication::class)->run();

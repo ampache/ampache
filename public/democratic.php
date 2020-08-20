@@ -27,4 +27,6 @@ require_once __DIR__ . '/../lib/init.php';
 
 use Ampache\Application\DemocraticPlaybackApplication;
 
-(new DemocraticPlaybackApplication())->run();
+$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+
+$dic->get(DemocraticPlaybackApplication::class)->run();

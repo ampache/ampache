@@ -31,4 +31,6 @@ define('NO_SESSION', '1');
 
 require_once __DIR__ . '/../lib/init.php';
 
-(new StatisticGraphApplication())->run();
+$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+
+$dic->get(StatisticGraphApplication::class)->run();

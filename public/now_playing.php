@@ -28,4 +28,6 @@ require_once __DIR__ . '/../lib/init.php';
 
 use Ampache\Application\NowPlayingApplication;
 
-(new NowPlayingApplication())->run();
+$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+
+$dic->get(NowPlayingApplication::class)->run();
