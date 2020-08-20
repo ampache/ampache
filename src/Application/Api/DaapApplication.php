@@ -27,6 +27,7 @@ namespace Ampache\Application\Api;
 
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;
+use Core;
 use Daap_Api;
 
 final class DaapApplication implements ApplicationInterface

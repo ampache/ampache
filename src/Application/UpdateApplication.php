@@ -27,6 +27,7 @@ namespace Ampache\Application;
 
 use Access;
 use AmpConfig;
+use AmpError;
 use AutoUpdate;
 use Core;
 use UI;

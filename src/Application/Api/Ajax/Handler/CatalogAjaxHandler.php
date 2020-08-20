@@ -28,6 +28,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 use Access;
 use Ajax;
 use Catalog;
+use Core;
 
 final class CatalogAjaxHandler implements AjaxHandlerInterface
 {

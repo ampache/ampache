@@ -34,6 +34,7 @@ use Live_Stream;
 use Playlist;
 use Search;
 use Share;
+use UI;
 
 final class BrowseAjaxHandler implements AjaxHandlerInterface
 {

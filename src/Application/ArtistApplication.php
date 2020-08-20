@@ -29,6 +29,7 @@ use AmpConfig;
 use Artist;
 use Catalog;
 use UI;
+use Wanted;
 
 final class ArtistApplication implements ApplicationInterface
 {
