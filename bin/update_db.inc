@@ -40,7 +40,6 @@ echo "\n-----------------\n" .
 
 $translated_charset = Dba::translate_to_mysqlcharset(AmpConfig::get('site_charset'));
 $target_charset     = $translated_charset['charset'];
-$engine_sql         = ($translated_charset['charset'] == 'utf8mb4') ? 'ENGINE=InnoDB' : '';
 $target_collation   = $translated_charset['collation'];
 $table_engine       = ($target_charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
