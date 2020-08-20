@@ -26,6 +26,8 @@ $prefix = realpath($path . '/../');
 $a_root = realpath(__DIR__ . "/../");
 require_once $a_root . '/lib/init.php';
 
+ob_end_flush();
+
 $options = getopt("x");
 
 // will not change anything if debug is true
@@ -45,13 +47,14 @@ $table_engine       = ($target_charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 echo T_('This script makes changes to your database based on your config settings') . "\n\n";
 echo T_('Target charset') . ":   $target_charset\n";
 echo T_('Target collation') . ": $target_collation\n";
-echo T_('Table engine') . ":     $table_engine\n\n";
-
+echo T_('Table engine') . ":     $table_engine\n";
 
 if ($test_mode) {
     echo "\n" . T_('Running in Test Mode. Use -x to execute') . "\n\n";
     echo "***" . T_('No changes have been made') . "***\n\n";
+    ob_flush();
 } else {
     echo "\n***" . T_("WARNING") . "*** " . T_("Running in Write Mode. Make sure you've tested first!") . "\n\n";
+    ob_flush();
     Dba::reset_db_charset();
 }

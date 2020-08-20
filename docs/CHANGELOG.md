@@ -47,6 +47,7 @@ If you choose to use utf8mb4 Ampache will convert your table engine to InnoDB to
 ### Removed
 
 * Remove stat recording from channels
+* Don't reset the database charset and collation after each db update
 
 ### Fixed
 
@@ -1452,7 +1453,7 @@ Notes about this release that can't be summed up in a log line
 * Added caching to Video
 * Added Video calls to the API
 * Remove redundent code from Browse class by making it extend
-  nwe Query class
+  new Query class
 * Update Prototype to 1.6.0.3
 * Add Time range to advanced search
 * Add sorting to Video Browse
