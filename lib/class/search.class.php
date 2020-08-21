@@ -1309,7 +1309,7 @@ class Search extends playlist_object
                 }
                 if (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<')) {
                     $where[] = "`rating_" . $my_type . "_" . $userid . "`.`rating` IS NULL";
-                } elseif ($sql_match_operator== '<>' || $sql_match_operator == '<' || $sql_match_operator == '<=' || $sql_match_operator == '!=') {
+                } elseif ($sql_match_operator == '<>' || $sql_match_operator == '<' || $sql_match_operator == '<=' || $sql_match_operator == '!=') {
                     $where[] = "(`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input OR `rating_" . $my_type . "_" . $userid . "`.`rating` IS NULL)";
                 } else {
                     $where[] = "`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input";
@@ -1566,7 +1566,7 @@ class Search extends playlist_object
                     }
                     if (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<')) {
                         $where[] = "`rating_" . $my_type . "_" . $userid . "`.`rating` IS NULL";
-                    } elseif ($sql_match_operator== '<>' || $sql_match_operator == '<' || $sql_match_operator == '<=' || $sql_match_operator == '!=') {
+                    } elseif ($sql_match_operator == '<>' || $sql_match_operator == '<' || $sql_match_operator == '<=' || $sql_match_operator == '!=') {
                         $where[] = "(`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input OR `rating_" . $my_type . "_" . $userid . "`.`rating` IS NULL)";
                     } else {
                         $where[] = "`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input";
@@ -1953,7 +1953,7 @@ class Search extends playlist_object
                     }
                     if (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<')) {
                         $where[] = "`rating_" . $my_type . "_" . $userid . "`.`rating` IS NULL";
-                    } elseif ($sql_match_operator== '<>' || $sql_match_operator == '<' || $sql_match_operator == '<=' || $sql_match_operator == '!=') {
+                    } elseif ($sql_match_operator == '<>' || $sql_match_operator == '<' || $sql_match_operator == '<=' || $sql_match_operator == '!=') {
                         $where[] = "(`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input OR `rating_" . $my_type . "_" . $userid . "`.`rating` IS NULL)";
                     } else {
                         $where[] = "`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input";
