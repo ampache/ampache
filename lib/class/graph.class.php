@@ -33,9 +33,6 @@ class Graph
 
             return false;
         }
-        require_once __DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/Data.php';
-        require_once __DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/Draw.php';
-        require_once __DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/Image.php';
 
         return true;
     }
@@ -173,7 +170,7 @@ class Graph
 
     /**
      * @param string $fct
-     * @param \CpChart\Chart\Data $MyData
+     * @param \CpChart\Data $MyData
      * @param integer $user_id
      * @param string $object_type
      * @param integer $object_id
@@ -183,7 +180,7 @@ class Graph
      * @param boolean $show_total
      * @return array
      */
-    protected function get_all_pts($fct, CpChart\Chart\Data $MyData, $user_id = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $show_total = true)
+    protected function get_all_pts($fct, CpChart\Data $MyData, $user_id = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $show_total = true)
     {
         $values = $this->get_all_type_pts($fct, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
         foreach ($values as $date => $value) {
@@ -199,7 +196,7 @@ class Graph
     /**
      * get_user_all_pts
      * @param string $fct
-     * @param \CpChart\Chart\Data $MyData
+     * @param \CpChart\Data $MyData
      * @param integer $user
      * @param string $object_type
      * @param integer $object_id
@@ -207,7 +204,7 @@ class Graph
      * @param integer $end_date
      * @param string $zoom
      */
-    protected function get_user_all_pts($fct, CpChart\Chart\Data $MyData, $user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
+    protected function get_user_all_pts($fct, CpChart\Data $MyData, $user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         $values = $this->get_all_pts($fct, $MyData, $user, $object_type, $object_id, $start_date, $end_date, $zoom);
 
@@ -232,7 +229,7 @@ class Graph
 
     /**
      * @param string $fct
-     * @param \CpChart\Chart\Data $MyData
+     * @param \CpChart\Data $MyData
      * @param integer $catalog
      * @param string $object_type
      * @param integer $object_id
@@ -240,7 +237,7 @@ class Graph
      * @param integer $end_date
      * @param string $zoom
      */
-    protected function get_catalog_all_pts($fct, CpChart\Chart\Data $MyData, $catalog = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
+    protected function get_catalog_all_pts($fct, CpChart\Data $MyData, $catalog = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
         $values = $this->get_all_pts($fct, $MyData, $catalog, $object_type, $object_id, $start_date, $end_date, $zoom, false);
 
@@ -430,12 +427,12 @@ class Graph
 
     /**
      * @param string $title
-     * @param \CpChart\Chart\Data $MyData
+     * @param \CpChart\Data $MyData
      * @param string $zoom
      * @param integer $width
      * @param integer $height
      */
-    protected function render_graph($title, CpChart\Chart\Data $MyData, $zoom, $width = 0, $height = 0)
+    protected function render_graph($title, CpChart\Data $MyData, $zoom, $width = 0, $height = 0)
     {
         // Check graph size sanity
         $width = (int) $width;
@@ -465,7 +462,7 @@ class Graph
         }
 
         /* Create the pChart object */
-        $myPicture = new CpChart\Chart\Image($width, $height, $MyData);
+        $myPicture = new CpChart\Image($width, $height, $MyData);
 
         /* Turn of Antialiasing */
         $myPicture->Antialias = false;
@@ -482,13 +479,12 @@ class Graph
         /* Add a border to the picture */
         $myPicture->drawRectangle(0, 0, $width - 1, $height - 1, array("R" => 0, "G" => 0, "B" => 0));
 
-        $font_path = __DIR__ . "/../../vendor/szymach/c-pchart/src/Resources/fonts";
         /* Write the chart title */
-        $myPicture->setFontProperties(array("FontName" => $font_path . "/Forgotte.ttf", "FontSize" => 11));
+        $myPicture->setFontProperties(array("FontName" => "Forgotte.ttf", "FontSize" => 11));
         $myPicture->drawText(150, 35, $title, array("FontSize" => 20, "Align" => TEXT_ALIGN_BOTTOMMIDDLE));
 
         /* Set the default font */
-        $myPicture->setFontProperties(array("FontName" => $font_path . "/pf_arma_five.ttf", "FontSize" => 6));
+        $myPicture->setFontProperties(array("FontName" => "pf_arma_five.ttf", "FontSize" => 6));
 
         /* Define the chart area */
         $myPicture->setGraphArea(60, 40, $width - 20, $height - 50);
@@ -527,7 +523,7 @@ class Graph
      */
     public function render_user_hits($user, $object_type, $object_id, $start_date = null, $end_date = null, $zoom = 'day', $width = 0, $height = 0)
     {
-        $MyData = new CpChart\Chart\Data();
+        $MyData = new CpChart\Data();
         $this->get_user_all_pts('get_user_hits_pts', $MyData, $user, $object_type, $object_id, $start_date, $end_date, $zoom);
 
         $MyData->setAxisName(0, "Hits");
@@ -548,7 +544,7 @@ class Graph
      */
     public function render_user_bandwidth($user = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $width = 0, $height = 0)
     {
-        $MyData = new CpChart\Chart\Data();
+        $MyData = new CpChart\Data();
         $this->get_user_all_pts('get_user_bandwidth_pts', $MyData, $user, $object_type, $object_id, $start_date, $end_date, $zoom);
 
         $MyData->setAxisName(0, "Bandwidth");
@@ -620,7 +616,7 @@ class Graph
      */
     public function render_catalog_files($catalog = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $width = 0, $height = 0)
     {
-        $MyData = new CpChart\Chart\Data();
+        $MyData = new CpChart\Data();
         $this->get_catalog_all_pts('get_catalog_files_pts', $MyData, $catalog, $object_type, $object_id, $start_date, $end_date, $zoom);
 
         $MyData->setAxisName(0, "Files");
@@ -641,7 +637,7 @@ class Graph
      */
     public function render_catalog_size($catalog = 0, $object_type = null, $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day', $width = 0, $height = 0)
     {
-        $MyData = new CpChart\Chart\Data();
+        $MyData = new CpChart\Data();
         $this->get_catalog_all_pts('get_catalog_size_pts', $MyData, $catalog, $object_type, $object_id, $start_date, $end_date, $zoom);
 
         $MyData->setAxisName(0, "Size");

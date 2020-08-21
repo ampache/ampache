@@ -155,10 +155,6 @@ class Catalog_soundcloud extends Catalog
                 $this->$key = $value;
             }
         }
-
-        if (!@include_once(__DIR__ . '/../../../vendor/mptre/php-soundcloud/Services/Soundcloud.php')) {
-            throw new Exception('Missing php-soundcloud dependency');
-        }
     }
 
     /**
