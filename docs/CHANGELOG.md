@@ -38,6 +38,7 @@ If you choose to use utf8mb4 Ampache will convert your table engine to InnoDB to
 * Searching by "Rating (average)" now ignores private/public and always returns the average.
 * Hide '# Skipped' and 'Played/Skipped ratio' when 'Show # skipped' is Off
 * Search items rearranged to try to match each other
+* Sort 'Playlist' and 'Smart Platlist' browse pages by name
 
 ### Deprecated
 
