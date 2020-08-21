@@ -1,9 +1,12 @@
 language: php
 sudo: false
 php:
- - 7.1
- - 7.3
  - 7.4
+ - nightly
+
+jobs:
+  allow_failures:
+    - php: nightly
  
 before_install:
  - export PATH="$PATH:$HOME/.composer/vendor/bin"
