@@ -1274,8 +1274,8 @@ class Search extends playlist_object
                     break;
                 case 'rating':
                     // average ratings only
-                    $where[]         = "`average_rating`.`avg` $sql_match_operator '$input'";
-                    $table['rating'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS " .
+                    $where[]          = "`average_rating`.`avg` $sql_match_operator '$input'";
+                    $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS " .
                         "`avg` FROM `rating` WHERE `rating`.`object_type`='album' GROUP BY `object_id`) AS " .
                         "`average_rating` on `average_rating`.`object_id` = `album`.`id` ";
                     break;
@@ -1296,29 +1296,32 @@ class Search extends playlist_object
                     $looking = str_replace('rating', '', $rule[0]);
                     $column  = ($looking == 'my') ? 'id' : 'album_artist';
                     $my_type = ($looking == 'my') ? 'album' : $looking;
-                    if ($input == 0 && $sql_match_operator == '>=') {
-                        break;
-                    }
-                    if ($input == 0 && $sql_match_operator == '<') {
-                        $input              = -1;
-                        $sql_match_operator = '=';
-                    }
-                    if ($input == 0 && $sql_match_operator == '<>') {
-                        $input              = 1;
-                        $sql_match_operator = '>=';
-                    }
-                    $unrated = (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<'));
-                    $where[] = ($unrated) ? "`album`.`$column` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = '$my_type' AND `user` = $userid)" :
-                        "`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input" .
-                        " AND `rating_" . $my_type . "_" . $userid . "`.`user` = $userid " .
-                        " AND `rating_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type'";
-                    // rating once per user
-                    $table['rating'] .= (!strpos($table['rating'], "rating_" . $my_type . "_" . $userid)) ?
-                        "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $userid . "` ON " .
-                        "`rating_" . $my_type . "_" . $userid . "`.`object_type`='$my_type' AND " .
-                        "`rating_" . $my_type . "_" . $userid . "`.`object_id`=`album`.`$column` AND " .
-                        "`rating_" . $my_type . "_" . $userid . "`.`user` = $userid " : ' ';
+                if ($input == 0 && $sql_match_operator == '>=') {
                     break;
+                }
+                if ($input == 0 && $sql_match_operator == '<') {
+                    $input              = -1;
+                    $sql_match_operator = '<=>';
+                }
+                if ($input == 0 && $sql_match_operator == '<>') {
+                    $input              = 1;
+                    $sql_match_operator = '>=';
+                }
+                if (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<')) {
+                    $where[] = "`rating_" . $my_type . "_" . $userid . "`.`rating` IS NULL";
+                }
+                if (in_array($sql_match_operator, array('<>', '<', '<=', '!='))) {
+                    $where[] = "(`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input OR `rating_" . $my_type . "_" . $userid . "`.`rating` IS NULL)";
+                } else {
+                    $where[] = "`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input";
+                }
+                // rating once per user
+                $table['rating'] .= (!strpos($table['rating'], "rating_" . $my_type . "_" . $userid)) ?
+                    "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` " .
+                    "WHERE `user` = $userid AND `object_type`='$my_type') " .
+                    "AS `rating_" . $my_type . "_" . $userid . "` " .
+                    "ON `rating_" . $my_type . "_" . $userid . "`.`object_id`=`album`.`$column` " : ' ';
+                break;
                 case 'myplayed':
                     $column       = 'id';
                     $my_type      = 'album';
@@ -1363,15 +1366,17 @@ class Search extends playlist_object
                             "ON `song`.`album`=`favorite_album_$other_userid`.`object_id` " .
                             "AND `favorite_album_$other_userid`.`object_type` = 'album' " : ' ';
                     } else {
+                        $column  = 'id';
+                        $my_type = 'album';
                         $where[] = "`rating_album_" . $other_userid . '`.' . $sql_match_operator .
                                    " AND `rating_album_$other_userid`.`user` = $other_userid " .
                                    " AND `rating_album_$other_userid`.`object_type` = 'album'";
                         // rating once per user
-                        $table['rating'] .= (!strpos($table['rating'], "rating_album_$userid")) ?
-                            "LEFT JOIN `rating` AS `rating_album_$userid` ON " .
-                            "`rating_album_$userid`.`object_type`='album' AND " .
-                            "`rating_album_$userid`.`object_id`=`song`.`album` AND " .
-                            "`rating_album_$userid`.`user` = $userid " : ' ';
+                        $table['rating'] .= (!strpos($table['rating'], "rating_" . $my_type . "_" . $userid)) ?
+                            "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $userid . "` ON " .
+                            "`rating_" . $my_type . "_" . $userid . "`.`object_type`='$my_type' AND " .
+                            "`rating_" . $my_type . "_" . $userid . "`.`object_id`=`$my_type`.`$column` AND " .
+                            "`rating_" . $my_type . "_" . $userid . "`.`user` = $userid " : ' ';
                     }
                     break;
                 case 'catalog':
@@ -1519,8 +1524,8 @@ class Search extends playlist_object
                     break;
                 case 'rating':
                     // average ratings only
-                    $where[]         = "`average_rating`.`avg` $sql_match_operator '$input'";
-                    $table['rating'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS " .
+                    $where[]          = "`average_rating`.`avg` $sql_match_operator '$input'";
+                    $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS " .
                         "`avg` FROM `rating` WHERE `rating`.`object_type`='artist' GROUP BY `object_id`) AS " .
                         "`average_rating` on `average_rating`.`object_id` = `artist`.`id` ";
                     break;
@@ -1560,17 +1565,20 @@ class Search extends playlist_object
                         $input              = 1;
                         $sql_match_operator = '>=';
                     }
-                    $unrated = (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<'));
-                    $where[] = ($unrated) ? "`artist`.`$column` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = '$my_type' AND `user` = $userid)" :
-                        "`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input" .
-                        " AND `rating_" . $my_type . "_" . $userid . "`.`user` = $userid " .
-                        " AND `rating_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type'";
+                    if (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<')) {
+                        $where[] = "`rating_" . $my_type . "_" . $userid . "`.`rating` IS NULL";
+                    }
+                    if (in_array($sql_match_operator, array('<>', '<', '<=', '!='))) {
+                        $where[] = "(`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input OR `rating_" . $my_type . "_" . $userid . "`.`rating` IS NULL)";
+                    } else {
+                        $where[] = "`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input";
+                    }
                     // rating once per user
                     $table['rating'] .= (!strpos($table['rating'], "rating_" . $my_type . "_" . $userid)) ?
-                        "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $userid . "` ON " .
-                        "`rating_" . $my_type . "_" . $userid . "`.`object_type`='$my_type' AND " .
-                        "`rating_" . $my_type . "_" . $userid . "`.`object_id`=`$my_type`.`$column` AND " .
-                        "`rating_" . $my_type . "_" . $userid . "`.`user` = $userid " : ' ';
+                        "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` " .
+                        "WHERE `user` = $userid AND `object_type`='$my_type') " .
+                        "AS `rating_" . $my_type . "_" . $userid . "` " .
+                        "ON `rating_" . $my_type . "_" . $userid . "`.`object_id`=`artist`.`$column` " : ' ';
                     break;
                 case 'myplayed':
                     $column       = 'id';
@@ -1613,15 +1621,17 @@ class Search extends playlist_object
                             "ON `song`.`artist`=`favorite_artist_$other_userid`.`object_id` " .
                             "AND `favorite_artist_$other_userid`.`object_type` = 'artist' " : ' ';
                     } else {
+                        $column  = 'id';
+                        $my_type = 'artist';
                         $where[] = "`rating_artist_" . $other_userid . '`.' . $sql_match_operator .
                                    " AND `rating_artist_$other_userid`.`user` = $other_userid " .
                                    " AND `rating_artist_$other_userid`.`object_type` = 'artist'";
                         // rating once per user
-                        $table['rating'] .= (!strpos($table['rating'], "rating_artist_$userid")) ?
-                            "LEFT JOIN `rating` AS `rating_artist_$userid` ON " .
-                            "`rating_artist_$userid`.`object_type`='artist' AND " .
-                            "`rating_artist_$userid`.`object_id`=`song`.`artist` AND " .
-                            "`rating_artist_$userid`.`user` = $userid " : ' ';
+                        $table['rating'] .= (!strpos($table['rating'], "rating_" . $my_type . "_" . $userid)) ?
+                            "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $userid . "` ON " .
+                            "`rating_" . $my_type . "_" . $userid . "`.`object_type`='$my_type' AND " .
+                            "`rating_" . $my_type . "_" . $userid . "`.`object_id`=`$my_type`.`$column` AND " .
+                            "`rating_" . $my_type . "_" . $userid . "`.`user` = $userid " : ' ';
                     }
                     break;
                 default:
@@ -1909,8 +1919,8 @@ class Search extends playlist_object
                     break;
                 case 'rating':
                     // average ratings only
-                    $where[]         = "`average_rating`.`avg` $sql_match_operator '$input'";
-                    $table['rating'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS " .
+                    $where[]          = "`average_rating`.`avg` $sql_match_operator '$input'";
+                    $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS " .
                         "`avg` FROM `rating` WHERE `rating`.`object_type`='song' GROUP BY `object_id`) AS " .
                         "`average_rating` on `average_rating`.`object_id` = `song`.`id` ";
                     break;
@@ -1943,17 +1953,20 @@ class Search extends playlist_object
                         $input              = 1;
                         $sql_match_operator = '>=';
                     }
-                    $unrated = (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<'));
-                    $where[] = ($unrated) ? "`song`.`$column` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = '$my_type' AND `user` = $userid)" :
-                               "`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input" .
-                               " AND `rating_" . $my_type . "_" . $userid . "`.`user` = $userid " .
-                               " AND `rating_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type'";
+                    if (($input == 0 && $sql_match_operator != '>') || ($input == 1 && $sql_match_operator == '<')) {
+                        $where[] = "`rating_" . $my_type . "_" . $userid . "`.`rating` IS NULL";
+                    }
+                    if (in_array($sql_match_operator, array('<>', '<', '<=', '!='))) {
+                        $where[] = "(`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input OR `rating_" . $my_type . "_" . $userid . "`.`rating` IS NULL)";
+                    } else {
+                        $where[] = "`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input";
+                    }
                     // rating once per user
                     $table['rating'] .= (!strpos($table['rating'], "rating_" . $my_type . "_" . $userid)) ?
-                        "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $userid . "` ON " .
-                        "`rating_" . $my_type . "_" . $userid . "`.`object_type`='$my_type' AND " .
-                        "`rating_" . $my_type . "_" . $userid . "`.`object_id`=`song`.`$column` AND " .
-                        "`rating_" . $my_type . "_" . $userid . "`.`user` = $userid " : ' ';
+                        "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` " .
+                        "WHERE `user` = $userid AND `object_type`='$my_type') " .
+                        "AS `rating_" . $my_type . "_" . $userid . "` " .
+                        "ON `rating_" . $my_type . "_" . $userid . "`.`object_id`=`song`.`$column` " : ' ';
                     break;
                 case 'catalog':
                     $where[] = "`song`.`catalog` $sql_match_operator '$input'";

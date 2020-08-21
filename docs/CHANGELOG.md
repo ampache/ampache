@@ -59,6 +59,7 @@ If you choose to use utf8mb4 Ampache will convert your table engine to InnoDB to
 * Mashup 'Newest' would incorrectly apply an offset missing the newest items
 * Search by 'Smart Playlist' rules fixed when added with other rules
 * Use LEFT JOIN instead of HAVING for search rules to allow more complicated lists
+* Logic searching 'My Rating' includes unrated (0 Stars) in a better way
 
 ### Security
 
