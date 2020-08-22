@@ -388,6 +388,7 @@ class Search extends playlist_object
      * Generic integer searches rules
      * @param string $name
      * @param string $label
+     * @param string $type
      */
     private function type_numeric($name, $label, $type = 'numeric')
     {
