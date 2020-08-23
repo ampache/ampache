@@ -18,8 +18,8 @@ core/
 develop/
 master/
 node_modules/
-resources/
 storage/
+nbproject/
 vendor/
 .settings/
 .vscode/
