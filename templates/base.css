@@ -318,9 +318,9 @@ a.tag_size4 { text-decoration: none; }
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     -webkit-transition: all 0.5s;
     transition: all 0.5s;
-    -webkit-transform: translate(-50%,0);
-    -ms-transform: translate(-50%,0);
-    transform: translate(-50%,0);
+    -webkit-transform: translate(-50%, 0);
+    -ms-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
 }
 
 #notification.notification-out {
