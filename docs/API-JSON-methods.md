@@ -107,7 +107,7 @@ You can pass multiple rules as well as joins to create in depth search results
 Rules must be sent in groups of 3 using an int (starting from 1) to designate which rules are combined.
 Use operator ('and'|'or') to choose whether to join or separate each rule when searching.
 
-Refer to the [Advanced Search](advanced-search) page for details about creating searches.
+Refer to the [Advanced Search](API-advanced-search.md) page for details about creating searches.
 
 @param array $input
 

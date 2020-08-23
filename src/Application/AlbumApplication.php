@@ -49,7 +49,9 @@ final class AlbumApplication implements ApplicationInterface
                 }
 
                 $album_id = (string) scrub_in($_REQUEST['album_id']);
-                show_confirmation(T_('Are You Sure?'), T_("The Album and all files will be deleted"),
+                show_confirmation(
+                    T_('Are You Sure?'),
+                    T_("The Album and all files will be deleted"),
                     AmpConfig::get('web_path') . "/albums.php?action=confirm_delete&album_id=" . $album_id,
                     1,
                     'delete_album'
@@ -69,9 +71,17 @@ final class AlbumApplication implements ApplicationInterface
                 }
 
                 if ($album->remove()) {
-                    show_confirmation(T_('No Problem'), T_('The Album has been deleted'), AmpConfig::get('web_path'));
+                    show_confirmation(
+                        T_('No Problem'),
+                        T_('The Album has been deleted'),
+                        AmpConfig::get('web_path')
+                    );
                 } else {
-                    show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Album."), AmpConfig::get('web_path'));
+                    show_confirmation(
+                        T_("There Was a Problem"),
+                        T_("Couldn't delete this Album."),
+                        AmpConfig::get('web_path')
+                    );
                 }
                 break;
             case 'update_from_tags':

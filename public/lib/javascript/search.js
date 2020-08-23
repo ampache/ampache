@@ -78,7 +78,7 @@ var SearchRow = {
         rowIter++;
     },
     constructInput(ruleType, ruleNumber, input) {
-        if (input == null || typeof input == 'undefined') {
+        if (input == null || typeof input == "undefined") {
             input = "";
         }
 

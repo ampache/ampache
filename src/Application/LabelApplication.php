@@ -46,7 +46,9 @@ final class LabelApplication implements ApplicationInterface
                 }
 
                 $label_id = (string) scrub_in($_REQUEST['label_id']);
-                show_confirmation(T_('Are You Sure?'), T_('This Label will be deleted'),
+                show_confirmation(
+                    T_('Are You Sure?'),
+                    T_('This Label will be deleted'),
                     AmpConfig::get('web_path') . "/labels.php?action=confirm_delete&label_id=" . $label_id,
                     1,
                     'delete_label'

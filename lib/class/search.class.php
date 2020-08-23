@@ -388,6 +388,7 @@ class Search extends playlist_object
      * Generic integer searches rules
      * @param string $name
      * @param string $label
+     * @param string $type
      */
     private function type_numeric($name, $label, $type = 'numeric')
     {
@@ -1329,7 +1330,7 @@ class Search extends playlist_object
                     $table['myplayed'] .= (!strpos($table['myplayed'], "myplayed_" . $my_type . "_" . $userid)) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
-                        "AND `object_count`.`user`=$userid GROUP BY `object_count`.`object_id`) AS " .
+                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS " .
                         "`myplayed_" . $my_type . "_" . $userid . "` " .
                         "ON `album`.`$column`=`myplayed_" . $my_type . "_" . $userid . "`.`object_id` " .
                         "AND `myplayed_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
@@ -1340,7 +1341,7 @@ class Search extends playlist_object
                     $table['last_play'] .= (!strpos($table['last_play'], "last_play_" . $my_type . "_" . $userid)) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
-                        "AND `object_count`.`user`=$userid GROUP BY `object_count`.`object_id`) AS `last_play_" . $my_type . "_" . $userid . "` " .
+                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS `last_play_" . $my_type . "_" . $userid . "` " .
                         "ON `album`.`id`=`last_play_" . $my_type . "_" . $userid . "`.`object_id` " .
                         "AND `last_play_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
                     $where[] = "`last_play_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
@@ -1586,7 +1587,7 @@ class Search extends playlist_object
                     $table['myplayed'] .= (!strpos($table['myplayed'], "myplayed_" . $my_type . "_" . $userid)) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
-                        "AND `object_count`.`user`=$userid GROUP BY `object_count`.`object_id`) AS " .
+                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS " .
                         "`myplayed_" . $my_type . "_" . $userid . "` " .
                         "ON `artist`.`$column`=`myplayed_" . $my_type . "_" . $userid . "`.`object_id` " .
                         "AND `myplayed_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
@@ -1597,7 +1598,7 @@ class Search extends playlist_object
                     $table['last_play'] .= (!strpos($table['last_play'], "last_play_" . $my_type . "_" . $userid)) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
-                        "AND `object_count`.`user`=$userid GROUP BY `object_count`.`object_id`) AS `last_play_" . $my_type . "_" . $userid . "` " .
+                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS `last_play_" . $my_type . "_" . $userid . "` " .
                         "ON `artist`.`id`=`last_play_" . $my_type . "_" . $userid . "`.`object_id` " .
                         "AND `last_play_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
                     $where[] = "`last_play_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
@@ -1867,7 +1868,7 @@ class Search extends playlist_object
                     $table['last_play'] .= (!strpos($table['last_play'], "last_play_" . $my_type . "_" . $userid)) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
-                        "AND `object_count`.`user`=$userid GROUP BY `object_count`.`object_id`) AS `last_play_" . $my_type . "_" . $userid . "` " .
+                        "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS `last_play_" . $my_type . "_" . $userid . "` " .
                         "ON `song`.`id`=`last_play_" . $my_type . "_" . $userid . "`.`object_id` " .
                         "AND `last_play_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';
                     $where[] = "`last_play_" . $my_type . "_" . $userid . "`.`date` $sql_match_operator (UNIX_TIMESTAMP() - ($input * 86400))";
@@ -1905,7 +1906,7 @@ class Search extends playlist_object
                 $table['myplayed'] .= (!strpos($table['myplayed'], "myplayed_" . $my_type . "_" . $userid)) ?
                     "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` " .
                     "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
-                    "AND `object_count`.`user`=$userid GROUP BY `object_count`.`object_id`) AS " .
+                    "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS " .
                     "`myplayed_" . $my_type . "_" . $userid . "` " .
                     "ON `song`.`$column`=`myplayed_" . $my_type . "_" . $userid . "`.`object_id` " .
                     "AND `myplayed_" . $my_type . "_" . $userid . "`.`object_type` = '$my_type' " : ' ';

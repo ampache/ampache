@@ -210,7 +210,7 @@ class Rating extends database_object
         }
         if (AmpConfig::get('album_group') && $type === 'album') {
             $sql .= " GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year`" .
-                    " ORDER BY `rating` DESC, `count` DESC, `order` DESC, `rating`.`object_id` DESC";
+                    " ORDER BY `rating` DESC, `count` DESC, `order` DESC, `id` DESC";
         } else {
             $sql .= " GROUP BY `object_id` ORDER BY `rating` DESC, `count` DESC, `order` DESC  ";
         }

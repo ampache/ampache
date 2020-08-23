@@ -711,6 +711,7 @@ a.jp-volume-max:hover {
 .jp-type-playlist .jp-playlist .jp-free-media a:hover {
     color: #fff;
 }
+
 .jp-artist {
     font-size: 0.8em;
 }
@@ -877,13 +878,13 @@ a.jp-shuffle-off:hover {
 .jp-no-solution {
     padding: 5px;
     font-size: 0.67em;
-    color: #CCC;
+    color: #ccc;
     display: none;
     text-align: center;
 }
 
 .jp-no-solution a {
-    color: #CCC;
+    color: #ccc;
 }
 
 .jp-no-solution span {
@@ -903,7 +904,7 @@ a.jp-shuffle-off:hover {
 }
 
 .jp-close a {
-    color: #CCC;
+    color: #ccc;
     z-index: 9999;
 }
 
@@ -918,7 +919,7 @@ a.jp-shuffle-off:hover {
 }
 
 #webplayer-minimize a {
-    color: #CCC;
+    color: #ccc;
     z-index: 10000;
 }
 

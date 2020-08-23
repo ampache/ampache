@@ -1956,14 +1956,14 @@ CAFDemuxer = (function(_super) {
     var buffer, byteOffset, cookie, entries, flags, i, key, metadata, offset, sampleOffset, value, _i, _j, _ref;
     if (!this.format && this.stream.available(64)) {
       if (this.stream.readString(4) !== "caff") {
-        return this.emit('error', "Invalid CAF, does not begin with 'caff'");
+        return this.emit("error", "Invalid CAF, does not begin with 'caff'");
       }
       this.stream.advance(4);
-      if (this.stream.readString(4) !== 'desc') {
-        return this.emit('error', "Invalid CAF, 'caff' is not followed by 'desc'");
+      if (this.stream.readString(4) !== "desc") {
+        return this.emit("error", "Invalid CAF, 'caff' is not followed by 'desc'");
       }
       if (!(this.stream.readUInt32() === 0 && this.stream.readUInt32() === 32)) {
-        return this.emit('error', "Invalid 'desc' size, should be 32");
+        return this.emit("error", "Invalid 'desc' size, should be 32");
       }
       this.format = {};
       this.format.sampleRate = this.stream.readFloat64();

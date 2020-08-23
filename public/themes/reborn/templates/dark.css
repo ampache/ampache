@@ -46,41 +46,49 @@ hr {
   border-top-color: #eee;
 }
 
-input[type=password], input[type=text], textarea {
+input[type=password],
+input[type=text],
+textarea {
     background-color: #f5f5f5;
     background-image: -moz-linear-gradient(top, #eee, #fff);
     background-image: -ms-linear-gradient(top, #eee, #fff);
-    background-image: -webkit-gradient(linear,0 0,0 100%,from(#eee),to(#fff));
+    background-image: -webkit-gradient(linear, 0, 0 100%, from(#eee), to(#fff));
     background-image: -webkit-linear-gradient(top, #eee, #fff);
     background-image: -o-linear-gradient(top, #eee, #fff);
     background-image: linear-gradient(top, #eee, #fff);
     border-color: #fff;
 }
 
-input[type=button], input[type=submit] {
-    background-image: -moz-linear-gradient(top, #ff9d00,#cc6200);
-    background-image: -ms-linear-gradient(top, #ff9d00,#cc6200);
-    background-image: -webkit-gradient(linear,0 0,0 100%,from(#ff9d00),to(#cc6200));
-    background-image: -webkit-linear-gradient(top, #ff9d00,#cc6200);
-    background-image: -o-linear-gradient(top, #ff9d00,#cc6200);
-    background-image: linear-gradient(top, #ff9d00,#cc6200);
+input[type=button],
+input[type=submit] {
+    background-image: -moz-linear-gradient(top, #ff9d00, #cc6200);
+    background-image: -ms-linear-gradient(top, #ff9d00, #cc6200);
+    background-image: -webkit-gradient(linear, 0, 0 100%, from(#ff9d00), to(#cc6200));
+    background-image: -webkit-linear-gradient(top, #ff9d00, #cc6200);
+    background-image: -o-linear-gradient(top, #ff9d00, #cc6200);
+    background-image: linear-gradient(top, #ff9d00, #cc6200);
     -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
     color: #fff;
 }
 
-input[type=button]:hover, input[type=button]:focus, input[type=submit]:hover, input[type=submit]:focus {
+input[type=button]:hover,
+input[type=button]:focus,
+input[type=submit]:hover,
+input[type=submit]:focus {
     background-color: #cc6200;
 }
 
-input[type=button]:focus:active, input[type=submit]:focus:active {
+input[type=button]:focus:active,
+input[type=submit]:focus:active {
     -webkit-box-shadow: inset 0 0 3px #000, 0 1px 0 rgba(255, 255, 255, 0.1);
     -moz-box-shadow: inset 0 0 3px #000, 0 1px 0 rgba(255, 255, 255, 0.1);
     box-shadow: inset 0 0 3px #000, 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-.edit_dialog_content input[type=text], .edit_dialog_content select {
+.edit_dialog_content input[type=text],
+.edit_dialog_content select {
     color: #fff;
 }
 
@@ -136,7 +144,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
 }
 
-#loginPage #headerlogo, #registerPage #headerlogo {
+#loginPage #headerlogo,
+#registerPage #headerlogo {
     background-image: url('../images/ampache-dark.png');
 }
 
@@ -144,7 +153,8 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     color: #999;
 }
 
-#loginPage #loginbox div, #registerPage #registerbox div {
+#loginPage #loginbox div,
+#registerPage #registerbox div {
     text-shadow: 0 1px 0 #000;
     color: #999;
 }
@@ -202,7 +212,9 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     color: #fff;
 }
 
-#sidebar-content, #sidebar-content-light, #sidebar-light {
+#sidebar-content,
+#sidebar-content-light,
+#sidebar-light {
     border-color: rgba(0, 0, 0, 0.15);
     -webkit-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
@@ -265,15 +277,16 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     color: #eee;
 }
 
-#rightbar #rb_current_playlist li a:hover, #rightbar #rb_current_playlist li a:focus {
+#rightbar #rb_current_playlist li a:hover,
+#rightbar #rb_current_playlist li a:focus {
     color: #fff;
     background-color: #c85a00;
-    background-image: -moz-linear-gradient(top, #cc6200,#c24d00);
-    background-image: -ms-linear-gradient(top, #cc6200,#c24d00);
-    background-image: -webkit-gradient(linear,0 0,0 100%,from(#cc6200),to(#c24d00));
-    background-image: -webkit-linear-gradient(top, #cc6200,#c24d00);
-    background-image: -o-linear-gradient(top, #cc6200,#c24d00);
-    background-image: linear-gradient(top, #cc6200,#c24d00);
+    background-image: -moz-linear-gradient(top, #cc6200, #c24d00);
+    background-image: -ms-linear-gradient(top, #cc6200, #c24d00);
+    background-image: -webkit-gradient(linear, 0, 0 100%, from(#cc6200), to(#c24d00));
+    background-image: -webkit-linear-gradient(top, #cc6200, #c24d00);
+    background-image: -o-linear-gradient(top, #cc6200, #c24d00);
+    background-image: linear-gradient(top, #cc6200, #c24d00);
 }
 
 #rightbar #rb_current_playlist li.odd {
@@ -306,11 +319,13 @@ input[type=button]:focus:active, input[type=submit]:focus:active {
     color: #fff;
 }
 
-.list-header, .list-header a {
+.list-header,
+.list-header a {
     color: #999;
 }
 
-.list-header a:hover, .list-header a:focus {
+.list-header a:hover,
+.list-header a:focus {
     color: #fff;
 }
 
@@ -330,11 +345,13 @@ table.tabledata a {
     color: #ff9d00;
 }
 
-table.tabledata a:hover, table.tabledata a:focus {
+table.tabledata a:hover,
+table.tabledata a:focus {
     color: #ffc466;
 }
 
-table.tabledata thead .th-top, table.tabledata tfoot .th-bottom {
+table.tabledata thead .th-top,
+table.tabledata tfoot .th-bottom {
     background-color: #262626;
     -webkit-box-shadow: 0 1px 0 #2a2a2a, inset 0 1px 1px #000;
     -moz-box-shadow: 0 1px 0 #2a2a2a, inset 0 1px 1px #000;
@@ -353,14 +370,15 @@ table.tabledata th a {
     color: #ff9d00;
 }
 
-table.tabledata tr:hover, table.tabledata tr:focus {
+table.tabledata tr:hover,
+table.tabledata tr:focus {
     background-color: #c85a00;
-    background-image: -moz-linear-gradient(top, #cc6200,#c24d00);
-    background-image: -ms-linear-gradient(top, #cc6200,#c24d00);
-    background-image: -webkit-gradient(linear,0 0,0 100%,from(#cc6200),to(#c24d00));
-    background-image: -webkit-linear-gradient(top, #cc6200,#c24d00);
-    background-image: -o-linear-gradient(top, #cc6200,#c24d00);
-    background-image: linear-gradient(top, #cc6200,#c24d00);
+    background-image: -moz-linear-gradient(top, #cc6200, #c24d00);
+    background-image: -ms-linear-gradient(top, #cc6200, #c24d00);
+    background-image: -webkit-gradient(linear, 0, 0 100%, from(#cc6200), to(#c24d00));
+    background-image: -webkit-linear-gradient(top, #cc6200, #c24d00);
+    background-image: -o-linear-gradient(top, #cc6200, #c24d00);
+    background-image: linear-gradient(top, #cc6200, #c24d00);
 }
 
 table.tabledata .th-top:hover,
@@ -418,7 +436,7 @@ table.tabledata tbody .cel_cover img:hover {
 }
 
 #now_playing .cel_lyrics a:hover {
-    color: #0099CC;
+    color: #09c;
 }
 
 /* --------------------------
@@ -434,12 +452,12 @@ span.fatalerror {
 
 .box-content #tag_filter .tag_button span:hover {
     background-color: #c85a00;
-    background-image: -moz-linear-gradient(top, #cc6200,#c24d00);
-    background-image: -ms-linear-gradient(top, #cc6200,#c24d00);
-    background-image: -webkit-gradient(linear,0 0,0 100%,from(#cc6200),to(#c24d00));
-    background-image: -webkit-linear-gradient(top, #cc6200,#c24d00);
-    background-image: -o-linear-gradient(top, #cc6200,#c24d00);
-    background-image: linear-gradient(top, #cc6200,#c24d00);
+    background-image: -moz-linear-gradient(top, #cc6200, #c24d00);
+    background-image: -ms-linear-gradient(top, #cc6200, #c24d00);
+    background-image: -webkit-gradient(linear, 0, 0 100%, from(#cc6200), to(#c24d00));
+    background-image: -webkit-linear-gradient(top, #cc6200, #c24d00);
+    background-image: -o-linear-gradient(top, #cc6200, #c24d00);
+    background-image: linear-gradient(top, #cc6200, #c24d00);
 }
 
 /* --------------------------
@@ -471,18 +489,21 @@ span.fatalerror {
     color: #999;
 }
 
-#information_actions a:hover, #information_actions li:hover {
-    color: #fff;/*#ffc466;*/
+#information_actions a:hover,
+#information_actions li:hover {
+    color: #fff;
 }
 
 /* ------------------------
     Styles for user flags
    ------------------------ */
-.userflag a.userflag_true, .userflag a:hover.userflag_false {
+.userflag a.userflag_true,
+.userflag a:hover.userflag_false {
     background: url(../../../images/icon_flag.png) left top;
 }
 
-.userflag a:hover.userflag_true, .userflag a.userflag_false {
+.userflag a:hover.userflag_true,
+.userflag a.userflag_false {
     background: url(../../../images/icon_flag_off.png) left top;
 }
 
@@ -582,7 +603,8 @@ div.jp-playlist li {
     border-color: #1d1d1d;
 }
 
-span.item-count, span.query-count {
+span.item-count,
+span.query-count {
     color: #999;
 }
 
