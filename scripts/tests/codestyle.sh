@@ -1,14 +1,10 @@
 #!/bin/bash
 
-if [ -e "php-cs-fixer.phar" ]
+if [ -e "vendor/bin/php-cs-fixer" ]
 then
-    PHPCSFIXER="php php-cs-fixer.phar"
-elif [ -e "bin/php-cs-fixer" ]
-then
-    PHPCSFIXER="php bin/php-cs-fixer"
+    PHPCSFIXER="vendor/bin/php-cs-fixer"
 else
-    echo -e "\e[1;31mPlease install or download latest stable php-cs-fixer\e[00m";
-    echo -e "\e[1;31mhttp://cs.sensiolabs.org/\e[00m";
+    echo -e "\e[1;31mphp-cs-fixer not found: Please run composer install --dev\e[00m";
     exit 1
 fi
 
