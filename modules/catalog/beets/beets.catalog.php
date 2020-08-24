@@ -21,7 +21,7 @@
  *
  */
 
-use Beets\CliHandler;
+use Ampache\Module\Beets\CliHandler;
 
 /**
  * Beets Catalog Class
@@ -29,7 +29,7 @@ use Beets\CliHandler;
  * This class handles all actual work in regards to local Beets catalogs.
  *
  */
-class Catalog_beets extends Beets\Catalog
+class Catalog_beets extends \Ampache\Module\Beets\Catalog
 {
     protected $version     = '000001';
     protected $type        = 'beets';
@@ -137,7 +137,7 @@ class Catalog_beets extends Beets\Catalog
      */
     protected function getParser()
     {
-        return new Beets\CliHandler();
+        return new \Ampache\Module\Beets\CliHandler();
     }
 
     /**

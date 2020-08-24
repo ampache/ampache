@@ -27,7 +27,7 @@
  * This class handles all actual work in regards to remote Beets catalogs.
  *
  */
-class Catalog_beetsremote extends Beets\Catalog
+class Catalog_beetsremote extends \Ampache\Module\Beets\Catalog
 {
     protected $version     = '000001';
     protected $type        = 'beetsremote';
@@ -136,7 +136,7 @@ class Catalog_beetsremote extends Beets\Catalog
      */
     protected function getParser()
     {
-        return new Beets\JsonHandler($this->uri);
+        return new \Ampache\Module\Beets\JsonHandler($this->uri);
     }
 
     /**

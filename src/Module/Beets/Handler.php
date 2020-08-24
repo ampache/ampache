@@ -21,7 +21,7 @@
  *
  */
 
-namespace Beets;
+namespace Ampache\Module\Beets;
 
 /**
  * Description of handler

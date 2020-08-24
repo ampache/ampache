@@ -359,8 +359,13 @@
     "autoload": {
         "psr-4": {
             "Lib\\": "lib/class",
-            "Beets\\": "modules/Beets",
-            "Ampache\\": ["src/", "tests/"]
+            "Ampache\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Lib\\": "lib/class",
+            "Ampache\\": "tests/"
         }
     },
     "scripts": {

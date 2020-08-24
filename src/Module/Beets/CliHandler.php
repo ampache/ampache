@@ -1,7 +1,6 @@
 <?php
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,7 +20,8 @@
  *
  */
 
-namespace Beets;
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+namespace Ampache\Module\Beets;
 
 /**
  * Start commands in CLI and dispatch them
