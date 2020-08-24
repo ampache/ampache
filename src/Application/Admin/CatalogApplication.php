@@ -206,7 +206,7 @@ final class CatalogApplication implements ApplicationInterface
                     $catalog_id = Catalog::create($_POST);
 
                     if (!$catalog_id) {
-                        require AmpConfig::get('prefix') . UI::find_template('show_add_catalog.inc.php');
+                        require UI::find_template('show_add_catalog.inc.php');
                         break;
                     }
 
@@ -214,7 +214,7 @@ final class CatalogApplication implements ApplicationInterface
                     catalog_worker('add_to_catalog', $catalogs, $_POST);
                     show_confirmation(T_('No Problem'), T_('The Catalog creation process has started'), AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
                 } else {
-                    require AmpConfig::get('prefix') . UI::find_template('show_add_catalog.inc.php');
+                    require UI::find_template('show_add_catalog.inc.php');
                 }
                 break;
             case 'clear_stats':
@@ -229,7 +229,7 @@ final class CatalogApplication implements ApplicationInterface
                 show_confirmation($title, $body, $url);
                 break;
             case 'show_add_catalog':
-                require AmpConfig::get('prefix') . UI::find_template('show_add_catalog.inc.php');
+                require UI::find_template('show_add_catalog.inc.php');
                 break;
             case 'clear_now_playing':
                 if (AmpConfig::get('demo_mode')) {
@@ -246,7 +246,7 @@ final class CatalogApplication implements ApplicationInterface
 
                 $songs = Song::get_disabled();
                 if (count($songs)) {
-                    require AmpConfig::get('prefix') . UI::find_template('show_disabled_songs.inc.php');
+                    require UI::find_template('show_disabled_songs.inc.php');
                 } else {
                     echo '<div class="error show-disabled">' . T_('No disabled Songs found') . '</div>';
                 }
@@ -267,7 +267,7 @@ final class CatalogApplication implements ApplicationInterface
             case 'show_customize_catalog':
                 $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
                 $catalog->format();
-                require_once AmpConfig::get('prefix') . UI::find_template('show_edit_catalog.inc.php');
+                require_once UI::find_template('show_edit_catalog.inc.php');
                 break;
             case 'gather_media_art':
                 catalog_worker('gather_media_art', $catalogs);
@@ -275,7 +275,7 @@ final class CatalogApplication implements ApplicationInterface
                 break;
             case 'show_catalogs':
             default:
-                require_once AmpConfig::get('prefix') . UI::find_template('show_manage_catalogs.inc.php');
+                require_once UI::find_template('show_manage_catalogs.inc.php');
                 break;
         } // end switch
 

@@ -51,7 +51,7 @@ final class LocalPlayApplication implements ApplicationInterface
         $refresh_limit = AmpConfig::get('refresh_limit', 0);
         if ($refresh_limit > 5) {
             $ajax_url      = '?page=localplay&action=command&command=refresh';
-            require_once AmpConfig::get('prefix') . UI::find_template('javascript_refresh.inc.php');
+            require_once UI::find_template('javascript_refresh.inc.php');
         }
 
         switch ($_REQUEST['action']) {
@@ -65,7 +65,7 @@ final class LocalPlayApplication implements ApplicationInterface
                 // Get the current Localplay fields
                 $localplay = new Localplay(AmpConfig::get('localplay_controller'));
                 $fields    = $localplay->get_instance_fields();
-                require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_add_instance.inc.php');
+                require_once UI::find_template('show_localplay_add_instance.inc.php');
                 break;
             case 'add_instance':
                 // This requires 50 or better!
@@ -98,7 +98,7 @@ final class LocalPlayApplication implements ApplicationInterface
                 $localplay = new Localplay(AmpConfig::get('localplay_controller'));
                 $instance  = $localplay->get_instance($_REQUEST['instance']);
                 $fields    = $localplay->get_instance_fields();
-                require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_edit_instance.inc.php');
+                require_once UI::find_template('show_localplay_edit_instance.inc.php');
                 break;
             case 'show_instances':
                 // First build the Localplay object and then get the instances
@@ -109,7 +109,7 @@ final class LocalPlayApplication implements ApplicationInterface
                 $localplay = new Localplay(AmpConfig::get('localplay_controller'));
                 $instances = $localplay->get_instances();
                 $fields    = $localplay->get_instance_fields();
-                require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_instances.inc.php');
+                require_once UI::find_template('show_localplay_instances.inc.php');
                 break;
             case 'show_playlist':
             default:
@@ -123,7 +123,7 @@ final class LocalPlayApplication implements ApplicationInterface
 
                 // Pull the current playlist and require the template
                 $objects = $localplay->get();
-                require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_status.inc.php');
+                require_once UI::find_template('show_localplay_status.inc.php');
                 break;
         } // end switch action
 

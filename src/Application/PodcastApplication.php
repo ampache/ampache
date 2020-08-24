@@ -52,7 +52,7 @@ final class PodcastApplication implements ApplicationInterface
                     return;
                 }
 
-                require_once AmpConfig::get('prefix') . UI::find_template('show_add_podcast.inc.php');
+                require_once UI::find_template('show_add_podcast.inc.php');
 
                 break;
             case 'create':
@@ -72,7 +72,7 @@ final class PodcastApplication implements ApplicationInterface
                 $results = Podcast::create($_POST);
 
                 if (!$results) {
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_add_podcast.inc.php');
+                    require_once UI::find_template('show_add_podcast.inc.php');
                 } else {
                     $title  = T_('No Problem');
                     $body   = T_('Subscribed to the Podcast');
@@ -116,7 +116,7 @@ final class PodcastApplication implements ApplicationInterface
                     $podcast->format();
                     $object_ids  = $podcast->get_episodes();
                     $object_type = 'podcast_episode';
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_podcast.inc.php');
+                    require_once UI::find_template('show_podcast.inc.php');
                 }
                 break;
         } // end data collection

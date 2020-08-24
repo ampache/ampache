@@ -56,7 +56,7 @@ class Plugin
     public function has_info($cname)
     {
         try {
-            $basedir = AmpConfig::get('prefix') . '/modules/plugins';
+            $basedir = __DIR__ . '/../../modules/plugins';
             if (is_dir($basedir . '/' . $cname)) {
                 $name = $cname;
             } else {
@@ -102,7 +102,7 @@ class Plugin
         $plugins_list[$type] = array();
 
         // Open up the plugin dir
-        $basedir = AmpConfig::get('prefix') . '/modules/plugins';
+        $basedir = __DIR__ . '/../../modules/plugins';
         $handle  = opendir($basedir);
 
         if (!is_resource($handle)) {

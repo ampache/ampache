@@ -93,7 +93,7 @@ final class AccessApplication implements ApplicationInterface
                     show_confirmation(T_('No Problem'), T_('Your new Access Control List(s) have been created'), $url);
                 } else {
                     $action = 'show_add_' . Core::get_post('type');
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_add_access.inc.php');
+                    require_once UI::find_template('show_add_access.inc.php');
                 }
                 break;
             case 'update_record':
@@ -108,7 +108,7 @@ final class AccessApplication implements ApplicationInterface
                     show_confirmation(T_('No Problem'), T_('Your Access Control List has been updated'), AmpConfig::get('web_path') . '/admin/access.php');
                 } else {
                     $access->format();
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_edit_access.inc.php');
+                    require_once UI::find_template('show_edit_access.inc.php');
                 }
                 break;
             case 'show_add_current':
@@ -116,17 +116,17 @@ final class AccessApplication implements ApplicationInterface
             case 'show_add_local':
             case 'show_add_advanced':
                 $action = Core::get_request('action');
-                require_once AmpConfig::get('prefix') . UI::find_template('show_add_access.inc.php');
+                require_once UI::find_template('show_add_access.inc.php');
                 break;
             case 'show_edit_record':
                 $access = new Access(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
                 $access->format();
-                require_once AmpConfig::get('prefix') . UI::find_template('show_edit_access.inc.php');
+                require_once UI::find_template('show_edit_access.inc.php');
                 break;
             default:
                 $list = array();
                 $list = Access::get_access_lists();
-                require_once AmpConfig::get('prefix') . UI::find_template('show_access_list.inc.php');
+                require_once UI::find_template('show_access_list.inc.php');
                 break;
         } // end switch on action
 

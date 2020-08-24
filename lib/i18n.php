@@ -31,7 +31,7 @@ use Gettext\Translator;
 function load_gettext()
 {
     $lang   = AmpConfig::get('lang');
-    $mopath = AmpConfig::get('prefix') . '/locale/' . $lang . '/LC_MESSAGES/messages.mo';
+    $mopath = __DIR__ . '/../locale/' . $lang . '/LC_MESSAGES/messages.mo';
 
     $gettext = new Translator();
     if (file_exists($mopath)) {

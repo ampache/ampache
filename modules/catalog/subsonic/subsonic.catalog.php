@@ -134,7 +134,7 @@ class Catalog_subsonic extends Catalog
             }
         }
 
-        require_once AmpConfig::get('prefix') . '/modules/catalog/subsonic/subsonic.client.php';
+        require_once __DIR__ . '/../../../modules/catalog/subsonic/subsonic.client.php';
     }
 
     /**

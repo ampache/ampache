@@ -50,7 +50,7 @@ final class ChannelApplication implements ApplicationInterface
                     $object = new $type(Core::get_request('id'));
                     if ($object->id) {
                         $object->format();
-                        require_once AmpConfig::get('prefix') . UI::find_template('show_add_channel.inc.php');
+                        require_once UI::find_template('show_add_channel.inc.php');
                     }
                 }
                 UI::show_footer();
@@ -72,7 +72,7 @@ final class ChannelApplication implements ApplicationInterface
                 $created = Channel::create($_REQUEST['name'], $_REQUEST['description'], $_REQUEST['url'], $_REQUEST['type'], $_REQUEST['id'], $_REQUEST['interface'], $_REQUEST['port'], $_REQUEST['admin_password'], isset($_REQUEST['private']) ? 1 : 0, $_REQUEST['max_listeners'], $_REQUEST['random'] ?: 0, $_REQUEST['loop'] ?: 0, $_REQUEST['stream_type'], $_REQUEST['bitrate']);
 
                 if (!$created) {
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_add_channel.inc.php');
+                    require_once UI::find_template('show_add_channel.inc.php');
                 } else {
                     show_confirmation(T_('No Problem'), T_('The Channel has been created'), AmpConfig::get('web_path') . '/browse.php?action=channel');
                 }

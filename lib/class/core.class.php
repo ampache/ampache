@@ -249,9 +249,9 @@ class Core
     {
         $possiblePaths   = array();
         $namespaceParts  = explode('\\', (string) $class);
-        $possiblePaths[] = AmpConfig::get('prefix') . '/modules/' . implode('/', $namespaceParts) . '.php';
+        $possiblePaths[] = __DIR__ . '/../../modules/' . implode('/', $namespaceParts) . '.php';
 
-        $classedPath = array('path' => AmpConfig::get('prefix')) +
+        $classedPath = array('path' => __DIR__ . '/../../') +
                 self::insertInArray($namespaceParts, 1, array('add' => 'class'));
         $possiblePaths[] = implode('/', $classedPath) . '.php';
 
@@ -266,7 +266,7 @@ class Core
     private static function getNonNamespacedPaths($class)
     {
         $possiblePaths   = array();
-        $possiblePaths[] = AmpConfig::get('prefix') . '/lib/class/' .
+        $possiblePaths[] = __DIR__ . '/../../lib/class/' .
                 strtolower((string) $class) . '.class.php';
 
         return $possiblePaths;

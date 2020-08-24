@@ -116,7 +116,7 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
                 if (($_REQUEST['playlist_method'] == 'clear' || AmpConfig::get('playlist_method') == 'clear')) {
                     define('NO_SONGS', '1');
                     ob_start();
-                    require_once AmpConfig::get('prefix') . UI::find_template('rightbar.inc.php');
+                    require_once UI::find_template('rightbar.inc.php');
                     $results['rightbar'] = ob_get_clean();
                 }
 

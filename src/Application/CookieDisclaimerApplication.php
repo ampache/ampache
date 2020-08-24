@@ -42,7 +42,7 @@ final class CookieDisclaimerApplication implements ApplicationInterface
             return;
         }
 
-        require_once AmpConfig::get('prefix') . UI::find_template('cookie_disclaimer.inc.php');
+        require_once UI::find_template('cookie_disclaimer.inc.php');
 
         UI::show_footer();
     }

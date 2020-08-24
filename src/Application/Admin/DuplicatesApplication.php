@@ -47,17 +47,17 @@ final class DuplicatesApplication implements ApplicationInterface
         switch ($_REQUEST['action']) {
             case 'find_duplicates':
                 $search_type = $_REQUEST['search_type'];
-                require_once AmpConfig::get('prefix') . UI::find_template('show_duplicate.inc.php');
+                require_once UI::find_template('show_duplicate.inc.php');
                 if ($search_type == 'album') {
                     $duplicates = Song::get_duplicate_info(array(), $search_type);
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_duplicates_filtered.inc.php');
+                    require_once UI::find_template('show_duplicates_filtered.inc.php');
                     break;
                 }
                 $duplicates  = Song::find_duplicates($search_type);
-                require_once AmpConfig::get('prefix') . UI::find_template('show_duplicates.inc.php');
+                require_once UI::find_template('show_duplicates.inc.php');
                 break;
             default:
-                require_once AmpConfig::get('prefix') . UI::find_template('show_duplicate.inc.php');
+                require_once UI::find_template('show_duplicate.inc.php');
                 break;
         } // end switch on action
 

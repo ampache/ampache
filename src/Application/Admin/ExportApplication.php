@@ -78,7 +78,7 @@ final class ExportApplication implements ApplicationInterface
                 // We don't want the footer so we're done here
                 return;
             default:
-                require_once AmpConfig::get('prefix') . UI::find_template('show_export.inc.php');
+                require_once UI::find_template('show_export.inc.php');
                 break;
         } // end switch on action
 

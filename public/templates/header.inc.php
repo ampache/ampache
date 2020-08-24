@@ -59,11 +59,11 @@ $t_logout    = T_('Log out'); ?>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo scrub_out(AmpConfig::get('site_title')); ?> - <?php echo $location['title']; ?></title>
 
-        <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
+        <?php require_once UI::find_template('stylesheets.inc.php'); ?>
 
-        <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('jquery-editdialog.css', true); ?>" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php UI::find_template('jquery-editdialog.css', true); ?>" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php echo $web_path . UI::find_template('jquery-file-upload.css', true); ?>" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php UI::find_template('jquery-file-upload.css', true); ?>" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jstree/dist/themes/default/style.min.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/tag-it/css/jquery.tagit.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/rhinoslider/css/rhinoslider-1.05.css" type="text/css" media="screen" />
@@ -110,7 +110,7 @@ $t_logout    = T_('Log out'); ?>
         if (AmpConfig::get('ajax_load')) {
             $iframed = true; ?>
         <script src="<?php echo $web_path; ?>/lib/javascript/dynamicpage.js"></script>
-        <?php require_once AmpConfig::get('prefix') . UI::find_template('show_html5_player_headers.inc.php'); ?>
+        <?php require_once UI::find_template('show_html5_player_headers.inc.php'); ?>
         <script>
             function NavigateTo(url)
             {
@@ -367,9 +367,9 @@ $t_logout    = T_('Log out'); ?>
                 <div id="headerbox">
                     <?php
                         UI::show_box_top('', 'box box_headerbox');
-                        require_once AmpConfig::get('prefix') . UI::find_template('show_search_bar.inc.php');
+                        require_once UI::find_template('show_search_bar.inc.php');
                         if (User::is_registered()) {
-                            require_once AmpConfig::get('prefix') . UI::find_template('show_playtype_switch.inc.php'); ?>
+                            require_once UI::find_template('show_playtype_switch.inc.php'); ?>
                         <span id="loginInfo">
                             <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo Core::get_global('user')->id; ?>"><?php echo Core::get_global('user')->fullname; ?></a>
                         <?php
@@ -463,10 +463,10 @@ $t_logout    = T_('Log out'); ?>
                     <span id="sidebar-header-content"></span>
                 </div>
                 <div id="sidebar-content" class="<?php echo $isCollapsed ? 'sidebar-content-collapsed' : ''; ?>" >
-                    <?php require_once AmpConfig::get('prefix') . UI::find_template('sidebar.inc.php'); ?>
+                    <?php require_once UI::find_template('sidebar.inc.php'); ?>
                 </div>
                 <div id="sidebar-content-light" class="<?php echo $isCollapsed ? 'sidebar-content-light-collapsed' : ''; ?>" >
-                    <?php require_once AmpConfig::get('prefix') . UI::find_template('sidebar.light.inc.php'); ?>
+                    <?php require_once UI::find_template('sidebar.light.inc.php'); ?>
                 </div>
             </div>
             <!-- Handle collapsed visibility -->
@@ -501,7 +501,7 @@ $t_logout    = T_('Log out'); ?>
             });
             </script>
             <div id="rightbar" class="rightbar-fixed">
-                <?php require_once AmpConfig::get('prefix') . UI::find_template('rightbar.inc.php'); ?>
+                <?php require_once UI::find_template('rightbar.inc.php'); ?>
             </div>
 
             <!-- Tiny little div, used to cheat the system -->
@@ -532,6 +532,6 @@ $t_logout    = T_('Log out'); ?>
                         echo '</div>';
                     }
                 if (AmpConfig::get("ajax_load")) {
-                    require AmpConfig::get('prefix') . UI::find_template('show_web_player_embedded.inc.php');
+                    require UI::find_template('show_web_player_embedded.inc.php');
                 } // load the web_player early to make sure the browser doesn't block audio playback?>
                 <div id="guts">

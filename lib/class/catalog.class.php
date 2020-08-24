@@ -266,7 +266,7 @@ abstract class Catalog extends database_object
             return null;
         }
 
-        $filename = AmpConfig::get('prefix') . '/modules/catalog/' . $type . '/' . $type . '.catalog.php';
+        $filename = __DIR__ . '/../../modules/catalog/' . $type . '/' . $type . '.catalog.php';
         $include  = require_once $filename;
 
         if (!$include) {
@@ -373,7 +373,7 @@ abstract class Catalog extends database_object
     public static function get_catalog_types()
     {
         /* First open the dir */
-        $basedir = AmpConfig::get('prefix') . '/modules/catalog';
+        $basedir = __DIR__ . '/../../modules/catalog';
         $handle  = opendir($basedir);
 
         if (!is_resource($handle)) {
@@ -684,7 +684,7 @@ abstract class Catalog extends database_object
         }
 
         $insert_id = 0;
-        $filename  = AmpConfig::get('prefix') . '/modules/catalog/' . $type . '/' . $type . '.catalog.php';
+        $filename  = __DIR__ . '/../../modules/catalog/' . $type . '/' . $type . '.catalog.php';
         $include   = require_once $filename;
 
         if ($include) {
@@ -2158,7 +2158,7 @@ abstract class Catalog extends database_object
         debug_event('catalog.class', 'Starting clean on ' . $this->name, 5);
 
         if (!defined('SSE_OUTPUT')) {
-            require AmpConfig::get('prefix') . UI::find_template('show_clean_catalog.inc.php');
+            require UI::find_template('show_clean_catalog.inc.php');
             ob_flush();
             flush();
         }
@@ -2186,7 +2186,7 @@ abstract class Catalog extends database_object
     public function verify_catalog()
     {
         if (!defined('SSE_OUTPUT')) {
-            require AmpConfig::get('prefix') . UI::find_template('show_verify_catalog.inc.php');
+            require UI::find_template('show_verify_catalog.inc.php');
             ob_flush();
             flush();
         }
@@ -2876,7 +2876,7 @@ abstract class Catalog extends database_object
                 foreach ($catalogs as $catalog_id) {
                     $catalog = self::create_from_id($catalog_id);
                     if ($catalog !== null) {
-                        require AmpConfig::get('prefix') . UI::find_template('show_gather_art.inc.php');
+                        require UI::find_template('show_gather_art.inc.php');
                         flush();
                         $catalog->gather_art();
                     }

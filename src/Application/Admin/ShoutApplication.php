@@ -60,7 +60,7 @@ final class ShoutApplication implements ApplicationInterface
                 $object->format();
                 $client = new User($shout->user);
                 $client->format();
-                require_once AmpConfig::get('prefix') . UI::find_template('show_edit_shout.inc.php');
+                require_once UI::find_template('show_edit_shout.inc.php');
                 break;
             case 'delete':
                 $shout = new Shoutbox($_REQUEST['shout_id']);

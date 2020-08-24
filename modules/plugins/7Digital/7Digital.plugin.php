@@ -40,7 +40,7 @@ class Ampache7digital
     public function __construct()
     {
         $this->description = T_('Song preview from 7digital');
-        require_once AmpConfig::get('prefix') . "/modules/oauth/OAuth.php";
+        require_once __DIR__ . "/../../../modules/oauth/OAuth.php";
 
         return true;
     } // constructor

@@ -123,7 +123,7 @@ class Registration
      */
     public static function show_agreement()
     {
-        $filename = AmpConfig::get('prefix') . '/config/registration_agreement.php';
+        $filename = __DIR__ . '/../../config/registration_agreement.php';
 
         if (!file_exists($filename)) {
             return false;

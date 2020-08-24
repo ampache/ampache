@@ -44,7 +44,7 @@ final class MashupApplication implements ApplicationInterface
         }
 
         UI::show_header();
-        require_once AmpConfig::get('prefix') . UI::find_template('show_mashup.inc.php');
+        require_once UI::find_template('show_mashup.inc.php');
 
         // Show the Footer
         UI::show_query_stats();

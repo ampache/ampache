@@ -97,7 +97,7 @@ final class LabelApplication implements ApplicationInterface
 
                 $label_id = Label::create($_POST);
                 if (!$label_id) {
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_add_label.inc.php');
+                    require_once UI::find_template('show_add_label.inc.php');
                 } else {
                     show_confirmation(T_('No Problem'), T_('The Label has been added'), AmpConfig::get('web_path') . '/browse.php?action=label');
                 }
@@ -114,7 +114,7 @@ final class LabelApplication implements ApplicationInterface
                     $label->format();
                     $object_ids  = $label->get_artists();
                     $object_type = 'artist';
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_label.inc.php');
+                    require_once UI::find_template('show_label.inc.php');
                     UI::show_footer();
 
                     return;
@@ -122,7 +122,7 @@ final class LabelApplication implements ApplicationInterface
             // intentional fall through
             case 'show_add_label':
                 if (Access::check('interface', 50) || AmpConfig::get('upload_allow_edit')) {
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_add_label.inc.php');
+                    require_once UI::find_template('show_add_label.inc.php');
                 } else {
                     echo T_('The Label cannot be found');
                 }

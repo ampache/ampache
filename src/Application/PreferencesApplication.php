@@ -220,7 +220,7 @@ final class PreferencesApplication implements ApplicationInterface
                 }
 
                 // Show the default preferences page
-                require AmpConfig::get('prefix') . UI::find_template('show_preferences.inc.php');
+                require UI::find_template('show_preferences.inc.php');
                 break;
         } // end switch on action
 

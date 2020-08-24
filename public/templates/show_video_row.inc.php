@@ -69,7 +69,7 @@ if (Art::is_enabled()) { ?>
 </td>
 <?php
 if ($video_type != 'video') {
-        require AmpConfig::get('prefix') . UI::find_template('show_partial_' . $video_type . '_row.inc.php');
+        require UI::find_template('show_partial_' . $video_type . '_row.inc.php');
     } ?>
 <td class="cel_release_date"><?php echo $libitem->f_release_date; ?></td>
 <td class="cel_codec"><?php echo $libitem->f_codec; ?></td>

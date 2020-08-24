@@ -66,7 +66,7 @@ class AutoUpdate
      */
     protected static function is_git_repository()
     {
-        return is_dir(AmpConfig::get('prefix') . '/.git');
+        return is_dir(__DIR__ . '/../../.git');
     }
 
     /**
@@ -84,7 +84,7 @@ class AutoUpdate
      */
     protected static function is_branch_develop_exists()
     {
-        return is_readable(AmpConfig::get('prefix') . '/.git/refs/heads/develop');
+        return is_readable(__DIR__ . '/../../.git/refs/heads/develop');
     }
 
     /**
@@ -204,11 +204,11 @@ class AutoUpdate
     public static function get_current_commit()
     {
         $git_branch = self::is_force_git_branch();
-        if ($git_branch !== '' && is_readable(AmpConfig::get('prefix') . '/.git/refs/heads/' . $git_branch)) {
-            return trim(file_get_contents(AmpConfig::get('prefix') . '/.git/refs/heads/' . $git_branch));
+        if ($git_branch !== '' && is_readable(__DIR__ . '/../../.git/refs/heads/' . $git_branch)) {
+            return trim(file_get_contents(__DIR__ . '/../../.git/refs/heads/' . $git_branch));
         }
         if (self::is_branch_develop_exists()) {
-            return trim(file_get_contents(AmpConfig::get('prefix') . '/.git/refs/heads/develop'));
+            return trim(file_get_contents(__DIR__ . '/../../.git/refs/heads/develop'));
         }
 
         return '';
@@ -295,7 +295,7 @@ class AutoUpdate
         }
         echo T_('Updating Ampache sources with `' . $cmd . '` ...') . '<br />';
         ob_flush();
-        chdir(AmpConfig::get('prefix'));
+        chdir(__DIR__ . '/../../');
         exec($cmd);
         echo T_('Done') . '<br />';
         ob_flush();
@@ -307,10 +307,10 @@ class AutoUpdate
      */
     public static function update_dependencies()
     {
-        $cmd = 'composer install --prefer-source --no-interaction';
+        $cmd = 'composer install --no-dev --prefer-source --no-interaction';
         echo T_('Updating dependencies with `' . $cmd . '` ...') . '<br />';
         ob_flush();
-        chdir(AmpConfig::get('prefix'));
+        chdir(__DIR__ . '/../../');
         exec($cmd);
         echo T_('Done') . '<br />';
         ob_flush();

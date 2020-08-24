@@ -52,7 +52,7 @@ final class RadioApplication implements ApplicationInterface
                     return;
                 }
 
-                require_once AmpConfig::get('prefix') . UI::find_template('show_add_live_stream.inc.php');
+                require_once UI::find_template('show_add_live_stream.inc.php');
 
                 break;
             case 'create':
@@ -72,7 +72,7 @@ final class RadioApplication implements ApplicationInterface
                 $results = Live_Stream::create($_POST);
 
                 if (!$results) {
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_add_live_stream.inc.php');
+                    require_once UI::find_template('show_add_live_stream.inc.php');
                 } else {
                     $body  = T_('Radio Station created');
                     $title = '';
@@ -83,7 +83,7 @@ final class RadioApplication implements ApplicationInterface
             default:
                 $radio = new Live_Stream($_REQUEST['radio']);
                 $radio->format();
-                require AmpConfig::get('prefix') . UI::find_template('show_live_stream.inc.php');
+                require UI::find_template('show_live_stream.inc.php');
                 break;
         } // end data collection
 

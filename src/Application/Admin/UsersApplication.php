@@ -99,7 +99,7 @@ final class UsersApplication implements ApplicationInterface
 
                 /* If we've got an error then show edit form! */
                 if (AmpError::occurred()) {
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_edit_user.inc.php');
+                    require_once UI::find_template('show_edit_user.inc.php');
                     break;
                 }
 
@@ -181,7 +181,7 @@ final class UsersApplication implements ApplicationInterface
 
                 /* If we've got an error then show add form! */
                 if (AmpError::occurred()) {
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_add_user.inc.php');
+                    require_once UI::find_template('show_add_user.inc.php');
                     break;
                 }
 
@@ -242,7 +242,7 @@ final class UsersApplication implements ApplicationInterface
                 }
                 $client = new User((int) Core::get_request('user_id'));
                 $client->format();
-                require_once AmpConfig::get('prefix') . UI::find_template('show_edit_user.inc.php');
+                require_once UI::find_template('show_edit_user.inc.php');
                 break;
             case 'confirm_delete':
                 if (AmpConfig::get('demo_mode')) {
@@ -351,18 +351,18 @@ final class UsersApplication implements ApplicationInterface
                 } else {
                     $history = $working_user->get_ip_history(1);
                 }
-                require AmpConfig::get('prefix') . UI::find_template('show_ip_history.inc.php');
+                require UI::find_template('show_ip_history.inc.php');
                 break;
             case 'show_add_user':
                 if (AmpConfig::get('demo_mode')) {
                     break;
                 }
-                require_once AmpConfig::get('prefix') . UI::find_template('show_add_user.inc.php');
+                require_once UI::find_template('show_add_user.inc.php');
                 break;
             case 'show_preferences':
                 $client      = new User((int) Core::get_request('user_id'));
                 $preferences = Preference::get_all($client->id);
-                require_once AmpConfig::get('prefix') . UI::find_template('show_user_preferences.inc.php');
+                require_once UI::find_template('show_user_preferences.inc.php');
                 break;
             default:
                 $browse = new Browse();

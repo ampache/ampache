@@ -36,7 +36,7 @@ final class ArtApplication implements ApplicationInterface
 {
     public function run(): void
     {
-        require_once AmpConfig::get('prefix') . UI::find_template('header.inc.php');
+        require_once UI::find_template('header.inc.php');
 
         $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
@@ -151,10 +151,10 @@ final class ArtApplication implements ApplicationInterface
                     } // end foreach
                     // Store the results for further use
                     $_SESSION['form']['images'] = $images;
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_arts.inc.php');
+                    require_once UI::find_template('show_arts.inc.php');
                 }
 
-                require_once AmpConfig::get('prefix') . UI::find_template('show_get_art.inc.php');
+                require_once UI::find_template('show_get_art.inc.php');
 
                 break;
             case 'select_art':

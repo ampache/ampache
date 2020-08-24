@@ -27,7 +27,7 @@ use Ampache\Application\Api\SseApplication;
 
 require_once __DIR__ . '/../../lib/init.php';
 
-require_once AmpConfig::get('prefix') . '/modules/catalog/local/local.catalog.php';
+require_once __DIR__ . '/../../modules/catalog/local/local.catalog.php';
 
 $dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
 

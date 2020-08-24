@@ -124,7 +124,7 @@ abstract class Catalog extends \Catalog
     public function add_to_catalog($options = null)
     {
         if (!defined('SSE_OUTPUT')) {
-            require AmpConfig::get('prefix') . UI::find_template('show_adds_catalog.inc.php');
+            require UI::find_template('show_adds_catalog.inc.php');
             flush();
         }
         set_time_limit(0);

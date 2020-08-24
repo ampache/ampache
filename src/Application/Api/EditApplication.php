@@ -83,16 +83,16 @@ final class EditApplication implements ApplicationInterface
         switch ($_REQUEST['action']) {
             case 'show_edit_object':
                 ob_start();
-                require AmpConfig::get('prefix') . UI::find_template('show_edit_' . $type . '.inc.php');
+                require UI::find_template('show_edit_' . $type . '.inc.php');
                 $results = ob_get_contents();
                 break;
             case 'refresh_updated':
-                require AmpConfig::get('prefix') . UI::find_template('show_' . $type . '.inc.php');
+                require UI::find_template('show_' . $type . '.inc.php');
                 $results = ob_get_contents();
                 break;
             case 'show_edit_playlist':
                 ob_start();
-                require AmpConfig::get('prefix') . UI::find_template('show_playlists_dialog.inc.php');
+                require UI::find_template('show_playlists_dialog.inc.php');
                 $results = ob_get_contents();
                 ob_end_clean();
                 break;

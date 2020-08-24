@@ -446,7 +446,7 @@ class Channel extends database_object implements media, library_item
      */
     public function start_channel()
     {
-        exec("php " . AmpConfig::get('prefix') . '/bin/channel_run.inc -c ' . $this->id . ' > /dev/null &');
+        exec("php " . __DIR__ . '/../../bin/channel_run.inc -c ' . $this->id . ' > /dev/null &');
     }
 
     /**

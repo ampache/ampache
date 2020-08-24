@@ -45,7 +45,7 @@ class AmpacheVlc extends localplay_controller
     public function __construct()
     {
         /* Do a Require Once On the needed Libraries */
-        require_once AmpConfig::get('prefix') . '/modules/localplay/vlc/vlcplayer.class.php';
+        require_once __DIR__ . '/../../../modules/localplay/vlc/vlcplayer.class.php';
     } // Constructor
 
     /**

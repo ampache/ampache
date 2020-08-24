@@ -76,7 +76,7 @@ final class TvShowApplication implements ApplicationInterface
                 $tvshow->format();
                 $object_ids  = $tvshow->get_seasons();
                 $object_type = 'tvshow_season';
-                require_once AmpConfig::get('prefix') . UI::find_template('show_tvshow.inc.php');
+                require_once UI::find_template('show_tvshow.inc.php');
                 break;
             case 'match':
             case 'Match':
@@ -90,10 +90,10 @@ final class TvShowApplication implements ApplicationInterface
                     $chr = $match;
                 }
                 /* Enclose this in the purty box! */
-                require AmpConfig::get('prefix') . UI::find_template('show_box_top.inc.php');
+                require UI::find_template('show_box_top.inc.php');
                 show_alphabet_list('tvshows', 'tvshows.php', $match);
                 show_alphabet_form($chr, T_('Show TV Shows starting with'), "tvshows.php?action=match");
-                require AmpConfig::get('prefix') . UI::find_template('show_box_bottom.inc.php');
+                require UI::find_template('show_box_bottom.inc.php');
 
                 if ($match === "Browse") {
                     show_tvshows();

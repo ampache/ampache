@@ -95,7 +95,7 @@ final class SmartPlaylistApplication implements ApplicationInterface
                 $playlist = new Search((int) $_REQUEST['playlist_id'], 'song');
                 $playlist->format();
                 $object_ids = $playlist->get_items();
-                require_once AmpConfig::get('prefix') . UI::find_template('show_search.inc.php');
+                require_once UI::find_template('show_search.inc.php');
                 break;
             case 'update_playlist':
                 $playlist = new Search((int) $_REQUEST['playlist_id'], 'song');
@@ -108,11 +108,11 @@ final class SmartPlaylistApplication implements ApplicationInterface
                     break;
                 }
                 $object_ids = $playlist->get_items();
-                require_once AmpConfig::get('prefix') . UI::find_template('show_search.inc.php');
+                require_once UI::find_template('show_search.inc.php');
                 break;
             default:
                 $object_ids = $playlist->get_items();
-                require_once AmpConfig::get('prefix') . UI::find_template('show_search.inc.php');
+                require_once  UI::find_template('show_search.inc.php');
                 break;
         } // switch on the action
 

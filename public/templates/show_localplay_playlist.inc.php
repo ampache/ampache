@@ -24,7 +24,7 @@ $localplay = new Localplay(AmpConfig::get('localplay_controller'));
 $localplay->connect();
 $status = $localplay->status(); ?>
 <?php if ($browse->is_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+    require UI::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata">
     <thead>
@@ -69,5 +69,5 @@ $status = $localplay->status(); ?>
     </tfoot>
 </table>
 <?php if ($browse->is_show_header()) {
-            require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+            require UI::find_template('list_header.inc.php');
         } ?>

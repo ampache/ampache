@@ -42,7 +42,7 @@ $web_path = AmpConfig::get('web_path'); ?>
             $libitem = new License($license_id);
             $libitem->format();
 
-            require AmpConfig::get('prefix') . UI::find_template('show_license_row.inc.php'); ?>
+            require UI::find_template('show_license_row.inc.php'); ?>
         <?php
         } if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">

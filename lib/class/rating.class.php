@@ -398,7 +398,7 @@ class Rating extends database_object
         }
         $rating = new Rating($object_id, $type);
 
-        require AmpConfig::get('prefix') . UI::find_template('show_object_rating.inc.php');
+        require UI::find_template('show_object_rating.inc.php');
 
         return true;
     } // show

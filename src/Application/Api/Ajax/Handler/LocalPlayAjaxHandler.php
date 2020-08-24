@@ -58,7 +58,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                 // We should also refesh the sidebar
                 ob_start();
-                require_once AmpConfig::get('prefix') . UI::find_template('sidebar.inc.php');
+                require_once UI::find_template('sidebar.inc.php');
                 $results['sidebar-content'] = ob_get_contents();
                 ob_end_clean();
                 break;
@@ -78,7 +78,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                     case 'refresh':
                         ob_start();
                         $objects = $localplay->get();
-                        require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_status.inc.php');
+                        require_once UI::find_template('show_localplay_status.inc.php');
                         $results['localplay_status'] = ob_get_contents();
                         ob_end_clean();
                         break;
@@ -99,7 +99,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                         // We actually want to refresh something here
                         ob_start();
                         $objects = $localplay->get();
-                        require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_status.inc.php');
+                        require_once UI::find_template('show_localplay_status.inc.php');
                         $results['localplay_status'] = ob_get_contents();
                         ob_end_clean();
                         break;
@@ -194,7 +194,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                 ob_start();
                 $objects = $localplay->get();
-                require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_status.inc.php');
+                require_once UI::find_template('show_localplay_status.inc.php');
                 $results['localplay_status'] = ob_get_contents();
                 ob_end_clean();
 
@@ -214,7 +214,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                 ob_start();
                 $objects = $localplay->get();
-                require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_status.inc.php');
+                require_once UI::find_template('show_localplay_status.inc.php');
                 $results['localplay_status'] = ob_get_contents();
                 ob_end_clean();
 

@@ -30,7 +30,7 @@ function show_rating($object_id, $type)
 {
     $rating = new Rating($object_id, $type);
 
-    require AmpConfig::get('prefix') . UI::find_template('show_object_rating.inc.php');
+    require UI::find_template('show_object_rating.inc.php');
 } // show_rating
 
 /**

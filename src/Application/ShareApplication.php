@@ -62,7 +62,7 @@ final class ShareApplication implements ApplicationInterface
                     $object = new $type($object_id);
                     if ($object->id) {
                         $object->format();
-                        require_once AmpConfig::get('prefix') . UI::find_template('show_add_share.inc.php');
+                        require_once UI::find_template('show_add_share.inc.php');
                     }
                 }
                 UI::show_footer();
@@ -85,7 +85,7 @@ final class ShareApplication implements ApplicationInterface
                 $share_id = Share::create_share($_REQUEST['type'], (int) $_REQUEST['id'], make_bool($_REQUEST['allow_stream']), make_bool($_REQUEST['allow_download']), (int) $_REQUEST['expire'], $_REQUEST['secret'], (int) $_REQUEST['max_counter']);
 
                 if (!$share_id) {
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_add_share.inc.php');
+                    require_once UI::find_template('show_add_share.inc.php');
                 } else {
                     $share = new Share($share_id);
                     $body  = T_('Share created') . '<br />' .
@@ -211,15 +211,15 @@ final class ShareApplication implements ApplicationInterface
                 $_REQUEST['action']                    = 'download';
                 $_REQUEST['type']                      = $share->object_type;
                 $_REQUEST[$share->object_type . '_id'] = $share->object_id;
-                require AmpConfig::get('prefix') . '/stream.php';
+                require __DIR__ . '/../../public/stream.php';
             } else {
                 $_REQUEST['action'] = $share->object_type;
                 $_REQUEST['id']     = $share->object_id;
                 $object_type        = $share->object_type;
-                require AmpConfig::get('prefix') . '/batch.php';
+                require __DIR__ . '/../../public/batch.php';
             }
         } elseif ($action == 'stream') {
-            require AmpConfig::get('prefix') . UI::find_template('show_share.inc.php');
+            require UI::find_template('show_share.inc.php');
         } else {
             debug_event('share', 'Access Denied: unknown action.', 3);
             UI::access_denied();

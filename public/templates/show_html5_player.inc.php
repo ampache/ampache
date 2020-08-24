@@ -5,7 +5,7 @@ if ($is_share) {
 }
 
 if (!$iframed) {
-    require_once AmpConfig::get('prefix') . UI::find_template('show_html5_player_headers.inc.php');
+    require_once UI::find_template('show_html5_player_headers.inc.php');
 }
 $prev       = T_('Previous');
 $play       = T_('Play');
@@ -314,7 +314,7 @@ if (AmpConfig::get('webplayer_aurora')) {
     // Load only existing codec scripts
     foreach ($atypes as $atype) {
         $spath = '/modules/aurora.js/' . $atype . '.js';
-        if (Core::is_readable(AmpConfig::get('prefix') . $spath)) {
+        if (Core::is_readable(__DIR__ . '/../lib/components' . $spath)) {
             echo '<script src="' . AmpConfig::get('web_path') . $spath . '" defer></script>' . "\n";
         }
     }
@@ -516,7 +516,7 @@ if ($isVideo) { ?>
 </div>
 <?php
 if (!$iframed || $is_share) {
-        require_once AmpConfig::get('prefix') . UI::find_template('uberviz.inc.php');
+        require_once UI::find_template('uberviz.inc.php');
     } ?>
 <?php if (!$is_share) { ?>
 </body>

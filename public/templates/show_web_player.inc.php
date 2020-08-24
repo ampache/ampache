@@ -54,4 +54,4 @@ if (isset($playlist)) {
         $isVideo = WebPlayer::is_playlist_video($playlist);
     }
 }
-require_once AmpConfig::get('prefix') . UI::find_template('show_html5_player.inc.php'); ?>
+require_once UI::find_template('show_html5_player.inc.php'); ?>

@@ -36,7 +36,7 @@ $video_type = strtolower(get_class($libitem)); ?>
             </tr>
 <?php
 if ($video_type != 'video') {
-    require AmpConfig::get('prefix') . UI::find_template('show_partial_edit_' . $video_type . '_row.inc.php');
+    require UI::find_template('show_partial_edit_' . $video_type . '_row.inc.php');
 } ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>

@@ -86,7 +86,7 @@
 </ul>
 <?php
     if (AmpConfig::get('play_type') == 'localplay') {
-        require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_control.inc.php');
+        require_once UI::find_template('show_localplay_control.inc.php');
     } ?>
 <ul id="rb_current_playlist">
 

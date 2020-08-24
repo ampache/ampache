@@ -521,7 +521,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                 case '/images/key.png':
                 case '/images/tunein.png':
                     // Get read file data
-                    $fpath = AmpConfig::get('prefix') . '/channel' . $cmd['1'];
+                    $fpath = __DIR__ . '/../public/channel' . $cmd['1'];
                     $pinfo = pathinfo($fpath);
 
                     $content_type = 'text/html';

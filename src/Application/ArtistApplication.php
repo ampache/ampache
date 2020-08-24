@@ -84,7 +84,7 @@ final class ArtistApplication implements ApplicationInterface
                     debug_event('artists', 'Requested an artist that does not exist', 2);
                     echo T_("You have requested an Artist that does not exist.");
                 } else {
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_artist.inc.php');
+                    require_once UI::find_template('show_artist.inc.php');
                 }
                 break;
             case 'show_all_songs':
@@ -92,13 +92,13 @@ final class ArtistApplication implements ApplicationInterface
                 $artist->format();
                 $object_type = 'song';
                 $object_ids  = $artist->get_songs();
-                require_once AmpConfig::get('prefix') . UI::find_template('show_artist.inc.php');
+                require_once UI::find_template('show_artist.inc.php');
                 break;
             case 'update_from_tags':
                 $type       = 'artist';
                 $object_id  = (int) filter_input(INPUT_GET, 'artist', FILTER_SANITIZE_NUMBER_INT);
                 $target_url = AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $object_id;
-                require_once AmpConfig::get('prefix') . UI::find_template('show_update_items.inc.php');
+                require_once UI::find_template('show_update_items.inc.php');
                 break;
             case 'match':
             case 'Match':
@@ -113,10 +113,10 @@ final class ArtistApplication implements ApplicationInterface
                     $chr = $match;
                 }
                 /* Enclose this in the purty box! */
-                require AmpConfig::get('prefix') . UI::find_template('show_box_top.inc.php');
+                require UI::find_template('show_box_top.inc.php');
                 show_alphabet_list('artists', 'artists.php', $match);
                 show_alphabet_form($chr, T_('Show Artists starting with'), "artists.php?action=match");
-                require AmpConfig::get('prefix') . UI::find_template('show_box_bottom.inc.php');
+                require UI::find_template('show_box_bottom.inc.php');
 
                 if ($match === "Browse") {
                     show_artists();
@@ -136,7 +136,7 @@ final class ArtistApplication implements ApplicationInterface
                 $mbid    = $_REQUEST['mbid'];
                 $wartist = Wanted::get_missing_artist($mbid);
 
-                require AmpConfig::get('prefix') . UI::find_template('show_missing_artist.inc.php');
+                require UI::find_template('show_missing_artist.inc.php');
                 break;
         } // end switch
 

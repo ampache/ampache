@@ -48,7 +48,7 @@ class UI
     public static function find_template($template, bool $extern = false)
     {
         $path      = AmpConfig::get('theme_path') . '/templates/' . $template;
-        $realpath  = AmpConfig::get('prefix') . $path;
+        $realpath  = __DIR__ . '/../../public/' . $path;
         $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         if (($extension != 'php' || AmpConfig::get('allow_php_themes')) && file_exists($realpath) && is_file($realpath)) {
             return $path;
@@ -57,7 +57,7 @@ class UI
                 return '/templates/' . $template;
             }
 
-            return '/public/templates/' . $template;
+            return __DIR__ . '/../../public/templates/' . $template;
         }
     }
 
@@ -73,7 +73,7 @@ class UI
         // Clear any buffered crap
         ob_end_clean();
         header("HTTP/1.1 403 $error");
-        require_once AmpConfig::get('prefix') . self::find_template('show_denied.inc.php');
+        require_once self::find_template('show_denied.inc.php');
 
         return false;
     }
@@ -89,7 +89,7 @@ class UI
     public static function ajax_include($template)
     {
         ob_start();
-        require AmpConfig::get('prefix') . self::find_template('') . $template;
+        require self::find_template('') . $template;
         $output = ob_get_contents();
         ob_end_clean();
 
@@ -345,7 +345,7 @@ class UI
         }
 
         $path       = AmpConfig::get('theme_path') . '/images/icons/';
-        $filesearch = glob(AmpConfig::get('prefix-public') . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
+        $filesearch = glob(__DIR__ . '/../../public/' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
         if (empty($filesearch)) {
             // if the theme is missing an icon. fall back to default images folder
             $filename = 'icon_' . $name . '.png';
@@ -444,7 +444,7 @@ class UI
         }
 
         $path       = AmpConfig::get('theme_path') . '/images/';
-        $filesearch = glob(AmpConfig::get('prefix') . $path . $name . '.{svg,png}', GLOB_BRACE);
+        $filesearch = glob(__DIR__ . '/../../public/' . $path . $name . '.{svg,png}', GLOB_BRACE);
         if (empty($filesearch)) {
             // if the theme is missing an image. fall back to default images folder
             $filename = $name . '.png';
@@ -466,7 +466,7 @@ class UI
      */
     public static function show_header()
     {
-        require_once AmpConfig::get('prefix') . self::find_template('header.inc.php');
+        require_once self::find_template('header.inc.php');
     }
 
     /**
@@ -476,7 +476,7 @@ class UI
      */
     public static function show_header_tiny()
     {
-        require_once AmpConfig::get('prefix') . self::find_template('header-tiny.inc.php');
+        require_once self::find_template('header-tiny.inc.php');
     }
 
     /**
@@ -487,7 +487,7 @@ class UI
      */
     public static function show(string $template)
     {
-        require_once AmpConfig::get('prefix') . self::find_template($template);
+        require_once self::find_template($template);
     }
 
     /**
@@ -509,7 +509,7 @@ class UI
             }
         }
 
-        require_once AmpConfig::get('prefix') . self::find_template('footer.inc.php');
+        require_once self::find_template('footer.inc.php');
         if (Core::get_request('profiling') !== '') {
             Dba::show_profile();
         }
@@ -524,7 +524,7 @@ class UI
      */
     public static function show_box_top($title = '', $class = '')
     {
-        require AmpConfig::get('prefix') . self::find_template('show_box_top.inc.php');
+        require self::find_template('show_box_top.inc.php');
     }
 
     /**
@@ -534,7 +534,7 @@ class UI
      */
     public static function show_box_bottom()
     {
-        require AmpConfig::get('prefix') . self::find_template('show_box_bottom.inc.php');
+        require self::find_template('show_box_bottom.inc.php');
     }
 
     /**
@@ -544,7 +544,7 @@ class UI
      */
     public static function show_query_stats()
     {
-        require AmpConfig::get('prefix') . self::find_template('show_query_stats.inc.php');
+        require self::find_template('show_query_stats.inc.php');
     }
 
     public static function show_custom_style()

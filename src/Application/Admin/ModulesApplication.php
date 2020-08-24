@@ -203,19 +203,19 @@ final class ModulesApplication implements ApplicationInterface
             case 'show_plugins':
                 $plugins = Plugin::get_plugins();
                 UI::show_box_top(T_('Manage Plugins'), 'box box_localplay_plugins');
-                require_once AmpConfig::get('prefix') . UI::find_template('show_plugins.inc.php');
+                require_once UI::find_template('show_plugins.inc.php');
                 UI::show_box_bottom();
                 break;
             case 'show_localplay':
                 $controllers = Localplay::get_controllers();
                 UI::show_box_top(T_('Localplay Controllers'), 'box box_localplay_controllers');
-                require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_controllers.inc.php');
+                require_once UI::find_template('show_localplay_controllers.inc.php');
                 UI::show_box_bottom();
                 break;
             case 'show_catalog_types':
                 $catalogs = Catalog::get_catalog_types();
                 UI::show_box_top(T_('Catalog Types'), 'box box_catalog_types');
-                require_once AmpConfig::get('prefix') . UI::find_template('show_catalog_types.inc.php');
+                require_once UI::find_template('show_catalog_types.inc.php');
                 UI::show_box_bottom();
                 break;
             default:

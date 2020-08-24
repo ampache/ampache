@@ -36,6 +36,7 @@ define('NO_SESSION', '1');
 
 require_once __DIR__ . '/../../lib/init.php';
 
+/** @var \Psr\Container\ContainerInterface $dic */
 $dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
 
 $dic->get(PlayApplication::class)->run();

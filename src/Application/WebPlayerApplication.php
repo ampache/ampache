@@ -32,6 +32,6 @@ final class WebPlayerApplication implements ApplicationInterface
 {
     public function run(): void
     {
-        require_once AmpConfig::get('prefix') . UI::find_template('show_web_player.inc.php');
+        require_once UI::find_template('show_web_player.inc.php');
     }
 }

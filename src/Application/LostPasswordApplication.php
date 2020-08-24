@@ -55,10 +55,10 @@ final class LostPasswordApplication implements ApplicationInterface
                     $result     = $this->send_newpassword($email, $current_ip);
                 }
                 // Do not acknowledge a password has been sent or failed and go back to login
-                require AmpConfig::get('prefix') . UI::find_template('show_login_form.inc.php');
+                require UI::find_template('show_login_form.inc.php');
                 break;
             default:
-                require AmpConfig::get('prefix') . UI::find_template('show_lostpassword_form.inc.php');
+                require UI::find_template('show_lostpassword_form.inc.php');
         }
     }
 

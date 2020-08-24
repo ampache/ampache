@@ -32,22 +32,18 @@ if (version_compare(phpversion(), '7.1.0', '<')) {
 //error_reporting(E_ERROR); // Only show fatal errors in production
 
 $load_time_begin = microtime(true);
-$configfile      = $a_root . '/config/ampache.cfg.php';
+$configfile      = __DIR__ . '/../config/ampache.cfg.php';
 
 // We still allow scripts to run (it could be the purpose of the maintenance)
 if (!defined('CLI')) {
-    if (file_exists($a_root . '/.maintenance')) {
-        require_once $a_root . '/.maintenance';
+    if (file_exists(__DIR__ . '/../.maintenance')) {
+        require_once  __DIR__ . '/../.maintenance';
     }
 }
 
-require_once $a_root . '/lib/general.lib.php';
-require_once $a_root . '/lib/class/ampconfig.class.php';
-require_once $a_root . '/lib/class/core.class.php';
-
-// Define some base level config options
-AmpConfig::set('prefix', $prefix);
-AmpConfig::set('prefix-public', $prefix . '/public');
+require_once __DIR__ . '/general.lib.php';
+require_once __DIR__ . '/class/ampconfig.class.php';
+require_once __DIR__ . '/class/core.class.php';
 
 // Register autoloaders
 spl_autoload_register(array('Core', 'autoload'), true, true);
@@ -80,20 +76,20 @@ if (!isset($http_port) || empty($http_port)) {
 define('INIT_LOADED', 1);
 
 // Core includes we can't do with the autoloader
-require_once $a_root . '/lib/preferences.php';
-require_once $a_root . '/lib/debug.lib.php';
-require_once $a_root . '/lib/log.lib.php';
-require_once $a_root . '/lib/ui.lib.php';
-require_once $a_root . '/lib/i18n.php';
-require_once $a_root . '/lib/batch.lib.php';
-require_once $a_root . '/lib/themes.php';
-require_once $a_root . '/lib/class/localplay_controller.abstract.php';
-require_once $a_root . '/lib/class/database_object.abstract.php';
-require_once $a_root . '/lib/class/media.interface.php';
-require_once $a_root . '/lib/class/playable_item.interface.php';
-require_once $a_root . '/lib/class/library_item.interface.php';
-require_once $a_root . '/lib/class/playlist_object.abstract.php';
-require_once $a_root . '/modules/horde/Browser.php';
+require_once __DIR__ . '/preferences.php';
+require_once __DIR__ . '/debug.lib.php';
+require_once __DIR__ . '/log.lib.php';
+require_once __DIR__ . '/ui.lib.php';
+require_once __DIR__ . '/i18n.php';
+require_once __DIR__ . '/batch.lib.php';
+require_once __DIR__ . '/themes.php';
+require_once __DIR__ . '/class/localplay_controller.abstract.php';
+require_once __DIR__ . '/class/database_object.abstract.php';
+require_once __DIR__ . '/class/media.interface.php';
+require_once __DIR__ . '/class/playable_item.interface.php';
+require_once __DIR__ . '/class/library_item.interface.php';
+require_once __DIR__ . '/class/playlist_object.abstract.php';
+require_once __DIR__ . '/../modules/horde/Browser.php';
 
 /* Set up the flip class */
 UI::flip_class(array('odd', 'even'));

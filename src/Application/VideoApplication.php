@@ -75,7 +75,7 @@ final class VideoApplication implements ApplicationInterface
             default:
                 $video = Video::create_from_id(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
                 $video->format();
-                require_once AmpConfig::get('prefix') . UI::find_template('show_video.inc.php');
+                require_once UI::find_template('show_video.inc.php');
                 break;
         }
 

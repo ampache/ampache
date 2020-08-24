@@ -90,7 +90,7 @@ final class NowPlayingApplication implements ApplicationInterface
             });
         }
 
-        require AmpConfig::get('prefix') . UI::find_template('show_now_playing.inc.php'); ?>
+        require UI::find_template('show_now_playing.inc.php'); ?>
         </body>
         </html><?php
     }

@@ -23,7 +23,7 @@
 $web_path = AmpConfig::get('web_path');
  ?>
 <?php if ($browse->is_show_header()) {
-     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+     require UI::find_template('list_header.inc.php');
  } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="user">
 <colgroup>
@@ -70,7 +70,7 @@ foreach ($object_ids as $user_id) {
         $last_seen      = $libitem->last_seen ? get_datetime($libitem->last_seen) : T_('Never');
         $create_date    = $libitem->create_date ? get_datetime($libitem->create_date) : T_('Unknown'); ?>
 <tr class="<?php echo UI::flip_class(); ?>" id="admin_user_<?php echo $libitem->id; ?>">
-    <?php require AmpConfig::get('prefix') . UI::find_template('show_user_row.inc.php'); ?>
+    <?php require UI::find_template('show_user_row.inc.php'); ?>
 </tr>
 <?php
     } //end foreach users?>
@@ -98,5 +98,5 @@ foreach ($object_ids as $user_id) {
 </tfoot>
 </table>
 <?php if ($browse->is_show_header()) {
-        require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+        require UI::find_template('list_header.inc.php');
     } ?>

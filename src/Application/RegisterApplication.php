@@ -50,7 +50,7 @@ final class RegisterApplication implements ApplicationInterface
         if (AmpConfig::get('captcha_public_reg')) {
             define("CAPTCHA_INVERSE", 1);
             define("CAPTCHA_BASE_URL", AmpConfig::get('web_path') . '/modules/captcha/captcha.php');
-            require_once AmpConfig::get('prefix') . '/modules/captcha/captcha.php';
+            require_once __DIR__ . '/../../modules/captcha/captcha.php';
         }
 
         // Switch on the actions
@@ -58,7 +58,7 @@ final class RegisterApplication implements ApplicationInterface
             case 'validate':
                 $username      = scrub_in(Core::get_get('username'));
                 $validation    = scrub_in(Core::get_get('auth'));
-                require_once AmpConfig::get('prefix') . UI::find_template('show_user_activate.inc.php');
+                require_once UI::find_template('show_user_activate.inc.php');
                 break;
             case 'add_user':
                 /**
@@ -147,7 +147,7 @@ final class RegisterApplication implements ApplicationInterface
 
                 // If we've hit an error anywhere up there break!
                 if (AmpError::occurred()) {
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_user_registration.inc.php');
+                    require_once UI::find_template('show_user_registration.inc.php');
                     break;
                 }
 
@@ -170,7 +170,7 @@ final class RegisterApplication implements ApplicationInterface
 
                 if ($new_user > 0) {
                     AmpError::add('duplicate_user', T_("Failed to create user"));
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_user_registration.inc.php');
+                    require_once UI::find_template('show_user_registration.inc.php');
                     break;
                 }
 
@@ -183,11 +183,11 @@ final class RegisterApplication implements ApplicationInterface
                     Registration::send_confirmation($username, $fullname, $email, $website, $validation);
                 }
 
-                require_once AmpConfig::get('prefix') . UI::find_template('show_registration_confirmation.inc.php');
+                require_once UI::find_template('show_registration_confirmation.inc.php');
                 break;
             case 'show_add_user':
             default:
-                require_once AmpConfig::get('prefix') . UI::find_template('show_user_registration.inc.php');
+                require_once UI::find_template('show_user_registration.inc.php');
                 break;
         } // end switch on action
     }

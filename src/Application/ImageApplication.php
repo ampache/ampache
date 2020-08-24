@@ -86,7 +86,7 @@ final class ImageApplication implements ApplicationInterface
             switch (filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) {
                 case 'popup':
                     $typeManaged = true;
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_big_art.inc.php');
+                    require_once UI::find_template('show_big_art.inc.php');
                     break;
                 case 'session':
                     // If we need to pull the data out of the session
@@ -123,7 +123,7 @@ final class ImageApplication implements ApplicationInterface
             }
 
             if (!$art->raw_mime) {
-                $rootimg = AmpConfig::get('prefix') . AmpConfig::get('theme_path') . '/images/';
+                $rootimg =  __DIR__ . '/../../public/' . AmpConfig::get('theme_path') . '/images/';
                 switch ($type) {
                     case 'video':
                     case 'tvshow':

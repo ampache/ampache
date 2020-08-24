@@ -76,7 +76,7 @@ final class TvShowSeasonApplication implements ApplicationInterface
                 $season->format();
                 $object_ids  = $season->get_episodes();
                 $object_type = 'tvshow_episode';
-                require_once AmpConfig::get('prefix') . UI::find_template('show_tvshow_season.inc.php');
+                require_once UI::find_template('show_tvshow_season.inc.php');
                 break;
         } // end switch
 

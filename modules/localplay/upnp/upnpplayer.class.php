@@ -73,8 +73,8 @@ class UPnPPlayer
      */
     public function __construct($name = "noname", $description_url = "http://localhost")
     {
-        require_once AmpConfig::get('prefix') . '/modules/localplay/upnp/UPnPDevice.php';
-        require_once AmpConfig::get('prefix') . '/modules/localplay/upnp/UPnPPlaylist.php';
+        require_once __DIR__ . '/../../../modules/localplay/upnp/UPnPDevice.php';
+        require_once __DIR__ . '/../../../modules/localplay/upnp/UPnPPlaylist.php';
 
         debug_event('upnpplayer.class', 'constructor: ' . $name . ' | ' . $description_url, 5);
         $this->_description_url = $description_url;

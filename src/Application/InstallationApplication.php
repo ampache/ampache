@@ -46,16 +46,16 @@ final class InstallationApplication implements ApplicationInterface
         // Redirect if installation is already complete.
         if (!install_check_status($configfile)) {
             $redirect_url = 'login.php';
-            require_once AmpConfig::get('prefix') . UI::find_template('error_page.inc.php');
+            require_once UI::find_template('error_page.inc.php');
 
             return;
         }
 
         define('INSTALL', 1);
 
-        $htaccess_play_file    = AmpConfig::get('prefix') . '/play/.htaccess';
-        $htaccess_rest_file    = AmpConfig::get('prefix') . '/rest/.htaccess';
-        $htaccess_channel_file = AmpConfig::get('prefix') . '/channel/.htaccess';
+        $htaccess_play_file    = __DIR__ . '/../../public/play/.htaccess';
+        $htaccess_rest_file    = __DIR__ . '/../../public/rest/.htaccess';
+        $htaccess_channel_file = __DIR__ . '/../../public/channel/.htaccess';
 
         // Clean up incoming variables
         $web_path   = scrub_in($_REQUEST['web_path']);
@@ -200,13 +200,13 @@ final class InstallationApplication implements ApplicationInterface
                 /* Make sure we've got a valid config file */
                 if (!check_config_values($results) || !$created_config) {
                     AmpError::add('general', T_('Configuration files were either not found or unreadable'));
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_install_config.inc.php');
+                    require_once UI::find_template('show_install_config.inc.php');
                     break;
                 }
 
                 // Don't try to add administrator user on existing database
                 if (install_check_status($configfile)) {
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_install_account.inc.php');
+                    require_once UI::find_template('show_install_account.inc.php');
                 } else {
                     header("Location: " . $web_path . '/login.php');
                 }
@@ -218,7 +218,7 @@ final class InstallationApplication implements ApplicationInterface
                 $password2 = $_REQUEST['local_pass2'];
 
                 if (!install_create_account($username, $password, $password2)) {
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_install_account.inc.php');
+                    require_once UI::find_template('show_install_account.inc.php');
                     break;
                 }
 

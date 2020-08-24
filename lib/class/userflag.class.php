@@ -374,7 +374,7 @@ class Userflag extends database_object
         }
 
         $userflag = new Userflag($object_id, $type);
-        require AmpConfig::get('prefix') . UI::find_template('show_object_userflag.inc.php');
+        require UI::find_template('show_object_userflag.inc.php');
 
         return true;
     } // show

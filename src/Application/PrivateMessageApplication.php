@@ -58,7 +58,7 @@ final class PrivateMessageApplication implements ApplicationInterface
                         $_REQUEST['message'] = "\n\n\n---\n> " . str_replace("\n", "\n> ", $pvmsg->message);
                     }
                 }
-                require_once AmpConfig::get('prefix') . UI::find_template('show_add_pvmsg.inc.php');
+                require_once UI::find_template('show_add_pvmsg.inc.php');
                 break;
             case 'add_message':
                 if (AmpConfig::get('demo_mode')) {
@@ -78,7 +78,7 @@ final class PrivateMessageApplication implements ApplicationInterface
 
                 $pvmsg_id = PrivateMsg::create($_POST);
                 if (!$pvmsg_id) {
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_add_pvmsg.inc.php');
+                    require_once UI::find_template('show_add_pvmsg.inc.php');
                 } else {
                     show_confirmation(T_('No Problem'), T_('Message has been sent'), AmpConfig::get('web_path') . '/browse.php?action=pvmsg');
                 }
@@ -146,7 +146,7 @@ final class PrivateMessageApplication implements ApplicationInterface
                     if (!$pvmsg->is_read) {
                         $pvmsg->set_is_read(1);
                     }
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_pvmsg.inc.php');
+                    require_once UI::find_template('show_pvmsg.inc.php');
                 } else {
                     debug_event('pvmsg', 'Unknown or unauthorized private message #' . $msg_id . '.', 3);
                     UI::access_denied();

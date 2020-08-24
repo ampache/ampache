@@ -275,7 +275,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
     } // end if we are creating a user
 
     if ($create_tables) {
-        $sql_file = AmpConfig::get('prefix') . '/sql/ampache.sql';
+        $sql_file = __DIR__ . '/../sql/ampache.sql';
         $query    = fread(fopen($sql_file, 'r'), filesize($sql_file));
         $pieces   = split_sql($query);
         $p_count  = count($pieces);
@@ -323,7 +323,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
  */
 function install_create_config($download = false)
 {
-    $config_file = AmpConfig::get('prefix') . '/config/ampache.cfg.php';
+    $config_file = __DIR__ . '/../config/ampache.cfg.php';
 
     /* Attempt to make DB connection */
     Dba::dbh();

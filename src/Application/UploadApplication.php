@@ -68,7 +68,7 @@ final class UploadApplication implements ApplicationInterface
 
             default:
                 UI::show_header();
-                require AmpConfig::get('prefix') . UI::find_template('show_add_upload.inc.php');
+                require UI::find_template('show_add_upload.inc.php');
                 break;
         } // switch on the action
 

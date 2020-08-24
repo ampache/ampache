@@ -76,7 +76,7 @@ final class SongApplication implements ApplicationInterface
                 $song->format();
                 $song->fill_ext_info();
                 $lyrics = $song->get_lyrics();
-                require_once AmpConfig::get('prefix') . UI::find_template('show_lyrics.inc.php');
+                require_once UI::find_template('show_lyrics.inc.php');
                 break;
             case 'show_song':
             default:
@@ -87,7 +87,7 @@ final class SongApplication implements ApplicationInterface
                     debug_event('song', 'Requested a song that does not exist', 2);
                     echo T_("You have requested a Song that does not exist.");
                 } else {
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_song.inc.php');
+                    require_once UI::find_template('show_song.inc.php');
                 }
                 break;
         } // end data collection

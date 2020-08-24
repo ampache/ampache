@@ -33,7 +33,7 @@
         <?php
         foreach ($object_ids as $libitem) { ?>
         <tr id="song_preview_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_song_preview_row.inc.php'); ?>
+            <?php require UI::find_template('show_song_preview_row.inc.php'); ?>
         </tr>
         <?php
         } ?>

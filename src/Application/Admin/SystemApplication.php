@@ -56,15 +56,15 @@ final class SystemApplication implements ApplicationInterface
              */
             case 'generate_config':
                 ob_end_clean();
-                $current = parse_ini_file(AmpConfig::get('prefix') . '/config/ampache.cfg.php');
+                $current = parse_ini_file(__DIR__ . '/../../../config/ampache.cfg.php');
                 $final   = generate_config($current);
                 $browser = new Horde_Browser();
-                $browser->downloadHeaders('ampache.cfg.php', 'text/plain', false, filesize(AmpConfig::get('prefix') . '/config/ampache.cfg.php.dist'));
+                $browser->downloadHeaders('ampache.cfg.php', 'text/plain', false, filesize(__DIR__ . '/../../../config/ampache.cfg.php.dist'));
                 echo $final;
 
                 return;
             case 'write_config':
-                write_config(AmpConfig::get('prefix') . '/config/ampache.cfg.php');
+                write_config(__DIR__ . '/../../../config/ampache.cfg.php');
                 header('Location: ' . AmpConfig::get('web_path') . '/index.php');
 
                 return ;
@@ -77,7 +77,7 @@ final class SystemApplication implements ApplicationInterface
                 if (Core::get_request('autoupdate') == 'force') {
                     $version = AutoUpdate::get_latest_version(true);
                 }
-                require_once AmpConfig::get('prefix') . UI::find_template('show_debug.inc.php');
+                require_once UI::find_template('show_debug.inc.php');
                 break;
             case 'clear_cache':
                 switch ($_REQUEST['type']) {

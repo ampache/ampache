@@ -49,7 +49,7 @@ final class RandomApplication implements ApplicationInterface
                 }
             case 'advanced':
             default:
-                require_once AmpConfig::get('prefix') . UI::find_template('show_random.inc.php');
+                require_once UI::find_template('show_random.inc.php');
                 break;
         } // end switch
 

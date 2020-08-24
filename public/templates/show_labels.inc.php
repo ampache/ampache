@@ -30,7 +30,7 @@ $thcount = 6; ?>
 <?php
 } ?>
 <?php if ($browse->is_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+    require UI::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="label">
     <thead>
@@ -53,7 +53,7 @@ $thcount = 6; ?>
             $libitem = new Label($label_id);
             $libitem->format(); ?>
         <tr id="label_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_label_row.inc.php'); ?>
+            <?php require UI::find_template('show_label_row.inc.php'); ?>
         </tr>
         <?php
         } ?>
@@ -80,5 +80,5 @@ $thcount = 6; ?>
 
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-            require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+            require UI::find_template('list_header.inc.php');
         } ?>

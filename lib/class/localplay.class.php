@@ -99,7 +99,7 @@ class Localplay
             return false;
         }
 
-        $filename = AmpConfig::get('prefix') . '/modules/localplay/' . $this->type . '/' . $this->type . '.controller.php';
+        $filename = __DIR__ . '/../../modules/localplay/' . $this->type . '/' . $this->type . '.controller.php';
         $include  = require_once $filename;
 
         if (!$include) {
@@ -146,7 +146,7 @@ class Localplay
     public static function get_controllers()
     {
         /* First open the dir */
-        $basedir = AmpConfig::get('prefix') . '/modules/localplay';
+        $basedir = __DIR__ . '/../../modules/localplay';
         $handle  = opendir($basedir);
 
         if (!is_resource($handle)) {

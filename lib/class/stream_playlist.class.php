@@ -593,9 +593,9 @@ class Stream_Playlist
     public function create_web_player()
     {
         if (AmpConfig::get("ajax_load")) {
-            require AmpConfig::get('prefix') . UI::find_template('create_web_player_embedded.inc.php');
+            require UI::find_template('create_web_player_embedded.inc.php');
         } else {
-            require AmpConfig::get('prefix') . UI::find_template('create_web_player.inc.php');
+            require UI::find_template('create_web_player.inc.php');
         }
     }  // create_web_player
 
@@ -608,7 +608,7 @@ class Stream_Playlist
     public function show_web_player()
     {
         if (AmpConfig::get("ajax_load")) {
-            require AmpConfig::get('prefix') . UI::find_template('show_web_player_embedded.inc.php');
+            require UI::find_template('show_web_player_embedded.inc.php');
         }
     }  // show_web_player
 

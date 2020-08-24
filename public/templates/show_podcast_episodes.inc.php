@@ -21,7 +21,7 @@
  */
 $thcount  = 7; ?>
 <?php if ($browse->is_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+    require UI::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="podcast_episode">
     <thead>
@@ -62,7 +62,7 @@ $thcount  = 7; ?>
             $libitem = new Podcast_Episode($episode_id);
             $libitem->format(); ?>
         <tr id="podcast_episode_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_podcast_episode_row.inc.php'); ?>
+            <?php require UI::find_template('show_podcast_episode_row.inc.php'); ?>
         </tr>
         <?php
         } ?>
@@ -103,5 +103,5 @@ $thcount  = 7; ?>
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-            require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+            require UI::find_template('list_header.inc.php');
         } ?>

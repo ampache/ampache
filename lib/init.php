@@ -24,13 +24,11 @@
 // fixes some CSS issues
 ob_start();
 
-$prefix = realpath(__DIR__ . "/../");
-$a_root = realpath(__DIR__ . "/../");
-require_once $a_root . '/lib/init-tiny.php';
+require_once __DIR__ . '/init-tiny.php';
 
 // Explicitly load and enable the custom session handler.
 // Relying on autoload may not always load it before sessiony things are done.
-require_once $a_root . '/lib/class/session.class.php';
+require_once __DIR__ . '/class/session.class.php';
 Session::_auto_init();
 
 // Set up for redirection on important error cases
@@ -113,7 +111,7 @@ $results['cookie_life']   = $results['session_cookielife'];
 $results['cookie_secure'] = $results['session_cookiesecure'];
 
 // Library and module includes we can't do with the autoloader
-require_once $prefix . '/modules/infotools/AmazonSearchEngine.class.php';
+require_once __DIR__ . '/../modules/infotools/AmazonSearchEngine.class.php';
 
 // Make sure all default preferences are set
 Preference::set_defaults();
@@ -124,7 +122,7 @@ AmpConfig::set_by_array($results, true);
 
 // Modules (These are conditionally included depending upon config values)
 if (AmpConfig::get('ratings')) {
-    require_once $a_root . '/lib/rating.lib.php';
+    require_once __DIR__ . '/rating.lib.php';
 }
 
 // Set a new Error Handler
@@ -227,7 +225,7 @@ Preference::init();
 
 // Load gettext mojo
 if (!class_exists('Gettext\Translations')) {
-    require_once $prefix . '/templates/test_error_page.inc.php';
+    require_once __DIR__ . '/../public/templates/test_error_page.inc.php';
     /** @noinspection PhpUnhandledExceptionInspection */
     throw new Exception('load_gettext()');
 } else {

@@ -46,7 +46,7 @@ class AmpacheUPnP extends localplay_controller
     public function __construct()
     {
         /* Do a Require Once On the needed Libraries */
-        require_once AmpConfig::get('prefix') . '/modules/localplay/upnp/upnpplayer.class.php';
+        require_once __DIR__ . '/../../../modules/localplay/upnp/upnpplayer.class.php';
     }
 
     /**

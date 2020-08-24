@@ -23,7 +23,7 @@
 $web_path = AmpConfig::get('web_path');
 $thcount  = 8; ?>
 <?php if ($browse->is_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+    require UI::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="album">
     <thead>
@@ -87,7 +87,7 @@ $thcount  = 8; ?>
                 }
             } ?>
         <tr id="album_<?php echo $libitem->id ?>" class="<?php echo UI::flip_class() ?> libitem_menu">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_album_row.inc.php'); ?>
+            <?php require UI::find_template('show_album_row.inc.php'); ?>
         </tr>
         <?php
         }?>
@@ -133,5 +133,5 @@ $thcount  = 8; ?>
 
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-            require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+            require UI::find_template('list_header.inc.php');
         } ?>

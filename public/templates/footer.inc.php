@@ -51,7 +51,7 @@
         </div>
         <div id="webplayer"></div>
         <?php
-            require_once AmpConfig::get('prefix') . UI::find_template('uberviz.inc.php');
+            require_once UI::find_template('uberviz.inc.php');
         } ?>
     </body>
 </html>

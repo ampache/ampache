@@ -61,7 +61,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 $albums = Album::get_random($moment, false, Core::get_global('user')->id);
                 if (count($albums) && is_array($albums)) {
                     ob_start();
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_random_albums.inc.php');
+                    require_once UI::find_template('show_random_albums.inc.php');
                     $results['random_selection'] = ob_get_clean();
                 } else {
                     $results['random_selection'] = '<!-- None found -->';
@@ -79,7 +79,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 $videos = Video::get_random($moment);
                 if (count($videos) && is_array($videos)) {
                     ob_start();
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_random_videos.inc.php');
+                    require_once UI::find_template('show_random_videos.inc.php');
                     $results['random_video_selection'] = ob_get_clean();
                 } else {
                     $results['random_video_selection'] = '<!-- None found -->';
@@ -95,7 +95,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                         $biography = Recommendation::get_artist_info(null, rawurldecode($_REQUEST['fullname']));
                     }
                     ob_start();
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_artist_info.inc.php');
+                    require_once UI::find_template('show_artist_info.inc.php');
                     $results['artist_biography'] = ob_get_clean();
                 }
                 break;
@@ -115,7 +115,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                         }
                     }
                     ob_start();
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_recommended_artists.inc.php');
+                    require_once UI::find_template('show_recommended_artists.inc.php');
                     $results['similar_artist'] = ob_get_clean();
                 }
                 break;
@@ -125,7 +125,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $artists = Recommendation::get_artists_like($_REQUEST['media_artist'], 3, false);
                     $songs   = Recommendation::get_songs_like($media_id, 3);
                     ob_start();
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_now_playing_similar.inc.php');
+                    require_once UI::find_template('show_now_playing_similar.inc.php');
                     $results['similar_items_' . $media_id] = ob_get_clean();
                 }
                 break;
@@ -154,7 +154,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                         }
                     }
                     ob_start();
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_concerts.inc.php');
+                    require_once UI::find_template('show_concerts.inc.php');
                     $results['concerts'] = ob_get_clean();
                 }
                 break;
@@ -173,7 +173,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $browse->save_objects($object_ids);
                     $browse->store();
                     ob_start();
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_labels.inc.php');
+                    require_once UI::find_template('show_labels.inc.php');
                     $results['labels'] = ob_get_clean();
                 }
                 break;
@@ -192,7 +192,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     }
 
                     ob_start();
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_missing_albums.inc.php');
+                    require_once UI::find_template('show_missing_albums.inc.php');
                     $results['missing_albums'] = ob_get_clean();
                 }
                 break;
@@ -252,7 +252,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 ob_start();
                 $data = Song::get_recently_played();
                 Song::build_cache(array_keys($data));
-                require_once AmpConfig::get('prefix') . UI::find_template('show_recently_played.inc.php');
+                require_once UI::find_template('show_recently_played.inc.php');
                 $results['recently_played'] = ob_get_clean();
                 break;
             case 'sidebar':
@@ -278,7 +278,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 Ajax::set_include_override(true);
                 ob_start();
                 $_SESSION['state']['sidebar_tab'] = $button;
-                require_once AmpConfig::get('prefix') . UI::find_template('sidebar.inc.php');
+                require_once UI::find_template('sidebar.inc.php');
                 $results['sidebar-content'] = ob_get_contents();
                 ob_end_clean();
                 break;
@@ -351,7 +351,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $browse->store();
 
                     UI::show_box_top(T_('Songs'), 'info-box');
-                    require_once AmpConfig::get('prefix') . UI::find_template('show_songs.inc.php');
+                    require_once UI::find_template('show_songs.inc.php');
                     UI::show_box_bottom();
                 }
 

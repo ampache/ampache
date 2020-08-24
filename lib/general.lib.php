@@ -168,7 +168,7 @@ function invert_bool($value)
 function get_languages()
 {
     /* Open the locale directory */
-    $handle = opendir(AmpConfig::get('prefix') . '/locale');
+    $handle = opendir(__DIR__ . '/../locale');
 
     if (!is_resource($handle)) {
         debug_event('general.lib', 'Error unable to open locale directory', 1);
@@ -177,7 +177,7 @@ function get_languages()
     $results = array();
 
     while (false !== ($file = readdir($handle))) {
-        $full_file = AmpConfig::get('prefix') . '/locale/' . $file;
+        $full_file = __DIR__ . '/../locale/' . $file;
 
         /* Check to see if it's a directory */
         if (is_dir($full_file) && substr($file, 0, 1) != '.' && $file != 'base') {
@@ -392,7 +392,7 @@ function translate_pattern_code($code)
 function generate_config($current)
 {
     // Start building the new config file
-    $distfile = AmpConfig::get('prefix') . '/config/ampache.cfg.php.dist';
+    $distfile = __DIR__ . '/../config/ampache.cfg.php.dist';
     $handle   = fopen($distfile, 'r');
     $dist     = fread($handle, filesize($distfile));
     fclose($handle);

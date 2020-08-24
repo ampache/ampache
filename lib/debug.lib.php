@@ -353,8 +353,8 @@ function check_dependencies_folder()
 function check_config_writable()
 {
     // file eixsts && is writable, or dir is writable
-    return ((file_exists(AmpConfig::get('prefix') . '/config/ampache.cfg.php') && is_writable(AmpConfig::get('prefix') . '/config/ampache.cfg.php'))
-        || (!file_exists(AmpConfig::get('prefix') . '/config/ampache.cfg.php') && is_writeable(AmpConfig::get('prefix') . '/config/')));
+    return ((file_exists(__DIR__ . '/../config/ampache.cfg.php') && is_writable(__DIR__ . '/../config/ampache.cfg.php'))
+        || (!file_exists(__DIR__ . '/../config/ampache.cfg.php') && is_writeable(__DIR__ . '/../config/')));
 }
 
 /**
@@ -362,8 +362,8 @@ function check_config_writable()
  */
 function check_htaccess_channel_writable()
 {
-    return ((file_exists(AmpConfig::get('prefix') . '/channel/.htaccess') && is_writable(AmpConfig::get('prefix') . '/channel/.htaccess'))
-        || (!file_exists(AmpConfig::get('prefix') . '/channel/.htaccess') && is_writeable(AmpConfig::get('prefix') . '/channel/')));
+    return ((file_exists(__DIR__ . '/../public/channel/.htaccess') && is_writable(__DIR__ . '/../public/channel/.htaccess'))
+        || (!file_exists(__DIR__ . '/../public/channel/.htaccess') && is_writeable(__DIR__ . '/../public/channel/')));
 }
 
 /**
@@ -371,8 +371,8 @@ function check_htaccess_channel_writable()
  */
 function check_htaccess_rest_writable()
 {
-    return ((file_exists(AmpConfig::get('prefix') . '/rest/.htaccess') && is_writable(AmpConfig::get('prefix') . '/rest/.htaccess'))
-        || (!file_exists(AmpConfig::get('prefix') . '/rest/.htaccess') && is_writeable(AmpConfig::get('prefix') . '/rest/')));
+    return ((file_exists(__DIR__ . '/../public/rest/.htaccess') && is_writable(__DIR__ . '/../public/rest/.htaccess'))
+        || (!file_exists(__DIR__ . '/../publicrest/.htaccess') && is_writeable(__DIR__ . '/../public/rest/')));
 }
 
 /**
@@ -380,8 +380,8 @@ function check_htaccess_rest_writable()
  */
 function check_htaccess_play_writable()
 {
-    return ((file_exists(AmpConfig::get('prefix') . '/play/.htaccess') && is_writable(AmpConfig::get('prefix') . '/play/.htaccess'))
-        || (!file_exists(AmpConfig::get('prefix') . '/play/.htaccess') && is_writeable(AmpConfig::get('prefix') . '/play/')));
+    return ((file_exists(__DIR__ . '/../public/play/.htaccess') && is_writable(__DIR__ . '/../public/play/.htaccess'))
+        || (!file_exists(__DIR__ . '/../public/play/.htaccess') && is_writeable(__DIR__ . '/../public/play/')));
 }
 
 /**

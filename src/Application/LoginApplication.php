@@ -59,6 +59,6 @@ final class LoginApplication implements ApplicationInterface
         }
         require_once __DIR__ . '/../../lib/login.php';
 
-        require $this->configContainer->get('prefix') . UI::find_template('show_login_form.inc.php');
+        require UI::find_template('show_login_form.inc.php');
     }
 }

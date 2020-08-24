@@ -32,7 +32,7 @@
         <?php
         foreach ($coming_concerts as $libitem) { ?>
         <tr id="concert_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_concert_row.inc.php'); ?>
+            <?php require UI::find_template('show_concert_row.inc.php'); ?>
         </tr>
         <?php
         } ?>
@@ -58,7 +58,7 @@
         <?php
         foreach ($concerts as $libitem) { ?>
         <tr id="concert_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_concert_row.inc.php'); ?>
+            <?php require UI::find_template('show_concert_row.inc.php'); ?>
         </tr>
         <?php
         } ?>

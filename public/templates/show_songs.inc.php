@@ -23,7 +23,7 @@
 $web_path = AmpConfig::get('web_path');
 $thcount  = 8; ?>
 <?php if ($browse->is_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+    require UI::find_template('list_header.inc.php');
 } ?>
 <table id="reorder_songs_table_<?php echo $browse->get_filter('album'); ?>" class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="song" data-offset="<?php echo $browse->get_start(); ?>">
     <thead>
@@ -76,7 +76,7 @@ $thcount  = 8; ?>
                 $libitem = new Song($song_id, $limit_threshold);
                 $libitem->format(); ?>
             <tr class="<?php echo UI::flip_class(); ?>" id="song_<?php echo $libitem->id; ?>">
-                <?php require AmpConfig::get('prefix') . UI::find_template('show_song_row.inc.php'); ?>
+                <?php require UI::find_template('show_song_row.inc.php'); ?>
             </tr>
         <?php
             } ?>
@@ -129,5 +129,5 @@ $thcount  = 8; ?>
 
 <?php show_table_render($argument); ?>
 <?php if ($browse->is_show_header()) {
-                require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+                require UI::find_template('list_header.inc.php');
             } ?>

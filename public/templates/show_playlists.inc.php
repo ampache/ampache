@@ -20,7 +20,7 @@
  *
  */ ?>
 <?php if ($browse->is_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+    require UI::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="playlist">
     <thead>
@@ -59,7 +59,7 @@
             // Don't show empty playlist if not admin or the owner
             if (Access::check('interface', 100) || $libitem->get_user_owner() == Core::get_global('user')->id || $libitem->get_media_count() > 0) { ?>
         <tr class="<?php echo UI::flip_class(); ?>" id="playlist_row_<?php echo $libitem->id; ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_playlist_row.inc.php'); ?>
+            <?php require UI::find_template('show_playlist_row.inc.php'); ?>
         </tr>
         <?php
             }
@@ -100,5 +100,5 @@
     </tfoot>
 </table>
 <?php if ($browse->is_show_header()) {
-            require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+            require UI::find_template('list_header.inc.php');
         } ?>

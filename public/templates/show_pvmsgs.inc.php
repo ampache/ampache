@@ -40,7 +40,7 @@ $thcount = 5; ?>
     </ul>
 </div>
 <?php if ($browse->is_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+    require UI::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="label">
     <thead>
@@ -60,7 +60,7 @@ $thcount = 5; ?>
             $libitem = new PrivateMsg($pvmg_id);
             $libitem->format(); ?>
         <tr id="label_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?> <?php echo (!$libitem->is_read) ? "unread" : "" ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_pvmsg_row.inc.php'); ?>
+            <?php require UI::find_template('show_pvmsg_row.inc.php'); ?>
         </tr>
         <?php
         } ?>
@@ -85,5 +85,5 @@ $thcount = 5; ?>
 
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-            require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+            require UI::find_template('list_header.inc.php');
         } ?>

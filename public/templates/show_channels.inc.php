@@ -21,7 +21,7 @@
  */
  ?>
 <?php if ($browse->is_show_header()) {
-     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+     require UI::find_template('list_header.inc.php');
  } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="channel">
     <thead>
@@ -49,7 +49,7 @@
             $libitem = new Channel($channel_id);
             $libitem->format(); ?>
         <tr class="<?php echo UI::flip_class(); ?>" id="channel_row_<?php echo $libitem->id; ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_channel_row.inc.php'); ?>
+            <?php require UI::find_template('show_channel_row.inc.php'); ?>
         </tr>
         <?php
         } ?>
@@ -62,5 +62,5 @@
     </tbody>
 </table>
 <?php if ($browse->is_show_header()) {
-            require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+            require UI::find_template('list_header.inc.php');
         } ?>

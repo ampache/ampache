@@ -75,7 +75,7 @@ final class PodcastEpisodeApplication implements ApplicationInterface
             default:
                 $episode = new Podcast_Episode($_REQUEST['podcast_episode']);
                 $episode->format();
-                require_once AmpConfig::get('prefix') . UI::find_template('show_podcast_episode.inc.php');
+                require_once UI::find_template('show_podcast_episode.inc.php');
                 break;
         }
 

@@ -32,7 +32,7 @@
 <?php
 } ?>
 <?php if ($browse->is_show_header()) {
-    require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+    require UI::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="live_stream">
     <thead>
@@ -51,7 +51,7 @@
             $libitem = new Live_Stream($radio_id);
             $libitem->format(); ?>
         <tr id="live_stream_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require AmpConfig::get('prefix') . UI::find_template('show_live_stream_row.inc.php'); ?>
+            <?php require UI::find_template('show_live_stream_row.inc.php'); ?>
         </tr>
         <?php
         } // end foreach ($artists as $artist)?>
@@ -74,5 +74,5 @@
     </tfoot>
 </table>
 <?php if ($browse->is_show_header()) {
-            require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+            require UI::find_template('list_header.inc.php');
         } ?>
