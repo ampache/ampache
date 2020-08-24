@@ -3,11 +3,9 @@
 /config/ampache-doped.cfg.php
 /config/ampache.cfg.php
 /config/registration_agreement.php
-/lib/components/
 /log/
 /logs/
 /modules/plugins/ampache-*
-/nbproject/private/
 /play/.htaccess
 /rest/.htaccess
 /tmp/
