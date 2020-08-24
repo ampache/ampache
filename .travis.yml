@@ -13,11 +13,11 @@ before_install:
  - composer global require friendsofphp/php-cs-fixer:~2.15.0
 
 before_script:
- - chmod +x scripts/tests/syntax.sh
- - chmod +x scripts/tests/codestyle.sh
+ - chmod +x resources/scripts/tests/syntax.sh
+ - chmod +x resources/scripts/tests/codestyle.sh
  - composer update
 
 script:
- - scripts/tests/syntax.sh
- - scripts/tests/codestyle.sh
+ - resources/scripts/tests/syntax.sh
+ - resources/scripts/tests/codestyle.sh
  - composer test
