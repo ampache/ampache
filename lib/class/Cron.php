@@ -39,6 +39,10 @@ use User;
 use Userflag;
 use Video;
 
+/**
+ * Class Cron
+ * @package Lib
+ */
 final class Cron
 {
 

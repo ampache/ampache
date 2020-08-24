@@ -4,7 +4,7 @@
 
 **IMPORTANT** instead of using date() we are now using IntlDateFormatter and your locale to identify formats.
 This means that 'custom_datetime' based on the date() format is incorrect and will look weird.
-Look here for the code to change your 'custom_datetime' string [(http://userguide.icu-project.org/formatparse/datetime)]
+Look here for the code to change your 'custom_datetime' string [(<http://userguide.icu-project.org/formatparse/datetime>)]
 
 This means Ampache now **requires** php-intl module/dll to be enabled.
 
@@ -15,7 +15,7 @@ If you choose to use utf8mb4 Ampache will convert your table engine to InnoDB to
 
 * php-intl is now required for translation of date formats into your locale
 * Numeric 'Played/Skipped ratio' added to search. (Set using (stream/skip)*100.)
-  * ```> 0 & < 100 ```: Skipped more than played
+  * ```> 0 & < 100```: Skipped more than played
   * ```100```: Equal plays and skips
   * ```> 100```: Played more than skipped
 * Generate rsstokens for each user allowing unique feed URLs
@@ -32,12 +32,14 @@ If you choose to use utf8mb4 Ampache will convert your table engine to InnoDB to
 
 ### Changed
 
-* get_datetime(): use IntlDateFormatter to format based on locale. [(https://www.php.net/manual/en/intldateformatter.format.php)]
+* get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
 * stats.php: Show total 'Item Count'  on Statistics page instead of trying to shoehorn songs/videos/etc into different columns
 * ampache.sql updated after about 4 years... no more updates on install!
 * Searching by "Rating (average)" now ignores private/public and always returns the average.
 * Hide '# Skipped' and 'Played/Skipped ratio' when 'Show # skipped' is Off
 * Search items rearranged to try to match each other
+* Sort 'Playlist' and 'Smart Platlist' browse pages by name
+* Display the blankuser avatar in now playing if missing
 
 ### Deprecated
 
@@ -58,7 +60,8 @@ If you choose to use utf8mb4 Ampache will convert your table engine to InnoDB to
 * Searching albums for artist name
 * Mashup 'Newest' would incorrectly apply an offset missing the newest items
 * Search by 'Smart Playlist' rules fixed when added with other rules
-* Use LEFT JOIN instead of having for search rules to allow mor complicated lists
+* Use LEFT JOIN instead of HAVING for search rules to allow more complicated lists
+* Logic searching 'My Rating' includes unrated (0 Stars) in a better way
 
 ### Security
 

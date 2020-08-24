@@ -33,7 +33,8 @@ switch ($_REQUEST['action']) {
         }
 
         $video_id = (string) scrub_in(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
-        show_confirmation(T_('Are You Sure?'), T_("The Video will be deleted"),
+        show_confirmation(T_('Are You Sure?'),
+            T_("The Video will be deleted"),
             AmpConfig::get('web_path') . "/video.php?action=confirm_delete&video_id=" . $video_id,
             1,
             'delete_video'
