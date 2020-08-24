@@ -365,8 +365,8 @@
     },
     "scripts": {
         "test": "./vendor/bin/phpunit tests",
-        "codestyle": "./scripts/tests/codestyle.sh",
-        "syntax": "./scripts/tests/syntax.sh"
+        "codestyle": "resources/scripts/tests/codestyle.sh",
+        "syntax": "resources/scripts/tests/syntax.sh"
     },
     "suggest": {
         "szymach/c-pchart": "Enable graphical statistics",
