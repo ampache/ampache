@@ -1,6 +1,7 @@
 <?php
-declare(strict_types=0);
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
@@ -18,6 +19,12 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+declare(strict_types=0);
+
+namespace Ampache\Module\Util;
+
+use Requests;
 
 /**
  * AmazonSearch Class
@@ -165,7 +172,9 @@ class AmazonSearch
 
         //debug_event('amazonsearchengine.class', $contents, 5);
         if (!xml_parse($this->_parser, $contents)) {
-            debug_event('amazonsearchengine.class', 'Error:' . sprintf('XML error: %s at line %d', xml_error_string(xml_get_error_code($this->_parser)), xml_get_current_line_number($this->_parser)), 1);
+            debug_event('amazonsearchengine.class',
+                'Error:' . sprintf('XML error: %s at line %d', xml_error_string(xml_get_error_code($this->_parser)),
+                    xml_get_current_line_number($this->_parser)), 1);
         }
 
         xml_parser_free($this->_parser);
@@ -327,7 +336,9 @@ class AmazonSearch
         $contents = $request->body;
 
         if (!xml_parse($this->_parser, $contents)) {
-            debug_event('amazonsearchengine.class', 'Error:' . sprintf('XML error: %s at line %d', xml_error_string(xml_get_error_code($this->_parser)), xml_get_current_line_number($this->_parser)), 1);
+            debug_event('amazonsearchengine.class',
+                'Error:' . sprintf('XML error: %s at line %d', xml_error_string(xml_get_error_code($this->_parser)),
+                    xml_get_current_line_number($this->_parser)), 1);
         }
 
         xml_parser_free($this->_parser);
@@ -401,4 +412,4 @@ class AmazonSearch
         // zero the tag
         $this->_currentTag = '';
     } // endElement
-} // end AmazonSearch
+}
