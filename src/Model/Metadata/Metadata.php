@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,16 +20,12 @@
  *
  */
 
-namespace Lib\Metadata;
+namespace Ampache\Model\Metadata;
 
 use AmpConfig;
-use Lib\Metadata\Model\MetadataField;
+use Ampache\Model\Metadata\Model\MetadataField;
+use ReflectionException;
 
-/**
- * Description of metadata
- *
- * @author raziel
- */
 trait Metadata
 {
     /**
@@ -85,9 +81,9 @@ trait Metadata
 
     /**
      *
-     * @param MetadataField $field
+     * @param \Ampache\Model\Metadata\Model\MetadataField $field
      * @param string $data
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function addMetadata(MetadataField $field, $data)
     {
@@ -100,9 +96,9 @@ trait Metadata
     }
 
     /**
-     * @param Model\MetadataField $field
+     * @param MetadataField $field
      * @param $data
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function updateOrInsertMetadata(MetadataField $field, $data)
     {
@@ -121,8 +117,8 @@ trait Metadata
      *
      * @param string $name
      * @param boolean $public
-     * @return MetadataField
-     * @throws \ReflectionException
+     * @return \Ampache\Model\Metadata\Model\MetadataField
+     * @throws ReflectionException
      */
     protected function createField($name, $public)
     {
@@ -140,8 +136,8 @@ trait Metadata
      *
      * @param string $propertie
      * @param boolean $public
-     * @return MetadataField
-     * @throws \ReflectionException
+     * @return \Ampache\Model\Metadata\Model\MetadataField
+     * @throws ReflectionException
      */
     public function getField($propertie, $public = true)
     {

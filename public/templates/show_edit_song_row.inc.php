@@ -20,7 +20,7 @@
  *
  */
 
-use Lib\Metadata\Model\Metadata;
+use Ampache\Model\Metadata\Model\Metadata;
 
 ?>
 <div>

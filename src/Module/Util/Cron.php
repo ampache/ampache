@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,9 +20,10 @@
  *
  */
 
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 declare(strict_types=0);
 
-namespace Lib;
+namespace Ampache\Module\Util;
 
 use Album;
 use AmpConfig;
@@ -39,10 +40,6 @@ use User;
 use Userflag;
 use Video;
 
-/**
- * Class Cron
- * @package Lib
- */
 final class Cron
 {
 

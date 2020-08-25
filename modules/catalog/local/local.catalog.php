@@ -20,8 +20,8 @@
  *
  */
 
-use Lib\Metadata\Repository\Metadata;
-use Lib\Metadata\Repository\MetadataField;
+use Ampache\Model\Metadata\Repository\Metadata;
+use Ampache\Model\Metadata\Repository\MetadataField;
 
 /**
  * Local Catalog Class

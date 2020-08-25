@@ -358,13 +358,11 @@
     },
     "autoload": {
         "psr-4": {
-            "Lib\\": "lib/class",
             "Ampache\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Lib\\": "lib/class",
             "Ampache\\": "tests/"
         }
     },

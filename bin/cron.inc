@@ -20,7 +20,7 @@
  *
  */
 
-use Lib\Cron;
+use Ampache\Module\Util\Cron;
 
 define('NO_SESSION', '1');
 define('CLI', 1);

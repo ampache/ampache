@@ -18,7 +18,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Ampache\Model\database_object;
+
+?>
 <?php if (AmpConfig::get('show_footer_statistics')) { ?>
     <br />
     <span class="query-count">

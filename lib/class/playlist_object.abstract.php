@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\database_object;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 
 /**

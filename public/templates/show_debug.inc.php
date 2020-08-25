@@ -20,7 +20,7 @@
  *
  */
 
-use Lib\Cron;
+use Ampache\Module\Util\Cron;
 
 ?>
 <?php UI::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>

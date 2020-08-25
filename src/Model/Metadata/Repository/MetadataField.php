@@ -1,7 +1,6 @@
 <?php
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,17 +20,17 @@
  *
  */
 
-namespace Lib\Interfaces;
+namespace Ampache\Model\Metadata\Repository;
 
-/**
- * Description of Model
- *
- * @author raziel
- */
-interface Model
+use Dba;
+use Ampache\Repository\Repository;
+
+class MetadataField extends Repository
 {
-    /**
-     * Get ID of Database Object
-     */
-    public function getId();
+    protected $modelClassName = '\Ampache\Model\Metadata\Model\MetadataField';
+
+    public static function garbage_collection()
+    {
+        Dba::write('DELETE FROM `metadata_field` USING `metadata_field` LEFT JOIN `metadata` ON `metadata`.`field` = `metadata_field`.`id` WHERE `metadata`.`id` IS NULL');
+    }
 }

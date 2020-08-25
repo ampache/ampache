@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,17 +20,11 @@
  *
  */
 
-namespace Lib\Metadata\Model;
+namespace Ampache\Model\Metadata\Model;
 
-use Lib\DatabaseObject;
-use Lib\Interfaces\Model;
-use library_item;
+use Ampache\Model\DatabaseObject;
+use Ampache\Model\Model;
 
-/**
- * Description of metadata
- *
- * @author raziel
- */
 class Metadata extends DatabaseObject implements Model
 {
     /**
@@ -69,7 +63,7 @@ class Metadata extends DatabaseObject implements Model
      * can initialize objects the right way
      */
     protected $fieldClassRelations = array(
-        'field' => '\Lib\Metadata\Repository\MetadataField'
+        'field' => '\Ampache\Model\Metadata\Repository\MetadataField'
     );
 
     /**

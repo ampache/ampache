@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,18 +20,14 @@
  *
  */
 
-namespace Lib;
+namespace Ampache\Repository;
 
+use Ampache\Model\DatabaseObject;
 use Dba;
-use Lib\Interfaces\Model;
+use Ampache\Model\Model;
 use ReflectionClass;
 use ReflectionException;
 
-/**
- * Description of Repository
- *
- * @author raziel
- */
 class Repository
 {
     protected $modelClassName;
@@ -69,7 +65,7 @@ class Repository
     /**
      *
      * @param integer $object_id
-     * @return Metadata\Repository\MetadataField
+     * @return \Ampache\Model\Metadata\Repository\MetadataField
      */
     public function findById($object_id)
     {
@@ -134,7 +130,7 @@ class Repository
     }
 
     /**
-     * @param DatabaseObject $object
+     * @param \Ampache\Model\DatabaseObject $object
      * @throws ReflectionException
      */
     public function add(DatabaseObject $object)
@@ -288,4 +284,4 @@ class Repository
     {
         return strtolower(preg_replace('/(?<=\\w)(?=[A-Z])/', '_$1', $string));
     }
-} // end repository
+}

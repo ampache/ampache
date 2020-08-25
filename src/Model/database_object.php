@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,8 +20,13 @@
  *
  */
 
+namespace Ampache\Model;
+
+use AmpConfig;
+use Dba;
+
 /**
- * database_object
+ * Ampache\Model\database_object
  *
  * This is a general object that is extended by all of the basic
  * database based objects in ampache. It attempts to do some standard
@@ -46,7 +51,7 @@ abstract class database_object
     public function get_info($object_id, $table_name = '')
     {
         $table     = $table_name ? Dba::escape($table_name) : Dba::escape(strtolower(get_class($this)));
-        $object_id = (int) $object_id;
+        $object_id = (int)$object_id;
 
         // Make sure we've got a real id
         if ($object_id < 1) {
@@ -163,4 +168,4 @@ abstract class database_object
     {
         self::$_enabled = AmpConfig::get('memory_cache');
     } // _auto_init
-} // end database_object.abstract
+} // end Ampache\Model\database_object.abstract

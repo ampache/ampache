@@ -2,7 +2,8 @@
 declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
-use Lib\Metadata\Metadata;
+use Ampache\Model\database_object;
+use Ampache\Model\Metadata\Metadata;
 
 /**
  *

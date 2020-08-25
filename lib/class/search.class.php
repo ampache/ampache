@@ -21,7 +21,7 @@ declare(strict_types=0);
  *
  */
 
-use Lib\Metadata\Repository\MetadataField;
+use Ampache\Model\Metadata\Repository\MetadataField;
 
 /**
  * Search Class

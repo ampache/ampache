@@ -1,7 +1,7 @@
 <?php
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
-use Lib\Metadata\Repository\MetadataField;
+use Ampache\Model\Metadata\Repository\MetadataField;
 
 /**
  *

@@ -1,4 +1,5 @@
 <?php
+
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -20,24 +21,17 @@
  *
  */
 
-namespace Lib\Metadata\Repository;
-
-use Dba;
-use Lib\Repository;
+namespace Ampache\Model;
 
 /**
- * Description of Metadata
+ * Description of Model
  *
  * @author raziel
  */
-class Metadata extends Repository
+interface Model
 {
-    protected $modelClassName = '\Lib\Metadata\Model\Metadata';
-
-    public static function garbage_collection()
-    {
-        Dba::write('DELETE FROM `metadata` USING `metadata` LEFT JOIN `song` ON `song`.`id` = `metadata`.`object_id` WHERE `song`.`id` IS NULL');
-    }
-
-    // put your code here
+    /**
+     * Get ID of Database Object
+     */
+    public function getId();
 }

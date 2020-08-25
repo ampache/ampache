@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,7 +20,9 @@
  *
  */
 
-namespace Lib;
+namespace Ampache\Model;
+
+use Ampache\Repository\Repository;
 
 /**
  * Description of Model
@@ -117,10 +119,10 @@ abstract class DatabaseObject
     {
         foreach ($this->fieldClassRelations as $field => $repositoryName) {
             if (class_exists($repositoryName)) {
-                /* @var Repository $repository */
+                /* @var \Ampache\Repository\Repository $repository */
                 $repository   = new $repositoryName;
                 $this->$field = $repository->findById($this->$field);
             }
         }
     }
-} // end databaseobject
+}
