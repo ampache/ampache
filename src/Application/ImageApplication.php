@@ -29,7 +29,7 @@ use AmpConfig;
 use Art;
 use Auth;
 use Core;
-use Horde_Browser;
+use Ampache\Module\Util\Horde_Browser;
 use Session;
 use UI;
 
@@ -41,6 +41,14 @@ use UI;
  */
 final class ImageApplication implements ApplicationInterface
 {
+    private Horde_Browser $browser;
+
+    public function __construct(
+        Horde_Browser $browser
+    ) {
+        $this->browser = $browser;
+    }
+
     public function run(): void
     {
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
@@ -159,14 +167,13 @@ final class ImageApplication implements ApplicationInterface
             $filename  = scrub_out($filename . '.' . $extension);
 
             // Send the headers and output the image
-            $browser = new Horde_Browser();
             if (!empty($etag)) {
                 header('ETag: ' . $etag);
                 header('Cache-Control: private');
                 header('Last-Modified: ' . gmdate('D, d M Y H:i:s \G\M\T', time()));
             }
             header("Access-Control-Allow-Origin: *");
-            $browser->downloadHeaders($filename, $mime, true);
+            $this->browser->downloadHeaders($filename, $mime, true);
             echo $image;
         }
     }

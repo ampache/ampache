@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Util\Horde_Browser;
+
 /**
  * split_sql
  * splits up a standard SQL dump file into distinct sql queries

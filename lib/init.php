@@ -110,9 +110,6 @@ $results['cookie_domain'] = $results['http_port'];
 $results['cookie_life']   = $results['session_cookielife'];
 $results['cookie_secure'] = $results['session_cookiesecure'];
 
-// Library and module includes we can't do with the autoloader
-require_once __DIR__ . '/../modules/infotools/AmazonSearchEngine.class.php';
-
 // Make sure all default preferences are set
 Preference::set_defaults();
 // Temp Fixes

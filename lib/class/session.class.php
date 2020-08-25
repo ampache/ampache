@@ -21,6 +21,8 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Module\Util\Horde_Browser;
+
 /**
  *
  * This class handles all of the session related stuff in Ampache

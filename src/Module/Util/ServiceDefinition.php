@@ -1,9 +1,6 @@
 <?php
-
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,24 +20,12 @@ declare(strict_types=1);
  *
  */
 
-/**
- * This file creates and initializes the central DI-Container
- */
-namespace Ampache\Config;
+declare(strict_types=1);
 
-use AmpConfig;
-use DI\ContainerBuilder;
-use function DI\factory;
+namespace Ampache\Module\Util;
 
-$builder = new ContainerBuilder();
-$builder->addDefinitions([
-    ConfigContainerInterface::class => factory(static function (): ConfigContainerInterface {
-        return new ConfigContainer(AmpConfig::get_all());
-    }),
-]);
-$builder->addDefinitions(
-    require_once __DIR__ . '/../Application/ServiceDefinition.php',
-    require_once __DIR__ . '/../Module/Util/ServiceDefinition.php',
-);
+use function DI\autowire;
 
-return $builder->build();
+return [
+    Horde_Browser::class => autowire(Horde_Browser::class),
+];

@@ -33,7 +33,7 @@ use Catalog;
 use Core;
 use Dba;
 use Democratic;
-use Horde_Browser;
+use Ampache\Module\Util\Horde_Browser;
 use Podcast_Episode;
 use Preference;
 use Random;
@@ -50,6 +50,14 @@ use Video;
 
 final class PlayApplication implements ApplicationInterface
 {
+    private Horde_Browser $browser;
+
+    public function __construct(
+        Horde_Browser $browser
+    ) {
+        $this->browser = $browser;
+    }
+
     public function run(): void
     {
         ob_end_clean();
@@ -442,9 +450,6 @@ final class PlayApplication implements ApplicationInterface
 
         header('Access-Control-Allow-Origin: *');
 
-        // Generate browser class for sending headers
-        $browser = new Horde_Browser();
-
         /* If they are just trying to download make sure they have rights
          * and then present them with the download file
          */
@@ -465,7 +470,7 @@ final class PlayApplication implements ApplicationInterface
             // STUPID IE
             $media_name = str_replace(array('?', '/', '\\'), "_", $media->f_file);
 
-            $browser->downloadHeaders($media_name, $media->mime, false, $media->size);
+            $this->browser->downloadHeaders($media_name, $media->mime, false, $media->size);
             $filepointer   = fopen(Core::conv_lc_file($media->file), 'rb');
             $bytesStreamed = 0;
 
@@ -763,7 +768,7 @@ final class PlayApplication implements ApplicationInterface
         // Warning: Do not change any session variable after this call
         session_write_close();
 
-        $browser->downloadHeaders($media_name, $mime, false, $stream_size);
+        $this->browser->downloadHeaders($media_name, $mime, false, $stream_size);
 
         $bytes_streamed = 0;
 

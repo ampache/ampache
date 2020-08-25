@@ -33,12 +33,20 @@ use Artist;
 use AutoUpdate;
 use Core;
 use Dba;
-use Horde_Browser;
+use Ampache\Module\Util\Horde_Browser;
 use Song;
 use UI;
 
 final class SystemApplication implements ApplicationInterface
 {
+    private Horde_Browser $browser;
+
+    public function __construct(
+        Horde_Browser $browser
+    ) {
+        $this->browser = $browser;
+    }
+
     public function run(): void
     {
         if (!Access::check('interface', 100) || AmpConfig::get('demo_mode')) {
@@ -58,8 +66,7 @@ final class SystemApplication implements ApplicationInterface
                 ob_end_clean();
                 $current = parse_ini_file(__DIR__ . '/../../../config/ampache.cfg.php');
                 $final   = generate_config($current);
-                $browser = new Horde_Browser();
-                $browser->downloadHeaders('ampache.cfg.php', 'text/plain', false, filesize(__DIR__ . '/../../../config/ampache.cfg.php.dist'));
+                $this->browser->downloadHeaders('ampache.cfg.php', 'text/plain', false, filesize(__DIR__ . '/../../../config/ampache.cfg.php.dist'));
                 echo $final;
 
                 return;

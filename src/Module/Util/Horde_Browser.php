@@ -1,4 +1,29 @@
 <?php
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright 2001 - 2020 Ampache.org
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+namespace Ampache\Module\Util;
+
+use Core;
+
 /**
  *  #####################################################################
  *  #                               Warning                             #
@@ -246,8 +271,8 @@ class Horde_Browser
     /**
      * Creates a browser instance (Constructor).
      *
-     * @param string $userAgent  The browser string to parse.
-     * @param string $accept     The HTTP_ACCEPT settings to use.
+     * @param string $userAgent The browser string to parse.
+     * @param string $accept The HTTP_ACCEPT settings to use.
      */
     public function __construct($userAgent = null, $accept = null)
     {
@@ -258,8 +283,8 @@ class Horde_Browser
      * Parses the user agent string and inititializes the object with all the
      * known features and quirks for the given browser.
      *
-     * @param string $userAgent  The browser string to parse.
-     * @param string $accept     The HTTP_ACCEPT settings to use.
+     * @param string $userAgent The browser string to parse.
+     * @param string $accept The HTTP_ACCEPT settings to use.
      */
     public function match($userAgent = null, $accept = null)
     {
@@ -297,9 +322,8 @@ class Horde_Browser
         $agent      = $this->_agent;
         $lowerAgent = $this->_lowerAgent;
 
-        if (strpos($lowerAgent, 'iemobile') !== false ||
-            strpos($lowerAgent, 'mobileexplorer') !== false ||
-            strpos($lowerAgent, 'openwave') !== false) {
+        if (strpos($lowerAgent, 'iemobile') !== false || strpos($lowerAgent,
+                'mobileexplorer') !== false || strpos($lowerAgent, 'openwave') !== false) {
             $this->setFeature('frames', false);
             $this->setFeature('javascript', false);
             $this->setQuirk('avoid_popup_windows');
@@ -319,8 +343,7 @@ class Horde_Browser
                     $this->setFeature('cite');
                 }
             }
-        } elseif (strpos($lowerAgent, 'opera mini') !== false ||
-                  strpos($lowerAgent, 'operamini') !== false) {
+        } elseif (strpos($lowerAgent, 'opera mini') !== false || strpos($lowerAgent, 'operamini') !== false) {
             $this->setBrowser('opera');
             $this->setFeature('frames', false);
             $this->setFeature('javascript');
@@ -359,17 +382,16 @@ class Horde_Browser
                 $this->setFeature('optgroup');
                 $this->setQuirk('double_linebreak_textarea');
             }
-        } elseif (strpos($lowerAgent, 'elaine/') !== false ||
-                  strpos($lowerAgent, 'palmsource') !== false ||
-                  strpos($lowerAgent, 'digital paths') !== false) {
+        } elseif (strpos($lowerAgent, 'elaine/') !== false || strpos($lowerAgent,
+                'palmsource') !== false || strpos($lowerAgent, 'digital paths') !== false) {
             $this->setBrowser('palm');
             $this->setFeature('images', false);
             $this->setFeature('frames', false);
             $this->setFeature('javascript', false);
             $this->setQuirk('avoid_popup_windows');
             $this->setMobile(true);
-        } elseif ((preg_match('|MSIE ([0-9.]+)|', $agent, $version)) ||
-                  (preg_match('|Internet Explorer/([0-9.]+)|', $agent, $version))) {
+        } elseif ((preg_match('|MSIE ([0-9.]+)|', $agent, $version)) || (preg_match('|Internet Explorer/([0-9.]+)|',
+                $agent, $version))) {
             $this->setBrowser('msie');
             $this->setQuirk('cache_ssl_downloads');
             $this->setQuirk('cache_same_url');
@@ -384,8 +406,7 @@ class Horde_Browser
 
             /* IE (< 7) on Windows does not support alpha transparency
              * in PNG images. */
-            if (($this->_majorVersion < 7) &&
-                preg_match('/windows/i', $agent)) {
+            if (($this->_majorVersion < 7) && preg_match('/windows/i', $agent)) {
                 $this->setQuirk('png_transparency');
             }
 
@@ -399,78 +420,78 @@ class Horde_Browser
             $this->setFeature('xmlhttpreq');
 
             switch ($this->_majorVersion) {
-            default:
-            case 10:
-            case 9:
-            case 8:
-            case 7:
-                $this->setFeature('javascript', 1.4);
-                $this->setFeature('ajax');
-                $this->setFeature('dom');
-                $this->setFeature('iframes');
-                $this->setFeature('utf');
-                $this->setFeature('rte');
-                $this->setFeature('homepage');
-                $this->setFeature('accesskey');
-                $this->setFeature('optgroup');
-                if ($this->_majorVersion != 7) {
-                    $this->setFeature('cite');
-                    $this->setFeature('dataurl', ($this->_majorVersion == 8) ? 32768 : true);
-                }
-                break;
-
-            case 6:
-                $this->setFeature('javascript', 1.4);
-                $this->setFeature('dom');
-                $this->setFeature('iframes');
-                $this->setFeature('utf');
-                $this->setFeature('rte');
-                $this->setFeature('homepage');
-                $this->setFeature('accesskey');
-                $this->setFeature('optgroup');
-                $this->setQuirk('scrollbar_in_way');
-                $this->setQuirk('broken_multipart_form');
-                $this->setQuirk('windowed_controls');
-                break;
-
-            case 5:
-                if ($this->getPlatform() == 'mac') {
-                    $this->setFeature('javascript', 1.2);
+                default:
+                case 10:
+                case 9:
+                case 8:
+                case 7:
+                    $this->setFeature('javascript', 1.4);
+                    $this->setFeature('ajax');
+                    $this->setFeature('dom');
+                    $this->setFeature('iframes');
+                    $this->setFeature('utf');
+                    $this->setFeature('rte');
+                    $this->setFeature('homepage');
+                    $this->setFeature('accesskey');
                     $this->setFeature('optgroup');
-                    $this->setFeature('xmlhttpreq', false);
-                } else {
-                    // MSIE 5 for Windows.
+                    if ($this->_majorVersion != 7) {
+                        $this->setFeature('cite');
+                        $this->setFeature('dataurl', ($this->_majorVersion == 8) ? 32768 : true);
+                    }
+                    break;
+
+                case 6:
                     $this->setFeature('javascript', 1.4);
                     $this->setFeature('dom');
-                    if ($this->_minorVersion >= 5) {
-                        $this->setFeature('rte');
-                        $this->setQuirk('windowed_controls');
-                    }
-                }
-                $this->setFeature('iframes');
-                $this->setFeature('utf');
-                $this->setFeature('homepage');
-                $this->setFeature('accesskey');
-                if ($this->_minorVersion == 5) {
-                    $this->setQuirk('break_disposition_header');
-                    $this->setQuirk('broken_multipart_form');
-                }
-                break;
-
-            case 4:
-                $this->setFeature('javascript', 1.2);
-                $this->setFeature('accesskey');
-                $this->setFeature('xmlhttpreq', false);
-                if ($this->_minorVersion > 0) {
+                    $this->setFeature('iframes');
                     $this->setFeature('utf');
-                }
-                break;
+                    $this->setFeature('rte');
+                    $this->setFeature('homepage');
+                    $this->setFeature('accesskey');
+                    $this->setFeature('optgroup');
+                    $this->setQuirk('scrollbar_in_way');
+                    $this->setQuirk('broken_multipart_form');
+                    $this->setQuirk('windowed_controls');
+                    break;
 
-            case 3:
-                $this->setFeature('javascript', 1.1);
-                $this->setQuirk('avoid_popup_windows');
-                $this->setFeature('xmlhttpreq', false);
-                break;
+                case 5:
+                    if ($this->getPlatform() == 'mac') {
+                        $this->setFeature('javascript', 1.2);
+                        $this->setFeature('optgroup');
+                        $this->setFeature('xmlhttpreq', false);
+                    } else {
+                        // MSIE 5 for Windows.
+                        $this->setFeature('javascript', 1.4);
+                        $this->setFeature('dom');
+                        if ($this->_minorVersion >= 5) {
+                            $this->setFeature('rte');
+                            $this->setQuirk('windowed_controls');
+                        }
+                    }
+                    $this->setFeature('iframes');
+                    $this->setFeature('utf');
+                    $this->setFeature('homepage');
+                    $this->setFeature('accesskey');
+                    if ($this->_minorVersion == 5) {
+                        $this->setQuirk('break_disposition_header');
+                        $this->setQuirk('broken_multipart_form');
+                    }
+                    break;
+
+                case 4:
+                    $this->setFeature('javascript', 1.2);
+                    $this->setFeature('accesskey');
+                    $this->setFeature('xmlhttpreq', false);
+                    if ($this->_minorVersion > 0) {
+                        $this->setFeature('utf');
+                    }
+                    break;
+
+                case 3:
+                    $this->setFeature('javascript', 1.1);
+                    $this->setQuirk('avoid_popup_windows');
+                    $this->setFeature('xmlhttpreq', false);
+                    break;
             }
         } elseif (preg_match('|ANTFresco/([0-9]+)|', $agent, $version)) {
             $this->setBrowser('fresco');
@@ -479,23 +500,18 @@ class Horde_Browser
         } elseif (strpos($lowerAgent, 'avantgo') !== false) {
             $this->setBrowser('avantgo');
             $this->setMobile(true);
-        } elseif (preg_match('|Konqueror/([0-9]+)\.?([0-9]+)?|', $agent, $version) ||
-                  preg_match('|Safari/([0-9]+)\.?([0-9]+)?|', $agent, $version)) {
+        } elseif (preg_match('|Konqueror/([0-9]+)\.?([0-9]+)?|', $agent,
+                $version) || preg_match('|Safari/([0-9]+)\.?([0-9]+)?|', $agent, $version)) {
             $this->setBrowser('webkit');
             $this->setQuirk('empty_file_input_value');
             $this->setQuirk('no_hidden_overflow_tables');
             $this->setFeature('dataurl');
 
-            if (strpos($agent, 'Mobile') !== false ||
-                strpos($agent, 'Android') !== false ||
-                strpos($agent, 'SAMSUNG-GT') !== false ||
-                ((strpos($agent, 'Nokia') !== false ||
-                 strpos($agent, 'Symbian') !== false) &&
-                 strpos($agent, 'WebKit') !== false) ||
-                (strpos($agent, 'N900') !== false &&
-                 strpos($agent, 'Maemo Browser') !== false) ||
-                (strpos($agent, 'MeeGo') !== false &&
-                strpos($agent, 'NokiaN9') !== false)) {
+            if (strpos($agent, 'Mobile') !== false || strpos($agent, 'Android') !== false || strpos($agent,
+                    'SAMSUNG-GT') !== false || ((strpos($agent, 'Nokia') !== false || strpos($agent,
+                            'Symbian') !== false) && strpos($agent, 'WebKit') !== false) || (strpos($agent,
+                        'N900') !== false && strpos($agent, 'Maemo Browser') !== false) || (strpos($agent,
+                        'MeeGo') !== false && strpos($agent, 'NokiaN9') !== false)) {
                 // WebKit Mobile
                 $this->setFeature('frames', false);
                 $this->setFeature('javascript');
@@ -508,8 +524,7 @@ class Horde_Browser
                 $this->_minorVersion = $version[2];
             }
 
-            if (stripos($agent, 'Chrome/') !== false ||
-                stripos($agent, 'CriOS/') !== false) {
+            if (stripos($agent, 'Chrome/') !== false || stripos($agent, 'CriOS/') !== false) {
                 // Google Chrome.
                 $this->setFeature('ischrome');
                 $this->setFeature('rte');
@@ -525,8 +540,7 @@ class Horde_Browser
                 if (preg_match('|Chrome/([0-9.]+)|i', $agent, $version_string)) {
                     list($this->_majorVersion, $this->_minorVersion) = explode('.', $version_string[1], 2);
                 }
-            } elseif (stripos($agent, 'Safari/') !== false &&
-                $this->_majorVersion >= 60) {
+            } elseif (stripos($agent, 'Safari/') !== false && $this->_majorVersion >= 60) {
                 // Safari.
                 $this->setFeature('issafari');
 
@@ -534,7 +548,7 @@ class Horde_Browser
                 // numbers until Version 3.
                 if (preg_match('|Version/([0-9.]+)|', $agent, $version_string)) {
                     list($this->_majorVersion, $this->_minorVersion) = explode('.', $version_string[1], 2);
-                    $this->_minorVersion                             = (int) ($this->_minorVersion);
+                    $this->_minorVersion                             = (int)($this->_minorVersion);
                     $this->setFeature('ajax');
                     $this->setFeature('rte');
                 } elseif ($this->_majorVersion >= 412) {
@@ -565,16 +579,15 @@ class Horde_Browser
                 $this->setFeature('javascript', 1.1);
                 $this->setFeature('iskonqueror');
                 switch ($this->_majorVersion) {
-                case 4:
-                case 3:
-                    $this->setFeature('dom');
-                    $this->setFeature('iframes');
-                    if ($this->_minorVersion >= 5 ||
-                        $this->_majorVersion == 4) {
-                        $this->setFeature('accesskey');
-                        $this->setFeature('xmlhttpreq');
-                    }
-                    break;
+                    case 4:
+                    case 3:
+                        $this->setFeature('dom');
+                        $this->setFeature('iframes');
+                        if ($this->_minorVersion >= 5 || $this->_majorVersion == 4) {
+                            $this->setFeature('accesskey');
+                            $this->setFeature('xmlhttpreq');
+                        }
+                        break;
                 }
             }
         } elseif (preg_match('|Mozilla/([0-9.]+)|', $agent, $version)) {
@@ -583,52 +596,52 @@ class Horde_Browser
 
             list($this->_majorVersion, $this->_minorVersion) = explode('.', $version[1]);
             switch ($this->_majorVersion) {
-            default:
-            case 5:
-                if ($this->getPlatform() == 'win') {
-                    $this->setQuirk('break_disposition_filename');
-                }
-                $this->setFeature('javascript', 1.4);
-                $this->setFeature('ajax');
-                $this->setFeature('dom');
-                $this->setFeature('accesskey');
-                $this->setFeature('optgroup');
-                $this->setFeature('xmlhttpreq');
-                $this->setFeature('cite');
-                if (preg_match('|rv:(.*)\)|', $agent, $revision)) {
-                    if (version_compare($revision[1], '1', '>=')) {
-                        $this->setFeature('iframes');
+                default:
+                case 5:
+                    if ($this->getPlatform() == 'win') {
+                        $this->setQuirk('break_disposition_filename');
                     }
-                    if (version_compare($revision[1], '1.3', '>=')) {
-                        $this->setFeature('rte');
+                    $this->setFeature('javascript', 1.4);
+                    $this->setFeature('ajax');
+                    $this->setFeature('dom');
+                    $this->setFeature('accesskey');
+                    $this->setFeature('optgroup');
+                    $this->setFeature('xmlhttpreq');
+                    $this->setFeature('cite');
+                    if (preg_match('|rv:(.*)\)|', $agent, $revision)) {
+                        if (version_compare($revision[1], '1', '>=')) {
+                            $this->setFeature('iframes');
+                        }
+                        if (version_compare($revision[1], '1.3', '>=')) {
+                            $this->setFeature('rte');
+                        }
+                        if (version_compare($revision[1], '1.8.1', '>=')) {
+                            $this->setFeature('dataurl');
+                        }
+                        if (version_compare($revision[1], '10.0', '>=')) {
+                            $this->setFeature('utf');
+                        }
                     }
-                    if (version_compare($revision[1], '1.8.1', '>=')) {
-                        $this->setFeature('dataurl');
+                    if (stripos($agent, 'mobile') !== false) {
+                        $this->setMobile(true);
+                    } elseif (stripos($agent, 'tablet') !== false) {
+                        $this->setTablet(true);
+                        $this->setMobile(true);
                     }
-                    if (version_compare($revision[1], '10.0', '>=')) {
-                        $this->setFeature('utf');
-                    }
-                }
-                if (stripos($agent, 'mobile') !== false) {
-                    $this->setMobile(true);
-                } elseif (stripos($agent, 'tablet') !== false) {
-                    $this->setTablet(true);
-                    $this->setMobile(true);
-                }
-                break;
+                    break;
 
-            case 4:
-                $this->setFeature('javascript', 1.3);
-                $this->setQuirk('buggy_compression');
-                break;
+                case 4:
+                    $this->setFeature('javascript', 1.3);
+                    $this->setQuirk('buggy_compression');
+                    break;
 
-            case 3:
-            case 2:
-            case 1:
-            case 0:
-                $this->setFeature('javascript', 1);
-                $this->setQuirk('buggy_compression');
-                break;
+                case 3:
+                case 2:
+                case 1:
+                case 0:
+                    $this->setFeature('javascript', 1);
+                    $this->setQuirk('buggy_compression');
+                    break;
             }
         } elseif (preg_match('|Lynx/([0-9]+)|', $agent, $version)) {
             $this->setBrowser('lynx');
@@ -645,17 +658,15 @@ class Horde_Browser
         } elseif (preg_match('|HotJava/([0-9]+)|', $agent, $version)) {
             $this->setBrowser('hotjava');
             $this->setFeature('javascript', false);
-        } elseif (strpos($agent, 'UP/') !== false ||
-                  strpos($agent, 'UP.B') !== false ||
-                  strpos($agent, 'UP.L') !== false) {
+        } elseif (strpos($agent, 'UP/') !== false || strpos($agent, 'UP.B') !== false || strpos($agent,
+                'UP.L') !== false) {
             $this->setBrowser('up');
             $this->setFeature('html', false);
             $this->setFeature('javascript', false);
             $this->setFeature('hdml');
             $this->setFeature('wml');
 
-            if (strpos($agent, 'GUI') !== false &&
-                strpos($agent, 'UP.Link') !== false) {
+            if (strpos($agent, 'GUI') !== false && strpos($agent, 'UP.Link') !== false) {
                 /* The device accepts Openwave GUI extensions for WML
                  * 1.3. Non-UP.Link gateways sometimes have problems,
                  * so exclude them. */
@@ -701,8 +712,7 @@ class Horde_Browser
             $this->setFeature('hdml');
             $this->setFeature('wml');
             $this->setMobile(true);
-        } elseif (strpos($lowerAgent, 'docomo') !== false ||
-                  strpos($lowerAgent, 'portalmmm') !== false) {
+        } elseif (strpos($lowerAgent, 'docomo') !== false || strpos($lowerAgent, 'portalmmm') !== false) {
             $this->setBrowser('imode');
             $this->setFeature('images', false);
             $this->setMobile(true);
@@ -714,8 +724,7 @@ class Horde_Browser
             $this->setFeature('hdml');
             $this->setFeature('wml');
             $this->setMobile(true);
-            if ($this->_majorVersion >= 5 ||
-                ($this->_majorVersion == 4 && $this->_minorVersion >= 6)) {
+            if ($this->_majorVersion >= 5 || ($this->_majorVersion == 4 && $this->_minorVersion >= 6)) {
                 $this->setFeature('ajax');
                 $this->setFeature('iframes');
                 $this->setFeature('javascript', 1.5);
@@ -765,7 +774,7 @@ class Horde_Browser
     /**
      * Sets the current browser.
      *
-     * @param string $browser  The browser to set as current.
+     * @param string $browser The browser to set as current.
      */
     public function setBrowser($browser)
     {
@@ -775,7 +784,7 @@ class Horde_Browser
     /**
      * Determines if the given browser is the same as the current.
      *
-     * @param string $browser  The browser to check.
+     * @param string $browser The browser to check.
      *
      * @return boolean  Is the given browser the same as the current?
      */
@@ -787,11 +796,11 @@ class Horde_Browser
     /**
      * Set this browser as a mobile device.
      *
-     * @param boolean $mobile  True if the browser is a mobile device.
+     * @param boolean $mobile True if the browser is a mobile device.
      */
     public function setMobile($mobile)
     {
-        $this->_mobile = (bool) $mobile;
+        $this->_mobile = (bool)$mobile;
     }
 
     /**
@@ -807,13 +816,13 @@ class Horde_Browser
     /**
      * Set this browser as a tablet device.
      *
+     * @param boolean $tablet True if the browser is a tablet device.
      * @since 2.1.0
      *
-     * @param boolean $tablet  True if the browser is a tablet device.
      */
     public function setTablet($tablet)
     {
-        $this->_tablet = (bool) $tablet;
+        $this->_tablet = (bool)$tablet;
     }
 
     /**
@@ -821,9 +830,9 @@ class Horde_Browser
      * most browsers do not differentiate between smartphone and tablet
      * versions.
      *
+     * @return boolean  True if we do, false if we don't.
      * @since 2.1.0
      *
-     * @return boolean  True if we do, false if we don't.
      */
     public function isTablet()
     {
@@ -933,7 +942,7 @@ class Horde_Browser
     /**
      * Checks unique behavior for the current browser.
      *
-     * @param string $quirk  The behavior to check.
+     * @param string $quirk The behavior to check.
      *
      * @return boolean  Does the browser have the behavior set?
      */
@@ -945,7 +954,7 @@ class Horde_Browser
     /**
      * Returns unique behavior for the current browser.
      *
-     * @param string $quirk  The behavior to retrieve.
+     * @param string $quirk The behavior to retrieve.
      *
      * @return string  The value for the requested behavior.
      */
@@ -994,7 +1003,7 @@ class Horde_Browser
     /**
      * Checks the current browser capabilities.
      *
-     * @param string $feature  The capability to check.
+     * @param string $feature The capability to check.
      *
      * @return boolean  Does the browser have the capability set?
      */
@@ -1006,7 +1015,7 @@ class Horde_Browser
     /**
      * Returns the current browser capability.
      *
-     * @param string $feature  The capability to retrieve.
+     * @param string $feature The capability to retrieve.
      *
      * @return string  The value of the requested capability.
      */
@@ -1022,9 +1031,8 @@ class Horde_Browser
      */
     public function usingSSLConnection()
     {
-        return ((filter_has_var(INPUT_SERVER, 'HTTPS') &&
-                 (Core::get_server('HTTPS') == 'on')) ||
-                getenv('SSL_PROTOCOL_VERSION'));
+        return ((filter_has_var(INPUT_SERVER,
+                    'HTTPS') && (Core::get_server('HTTPS') == 'on')) || getenv('SSL_PROTOCOL_VERSION'));
     }
 
     /**
@@ -1034,7 +1042,8 @@ class Horde_Browser
      */
     public function getHTTPProtocol()
     {
-        return (filter_has_var(INPUT_SERVER, 'SERVER_PROTOCOL') && ($pos = strrpos($_SERVER['SERVER_PROTOCOL'], '/'))) ? substr($_SERVER['SERVER_PROTOCOL'], $pos + 1) : null;
+        return (filter_has_var(INPUT_SERVER, 'SERVER_PROTOCOL') && ($pos = strrpos($_SERVER['SERVER_PROTOCOL'],
+                '/'))) ? substr($_SERVER['SERVER_PROTOCOL'], $pos + 1) : null;
     }
 
     /**
@@ -1056,48 +1065,46 @@ class Horde_Browser
      */
     public static function allowFileUploads()
     {
-        if (!ini_get('file_uploads') ||
-            (($dir = ini_get('upload_tmp_dir')) &&
-             !is_writable($dir))) {
+        if (!ini_get('file_uploads') || (($dir = ini_get('upload_tmp_dir')) && !is_writable($dir))) {
             return 0;
         }
 
         $filesize = ini_get('upload_max_filesize');
         switch (strtolower(substr($filesize, -1, 1))) {
-        case 'k':
-            $filesize = (int) (floatval($filesize) * 1024);
-            break;
+            case 'k':
+                $filesize = (int)(floatval($filesize) * 1024);
+                break;
 
-        case 'm':
-            $filesize = (int) (floatval($filesize) * 1024 * 1024);
-            break;
+            case 'm':
+                $filesize = (int)(floatval($filesize) * 1024 * 1024);
+                break;
 
-        case 'g':
-            $filesize = (int) (floatval($filesize) * 1024 * 1024 * 1024);
-            break;
+            case 'g':
+                $filesize = (int)(floatval($filesize) * 1024 * 1024 * 1024);
+                break;
 
-        default:
-            $filesize = (int) ($filesize);
-            break;
+            default:
+                $filesize = (int)($filesize);
+                break;
         }
 
         $postsize = ini_get('post_max_size');
         switch (strtolower(substr($postsize, -1, 1))) {
-        case 'k':
-            $postsize = (int) (floatval($postsize) * 1024);
-            break;
+            case 'k':
+                $postsize = (int)(floatval($postsize) * 1024);
+                break;
 
-        case 'm':
-            $postsize = (int) (floatval($postsize) * 1024 * 1024);
-            break;
+            case 'm':
+                $postsize = (int)(floatval($postsize) * 1024 * 1024);
+                break;
 
-        case 'g':
-            $postsize = (int) (floatval($postsize) * 1024 * 1024 * 1024);
-            break;
+            case 'g':
+                $postsize = (int)(floatval($postsize) * 1024 * 1024 * 1024);
+                break;
 
-        default:
-            $postsize = (int) ($postsize);
-            break;
+            default:
+                $postsize = (int)($postsize);
+                break;
         }
 
         return min($filesize, $postsize);
@@ -1107,12 +1114,14 @@ class Horde_Browser
      * Determines if the file was uploaded or not.  If not, will return the
      * appropriate error message.
      *
-     * @param string $field  The name of the field containing the uploaded
+     * @param string $field The name of the field containing the uploaded
      *                       file.
-     * @param string $name   The file description string to use in the error
+     * @param string $name The file description string to use in the error
      *                       message.  Default: 'file'.
      *
      * @throws Horde_Browser_Exception
+     *
+     * @deprecated Not in use - erroneous
      */
     public function wasFileUploaded($field, $name = null)
     {
@@ -1145,31 +1154,37 @@ class Horde_Browser
         }
 
         if (empty($_FILES) || ($error == UPLOAD_ERR_NO_FILE)) {
-            throw new Horde_Browser_Exception(sprintf(Horde_Browser_Translation::t("There was a problem with the file upload: No %s was uploaded."), $name), UPLOAD_ERR_NO_FILE);
+            throw new Horde_Browser_Exception(sprintf(Horde_Browser_Translation::t("There was a problem with the file upload: No %s was uploaded."),
+                $name), UPLOAD_ERR_NO_FILE);
         } elseif (($error == UPLOAD_ERR_OK) && is_uploaded_file($tmp_name)) {
             if (!filesize($tmp_name)) {
-                throw new Horde_Browser_Exception(Horde_Browser_Translation::t("The uploaded file appears to be empty. It may not exist on your computer."), UPLOAD_ERR_NO_FILE);
+                throw new Horde_Browser_Exception(Horde_Browser_Translation::t("The uploaded file appears to be empty. It may not exist on your computer."),
+                    UPLOAD_ERR_NO_FILE);
             }
             // SUCCESS
-        } elseif (($error == UPLOAD_ERR_INI_SIZE) ||
-                  ($error == UPLOAD_ERR_FORM_SIZE)) {
-            throw new Horde_Browser_Exception(sprintf(Horde_Browser_Translation::t("There was a problem with the file upload: The %s was larger than the maximum allowed size (%d bytes)."), $name, $uploadSize), $error);
+        } elseif (($error == UPLOAD_ERR_INI_SIZE) || ($error == UPLOAD_ERR_FORM_SIZE)) {
+            throw new Horde_Browser_Exception(sprintf(Horde_Browser_Translation::t("There was a problem with the file upload: The %s was larger than the maximum allowed size (%d bytes)."),
+                $name, $uploadSize), $error);
         } elseif ($error == UPLOAD_ERR_PARTIAL) {
-            throw new Horde_Browser_Exception(sprintf(Horde_Browser_Translation::t("There was a problem with the file upload: The %s was only partially uploaded."), $name), $error);
+            throw new Horde_Browser_Exception(sprintf(Horde_Browser_Translation::t("There was a problem with the file upload: The %s was only partially uploaded."),
+                $name), $error);
         }
     }
 
     /**
      * Returns the headers for a browser download.
      *
-     * @param string $filename  The filename of the download.
-     * @param string $cType     The content-type description of the file.
-     * @param boolean $inline   True if inline, false if attachment.
-     * @param string $cLength   The content-length of this file.
+     * @param string $filename The filename of the download.
+     * @param string $cType The content-type description of the file.
+     * @param boolean $inline True if inline, false if attachment.
+     * @param string $cLength The content-length of this file.
      */
-    public function downloadHeaders($filename = 'unknown', $cType = null,
-                             $inline = false, $cLength = null)
-    {
+    public function downloadHeaders(
+        $filename = 'unknown',
+        $cType = null,
+        $inline = false,
+        $cLength = null
+    ) {
         /* Remove linebreaks from file names. */
         $filename = str_replace(array("\r\n", "\r", "\n"), ' ', $filename);
 
@@ -1217,8 +1232,7 @@ class Horde_Browser
 
         /* Content-Length Header. Only send if we are not compressing
          * output. */
-        if ($cLength !== null &&
-            !in_array('ob_gzhandler', ob_list_handlers())) {
+        if ($cLength !== null && !in_array('ob_gzhandler', ob_list_handlers())) {
             header('Content-Length: ' . $cLength);
         }
 
@@ -1233,7 +1247,7 @@ class Horde_Browser
     /**
      * Determines if a browser can display a given MIME type.
      *
-     * @param string $mimetype  The MIME type to check.
+     * @param string $mimetype The MIME type to check.
      *
      * @return boolean  True if the browser can display the MIME type.
      */
@@ -1259,9 +1273,8 @@ class Horde_Browser
             /* image/jpeg and image/pjpeg *appear* to be the same entity, but
              * Mozilla doesn't seem to want to accept the latter.  For our
              * purposes, we will treat them the same. */
-            if ($this->isBrowser('mozilla') &&
-                ($mimetype == 'image/pjpeg') &&
-                (strpos($this->_accept, 'image/jpeg') !== false)) {
+            if ($this->isBrowser('mozilla') && ($mimetype == 'image/pjpeg') && (strpos($this->_accept,
+                        'image/jpeg') !== false)) {
                 return true;
             }
 
