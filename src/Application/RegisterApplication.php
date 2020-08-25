@@ -27,7 +27,7 @@ namespace Ampache\Application;
 
 use AmpConfig;
 use AmpError;
-use captcha;
+use Ampache\Module\Util\Captcha\captcha;
 use Core;
 use Mailer;
 use Registration;
@@ -50,7 +50,7 @@ final class RegisterApplication implements ApplicationInterface
         if (AmpConfig::get('captcha_public_reg')) {
             define("CAPTCHA_INVERSE", 1);
             define("CAPTCHA_BASE_URL", AmpConfig::get('web_path') . '/modules/captcha/captcha.php');
-            require_once __DIR__ . '/../../modules/captcha/captcha.php';
+            require_once __DIR__ . '/../../src/Module/Util/Captcha/init.php';
         }
 
         // Switch on the actions
