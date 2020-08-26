@@ -25,17 +25,16 @@ use Ampache\Model\Metadata\Repository\MetadataField;
 
 /**
  * update_preferences
- * grabs the current keys that should be added
- * and then runs throught $_REQUEST looking for those
- * values and updates them for this user
+ * grabs the current keys that should be added and then runs
+ * through $_REQUEST looking for those values and updates them for this user
  * @param integer $user_id
  */
 function update_preferences($user_id = 0)
 {
-    /* Get current keys */
+    // Get current keys
     $sql = "SELECT `id`, `name`, `type` FROM `preference`";
 
-    /* If it isn't the System Account's preferences */
+    // If it isn't the System Account's preferences
     if ($user_id != '-1') {
         $sql .= " WHERE `catagory` != 'system'";
     }
@@ -48,22 +47,22 @@ function update_preferences($user_id = 0)
         $results[] = array('id' => $row['id'], 'name' => $row['name'], 'type' => $row['type']);
     } // end collecting keys
 
-    /* Foreach through possible keys and assign them */
+    // Foreach through possible keys and assign them
     foreach ($results as $data) {
-        /* Get the Value from POST/GET var called $data */
-        $name            = (string) $data['name'];
-        $apply_to_all    = 'check_' . $data['name'];
-        $new_level       = 'level_' . $data['name'];
-        $pref_id         = $data['id'];
-        $value           = (string) scrub_in($_REQUEST[$name]);
+        // Get the Value from POST/GET var called $data
+        $name         = (string) $data['name'];
+        $apply_to_all = 'check_' . $data['name'];
+        $new_level    = 'level_' . $data['name'];
+        $pref_id      = $data['id'];
+        $value        = scrub_in($_REQUEST[$name]);
 
-        /* Some preferences require some extra checks to be performed */
+        // Some preferences require some extra checks to be performed
         switch ($name) {
             case 'transcode_bitrate':
                 $value = (string) Stream::validate_bitrate($value);
-            break;
+                break;
             default:
-            break;
+                break;
         }
 
         if (preg_match('/_pass$/', $name)) {
@@ -71,12 +70,12 @@ function update_preferences($user_id = 0)
                 unset($_REQUEST[$name]);
             } else {
                 if (preg_match('/md5_pass$/', $name)) {
-                    $value = md5($value);
+                    $value = md5((string) $value);
                 }
             }
         }
 
-        /* Run the update for this preference only if it's set */
+        // Run the update for this preference only if it's set
         if (isset($_REQUEST[$name])) {
             Preference::update($pref_id, $user_id, $value, $_REQUEST[$apply_to_all]);
         }
@@ -104,19 +103,19 @@ function update_preference($user_id, $name, $pref_id, $value)
     $apply_check = "check_" . $name;
     $level_check = "level_" . $name;
 
-    /* First see if they are an administrator and we are applying this to everything */
+    // First see if they are an administrator and we are applying this to everything
     if (Core::get_global('user')->has_access(100) && make_bool($_REQUEST[$apply_check])) {
         Preference::update_all($pref_id, $value);
 
         return true;
     }
 
-    /* Check and see if they are an admin and the level def is set */
+    // Check and see if they are an admin and the level def is set
     if (Core::get_global('user')->has_access(100) && make_bool($_REQUEST[$level_check])) {
         Preference::update_level($pref_id, $_REQUEST[$level_check]);
     }
 
-    /* Else make sure that the current users has the right to do this */
+    // Else make sure that the current users has the right to do this
     if (Preference::has_access($name)) {
         $sql = "UPDATE `user_preference` SET `value` = ? WHERE `preference` = ? AND `user` = ?";
         Dba::write($sql, array($value, $pref_id, $user_id));

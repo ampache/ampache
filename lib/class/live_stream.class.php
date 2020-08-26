@@ -258,7 +258,7 @@ class Live_Stream extends database_object implements media, library_item
         }
 
         $sql = "UPDATE `live_stream` SET `name` = ?,`site_url` = ?,`url` = ?, codec = ? WHERE `id` = ?";
-        Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $data['codec'], $this->id));
+        Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], strtolower((string) $data['codec']), $this->id));
 
         return $this->id;
     } // update
@@ -309,7 +309,7 @@ class Live_Stream extends database_object implements media, library_item
         $sql = "INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) " .
             "VALUES (?, ?, ?, ?, ?)";
 
-        return Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $catalog->id, $data['codec']));
+        return Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $catalog->id, strtolower((string) $data['codec'])));
     } // create
 
     /**

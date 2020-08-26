@@ -125,7 +125,7 @@ input[type=submit]:focus:active {
     border-color: #ff9d00;
 }
 
-#headerbox  select {
+#headerbox select {
     color: #555;
 }
 

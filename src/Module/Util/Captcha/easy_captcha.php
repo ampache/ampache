@@ -265,7 +265,9 @@ class easy_captcha
     public function save()
     {
         $this->straighten_temp_dir();
-        if ($filepath == $this->data_file()) {
+
+        $filepath = $this->data_file();
+        if ($filepath) {
             $this->saved = file_put_contents($filepath, serialize($this), LOCK_EX);
         }
     }

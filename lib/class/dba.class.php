@@ -589,8 +589,8 @@ class Dba
             $sql              = "DESCRIBE `" . $row['0'] . "`";
             $describe_results = self::read($sql);
 
-            // Change the tables default charset and colliation
-            $sql = "ALTER TABLE `" . $row['0'] . "` DEFAULT CHARACTER SET $target_charset COLLATE $target_collation $engine_sql";
+            // Change the tables default charset and collation
+            $sql = "ALTER TABLE `" . $row['0'] . "` CONVERT TO CHARACTER SET $target_charset COLLATE $target_collation $engine_sql";
             self::write($sql);
 
             // Iterate through the columns of the table
