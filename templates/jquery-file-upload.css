@@ -117,14 +117,19 @@
     margin: 0 auto 0 auto;
     border-radius: 0;
     padding: 0;
-    overflow: hidden; }
+    overflow: hidden;
+}
+
 #tree {
     float: right;
     min-width: 600px;
     border-right: 1px solid silver;
     overflow: auto;
-    padding: 0 0; }
+    padding: 0 0;
+}
+
 #data { float: left; }
+
 #data textarea {
     margin: 0;
     padding: 0;
@@ -133,4 +138,5 @@
     border: 0;
     display: block;
     line-height: 18px;
-    resize: none; }
+    resize: none;
+}
