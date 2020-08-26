@@ -41,6 +41,7 @@ If you choose to use utf8mb4 Ampache will convert your table engine to InnoDB to
 * Sort 'Playlist' and 'Smart Platlist' browse pages by name
 * Display the blankuser avatar in now playing if missing
 * Swap 'Random' and 'Playlists' in the sidebar (css order numbers)
+* Don't hide artist art when you disable lastfm_api_key in the config
 
 ### Deprecated
 

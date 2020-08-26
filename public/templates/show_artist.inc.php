@@ -33,47 +33,38 @@ if ($directplay_limit > 0) {
 } ?>
 <?php
 UI::show_box_top($artist->f_name, 'info-box'); ?>
-<?php
-if (AmpConfig::get('lastfm_api_key')) {
+<div class="item_right_info">
+    <div class="external_links">
+        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('google', T_('Search on Google ...')); ?></a>
+        <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode($artist->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
+        <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($artist->f_name); ?>%22&go=Go" target="_blank"><?php echo UI::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
+        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22&type=artist" target="_blank"><?php echo UI::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
+    </div>
+    <?php if (AmpConfig::get('lastfm_api_key')) {
     echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=artist_info&artist=' . $artist->id, 'artist_info')); ?>
-    <div class="item_right_info">
-        <div class="external_links">
-            <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('google', T_('Search on Google ...')); ?></a>
-            <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode($artist->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
-            <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($artist->f_name); ?>%22&go=Go" target="_blank"><?php echo UI::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
-            <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22&type=artist" target="_blank"><?php echo UI::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
-        </div>
         <div id="artist_biography">
             <?php echo T_('Loading...'); ?>
         </div>
-<?php
-} else { ?>
-    <div class="item_right_info">
-        <div class="external_links">
-            <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('google', T_('Search on Google ...')); ?></a>
-            <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode($artist->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
-            <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($artist->f_name); ?>%22&go=Go" target="_blank"><?php echo UI::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
-            <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22&type=artist" target="_blank"><?php echo UI::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
-        </div>
-<?php
-    $thumb = UI::is_grid_view('artist') ? 2 : 11;
-    Art::display('artist', $artist->id, $artist->f_name, $thumb);
-} ?>
-    </div>
+    <?php
+} else {
+        $thumb = UI::is_grid_view('artist') ? 2 : 11;
+        Art::display('artist', $artist->id, $artist->f_name, $thumb);
+    } ?>
+</div>
 
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) {
-    $rating = new Rating($artist->id, 'artist'); ?>
+        $rating = new Rating($artist->id, 'artist'); ?>
     <div id="rating_<?php echo (int) ($artist->id); ?>_artist" style="display:inline;">
         <?php show_rating($artist->id, 'artist');
-    $average = $rating->get_average_rating();
-    if ($average > 0) {
-        /* HINT: Average rating. e.g. (average 3.7) */
-        echo '(' . T_('average') . ' ' . $average . ')';
-    } ?>
+        $average = $rating->get_average_rating();
+        if ($average > 0) {
+            /* HINT: Average rating. e.g. (average 3.7) */
+            echo '(' . T_('average') . ' ' . $average . ')';
+        } ?>
     </div>
     <?php
-} ?>
+    } ?>
     <?php if (AmpConfig::get('userflags')) { ?>
     <div style="display:table-cell;" id="userflag_<?php echo $artist->id; ?>_artist">
             <?php Userflag::show($artist->id, 'artist'); ?>
