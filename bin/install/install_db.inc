@@ -27,11 +27,8 @@ if(php_sapi_name() != 'cli') {
 define('NO_SESSION', 1);
 define('CLI', 1);
 
-$path   = dirname(__FILE__);
-$prefix = realpath(__DIR__ . '/../../');
-$a_root = realpath(__DIR__ . '/../../');
-require_once $a_root . '/lib/init-tiny.php';
-require_once $a_root . '/lib/install.lib.php';
+require_once __DIR__ . '/../../lib/init-tiny.php';
+require_once __DIR__ . '/../../lib/install.lib.php';
 
 $options = getopt(
     'h:d:fp:P:u:U:w:',

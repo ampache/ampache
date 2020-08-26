@@ -80,8 +80,7 @@ Recommendation::garbage_collection();
 /**
  * Run compute_cache
  */
-$a_root = realpath(__DIR__ . "/../");
-require_once $a_root . '/bin/compute_cache.inc';
+require_once __DIR__ . '/compute_cache.inc';
 
 /**
  * ping your channels to keep them alive
