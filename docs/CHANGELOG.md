@@ -40,6 +40,8 @@ If you choose to use utf8mb4 Ampache will convert your table engine to InnoDB to
 * Search items rearranged to try to match each other
 * Sort 'Playlist' and 'Smart Platlist' browse pages by name
 * Display the blankuser avatar in now playing if missing
+* Swap 'Random' and 'Playlists' in the sidebar (css order numbers)
+* Don't hide artist art when you disable lastfm_api_key in the config
 
 ### Deprecated
 
@@ -62,6 +64,8 @@ If you choose to use utf8mb4 Ampache will convert your table engine to InnoDB to
 * Search by 'Smart Playlist' rules fixed when added with other rules
 * Use LEFT JOIN instead of HAVING for search rules to allow more complicated lists
 * Logic searching 'My Rating' includes unrated (0 Stars) in a better way
+* Captcha was not generated for registration
+* Enforce lowercase codec for live streams
 
 ### Security
 

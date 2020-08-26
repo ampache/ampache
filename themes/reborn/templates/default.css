@@ -349,7 +349,7 @@ div#autoupdate > span {
     border-radius: 15px;
 }
 
-#headerbox  select {
+#headerbox select {
     min-width: 150px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -740,7 +740,7 @@ div#autoupdate > span {
     order: 20;
 }
 
-.sb2_random {
+.sb2_playlist {
     order: 30;
 }
 
@@ -748,7 +748,7 @@ div#autoupdate > span {
     order: 40;
 }
 
-.sb2_playlist {
+.sb2_random {
     order: 50;
 }
 
@@ -811,6 +811,7 @@ span#sidebar-header-content::after {
     top: 33px !important;
     right: 15px !important;
 }
+
 /* ---------------------------- */
 
 #rightbar #rb_action {
