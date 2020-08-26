@@ -40,6 +40,7 @@ If you choose to use utf8mb4 Ampache will convert your table engine to InnoDB to
 * Search items rearranged to try to match each other
 * Sort 'Playlist' and 'Smart Platlist' browse pages by name
 * Display the blankuser avatar in now playing if missing
+* Swap 'Random' and 'Playlists' in the sidebar (css order numbers)
 
 ### Deprecated
 

@@ -740,7 +740,7 @@ div#autoupdate > span {
     order: 20;
 }
 
-.sb2_random {
+.sb2_playlist {
     order: 30;
 }
 
@@ -748,7 +748,7 @@ div#autoupdate > span {
     order: 40;
 }
 
-.sb2_playlist {
+.sb2_random {
     order: 50;
 }
 
