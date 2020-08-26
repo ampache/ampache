@@ -17,7 +17,7 @@
     height: 100%;
 }
 
-.editdialogstyle.ui-dialog  .ui-dialog-titlebar {
+.editdialogstyle.ui-dialog .ui-dialog-titlebar {
     background: rgba(255, 255, 255, 0.1) none;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
@@ -160,7 +160,7 @@
     cursor: pointer;
 }
 
-.playlistdialogstyle.ui-dialog  .ui-dialog-titlebar {
+.playlistdialogstyle.ui-dialog .ui-dialog-titlebar {
     display: none;
 }
 
@@ -220,7 +220,7 @@
     cursor: pointer;
 }
 
-.broadcastsdialogstyle.ui-dialog  .ui-dialog-titlebar {
+.broadcastsdialogstyle.ui-dialog .ui-dialog-titlebar {
     display: none;
 }
 
@@ -280,11 +280,11 @@
     cursor: pointer;
 }
 
-.sharedialogstyle.ui-dialog  .ui-dialog-titlebar {
+.sharedialogstyle.ui-dialog .ui-dialog-titlebar {
     display: none;
 }
 
-.sharedialogstyle.ui-dialog  .ui-dialog-title {
+.sharedialogstyle.ui-dialog .ui-dialog-title {
     display: none;
 }
 

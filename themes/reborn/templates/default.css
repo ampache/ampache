@@ -349,7 +349,7 @@ div#autoupdate > span {
     border-radius: 15px;
 }
 
-#headerbox  select {
+#headerbox select {
     min-width: 150px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -811,6 +811,7 @@ span#sidebar-header-content::after {
     top: 33px !important;
     right: 15px !important;
 }
+
 /* ---------------------------- */
 
 #rightbar #rb_action {

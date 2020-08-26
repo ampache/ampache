@@ -70,7 +70,7 @@ function update_preferences($user_id = 0)
                 unset($_REQUEST[$name]);
             } else {
                 if (preg_match('/md5_pass$/', $name)) {
-                    $value = md5($value);
+                    $value = md5((string) $value);
                 }
             }
         }

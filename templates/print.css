@@ -48,28 +48,64 @@ pre {
   display: block;
 }
 
-li { display: list-item; }
-head { display: none; }
-table { display: block; }
-tr { display: table-row; }
-thead { display: table-header-group; }
-tbody { display: table-row-group; }
-tfoot { display: table-footer-group; }
-col { display: table-column; }
-colgroup { display: table-column-group; }
+li {
+  display: list-item;
+}
+head {
+  display: none;
+}
+table {
+  display: block;
+}
+tr {
+  display: table-row;
+}
+thead {
+  display: table-header-group;
+}
+tbody {
+  display: table-row-group;
+}
+tfoot {
+  display: table-footer-group;
+}
+col {
+  display: table-column;
+}
+colgroup {
+  display: table-column-group;
+}
 
 td,
 th {
   display: table-cell;
 }
 
-caption { display: table-caption; }
-th { font-weight: bolder; text-align: center; }
-caption { text-align: center; }
-body { margin: 8px; }
-h1 { font-size: 2em; margin: 0.67em 0; }
-h2 { font-size: 1.5em; margin: 0.75em 0; }
-h3 { font-size: 1.17em; margin: 0.83em 0; }
+caption {
+  display: table-caption;
+}
+th {
+  font-weight: bolder;
+  text-align: center;
+}
+caption {
+  text-align: center;
+}
+body {
+  margin: 8px;
+}
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+h2 {
+  font-size: 1.5em;
+  margin: 0.75em 0;
+}
+h3 {
+  font-size: 1.17em;
+  margin: 0.83em 0;
+}
 
 h4,
 p,
@@ -84,8 +120,14 @@ menu {
   margin: 1.12em 0;
 }
 
-h5 { font-size: 0.83em; margin: 1.5em 0; }
-h6 { font-size: 0.75em; margin: 1.67em 0; }
+h5 {
+  font-size: 0.83em;
+  margin: 1.5em 0;
+}
+h6 {
+  font-size: 0.75em;
+  margin: 1.67em 0;
+}
 
 h1,
 h2,
@@ -98,7 +140,10 @@ strong {
   font-weight: bolder;
 }
 
-blockquote { margin-left: 40px; margin-right: 40px; }
+blockquote {
+  margin-left: 40px;
+  margin-right: 40px;
+}
 
 i,
 cite,
@@ -191,19 +236,31 @@ center { text-align: center; }
   text-decoration: underline;
 }
 
-/* :focus { outline: thin invert; } */
-
 /* Begin bidirectionality settings (do not change) */
 
-bdo[DIR="ltr"] { direction: ltr; unicode-bidi: bidi-override; }
-bdo[DIR="rtl"] { direction: rtl; unicode-bidi: bidi-override; }
+bdo[DIR="ltr"] {
+  direction: ltr;
+  unicode-bidi: bidi-override;
+}
+bdo[DIR="rtl"] {
+  direction: rtl;
+  unicode-bidi: bidi-override;
+}
 
-*[DIR="ltr"] { direction: ltr; unicode-bidi: embed; }
-*[DIR="rtl"] { direction: rtl; unicode-bidi: embed; }
+*[DIR="ltr"] {
+  direction: ltr;
+  unicode-bidi: embed;
+}
+*[DIR="rtl"] {
+  direction: rtl;
+  unicode-bidi: embed;
+}
 
 @media print {
 
-  h1 { page-break-before: always; }
+  h1 {
+    page-break-before: always;
+  }
 
   h1,
   h2,
