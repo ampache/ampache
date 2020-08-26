@@ -32,10 +32,8 @@ $options = getopt("x");
 $debug = !array_key_exists('x', $options);
 
 define('NO_SESSION', '1');
-$path   = dirname(__FILE__);
-$prefix = realpath($path . '/../');
-$a_root = realpath(__DIR__ . "/../");
-require_once $a_root . '/lib/init.php';
+
+require_once __DIR__ . '/../lib/init.php';
 
 if ($debug) {
     echo "\n" . T_('Running in Debug Mode. Use -x to execute') . "\n\n";

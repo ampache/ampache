@@ -26,10 +26,8 @@ define('CLI', 1);
 $chunk_buffer        = '';
 $nb_chunks_remainder = 0;
 
-$path   = dirname(__FILE__);
-$prefix = realpath($path . '/../');
-$a_root = realpath(__DIR__ . "/../");
-require_once $a_root . '/lib/init.php';
+require_once __DIR__ . '/../lib/init.php';
+
 ob_end_flush();
 
 $metadata_interval = 16000;

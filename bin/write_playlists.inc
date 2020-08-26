@@ -22,9 +22,8 @@
 
 define('NO_SESSION', '1');
 
-$path   = dirname(__FILE__);
-$prefix = realpath($path . '/../');
-require_once($prefix . '/lib/init.php');
+
+require_once __DIR__ . '/../lib/init.php';
 
 $valid_exts = array('m3u', 'xspf', 'pls');
 
@@ -86,11 +85,11 @@ foreach ($items as $item) {
     $plstr = $pl->{'get_' . $ext . '_string'}();
     if (file_put_contents($filename, $plstr) === false) {
         /* HINT: playlist (file path) */
-        sprintf(T_('There was a problem creating the playlist file "%s"'), $path);
+        sprintf(T_('There was a problem creating the playlist file "%s"'), $filename);
         echo "\n";
     } else {
         /* HINT: playlist (file path) */
-        sprintf(T_('Playlist created "%s"'), $path);
+        sprintf(T_('Playlist created "%s"'), $filename);
         echo "\n";
     }
 }

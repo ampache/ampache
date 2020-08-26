@@ -21,10 +21,9 @@
  */
 
 define('NO_SESSION', '1');
-$path   = dirname(__FILE__);
-$prefix = realpath($path . '/../');
-$a_root = realpath(__DIR__ . "/../");
-require_once $a_root . '/lib/init.php';
+
+require_once __DIR__ . '/../lib/init.php';
+
 $version = "1.0";
 
 if (count(Core::get_global('argv')) != 2) {
