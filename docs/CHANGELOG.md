@@ -63,6 +63,7 @@ If you choose to use utf8mb4 Ampache will convert your table engine to InnoDB to
 * Use LEFT JOIN instead of HAVING for search rules to allow more complicated lists
 * Logic searching 'My Rating' includes unrated (0 Stars) in a better way
 * Captcha was not generated for registration
+* Enforce lowercase codec for live streams
 
 ### Security
 
