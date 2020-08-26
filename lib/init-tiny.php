@@ -81,11 +81,6 @@ require_once __DIR__ . '/ui.lib.php';
 require_once __DIR__ . '/i18n.php';
 require_once __DIR__ . '/batch.lib.php';
 require_once __DIR__ . '/themes.php';
-require_once __DIR__ . '/class/localplay_controller.abstract.php';
-require_once __DIR__ . '/class/media.interface.php';
-require_once __DIR__ . '/class/playable_item.interface.php';
-require_once __DIR__ . '/class/library_item.interface.php';
-require_once __DIR__ . '/class/playlist_object.abstract.php';
 
 /* Set up the flip class */
 UI::flip_class(array('odd', 'even'));

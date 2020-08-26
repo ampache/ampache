@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Model\Media;
+
 /**
  * Subsonic Catalog Class
  *
@@ -425,7 +427,7 @@ class Catalog_subsonic extends Catalog
 
     /**
      * @param Podcast_Episode|Song|Song_Preview|Video $media
-     * @return media|null
+     * @return Media|null
      */
     public function prepare_media($media)
     {

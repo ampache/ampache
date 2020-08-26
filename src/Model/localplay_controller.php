@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -19,6 +19,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+namespace Ampache\Model;
+
+use AmpConfig;
+use Stream_URL;
 
 /**
  * localplay_controller Class
@@ -40,15 +45,25 @@ abstract class localplay_controller
      * @return mixed
      */
     abstract public function delete_track($object_id); // Takes a single object_id and removes it from the playlist
+
     abstract public function play();
+
     abstract public function stop();
+
     abstract public function get();
+
     abstract public function connect();
+
     abstract public function status();
+
     abstract public function get_version(); // Returns the version of this plugin
+
     abstract public function get_description(); // Returns the description
+
     abstract public function is_installed(); // Returns an boolean t/f
+
     abstract public function install();
+
     abstract public function uninstall();
 
     // For display we need the following 'instance' functions
@@ -71,7 +86,9 @@ abstract class localplay_controller
      * @return mixed
      */
     abstract public function update_instance($uid, $post);
+
     abstract public function get_instances();
+
     abstract public function instance_fields();
 
     /**
@@ -80,6 +97,7 @@ abstract class localplay_controller
      * @return mixed
      */
     abstract public function set_active_instance($uid, $user_id);
+
     abstract public function get_active_instance();
 
     /**
@@ -130,19 +148,22 @@ abstract class localplay_controller
         if (AmpConfig::get('stream_beautiful_url')) {
             preg_match('/oid\/(.*?)\//', $url, $match);
             if ($match[1]) {
-                return array('primary_key' => 'oid',
+                return array(
+                    'primary_key' => 'oid',
                     'oid' => $match[1]
                 );
             }
             preg_match('/demo_id\/(.*?)\//', $url, $match);
             if ($match[1]) {
-                return array('primary_key' => 'demo_id',
+                return array(
+                    'primary_key' => 'demo_id',
                     'oid' => $match[1]
                 );
             }
             preg_match('/random\/(.*?)\//', $url, $match);
             if ($match[1]) {
-                return array('primary_key' => 'random',
+                return array(
+                    'primary_key' => 'random',
                     'type' => $match[1]
                 );
             }

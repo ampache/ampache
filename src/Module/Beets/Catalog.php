@@ -28,8 +28,8 @@ use AmpConfig;
 use AmpError;
 use Ampache\Model\Metadata\Repository\Metadata;
 use Ampache\Model\Metadata\Repository\MetadataField;
-use library_item;
-use media;
+use Ampache\Model\library_item;
+use Ampache\Model\Media;
 use UI;
 use Dba;
 use Song;
@@ -85,8 +85,8 @@ abstract class Catalog extends \Catalog
 
     /**
      *
-     * @param media $media
-     * @return media
+     * @param Media $media
+     * @return Media
      */
     public function prepare_media($media)
     {
@@ -181,7 +181,7 @@ abstract class Catalog extends \Catalog
 
     /**
      * Get rid of all tags found in the libraryItem
-     * @param library_item $libraryItem
+     * @param \Ampache\Model\library_item $libraryItem
      * @param array $metadata
      * @return array
      */

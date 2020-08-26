@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Model\Media;
+
 /**
  * Remote Catalog Class
  *
@@ -401,7 +403,7 @@ class Catalog_remote extends Catalog
 
     /**
      * @param Podcast_Episode|Song|Song_Preview|Video $media
-     * @return boolean|media|null
+     * @return boolean|Media|null
      * @throws Exception
      */
     public function prepare_media($media)

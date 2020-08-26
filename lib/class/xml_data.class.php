@@ -21,6 +21,8 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Model\library_item;
+
 /**
  * XML_Data Class
  *

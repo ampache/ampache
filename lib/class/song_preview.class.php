@@ -3,6 +3,8 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
 use Ampache\Model\database_object;
+use Ampache\Model\Media;
+use Ampache\Model\playable_item;
 
 /**
  *
@@ -24,7 +26,7 @@ use Ampache\Model\database_object;
  *
  */
 
-class Song_Preview extends database_object implements media, playable_item
+class Song_Preview extends database_object implements Media, playable_item
 {
     public $id;
     public $file;

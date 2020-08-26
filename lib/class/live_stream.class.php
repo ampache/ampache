@@ -22,6 +22,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Model\database_object;
+use Ampache\Model\library_item;
+use Ampache\Model\Media;
 
 /**
  * Radio Class
@@ -30,7 +32,7 @@ use Ampache\Model\database_object;
  * this can include podcasts or what-have-you
  *
  */
-class Live_Stream extends database_object implements media, library_item
+class Live_Stream extends database_object implements Media, library_item
 {
     /* DB based variables */
 

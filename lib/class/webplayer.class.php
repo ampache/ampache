@@ -2,6 +2,8 @@
 declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
+use Ampache\Model\Media;
+use Ampache\Model\playable_item;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 
 /**
@@ -94,7 +96,7 @@ class WebPlayer
     /**
      * Check if the playlist is a video playlist.
      * @param array $urlinfo
-     * @return media|null
+     * @return Media|null
      */
     public static function get_media_object($urlinfo)
     {
@@ -163,7 +165,7 @@ class WebPlayer
 
     /**
      * Check if we can transcode this file type
-     * @param media $media
+     * @param Media $media
      * @param string $file_type
      * @param array $types
      * @param array $urlinfo

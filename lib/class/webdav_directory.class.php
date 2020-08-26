@@ -21,6 +21,8 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Model\library_item;
+use Ampache\Model\Media;
 use Sabre\DAV;
 
 /**
@@ -102,7 +104,7 @@ class WebDAV_Directory extends DAV\Collection
             throw new DAV\Exception\NotFound('The library item `' . $array['object_type'] . '` with id `' . $array['object_id'] . '` could not be found');
         }
 
-        if ($libitem instanceof media) {
+        if ($libitem instanceof Media) {
             return new WebDAV_File($libitem);
         } else {
             return new WebDAV_Directory($libitem);

@@ -24,9 +24,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
-use library_item;
-use media;
-use playable_item;
+use Ampache\Model\library_item;
+use Ampache\Model\Media;
+use Ampache\Model\playable_item;
 
 /**
  * Provides utility methods to check whether an object implements a certain interface
@@ -47,7 +47,7 @@ final class InterfaceImplementationChecker
                 $interface_name,
                 array_map(
                     static function (string $name): string {
-                        return strtolower($name);
+                        return $name;
                     },
                     class_implements($instance)
                 )
@@ -78,6 +78,6 @@ final class InterfaceImplementationChecker
      */
     public static function is_media(string $instance): bool
     {
-        return self::is_class_typeof($instance, media::class);
+        return self::is_class_typeof($instance, Media::class);
     }
 }

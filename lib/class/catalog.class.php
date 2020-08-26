@@ -22,6 +22,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Model\database_object;
+use Ampache\Model\library_item;
+use Ampache\Model\Media;
 use Ampache\Model\Metadata\Repository\Metadata;
 use Ampache\Model\Metadata\Repository\MetadataField;
 
@@ -194,7 +196,7 @@ abstract class Catalog extends database_object
 
     /**
      * @param Song|Podcast_Episode|Song_Preview|Video $media
-     * @return media|null
+     * @return Media|null
      */
     abstract public function prepare_media($media);
 

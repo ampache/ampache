@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,8 +20,15 @@
  *
  */
 
-use Ampache\Model\database_object;
+namespace Ampache\Model;
+
+use Access;
 use Ampache\Module\Util\InterfaceImplementationChecker;
+use AmpConfig;
+use Art;
+use Core;
+use UI;
+use User;
 
 /**
  * playlist_object
@@ -173,7 +180,7 @@ abstract class playlist_object extends database_object implements library_item
      */
     public function search_childrens($name)
     {
-        debug_event('playlist_object.abstract', 'search_childrens ' . $name, 5);
+        debug_event('Ampache\Model\playlist_object.abstract', 'search_childrens ' . $name, 5);
 
         return array();
     }

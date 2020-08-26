@@ -21,6 +21,7 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Model\Media;
 use Sabre\DAV;
 
 /**
@@ -35,9 +36,9 @@ class WebDAV_File extends DAV\File
 
     /**
      * WebDAV_File constructor.
-     * @param media $libitem
+     * @param Media $libitem
      */
-    public function __construct(media $libitem)
+    public function __construct(Media $libitem)
     {
         $this->libitem = $libitem;
         $this->libitem->format();

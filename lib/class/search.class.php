@@ -22,6 +22,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Model\Metadata\Repository\MetadataField;
+use Ampache\Model\playlist_object;
 
 /**
  * Search Class

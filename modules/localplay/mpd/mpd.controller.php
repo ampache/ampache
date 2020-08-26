@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Model\localplay_controller;
+
 /**
  * AmpacheMpd Class
  *

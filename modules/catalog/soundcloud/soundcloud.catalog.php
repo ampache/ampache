@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Model\Media;
+
 /**
  * SoundCloud Catalog Class
  *
@@ -465,7 +467,7 @@ class Catalog_soundcloud extends Catalog
 
     /**
      * @param Podcast_Episode|Song|Song_Preview|Video $media
-     * @return media|null
+     * @return Media|null
      */
     public function prepare_media($media)
     {

@@ -27,6 +27,8 @@
  *
  */
 
+use Ampache\Model\Media;
+
 require_once('SeafileAdapter.php');
 
 /**
@@ -432,7 +434,7 @@ class Catalog_Seafile extends Catalog
     }
 
     /**
-     * @param media $media
+     * @param Media $media
      * @param array $gather_types
      * @param string $sort_pattern
      * @param string $rename_pattern
@@ -542,7 +544,7 @@ class Catalog_Seafile extends Catalog
 
     /**
      * @param Podcast_Episode|Song|Song_Preview|Video $media
-     * @return media|Podcast_Episode|Song|Song_Preview|Video|null
+     * @return Media|Podcast_Episode|Song|Song_Preview|Video|null
      */
     public function prepare_media($media)
     {

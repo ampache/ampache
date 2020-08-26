@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Media;
 use Kunnu\Dropbox\DropboxApp;
 use Kunnu\Dropbox\Dropbox;
 use Kunnu\Dropbox\DropboxFile;
@@ -642,7 +643,7 @@ class Catalog_dropbox extends Catalog
 
     /**
      * @param Podcast_Episode|Song|Song_Preview|Video $media
-     * @return media|Podcast_Episode|Song|Song_Preview|Video|null
+     * @return Media|Podcast_Episode|Song|Song_Preview|Video|null
      */
     public function prepare_media($media)
     {

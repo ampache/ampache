@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Ampache\Module\Util;
 
 use Channel;
-use library_item;
-use media;
+use Ampache\Model\library_item;
+use Ampache\Model\Media;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use playable_item;
+use Ampache\Model\playable_item;
 use Song_Preview;
 
 class InterfaceImplementationCheckerTest extends MockeryTestCase
@@ -52,7 +52,7 @@ class InterfaceImplementationCheckerTest extends MockeryTestCase
 
     public function testIsMediaReturnsTrueIfImplemented(): void
     {
-        $instance = Mockery::mock(Channel::class, media::class);
+        $instance = Mockery::mock(Channel::class, Media::class);
 
         $this->assertTrue(
             InterfaceImplementationChecker::is_media(get_class($instance))

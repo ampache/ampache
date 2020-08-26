@@ -21,6 +21,8 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Model\playlist_object;
+
 /**
  * Playlist Class
  * This class handles playlists in ampache. it references the playlist* tables
