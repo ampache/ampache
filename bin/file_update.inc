@@ -64,17 +64,12 @@ if (count($_SERVER['argv']) != 1 && $catname != 1 && $catfile != 1 && $artadd !=
     return false;
 }
 
-echo "\n----------------------------------------------------------\n";
-echo T_("Starting File operations...") . $operations_string . "\n";
-echo "----------------------------------------------------------\n\n";
-
 // -------- Options before the File actions loop
 if ($artadd == 1) {
     $options['gather_art'] = true;
 } else {
     $options['gather_art'] = false;
 }
-// --------
 
 $sql = "SELECT `id` FROM `catalog` WHERE `name` = '$catname' AND `catalog_type`='local'";
 $db_results = Dba::read($sql);

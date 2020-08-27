@@ -31,6 +31,7 @@ If you choose to use utf8mb4 Ampache will convert your table engine to InnoDB to
   * bin/update_file.inc: Update your catalog when individual files are changed using inotifywait.sh
   * bin/update_db.inc: Update your database collation, charset and table engine from the cli
   * docs/examples/inotifywait.sh: script to use inotifywait and update_file.inc to update as file changes happen
+  * docs/examples/inotifywait.service: systemd example service for inotifywait.sh
 
 ### Changed
 
