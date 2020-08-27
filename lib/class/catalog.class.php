@@ -755,7 +755,7 @@ abstract class Catalog extends database_object
         $time    = '0';
         $size    = '0';
         foreach ($media_tables as $table) {
-            $enabled_sql = ($enabled) ? " WHERE `$table`.`enabled`='1'" : '';
+            $enabled_sql = ($enabled && $media_tables !== 'podcast_episode') ? " WHERE `$table`.`enabled`='1'" : '';
             $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql;
             $db_results  = Dba::read($sql);
             $data        = Dba::fetch_row($db_results);
