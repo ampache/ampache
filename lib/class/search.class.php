@@ -836,6 +836,7 @@ class Search extends playlist_object
     {
         $limit  = (int) ($data['limit']);
         $offset = (int) ($data['offset']);
+        $random = ((int) $data['random'] > 0) ? 1 : 0;
         $data   = self::clean_request($data);
 
         $search = new Search(null, $data['type'], $user);
@@ -862,6 +863,9 @@ class Search extends playlist_object
             if (!empty($search_info['having_sql'])) {
                 $sql .= ' HAVING ' . $search_info['having_sql'];
             }
+        }
+        if ($random > 0) {
+            $sql .= " ORDER BY RAND()";
         }
         $sql .= ' ' . $limit_sql;
         $sql = trim((string) $sql);

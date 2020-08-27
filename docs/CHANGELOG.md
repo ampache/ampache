@@ -78,6 +78,10 @@ Fix CVE-2020-15153 - Unauthenticated SQL injection in Ampache
 
 Minor bugfixes
 
+### Added
+
+* Api::advanced_search added random (0|1) to shuffle your searches
+
 ### Changed
 
 * Api::stream, Api::download 'format' parameter changed to 'transcode'
