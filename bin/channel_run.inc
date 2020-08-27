@@ -60,12 +60,18 @@ if ($chanid < 1) {
 
     return false;
 }
+if (!AmpConfig::get('channel')) {
+    echo ('Cannot start channel, enable channels in your server config first.');
 
+    return false;
+}
 // Transcode is mandatory to have consistent stream codec
 $transcode_cfg = AmpConfig::get('transcode');
 
 if ($transcode_cfg == 'never') {
-    die('Cannot start channel, transcoding is mandatory to work');
+    echo ('Cannot start channel, transcoding is mandatory to work');
+
+    return false;
 }
 
 echo T_("Starting Channel...") . $operations_string . "\n";
