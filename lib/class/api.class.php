@@ -3764,12 +3764,12 @@ class Api
      * Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
      *
      * @param array $input
-     * id      = (string) $song_id|$podcast_episode_id
-     * type    = (string) 'song'|'podcast'
-     * bitrate = (integer) max bitrate for transcoding
-     * format  = (string) 'mp3'|'ogg', etc use 'raw' to skip transcoding
-     * offset  = (integer) time offset in seconds
-     * length  = (integer) 0,1
+     * id        = (string) $song_id|$podcast_episode_id
+     * type      = (string) 'song'|'podcast'
+     * bitrate   = (integer) max bitrate for transcoding
+     * transcode = (string) 'mp3'|'ogg', etc use 'raw' to skip transcoding
+     * offset    = (integer) time offset in seconds
+     * length    = (integer) 0,1
      * @return boolean
      */
     public static function stream($input)
@@ -3782,7 +3782,7 @@ class Api
         $user_id = User::get_from_username(Session::username($input['auth']))->id;
 
         $maxBitRate    = $input['bitrate'];
-        $format        = $input['format']; // mp3, flv or raw
+        $format        = $input['transcode']; // mp3, flv or raw
         $original      = $format && $format != 'raw';
         $timeOffset    = $input['offset'];
         $contentLength = (int) $input['length']; // Force content-length guessing if transcode
@@ -3826,9 +3826,9 @@ class Api
      * Downloads a given media file. set format=raw to download the full file
      *
      * @param array $input
-     * id     = (string) $song_id| $podcast_episode_id
-     * type   = (string) 'song'|'podcast'
-     * format = (string) 'mp3'|'ogg', etc //optional
+     * id        = (string) $song_id| $podcast_episode_id
+     * type      = (string) 'song'|'podcast'
+     * transcode = (string) 'mp3'|'ogg', etc //optional
      * @return boolean
      */
     public static function download($input)
@@ -3838,7 +3838,7 @@ class Api
         }
         $fileid   = $input['id'];
         $type     = $input['type'];
-        $format   = $input['format'];
+        $format   = $input['transcode'];
         $original = $format && $format != 'raw';
         $user_id  = User::get_from_username(Session::username($input['auth']))->id;
 
