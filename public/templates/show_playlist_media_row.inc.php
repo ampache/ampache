@@ -21,6 +21,9 @@
  */
 
 // Don't show disabled medias to normal users
+use Ampache\Module\Access;
+use Ampache\Module\Ajax;
+
 if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface', 50)) { ?>
 <td class="cel_play">
     <span class="cel_play_content"><?php echo '<b>' . $playlist_track . '</b>' ?></span>

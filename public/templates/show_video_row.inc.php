@@ -19,6 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+use Ampache\Module\Access;
+use Ampache\Module\Ajax;
+
 if (!isset($video_type)) {
     $libitem = Video::create_from_id($libitem->id);
     $libitem->format();

@@ -20,7 +20,11 @@
  *
  */
 
-$link = AmpConfig::get('use_rss') ? ' ' . Ampache_RSS::get_display('recently_played', $user->id) :  '';
+use Ampache\Module\Access;
+use Ampache\Module\Ajax;
+use Ampache\Module\AmpacheRss;
+
+$link = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('recently_played', $user->id) :  '';
 UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
 <table class="tabledata">
     <thead>

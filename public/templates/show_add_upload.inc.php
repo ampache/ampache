@@ -20,7 +20,10 @@
  *
  */
 
- // Upload form from http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/?>
+use Ampache\Module\Access;
+use Ampache\Module\Ajax;
+
+// Upload form from http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/?>
 <?php
 UI::show_box_top(T_('Upload'));
 $ajaxfs = AmpConfig::get('ajax_server') . '/fs.ajax.php';

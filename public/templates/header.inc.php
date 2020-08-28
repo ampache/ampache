@@ -20,6 +20,9 @@
  *
  */
 
+use Ampache\Module\Access;
+use Ampache\Module\Ajax;
+
 if (INIT_LOADED != '1') {
     return false;
 }

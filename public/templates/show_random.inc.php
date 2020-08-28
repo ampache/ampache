@@ -18,7 +18,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Ampache\Module\Ajax; ?>
 <?php UI::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
 <form id="random" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=get_advanced&type=<?php echo Core::get_request('type') ? scrub_out(Core::get_request('type')) : 'song'; ?>">
 <table class="tabledata">

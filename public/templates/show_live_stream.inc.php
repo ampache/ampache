@@ -19,7 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
- ?>
+
+use Ampache\Module\Ajax;
+
+?>
 
 <?php UI::show_box_top($radio->f_name . ' ' . T_('Details'), 'box box_live_stream_details'); ?>
 <div class="item_right_info">

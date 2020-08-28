@@ -1,4 +1,7 @@
 <?php
+
+use Ampache\Module\Access;
+
 $autoplay = true;
 if ($is_share) {
     $autoplay = ($_REQUEST['autoplay'] === 'true');

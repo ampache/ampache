@@ -21,6 +21,9 @@
  */
 
 /* Create some variables we are going to need */
+
+use Ampache\Module\Ajax;
+
 $web_path = AmpConfig::get('web_path');
 $base_url = '?action=set_userflag&userflag_type=' . $userflag->type . '&object_id=' . $userflag->id;
 $othering = false;

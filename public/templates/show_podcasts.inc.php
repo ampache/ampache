@@ -19,6 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+use Ampache\Module\Access;
+use Ampache\Module\Ajax;
+
 $thcount  = 5; ?>
 <div id="information_actions">
     <ul>

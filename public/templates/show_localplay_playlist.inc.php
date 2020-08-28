@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Ajax;
+
 $localplay = new Localplay(AmpConfig::get('localplay_controller'));
 $localplay->connect();
 $status = $localplay->status(); ?>

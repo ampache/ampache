@@ -18,5 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Ampache\Module\Ajax; ?>
 <th class="cel_location optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=personal_video&sort=location', T_('Location'), 'sort_video_location'); ?></th>

@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,6 +19,13 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+declare(strict_types=0);
+
+namespace Ampache\Module;
+
+use AmpConfig;
+use UI;
 
 /**
  * Ajax class
@@ -63,7 +69,7 @@ class Ajax
             $source_txt = "'#$source'";
         }
 
-        $observe   = "<script>";
+        $observe = "<script>";
         $methodact = ($method == 'click') ? "update_action();" : "";
         if (AmpConfig::get('ajax_load') && $method == 'load') {
             $source_txt = "$( document ).ready(";
@@ -205,7 +211,7 @@ class Ajax
     } // run
 
     /**
-      * set_include_override
+     * set_include_override
      * This sets the including div override, used only one place. Kind of a
      * hack.
      * @param boolean $value

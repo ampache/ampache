@@ -19,7 +19,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
- ?>
+
+use Ampache\Module\Access;
+use Ampache\Module\Ajax;
+
+?>
 <ul id="sidebar-tabs">
 <?php
 if (User::is_registered()) {

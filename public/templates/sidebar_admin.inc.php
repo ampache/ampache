@@ -19,7 +19,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Ampache\Module\Access;
+use Ampache\Module\Ajax; ?>
 <ul class="sb2" id="sb_admin">
     <?php if (AmpConfig::get('browse_filter')) {
     echo "<li>";

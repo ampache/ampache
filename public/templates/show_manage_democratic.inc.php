@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Ajax;
+
 UI::show_box_top(T_('Manage'));  ?>
 <table class="tabledata">
     <tr class="th-top">

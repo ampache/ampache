@@ -19,7 +19,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
- ?>
+
+use Ampache\Module\Access;
+use Ampache\Module\Ajax;
+
+?>
 <?php
 $browse = new Browse();
 $browse->set_type($object_type);

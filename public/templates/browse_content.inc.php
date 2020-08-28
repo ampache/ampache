@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Ajax;
+
 // Because sometimes you just need a container?>
 <?php Ajax::start_container('browse_content_' . $type, 'browse_content'); ?>
 

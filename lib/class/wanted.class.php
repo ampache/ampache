@@ -22,6 +22,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Model\database_object;
+use Ampache\Module\Ajax;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use MusicBrainz\Filters\ArtistFilter;

@@ -20,6 +20,10 @@
  *
  */
 
+use Ampache\Module\Access;
+use Ampache\Module\Ajax;
+use Ampache\Module\AmpacheRss;
+
 $browse = new Browse();
 $browse->set_type($object_type);
 
@@ -79,7 +83,7 @@ UI::show_box_top($podcast->f_title, 'info-box'); ?>
     <?php if (AmpConfig::get('use_rss')) {
             ?>
         <li>
-            <?php echo Ampache_RSS::get_display('podcast', -1, T_('RSS Feed'), array('object_type' => 'podcast', 'object_id' => $podcast->id)); ?>
+            <?php echo AmpacheRss::get_display('podcast', -1, T_('RSS Feed'), array('object_type' => 'podcast', 'object_id' => $podcast->id)); ?>
         </li>
         <?php
         } ?>

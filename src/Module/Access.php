@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,6 +20,16 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module;
+
+use AmpConfig;
+use AmpError;
+use Core;
+use Dba;
+use User;
+
 /**
  * Access Class
  *
@@ -32,67 +41,67 @@ class Access
 {
     // Variables from DB
     /**
-     *  @var integer $id
+     * @var integer $id
      */
     public $id;
 
     /**
-     *  @var string $name
+     * @var string $name
      */
     public $name;
 
     /**
-     *  @var string $start
+     * @var string $start
      */
     public $start;
 
     /**
-     *  @var string $end
+     * @var string $end
      */
     public $end;
 
     /**
-     *  @var integer $level
+     * @var integer $level
      */
     public $level;
 
     /**
-     *  @var integer $user
+     * @var integer $user
      */
     public $user;
 
     /**
-     *  @var string $type
+     * @var string $type
      */
     public $type;
 
     /**
-     *  @var boolean $enabled
+     * @var boolean $enabled
      */
     public $enabled;
 
     /**
-     *  @var string $f_start
+     * @var string $f_start
      */
     public $f_start;
 
     /**
-     *  @var string $f_end
+     * @var string $f_end
      */
     public $f_end;
 
     /**
-     *  @var string $f_user
+     * @var string $f_user
      */
     public $f_user;
 
     /**
-     *  @var string $f_level
+     * @var string $f_level
      */
     public $f_level;
 
     /**
-     *  @var string $f_type
+     * @var string $f_type
      */
     public $f_type;
 
@@ -105,7 +114,7 @@ class Access
     public function __construct($access_id)
     {
         /* Assign id for use in get_info() */
-        $this->id = (int) $access_id;
+        $this->id = (int)$access_id;
 
         $info = $this->has_info();
         foreach ($info as $key => $value) {
@@ -123,7 +132,7 @@ class Access
      */
     private function has_info()
     {
-        $sql        = 'SELECT * FROM `access_list` WHERE `id` = ?';
+        $sql = 'SELECT * FROM `access_list` WHERE `id` = ?';
         $db_results = Dba::read($sql, array($this->id));
 
         return Dba::fetch_assoc($db_results);
@@ -138,11 +147,11 @@ class Access
     public function format()
     {
         $this->f_start = inet_ntop($this->start);
-        $this->f_end   = inet_ntop($this->end);
+        $this->f_end = inet_ntop($this->end);
 
-        $this->f_user  = $this->get_user_name();
+        $this->f_user = $this->get_user_name();
         $this->f_level = $this->get_level_name();
-        $this->f_type  = $this->get_type_name();
+        $this->f_type = $this->get_type_name();
     }
 
     /**
@@ -156,7 +165,7 @@ class Access
     private static function _verify_range($startp, $endp)
     {
         $startn = @inet_pton($startp);
-        $endn   = @inet_pton($endp);
+        $endn = @inet_pton($endp);
 
         if (!$startn && $startp != '0.0.0.0' && $startp != '::') {
             AmpError::add('start', T_('An Invalid IPv4 / IPv6 Address was entered'));
@@ -191,18 +200,16 @@ class Access
             return false;
         }
 
-        $start   = @inet_pton($data['start']);
-        $end     = @inet_pton($data['end']);
-        $name    = $data['name'];
-        $type    = self::validate_type($data['type']);
-        $level   = (int) $data['level'];
-        $user    = $data['user'] ?: '-1';
+        $start = @inet_pton($data['start']);
+        $end = @inet_pton($data['end']);
+        $name = $data['name'];
+        $type = self::validate_type($data['type']);
+        $level = (int)$data['level'];
+        $user = $data['user'] ?: '-1';
         $enabled = make_bool($data['enabled']) ? 1 : 0;
 
-        $sql = 'UPDATE `access_list` SET `start` = ?, `end` = ?, `level` = ?, ' .
-                '`user` = ?, `name` = ?, `type` = ?, `enabled` = ? WHERE `id` = ?';
-        Dba::write($sql,
-                array($start, $end, $level, $user, $name, $type, $enabled, $this->id));
+        $sql = 'UPDATE `access_list` SET `start` = ?, `end` = ?, `level` = ?, ' . '`user` = ?, `name` = ?, `type` = ?, `enabled` = ? WHERE `id` = ?';
+        Dba::write($sql, array($start, $end, $level, $user, $name, $type, $enabled, $this->id));
 
         return true;
     }
@@ -223,22 +230,23 @@ class Access
 
         // Check existing ACLs to make sure we're not duplicating values here
         if (self::exists($data)) {
-            debug_event('access.class', 'Error: An ACL entry equal to the created one already exists. Not adding duplicate: ' . $data['start'] . ' - ' . $data['end'], 1);
+            debug_event('access.class',
+                'Error: An ACL entry equal to the created one already exists. Not adding duplicate: ' . $data['start'] . ' - ' . $data['end'],
+                1);
             AmpError::add('general', T_('Duplicate ACL entry defined'));
 
             return false;
         }
 
-        $start   = @inet_pton($data['start']);
-        $end     = @inet_pton($data['end']);
-        $name    = $data['name'];
-        $user    = $data['user'] ?: '-1';
-        $level   = (int) $data['level'];
-        $type    = self::validate_type($data['type']);
+        $start = @inet_pton($data['start']);
+        $end = @inet_pton($data['end']);
+        $name = $data['name'];
+        $user = $data['user'] ?: '-1';
+        $level = (int)$data['level'];
+        $type = self::validate_type($data['type']);
         $enabled = make_bool($data['enabled']) ? 1 : 0;
 
-        $sql = 'INSERT INTO `access_list` (`name`, `level`, `start`, `end`, ' .
-                '`user`, `type`, `enabled`) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO `access_list` (`name`, `level`, `start`, `end`, ' . '`user`, `type`, `enabled`) VALUES (?, ?, ?, ?, ?, ?, ?)';
         Dba::write($sql, array($name, $level, $start, $end, $user, $type, $enabled));
 
         return true;
@@ -255,12 +263,11 @@ class Access
     public static function exists(array $data)
     {
         $start = inet_pton($data['start']);
-        $end   = inet_pton($data['end']);
-        $type  = self::validate_type($data['type']);
-        $user  = $data['user'] ?: '-1';
+        $end = inet_pton($data['end']);
+        $type = self::validate_type($data['type']);
+        $user = $data['user'] ?: '-1';
 
-        $sql = 'SELECT * FROM `access_list` WHERE `start` = ? AND `end` = ? ' .
-                'AND `type` = ? AND `user` = ?';
+        $sql = 'SELECT * FROM `access_list` WHERE `start` = ? AND `end` = ? ' . 'AND `type` = ? AND `user` = ?';
         $db_results = Dba::read($sql, array($start, $end, $type, $user));
 
         if (Dba::fetch_assoc($db_results)) {
@@ -355,14 +362,12 @@ class Access
                 return false;
         } // end switch on type
 
-        $sql = 'SELECT `id` FROM `access_list` ' .
-                'WHERE `start` <= ? AND `end` >= ? ' .
-                'AND `level` >= ? AND `type` = ?';
+        $sql = 'SELECT `id` FROM `access_list` ' . 'WHERE `start` <= ? AND `end` >= ? ' . 'AND `level` >= ? AND `type` = ?';
 
         $user_ip = Core::get_user_ip();
-        $params  = array(inet_pton($user_ip), inet_pton($user_ip), $level, $type);
+        $params = array(inet_pton($user_ip), inet_pton($user_ip), $level, $type);
 
-        if (strlen((string) $user) && $user != '-1') {
+        if (strlen((string)$user) && $user != '-1') {
             $sql .= " AND `user` IN(?, '-1')";
             $params[] = $user;
         } else {
@@ -448,7 +453,7 @@ class Access
      */
     public static function get_access_lists()
     {
-        $sql        = 'SELECT `id` FROM `access_list`';
+        $sql = 'SELECT `id` FROM `access_list`';
         $db_results = Dba::read($sql);
 
         $results = array();

@@ -24,6 +24,10 @@
  * they can have their own preference sections so we need to build the
  * links based on that, always ignore 'internal' though
  */
+
+use Ampache\Module\Access;
+use Ampache\Module\Ajax;
+
 $categories = Preference::get_categories(); ?>
 <?php
 $t_preferences = T_('Preferences'); ?>

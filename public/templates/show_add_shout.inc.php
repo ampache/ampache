@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Access;
+
 $object_type = strtolower(get_class($object)); ?>
 <div>
 <?php if (Access::check('interface', 25)) { ?>

@@ -27,8 +27,10 @@
  * goes all ajaxie if you've got javascript on
  */
 
+use Ampache\Module\AmpacheRss;
+
 if (count($results)) {
-    $link = AmpConfig::get('use_rss') ? ' ' . Ampache_RSS::get_display('nowplaying') : ''; ?>
+    $link = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('nowplaying') : ''; ?>
 <?php UI::show_box_top(T_('Now Playing') . $link); ?>
 <?php
 foreach ($results as $item) {

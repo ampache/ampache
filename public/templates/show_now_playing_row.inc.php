@@ -18,7 +18,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Ampache\Module\Access;
+use Ampache\Module\Ajax; ?>
 <div class="np_group" id="np_group_1">
     <div class="np_cell cel_username">
         <label><?php echo T_('Username'); ?></label>

@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Access;
+
 $web_path = AmpConfig::get('web_path'); ?>
 
 <ul id="sidebar-light">

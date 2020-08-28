@@ -19,7 +19,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
- ?>
+
+use Ampache\Module\Access;
+use Ampache\Module\Ajax;
+
+?>
 <div id="information_actions">
     <ul>
         <?php if (Access::check('interface', 25)) { ?>

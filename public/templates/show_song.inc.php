@@ -21,6 +21,9 @@
  *
  */
 
+use Ampache\Module\Access;
+use Ampache\Module\Ajax;
+
 if ($song->enabled) {
     $icon     = 'disable';
     $icontext = T_('Disable');

@@ -21,6 +21,9 @@
  */
 
 /* Create some variables we are going to need */
+
+use Ampache\Module\Ajax;
+
 $web_path = AmpConfig::get('web_path');
 $base_url = '?action=set_rating&rating_type=' . $rating->type . '&object_id=' . $rating->id;
 $rate     = ($rating->get_user_rating() ?: 0);

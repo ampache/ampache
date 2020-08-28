@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api;
 
-use Access;
+use Ampache\Module\Access;
 use Ampache\Application\ApplicationInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use AmpConfig;

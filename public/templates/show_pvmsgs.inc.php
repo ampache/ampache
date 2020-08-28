@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Ajax;
+
 $thcount = 5; ?>
 <script>
     function getSelectionArray()

@@ -18,7 +18,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Ampache\Module\Access;
+use Ampache\Module\Ajax; ?>
 <?php if ($browse->is_show_header()) {
     require UI::find_template('list_header.inc.php');
 } ?>

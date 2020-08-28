@@ -20,6 +20,10 @@
  *
  */
 
+use Ampache\Module\Access;
+use Ampache\Module\Ajax;
+use Ampache\Module\AmpacheRss;
+
 $web_path = AmpConfig::get('web_path');
 
 // Title for this album
@@ -143,7 +147,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     } ?>
         <?php if (AmpConfig::get('use_rss')) { ?>
         <li>
-            <?php echo Ampache_RSS::get_display('podcast', -1, T_('RSS Feed'), array('object_type' => 'album', 'object_id' => $album->id)); ?>
+            <?php echo AmpacheRss::get_display('podcast', -1, T_('RSS Feed'), array('object_type' => 'album', 'object_id' => $album->id)); ?>
         </li>
         <?php
     } ?>

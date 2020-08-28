@@ -19,7 +19,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
- ?>
+
+use Ampache\Module\Access;
+use Ampache\Module\Ajax;
+
+?>
 <?php UI::show_box_top($video->f_title . ' ' . T_('Details'), 'box box_video_details'); ?>
 <div class="item_right_info">
 <?php

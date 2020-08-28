@@ -20,6 +20,9 @@
  *
  */
 
+use Ampache\Module\Access;
+use Ampache\Module\Ajax;
+
 $web_path = AmpConfig::get('web_path'); ?>
 <?php
 $browse = new Browse();

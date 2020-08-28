@@ -18,7 +18,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Ampache\Module\Access; ?>
     <td class="cel_username">
         <a href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo $libitem->id; ?>">
             <?php

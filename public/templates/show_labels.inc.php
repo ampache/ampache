@@ -20,6 +20,9 @@
  *
  */
 
+use Ampache\Module\Access;
+use Ampache\Module\Ajax;
+
 $thcount = 6; ?>
 <?php if (Access::check('interface', 50) || AmpConfig::get('upload_allow_edit')) { ?>
 <div id="information_actions">

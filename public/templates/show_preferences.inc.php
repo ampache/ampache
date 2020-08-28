@@ -24,7 +24,10 @@
  * This page has a few tabs, as such we need to figure out which tab we are on
  * and display the information accordingly
  */
- ?>
+
+use Ampache\Module\Access;
+
+?>
 <?php /* HINT: Username FullName */ UI::show_box_top(sprintf(T_('Editing %s Preferences'), $fullname), 'box box_preferences'); ?>
 <?php  if (Core::get_request('tab') !== 'account' && Core::get_request('tab') !== 'modules') {
      debug_event('show_preferences.inc', (string) Core::get_request('tab'), 5); ?>

@@ -19,7 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
- ?>
+
+use Ampache\Module\Ajax;
+
+?>
 
 <script>
 // Set refresh interval (in seconds)

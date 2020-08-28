@@ -25,8 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
-use Access;
-use Ajax;
+use Ampache\Module\Access;
+use Ampache\Module\Ajax;
 use Core;
 use Shoutbox;
 use Song;

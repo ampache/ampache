@@ -23,6 +23,9 @@
 /* I'm cheating a little here, check to see if we want to show the
  * Apply to All button on this page
  */
+
+use Ampache\Module\Access;
+
 if (Access::check('interface', 100) && $_REQUEST['action'] == 'admin') {
     $is_admin = true;
 } ?>

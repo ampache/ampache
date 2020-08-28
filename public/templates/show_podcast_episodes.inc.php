@@ -19,6 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+use Ampache\Module\Ajax;
+
 $thcount  = 7; ?>
 <?php if ($browse->is_show_header()) {
     require UI::find_template('list_header.inc.php');

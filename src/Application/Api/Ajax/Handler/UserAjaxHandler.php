@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
-use Access;
+use Ampache\Module\Access;
 use AmpConfig;
 use Core;
 use User;

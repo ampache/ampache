@@ -24,6 +24,9 @@
 /* We have to create a cookie here because IIS
  * can't handle Cookie + Redirect
  */
+
+use Ampache\Module\Access;
+
 Session::create_cookie();
 Preference::init();
 

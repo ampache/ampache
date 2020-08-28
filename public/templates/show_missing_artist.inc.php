@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Ajax;
+
 $web_path = AmpConfig::get('web_path'); ?>
 <?php
 UI::show_box_top($wartist['name'], 'info-box'); ?>

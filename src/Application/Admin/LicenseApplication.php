@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Admin;
 
-use Access;
+use Ampache\Module\Access;
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use Browse;

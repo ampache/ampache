@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application;
 
-use Access;
+use Ampache\Module\Access;
 use Album;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use AmpConfig;

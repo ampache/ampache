@@ -21,6 +21,10 @@
  */
 
 /* HINT: Democratic Playlist Name */
+
+use Ampache\Module\Access;
+use Ampache\Module\Ajax;
+
 $string = $democratic->is_enabled() ? sprintf(T_('%s Playlist'), $democratic->name) : T_('Democratic Playlist');
 UI::show_box_top($string, 'info-box'); ?>
 <div id="information_actions">

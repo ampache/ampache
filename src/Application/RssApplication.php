@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application;
 
-use Ampache_RSS;
+use Ampache\Module\AmpacheRss;
 use AmpConfig;
 use Core;
 use UI;
@@ -46,7 +46,7 @@ final class RssApplication implements ApplicationInterface
 
         $type      = Core::get_request('type');
         $rsstoken  = Core::get_request('rsstoken');
-        $rss       = new Ampache_RSS($type, $rsstoken);
+        $rss       = new AmpacheRss($type, $rsstoken);
         $params    = null;
         if ($type === "podcast") {
             $params                = array();

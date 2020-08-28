@@ -18,7 +18,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Ampache\Module\Ajax; ?>
 <?php UI::show_box_top(T_('Show Localplay Instances'), 'box box_localplay_instances'); ?>
 <table class="tabledata">
 <tr>

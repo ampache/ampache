@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Access;
+
 $last_seen   = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');
 $create_date = $client->create_date ? get_datetime((int) $client->create_date) : T_('Unknown');
 $client->format(); ?>

@@ -22,6 +22,8 @@
 
 // Because this is a reset of the persons password make the form a little more secure
 
+use Ampache\Module\Access;
+
 $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
 <?php AmpError::display('general'); ?>
 <form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=update_user" enctype="multipart/form-data">

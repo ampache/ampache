@@ -21,6 +21,9 @@
  */
 
 // Don't show disabled songs to normal users
+use Ampache\Module\Access;
+use Ampache\Module\Ajax;
+
 if ($libitem->enabled || Access::check('interface', 50)) { ?>
 <td class="cel_play">
     <span class="cel_play_content">

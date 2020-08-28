@@ -20,6 +20,9 @@
  *
  */
 
+use Ampache\Module\Access;
+use Ampache\Module\Ajax;
+
 $tag_types = array(
     'artist' => T_('Artist'),
     'album' => T_('Album'),

@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Ajax;
+
 $status      = $localplay->status();
 $now_playing = $status['track_title'];
 if (!empty($status['track_album'])) {

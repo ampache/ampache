@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Module\Access;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 
 if (!defined('NO_SESSION')) {

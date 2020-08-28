@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,20 +20,31 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Module\Util\InterfaceImplementationChecker;
+declare(strict_types=0);
 
-/**
- * Ampache_RSS Class
- *
- */
-class Ampache_RSS
+namespace Ampache\Module;
+
+use Album;
+use Ampache\Module\Util\InterfaceImplementationChecker;
+use AmpConfig;
+use Art;
+use Artist;
+use Shoutbox;
+use Song;
+use Stats;
+use Stream;
+use UI;
+use User;
+use XML_Data;
+
+class AmpacheRss
 {
     /**
-     *  @var string $type
+     * @var string $type
      */
     private $type;
     /**
-     *  @var string $rsstoken
+     * @var string $rsstoken
      */
     private $rsstoken;
     public $data;
@@ -47,7 +57,7 @@ class Ampache_RSS
      */
     public function __construct($type, $rsstoken = "")
     {
-        $this->type     = self::validate_type($type);
+        $this->type = self::validate_type($type);
         $this->rsstoken = $rsstoken;
     } // constructor
 
@@ -63,7 +73,7 @@ class Ampache_RSS
         if ($this->type === "podcast") {
             if ($params != null && is_array($params)) {
                 $object_type = $params['object_type'];
-                $object_id   = $params['object_id'];
+                $object_id = $params['object_id'];
                 if (InterfaceImplementationChecker::is_library_item($object_type)) {
                     $libitem = new $object_type($object_id);
                     if ($libitem->id) {
@@ -75,17 +85,17 @@ class Ampache_RSS
             }
         } else {
             // Function call name
-            $data_function     = 'load_' . $this->type;
+            $data_function = 'load_' . $this->type;
             $pub_date_function = 'pubdate_' . $this->type;
 
             if ($this->rsstoken) {
-                $data     = call_user_func(array('Ampache_RSS', $data_function), $this->rsstoken);
+                $data = call_user_func(array(AmpacheRss::class, $data_function), $this->rsstoken);
             } else {
-                $data     = call_user_func(array('Ampache_RSS', $data_function));
+                $data = call_user_func(array(AmpacheRss::class, $data_function));
             }
             $pub_date = null;
-            if (method_exists('Ampache_RSS', $pub_date_function)) {
-                $pub_date = call_user_func(array('Ampache_RSS', $pub_date_function));
+            if (method_exists(AmpacheRss::class, $pub_date_function)) {
+                $pub_date = call_user_func(array(AmpacheRss::class, $pub_date_function));
             }
 
             XML_Data::set_type('rss');
@@ -103,7 +113,8 @@ class Ampache_RSS
      */
     public function get_title()
     {
-        $titles = array('now_playing' => T_('Now Playing'),
+        $titles = array(
+            'now_playing' => T_('Now Playing'),
             'recently_played' => T_('Recently Played'),
             'latest_album' => T_('Newest Albums'),
             'latest_artist' => T_('Newest Artists'),
@@ -132,7 +143,14 @@ class Ampache_RSS
      */
     public static function validate_type($type)
     {
-        $valid_types = array('now_playing', 'recently_played', 'latest_album', 'latest_artist', 'latest_shout', 'podcast');
+        $valid_types = array(
+            'now_playing',
+            'recently_played',
+            'latest_album',
+            'latest_artist',
+            'latest_shout',
+            'podcast'
+        );
 
         if (!in_array($type, $valid_types)) {
             return 'now_playing';
@@ -165,13 +183,14 @@ class Ampache_RSS
         $rsstoken = "";
         if ($user_id != -1) {
             $user = new User($user_id);
-            if (! $user->rsstoken) {
+            if (!$user->rsstoken) {
                 $user->generate_rsstoken();
             }
             $rsstoken = "&rsstoken=" . $user->rsstoken;
         }
 
-        $string = '<a class="nohtml" href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . $rsstoken . $strparams . '">' . UI::get_icon('feed', T_('RSS Feed'));
+        $string = '<a class="nohtml" href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . $rsstoken . $strparams . '">' . UI::get_icon('feed',
+                T_('RSS Feed'));
         if (!empty($title)) {
             $string .= ' &nbsp;' . $title;
         }
@@ -192,31 +211,31 @@ class Ampache_RSS
     {
         $data = Stream::get_now_playing();
 
-        $results    = array();
-        $format     = AmpConfig::get('rss_format') ?: '%t - %a - %A';
+        $results = array();
+        $format = AmpConfig::get('rss_format') ?: '%t - %a - %A';
         $string_map = array(
             '%t' => 'title',
             '%a' => 'artist',
             '%A' => 'album'
         );
         foreach ($data as $element) {
-            $song        = $element['media'];
-            $client      = $element['user'];
-            $title       = $format;
+            $song = $element['media'];
+            $client = $element['user'];
+            $title = $format;
             $description = $format;
             foreach ($string_map as $search => $replace) {
-                $trep        = 'f_' . $replace;
-                $drep        = 'f_' . $replace . '_full';
-                $title       = str_replace($search, $song->$trep, $title);
+                $trep = 'f_' . $replace;
+                $drep = 'f_' . $replace . '_full';
+                $title = str_replace($search, $song->$trep, $title);
                 $description = str_replace($search, $song->$drep, $description);
             }
             $xml_array = array(
-                    'title' => $title,
-                    'link' => $song->link,
-                    'description' => $description,
-                    'comments' => $client->f_name . ' - ' . $element['agent'],
-                    'pubDate' => date("r", (int) $element['expire'])
-                    );
+                'title' => $title,
+                'link' => $song->link,
+                'description' => $description,
+                'comments' => $client->f_name . ' - ' . $element['agent'],
+                'pubDate' => date("r", (int)$element['expire'])
+            );
             $results[] = $xml_array;
         } // end foreach
 
@@ -247,21 +266,23 @@ class Ampache_RSS
      */
     public static function load_recently_played($rsstoken = "")
     {
-        $user    = ($rsstoken) ? User::get_from_rsstoken($rsstoken) : null;
-        $data    = ($user) ? Song::get_recently_played($user->id) : Song::get_recently_played();
+        $user = ($rsstoken) ? User::get_from_rsstoken($rsstoken) : null;
+        $data = ($user) ? Song::get_recently_played($user->id) : Song::get_recently_played();
         $results = array();
 
         foreach ($data as $item) {
             $client = new User($item['user']);
-            $song   = new Song($item['object_id']);
+            $song = new Song($item['object_id']);
             if ($song->enabled) {
                 $song->format();
 
-                $xml_array = array('title' => $song->f_title . ' - ' . $song->f_artist . ' - ' . $song->f_album,
-                            'link' => str_replace('&amp;', '&', $song->link),
-                            'description' => $song->title . ' - ' . $song->f_artist_full . ' - ' . $song->f_album_full,
-                            'comments' => $client->username,
-                            'pubDate' => date("r", (int) $item['date']));
+                $xml_array = array(
+                    'title' => $song->f_title . ' - ' . $song->f_artist . ' - ' . $song->f_album,
+                    'link' => str_replace('&amp;', '&', $song->link),
+                    'description' => $song->title . ' - ' . $song->f_artist_full . ' - ' . $song->f_album_full,
+                    'comments' => $client->username,
+                    'pubDate' => date("r", (int)$item['date'])
+                );
                 $results[] = $xml_array;
             }
         } // end foreach
@@ -284,12 +305,13 @@ class Ampache_RSS
             $album = new Album($albumid);
             $album->format();
 
-            $xml_array = array('title' => $album->f_name,
-                    'link' => $album->link,
-                    'description' => $album->f_artist_name . ' - ' . $album->f_name,
-                    'image' => Art::url($album->id, 'album', null, 2),
-                    'comments' => '',
-                    'pubDate' => date("c", (int) $album->get_addtime_first_song())
+            $xml_array = array(
+                'title' => $album->f_name,
+                'link' => $album->link,
+                'description' => $album->f_artist_name . ' - ' . $album->f_name,
+                'image' => Art::url($album->id, 'album', null, 2),
+                'comments' => '',
+                'pubDate' => date("c", (int)$album->get_addtime_first_song())
             );
             $results[] = $xml_array;
         } // end foreach
@@ -312,12 +334,13 @@ class Ampache_RSS
             $artist = new Artist($artistid);
             $artist->format();
 
-            $xml_array = array('title' => $artist->f_name,
-                    'link' => $artist->link,
-                    'description' => $artist->summary,
-                    'image' => Art::url($artist->id, 'artist', null, 2),
-                    'comments' => '',
-                    'pubDate' => ''
+            $xml_array = array(
+                'title' => $artist->f_name,
+                'link' => $artist->link,
+                'description' => $artist->summary,
+                'image' => Art::url($artist->id, 'artist', null, 2),
+                'comments' => '',
+                'pubDate' => ''
             );
             $results[] = $xml_array;
         } // end foreach
@@ -345,12 +368,13 @@ class Ampache_RSS
                 $user = new User($shout->user);
                 $user->format();
 
-                $xml_array = array('title' => $user->username . ' ' . T_('on') . ' ' . $object->get_fullname(),
-                        'link' => $object->link,
-                        'description' => $shout->text,
-                        'image' => Art::url($shout->object_id, $shout->object_type, null, 2),
-                        'comments' => '',
-                        'pubDate' => date("c", (int) $shout->date)
+                $xml_array = array(
+                    'title' => $user->username . ' ' . T_('on') . ' ' . $object->get_fullname(),
+                    'link' => $object->link,
+                    'description' => $shout->text,
+                    'image' => Art::url($shout->object_id, $shout->object_type, null, 2),
+                    'comments' => '',
+                    'pubDate' => date("c", (int)$shout->date)
                 );
                 $results[] = $xml_array;
             }

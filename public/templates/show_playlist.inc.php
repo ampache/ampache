@@ -24,7 +24,10 @@
  * Playlist Box
  * This box is used for actions on the main screen and on a specific playlist page
  * It changes depending on where it is
- */ ?>
+ */
+
+use Ampache\Module\Access;
+use Ampache\Module\Ajax; ?>
 <?php
 ob_start();
 require UI::find_template('show_playlist_title.inc.php');
