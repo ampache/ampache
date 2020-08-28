@@ -39,7 +39,6 @@ if (!defined('CLI')) {
     }
 }
 
-require_once __DIR__ . '/general.lib.php';
 require_once __DIR__ . '/class/ampconfig.class.php';
 require_once __DIR__ . '/class/core.class.php';
 
@@ -74,13 +73,7 @@ if (!isset($http_port) || empty($http_port)) {
 define('INIT_LOADED', 1);
 
 // Core includes we can't do with the autoloader
-require_once __DIR__ . '/preferences.php';
-require_once __DIR__ . '/debug.lib.php';
-require_once __DIR__ . '/log.lib.php';
-require_once __DIR__ . '/ui.lib.php';
-require_once __DIR__ . '/i18n.php';
-require_once __DIR__ . '/batch.lib.php';
-require_once __DIR__ . '/themes.php';
+require_once __DIR__ . '/../src/Config/functions.php';
 
 /* Set up the flip class */
 UI::flip_class(array('odd', 'even'));

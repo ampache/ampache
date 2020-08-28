@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,6 +20,7 @@
  *
  */
 
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /* We have to create a cookie here because IIS
  * can't handle Cookie + Redirect
  */

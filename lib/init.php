@@ -117,11 +117,6 @@ $results = Preference::fix_preferences($results);
 
 AmpConfig::set_by_array($results, true);
 
-// Modules (These are conditionally included depending upon config values)
-if (AmpConfig::get('ratings')) {
-    require_once __DIR__ . '/rating.lib.php';
-}
-
 // Set a new Error Handler
 $old_error_handler = set_error_handler('ampache_error_handler');
 

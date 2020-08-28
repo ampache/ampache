@@ -37,7 +37,7 @@ final class InstallationApplication implements ApplicationInterface
 {
     public function run(): void
     {
-        require_once __DIR__ . '/../../lib/install.lib.php';
+        require_once __DIR__ . '/../../src/Config/install.php';
 
         set_error_handler('ampache_error_handler');
 
