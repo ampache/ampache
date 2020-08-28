@@ -83,13 +83,9 @@ Minor bugfixes
 
 * Api::advanced_search added parameter 'random' (0|1) to shuffle your searches
 
-### Changed
-
-* Api::stream, Api::download 'format' parameter changed to 'transcode'
-
 ### Fixed
 
-* Api::stream, Api::download format parameter was overwritten with 'xml' or 'json'
+* Api::stream, Api::download Api::playlist_generate 'format' parameter was overwritten with 'xml' or 'json'
 
 ## 4.2.1-release
 
