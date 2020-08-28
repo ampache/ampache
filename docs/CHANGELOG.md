@@ -27,6 +27,7 @@ If you choose to use utf8mb4 Ampache will convert your table engine to InnoDB to
 * NEW config options (config_version 45)
   * database_charset: Set a default charset for your database
   * database_collation: Set a default collation for your database
+  * simple_user_mode: Don't allow users to edit their account values (used for demo sites that allow login)
 * NEW files
   * bin/update_file.inc: Update your catalog when individual files are changed using inotifywait.sh
   * bin/update_db.inc: Update your database collation, charset and table engine from the cli
@@ -80,15 +81,11 @@ Minor bugfixes
 
 ### Added
 
-* Api::advanced_search added random (0|1) to shuffle your searches
-
-### Changed
-
-* Api::stream, Api::download 'format' parameter changed to 'transcode'
+* Api::advanced_search added parameter 'random' (0|1) to shuffle your searches
 
 ### Fixed
 
-* Api::stream, Api::download format parameter was overwritten with 'xml' or 'json'
+* Api::stream, Api::download Api::playlist_generate 'format' parameter was overwritten with 'xml' or 'json'
 
 ## 4.2.1-release
 

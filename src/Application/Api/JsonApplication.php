@@ -97,7 +97,7 @@ final class JsonApplication implements ApplicationInterface
             // If the method is the same as the action being called
             // Then let's call this function!
             if ($_GET['action'] == $method) {
-                $_GET['format'] = 'json';
+                $_GET['api_format'] = 'json';
                 call_user_func(array('api', $method),$_GET);
                 // We only allow a single function to be called, and we assume it's cleaned up!
                 exit;
