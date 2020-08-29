@@ -35,7 +35,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\Ui;
 use User;
-use XML_Data;
+use Ampache\Module\Api\Xml_Data;
 
 class AmpacheRss
 {
@@ -79,7 +79,7 @@ class AmpacheRss
                     if ($libitem->id) {
                         $libitem->format();
 
-                        return XML_Data::podcast($libitem);
+                        return Xml_Data::podcast($libitem);
                     }
                 }
             }
@@ -98,9 +98,9 @@ class AmpacheRss
                 $pub_date = call_user_func(array(AmpacheRss::class, $pub_date_function));
             }
 
-            XML_Data::set_type('rss');
+            Xml_Data::set_type('rss');
 
-            return XML_Data::rss_feed($data, $this->get_title(), $pub_date);
+            return Xml_Data::rss_feed($data, $this->get_title(), $pub_date);
         }
 
         return null;

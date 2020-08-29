@@ -25,6 +25,7 @@ declare(strict_types=0);
 use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Model\Plugin;
 use Ampache\Module\Access;
+use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Playback\LocalPlay;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\Ui;
@@ -2077,7 +2078,7 @@ function xoutput_from_array($array, $callback = false, $type = '')
 {
     $output = (Core::get_request('xoutput') !== '') ? Core::get_request('xoutput') : 'xml';
     if ($output == 'xml') {
-        return XML_Data::output_xml_from_array($array, $callback, $type);
+        return Xml_Data::output_xml_from_array($array, $callback, $type);
     } elseif ($output == 'raw') {
         $outputnode = Core::get_request('xoutputnode');
 

@@ -31,7 +31,7 @@ use AmpConfig;
 use Core;
 use Session;
 use User;
-use XML_Data;
+use Ampache\Module\Api\Xml_Data;
 
 final class XmlApplication implements ApplicationInterface
 {
@@ -50,7 +50,7 @@ final class XmlApplication implements ApplicationInterface
         if (!AmpConfig::get('access_control')) {
             ob_end_clean();
             debug_event('xml.server', 'Error Attempted to use XML API with Access Control turned off', 3);
-            echo XML_Data::error('501', T_('Access Control not enabled'));
+            echo Xml_Data::error('501', T_('Access Control not enabled'));
 
             return;
         }
@@ -62,7 +62,7 @@ final class XmlApplication implements ApplicationInterface
         if (!Session::exists('api', Core::get_request('auth')) && Core::get_request('action') != 'handshake' && Core::get_request('action') != 'ping') {
             debug_event('Access Denied', 'Invalid Session attempt to API [' . Core::get_request('action') . ']', 3);
             ob_end_clean();
-            echo XML_Data::error('401', T_('Session Expired'));
+            echo Xml_Data::error('401', T_('Session Expired'));
 
             return;
         }
@@ -73,7 +73,7 @@ final class XmlApplication implements ApplicationInterface
         if (!Access::check_network('init-api', $username, 5)) {
             debug_event('Access Denied', 'Unauthorized access attempt to API [' . Core::get_server('REMOTE_ADDR') . ']', 3);
             ob_end_clean();
-            echo XML_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
+            echo Xml_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
 
             return;
         }
@@ -114,6 +114,6 @@ final class XmlApplication implements ApplicationInterface
 
         // If we manage to get here, we still need to hand out an XML document
         ob_end_clean();
-        echo XML_Data::error('405', T_('Invalid Request'));
+        echo Xml_Data::error('405', T_('Invalid Request'));
     }
 }

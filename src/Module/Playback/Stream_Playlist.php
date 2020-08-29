@@ -33,7 +33,7 @@ use PDOStatement;
 use Session;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Util\Ui;
-use XML_Data;
+use Ampache\Module\Api\Xml_Data;
 
 /**
  * Stream_Playlist Class
@@ -526,13 +526,13 @@ class Stream_Playlist
                 $xml['track']['trackNum'] = $url->track_num;
             }
 
-            $result .= XML_Data::keyed_array($xml, true);
+            $result .= Xml_Data::keyed_array($xml, true);
         } // end foreach
 
-        XML_Data::set_type('xspf');
-        $ret = XML_Data::header($this->title);
+        Xml_Data::set_type('xspf');
+        $ret = Xml_Data::header($this->title);
         $ret .= $result;
-        $ret .= XML_Data::footer();
+        $ret .= Xml_Data::footer();
 
         return $ret;
     } // get_xspf_string
