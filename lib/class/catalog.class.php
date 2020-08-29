@@ -21,7 +21,7 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Model\database_object;
+use database_object;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
 use Ampache\Model\Metadata\Repository\Metadata;

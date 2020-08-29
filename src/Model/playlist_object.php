@@ -27,6 +27,7 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use AmpConfig;
 use Art;
 use Core;
+use database_object;
 use UI;
 use User;
 

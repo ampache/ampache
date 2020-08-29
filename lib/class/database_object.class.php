@@ -20,13 +20,9 @@
  *
  */
 
-namespace Ampache\Model;
-
-use AmpConfig;
-use Dba;
 
 /**
- * Ampache\Model\database_object
+ * database_object
  *
  * This is a general object that is extended by all of the basic
  * database based objects in ampache. It attempts to do some standard
@@ -168,4 +164,4 @@ abstract class database_object
     {
         self::$_enabled = AmpConfig::get('memory_cache');
     } // _auto_init
-} // end Ampache\Model\database_object.abstract
+} // end database_object.abstract

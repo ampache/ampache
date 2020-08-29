@@ -2,7 +2,7 @@
 declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
-use Ampache\Model\database_object;
+use database_object;
 use Ampache\Model\library_item;
 use Ampache\Module\Ajax;
 

@@ -20,7 +20,7 @@
  *
  */
 
-use Ampache\Model\database_object;
+use database_object;
 
 ?>
 <?php if (AmpConfig::get('show_footer_statistics')) { ?>
