@@ -1,11 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-
-use Ampache\Model\localplay_controller;
-use Ampache\Module\Ajax;
-
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -25,7 +20,18 @@ use Ampache\Module\Ajax;
  *
  */
 
-class Localplay
+declare(strict_types=0);
+
+namespace Ampache\Module\Playback;
+
+use Ampache\Model\localplay_controller;
+use Ampache\Module\Ajax;
+use AmpConfig;
+use Core;
+use Preference;
+use Stream_URL;
+
+class LocalPlay
 {
     /* Base Variables */
     public $type;
@@ -78,16 +84,16 @@ class Localplay
     } // player_loaded
 
     /**
-      * format
+     * format
      * This makes the Localplay/plugin information
      * human readable
      */
     public function format()
     {
         if (is_object($this->_player)) {
-            $this->f_name            = ucfirst($this->type);
-            $this->f_description     = $this->_player->get_description();
-            $this->f_version         = $this->_player->get_version();
+            $this->f_name        = ucfirst($this->type);
+            $this->f_description = $this->_player->get_description();
+            $this->f_version     = $this->_player->get_version();
         }
     } // format
 
@@ -103,7 +109,7 @@ class Localplay
             return false;
         }
 
-        $filename = __DIR__ . '/../../modules/localplay/' . $this->type . '/' . $this->type . '.controller.php';
+        $filename = __DIR__ . '/../../../modules/localplay/' . $this->type . '/' . $this->type . '.controller.php';
         $include  = require_once $filename;
 
         if (!$include) {
@@ -116,7 +122,8 @@ class Localplay
             $class_name    = "Ampache" . $this->type;
             $this->_player = new $class_name();
             if (!($this->_player instanceof localplay_controller)) {
-                debug_event('localplay.class', $this->type . ' not an instance of controller abstract, unable to load', 1);
+                debug_event('localplay.class', $this->type . ' not an instance of controller abstract, unable to load',
+                    1);
                 unset($this->_player);
 
                 return false;
@@ -138,7 +145,8 @@ class Localplay
     public function format_name($name, $object_id)
     {
         $name = scrub_out($name);
-        $name = Ajax::text('?page=localplay&action=command&command=skip&id=' . $object_id, $name, 'localplay_skip_' . $object_id);
+        $name = Ajax::text('?page=localplay&action=command&command=skip&id=' . $object_id, $name,
+            'localplay_skip_' . $object_id);
 
         return $name;
     } // format_name
@@ -150,7 +158,7 @@ class Localplay
     public static function get_controllers()
     {
         /* First open the dir */
-        $basedir = __DIR__ . '/../../modules/localplay';
+        $basedir = __DIR__ . '/../../../modules/localplay';
         $handle  = opendir($basedir);
 
         if (!is_resource($handle)) {
@@ -166,13 +174,13 @@ class Localplay
                 continue;
             }
             /* Make sure it is a dir */
-            if (! is_dir($basedir . '/' . $file)) {
+            if (!is_dir($basedir . '/' . $file)) {
                 debug_event('localplay.class', $file . ' is not a directory.', 3);
                 continue;
             }
 
             // Make sure the plugin base file exists inside the plugin directory
-            if (! file_exists($basedir . '/' . $file . '/' . $file . '.controller.php')) {
+            if (!file_exists($basedir . '/' . $file . '/' . $file . '.controller.php')) {
                 debug_event('localplay.class', 'Missing class for ' . $file, 3);
                 continue;
             }
@@ -193,7 +201,7 @@ class Localplay
     public static function is_enabled($controller)
     {
         // Load the controller and then check for its preferences
-        $localplay = new Localplay($controller);
+        $localplay = new LocalPlay($controller);
         // If we can't even load it no sense in going on
         if (!isset($localplay->_player)) {
             return false;
@@ -300,7 +308,8 @@ class Localplay
     public function add_url(Stream_URL $url)
     {
         if (!$this->_player->add_url($url)) {
-            debug_event('localplay.class', 'Unable to add url ' . $url->url . ', check ' . $this->type . ' controller', 1);
+            debug_event('localplay.class', 'Unable to add url ' . $url->url . ', check ' . $this->type . ' controller',
+                1);
 
             return false;
         }
@@ -392,7 +401,7 @@ class Localplay
     public function volume_set($value)
     {
         /* Make sure it's int and 0 - 100 */
-        $value = (int) $value;
+        $value = (int)$value;
 
         /* Make sure that it's between 0 and 100 */
         if ($value > 100 || $value < 0) {
@@ -465,7 +474,8 @@ class Localplay
     public function skip($track_id)
     {
         if (!$this->_player->skip($track_id)) {
-            debug_event('localplay.class', 'Error: Unable to skip to next song, check ' . $this->type . ' controller', 1);
+            debug_event('localplay.class', 'Error: Unable to skip to next song, check ' . $this->type . ' controller',
+                1);
 
             return false;
         }
@@ -481,7 +491,8 @@ class Localplay
     public function next()
     {
         if (!$this->_player->next()) {
-            debug_event('localplay.class', 'Error: Unable to skip to next song, check ' . $this->type . ' controller', 1);
+            debug_event('localplay.class', 'Error: Unable to skip to next song, check ' . $this->type . ' controller',
+                1);
 
             return false;
         }
@@ -497,7 +508,8 @@ class Localplay
     public function prev()
     {
         if (!$this->_player->prev()) {
-            debug_event('localplay.class', 'Error: Unable to skip to previous song, check ' . $this->type . ' controller', 1);
+            debug_event('localplay.class',
+                'Error: Unable to skip to previous song, check ' . $this->type . ' controller', 1);
 
             return false;
         }
@@ -622,7 +634,8 @@ class Localplay
     public function delete_all()
     {
         if (!$this->_player->clear_playlist()) {
-            debug_event('localplay.class', 'Error: Unable to delete entire playlist, check ' . $this->type . ' controller', 1);
+            debug_event('localplay.class',
+                'Error: Unable to delete entire playlist, check ' . $this->type . ' controller', 1);
 
             return false;
         }
@@ -676,10 +689,10 @@ class Localplay
         /* This is a cheezball fix for when we were unable to find a
          * artist/album (or one wasn't provided)
          */
-        $track_name = ltrim(ltrim((string) $track_name, ' - '), ' - ');
+        $track_name = ltrim(ltrim((string)$track_name, ' - '), ' - ');
 
         $track_name = "[" . $status['track'] . "] - " . $track_name;
 
         return $track_name;
     } // get_user_playing
-} // end localplay.class
+}

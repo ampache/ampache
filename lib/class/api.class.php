@@ -24,6 +24,7 @@ declare(strict_types=0);
 use Ampache\Model\License;
 use Ampache\Module\Access;
 use Ampache\Module\Api\Json_Data;
+use Ampache\Module\Playback\LocalPlay;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 
 /**
@@ -3970,7 +3971,7 @@ class Api
     public static function localplay($input)
     {
         // Load their Localplay instance
-        $localplay = new Localplay(AmpConfig::get('localplay_controller'));
+        $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
         $localplay->connect();
 
         switch ($input['command']) {

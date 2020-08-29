@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Module\Access;
+use Ampache\Module\Playback\LocalPlay;
 use Gettext\Translator;
 
 /**
@@ -814,11 +815,11 @@ function create_preference_input($name, $value)
             echo "</select>\n";
             break;
         case 'localplay_controller':
-            $controllers = Localplay::get_controllers();
+            $controllers = LocalPlay::get_controllers();
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"\">" . T_('None') . "</option>\n";
             foreach ($controllers as $controller) {
-                if (!Localplay::is_enabled($controller)) {
+                if (!LocalPlay::is_enabled($controller)) {
                     continue;
                 }
                 $is_selected = '';

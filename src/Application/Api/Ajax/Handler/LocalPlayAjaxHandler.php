@@ -29,7 +29,7 @@ use Ampache\Module\Access;
 use AmpConfig;
 use Browse;
 use Core;
-use Localplay;
+use Ampache\Module\Playback\LocalPlay;
 use Preference;
 use UI;
 
@@ -52,7 +52,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                 $type = $_REQUEST['instance'] ? 'localplay' : 'stream';
 
-                $localplay = new Localplay(AmpConfig::get('localplay_controller'));
+                $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $localplay->set_active_instance($_REQUEST['instance']);
                 Preference::update('play_type', Core::get_global('user')->id, $type);
 
@@ -70,7 +70,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                     return;
                 }
 
-                $localplay = new Localplay(AmpConfig::get('localplay_controller'));
+                $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $localplay->connect();
 
                 // Switch on valid commands
@@ -140,7 +140,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                     return;
                 }
-                $localplay = new Localplay(AmpConfig::get('localplay_controller'));
+                $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $localplay->connect();
 
                 // Scrub in the delete request
@@ -173,7 +173,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 }
 
                 // Scrub it in
-                $localplay = new Localplay(AmpConfig::get('localplay_controller'));
+                $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $localplay->delete_instance($_REQUEST['instance']);
 
                 $key           = 'localplay_instance_' . $_REQUEST['instance'];
@@ -188,7 +188,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 }
 
                 // Scrub her in
-                $localplay = new Localplay(AmpConfig::get('localplay_controller'));
+                $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $localplay->connect();
                 $localplay->repeat(make_bool($_REQUEST['value']));
 
@@ -208,7 +208,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 }
 
                 // Scrub her in
-                $localplay = new Localplay(AmpConfig::get('localplay_controller'));
+                $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $localplay->connect();
                 $localplay->random(make_bool($_REQUEST['value']));
 

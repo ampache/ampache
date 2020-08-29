@@ -22,6 +22,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Module\Access;
+use Ampache\Module\Playback\LocalPlay;
 
 /**
  * Subsonic Class
@@ -1778,7 +1779,7 @@ class Subsonic_Api
 
         $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'jukeboxcontrol');
         debug_event('subsonic_api.class', 'Using Localplay controller: ' . AmpConfig::get('localplay_controller'), 5);
-        $localplay = new Localplay(AmpConfig::get('localplay_controller'));
+        $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
 
         if ($localplay->connect()) {
             $ret = false;

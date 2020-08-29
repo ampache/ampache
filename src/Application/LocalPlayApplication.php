@@ -27,7 +27,7 @@ namespace Ampache\Application;
 
 use Ampache\Module\Access;
 use AmpConfig;
-use Localplay;
+use Ampache\Module\Playback\LocalPlay;
 use UI;
 
 final class LocalPlayApplication implements ApplicationInterface
@@ -63,7 +63,7 @@ final class LocalPlayApplication implements ApplicationInterface
                 }
 
                 // Get the current Localplay fields
-                $localplay = new Localplay(AmpConfig::get('localplay_controller'));
+                $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $fields    = $localplay->get_instance_fields();
                 require_once UI::find_template('show_localplay_add_instance.inc.php');
                 break;
@@ -75,7 +75,7 @@ final class LocalPlayApplication implements ApplicationInterface
                 }
 
                 // Setup the object
-                $localplay = new Localplay(AmpConfig::get('localplay_controller'));
+                $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $localplay->add_instance($_POST);
                 header("Location:" . AmpConfig::get('web_path') . "/localplay.php?action=show_instances");
                 break;
@@ -85,7 +85,7 @@ final class LocalPlayApplication implements ApplicationInterface
                     UI::access_denied();
                     break;
                 }
-                $localplay = new Localplay(AmpConfig::get('localplay_controller'));
+                $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $localplay->update_instance($_REQUEST['instance'], $_POST);
                 header("Location:" . AmpConfig::get('web_path') . "/localplay.php?action=show_instances");
                 break;
@@ -95,7 +95,7 @@ final class LocalPlayApplication implements ApplicationInterface
                     UI::access_denied();
                     break;
                 }
-                $localplay = new Localplay(AmpConfig::get('localplay_controller'));
+                $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $instance  = $localplay->get_instance($_REQUEST['instance']);
                 $fields    = $localplay->get_instance_fields();
                 require_once UI::find_template('show_localplay_edit_instance.inc.php');
@@ -106,7 +106,7 @@ final class LocalPlayApplication implements ApplicationInterface
                     UI::access_denied();
                     break;
                 }
-                $localplay = new Localplay(AmpConfig::get('localplay_controller'));
+                $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $instances = $localplay->get_instances();
                 $fields    = $localplay->get_instance_fields();
                 require_once UI::find_template('show_localplay_instances.inc.php');
@@ -118,7 +118,7 @@ final class LocalPlayApplication implements ApplicationInterface
                     break;
                 }
                 // Init and then connect to our Localplay instance
-                $localplay = new Localplay(AmpConfig::get('localplay_controller'));
+                $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $localplay->connect();
 
                 // Pull the current playlist and require the template

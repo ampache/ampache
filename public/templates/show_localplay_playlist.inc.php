@@ -21,8 +21,9 @@
  */
 
 use Ampache\Module\Ajax;
+use Ampache\Module\Playback\LocalPlay;
 
-$localplay = new Localplay(AmpConfig::get('localplay_controller'));
+$localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
 $localplay->connect();
 $status = $localplay->status(); ?>
 <?php if ($browse->is_show_header()) {

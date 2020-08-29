@@ -21,6 +21,8 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Module\Playback\LocalPlay;
+
 /**
  * Stream_Playlist Class
  *
@@ -618,7 +620,7 @@ class Stream_Playlist
      */
     public function create_localplay()
     {
-        $localplay = new Localplay(AmpConfig::get('localplay_controller'));
+        $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
         $localplay->connect();
         $append = $_REQUEST['append'];
         if (!$append) {

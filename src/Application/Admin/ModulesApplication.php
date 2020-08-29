@@ -30,7 +30,7 @@ use AmpConfig;
 use AmpError;
 use Catalog;
 use Core;
-use Localplay;
+use Ampache\Module\Playback\LocalPlay;
 use Plugin;
 use Preference;
 use UI;
@@ -52,7 +52,7 @@ final class ModulesApplication implements ApplicationInterface
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'install_localplay':
-                $localplay = new Localplay(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
+                $localplay = new LocalPlay(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
                 if (!$localplay->player_loaded()) {
                     AmpError::add('general', T_('Failed to enable the Localplay module'));
                     AmpError::display('general');
@@ -107,7 +107,7 @@ final class ModulesApplication implements ApplicationInterface
             case 'uninstall_localplay':
                 $type = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 
-                $localplay = new Localplay($type);
+                $localplay = new LocalPlay($type);
                 $localplay->uninstall();
 
                 /* Show Confirmation */
@@ -207,7 +207,7 @@ final class ModulesApplication implements ApplicationInterface
                 UI::show_box_bottom();
                 break;
             case 'show_localplay':
-                $controllers = Localplay::get_controllers();
+                $controllers = LocalPlay::get_controllers();
                 UI::show_box_top(T_('Localplay Controllers'), 'box box_localplay_controllers');
                 require_once UI::find_template('show_localplay_controllers.inc.php');
                 UI::show_box_bottom();

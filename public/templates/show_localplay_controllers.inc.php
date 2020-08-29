@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Playback\LocalPlay;
+
 $web_path = AmpConfig::get('web_path'); ?>
 <!-- Plugin we've found -->
 <table class="tabledata">
@@ -34,12 +36,12 @@ $web_path = AmpConfig::get('web_path'); ?>
     <tbody>
         <?php
         foreach ($controllers as $controller) {
-            $localplay = new Localplay($controller);
+            $localplay = new LocalPlay($controller);
             if (!$localplay->player_loaded()) {
                 continue;
             }
             $localplay->format();
-            if (Localplay::is_enabled($controller)) {
+            if (LocalPlay::is_enabled($controller)) {
                 $action        = 'confirm_uninstall_localplay';
                 $action_txt    = T_('Disable');
             } else {

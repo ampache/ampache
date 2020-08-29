@@ -22,6 +22,7 @@
 
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
+use Ampache\Module\Playback\LocalPlay;
 
 ?>
 <?php
@@ -141,7 +142,7 @@ $t_search    = T_('Search'); ?>
             <?php if (($server_allow == AmpConfig::get('allow_localplay_playback')) && ($controller == AmpConfig::get('localplay_controller')) && ($access_check == Access::check('localplay', 5))) { ?>
             <?php
                 // Little bit of work to be done here
-                $localplay             = new Localplay(AmpConfig::get('localplay_controller'));
+                $localplay             = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $current_instance      = $localplay->current_instance();
                 $class                 = $current_instance ? '' : ' class="active_instance"'; ?>
             <li id="sb_home_playlist_show"><a href="<?php echo $web_path ?>/localplay.php?action=show_playlist"><?php echo T_('Localplay') ?></a></li>

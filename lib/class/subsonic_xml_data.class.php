@@ -21,6 +21,7 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Module\Playback\LocalPlay;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 
 /**
@@ -1321,9 +1322,9 @@ class Subsonic_XML_Data
     /**
      * addJukeboxPlaylist
      * @param SimpleXMLElement $xml
-     * @param Localplay $localplay
+     * @param LocalPlay $localplay
      */
-    public static function addJukeboxPlaylist($xml, Localplay $localplay)
+    public static function addJukeboxPlaylist($xml, LocalPlay $localplay)
     {
         $xjbox  = self::createJukeboxStatus($xml, $localplay, 'jukeboxPlaylist');
         $tracks = $localplay->get();
@@ -1337,11 +1338,11 @@ class Subsonic_XML_Data
     /**
      * createJukeboxStatus
      * @param SimpleXMLElement $xml
-     * @param Localplay $localplay
+     * @param LocalPlay $localplay
      * @param string $elementName
      * @return SimpleXMLElement
      */
-    public static function createJukeboxStatus($xml, Localplay $localplay, $elementName = 'jukeboxStatus')
+    public static function createJukeboxStatus($xml, LocalPlay $localplay, $elementName = 'jukeboxStatus')
     {
         $xjbox  = $xml->addChild($elementName);
         $status = $localplay->status();
