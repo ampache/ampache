@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Plugin;
 use Ampache\Module\Access;
 
 $last_seen   = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');

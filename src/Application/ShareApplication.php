@@ -28,7 +28,7 @@ namespace Ampache\Application;
 use Ampache\Module\Access;
 use AmpConfig;
 use Core;
-use Plugin;
+use Ampache\Model\Plugin;
 use Preference;
 use Share;
 use UI;

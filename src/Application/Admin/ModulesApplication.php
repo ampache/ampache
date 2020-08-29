@@ -31,7 +31,7 @@ use AmpError;
 use Catalog;
 use Core;
 use Ampache\Module\Playback\LocalPlay;
-use Plugin;
+use Ampache\Model\Plugin;
 use Preference;
 use UI;
 use User;

@@ -21,6 +21,8 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Model\Plugin;
+
 /**
  *
  * This class takes the information pulled from getID3 and returns it in a

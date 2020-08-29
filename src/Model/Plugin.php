@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,6 +19,14 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
+use Dba;
+use Exception;
+use User;
 
 class Plugin
 {
@@ -60,7 +67,7 @@ class Plugin
             if (is_dir($basedir . '/' . $cname)) {
                 $name = $cname;
             } else {
-                $name = 'ampache-' . strtolower((string) $cname);
+                $name = 'ampache-' . strtolower((string)$cname);
             }
 
             /* Require the file we want */
@@ -128,22 +135,22 @@ class Plugin
             }
 
             // Make sure the plugin base file exists inside the plugin directory
-            if (! file_exists($basedir . '/' . $file . '/' . $cfile . '.plugin.php')) {
+            if (!file_exists($basedir . '/' . $file . '/' . $cfile . '.plugin.php')) {
                 debug_event('plugin.class', 'Missing class for ' . $cfile, 3);
                 continue;
             }
 
             if ($type != '') {
                 $plugin = new Plugin($cfile);
-                if (! Plugin::is_installed($plugin->_plugin->name)) {
+                if (!Plugin::is_installed($plugin->_plugin->name)) {
                     debug_event('plugin.class', 'Plugin ' . $plugin->_plugin->name . ' is not installed, skipping', 6);
                     continue;
                 }
-                if (! $plugin->is_valid()) {
+                if (!$plugin->is_valid()) {
                     debug_event('plugin.class', 'Plugin ' . $cfile . ' is not valid, skipping', 6);
                     continue;
                 }
-                if (! method_exists($plugin->_plugin, $type)) {
+                if (!method_exists($plugin->_plugin, $type)) {
                     debug_event('plugin.class', 'Plugin ' . $cfile . ' does not support ' . $type . ', skipping', 6);
                     continue;
                 }
@@ -169,13 +176,13 @@ class Plugin
     public function is_valid()
     {
         /* Check the plugin to make sure it's got the needed vars */
-        if (!strlen((string) $this->_plugin->name)) {
+        if (!strlen((string)$this->_plugin->name)) {
             return false;
         }
-        if (!strlen((string) $this->_plugin->description)) {
+        if (!strlen((string)$this->_plugin->description)) {
             return false;
         }
-        if (!strlen((string) $this->_plugin->version)) {
+        if (!strlen((string)$this->_plugin->version)) {
             return false;
         }
 
@@ -227,8 +234,7 @@ class Plugin
      */
     public function install()
     {
-        if ($this->_plugin->install() &&
-            $this->set_plugin_version($this->_plugin->version)) {
+        if ($this->_plugin->install() && $this->set_plugin_version($this->_plugin->version)) {
             return true;
         }
 
@@ -316,8 +322,8 @@ class Plugin
      */
     public function set_plugin_version($version)
     {
-        $name         = Dba::escape('Plugin_' . $this->_plugin->name);
-        $version      = Dba::escape($version);
+        $name    = Dba::escape('Plugin_' . $this->_plugin->name);
+        $version = Dba::escape($version);
 
         $sql = "REPLACE INTO `update_info` SET `key`='$name', `value`='$version'";
         Dba::write($sql);
@@ -326,16 +332,16 @@ class Plugin
     } // set_plugin_version
 
     /**
-      * remove_plugin_version
+     * remove_plugin_version
      * This removes the version row from the db done on uninstall
      */
     public function remove_plugin_version()
     {
-        $name    = Dba::escape('Plugin_' . $this->_plugin->name);
+        $name = Dba::escape('Plugin_' . $this->_plugin->name);
 
         $sql = "DELETE FROM `update_info` WHERE `key`='$name'";
         Dba::write($sql);
 
         return true;
     } // remove_plugin_version
-} // end plugin.class
+}

@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Model\Plugin;
+
 $web_path = AmpConfig::get('web_path'); ?>
 <!-- Plugin we've found -->
 <table class="tabledata">

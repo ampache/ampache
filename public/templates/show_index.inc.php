@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Plugin;
 use Ampache\Module\Ajax;
 
 $user = Core::get_global('user');

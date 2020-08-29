@@ -29,7 +29,7 @@ use Ampache\Module\Access;
 use AmpConfig;
 use AmpError;
 use Core;
-use Plugin;
+use Ampache\Model\Plugin;
 use Preference;
 use UI;
 use User;

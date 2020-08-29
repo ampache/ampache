@@ -23,6 +23,7 @@
 declare(strict_types=0);
 
 use Ampache\Model\Metadata\Repository\MetadataField;
+use Ampache\Model\Plugin;
 use Ampache\Module\Access;
 use Ampache\Module\Playback\LocalPlay;
 use Gettext\Translator;
