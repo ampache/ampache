@@ -26,32 +26,50 @@ declare(strict_types=0);
 namespace Ampache\Application\Api;
 
 use Ampache\Application\ApplicationInterface;
-use AmpConfig;
-use Sabre\DAV\Auth\Plugin;
-use Sabre\DAV\Server;
-use Ampache\Module\WebDav\WebDav_Auth;
-use Ampache\Module\WebDav\WebDav_Catalog;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\WebDav\WebDavFactoryInterface;
 
 final class WebDavApplication implements ApplicationInterface
 {
+    private ConfigContainerInterface $configContainer;
+
+    private WebDavFactoryInterface $webDavFactory;
+
+    public function __construct(
+        ConfigContainerInterface $configContainer,
+        WebDavFactoryInterface $webDavFactory
+    ) {
+        $this->configContainer = $configContainer;
+        $this->webDavFactory   = $webDavFactory;
+    }
+
     public function run(): void
     {
-        if (!AmpConfig::get('webdav_backend')) {
-            echo T_("Disabled");
+        if ($this->configContainer->isWebDavBackendEnabled() === false) {
+            echo T_('Disabled');
 
             return;
         }
 
-        $rootDir = new WebDav_Catalog();
-        $server  = new Server($rootDir);
+        $server = $this->webDavFactory->createServer(
+            $this->webDavFactory->createWebDavCatalog()
+        );
 
-        $baseUri = ((AmpConfig::get('raw_web_path') !== "/") ? AmpConfig::get('raw_web_path') : "") . '/webdav/index.php';
-        $server->setBaseUri($baseUri);
-        if (AmpConfig::get('use_auth')) {
-            $authBackend = new WebDav_Auth();
-            $authBackend->setRealm('Ampache');
-            $authPlugin  = new Plugin($authBackend);
-            $server->addPlugin($authPlugin);
+        $raw_web_path = $this->configContainer->getRawWebPath();
+        if ($raw_web_path === '/') {
+            $raw_web_path = '';
+        }
+
+        $server->setBaseUri(
+            sprintf('%s/webdav/index.php', $raw_web_path)
+        );
+
+        if ($this->configContainer->isAuthenticationEnabled()) {
+            $server->addPlugin(
+                $this->webDavFactory->createPlugin(
+                    $this->webDavFactory->createWebDavAuth()
+                )
+            );
         }
 
         $server->exec();

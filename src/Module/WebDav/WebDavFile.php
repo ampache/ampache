@@ -31,7 +31,7 @@ use Sabre\DAV;
 /**
  * This class wrap Ampache songs to WebDAV files.
  */
-class WebDav_File extends DAV\File
+class WebDavFile extends DAV\File
 {
     private $libitem;
 

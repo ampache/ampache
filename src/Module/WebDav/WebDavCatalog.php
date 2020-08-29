@@ -33,14 +33,11 @@ use Sabre\DAV;
  *
  * This class wrap Ampache catalogs to WebDAV directories.
  */
-class WebDav_Catalog extends DAV\Collection
+class WebDavCatalog extends DAV\Collection
 {
-    private $catalog_id;
+    private int $catalog_id;
 
-    /**
-     * @param integer $catalog_id
-     */
-    public function __construct($catalog_id = 0)
+    public function __construct(int $catalog_id)
     {
         $this->catalog_id = $catalog_id;
     }
@@ -59,7 +56,7 @@ class WebDav_Catalog extends DAV\Collection
         }
         $artists = Catalog::get_artists($catalogs);
         foreach ($artists as $artist) {
-            $children[] = new WebDav_Directory($artist);
+            $children[] = new WebDavDirectory($artist);
         }
 
         return $children;
@@ -68,7 +65,7 @@ class WebDav_Catalog extends DAV\Collection
     /**
      * getChild
      * @param string $name
-     * @return WebDav_File|WebDav_Directory
+     * @return WebDavFile|WebDavDirectory
      */
     public function getChild($name)
     {
@@ -78,7 +75,7 @@ class WebDav_Catalog extends DAV\Collection
         // Always return first match
         // Warning: this means that two items with the same name will not be supported for now
         if (count($matches) > 0) {
-            return WebDav_Directory::getChildFromArray($matches[0]);
+            return WebDavDirectory::getChildFromArray($matches[0]);
         }
 
         throw new DAV\Exception\NotFound('The artist with name: ' . $name . ' could not be found');

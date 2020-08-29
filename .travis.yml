@@ -20,4 +20,4 @@ before_script:
 script:
  - resources/scripts/tests/syntax.sh
  - resources/scripts/tests/codestyle.sh
- - composer test
+ - composer tests

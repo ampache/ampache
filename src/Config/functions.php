@@ -494,7 +494,8 @@ if (!function_exists('apache_request_headers')) {
 
         return $headers;
     }
-
+}
+if (!function_exists('getallheaders')) {
     /**
      * @return array
      */

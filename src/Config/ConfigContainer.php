@@ -48,4 +48,19 @@ final class ConfigContainer implements ConfigContainerInterface
     {
         return $this->configuration[ConfigurationKeyEnum::SESSION_NAME] ?? '';
     }
+
+    public function isWebDavBackendEnabled(): bool
+    {
+        return (bool) ($this->configuration[ConfigurationKeyEnum::BACKEND_WEBDAV] ?? false);
+    }
+
+    public function isAuthenticationEnabled(): bool
+    {
+        return (bool) ($this->configuration[ConfigurationKeyEnum::USE_AUTH] ?? true);
+    }
+
+    public function getRawWebPath(): string
+    {
+        return $this->configuration[ConfigurationKeyEnum::RAW_WEB_PATH] ?? '';
+    }
 }

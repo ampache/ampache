@@ -28,12 +28,12 @@ use Ampache\Module\Authorization\Auth;
 use Sabre\DAV;
 
 /**
- * WebDAV Directory Class
- *
  * This class wrap Ampache albums and artist to WebDAV directories.
  */
-class WebDav_Auth extends DAV\Auth\Backend\AbstractBasic
+final class WebDavAuth extends DAV\Auth\Backend\AbstractBasic
 {
+    protected $realm = 'Ampache';
+
     /**
      * validateUserPass
      * @param $username

@@ -1,9 +1,6 @@
 <?php
-
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,15 +20,25 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Config;
+namespace Ampache\Module\WebDav;
 
-/**
- * This class contains constants for all available configuration keys
- */
-final class ConfigurationKeyEnum
+use Sabre\DAV\Auth\Backend\BackendInterface;
+use Sabre\DAV\Auth\Plugin;
+use Sabre\DAV\ICollection;
+use Sabre\DAV\INode;
+use Sabre\DAV\Server;
+use Sabre\DAV\Tree;
+
+interface WebDavFactoryInterface
 {
-    public const SESSION_NAME   = 'session_name';
-    public const BACKEND_WEBDAV = 'webdav_backend';
-    public const RAW_WEB_PATH   = 'raw_web_path';
-    public const USE_AUTH       = 'use_auth';
+    public function createWebDavAuth(): BackendInterface;
+
+    public function createWebDavCatalog(int $catalog_id = 0): ICollection;
+
+    /**
+     * @param Tree|INode|array|null $node The tree object
+     */
+    public function createServer($node): Server;
+
+    public function createPlugin(?BackendInterface $backend): Plugin;
 }

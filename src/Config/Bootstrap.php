@@ -39,8 +39,9 @@ $builder->addDefinitions([
     }),
 ]);
 $builder->addDefinitions(
-    require_once __DIR__ . '/../Application/ServiceDefinition.php',
-    require_once __DIR__ . '/../Module/Util/ServiceDefinition.php',
+    require_once __DIR__ . '/../Application/service_definition.php',
+    require_once __DIR__ . '/../Module/Util/service_definition.php',
+    require_once __DIR__ . '/../Module/WebDav/service_definition.php',
 );
 
 return $builder->build();

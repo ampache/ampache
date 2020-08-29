@@ -28,6 +28,7 @@ cs_fixer_tmp_*
 .pc
 .php_cs.cache
 .project
+build
 php-cs-fixer.phar
 composer.phar
 robots.txt

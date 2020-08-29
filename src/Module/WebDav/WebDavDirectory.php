@@ -31,7 +31,7 @@ use Sabre\DAV;
 /**
  * This class wrap Ampache albums and artist to WebDAV directories.
  */
-class WebDav_Directory extends DAV\Collection
+class WebDavDirectory extends DAV\Collection
 {
     private $libitem;
 
@@ -56,10 +56,10 @@ class WebDav_Directory extends DAV\Collection
         foreach ($childs as $key => $child) {
             if (is_string($key)) {
                 foreach ($child as $schild) {
-                    $children[] = WebDav_Directory::getChildFromArray($schild);
+                    $children[] = WebDavDirectory::getChildFromArray($schild);
                 }
             } else {
-                $children[] = WebDav_Directory::getChildFromArray($child);
+                $children[] = WebDavDirectory::getChildFromArray($child);
             }
         }
 
@@ -69,7 +69,7 @@ class WebDav_Directory extends DAV\Collection
     /**
      * getChild
      * @param string $name
-     * @return WebDav_File|WebDav_Directory
+     * @return WebDavFile|WebDavDirectory
      */
     public function getChild($name)
     {
@@ -85,7 +85,7 @@ class WebDav_Directory extends DAV\Collection
         // Always return first match
         // Warning: this means that two items with the same name will not be supported for now
         if (count($matches) > 0) {
-            return WebDav_Directory::getChildFromArray($matches[0]);
+            return WebDavDirectory::getChildFromArray($matches[0]);
         }
 
         throw new DAV\Exception\NotFound('The child with name: ' . $name . ' could not be found');
@@ -94,7 +94,7 @@ class WebDav_Directory extends DAV\Collection
     /**
      * getChildFromArray
      * @param $array
-     * @return WebDav_File|WebDav_Directory
+     * @return WebDavFile|WebDavDirectory
      */
     public static function getChildFromArray($array)
     {
@@ -104,9 +104,9 @@ class WebDav_Directory extends DAV\Collection
         }
 
         if ($libitem instanceof Media) {
-            return new WebDav_File($libitem);
+            return new WebDavFile($libitem);
         } else {
-            return new WebDav_Directory($libitem);
+            return new WebDavDirectory($libitem);
         }
     }
 

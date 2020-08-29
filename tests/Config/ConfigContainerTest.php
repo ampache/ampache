@@ -23,11 +23,8 @@ declare(strict_types=1);
  *
  */
 
-namespace Config;
+namespace Ampache\Config;
 
-use Ampache\Config\ConfigContainer;
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 class ConfigContainerTest extends MockeryTestCase
@@ -39,7 +36,7 @@ class ConfigContainerTest extends MockeryTestCase
 
         $subject = $this->createSubject([$key => $value]);
 
-        $this->assertSame(
+        static::assertSame(
             $value,
             $subject->get($key)
         );
@@ -47,7 +44,7 @@ class ConfigContainerTest extends MockeryTestCase
 
     public function testGetReturnsNullIfKeyNotSet(): void
     {
-        $this->assertNull(
+        static::assertNull(
             $this->createSubject([])->get('foobar')
         );
     }
@@ -60,7 +57,7 @@ class ConfigContainerTest extends MockeryTestCase
             ConfigurationKeyEnum::SESSION_NAME => $value
         ]);
 
-        $this->assertSame(
+        static::assertSame(
             $value,
             $subject->getSessionName()
         );
@@ -68,13 +65,59 @@ class ConfigContainerTest extends MockeryTestCase
 
     public function testGetSessionNameReturnsEmptyStringIfNotSet(): void
     {
-        $this->assertSame(
+        static::assertSame(
             '',
-            $this->createSubject([])->getSessionName()
+            $this->createSubject()->getSessionName()
         );
     }
 
-    private function createSubject(array $configuration): ConfigContainerInterface
+    public function testIsWebDavEnabledReturnsValueCasted(): void
+    {
+        static::assertTrue(
+            $this->createSubject([ConfigurationKeyEnum::BACKEND_WEBDAV => '1'])->isWebDavBackendEnabled()
+        );
+    }
+
+    public function testIsWebDavEnabledReturnsDefault(): void
+    {
+        static::assertFalse(
+            $this->createSubject()->isWebDavBackendEnabled()
+        );
+    }
+
+    public function testIsAuthenticationEnabledReturnsValueCasted(): void
+    {
+        static::assertFalse(
+            $this->createSubject([ConfigurationKeyEnum::USE_AUTH => '0'])->isAuthenticationEnabled()
+        );
+    }
+
+    public function testIsAuthenticationEnabledReturnsDefault(): void
+    {
+        static::assertTrue(
+            $this->createSubject()->isAuthenticationEnabled()
+        );
+    }
+
+    public function testGetRawWebPathReturnsConfigValue(): void
+    {
+        $value = 'some-path';
+
+        static::assertSame(
+            $value,
+            $this->createSubject([ConfigurationKeyEnum::RAW_WEB_PATH => $value])->getRawWebPath()
+        );
+    }
+
+    public function testGetRawWebPathReturnsDefault(): void
+    {
+        static::assertSame(
+            '',
+            $this->createSubject()->getRawWebPath()
+        );
+    }
+
+    private function createSubject(array $configuration = []): ConfigContainerInterface
     {
         return new ConfigContainer($configuration);
     }

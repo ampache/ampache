@@ -41,4 +41,19 @@ interface ConfigContainerInterface
      * Returns the name of the PHP session
      */
     public function getSessionName(): string;
+
+    /**
+     * Returns the webdav config state
+     */
+    public function isWebDavBackendEnabled(): bool;
+
+    /**
+     * Returns the authentication config state
+     */
+    public function isAuthenticationEnabled(): bool;
+
+    /**
+     * Returns the raw web path
+     */
+    public function getRawWebPath(): string;
 }
