@@ -5,6 +5,7 @@ declare(strict_types=0);
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Module\Util\Mailer;
 
 /**
  *

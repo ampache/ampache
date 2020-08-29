@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,13 +20,16 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\Util;
+
+use AmpConfig;
+use Dba;
 use PHPMailer\PHPMailer\PHPMailer;
 
 /**
- * Mailer Class
- *
  * This class handles the Mail
- *
  */
 class Mailer
 {
@@ -38,16 +40,6 @@ class Mailer
     public $recipient_name;
     public $sender;
     public $sender_name;
-
-    /**
-     * Constructor
-     *
-     * This does nothing. Much like goggles.
-     */
-    public function __construct()
-    {
-        // Eh bien.
-    } // Constructor
 
     /**
      * is_mail_enabled
@@ -163,29 +155,29 @@ class Mailer
             $mail = $phpmailer;
         }
 
-        $mail->CharSet     = AmpConfig::get('site_charset');
-        $mail->Encoding    = 'base64';
-        $mail->From        = $this->sender;
-        $mail->Sender      = $this->sender;
-        $mail->FromName    = $this->sender_name;
-        $mail->Subject     = $this->subject;
+        $mail->CharSet  = AmpConfig::get('site_charset');
+        $mail->Encoding = 'base64';
+        $mail->From     = $this->sender;
+        $mail->Sender   = $this->sender;
+        $mail->FromName = $this->sender_name;
+        $mail->Subject  = $this->subject;
 
         if (function_exists('mb_eregi_replace')) {
             $this->message = mb_eregi_replace("\r\n", "\n", $this->message);
         }
-        $mail->Body    = $this->message;
+        $mail->Body = $this->message;
 
-        $sendmail    = AmpConfig::get('sendmail_path');
-        $sendmail    = $sendmail ? $sendmail : '/usr/sbin/sendmail';
-        $mailhost    = AmpConfig::get('mail_host');
-        $mailhost    = $mailhost ? $mailhost : 'localhost';
-        $mailport    = AmpConfig::get('mail_port');
-        $mailport    = $mailport ? $mailport : 25;
-        $mailauth    = AmpConfig::get('mail_auth');
-        $mailuser    = AmpConfig::get('mail_auth_user');
-        $mailuser    = $mailuser ? $mailuser : '';
-        $mailpass    = AmpConfig::get('mail_auth_pass');
-        $mailpass    = $mailpass ? $mailpass : '';
+        $sendmail = AmpConfig::get('sendmail_path');
+        $sendmail = $sendmail ? $sendmail : '/usr/sbin/sendmail';
+        $mailhost = AmpConfig::get('mail_host');
+        $mailhost = $mailhost ? $mailhost : 'localhost';
+        $mailport = AmpConfig::get('mail_port');
+        $mailport = $mailport ? $mailport : 25;
+        $mailauth = AmpConfig::get('mail_auth');
+        $mailuser = AmpConfig::get('mail_auth_user');
+        $mailuser = $mailuser ? $mailuser : '';
+        $mailpass = AmpConfig::get('mail_auth_pass');
+        $mailpass = $mailpass ? $mailpass : '';
 
         switch ($mailtype) {
             case 'smtp':
@@ -236,4 +228,4 @@ class Mailer
 
         return $this->send($mail);
     }
-} // end mailer.class
+}

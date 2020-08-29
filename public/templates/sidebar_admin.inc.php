@@ -23,6 +23,7 @@
 
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
+use Ampache\Module\Util\Mailer;
 
 ?>
 <ul class="sb2" id="sb_admin">

@@ -21,6 +21,7 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Module\Util\Mailer;
 use database_object;
 
 /**

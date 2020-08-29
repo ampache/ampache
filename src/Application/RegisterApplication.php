@@ -29,7 +29,7 @@ use AmpConfig;
 use AmpError;
 use Ampache\Module\Util\Captcha\captcha;
 use Core;
-use Mailer;
+use Ampache\Module\Util\Mailer;
 use Registration;
 use UI;
 use User;

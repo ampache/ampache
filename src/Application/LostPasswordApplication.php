@@ -27,7 +27,7 @@ namespace Ampache\Application;
 
 use AmpConfig;
 use Core;
-use Mailer;
+use Ampache\Module\Util\Mailer;
 use UI;
 use User;
 

@@ -24,6 +24,9 @@
 /* Check and see if their remember me is the same or lower then local
  * if so disable the checkbox
  */
+
+use Ampache\Module\Util\Mailer;
+
 $remember_disabled = '';
 if (AmpConfig::get('session_length') >= AmpConfig::get('remember_length')) {
     $remember_disabled = 'disabled="disabled"';

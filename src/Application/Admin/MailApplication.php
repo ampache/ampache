@@ -29,7 +29,7 @@ use Ampache\Module\Access;
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use Core;
-use Mailer;
+use Ampache\Module\Util\Mailer;
 use UI;
 
 final class MailApplication implements ApplicationInterface

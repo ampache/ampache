@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 use Ampache\Module\Access;
 use Ampache\Module\Playback\LocalPlay;
+use Ampache\Module\Util\Mailer;
 
 /**
  * Subsonic Class

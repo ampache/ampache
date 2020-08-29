@@ -31,7 +31,7 @@ use AmpConfig;
 use AmpError;
 use Browse;
 use Core;
-use Mailer;
+use Ampache\Module\Util\Mailer;
 use Preference;
 use Registration;
 use UI;
