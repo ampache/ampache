@@ -28,7 +28,7 @@ namespace Ampache\Application\Api;
 use Ampache\Module\Access;
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;
-use Auth;
+use Ampache\Module\Authorization\Auth;
 use Core;
 use Preference;
 use Subsonic_Api;

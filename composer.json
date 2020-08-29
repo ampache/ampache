@@ -369,7 +369,8 @@
     "scripts": {
         "test": "./vendor/bin/phpunit tests",
         "codestyle": "resources/scripts/tests/codestyle.sh",
-        "syntax": "resources/scripts/tests/syntax.sh"
+        "syntax": "resources/scripts/tests/syntax.sh",
+	"fix-cs": "vendor/bin/php-cs-fixer fix -v ."
     },
     "suggest": {
         "szymach/c-pchart": "Enable graphical statistics",

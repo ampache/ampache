@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,6 +20,22 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\Authorization;
+
+use AmpConfig;
+use Auth_OpenID;
+use Auth_OpenID_PAPE_Request;
+use Auth_OpenID_SRegRequest;
+use Auth_OpenID_SRegResponse;
+use Core;
+use Dba;
+use LDAP;
+use Openid;
+use Session;
+use User;
+
 /**
  *
  * This class handles all of the session related stuff in Ampache
@@ -29,15 +44,6 @@ declare(strict_types=0);
  */
 class Auth
 {
-    /**
-     * Constructor
-     *
-     * This should never be called
-     */
-    private function __construct()
-    {
-        // Rien a faire
-    } // __construct
 
     /**
      * logout
@@ -72,7 +78,7 @@ class Auth
 
             $results            = array();
             $results['rfc3514'] = '<script>reloadRedirect("' . $target . '")</script>';
-            echo (string) xoutput_from_array($results);
+            echo (string)xoutput_from_array($results);
         } else {
             /* Redirect them to the login page */
             header('Location: ' . $target);
@@ -108,7 +114,7 @@ class Auth
         foreach (AmpConfig::get('auth_methods') as $method) {
             $function_name = $method . '_auth';
 
-            if (!method_exists('Auth', $function_name)) {
+            if (!method_exists(Auth::class, $function_name)) {
                 continue;
             }
 
@@ -133,7 +139,7 @@ class Auth
         $results = null;
         if (in_array($auth_mod, AmpConfig::get('auth_methods'))) {
             $function_name = $auth_mod . '_auth_2';
-            if (method_exists('Auth', $function_name)) {
+            if (method_exists(Auth::class, $function_name)) {
                 $results = self::$function_name();
             }
         }
@@ -151,7 +157,7 @@ class Auth
      */
     private static function mysql_auth($username, $password)
     {
-        if (strlen((string) $password) && strlen((string) $username)) {
+        if (strlen((string)$password) && strlen((string)$username)) {
             $sql        = 'SELECT `password` FROM `user` WHERE `username` = ?';
             $db_results = Dba::read($sql, array($username));
 
@@ -163,12 +169,10 @@ class Auth
                 // FIXME: Break things in the future.
                 $hashed_password   = array();
                 $hashed_password[] = hash('sha256', $password);
-                $hashed_password[] = hash('sha256',
-                    Dba::escape(stripslashes(htmlspecialchars(strip_tags($password)))));
+                $hashed_password[] = hash('sha256', Dba::escape(stripslashes(htmlspecialchars(strip_tags($password)))));
 
                 // Automagically update the password if it's old and busted.
-                if ($row['password'] == $hashed_password[1] &&
-                    $hashed_password[0] != $hashed_password[1]) {
+                if ($row['password'] == $hashed_password[1] && $hashed_password[0] != $hashed_password[1]) {
                     $user = User::get_from_username($username);
                     $user->update_password($password);
                 }
@@ -214,8 +218,8 @@ class Auth
     {
         $results = array();
         if (!function_exists('pam_auth')) {
-            $results['success']    = false;
-            $results['error']      = 'The PAM PHP module is not installed';
+            $results['success'] = false;
+            $results['error']   = 'The PAM PHP module is not installed';
 
             return $results;
         }
@@ -223,12 +227,12 @@ class Auth
         $password = scrub_in($password);
 
         if (pam_auth($username, $password)) {
-            $results['success']     = true;
-            $results['type']        = 'pam';
-            $results['username']    = $username;
+            $results['success']  = true;
+            $results['type']     = 'pam';
+            $results['username'] = $username;
         } else {
-            $results['success']    = false;
-            $results['error']      = 'PAM login attempt failed';
+            $results['success'] = false;
+            $results['error']   = 'PAM login attempt failed';
         }
 
         return $results;
@@ -254,12 +258,11 @@ class Auth
         }
 
         // FIXME: should we do input sanitization?
-        $proc = proc_open($authenticator,
-            array(
-                0 => array('pipe', 'r'),
-                1 => array('pipe', 'w'),
-                2 => array('pipe', 'w')
-            ), $pipes);
+        $proc = proc_open($authenticator, array(
+            0 => array('pipe', 'r'),
+            1 => array('pipe', 'w'),
+            2 => array('pipe', 'w')
+        ), $pipes);
 
         if (is_resource($proc)) {
             fwrite($pipes[0], $username . "\n" . $password . "\n");
@@ -314,13 +317,12 @@ class Auth
     {
         unset($password);
         $results = array();
-        if ((Core::get_server('REMOTE_USER') == $username) ||
-            (Core::get_server('HTTP_REMOTE_USER') == $username)) {
-            $results['success']     = true;
-            $results['type']        = 'http';
-            $results['username']    = $username;
-            $results['name']        = $username;
-            $results['email']       = '';
+        if ((Core::get_server('REMOTE_USER') == $username) || (Core::get_server('HTTP_REMOTE_USER') == $username)) {
+            $results['success']  = true;
+            $results['type']     = 'http';
+            $results['username'] = $username;
+            $results['name']     = $username;
+            $results['email']    = '';
         } else {
             $results['success'] = false;
             $results['error']   = 'HTTP auth login attempt failed';
@@ -349,12 +351,9 @@ class Auth
             if ($consumer) {
                 $auth_request = $consumer->begin($website);
                 if ($auth_request) {
-                    $sreg_request = Auth_OpenID_SRegRequest::build(
-                        // Required
-                        array('nickname'),
-                        // Optional
-                        array('fullname', 'email')
-                    );
+                    $sreg_request = Auth_OpenID_SRegRequest::build(// Required
+                        array('nickname'), // Optional
+                        array('fullname', 'email'));
                     if ($sreg_request) {
                         $auth_request->addExtension($sreg_request);
                     }
@@ -369,7 +368,8 @@ class Auth
                     // For OpenID 1, send a redirect.  For OpenID 2, use a Javascript
                     // form to send a POST request to the server.
                     if ($auth_request->shouldSendRedirect()) {
-                        $redirect_url = $auth_request->redirectURL(AmpConfig::get('web_path'), Openid::get_return_url());
+                        $redirect_url = $auth_request->redirectURL(AmpConfig::get('web_path'),
+                            Openid::get_return_url());
                         if (Auth_OpenID::isFailure($redirect_url)) {
                             $results['success'] = false;
                             $results['error']   = 'Could not redirect to server: ' . $redirect_url->message;
@@ -381,7 +381,8 @@ class Auth
                     } else {
                         // Generate form markup and render it.
                         $form_id   = 'openid_message';
-                        $form_html = $auth_request->htmlMarkup(AmpConfig::get('web_path'), Openid::get_return_url(), false, array('id' => $form_id));
+                        $form_html = $auth_request->htmlMarkup(AmpConfig::get('web_path'), Openid::get_return_url(),
+                            false, array('id' => $form_id));
 
                         if (Auth_OpenID::isFailure($form_html)) {
                             $results['success'] = false;
@@ -435,8 +436,8 @@ class Auth
                 } else {
                     if ($response->status == Auth_OpenID_SUCCESS) {
                         // Extract the identity URL and Simple Registration data (if it was returned).
-                        $sreg_resp    = Auth_OpenID_SRegResponse::fromSuccessResponse($response);
-                        $sreg         = $sreg_resp->contents();
+                        $sreg_resp = Auth_OpenID_SRegResponse::fromSuccessResponse($response);
+                        $sreg      = $sreg_resp->contents();
 
                         $results['website'] = $response->getDisplayIdentifier();
                         if (@$sreg['email']) {
@@ -499,7 +500,7 @@ class Auth
     public static function token_check($username, $token, $salt)
     {
         // subsonic token auth with apikey
-        if (strlen((string) $token) && strlen((string) $salt) && strlen((string) $username)) {
+        if (strlen((string)$token) && strlen((string)$salt) && strlen((string)$username)) {
             $sql        = 'SELECT `apikey` FROM `user` WHERE `username` = ?';
             $db_results = Dba::read($sql, array($username));
             $row        = Dba::fetch_assoc($db_results);
@@ -515,4 +516,4 @@ class Auth
 
         return array();
     }
-} // end auth.class
+}

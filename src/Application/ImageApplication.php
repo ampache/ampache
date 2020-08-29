@@ -27,7 +27,7 @@ namespace Ampache\Application;
 
 use AmpConfig;
 use Art;
-use Auth;
+use Ampache\Module\Authorization\Auth;
 use Core;
 use Ampache\Module\Util\Horde_Browser;
 use Session;

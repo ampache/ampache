@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use Ampache\Config\ConfigContainerInterface;
-use Auth;
+use Ampache\Module\Authorization\Auth;
 
 /**
  * This is the logout page. It kills any cookies you have in your browser,

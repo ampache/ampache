@@ -22,6 +22,8 @@
 
 // Use output buffering, this gains us a few things and
 // fixes some CSS issues
+use Ampache\Module\Authorization\Auth;
+
 ob_start();
 
 require_once __DIR__ . '/init-tiny.php';

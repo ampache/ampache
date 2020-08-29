@@ -28,7 +28,7 @@ namespace Ampache\Application\Playback;
 use Ampache\Module\Access;
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;
-use Auth;
+use Ampache\Module\Authorization\Auth;
 use Channel;
 use Core;
 use Preference;
