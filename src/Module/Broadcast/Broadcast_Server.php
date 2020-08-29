@@ -31,7 +31,7 @@ use Exception;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 use Session;
-use Stream;
+use Ampache\Module\Playback\Stream;
 use Stream_Playlist;
 use WebPlayer;
 

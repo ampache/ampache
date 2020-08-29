@@ -27,6 +27,7 @@ namespace Ampache\Application\Playback;
 
 use Ampache\Module\Access;
 use Ampache\Application\ApplicationInterface;
+use Ampache\Module\Playback\Stream;
 use AmpConfig;
 use Ampache\Module\Authorization\Auth;
 use Catalog;
@@ -42,7 +43,6 @@ use Share;
 use Song;
 use Song_Preview;
 use Ampache\Module\Statistics\Stats;
-use Stream;
 use Stream_Playlist;
 use UI;
 use User;

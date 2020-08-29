@@ -24,6 +24,7 @@ declare(strict_types=0);
 use Ampache\Model\library_item;
 use Ampache\Model\License;
 use Ampache\Model\Shoutbox;
+use Ampache\Module\Playback\Stream;
 
 /**
  * XML_Data Class

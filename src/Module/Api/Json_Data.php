@@ -40,7 +40,7 @@ use Search;
 use Share;
 use Ampache\Model\Shoutbox;
 use Song;
-use Stream;
+use Ampache\Module\Playback\Stream;
 use Tag;
 use User;
 use Useractivity;

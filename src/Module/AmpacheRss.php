@@ -32,7 +32,7 @@ use Artist;
 use Ampache\Model\Shoutbox;
 use Song;
 use Ampache\Module\Statistics\Stats;
-use Stream;
+use Ampache\Module\Playback\Stream;
 use UI;
 use User;
 use XML_Data;

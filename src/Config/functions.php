@@ -26,6 +26,7 @@ use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Model\Plugin;
 use Ampache\Module\Access;
 use Ampache\Module\Playback\LocalPlay;
+use Ampache\Module\Playback\Stream;
 use Gettext\Translator;
 
 /**

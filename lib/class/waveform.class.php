@@ -21,7 +21,9 @@ declare(strict_types=0);
  *
  */
 
- /**
+use Ampache\Module\Playback\Stream;
+
+/**
   * Waveform code generation license:
   *
   *

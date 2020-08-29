@@ -25,6 +25,8 @@ declare(strict_types=0);
  * This class is a derived work from UMSP project (http://wiki.wdlxtv.com/UMSP).
  */
 
+use Ampache\Module\Playback\Stream;
+
 /**
  * UPnP Class
  *

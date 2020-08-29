@@ -22,6 +22,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Module\Playback\LocalPlay;
+use Ampache\Module\Playback\Stream;
 
 /**
  * Stream_Playlist Class

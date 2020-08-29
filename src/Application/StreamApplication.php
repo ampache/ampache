@@ -34,7 +34,7 @@ use Core;
 use Democratic;
 use Playlist;
 use Session;
-use Stream;
+use Ampache\Module\Playback\Stream;
 use Stream_Playlist;
 use Tmp_Playlist;
 use UI;

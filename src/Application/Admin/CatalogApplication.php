@@ -33,7 +33,7 @@ use Catalog;
 use Core;
 use Song;
 use Ampache\Module\Statistics\Stats;
-use Stream;
+use Ampache\Module\Playback\Stream;
 use UI;
 
 final class CatalogApplication implements ApplicationInterface

@@ -1,10 +1,7 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
-use Ampache\Module\Access;
-
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -24,14 +21,22 @@ use Ampache\Module\Access;
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\Playback;
+
+use Ampache\Module\Access;
+use AmpConfig;
+use Core;
+use Dba;
+use Preference;
+use Session;
+use User;
+use Video;
+
 class Stream
 {
     private static $session;
-
-    private function __construct()
-    {
-        // Static class, do nothing.
-    }
 
     /**
      * set_session
@@ -537,4 +542,4 @@ class Stream
 
         return $web_path . "/play/index.php?$session_string";
     } // get_base_url
-} // end stream.class
+}

@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\Cron;
 use Ampache\Module\Util\Recommendation;
 

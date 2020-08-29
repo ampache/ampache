@@ -5,6 +5,7 @@ declare(strict_types=0);
 use Ampache\Model\License;
 use Ampache\Model\Plugin;
 use Ampache\Model\Shoutbox;
+use Ampache\Module\Playback\Stream;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Recommendation;
 use database_object;
