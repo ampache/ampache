@@ -20,10 +20,14 @@
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
+use AmpConfig;
+use Dba;
 
 /**
- * database_object
- *
  * This is a general object that is extended by all of the basic
  * database based objects in ampache. It attempts to do some standard
  * caching for all of the objects to cut down on the database calls
@@ -34,8 +38,8 @@ abstract class database_object
     private static $object_cache = array();
 
     // Statistics for debugging
-    public static $cache_hit = 0;
-    private static $_enabled = false;
+    public static $cache_hit       = 0;
+    private static ?bool $_enabled = null;
 
     /**
      * get_info
@@ -127,6 +131,12 @@ abstract class database_object
      */
     public static function add_to_cache($index, $object_id, $data)
     {
+        /**
+         * Lazy load the cache setting to avoid some magic auto_init logic
+         */
+        if (self::$_enabled === null) {
+            self::$_enabled = AmpConfig::get('memory_cache');
+        }
         if (!self::$_enabled) {
             return false;
         }
@@ -155,13 +165,4 @@ abstract class database_object
             unset(self::$object_cache[$index][$object_id]);
         }
     } // remove_from_cache
-
-    /**
-     * _auto_init
-     * Load in the cache settings once so we can avoid function calls
-     */
-    public static function _auto_init()
-    {
-        self::$_enabled = AmpConfig::get('memory_cache');
-    } // _auto_init
-} // end database_object.abstract
+}

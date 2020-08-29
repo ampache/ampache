@@ -21,8 +21,6 @@ declare(strict_types=0);
  *
  */
 
-use database_object;
-
 /**
  * TempPlaylist Class
  *
@@ -31,7 +29,7 @@ use database_object;
  * visit user_vote from time to time.
  *
  */
-class Tmp_Playlist extends database_object
+class Tmp_Playlist extends \Ampache\Model\database_object
 {
     /* Variables from the Datbase */
     public $id;

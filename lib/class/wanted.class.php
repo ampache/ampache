@@ -22,7 +22,6 @@ declare(strict_types=0);
  */
 
 use Ampache\Model\Plugin;
-use database_object;
 use Ampache\Module\Api\Ajax;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
@@ -31,7 +30,7 @@ use MusicBrainz\Filters\ArtistFilter;
 /**
  * Class Wanted
  */
-class Wanted extends database_object
+class Wanted extends \Ampache\Model\database_object
 {
     /* Variables from DB */
 
@@ -407,7 +406,7 @@ class Wanted extends database_object
             $wanted    = new Wanted($wanted_id);
             $wanted->accept();
 
-            database_object::remove_from_cache('wanted', $wanted_id);
+            \Ampache\Model\database_object::remove_from_cache('wanted', $wanted_id);
         }
     }
 

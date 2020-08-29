@@ -3,7 +3,6 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
 use Ampache\Model\Shoutbox;
-use database_object;
 use Ampache\Model\library_item;
 
 /**
@@ -26,7 +25,7 @@ use Ampache\Model\library_item;
  *
  */
 
-class TVShow_Season extends database_object implements library_item
+class TVShow_Season extends \Ampache\Model\database_object implements library_item
 {
     /* Variables from DB */
     public $id;

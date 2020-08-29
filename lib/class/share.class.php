@@ -6,7 +6,6 @@ use Ampache\Model\Plugin;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
-use database_object;
 use Ampache\Module\Authorization\Access;
 
 /**
@@ -29,7 +28,7 @@ use Ampache\Module\Authorization\Access;
  *
  */
 
-class Share extends database_object
+class Share extends \Ampache\Model\database_object
 {
     public $id;
     public $user;

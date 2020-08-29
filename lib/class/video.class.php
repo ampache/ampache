@@ -5,7 +5,6 @@ declare(strict_types=0);
 use Ampache\Model\Shoutbox;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Statistics\Stats;
-use database_object;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
 use Ampache\Module\Authorization\Access;
@@ -30,7 +29,7 @@ use Ampache\Module\Authorization\Access;
  *
  */
 
-class Video extends database_object implements Media, library_item
+class Video extends \Ampache\Model\database_object implements Media, library_item
 {
     /**
      * @var integer $id

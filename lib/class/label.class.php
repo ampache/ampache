@@ -22,7 +22,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Model\Shoutbox;
-use database_object;
+use Ampache\Model\database_object;
 use Ampache\Model\library_item;
 use Ampache\Module\Authorization\Access;
 

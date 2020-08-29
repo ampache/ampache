@@ -22,7 +22,6 @@ declare(strict_types=0);
  */
 
 use Ampache\Module\Util\Mailer;
-use database_object;
 
 /**
  * PrivateMsg class
@@ -30,7 +29,7 @@ use database_object;
  * This is the class responsible for handling the PrivateMsg object
  * it is related to the user_pvmsg table in the database.
  */
-class PrivateMsg extends database_object
+class PrivateMsg extends \Ampache\Model\database_object
 {
     /* Variables from DB */
     /**

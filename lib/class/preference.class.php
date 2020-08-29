@@ -21,6 +21,7 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Model\database_object;
 use Ampache\Module\Authorization\Access;
 
 /**

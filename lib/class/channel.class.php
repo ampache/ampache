@@ -4,7 +4,6 @@ declare(strict_types=0);
 
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\Ui;
-use database_object;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
 use Ampache\Module\Api\Ajax;
@@ -29,7 +28,7 @@ use Ampache\Module\Api\Ajax;
  *
  */
 
-class Channel extends database_object implements Media, library_item
+class Channel extends \Ampache\Model\database_object implements Media, library_item
 {
     public $id;
     public $is_private;

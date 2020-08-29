@@ -21,7 +21,6 @@ declare(strict_types=0);
  *
  */
 
-use database_object;
 use Ampache\Model\library_item;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\InterfaceImplementationChecker;
@@ -32,7 +31,7 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
  * This class handles all of the tag relation operations
  *
  */
-class Tag extends database_object implements library_item
+class Tag extends \Ampache\Model\database_object implements library_item
 {
     public $id;
     public $name;

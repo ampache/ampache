@@ -5,7 +5,6 @@ declare(strict_types=0);
 use Ampache\Model\Shoutbox;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Recommendation;
-use database_object;
 use Ampache\Model\library_item;
 use Ampache\Module\Authorization\Access;
 
@@ -29,7 +28,7 @@ use Ampache\Module\Authorization\Access;
  *
  */
 
-class Artist extends database_object implements library_item
+class Artist extends \Ampache\Model\database_object implements library_item
 {
     /* Variables from DB */
 

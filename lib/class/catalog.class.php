@@ -28,7 +28,6 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
-use database_object;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
 use Ampache\Model\Metadata\Repository\Metadata;
@@ -42,7 +41,7 @@ use Ampache\Module\Authorization\Access;
  * it contains functions for creating/listing/updated the catalogs.
  *
  */
-abstract class Catalog extends database_object
+abstract class Catalog extends \Ampache\Model\database_object
 {
     /**
      * @var integer $id

@@ -21,15 +21,13 @@ declare(strict_types=0);
  *
  */
 
-use database_object;
-
 /**
  * Bookmark class
  *
  * This manage bookmark on playable items
  *
  */
-class Bookmark extends database_object
+class Bookmark extends \Ampache\Model\database_object
 {
     // Public variables
     public $id;

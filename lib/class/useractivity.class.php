@@ -21,15 +21,13 @@ declare(strict_types=0);
  *
  */
 
-use database_object;
-
 /**
  * Userflag class
  *
  * This user flag/unflag songs, albums, artists, videos, tvshows, movies ... as favorite.
  *
  */
-class Useractivity extends database_object
+class Useractivity extends \Ampache\Model\database_object
 {
     /* Variables from DB */
     public $id;

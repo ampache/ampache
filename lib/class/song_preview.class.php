@@ -5,7 +5,7 @@ declare(strict_types=0);
 use Ampache\Model\Plugin;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
-use database_object;
+use Ampache\Model\database_object;
 use Ampache\Model\Media;
 use Ampache\Model\playable_item;
 

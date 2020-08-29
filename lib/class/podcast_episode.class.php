@@ -5,7 +5,6 @@ declare(strict_types=0);
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
-use database_object;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
 use Ampache\Module\Authorization\Access;
@@ -30,7 +29,7 @@ use Ampache\Module\Authorization\Access;
  *
  */
 
-class Podcast_Episode extends database_object implements Media, library_item
+class Podcast_Episode extends \Ampache\Model\database_object implements Media, library_item
 {
     public $id;
     public $title;
