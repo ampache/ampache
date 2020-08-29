@@ -32,7 +32,7 @@ use AmpConfig;
 use Core;
 use Label;
 use Tag;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class EditApplication implements ApplicationInterface
 {
@@ -83,16 +83,16 @@ final class EditApplication implements ApplicationInterface
         switch ($_REQUEST['action']) {
             case 'show_edit_object':
                 ob_start();
-                require UI::find_template('show_edit_' . $type . '.inc.php');
+                require Ui::find_template('show_edit_' . $type . '.inc.php');
                 $results = ob_get_contents();
                 break;
             case 'refresh_updated':
-                require UI::find_template('show_' . $type . '.inc.php');
+                require Ui::find_template('show_' . $type . '.inc.php');
                 $results = ob_get_contents();
                 break;
             case 'show_edit_playlist':
                 ob_start();
-                require UI::find_template('show_playlists_dialog.inc.php');
+                require Ui::find_template('show_playlists_dialog.inc.php');
                 $results = ob_get_contents();
                 ob_end_clean();
                 break;

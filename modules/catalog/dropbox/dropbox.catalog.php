@@ -21,6 +21,7 @@
  */
 
 use Ampache\Model\Media;
+use Ampache\Module\Util\Ui;
 use Kunnu\Dropbox\DropboxApp;
 use Kunnu\Dropbox\Dropbox;
 use Kunnu\Dropbox\DropboxFile;
@@ -247,11 +248,11 @@ class Catalog_dropbox extends Catalog
         }
 
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_top(T_('Running Dropbox Remote Update') . '. . .');
+            Ui::show_box_top(T_('Running Dropbox Remote Update') . '. . .');
         }
         $this->update_remote_catalog();
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_bottom();
+            Ui::show_box_bottom();
         }
 
         return true;
@@ -272,7 +273,7 @@ class Catalog_dropbox extends Catalog
         /* Update the Catalog last_add */
         $this->update_last_add();
 
-        UI::update_text('', sprintf(T_('Catalog Update Finished.  Total Media: [%s]'), $this->count));
+        Ui::update_text('', sprintf(T_('Catalog Update Finished.  Total Media: [%s]'), $this->count));
 
         return true;
     }
@@ -530,14 +531,14 @@ class Catalog_dropbox extends Catalog
                     $results['file'] = $path;
                     $info            = self::update_song_from_tags($results, $song);
                     if ($info['change']) {
-                        UI::update_text('', sprintf(T_('Updated song "%s"'), $row['title']));
+                        Ui::update_text('', sprintf(T_('Updated song "%s"'), $row['title']));
                         $updated['updated']++;
                     } else {
-                        UI::update_text('', sprintf(T_('Song up to date: "%s"'), $row['title']));
+                        Ui::update_text('', sprintf(T_('Song up to date: "%s"'), $row['title']));
                     }
                 } else {
                     debug_event('dropbox.catalog', 'removing song', 5, 'ampache-catalog');
-                    UI::update_text('', sprintf(T_('Removing song "%s"'), $row['title']));
+                    Ui::update_text('', sprintf(T_('Removing song "%s"'), $row['title']));
                     Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
                 }
             }
@@ -717,8 +718,8 @@ class Catalog_dropbox extends Catalog
                         $sql             = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
                         Dba::write($sql, array($song->file, $song->id));
                         $search_count++;
-                        if (UI::check_ticker()) {
-                            UI::update_text('count_art_' . $this->id, $search_count);
+                        if (Ui::check_ticker()) {
+                            Ui::update_text('count_art_' . $this->id, $search_count);
                         }
                     }
                 }
@@ -726,7 +727,7 @@ class Catalog_dropbox extends Catalog
         }
 
         // One last time for good measure
-        UI::update_text('count_art_' . $this->id, $search_count);
+        Ui::update_text('count_art_' . $this->id, $search_count);
 
         return true;
     }

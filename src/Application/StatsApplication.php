@@ -29,14 +29,14 @@ use Ampache\Module\Access;
 use AmpConfig;
 use Core;
 use Ampache\Module\Util\Graph;
-use UI;
+use Ampache\Module\Util\Ui;
 use User;
 
 final class StatsApplication implements ApplicationInterface
 {
     public function run(): void
     {
-        UI::show_header();
+        Ui::show_header();
         define('TABLE_RENDERED', 1);
 
         // Temporary workaround to avoid sorting on custom base requests
@@ -47,33 +47,33 @@ final class StatsApplication implements ApplicationInterface
             // Show a Users "Profile" page
             case 'show_user':
                 $client = new User((int) Core::get_request('user_id'));
-                require_once UI::find_template('show_user.inc.php');
+                require_once Ui::find_template('show_user.inc.php');
                 break;
             // Show stats
             case 'newest':
-                require_once UI::find_template('show_newest.inc.php');
+                require_once Ui::find_template('show_newest.inc.php');
                 break;
             case 'popular':
-                require_once UI::find_template('show_popular.inc.php');
+                require_once Ui::find_template('show_popular.inc.php');
                 break;
             case 'highest':
-                require_once UI::find_template('show_highest.inc.php');
+                require_once Ui::find_template('show_highest.inc.php');
                 break;
             case 'userflag':
-                require_once UI::find_template('show_userflag.inc.php');
+                require_once Ui::find_template('show_userflag.inc.php');
                 break;
             case 'recent':
                 $user_id = Core::get_request('user_id');
-                require_once UI::find_template('show_recent.inc.php');
+                require_once Ui::find_template('show_recent.inc.php');
                 break;
             case 'wanted':
-                require_once UI::find_template('show_wanted.inc.php');
+                require_once Ui::find_template('show_wanted.inc.php');
                 break;
             case 'share':
-                require_once UI::find_template('show_shares.inc.php');
+                require_once Ui::find_template('show_shares.inc.php');
                 break;
             case 'upload':
-                require_once UI::find_template('show_uploads.inc.php');
+                require_once Ui::find_template('show_uploads.inc.php');
                 break;
             case 'graph':
                 Graph::display_from_request();
@@ -81,7 +81,7 @@ final class StatsApplication implements ApplicationInterface
             case 'show':
             default:
                 if (Access::check('interface', 50)) {
-                    require_once UI::find_template('show_stats.inc.php');
+                    require_once Ui::find_template('show_stats.inc.php');
                 }
                 break;
         } // end switch on action
@@ -89,7 +89,7 @@ final class StatsApplication implements ApplicationInterface
         show_table_render(false, true);
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

@@ -20,9 +20,11 @@
  *
  */
 
+use Ampache\Module\Util\Ui;
+
 $default_rename = "%T - %t";
 $default_sort   = "%a/%A"; ?>
-<?php UI::show_box_top(T_('Add Catalog'), 'box box_add_catalog'); ?>
+<?php Ui::show_box_top(T_('Add Catalog'), 'box box_add_catalog'); ?>
 <p><?php echo T_("In the form below enter either a local path (i.e. /data/music) or the URL to a remote Ampache installation (i.e http://theotherampache.com)"); ?></p>
 &nbsp;
 <?php AmpError::display('general'); ?>
@@ -105,4 +107,4 @@ $default_sort   = "%a/%A"; ?>
         <input class="button" type="submit" value="<?php echo T_('Add Catalog'); ?>" />
     </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

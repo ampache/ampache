@@ -3,6 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Util\Ui;
 use database_object;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
@@ -146,7 +147,7 @@ class Podcast_Episode extends database_object implements Media, library_item
         $min_h          = sprintf("%02d", ($min % 60));
         $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
         // Format the Size
-        $this->f_size = UI::format_bytes($this->size);
+        $this->f_size = Ui::format_bytes($this->size);
         $this->f_file = $this->f_title . '.' . $this->type;
 
         $this->link   = AmpConfig::get('web_path') . '/podcast_episode.php?action=show&podcast_episode=' . $this->id;

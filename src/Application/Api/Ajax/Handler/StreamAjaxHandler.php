@@ -29,7 +29,7 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use AmpConfig;
 use Core;
 use Preference;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class StreamAjaxHandler implements AjaxHandlerInterface
 {
@@ -76,7 +76,7 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
                 }
 
                 if (($new == 'localplay' && $current != 'localplay') || ($current == 'localplay' && $new != 'localplay')) {
-                    $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
+                    $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 }
 
                 $results['rfc3514'] = '0x0';
@@ -116,7 +116,7 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
                 if (($_REQUEST['playlist_method'] == 'clear' || AmpConfig::get('playlist_method') == 'clear')) {
                     define('NO_SONGS', '1');
                     ob_start();
-                    require_once UI::find_template('rightbar.inc.php');
+                    require_once Ui::find_template('rightbar.inc.php');
                     $results['rightbar'] = ob_get_clean();
                 }
 

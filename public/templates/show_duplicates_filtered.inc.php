@@ -21,9 +21,10 @@
  */
 
 use Ampache\Module\Ajax;
+use Ampache\Module\Util\Ui;
 
 ?>
-<?php UI::show_box_top(T_('Duplicate Songs')); ?>
+<?php Ui::show_box_top(T_('Duplicate Songs')); ?>
 <form method="post" enctype="multipart/form-data">
     <table class="tabledata">
         <tr class="th-top">
@@ -42,7 +43,7 @@ use Ampache\Module\Ajax;
                 $song->format();
                 $row_key              = 'duplicate_' . $song_id;
                 $button_flip_state_id = 'button_flip_state_' . $song_id;
-                $current_class        = ($key == '0') ? 'row-highlight' : UI::flip_class();
+                $current_class        = ($key == '0') ? 'row-highlight' : Ui::flip_class();
                 if ($song->enabled) {
                     $button     = 'disable';
                     $buttontext = T_('Disable');
@@ -76,4 +77,4 @@ use Ampache\Module\Ajax;
         </tr>
     </table>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

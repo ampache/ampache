@@ -22,19 +22,20 @@
 
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
+use Ampache\Module\Util\Ui;
 
 ?>
 <?php
 ob_start();
-require UI::find_template('show_search_title.inc.php');
+require Ui::find_template('show_search_title.inc.php');
 $title = ob_get_contents();
 ob_end_clean();
-UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title . '</div>', 'box box_smartplaylist'); ?>
+Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title . '</div>', 'box box_smartplaylist'); ?>
 <div id="information_actions">
     <ul>
         <?php if (Access::check_function('batch_download') && check_can_zip('search')) { ?>
         <li>
-            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('batch_download', T_('Batch Download')); ?></a>
+            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>"><?php echo Ui::get_icon('batch_download', T_('Batch Download')); ?></a>
             <?php echo T_('Batch Download'); ?>
         </li>
             <?php
@@ -46,7 +47,7 @@ UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
         <?php if ($playlist->has_access()) { ?>
         <li>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/smartplaylist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>">
-                <?php echo UI::get_icon('delete'); ?>
+                <?php echo Ui::get_icon('delete'); ?>
             </a>
             <?php echo T_('Delete'); ?>
         </li>
@@ -56,13 +57,13 @@ UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
 </div>
 
 <form id="editplaylist" name="editplaylist" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/smartplaylist.php?action=update_playlist&playlist_id=<?php echo $playlist->id; ?>" enctype="multipart/form-data" style="Display:inline">
-    <?php require UI::find_template('show_rules.inc.php'); ?>
+    <?php require Ui::find_template('show_rules.inc.php'); ?>
     <div class="formValidation">
         <input class="button" type="submit" value="<?php echo T_('Save Changes'); ?>" />
     </div>
 </form>
 
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>
 
 <div>
 <?php

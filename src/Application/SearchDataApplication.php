@@ -27,7 +27,7 @@ namespace Ampache\Application;
 
 use Core;
 use Search;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class SearchDataApplication implements ApplicationInterface
 {
@@ -41,7 +41,7 @@ final class SearchDataApplication implements ApplicationInterface
         echo $this->arrayToJSON($search->types) . ";\n";
         echo 'var basetypes = ';
         echo $this->arrayToJSON($search->basetypes) . ";\n";
-        echo 'removeIcon = \'<a href="javascript: void(0)">' . UI::get_icon('disable', T_('Remove')) . '</a>\';';
+        echo 'removeIcon = \'<a href="javascript: void(0)">' . Ui::get_icon('disable', T_('Remove')) . '</a>\';';
     }
     /**
      * @deprecated json_encode should do the trick here

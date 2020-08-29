@@ -24,6 +24,7 @@
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
 
 if ($song->enabled) {
     $icon     = 'disable';
@@ -33,12 +34,12 @@ if ($song->enabled) {
     $icontext = T_('Enable');
 }
 $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
-<?php UI::show_box_top($song->title . ' ' . T_('Details'), 'box box_song_details'); ?>
+<?php Ui::show_box_top($song->title . ' ' . T_('Details'), 'box box_song_details'); ?>
 <dl class="media_details">
 
     <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
-    <?php $rowparity = UI::flip_class(); ?>
+    <?php $rowparity = Ui::flip_class(); ?>
     <?php $rating    = new Rating($song->id, 'song'); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Rating'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
@@ -54,7 +55,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
     } ?>
 
     <?php if (AmpConfig::get('userflags')) { ?>
-    <?php $rowparity = UI::flip_class(); ?>
+    <?php $rowparity = Ui::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Fav.'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
         <div id="userflag_<?php echo $song->id; ?>_song"><?php Userflag::show($song->id, 'song'); ?>
@@ -65,7 +66,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
     <?php
 } ?>
     <?php if (AmpConfig::get('waveform')) { ?>
-    <?php $rowparity = UI::flip_class(); ?>
+    <?php $rowparity = Ui::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Waveform'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
         <div id="waveform_<?php echo $song->id; ?>">
@@ -74,7 +75,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
     </dd>
     <?php
     } ?>
-    <?php $rowparity = UI::flip_class(); ?>
+    <?php $rowparity = Ui::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
         <?php if (AmpConfig::get('directplay')) { ?>
@@ -95,7 +96,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
         <?php if (AmpConfig::get('sociable')) { ?>
         <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=song&id=<?php echo $song->id; ?>">
-            <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
+            <?php echo Ui::get_icon('comment', T_('Post Shout')); ?>
         </a>
         <?php
         } ?>
@@ -109,22 +110,22 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         <?php
         } ?>
         <?php if (Access::check_function('download')) { ?>
-        <a class="nohtml" href="<?php echo Song::play_url($song->id, '&action=download', '', false, Core::get_global('user')->id, true); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
-        <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
+        <a class="nohtml" href="<?php echo Song::play_url($song->id, '&action=download', '', false, Core::get_global('user')->id, true); ?>"><?php echo Ui::get_icon('link', T_('Link')); ?></a>
+        <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
         <?php
         } ?>
         <?php if (($song->user_upload > 0 && $song->user_upload == $GLOBALS['user']->id) || Access::check('interface', 50)) {
             ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) {
                 ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=song&object_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=song&object_id=<?php echo $song->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
             <?php
             } ?>
         <?php
         } ?>
         <?php if (Access::check('interface', 50) || ($song->user_upload == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit'))) { ?>
         <a onclick="showEditDialog('song_row', '<?php echo $song->id ?>', '<?php echo 'edit_song_' . $song->id ?>', '<?php echo T_('Song Edit') ?>', '')">
-            <?php echo UI::get_icon('edit', T_('Edit')); ?>
+            <?php echo Ui::get_icon('edit', T_('Edit')); ?>
         </a>
         <?php
         } ?>
@@ -136,7 +137,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         } ?>
         <?php if (Catalog::can_remove($song)) { ?>
         <a href="<?php echo AmpConfig::get('web_path'); ?>/song.php?action=delete&song_id=<?php echo $song->id; ?>">
-            <?php echo UI::get_icon('delete', T_('Delete')); ?>
+            <?php echo Ui::get_icon('delete', T_('Delete')); ?>
         </a>
         <?php
         } ?>
@@ -152,9 +153,9 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
     $songprops[T_('Genre')]         = $song->f_tags;
     $songprops[T_('Year')]          = $song->year;
     $songprops[T_('Original Year')] = scrub_out($song->get_album_original_year($song->album));
-    $songprops[T_('Links')]         = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>";
-    $songprops[T_('Links')] .= "<a href=\"https://www.duckduckgo.com/?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
-    $songprops[T_('Links')] .= "&nbsp;<a href=\"http://www.last.fm/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
+    $songprops[T_('Links')]         = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . Ui::get_icon('google', T_('Search on Google ...')) . "</a>";
+    $songprops[T_('Links')] .= "<a href=\"https://www.duckduckgo.com/?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
+    $songprops[T_('Links')] .= "&nbsp;<a href=\"http://www.last.fm/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22&type=track\" target=\"_blank\">" . Ui::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
     $songprops[T_('Length')]         = scrub_out($song->f_time);
     $songprops[T_('Comment')]        = scrub_out($song->comment);
     $label_string                    = '';
@@ -204,7 +205,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
 
     foreach ($songprops as $key => $value) {
         if (trim($value)) {
-            $rowparity = UI::flip_class();
+            $rowparity = Ui::flip_class();
             echo "<dt class=\"" . $rowparity . "\">" . T_($key) . "</dt><dd class=\"" . $rowparity . "\">" . $value . "</dd>";
         }
     }
@@ -213,11 +214,11 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         $dismetas = $song->getDisabledMetadataFields();
         foreach ($song->getMetadata() as $metadata) {
             if (!in_array($metadata->getField()->getName(), $dismetas)) {
-                $rowparity = UI::flip_class();
+                $rowparity = Ui::flip_class();
                 echo '<dt class="' . $rowparity . '">' . $metadata->getField()->getFormattedName() . '</dt>';
                 echo '<dd class="' . $rowparity . '">' . $metadata->getData() . '</dd>';
             }
         }
     } ?>
 </dl>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

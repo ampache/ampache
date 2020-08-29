@@ -31,7 +31,7 @@ use Core;
 use CpChart;
 use Dba;
 use Ampache\Model\Plugin;
-use UI;
+use Ampache\Module\Util\Ui;
 use User;
 
 class Graph
@@ -835,7 +835,7 @@ class Graph
         }
 
         if (($owner_id < 1 || $owner_id != Core::get_global('user')->id) && !Access::check('interface', 50)) {
-            UI::access_denied();
+            Ui::access_denied();
         } else {
             $user_id      = (int)Core::get_request('user_id');
             $end_date     = $_REQUEST['end_date'] ? strtotime($_REQUEST['end_date']) : time();
@@ -868,7 +868,7 @@ class Graph
                 }
             }
 
-            require_once UI::find_template('show_graphs.inc.php');
+            require_once Ui::find_template('show_graphs.inc.php');
         }
     }
 }

@@ -24,6 +24,7 @@
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\Util\Mailer;
+use Ampache\Module\Util\Ui;
 
 ?>
 <ul class="sb2" id="sb_admin">
@@ -34,7 +35,7 @@ use Ampache\Module\Util\Mailer;
     echo "</li>";
 } ?>
   <li>
-    <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Catalogs'); ?>"><?php echo T_('Catalogs'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'catalogs', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_catalogs')) ? $_COOKIE['sb_catalogs'] : 'expanded')); ?></h4>
+    <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Catalogs'); ?>"><?php echo T_('Catalogs'); ?></span><?php echo Ui::get_icon('all', T_('Expand/Collapse'), 'catalogs', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_catalogs')) ? $_COOKIE['sb_catalogs'] : 'expanded')); ?></h4>
     <ul class="sb3" id="sb_admin_catalogs">
       <li id="sb_admin_catalogs_Add"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo T_('Add Catalog'); ?></a></li>
       <li id="sb_admin_catalogs_Show"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_catalogs"><?php echo T_('Show Catalogs'); ?></a></li>
@@ -48,7 +49,7 @@ use Ampache\Module\Util\Mailer;
   </li>
   <?php if (Access::check('interface', 100)) { ?>
     <li>
-      <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('User Tools'); ?>"><?php echo T_('User Tools'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'user_tools', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_user_tools')) ? $_COOKIE['sb_user_tools'] : 'expanded')); ?></h4>
+      <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('User Tools'); ?>"><?php echo T_('User Tools'); ?></span><?php echo Ui::get_icon('all', T_('Expand/Collapse'), 'user_tools', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_user_tools')) ? $_COOKIE['sb_user_tools'] : 'expanded')); ?></h4>
       <ul class="sb3" id="sb_admin_ut">
         <li id="sb_admin_ut_AddUser"><a href="<?php echo $web_path; ?>/admin/users.php?action=show_add_user"><?php echo T_('Add User'); ?></a></li>
         <li id="sb_admin_ut_BrowseUsers"><a href="<?php echo $web_path; ?>/admin/users.php"><?php echo T_('Browse Users'); ?></a></li>
@@ -65,7 +66,7 @@ use Ampache\Module\Util\Mailer;
       </ul>
     </li>
     <li>
-      <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Access Control'); ?>"><?php echo T_('Access Control'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'access_control', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_access_control')) ? $_COOKIE['sb_access_control'] : 'expanded')); ?></h4>
+      <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Access Control'); ?>"><?php echo T_('Access Control'); ?></span><?php echo Ui::get_icon('all', T_('Expand/Collapse'), 'access_control', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_access_control')) ? $_COOKIE['sb_access_control'] : 'expanded')); ?></h4>
       <ul class="sb3" id="sb_admin_acl">
         <li id="sb_admin_acl_AddAccess"><a href="<?php echo $web_path; ?>/admin/access.php?action=show_add_advanced"><?php echo T_('Add ACL'); ?></a></li>
         <li id="sb_admin_acl_ShowAccess"><a href="<?php echo $web_path; ?>/admin/access.php"><?php echo T_('Show ACL(s)'); ?></a></li>

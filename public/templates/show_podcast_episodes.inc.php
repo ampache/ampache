@@ -21,10 +21,11 @@
  */
 
 use Ampache\Module\Ajax;
+use Ampache\Module\Util\Ui;
 
 $thcount  = 7; ?>
 <?php if ($browse->is_show_header()) {
-    require UI::find_template('list_header.inc.php');
+    require Ui::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="podcast_episode">
     <thead>
@@ -64,13 +65,13 @@ $thcount  = 7; ?>
         foreach ($object_ids as $episode_id) {
             $libitem = new Podcast_Episode($episode_id);
             $libitem->format(); ?>
-        <tr id="podcast_episode_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require UI::find_template('show_podcast_episode_row.inc.php'); ?>
+        <tr id="podcast_episode_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
+            <?php require Ui::find_template('show_podcast_episode_row.inc.php'); ?>
         </tr>
         <?php
         } ?>
         <?php if (!count($object_ids)) { ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
+        <tr class="<?php echo Ui::flip_class(); ?>">
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No podcast episode found'); ?></span></td>
         </tr>
         <?php
@@ -106,5 +107,5 @@ $thcount  = 7; ?>
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-            require UI::find_template('list_header.inc.php');
+            require Ui::find_template('list_header.inc.php');
         } ?>

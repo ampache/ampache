@@ -30,7 +30,7 @@ use AmpConfig;
 use Catalog;
 use Core;
 use Playlist;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class PlaylistApplication implements ApplicationInterface
 {
@@ -49,14 +49,14 @@ final class PlaylistApplication implements ApplicationInterface
             }
         }
 
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'create_playlist':
                 /* Check rights */
                 if (!Access::check('interface', 25)) {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
 
@@ -72,16 +72,16 @@ final class PlaylistApplication implements ApplicationInterface
                 break;
             case 'delete_playlist':
                 // If we made it here, we didn't have sufficient rights.
-                UI::access_denied();
+                Ui::access_denied();
                 break;
             case 'show_playlist':
                 $playlist = new Playlist($_REQUEST['playlist_id']);
                 $playlist->format();
                 $object_ids = $playlist->get_items();
-                require_once UI::find_template('show_playlist.inc.php');
+                require_once Ui::find_template('show_playlist.inc.php');
                 break;
             case 'show_import_playlist':
-                require_once UI::find_template('show_import_playlist.inc.php');
+                require_once Ui::find_template('show_import_playlist.inc.php');
                 break;
             case 'import_playlist':
                 /* first we rename the file to it's original name before importing.
@@ -112,7 +112,7 @@ final class PlaylistApplication implements ApplicationInterface
                 $playlist = new Playlist($_REQUEST['playlist_id']);
                 /* Make sure they have permission */
                 if (!$playlist->has_access()) {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
 
@@ -136,7 +136,7 @@ final class PlaylistApplication implements ApplicationInterface
             case 'add_song':
                 $playlist = new Playlist($_REQUEST['playlist_id']);
                 if (!$playlist->has_access()) {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
 
@@ -147,7 +147,7 @@ final class PlaylistApplication implements ApplicationInterface
                  * @deprecated Seems not in use, method `prune_empty_playlists` is not defined
                  */
                 if (!Core::get_global('user')->has_access(100)) {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
 
@@ -163,7 +163,7 @@ final class PlaylistApplication implements ApplicationInterface
                 $playlist = new Playlist($_REQUEST['playlist_id']);
                 /* Make sure they have permission */
                 if (!$playlist->has_access()) {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
 
@@ -185,27 +185,27 @@ final class PlaylistApplication implements ApplicationInterface
                     $playlist->delete_track($track_id);
                 }
                 $object_ids = $playlist->get_items();
-                require_once UI::find_template('show_playlist.inc.php');
+                require_once Ui::find_template('show_playlist.inc.php');
                 break;
             case 'sort_tracks':
                 $playlist = new Playlist($_REQUEST['playlist_id']);
                 if (!$playlist->has_access()) {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
 
                 /* Sort the tracks */
                 $playlist->sort_tracks();
                 $object_ids = $playlist->get_items();
-                require_once UI::find_template('show_playlist.inc.php');
+                require_once Ui::find_template('show_playlist.inc.php');
                 break;
             default:
-                require_once UI::find_template('show_playlist.inc.php');
+                require_once Ui::find_template('show_playlist.inc.php');
                 break;
         } // switch on the action
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

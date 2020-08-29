@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 use Ampache\Model\Plugin;
 use Ampache\Module\Util\Recommendation;
+use Ampache\Module\Util\Ui;
 use database_object;
 use Ampache\Model\library_item;
 use Ampache\Module\Ajax;
@@ -2010,11 +2011,11 @@ class Art extends database_object
             echo "<div class=\"item_art_actions\">";
             if (Core::get_global('user')->has_access(50) || (Core::get_global('user')->has_access(25) && Core::get_global('user')->id == $libitem->get_user_owner())) {
                 echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=find_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
-                echo UI::get_icon('edit', T_('Edit/Find Art'));
+                echo Ui::get_icon('edit', T_('Edit/Find Art'));
                 echo "</a>";
 
                 echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
-                echo UI::get_icon('delete', T_('Reset Art'));
+                echo Ui::get_icon('delete', T_('Reset Art'));
                 echo "</a>";
             }
             echo"</div>";

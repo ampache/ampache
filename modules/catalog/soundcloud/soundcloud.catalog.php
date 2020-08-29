@@ -21,6 +21,7 @@
  */
 
 use Ampache\Model\Media;
+use Ampache\Module\Util\Ui;
 
 /**
  * SoundCloud Catalog Class
@@ -251,11 +252,11 @@ class Catalog_soundcloud extends Catalog
         }
 
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_top(T_('Running SoundCloud Remote Update'));
+            Ui::show_box_top(T_('Running SoundCloud Remote Update'));
         }
         $this->update_remote_catalog();
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_bottom();
+            Ui::show_box_bottom();
         }
 
         return true;
@@ -325,7 +326,7 @@ class Catalog_soundcloud extends Catalog
                         }
                     }
 
-                    UI::update_text(T_("Updated"), T_('Completed updating SoundCloud Catalog(s)') . " " .
+                    Ui::update_text(T_("Updated"), T_('Completed updating SoundCloud Catalog(s)') . " " .
                         /* HINT: Number of Songs added */
                         sprintf(nT_('%s Song added', '%s Songs added', $songsadded), $songsadded));
 

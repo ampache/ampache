@@ -31,7 +31,7 @@ use Core;
 use Dba;
 use Exception;
 use Preference;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class InstallationApplication implements ApplicationInterface
 {
@@ -46,7 +46,7 @@ final class InstallationApplication implements ApplicationInterface
         // Redirect if installation is already complete.
         if (!install_check_status($configfile)) {
             $redirect_url = 'login.php';
-            require_once UI::find_template('error_page.inc.php');
+            require_once Ui::find_template('error_page.inc.php');
 
             return;
         }
@@ -200,13 +200,13 @@ final class InstallationApplication implements ApplicationInterface
                 /* Make sure we've got a valid config file */
                 if (!check_config_values($results) || !$created_config) {
                     AmpError::add('general', T_('Configuration files were either not found or unreadable'));
-                    require_once UI::find_template('show_install_config.inc.php');
+                    require_once Ui::find_template('show_install_config.inc.php');
                     break;
                 }
 
                 // Don't try to add administrator user on existing database
                 if (install_check_status($configfile)) {
-                    require_once UI::find_template('show_install_account.inc.php');
+                    require_once Ui::find_template('show_install_account.inc.php');
                 } else {
                     header("Location: " . $web_path . '/login.php');
                 }
@@ -218,7 +218,7 @@ final class InstallationApplication implements ApplicationInterface
                 $password2 = $_REQUEST['local_pass2'];
 
                 if (!install_create_account($username, $password, $password2)) {
-                    require_once UI::find_template('show_install_account.inc.php');
+                    require_once Ui::find_template('show_install_account.inc.php');
                     break;
                 }
 

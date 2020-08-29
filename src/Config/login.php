@@ -28,6 +28,7 @@
 use Ampache\Module\Access;
 use Ampache\Module\Authorization\Auth;
 use Ampache\Module\System\AutoUpdate;
+use Ampache\Module\Util\Ui;
 
 Session::create_cookie();
 Preference::init();
@@ -40,7 +41,7 @@ Preference::init();
 if (AmpConfig::get('access_control')) {
     if (!Access::check_network('interface', '', 5)) {
         debug_event('login.class', 'UI::access_denied:' . (string) filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) . ' is not in the Interface Access list', 3);
-        UI::access_denied();
+        Ui::access_denied();
 
         return false;
     }

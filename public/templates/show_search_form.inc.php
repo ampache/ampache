@@ -21,8 +21,9 @@
  */
 
 use Ampache\Module\Access;
+use Ampache\Module\Util\Ui;
 
-UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
+Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
 <form id="search" name="search" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=<?php echo (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) ? scrub_out((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) : 'song'; ?>" enctype="multipart/form-data" style="Display:inline">
 <table class="tabledata">
     <tr id="search_location">
@@ -81,7 +82,7 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
     </tr>
 </table>
 
-<?php require UI::find_template('show_rules.inc.php'); ?>
+<?php require Ui::find_template('show_rules.inc.php'); ?>
 
 <div class="formValidation">
             <input class="button" type="submit" value="<?php echo T_('Search'); ?>" />&nbsp;&nbsp;
@@ -95,4 +96,4 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
 <script>
     document.getElementById('searchString').value = '';
 </script>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

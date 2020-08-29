@@ -31,7 +31,7 @@ use Ampache\Module\Util\Captcha\captcha;
 use Core;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\User\Registration;
-use UI;
+use Ampache\Module\Util\Ui;
 use User;
 
 final class RegisterApplication implements ApplicationInterface
@@ -41,7 +41,7 @@ final class RegisterApplication implements ApplicationInterface
         /* Check Perms */
         if (!AmpConfig::get('allow_public_registration') && !Mailer::is_mail_enabled()) {
             debug_event('register', 'Error Attempted registration', 2);
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
@@ -58,7 +58,7 @@ final class RegisterApplication implements ApplicationInterface
             case 'validate':
                 $username      = scrub_in(Core::get_get('username'));
                 $validation    = scrub_in(Core::get_get('auth'));
-                require_once UI::find_template('show_user_activate.inc.php');
+                require_once Ui::find_template('show_user_activate.inc.php');
                 break;
             case 'add_user':
                 /**
@@ -147,7 +147,7 @@ final class RegisterApplication implements ApplicationInterface
 
                 // If we've hit an error anywhere up there break!
                 if (AmpError::occurred()) {
-                    require_once UI::find_template('show_user_registration.inc.php');
+                    require_once Ui::find_template('show_user_registration.inc.php');
                     break;
                 }
 
@@ -170,7 +170,7 @@ final class RegisterApplication implements ApplicationInterface
 
                 if ($new_user > 0) {
                     AmpError::add('duplicate_user', T_("Failed to create user"));
-                    require_once UI::find_template('show_user_registration.inc.php');
+                    require_once Ui::find_template('show_user_registration.inc.php');
                     break;
                 }
 
@@ -183,11 +183,11 @@ final class RegisterApplication implements ApplicationInterface
                     Registration::send_confirmation($username, $fullname, $email, $website, $validation);
                 }
 
-                require_once UI::find_template('show_registration_confirmation.inc.php');
+                require_once Ui::find_template('show_registration_confirmation.inc.php');
                 break;
             case 'show_add_user':
             default:
-                require_once UI::find_template('show_user_registration.inc.php');
+                require_once Ui::find_template('show_user_registration.inc.php');
                 break;
         } // end switch on action
     }

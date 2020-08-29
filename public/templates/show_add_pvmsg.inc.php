@@ -18,8 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
-<?php UI::show_box_top(T_('Compose Message'), 'box box_add_pvmsg'); ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
+<?php Ui::show_box_top(T_('Compose Message'), 'box box_add_pvmsg'); ?>
 <form name="label" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=add_message">
 <table class="tabledata">
 <tr>
@@ -80,4 +84,4 @@ $(function() {
     });
 });
 </script>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

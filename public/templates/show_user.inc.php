@@ -22,11 +22,12 @@
 
 use Ampache\Model\Plugin;
 use Ampache\Module\Access;
+use Ampache\Module\Util\Ui;
 
 $last_seen   = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');
 $create_date = $client->create_date ? get_datetime((int) $client->create_date) : T_('Unknown');
 $client->format(); ?>
-<?php UI::show_box_top($client->f_name); ?>
+<?php Ui::show_box_top($client->f_name); ?>
 <div class="user_avatar">
 <?php
 if ($client->f_avatar) {
@@ -50,50 +51,50 @@ if ($client->f_avatar) {
 } ?>
 </div>
 <dl class="media_details">
-    <?php $rowparity = UI::flip_class(); ?>
+    <?php $rowparity = Ui::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Display Name'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
         <?php echo $client->f_name; ?>
         <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
             <a id="<?php echo 'reply_pvmsg_' . $client->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $client->username; ?>">
-                <?php echo UI::get_icon('mail', T_('Send private message')); ?>
+                <?php echo Ui::get_icon('mail', T_('Send private message')); ?>
             </a>
         <?php
     } ?>
         <?php if (Access::check('interface', 100)) { ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_edit&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('edit', T_('Edit')); ?></a>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_preferences&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('preferences', T_('Preferences')); ?></a>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_edit&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('edit', T_('Edit')); ?></a>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_preferences&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('preferences', T_('Preferences')); ?></a>
         <?php
     } elseif ($client->id == Core::get_global('user')->id) { ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?tab=account"><?php echo UI::get_icon('edit', T_('Edit')); ?></a>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?tab=account"><?php echo Ui::get_icon('edit', T_('Edit')); ?></a>
 
         <?php
     }
     if (AmpConfig::get('use_now_playing_embedded')) { ?>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/now_playing.php?user_id=<?php echo $client->id; ?>" target="_blank"><?php echo UI::get_icon('play_preview', T_('Now Playing')); ?></a>
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/now_playing.php?user_id=<?php echo $client->id; ?>" target="_blank"><?php echo Ui::get_icon('play_preview', T_('Now Playing')); ?></a>
  <?php
     } ?>
 
     </dd>
-    <?php $rowparity = UI::flip_class(); ?>
+    <?php $rowparity = Ui::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Member Since'); ?></dt>
     <dd class="<?php echo $rowparity; ?>"><?php echo $create_date; ?></dd>
-    <?php $rowparity = UI::flip_class(); ?>
+    <?php $rowparity = Ui::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Last Seen'); ?></dt>
     <dd class="<?php echo $rowparity; ?>"><?php echo $last_seen; ?></dd>
-    <?php $rowparity = UI::flip_class(); ?>
+    <?php $rowparity = Ui::flip_class(); ?>
     <?php if (Access::check('interface', 50)) { ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Activity'); ?></dt>
     <dd class="<?php echo $rowparity; ?>"><?php echo $client->f_usage; ?></dd>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) {
         ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
         <?php
     } ?>
     </dd>
     <?php
 } ?>
-    <?php $rowparity = UI::flip_class(); ?>
+    <?php $rowparity = Ui::flip_class(); ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Status'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
     <?php if ($client->is_logged_in() && $client->is_online()) { ?>
@@ -105,7 +106,7 @@ if ($client->f_avatar) {
     } ?>
     </dd>
 </dl><br />
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>
 
 <div class="tabs_wrapper">
     <div id="tabs_container">
@@ -130,7 +131,7 @@ if ($client->f_avatar) {
         $tmp_playlist = new Tmp_Playlist(Tmp_Playlist::get_from_userid($client->id));
         $object_ids   = $tmp_playlist->get_items();
         if (count($object_ids) > 0) {
-            UI::show_box_top(T_('Active Playlist')); ?>
+            Ui::show_box_top(T_('Active Playlist')); ?>
         <table>
             <tr>
                 <td>
@@ -146,14 +147,14 @@ if ($client->f_avatar) {
                 </td>
             </tr>
         </table><br />
-        <?php UI::show_box_bottom(); ?>
+        <?php Ui::show_box_bottom(); ?>
         <?php
         } ?>
         <?php
             $data = Song::get_recently_played($client->id);
             Song::build_cache(array_keys($data));
             $user_id = $client->id;
-            require UI::find_template('show_recently_played.inc.php'); ?>
+            require Ui::find_template('show_recently_played.inc.php'); ?>
         </div>
         <?php if (AmpConfig::get('allow_upload')) { ?>
         <div id="artists" class="tab_content">

@@ -28,13 +28,13 @@ namespace Ampache\Application;
 use AmpConfig;
 use Catalog;
 use TVShow;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class TvShowApplication implements ApplicationInterface
 {
     public function run(): void
     {
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
@@ -60,7 +60,7 @@ final class TvShowApplication implements ApplicationInterface
                 $tvshow = new TVShow($_REQUEST['tvshow_id']);
                 if (!Catalog::can_remove($tvshow)) {
                     debug_event('tvshows', 'Unauthorized to remove the tvshow `.' . $tvshow->id . '`.', 1);
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -76,7 +76,7 @@ final class TvShowApplication implements ApplicationInterface
                 $tvshow->format();
                 $object_ids  = $tvshow->get_seasons();
                 $object_type = 'tvshow_season';
-                require_once UI::find_template('show_tvshow.inc.php');
+                require_once Ui::find_template('show_tvshow.inc.php');
                 break;
             case 'match':
             case 'Match':
@@ -90,10 +90,10 @@ final class TvShowApplication implements ApplicationInterface
                     $chr = $match;
                 }
                 /* Enclose this in the purty box! */
-                require UI::find_template('show_box_top.inc.php');
+                require Ui::find_template('show_box_top.inc.php');
                 show_alphabet_list('tvshows', 'tvshows.php', $match);
                 show_alphabet_form($chr, T_('Show TV Shows starting with'), "tvshows.php?action=match");
-                require UI::find_template('show_box_bottom.inc.php');
+                require Ui::find_template('show_box_bottom.inc.php');
 
                 if ($match === "Browse") {
                     show_tvshows();
@@ -111,7 +111,7 @@ final class TvShowApplication implements ApplicationInterface
         } // end switch
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

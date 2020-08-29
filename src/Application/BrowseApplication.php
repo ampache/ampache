@@ -29,7 +29,7 @@ use AmpConfig;
 use Browse;
 use Core;
 use Tag;
-use UI;
+use Ampache\Module\Util\Ui;
 
 /**
  * Browse Page
@@ -75,10 +75,10 @@ final class BrowseApplication implements ApplicationInterface
                 break;
         } // end switch
 
-        UI::show_header();
+        Ui::show_header();
 
         if (in_array($_REQUEST['action'], array('song', 'album', 'artist', 'label', 'channel', 'broadcast', 'live_stream', 'podcast', 'video'))) {
-            UI::show('show_browse_form.inc.php');
+            Ui::show('show_browse_form.inc.php');
         }
 
         // Browser is able to save page on current session. Only applied to main menus.
@@ -104,14 +104,14 @@ final class BrowseApplication implements ApplicationInterface
                 $object_ids = $browse->get_saved();
                 $keys       = array_keys($object_ids);
                 Tag::build_cache($keys);
-                UI::show_box_top(T_('Tag Cloud'), 'box box_tag_cloud');
+                Ui::show_box_top(T_('Tag Cloud'), 'box box_tag_cloud');
                 $browse2 = new Browse();
                 $browse2->set_type($browse_type);
                 $browse2->store();
-                require_once UI::find_template('show_tagcloud.inc.php');
-                UI::show_box_bottom();
+                require_once Ui::find_template('show_tagcloud.inc.php');
+                Ui::show_box_bottom();
                 $type = $browse2->get_type();
-                require_once UI::find_template('browse_content.inc.php');
+                require_once Ui::find_template('browse_content.inc.php');
                 break;
             case 'artist':
                 $browse->set_filter('catalog', $_SESSION['catalog']);
@@ -215,7 +215,7 @@ final class BrowseApplication implements ApplicationInterface
         $browse->store();
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

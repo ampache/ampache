@@ -18,9 +18,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
 
-<?php UI::show_box_top(T_('E-mail Users'), 'box box_mail_users'); ?>
+use Ampache\Module\Util\Ui;
+
+?>
+
+<?php Ui::show_box_top(T_('E-mail Users'), 'box box_mail_users'); ?>
 <form name="mail" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/mail.php?action=send_mail" enctype="multipart/form-data">
     <table class="tabledata">
         <tr>
@@ -60,4 +64,4 @@
         <input class="button" type="submit" value="<?php echo T_('Send e-mail'); ?>" />
     </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Util\Ui;
+
 $web_path       = AmpConfig::get('web_path');
 $theme_path     = AmpConfig::get('theme_path') . '/templates';
 $theme_color    = AmpConfig::get('theme_color');
@@ -41,4 +43,4 @@ if (is_rtl(AmpConfig::get('lang'))
 <?php } ?>
 <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/prettyphoto/css/prettyPhoto.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/jquery-ui.custom.css'; ?>" type="text/css" media="screen" />
-<?php UI::show_custom_style(); ?>
+<?php Ui::show_custom_style(); ?>

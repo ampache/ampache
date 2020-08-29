@@ -18,8 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
-<?php UI::show_box_top(T_('Edit Localplay Instance'), 'box box_localplay_edit_instance'); ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
+<?php Ui::show_box_top(T_('Edit Localplay Instance'), 'box box_localplay_edit_instance'); ?>
 <form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/localplay.php?action=update_instance&amp;instance=<?php echo (int) scrub_in(filter_input(INPUT_GET, 'instance', FILTER_SANITIZE_SPECIAL_CHARS)); ?>">
 <table class="tabledata">
 <?php foreach ($fields as $key => $field) { ?>
@@ -34,4 +38,4 @@
         <input type="submit" value="<?php echo T_('Update Instance'); ?>" />
   </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

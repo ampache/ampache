@@ -18,8 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
-<?php UI::show_box_top(T_('Importing a Playlist from a File'), 'box box_import_playlist'); ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
+<?php Ui::show_box_top(T_('Importing a Playlist from a File'), 'box box_import_playlist'); ?>
 <form method="post" name="import_playlist" action="<?php echo AmpConfig::get('web_path'); ?>/playlist.php" enctype="multipart/form-data">
     <table class="tabledata">
         <tr>
@@ -34,4 +38,4 @@
         <input type="submit" value="<?php echo T_('Import Playlist'); ?>" />
     </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

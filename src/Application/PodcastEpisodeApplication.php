@@ -28,13 +28,13 @@ namespace Ampache\Application;
 use AmpConfig;
 use Catalog;
 use Podcast_Episode;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class PodcastEpisodeApplication implements ApplicationInterface
 {
     public function run(): void
     {
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
@@ -60,7 +60,7 @@ final class PodcastEpisodeApplication implements ApplicationInterface
                 $episode = new Podcast_Episode($_REQUEST['podcast_episode_id']);
                 if (!Catalog::can_remove($episode)) {
                     debug_event('podcast_episode', 'Unauthorized to remove the episode `.' . $episode->id . '`.', 1);
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -75,12 +75,12 @@ final class PodcastEpisodeApplication implements ApplicationInterface
             default:
                 $episode = new Podcast_Episode($_REQUEST['podcast_episode']);
                 $episode->format();
-                require_once UI::find_template('show_podcast_episode.inc.php');
+                require_once Ui::find_template('show_podcast_episode.inc.php');
                 break;
         }
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

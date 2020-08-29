@@ -30,25 +30,25 @@ use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use AmpError;
 use Core;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class AccessApplication implements ApplicationInterface
 {
     public function run(): void
     {
         if (!Access::check('interface', 100)) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
 
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'delete_record':
                 if (!Core::form_verify('delete_access')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -69,7 +69,7 @@ final class AccessApplication implements ApplicationInterface
             case 'add_host':
                 // Make sure we've got a valid form submission
                 if (!Core::form_verify('add_acl', 'post')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -93,12 +93,12 @@ final class AccessApplication implements ApplicationInterface
                     show_confirmation(T_('No Problem'), T_('Your new Access Control List(s) have been created'), $url);
                 } else {
                     $action = 'show_add_' . Core::get_post('type');
-                    require_once UI::find_template('show_add_access.inc.php');
+                    require_once Ui::find_template('show_add_access.inc.php');
                 }
                 break;
             case 'update_record':
                 if (!Core::form_verify('edit_acl')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -108,7 +108,7 @@ final class AccessApplication implements ApplicationInterface
                     show_confirmation(T_('No Problem'), T_('Your Access Control List has been updated'), AmpConfig::get('web_path') . '/admin/access.php');
                 } else {
                     $access->format();
-                    require_once UI::find_template('show_edit_access.inc.php');
+                    require_once Ui::find_template('show_edit_access.inc.php');
                 }
                 break;
             case 'show_add_current':
@@ -116,22 +116,22 @@ final class AccessApplication implements ApplicationInterface
             case 'show_add_local':
             case 'show_add_advanced':
                 $action = Core::get_request('action');
-                require_once UI::find_template('show_add_access.inc.php');
+                require_once Ui::find_template('show_add_access.inc.php');
                 break;
             case 'show_edit_record':
                 $access = new Access(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
                 $access->format();
-                require_once UI::find_template('show_edit_access.inc.php');
+                require_once Ui::find_template('show_edit_access.inc.php');
                 break;
             default:
                 $list = array();
                 $list = Access::get_access_lists();
-                require_once UI::find_template('show_access_list.inc.php');
+                require_once Ui::find_template('show_access_list.inc.php');
                 break;
         } // end switch on action
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

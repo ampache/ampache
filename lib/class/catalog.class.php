@@ -26,6 +26,7 @@ use Ampache\Model\Shoutbox;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Recommendation;
+use Ampache\Module\Util\Ui;
 use database_object;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
@@ -656,7 +657,7 @@ abstract class Catalog extends database_object
         $counts         = array_merge(User::count(), $counts);
         $counts['tags'] = self::count_tags();
 
-        $counts['formatted_size'] = UI::format_bytes($counts['size']);
+        $counts['formatted_size'] = Ui::format_bytes($counts['size']);
 
         $hours = floor($counts['time'] / 3600);
         $days  = floor($hours / 24);
@@ -1380,8 +1381,8 @@ abstract class Catalog extends database_object
             Video::generate_preview($object_id);
         }
 
-        if (UI::check_ticker() && !$api) {
-            UI::update_text('read_art_' . $object_id, $libitem->get_fullname());
+        if (Ui::check_ticker() && !$api) {
+            Ui::update_text('read_art_' . $object_id, $libitem->get_fullname());
         }
         if ($inserted) {
             return true;
@@ -1448,13 +1449,13 @@ abstract class Catalog extends database_object
 
                 // Stupid little cutesie thing
                 $search_count++;
-                if (UI::check_ticker()) {
-                    UI::update_text('count_art_' . $this->id, $search_count);
+                if (Ui::check_ticker()) {
+                    Ui::update_text('count_art_' . $this->id, $search_count);
                 }
             }
         }
         // One last time for good measure
-        UI::update_text('count_art_' . $this->id, $search_count);
+        Ui::update_text('count_art_' . $this->id, $search_count);
 
         return true;
     }
@@ -1489,14 +1490,14 @@ abstract class Catalog extends database_object
 
                 // Stupid little cutesie thing
                 $search_count++;
-                if (UI::check_ticker()) {
-                    UI::update_text('count_artist_' . $object_id, $search_count);
+                if (Ui::check_ticker()) {
+                    Ui::update_text('count_artist_' . $object_id, $search_count);
                 }
             }
         }
 
         // One last time for good measure
-        UI::update_text('count_artist_complete', $search_count);
+        Ui::update_text('count_artist_complete', $search_count);
     }
 
     /**
@@ -1723,14 +1724,14 @@ abstract class Catalog extends database_object
                     $result = (int) $change[1];
                 }
                 $file   = scrub_out($song->file);
-                echo '<tr class="' . UI::flip_class() . '">' . "\n";
+                echo '<tr class="' . Ui::flip_class() . '">' . "\n";
                 echo "<td>$file</td><td>" . T_('Updated') . "</td>\n";
                 echo $info['text'];
                 echo "</td>\n</tr>\n";
                 flush();
             } else {
                 if (!$api) {
-                    echo '<tr class="' . UI::flip_class() . '"><td>' . scrub_out($song->file) . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
+                    echo '<tr class="' . Ui::flip_class() . '"><td>' . scrub_out($song->file) . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
                 }
                 flush();
             }
@@ -2167,7 +2168,7 @@ abstract class Catalog extends database_object
         debug_event('catalog.class', 'Starting clean on ' . $this->name, 5);
 
         if (!defined('SSE_OUTPUT')) {
-            require UI::find_template('show_clean_catalog.inc.php');
+            require Ui::find_template('show_clean_catalog.inc.php');
             ob_flush();
             flush();
         }
@@ -2178,11 +2179,11 @@ abstract class Catalog extends database_object
         debug_event('catalog.class', 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 4);
 
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_top();
+            Ui::show_box_top();
         }
-        UI::update_text(T_("Catalog Cleaned"), sprintf(nT_("%d file removed.", "%d files removed.", $dead_total), $dead_total));
+        Ui::update_text(T_("Catalog Cleaned"), sprintf(nT_("%d file removed.", "%d files removed.", $dead_total), $dead_total));
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_bottom();
+            Ui::show_box_bottom();
         }
 
         $this->update_last_clean();
@@ -2195,7 +2196,7 @@ abstract class Catalog extends database_object
     public function verify_catalog()
     {
         if (!defined('SSE_OUTPUT')) {
-            require UI::find_template('show_verify_catalog.inc.php');
+            require Ui::find_template('show_verify_catalog.inc.php');
             ob_flush();
             flush();
         }
@@ -2203,11 +2204,11 @@ abstract class Catalog extends database_object
         $verified = $this->verify_catalog_proc();
 
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_top();
+            Ui::show_box_top();
         }
-        UI::update_text(T_("Catalog Verified"), sprintf(nT_('%d file updated.', '%d files updated.', $verified['updated']), $verified['updated']));
+        Ui::update_text(T_("Catalog Verified"), sprintf(nT_('%d file updated.', '%d files updated.', $verified['updated']), $verified['updated']));
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_bottom();
+            Ui::show_box_bottom();
         }
 
         return true;
@@ -2885,7 +2886,7 @@ abstract class Catalog extends database_object
                 foreach ($catalogs as $catalog_id) {
                     $catalog = self::create_from_id($catalog_id);
                     if ($catalog !== null) {
-                        require UI::find_template('show_gather_art.inc.php');
+                        require Ui::find_template('show_gather_art.inc.php');
                         flush();
                         $catalog->gather_art();
                     }

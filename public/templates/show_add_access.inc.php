@@ -18,8 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
-<?php UI::show_box_top(T_('Add Access Control List'), 'box box_add_access'); ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
+<?php Ui::show_box_top(T_('Add Access Control List'), 'box box_add_access'); ?>
 <?php AmpError::display('general');
 $apirpc       = T_('API/RPC');
 $localnetwork = T_('Local Network Definition');
@@ -114,4 +118,4 @@ $all          = T_('All'); ?>
         <input class="button" type="submit" value="<?php echo T_('Create ACL'); ?>" />
     </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

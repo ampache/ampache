@@ -18,8 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
-<?php UI::show_box_top(T_('Customize Search'), 'box box_get_albumart'); ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
+<?php Ui::show_box_top(T_('Customize Search'), 'box box_get_albumart'); ?>
 <form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=find_art&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>&artist_name=<?php echo urlencode(Core::get_request('artist_name'));?>&album_name=<?php echo urlencode(Core::get_request('album_name')); ?>&cover=<?php echo urlencode(Core::get_request('cover')); ?>" style="Display:inline;">
     <table class="tabledata">
         <?php
@@ -46,7 +50,7 @@
         </tr>
         <tr>
             <td>
-                <?php echo T_('Local Image'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)
+                <?php echo T_('Local Image'); ?> (&lt; <?php echo Ui::format_bytes(AmpConfig::get('max_upload_size')); ?>)
             </td>
             <td>
                 <input type="file" id="file" name="file" value="" />
@@ -63,4 +67,4 @@
         <input type="submit" value="<?php echo T_('Get Art'); ?>" />
     </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

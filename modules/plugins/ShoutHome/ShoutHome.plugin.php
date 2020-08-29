@@ -2,6 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
 use Ampache\Model\Shoutbox;
+use Ampache\Module\Util\Ui;
 
 /**
  *
@@ -96,7 +97,7 @@ class AmpacheShoutHome
             echo "<div id='shout_objects'>\n";
             $shouts = Shoutbox::get_top($this->maxitems);
             if (count($shouts)) {
-                require_once UI::find_template('show_shoutbox.inc.php');
+                require_once Ui::find_template('show_shoutbox.inc.php');
             }
             echo "</div>\n";
         }

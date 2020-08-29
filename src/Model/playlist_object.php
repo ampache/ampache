@@ -28,7 +28,7 @@ use AmpConfig;
 use Art;
 use Core;
 use database_object;
-use UI;
+use Ampache\Module\Util\Ui;
 use User;
 
 /**
@@ -82,7 +82,7 @@ abstract class playlist_object extends database_object implements library_item
     public function format($details = true)
     {
         $this->f_name = $this->name;
-        $this->f_type = ($this->type == 'private') ? UI::get_icon('lock', T_('Private')) : '';
+        $this->f_type = ($this->type == 'private') ? Ui::get_icon('lock', T_('Private')) : '';
 
         if ($details) {
             $client = new User($this->user);

@@ -18,8 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
-<?php UI::show_box_top(T_('Subscribe to Podcast'), 'box box_add_podcast'); ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
+<?php Ui::show_box_top(T_('Subscribe to Podcast'), 'box box_add_podcast'); ?>
 <form name="podcast" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=create">
 <table class="tabledata">
 <tr>
@@ -42,4 +46,4 @@
     <input class="button" type="submit" value="<?php echo T_('Subscribe'); ?>" />
 </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

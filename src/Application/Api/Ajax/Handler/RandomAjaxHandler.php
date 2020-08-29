@@ -32,7 +32,7 @@ use Browse;
 use Core;
 use Playlist;
 use Ampache\Model\Random;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class RandomAjaxHandler implements AjaxHandlerInterface
 {
@@ -54,7 +54,7 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                 foreach ($songs as $song_id) {
                     Core::get_global('user')->playlist->add_object($song_id, 'song');
                 }
-                $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
+                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             case 'album':
                 $album_id = Album::get_random(null, false, Core::get_global('user')->id);
@@ -82,7 +82,7 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                 foreach ($songs as $song_id) {
                     Core::get_global('user')->playlist->add_object($song_id, 'song');
                 }
-                $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
+                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             case 'artist':
                 $artist_id = Random::artist();
@@ -97,7 +97,7 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                 foreach ($songs as $song_id) {
                     Core::get_global('user')->playlist->add_object($song_id, 'song');
                 }
-                $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
+                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             case 'playlist':
                 $playlist_id = Random::playlist();
@@ -112,7 +112,7 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                 foreach ($items as $item) {
                     Core::get_global('user')->playlist->add_object($item['object_id'], $item['object_type']);
                 }
-                $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
+                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             case 'advanced_random':
                 $object_ids = Random::advanced('song', $_POST);
@@ -123,7 +123,7 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                         Core::get_global('user')->playlist->add_object($object_id, 'song');
                     }
                 }
-                $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
+                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
 
                 // Now setup the browse and show them below!
                 $browse = new Browse();

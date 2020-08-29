@@ -18,8 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
-<?php UI::show_box_top(T_('Missing Artists'), 'info-box'); ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
+<?php Ui::show_box_top(T_('Missing Artists'), 'info-box'); ?>
 <table class="tabledata">
     <thead>
         <tr class="th-top">
@@ -30,7 +34,7 @@
         <?php
         if ($wartists) {
             foreach ($wartists as $libitem) { ?>
-        <tr id="wartist_<?php echo $libitem['mbid']; ?>" class="<?php echo UI::flip_class(); ?>">
+        <tr id="wartist_<?php echo $libitem['mbid']; ?>" class="<?php echo Ui::flip_class(); ?>">
             <td class="cel_artist">
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/artists.php?action=show_missing&amp;mbid=<?php echo $libitem['mbid']; ?>"><?php echo $libitem['name']; ?></a>
             </td>
@@ -39,11 +43,11 @@
             }
         } ?>
         <?php if (!$wartists || !count($wartists)) { ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
+        <tr class="<?php echo Ui::flip_class(); ?>">
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No missing artists found'); ?></span></td>
         </tr>
         <?php
         } ?>
     </tbody>
 </table>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

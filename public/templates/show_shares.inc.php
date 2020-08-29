@@ -18,15 +18,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
-<?php UI::show_box_top(T_('Shares')); ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
+<?php Ui::show_box_top(T_('Shares')); ?>
 <div id="information_actions">
     <ul>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=clean"><?php echo UI::get_icon('clean', T_('Clean')); ?> <?php echo T_('Clean Expired Shared Objects'); ?></a>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=clean"><?php echo Ui::get_icon('clean', T_('Clean')); ?> <?php echo T_('Clean Expired Shared Objects'); ?></a>
         </li>
     </ul>
 </div>
 
-<?php require_once UI::find_template('show_stats_share.inc.php'); ?>
-<?php UI::show_box_bottom(); ?>
+<?php require_once Ui::find_template('show_stats_share.inc.php'); ?>
+<?php Ui::show_box_bottom(); ?>

@@ -23,6 +23,7 @@
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
 
 ?>
 <td class="cel_play">
@@ -57,7 +58,7 @@ use Ampache\Module\Playback\Stream_Playlist;
             if (Access::check('interface', 25)) {
                 echo Ajax::button('?action=basket&type=playlist_random&id=' . $libitem->id, 'random', T_('Random to temporary playlist'), 'random_playlist_' . $libitem->id); ?>
             <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'playlist', '<?php echo $libitem->id ?>')">
-                <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
+                <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
             </a>
         <?php
             } ?>
@@ -82,7 +83,7 @@ use Ampache\Module\Playback\Stream_Playlist;
 <?php
     if (Access::check_function('batch_download') && check_can_zip('playlist')) { ?>
         <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $libitem->id; ?>">
-            <?php echo UI::get_icon('batch_download', T_('Batch download')); ?>
+            <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
         </a>
 <?php
     }
@@ -93,7 +94,7 @@ use Ampache\Module\Playback\Stream_Playlist;
     }
     if ($libitem->has_access()) { ?>
     <a id="<?php echo 'edit_playlist_' . $libitem->id ?>" onclick="showEditDialog('playlist_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_playlist_' . $libitem->id ?>', '<?php echo T_('Playlist Edit') ?>', 'playlist_row_')">
-        <?php echo UI::get_icon('edit', T_('Edit')); ?>
+        <?php echo Ui::get_icon('edit', T_('Edit')); ?>
     </a>
     <?php echo Ajax::button('?page=browse&action=delete_object&type=playlist&id=' . $libitem->id, 'delete', T_('Delete'), 'delete_playlist_' . $libitem->id, '', '', T_('Do you really want to delete this Playlist?'));
     } ?>

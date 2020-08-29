@@ -18,8 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
-<?php UI::show_box_top(T_('Missing Albums'), 'info-box'); ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
+<?php Ui::show_box_top(T_('Missing Albums'), 'info-box'); ?>
 <table class="tabledata">
     <thead>
         <tr class="th-top">
@@ -34,18 +38,18 @@
         <?php
         if ($walbums) {
             foreach ($walbums as $libitem) { ?>
-        <tr id="walbum_<?php echo $libitem->mbid; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require UI::find_template('show_wanted_album_row.inc.php'); ?>
+        <tr id="walbum_<?php echo $libitem->mbid; ?>" class="<?php echo Ui::flip_class(); ?>">
+            <?php require Ui::find_template('show_wanted_album_row.inc.php'); ?>
         </tr>
         <?php
             }
         } ?>
         <?php if (!$walbums || !count($walbums)) { ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
+        <tr class="<?php echo Ui::flip_class(); ?>">
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No missing albums found'); ?></span></td>
         </tr>
         <?php
         } ?>
     </tbody>
 </table>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

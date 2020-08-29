@@ -28,22 +28,22 @@ namespace Ampache\Application;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use AmpConfig;
 use Core;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class CookieDisclaimerApplication implements ApplicationInterface
 {
     public function run(): void
     {
-        UI::show_header();
+        Ui::show_header();
         $object_type = Core::get_request('action');
         if (!InterfaceImplementationChecker::is_library_item($object_type)) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
 
-        require_once UI::find_template('cookie_disclaimer.inc.php');
+        require_once Ui::find_template('cookie_disclaimer.inc.php');
 
-        UI::show_footer();
+        Ui::show_footer();
     }
 }

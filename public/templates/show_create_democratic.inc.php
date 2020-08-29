@@ -20,7 +20,9 @@
  *
  */
 
-UI::show_box_top(T_('Configure Democratic Playlist')); ?>
+use Ampache\Module\Util\Ui;
+
+Ui::show_box_top(T_('Configure Democratic Playlist')); ?>
 <form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=create" enctype="multipart/form-data">
     <table class="tabledata">
         <tr>
@@ -70,4 +72,4 @@ UI::show_box_top(T_('Configure Democratic Playlist')); ?>
         <input type="submit" value="<?php echo T_('Update'); ?>" />
     </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

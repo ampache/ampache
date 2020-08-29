@@ -23,14 +23,15 @@
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
 
 ?>
-<?php UI::show_box_top($episode->f_title . ' - ' . $episode->f_podcast_link, 'box box_podcast_episode_details'); ?>
+<?php Ui::show_box_top($episode->f_title . ' - ' . $episode->f_podcast_link, 'box box_podcast_episode_details'); ?>
 <dl class="media_details">
 
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
-        <?php $rowparity = UI::flip_class(); ?>
+        <?php $rowparity = Ui::flip_class(); ?>
         <dt class="<?php echo $rowparity; ?>"><?php echo T_('Rating'); ?></dt>
         <dd class="<?php echo $rowparity; ?>">
             <div id="rating_<?php echo $episode->id; ?>_podcast_episode"><?php Rating::show($episode->id, 'podcast_episode'); ?>
@@ -40,7 +41,7 @@ use Ampache\Module\Playback\Stream_Playlist;
     } ?>
 
     <?php if (AmpConfig::get('userflags')) { ?>
-        <?php $rowparity = UI::flip_class(); ?>
+        <?php $rowparity = Ui::flip_class(); ?>
         <dt class="<?php echo $rowparity; ?>"><?php echo T_('Fav.'); ?></dt>
         <dd class="<?php echo $rowparity; ?>">
             <div id="userflag_<?php echo $episode->id; ?>_podcast_episode"><?php Userflag::show($episode->id, 'podcast_episode'); ?>
@@ -50,7 +51,7 @@ use Ampache\Module\Playback\Stream_Playlist;
     } ?>
 <?php
 } ?>
-<?php $rowparity = UI::flip_class(); ?>
+<?php $rowparity = Ui::flip_class(); ?>
 <dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
         <?php if (!empty($episode->file)) { ?>
@@ -72,7 +73,7 @@ use Ampache\Module\Playback\Stream_Playlist;
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=podcast_episode&id=<?php echo $episode->id; ?>">
-                <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
+                <?php echo Ui::get_icon('comment', T_('Post Shout')); ?>
                 </a>
             <?php
         } ?>
@@ -86,23 +87,23 @@ use Ampache\Module\Playback\Stream_Playlist;
         <?php
     } ?>
         <?php if (Access::check_function('download') && !empty($episode->file)) { ?>
-            <a class="nohtml" href="<?php echo print_r(Podcast_Episode::play_url($episode->id)); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
-            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $episode->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
+            <a class="nohtml" href="<?php echo print_r(Podcast_Episode::play_url($episode->id)); ?>"><?php echo Ui::get_icon('link', T_('Link')); ?></a>
+            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $episode->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
         <?php
     } ?>
         <?php if (Access::check('interface', 50)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=podcast_episode&object_id=<?php echo $episode->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=podcast_episode&object_id=<?php echo $episode->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
             <?php
         } ?>
             <a onclick="showEditDialog('podcast_episode_row', '<?php echo $episode->id ?>', '<?php echo 'edit_podcast_episode_' . $episode->id ?>', '<?php echo T_('Podcast Episode Edit') ?>', '')">
-                <?php echo UI::get_icon('edit', T_('Edit')); ?>
+                <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>
         <?php
     } ?>
         <?php if (Catalog::can_remove($episode)) { ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/podcast_episode.php?action=delete&podcast_episode_id=<?php echo $episode->id; ?>">
-                <?php echo UI::get_icon('delete', T_('Delete')); ?>
+                <?php echo Ui::get_icon('delete', T_('Delete')); ?>
             </a>
         <?php
     } ?>
@@ -126,9 +127,9 @@ use Ampache\Module\Playback\Stream_Playlist;
 
     foreach ($songprops as $key => $value) {
         if (trim($value)) {
-            $rowparity = UI::flip_class();
+            $rowparity = Ui::flip_class();
             echo "<dt class=\"" . $rowparity . "\">" . T_($key) . "</dt><dd class=\"" . $rowparity . "\">" . $value . "</dd>";
         }
     } ?>
 </dl>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

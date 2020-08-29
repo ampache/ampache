@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Util\Ui;
+
 if ($playlist) {
     $logic_operator = $playlist->logic_operator;
 } else {
@@ -29,7 +31,7 @@ $logic_operator = strtolower($logic_operator); ?>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search.js"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) ? scrub_out((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) : 'song'; ?>"></script>
 
-<?php UI::show_box_top(T_('Rules') . "...", 'box box_rules'); ?>
+<?php Ui::show_box_top(T_('Rules') . "...", 'box box_rules'); ?>
 <table class="tabledata">
 <tbody id="searchtable">
     <tr id="rules_operator">
@@ -48,7 +50,7 @@ $logic_operator = strtolower($logic_operator); ?>
     <tr id="rules_addrowbutton">
     <td>
         <a id="addrowbutton" href="javascript:void(0)">
-            <?php echo UI::get_icon('add'); ?>
+            <?php echo Ui::get_icon('add'); ?>
         <?php echo T_('Add Another Rule'); ?>
         </a>
         <script>$('#addrowbutton').on('click', SearchRow.add);</script>
@@ -56,7 +58,7 @@ $logic_operator = strtolower($logic_operator); ?>
     </tr>
 </tbody>
 </table>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>
 
 <?php
 if ($playlist) {

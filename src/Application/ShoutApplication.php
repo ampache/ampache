@@ -31,26 +31,26 @@ use AmpConfig;
 use AmpError;
 use Core;
 use Ampache\Model\Shoutbox;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class ShoutApplication implements ApplicationInterface
 {
     public function run(): void
     {
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'add_shout':
                 // Must be at least a user to do this
                 if (!Access::check('interface', 25)) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
 
                 if (!Core::form_verify('add_shout', 'post')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -64,7 +64,7 @@ final class ShoutApplication implements ApplicationInterface
                 }
 
                 if (!InterfaceImplementationChecker::is_library_item(Core::get_post('object_type'))) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -89,7 +89,7 @@ final class ShoutApplication implements ApplicationInterface
                 }
 
                 // Now go ahead and display the page where we let them add a comment etc
-                require_once UI::find_template('show_add_shout.inc.php');
+                require_once Ui::find_template('show_add_shout.inc.php');
                 break;
             default:
                 header("Location:" . AmpConfig::get('web_path'));
@@ -97,7 +97,7 @@ final class ShoutApplication implements ApplicationInterface
         } // end switch on action
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

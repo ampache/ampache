@@ -28,13 +28,13 @@ namespace Ampache\Application;
 use AmpConfig;
 use Catalog;
 use Song;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class SongApplication implements ApplicationInterface
 {
     public function run(): void
     {
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
@@ -60,7 +60,7 @@ final class SongApplication implements ApplicationInterface
                 $song = new Song($_REQUEST['song_id']);
                 if (!Catalog::can_remove($song)) {
                     debug_event('song', 'Unauthorized to remove the song `.' . $song->id . '`.', 1);
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -76,7 +76,7 @@ final class SongApplication implements ApplicationInterface
                 $song->format();
                 $song->fill_ext_info();
                 $lyrics = $song->get_lyrics();
-                require_once UI::find_template('show_lyrics.inc.php');
+                require_once Ui::find_template('show_lyrics.inc.php');
                 break;
             case 'show_song':
             default:
@@ -87,13 +87,13 @@ final class SongApplication implements ApplicationInterface
                     debug_event('song', 'Requested a song that does not exist', 2);
                     echo T_("You have requested a Song that does not exist.");
                 } else {
-                    require_once UI::find_template('show_song.inc.php');
+                    require_once Ui::find_template('show_song.inc.php');
                 }
                 break;
         } // end data collection
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

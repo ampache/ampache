@@ -18,8 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
-<?php UI::show_box_top(T_('Create Playlist')); ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
+<?php Ui::show_box_top(T_('Create Playlist')); ?>
 <form name="songs" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/playlist.php">
     <table class="tabledata">
         <tr>
@@ -41,4 +45,4 @@
         <input type="hidden" name="action" value="Create" />
     </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

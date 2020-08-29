@@ -21,6 +21,7 @@
  */
 
 use Ampache\Module\Ajax;
+use Ampache\Module\Util\Ui;
 
 ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="wanted">
@@ -38,11 +39,11 @@ use Ampache\Module\Ajax;
         foreach ($object_ids as $wanted_id) {
             $libitem = new Wanted($wanted_id);
             $libitem->format(); ?>
-        <tr id="walbum_<?php echo $libitem->mbid; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require UI::find_template('show_wanted_album_row.inc.php'); ?>
+        <tr id="walbum_<?php echo $libitem->mbid; ?>" class="<?php echo Ui::flip_class(); ?>">
+            <?php require Ui::find_template('show_wanted_album_row.inc.php'); ?>
         </tr>
         <?php
         } ?>
     </tbody>
 </table>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

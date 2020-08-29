@@ -23,9 +23,10 @@
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
 
 ?>
-<?php UI::show_box_top($video->f_title . ' ' . T_('Details'), 'box box_video_details'); ?>
+<?php Ui::show_box_top($video->f_title . ' ' . T_('Details'), 'box box_video_details'); ?>
 <div class="item_right_info">
 <?php
 $gart = false;
@@ -58,7 +59,7 @@ $subtitles = $video->get_subtitles();
 <dl class="media_details">
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
-        <?php $rowparity = UI::flip_class(); ?>
+        <?php $rowparity = Ui::flip_class(); ?>
         <dt class="<?php echo $rowparity; ?>"><?php echo T_('Rating'); ?></dt>
         <dd class="<?php echo $rowparity; ?>">
             <div id="rating_<?php echo $video->id; ?>_video"><?php Rating::show($video->id, 'video'); ?>
@@ -68,7 +69,7 @@ $subtitles = $video->get_subtitles();
         } ?>
 
     <?php if (AmpConfig::get('userflags')) { ?>
-        <?php $rowparity = UI::flip_class(); ?>
+        <?php $rowparity = Ui::flip_class(); ?>
         <dt class="<?php echo $rowparity; ?>"><?php echo T_('Fav.'); ?></dt>
         <dd class="<?php echo $rowparity; ?>">
             <div id="userflag_<?php echo $video->id; ?>_video"><?php Userflag::show($video->id, 'video'); ?>
@@ -78,7 +79,7 @@ $subtitles = $video->get_subtitles();
         } ?>
 <?php
     } ?>
-<?php $rowparity = UI::flip_class(); ?>
+<?php $rowparity = Ui::flip_class(); ?>
 <dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
         <?php if (AmpConfig::get('directplay')) { ?>
@@ -92,7 +93,7 @@ $subtitles = $video->get_subtitles();
         <?php echo Ajax::button('?action=basket&type=video&id=' . $video->id, 'add', T_('Add to temporary playlist'), 'add_video_' . $video->id); ?>
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $video->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('comment', T_('Post Shout')); ?></a>
             <?php
         } ?>
         <?php
@@ -105,23 +106,23 @@ $subtitles = $video->get_subtitles();
         <?php
     } ?>
         <?php if (Access::check_function('download')) { ?>
-            <a class="nohtml" href="<?php echo Video::play_url($video->id); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
-            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
+            <a class="nohtml" href="<?php echo Video::play_url($video->id); ?>"><?php echo Ui::get_icon('link', T_('Link')); ?></a>
+            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
         <?php
     } ?>
         <?php if (Access::check('interface', 50)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=video&object_id=<?php echo $video->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=video&object_id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
             <?php
         } ?>
             <a onclick="showEditDialog('video_row', '<?php echo $video->id ?>', '<?php echo 'edit_video_' . $video->id ?>', '<?php echo T_('Video Edit') ?>', '')">
-                <?php echo UI::get_icon('edit', T_('Edit')); ?>
+                <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>
         <?php
     } ?>
         <?php if (Catalog::can_remove($video)) { ?>
             <a id="<?php echo 'delete_video_' . $video->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/video.php?action=delete&video_id=<?php echo $video->id; ?>">
-                <?php echo UI::get_icon('delete', T_('Delete')); ?>
+                <?php echo Ui::get_icon('delete', T_('Delete')); ?>
             </a>
         <?php
     } ?>
@@ -130,7 +131,7 @@ $subtitles = $video->get_subtitles();
   $videoprops[T_('Title')]   = scrub_out($video->f_title);
   $videoprops[T_('Length')]  = scrub_out($video->f_time);
 if (get_class($video) != 'Video') {
-    require UI::find_template('show_partial_' . strtolower(get_class($video)) . '.inc.php');
+    require Ui::find_template('show_partial_' . strtolower(get_class($video)) . '.inc.php');
 }
   $videoprops[T_('Release Date')]    = scrub_out($video->f_release_date);
   $videoprops[T_('Codec')]           = scrub_out($video->f_codec);
@@ -153,9 +154,9 @@ if (get_class($video) != 'Video') {
 
     foreach ($videoprops as $key => $value) {
         if (trim($value)) {
-            $rowparity = UI::flip_class();
+            $rowparity = Ui::flip_class();
             echo "<dt class=\"" . $rowparity . "\">" . T_($key) . "</dt><dd class=\"" . $rowparity . "\">" . $value . "</dd>";
         }
     } ?>
 </dl>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

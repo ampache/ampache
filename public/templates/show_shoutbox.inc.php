@@ -21,18 +21,19 @@
  */
 
 use Ampache\Model\Shoutbox;
+use Ampache\Module\Util\Ui;
 
 ?>
-<?php UI::show_box_top(T_('Shoutbox')); ?>
+<?php Ui::show_box_top(T_('Shoutbox')); ?>
 <div id="shoutbox">
 <?php
   foreach ($shouts as $shout_id) {
       $shout = new Shoutbox($shout_id);
       $shout->format(); ?>
-<div id="shout<?php echo $shout->id; ?>" class="shout <?php echo UI::flip_class(); ?>">
+<div id="shout<?php echo $shout->id; ?>" class="shout <?php echo Ui::flip_class(); ?>">
     <?php echo $shout->get_display(true, true); ?>
 </div>
 <?php
   } ?>
 </div>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

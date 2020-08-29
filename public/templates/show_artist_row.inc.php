@@ -23,6 +23,7 @@
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
 
 ?>
 <td class="cel_play">
@@ -58,7 +59,7 @@ if (Art::is_enabled()) {
             echo Ajax::button('?action=basket&type=artist&id=' . $libitem->id, 'add', T_('Add to temporary playlist'), 'add_artist_' . $libitem->id);
             echo Ajax::button('?action=basket&type=artist_random&id=' . $libitem->id, 'random', T_('Random to temporary playlist'), 'random_artist_' . $libitem->id); ?>
             <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'artist', '<?php echo $libitem->id ?>')">
-                <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
+                <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
             </a>
         <?php
         } ?>
@@ -87,19 +88,19 @@ if (Art::is_enabled()) {
 <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
         if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) { ?>
     <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&amp;id=<?php echo $libitem->id; ?>">
-        <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
+        <?php echo Ui::get_icon('comment', T_('Post Shout')); ?>
     </a>
     <?php
     }
         if ($libitem->can_edit()) { ?>
         <a id="<?php echo 'edit_artist_' . $libitem->id ?>" onclick="showEditDialog('artist_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_artist_' . $libitem->id ?>', '<?php echo T_('Artist Edit') ?>', 'artist_')">
-        <?php echo UI::get_icon('edit', T_('Edit')); ?>
+        <?php echo Ui::get_icon('edit', T_('Edit')); ?>
         </a>
     <?php
     }
         if (Catalog::can_remove($libitem)) { ?>
         <a id="<?php echo 'delete_artist_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/artists.php?action=delete&artist_id=<?php echo $libitem->id; ?>">
-            <?php echo UI::get_icon('delete', T_('Delete')); ?>
+            <?php echo Ui::get_icon('delete', T_('Delete')); ?>
         </a>
     <?php
     }

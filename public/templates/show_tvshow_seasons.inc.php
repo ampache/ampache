@@ -21,11 +21,12 @@
  */
 
 use Ampache\Module\Ajax;
+use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path');
 $thcount  = 6; ?>
 <?php if ($browse->is_show_header()) {
-    require UI::find_template('list_header.inc.php');
+    require Ui::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="tvshow_season">
     <thead>
@@ -67,13 +68,13 @@ $thcount  = 6; ?>
         foreach ($object_ids as $season_id) {
             $libitem = new TVShow_season($season_id);
             $libitem->format(); ?>
-        <tr id="tvshow_season_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require UI::find_template('show_tvshow_season_row.inc.php'); ?>
+        <tr id="tvshow_season_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
+            <?php require Ui::find_template('show_tvshow_season_row.inc.php'); ?>
         </tr>
         <?php
         } ?>
         <?php if (!count($object_ids)) { ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
+        <tr class="<?php echo Ui::flip_class(); ?>">
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No season found'); ?></span></td>
         </tr>
         <?php
@@ -106,5 +107,5 @@ $thcount  = 6; ?>
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-            require UI::find_template('list_header.inc.php');
+            require Ui::find_template('list_header.inc.php');
         } ?>

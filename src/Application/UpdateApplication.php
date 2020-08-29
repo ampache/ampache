@@ -30,7 +30,7 @@ use AmpConfig;
 use AmpError;
 use Ampache\Module\System\AutoUpdate;
 use Core;
-use UI;
+use Ampache\Module\Util\Ui;
 use Update;
 
 final class UpdateApplication implements ApplicationInterface
@@ -43,7 +43,7 @@ final class UpdateApplication implements ApplicationInterface
         if (Core::get_request('action') == 'update') {
             if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) == 'sources') {
                 if (!Access::check('interface', 100)) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -78,7 +78,7 @@ final class UpdateApplication implements ApplicationInterface
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container" style="height: 70px;">
                 <a class="navbar-brand" href="#">
-                    <img src="<?php echo UI::get_logo_url('dark'); ?>" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
+                    <img src="<?php echo Ui::get_logo_url('dark'); ?>" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
                     <?php echo T_('Ampache') . ' :: ' . T_('For the Love of Music') . ' - ' . T_('Installation'); ?>
                 </a>
             </div>

@@ -23,6 +23,7 @@
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
 
 ?>
 <td class="cel_play">
@@ -62,7 +63,7 @@ if (Art::is_enabled()) {
                 } else {
                     echo implode(',', $libitem->album_suite);
                 } ?>')">
-            <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
+            <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
         </a>
             <?php
             } ?>
@@ -94,7 +95,7 @@ if (Art::is_enabled()) {
     <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
         if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) { ?>
         <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&amp;id=<?php echo $libitem->id; ?>">
-            <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
+            <?php echo Ui::get_icon('comment', T_('Post Shout')); ?>
         </a>
     <?php
     }
@@ -105,19 +106,19 @@ if (Art::is_enabled()) {
         }
         if (Access::check_function('batch_download') && check_can_zip('album')) { ?>
             <a class="nohtml" href="<?php echo AmpConfig::get('web_path') ?>/batch.php?action=album&<?php echo $libitem->get_http_album_query_ids('id') ?>">
-                <?php echo UI::get_icon('batch_download', T_('Batch download')); ?>
+                <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
             </a>
     <?php
     }
         if (Access::check('interface', 50) && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) { ?>
             <a id="<?php echo 'edit_album_' . $libitem->id ?>" onclick="showEditDialog('album_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_album_' . $libitem->id ?>', '<?php echo T_('Album Edit') ?>', 'album_')">
-                <?php echo UI::get_icon('edit', T_('Edit')); ?>
+                <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>
     <?php
     }
         if (Catalog::can_remove($libitem)) { ?>
             <a id="<?php echo 'delete_album_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path') ?>/albums.php?action=delete&album_id=<?php echo $libitem->id ?>">
-            <?php echo UI::get_icon('delete', T_('Delete')); ?>
+            <?php echo Ui::get_icon('delete', T_('Delete')); ?>
             </a>
     <?php
     }

@@ -18,8 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
-<tr id="flagged_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
+<tr id="flagged_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
     <td class="cel_object"><?php echo $object->f_link; ?></td>
     <td class="cel_username"><?php echo $client->f_link; ?></td>
     <td class="cel_sticky"><?php echo $libitem->sticky; ?></td>
@@ -27,10 +31,10 @@
     <td class="cel_date"><?php echo $libitem->date; ?></td>
     <td class="cel_action">
         <a href="<?php echo $web_path; ?>/admin/shout.php?action=show_edit&amp;shout_id=<?php echo $libitem->id; ?>">
-            <?php echo UI::get_icon('edit', T_('Edit')); ?>
+            <?php echo Ui::get_icon('edit', T_('Edit')); ?>
         </a>
         <a href="<?php echo $web_path; ?>/admin/shout.php?action=delete&amp;shout_id=<?php echo $libitem->id; ?>">
-            <?php echo UI::get_icon('delete', T_('Delete')); ?>
+            <?php echo Ui::get_icon('delete', T_('Delete')); ?>
         </a>
     </td>
 </tr>

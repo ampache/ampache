@@ -34,7 +34,7 @@ use Core;
 use Ampache\Module\Util\Mailer;
 use Preference;
 use Ampache\Module\User\Registration;
-use UI;
+use Ampache\Module\Util\Ui;
 use User;
 
 final class UsersApplication implements ApplicationInterface
@@ -42,12 +42,12 @@ final class UsersApplication implements ApplicationInterface
     public function run(): void
     {
         if (!Access::check('interface', 100)) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
 
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
@@ -57,7 +57,7 @@ final class UsersApplication implements ApplicationInterface
                 }
 
                 if (!Core::form_verify('edit_user', 'post')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -99,7 +99,7 @@ final class UsersApplication implements ApplicationInterface
 
                 /* If we've got an error then show edit form! */
                 if (AmpError::occurred()) {
-                    require_once UI::find_template('show_edit_user.inc.php');
+                    require_once Ui::find_template('show_edit_user.inc.php');
                     break;
                 }
 
@@ -146,7 +146,7 @@ final class UsersApplication implements ApplicationInterface
                 }
 
                 if (!Core::form_verify('add_user', 'post')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -181,7 +181,7 @@ final class UsersApplication implements ApplicationInterface
 
                 /* If we've got an error then show add form! */
                 if (AmpError::occurred()) {
-                    require_once UI::find_template('show_add_user.inc.php');
+                    require_once Ui::find_template('show_add_user.inc.php');
                     break;
                 }
 
@@ -242,14 +242,14 @@ final class UsersApplication implements ApplicationInterface
                 }
                 $client = new User((int) Core::get_request('user_id'));
                 $client->format();
-                require_once UI::find_template('show_edit_user.inc.php');
+                require_once Ui::find_template('show_edit_user.inc.php');
                 break;
             case 'confirm_delete':
                 if (AmpConfig::get('demo_mode')) {
                     break;
                 }
                 if (!Core::form_verify('delete_user')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -284,7 +284,7 @@ final class UsersApplication implements ApplicationInterface
                 }
 
                 if (!Core::form_verify('delete_avatar', 'post')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -307,7 +307,7 @@ final class UsersApplication implements ApplicationInterface
                 }
 
                 if (!Core::form_verify('generate_apikey', 'post')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -330,7 +330,7 @@ final class UsersApplication implements ApplicationInterface
                 }
 
                 if (!Core::form_verify('generate_rsstoken', 'post')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -353,18 +353,18 @@ final class UsersApplication implements ApplicationInterface
                 } else {
                     $history = $working_user->get_ip_history(1);
                 }
-                require UI::find_template('show_ip_history.inc.php');
+                require Ui::find_template('show_ip_history.inc.php');
                 break;
             case 'show_add_user':
                 if (AmpConfig::get('demo_mode')) {
                     break;
                 }
-                require_once UI::find_template('show_add_user.inc.php');
+                require_once Ui::find_template('show_add_user.inc.php');
                 break;
             case 'show_preferences':
                 $client      = new User((int) Core::get_request('user_id'));
                 $preferences = Preference::get_all($client->id);
-                require_once UI::find_template('show_user_preferences.inc.php');
+                require_once Ui::find_template('show_user_preferences.inc.php');
                 break;
             default:
                 $browse = new Browse();
@@ -379,7 +379,7 @@ final class UsersApplication implements ApplicationInterface
         } // end switch on action
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

@@ -22,22 +22,23 @@
 
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
+use Ampache\Module\Util\Ui;
 
 ?>
 <?php if (Access::check('interface', 50)) { ?>
-<?php UI::show_box_top(T_('Manage'), 'info-box'); ?>
+<?php Ui::show_box_top(T_('Manage'), 'info-box'); ?>
 <div id="information_actions">
 <ul>
 <li>
-    <a href="<?php echo AmpConfig::get('web_path'); ?>/radio.php?action=show_create"><?php echo UI::get_icon('add', T_('Add')); ?> <?php echo T_('Add Radio Station'); ?></a>
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/radio.php?action=show_create"><?php echo Ui::get_icon('add', T_('Add')); ?> <?php echo T_('Add Radio Station'); ?></a>
 </li>
 </ul>
 </div>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>
 <?php
 } ?>
 <?php if ($browse->is_show_header()) {
-    require UI::find_template('list_header.inc.php');
+    require Ui::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="live_stream">
     <thead>
@@ -55,8 +56,8 @@ use Ampache\Module\Ajax;
         foreach ($object_ids as $radio_id) {
             $libitem = new Live_Stream($radio_id);
             $libitem->format(); ?>
-        <tr id="live_stream_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require UI::find_template('show_live_stream_row.inc.php'); ?>
+        <tr id="live_stream_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
+            <?php require Ui::find_template('show_live_stream_row.inc.php'); ?>
         </tr>
         <?php
         } // end foreach ($artists as $artist)?>
@@ -79,5 +80,5 @@ use Ampache\Module\Ajax;
     </tfoot>
 </table>
 <?php if ($browse->is_show_header()) {
-            require UI::find_template('list_header.inc.php');
+            require Ui::find_template('list_header.inc.php');
         } ?>

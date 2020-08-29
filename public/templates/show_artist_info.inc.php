@@ -18,11 +18,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
 
 <div class="item_info">
     <?php if ($biography['id']) {
-    $thumb = UI::is_grid_view('artist') ? 2 : 11;
+    $thumb = Ui::is_grid_view('artist') ? 2 : 11;
     Art::display('artist', $biography['id'], $artist->f_name, $thumb);
 } else { ?>
         <div class="item_art">

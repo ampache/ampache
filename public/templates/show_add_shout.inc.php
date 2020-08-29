@@ -22,6 +22,7 @@
 
 use Ampache\Model\Shoutbox;
 use Ampache\Module\Access;
+use Ampache\Module\Util\Ui;
 
 $object_type = strtolower(get_class($object)); ?>
 <div>
@@ -32,7 +33,7 @@ $boxtitle = T_('Post to Shoutbox');
     if ($data) {
         $boxtitle .= ' (' . $data . ')';
     }
-    UI::show_box_top($boxtitle, 'box box_add_shout'); ?>
+    Ui::show_box_top($boxtitle, 'box box_add_shout'); ?>
 <form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=add_shout">
 <table id="shoutbox-input">
 <tr>
@@ -58,19 +59,19 @@ $boxtitle = T_('Post to Shoutbox');
 </tr>
 </table>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>
 </div>
 <?php
 } ?>
 <div style="display: inline;">
 <?php
 $boxtitle = $object->f_title . ' ' . T_('Shoutbox');
-UI::show_box_top($boxtitle, 'box box_add_shout'); ?>
+Ui::show_box_top($boxtitle, 'box box_add_shout'); ?>
 <?php
 $shouts = Shoutbox::get_shouts($object_type, $object->id);
 if (count($shouts)) {
-    require_once UI::find_template('show_shoutbox.inc.php');
+    require_once Ui::find_template('show_shoutbox.inc.php');
 } ?>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>
 </div>
 </div>

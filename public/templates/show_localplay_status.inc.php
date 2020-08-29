@@ -21,6 +21,7 @@
  */
 
 use Ampache\Module\Ajax;
+use Ampache\Module\Util\Ui;
 
 $status      = $localplay->status();
 $now_playing = $status['track_title'];
@@ -28,7 +29,7 @@ if (!empty($status['track_album'])) {
     $now_playing .= ' - ' . $status['track_album'] . ' - ' . $status['track_artist'];
 } ?>
 <?php Ajax::start_container('localplay_status'); ?>
-<?php UI::show_box_top(T_('Localplay Control') . ' - ' . strtoupper($localplay->type), 'box box_localplay_status'); ?>
+<?php Ui::show_box_top(T_('Localplay Control') . ' - ' . strtoupper($localplay->type), 'box box_localplay_status'); ?>
 <?php echo T_('Now Playing'); ?>:&nbsp;<i><?php echo $now_playing; ?></i>
 <div id="information_actions">
     <ul>
@@ -57,5 +58,5 @@ if (!empty($status['track_album'])) {
     $browse->set_static_content(true);
     $browse->show_objects($objects);
     $browse->store(); ?>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>
 <?php Ajax::end_container(); ?>

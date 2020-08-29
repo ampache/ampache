@@ -1,5 +1,8 @@
 <?php
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+use Ampache\Module\Util\Ui;
+
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -95,13 +98,13 @@ class AmpacheFriendsTimeline
                 echo '<div class="home_plugin">';
                 $activities = Useractivity::get_friends_activities($user_id, $this->maxitems);
                 if (count($activities) > 0) {
-                    UI::show_box_top(T_('Friends Timeline'));
+                    Ui::show_box_top(T_('Friends Timeline'));
                     Useractivity::build_cache($activities);
                     foreach ($activities as $activity_id) {
                         $activity = new Useractivity($activity_id);
                         $activity->show();
                     }
-                    UI::show_box_bottom();
+                    Ui::show_box_bottom();
                 }
                 echo '</div>';
             }

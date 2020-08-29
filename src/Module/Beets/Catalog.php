@@ -30,7 +30,7 @@ use Ampache\Model\Metadata\Repository\Metadata;
 use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
-use UI;
+use Ampache\Module\Util\Ui;
 use Dba;
 use Song;
 
@@ -104,10 +104,10 @@ abstract class Catalog extends \Catalog
      */
     protected function updateUi($prefix, $count, $song = null, $ignoreTicker = false)
     {
-        if ($ignoreTicker || UI::check_ticker()) {
-            UI::update_text($prefix . '_count_' . $this->id, $count);
+        if ($ignoreTicker || Ui::check_ticker()) {
+            Ui::update_text($prefix . '_count_' . $this->id, $count);
             if (isset($song)) {
-                UI::update_text($prefix . '_dir_' . $this->id, scrub_out($this->getVirtualSongPath($song)));
+                Ui::update_text($prefix . '_dir_' . $this->id, scrub_out($this->getVirtualSongPath($song)));
             }
         }
     }
@@ -124,12 +124,12 @@ abstract class Catalog extends \Catalog
     public function add_to_catalog($options = null)
     {
         if (!defined('SSE_OUTPUT')) {
-            require UI::find_template('show_adds_catalog.inc.php');
+            require Ui::find_template('show_adds_catalog.inc.php');
             flush();
         }
         set_time_limit(0);
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_top(T_('Running Beets Update'));
+            Ui::show_box_top(T_('Running Beets Update'));
         }
         $parser = $this->getParser();
         $parser->setHandler($this, 'addSong');
@@ -138,7 +138,7 @@ abstract class Catalog extends \Catalog
         $this->update_last_add();
 
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_bottom();
+            Ui::show_box_bottom();
         }
     }
 

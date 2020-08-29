@@ -20,8 +20,10 @@
  *
  */
 
- $web_path = AmpConfig::get('web_path');
-UI::show_box_top("Song Lyrics", 'box box_lyrics_song');
+use Ampache\Module\Util\Ui;
+
+$web_path = AmpConfig::get('web_path');
+Ui::show_box_top("Song Lyrics", 'box box_lyrics_song');
 
 // Prepare the variables
 $title  = scrub_out($song->title);
@@ -63,4 +65,4 @@ if ($album != T_('Unknown (Orphaned)')) {
 } ?>
 </div>
 
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

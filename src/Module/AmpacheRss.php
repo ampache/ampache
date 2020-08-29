@@ -33,7 +33,7 @@ use Ampache\Model\Shoutbox;
 use Song;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Playback\Stream;
-use UI;
+use Ampache\Module\Util\Ui;
 use User;
 use XML_Data;
 
@@ -189,7 +189,7 @@ class AmpacheRss
             $rsstoken = "&rsstoken=" . $user->rsstoken;
         }
 
-        $string = '<a class="nohtml" href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . $rsstoken . $strparams . '">' . UI::get_icon('feed',
+        $string = '<a class="nohtml" href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . $rsstoken . $strparams . '">' . Ui::get_icon('feed',
                 T_('RSS Feed'));
         if (!empty($title)) {
             $string .= ' &nbsp;' . $title;

@@ -23,13 +23,14 @@
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path'); ?>
 <?php
 $browse = new Browse();
 $browse->set_type($object_type);
 
-UI::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box'); ?>
+Ui::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box'); ?>
 <div class="item_right_info">
     <?php
     Art::display('tvshow_season', $season->id, $season->f_name, 6); ?>
@@ -70,7 +71,7 @@ UI::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box'); 
         <?php if (Access::check('interface', 50)) { ?>
         <li>
             <a id="<?php echo 'edit_tvshow_season_' . $season->id ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $season->id ?>', '<?php echo 'edit_tvshow_season_' . $season->id ?>', '<?php echo T_('Season Edit') ?>', '')">
-                <?php echo UI::get_icon('edit', T_('Edit')); ?>
+                <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>
             <a id="<?php echo 'edit_tvshow_season_' . $season->id ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $season->id ?>', '<?php echo 'edit_tvshow_season_' . $season->id ?>', '<?php echo T_('Season Edit') ?>', '')">
                 <?php echo T_('Edit Season'); ?>
@@ -81,14 +82,14 @@ UI::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box'); 
         <?php if (Catalog::can_remove($season)) { ?>
         <li>
             <a id="<?php echo 'delete_tvshow_season_' . $season->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/tvshow_seasons.php?action=delete&tvshow_season_id=<?php echo $season->id; ?>">
-                <?php echo UI::get_icon('delete', T_('Delete')); ?> <?php echo T_('Delete'); ?>
+                <?php echo Ui::get_icon('delete', T_('Delete')); ?> <?php echo T_('Delete'); ?>
             </a>
         </li>
         <?php
     } ?>
     </ul>
 </div>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>
 <div class="tabs_wrapper">
     <div id="tabs_container">
         <ul id="tabs">

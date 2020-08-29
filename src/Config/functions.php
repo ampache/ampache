@@ -27,6 +27,7 @@ use Ampache\Model\Plugin;
 use Ampache\Module\Access;
 use Ampache\Module\Playback\LocalPlay;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Util\Ui;
 use Gettext\Translator;
 
 /**
@@ -42,8 +43,8 @@ function set_memory_limit($new_limit)
         return;
     }
 
-    $current_limit = UI::unformat_bytes($current_limit);
-    $new_limit     = UI::unformat_bytes($new_limit);
+    $current_limit = Ui::unformat_bytes($current_limit);
+    $new_limit     = Ui::unformat_bytes($new_limit);
 
     if ($current_limit < $new_limit) {
         ini_set('memory_limit', $new_limit);
@@ -939,7 +940,7 @@ function create_preference_input($name, $value)
             $api_key     = rawurlencode(AmpConfig::get('lastfm_api_key'));
             $callback    = rawurlencode(AmpConfig::get('web_path') . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
             /* HINT: Plugin Name */
-            echo "<a href='$url/api/auth/?api_key=$api_key&cb=$callback'>" . UI::get_icon('plugin', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
+            echo "<a href='$url/api/auth/?api_key=$api_key&cb=$callback'>" . Ui::get_icon('plugin', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
             break;
         default:
             if (preg_match('/_pass$/', $name)) {
@@ -1523,7 +1524,7 @@ function show_confirmation($title, $text, $next_url, $cancel = 0, $form_name = '
         $path = AmpConfig::get('web_path') . "/$next_url";
     }
 
-    require UI::find_template('show_confirmation.inc.php');
+    require Ui::find_template('show_confirmation.inc.php');
 } // show_confirmation
 
 /**
@@ -1681,7 +1682,7 @@ function get_location()
  */
 function show_preference_box($preferences)
 {
-    require UI::find_template('show_preference_box.inc.php');
+    require Ui::find_template('show_preference_box.inc.php');
 } // show_preference_box
 
 /**
@@ -2203,7 +2204,7 @@ function show_now_playing()
 
     $web_path = AmpConfig::get('web_path');
     $results  = Stream::get_now_playing();
-    require_once UI::find_template('show_now_playing.inc.php');
+    require_once Ui::find_template('show_now_playing.inc.php');
 } // show_now_playing
 
 /**
@@ -2490,7 +2491,7 @@ function show_rating($object_id, $type)
 {
     $rating = new Rating($object_id, $type);
 
-    require UI::find_template('show_object_rating.inc.php');
+    require Ui::find_template('show_object_rating.inc.php');
 } // show_rating
 
 /**
@@ -2530,5 +2531,5 @@ function get_rating_name($score)
  */
 function pGraph_Yformat_bytes($value)
 {
-    return UI::format_bytes($value);
+    return Ui::format_bytes($value);
 }

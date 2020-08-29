@@ -22,18 +22,19 @@
 
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
+use Ampache\Module\Util\Ui;
 
 $thcount = 6; ?>
 <?php if (Access::check('interface', 50) || AmpConfig::get('upload_allow_edit')) { ?>
 <div id="information_actions">
     <ul>
-        <li><?php echo UI::get_icon('add', T_('Add')); ?> <a href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=show_add_label"><?php echo T_('Create Label'); ?></a></li>
+        <li><?php echo Ui::get_icon('add', T_('Add')); ?> <a href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=show_add_label"><?php echo T_('Create Label'); ?></a></li>
     </ul>
 </div>
 <?php
 } ?>
 <?php if ($browse->is_show_header()) {
-    require UI::find_template('list_header.inc.php');
+    require Ui::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="label">
     <thead>
@@ -55,13 +56,13 @@ $thcount = 6; ?>
         foreach ($object_ids as $label_id) {
             $libitem = new Label($label_id);
             $libitem->format(); ?>
-        <tr id="label_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require UI::find_template('show_label_row.inc.php'); ?>
+        <tr id="label_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
+            <?php require Ui::find_template('show_label_row.inc.php'); ?>
         </tr>
         <?php
         } ?>
         <?php if (!count($object_ids)) { ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
+        <tr class="<?php echo Ui::flip_class(); ?>">
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No label found'); ?></span></td>
         </tr>
         <?php
@@ -83,5 +84,5 @@ $thcount = 6; ?>
 
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-            require UI::find_template('list_header.inc.php');
+            require Ui::find_template('list_header.inc.php');
         } ?>

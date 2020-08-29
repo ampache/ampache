@@ -31,7 +31,7 @@ use Browse;
 use Core;
 use Democratic;
 use Song;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class DemocraticPlaybackApplication implements ApplicationInterface
 {
@@ -39,12 +39,12 @@ final class DemocraticPlaybackApplication implements ApplicationInterface
     {
         /* Make sure they have access to this */
         if (!AmpConfig::get('allow_democratic_playback')) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
 
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
@@ -55,16 +55,16 @@ final class DemocraticPlaybackApplication implements ApplicationInterface
             // intentional fall through
             case 'show_create':
                 if (!Access::check('interface', 75)) {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
 
                 // Show the create page
-                require_once UI::find_template('show_create_democratic.inc.php');
+                require_once Ui::find_template('show_create_democratic.inc.php');
                 break;
             case 'delete':
                 if (!Access::check('interface', 75)) {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
 
@@ -75,12 +75,12 @@ final class DemocraticPlaybackApplication implements ApplicationInterface
             case 'create':
                 // Only power users here
                 if (!Access::check('interface', 75)) {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
 
                 if (!Core::form_verify('create_democratic')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -105,26 +105,26 @@ final class DemocraticPlaybackApplication implements ApplicationInterface
                 break;
             case 'manage_playlists':
                 if (!Access::check('interface', 75)) {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
                 // Get all of the non-user playlists
                 $playlists = Democratic::get_playlists();
 
-                require_once UI::find_template('show_manage_democratic.inc.php');
+                require_once Ui::find_template('show_manage_democratic.inc.php');
 
                 break;
             case 'show_playlist':
             default:
                 $democratic = Democratic::get_current_playlist();
                 if (!$democratic->id) {
-                    require_once UI::find_template('show_democratic.inc.php');
+                    require_once Ui::find_template('show_democratic.inc.php');
                     break;
                 }
 
                 $democratic->set_parent();
                 $democratic->format();
-                require_once UI::find_template('show_democratic.inc.php');
+                require_once Ui::find_template('show_democratic.inc.php');
                 $objects = $democratic->get_items();
                 Song::build_cache($democratic->object_ids);
                 Democratic::build_vote_cache($democratic->vote_ids);
@@ -138,7 +138,7 @@ final class DemocraticPlaybackApplication implements ApplicationInterface
         } // end switch on action
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

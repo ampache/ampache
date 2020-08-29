@@ -22,10 +22,11 @@
 
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
+use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path'); ?>
 <?php if ($browse->is_show_header()) {
-    require UI::find_template('list_header.inc.php');
+    require Ui::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata">
 <colgroup>
@@ -77,7 +78,7 @@ $democratic = Democratic::get_current_playlist();
         }
         $media = new $item['object_type']($item['object_id']);
         $media->format(); ?>
-<tr class="<?php echo UI::flip_class(); ?>">
+<tr class="<?php echo Ui::flip_class(); ?>">
     <td class="cel_action">
     <?php if ($democratic->has_vote($item['object_id'], $item['object_type'])) { ?>
     <?php echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['id'], 'delete', T_('Remove Vote'), 'remove_vote_' . $item['id']); ?>
@@ -122,5 +123,5 @@ $democratic = Democratic::get_current_playlist();
 
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-        require UI::find_template('list_header.inc.php');
+        require Ui::find_template('list_header.inc.php');
     } ?>

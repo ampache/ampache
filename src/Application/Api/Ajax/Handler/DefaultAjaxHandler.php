@@ -33,7 +33,7 @@ use Playlist;
 use Rating;
 use Song;
 use Ampache\Module\Statistics\Stats;
-use UI;
+use Ampache\Module\Util\Ui;
 use User;
 use Userflag;
 
@@ -46,7 +46,7 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($action) {
             case 'refresh_rightbar':
-                $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
+                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             case 'current_playlist':
                 switch ($_REQUEST['type']) {
@@ -55,7 +55,7 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                         break;
                 } // end switch
 
-                $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
+                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             // Handle the users basketcases...
             case 'basket':
@@ -114,7 +114,7 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                     }
                 }
 
-                $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
+                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             /* Setting ratings */
             case 'set_rating':

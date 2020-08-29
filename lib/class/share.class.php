@@ -5,6 +5,7 @@ declare(strict_types=0);
 use Ampache\Model\Plugin;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
 use database_object;
 use Ampache\Module\Access;
 
@@ -259,10 +260,10 @@ class Share extends database_object
         if ($this->id) {
             if (Core::get_global('user')->has_access('75') || $this->user == (int) Core::get_global('user')->id) {
                 if ($this->allow_download) {
-                    echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download\">" . UI::get_icon('download', T_('Download')) . "</a>";
+                    echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download\">" . Ui::get_icon('download', T_('Download')) . "</a>";
                 }
-                echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share Edit') . "', 'share_')\">" . UI::get_icon('edit', T_('Edit')) . "</a>";
-                echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=show_delete&id=" . $this->id . "\">" . UI::get_icon('delete', T_('Delete')) . "</a>";
+                echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share Edit') . "', 'share_')\">" . Ui::get_icon('edit', T_('Edit')) . "</a>";
+                echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_icon('delete', T_('Delete')) . "</a>";
             }
         }
     }
@@ -476,7 +477,7 @@ class Share extends database_object
      */
     public static function display_ui($object_type, $object_id, $show_text = true)
     {
-        echo "<a onclick=\"showShareDialog(event, '" . $object_type . "', " . $object_id . ");\">" . UI::get_icon('share', T_('Share'));
+        echo "<a onclick=\"showShareDialog(event, '" . $object_type . "', " . $object_id . ");\">" . Ui::get_icon('share', T_('Share'));
         if ($show_text) {
             echo " &nbsp;" . T_('Share');
         }
@@ -490,7 +491,7 @@ class Share extends database_object
     public static function display_ui_links($object_type, $object_id)
     {
         echo "<ul>";
-        echo "<li><a onclick=\"handleShareAction('" . AmpConfig::get('web_path') . "/share.php?action=show_create&type=" . $object_type . "&id=" . $object_id . "')\">" . UI::get_icon('share', T_('Advanced Share')) . " &nbsp;" . T_('Advanced Share') . "</a></li>";
+        echo "<li><a onclick=\"handleShareAction('" . AmpConfig::get('web_path') . "/share.php?action=show_create&type=" . $object_type . "&id=" . $object_id . "')\">" . Ui::get_icon('share', T_('Advanced Share')) . " &nbsp;" . T_('Advanced Share') . "</a></li>";
         if (AmpConfig::get('download')) {
             $dllink = "";
             if ($object_type == "song" || $object_type == "video") {
@@ -505,13 +506,13 @@ class Share extends database_object
                     // Add session information to the link to avoid authentication
                     $dllink .= "&ssid=" . Stream::get_session();
                 }
-                echo "<li><a class=\"nohtml\" href=\"" . $dllink . "\">" . UI::get_icon('download', T_('Temporary direct link')) . " &nbsp;" . T_('Temporary direct link') . "</a></li>";
+                echo "<li><a class=\"nohtml\" href=\"" . $dllink . "\">" . Ui::get_icon('download', T_('Temporary direct link')) . " &nbsp;" . T_('Temporary direct link') . "</a></li>";
             }
         }
         echo "<li style='padding-top: 8px; text-align: right;'>";
         $plugins = Plugin::get_plugins('external_share');
         foreach ($plugins as $plugin_name) {
-            echo "<a onclick=\"handleShareAction('" . AmpConfig::get('web_path') . "/share.php?action=external_share&plugin=" . $plugin_name . "&type=" . $object_type . "&id=" . $object_id . "')\" target=\"_blank\">" . UI::get_icon('share_' . strtolower((string) $plugin_name), $plugin_name) . "</a>&nbsp;";
+            echo "<a onclick=\"handleShareAction('" . AmpConfig::get('web_path') . "/share.php?action=external_share&plugin=" . $plugin_name . "&type=" . $object_type . "&id=" . $object_id . "')\" target=\"_blank\">" . Ui::get_icon('share_' . strtolower((string) $plugin_name), $plugin_name) . "</a>&nbsp;";
         }
         echo "</li>";
         echo "</ul>";

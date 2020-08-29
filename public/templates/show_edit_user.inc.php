@@ -21,9 +21,10 @@
  */
 
 use Ampache\Module\Access;
+use Ampache\Module\Util\Ui;
 
 ?>
-<?php UI::show_box_top(T_('Editing Existing User')); ?>
+<?php Ui::show_box_top(T_('Editing Existing User')); ?>
 <?php AmpError::display('general'); ?>
 <form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/users.php"; ?>">
     <table class="tabledata">
@@ -119,7 +120,7 @@ use Ampache\Module\Access;
         </tr>
         <tr>
             <td>
-                <?php echo T_('Avatar'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)
+                <?php echo T_('Avatar'); ?> (&lt; <?php echo Ui::format_bytes(AmpConfig::get('max_upload_size')); ?>)
             </td>
             <td>
                 <input type="file" id="avatar" name="avatar" value="" />
@@ -132,7 +133,7 @@ use Ampache\Module\Access;
                 if ($client->f_avatar) {
                     echo $client->f_avatar;
                 } ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_delete_avatar&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_delete_avatar&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
                 <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
             </td>
         </tr>
@@ -142,7 +143,7 @@ use Ampache\Module\Access;
         <tr>
             <td>
                 <?php echo T_('API Key'); ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('random', T_('Generate new API Key')); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new API Key')); ?></a>
             </td>
             <td>
                 <span>
@@ -164,7 +165,7 @@ use Ampache\Module\Access;
             <td>
                 <?php echo T_('RSS Token'); ?>
                 <?php if (Access::check('interface', 100)) { ?>
-                    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('random', T_('Generate new RSS token')); ?></a>
+                    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new RSS token')); ?></a>
                 <?php } ?>
             </td>
             <td>
@@ -207,4 +208,4 @@ use Ampache\Module\Access;
         <input type="hidden" name="user_id" value="<?php echo $client->id; ?>" />
     </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

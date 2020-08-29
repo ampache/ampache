@@ -22,17 +22,18 @@
 
 use Ampache\Module\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
 
 ?>
 
-<?php UI::show_box_top($radio->f_name . ' ' . T_('Details'), 'box box_live_stream_details'); ?>
+<?php Ui::show_box_top($radio->f_name . ' ' . T_('Details'), 'box box_live_stream_details'); ?>
 <div class="item_right_info">
     <?php
-        $thumb = UI::is_grid_view('live_stream') ? 2 : 11;
+        $thumb = Ui::is_grid_view('live_stream') ? 2 : 11;
         Art::display('live_stream', $radio->id, $radio->f_name, $thumb); ?>
 </div>
 <dl class="media_details">
-<?php $rowparity = UI::flip_class(); ?>
+<?php $rowparity = Ui::flip_class(); ?>
 <dt class="<?php echo $rowparity; ?>"><?php echo T_('Action'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
         <?php if (AmpConfig::get('directplay')) { ?>
@@ -53,9 +54,9 @@ use Ampache\Module\Playback\Stream_Playlist;
 
     foreach ($itemprops as $key => $value) {
         if (trim($value)) {
-            $rowparity = UI::flip_class();
+            $rowparity = Ui::flip_class();
             echo "<dt class=\"" . $rowparity . "\">" . T_($key) . "</dt><dd class=\"" . $rowparity . "\">" . $value . "</dd>";
         }
     } ?>
 </dl>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

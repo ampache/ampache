@@ -22,6 +22,7 @@
 
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
+use Ampache\Module\Util\Ui;
 
 ?>
 <script>
@@ -40,7 +41,7 @@ use Ampache\Module\Ajax;
     </li>
     <?php if (Access::check('interface', 25)) { ?>
         <li id="pl_add">
-            <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
+            <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
             <ul id="pl_action_additems" class="submenu">
                 <li>
                     <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist'); ?>
@@ -63,7 +64,7 @@ use Ampache\Module\Ajax;
 <?php if (Access::check_function('batch_download') && check_can_zip('tmp_playlist')) { ?>
     <li>
         <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo Core::get_global('user')->playlist->id; ?>">
-            <?php echo UI::get_icon('batch_download', T_('Batch download')); ?>
+            <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
         </a>
     </li>
 <?php
@@ -72,7 +73,7 @@ use Ampache\Module\Ajax;
     <?php echo Ajax::button('?action=basket&type=clear_all', 'delete', T_('Clear playlist'), 'rb_clear_playlist'); ?>
     </li>
     <li id="rb_add">
-      <?php echo UI::get_icon('add', T_('Add dynamic items')); ?>
+      <?php echo Ui::get_icon('add', T_('Add dynamic items')); ?>
         <ul id="rb_action_additems" class="submenu">
             <li>
                 <?php echo Ajax::text('?page=random&action=song', T_('Random song'), 'rb_add_random_song'); ?>
@@ -91,7 +92,7 @@ use Ampache\Module\Ajax;
 </ul>
 <?php
     if (AmpConfig::get('play_type') == 'localplay') {
-        require_once UI::find_template('show_localplay_control.inc.php');
+        require_once Ui::find_template('show_localplay_control.inc.php');
     } ?>
 <ul id="rb_current_playlist">
 
@@ -132,7 +133,7 @@ use Ampache\Module\Ajax;
             $object = new $type(array_shift($object_data));
             $object->format();
         } ?>
-    <li class="<?php echo UI::flip_class(); ?>" >
+    <li class="<?php echo Ui::flip_class(); ?>" >
       <?php echo $object->f_link; ?>
         <?php echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid, 'delete', T_('Delete'), 'rightbar_delete_' . $uid, '', 'delitem'); ?>
     </li>
@@ -142,7 +143,7 @@ use Ampache\Module\Ajax;
 <?php
     } ?>
 <?php if (isset($truncated)) { ?>
-    <li class="<?php echo UI::flip_class(); ?>">
+    <li class="<?php echo Ui::flip_class(); ?>">
         <?php echo $truncated . ' ' . T_('More'); ?>...
     </li>
 <?php

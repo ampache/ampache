@@ -22,6 +22,8 @@
 
 // Minimal init for use in install
 // Do a check for PHP5.4 because nothing will work without it
+use Ampache\Module\Util\Ui;
+
 if (version_compare(phpversion(), '7.1.0', '<')) {
     echo T_("Ampache requires PHP version >= 7.1");
     throw new RuntimeException(T_("Ampache requires PHP version >= 7.1"));
@@ -76,7 +78,7 @@ define('INIT_LOADED', 1);
 require_once __DIR__ . '/../src/Config/functions.php';
 
 /* Set up the flip class */
-UI::flip_class(array('odd', 'even'));
+Ui::flip_class(array('odd', 'even'));
 
 // Merge GET then POST into REQUEST effectively stripping COOKIE without
 // depending on a PHP setting change for the effect

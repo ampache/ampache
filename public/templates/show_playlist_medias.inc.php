@@ -21,10 +21,11 @@
  */
 
 use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path'); ?>
 <?php if ($browse->is_show_header()) {
-    require UI::find_template('list_header.inc.php');
+    require Ui::find_template('list_header.inc.php');
 } ?>
 <form method="post" id="reorder_playlist_<?php echo $playlist->id; ?>">
     <table id="reorder_playlist_table" class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="media">
@@ -63,8 +64,8 @@ $web_path = AmpConfig::get('web_path'); ?>
             $libitem = new $object_type($object['object_id']);
             $libitem->format();
             $playlist_track = $object['track']; ?>
-        <tr class="<?php echo UI::flip_class() ?>" id="track_<?php echo $object['track_id'] ?>">
-            <?php require UI::find_template('show_playlist_media_row.inc.php'); ?>
+        <tr class="<?php echo Ui::flip_class() ?>" id="track_<?php echo $object['track_id'] ?>">
+            <?php require Ui::find_template('show_playlist_media_row.inc.php'); ?>
         </tr>
         <?php
         }
@@ -99,5 +100,5 @@ $web_path = AmpConfig::get('web_path'); ?>
 </form>
 <?php show_table_render($argument); ?>
 <?php if ($browse->is_show_header()) {
-        require UI::find_template('list_header.inc.php');
+        require Ui::find_template('list_header.inc.php');
     } ?>

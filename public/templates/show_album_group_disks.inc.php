@@ -23,6 +23,7 @@
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path');
 
@@ -42,18 +43,18 @@ if ($directplay_limit > 0) {
         $show_direct_play = $show_playlist_add;
     }
 } ?>
-<?php UI::show_box_top($title, 'info-box'); ?>
+<?php Ui::show_box_top($title, 'info-box'); ?>
 <div class="item_right_info">
     <div class="external_links">
-        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($album->f_artist); ?>%22+%22<?php echo rawurlencode($album->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('google', T_('Search on Google ...')); ?></a>
-        <a href="https://www.duckduckgo.com/s?q=%22<?php echo rawurlencode($label->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
-        <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($album->f_name); ?>%22&go=Go" target="_blank"><?php echo UI::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
-        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($album->f_artist); ?>%22+%22<?php echo rawurlencode($album->f_name); ?>%22&type=album" target="_blank"><?php echo UI::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
+        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($album->f_artist); ?>%22+%22<?php echo rawurlencode($album->f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>
+        <a href="https://www.duckduckgo.com/s?q=%22<?php echo rawurlencode($label->f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
+        <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($album->f_name); ?>%22&go=Go" target="_blank"><?php echo Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
+        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($album->f_artist); ?>%22+%22<?php echo rawurlencode($album->f_name); ?>%22&type=album" target="_blank"><?php echo Ui::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
     </div>
     <?php
     if ($album->name != T_('Unknown (Orphaned)')) {
         $name  = '[' . $album->f_artist . '] ' . scrub_out($album->full_name);
-        $thumb = UI::is_grid_view('album') ? 2 : 11;
+        $thumb = Ui::is_grid_view('album') ? 2 : 11;
         Art::display('album', $album->id, $name, $thumb);
     } ?>
 </div>
@@ -102,20 +103,20 @@ if ($directplay_limit > 0) {
     } ?>
         <?php if (Access::check('interface', 50)) { ?>
             <li>
-                <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_group_from_tags&amp;album_id=<?php echo $album->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo UI::get_icon('file_refresh', T_('Update from tags')); ?> &nbsp;&nbsp;<?php echo T_('Update from tags'); ?></a>
+                <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_group_from_tags&amp;album_id=<?php echo $album->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo Ui::get_icon('file_refresh', T_('Update from tags')); ?> &nbsp;&nbsp;<?php echo T_('Update from tags'); ?></a>
             </li>
             <?php
         } ?>
         <?php if (Access::check_function('batch_download') && check_can_zip('album')) { ?>
         <li>
-            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
+            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo Ui::get_icon('batch_download', T_('Download')); ?></a>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo T_('Download'); ?></a>
         </li>
         <?php
     } ?>
     </ul>
 </div>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>
 <div id="additional_information">
 &nbsp;
 </div>
@@ -149,7 +150,7 @@ if ($directplay_limit > 0) {
         } ?>
         <?php if (Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
-                <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $c_album->id ?>"><?php echo UI::get_icon('comment', T_('Post shout')) ?></a>
+                <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $c_album->id ?>"><?php echo Ui::get_icon('comment', T_('Post shout')) ?></a>
             <?php
             } ?>
             <?php if (AmpConfig::get('share')) { ?>
@@ -159,19 +160,19 @@ if ($directplay_limit > 0) {
         <?php
         } ?>
         <?php if (Access::check_function('batch_download') && check_can_zip('album')) { ?>
-            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $c_album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
+            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $c_album->get_http_album_query_ids('id'); ?>"><?php echo Ui::get_icon('batch_download', T_('Download')); ?></a>
         <?php
         } ?>
         <?php if (Access::check('interface', 50)) { ?>
             <a onclick="submitNewItemsOrder('<?php echo $c_album->id ?>', 'reorder_songs_table_<?php echo $c_album->id ?>', 'song_',
                                             '<?php echo AmpConfig::get('web_path') ?>/albums.php?action=set_track_numbers', 'refresh_album_songs')">
-                <?php echo UI::get_icon('save', T_('Save Track Order')); ?>
+                <?php echo Ui::get_icon('save', T_('Save Track Order')); ?>
             </a>
             <a href="javascript:NavigateTo('<?php echo $web_path ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $c_album->id ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?') ?>');">
-                <?php echo UI::get_icon('file_refresh', T_('Update from tags')); ?>
+                <?php echo Ui::get_icon('file_refresh', T_('Update from tags')); ?>
             </a>
             <a id="<?php echo 'edit_album_' . $c_album->id ?>" onclick="showEditDialog('album_row', '<?php echo $c_album->id ?>', '<?php echo 'edit_album_' . $c_album->id ?>', '<?php echo T_('Album Edit') ?>', '')">
-                <?php echo UI::get_icon('edit', T_('Edit')); ?>
+                <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>
         <?php
         } ?>

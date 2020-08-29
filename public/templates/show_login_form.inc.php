@@ -26,6 +26,7 @@
  */
 
 use Ampache\Module\Util\Mailer;
+use Ampache\Module\Util\Ui;
 
 $remember_disabled = '';
 if (AmpConfig::get('session_length') >= AmpConfig::get('remember_length')) {
@@ -51,7 +52,7 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
     <!-- Propelled by Ampache | ampache.org -->
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php require_once UI::find_template('stylesheets.inc.php'); ?>
+    <?php require_once Ui::find_template('stylesheets.inc.php'); ?>
     <title><?php echo scrub_out(AmpConfig::get('site_title')); ?></title>
 </head>
 
@@ -103,4 +104,4 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
         echo '<h1 id="headerlogo"></h1>';
         echo '</div>';
     }
-    UI::show_footer(); ?>
+    Ui::show_footer(); ?>

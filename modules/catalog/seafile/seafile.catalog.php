@@ -28,6 +28,7 @@
  */
 
 use Ampache\Model\Media;
+use Ampache\Module\Util\Ui;
 
 require_once('SeafileAdapter.php');
 
@@ -252,7 +253,7 @@ class Catalog_Seafile extends Catalog
         set_time_limit(0);
 
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_top(T_('Running Seafile Remote Update'));
+            Ui::show_box_top(T_('Running Seafile Remote Update'));
         }
 
         $success = false;
@@ -283,7 +284,7 @@ class Catalog_Seafile extends Catalog
                 return 0;
             });
 
-            UI::update_text(T_('Catalog Updated'),
+            Ui::update_text(T_('Catalog Updated'),
                     /* HINT: count of songs updated */
                     sprintf(T_('Total Media: [%s]'), $count));
 
@@ -295,7 +296,7 @@ class Catalog_Seafile extends Catalog
         }
 
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_bottom();
+            Ui::show_box_bottom();
         }
 
         $this->update_last_add();
@@ -315,13 +316,13 @@ class Catalog_Seafile extends Catalog
         if ($this->check_remote_song($this->seafile->to_virtual_path($file))) {
             debug_event('seafile_catalog', 'Skipping existing song ' . $file->name, 5);
             /* HINT: filename (File path) */
-            UI::update_text('', sprintf(T_('Skipping existing song: %s'), $file->name));
+            Ui::update_text('', sprintf(T_('Skipping existing song: %s'), $file->name));
         } else {
             debug_event('seafile_catalog', 'Adding song ' . $file->name, 5);
             try {
                 $results = $this->download_metadata($file);
                 /* HINT: filename (File path) */
-                UI::update_text('', sprintf(T_('Adding a new song: %s'), $file->name));
+                Ui::update_text('', sprintf(T_('Adding a new song: %s'), $file->name));
                 $added = Song::insert($results);
 
                 if ($added) {
@@ -333,7 +334,7 @@ class Catalog_Seafile extends Catalog
                 /* HINT: %1 filename (File path), %2 error message */
                 debug_event('seafile_catalog', sprintf('Could not add song "%1$s": %2$s', $file->name, $error->getMessage()), 1);
                 /* HINT: filename (File path) */
-                UI::update_text('', sprintf(T_('Could not add song: %s'), $file->name));
+                Ui::update_text('', sprintf(T_('Could not add song: %s'), $file->name));
             }
         }
 
@@ -414,14 +415,14 @@ class Catalog_Seafile extends Catalog
                     $song = new Song($row['id']);
                     $info = self::update_song_from_tags($metadata, $song);
                     if ($info['change']) {
-                        UI::update_text('', sprintf(T_('Updated song: %s'), $row['title']));
+                        Ui::update_text('', sprintf(T_('Updated song: %s'), $row['title']));
                         $results['updated']++;
                     } else {
-                        UI::update_text('', sprintf(T_('Song up to date: %s'), $row['title']));
+                        Ui::update_text('', sprintf(T_('Song up to date: %s'), $row['title']));
                     }
                 } else {
                     debug_event('seafile_catalog', 'Verify removing song', 5, 'ampache-catalog');
-                    UI::update_text('', sprintf(T_('Removing song: %s'), $row['title']));
+                    Ui::update_text('', sprintf(T_('Removing song: %s'), $row['title']));
                     //$dead++;
                     Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
                 }
@@ -477,7 +478,7 @@ class Catalog_Seafile extends Catalog
                 try {
                     $exists = $this->seafile->get_file($file['path'], $file['filename']) !== null;
                 } catch (Exception $error) {
-                    UI::update_text(T_("There Was a Problem"),
+                    Ui::update_text(T_("There Was a Problem"),
                             /* HINT: %1 filename (File path), %2 Error Message */
                             sprintf(T_('There was an error while checking this song "%1$s": %2$s'), $file['filename'], $error->getMessage()));
                     debug_event('seafile_catalog', 'Clean Exception: ' . $error->getMessage(), 2);
@@ -488,10 +489,10 @@ class Catalog_Seafile extends Catalog
                 if ($exists) {
                     debug_event('seafile_catalog', 'Clean keeping song', 5);
                     /* HINT: filename (File path) */
-                    UI::update_text('', sprintf(T_('Keeping song: %s'), $file['filename']));
+                    Ui::update_text('', sprintf(T_('Keeping song: %s'), $file['filename']));
                 } else {
                     /* HINT: filename (File path) */
-                    UI::update_text('', sprintf(T_('Removing song: %s'), $file['filename']));
+                    Ui::update_text('', sprintf(T_('Removing song: %s'), $file['filename']));
                     debug_event('seafile_catalog', 'Clean removing song', 5);
                     $dead++;
                     Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));

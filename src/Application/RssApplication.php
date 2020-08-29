@@ -28,7 +28,7 @@ namespace Ampache\Application;
 use Ampache\Module\AmpacheRss;
 use AmpConfig;
 use Core;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class RssApplication implements ApplicationInterface
 {
@@ -36,7 +36,7 @@ final class RssApplication implements ApplicationInterface
     {
         /* Check Perms */
         if (!AmpConfig::get('use_rss') || AmpConfig::get('demo_mode')) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }

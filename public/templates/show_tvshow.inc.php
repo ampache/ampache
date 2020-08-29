@@ -23,13 +23,14 @@
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path'); ?>
 <?php
 $browse = new Browse();
 $browse->set_type($object_type);
 
-UI::show_box_top($tvshow->f_name, 'info-box'); ?>
+Ui::show_box_top($tvshow->f_name, 'info-box'); ?>
 <div class="item_right_info">
     <?php
     Art::display('tvshow', $tvshow->id, $tvshow->f_name, 6); ?>
@@ -76,7 +77,7 @@ UI::show_box_top($tvshow->f_name, 'info-box'); ?>
         <?php if (Access::check('interface', 50)) { ?>
         <li>
             <a id="<?php echo 'edit_tvshow_' . $tvshow->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $tvshow->id ?>', '<?php echo 'edit_tvshow_' . $tvshow->id ?>', '<?php echo T_('TV Show Edit') ?>', '')">
-                <?php echo UI::get_icon('edit', T_('Edit')); ?>
+                <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>
             <a id="<?php echo 'edit_tvshow_' . $tvshow->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $tvshow->id ?>', '<?php echo 'edit_tvshow_' . $tvshow->id ?>', '<?php echo T_('TV Show Edit') ?>', '')">
                 <?php echo T_('Edit TV Show'); ?>
@@ -87,14 +88,14 @@ UI::show_box_top($tvshow->f_name, 'info-box'); ?>
         <?php if (Catalog::can_remove($tvshow)) { ?>
         <li>
             <a id="<?php echo 'delete_tvshow_' . $tvshow->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/tvshows.php?action=delete&tvshow_id=<?php echo $tvshow->id; ?>">
-                <?php echo UI::get_icon('delete', T_('Delete')); ?> <?php echo T_('Delete'); ?>
+                <?php echo Ui::get_icon('delete', T_('Delete')); ?> <?php echo T_('Delete'); ?>
             </a>
         </li>
         <?php
     } ?>
     </ul>
 </div>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>
 <div class="tabs_wrapper">
     <div id="tabs_container">
         <ul id="tabs">

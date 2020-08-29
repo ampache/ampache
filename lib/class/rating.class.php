@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 use Ampache\Model\Plugin;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Util\Ui;
 use database_object;
 
 /**
@@ -402,7 +403,7 @@ class Rating extends database_object
         }
         $rating = new Rating($object_id, $type);
 
-        require UI::find_template('show_object_rating.inc.php');
+        require Ui::find_template('show_object_rating.inc.php');
 
         return true;
     } // show

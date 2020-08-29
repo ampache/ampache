@@ -21,6 +21,7 @@
  */
 
 use Ampache\Module\Ajax;
+use Ampache\Module\Util\Ui;
 
 ?>
 <td class="cel_play">
@@ -45,7 +46,7 @@ use Ampache\Module\Ajax;
 <td class="cel_streamurl">
     <?php echo $libitem->get_stream_url(); ?><br />
     <?php if ($libitem->is_private) {
-    echo UI::get_icon('lock', T_('Authentication Required'));
+    echo Ui::get_icon('lock', T_('Authentication Required'));
 } ?>
     <?php echo $libitem->get_stream_proxy_url(); ?>
 </td>

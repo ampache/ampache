@@ -32,14 +32,14 @@ use Artist;
 use Catalog;
 use Core;
 use Song;
-use UI;
+use Ampache\Module\Util\Ui;
 use Wanted;
 
 final class AlbumApplication implements ApplicationInterface
 {
     public function run(): void
     {
-        require_once UI::find_template('header.inc.php');
+        require_once Ui::find_template('header.inc.php');
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
@@ -65,7 +65,7 @@ final class AlbumApplication implements ApplicationInterface
                 $album = new Album($_REQUEST['album_id']);
                 if (!Catalog::can_remove($album)) {
                     debug_event('albums', 'Unauthorized to remove the album `.' . $album->id . '`.', 2);
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -87,7 +87,7 @@ final class AlbumApplication implements ApplicationInterface
             case 'update_from_tags':
                 // Make sure they are a 'power' user at least
                 if (!Access::check('interface', 75)) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -97,12 +97,12 @@ final class AlbumApplication implements ApplicationInterface
                 $type       = 'album';
                 $object_id  = (int) filter_input(INPUT_GET, 'album_id', FILTER_SANITIZE_NUMBER_INT);
                 $target_url = AmpConfig::get('web_path') . '/albums.php?action=show&amp;album=' . $object_id;
-                require_once UI::find_template('show_update_items.inc.php');
+                require_once Ui::find_template('show_update_items.inc.php');
                 break;
             case 'update_group_from_tags':
                 // Make sure they are a 'power' user at least
                 if (!Access::check('interface', 75)) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -113,13 +113,13 @@ final class AlbumApplication implements ApplicationInterface
                 $object_id  = (int) filter_input(INPUT_GET, 'album_id', FILTER_SANITIZE_NUMBER_INT);
                 $objects    = $album->get_album_suite();
                 $target_url = AmpConfig::get('web_path') . '/albums.php?action=show&amp;album=' . $object_id;
-                require_once UI::find_template('show_update_item_group.inc.php');
+                require_once Ui::find_template('show_update_item_group.inc.php');
                 break;
             case 'set_track_numbers':
                 debug_event('albums', 'Set track numbers called.', 5);
 
                 if (!Access::check('interface', 75)) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -158,7 +158,7 @@ final class AlbumApplication implements ApplicationInterface
                 }
                 $walbum->load_all();
                 $walbum->format();
-                require UI::find_template('show_missing_album.inc.php');
+                require Ui::find_template('show_missing_album.inc.php');
                 break;
             // Browse by Album
             case 'show':
@@ -170,16 +170,16 @@ final class AlbumApplication implements ApplicationInterface
                     echo T_("You have requested an Album that does not exist.");
                 // allow single disks to not be shown as multi's
                 } elseif (count($album->album_suite) <= 1) {
-                    require UI::find_template('show_album.inc.php');
+                    require Ui::find_template('show_album.inc.php');
                 } else {
-                    require UI::find_template('show_album_group_disks.inc.php');
+                    require Ui::find_template('show_album_group_disks.inc.php');
                 }
 
                 break;
         } // switch on view
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

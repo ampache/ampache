@@ -4,6 +4,7 @@
 use Ampache\Model\Plugin;
 use Ampache\Module\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
 
 /**
  *
@@ -106,7 +107,7 @@ class AmpacheCatalogFavorites
             $userflags = Userflag::get_latest(null, 0, $this->maxitems);
             $count     = 0;
             echo '<div class="home_plugin">';
-            UI::show_box_top(T_('Highlight'));
+            Ui::show_box_top(T_('Highlight'));
             echo '<table class="tabledata';
             if (!$this->gridview) {
                 echo " disablegv";
@@ -135,7 +136,7 @@ class AmpacheCatalogFavorites
                     }
 
                     echo '<div style="float: left; margin-right: 10px;">';
-                    $thumb = ($this->gridview && UI::is_grid_view('album')) ? 1 : 12; // default to 150x150
+                    $thumb = ($this->gridview && Ui::is_grid_view('album')) ? 1 : 12; // default to 150x150
                     $item->display_art($thumb, true);
                     echo '</div>';
                     echo '</td>';
@@ -157,7 +158,7 @@ class AmpacheCatalogFavorites
                 }
             }
             echo '</table>';
-            UI::show_box_bottom();
+            Ui::show_box_bottom();
             echo '</div>';
         }
     }

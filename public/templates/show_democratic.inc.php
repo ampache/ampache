@@ -24,9 +24,10 @@
 
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
+use Ampache\Module\Util\Ui;
 
 $string = $democratic->is_enabled() ? sprintf(T_('%s Playlist'), $democratic->name) : T_('Democratic Playlist');
-UI::show_box_top($string, 'info-box'); ?>
+Ui::show_box_top($string, 'info-box'); ?>
 <div id="information_actions">
 <ul>
 <?php if ($democratic->is_enabled()) { ?>
@@ -37,7 +38,7 @@ UI::show_box_top($string, 'info-box'); ?>
 } ?>
 <?php if (Access::check('interface', 75)) { ?>
 <li>
-    <a href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=manage"><?php echo UI::get_icon('server_lightning', T_('Configure Democratic Playlist')); ?>
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=manage"><?php echo Ui::get_icon('server_lightning', T_('Configure Democratic Playlist')); ?>
     &nbsp;
     <?php echo T_('Configure Democratic Playlist'); ?></a>
 </li>
@@ -81,4 +82,4 @@ UI::show_box_top($string, 'info-box'); ?>
         echo "checked";
     } ?> /> <?php echo T_('Reload this page automatically'); ?>
 </div>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

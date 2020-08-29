@@ -9,6 +9,7 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Recommendation;
+use Ampache\Module\Util\Ui;
 use database_object;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
@@ -1685,7 +1686,7 @@ class Song extends database_object implements Media, library_item
         $this->f_track = (string) $this->track;
 
         // Format the size
-        $this->f_size = UI::format_bytes($this->size);
+        $this->f_size = Ui::format_bytes($this->size);
 
         $this->f_lyrics = "<a title=\"" . scrub_out($this->title) . "\" href=\"" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=" . $this->id . "\">" . T_('Show Lyrics') . "</a>";
 

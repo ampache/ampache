@@ -29,41 +29,41 @@ use Ampache\Module\Access;
 use AmpConfig;
 use Core;
 use Podcast;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class PodcastApplication implements ApplicationInterface
 {
     public function run(): void
     {
         if (!AmpConfig::get('podcast')) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
 
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'show_create':
                 if (!Access::check('interface', 75)) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
 
-                require_once UI::find_template('show_add_podcast.inc.php');
+                require_once Ui::find_template('show_add_podcast.inc.php');
 
                 break;
             case 'create':
                 if (!Access::check('interface', 75) || AmpConfig::get('demo_mode')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
 
                 if (!Core::form_verify('add_podcast', 'post')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -72,7 +72,7 @@ final class PodcastApplication implements ApplicationInterface
                 $results = Podcast::create($_POST);
 
                 if (!$results) {
-                    require_once UI::find_template('show_add_podcast.inc.php');
+                    require_once Ui::find_template('show_add_podcast.inc.php');
                 } else {
                     $title  = T_('No Problem');
                     $body   = T_('Subscribed to the Podcast');
@@ -81,7 +81,7 @@ final class PodcastApplication implements ApplicationInterface
                 break;
             case 'delete':
                 if (!Access::check('interface', 75) || AmpConfig::get('demo_mode')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -97,7 +97,7 @@ final class PodcastApplication implements ApplicationInterface
                 break;
             case 'confirm_delete':
                 if (!Access::check('interface', 75) || AmpConfig::get('demo_mode')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -116,13 +116,13 @@ final class PodcastApplication implements ApplicationInterface
                     $podcast->format();
                     $object_ids  = $podcast->get_episodes();
                     $object_type = 'podcast_episode';
-                    require_once UI::find_template('show_podcast.inc.php');
+                    require_once Ui::find_template('show_podcast.inc.php');
                 }
                 break;
         } // end data collection
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

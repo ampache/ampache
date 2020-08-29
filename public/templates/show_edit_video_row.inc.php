@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Util\Ui;
+
 $libitem = Video::create_from_id($libitem->id);
 $libitem->format();
 $video_type = strtolower(get_class($libitem)); ?>
@@ -36,7 +38,7 @@ $video_type = strtolower(get_class($libitem)); ?>
             </tr>
 <?php
 if ($video_type != 'video') {
-    require UI::find_template('show_partial_edit_' . $video_type . '_row.inc.php');
+    require Ui::find_template('show_partial_edit_' . $video_type . '_row.inc.php');
 } ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>

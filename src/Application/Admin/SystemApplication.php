@@ -35,7 +35,7 @@ use Core;
 use Dba;
 use Ampache\Module\Util\Horde_Browser;
 use Song;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class SystemApplication implements ApplicationInterface
 {
@@ -50,12 +50,12 @@ final class SystemApplication implements ApplicationInterface
     public function run(): void
     {
         if (!Access::check('interface', 100) || AmpConfig::get('demo_mode')) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
 
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
@@ -84,7 +84,7 @@ final class SystemApplication implements ApplicationInterface
                 if (Core::get_request('autoupdate') == 'force') {
                     $version = AutoUpdate::get_latest_version(true);
                 }
-                require_once UI::find_template('show_debug.inc.php');
+                require_once Ui::find_template('show_debug.inc.php');
                 break;
             case 'clear_cache':
                 switch ($_REQUEST['type']) {
@@ -105,7 +105,7 @@ final class SystemApplication implements ApplicationInterface
         } // end switch
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

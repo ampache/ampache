@@ -18,8 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
-<?php UI::show_box_top(T_('Edit Access Control List')); ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
+<?php Ui::show_box_top(T_('Edit Access Control List')); ?>
 <?php AmpError::display('general');
 $apirpc       = T_('API/RPC');
 $localnetwork = T_('Local Network Definition');
@@ -87,4 +91,4 @@ $all          = T_('All'); ?>
         <input type="submit" value="<?php echo T_('Update'); ?>" />
     </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

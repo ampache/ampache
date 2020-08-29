@@ -37,7 +37,7 @@ use Session;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Tmp_Playlist;
-use UI;
+use Ampache\Module\Util\Ui;
 use User;
 
 final class StreamApplication implements ApplicationInterface
@@ -53,7 +53,7 @@ final class StreamApplication implements ApplicationInterface
         if (!defined('NO_SESSION')) {
             /* If we are running a demo, quick while you still can! */
             if (AmpConfig::get('demo_mode') || (AmpConfig::get('use_auth')) && !Access::check('interface', 25)) {
-                UI::access_denied();
+                Ui::access_denied();
 
                 return;
             }
@@ -196,7 +196,7 @@ final class StreamApplication implements ApplicationInterface
             if ($stream_type != 'democratic') {
                 if (!User::stream_control($media_ids)) {
                     debug_event('stream', 'Stream control failed for user ' . Core::get_global('user')->username, 3);
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }

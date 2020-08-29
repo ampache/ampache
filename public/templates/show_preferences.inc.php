@@ -26,9 +26,10 @@
  */
 
 use Ampache\Module\Access;
+use Ampache\Module\Util\Ui;
 
 ?>
-<?php /* HINT: Username FullName */ UI::show_box_top(sprintf(T_('Editing %s Preferences'), $fullname), 'box box_preferences'); ?>
+<?php /* HINT: Username FullName */ Ui::show_box_top(sprintf(T_('Editing %s Preferences'), $fullname), 'box box_preferences'); ?>
 <?php  if (Core::get_request('tab') !== 'account' && Core::get_request('tab') !== 'modules') {
     debug_event('show_preferences.inc', (string) Core::get_request('tab'), 5); ?>
 
@@ -49,8 +50,8 @@ use Ampache\Module\Access;
 if (Core::get_request('tab') === 'account') {
     $client   = Core::get_global('user');
     $template = (AmpConfig::get('simple_user_mode') && !Access::check('interface', 100)) ? 'show_account_simple.inc.php' : 'show_account.inc.php';
-    require UI::find_template($template);
+    require Ui::find_template($template);
 } ?>
 </form>
 
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

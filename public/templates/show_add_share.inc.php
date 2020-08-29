@@ -21,9 +21,10 @@
  */
 
 use Ampache\Module\Access;
+use Ampache\Module\Util\Ui;
 
 ?>
-<?php UI::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
+<?php Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
 <form name="share" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=create">
 <input type="hidden" name="type" value="<?php echo scrub_out(Core::get_request('type')); ?>" />
 <input type="hidden" name="id" value="<?php echo scrub_out(Core::get_request('id')); ?>" />
@@ -75,4 +76,4 @@ use Ampache\Module\Access;
     <input class="button" type="submit" value="<?php echo T_('Create'); ?>" />
 </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

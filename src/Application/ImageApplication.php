@@ -31,7 +31,7 @@ use Ampache\Module\Authorization\Auth;
 use Core;
 use Ampache\Module\Util\Horde_Browser;
 use Session;
-use UI;
+use Ampache\Module\Util\Ui;
 
 /**
  * Album Art
@@ -94,7 +94,7 @@ final class ImageApplication implements ApplicationInterface
             switch (filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) {
                 case 'popup':
                     $typeManaged = true;
-                    require_once UI::find_template('show_big_art.inc.php');
+                    require_once Ui::find_template('show_big_art.inc.php');
                     break;
                 case 'session':
                     // If we need to pull the data out of the session

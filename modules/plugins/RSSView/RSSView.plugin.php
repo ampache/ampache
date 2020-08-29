@@ -1,5 +1,8 @@
 <?php
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+use Ampache\Module\Util\Ui;
+
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -95,7 +98,7 @@ class AmpacheRSSView
         $xmlstr      = file_get_contents($this->feed_url, false, stream_context_create(Core::requests_options()));
         $xml         = simplexml_load_string($xmlstr);
         if ($xml->channel) {
-            UI::show_box_top($xml->channel->title);
+            Ui::show_box_top($xml->channel->title);
             $count = 0;
             echo '<div class="home_plugin"><table class="tabledata">';
             foreach ($xml->channel->item as $item) {
@@ -118,7 +121,7 @@ class AmpacheRSSView
                 }
             }
             echo '</table></div>';
-            UI::show_box_bottom();
+            Ui::show_box_bottom();
         }
     }
 

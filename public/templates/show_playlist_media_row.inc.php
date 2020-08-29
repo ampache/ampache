@@ -24,6 +24,7 @@
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
 
 if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface', 50)) { ?>
 <td class="cel_play">
@@ -54,7 +55,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
         <?php echo Ajax::button('?action=basket&type=' . $object_type . '&id=' . $libitem->id, 'add', T_('Add to temporary playlist'), 'playlist_add_' . $libitem->id);
     if (Access::check('interface', 25)) { ?>
             <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, '<?php echo $object_type ?>', '<?php echo $libitem->id ?>')">
-                <?php echo UI::get_icon('playlist_add', T_('Add to playlist')) ?>
+                <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')) ?>
             </a>
         <?php
     } ?>
@@ -74,7 +75,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
 <td class="cel_action">
     <?php if (AmpConfig::get('download')) { ?>
     <a class="nohtml" href="<?php echo AmpConfig::get('web_path') ?>/stream.php?action=download&amp;<?php echo $object_type ?>_id=<?php echo $libitem->id ?>">
-        <?php echo UI::get_icon('download', T_('Download')) ?>
+        <?php echo Ui::get_icon('download', T_('Download')) ?>
     </a>
     <?php
     }
@@ -90,7 +91,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
     </td>
     <?php if (Access::check('interface', 50) && get_class($playlist) == "Playlist") { ?>
     <td class="cel_drag">
-        <?php echo UI::get_icon('drag', T_('Reorder')) ?>
+        <?php echo Ui::get_icon('drag', T_('Reorder')) ?>
             </td>
         <?php
         }

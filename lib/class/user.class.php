@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 use Ampache\Model\Plugin;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Util\Ui;
 use database_object;
 use Ampache\Module\Ajax;
 
@@ -1155,7 +1156,7 @@ class User extends database_object
             $result = Dba::fetch_assoc($db_results);
             $total  = $result['size'];
 
-            $this->f_usage = UI::format_bytes($total);
+            $this->f_usage = Ui::format_bytes($total);
 
             /* Get Users Last ip */
             if (count($data = $this->get_ip_history(1))) {

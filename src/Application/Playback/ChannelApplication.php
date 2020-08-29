@@ -32,7 +32,7 @@ use Ampache\Module\Authorization\Auth;
 use Channel;
 use Core;
 use Preference;
-use UI;
+use Ampache\Module\Util\Ui;
 use User;
 
 final class ChannelApplication implements ApplicationInterface
@@ -76,7 +76,7 @@ final class ChannelApplication implements ApplicationInterface
                         if (!Access::check_network('stream', Core::get_global('user')->id, 25) &&
                             !Access::check_network('network', Core::get_global('user')->id, 25)) {
                             debug_event('channel/index', "UI::access_denied: Streaming Access Denied: " . Core::get_user_ip() . " does not have stream level access", 2);
-                            UI::access_denied();
+                            Ui::access_denied();
 
                             return;
                         }

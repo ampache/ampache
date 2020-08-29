@@ -24,6 +24,7 @@ use Ampache\Module\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\Util\Mailer;
+use Ampache\Module\Util\Ui;
 
 if (INIT_LOADED != '1') {
     return false;
@@ -64,11 +65,11 @@ $t_logout    = T_('Log out'); ?>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo scrub_out(AmpConfig::get('site_title')); ?> - <?php echo $location['title']; ?></title>
 
-        <?php require_once UI::find_template('stylesheets.inc.php'); ?>
+        <?php require_once Ui::find_template('stylesheets.inc.php'); ?>
 
-        <link rel="stylesheet" href="<?php UI::find_template('jquery-editdialog.css', true); ?>" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php Ui::find_template('jquery-editdialog.css', true); ?>" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="<?php UI::find_template('jquery-file-upload.css', true); ?>" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php Ui::find_template('jquery-file-upload.css', true); ?>" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jstree/dist/themes/default/style.min.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/tag-it/css/jquery.tagit.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/rhinoslider/css/rhinoslider-1.05.css" type="text/css" media="screen" />
@@ -115,7 +116,7 @@ $t_logout    = T_('Log out'); ?>
         if (AmpConfig::get('ajax_load')) {
             $iframed = true; ?>
         <script src="<?php echo $web_path; ?>/lib/javascript/dynamicpage.js"></script>
-        <?php require_once UI::find_template('show_html5_player_headers.inc.php'); ?>
+        <?php require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
         <script>
             function NavigateTo(url)
             {
@@ -361,20 +362,20 @@ $t_logout    = T_('Log out'); ?>
 
         <!-- rfc3514 implementation -->
         <div id="rfc3514" style="display:none;">0x0</div>
-        <div id="notification" class="notification-out"><?php echo UI::get_icon('info', T_('Information')); ?><span id="notification-content"></span></div>
+        <div id="notification" class="notification-out"><?php echo Ui::get_icon('info', T_('Information')); ?><span id="notification-content"></span></div>
         <div id="maincontainer">
             <div id="header" class="header-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><!-- This is the header -->
                 <h1 id="headerlogo">
                   <a href="<?php echo $web_path; ?>/index.php">
-                    <img src="<?php echo UI::get_logo_url(); ?>" title="<?php echo scrub_out(AmpConfig::get('site_title')); ?>" alt="<?php echo scrub_out(AmpConfig::get('site_title')); ?>" />
+                    <img src="<?php echo Ui::get_logo_url(); ?>" title="<?php echo scrub_out(AmpConfig::get('site_title')); ?>" alt="<?php echo scrub_out(AmpConfig::get('site_title')); ?>" />
                   </a>
                 </h1>
                 <div id="headerbox">
                     <?php
-                        UI::show_box_top('', 'box box_headerbox');
-                        require_once UI::find_template('show_search_bar.inc.php');
+                        Ui::show_box_top('', 'box box_headerbox');
+                        require_once Ui::find_template('show_search_bar.inc.php');
                         if (User::is_registered()) {
-                            require_once UI::find_template('show_playtype_switch.inc.php'); ?>
+                            require_once Ui::find_template('show_playtype_switch.inc.php'); ?>
                         <span id="loginInfo">
                             <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo Core::get_global('user')->id; ?>"><?php echo Core::get_global('user')->fullname; ?></a>
                         <?php
@@ -397,10 +398,10 @@ $t_logout    = T_('Log out'); ?>
                         } ?>
                     <?php if (AmpConfig::get('ajax_load') && (!isset($_SESSION['login']) || !$_SESSION['login'])) { ?>
                         <div id="rightbar-minimize">
-                            <a href="javascript:ToggleRightbarVisibility();"><?php echo UI::get_icon('minimize', T_('Show/Hide Playlist')); ?></a>
+                            <a href="javascript:ToggleRightbarVisibility();"><?php echo Ui::get_icon('minimize', T_('Show/Hide Playlist')); ?></a>
                         </div>
                     <?php } ?>
-                    <?php UI::show_box_bottom(); ?>
+                    <?php Ui::show_box_bottom(); ?>
                 </div> <!-- End headerbox -->
             </div><!-- End header -->
 
@@ -410,25 +411,25 @@ $t_logout    = T_('Log out'); ?>
             <div id="topmenu_container" class="topmenu_container-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/index.php">
-                        <?php echo UI::get_image('topmenu-home', $t_home); ?>
+                        <?php echo Ui::get_image('topmenu-home', $t_home); ?>
                         <span><?php echo $t_home ?></span>
                     </a>
                 </div>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/browse.php?action=artist">
-                        <?php echo UI::get_image('topmenu-artist', $t_artists); ?>
+                        <?php echo Ui::get_image('topmenu-artist', $t_artists); ?>
                         <span><?php echo $t_artists ?></span>
                     </a>
                 </div>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/browse.php?action=playlist">
-                        <?php echo UI::get_image('topmenu-playlist', $t_playlists); ?>
+                        <?php echo Ui::get_image('topmenu-playlist', $t_playlists); ?>
                         <span><?php echo $t_playlists ?></span>
                     </a>
                 </div>
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/browse.php?action=tag">
-                        <?php echo UI::get_image('topmenu-tagcloud', $t_tagcloud); ?>
+                        <?php echo Ui::get_image('topmenu-tagcloud', $t_tagcloud); ?>
                         <span><?php echo $t_tagcloud ?></span>
                     </a>
                 </div>
@@ -438,7 +439,7 @@ $t_logout    = T_('Log out'); ?>
 
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/stats.php?action=userflag">
-                        <?php echo UI::get_image('topmenu-favorite', $t_favorites); ?>
+                        <?php echo Ui::get_image('topmenu-favorite', $t_favorites); ?>
                         <span><?php echo $t_favorites ?></span>
                     </a>
                 </div>
@@ -449,7 +450,7 @@ $t_logout    = T_('Log out'); ?>
 
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/upload.php">
-                        <?php echo UI::get_image('topmenu-upload', $t_upload); ?>
+                        <?php echo Ui::get_image('topmenu-upload', $t_upload); ?>
                         <span><?php echo $t_upload ?></span>
                     </a>
                 </div>
@@ -468,10 +469,10 @@ $t_logout    = T_('Log out'); ?>
                     <span id="sidebar-header-content"></span>
                 </div>
                 <div id="sidebar-content" class="<?php echo $isCollapsed ? 'sidebar-content-collapsed' : ''; ?>" >
-                    <?php require_once UI::find_template('sidebar.inc.php'); ?>
+                    <?php require_once Ui::find_template('sidebar.inc.php'); ?>
                 </div>
                 <div id="sidebar-content-light" class="<?php echo $isCollapsed ? 'sidebar-content-light-collapsed' : ''; ?>" >
-                    <?php require_once UI::find_template('sidebar.light.inc.php'); ?>
+                    <?php require_once Ui::find_template('sidebar.light.inc.php'); ?>
                 </div>
             </div>
             <!-- Handle collapsed visibility -->
@@ -506,7 +507,7 @@ $t_logout    = T_('Log out'); ?>
             });
             </script>
             <div id="rightbar" class="rightbar-fixed">
-                <?php require_once UI::find_template('rightbar.inc.php'); ?>
+                <?php require_once Ui::find_template('rightbar.inc.php'); ?>
             </div>
 
             <!-- Tiny little div, used to cheat the system -->
@@ -537,6 +538,6 @@ $t_logout    = T_('Log out'); ?>
                         echo '</div>';
                     }
                 if (AmpConfig::get("ajax_load")) {
-                    require UI::find_template('show_web_player_embedded.inc.php');
+                    require Ui::find_template('show_web_player_embedded.inc.php');
                 } // load the web_player early to make sure the browser doesn't block audio playback?>
                 <div id="guts">

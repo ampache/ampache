@@ -22,12 +22,13 @@
 
 use Ampache\Module\Ajax;
 use Ampache\Module\Playback\LocalPlay;
+use Ampache\Module\Util\Ui;
 
 $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
 $localplay->connect();
 $status = $localplay->status(); ?>
 <?php if ($browse->is_show_header()) {
-    require UI::find_template('list_header.inc.php');
+    require Ui::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata">
     <thead>
@@ -44,7 +45,7 @@ $status = $localplay->status(); ?>
             if ($status['track'] == $object['track']) {
                 $class=' class="cel_name lp_current"';
             } ?>
-        <tr class="<?php echo UI::flip_class(); ?>" id="localplay_playlist_<?php echo $object['id']; ?>">
+        <tr class="<?php echo Ui::flip_class(); ?>" id="localplay_playlist_<?php echo $object['id']; ?>">
             <td class="cel_track">
                 <?php echo scrub_out($object['track']); ?>
             </td>
@@ -57,7 +58,7 @@ $status = $localplay->status(); ?>
         </tr>
         <?php
         } if (!count($object_ids)) { ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
+        <tr class="<?php echo Ui::flip_class(); ?>">
             <td colspan="3"><span class="error"><?php echo T_('No records found'); ?></span></td>
         </tr>
         <?php
@@ -72,5 +73,5 @@ $status = $localplay->status(); ?>
     </tfoot>
 </table>
 <?php if ($browse->is_show_header()) {
-            require UI::find_template('list_header.inc.php');
+            require Ui::find_template('list_header.inc.php');
         } ?>

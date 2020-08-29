@@ -21,6 +21,7 @@
  */
 
 use Ampache\Model\Media;
+use Ampache\Module\Util\Ui;
 
 /**
  * Subsonic Catalog Class
@@ -198,11 +199,11 @@ class Catalog_subsonic extends Catalog
         set_time_limit(0);
 
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_top(T_('Running Subsonic Remote Update'));
+            Ui::show_box_top(T_('Running Subsonic Remote Update'));
         }
         $this->update_remote_catalog();
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_bottom();
+            Ui::show_box_bottom();
         }
 
         return true;
@@ -288,7 +289,7 @@ class Catalog_subsonic extends Catalog
             }
         }
 
-        UI::update_text(T_("Updated"), T_('Completed updating Subsonic Catalog(s)') . " " .
+        Ui::update_text(T_("Updated"), T_('Completed updating Subsonic Catalog(s)') . " " .
             /* HINT: Number of songs */
             sprintf(nT_('%s Song added', '%s Songs added', $songsadded), $songsadded));
 

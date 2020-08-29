@@ -24,6 +24,7 @@ use Ampache\Model\Media;
 use Ampache\Model\Metadata\Repository\Metadata;
 use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Module\Util\Recommendation;
+use Ampache\Module\Util\Ui;
 
 /**
  * Local Catalog Class
@@ -288,7 +289,7 @@ class Catalog_local extends Catalog
             // reduce the crazy log info
             if ($counter % 1000 == 0) {
                 debug_event('local.catalog', "Reading $file inside $path", 5);
-                debug_event('local.catalog', "Memory usage: " . (string)UI::format_bytes(memory_get_usage(true)), 5);
+                debug_event('local.catalog', "Memory usage: " . (string)Ui::format_bytes(memory_get_usage(true)), 5);
             }
             $counter++;
 
@@ -303,7 +304,7 @@ class Catalog_local extends Catalog
 
         // This should only happen on the last run
         if ($path == $this->path) {
-            UI::update_text('add_count_' . $this->id, $this->count);
+            Ui::update_text('add_count_' . $this->id, $this->count);
         }
 
         /* Close the dir handle */
@@ -449,9 +450,9 @@ class Catalog_local extends Catalog
 
                 $this->count++;
                 $file = str_replace(array('(', ')', '\''), '', $full_file);
-                if (UI::check_ticker()) {
-                    UI::update_text('add_count_' . $this->id, $this->count);
-                    UI::update_text('add_dir_' . $this->id, scrub_out($file));
+                if (Ui::check_ticker()) {
+                    Ui::update_text('add_count_' . $this->id, $this->count);
+                    Ui::update_text('add_dir_' . $this->id, scrub_out($file));
                 } // update our current state
             } // if it's not an m3u
 
@@ -486,7 +487,7 @@ class Catalog_local extends Catalog
         $this->added_videos_to_gather = array();
 
         if (!defined('SSE_OUTPUT')) {
-            require UI::find_template('show_adds_catalog.inc.php');
+            require Ui::find_template('show_adds_catalog.inc.php');
             flush();
         }
 
@@ -522,7 +523,7 @@ class Catalog_local extends Catalog
             if ($options['gather_art']) {
                 $catalog_id = $this->id;
                 if (!defined('SSE_OUTPUT')) {
-                    require UI::find_template('show_gather_art.inc.php');
+                    require Ui::find_template('show_gather_art.inc.php');
                     flush();
                 }
                 $this->gather_art($this->added_songs_to_gather, $this->added_videos_to_gather);
@@ -539,9 +540,9 @@ class Catalog_local extends Catalog
         }
 
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_top();
-            UI::update_text(T_('Catalog Updated'), sprintf(T_('Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'), date('i:s', $time_diff), $this->count, $rate));
-            UI::show_box_bottom();
+            Ui::show_box_top();
+            Ui::update_text(T_('Catalog Updated'), sprintf(T_('Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'), date('i:s', $time_diff), $this->count, $rate));
+            Ui::show_box_bottom();
         }
     } // add_to_catalog
 
@@ -610,10 +611,10 @@ class Catalog_local extends Catalog
         }
         while ($row = Dba::fetch_assoc($db_results)) {
             $count++;
-            if (UI::check_ticker()) {
+            if (Ui::check_ticker()) {
                 $file = str_replace(array('(', ')', '\''), '', $row['file']);
-                UI::update_text('verify_count_' . $this->id, $count);
-                UI::update_text('verify_dir_' . $this->id, scrub_out($file));
+                Ui::update_text('verify_count_' . $this->id, $count);
+                Ui::update_text('verify_dir_' . $this->id, scrub_out($file));
             }
 
             if (!Core::is_readable(Core::conv_lc_file($row['file']))) {
@@ -631,7 +632,7 @@ class Catalog_local extends Catalog
             unset($info);
         }
 
-        UI::update_text('verify_count_' . $this->id, $count);
+        Ui::update_text('verify_count_' . $this->id, $count);
 
         return $changed;
     } // _verify_chunk
@@ -713,10 +714,10 @@ class Catalog_local extends Catalog
         while ($results = Dba::fetch_assoc($db_results)) {
             //debug_event('local.catalog', 'Cleaning check on ' . $results['file'] . '(' . $results['id'] . ')', 5);
             $count++;
-            if (UI::check_ticker()) {
+            if (Ui::check_ticker()) {
                 $file = str_replace(array('(', ')', '\''), '', $results['file']);
-                UI::update_text('clean_count_' . $this->id, $count);
-                UI::update_text('clean_dir_' . $this->id, scrub_out($file));
+                Ui::update_text('clean_count_' . $this->id, $count);
+                Ui::update_text('clean_dir_' . $this->id, scrub_out($file));
             }
             $file_info = Core::get_filesize(Core::conv_lc_file($results['file']));
             if (!file_exists(Core::conv_lc_file($results['file'])) || $file_info < 1) {

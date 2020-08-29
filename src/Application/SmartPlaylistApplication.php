@@ -30,7 +30,7 @@ use AmpConfig;
 use Core;
 use Dba;
 use Search;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class SmartPlaylistApplication implements ApplicationInterface
 {
@@ -49,14 +49,14 @@ final class SmartPlaylistApplication implements ApplicationInterface
             }
         }
 
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'create_playlist':
                 /* Check rights */
                 if (!Access::check('interface', 25)) {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
 
@@ -89,13 +89,13 @@ final class SmartPlaylistApplication implements ApplicationInterface
                 break;
             case 'delete_playlist':
                 // If we made it here, we didn't have sufficient rights.
-                UI::access_denied();
+                Ui::access_denied();
                 break;
             case 'show_playlist':
                 $playlist = new Search((int) $_REQUEST['playlist_id'], 'song');
                 $playlist->format();
                 $object_ids = $playlist->get_items();
-                require_once UI::find_template('show_search.inc.php');
+                require_once Ui::find_template('show_search.inc.php');
                 break;
             case 'update_playlist':
                 $playlist = new Search((int) $_REQUEST['playlist_id'], 'song');
@@ -104,20 +104,20 @@ final class SmartPlaylistApplication implements ApplicationInterface
                     $playlist->update();
                     $playlist->format();
                 } else {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
                 $object_ids = $playlist->get_items();
-                require_once UI::find_template('show_search.inc.php');
+                require_once Ui::find_template('show_search.inc.php');
                 break;
             default:
                 $object_ids = $playlist->get_items();
-                require_once  UI::find_template('show_search.inc.php');
+                require_once  Ui::find_template('show_search.inc.php');
                 break;
         } // switch on the action
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

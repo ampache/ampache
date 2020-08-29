@@ -18,9 +18,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
 <?php if ($browse->is_show_header()) {
-    require UI::find_template('list_header.inc.php');
+    require Ui::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="catalog">
     <thead>
@@ -38,12 +42,12 @@
             foreach ($object_ids as $catalog_id) {
                 $libitem = Catalog::create_from_id($catalog_id);
                 $libitem->format(); ?>
-        <tr class="<?php echo UI::flip_class(); ?>" id="catalog_<?php echo $libitem->id; ?>">
-            <?php require UI::find_template('show_catalog_row.inc.php'); ?>
+        <tr class="<?php echo Ui::flip_class(); ?>" id="catalog_<?php echo $libitem->id; ?>">
+            <?php require Ui::find_template('show_catalog_row.inc.php'); ?>
         </tr>
         <?php
             } ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
+        <tr class="<?php echo Ui::flip_class(); ?>">
             <td colspan="6">
             <?php if (!count($object_ids)) { ?>
                 <span class="nodata"><?php echo T_('No Catalog found'); ?></span>
@@ -64,5 +68,5 @@
     </tfoot>
 </table>
 <?php if ($browse->is_show_header()) {
-                require UI::find_template('list_header.inc.php');
+                require Ui::find_template('list_header.inc.php');
             } ?>

@@ -21,10 +21,11 @@
  */
 
 use Ampache\Module\Ajax;
+use Ampache\Module\Util\Ui;
 
 ?>
 <?php if ($browse->is_show_header()) {
-    require UI::find_template('list_header.inc.php');
+    require Ui::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>"  data-objecttype="broadcast">
     <thead>
@@ -42,13 +43,13 @@ use Ampache\Module\Ajax;
         foreach ($object_ids as $broadcast_id) {
             $libitem = new Broadcast($broadcast_id);
             $libitem->format(); ?>
-        <tr class="<?php echo UI::flip_class(); ?>" id="broadcast_row_<?php echo $libitem->id; ?>">
-            <?php require UI::find_template('show_broadcast_row.inc.php'); ?>
+        <tr class="<?php echo Ui::flip_class(); ?>" id="broadcast_row_<?php echo $libitem->id; ?>">
+            <?php require Ui::find_template('show_broadcast_row.inc.php'); ?>
         </tr>
         <?php
         } ?>
         <?php if (!count($object_ids)) { ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
+        <tr class="<?php echo Ui::flip_class(); ?>">
             <td colspan="6"><span class="nodata"><?php echo T_('No Broadcast found'); ?></span></td>
         </tr>
         <?php
@@ -56,5 +57,5 @@ use Ampache\Module\Ajax;
     </tbody>
 </table>
 <?php if ($browse->is_show_header()) {
-            require UI::find_template('list_header.inc.php');
+            require Ui::find_template('list_header.inc.php');
         } ?>

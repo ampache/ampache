@@ -18,8 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
-<?php UI::show_box_top(T_('Show Catalogs'), 'box box_manage_catalogs') ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
+<?php Ui::show_box_top(T_('Show Catalogs'), 'box box_manage_catalogs') ?>
 <div id="information_actions">
     <ul style="float: left;">
         <li>
@@ -61,7 +65,7 @@
     </form>
 </div>
 <?php
-    UI::show_box_bottom();
+    Ui::show_box_bottom();
     $catalog_ids = Catalog::get_catalogs();
     $browse      = new Browse();
     $browse->set_type('catalog');

@@ -29,41 +29,41 @@ use Ampache\Module\Access;
 use AmpConfig;
 use Core;
 use Live_Stream;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class RadioApplication implements ApplicationInterface
 {
     public function run(): void
     {
         if (!AmpConfig::get('live_stream')) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
 
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'show_create':
                 if (!Access::check('interface', 75)) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
 
-                require_once UI::find_template('show_add_live_stream.inc.php');
+                require_once Ui::find_template('show_add_live_stream.inc.php');
 
                 break;
             case 'create':
                 if (!Access::check('interface', 75) || AmpConfig::get('demo_mode')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
 
                 if (!Core::form_verify('add_radio', 'post')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -72,7 +72,7 @@ final class RadioApplication implements ApplicationInterface
                 $results = Live_Stream::create($_POST);
 
                 if (!$results) {
-                    require_once UI::find_template('show_add_live_stream.inc.php');
+                    require_once Ui::find_template('show_add_live_stream.inc.php');
                 } else {
                     $body  = T_('Radio Station created');
                     $title = '';
@@ -83,12 +83,12 @@ final class RadioApplication implements ApplicationInterface
             default:
                 $radio = new Live_Stream($_REQUEST['radio']);
                 $radio->format();
-                require UI::find_template('show_live_stream.inc.php');
+                require Ui::find_template('show_live_stream.inc.php');
                 break;
         } // end data collection
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

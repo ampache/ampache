@@ -29,19 +29,19 @@ use Ampache\Module\Access;
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use Catalog;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class ExportApplication implements ApplicationInterface
 {
     public function run(): void
     {
         if (!Access::check('interface', 75)) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
 
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
@@ -78,12 +78,12 @@ final class ExportApplication implements ApplicationInterface
                 // We don't want the footer so we're done here
                 return;
             default:
-                require_once UI::find_template('show_export.inc.php');
+                require_once Ui::find_template('show_export.inc.php');
                 break;
         } // end switch on action
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

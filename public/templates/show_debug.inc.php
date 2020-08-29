@@ -22,33 +22,34 @@
 
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\Util\Cron;
+use Ampache\Module\Util\Ui;
 
 ?>
-<?php UI::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>
+<?php Ui::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>
     <div id="information_actions">
         <ul>
             <li>
-                <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo UI::get_icon('cog', T_('Generate Configuration File')) . ' ' . T_('Generate Configuration File'); ?></a>
+                <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=generate_config"><?php echo Ui::get_icon('cog', T_('Generate Configuration File')) . ' ' . T_('Generate Configuration File'); ?></a>
             </li>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=write_config"><?php echo UI::get_icon('cog', T_('Write New Config')) . ' ' . T_('Write New Config'); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=write_config"><?php echo Ui::get_icon('cog', T_('Write New Config')) . ' ' . T_('Write New Config'); ?></a>
             </li>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=reset_db_charset"><?php echo UI::get_icon('server_lightning', T_('Set Database Charset')) . ' ' . T_('Set Database Charset'); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=reset_db_charset"><?php echo Ui::get_icon('server_lightning', T_('Set Database Charset')) . ' ' . T_('Set Database Charset'); ?></a>
             </li>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=clear_cache&type=song"><?php echo UI::get_icon('cog', T_('Clear Songs Cache')) . ' ' . T_('Clear Songs Cache'); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=clear_cache&type=song"><?php echo Ui::get_icon('cog', T_('Clear Songs Cache')) . ' ' . T_('Clear Songs Cache'); ?></a>
             </li>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=clear_cache&type=artist"><?php echo UI::get_icon('cog', T_('Clear Artists Cache')) . ' ' . T_('Clear Artists Cache'); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=clear_cache&type=artist"><?php echo Ui::get_icon('cog', T_('Clear Artists Cache')) . ' ' . T_('Clear Artists Cache'); ?></a>
             </li>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=clear_cache&type=album"><?php echo UI::get_icon('cog', T_('Clear Albums Cache')) . ' ' . T_('Clear Albums Cache'); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/system.php?action=clear_cache&type=album"><?php echo Ui::get_icon('cog', T_('Clear Albums Cache')) . ' ' . T_('Clear Albums Cache'); ?></a>
             </li>
         </ul>
     </div>
 
-    <?php UI::show_box_top(T_('Ampache Update'), 'box'); ?>
+    <?php Ui::show_box_top(T_('Ampache Update'), 'box'); ?>
         <div><?php echo T_('Installed Ampache version'); ?>: <?php echo AutoUpdate::get_current_version(); ?>.</div>
         <div><?php echo T_('Latest Ampache version'); ?>: <?php echo AutoUpdate::get_latest_version(); ?>.</div>
         <?php if ((string) AmpConfig::get('github_force_branch') !== '') {
@@ -60,15 +61,15 @@ use Ampache\Module\Util\Cron;
             AutoUpdate::show_new_version();
         } ?>
         <br />
-    <?php UI::show_box_bottom(); ?>
+    <?php Ui::show_box_bottom(); ?>
 
 <?php if ((string) AmpConfig::get('cron_cache') !== '') { ?>
-    <?php UI::show_box_top(T_('Ampache Cron'), 'box'); ?>
+    <?php Ui::show_box_top(T_('Ampache Cron'), 'box'); ?>
         <div><?php echo T_('The last cron was completed'); ?>: <?php echo get_datetime(Cron::get_cron_date()); ?></div>
         <br />
-    <?php UI::show_box_bottom();
+    <?php Ui::show_box_bottom();
 } ?>
-    <?php UI::show_box_top(T_('PHP Settings'), 'box box_php_settings'); ?>
+    <?php Ui::show_box_top(T_('PHP Settings'), 'box box_php_settings'); ?>
         <table class="tabledata">
             <colgroup>
                 <col id="col_php_setting">
@@ -81,47 +82,47 @@ use Ampache\Module\Util\Cron;
             </tr>
             </thead>
             <tbody>
-            <tr class="<?php echo UI::flip_class(); ?>">
+            <tr class="<?php echo Ui::flip_class(); ?>">
                 <td><?php echo T_('Memory Limit'); ?></td>
                 <td><?php echo ini_get('memory_limit'); ?></td>
             </tr>
-            <tr class="<?php echo UI::flip_class(); ?>">
+            <tr class="<?php echo Ui::flip_class(); ?>">
                 <td><?php echo T_('Maximum Execution Time'); ?></td>
                 <td><?php echo ini_get('max_execution_time'); ?></td>
             </tr>
-            <tr class="<?php echo UI::flip_class(); ?>">
+            <tr class="<?php echo Ui::flip_class(); ?>">
                 <td><?php echo T_('Override Execution Time'); ?></td>
                 <td><?php set_time_limit(0); echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
             </tr>
-            <tr class="<?php echo UI::flip_class(); ?>">
+            <tr class="<?php echo Ui::flip_class(); ?>">
                 <td><?php T_('Open Basedir'); ?></td>
                 <td><?php echo ini_get('open_basedir'); ?></td>
             </tr>
-            <tr class="<?php echo UI::flip_class(); ?>">
+            <tr class="<?php echo Ui::flip_class(); ?>">
                 <td><?php echo T_('Zlib Support'); ?></td>
                 <td><?php echo print_bool(function_exists('gzcompress')); ?></td>
             </tr>
-            <tr class="<?php echo UI::flip_class(); ?>">
+            <tr class="<?php echo Ui::flip_class(); ?>">
                 <td><?php echo T_('GD Support'); ?></td>
                 <td><?php echo print_bool(function_exists('ImageCreateFromString')); ?></td>
             </tr>
-            <tr class="<?php echo UI::flip_class(); ?>">
+            <tr class="<?php echo Ui::flip_class(); ?>">
                 <td><?php echo T_('Iconv Support'); ?></td>
                 <td><?php echo print_bool(function_exists('iconv')); ?></td>
             </tr>
-            <tr class="<?php echo UI::flip_class(); ?>">
+            <tr class="<?php echo Ui::flip_class(); ?>">
                 <td><?php echo T_('Gettext Support'); ?></td>
                 <td><?php echo print_bool(function_exists('bindtextdomain')); ?></td>
             </tr>
-            <tr class="<?php echo UI::flip_class(); ?>">
+            <tr class="<?php echo Ui::flip_class(); ?>">
                 <td><?php echo T_('PHP intl extension'); ?></td>
                 <td><?php echo print_bool(check_php_intl()); ?></td>
             </tr>
             </tbody>
         </table>
-    <?php UI::show_box_bottom(); ?>
+    <?php Ui::show_box_bottom(); ?>
 
-    <?php UI::show_box_top(T_('Current Configuration'), 'box box_current_configuration'); ?>
+    <?php Ui::show_box_top(T_('Current Configuration'), 'box box_current_configuration'); ?>
         <table class="tabledata">
             <colgroup>
                <col id="col_configuration">
@@ -157,7 +158,7 @@ use Ampache\Module\Util\Cron;
 
     // Be sure to print only scalar values
     if ($value === null || is_scalar($value)) { ?>
-            <tr class="<?php echo UI::flip_class(); ?>">
+            <tr class="<?php echo Ui::flip_class(); ?>">
                 <td><strong><?php echo $key; ?></strong></td>
                 <td><?php echo $value; ?></td>
             </tr>
@@ -166,6 +167,6 @@ use Ampache\Module\Util\Cron;
 } ?>
             </tbody>
         </table>
-    <?php UI::show_box_bottom(); ?>
+    <?php Ui::show_box_bottom(); ?>
 
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

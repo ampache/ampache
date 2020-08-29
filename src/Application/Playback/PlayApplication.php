@@ -44,7 +44,7 @@ use Song;
 use Song_Preview;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Playback\Stream_Playlist;
-use UI;
+use Ampache\Module\Util\Ui;
 use User;
 use Video;
 
@@ -267,7 +267,7 @@ final class PlayApplication implements ApplicationInterface
         // If we are in demo mode.. die here
         if (AmpConfig::get('demo_mode')) {
             debug_event('play/index', "Streaming Access Denied: Disable demo_mode in 'config/ampache.cfg.php'", 3);
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
@@ -275,7 +275,7 @@ final class PlayApplication implements ApplicationInterface
         $prefs = AmpConfig::get('allow_stream_playback') && $_SESSION['userdata']['preferences']['allow_stream_playback'];
         if (!$prefs) {
             debug_event('play/index', "Streaming Access Denied: Enable 'Allow Streaming' in Server Config -> Options", 3);
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
@@ -285,7 +285,7 @@ final class PlayApplication implements ApplicationInterface
             if (!Access::check_network('stream', Core::get_global('user')->id, 25) &&
                 !Access::check_network('network', Core::get_global('user')->id, 25)) {
                 debug_event('play/index', "Streaming Access Denied: " . Core::get_user_ip() . " does not have stream level access", 3);
-                UI::access_denied();
+                Ui::access_denied();
 
                 return;
             }
@@ -296,7 +296,7 @@ final class PlayApplication implements ApplicationInterface
             $playlist = new Stream_Playlist($object_id);
             // Some rudimentary security
             if ($uid != $playlist->user) {
-                UI::access_denied();
+                Ui::access_denied();
 
                 return;
             }
@@ -374,7 +374,7 @@ final class PlayApplication implements ApplicationInterface
 
         if (!User::stream_control(array(array('object_type' => $type, 'object_id' => $media->id)))) {
             debug_event('play/index', 'Stream control failed for user ' . Core::get_global('user')->username . ' on ' . $media->get_stream_name(), 3);
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }

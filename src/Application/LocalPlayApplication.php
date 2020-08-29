@@ -28,17 +28,17 @@ namespace Ampache\Application;
 use Ampache\Module\Access;
 use AmpConfig;
 use Ampache\Module\Playback\LocalPlay;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class LocalPlayApplication implements ApplicationInterface
 {
     public function run(): void
     {
-        UI::show_header();
+        Ui::show_header();
 
         // Check to see if we've got the rights to be here
         if (!AmpConfig::get('allow_localplay_playback') || !Access::check('interface', 25)) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
@@ -51,26 +51,26 @@ final class LocalPlayApplication implements ApplicationInterface
         $refresh_limit = AmpConfig::get('refresh_limit', 0);
         if ($refresh_limit > 5) {
             $ajax_url      = '?page=localplay&action=command&command=refresh';
-            require_once UI::find_template('javascript_refresh.inc.php');
+            require_once Ui::find_template('javascript_refresh.inc.php');
         }
 
         switch ($_REQUEST['action']) {
             case 'show_add_instance':
                 // This requires 50 or better
                 if (!Access::check('localplay', 75)) {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
 
                 // Get the current Localplay fields
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $fields    = $localplay->get_instance_fields();
-                require_once UI::find_template('show_localplay_add_instance.inc.php');
+                require_once Ui::find_template('show_localplay_add_instance.inc.php');
                 break;
             case 'add_instance':
                 // This requires 50 or better!
                 if (!Access::check('localplay', 75)) {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
 
@@ -82,7 +82,7 @@ final class LocalPlayApplication implements ApplicationInterface
             case 'update_instance':
                 // Make sure they gots them rights
                 if (!Access::check('localplay', 75)) {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
@@ -92,29 +92,29 @@ final class LocalPlayApplication implements ApplicationInterface
             case 'edit_instance':
                 // Check to make sure they've got the access
                 if (!Access::check('localplay', 75)) {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $instance  = $localplay->get_instance($_REQUEST['instance']);
                 $fields    = $localplay->get_instance_fields();
-                require_once UI::find_template('show_localplay_edit_instance.inc.php');
+                require_once Ui::find_template('show_localplay_edit_instance.inc.php');
                 break;
             case 'show_instances':
                 // First build the Localplay object and then get the instances
                 if (!Access::check('localplay', 5)) {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $instances = $localplay->get_instances();
                 $fields    = $localplay->get_instance_fields();
-                require_once UI::find_template('show_localplay_instances.inc.php');
+                require_once Ui::find_template('show_localplay_instances.inc.php');
                 break;
             case 'show_playlist':
             default:
                 if (!Access::check('localplay', 5)) {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
                 // Init and then connect to our Localplay instance
@@ -123,12 +123,12 @@ final class LocalPlayApplication implements ApplicationInterface
 
                 // Pull the current playlist and require the template
                 $objects = $localplay->get();
-                require_once UI::find_template('show_localplay_status.inc.php');
+                require_once Ui::find_template('show_localplay_status.inc.php');
                 break;
         } // end switch action
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

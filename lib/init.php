@@ -23,6 +23,7 @@
 // Use output buffering, this gains us a few things and
 // fixes some CSS issues
 use Ampache\Module\Authorization\Auth;
+use Ampache\Module\Util\Ui;
 
 ob_start();
 
@@ -133,7 +134,7 @@ if (substr($post_size, strlen((string) $post_size) - 1, strlen((string) $post_si
 ini_set('session.gc_probability', '5');
 
 if (!isset($results['memory_limit']) ||
-    (UI::unformat_bytes($results['memory_limit']) < UI::unformat_bytes('32M'))
+    (Ui::unformat_bytes($results['memory_limit']) < Ui::unformat_bytes('32M'))
 ) {
     $results['memory_limit'] = '32M';
 }

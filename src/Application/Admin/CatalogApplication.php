@@ -34,19 +34,19 @@ use Core;
 use Song;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Playback\Stream;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class CatalogApplication implements ApplicationInterface
 {
     public function run(): void
     {
         if (!Access::check('interface', 75)) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
 
-        UI::show_header();
+        Ui::show_header();
 
         $catalogs = isset($_REQUEST['catalogs']) ? filter_var_array($_REQUEST['catalogs'], FILTER_SANITIZE_STRING) : array();
         $action   = Core::get_request('action');
@@ -57,7 +57,7 @@ final class CatalogApplication implements ApplicationInterface
             if (!$catalog->isReady()) {
                 if (!isset($_REQUEST['perform_ready'])) {
                     $catalog->show_ready_process();
-                    UI::show_footer();
+                    Ui::show_footer();
 
                     return;
                 } else {
@@ -93,7 +93,7 @@ final class CatalogApplication implements ApplicationInterface
                 break;
             case 'full_service':
                 if (AmpConfig::get('demo_mode')) {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
 
@@ -106,7 +106,7 @@ final class CatalogApplication implements ApplicationInterface
                 }
 
                 if (!Core::form_verify('delete_catalog')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -196,7 +196,7 @@ final class CatalogApplication implements ApplicationInterface
                 }
 
                 if (!Core::form_verify('add_catalog', 'post')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -206,7 +206,7 @@ final class CatalogApplication implements ApplicationInterface
                     $catalog_id = Catalog::create($_POST);
 
                     if (!$catalog_id) {
-                        require UI::find_template('show_add_catalog.inc.php');
+                        require Ui::find_template('show_add_catalog.inc.php');
                         break;
                     }
 
@@ -214,12 +214,12 @@ final class CatalogApplication implements ApplicationInterface
                     catalog_worker('add_to_catalog', $catalogs, $_POST);
                     show_confirmation(T_('No Problem'), T_('The Catalog creation process has started'), AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
                 } else {
-                    require UI::find_template('show_add_catalog.inc.php');
+                    require Ui::find_template('show_add_catalog.inc.php');
                 }
                 break;
             case 'clear_stats':
                 if (AmpConfig::get('demo_mode')) {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
                 Stats::clear();
@@ -229,11 +229,11 @@ final class CatalogApplication implements ApplicationInterface
                 show_confirmation($title, $body, $url);
                 break;
             case 'show_add_catalog':
-                require UI::find_template('show_add_catalog.inc.php');
+                require Ui::find_template('show_add_catalog.inc.php');
                 break;
             case 'clear_now_playing':
                 if (AmpConfig::get('demo_mode')) {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
                 Stream::clear_now_playing();
@@ -246,7 +246,7 @@ final class CatalogApplication implements ApplicationInterface
 
                 $songs = Song::get_disabled();
                 if (count($songs)) {
-                    require UI::find_template('show_disabled_songs.inc.php');
+                    require Ui::find_template('show_disabled_songs.inc.php');
                 } else {
                     echo '<div class="error show-disabled">' . T_('No disabled Songs found') . '</div>';
                 }
@@ -254,7 +254,7 @@ final class CatalogApplication implements ApplicationInterface
             case 'show_delete_catalog':
                 /** @deprecated duplicated */
                 if (AmpConfig::get('demo_mode')) {
-                    UI::access_denied();
+                    Ui::access_denied();
                     break;
                 }
 
@@ -267,7 +267,7 @@ final class CatalogApplication implements ApplicationInterface
             case 'show_customize_catalog':
                 $catalog = Catalog::create_from_id($_REQUEST['catalog_id']);
                 $catalog->format();
-                require_once UI::find_template('show_edit_catalog.inc.php');
+                require_once Ui::find_template('show_edit_catalog.inc.php');
                 break;
             case 'gather_media_art':
                 catalog_worker('gather_media_art', $catalogs);
@@ -275,12 +275,12 @@ final class CatalogApplication implements ApplicationInterface
                 break;
             case 'show_catalogs':
             default:
-                require_once UI::find_template('show_manage_catalogs.inc.php');
+                require_once Ui::find_template('show_manage_catalogs.inc.php');
                 break;
         } // end switch
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

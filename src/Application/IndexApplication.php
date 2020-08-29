@@ -27,13 +27,13 @@ namespace Ampache\Application;
 
 use AmpConfig;
 use Core;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class IndexApplication implements ApplicationInterface
 {
     public function run(): void
     {
-        UI::show_header();
+        Ui::show_header();
 
         $action = Core::get_request('action');
 
@@ -50,13 +50,13 @@ final class IndexApplication implements ApplicationInterface
         if (AmpConfig::get('refresh_limit') > 5 && AmpConfig::get('home_now_playing')) {
             $refresh_limit = AmpConfig::get('refresh_limit');
             $ajax_url      = '?page=index&action=reloadnp';
-            require_once UI::find_template('javascript_refresh.inc.php');
+            require_once Ui::find_template('javascript_refresh.inc.php');
         }
 
-        require_once UI::find_template('show_index.inc.php');
+        require_once Ui::find_template('show_index.inc.php');
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

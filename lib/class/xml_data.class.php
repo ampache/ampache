@@ -25,6 +25,7 @@ use Ampache\Model\library_item;
 use Ampache\Model\License;
 use Ampache\Model\Shoutbox;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Util\Ui;
 
 /**
  * XML_Data Class
@@ -278,7 +279,7 @@ class XML_Data
                 "\n<root>\n" . $string . "</root>\n";
         }
 
-        return UI::clean_utf8($string);
+        return Ui::clean_utf8($string);
     }
     } // output_from_array
 
@@ -1114,7 +1115,7 @@ class XML_Data
         if ($full_xml) {
             $xml .= self::_header();
         }
-        $xml .= UI::clean_utf8($string);
+        $xml .= Ui::clean_utf8($string);
         if ($full_xml) {
             $xml .= self::_footer();
         }

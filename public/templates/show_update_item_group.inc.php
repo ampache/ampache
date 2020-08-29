@@ -19,7 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-UI::show_box_top(T_('Starting Update from Tags'), 'box box_update_items');
+
+use Ampache\Module\Util\Ui;
+
+Ui::show_box_top(T_('Starting Update from Tags'), 'box box_update_items');
 
 // update from high to low so you return to the first disk in a group album
 rsort($objects);
@@ -44,4 +47,4 @@ if (!$art->has_db_info() && !AmpConfig::get('art_order') == 'db') {
 <br />
 <strong><?php echo T_('Update from tags complete'); ?></strong>&nbsp;&nbsp;
 <a class="button" href="<?php echo $target_url; ?>"><?php echo T_('Continue'); ?></a>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

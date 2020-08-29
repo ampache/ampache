@@ -22,10 +22,11 @@
 
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
+use Ampache\Module\Util\Ui;
 
 // Upload form from http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/?>
 <?php
-UI::show_box_top(T_('Upload'));
+Ui::show_box_top(T_('Upload'));
 $ajaxfs = AmpConfig::get('ajax_server') . '/fs.ajax.php';
 $artist = (int) (Core::get_request('artist'));
 $album  = (int) (Core::get_request('album')); ?>
@@ -215,7 +216,7 @@ if ($upload_max > 0) { ?>
         <?php echo T_('Files'); ?>
         <?php
         if ($upload_max > 0) {
-            echo " (< " . UI::format_bytes($upload_max) . ")";
+            echo " (< " . Ui::format_bytes($upload_max) . ")";
         } ?>
         <br /><br />
         <?php echo T_('Allowed file type'); ?>:<br />
@@ -335,4 +336,4 @@ $(function(){
     });
 });
 </script>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

@@ -28,19 +28,19 @@ namespace Ampache\Application;
 use AmpConfig;
 use Broadcast;
 use Core;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class BroadcastApplication implements ApplicationInterface
 {
     public function run(): void
     {
         if (!AmpConfig::get('broadcast')) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
 
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
@@ -49,12 +49,12 @@ final class BroadcastApplication implements ApplicationInterface
 
                 $next_url = AmpConfig::get('web_path') . '/broadcast.php?action=delete&id=' . scrub_out($object_id);
                 show_confirmation(T_('Are You Sure?'), T_('This Broadcast will be deleted'), $next_url, 1, 'delete_broadcast');
-                UI::show_footer();
+                Ui::show_footer();
 
                 return;
             case 'delete':
                 if (AmpConfig::get('demo_mode')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -65,13 +65,13 @@ final class BroadcastApplication implements ApplicationInterface
                     $next_url = AmpConfig::get('web_path') . '/browse.php?action=broadcast';
                     show_confirmation(T_('No Problem'), T_('Broadcast has been deleted'), $next_url);
                 }
-                UI::show_footer();
+                Ui::show_footer();
 
                 return;
         } // switch on the action
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

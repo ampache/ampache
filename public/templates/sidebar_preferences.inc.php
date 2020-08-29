@@ -27,6 +27,7 @@
 
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
+use Ampache\Module\Util\Ui;
 
 $categories = Preference::get_categories(); ?>
 <?php
@@ -38,7 +39,7 @@ $t_preferences = T_('Preferences'); ?>
     Ajax::end_container();
     echo "</li>";
 } ?>
-  <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo $t_preferences; ?>"><?php echo $t_preferences; ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'preferences', 'header-all ' . ((filter_has_var(INPUT_COOKIE, 'sb_preferences')) ? $_COOKIE['sb_preferences'] : 'expanded')); ?></h4>
+  <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo $t_preferences; ?>"><?php echo $t_preferences; ?></span><?php echo Ui::get_icon('all', T_('Expand/Collapse'), 'preferences', 'header-all ' . ((filter_has_var(INPUT_COOKIE, 'sb_preferences')) ? $_COOKIE['sb_preferences'] : 'expanded')); ?></h4>
     <ul class="sb3" id="sb_preferences_sections">
 <?php
     foreach ($categories as $name) {

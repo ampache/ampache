@@ -21,6 +21,7 @@
  */
 
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Util\Ui;
 
 $thresh_value = AmpConfig::get('stats_threshold');
 $user_id      = (int) Core::get_global('user')->id;
@@ -68,4 +69,4 @@ $browse->set_simple_browse(true);
 $browse->show_objects();
 $browse->store();
 
-UI::show_box_bottom();
+Ui::show_box_bottom();

@@ -26,14 +26,14 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use Ampache\Module\Access;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class PhpInfoApplication implements ApplicationInterface
 {
     public function run(): void
     {
         if (!Access::check('interface', 100)) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }

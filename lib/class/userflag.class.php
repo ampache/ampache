@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 use Ampache\Model\Plugin;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Util\Ui;
 use database_object;
 
 /**
@@ -378,7 +379,7 @@ class Userflag extends database_object
         }
 
         $userflag = new Userflag($object_id, $type);
-        require UI::find_template('show_object_userflag.inc.php');
+        require Ui::find_template('show_object_userflag.inc.php');
 
         return true;
     } // show

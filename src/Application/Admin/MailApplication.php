@@ -30,25 +30,25 @@ use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use Core;
 use Ampache\Module\Util\Mailer;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class MailApplication implements ApplicationInterface
 {
     public function run(): void
     {
         if (!Access::check('interface', 75)) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
 
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'send_mail':
                 if (AmpConfig::get('demo_mode')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -89,12 +89,12 @@ final class MailApplication implements ApplicationInterface
 
                 break;
             default:
-                require_once UI::find_template('show_mail_users.inc.php');
+                require_once Ui::find_template('show_mail_users.inc.php');
                 break;
         } // end switch
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

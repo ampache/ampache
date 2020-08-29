@@ -21,6 +21,7 @@
  */
 
 use Ampache\Model\Media;
+use Ampache\Module\Util\Ui;
 
 /**
  * Remote Catalog Class
@@ -195,11 +196,11 @@ class Catalog_remote extends Catalog
     public function add_to_catalog($options = null)
     {
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_top(T_('Running Remote Update'));
+            Ui::show_box_top(T_('Running Remote Update'));
         }
         $this->update_remote_catalog();
         if (!defined('SSE_OUTPUT')) {
-            UI::show_box_bottom();
+            Ui::show_box_bottom();
         }
 
         return true;
@@ -261,7 +262,7 @@ class Catalog_remote extends Catalog
         // Get the song count, etc.
         $remote_catalog_info = $remote_handle->info();
 
-        UI::update_text(T_("Remote Catalog Updated"),
+        Ui::update_text(T_("Remote Catalog Updated"),
                 /* HINT: count of songs found*/
                 sprintf(nT_('%s song was found', '%s songs were found', $remote_catalog_info['songs']),
                 $remote_catalog_info['songs']));
@@ -301,7 +302,7 @@ class Catalog_remote extends Catalog
             }
         } // end while
 
-        UI::update_text(T_("Updated"), T_("Completed updating remote Catalog(s)."));
+        Ui::update_text(T_("Updated"), T_("Completed updating remote Catalog(s)."));
 
         // Update the last update value
         $this->update_last_update();

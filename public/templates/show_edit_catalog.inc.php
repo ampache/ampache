@@ -21,7 +21,10 @@
  */
 
 /* HINT: Catalog Name */
-UI::show_box_top(sprintf(T_('Settings for Catalog: %s'), $catalog->name . ' (' . $catalog->f_info . ')'), 'box box_edit_catalog'); ?>
+
+use Ampache\Module\Util\Ui;
+
+Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), $catalog->name . ' (' . $catalog->f_info . ')'), 'box box_edit_catalog'); ?>
 <form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
     <table class="tabledata">
         <tr>
@@ -76,4 +79,4 @@ UI::show_box_top(sprintf(T_('Settings for Catalog: %s'), $catalog->name . ' (' .
         <input class="button" type="submit" value="<?php echo T_('Save Catalog Settings'); ?>" />
     </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

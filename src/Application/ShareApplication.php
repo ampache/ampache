@@ -31,7 +31,7 @@ use Core;
 use Ampache\Model\Plugin;
 use Preference;
 use Share;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class ShareApplication implements ApplicationInterface
 {
@@ -41,7 +41,7 @@ final class ShareApplication implements ApplicationInterface
 
         if (!AmpConfig::get('share')) {
             debug_event('share', 'Access Denied: sharing features are not enabled.', 3);
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
@@ -50,7 +50,7 @@ final class ShareApplication implements ApplicationInterface
 
         switch ($action) {
             case 'show_create':
-                UI::show_header();
+                Ui::show_header();
 
                 $type = Share::format_type(Core::get_request('type'));
                 if (!empty($type) && !empty($_REQUEST['id'])) {
@@ -62,30 +62,30 @@ final class ShareApplication implements ApplicationInterface
                     $object = new $type($object_id);
                     if ($object->id) {
                         $object->format();
-                        require_once UI::find_template('show_add_share.inc.php');
+                        require_once Ui::find_template('show_add_share.inc.php');
                     }
                 }
-                UI::show_footer();
+                Ui::show_footer();
 
                 return;
             case 'create':
                 if (AmpConfig::get('demo_mode')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
 
                 if (!Core::form_verify('add_share', 'post')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
 
-                UI::show_header();
+                Ui::show_header();
                 $share_id = Share::create_share($_REQUEST['type'], (int) $_REQUEST['id'], make_bool($_REQUEST['allow_stream']), make_bool($_REQUEST['allow_download']), (int) $_REQUEST['expire'], $_REQUEST['secret'], (int) $_REQUEST['max_counter']);
 
                 if (!$share_id) {
-                    require_once UI::find_template('show_add_share.inc.php');
+                    require_once Ui::find_template('show_add_share.inc.php');
                 } else {
                     $share = new Share($share_id);
                     $body  = T_('Share created') . '<br />' .
@@ -100,58 +100,58 @@ final class ShareApplication implements ApplicationInterface
                     $title = T_('No Problem');
                     show_confirmation($title, $body, AmpConfig::get('web_path') . '/stats.php?action=share');
                 }
-                UI::show_footer();
+                Ui::show_footer();
 
                 return;
             case 'show_delete':
-                UI::show_header();
+                Ui::show_header();
                 $share_id = Core::get_request('id');
 
                 $next_url = AmpConfig::get('web_path') . '/share.php?action=delete&id=' . scrub_out($share_id);
                 show_confirmation(T_('Are You Sure?'), T_('The Share will be deleted and no longer accessible to others'), $next_url, 1, 'delete_share');
-                UI::show_footer();
+                Ui::show_footer();
 
                 return;
             case 'delete':
                 if (AmpConfig::get('demo_mode')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
 
-                UI::show_header();
+                Ui::show_header();
                 $share_id = Core::get_request('id');
                 if (Share::delete_share($share_id, Core::get_global('user'))) {
                     $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
                     show_confirmation(T_('No Problem'), T_('Share has been deleted'), $next_url);
                 }
-                UI::show_footer();
+                Ui::show_footer();
 
                 return;
             case 'clean':
                 if (AmpConfig::get('demo_mode')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
 
-                UI::show_header();
+                Ui::show_header();
                 Share::garbage_collection();
                 $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
                 show_confirmation(T_('No Problem'), T_('Expired shares have been cleaned'), $next_url);
-                UI::show_footer();
+                Ui::show_footer();
 
                 return;
             case 'external_share':
                 if (AmpConfig::get('demo_mode')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
 
                 $plugin = new Plugin(Core::get_get('plugin'));
                 if (!$plugin) {
-                    UI::access_denied('Access Denied - Unknown external share plugin');
+                    Ui::access_denied('Access Denied - Unknown external share plugin');
 
                     return;
                 }
@@ -179,7 +179,7 @@ final class ShareApplication implements ApplicationInterface
         if (AmpConfig::get('access_control')) {
             if (!Access::check_network('interface', '', 5)) {
                 debug_event('share', 'Access Denied:' . Core::get_server('REMOTE_ADDR') . ' is not in the Interface Access list', 3);
-                UI::access_denied();
+                Ui::access_denied();
 
                 return;
             }
@@ -198,7 +198,7 @@ final class ShareApplication implements ApplicationInterface
         }
 
         if (!$share->is_valid($secret, $action)) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
@@ -219,10 +219,10 @@ final class ShareApplication implements ApplicationInterface
                 require __DIR__ . '/../../public/batch.php';
             }
         } elseif ($action == 'stream') {
-            require UI::find_template('show_share.inc.php');
+            require Ui::find_template('show_share.inc.php');
         } else {
             debug_event('share', 'Access Denied: unknown action.', 3);
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }

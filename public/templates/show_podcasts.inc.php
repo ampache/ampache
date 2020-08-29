@@ -22,20 +22,21 @@
 
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
+use Ampache\Module\Util\Ui;
 
 $thcount  = 5; ?>
 <div id="information_actions">
     <ul>
         <?php if (Access::check('interface', 75)) { ?>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=show_create"><?php echo UI::get_icon('add', T_('Add')); ?> <?php echo T_('Subscribe to Podcast'); ?></a>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=show_create"><?php echo Ui::get_icon('add', T_('Add')); ?> <?php echo T_('Subscribe to Podcast'); ?></a>
         </li>
         <?php
 } ?>
     </ul>
 </div>
 <?php if ($browse->is_show_header()) {
-    require UI::find_template('list_header.inc.php');
+    require Ui::find_template('list_header.inc.php');
 } ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="podcast">
     <thead>
@@ -76,13 +77,13 @@ $thcount  = 5; ?>
         foreach ($object_ids as $podcast_id) {
             $libitem = new Podcast($podcast_id);
             $libitem->format(); ?>
-        <tr id="podcast_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require UI::find_template('show_podcast_row.inc.php'); ?>
+        <tr id="podcast_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
+            <?php require Ui::find_template('show_podcast_row.inc.php'); ?>
         </tr>
         <?php
         } ?>
         <?php if (!count($object_ids)) { ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
+        <tr class="<?php echo Ui::flip_class(); ?>">
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No podcast found'); ?></span></td>
         </tr>
         <?php
@@ -114,5 +115,5 @@ $thcount  = 5; ?>
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
-            require UI::find_template('list_header.inc.php');
+            require Ui::find_template('list_header.inc.php');
         } ?>

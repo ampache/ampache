@@ -29,14 +29,15 @@
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
 
 ?>
 <?php
 ob_start();
-require UI::find_template('show_playlist_title.inc.php');
+require Ui::find_template('show_playlist_title.inc.php');
 $title = ob_get_contents();
 ob_end_clean();
-UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</div>', 'info-box'); ?>
+Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</div>', 'info-box'); ?>
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
     <div style="display:table-cell;" id="rating_<?php echo $playlist->id; ?>_playlist">
@@ -58,16 +59,16 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $playlist->id; ?>', 'reorder_playlist_table', 'track_',
                                             '<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id; ?>', 'refresh_playlist_medias')">
-                <?php echo UI::get_icon('save', T_('Save Track Order')); ?>
+                <?php echo Ui::get_icon('save', T_('Save Track Order')); ?>
                 &nbsp;&nbsp;<?php echo T_('Save Track Order'); ?>
             </a>
         </li>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=sort_tracks&playlist_id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('sort', T_('Sort Tracks by Artist, Album, Song')); ?>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=sort_tracks&playlist_id=<?php echo $playlist->id; ?>"><?php echo Ui::get_icon('sort', T_('Sort Tracks by Artist, Album, Song')); ?>
             &nbsp;&nbsp;<?php echo T_('Sort Tracks by Artist, Album, Song'); ?></a>
         </li>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=remove_duplicates&playlist_id=<?php echo $playlist->id; ?>"><?php echo UI::get_icon('wand', T_('Remove Duplicates')); ?>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=remove_duplicates&playlist_id=<?php echo $playlist->id; ?>"><?php echo Ui::get_icon('wand', T_('Remove Duplicates')); ?>
             &nbsp;&nbsp;<?php echo T_('Remove Duplicates'); ?></a>
         </li>
     <?php
@@ -75,7 +76,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     <?php if (Access::check_function('batch_download') && check_can_zip('playlist')) { ?>
         <li>
             <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>">
-                <?php echo UI::get_icon('batch_download', T_('Batch Download')); ?>
+                <?php echo Ui::get_icon('batch_download', T_('Batch Download')); ?>
                 &nbsp;&nbsp;<?php echo T_('Batch Download'); ?>
             </a>
         </li>
@@ -106,7 +107,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     <?php if (Core::get_global('user')->has_access('50') && AmpConfig::get('channel')) { ?>
         <li>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/channel.php?action=show_create&type=playlist&id=<?php echo $playlist->id; ?>">
-                <?php echo UI::get_icon('flow'); ?>
+                <?php echo Ui::get_icon('flow'); ?>
                 &nbsp;&nbsp;<?php echo T_('Create channel'); ?>
             </a>
         </li>
@@ -115,7 +116,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     <?php if ($playlist->has_access()) { ?>
         <li>
             <a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to delete this Playlist?'); ?>');">
-                <?php echo UI::get_icon('delete'); ?>
+                <?php echo Ui::get_icon('delete'); ?>
                 &nbsp;&nbsp;<?php echo T_('Delete'); ?>
             </a>
         </li>
@@ -123,7 +124,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     } ?>
     </ul>
 </div>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>
 <div id='reordered_list_<?php echo $playlist->id; ?>'>
 <?php
     $browse = new Browse();

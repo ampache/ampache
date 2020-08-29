@@ -24,8 +24,11 @@
  * This page has a few tabs, as such we need to figure out which tab we are on
  * and display the information accordingly
  */
- ?>
-<?php /* HINT: Username FullName */ UI::show_box_top(sprintf(T_('Editing %s Preferences'), $client->fullname), 'box box_preferences'); ?>
+
+use Ampache\Module\Util\Ui;
+
+?>
+<?php /* HINT: Username FullName */ Ui::show_box_top(sprintf(T_('Editing %s Preferences'), $client->fullname), 'box box_preferences'); ?>
 <form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=admin_update_preferences" enctype="multipart/form-data">
 <table class="tabledata">
 <colgroup>
@@ -37,7 +40,7 @@
     <th class="col_value"><?php echo T_('Value'); ?></th>
 </tr>
 <?php foreach ($preferences as $pref) { ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
+        <tr class="<?php echo Ui::flip_class(); ?>">
                 <td class="cel_preference"><?php echo T_($pref['description']); ?></td>
                 <td class="cel_value">
                         <?php create_preference_input($pref['name'], $pref['value']); ?>
@@ -58,4 +61,4 @@
 </table>
 </form>
 
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

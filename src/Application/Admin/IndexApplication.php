@@ -29,19 +29,19 @@ use Ampache\Module\Access;
 use Ampache\Application\ApplicationInterface;
 use Browse;
 use Catalog;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class IndexApplication implements ApplicationInterface
 {
     public function run(): void
     {
         if (!Access::check('interface', 75)) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
 
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
@@ -58,7 +58,7 @@ final class IndexApplication implements ApplicationInterface
         }
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

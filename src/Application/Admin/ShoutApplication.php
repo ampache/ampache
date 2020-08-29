@@ -30,7 +30,7 @@ use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use Browse;
 use Ampache\Model\Shoutbox;
-use UI;
+use Ampache\Module\Util\Ui;
 use User;
 
 final class ShoutApplication implements ApplicationInterface
@@ -38,12 +38,12 @@ final class ShoutApplication implements ApplicationInterface
     public function run(): void
     {
         if (!Access::check('interface', 100)) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
 
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
@@ -60,7 +60,7 @@ final class ShoutApplication implements ApplicationInterface
                 $object->format();
                 $client = new User($shout->user);
                 $client->format();
-                require_once UI::find_template('show_edit_shout.inc.php');
+                require_once Ui::find_template('show_edit_shout.inc.php');
                 break;
             case 'delete':
                 $shout = new Shoutbox($_REQUEST['shout_id']);
@@ -78,7 +78,7 @@ final class ShoutApplication implements ApplicationInterface
         } // end switch on action
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

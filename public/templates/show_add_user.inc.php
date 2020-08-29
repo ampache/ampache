@@ -18,8 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
-<?php UI::show_box_top(T_('Add User'), 'box box_add_user'); ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
+<?php Ui::show_box_top(T_('Add User'), 'box box_add_user'); ?>
 <?php AmpError::display('general'); ?>
 <form name="add_user" enctype="multpart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/users.php?action=add_user"; ?>">
     <table class="tabledata">
@@ -91,7 +95,7 @@
         </tr>
         <tr>
             <td>
-                <?php echo T_('Avatar'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)
+                <?php echo T_('Avatar'); ?> (&lt; <?php echo Ui::format_bytes(AmpConfig::get('max_upload_size')); ?>)
             </td>
             <td>
                 <input type="file" id="avatar" name="avatar" value="" />
@@ -104,4 +108,4 @@
         <input type="submit" value="<?php echo T_('Add User'); ?>" />
     </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

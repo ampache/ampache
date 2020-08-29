@@ -22,6 +22,7 @@
 
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
+use Ampache\Module\Util\Ui;
 
 ?>
 <ul id="sidebar-tabs">
@@ -51,7 +52,7 @@ if (User::is_registered()) {
             print_r(Ajax::button("?page=index&action=sidebar&button=" . $item['id'], $item['icon'], $item['title'], 'sidebar_' . $item['id']));
             if ($item['id'] == $_SESSION['state']['sidebar_tab']) { ?>
             <div id="sidebar-page" class="sidebar-page-float">
-                <?php require_once UI::find_template('sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php'); ?>
+                <?php require_once Ui::find_template('sidebar_' . $_SESSION['state']['sidebar_tab'] . '.inc.php'); ?>
             </div>
     <?php
             } ?>
@@ -63,14 +64,14 @@ if (User::is_registered()) {
         <li id="sb_tab_home" class="sb1">
             <div id="sidebar-page" class="sidebar-page-float">
             <?php
-                require_once UI::find_template('sidebar_home.inc.php'); ?>
+                require_once Ui::find_template('sidebar_home.inc.php'); ?>
             </div>
         </li>
 <?php
 } ?>
         <li id="sb_tab_logout" class="sb1">
             <a target="_top" href="<?php echo $web_path; ?>/logout.php" id="sidebar_logout" class="nohtml" >
-            <?php echo UI::get_icon('logout', $t_logout); ?>
+            <?php echo Ui::get_icon('logout', $t_logout); ?>
             </a>
 </li>
 </ul>

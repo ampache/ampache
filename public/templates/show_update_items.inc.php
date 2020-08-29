@@ -19,7 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-UI::show_box_top(T_('Starting Update from Tags'), 'box box_update_items');
+
+use Ampache\Module\Util\Ui;
+
+Ui::show_box_top(T_('Starting Update from Tags'), 'box box_update_items');
 
 $return_id = Catalog::update_single_item($type, $object_id);
 
@@ -40,4 +43,4 @@ if (!$art->has_db_info() && !AmpConfig::get('art_order') == 'db') {
 <br />
 <strong><?php echo T_('Update from tags complete'); ?></strong>&nbsp;&nbsp;
 <a class="button" href="<?php echo $target_url; ?>"><?php echo T_('Continue'); ?></a>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

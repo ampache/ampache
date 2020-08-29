@@ -21,12 +21,14 @@
  *
  */
 
+use Ampache\Module\Util\Ui;
+
 $name    = 'export_' . $_REQUEST['export_format'];
 ${$name} = ' selected="selected"';
 $name    = 'catalog_' . $_REQUEST['export_catalog'];
 ${$name} = ' selected="selected"';
 
-UI::show_box_top(T_('Export Catalog'), 'box box_export'); ?>
+Ui::show_box_top(T_('Export Catalog'), 'box box_export'); ?>
 <form name="export" action="<?php echo AmpConfig::get('web_path'); ?>/admin/export.php?action=export" method="post" enctype="multipart/form-data">
     <table class="tableform">
         <tr>
@@ -59,4 +61,4 @@ UI::show_box_top(T_('Export Catalog'), 'box box_export'); ?>
         <input type="submit" value="<?php echo T_('Export'); ?>" />
     </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

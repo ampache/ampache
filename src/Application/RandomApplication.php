@@ -28,13 +28,13 @@ namespace Ampache\Application;
 use AmpConfig;
 use Core;
 use Ampache\Model\Random;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class RandomApplication implements ApplicationInterface
 {
     public function run(): void
     {
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
@@ -49,12 +49,12 @@ final class RandomApplication implements ApplicationInterface
                 }
             case 'advanced':
             default:
-                require_once UI::find_template('show_random.inc.php');
+                require_once Ui::find_template('show_random.inc.php');
                 break;
         } // end switch
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

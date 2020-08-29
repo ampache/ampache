@@ -18,17 +18,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
-<?php /* HINT: Username */ UI::show_box_top(sprintf(T_('%s IP History'), $working_user->fullname)); ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
+<?php /* HINT: Username */ Ui::show_box_top(sprintf(T_('%s IP History'), $working_user->fullname)); ?>
 <div id="information_actions">
 <ul>
 <li>
 <?php if (isset($_REQUEST['all'])) { ?>
-    <a href="<?php echo AmpConfig::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>"><?php echo UI::get_icon('disable', T_('Disable')); ?></a>
+    <a href="<?php echo AmpConfig::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>"><?php echo Ui::get_icon('disable', T_('Disable')); ?></a>
     <?php echo T_('Show Unique'); ?>
 <?php
 } else { ?>
-    <a href="<?php echo AmpConfig::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>&all"><?php echo UI::get_icon('add', T_('Add')); ?></a>
+    <a href="<?php echo AmpConfig::get('web_path')?>/admin/users.php?action=show_ip_history&user_id=<?php echo $working_user->id?>&all"><?php echo Ui::get_icon('add', T_('Add')); ?></a>
     <?php echo T_('Show All'); ?>
 <?php
     }?>
@@ -47,7 +51,7 @@
      <th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>
 </tr>
 <?php foreach ($history as $data) { ?>
-<tr class="<?php echo UI::flip_class(); ?>">
+<tr class="<?php echo Ui::flip_class(); ?>">
     <td class="cel_date">
         <?php echo get_datetime((int) $data['date']); ?>
     </td>
@@ -63,4 +67,4 @@
 </tr>
 
 </table>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

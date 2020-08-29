@@ -28,10 +28,11 @@
  */
 
 use Ampache\Module\AmpacheRss;
+use Ampache\Module\Util\Ui;
 
 if (count($results)) {
     $link = AmpConfig::get('use_rss') ? ' ' . AmpacheRss::get_display('nowplaying') : ''; ?>
-<?php UI::show_box_top(T_('Now Playing') . $link); ?>
+<?php Ui::show_box_top(T_('Now Playing') . $link); ?>
 <?php
 foreach ($results as $item) {
         $media   = $item['media'];
@@ -52,13 +53,13 @@ foreach ($results as $item) {
 <div class="np_row">
 <?php
 if (get_class($media) == 'Song') {
-            require UI::find_template('show_now_playing_row.inc.php');
+            require Ui::find_template('show_now_playing_row.inc.php');
         } elseif (get_class($media) == 'Video') {
-            require UI::find_template('show_now_playing_video_row.inc.php');
+            require Ui::find_template('show_now_playing_video_row.inc.php');
         } ?>
 </div>
 <?php
     } // end foreach?>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>
 <?php
 } // end if count results?>

@@ -30,18 +30,18 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use AmpConfig;
 use Art;
 use Core;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class ArtApplication implements ApplicationInterface
 {
     public function run(): void
     {
-        require_once UI::find_template('header.inc.php');
+        require_once Ui::find_template('header.inc.php');
 
         $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
         if (!InterfaceImplementationChecker::is_library_item($object_type)) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
@@ -53,7 +53,7 @@ final class ArtApplication implements ApplicationInterface
 
         // If not a content manager user then kick em out
         if (!Access::check('interface', 50) && (!Access::check('interface', 25) || $item->get_user_owner() != Core::get_global('user')->id)) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
@@ -151,10 +151,10 @@ final class ArtApplication implements ApplicationInterface
                     } // end foreach
                     // Store the results for further use
                     $_SESSION['form']['images'] = $images;
-                    require_once UI::find_template('show_arts.inc.php');
+                    require_once Ui::find_template('show_arts.inc.php');
                 }
 
-                require_once UI::find_template('show_get_art.inc.php');
+                require_once Ui::find_template('show_get_art.inc.php');
 
                 break;
             case 'select_art':
@@ -190,7 +190,7 @@ final class ArtApplication implements ApplicationInterface
         }
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

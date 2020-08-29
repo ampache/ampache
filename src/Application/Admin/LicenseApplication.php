@@ -30,19 +30,19 @@ use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use Browse;
 use Ampache\Model\License;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class LicenseApplication implements ApplicationInterface
 {
     public function run(): void
     {
         if (!Access::check('interface', 75)) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
 
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
@@ -63,7 +63,7 @@ final class LicenseApplication implements ApplicationInterface
                 $license = new License($_REQUEST['license_id']);
             // intentional fall through
             case 'show_create':
-                require_once UI::find_template('show_edit_license.inc.php');
+                require_once Ui::find_template('show_edit_license.inc.php');
                 break;
             case 'delete':
                 License::delete($_REQUEST['license_id']);
@@ -80,7 +80,7 @@ final class LicenseApplication implements ApplicationInterface
         }
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

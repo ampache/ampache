@@ -20,6 +20,8 @@
  *
  */
 
-UI::show_box_top(T_('Information'));
-require_once UI::find_template('show_stats_popular.inc.php');
-UI::show_box_bottom();
+use Ampache\Module\Util\Ui;
+
+Ui::show_box_top(T_('Information'));
+require_once Ui::find_template('show_stats_popular.inc.php');
+Ui::show_box_bottom();

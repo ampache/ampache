@@ -21,6 +21,7 @@
  */
 
 use Ampache\Model\License;
+use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path'); ?>
 <div id="information_actions">
@@ -44,10 +45,10 @@ $web_path = AmpConfig::get('web_path'); ?>
             $libitem = new License($license_id);
             $libitem->format();
 
-            require UI::find_template('show_license_row.inc.php'); ?>
+            require Ui::find_template('show_license_row.inc.php'); ?>
         <?php
         } if (!count($object_ids)) { ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
+        <tr class="<?php echo Ui::flip_class(); ?>">
             <td colspan="6" class="error"><?php echo T_('No licenses found'); ?></td>
         </tr>
         <?php

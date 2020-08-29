@@ -19,7 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
- ?>
+
+use Ampache\Module\Util\Ui;
+
+?>
                 </div>
                 <div style="clear:both;">
                 </div>
@@ -47,11 +50,11 @@
         </div>
         <?php if (AmpConfig::get('ajax_load') && (!isset($_SESSION['login']) || !$_SESSION['login'])) { ?>
         <div id="webplayer-minimize">
-          <a href="javascript:TogglePlayerVisibility();"><?php echo UI::get_icon('minimize', T_('Show/Hide Player')); ?></a>
+          <a href="javascript:TogglePlayerVisibility();"><?php echo Ui::get_icon('minimize', T_('Show/Hide Player')); ?></a>
         </div>
         <div id="webplayer"></div>
         <?php
-            require_once UI::find_template('uberviz.inc.php');
+            require_once Ui::find_template('uberviz.inc.php');
         } ?>
     </body>
 </html>

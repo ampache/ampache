@@ -21,6 +21,7 @@
  */
 
 use Ampache\Model\Shoutbox;
+use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path'); ?>
 <table class="tabledata">
@@ -45,10 +46,10 @@ $web_path = AmpConfig::get('web_path'); ?>
             $client = new User($libitem->user);
             $client->format();
 
-            require UI::find_template('show_shout_row.inc.php'); ?>
+            require Ui::find_template('show_shout_row.inc.php'); ?>
         <?php
         } if (!count($object_ids)) { ?>
-        <tr class="<?php echo UI::flip_class(); ?>">
+        <tr class="<?php echo Ui::flip_class(); ?>">
             <td colspan="6" class="error"><?php echo T_('No records found'); ?></td>
         </tr>
         <?php

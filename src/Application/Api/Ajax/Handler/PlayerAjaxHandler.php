@@ -28,7 +28,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 use AmpConfig;
 use Broadcast;
 use Core;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class PlayerAjaxHandler implements AjaxHandlerInterface
 {
@@ -41,7 +41,7 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
         switch ($_REQUEST['action']) {
             case 'show_broadcasts':
                 ob_start();
-                require UI::find_template('show_broadcasts_dialog.inc.php');
+                require Ui::find_template('show_broadcasts_dialog.inc.php');
                 $results = ob_get_contents();
                 ob_end_clean();
                 echo $results;

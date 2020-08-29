@@ -18,7 +18,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
 <!DOCTYPE html>
 <html lang="en-US">
     <head>
@@ -34,7 +38,7 @@
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container" style="height: 70px;">
                 <a class="navbar-brand" href="#">
-                    <img src="<?php echo UI::get_logo_url('dark'); ?>" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
+                    <img src="<?php echo Ui::get_logo_url('dark'); ?>" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
                     <?php echo T_('Ampache') . ' :: ' . T_('For the Love of Music'); ?>
                 </a>
             </div>

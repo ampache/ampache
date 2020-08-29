@@ -28,19 +28,19 @@ namespace Ampache\Application;
 use AmpConfig;
 use Channel;
 use Core;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class ChannelApplication implements ApplicationInterface
 {
     public function run(): void
     {
         if (!AmpConfig::get('channel')) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
 
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
@@ -50,21 +50,21 @@ final class ChannelApplication implements ApplicationInterface
                     $object = new $type(Core::get_request('id'));
                     if ($object->id) {
                         $object->format();
-                        require_once UI::find_template('show_add_channel.inc.php');
+                        require_once Ui::find_template('show_add_channel.inc.php');
                     }
                 }
-                UI::show_footer();
+                Ui::show_footer();
 
                 return;
             case 'create':
                 if (AmpConfig::get('demo_mode')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
 
                 if (!Core::form_verify('add_channel', 'post')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -72,11 +72,11 @@ final class ChannelApplication implements ApplicationInterface
                 $created = Channel::create($_REQUEST['name'], $_REQUEST['description'], $_REQUEST['url'], $_REQUEST['type'], $_REQUEST['id'], $_REQUEST['interface'], $_REQUEST['port'], $_REQUEST['admin_password'], isset($_REQUEST['private']) ? 1 : 0, $_REQUEST['max_listeners'], $_REQUEST['random'] ?: 0, $_REQUEST['loop'] ?: 0, $_REQUEST['stream_type'], $_REQUEST['bitrate']);
 
                 if (!$created) {
-                    require_once UI::find_template('show_add_channel.inc.php');
+                    require_once Ui::find_template('show_add_channel.inc.php');
                 } else {
                     show_confirmation(T_('No Problem'), T_('The Channel has been created'), AmpConfig::get('web_path') . '/browse.php?action=channel');
                 }
-                UI::show_footer();
+                Ui::show_footer();
 
                 return;
             case 'show_delete':
@@ -84,12 +84,12 @@ final class ChannelApplication implements ApplicationInterface
 
                 $next_url = AmpConfig::get('web_path') . '/channel.php?action=delete&id=' . scrub_out($object_id);
                 show_confirmation(T_('Are You Sure?'), T_('This Channel will be deleted'), $next_url, 1, 'delete_channel');
-                UI::show_footer();
+                Ui::show_footer();
 
                 return;
             case 'delete':
                 if (AmpConfig::get('demo_mode')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -100,13 +100,13 @@ final class ChannelApplication implements ApplicationInterface
                     $next_url = AmpConfig::get('web_path') . '/browse.php?action=channel';
                     show_confirmation(T_('No Problem'), T_('The Channel has been deleted'), $next_url);
                 }
-                UI::show_footer();
+                Ui::show_footer();
 
                 return;
         } // switch on the action
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

@@ -23,10 +23,11 @@
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path');
 $button   = Ajax::button('?page=index&action=random_videos', 'random', T_('Refresh'), 'random_video_refresh'); ?>
-<?php UI::show_box_top(T_('Videos of the Moment') . ' ' . $button, 'box box_random_videos'); ?>
+<?php Ui::show_box_top(T_('Videos of the Moment') . ' ' . $button, 'box box_random_videos'); ?>
 <?php
 if ($videos) {
     foreach ($videos as $video_id) {
@@ -40,7 +41,7 @@ if ($videos) {
                 $art_showed = Art::display('video', $video->id, $video->f_full_title, 9, $video->link, false, 'preview');
             }
             if (!$art_showed) {
-                $thumb = UI::is_grid_view('video') ? 7 : 6;
+                $thumb = Ui::is_grid_view('video') ? 7 : 6;
                 Art::display('video', $video->id, $video->f_full_title, $thumb, $video->link);
             }
         } else { ?>
@@ -70,4 +71,4 @@ if ($videos) {
 <?php
 } ?>
 
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

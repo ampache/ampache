@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Util\Ui;
+
 $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
 $web_path = AmpConfig::get('web_path'); ?>
 <!DOCTYPE html>
@@ -29,7 +31,7 @@ $web_path = AmpConfig::get('web_path'); ?>
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo AmpConfig::get('site_title') . ' - ' . T_('Registration'); ?></title>
-        <?php require_once UI::find_template('stylesheets.inc.php'); ?>
+        <?php require_once Ui::find_template('stylesheets.inc.php'); ?>
     </head>
     <body id="registerPage">
         <div id="maincontainer">
@@ -57,4 +59,4 @@ $web_path = AmpConfig::get('web_path'); ?>
             </div>
         </div>
 <?php
-UI::show_footer(); ?>
+Ui::show_footer(); ?>

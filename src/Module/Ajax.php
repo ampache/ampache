@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module;
 
 use AmpConfig;
-use UI;
+use Ampache\Module\Util\Ui;
 
 /**
  * Ajax class
@@ -150,7 +150,7 @@ class Ajax
             $class = ' class="' . $class . '"';
         }
 
-        $string = UI::get_icon($icon, $alt);
+        $string = Ui::get_icon($icon, $alt);
 
         // Generate an <a> so that it's more compliant with older
         // browsers (ie :hover actions) and also to unify linkbuttons

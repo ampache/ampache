@@ -32,7 +32,7 @@ use Democratic;
 use PDOStatement;
 use Session;
 use Ampache\Module\Playback\Stream_Url;
-use UI;
+use Ampache\Module\Util\Ui;
 use XML_Data;
 
 /**
@@ -603,9 +603,9 @@ class Stream_Playlist
     public function create_web_player()
     {
         if (AmpConfig::get("ajax_load")) {
-            require UI::find_template('create_web_player_embedded.inc.php');
+            require Ui::find_template('create_web_player_embedded.inc.php');
         } else {
-            require UI::find_template('create_web_player.inc.php');
+            require Ui::find_template('create_web_player.inc.php');
         }
     }  // create_web_player
 
@@ -618,7 +618,7 @@ class Stream_Playlist
     public function show_web_player()
     {
         if (AmpConfig::get("ajax_load")) {
-            require UI::find_template('show_web_player_embedded.inc.php');
+            require Ui::find_template('show_web_player_embedded.inc.php');
         }
     }  // show_web_player
 

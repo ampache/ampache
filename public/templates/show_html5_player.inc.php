@@ -1,6 +1,7 @@
 <?php
 
 use Ampache\Module\Access;
+use Ampache\Module\Util\Ui;
 
 $autoplay = true;
 if ($is_share) {
@@ -8,7 +9,7 @@ if ($is_share) {
 }
 
 if (!$iframed) {
-    require_once UI::find_template('show_html5_player_headers.inc.php');
+    require_once Ui::find_template('show_html5_player_headers.inc.php');
 }
 $prev       = T_('Previous');
 $play       = T_('Play');
@@ -158,9 +159,9 @@ if (!$isVideo && !$isRadio && !$is_share) {
             echo "var titleobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/song.php?action=show_song&song_id=' + currenti.attr('data-media_id') + '\');\" title=\"' + obj.title + '\">' + obj.title + '</a>';";
             echo "var artistobj = (currenti.attr('data-artist_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/artists.php?action=show&artist=' + currenti.attr('data-artist_id') + '\');\" title=\"' + obj.artist + '\">' + obj.artist + '</a>' : obj.artist;";
             echo "var lyricsobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=' + currenti.attr('data-media_id') + '\');\">" . T_('Show Lyrics') . "</a>';";
-            echo "var actionsobj = (currenti.attr('data-album_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/albums.php?action=show&album=' + currenti.attr('data-album_id') + '\');\" title=\"" . T_('Show Album') . "\">" . UI::get_icon('album', T_('Show Album')) . "</a> |' : '';";
+            echo "var actionsobj = (currenti.attr('data-album_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/albums.php?action=show&album=' + currenti.attr('data-album_id') + '\');\" title=\"" . T_('Show Album') . "\">" . Ui::get_icon('album', T_('Show Album')) . "</a> |' : '';";
             if (AmpConfig::get('sociable') && (!AmpConfig::get('use_auth') || Access::check('interface', 25))) {
-                echo "actionsobj += ' <a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + currenti.attr('data-media_id') + '\');\">" . UI::get_icon('comment', T_('Post Shout')) . "</a> |';";
+                echo "actionsobj += ' <a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + currenti.attr('data-media_id') + '\');\">" . Ui::get_icon('comment', T_('Post Shout')) . "</a> |';";
             }
             echo "actionsobj += '<div id=\'action_buttons\'></div>';";
             if (AmpConfig::get('waveform') && !$is_share) {
@@ -473,30 +474,30 @@ if ($isVideo) { ?>
         <?php if (Access::check('interface', 25)) { ?>
             <div class="action_button">
                 <a onclick="javascript:SaveToExistingPlaylist(event);">
-                    <?php echo UI::get_icon('playlist_add_all', T_('Add All to playlist')) ?>
+                    <?php echo Ui::get_icon('playlist_add_all', T_('Add All to playlist')) ?>
                 </a>
             </div>
 
         <?php
             } ?>
         <div id="slideshow" class="slideshow action_button">
-            <a href="javascript:SwapSlideshow();"><?php echo UI::get_icon('image', T_('Slideshow')) ?></a>
+            <a href="javascript:SwapSlideshow();"><?php echo Ui::get_icon('image', T_('Slideshow')) ?></a>
         </div>
         <div id="expandplaylistbtn" class="action_button">
-            <a href="javascript:TogglePlaylistExpand();"><?php echo UI::get_icon('multilines', T_('Expand/collapse playlist')) ?></a>
+            <a href="javascript:TogglePlaylistExpand();"><?php echo Ui::get_icon('multilines', T_('Expand/collapse playlist')) ?></a>
         </div>
 <?php if (AmpConfig::get('webplayer_html5')) { ?>
         <div class="action_button">
-            <a href="javascript:ShowVisualizer();"><?php echo UI::get_icon('visualizer', T_('Visualizer')) ?></a>
+            <a href="javascript:ShowVisualizer();"><?php echo Ui::get_icon('visualizer', T_('Visualizer')) ?></a>
         </div>
         <div class="action_button">
-            <a onClick="ShowVisualizerFullScreen();" href="#"><?php echo UI::get_icon('fullscreen', T_('Visualizer full-screen')) ?></a>
+            <a onClick="ShowVisualizerFullScreen();" href="#"><?php echo Ui::get_icon('fullscreen', T_('Visualizer full-screen')) ?></a>
         </div>
         <div id="replaygainbtn" class="action_button">
-            <a href="javascript:ToggleReplayGain();"><?php echo UI::get_icon('replaygain', T_('ReplayGain')) ?></a>
+            <a href="javascript:ToggleReplayGain();"><?php echo Ui::get_icon('replaygain', T_('ReplayGain')) ?></a>
         </div>
         <div id="equalizerbtn" class="action_button" style="visibility: hidden;">
-            <a href="javascript:ShowEqualizer();"><?php echo UI::get_icon('equalizer', T_('Equalizer')) ?></a>
+            <a href="javascript:ShowEqualizer();"><?php echo Ui::get_icon('equalizer', T_('Equalizer')) ?></a>
         </div>
 <?php
             } ?>
@@ -519,7 +520,7 @@ if ($isVideo) { ?>
 </div>
 <?php
 if (!$iframed || $is_share) {
-        require_once UI::find_template('uberviz.inc.php');
+        require_once Ui::find_template('uberviz.inc.php');
     } ?>
 <?php if (!$is_share) { ?>
 </body>

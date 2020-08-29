@@ -27,14 +27,14 @@ namespace Ampache\Application;
 
 use AmpConfig;
 use Catalog;
-use UI;
+use Ampache\Module\Util\Ui;
 use Video;
 
 final class VideoApplication implements ApplicationInterface
 {
     public function run(): void
     {
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
@@ -60,7 +60,7 @@ final class VideoApplication implements ApplicationInterface
                 $video = Video::create_from_id(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
                 if (!Catalog::can_remove($video)) {
                     debug_event('video', 'Unauthorized to remove the video `.' . $video->id . '`.', 1);
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -75,12 +75,12 @@ final class VideoApplication implements ApplicationInterface
             default:
                 $video = Video::create_from_id(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
                 $video->format();
-                require_once UI::find_template('show_video.inc.php');
+                require_once Ui::find_template('show_video.inc.php');
                 break;
         }
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

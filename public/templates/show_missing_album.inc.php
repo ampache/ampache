@@ -20,12 +20,14 @@
  *
  */
 
+use Ampache\Module\Util\Ui;
+
 $web_path = AmpConfig::get('web_path');
 
 // Title for this album
 $title = scrub_out($walbum->name) . '&nbsp;(' . $walbum->year . ')';
 $title .= '&nbsp;-&nbsp;' . $walbum->f_artist_link; ?>
-<?php UI::show_box_top($title, 'info-box missing'); ?>
+<?php Ui::show_box_top($title, 'info-box missing'); ?>
 <div class="item_art">
 <?php
 // Attempt to find the art.
@@ -56,7 +58,7 @@ if (count($images) > 0 && !empty($images[0]['url'])) {
     </li>
 </ul>
 </div>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>
 <div id="additional_information">
 &nbsp;
 </div>

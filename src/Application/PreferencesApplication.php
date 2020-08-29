@@ -31,7 +31,7 @@ use AmpError;
 use Core;
 use Ampache\Model\Plugin;
 use Preference;
-use UI;
+use Ampache\Module\Util\Ui;
 use User;
 
 final class PreferencesApplication implements ApplicationInterface
@@ -48,13 +48,13 @@ final class PreferencesApplication implements ApplicationInterface
         switch ($_REQUEST['action']) {
             case 'update_preferences':
                 if (Core::get_post('method') == 'admin' && !Access::check('interface', 100)) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
 
                 if (!Core::form_verify('update_preference', 'post')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -90,13 +90,13 @@ final class PreferencesApplication implements ApplicationInterface
             case 'admin_update_preferences':
                 // Make sure only admins here
                 if (!Access::check('interface', 100)) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
 
                 if (!Core::form_verify('update_preference', 'post')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -108,7 +108,7 @@ final class PreferencesApplication implements ApplicationInterface
             case 'admin':
                 // Make sure only admins here
                 if (!Access::check('interface', 100)) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -117,7 +117,7 @@ final class PreferencesApplication implements ApplicationInterface
                 break;
             case 'user':
                 if (!Access::check('interface', 100)) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -128,13 +128,13 @@ final class PreferencesApplication implements ApplicationInterface
             case 'update_user':
                 // Make sure we're a user and they came from the form
                 if (!Access::check('interface', 25) && Core::get_global('user')->id > 0) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
 
                 if (!Core::form_verify('update_user', 'post')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -176,7 +176,7 @@ final class PreferencesApplication implements ApplicationInterface
             case 'grant':
                 // Make sure we're a user and they came from the form
                 if (!Access::check('interface', 25) && Core::get_global('user')->id > 0) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -204,7 +204,7 @@ final class PreferencesApplication implements ApplicationInterface
                 break;
         } // End Switch Action
 
-        UI::show_header();
+        Ui::show_header();
 
         /**
          * switch on the view
@@ -220,12 +220,12 @@ final class PreferencesApplication implements ApplicationInterface
                 }
 
                 // Show the default preferences page
-                require UI::find_template('show_preferences.inc.php');
+                require Ui::find_template('show_preferences.inc.php');
                 break;
         } // end switch on action
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

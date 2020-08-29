@@ -26,13 +26,13 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use AmpConfig;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class WebPlayerEmbeddedApplication implements ApplicationInterface
 {
     public function run(): void
     {
         $iframed = true;
-        require_once UI::find_template('show_web_player.inc.php');
+        require_once Ui::find_template('show_web_player.inc.php');
     }
 }

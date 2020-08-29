@@ -24,14 +24,15 @@ use Ampache\Module\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\AmpacheRss;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
 
 $browse = new Browse();
 $browse->set_type($object_type);
 
-UI::show_box_top($podcast->f_title, 'info-box'); ?>
+Ui::show_box_top($podcast->f_title, 'info-box'); ?>
 <div class="item_right_info">
     <?php
-    $thumb = UI::is_grid_view('podcast') ? 2 : 11;
+    $thumb = Ui::is_grid_view('podcast') ? 2 : 11;
     Art::display('podcast', $podcast->id, $podcast->f_title, $thumb); ?>
     <?php if ($podcast->description) { ?>
     <div id="item_summary">
@@ -76,7 +77,7 @@ UI::show_box_top($podcast->f_title, 'info-box'); ?>
         <?php if (Access::check('interface', 50)) { ?>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=podcast&object_id=<?php echo $podcast->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=podcast&object_id=<?php echo $podcast->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=podcast&object_id=<?php echo $podcast->id; ?>"><?php echo T_('Graphs'); ?></a>
             </li>
         <?php
@@ -90,7 +91,7 @@ UI::show_box_top($podcast->f_title, 'info-box'); ?>
         } ?>
         <li>
             <a id="<?php echo 'edit_podcast_' . $podcast->id ?>" onclick="showEditDialog('podcast_row', '<?php echo $podcast->id ?>', '<?php echo 'edit_podcast_' . $podcast->id ?>', '<?php echo T_('Podcast Edit') ?>', '')">
-                <?php echo UI::get_icon('edit', T_('Edit')); ?>
+                <?php echo Ui::get_icon('edit', T_('Edit')); ?>
             </a>
             <a id="<?php echo 'edit_podcast_' . $podcast->id ?>" onclick="showEditDialog('podcast_row', '<?php echo $podcast->id ?>', '<?php echo 'edit_podcast_' . $podcast->id ?>', '<?php echo T_('Podcast Edit') ?>', '')">
                 <?php echo T_('Edit Podcast'); ?>
@@ -105,14 +106,14 @@ UI::show_box_top($podcast->f_title, 'info-box'); ?>
         <?php if (Access::check('interface', 75)) { ?>
         <li>
             <a id="<?php echo 'delete_podcast_' . $podcast->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=delete&podcast_id=<?php echo $podcast->id; ?>">
-                <?php echo UI::get_icon('delete', T_('Delete')); ?> &nbsp;<?php echo T_('Delete'); ?>
+                <?php echo Ui::get_icon('delete', T_('Delete')); ?> &nbsp;<?php echo T_('Delete'); ?>
             </a>
         </li>
         <?php
     } ?>
     </ul>
 </div>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>
 <div class="tabs_wrapper">
     <div id="tabs_container">
         <ul id="tabs">

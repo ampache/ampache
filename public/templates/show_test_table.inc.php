@@ -18,7 +18,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
 <tr>
     <td><?php echo T_('PHP version'); ?></td>
     <td>
@@ -90,7 +94,7 @@
 <tr>
     <td><?php echo T_('PHP iconv extension'); ?></td>
     <td>
-    <?php echo debug_result(UI::check_iconv()); ?>
+    <?php echo debug_result(Ui::check_iconv()); ?>
     </td>
     <td>
     <?php echo T_('This tests whether you have the iconv extension enabled. This extension is required by Ampache.'); ?>
@@ -248,7 +252,7 @@ if (!defined('INSTALL')) { ?>
     <td>
     <?php
         if ($results && check_config_values($results)) {
-            echo "&nbsp;&nbsp;&nbsp;" . UI::get_icon('enable', T_('Enable')) . "&nbsp;&nbsp;&nbsp;";
+            echo "&nbsp;&nbsp;&nbsp;" . Ui::get_icon('enable', T_('Enable')) . "&nbsp;&nbsp;&nbsp;";
         } else {
             echo debug_result(false, "SKIPPED");
         } ?>

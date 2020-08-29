@@ -18,7 +18,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
 <?php
 $t_ampache = T_('Ampache'); ?>
 <!DOCTYPE html>
@@ -29,7 +33,7 @@ $t_ampache = T_('Ampache'); ?>
 <head>
 <!-- Propelled by Ampache | ampache.org -->
 <meta http-equiv="refresh" content="10;URL=<?php echo $redirect_url;?>" />
-<?php UI::show_custom_style(); ?>
+<?php Ui::show_custom_style(); ?>
 <title><?php echo T_("Ampache Error Page");?></title>
 <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">

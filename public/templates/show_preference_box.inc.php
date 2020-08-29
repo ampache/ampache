@@ -25,6 +25,7 @@
  */
 
 use Ampache\Module\Access;
+use Ampache\Module\Util\Ui;
 
 if (Access::check('interface', 100) && $_REQUEST['action'] == 'admin') {
     $is_admin = true;
@@ -59,11 +60,11 @@ if (Access::check('interface', 100) && $_REQUEST['action'] == 'admin') {
             $lastsubcat = $pref['subcategory'];
             $fsubcat    = $lastsubcat;
             if (!empty($fsubcat)) { ?>
-                <tr class="<?php echo UI::flip_class() ?>"><td colspan="4"><h5><?php echo ucwords(T_($fsubcat)) ?></h5></td></tr>
+                <tr class="<?php echo Ui::flip_class() ?>"><td colspan="4"><h5><?php echo ucwords(T_($fsubcat)) ?></h5></td></tr>
                 <?php
             }
         } ?>
-        <tr class="<?php echo UI::flip_class() ?>">
+        <tr class="<?php echo Ui::flip_class() ?>">
             <td class="cel_preference"><?php echo T_($pref['description']); ?></td>
             <td class="cel_value">
                 <?php create_preference_input($pref['name'], $pref['value']); ?>

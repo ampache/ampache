@@ -2,18 +2,19 @@
 
 use Ampache\Module\Broadcast\Broadcast_Server;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Util\Ui;
 
 if ($iframed || $is_share) { ?>
-<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path') . UI::find_template('jplayer.midnight.black-iframed.css', true) ?>" type="text/css" />
+<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path') . Ui::find_template('jplayer.midnight.black-iframed.css', true) ?>" type="text/css" />
 <?php
 } else { ?>
-<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path') . UI::find_template('jplayer.midnight.black.css', true) ?>" type="text/css" />
+<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path') . Ui::find_template('jplayer.midnight.black.css', true) ?>" type="text/css" />
 <?php
     }
 
 if (!$iframed) {
-    require_once UI::find_template('stylesheets.inc.php', true); ?>
-<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path') . UI::find_template('jquery-editdialog.css', true); ?>" type="text/css" media="screen" />
+    require_once Ui::find_template('stylesheets.inc.php', true); ?>
+<link rel="stylesheet" href="<?php echo AmpConfig::get('web_path') . Ui::find_template('jquery-editdialog.css', true); ?>" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/components/jquery/jquery.min.js"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>

@@ -21,6 +21,7 @@
  */
 
 use Ampache\Module\Ajax;
+use Ampache\Module\Util\Ui;
 
 ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="share">
@@ -45,11 +46,11 @@ use Ampache\Module\Ajax;
     foreach ($object_ids as $share_id) {
         $libitem = new Share($share_id);
         $libitem->format(); ?>
-    <tr id="share_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
-        <?php require UI::find_template('show_share_row.inc.php'); ?>
+    <tr id="share_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
+        <?php require Ui::find_template('show_share_row.inc.php'); ?>
     </tr>
     <?php
     } ?>
     </tbody>
 </table>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

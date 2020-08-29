@@ -28,7 +28,7 @@ namespace Ampache\Application;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use AmpConfig;
 use Core;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class MashupApplication implements ApplicationInterface
 {
@@ -38,16 +38,16 @@ final class MashupApplication implements ApplicationInterface
 
         $object_type = Core::get_request('action');
         if (!InterfaceImplementationChecker::is_library_item($object_type)) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
 
-        UI::show_header();
-        require_once UI::find_template('show_mashup.inc.php');
+        Ui::show_header();
+        require_once Ui::find_template('show_mashup.inc.php');
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

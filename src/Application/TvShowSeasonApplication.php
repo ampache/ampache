@@ -28,13 +28,13 @@ namespace Ampache\Application;
 use AmpConfig;
 use Catalog;
 use TVShow_Season;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class TvShowSeasonApplication implements ApplicationInterface
 {
     public function run(): void
     {
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
@@ -60,7 +60,7 @@ final class TvShowSeasonApplication implements ApplicationInterface
                 $tvshow_season = new TVShow_Season($_REQUEST['tvshow_season_id']);
                 if (!Catalog::can_remove($tvshow_season)) {
                     debug_event('tvshow_seasons', 'Unauthorized to remove the tvshow `.' . $tvshow_season->id . '`.', 1);
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -76,12 +76,12 @@ final class TvShowSeasonApplication implements ApplicationInterface
                 $season->format();
                 $object_ids  = $season->get_episodes();
                 $object_type = 'tvshow_episode';
-                require_once UI::find_template('show_tvshow_season.inc.php');
+                require_once Ui::find_template('show_tvshow_season.inc.php');
                 break;
         } // end switch
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

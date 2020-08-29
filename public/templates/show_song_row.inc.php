@@ -24,6 +24,7 @@
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
 
 if ($libitem->enabled || Access::check('interface', 50)) { ?>
 <td class="cel_play">
@@ -53,7 +54,7 @@ if ($libitem->enabled || Access::check('interface', 50)) { ?>
     echo Ajax::button('?action=basket&type=song&id=' . $libitem->id, 'add', T_('Add to temporary playlist'), 'add_' . $libitem->id);
     if (Access::check('interface', 25)) { ?>
         <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $libitem->id ?>')">
-            <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
+            <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
         </a>
     <?php
         if (AmpConfig::get('directplay')) {
@@ -92,10 +93,10 @@ if ($libitem->enabled || Access::check('interface', 50)) { ?>
         }
     } ?>
 <td class="cel_action">
-    <a href="<?php echo $libitem->link ?>"><?php echo UI::get_icon('preferences', T_('Song Information')) ?></a>
+    <a href="<?php echo $libitem->link ?>"><?php echo Ui::get_icon('preferences', T_('Song Information')) ?></a>
     <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
         if (AmpConfig::get('sociable')) { ?>
-            <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=song&id=<?php echo $libitem->id ?>"><?php echo UI::get_icon('comment', T_('Post Shout')) ?></a>
+            <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=song&id=<?php echo $libitem->id ?>"><?php echo Ui::get_icon('comment', T_('Post Shout')) ?></a>
         <?php
         }
     }
@@ -105,12 +106,12 @@ if ($libitem->enabled || Access::check('interface', 50)) { ?>
         }
     }
     if (Access::check_function('download')) { ?>
-        <a class="nohtml" href="<?php echo AmpConfig::get('web_path') ?>/stream.php?action=download&song_id=<?php echo $libitem->id ?>"><?php echo UI::get_icon('download', T_('Download')) ?></a>
+        <a class="nohtml" href="<?php echo AmpConfig::get('web_path') ?>/stream.php?action=download&song_id=<?php echo $libitem->id ?>"><?php echo Ui::get_icon('download', T_('Download')) ?></a>
 <?php
     }
     if (Access::check('interface', 50) || ($libitem->user_upload == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit'))) { ?>
         <a id="<?php echo 'edit_song_' . $libitem->id ?>" onclick="showEditDialog('song_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_song_' . $libitem->id ?>', '<?php echo T_('Song Edit') ?>', 'song_')">
-            <?php echo UI::get_icon('edit', T_('Edit')); ?>
+            <?php echo Ui::get_icon('edit', T_('Edit')); ?>
         </a>
 <?php
     }
@@ -131,7 +132,7 @@ if ($libitem->enabled || Access::check('interface', 50)) { ?>
     }
     if (Catalog::can_remove($libitem)) { ?>
         <a id="<?php echo 'delete_song_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/song.php?action=delete&song_id=<?php echo $libitem->id; ?>">
-            <?php echo UI::get_icon('delete', T_('Delete')); ?>
+            <?php echo Ui::get_icon('delete', T_('Delete')); ?>
         </a>
 <?php
     } ?>
@@ -139,7 +140,7 @@ if ($libitem->enabled || Access::check('interface', 50)) { ?>
 <?php
     if (Access::check('interface', 50) && isset($argument) && $argument) { ?>
 <td class="cel_drag">
-    <?php echo UI::get_icon('drag', T_('Reorder')); ?>
+    <?php echo Ui::get_icon('drag', T_('Reorder')); ?>
 </td>
 <?php
     }

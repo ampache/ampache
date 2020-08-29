@@ -21,10 +21,12 @@
  */
 
 // Gotta do some math here!
+use Ampache\Module\Util\Ui;
+
 $total_images = count($images);
 $rows         = floor($total_images / 4);
 $count        = 0; ?>
-<?php UI::show_box_top(T_('Select New Art'), 'box box_album_art'); ?>
+<?php Ui::show_box_top(T_('Select New Art'), 'box box_album_art'); ?>
 <table class="table-data">
 <tr>
 <?php
@@ -69,5 +71,5 @@ while ($count <= $rows) {
     $count++;
 } // end while?>
 </table>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>
 

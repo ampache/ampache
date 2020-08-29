@@ -21,8 +21,9 @@
  */
 
 use Ampache\Module\Ajax;
+use Ampache\Module\Util\Ui;
 
-UI::show_box_top(T_('Manage'));  ?>
+Ui::show_box_top(T_('Manage'));  ?>
 <table class="tabledata">
     <tr class="th-top">
         <th class="cel_number"><?php echo T_('Playlist'); ?></th>
@@ -39,7 +40,7 @@ UI::show_box_top(T_('Manage'));  ?>
             $democratic->format();
             $playlist = new Playlist($democratic->base_playlist);
             $playlist->format(); ?>
-    <tr class="<?php echo UI::flip_class(); ?>">
+    <tr class="<?php echo Ui::flip_class(); ?>">
         <td><?php echo scrub_out($democratic->name); ?></td>
         <td><?php echo $playlist->f_link; ?></td>
         <td><?php echo $democratic->f_cooldown; ?></td>
@@ -48,7 +49,7 @@ UI::show_box_top(T_('Manage'));  ?>
         <td><?php echo $democratic->count_items(); ?></td>
         <td>
         <?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id, 'all', T_('Play'), 'play_democratic'); ?>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=delete&amp;democratic_id=<?php echo scrub_out($democratic->id); ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=delete&amp;democratic_id=<?php echo scrub_out($democratic->id); ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
         </td>
     </tr>
     <?php
@@ -63,4 +64,4 @@ UI::show_box_top(T_('Manage'));  ?>
 <div>
     <a class="button" href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=show_create"><?php echo T_('Create Playlist'); ?></a>
 </div>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

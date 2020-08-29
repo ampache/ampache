@@ -24,6 +24,9 @@
 /* Check and see if their remember me is the same or lower then local
  * if so disable the checkbox
  */
+
+use Ampache\Module\Util\Ui;
+
 if (AmpConfig::get('session_length') >= AmpConfig::get('remember_length')) {
     $remember_disabled = 'disabled="disabled"';
 }
@@ -47,7 +50,7 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
     <!-- Propelled by Ampache | ampache.org -->
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php require_once UI::find_template('stylesheets.inc.php'); ?>
+    <?php require_once Ui::find_template('stylesheets.inc.php'); ?>
     <title><?php echo scrub_out(AmpConfig::get('site_title')); ?></title>
 </head>
 
@@ -77,4 +80,4 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
 } ?>
         </div>
         <?php
-        UI::show_footer(); ?>
+        Ui::show_footer(); ?>

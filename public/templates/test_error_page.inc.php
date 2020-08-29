@@ -18,7 +18,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
 <?php $t_ampache = T_('Ampache'); ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
@@ -27,7 +31,7 @@
 
 <head>
 <!-- Propelled by Ampache | ampache.org -->
-<?php UI::show_custom_style(); ?>
+<?php Ui::show_custom_style(); ?>
 <title><?php echo("Ampache Error Page");?></title>
 <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
@@ -39,7 +43,7 @@
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container" style="height: 70px;">
             <a class="navbar-brand" href="#">
-                <img src="<?php echo UI::get_logo_url('dark'); ?>" title="<?php echo $t_ampache; ?>" alt="<?php echo $t_ampache; ?>">
+                <img src="<?php echo Ui::get_logo_url('dark'); ?>" title="<?php echo $t_ampache; ?>" alt="<?php echo $t_ampache; ?>">
                 <?php echo $t_ampache . ' :: ' . T_('For the Love of Music') . ' - ' . T_('Installation'); ?>
             </a>
         </div>

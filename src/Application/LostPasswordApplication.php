@@ -28,7 +28,7 @@ namespace Ampache\Application;
 use AmpConfig;
 use Core;
 use Ampache\Module\Util\Mailer;
-use UI;
+use Ampache\Module\Util\Ui;
 use User;
 
 final class LostPasswordApplication implements ApplicationInterface
@@ -37,7 +37,7 @@ final class LostPasswordApplication implements ApplicationInterface
     {
         /* Check Perms */
         if (!Mailer::is_mail_enabled() || AmpConfig::get('demo_mode')) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
@@ -55,10 +55,10 @@ final class LostPasswordApplication implements ApplicationInterface
                     $result     = $this->send_newpassword($email, $current_ip);
                 }
                 // Do not acknowledge a password has been sent or failed and go back to login
-                require UI::find_template('show_login_form.inc.php');
+                require Ui::find_template('show_login_form.inc.php');
                 break;
             default:
-                require UI::find_template('show_lostpassword_form.inc.php');
+                require Ui::find_template('show_lostpassword_form.inc.php');
         }
     }
 

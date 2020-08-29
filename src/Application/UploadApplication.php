@@ -28,7 +28,7 @@ namespace Ampache\Application;
 use Ampache\Module\Access;
 use AmpConfig;
 use Core;
-use UI;
+use Ampache\Module\Util\Ui;
 use Upload;
 
 final class UploadApplication implements ApplicationInterface
@@ -36,7 +36,7 @@ final class UploadApplication implements ApplicationInterface
     public function run(): void
     {
         if (!AmpConfig::get('allow_upload') || !Access::check('interface', 25)) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
@@ -57,7 +57,7 @@ final class UploadApplication implements ApplicationInterface
         switch ($_REQUEST['actionp']) {
             case 'upload':
                 if (AmpConfig::get('demo_mode')) {
-                    UI::access_denied();
+                    Ui::access_denied();
 
                     return;
                 }
@@ -67,13 +67,13 @@ final class UploadApplication implements ApplicationInterface
                 return;
 
             default:
-                UI::show_header();
-                require UI::find_template('show_add_upload.inc.php');
+                Ui::show_header();
+                require Ui::find_template('show_add_upload.inc.php');
                 break;
         } // switch on the action
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

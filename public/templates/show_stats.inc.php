@@ -21,10 +21,11 @@
  */
 
 use Ampache\Module\Util\Graph;
+use Ampache\Module\Util\Ui;
 
 $stats    = Catalog::get_stats();
 $catalogs = Catalog::get_catalogs(); ?>
-<?php UI::show_box_top(T_('Statistics'), 'box box_stats'); ?>
+<?php Ui::show_box_top(T_('Statistics'), 'box box_stats'); ?>
 <em><?php echo T_('Catalogs'); ?></em>
 <table class="tabledata">
     <thead>
@@ -110,7 +111,7 @@ $catalogs = Catalog::get_catalogs(); ?>
     } ?>
     </tbody>
 </table>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>
 
 <?php
 if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) {

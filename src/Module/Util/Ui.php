@@ -1,11 +1,6 @@
 <?php
-declare(strict_types=0);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-
-use Ampache\Model\Plugin;
-
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -24,19 +19,25 @@ use Ampache\Model\Plugin;
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-// A collection of methods related to the user interface
 
-class UI
+declare(strict_types=0);
+
+namespace Ampache\Module\Util;
+
+use Ampache\Model\Plugin;
+use AmpConfig;
+use Core;
+use Dba;
+
+/**
+ * A collection of methods related to the user interface
+ */
+class Ui
 {
     private static $_classes;
     private static $_ticker;
     private static $_icon_cache;
     private static $_image_cache;
-
-    public function __construct()
-    {
-        return false;
-    }
 
     /**
      * find_template
@@ -50,7 +51,7 @@ class UI
     public static function find_template($template, bool $extern = false)
     {
         $path      = AmpConfig::get('theme_path') . '/templates/' . $template;
-        $realpath  = __DIR__ . '/../../public/' . $path;
+        $realpath  = __DIR__ . '/../../../public/' . $path;
         $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         if (($extension != 'php' || AmpConfig::get('allow_php_themes')) && file_exists($realpath) && is_file($realpath)) {
             return $path;
@@ -59,7 +60,7 @@ class UI
                 return '/templates/' . $template;
             }
 
-            return __DIR__ . '/../../public/templates/' . $template;
+            return __DIR__ . '/../../../public/templates/' . $template;
         }
     }
 
@@ -143,7 +144,8 @@ class UI
     public static function clean_utf8($string)
     {
         if ($string) {
-            $clean = preg_replace('/[^\x{9}\x{a}\x{d}\x{20}-\x{d7ff}\x{e000}-\x{fffd}\x{10000}-\x{10ffff}]|[\x{7f}-\x{84}\x{86}-\x{9f}\x{fdd0}-\x{fddf}\x{1fffe}-\x{1ffff}\x{2fffe}-\x{2ffff}\x{3fffe}-\x{3ffff}\x{4fffe}-\x{4ffff}\x{5fffe}-\x{5ffff}\x{6fffe}-\x{6ffff}\x{7fffe}-\x{7ffff}\x{8fffe}-\x{8ffff}\x{9fffe}-\x{9ffff}\x{afffe}-\x{affff}\x{bfffe}-\x{bffff}\x{cfffe}-\x{cffff}\x{dfffe}-\x{dffff}\x{efffe}-\x{effff}\x{ffffe}-\x{fffff}\x{10fffe}-\x{10ffff}]/u', '', $string);
+            $clean = preg_replace('/[^\x{9}\x{a}\x{d}\x{20}-\x{d7ff}\x{e000}-\x{fffd}\x{10000}-\x{10ffff}]|[\x{7f}-\x{84}\x{86}-\x{9f}\x{fdd0}-\x{fddf}\x{1fffe}-\x{1ffff}\x{2fffe}-\x{2ffff}\x{3fffe}-\x{3ffff}\x{4fffe}-\x{4ffff}\x{5fffe}-\x{5ffff}\x{6fffe}-\x{6ffff}\x{7fffe}-\x{7ffff}\x{8fffe}-\x{8ffff}\x{9fffe}-\x{9ffff}\x{afffe}-\x{affff}\x{bfffe}-\x{bffff}\x{cfffe}-\x{cffff}\x{dfffe}-\x{dffff}\x{efffe}-\x{effff}\x{ffffe}-\x{fffff}\x{10fffe}-\x{10ffff}]/u',
+                '', $string);
 
             // Other cleanup regex. Takes too long to process.
             /* $regex = <<<'END'
@@ -161,7 +163,7 @@ class UI
               $clean = preg_replace($regex, '$1', $string); */
 
             if ($clean) {
-                return rtrim((string) $clean);
+                return rtrim((string)$clean);
             }
 
             debug_event('ui.class', 'Charset cleanup failed, something might break', 1);
@@ -200,7 +202,7 @@ class UI
     public static function format_bytes($value, $precision = 2)
     {
         $pass = 0;
-        while (strlen((string) floor($value)) > 3) {
+        while (strlen((string)floor($value)) > 3) {
             $value /= 1024;
             $pass++;
         }
@@ -226,7 +228,7 @@ class UI
                 break;
         }
 
-        return ((string) round($value, $precision)) . ' ' . $unit;
+        return ((string)round($value, $precision)) . ' ' . $unit;
     }
 
     /**
@@ -238,11 +240,11 @@ class UI
      */
     public static function unformat_bytes($value)
     {
-        if (preg_match('/^([0-9]+) *([[:alpha:]]+)$/', (string) $value, $matches)) {
+        if (preg_match('/^([0-9]+) *([[:alpha:]]+)$/', (string)$value, $matches)) {
             $value = $matches[1];
             $unit  = strtolower(substr($matches[2], 0, 1));
         } else {
-            return (string) $value;
+            return (string)$value;
         }
 
         switch ($unit) {
@@ -257,7 +259,7 @@ class UI
                 break;
         }
 
-        return (string) $value;
+        return (string)$value;
     }
 
     /**
@@ -341,7 +343,7 @@ class UI
         }
 
         $path       = AmpConfig::get('theme_path') . '/images/icons/';
-        $filesearch = glob(__DIR__ . '/../../public/' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
+        $filesearch = glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
         if (empty($filesearch)) {
             // if the theme is missing an icon. fall back to default images folder
             $filename = 'icon_' . $name . '.png';
@@ -440,7 +442,7 @@ class UI
         }
 
         $path       = AmpConfig::get('theme_path') . '/images/';
-        $filesearch = glob(__DIR__ . '/../../public/' . $path . $name . '.{svg,png}', GLOB_BRACE);
+        $filesearch = glob(__DIR__ . '/../../../public/' . $path . $name . '.{svg,png}', GLOB_BRACE);
         if (empty($filesearch)) {
             // if the theme is missing an image. fall back to default images folder
             $filename = $name . '.png';
@@ -448,7 +450,7 @@ class UI
         } else {
             $filename = pathinfo($filesearch[0], 2);
         }
-        $url      = AmpConfig::get('web_path') . $path . $filename;
+        $url = AmpConfig::get('web_path') . $path . $filename;
         // cache the url so you don't need to keep searching
         self::$_image_cache[$name] = $url;
 
@@ -615,12 +617,12 @@ class UI
      */
     public static function is_grid_view($type)
     {
-        $isgv   = true;
-        $name   = 'browse_' . $type . '_grid_view';
+        $isgv = true;
+        $name = 'browse_' . $type . '_grid_view';
         if (filter_has_var(INPUT_COOKIE, $name)) {
             $isgv = ($_COOKIE[$name] == 'true');
         }
 
         return $isgv;
     }
-} // end ui.class
+}

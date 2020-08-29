@@ -18,7 +18,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
 <table class="tabledata">
     <thead>
         <tr class="th-top">
@@ -32,11 +36,11 @@
     <tbody>
         <?php
         foreach ($object_ids as $libitem) { ?>
-        <tr id="song_preview_<?php echo $libitem->id; ?>" class="<?php echo UI::flip_class(); ?>">
-            <?php require UI::find_template('show_song_preview_row.inc.php'); ?>
+        <tr id="song_preview_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
+            <?php require Ui::find_template('show_song_preview_row.inc.php'); ?>
         </tr>
         <?php
         } ?>
     </tbody>
 </table>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

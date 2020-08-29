@@ -30,7 +30,7 @@ use Core;
 use Song;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Playback\Stream;
-use UI;
+use Ampache\Module\Util\Ui;
 use User;
 
 final class NowPlayingApplication implements ApplicationInterface
@@ -40,7 +40,7 @@ final class NowPlayingApplication implements ApplicationInterface
         global $htmllang, $web_path;
         /* Check Perms */
         if (!AmpConfig::get('use_now_playing_embedded') || AmpConfig::get('demo_mode')) {
-            UI::access_denied();
+            Ui::access_denied();
             exit;
         } ?>
         <!DOCTYPE html>
@@ -90,7 +90,7 @@ final class NowPlayingApplication implements ApplicationInterface
             });
         }
 
-        require UI::find_template('show_now_playing.inc.php'); ?>
+        require Ui::find_template('show_now_playing.inc.php'); ?>
         </body>
         </html><?php
     }

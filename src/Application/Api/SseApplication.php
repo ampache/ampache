@@ -31,14 +31,14 @@ use AmpConfig;
 use AmpError;
 use Catalog;
 use Core;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class SseApplication implements ApplicationInterface
 {
     public function run(): void
     {
         if (!Access::check('interface', 75)) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }

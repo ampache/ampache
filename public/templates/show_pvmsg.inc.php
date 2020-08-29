@@ -20,7 +20,9 @@
  *
  */
 
-UI::show_box_top($pvmsg->f_subject, 'info-box'); ?>
+use Ampache\Module\Util\Ui;
+
+Ui::show_box_top($pvmsg->f_subject, 'info-box'); ?>
 <div>
     <?php echo T_('Sent by') . ' ' . $pvmsg->f_from_user_link . ' at ' . $pvmsg->f_creation_date; ?>
 </div>
@@ -30,7 +32,7 @@ UI::show_box_top($pvmsg->f_subject, 'info-box'); ?>
     <ul>
         <li>
             <a id="<?php echo 'reply_pvmsg_' . $label->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&reply_to=<?php echo $pvmsg->id; ?>">
-                <?php echo UI::get_icon('mail', T_('Reply')); ?> <?php echo T_('Reply'); ?>
+                <?php echo Ui::get_icon('mail', T_('Reply')); ?> <?php echo T_('Reply'); ?>
             </a>
         </li>
     </ul>
@@ -41,4 +43,4 @@ UI::show_box_top($pvmsg->f_subject, 'info-box'); ?>
     <?php echo nl2br($pvmsg->f_message); ?>
 </div>
 
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

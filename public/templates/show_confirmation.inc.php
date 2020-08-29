@@ -20,8 +20,10 @@
  *
  */
 
+use Ampache\Module\Util\Ui;
+
 $confirmation = Core::form_register($form_name); ?>
-<?php UI::show_box_top(scrub_out($title), 'box box_confirmation'); ?>
+<?php Ui::show_box_top(scrub_out($title), 'box box_confirmation'); ?>
 <?php echo $text; ?>
     <br />
     <form method="post" action="<?php echo $path; ?>" style="display:inline;">
@@ -35,4 +37,4 @@ $confirmation = Core::form_register($form_name); ?>
     </form>
 <?php
 } ?>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

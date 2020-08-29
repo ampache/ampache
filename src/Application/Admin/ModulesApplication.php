@@ -33,7 +33,7 @@ use Core;
 use Ampache\Module\Playback\LocalPlay;
 use Ampache\Model\Plugin;
 use Preference;
-use UI;
+use Ampache\Module\Util\Ui;
 use User;
 
 final class ModulesApplication implements ApplicationInterface
@@ -41,13 +41,13 @@ final class ModulesApplication implements ApplicationInterface
     public function run(): void
     {
         if (!Core::get_global('user')->has_access(100)) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
 
         /* Always show the header */
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
@@ -202,28 +202,28 @@ final class ModulesApplication implements ApplicationInterface
                 break;
             case 'show_plugins':
                 $plugins = Plugin::get_plugins();
-                UI::show_box_top(T_('Manage Plugins'), 'box box_localplay_plugins');
-                require_once UI::find_template('show_plugins.inc.php');
-                UI::show_box_bottom();
+                Ui::show_box_top(T_('Manage Plugins'), 'box box_localplay_plugins');
+                require_once Ui::find_template('show_plugins.inc.php');
+                Ui::show_box_bottom();
                 break;
             case 'show_localplay':
                 $controllers = LocalPlay::get_controllers();
-                UI::show_box_top(T_('Localplay Controllers'), 'box box_localplay_controllers');
-                require_once UI::find_template('show_localplay_controllers.inc.php');
-                UI::show_box_bottom();
+                Ui::show_box_top(T_('Localplay Controllers'), 'box box_localplay_controllers');
+                require_once Ui::find_template('show_localplay_controllers.inc.php');
+                Ui::show_box_bottom();
                 break;
             case 'show_catalog_types':
                 $catalogs = Catalog::get_catalog_types();
-                UI::show_box_top(T_('Catalog Types'), 'box box_catalog_types');
-                require_once UI::find_template('show_catalog_types.inc.php');
-                UI::show_box_bottom();
+                Ui::show_box_top(T_('Catalog Types'), 'box box_catalog_types');
+                require_once Ui::find_template('show_catalog_types.inc.php');
+                Ui::show_box_bottom();
                 break;
             default:
                 break;
         } // end switch
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

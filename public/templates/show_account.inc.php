@@ -23,6 +23,7 @@
 // Because this is a reset of the persons password make the form a little more secure
 
 use Ampache\Module\Access;
+use Ampache\Module\Util\Ui;
 
 $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
 <?php AmpError::display('general'); ?>
@@ -85,7 +86,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
         </tr>
         <tr>
             <td>
-                <?php echo T_('Avatar'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)
+                <?php echo T_('Avatar'); ?> (&lt; <?php echo Ui::format_bytes(AmpConfig::get('max_upload_size')); ?>)
             </td>
             <td>
                 <input type="file" id="avatar" name="avatar" value="" />
@@ -98,7 +99,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
                 if ($client->f_avatar) {
                     echo $client->f_avatar;
                 } ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_delete_avatar&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_delete_avatar&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
                 <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
             </td>
         </tr>
@@ -106,7 +107,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
             <td>
                 <?php echo T_('API Key'); ?>
                 <?php if (Access::check('interface', 100)) { ?>
-                    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('random', T_('Generate new API key')); ?></a>
+                    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new API key')); ?></a>
                 <?php } ?>
             </td>
             <td>
@@ -129,7 +130,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
             <td>
                 <?php echo T_('RSS Token'); ?>
                 <?php if (Access::check('interface', 100)) { ?>
-                    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('random', T_('Generate new RSS token')); ?></a>
+                    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new RSS token')); ?></a>
                 <?php } ?>
             </td>
             <td>

@@ -23,6 +23,7 @@
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
 
 ?>
 <td class="cel_play">
@@ -47,7 +48,7 @@ use Ampache\Module\Playback\Stream_Playlist;
     echo Ajax::button('?action=basket&type=podcast_episode&id=' . $libitem->id, 'add', T_('Add to temporary playlist'), 'add_' . $libitem->id);
     if (Access::check('interface', 25)) { ?>
         <a id="<?php echo 'add_playlist_' . $libitem->id ?>" onclick="showPlaylistDialog(event, 'podcast_episode', '<?php echo $libitem->id ?>')">
-            <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
+            <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
         </a>
     <?php
     } ?>
@@ -74,7 +75,7 @@ use Ampache\Module\Playback\Stream_Playlist;
     } ?>
 <td class="cel_action">
     <?php if (Access::check_function('download') && !empty($libitem->file)) { ?>
-            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $libitem->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
+            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $libitem->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
         <?php
 } ?>
 <?php
@@ -83,13 +84,13 @@ use Ampache\Module\Playback\Stream_Playlist;
         <?php echo Ajax::button('?page=podcast&action=sync&podcast_episode_id=' . $libitem->id, 'file_refresh', T_('Sync'), 'sync_podcast_episode_' . $libitem->id); ?>
     </span>
     <a id="<?php echo 'edit_podcast_episode_' . $libitem->id ?>" onclick="showEditDialog('podcast_episode_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_podcast_episode_' . $libitem->id ?>', '<?php echo T_('Podcast Episode Edit') ?>', 'podcast_episode_')">
-        <?php echo UI::get_icon('edit', T_('Edit')); ?>
+        <?php echo Ui::get_icon('edit', T_('Edit')); ?>
     </a>
     <?php
     }
     if (Catalog::can_remove($libitem)) { ?>
     <a id="<?php echo 'delete_podcast_episode_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast_episode.php?action=delete&podcast_episode_id=<?php echo $libitem->id; ?>">
-        <?php echo UI::get_icon('delete', T_('Delete')); ?>
+        <?php echo Ui::get_icon('delete', T_('Delete')); ?>
     </a>
     <?php
     } ?>

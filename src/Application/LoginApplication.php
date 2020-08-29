@@ -27,7 +27,7 @@ namespace Ampache\Application;
 
 use Ampache\Config\ConfigContainerInterface;
 use Session;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class LoginApplication implements ApplicationInterface
 {
@@ -59,6 +59,6 @@ final class LoginApplication implements ApplicationInterface
         }
         require_once __DIR__ . '/../../src/Config/login.php';
 
-        require UI::find_template('show_login_form.inc.php');
+        require Ui::find_template('show_login_form.inc.php');
     }
 }

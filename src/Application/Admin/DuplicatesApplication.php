@@ -29,40 +29,40 @@ use Ampache\Module\Access;
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use Song;
-use UI;
+use Ampache\Module\Util\Ui;
 
 final class DuplicatesApplication implements ApplicationInterface
 {
     public function run(): void
     {
         if (!Access::check('interface', 75)) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return;
         }
 
-        UI::show_header();
+        Ui::show_header();
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'find_duplicates':
                 $search_type = $_REQUEST['search_type'];
-                require_once UI::find_template('show_duplicate.inc.php');
+                require_once Ui::find_template('show_duplicate.inc.php');
                 if ($search_type == 'album') {
                     $duplicates = Song::get_duplicate_info(array(), $search_type);
-                    require_once UI::find_template('show_duplicates_filtered.inc.php');
+                    require_once Ui::find_template('show_duplicates_filtered.inc.php');
                     break;
                 }
                 $duplicates  = Song::find_duplicates($search_type);
-                require_once UI::find_template('show_duplicates.inc.php');
+                require_once Ui::find_template('show_duplicates.inc.php');
                 break;
             default:
-                require_once UI::find_template('show_duplicate.inc.php');
+                require_once Ui::find_template('show_duplicate.inc.php');
                 break;
         } // end switch on action
 
         // Show the Footer
-        UI::show_query_stats();
-        UI::show_footer();
+        Ui::show_query_stats();
+        Ui::show_footer();
     }
 }

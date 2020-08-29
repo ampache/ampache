@@ -22,13 +22,14 @@
 
 use Ampache\Module\Access;
 use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Module\Util\Ui;
 
 if (!defined('NO_SESSION')) {
     if (isset($_REQUEST['ssid'])) {
         define('NO_SESSION', 1);
         require_once __DIR__ . '/../lib/init.php';
         if (!Session::exists('stream', $_REQUEST['ssid'])) {
-            UI::access_denied();
+            Ui::access_denied();
 
             return false;
         }
@@ -40,7 +41,7 @@ if (!defined('NO_SESSION')) {
 ob_end_clean();
 //test that batch download is permitted
 if (!defined('NO_SESSION') && !Access::check_function('batch_download')) {
-    UI::access_denied();
+    Ui::access_denied();
 
     return false;
 }
@@ -59,7 +60,7 @@ if ($object_type == 'browse') {
 
 if (!check_can_zip($object_type)) {
     debug_event('batch', 'Object type `' . $object_type . '` is not allowed to be zipped.', 2);
-    UI::access_denied();
+    Ui::access_denied();
 
     return false;
 }
@@ -113,7 +114,7 @@ if (InterfaceImplementationChecker::is_playable_item($object_type)) {
 
 if (!User::stream_control($media_ids)) {
     debug_event('batch', 'UI::access_denied: Stream control failed for user ' . Core::get_global('user')->username, 3);
-    UI::access_denied();
+    Ui::access_denied();
 
     return false;
 }

@@ -21,9 +21,10 @@
  */
 
 use Ampache\Module\Ajax;
+use Ampache\Module\Util\Ui;
 
 ?>
-<?php UI::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
+<?php Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
 <form id="random" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=get_advanced&type=<?php echo Core::get_request('type') ? scrub_out(Core::get_request('type')) : 'song'; ?>">
 <table class="tabledata">
 <tr id="search_location">
@@ -94,20 +95,20 @@ use Ampache\Module\Ajax;
         foreach (array(64, 128, 256, 512, 1024) as $i) {
             echo "\t\t\t" . '<option value="' . $i . '"' .
                 (($_POST['size_limit'] == $i) ? 'selected="selected"' : '') . '>' .
-                UI::format_bytes($i * 1048576) . "</option>\n";
+                Ui::format_bytes($i * 1048576) . "</option>\n";
         } ?>
                 </select>
         </td>
 </tr>
 </table>
 
-<?php require UI::find_template('show_rules.inc.php'); ?>
+<?php require Ui::find_template('show_rules.inc.php'); ?>
 
 <div class="formValidation">
         <input type="submit" value="<?php echo T_('Enqueue'); ?>" />
 </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>
 <div id="browse">
 <?php
     if (is_array($object_ids)) {

@@ -19,8 +19,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
-<?php UI::show_box_top(T_('Find Duplicates'), 'box box_duplicate'); ?>
+ */
+
+use Ampache\Module\Util\Ui;
+
+?>
+<?php Ui::show_box_top(T_('Find Duplicates'), 'box box_duplicate'); ?>
 <form name="duplicates" action="<?php echo AmpConfig::get('web_path'); ?>/admin/duplicates.php?action=find_duplicates" method="post" enctype="multipart/form-data">
     <div class="find-duplicates">
         <strong><?php echo T_('Search Type'); ?>:</strong><br />
@@ -33,4 +37,4 @@
         <input type="submit" value="<?php echo T_('Find Duplicates'); ?>" />
     </div>
 </form>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>

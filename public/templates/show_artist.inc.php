@@ -24,6 +24,7 @@ use Ampache\Module\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\AmpacheRss;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
 
 $web_path          = AmpConfig::get('web_path');
 $show_direct_play  = AmpConfig::get('directplay');
@@ -37,13 +38,13 @@ if ($directplay_limit > 0) {
     }
 } ?>
 <?php
-UI::show_box_top($artist->f_name, 'info-box'); ?>
+Ui::show_box_top($artist->f_name, 'info-box'); ?>
 <div class="item_right_info">
     <div class="external_links">
-        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('google', T_('Search on Google ...')); ?></a>
-        <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode($artist->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
-        <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($artist->f_name); ?>%22&go=Go" target="_blank"><?php echo UI::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
-        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22&type=artist" target="_blank"><?php echo UI::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
+        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>
+        <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode($artist->f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
+        <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($artist->f_name); ?>%22&go=Go" target="_blank"><?php echo Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
+        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22&type=artist" target="_blank"><?php echo Ui::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
     </div>
     <?php if (AmpConfig::get('lastfm_api_key')) {
     echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=artist_info&artist=' . $artist->id, 'artist_info')); ?>
@@ -52,7 +53,7 @@ UI::show_box_top($artist->f_name, 'info-box'); ?>
         </div>
     <?php
 } else {
-        $thumb = UI::is_grid_view('artist') ? 2 : 11;
+        $thumb = Ui::is_grid_view('artist') ? 2 : 11;
         Art::display('artist', $artist->id, $artist->f_name, $thumb);
     } ?>
 </div>
@@ -105,14 +106,14 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <li>
             <?php if ($object_type == 'album') { ?>
             <a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>">
-            <?php echo UI::get_icon('view', T_("Show All")); ?></a>
+            <?php echo Ui::get_icon('view', T_("Show All")); ?></a>
             <a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>">
                 <?php echo T_("Show All"); ?>
             </a>
             <?php
     } else { ?>
             <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $artist->id; ?>">
-            <?php echo UI::get_icon('view', T_("Show Albums")); ?></a>
+            <?php echo Ui::get_icon('view', T_("Show Albums")); ?></a>
             <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $artist->id; ?>">
             <?php echo T_("Show Albums"); ?></a>
             <?php
@@ -145,7 +146,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     } ?>
         <?php if (Access::check('interface', 50)) { ?>
         <li>
-            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo UI::get_icon('file_refresh', T_('Update from tags')); ?> &nbsp;&nbsp;<?php echo T_('Update from tags'); ?></a>
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo Ui::get_icon('file_refresh', T_('Update from tags')); ?> &nbsp;&nbsp;<?php echo T_('Update from tags'); ?></a>
         </li>
         <?php
     } ?>
@@ -158,7 +159,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) {
         $postshout = T_('Post Shout'); ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('comment', $postshout); ?></a>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>"><?php echo Ui::get_icon('comment', $postshout); ?></a>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>"><?php echo $postshout; ?></a>
             <?php
     } ?>
@@ -167,7 +168,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if (Access::check_function('batch_download') && check_can_zip('artist')) {
         $download = T_('Download'); ?>
         <li>
-            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('batch_download', $download); ?></a>
+            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo Ui::get_icon('batch_download', $download); ?></a>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo $download; ?></a>
         </li>
         <?php
@@ -175,7 +176,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if (($owner_id > 0 && $owner_id == $GLOBALS['user']->id) || Access::check('interface', 50)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <li>
-                    <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
+                    <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
                     <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>"><?php echo T_('Graphs'); ?></a>
                 </li>
             <?php
@@ -188,7 +189,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             $t_upload = T_('Upload'); ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $artist->id; ?>">
-                        <?php echo UI::get_icon('upload', $t_upload); ?>
+                        <?php echo Ui::get_icon('upload', $t_upload); ?>
                         &nbsp;&nbsp;<?php echo $t_upload; ?>
                     </a>
                 </li>
@@ -196,7 +197,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         } ?>
             <li>
                 <a id="<?php echo 'edit_artist_' . $artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_' . $artist->id ?>', '<?php echo $artistedit ?>', '')">
-                    <?php echo UI::get_icon('edit', T_('Edit')); ?>
+                    <?php echo Ui::get_icon('edit', T_('Edit')); ?>
                 </a>
                 <a id="<?php echo 'edit_artist_' . $artist->id ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id ?>', '<?php echo 'edit_artist_' . $artist->id ?>', '<?php echo $artistedit ?>', '')">
                     <?php echo T_('Edit Artist'); ?>
@@ -208,14 +209,14 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         $delete = T_('Delete'); ?>
         <li>
             <a id="<?php echo 'delete_artist_' . $artist->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/artists.php?action=delete&artist_id=<?php echo $artist->id; ?>">
-                <?php echo UI::get_icon('delete', $delete); ?> <?php echo $delete; ?>
+                <?php echo Ui::get_icon('delete', $delete); ?> <?php echo $delete; ?>
             </a>
         </li>
         <?php
     } ?>
     </ul>
 </div>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>
 <div class="tabs_wrapper">
     <div id="tabs_container">
         <ul id="tabs">
@@ -263,9 +264,9 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 if (AmpConfig::get('wanted')) {
         echo Ajax::observe('missing_albums_link', 'click', Ajax::action('?page=index&action=wanted_missing_albums&artist=' . $artist->id, 'missing_albums')); ?>
         <div id="missing_albums" class="tab_content">
-        <?php UI::show_box_top(T_('Missing Albums'), 'info-box');
+        <?php Ui::show_box_top(T_('Missing Albums'), 'info-box');
         echo T_('Loading...');
-        UI::show_box_bottom(); ?>
+        Ui::show_box_bottom(); ?>
         </div>
 <?php
     } ?>
@@ -273,9 +274,9 @@ if (AmpConfig::get('wanted')) {
 if (AmpConfig::get('show_similar')) {
         echo Ajax::observe('similar_artist_link', 'click', Ajax::action('?page=index&action=similar_artist&artist=' . $artist->id, 'similar_artist')); ?>
         <div id="similar_artist" class="tab_content">
-        <?php UI::show_box_top(T_('Similar Artists'), 'info-box');
+        <?php Ui::show_box_top(T_('Similar Artists'), 'info-box');
         echo T_('Loading...');
-        UI::show_box_bottom(); ?>
+        Ui::show_box_bottom(); ?>
         </div>
 <?php
     } ?>
@@ -283,9 +284,9 @@ if (AmpConfig::get('show_similar')) {
 if (AmpConfig::get('show_concerts')) {
         echo Ajax::observe('concerts_link', 'click', Ajax::action('?page=index&action=concerts&artist=' . $artist->id, 'concerts')); ?>
         <div id="concerts" class="tab_content">
-        <?php UI::show_box_top(T_('Events'), 'info-box');
+        <?php Ui::show_box_top(T_('Events'), 'info-box');
         echo T_('Loading...');
-        UI::show_box_bottom(); ?>
+        Ui::show_box_bottom(); ?>
         </div>
 <?php
     } ?>
@@ -293,9 +294,9 @@ if (AmpConfig::get('show_concerts')) {
 if (AmpConfig::get('label')) {
         echo Ajax::observe('labels_link', 'click', Ajax::action('?page=index&action=labels&artist=' . $artist->id, 'labels')); ?>
         <div id="labels" class="tab_content">
-        <?php UI::show_box_top(T_('Labels'), 'info-box');
+        <?php Ui::show_box_top(T_('Labels'), 'info-box');
         echo T_('Loading...');
-        UI::show_box_bottom(); ?>
+        Ui::show_box_bottom(); ?>
         </div>
 <?php
     } ?>
