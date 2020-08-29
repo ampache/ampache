@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,7 +20,14 @@ declare(strict_types=0);
  *
  */
 
-class scrobbler
+declare(strict_types=0);
+
+namespace Ampache\Module\Playback\Scrobble;
+
+use AmpConfig;
+use SimpleXMLElement;
+
+class Scrobbler
 {
     public $error_msg;
     public $challenge;
@@ -47,7 +53,7 @@ class scrobbler
         $this->host          = $host;
         $this->scheme        = $scheme;
         $this->api_key       = $api_key;
-        $this->secret        =$secret;
+        $this->secret        = $secret;
         $this->queued_tracks = array();
     } // scrobbler
 
@@ -83,30 +89,30 @@ class scrobbler
     public function call_url($url, $method = 'GET', $vars = null)
     {
         // Encode parameters per RFC1738
-        $params=http_build_query($vars);
-        $opts  = array(
-                'http' => array(
-                        'method' => $method,
-                        'header' => array(
-                                'Host: ' . $this->host,
-                                'User-Agent: Ampache/' . AmpConfig::get('version')
-                        ),
-                )
+        $params = http_build_query($vars);
+        $opts   = array(
+            'http' => array(
+                'method' => $method,
+                'header' => array(
+                    'Host: ' . $this->host,
+                    'User-Agent: Ampache/' . AmpConfig::get('version')
+                ),
+            )
         );
         // POST request need parameters in body and additional headers
         if ($method == 'POST') {
             $opts['http']['content']  = $params;
             $opts['http']['header'][] = 'Content-type: application/x-www-form-urlencoded';
-            $opts['http']['header'][] = 'Content-length: ' . strlen((string) $params);
+            $opts['http']['header'][] = 'Content-length: ' . strlen((string)$params);
             $params                   = '';
         }
         $context = stream_context_create($opts);
         if ($params != '') {
             // If there are paramters for GET request, adding the "?" caracter before
-            $params='?' . $params;
+            $params = '?' . $params;
         }
-        $target       = $this->scheme . '://' . $this->host . $url . $params;
-        $filepath     = @fopen($target, 'r', false, $context);
+        $target   = $this->scheme . '://' . $this->host . $url . $params;
+        $filepath = @fopen($target, 'r', false, $context);
         if (!$filepath) {
             debug_event('scrobbler.class', 'Cannot access ' . $target, 1);
 
@@ -148,18 +154,18 @@ class scrobbler
     {
         if ($token !== null) {
             $vars = array(
-            'method' => 'auth.getSession',
-            'api_key' => $this->api_key,
-            'token' => $token
+                'method' => 'auth.getSession',
+                'api_key' => $this->api_key,
+                'token' => $token
             );
             // sign the call
             $sig             = $this->get_api_sig($vars);
             $vars['api_sig'] = $sig;
             // call the getSession API
-            $response=$this->call_url('/2.0/', 'GET', $vars);
-            $xml     = simplexml_load_string($response);
+            $response = $this->call_url('/2.0/', 'GET', $vars);
+            $xml      = simplexml_load_string($response);
             if ($xml) {
-                $status = (string) $xml['status'];
+                $status = (string)$xml['status'];
                 if ($status == 'ok') {
                     if ($xml->session && $xml->session->key) {
                         return $xml->session->key;
@@ -236,8 +242,8 @@ class scrobbler
         ksort($this->queued_tracks);
 
         // Build the query string (encoded per RFC1738 by the call method)
-        $count   = 0;
-        $vars    = array();
+        $count = 0;
+        $vars  = array();
         foreach ($this->queued_tracks as $track) {
             // construct array of parameters for each song
             $vars["artist[$count]"]      = $track['artist'];
@@ -258,10 +264,10 @@ class scrobbler
         $vars['api_sig'] = $sig;
 
         // Call the method and parse response
-        $response=$this->call_url('/2.0/', 'POST', $vars);
-        $xml     = simplexml_load_string($response);
+        $response = $this->call_url('/2.0/', 'POST', $vars);
+        $xml      = simplexml_load_string($response);
         if ($xml) {
-            $status = (string) $xml['status'];
+            $status = (string)$xml['status'];
             if ($status == 'ok') {
                 return true;
             } else {
@@ -300,10 +306,10 @@ class scrobbler
         $vars['api_sig'] = $sig;
 
         // Call the method and parse response
-        $response=$this->call_url('/2.0/', 'POST', $vars);
-        $xml     = simplexml_load_string($response);
+        $response = $this->call_url('/2.0/', 'POST', $vars);
+        $xml      = simplexml_load_string($response);
         if ($xml) {
-            $status = (string) $xml['status'];
+            $status = (string)$xml['status'];
             if ($status == 'ok') {
                 return true;
             } else {
@@ -317,4 +323,4 @@ class scrobbler
             return false;
         }
     } // love
-} // end scrobbler.class
+}

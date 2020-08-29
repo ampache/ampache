@@ -2,6 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
 use Ampache\Model\Plugin;
+use Ampache\Module\Playback\Scrobble\Scrobbler;
 
 /**
  *
@@ -146,7 +147,7 @@ class Ampachelibrefm
         }
 
         // Create our scrobbler and then queue it
-        $scrobbler = new scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
+        $scrobbler = new Scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
 
         // Check to see if the scrobbling works by queueing song
         if (!$scrobbler->queue_track($song->f_artist_full, $song->f_album_full, $song->title, time(), $song->time, $song->track)) {
@@ -181,7 +182,7 @@ class Ampachelibrefm
             return false;
         }
         // Create our scrobbler and then queue it
-        $scrobbler = new scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
+        $scrobbler = new Scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
         if (!$scrobbler->love($flagged, $song->f_artist_full, $song->title)) {
             debug_event('librefm.plugin', 'Error Love Failed: ' . $scrobbler->error_msg, 3);
 
@@ -202,7 +203,7 @@ class Ampachelibrefm
      */
     public function get_session($user_id, $token)
     {
-        $scrobbler   = new scrobbler($this->api_key, $this->scheme, $this->api_host, '', $this->secret);
+        $scrobbler   = new Scrobbler($this->api_key, $this->scheme, $this->api_host, '', $this->secret);
         $session_key = $scrobbler->get_session_key($token);
         if (!$session_key) {
             debug_event('librefm.plugin', 'getSession Failed: ' . $scrobbler->error_msg, 3);
