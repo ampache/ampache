@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Model\Channel;
+
 define('NO_SESSION', '1');
 define('CLI', 1);
 

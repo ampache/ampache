@@ -33,7 +33,7 @@ use Artist;
 use Ampache\Module\Artist\Artist_Event;
 use Browse;
 use Catalog;
-use Channel;
+use Ampache\Model\Channel;
 use Core;
 use Label;
 use Ampache\Module\Util\Recommendation;

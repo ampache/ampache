@@ -56,7 +56,7 @@ interface library_item extends playable_item
      * @param boolean $force
      * @return mixed
      */
-    public function display_art($thumb, $force = false);
+    public function display_art($thumb = 2, $force = false);
 
     /**
      * @param array $data

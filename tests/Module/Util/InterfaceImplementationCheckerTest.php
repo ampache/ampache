@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
-use Channel;
+use Ampache\Model\Channel;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
 use Mockery;

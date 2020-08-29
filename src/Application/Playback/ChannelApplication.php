@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use Ampache\Module\Authorization\Auth;
-use Channel;
+use Ampache\Model\Channel;
 use Core;
 use Preference;
 use Ampache\Module\Util\Ui;

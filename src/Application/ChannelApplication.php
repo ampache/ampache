@@ -27,7 +27,7 @@ namespace Ampache\Application;
 
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
-use Channel;
+use Ampache\Model\Channel;
 use Core;
 use Ampache\Module\Util\Ui;
 

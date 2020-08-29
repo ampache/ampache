@@ -1,14 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-
-use Ampache\Module\Playback\Stream;
-use Ampache\Module\Util\Ui;
-use Ampache\Model\library_item;
-use Ampache\Model\Media;
-use Ampache\Module\Api\Ajax;
-
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -28,7 +20,24 @@ use Ampache\Module\Api\Ajax;
  *
  */
 
-class Channel extends \Ampache\Model\database_object implements Media, library_item
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
+use Ampache\Module\Playback\Stream;
+use Ampache\Module\Util\Ui;
+use Ampache\Module\Api\Ajax;
+use AmpConfig;
+use Art;
+use Catalog;
+use Core;
+use Dba;
+use PDOStatement;
+use Playlist;
+use Song;
+use Tag;
+
+class Channel extends database_object implements Media, library_item
 {
     public $id;
     public $is_private;
@@ -95,7 +104,7 @@ class Channel extends \Ampache\Model\database_object implements Media, library_i
 
         $this->start_date = $start_date;
         $this->interface  = $address;
-        $this->port       = (int) $port;
+        $this->port       = (int)$port;
         $this->pid        = $pid;
     }
 
@@ -134,7 +143,7 @@ class Channel extends \Ampache\Model\database_object implements Media, library_i
             foreach ($tags as $tag) {
                 $genre .= $tag['name'] . ' ';
             }
-            $genre = trim((string) $genre);
+            $genre = trim((string)$genre);
         }
 
         return $genre;
@@ -188,11 +197,41 @@ class Channel extends \Ampache\Model\database_object implements Media, library_i
      * @param string $bitrate
      * @return PDOStatement|boolean
      */
-    public static function create($name, $description, $url, $object_type, $object_id, $interface, $port, $admin_password, $private, $max_listeners, $random, $loop, $stream_type, $bitrate)
-    {
+    public static function create(
+        $name,
+        $description,
+        $url,
+        $object_type,
+        $object_id,
+        $interface,
+        $port,
+        $admin_password,
+        $private,
+        $max_listeners,
+        $random,
+        $loop,
+        $stream_type,
+        $bitrate
+    ) {
         if (!empty($name)) {
             $sql    = "INSERT INTO `channel` (`name`, `description`, `url`, `object_type`, `object_id`, `interface`, `port`, `fixed_endpoint`, `admin_password`, `is_private`, `max_listeners`, `random`, `loop`, `stream_type`, `bitrate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $params = array($name, $description, $url, $object_type, $object_id, $interface, $port, (!empty($interface) && !empty($port)), $admin_password, $private, $max_listeners, $random, $loop, $stream_type, $bitrate);
+            $params = array(
+                $name,
+                $description,
+                $url,
+                $object_type,
+                $object_id,
+                $interface,
+                $port,
+                (!empty($interface) && !empty($port)),
+                $admin_password,
+                $private,
+                $max_listeners,
+                $random,
+                $loop,
+                $stream_type,
+                $bitrate
+            );
 
             return Dba::write($sql, $params);
         }
@@ -211,9 +250,24 @@ class Channel extends \Ampache\Model\database_object implements Media, library_i
             Tag::update_tag_list($data['edit_tags'], 'channel', $this->id, true);
         }
 
-        $sql = "UPDATE `channel` SET `name` = ?, `description` = ?, `url` = ?, `interface` = ?, `port` = ?, `fixed_endpoint` = ?, `admin_password` = ?, `is_private` = ?, `max_listeners` = ?, `random` = ?, `loop` = ?, `stream_type` = ?, `bitrate` = ?, `object_id` = ? " .
-            "WHERE `id` = ?";
-        $params = array($data['name'], $data['description'], $data['url'], $data['interface'], $data['port'], (!empty($data['interface']) && !empty($data['port'])), $data['admin_password'], !empty($data['private']), $data['max_listeners'], $data['random'], $data['loop'], $data['stream_type'], $data['bitrate'], $data['object_id'], $this->id);
+        $sql    = "UPDATE `channel` SET `name` = ?, `description` = ?, `url` = ?, `interface` = ?, `port` = ?, `fixed_endpoint` = ?, `admin_password` = ?, `is_private` = ?, `max_listeners` = ?, `random` = ?, `loop` = ?, `stream_type` = ?, `bitrate` = ?, `object_id` = ? " . "WHERE `id` = ?";
+        $params = array(
+            $data['name'],
+            $data['description'],
+            $data['url'],
+            $data['interface'],
+            $data['port'],
+            (!empty($data['interface']) && !empty($data['port'])),
+            $data['admin_password'],
+            !empty($data['private']),
+            $data['max_listeners'],
+            $data['random'],
+            $data['loop'],
+            $data['stream_type'],
+            $data['bitrate'],
+            $data['object_id'],
+            $this->id
+        );
         Dba::write($sql, $params);
 
         return $this->id;
@@ -245,11 +299,16 @@ class Channel extends \Ampache\Model\database_object implements Media, library_i
     {
         if ($this->id) {
             if (Core::get_global('user')->has_access('75')) {
-                echo Ajax::button('?page=index&action=start_channel&id=' . $this->id, 'run', T_('Start Channel'), 'channel_start_' . $this->id);
-                echo " " . Ajax::button('?page=index&action=stop_channel&id=' . $this->id, 'stop', T_('Stop Channel'), 'channel_stop_' . $this->id);
-                echo " <a href=\"" . $this->get_stream_proxy_url_status() . "\" target=\"_blank\">" . Ui::get_icon('view', T_('Status')) . "</a>";
-                echo " <a id=\"edit_channel_ " . $this->id . "\" onclick=\"showEditDialog('channel_row', '" . $this->id . "', 'edit_channel_" . $this->id . "', '" . T_('Channel Edit') . "', 'channel_row_', 'refresh_channel')\">" . Ui::get_icon('edit', T_('Edit')) . "</a>";
-                echo " <a href=\"" . AmpConfig::get('web_path') . "/channel.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_icon('delete', T_('Delete')) . "</a>";
+                echo Ajax::button('?page=index&action=start_channel&id=' . $this->id, 'run', T_('Start Channel'),
+                    'channel_start_' . $this->id);
+                echo " " . Ajax::button('?page=index&action=stop_channel&id=' . $this->id, 'stop', T_('Stop Channel'),
+                        'channel_stop_' . $this->id);
+                echo " <a href=\"" . $this->get_stream_proxy_url_status() . "\" target=\"_blank\">" . Ui::get_icon('view',
+                        T_('Status')) . "</a>";
+                echo " <a id=\"edit_channel_ " . $this->id . "\" onclick=\"showEditDialog('channel_row', '" . $this->id . "', 'edit_channel_" . $this->id . "', '" . T_('Channel Edit') . "', 'channel_row_', 'refresh_channel')\">" . Ui::get_icon('edit',
+                        T_('Edit')) . "</a>";
+                echo " <a href=\"" . AmpConfig::get('web_path') . "/channel.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_icon('delete',
+                        T_('Delete')) . "</a>";
             }
         }
     }
@@ -324,9 +383,9 @@ class Channel extends \Ampache\Model\database_object implements Media, library_i
         $medias = array();
         if ($filter_type === null || $filter_type == 'channel') {
             $medias[] = array(
-                    'object_type' => 'channel',
-                    'object_id' => $this->id
-                    );
+                'object_type' => 'channel',
+                'object_id' => $this->id
+            );
         }
 
         return $medias;
@@ -395,7 +454,7 @@ class Channel extends \Ampache\Model\database_object implements Media, library_i
      */
     public function get_stream_url()
     {
-        return "http://" . $this->interface . ":" . (string) $this->port . "/stream." . $this->stream_type;
+        return "http://" . $this->interface . ":" . (string)$this->port . "/stream." . $this->stream_type;
     }
 
     /**
@@ -442,7 +501,7 @@ class Channel extends \Ampache\Model\database_object implements Media, library_i
         $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;
@@ -483,7 +542,7 @@ class Channel extends \Ampache\Model\database_object implements Media, library_i
     {
         $check = false;
         if ($this->interface && $this->port) {
-            $connection = @fsockopen($this->interface, (int) $this->port);
+            $connection = @fsockopen($this->interface, (int)$this->port);
             if (is_resource($connection)) {
                 $check = true;
                 fclose($connection);
@@ -561,12 +620,14 @@ class Channel extends \Ampache\Model\database_object implements Media, library_i
                         $this->media = $catalog->prepare_media($this->media);
 
                         if (!$this->media->file || !Core::is_readable(Core::conv_lc_file($this->media->file))) {
-                            debug_event('channel.class', 'Cannot read media ' . $this->media->id . ' file, skipped.', 3);
+                            debug_event('channel.class', 'Cannot read media ' . $this->media->id . ' file, skipped.',
+                                3);
                             $this->media = null;
                         } else {
                             $valid_types = $this->media->get_stream_types();
                             if (!in_array('transcode', $valid_types)) {
-                                debug_event('channel.class', 'Missing settings to transcode ' . $this->media->file . ', skipped.', 3);
+                                debug_event('channel.class',
+                                    'Missing settings to transcode ' . $this->media->file . ', skipped.', 3);
                                 $this->media = null;
                             } else {
                                 debug_event('channel.class', 'Now listening to ' . $this->media->file . '.', 4);
@@ -590,8 +651,8 @@ class Channel extends \Ampache\Model\database_object implements Media, library_i
                 // Stream not yet initialized for this media, start it
                 if (!$this->transcoder) {
                     $options = array(
-                            'bitrate' => $this->bitrate
-                            );
+                        'bitrate' => $this->bitrate
+                    );
                     $this->transcoder           = Stream::start_transcode($this->media, $this->stream_type, null, $options);
                     $this->media_bytes_streamed = 0;
                 }
@@ -601,19 +662,19 @@ class Channel extends \Ampache\Model\database_object implements Media, library_i
                         $this->header_chunk = '';
                     }
                     $chunk = fread($this->transcoder['handle'], $this->chunk_size);
-                    $this->media_bytes_streamed += strlen((string) $chunk);
+                    $this->media_bytes_streamed += strlen((string)$chunk);
 
-                    if ((ftell($this->transcoder['handle']) < 10000 && strtolower((string) $this->stream_type) == "ogg") || $this->header_chunk_remainder) {
+                    if ((ftell($this->transcoder['handle']) < 10000 && strtolower((string)$this->stream_type) == "ogg") || $this->header_chunk_remainder) {
                         // debug_event('channel.class', 'File handle pointer: ' . ftell($this->transcoder['handle']), 5);
                         $clchunk = $chunk;
 
                         if ($this->header_chunk_remainder) {
                             $this->header_chunk .= substr($clchunk, 0, $this->header_chunk_remainder);
-                            if (strlen((string) $clchunk) >= $this->header_chunk_remainder) {
+                            if (strlen((string)$clchunk) >= $this->header_chunk_remainder) {
                                 $clchunk                      = substr($clchunk, $this->header_chunk_remainder);
                                 $this->header_chunk_remainder = 0;
                             } else {
-                                $this->header_chunk_remainder = $this->header_chunk_remainder - strlen((string) $clchunk);
+                                $this->header_chunk_remainder = $this->header_chunk_remainder - strlen((string)$clchunk);
                                 $clchunk                      = '';
                             }
                         }
@@ -621,17 +682,20 @@ class Channel extends \Ampache\Model\database_object implements Media, library_i
                         while ($this->strtohex(substr($clchunk, 0, 4)) == "4F676753") {
                             $hex                = $this->strtohex(substr($clchunk, 0, 27));
                             $ogg_nr_of_segments = hexdec(substr($hex, 26 * 2, 2));
-                            if ((substr($clchunk, (int) (27 + $ogg_nr_of_segments + 1), 6) == "vorbis") || (substr($clchunk, (int) (27 + $ogg_nr_of_segments), 4) == "Opus")) {
-                                $hex .= $this->strtohex(substr($clchunk, 27, (int) $ogg_nr_of_segments));
+                            if ((substr($clchunk, (int)(27 + $ogg_nr_of_segments + 1),
+                                        6) == "vorbis") || (substr($clchunk, (int)(27 + $ogg_nr_of_segments),
+                                        4) == "Opus")) {
+                                $hex .= $this->strtohex(substr($clchunk, 27, (int)$ogg_nr_of_segments));
                                 $ogg_sum_segm_laces = 0;
                                 for ($segm = 0; $segm < $ogg_nr_of_segments; $segm++) {
                                     $ogg_sum_segm_laces += hexdec(substr($hex, 27 * 2 + $segm * 2, 2));
                                 }
-                                $this->header_chunk .= substr($clchunk, 0, (int) (27 + $ogg_nr_of_segments + $ogg_sum_segm_laces));
-                                if (strlen((string) $clchunk) < (27 + $ogg_nr_of_segments + $ogg_sum_segm_laces)) {
-                                    $this->header_chunk_remainder = (int) (27 + $ogg_nr_of_segments + $ogg_sum_segm_laces - strlen((string) $clchunk));
+                                $this->header_chunk .= substr($clchunk, 0,
+                                    (int)(27 + $ogg_nr_of_segments + $ogg_sum_segm_laces));
+                                if (strlen((string)$clchunk) < (27 + $ogg_nr_of_segments + $ogg_sum_segm_laces)) {
+                                    $this->header_chunk_remainder = (int)(27 + $ogg_nr_of_segments + $ogg_sum_segm_laces - strlen((string)$clchunk));
                                 }
-                                $clchunk = substr($clchunk, (int) (27 + $ogg_nr_of_segments + $ogg_sum_segm_laces));
+                                $clchunk = substr($clchunk, (int)(27 + $ogg_nr_of_segments + $ogg_sum_segm_laces));
                             } else {
                                 // no more interesting headers
                                 $clchunk = '';
@@ -656,7 +720,7 @@ class Channel extends \Ampache\Model\database_object implements Media, library_i
                     $this->transcoder = null;
                 }
 
-                if (!strlen((string) $chunk)) {
+                if (!strlen((string)$chunk)) {
                     $chunk = $this->get_chunk();
                 }
             }
@@ -766,11 +830,11 @@ class Channel extends \Ampache\Model\database_object implements Media, library_i
      */
     private function strtohex($source)
     {
-        $string= '';
+        $string = '';
         foreach (str_split($source) as $char) {
             $string .= sprintf("%02X", ord($char));
         }
 
-        return($string);
+        return ($string);
     }
-} // end channel.class
+}
