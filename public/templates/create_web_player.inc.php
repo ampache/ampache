@@ -19,7 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
- ?>
+
+use Ampache\Module\Playback\WebPlayer;
+
+?>
 <html>
 <head>
 <title><?php echo scrub_out(AmpConfig::get('site_title')); ?></title>

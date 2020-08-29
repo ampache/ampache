@@ -1,14 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-
-use Ampache\Model\Media;
-use Ampache\Model\playable_item;
-use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\Playback\Stream_Url;
-use Ampache\Module\Util\InterfaceImplementationChecker;
-
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -27,6 +19,18 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+declare(strict_types=0);
+
+namespace Ampache\Module\Playback;
+
+use Ampache\Model\Media;
+use Ampache\Model\playable_item;
+use Ampache\Module\Util\InterfaceImplementationChecker;
+use AmpConfig;
+use Democratic;
+use Song;
+use Song_Preview;
 
 class WebPlayer
 {
@@ -72,7 +76,7 @@ class WebPlayer
 
         if ($media != null) {
             $file_type = $media->type;
-            $transcode = self::can_transcode($media,$file_type, $types, $urlinfo, $force_type);
+            $transcode = self::can_transcode($media, $file_type, $types, $urlinfo, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $file_type, $transcode);
         } else {
             if ($item->type == 'live_stream') {
@@ -180,7 +184,8 @@ class WebPlayer
         $transcode_cfg = AmpConfig::get('transcode');
         // Check transcode is required
         $valid_types = Song::get_stream_types_for_type($file_type, 'webplayer');
-        if ($transcode_cfg == 'always' || !empty($force_type) || !in_array('native', $valid_types) || ($types['real'] != $file_type && (!AmpConfig::get('webplayer_flash') || $urlinfo['type'] != 'song'))) {
+        if ($transcode_cfg == 'always' || !empty($force_type) || !in_array('native',
+                $valid_types) || ($types['real'] != $file_type && (!AmpConfig::get('webplayer_flash') || $urlinfo['type'] != 'song'))) {
             if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && in_array('transcode', $valid_types))) {
                 // Transcode forced from client side
                 if (!empty($force_type) && AmpConfig::get('transcode_player_customize')) {
@@ -324,4 +329,4 @@ class WebPlayer
 
         return json_encode($json);
     }
-} // end webplayer.class
+}

@@ -21,6 +21,7 @@
  */
 
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Playback\WebPlayer;
 use Ampache\Module\Util\Ui;
 
 header('Cache-Control: no-cache');
