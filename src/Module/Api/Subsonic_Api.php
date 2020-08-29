@@ -37,7 +37,7 @@ use Ampache\Module\Util\Recommendation;
 use AmpConfig;
 use Art;
 use Artist;
-use Bookmark;
+use Ampache\Model\Bookmark;
 use Catalog;
 use Core;
 use DOMDocument;

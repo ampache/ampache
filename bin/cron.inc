@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Bookmark;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Cron;

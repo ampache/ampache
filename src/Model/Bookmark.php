@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,13 +20,19 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
+use Core;
+use Dba;
+use PDOStatement;
+use User;
+
 /**
- * Bookmark class
- *
  * This manage bookmark on playable items
- *
  */
-class Bookmark extends \Ampache\Model\database_object
+class Bookmark extends database_object
 {
     // Public variables
     public $id;
@@ -154,7 +159,8 @@ class Bookmark extends \Ampache\Model\database_object
 
         $sql = "INSERT INTO `bookmark` (`user`, `position`, `comment`, `object_type`, `object_id`, `creation_date`, `update_date`) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        return Dba::write($sql, array($user, $position, $comment, $data['object_type'], $data['object_id'], time(), time()));
+        return Dba::write($sql,
+            array($user, $position, $comment, $data['object_type'], $data['object_id'], time(), time()));
     }
 
     /**
@@ -185,4 +191,4 @@ class Bookmark extends \Ampache\Model\database_object
         $user         = new User($this->user);
         $this->f_user = $user->username;
     }
-} // end bookmark.class
+}
