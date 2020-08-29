@@ -161,9 +161,9 @@ class Ampache_RSS
         }
 
         $rsstoken = "";
-        if ($user_id != -1) {
-            $user = new User($user_id);
-            if (! $user->rsstoken) {
+        $user     = new User($user_id);
+        if ($user->id > 0) {
+            if (!$user->rsstoken) {
                 $user->generate_rsstoken();
             }
             $rsstoken = "&rsstoken=" . $user->rsstoken;
