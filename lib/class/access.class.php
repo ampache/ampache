@@ -336,13 +336,17 @@ class Access
 
         switch ($type) {
             case 'init-api':
-                $user = ($user) ? User::get_from_username($user) : User::get_from_apikey($apikey);
-                $user = $user->id;
-                $type = 'rpc';
-                break;
+                if ($user) {
+                    $user = User::get_from_username($user);
+                    $user = $user->id;
+                } elseif ($apikey) {
+                    $user = User::get_from_apikey($apikey);
+                    $user = $user->id;
+                }
+            // Intentional break fall-through
             case 'api':
                 $type = 'rpc';
-                break;
+            // Intentional break fall-through
             case 'network':
             case 'interface':
             case 'stream':
@@ -352,8 +356,8 @@ class Access
         } // end switch on type
 
         $sql = 'SELECT `id` FROM `access_list` ' .
-            'WHERE `start` <= ? AND `end` >= ? ' .
-            'AND `level` >= ? AND `type` = ?';
+                'WHERE `start` <= ? AND `end` >= ? ' .
+                'AND `level` >= ? AND `type` = ?';
 
         $user_ip = Core::get_user_ip();
         $params  = array(inet_pton($user_ip), inet_pton($user_ip), $level, $type);
