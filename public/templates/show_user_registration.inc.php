@@ -21,6 +21,7 @@
  *
  */
 
+use Ampache\Module\User\Registration;
 use Ampache\Module\Util\Captcha\captcha;
 
 $htmllang = str_replace("_", "-", AmpConfig::get('lang'));

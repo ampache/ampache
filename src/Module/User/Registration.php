@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,7 +20,12 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\User;
+
 use Ampache\Module\Util\Mailer;
+use AmpConfig;
 
 /**
  * Registration Class
@@ -31,15 +35,6 @@ use Ampache\Module\Util\Mailer;
  */
 class Registration
 {
-    /**
-     * constructor
-     * This is what is called when the class is loaded
-     */
-    public function __construct()
-    {
-        // Rien a faire
-    } // constructor
-
     /**
      * send_confirmation
      * This sends the confirmation e-mail for the specified user
@@ -109,9 +104,9 @@ class Registration
         /* HINT: Ampache site_title */
         $mailer->subject = sprintf(T_("Account enabled at %s"), AmpConfig::get('site_title'));
         /* HINT: Username */
-        $mailer->message = sprintf(T_("A new user has been enabled. %s"), $username) .
-                /* HINT: Ampache Login Page */
-                "\n\n " . sprintf(T_("You can log in at the following address %s"), AmpConfig::get('web_path') . "/login.php");
+        $mailer->message = sprintf(T_("A new user has been enabled. %s"), $username) . /* HINT: Ampache Login Page */
+            "\n\n " . sprintf(T_("You can log in at the following address %s"),
+                AmpConfig::get('web_path') . "/login.php");
         $mailer->recipient      = $email;
         $mailer->recipient_name = $fullname;
 
@@ -119,13 +114,13 @@ class Registration
     }
 
     /**
-      * show_agreement
+     * show_agreement
      * This shows the registration agreement, /config/registration_agreement.php
      * @return boolean
      */
     public static function show_agreement()
     {
-        $filename = __DIR__ . '/../../config/registration_agreement.php';
+        $filename = __DIR__ . '/../../../config/registration_agreement.php';
 
         if (!file_exists($filename)) {
             return false;

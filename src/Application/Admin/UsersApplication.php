@@ -33,7 +33,7 @@ use Browse;
 use Core;
 use Ampache\Module\Util\Mailer;
 use Preference;
-use Registration;
+use Ampache\Module\User\Registration;
 use UI;
 use User;
 
