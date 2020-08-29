@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use Ampache\Module\Api\Json_Data;
-use Session;
+use Ampache\Module\System\Session;
 use User;
 
 final class JsonApplication implements ApplicationInterface

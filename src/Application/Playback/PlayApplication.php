@@ -38,7 +38,7 @@ use Ampache\Module\Util\Horde_Browser;
 use Podcast_Episode;
 use Preference;
 use Ampache\Model\Random;
-use Session;
+use Ampache\Module\System\Session;
 use Share;
 use Song;
 use Song_Preview;

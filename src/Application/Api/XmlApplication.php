@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use Core;
-use Session;
+use Ampache\Module\System\Session;
 use User;
 use Ampache\Module\Api\Xml_Data;
 

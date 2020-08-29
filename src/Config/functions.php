@@ -28,6 +28,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Playback\LocalPlay;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
 use Gettext\Translator;
 

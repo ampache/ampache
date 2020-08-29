@@ -28,6 +28,7 @@
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\Auth;
 use Ampache\Module\System\AutoUpdate;
+use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
 
 Session::create_cookie();

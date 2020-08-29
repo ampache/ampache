@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use Ampache\Config\ConfigContainerInterface;
-use Session;
+use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
 
 final class LoginApplication implements ApplicationInterface

@@ -30,7 +30,7 @@ use Core;
 use Dba;
 use Democratic;
 use PDOStatement;
-use Session;
+use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Api\Xml_Data;
 

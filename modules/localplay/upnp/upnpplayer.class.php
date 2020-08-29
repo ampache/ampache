@@ -20,6 +20,8 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Module\System\Session;
+
 /**
  * UPnPPlayer Class
  *

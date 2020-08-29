@@ -28,7 +28,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 use AmpConfig;
 use Core;
 use Ampache\Model\Plugin;
-use Session;
+use Ampache\Module\System\Session;
 use Ampache\Module\Statistics\Stats;
 
 final class StatsAjaxHandler implements AjaxHandlerInterface

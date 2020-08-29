@@ -22,6 +22,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Model\Plugin;
+use Ampache\Module\System\Session;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;

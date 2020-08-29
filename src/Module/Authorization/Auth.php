@@ -33,7 +33,7 @@ use Core;
 use Dba;
 use Ampache\Module\Authentication\Ldap\Ldap;
 use Openid;
-use Session;
+use Ampache\Module\System\Session;
 use User;
 
 /**

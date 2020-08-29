@@ -20,20 +20,18 @@
  *
  */
 
-// Use output buffering, this gains us a few things and
-// fixes some CSS issues
 use Ampache\Module\Authorization\Auth;
+use Ampache\Module\System\Session;
 use Ampache\Module\System\Update;
 use Ampache\Module\Util\Ui;
 
+// Use output buffering, this gains us a few things and
+// fixes some CSS issues
 ob_start();
 
 require_once __DIR__ . '/init-tiny.php';
 
-// Explicitly load and enable the custom session handler.
-// Relying on autoload may not always load it before sessiony things are done.
-require_once __DIR__ . '/class/session.class.php';
-Session::_auto_init();
+Session::setup();
 
 // Set up for redirection on important error cases
 $path = get_web_path();

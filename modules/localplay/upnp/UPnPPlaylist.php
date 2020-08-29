@@ -19,6 +19,8 @@
  *
  */
 
+use Ampache\Module\System\Session;
+
 /**
  * UPnPPlaylist Class
  */

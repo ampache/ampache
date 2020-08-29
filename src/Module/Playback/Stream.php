@@ -30,7 +30,7 @@ use AmpConfig;
 use Core;
 use Dba;
 use Preference;
-use Session;
+use Ampache\Module\System\Session;
 use User;
 use Video;
 

@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,9 +20,19 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\System;
+
 use Ampache\Model\Query;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Horde_Browser;
+use AmpConfig;
+use Core;
+use Dba;
+use PDOStatement;
+use Song_Preview;
+use Tmp_Playlist;
 
 /**
  *
@@ -32,35 +41,6 @@ use Ampache\Module\Util\Horde_Browser;
  */
 class Session
 {
-    /**
-     * Constructor
-     * This should never be called
-     */
-    private function __construct()
-    {
-        // Rien a faire
-    } // __construct
-
-    /**
-     * open
-     *
-     * This is run on the beginning of a session, nothing to do here for now.
-     */
-    public static function open()
-    {
-        return true;
-    }
-
-    /**
-     * close
-     *
-     * This is run on the end of a session, nothing to do here for now.
-     */
-    public static function close()
-    {
-        return true;
-    }
-
     /**
      * write
      *
@@ -93,7 +73,7 @@ class Session
      */
     public static function destroy($key)
     {
-        if (!strlen((string) $key)) {
+        if (!strlen((string)$key)) {
             return false;
         }
 
@@ -133,18 +113,6 @@ class Session
         Tmp_Playlist::garbage_collection();
         Stream_Playlist::garbage_collection();
         Song_Preview::garbage_collection();
-    }
-
-    /**
-     * read
-     *
-     * This takes a key and returns the data from the database.
-     * @param $key
-     * @return string
-     */
-    public static function read($key)
-    {
-        return self::_read($key, 'value');
     }
 
     /**
@@ -207,10 +175,11 @@ class Session
         // Regenerate the session ID to prevent fixation
         switch ($data['type']) {
             case 'api':
-                $key = (isset($data['apikey'])) ? md5(((string) $data['apikey'] . (string) time())) : md5(uniqid((string) rand(), true));
+                $key = (isset($data['apikey'])) ? md5(((string)$data['apikey'] . (string)time())) : md5(uniqid((string)rand(),
+                    true));
                 break;
             case 'stream':
-                $key = (isset($data['sid'])) ? $data['sid'] : md5(uniqid((string) rand(), true));
+                $key = (isset($data['sid'])) ? $data['sid'] : md5(uniqid((string)rand(), true));
                 break;
             case 'mysql':
             default:
@@ -226,7 +195,8 @@ class Session
         if (isset($data['username'])) {
             $username = $data['username'];
         }
-        $s_ip  = filter_has_var(INPUT_SERVER, 'REMOTE_ADDR') ? filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP) : '0';
+        $s_ip = filter_has_var(INPUT_SERVER, 'REMOTE_ADDR') ? filter_var(Core::get_server('REMOTE_ADDR'),
+            FILTER_VALIDATE_IP) : '0';
         $type  = $data['type'];
         $value = '';
         if (isset($data['value'])) {
@@ -251,14 +221,14 @@ class Session
             $geoname = $data['geo_name'];
         }
 
-        if (!strlen((string) $value)) {
+        if (!strlen((string)$value)) {
             $value = ' ';
         }
 
         /* Insert the row */
-        $sql = 'INSERT INTO `session` (`id`, `username`, `ip`, `type`, `agent`, `value`, `expire`, `geo_latitude`, `geo_longitude`, `geo_name`) ' .
-            'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-        $db_results = Dba::write($sql, array($key, $username, $s_ip, $type, $agent, $value, $expire, $latitude, $longitude, $geoname));
+        $sql        = 'INSERT INTO `session` (`id`, `username`, `ip`, `type`, `agent`, `value`, `expire`, `geo_latitude`, `geo_longitude`, `geo_name`) ' . 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $db_results = Dba::write($sql,
+            array($key, $username, $s_ip, $type, $agent, $value, $expire, $latitude, $longitude, $geoname));
 
         if (!$db_results) {
             debug_event('session.class', 'Session creation failed', 1);
@@ -291,11 +261,8 @@ class Session
 
         // Set up the cookie params before we start the session.
         // This is vital
-        session_set_cookie_params(
-            (int) AmpConfig::get('cookie_life'),
-            (string) AmpConfig::get('cookie_path'),
-            (string) AmpConfig::get('cookie_domain'),
-            make_bool(AmpConfig::get('cookie_secure')));
+        session_set_cookie_params((int)AmpConfig::get('cookie_life'), (string)AmpConfig::get('cookie_path'),
+            (string)AmpConfig::get('cookie_domain'), make_bool(AmpConfig::get('cookie_secure')));
         session_write_close();
 
         // Set name
@@ -328,8 +295,7 @@ class Session
         switch ($type) {
             case 'api':
             case 'stream':
-                $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? ' .
-                    "AND `type` in ('stream', 'api')";
+                $sql        = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ? ' . "AND `type` in ('stream', 'api')";
                 $db_results = Dba::read($sql, array($key, time()));
 
                 if (Dba::num_rows($db_results)) {
@@ -377,7 +343,8 @@ class Session
 
         $sql = 'UPDATE `session` SET `expire` = ? WHERE `id`= ?';
         if ($db_results = Dba::write($sql, array($expire, $sid))) {
-            debug_event('session.class', $sid . ' has been extended to ' . @date('r', $expire) . ' extension length ' . ($expire - $time), 5);
+            debug_event('session.class',
+                $sid . ' has been extended to ' . @date('r', $expire) . ' extension length ' . ($expire - $time), 5);
         }
 
         return $db_results;
@@ -437,38 +404,34 @@ class Session
         return $location;
     }
 
-    /**
-     * _auto_init
-     *
-     * This function is called when the object is included, this sets up the
-     * session_save_handler
-     * @return boolean
-     */
-    public static function _auto_init()
+    public static function setup(): void
     {
         if (!function_exists('session_start')) {
             header("Location:" . AmpConfig::get('web_path') . "/test.php");
 
-            return false;
+            return;
         }
 
         session_set_save_handler(
-            array('Session', 'open'),
-            array('Session', 'close'),
-            array('Session', 'read'),
-            array('Session', 'write'),
-            array('Session', 'destroy'),
-            array('Session', 'gc'));
+            static function (): bool { return true; },
+            static function (): bool { return true; },
+            static function ($key) {
+                return self::_read($key, 'value');
+            },
+            static function ($key, $value): bool {
+                return self::write($key, $value);
+            },
+            static function ($key): bool {
+                return self::destroy($key);
+            },
+            static function (): void {
+                self::garbage_collection();
+            }
+        );
 
         // Make sure session_write_close is called during the early part of
         // shutdown, to avoid issues with object destruction.
         register_shutdown_function('session_write_close');
-
-        return true;
-    }
-
-    public static function gc()
-    {
     }
 
     /**
@@ -482,8 +445,8 @@ class Session
     public static function create_cookie()
     {
         // Set up the cookie prefs before we throw down, this is very important
-        $cookie_life   = (int) AmpConfig::get('cookie_life');
-        $cookie_path   = (string) AmpConfig::get('cookie_path');
+        $cookie_life   = (int)AmpConfig::get('cookie_life');
+        $cookie_path   = (string)AmpConfig::get('cookie_path');
         $cookie_domain = '';
         $cookie_secure = make_bool(AmpConfig::get('cookie_secure'));
 
@@ -518,7 +481,8 @@ class Session
         $cookie_secure = make_bool(AmpConfig::get('cookie_secure'));
 
         setcookie($session_name . '_user', $username, $cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
-        setcookie($session_name . '_lang', AmpConfig::get('lang'), $cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
+        setcookie($session_name . '_lang', AmpConfig::get('lang'), $cookie_life, $cookie_path, $cookie_domain,
+            $cookie_secure);
     }
 
     /**
@@ -548,7 +512,7 @@ class Session
      */
     public static function generateRandomToken()
     {
-        return md5(uniqid((string) mt_rand(), true));
+        return md5(uniqid((string)mt_rand(), true));
     }
 
     /**
@@ -602,7 +566,8 @@ class Session
     public static function ungimp_ie()
     {
         // If no https, no ungimpage required
-        if (filter_has_var(INPUT_SERVER, 'HTTPS') && filter_input(INPUT_SERVER, 'HTTPS', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) != 'on') {
+        if (filter_has_var(INPUT_SERVER, 'HTTPS') && filter_input(INPUT_SERVER, 'HTTPS', FILTER_SANITIZE_STRING,
+                FILTER_FLAG_NO_ENCODE_QUOTES) != 'on') {
             return true;
         }
 
@@ -613,4 +578,4 @@ class Session
 
         return true;
     }
-} // end session.class
+}

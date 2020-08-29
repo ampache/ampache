@@ -28,7 +28,7 @@ namespace Ampache\Application;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use AmpConfig;
 use Ampache\Module\Util\Graph;
-use Session;
+use Ampache\Module\System\Session;
 
 final class StatisticGraphApplication implements ApplicationInterface
 {

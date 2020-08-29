@@ -1,5 +1,7 @@
 <?php
 
+use Ampache\Module\System\Session;
+
 /**
  * Class UPnPDevice
  */
