@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,7 +20,15 @@ declare(strict_types=0);
  *
  */
 
-abstract class scrobbler_async extends Thread
+declare(strict_types=0);
+
+namespace Ampache\Module\Playback\Scrobble;
+
+use Requests;
+use Thread;
+use User;
+
+abstract class ScrobblerAsync extends Thread
 {
     public $user;
     public $song_info;
@@ -45,4 +52,4 @@ abstract class scrobbler_async extends Thread
             User::save_mediaplay($this->user, $this->song_info);
         }
     }
-} // end scrobbler_async.class
+}
