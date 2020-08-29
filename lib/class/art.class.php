@@ -24,6 +24,7 @@ declare(strict_types=0);
 use Ampache\Model\Plugin;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\VaInfo;
 use database_object;
 use Ampache\Model\library_item;
 use Ampache\Module\Ajax;
@@ -408,7 +409,7 @@ class Art extends database_object
                 foreach ($songs as $song_id) {
                     $song = new Song($song_id);
                     $song->format();
-                    $id3  = new vainfo($song->file);
+                    $id3  = new VaInfo($song->file);
                     $data = $id3->read_id3();
                     if (isset($data['tags']['id3v2'])) {
                         $image_from_tag = '';

@@ -25,6 +25,7 @@ use Ampache\Model\Metadata\Repository\Metadata;
 use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\VaInfo;
 
 /**
  * Local Catalog Class
@@ -776,12 +777,12 @@ class Catalog_local extends Catalog
      */
     private function insert_local_song($file, $options = array())
     {
-        $vainfo = new vainfo($file, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern);
+        $vainfo = new VaInfo($file, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern);
         $vainfo->get_info();
 
-        $key = vainfo::get_tag_type($vainfo->tags);
+        $key = VaInfo::get_tag_type($vainfo->tags);
 
-        $results            = vainfo::clean_tag_info($vainfo->tags, $key, $file);
+        $results            = VaInfo::clean_tag_info($vainfo->tags, $key, $file);
         $results['catalog'] = $this->id;
 
         if (isset($options['user_upload'])) {
@@ -819,7 +820,7 @@ class Catalog_local extends Catalog
             }
 
             if ($options['move_match_pattern']) {
-                $patres = vainfo::parse_pattern($file, $this->sort_pattern, $this->rename_pattern);
+                $patres = VaInfo::parse_pattern($file, $this->sort_pattern, $this->rename_pattern);
                 if ($patres['artist'] != $results['artist'] || $patres['album'] != $results['album'] || $patres['track'] != $results['track'] || $patres['title'] != $results['title']) {
                     // Remove first left directories from filename to match pattern
                     $cntslash = substr_count($pattern, preg_quote(DIRECTORY_SEPARATOR)) + 1;
@@ -893,11 +894,11 @@ class Catalog_local extends Catalog
     {
         /* Create the vainfo object and get info */
         $gtypes     = $this->get_gather_types('video');
-        $vainfo     = new vainfo($file, $gtypes, '', '', '', $this->sort_pattern, $this->rename_pattern);
+        $vainfo     = new VaInfo($file, $gtypes, '', '', '', $this->sort_pattern, $this->rename_pattern);
         $vainfo->get_info();
 
-        $tag_name           = vainfo::get_tag_type($vainfo->tags, 'metadata_order_video');
-        $results            = vainfo::clean_tag_info($vainfo->tags, $tag_name, $file);
+        $tag_name           = VaInfo::get_tag_type($vainfo->tags, 'metadata_order_video');
+        $results            = VaInfo::clean_tag_info($vainfo->tags, $tag_name, $file);
         $results['catalog'] = $this->id;
 
         $video_id = Video::insert($results, $gtypes, $options);

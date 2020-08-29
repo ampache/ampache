@@ -27,6 +27,7 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\VaInfo;
 use database_object;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
@@ -1789,7 +1790,7 @@ abstract class Catalog extends database_object
         $results      = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
         if (in_array($extension, $invalid_exts)) {
             debug_event('catalog.class', 'update_media_from_tags: ' . $extension . ' extension: Updating from file name', 2);
-            $patres  = vainfo::parse_pattern($media->file, $catalog->sort_pattern, $catalog->rename_pattern);
+            $patres  = VaInfo::parse_pattern($media->file, $catalog->sort_pattern, $catalog->rename_pattern);
             $results = array_merge($results, $patres);
 
             return call_user_func(array('Catalog', $function), $results, $media);
@@ -2082,12 +2083,12 @@ abstract class Catalog extends database_object
             $rename_pattern = $this->rename_pattern;
         }
 
-        $vainfo = new vainfo($media->file, $gather_types, '', '', '', $sort_pattern, $rename_pattern);
+        $vainfo = new VaInfo($media->file, $gather_types, '', '', '', $sort_pattern, $rename_pattern);
         $vainfo->get_info();
 
-        $key = vainfo::get_tag_type($vainfo->tags);
+        $key = VaInfo::get_tag_type($vainfo->tags);
 
-        return vainfo::clean_tag_info($vainfo->tags, $key, $media->file);
+        return VaInfo::clean_tag_info($vainfo->tags, $key, $media->file);
     }
 
     /**

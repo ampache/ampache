@@ -10,6 +10,7 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\VaInfo;
 use database_object;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
@@ -1255,7 +1256,7 @@ class Song extends database_object implements Media, library_item
                     }
                 }
                 $meta = $this->get_metadata();
-                $id3  = new vainfo($this->file);
+                $id3  = new VaInfo($this->file);
                 $id3->write_id3($meta);
                 Catalog::update_media_from_tags($this);
             }

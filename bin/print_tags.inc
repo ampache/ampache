@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Util\VaInfo;
+
 define('NO_SESSION', '1');
 
 require_once __DIR__ . '/../lib/init.php';
@@ -55,7 +57,7 @@ $catalog = Catalog::create_from_id($results['id']);
 $dir_pattern  = $catalog->sort_pattern;
 $file_pattern = $catalog->rename_pattern;
 
-$info = new vainfo($filename, array('music'), '', '', '', $dir_pattern, $file_pattern);
+$info = new VaInfo($filename, array('music'), '', '', '', $dir_pattern, $file_pattern);
 if (isset($dir_pattern) || isset($file_pattern)) {
     /* HINT: %1 $dir_pattern (e.g. %A/%Y %a), %2 $file_pattern (e.g. %d - %t) */
     printf(T_('Using: %1$s AND %2$s for file pattern matching'), $dir_pattern, $file_pattern);
@@ -64,8 +66,8 @@ if (isset($dir_pattern) || isset($file_pattern)) {
 try {
     $info->get_info();
     $results         = $info->tags;
-    $keys            = vainfo::get_tag_type($results);
-    $ampache_results = vainfo::clean_tag_info($results, $keys, $filename);
+    $keys            = VaInfo::get_tag_type($results);
+    $ampache_results = VaInfo::clean_tag_info($results, $keys, $filename);
 
     echo "\n";
     echo T_('Raw results:');

@@ -29,6 +29,7 @@
 
 use Ampache\Model\Media;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\VaInfo;
 
 require_once('SeafileAdapter.php');
 
@@ -365,16 +366,16 @@ class Catalog_Seafile extends Catalog
             $gather_types = $this->get_gather_types('music');
         }
 
-        $vainfo = new vainfo($tempfilename, $gather_types, '', '', '', $sort_pattern, $rename_pattern, true);
+        $vainfo = new VaInfo($tempfilename, $gather_types, '', '', '', $sort_pattern, $rename_pattern, true);
         $vainfo->forceSize($file->size);
         $vainfo->get_info();
 
-        $key = vainfo::get_tag_type($vainfo->tags);
+        $key = VaInfo::get_tag_type($vainfo->tags);
 
         // maybe fix stat-ing-nonexistent-file bug?
         $vainfo->tags['general']['size'] = (int) ($file->size);
 
-        $results = vainfo::clean_tag_info($vainfo->tags, $key, $file->name);
+        $results = VaInfo::clean_tag_info($vainfo->tags, $key, $file->name);
 
         // Set the remote path
         $results['catalog'] = $this->id;

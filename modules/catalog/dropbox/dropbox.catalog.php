@@ -22,6 +22,7 @@
 
 use Ampache\Model\Media;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\VaInfo;
 use Kunnu\Dropbox\DropboxApp;
 use Kunnu\Dropbox\Dropbox;
 use Kunnu\Dropbox\DropboxFile;
@@ -376,11 +377,11 @@ class Catalog_dropbox extends Catalog
             // Download File
             $this->download($dropbox, $path, -1, $outfile);
 
-            $vainfo = new vainfo($outfile, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern, $readfile);
+            $vainfo = new VaInfo($outfile, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern, $readfile);
             $vainfo->get_info();
 
-            $key     = vainfo::get_tag_type($vainfo->tags);
-            $results = vainfo::clean_tag_info($vainfo->tags, $key, $outfile);
+            $key     = VaInfo::get_tag_type($vainfo->tags);
+            $results = VaInfo::clean_tag_info($vainfo->tags, $key, $outfile);
             // Set the remote path
             $results['file']    = $path;
             $results['catalog'] = $this->id;
@@ -433,11 +434,11 @@ class Catalog_dropbox extends Catalog
 
             if ($res) {
                 $gtypes      = $this->get_gather_types('video');
-                $vainfo      = new vainfo($outfile, $gtypes, '', '', '', $this->sort_pattern, $this->rename_pattern, $readfile);
+                $vainfo      = new VaInfo($outfile, $gtypes, '', '', '', $this->sort_pattern, $this->rename_pattern, $readfile);
                 $vainfo->get_info();
 
-                $tag_name           = vainfo::get_tag_type($vainfo->tags, 'metadata_order_video');
-                $results            = vainfo::clean_tag_info($vainfo->tags, $tag_name, $outfile);
+                $tag_name           = VaInfo::get_tag_type($vainfo->tags, 'metadata_order_video');
+                $results            = VaInfo::clean_tag_info($vainfo->tags, $tag_name, $outfile);
                 $results['catalog'] = $this->id;
 
                 $results['file']       = $outfile;
@@ -521,12 +522,12 @@ class Catalog_dropbox extends Catalog
                     debug_event('dropbox.catalog', 'updating song', 5, 'ampache-catalog');
                     $song = new Song($row['id']);
 
-                    $vainfo = new vainfo($outfile, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern, $readfile);
+                    $vainfo = new VaInfo($outfile, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern, $readfile);
                     $vainfo->forceSize($filesize);
                     $vainfo->get_info();
 
-                    $key     = vainfo::get_tag_type($vainfo->tags);
-                    $results = vainfo::clean_tag_info($vainfo->tags, $key, $outfile);
+                    $key     = VaInfo::get_tag_type($vainfo->tags);
+                    $results = VaInfo::clean_tag_info($vainfo->tags, $key, $outfile);
                     // Must compare to original path, not temporary location.
                     $results['file'] = $path;
                     $info            = self::update_song_from_tags($results, $song);

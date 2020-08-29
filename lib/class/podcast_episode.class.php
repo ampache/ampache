@@ -4,6 +4,7 @@ declare(strict_types=0);
 
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\VaInfo;
 use database_object;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
@@ -482,10 +483,10 @@ class Podcast_Episode extends database_object implements Media, library_item
                     debug_event('podcast_episode.class', 'Download completed.', 4);
                     $this->file = $file;
 
-                    $vainfo = new vainfo($this->file);
+                    $vainfo = new VaInfo($this->file);
                     $vainfo->get_info();
-                    $key   = vainfo::get_tag_type($vainfo->tags);
-                    $infos = vainfo::clean_tag_info($vainfo->tags, $key, $file);
+                    $key   = VaInfo::get_tag_type($vainfo->tags);
+                    $infos = VaInfo::clean_tag_info($vainfo->tags, $key, $file);
                     // No time information, get it from file
                     if ($this->time < 1) {
                         $this->time = $infos['time'];
