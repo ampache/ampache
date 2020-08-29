@@ -31,7 +31,7 @@ use AmpConfig;
 use Ampache\Module\Authorization\Auth;
 use Core;
 use Preference;
-use Subsonic_Api;
+use Ampache\Module\Api\Subsonic_Api;
 use Subsonic_XML_Data;
 use User;
 
@@ -124,7 +124,7 @@ final class SubsonicApplication implements ApplicationInterface
         Preference::init();
 
         // Get the list of possible methods for the Ampache API
-        $methods = get_class_methods('subsonic_api');
+        $methods = get_class_methods(Subsonic_Api::class);
 
         // Define list of internal functions that should be skipped
         $internal_functions = array('check_version', 'check_parameter', 'decrypt_password', 'follow_stream', '_updatePlaylist', '_setStar', 'setHeader', 'apiOutput', 'apiOutput2', 'xml2json');
@@ -180,7 +180,7 @@ final class SubsonicApplication implements ApplicationInterface
             // Then let's call this function!
 
             if ($action == $method) {
-                call_user_func(array('subsonic_api', $method), $params);
+                call_user_func(array(Subsonic_Api::class, $method), $params);
                 // We only allow a single function to be called, and we assume it's cleaned up!
                 return;
             }
@@ -188,6 +188,7 @@ final class SubsonicApplication implements ApplicationInterface
 
         // If we manage to get here, we still need to hand out an XML document
         ob_end_clean();
-        Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, 'subsonic_api', $version), $callback);
+        Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND,
+            'Subsonic_Api', $version), $callback);
     }
 }
