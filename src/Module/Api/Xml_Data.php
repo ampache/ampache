@@ -24,11 +24,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Album;
+use Ampache\Model\Album;
 use Ampache\Model\library_item;
 use Ampache\Model\License;
 use Ampache\Model\Shoutbox;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use AmpConfig;
 use Art;
@@ -844,7 +845,8 @@ class Xml_Data
         $string     = '';
 
         foreach ($object_ids as $row_id => $data) {
-            $song = new $data['object_type']($data['object_id']);
+            $class_name = ObjectTypeToClassNameMapper::map($data['object_type']);
+            $song       = new $class_name($data['object_id']);
             $song->format();
 
             // FIXME: This is duplicate code and so wrong, functions need to be improved
@@ -1116,7 +1118,8 @@ class Xml_Data
 
         $medias = $libitem->get_medias();
         foreach ($medias as $media_info) {
-            $media = new $media_info['object_type']($media_info['object_id']);
+            $class_name = ObjectTypeToClassNameMapper::map($media_info['object_type']);
+            $media      = new $class_name['object_type']($media_info['object_id']);
             $media->format();
             $xitem = $xchannel->addChild("item");
             $xitem->addChild("title", htmlentities($media->get_fullname()));

@@ -2,12 +2,14 @@
 declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
+use Ampache\Model\Album;
 use Ampache\Model\License;
 use Ampache\Model\Plugin;
 use Ampache\Model\Shoutbox;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
@@ -1949,7 +1951,8 @@ class Song extends database_object implements Media, library_item
      */
     public static function generic_play_url($object_type, $object_id, $additional_params, $player = '', $local = false, $uid = -1, $original = false)
     {
-        $media = new $object_type($object_id);
+        $class_name = ObjectTypeToClassNameMapper::map($object_type);
+        $media      = new $class_name($object_id);
         if (!$media->id) {
             return '';
         }

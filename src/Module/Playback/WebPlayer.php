@@ -27,6 +27,7 @@ namespace Ampache\Module\Playback;
 use Ampache\Model\Media;
 use Ampache\Model\playable_item;
 use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Democratic;
 use Song;
@@ -108,7 +109,8 @@ class WebPlayer
     {
         $media = null;
         if ($urlinfo['id'] && InterfaceImplementationChecker::is_media($urlinfo['type'])) {
-            $media = new $urlinfo['type']($urlinfo['id']);
+            $class_name = ObjectTypeToClassNameMapper::map($urlinfo['type']);
+            $media      = new $class_name($urlinfo['id']);
         } else {
             if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
                 $media = new Song_Preview($urlinfo['id']);

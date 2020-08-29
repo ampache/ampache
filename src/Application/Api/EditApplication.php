@@ -28,6 +28,7 @@ namespace Ampache\Application\Api;
 use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Core;
 use Label;
@@ -61,7 +62,8 @@ final class EditApplication implements ApplicationInterface
             return;
         }
 
-        $libitem = new $object_type($object_id);
+        $class_name = ObjectTypeToClassNameMapper::map($object_type);
+        $libitem    = new $class_name($object_id);
         $libitem->format();
 
         $level = '50';
@@ -107,7 +109,8 @@ final class EditApplication implements ApplicationInterface
                 };
                 $entities($_POST);
 
-                $libitem = new $object_type($_POST['id']);
+                $class_name = ObjectTypeToClassNameMapper::map($object_type);
+                $libitem    = new $class_name($_POST['id']);
                 if ($libitem->get_user_owner() == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
                     // TODO: improve this uniqueless check
                     if (filter_has_var(INPUT_POST, 'user')) {
@@ -147,8 +150,9 @@ final class EditApplication implements ApplicationInterface
                 }
 
                 $libitem->format();
-                $new_id  = $libitem->update($_POST);
-                $libitem = new $object_type($new_id);
+                $new_id     = $libitem->update($_POST);
+                $class_name = ObjectTypeToClassNameMapper::map($object_type);
+                $libitem    = new $class_name($new_id);
                 $libitem->format();
 
                 xoutput_headers();

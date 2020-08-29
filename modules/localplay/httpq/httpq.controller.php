@@ -22,6 +22,7 @@
 
 use Ampache\Model\localplay_controller;
 use Ampache\Module\Playback\Stream_Url;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**
  * AmpacheHttpq Class
@@ -513,7 +514,8 @@ class AmpacheHttpq extends localplay_controller
 
                                         $db_results = Dba::read($sql);
                                         if ($row = Dba::fetch_assoc($db_results)) {
-                                            $media = new $row['type']($row['id']);
+                                            $class_name = ObjectTypeToClassNameMapper::map($row['type']);
+                                            $media      = new $class_name($row['id']);
                                             $media->format();
                                             switch ($row['type']) {
                                                         case 'song':

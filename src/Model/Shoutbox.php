@@ -28,6 +28,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\Mailer;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Art;
 use Core;
@@ -197,7 +198,8 @@ class Shoutbox
             return null;
         }
 
-        $object = new $type($object_id);
+        $class_name = ObjectTypeToClassNameMapper::map($type);
+        $object     = new $class_name($object_id);
 
         if ($object->id > 0) {
             if (strtolower((string)$type) === 'song') {
@@ -254,7 +256,8 @@ class Shoutbox
 
         // Never send email in case of user impersonation
         if (!isset($data['user']) && $insert_id !== null) {
-            $libitem       = new $data['object_type']($data['object_id']);
+            $class_name    = ObjectTypeToClassNameMapper::map($data['object_type']);
+            $libitem       = new $class_name($data['object_id']);
             $item_owner_id = $libitem->get_user_owner();
             if ($item_owner_id) {
                 if (Preference::get_by_user($item_owner_id, 'notify_email')) {

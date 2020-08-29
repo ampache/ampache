@@ -22,6 +22,7 @@
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path'); ?>
@@ -76,7 +77,8 @@ $democratic = Democratic::get_current_playlist();
         if (!is_array($item)) {
             $item = (array) $item;
         }
-        $media = new $item['object_type']($item['object_id']);
+        $class_name = ObjectTypeToClassNameMapper::map($item['object_type']);
+        $media      = new $class_name($item['object_id']);
         $media->format(); ?>
 <tr class="<?php echo Ui::flip_class(); ?>">
     <td class="cel_action">

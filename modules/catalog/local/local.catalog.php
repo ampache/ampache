@@ -20,9 +20,11 @@
  *
  */
 
+use Ampache\Model\Album;
 use Ampache\Model\Media;
 use Ampache\Model\Metadata\Repository\Metadata;
 use Ampache\Model\Metadata\Repository\MetadataField;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
@@ -625,8 +627,9 @@ class Catalog_local extends Catalog
                 continue;
             }
 
-            $media = new $media_type($row['id']);
-            $info  = self::update_media_from_tags($media, $this->get_gather_types(), $this->sort_pattern, $this->rename_pattern);
+            $class_name = ObjectTypeToClassNameMapper::map($media_type);
+            $media      = new $class_name($row['id']);
+            $info       = self::update_media_from_tags($media, $this->get_gather_types(), $this->sort_pattern, $this->rename_pattern);
             if ($info['change']) {
                 $changed++;
             }

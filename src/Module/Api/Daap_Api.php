@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Album;
+use Ampache\Model\Album;
 use AmpConfig;
 use Catalog;
 use Core;

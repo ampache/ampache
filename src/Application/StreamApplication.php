@@ -26,8 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use Ampache\Module\Authorization\Access;
-use Album;
+use Ampache\Model\Album;
 use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Artist;
 use Core;
@@ -104,8 +105,9 @@ final class StreamApplication implements ApplicationInterface
 
                 if (InterfaceImplementationChecker::is_playable_item($object_type)) {
                     foreach ($object_ids as $object_id) {
-                        $item      = new $object_type($object_id);
-                        $media_ids = array_merge($media_ids, $item->get_medias());
+                        $class_name = ObjectTypeToClassNameMapper::map($object_type);
+                        $item       = new $class_name($object_id);
+                        $media_ids  = array_merge($media_ids, $item->get_medias());
 
                         if ($_REQUEST['custom_play_action']) {
                             foreach ($media_ids as $media_id) {

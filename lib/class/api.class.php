@@ -21,6 +21,7 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Model\Album;
 use Ampache\Model\License;
 use Ampache\Model\Random;
 use Ampache\Model\Shoutbox;
@@ -33,6 +34,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\Mailer;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;
 
 /**
@@ -2008,7 +2010,8 @@ class Api
         if (!InterfaceImplementationChecker::is_library_item($object_type) || !$object_id) {
             self::message('error', T_('Wrong library item type'), '401', $input['api_format']);
         } else {
-            $item = new $object_type($object_id);
+            $class_name = ObjectTypeToClassNameMapper::map($object_type);
+            $item       = new $class_name($object_id);
             if (!$item->id) {
                 self::message('error', T_('Library item not found'), '404', $input['api_format']);
 
@@ -3092,7 +3095,8 @@ class Api
         if (!InterfaceImplementationChecker::is_library_item($type) || !$object_id) {
             self::message('error', T_('Wrong library item type'), '401', $input['api_format']);
         } else {
-            $item = new $type($object_id);
+            $class_name = ObjectTypeToClassNameMapper::map($type);
+            $item       = new $class_name($object_id);
             if (!$item->id) {
                 self::message('error', T_('Library item not found'), '404', $input['api_format']);
 
@@ -3150,7 +3154,8 @@ class Api
         if (!InterfaceImplementationChecker::is_library_item($type) || !$object_id) {
             self::message('error', T_('Wrong library item type'), '401', $input['api_format']);
         } else {
-            $item = new $type($object_id);
+            $class_name = ObjectTypeToClassNameMapper::map($type);
+            $item       = new $class_name($object_id);
             if (!$item->id) {
                 self::message('error', T_('Library item not found'), '404', $input['api_format']);
 
@@ -3631,7 +3636,8 @@ class Api
 
             return false;
         }
-        $item = new $type($object);
+        $class_name = ObjectTypeToClassNameMapper::map($type);
+        $item       = new $class_name($object);
         if (!$item->id) {
             self::message('error', T_('The requested item was not found'), '404', $input['api_format']);
 
@@ -3716,7 +3722,8 @@ class Api
 
             return true;
         }
-        $item = new $type($object);
+        $class_name = ObjectTypeToClassNameMapper::map($type);
+        $item       = new $class_name($object);
         if (!$item->id) {
             self::message('error', T_('The requested item was not found'), '404', $input['api_format']);
 

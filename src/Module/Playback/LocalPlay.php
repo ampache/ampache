@@ -26,6 +26,7 @@ namespace Ampache\Module\Playback;
 
 use Ampache\Model\localplay_controller;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Core;
 use Preference;
@@ -118,7 +119,7 @@ class LocalPlay
             return false;
         } // include
         else {
-            $class_name    = "Ampache" . $this->type;
+            $class_name    = ObjectTypeToClassNameMapper::map("Ampache" . $this->type);
             $this->_player = new $class_name();
             if (!($this->_player instanceof localplay_controller)) {
                 debug_event('localplay.class', $this->type . ' not an instance of controller abstract, unable to load',

@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Art;
 use Core;
@@ -152,9 +153,10 @@ class Stream_Playlist
      */
     public static function media_to_url($media, $additional_params = '', $urltype = 'web')
     {
-        $type      = $media['object_type'];
-        $object_id = $media['object_id'];
-        $object    = new $type($object_id);
+        $type       = $media['object_type'];
+        $object_id  = $media['object_id'];
+        $class_name = ObjectTypeToClassNameMapper::map($type);
+        $object     = new $class_name($object_id);
         $object->format();
 
         if ($media['custom_play_action']) {

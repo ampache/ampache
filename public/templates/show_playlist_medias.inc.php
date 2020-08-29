@@ -21,6 +21,7 @@
  */
 
 use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path'); ?>
@@ -61,7 +62,8 @@ $web_path = AmpConfig::get('web_path'); ?>
         }
         $object_type = $object['object_type'];
         if (InterfaceImplementationChecker::is_library_item($object_type)) {
-            $libitem = new $object_type($object['object_id']);
+            $class_name = ObjectTypeToClassNameMapper::map($object_type);
+            $libitem    = new $class_name($object['object_id']);
             $libitem->format();
             $playlist_track = $object['track']; ?>
         <tr class="<?php echo Ui::flip_class() ?>" id="track_<?php echo $object['track_id'] ?>">

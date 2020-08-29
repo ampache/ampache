@@ -20,9 +20,11 @@
  *
  */
 
+use Ampache\Model\Album;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 if (!defined('NO_SESSION')) {
@@ -74,7 +76,8 @@ if (InterfaceImplementationChecker::is_playable_item($object_type)) {
     $media_ids = array();
     foreach ($object_id as $item) {
         debug_event('batch', 'Requested item ' . $item, 5);
-        $libitem = new $object_type($item);
+        $class_name = ObjectTypeToClassNameMapper::map($object_type);
+        $libitem    = new $class_name($item);
         if ($libitem->id) {
             $libitem->format();
             $name      = $libitem->get_fullname();

@@ -2,9 +2,11 @@
 declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
+use Ampache\Model\Album;
 use Ampache\Model\Plugin;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Authorization\Access;
 
@@ -274,7 +276,8 @@ class Share extends \Ampache\Model\database_object
     public function format($details = true)
     {
         if ($details) {
-            $object = new $this->object_type($this->object_id);
+            $class_name = ObjectTypeToClassNameMapper::map($this->object_type);
+            $object     = new $class_name($this->object_id);
             $object->format();
             $this->f_name        = $object->get_fullname();
             $this->f_object_link = $object->f_link;
@@ -388,8 +391,9 @@ class Share extends \Ampache\Model\database_object
         switch ($this->object_type) {
             case 'album':
             case 'playlist':
-                $object = new $this->object_type($this->object_id);
-                $songs  = $object->get_medias('song');
+                $class_name = ObjectTypeToClassNameMapper::map($this->object_type);
+                $object     = new $class_name($this->object_id);
+                $songs      = $object->get_medias('song');
                 foreach ($songs as $song) {
                     $medias[] = $song;
                 }
@@ -417,8 +421,9 @@ class Share extends \Ampache\Model\database_object
         switch ($this->object_type) {
             case 'album':
             case 'playlist':
-                $object = new $this->object_type($this->object_id);
-                $songs  = $object->get_songs();
+                $class_name = ObjectTypeToClassNameMapper::map($this->object_type);
+                $object     = new $class_name($this->object_id);
+                $songs      = $object->get_songs();
                 foreach ($songs as $songid) {
                     $is_shared = ($media_id == $songid);
                     if ($is_shared) {

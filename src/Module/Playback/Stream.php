@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback;
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Core;
 use Dba;
@@ -432,8 +433,8 @@ class Stream
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $type  = $row['object_type'];
-            $media = new $type($row['object_id']);
+            $class_name = ObjectTypeToClassNameMapper::map($row['object_type']);
+            $media      = new $class_name($row['object_id']);
             $media->format();
             $client = new User($row['user']);
             $client->format();

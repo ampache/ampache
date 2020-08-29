@@ -24,6 +24,7 @@ declare(strict_types=0);
 use Ampache\Model\library_item;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**
  * Tag Class
@@ -988,8 +989,9 @@ class Tag extends \Ampache\Model\database_object implements library_item
         }
 
         if (InterfaceImplementationChecker::is_library_item($object_type)) {
-            $libitem = new $object_type($object_id);
-            $owner   = $libitem->get_user_owner();
+            $class_name = ObjectTypeToClassNameMapper::map($object_type);
+            $libitem    = new $class_name($object_id);
+            $owner      = $libitem->get_user_owner();
 
             return ($owner !== null && $owner == $uid);
         }

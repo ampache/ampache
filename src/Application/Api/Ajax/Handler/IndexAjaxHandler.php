@@ -27,7 +27,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
-use Album;
+use Ampache\Model\Album;
 use AmpConfig;
 use Artist;
 use Ampache\Module\Artist\Artist_Event;

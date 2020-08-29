@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Browse;
 use Core;
@@ -67,8 +68,9 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                         $object_id = array($object_id);
                     }
                     foreach ($object_id as $item) {
-                        $object = new $object_type($item);
-                        $medias = $object->get_medias();
+                        $class_name = ObjectTypeToClassNameMapper::map($object_type);
+                        $object     = new $class_name($item);
+                        $medias     = $object->get_medias();
                         Core::get_global('user')->playlist->add_medias($medias);
                     }
                 } else {
@@ -84,8 +86,9 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                             $data = explode('_', $_REQUEST['type']);
                             $type = $data['0'];
                             foreach ($_REQUEST['id'] as $i) {
-                                $object = new $type($i);
-                                $songs  = $object->get_random_songs();
+                                $class_name = ObjectTypeToClassNameMapper::map($object_type);
+                                $object     = new $class_name($i);
+                                $songs      = $object->get_random_songs();
                                 foreach ($songs as $song_id) {
                                     Core::get_global('user')->playlist->add_object($song_id, 'song');
                                 }
@@ -93,10 +96,11 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                             break;
                         case 'artist_random':
                         case 'tag_random':
-                            $data   = explode('_', $_REQUEST['type']);
-                            $type   = $data['0'];
-                            $object = new $type($_REQUEST['id']);
-                            $songs  = $object->get_random_songs();
+                            $data       = explode('_', $_REQUEST['type']);
+                            $type       = $data['0'];
+                            $class_name = ObjectTypeToClassNameMapper::map($type);
+                            $object     = new $class_name($_REQUEST['id']);
+                            $songs      = $object->get_random_songs();
                             foreach ($songs as $song_id) {
                                 Core::get_global('user')->playlist->add_object($song_id, 'song');
                             }

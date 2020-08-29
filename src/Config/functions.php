@@ -29,6 +29,7 @@ use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Playback\LocalPlay;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Session;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Gettext\Translator;
 
@@ -2298,7 +2299,8 @@ function get_media_files($media_ids)
                 $type      = array_shift($element);
                 $mediaid   = array_shift($element);
             }
-            $media = new $type($mediaid);
+            $class_name = ObjectTypeToClassNameMapper::map($type);
+            $media      = new $class_name($mediaid);
         } else {
             $media = new Song($element);
         }
@@ -2308,7 +2310,8 @@ function get_media_files($media_ids)
             $dirname = '';
             $parent  = $media->get_parent();
             if ($parent != null) {
-                $pobj = new $parent['object_type']($parent['object_id']);
+                $class_name = ObjectTypeToClassNameMapper::map($parent['object_type']);
+                $pobj       = new $class_name($parent['object_id']);
                 $pobj->format();
                 $dirname = $pobj->get_fullname();
             }

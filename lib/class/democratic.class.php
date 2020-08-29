@@ -24,6 +24,7 @@ declare(strict_types=0);
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**
  * Democratic Class
@@ -397,8 +398,9 @@ class Democratic extends Tmp_Playlist
             return false;
         }
 
-        $media = new $object_type($object_id);
-        $track = isset($media->track) ? (int) ($media->track) : null;
+        $class_name = ObjectTypeToClassNameMapper::map($object_type);
+        $media      = new $class_name($object_id);
+        $track      = isset($media->track) ? (int) ($media->track) : null;
 
         /* If it's on the playlist just vote */
         $sql = "SELECT `id` FROM `tmp_playlist_data` " .

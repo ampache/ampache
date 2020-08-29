@@ -22,6 +22,7 @@
 
 use Ampache\Model\Plugin;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 $last_seen   = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');
@@ -137,8 +138,9 @@ if ($client->f_avatar) {
                 <td>
                     <?php
                         foreach ($object_ids as $object_data) {
-                            $type   = array_shift($object_data);
-                            $object = new $type(array_shift($object_data));
+                            $type       = array_shift($object_data);
+                            $class_name = ObjectTypeToClassNameMapper::map($type);
+                            $object     = new $class_name(array_shift($object_data));
                             $object->format();
                             echo $object->f_link; ?>
                         <br />

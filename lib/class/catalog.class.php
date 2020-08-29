@@ -21,10 +21,12 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Model\Album;
 use Ampache\Model\License;
 use Ampache\Model\Shoutbox;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
@@ -286,7 +288,7 @@ abstract class Catalog extends \Ampache\Model\database_object
             return null;
         } // include
         else {
-            $class_name = "Catalog_" . $type;
+            $class_name = ObjectTypeToClassNameMapper::map("Catalog_" . $type);
             if ($catalog_id > 0) {
                 $catalog = new $class_name($catalog_id);
             } else {
@@ -1317,7 +1319,8 @@ abstract class Catalog extends \Ampache\Model\database_object
         if ($type == 'video') {
             $libitem = Video::create_from_id($object_id);
         } else {
-            $libitem = new $type($object_id);
+            $class_name = ObjectTypeToClassNameMapper::map($type);
+            $libitem    = new $class_name($object_id);
         }
         $inserted = false;
         $options  = array();

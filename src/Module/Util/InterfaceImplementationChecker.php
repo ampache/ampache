@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Model\Album;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
 use Ampache\Model\playable_item;
@@ -33,7 +34,6 @@ use Ampache\Model\playable_item;
  */
 final class InterfaceImplementationChecker
 {
-
     /**
      * Checks if an object implements a certain interface
      *
@@ -42,6 +42,8 @@ final class InterfaceImplementationChecker
      */
     private static function is_class_typeof(string $instance, string $interface_name): bool
     {
+        $instance = ObjectTypeToClassNameMapper::map($instance);
+
         if (class_exists($instance)) {
             return in_array(
                 $interface_name,

@@ -22,6 +22,8 @@
 
 namespace Ampache\Model;
 
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+
 /**
  * Description of Model
  *
@@ -118,7 +120,8 @@ abstract class DatabaseObject
         foreach ($this->fieldClassRelations as $field => $repositoryName) {
             if (class_exists($repositoryName)) {
                 /* @var \Ampache\Repository\Repository $repository */
-                $repository   = new $repositoryName;
+                $class_name   = ObjectTypeToClassNameMapper::map($repositoryName);
+                $repository   = new $class_name();
                 $this->$field = $repository->findById($this->$field);
             }
         }

@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Album;
+use Ampache\Model\Album;
 use Ampache\Module\Playback\LocalPlay;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\InterfaceImplementationChecker;
@@ -574,7 +574,7 @@ class Subsonic_Xml_Data
     /**
      * addAlbum
      * @param SimpleXMLElement $xml
-     * @param Album $album
+     * @param \Ampache\Model\Album $album
      * @param boolean $songs
      * @param boolean $addAmpacheInfo
      * @param string $elementName
@@ -826,7 +826,7 @@ class Subsonic_Xml_Data
 
     /**
      * formatAlbum
-     * @param Album $album
+     * @param \Ampache\Model\Album $album
      * @return string|null
      */
     private static function formatAlbum($album)
@@ -907,7 +907,7 @@ class Subsonic_Xml_Data
     /**
      * addAlbumDirectory
      * @param SimpleXMLElement $xml
-     * @param Album $album
+     * @param \Ampache\Model\Album $album
      */
     public static function addAlbumDirectory($xml, $album)
     {

@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application;
 
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Channel;
 use Core;
@@ -47,7 +48,8 @@ final class ChannelApplication implements ApplicationInterface
             case 'show_create':
                 $type = Channel::format_type(Core::get_request('type'));
                 if (!empty($type) && !empty($_REQUEST['id'])) {
-                    $object = new $type(Core::get_request('id'));
+                    $class_name = ObjectTypeToClassNameMapper::map($type);
+                    $object     = new $class_name(Core::get_request('id'));
                     if ($object->id) {
                         $object->format();
                         require_once Ui::find_template('show_add_channel.inc.php');

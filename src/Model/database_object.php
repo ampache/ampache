@@ -35,6 +35,8 @@ use Dba;
  */
 abstract class database_object
 {
+    protected const DB_TABLENAME = null;
+
     private static $object_cache = array();
 
     // Statistics for debugging
@@ -50,7 +52,7 @@ abstract class database_object
      */
     public function get_info($object_id, $table_name = '')
     {
-        $table     = $table_name ? Dba::escape($table_name) : Dba::escape(strtolower(get_class($this)));
+        $table     = $this->getTableName($table_name);
         $object_id = (int)$object_id;
 
         // Make sure we've got a real id
@@ -76,6 +78,19 @@ abstract class database_object
 
         return $row;
     } // get_info
+
+    private function getTableName($table_name): string
+    {
+        if (!$table_name) {
+            $table_name = static::DB_TABLENAME;
+
+            if ($table_name === null) {
+                $table_name = Dba::escape(strtolower(get_class($this)));
+            }
+        }
+
+        return Dba::escape($table_name);
+    }
 
     /**
      * clear_cache

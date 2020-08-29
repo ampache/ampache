@@ -22,6 +22,7 @@
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 ?>
@@ -130,7 +131,8 @@ use Ampache\Module\Util\Ui;
         $uid  = $object_data['track_id'];
         $type = array_shift($object_data);
         if (in_array($type, $normal_array)) {
-            $object = new $type(array_shift($object_data));
+            $class_name = ObjectTypeToClassNameMapper::map($type);
+            $object     = new $class_name(array_shift($object_data));
             $object->format();
         } ?>
     <li class="<?php echo Ui::flip_class(); ?>" >

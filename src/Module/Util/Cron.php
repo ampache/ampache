@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
-use Album;
+use Ampache\Model\Album;
 use AmpConfig;
 use Art;
 use Artist;

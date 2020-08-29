@@ -33,6 +33,8 @@
  * Cache information so we don't have to check for every file!
  */
 
+use Ampache\Model\Album;
+
 define('NO_SESSION', '1');
 
 require_once __DIR__ . '/../lib/init.php';

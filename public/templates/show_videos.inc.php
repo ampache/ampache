@@ -21,6 +21,7 @@
  */
 
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path');
@@ -69,7 +70,8 @@ if (isset($video_type) && $video_type != 'video') {
         /* Foreach through every artist that has been passed to us */
         foreach ($object_ids as $video_id) {
             if (isset($video_type)) {
-                $libitem = new $video_type($video_id);
+                $class_name = ObjectTypeToClassNameMapper::map($video_type);
+                $libitem    = new $class_name($video_id);
             } else {
                 $libitem = new Video($video_id);
             }

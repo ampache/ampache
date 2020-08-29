@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Application;
 
+use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Art;
 use Ampache\Module\Authorization\Auth;
@@ -107,10 +109,12 @@ final class ImageApplication implements ApplicationInterface
             }
         }
         if (!$typeManaged) {
-            $item     = new $type(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT));
+            $class_name = ObjectTypeToClassNameMapper::map($type);
+
+            $item     = new $class_name(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT));
             $filename = $item->name ?: $item->title;
 
-            $art = new Art($item->id, $type, $kind);
+            $art = new Art($item->id, 'album', $kind);
             $art->has_db_info();
             $etag = $art->id;
 

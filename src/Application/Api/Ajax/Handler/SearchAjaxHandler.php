@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
-use Album;
+use Ampache\Model\Album;
 use AmpConfig;
 use Art;
 use Artist;

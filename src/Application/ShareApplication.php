@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Core;
 use Ampache\Model\Plugin;
@@ -59,7 +60,8 @@ final class ShareApplication implements ApplicationInterface
                         $object_id = $object_id[0];
                     }
 
-                    $object = new $type($object_id);
+                    $class_name = ObjectTypeToClassNameMapper::map($type);
+                    $object     = new $class_name($object_id);
                     if ($object->id) {
                         $object->format();
                         require_once Ui::find_template('show_add_share.inc.php');

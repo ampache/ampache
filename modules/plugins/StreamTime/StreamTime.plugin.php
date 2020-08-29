@@ -2,6 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
 use Ampache\Module\Util\Graph;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**
  *
@@ -107,7 +108,8 @@ class AmpacheStreamTime
         // Calculate all media time
         $next_total = 0;
         foreach ($media_ids as $media_id) {
-            $media = new $media_id['object_type']($media_id['object_id']);
+            $class_name = ObjectTypeToClassNameMapper::map($media_id['object_type']);
+            $media      = new $class_name($media_id['object_id']);
             $next_total += $media->time;
         }
 

@@ -21,6 +21,7 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Model\Album;
 use Ampache\Model\Plugin;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Ui;

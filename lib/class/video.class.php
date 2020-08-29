@@ -8,6 +8,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**
  *
@@ -238,7 +239,9 @@ class Video extends \Ampache\Model\database_object implements Media, library_ite
             $db_results = Dba::read($sql, array($video_id));
             $results    = Dba::fetch_assoc($db_results);
             if ($results['id']) {
-                return new $dtype($video_id);
+                $class_name = ObjectTypeToClassNameMapper::map($dtype);
+
+                return new $class_name($video_id);
             }
         }
 

@@ -27,6 +27,7 @@ namespace Ampache\Application;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Art;
 use Core;
 use Ampache\Module\Util\Ui;
@@ -48,7 +49,8 @@ final class ArtApplication implements ApplicationInterface
         if (filter_has_var(INPUT_GET, 'burl')) {
             $burl = base64_decode(Core::get_get('burl'));
         }
-        $item = new $object_type($object_id);
+        $class_name = ObjectTypeToClassNameMapper::map($object_type);
+        $item       = new $class_name($object_id);
 
         // If not a content manager user then kick em out
         if (!Access::check('interface', 50) && (!Access::check('interface', 25) || $item->get_user_owner() != Core::get_global('user')->id)) {
@@ -172,7 +174,8 @@ final class ArtApplication implements ApplicationInterface
                 } else {
                     // Special case for albums, I'm not sure if we should keep it, remove it or find a generic way
                     if ($object_type == 'album') {
-                        $album        = new $object_type($object_id);
+                        $class_name   = ObjectTypeToClassNameMapper::map($object_type);
+                        $album        = new $class_name($object_id);
                         $album_groups = $album->get_group_disks_ids();
                         foreach ($album_groups as $a_id) {
                             $art = new Art($a_id, $object_type);

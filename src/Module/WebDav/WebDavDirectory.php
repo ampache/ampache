@@ -26,6 +26,7 @@ namespace Ampache\Module\WebDav;
 
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Sabre\DAV;
 
 /**
@@ -98,7 +99,8 @@ class WebDavDirectory extends DAV\Collection
      */
     public static function getChildFromArray($array)
     {
-        $libitem = new $array['object_type']($array['object_id']);
+        $class_name = ObjectTypeToClassNameMapper::map($array['object_type']);
+        $libitem    = new $class_name($array['object_id']);
         if (!$libitem->id) {
             throw new DAV\Exception\NotFound('The library item `' . $array['object_type'] . '` with id `' . $array['object_id'] . '` could not be found');
         }

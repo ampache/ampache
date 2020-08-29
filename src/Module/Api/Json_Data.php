@@ -24,7 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Album;
+use Ampache\Model\Album;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Art;
 use Artist;
@@ -846,7 +847,8 @@ class Json_Data
         $JSON = [];
 
         foreach ($object_ids as $row_id => $data) {
-            $song = new $data['object_type']($data['object_id']);
+            $class_name = ObjectTypeToClassNameMapper::map($data['object_type']);
+            $song       = new $class_name($data['object_id']);
             $song->format();
 
             $rating  = new Rating($song->id, 'song');

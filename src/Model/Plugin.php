@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Dba;
 use Exception;
 use User;
@@ -77,7 +78,7 @@ class Plugin
                 return false;
             }
 
-            $plugin_name   = "Ampache$cname";
+            $plugin_name   = ObjectTypeToClassNameMapper::map("Ampache$cname");
             $this->_plugin = new $plugin_name();
 
             if (!$this->is_valid()) {

@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 use Ampache\Model\playlist_object;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**
  * Playlist Class
@@ -492,7 +493,8 @@ class Playlist extends playlist_object
         $base_track = count($track_data);
         $count      = 0;
         foreach ($medias as $data) {
-            $media = new $data['object_type']($data['object_id']);
+            $class_name = ObjectTypeToClassNameMapper::map($data['object_type']);
+            $media      = new $class_name($data['object_id']);
             if (AmpConfig::get('unique_playlist') && in_array($media->id, $track_data)) {
                 debug_event('playlist.class', "Can't add a duplicate " . $data['object_type'] . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
             } elseif ($media->id) {

@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
-use Album;
+use Ampache\Model\Album;
 use AmpConfig;
 use Art;
 use Artist;
@@ -73,7 +73,8 @@ class AmpacheRss
                 $object_type = $params['object_type'];
                 $object_id   = $params['object_id'];
                 if (InterfaceImplementationChecker::is_library_item($object_type)) {
-                    $libitem = new $object_type($object_id);
+                    $class_name = ObjectTypeToClassNameMapper::map($object_type);
+                    $libitem    = new $class_name($object_id);
                     if ($libitem->id) {
                         $libitem->format();
 

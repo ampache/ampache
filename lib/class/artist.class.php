@@ -2,6 +2,7 @@
 declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
+use Ampache\Model\Album;
 use Ampache\Model\Shoutbox;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Recommendation;

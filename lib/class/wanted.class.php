@@ -21,6 +21,7 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Model\Album;
 use Ampache\Model\Plugin;
 use Ampache\Module\Api\Ajax;
 use MusicBrainz\MusicBrainz;

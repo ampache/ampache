@@ -21,6 +21,9 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Model\Album;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+
 /**
  * Userflag class
  *
@@ -271,7 +274,8 @@ class Useractivity extends \Ampache\Model\database_object
 
         $user = new User($this->user);
         $user->format();
-        $libitem = new $this->object_type($this->object_id);
+        $class_name = ObjectTypeToClassNameMapper::map($this->object_type);
+        $libitem    = new $class_name($this->object_id);
         $libitem->format();
 
         echo '<div>';

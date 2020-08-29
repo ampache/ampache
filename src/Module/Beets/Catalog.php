@@ -23,7 +23,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 namespace Ampache\Module\Beets;
 
-use Album;
+use Ampache\Model\Album;
 use AmpError;
 use Ampache\Model\Metadata\Repository\Metadata;
 use Ampache\Model\Metadata\Repository\MetadataField;

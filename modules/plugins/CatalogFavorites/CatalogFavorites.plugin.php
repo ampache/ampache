@@ -4,6 +4,7 @@
 use Ampache\Model\Plugin;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 /**
@@ -114,7 +115,8 @@ class AmpacheCatalogFavorites
             }
             echo '">';
             foreach ($userflags as $userflag) {
-                $item = new $userflag['type']($userflag['id']);
+                $class_name = ObjectTypeToClassNameMapper::map($userflag['type']);
+                $item       = new $class_name($userflag['id']);
                 $item->format();
                 $user = new User($userflag['user']);
                 $user->format();

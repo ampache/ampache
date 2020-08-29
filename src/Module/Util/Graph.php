@@ -830,8 +830,9 @@ class Graph
         $libitem  = null;
         $owner_id = 0;
         if (($object_id) && (InterfaceImplementationChecker::is_library_item($object_type))) {
-            $libitem  = new $object_type($object_id);
-            $owner_id = $libitem->get_user_owner();
+            $class_name = ObjectTypeToClassNameMapper::map($object_type);
+            $libitem    = new $class_name($object_id);
+            $owner_id   = $libitem->get_user_owner();
         }
 
         if (($owner_id < 1 || $owner_id != Core::get_global('user')->id) && !Access::check('interface', 50)) {

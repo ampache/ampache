@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Album;
 use Ampache\Module\Playback\Stream_Playlist;
 
 define('NO_SESSION', '1');

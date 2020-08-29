@@ -28,6 +28,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Browse;
 use Core;
 use Playlist;
@@ -96,8 +97,9 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                     debug_event('playlist.ajax', 'Adding all medias of ' . $item_type . '(s) {' . $item_id . '}...', 5);
                     $item_ids = explode(',', $item_id);
                     foreach ($item_ids as $iid) {
-                        $libitem = new $item_type($iid);
-                        $medias  = array_merge($medias, $libitem->get_medias());
+                        $class_name = ObjectTypeToClassNameMapper::map($item_type);
+                        $libitem    = new $class_name($iid);
+                        $medias     = array_merge($medias, $libitem->get_medias());
                     }
                 } else {
                     debug_event('playlist.ajax', 'Adding all medias of current playlist...', 5);

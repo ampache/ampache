@@ -21,8 +21,10 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Model\Album;
 use Ampache\Model\Plugin;
 use Ampache\Module\System\Session;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
@@ -2009,7 +2011,8 @@ class Art extends database_object
         }
 
         if ($prettyPhoto) {
-            $libitem = new $object_type($object_id);
+            $class_name = ObjectTypeToClassNameMapper::map($object_type);
+            $libitem    = new $class_name($object_id);
             echo "<div class=\"item_art_actions\">";
             if (Core::get_global('user')->has_access(50) || (Core::get_global('user')->has_access(25) && Core::get_global('user')->id == $libitem->get_user_owner())) {
                 echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=find_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
