@@ -23,6 +23,7 @@
 namespace Ampache\Repository;
 
 use Ampache\Model\DatabaseObject;
+use Ampache\Model\Metadata\Repository\MetadataField;
 use Dba;
 use Ampache\Model\Model;
 use ReflectionClass;
@@ -65,7 +66,7 @@ class Repository
     /**
      *
      * @param integer $object_id
-     * @return \Ampache\Model\Metadata\Repository\MetadataField
+     * @return MetadataField
      */
     public function findById($object_id)
     {
@@ -130,7 +131,7 @@ class Repository
     }
 
     /**
-     * @param \Ampache\Model\DatabaseObject $object
+     * @param DatabaseObject $object
      * @throws ReflectionException
      */
     public function add(DatabaseObject $object)

@@ -27,7 +27,6 @@ namespace Ampache\Application;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use AmpConfig;
 use Art;
 use Core;
 use Ampache\Module\Util\Ui;

@@ -35,7 +35,7 @@ abstract class localplay_controller
 {
     // Required Functions
     /**
-     * @param \Ampache\Module\Playback\Stream_Url $url
+     * @param Stream_Url $url
      * @return mixed
      */
     abstract public function add_url(Stream_Url $url); // Takes an array of song_ids

@@ -27,7 +27,6 @@ namespace Ampache\Module\WebDav;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
 use Sabre\DAV;
-use Ampache\Module\WebDav\WebDav_File;
 
 /**
  * This class wrap Ampache albums and artist to WebDAV directories.

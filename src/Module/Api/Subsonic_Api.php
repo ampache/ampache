@@ -53,7 +53,6 @@ use Search;
 use Share;
 use SimpleXMLElement;
 use Song;
-use Ampache\Module\Api\Subsonic_Xml_Data;
 use Tag;
 use User;
 use Userflag;

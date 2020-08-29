@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Application;
 
-use AmpConfig;
 use Ampache\Module\Util\Ui;
 
 final class WebPlayerEmbeddedApplication implements ApplicationInterface

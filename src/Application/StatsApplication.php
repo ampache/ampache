@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use Ampache\Module\Authorization\Access;
-use AmpConfig;
 use Core;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\Ui;

@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use AmpConfig;
 use Core;
 use Ampache\Module\Util\Ui;
 

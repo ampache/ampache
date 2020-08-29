@@ -81,7 +81,7 @@ trait Metadata
 
     /**
      *
-     * @param \Ampache\Model\Metadata\Model\MetadataField $field
+     * @param MetadataField $field
      * @param string $data
      * @throws ReflectionException
      */
@@ -117,7 +117,7 @@ trait Metadata
      *
      * @param string $name
      * @param boolean $public
-     * @return \Ampache\Model\Metadata\Model\MetadataField
+     * @return MetadataField
      * @throws ReflectionException
      */
     protected function createField($name, $public)
@@ -136,7 +136,7 @@ trait Metadata
      *
      * @param string $propertie
      * @param boolean $public
-     * @return \Ampache\Model\Metadata\Model\MetadataField
+     * @return MetadataField
      * @throws ReflectionException
      */
     public function getField($propertie, $public = true)

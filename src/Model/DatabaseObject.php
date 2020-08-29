@@ -22,8 +22,6 @@
 
 namespace Ampache\Model;
 
-use Ampache\Repository\Repository;
-
 /**
  * Description of Model
  *

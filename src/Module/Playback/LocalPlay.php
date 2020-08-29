@@ -29,7 +29,6 @@ use Ampache\Module\Api\Ajax;
 use AmpConfig;
 use Core;
 use Preference;
-use Ampache\Module\Playback\Stream_Url;
 
 class LocalPlay
 {

@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
-use AmpConfig;
 use Broadcast;
 use Core;
 use Ampache\Module\Util\Ui;

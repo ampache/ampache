@@ -31,7 +31,6 @@ use Dba;
 use Democratic;
 use PDOStatement;
 use Session;
-use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Api\Xml_Data;
 

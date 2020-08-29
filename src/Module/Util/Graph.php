@@ -29,9 +29,9 @@ use AmpConfig;
 use Catalog;
 use Core;
 use CpChart;
+use CpChart\Data;
 use Dba;
 use Ampache\Model\Plugin;
-use Ampache\Module\Util\Ui;
 use User;
 
 class Graph
@@ -197,7 +197,7 @@ class Graph
 
     /**
      * @param string $fct
-     * @param \CpChart\Data $MyData
+     * @param Data $MyData
      * @param integer $user_id
      * @param string $object_type
      * @param integer $object_id
@@ -209,7 +209,7 @@ class Graph
      */
     protected function get_all_pts(
         $fct,
-        CpChart\Data $MyData,
+        Data $MyData,
         $user_id = 0,
         $object_type = null,
         $object_id = 0,
@@ -232,7 +232,7 @@ class Graph
     /**
      * get_user_all_pts
      * @param string $fct
-     * @param \CpChart\Data $MyData
+     * @param Data $MyData
      * @param integer $user
      * @param string $object_type
      * @param integer $object_id
@@ -242,7 +242,7 @@ class Graph
      */
     protected function get_user_all_pts(
         $fct,
-        CpChart\Data $MyData,
+        Data $MyData,
         $user = 0,
         $object_type = null,
         $object_id = 0,
@@ -274,7 +274,7 @@ class Graph
 
     /**
      * @param string $fct
-     * @param \CpChart\Data $MyData
+     * @param Data $MyData
      * @param integer $catalog
      * @param string $object_type
      * @param integer $object_id
@@ -284,7 +284,7 @@ class Graph
      */
     protected function get_catalog_all_pts(
         $fct,
-        CpChart\Data $MyData,
+        Data $MyData,
         $catalog = 0,
         $object_type = null,
         $object_id = 0,
@@ -518,12 +518,12 @@ class Graph
 
     /**
      * @param string $title
-     * @param \CpChart\Data $MyData
+     * @param Data $MyData
      * @param string $zoom
      * @param integer $width
      * @param integer $height
      */
-    protected function render_graph($title, CpChart\Data $MyData, $zoom, $width = 0, $height = 0)
+    protected function render_graph($title, Data $MyData, $zoom, $width = 0, $height = 0)
     {
         // Check graph size sanity
         $width = (int)$width;
@@ -642,7 +642,7 @@ class Graph
         $width = 0,
         $height = 0
     ) {
-        $MyData = new CpChart\Data();
+        $MyData = new Data();
         $this->get_user_all_pts('get_user_hits_pts', $MyData, $user, $object_type, $object_id, $start_date, $end_date,
             $zoom);
 
@@ -672,7 +672,7 @@ class Graph
         $width = 0,
         $height = 0
     ) {
-        $MyData = new CpChart\Data();
+        $MyData = new Data();
         $this->get_user_all_pts('get_user_bandwidth_pts', $MyData, $user, $object_type, $object_id, $start_date,
             $end_date, $zoom);
 
@@ -753,7 +753,7 @@ class Graph
         $width = 0,
         $height = 0
     ) {
-        $MyData = new CpChart\Data();
+        $MyData = new Data();
         $this->get_catalog_all_pts('get_catalog_files_pts', $MyData, $catalog, $object_type, $object_id, $start_date,
             $end_date, $zoom);
 
@@ -783,7 +783,7 @@ class Graph
         $width = 0,
         $height = 0
     ) {
-        $MyData = new CpChart\Data();
+        $MyData = new Data();
         $this->get_catalog_all_pts('get_catalog_size_pts', $MyData, $catalog, $object_type, $object_id, $start_date,
             $end_date, $zoom);
 

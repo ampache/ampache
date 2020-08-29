@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use AmpConfig;
 use Art;
 use Browse;
 use Core;

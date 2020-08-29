@@ -24,7 +24,6 @@
 namespace Ampache\Module\Beets;
 
 use Album;
-use AmpConfig;
 use AmpError;
 use Ampache\Model\Metadata\Repository\Metadata;
 use Ampache\Model\Metadata\Repository\MetadataField;
@@ -181,7 +180,7 @@ abstract class Catalog extends \Catalog
 
     /**
      * Get rid of all tags found in the libraryItem
-     * @param \Ampache\Model\library_item $libraryItem
+     * @param library_item $libraryItem
      * @param array $metadata
      * @return array
      */

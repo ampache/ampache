@@ -27,8 +27,6 @@ namespace Ampache\Module\WebDav;
 use AmpConfig;
 use Catalog;
 use Sabre\DAV;
-use Ampache\Module\WebDav\WebDav_Directory;
-use Ampache\Module\WebDav\WebDav_File;
 
 /**
  * WebDAV Catalog Directory Class
