@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\Util\Cron;
 
 ?>

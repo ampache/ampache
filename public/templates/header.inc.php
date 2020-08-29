@@ -22,6 +22,7 @@
 
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
+use Ampache\Module\System\AutoUpdate;
 
 if (INIT_LOADED != '1') {
     return false;

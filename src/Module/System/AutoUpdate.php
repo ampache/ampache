@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,33 +20,32 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\System;
+
+use AmpConfig;
+use Core;
+use Exception;
+use Preference;
+use Requests;
+
 /**
  * AutoUpdate Class
  *
  * This class handles autoupdate check from Github.
  */
-
 class AutoUpdate
 {
-    /**
-     * Constructor
-     *
-     * This should never be called
-     */
-    private function __construct()
-    {
-        // static class
-    }
-
     /**
      * Check if current version is a development version.
      * @return boolean
      */
     protected static function is_develop()
     {
-        $version         = (string) AmpConfig::get('version');
-        $vspart          = explode('-', $version);
-        $git_branch      = self::is_force_git_branch();
+        $version    = (string)AmpConfig::get('version');
+        $vspart     = explode('-', $version);
+        $git_branch = self::is_force_git_branch();
 
         if ($git_branch == 'develop') {
             return true;
@@ -66,7 +64,7 @@ class AutoUpdate
      */
     protected static function is_git_repository()
     {
-        return is_dir(__DIR__ . '/../../.git');
+        return is_dir(__DIR__ . '/../../../.git');
     }
 
     /**
@@ -75,7 +73,7 @@ class AutoUpdate
      */
     protected static function is_force_git_branch()
     {
-        return (string) AmpConfig::get('github_force_branch');
+        return (string)AmpConfig::get('github_force_branch');
     }
 
     /**
@@ -84,7 +82,7 @@ class AutoUpdate
      */
     protected static function is_branch_develop_exists()
     {
-        return is_readable(__DIR__ . '/../../.git/refs/heads/develop');
+        return is_readable(__DIR__ . '/../../../.git/refs/heads/develop');
     }
 
     /**
@@ -101,12 +99,13 @@ class AutoUpdate
 
             // Not connected / API rate limit exceeded: just ignore, it will pass next time
             if ($request->status_code != 200) {
-                debug_event('autoupdate.class', 'Github API request ' . $url . ' failed with http code ' . $request->status_code, 1);
+                debug_event('autoupdate.class',
+                    'Github API request ' . $url . ' failed with http code ' . $request->status_code, 1);
 
                 return null;
             }
 
-            return json_decode((string) $request->body);
+            return json_decode((string)$request->body);
         } catch (Exception $error) {
             debug_event('autoupdate.class', 'Request error: ' . $error->getMessage(), 1);
 
@@ -160,8 +159,7 @@ class AutoUpdate
                     Preference::update('autoupdate_lastversion_new', Core::get_global('user')->id, $available);
                     AmpConfig::set('autoupdate_lastversion_new', $available, true);
                 }
-            }
-            // Otherwise it is stable version, get latest tag
+            } // Otherwise it is stable version, get latest tag
             else {
                 $tags = self::github_request('/tags');
                 $str  = strstr($tags[0]->name, "pre-release");
@@ -174,8 +172,7 @@ class AutoUpdate
                     AmpConfig::set('autoupdate_lastversion_new', $available, true);
                 }
             }
-        }
-        // Otherwise retrieve the cached version number
+        } // Otherwise retrieve the cached version number
         else {
             $lastversion = AmpConfig::get('autoupdate_lastversion');
         }
@@ -204,11 +201,11 @@ class AutoUpdate
     public static function get_current_commit()
     {
         $git_branch = self::is_force_git_branch();
-        if ($git_branch !== '' && is_readable(__DIR__ . '/../../.git/refs/heads/' . $git_branch)) {
-            return trim(file_get_contents(__DIR__ . '/../../.git/refs/heads/' . $git_branch));
+        if ($git_branch !== '' && is_readable(__DIR__ . '/../../../.git/refs/heads/' . $git_branch)) {
+            return trim(file_get_contents(__DIR__ . '/../../../.git/refs/heads/' . $git_branch));
         }
         if (self::is_branch_develop_exists()) {
-            return trim(file_get_contents(__DIR__ . '/../../.git/refs/heads/develop'));
+            return trim(file_get_contents(__DIR__ . '/../../../.git/refs/heads/develop'));
         }
 
         return '';
@@ -272,8 +269,7 @@ class AutoUpdate
         if ($develop_check) {
             echo ' | <a href="https://github.com/ampache/ampache/archive/' . $zip_name . '.zip' . '" target="_blank">' . T_('Download') . '</a>';
         } else {
-            echo ' | <a href="https://github.com/ampache/ampache/releases/download/' . self::get_latest_version() .
-              '/ampache-' . self::get_latest_version() . '_all.zip"' . ' target="_blank">' . T_('Download') . '</a>';
+            echo ' | <a href="https://github.com/ampache/ampache/releases/download/' . self::get_latest_version() . '/ampache-' . self::get_latest_version() . '_all.zip"' . ' target="_blank">' . T_('Download') . '</a>';
         }
         if (self::is_git_repository()) {
             echo ' | <a class="nohtml" href="' . AmpConfig::get('web_path') . '/update.php?type=sources&action=update"> <b>' . T_('Update') . '</b></a>';
@@ -295,7 +291,7 @@ class AutoUpdate
         }
         echo T_('Updating Ampache sources with `' . $cmd . '` ...') . '<br />';
         ob_flush();
-        chdir(__DIR__ . '/../../');
+        chdir(__DIR__ . '/../../../');
         exec($cmd);
         echo T_('Done') . '<br />';
         ob_flush();
@@ -310,9 +306,9 @@ class AutoUpdate
         $cmd = 'composer install --no-dev --prefer-source --no-interaction';
         echo T_('Updating dependencies with `' . $cmd . '` ...') . '<br />';
         ob_flush();
-        chdir(__DIR__ . '/../../');
+        chdir(__DIR__ . '/../../../');
         exec($cmd);
         echo T_('Done') . '<br />';
         ob_flush();
     }
-} // end autoupdate.class
+}

@@ -28,7 +28,7 @@ namespace Ampache\Application;
 use Ampache\Module\Access;
 use AmpConfig;
 use AmpError;
-use AutoUpdate;
+use Ampache\Module\System\AutoUpdate;
 use Core;
 use UI;
 use Update;

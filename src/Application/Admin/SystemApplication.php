@@ -30,7 +30,7 @@ use Album;
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use Artist;
-use AutoUpdate;
+use Ampache\Module\System\AutoUpdate;
 use Core;
 use Dba;
 use Ampache\Module\Util\Horde_Browser;
