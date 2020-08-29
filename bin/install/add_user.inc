@@ -46,12 +46,12 @@ if (empty($options) || !isset($options['u'])) {
 
 $username = $options['u'];
 $password = isset($options['p']) ? $options['p'] : mt_rand();
-$access = isset($options['l']) ? $options['l'] : AmpConfig::get('auto_user');
-$access = (isset($access)) ? (int) $access : 5;
-$access = is_numeric($access) ? $access : User::access_name_to_level($access);
-$email = isset($options['e']) ? $options['e'] : '';
-$website = isset($options['w']) ? $options['w'] : '';
-$name = isset($options['n']) ? $options['n'] : '';
+$access   = isset($options['l']) ? $options['l'] : AmpConfig::get('auto_user');
+$access   = (isset($access)) ? $access : 5;
+$access   = is_numeric($access) ? (int) $access : User::access_name_to_level($access);
+$email    = isset($options['e']) ? $options['e'] : '';
+$website  = isset($options['w']) ? $options['w'] : '';
+$name     = isset($options['n']) ? $options['n'] : '';
 
 if ((int) User::create($username, $name, $email, $website, $password, $access) < 1) {
     /* HINT: %1 Access Level (Administrator/User/etc), %2 Username, %3 password */

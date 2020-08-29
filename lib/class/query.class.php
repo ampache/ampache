@@ -111,7 +111,7 @@ class Query
      */
     public static function _auto_init()
     {
-        if (is_array(self::$allowed_filters)) {
+        if (!empty(self::$allowed_filters)) {
             return true;
         }
 
@@ -909,7 +909,7 @@ class Query
     public function get_saved()
     {
         // See if we have it in the local cache first
-        if (is_array($this->_cache)) {
+        if (!empty($this->_cache)) {
             return $this->_cache;
         }
 
