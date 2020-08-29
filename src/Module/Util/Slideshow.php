@@ -1,10 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-
-use Ampache\Model\Plugin;
-
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -24,6 +20,14 @@ use Ampache\Model\Plugin;
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\Util;
+
+use Ampache\Model\Plugin;
+use Core;
+use Song;
+
 class Slideshow
 {
     /**
@@ -31,7 +35,7 @@ class Slideshow
      */
     public static function get_current_slideshow()
     {
-        $songs  = Song::get_recently_played((int) Core::get_global('user')->id);
+        $songs  = Song::get_recently_played((int)Core::get_global('user')->id);
         $images = array();
         if (count($songs) > 0) {
             $last_song = new Song($songs[0]['object_id']);
@@ -59,4 +63,4 @@ class Slideshow
 
         return $images;
     }
-} // end slideshow.class
+}

@@ -37,7 +37,7 @@ use Channel;
 use Core;
 use Label;
 use Ampache\Module\Util\Recommendation;
-use Slideshow;
+use Ampache\Module\Util\Slideshow;
 use Song;
 use UI;
 use Video;
