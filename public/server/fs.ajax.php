@@ -34,7 +34,7 @@ $rootdir .= DIRECTORY_SEPARATOR;
 ini_set('open_basedir', $rootdir);
 
 if (filter_has_var(INPUT_GET, 'operation')) {
-    $fs = new \fs($rootdir);
+    $fs = new \Ampache\Module\Util\FileSystem($rootdir);
     try {
         $rslt = null;
         switch (Core::get_get('operation')) {

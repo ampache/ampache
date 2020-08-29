@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=0);
-
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -23,10 +20,13 @@ declare(strict_types=0);
  *
  */
 
-/**
- * Class fs
- */
-class fs
+declare(strict_types=0);
+
+namespace Ampache\Module\Util;
+
+use Exception;
+
+class FileSystem
 {
     protected $base = null;
 
@@ -100,7 +100,7 @@ class fs
      */
     public function lst($fs_id, $with_root = false)
     {
-        $dir = (string) $this->path($fs_id);
+        $dir = (string)$this->path($fs_id);
         $lst = @scandir($dir);
         if (!$lst) {
             throw new Exception('Could not list path: ' . $dir);
@@ -115,11 +115,24 @@ class fs
                 continue;
             }
             if (is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
-                $res[] = array('text' => $item, 'children' => true, 'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item), 'icon' => 'folder');
+                $res[] = array(
+                    'text' => $item,
+                    'children' => true,
+                    'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item),
+                    'icon' => 'folder'
+                );
             }
         }
         if ($with_root && $this->id($dir) === '/') {
-            $res = array(array('text' => basename($this->base), 'children' => $res, 'id' => '/', 'icon' => 'folder', 'state' => array('opened' => true, 'disabled' => true)));
+            $res = array(
+                array(
+                    'text' => basename($this->base),
+                    'children' => $res,
+                    'id' => '/',
+                    'icon' => 'folder',
+                    'state' => array('opened' => true, 'disabled' => true)
+                )
+            );
         }
 
         return $res;
@@ -171,10 +184,9 @@ class fs
                 case 'png':
                 case 'bmp':
                     $dat['content'] = 'data:'.finfo_file(finfo_open(FILEINFO_MIME_TYPE), $dir).';base64, '.base64_encode(file_get_contents($dir));
-                    break;*/
-                default:
-                    $dat['content'] = 'File not recognized: ' . $this->id($dir);
-                    break;
+                    break;*/ default:
+                $dat['content'] = 'File not recognized: ' . $this->id($dir);
+                break;
             }
 
             return $dat;
