@@ -1,4 +1,7 @@
 <?php
+
+use Ampache\Module\Broadcast\Broadcast_Server;
+
 if ($iframed || $is_share) { ?>
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path') . UI::find_template('jplayer.midnight.black-iframed.css', true) ?>" type="text/css" />
 <?php
