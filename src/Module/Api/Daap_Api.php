@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,6 +19,21 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+declare(strict_types=0);
+
+namespace Ampache\Module\Api;
+
+use Album;
+use AmpConfig;
+use Catalog;
+use Core;
+use Dba;
+use Playlist;
+use Rating;
+use Search;
+use Song;
+use Tag;
 
 /**
  * DAAP Class
@@ -71,14 +85,6 @@ class Daap_Api
     public static $tags = array();
 
     /**
-     * constructor
-     * This really isn't anything to do here, so it's private
-     */
-    private function __construct()
-    {
-    }
-
-    /**
      * follow_stream
      * @param string $url
      */
@@ -102,11 +108,11 @@ class Daap_Api
                     CURLOPT_RETURNTRANSFER => false,
                     CURLOPT_FOLLOWLOCATION => true,
                     CURLOPT_WRITEFUNCTION => array(
-                        'Daap_Api',
+                        'Ampache\Module\Api\Daap_Api',
                         'output_body'
                     ),
                     CURLOPT_HEADERFUNCTION => array(
-                        'Daap_Api',
+                        'Ampache\Module\Api\Daap_Api',
                         'output_header'
                     ),
                     // Ignore invalid certificate
@@ -134,7 +140,7 @@ class Daap_Api
         echo $data;
         ob_flush();
 
-        return strlen((string) $data);
+        return strlen((string)$data);
     }
 
     /**
@@ -144,15 +150,15 @@ class Daap_Api
      */
     public static function output_header($curl, $header)
     {
-        $rheader = trim((string) $header);
+        $rheader = trim((string)$header);
         $rhpart  = explode(':', $rheader);
-        if (! empty($rheader) && count($rhpart) > 1) {
+        if (!empty($rheader) && count($rhpart) > 1) {
             if ($rhpart[0] != "Transfer-Encoding") {
                 header($rheader);
             }
         }
 
-        return strlen((string) $header);
+        return strlen((string)$header);
     }
 
     /**
@@ -258,7 +264,7 @@ class Daap_Api
             ));
 
             if (Dba::num_rows($db_results) == 0) {
-                debug_event('daap_api.class', 'Unknown session id `' . Core::get_get('session-id') . '`.',4);
+                debug_event('daap_api.class', 'Unknown session id `' . Core::get_get('session-id') . '`.', 4);
             }
         }
     }
@@ -271,12 +277,12 @@ class Daap_Api
         $authenticated = false;
         $pass          = AmpConfig::get('daap_pass');
         // DAAP password specified, need to authenticate the client
-        if (! empty($pass)) {
+        if (!empty($pass)) {
             $headers = apache_request_headers();
             $auth    = $headers['Authorization'];
-            if (strpos(strtolower((string) $auth), 'basic') === 0) {
+            if (strpos(strtolower((string)$auth), 'basic') === 0) {
                 $decauth  = base64_decode(substr($auth, 6));
-                $userpass = explode(':', (string) $decauth);
+                $userpass = explode(':', (string)$decauth);
                 if (count($userpass) == 2) {
                     if ($userpass[1] == $pass) {
                         $authenticated = true;
@@ -287,9 +293,9 @@ class Daap_Api
             $authenticated = true;
         }
 
-        if (! $authenticated) {
+        if (!$authenticated) {
             debug_event('daap_api.class', 'Authentication failed. Wrong DAAP password?', 3);
-            if (! empty($code)) {
+            if (!empty($code)) {
                 self::createApiError($code, 403);
             }
         }
@@ -333,8 +339,8 @@ class Daap_Api
     private static function catalog_songs()
     {
         // $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        $meta      = explode(',', strtolower(Core::get_get('meta')));
-        $output    = self::tlv('dmap.status', 200);
+        $meta   = explode(',', strtolower(Core::get_get('meta')));
+        $output = self::tlv('dmap.status', 200);
         $output .= self::tlv('dmap.updatetype', 0);
 
         $songs    = array();
@@ -415,15 +421,15 @@ class Daap_Api
         } elseif (count($input) == 3) {
             // Stream
             if ($input[1] == 'items') {
-                $finfo = explode('.', (string) $input[2]);
+                $finfo = explode('.', (string)$input[2]);
                 if (count($finfo) == 2) {
-                    $object_id = (int) ($finfo[0]);
+                    $object_id = (int)($finfo[0]);
                     $type      = $finfo[1];
 
                     $params  = '';
                     $headers = apache_request_headers();
                     $client  = $headers['User-Agent'];
-                    if (! empty($client)) {
+                    if (!empty($client)) {
                         $client = urlencode(preg_replace('/[\s\/]/', '_', $client));
                         $params .= '&client=' . $client;
                     }
@@ -437,7 +443,7 @@ class Daap_Api
         } elseif (count($input) == 4) {
             // Playlist
             if ($input[1] == 'containers' && $input[3] == 'items') {
-                $object_id = (int) ($input[2]);
+                $object_id = (int)($input[2]);
 
                 self::check_session('daap.playlistsongs');
 
@@ -453,8 +459,8 @@ class Daap_Api
                     }
 
                     if ($playlist->id) {
-                        $meta    = explode(',', strtolower(Core::get_get('meta')));
-                        $output  = self::tlv('dmap.status', 200);
+                        $meta   = explode(',', strtolower(Core::get_get('meta')));
+                        $output = self::tlv('dmap.status', 200);
                         $output .= self::tlv('dmap.updatetype', 0);
                         $items    = $playlist->get_items();
                         $song_ids = array();
@@ -493,7 +499,7 @@ class Daap_Api
      */
     private static function tlv_songs($songs, $meta)
     {
-        if (array_search('all', $meta) > - 1) {
+        if (array_search('all', $meta) > -1) {
             $meta = self::$metas;
         }
         $tlv_out = '';
@@ -508,8 +514,7 @@ class Daap_Api
                         $output .= self::tlv($tag, $song->f_title);
                         break;
                     case 'dmap.containeritemid':
-                    /* case 'dmap.persistentid': */
-                        $output .= self::tlv($tag, $song->id);
+                        /* case 'dmap.persistentid': */ $output .= self::tlv($tag, $song->id);
                         break;
                     case 'daap.songalbum':
                         $output .= self::tlv($tag, $song->f_album);
@@ -521,7 +526,7 @@ class Daap_Api
                         $output .= self::tlv($tag, $song->f_composer);
                         break;
                     case 'daap.songbitrate':
-                        $output .= self::tlv($tag, (int) ($song->bitrate / 1000));
+                        $output .= self::tlv($tag, (int)($song->bitrate / 1000));
                         break;
                     case 'daap.songcomment':
                         $output .= self::tlv($tag, $song->comment);
@@ -597,8 +602,8 @@ class Daap_Api
         if (get_class($playlist) == 'Search') {
             $isSmart = true;
         }
-        $pl_id  = (($isSmart) ? Daap_Api::AMPACHEID_SMARTPL : 0) + $playlist->id;
-        $plist  = self::tlv('dmap.itemid', $pl_id);
+        $pl_id = (($isSmart) ? Daap_Api::AMPACHEID_SMARTPL : 0) + $playlist->id;
+        $plist = self::tlv('dmap.itemid', $pl_id);
         $plist .= self::tlv('dmap.persistentid', $pl_id);
         $plist .= self::tlv('dmap.itemname', $playlist->f_name);
         $plist .= self::tlv('dmap.itemcount', count($playlist->get_items()));
@@ -640,7 +645,7 @@ class Daap_Api
                     break;
             }
 
-            return $code . pack("N", strlen((string) $value)) . $value;
+            return $code . pack("N", strlen((string)$value)) . $value;
         } else {
             debug_event('daap_api.class', 'Unknown DAAP tag `' . $tag . '`.', 3);
         }
@@ -655,7 +660,7 @@ class Daap_Api
      */
     private static function tlv_string($tag, $value)
     {
-        return $tag . pack("N", strlen((string) $value)) . $value;
+        return $tag . pack("N", strlen((string)$value)) . $value;
     }
 
     /**
@@ -714,7 +719,8 @@ class Daap_Api
     {
         $values = explode('.', $value);
         if (count($values) == 4) {
-            return $tag . "\x00\x00\x00\x04" . pack("C", $values[0]) . pack("C", $values[1]) . pack("C", $values[2]) . pack("C", $values[3]);
+            return $tag . "\x00\x00\x00\x04" . pack("C", $values[0]) . pack("C", $values[1]) . pack("C",
+                    $values[2]) . pack("C", $values[3]);
         } else {
             debug_event('daap_api.class', 'Malformed `' . $tag . '` version `' . $value . '`.', 3);
         }
@@ -748,7 +754,8 @@ class Daap_Api
         self::add_dict('mstt', 'int', 'dmap.status'); // the response status code, these appear to be http status codes
         self::add_dict('miid', 'int', 'dmap.itemid'); // an item's id
         self::add_dict('minm', 'string', 'dmap.itemname'); // an items name
-        self::add_dict('mikd', 'byte', 'dmap.itemkind'); // the kind of item. So far, only '2' has been seen, an audio file?
+        self::add_dict('mikd', 'byte',
+            'dmap.itemkind'); // the kind of item. So far, only '2' has been seen, an audio file?
         self::add_dict('mper', 'long', 'dmap.persistentid'); // a persistent id
         self::add_dict('mcon', 'list', 'dmap.container'); // an arbitrary container
         self::add_dict('mcti', 'int', 'dmap.containeritemid'); // the id of an item in its container
@@ -904,7 +911,7 @@ class Daap_Api
         self::setHeaders();
 
         if (Core::get_server('REQUEST_METHOD') != 'OPTIONS') {
-            header("Content-length: " . strlen((string) $string));
+            header("Content-length: " . strlen((string)$string));
             echo $string;
         } else {
             header("Content-type: text/plain", true);
@@ -946,7 +953,7 @@ class Daap_Api
     public static function createApiError($tag, $code, $msg = '')
     {
         $output = self::tlv('dmap.status', $code);
-        if (! empty($msg)) {
+        if (!empty($msg)) {
             $output .= self::tlv('dmap.statusstring', $msg);
         }
         $output = self::tlv($tag, $output);
@@ -954,4 +961,4 @@ class Daap_Api
 
         return false;
     }
-} // end daap_api.class
+}

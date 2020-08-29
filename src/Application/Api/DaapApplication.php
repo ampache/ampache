@@ -28,7 +28,7 @@ namespace Ampache\Application\Api;
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use Core;
-use Daap_Api;
+use Ampache\Module\Api\Daap_Api;
 
 final class DaapApplication implements ApplicationInterface
 {
@@ -49,7 +49,7 @@ final class DaapApplication implements ApplicationInterface
         debug_event('daap/index', 'Request headers: ' . print_r($headers, true), 5);
 
         // Get the list of possible methods for the daap API
-        $methods = get_class_methods('daap_api');
+        $methods = get_class_methods('Ampache\Module\Api\Daap_Api');
         // Define list of internal functions that should be skipped
         $internal_functions = array('apiOutput', 'create_dictionary', 'createError', 'output_body', 'output_header', 'follow_stream');
 
@@ -70,7 +70,7 @@ final class DaapApplication implements ApplicationInterface
                     // If the method is the same as the action being called
                     // Then let's call this function!
                     if ($act == $method) {
-                        call_user_func(array('daap_api', $method), array_slice($params, $i, $p_count - $i));
+                        call_user_func(array('Ampache\Module\Api\Daap_Api', $method), array_slice($params, $i, $p_count - $i));
                         // We only allow a single function to be called, and we assume it's cleaned up!
                         return;
                     }
