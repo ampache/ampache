@@ -27,7 +27,7 @@ namespace Ampache\Application;
 
 use AmpConfig;
 use Core;
-use Random;
+use Ampache\Model\Random;
 use UI;
 
 final class RandomApplication implements ApplicationInterface

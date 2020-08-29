@@ -36,7 +36,7 @@ use Democratic;
 use Ampache\Module\Util\Horde_Browser;
 use Podcast_Episode;
 use Preference;
-use Random;
+use Ampache\Model\Random;
 use Session;
 use Share;
 use Song;

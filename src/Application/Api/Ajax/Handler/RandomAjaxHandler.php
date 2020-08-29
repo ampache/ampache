@@ -31,7 +31,7 @@ use Artist;
 use Browse;
 use Core;
 use Playlist;
-use Random;
+use Ampache\Model\Random;
 use UI;
 
 final class RandomAjaxHandler implements AjaxHandlerInterface

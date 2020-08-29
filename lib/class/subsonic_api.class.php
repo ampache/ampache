@@ -21,6 +21,7 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Model\Random;
 use Ampache\Module\Access;
 use Ampache\Module\Playback\LocalPlay;
 use Ampache\Module\Util\Mailer;

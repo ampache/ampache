@@ -22,6 +22,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Model\License;
+use Ampache\Model\Random;
 use Ampache\Module\Access;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Playback\LocalPlay;
