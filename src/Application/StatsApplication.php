@@ -28,7 +28,7 @@ namespace Ampache\Application;
 use Ampache\Module\Access;
 use AmpConfig;
 use Core;
-use Graph;
+use Ampache\Module\Util\Graph;
 use UI;
 use User;
 

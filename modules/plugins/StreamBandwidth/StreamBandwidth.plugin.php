@@ -1,5 +1,8 @@
 <?php
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+use Ampache\Module\Util\Graph;
+
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)

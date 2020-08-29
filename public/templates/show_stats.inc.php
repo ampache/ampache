@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Util\Graph;
+
 $stats    = Catalog::get_stats();
 $catalogs = Catalog::get_catalogs(); ?>
 <?php UI::show_box_top(T_('Statistics'), 'box box_stats'); ?>

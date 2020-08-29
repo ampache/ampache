@@ -2516,3 +2516,16 @@ function get_rating_name($score)
             return T_("Off the Charts!");
     } // end switch
 } // get_rating_name
+
+/**
+ * Used in graph class als format string
+ *
+ * @see \Ampache\Module\Util\Graph
+ *
+ * @param $value
+ * @return string
+ */
+function pGraph_Yformat_bytes($value)
+{
+    return UI::format_bytes($value);
+}

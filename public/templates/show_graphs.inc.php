@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Util\Graph;
+
 $boxtitle = T_('Statistical Graphs');
 if ($blink) {
     $boxtitle .= ' - ' . $blink;
