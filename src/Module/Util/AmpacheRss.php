@@ -22,10 +22,9 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Module;
+namespace Ampache\Module\Util;
 
 use Album;
-use Ampache\Module\Util\InterfaceImplementationChecker;
 use AmpConfig;
 use Art;
 use Artist;
@@ -33,7 +32,6 @@ use Ampache\Model\Shoutbox;
 use Song;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Playback\Stream;
-use Ampache\Module\Util\Ui;
 use User;
 use Ampache\Module\Api\Xml_Data;
 

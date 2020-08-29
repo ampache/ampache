@@ -27,7 +27,7 @@
  * goes all ajaxie if you've got javascript on
  */
 
-use Ampache\Module\AmpacheRss;
+use Ampache\Module\Util\AmpacheRss;
 use Ampache\Module\Util\Ui;
 
 if (count($results)) {

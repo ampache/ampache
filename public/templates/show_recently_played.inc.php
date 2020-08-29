@@ -22,7 +22,7 @@
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\AmpacheRss;
+use Ampache\Module\Util\AmpacheRss;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
