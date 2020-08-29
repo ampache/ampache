@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use AmpConfig;
-use Waveform;
+use Ampache\Module\Util\Waveform;
 
 final class WaveformApplication implements ApplicationInterface
 {

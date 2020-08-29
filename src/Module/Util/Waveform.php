@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,56 +20,57 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\Util;
+
 use Ampache\Module\Playback\Stream;
+use AmpConfig;
+use Catalog;
+use Core;
+use Dba;
+use PDOStatement;
+use RuntimeException;
+use Song;
 
 /**
-  * Waveform code generation license:
-  *
-  *
-  * Copyright (c) 2011, Andrew Freiday
-  * All rights reserved.
-  *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *
-  * - Redistributions of source code must retain the above copyright notice,
-  *     this list of conditions and the following disclaimer.
-  * - Redistributions in binary form must reproduce the above copyright notice,
-  *     this list of conditions and the following disclaimer in the documentation and/or
-  *     other materials provided with the distribution.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
-  * THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
-  * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
-  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-  * POSSIBILITY OF SUCH DAMAGE.
-  *
-  *
-  * https://github.com/afreiday/php-waveform-png
-  *
-  */
-
+ * Waveform code generation license:
+ *
+ *
+ * Copyright (c) 2011, Andrew Freiday
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * - Redistributions of source code must retain the above copyright notice,
+ *     this list of conditions and the following disclaimer.
+ * - Redistributions in binary form must reproduce the above copyright notice,
+ *     this list of conditions and the following disclaimer in the documentation and/or
+ *     other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ *
+ * https://github.com/afreiday/php-waveform-png
+ *
+ */
 class Waveform
 {
     public $id;
 
     /**
-     * Constructor
-     */
-    private function __construct()
-    {
-        // Static
-        return false;
-    } // Constructor
-
-    /**
      * Get a song waveform.
      * @param integer $song_id
-     * @return binary|string|null|boolean
+     * @return string|null|boolean
      * @throws RuntimeException
      */
     public static function get($song_id)
@@ -108,7 +108,8 @@ class Waveform
                                 $transcoder  = Stream::start_transcode($song, $transcode_to);
                                 $filepointer = $transcoder['handle'];
                                 if (!is_resource($filepointer)) {
-                                    debug_event('waveform.class', "Failed to open " . $song->file . " for waveform.", 3);
+                                    debug_event('waveform.class', "Failed to open " . $song->file . " for waveform.",
+                                        3);
 
                                     return null;
                                 }
@@ -134,8 +135,7 @@ class Waveform
                         } else {
                             debug_event('waveform.class', 'tmp_dir_path setting required for waveform.', 3);
                         }
-                    }
-                    // Already wav file, no transcode required
+                    } // Already wav file, no transcode required
                     else {
                         $waveform = self::create_waveform($song->file);
                     }
@@ -169,7 +169,7 @@ class Waveform
         }
         // Create subdirectory based on the 2 last digit of the SongID. We prevent having thousands of file in one directory.
         $path .= "/waveform/" . substr($song_id, -1) . "/" . substr($song_id, -2, -1) . "/";
-        if (! file_exists($path)) {
+        if (!file_exists($path)) {
             mkdir($path, 0755, true);
         }
 
@@ -226,7 +226,7 @@ class Waveform
      */
     protected static function html2rgb($input)
     {
-        $input=($input[0] == "#")?substr($input, 1, 6):substr($input, 0, 6);
+        $input = ($input[0] == "#") ? substr($input, 1, 6) : substr($input, 0, 6);
 
         return array(
             hexdec(substr($input, 0, 2)),
@@ -297,7 +297,7 @@ class Waveform
         // create original image width based on amount of detail
         // each waveform to be processed with be $height high, but will be condensed
         // and resized later (if specified)
-        $img = imagecreatetruecolor((int) ($data_size / $detail), $height);
+        $img = imagecreatetruecolor((int)($data_size / $detail), $height);
         if ($img === false) {
             debug_event('waveform.class', 'Cannot create image.', 1);
 
@@ -330,9 +330,9 @@ class Waveform
                         } else {
                             $temp = 128;
                         }
-                            $temp = chr((ord($bytes[1]) & 127) + $temp);
-                            $data = floor(self::findValues($bytes[0], $temp) / 256);
-                            break;
+                        $temp = chr((ord($bytes[1]) & 127) + $temp);
+                        $data = floor(self::findValues($bytes[0], $temp) / 256);
+                        break;
                     default:
                         $data = 0;
                         break;
@@ -344,27 +344,21 @@ class Waveform
                 // draw this data point
                 // relative value based on height of image being generated
                 // data values can range between 0 and 255
-                $value = (int) ($data / 255 * $height);
+                $value = (int)($data / 255 * $height);
 
                 // don't print flat values on the canvas if not necessary
                 if (!($value / $height == 0.5 && !$draw_flat)) {
                     // draw the line on the image using the $value and centering it vertically on the canvas
-                    imageline(
-                        $img,
-                        // x1
-                        (int) ($data_point / $detail),
+                    imageline($img, // x1
+                        (int)($data_point / $detail),
                         // y1: height of the image minus  as a percentage of the height for the wave amplitude
-                        $height - $value,
-                        // x2
-                        (int) ($data_point / $detail),
-                        // y2: same as y1, but from the bottom of the image
-                        $height - ($height - $value),
-                        imagecolorallocate($img, (int) $red, (int) $green, (int) $blue)
-                    );
+                        $height - $value, // x2
+                        (int)($data_point / $detail), // y2: same as y1, but from the bottom of the image
+                        $height - ($height - $value), imagecolorallocate($img, (int)$red, (int)$green, (int)$blue));
                 }
             } else {
                 // skip this one due to lack of detail
-                fseek($handle, (int) ($ratio + $byte), SEEK_CUR);
+                fseek($handle, (int)($ratio + $byte), SEEK_CUR);
             }
         }
 
@@ -408,4 +402,4 @@ class Waveform
 
         return Dba::write($sql, array($waveform, $song_id));
     }
-} // end waveform.class
+}
