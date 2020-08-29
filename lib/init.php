@@ -23,6 +23,7 @@
 // Use output buffering, this gains us a few things and
 // fixes some CSS issues
 use Ampache\Module\Authorization\Auth;
+use Ampache\Module\System\Update;
 use Ampache\Module\Util\Ui;
 
 ob_start();

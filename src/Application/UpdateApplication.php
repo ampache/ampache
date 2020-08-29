@@ -31,7 +31,7 @@ use AmpError;
 use Ampache\Module\System\AutoUpdate;
 use Core;
 use Ampache\Module\Util\Ui;
-use Update;
+use Ampache\Module\System\Update;
 
 final class UpdateApplication implements ApplicationInterface
 {

@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\System\Update;
+
 if(php_sapi_name() != 'cli') {
     exit(1);
 }
