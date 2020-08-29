@@ -32,7 +32,7 @@ use AmpError;
 use Catalog;
 use Core;
 use Song;
-use Stats;
+use Ampache\Module\Statistics\Stats;
 use Stream;
 use UI;
 

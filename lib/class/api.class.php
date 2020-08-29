@@ -27,6 +27,7 @@ use Ampache\Model\Shoutbox;
 use Ampache\Module\Access;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Playback\LocalPlay;
+use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;

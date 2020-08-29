@@ -24,6 +24,7 @@ declare(strict_types=0);
 use Ampache\Model\Random;
 use Ampache\Module\Access;
 use Ampache\Module\Playback\LocalPlay;
+use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;
 

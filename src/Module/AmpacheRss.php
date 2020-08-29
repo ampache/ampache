@@ -31,7 +31,7 @@ use Art;
 use Artist;
 use Ampache\Model\Shoutbox;
 use Song;
-use Stats;
+use Ampache\Module\Statistics\Stats;
 use Stream;
 use UI;
 use User;

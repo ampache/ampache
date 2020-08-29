@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Statistics\Stats;
+
 $threshold = AmpConfig::get('stats_threshold');
 $user_id   = Core::get_global('user')->id;
 $limit     = AmpConfig::get('popular_threshold', 10);

@@ -3,6 +3,7 @@
 
 use Ampache\Model\Plugin;
 use Ampache\Module\Playback\Scrobble\Scrobbler;
+use Ampache\Module\Statistics\Stats;
 
 /**
  *

@@ -28,7 +28,7 @@ namespace Ampache\Application;
 use AmpConfig;
 use Core;
 use Song;
-use Stats;
+use Ampache\Module\Statistics\Stats;
 use Stream;
 use UI;
 use User;

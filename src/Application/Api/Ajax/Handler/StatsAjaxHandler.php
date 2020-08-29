@@ -29,7 +29,7 @@ use AmpConfig;
 use Core;
 use Ampache\Model\Plugin;
 use Session;
-use Stats;
+use Ampache\Module\Statistics\Stats;
 
 final class StatsAjaxHandler implements AjaxHandlerInterface
 {

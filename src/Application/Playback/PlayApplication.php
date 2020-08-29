@@ -41,7 +41,7 @@ use Session;
 use Share;
 use Song;
 use Song_Preview;
-use Stats;
+use Ampache\Module\Statistics\Stats;
 use Stream;
 use Stream_Playlist;
 use UI;

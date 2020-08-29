@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Statistics\Stats;
+
 define('NO_SESSION', '1');
 define('CLI', 1);
 define('NO_CRON_CACHE', '1');

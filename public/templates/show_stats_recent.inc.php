@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Statistics\Stats;
+
 $sql    = Stats::get_recent_sql('album', $user_id);
 $browse = new Browse();
 $browse->set_type('album', $sql);

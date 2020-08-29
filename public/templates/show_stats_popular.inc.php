@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Statistics\Stats;
+
 $thresh_value = AmpConfig::get('stats_threshold');
 $user_id      = (int) Core::get_global('user')->id;
 

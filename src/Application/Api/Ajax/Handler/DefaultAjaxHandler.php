@@ -32,7 +32,7 @@ use Core;
 use Playlist;
 use Rating;
 use Song;
-use Stats;
+use Ampache\Module\Statistics\Stats;
 use UI;
 use User;
 use Userflag;
