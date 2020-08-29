@@ -60,8 +60,14 @@ if (!Session::exists('api', Core::get_request('auth')) && Core::get_request('act
 }
 
 // If the session exists then let's try to pull some data from it to see if we're still allowed to do this
-$username = ((Core::get_request('action') == 'handshake') && isset($_REQUEST['timestamp'])) ? Core::get_request('user') : null;
-$apikey   = (!$username) ? Core::get_request('auth') : null;
+$username = null;
+$apikey   = null;
+
+if ((Core::get_request('action') == 'handshake') && isset($_REQUEST['timestamp'])) {
+    $username = Core::get_request('user');
+} else {
+    $apikey = Core::get_request('auth');
+}
 
 if (!Access::check_network('init-api', $username, 5, $apikey)) {
     debug_event('Access Denied', 'Unauthorized access attempt to API [' . Core::get_server('REMOTE_ADDR') . ']', 3);
