@@ -22,6 +22,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Module\Access;
+use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 
 /**
@@ -82,7 +83,7 @@ class Api
         if ($type === 'error') {
             switch ($format) {
                 case 'json':
-                    echo JSON_Data::error($error_code, $message);
+                    echo Json_Data::error($error_code, $message);
                     break;
                 default:
                     echo XML_Data::error($error_code, $message);
@@ -91,7 +92,7 @@ class Api
         if ($type === 'success') {
             switch ($format) {
                 case 'json':
-                    echo JSON_Data::success($message);
+                    echo Json_Data::success($message);
                     break;
                 default:
                     echo XML_Data::success($message);
@@ -456,7 +457,7 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::songs(array($data['id']), $user->id);
+                echo Json_Data::songs(array($data['id']), $user->id);
             break;
             default:
                 echo XML_Data::songs(array($data['id']), $user->id);
@@ -512,9 +513,9 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::indexes($objects, $type);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::indexes($objects, $type);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
@@ -569,9 +570,9 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::indexes($objects, $type);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::indexes($objects, $type);
                 break;
             default:
                 XML_Data::set_offset($input['offset']);
@@ -624,17 +625,17 @@ class Api
 
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
                 switch ($type) {
                     case 'artist':
-                        echo JSON_Data::artists($results, array(), $user->id);
+                        echo Json_Data::artists($results, array(), $user->id);
                         break;
                     case 'album':
-                        echo JSON_Data::albums($results, array(), $user->id);
+                        echo Json_Data::albums($results, array(), $user->id);
                         break;
                     default:
-                        echo JSON_Data::songs($results, $user->id);
+                        echo Json_Data::songs($results, $user->id);
                         break;
                 }
             break;
@@ -691,9 +692,9 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::artists($artists, $include, $user->id);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::artists($artists, $include, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
@@ -724,7 +725,7 @@ class Api
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::artists(array($uid), $include, $user->id);
+                echo Json_Data::artists(array($uid), $include, $user->id);
             break;
             default:
                 echo XML_Data::artists(array($uid), $include, $user->id);
@@ -758,9 +759,9 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::albums($albums, array(), $user->id);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::albums($albums, array(), $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
@@ -797,9 +798,9 @@ class Api
             ob_end_clean();
             switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::songs($songs, $user->id);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::songs($songs, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
@@ -844,9 +845,9 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::albums($albums, $include, $user->id);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::albums($albums, $include, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
@@ -877,7 +878,7 @@ class Api
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::albums(array($uid), $include, $user->id);
+                echo Json_Data::albums(array($uid), $include, $user->id);
             break;
             default:
                 echo XML_Data::albums(array($uid), $include, $user->id);
@@ -927,9 +928,9 @@ class Api
         if (!empty($songs)) {
             switch ($input['api_format']) {
                 case 'json':
-                    JSON_Data::set_offset($input['offset']);
-                    JSON_Data::set_limit($input['limit']);
-                    echo JSON_Data::songs($songs, $user->id);
+                    Json_Data::set_offset($input['offset']);
+                    Json_Data::set_limit($input['limit']);
+                    echo Json_Data::songs($songs, $user->id);
                 break;
                 default:
                     XML_Data::set_offset($input['offset']);
@@ -974,9 +975,9 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::licenses($licenses);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::licenses($licenses);
                 break;
             default:
                 XML_Data::set_offset($input['offset']);
@@ -1012,7 +1013,7 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::licenses($uid);
+                echo Json_Data::licenses($uid);
                 break;
             default:
                 echo XML_Data::licenses($uid);
@@ -1047,7 +1048,7 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::songs($song_ids, $user->id);
+                echo Json_Data::songs($song_ids, $user->id);
                 break;
             default:
                 echo XML_Data::songs($song_ids, $user->id);
@@ -1082,9 +1083,9 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::tags($tags);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::tags($tags);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
@@ -1113,7 +1114,7 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::tags(array($uid));
+                echo Json_Data::tags(array($uid));
             break;
             default:
                 echo XML_Data::tags(array($uid));
@@ -1147,9 +1148,9 @@ class Api
             ob_end_clean();
             switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::artists($artists, array(), $user->id);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::artists($artists, array(), $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
@@ -1188,9 +1189,9 @@ class Api
             ob_end_clean();
             switch ($input['api_format']) {
                 case 'json':
-                    JSON_Data::set_offset($input['offset']);
-                    JSON_Data::set_limit($input['limit']);
-                    echo JSON_Data::albums($albums, array(), $user->id);
+                    Json_Data::set_offset($input['offset']);
+                    Json_Data::set_limit($input['limit']);
+                    echo Json_Data::albums($albums, array(), $user->id);
                 break;
                 default:
                     XML_Data::set_offset($input['offset']);
@@ -1230,9 +1231,9 @@ class Api
         if (!empty($songs)) {
             switch ($input['api_format']) {
                 case 'json':
-                    JSON_Data::set_offset($input['offset']);
-                    JSON_Data::set_limit($input['limit']);
-                    echo JSON_Data::songs($songs, $user->id);
+                    Json_Data::set_offset($input['offset']);
+                    Json_Data::set_limit($input['limit']);
+                    echo Json_Data::songs($songs, $user->id);
                 break;
                 default:
                     XML_Data::set_offset($input['offset']);
@@ -1280,9 +1281,9 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::songs($songs, $user->id);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::songs($songs, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
@@ -1313,7 +1314,7 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::songs(array((int) $song_id), $user->id);
+                echo Json_Data::songs(array((int) $song_id), $user->id);
             break;
             default:
                 echo XML_Data::songs(array((int) $song_id), $user->id);
@@ -1352,9 +1353,9 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::playlists($playlist_ids);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::playlists($playlist_ids);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
@@ -1397,7 +1398,7 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::playlists(array($uid));
+                echo Json_Data::playlists(array($uid));
             break;
             default:
                 echo XML_Data::playlists(array($uid));
@@ -1451,9 +1452,9 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::songs($songs, $user->id);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::songs($songs, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
@@ -1491,7 +1492,7 @@ class Api
         $uid = Playlist::create($name, $type, $user->id);
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::playlists(array($uid));
+                echo Json_Data::playlists(array($uid));
             break;
             default:
                 echo XML_Data::playlists(array($uid));
@@ -1812,7 +1813,7 @@ class Api
             case 'index':
                 switch ($input['api_format']) {
                     case 'json':
-                        echo JSON_Data::indexes($song_ids, 'song');
+                        echo Json_Data::indexes($song_ids, 'song');
                     break;
                     default:
                         echo XML_Data::indexes($song_ids, 'song');
@@ -1822,7 +1823,7 @@ class Api
             default:
                 switch ($input['api_format']) {
                     case 'json':
-                        echo JSON_Data::songs($song_ids, $user->id);
+                        echo Json_Data::songs($song_ids, $user->id);
                     break;
                     default:
                         echo XML_Data::songs($song_ids, $user->id);
@@ -1860,9 +1861,9 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::songs($results, $user->id);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::songs($results, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
@@ -1910,9 +1911,9 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::shares($shares);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::shares($shares);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
@@ -1949,7 +1950,7 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::shares($share);
+                echo Json_Data::shares($share);
             break;
             default:
                 echo XML_Data::shares($share);
@@ -2008,7 +2009,7 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::shares($share);
+                echo Json_Data::shares($share);
                 break;
             default:
                 echo XML_Data::shares($share);
@@ -2132,9 +2133,9 @@ class Api
 
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::videos($video_ids, $user->id);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::videos($video_ids, $user->id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
@@ -2162,7 +2163,7 @@ class Api
 
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::videos(array($video_id), $user->id);
+                echo Json_Data::videos(array($video_id), $user->id);
             break;
             default:
                 echo XML_Data::videos(array($video_id), $user->id);
@@ -2269,7 +2270,7 @@ class Api
             if ($type === 'song') {
                 switch ($input['api_format']) {
                     case 'json':
-                        echo JSON_Data::songs($results, $user->id);
+                        echo Json_Data::songs($results, $user->id);
                     break;
                     default:
                         echo XML_Data::songs($results, $user->id);
@@ -2278,7 +2279,7 @@ class Api
             if ($type === 'artist') {
                 switch ($input['api_format']) {
                     case 'json':
-                        echo JSON_Data::artists($results, array(), $user->id);
+                        echo Json_Data::artists($results, array(), $user->id);
                     break;
                     default:
                         echo XML_Data::artists($results, array(), $user->id);
@@ -2287,7 +2288,7 @@ class Api
             if ($type === 'album') {
                 switch ($input['api_format']) {
                     case 'json':
-                        echo JSON_Data::albums($results, array(), $user->id);
+                        echo Json_Data::albums($results, array(), $user->id);
                     break;
                     default:
                         echo XML_Data::albums($results, array(), $user->id);
@@ -2337,9 +2338,9 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::podcasts($podcasts, $episodes);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::podcasts($podcasts, $episodes);
                 break;
             default:
                 XML_Data::set_offset($input['offset']);
@@ -2380,7 +2381,7 @@ class Api
             ob_end_clean();
             switch ($input['api_format']) {
                 case 'json':
-                    echo JSON_Data::podcasts(array($object_id), $episodes);
+                    echo Json_Data::podcasts(array($object_id), $episodes);
                     break;
                 default:
                     echo XML_Data::podcasts(array($object_id), $episodes);
@@ -2425,7 +2426,7 @@ class Api
             ob_end_clean();
             switch ($input['api_format']) {
                 case 'json':
-                    echo JSON_Data::podcasts(array($podcast));
+                    echo Json_Data::podcasts(array($podcast));
                     break;
                 default:
                     echo XML_Data::podcasts(array($podcast));
@@ -2565,9 +2566,9 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::podcast_episodes($items);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::podcast_episodes($items);
                 break;
             default:
                 XML_Data::set_offset($input['offset']);
@@ -2605,7 +2606,7 @@ class Api
             ob_end_clean();
             switch ($input['api_format']) {
                 case 'json':
-                    echo JSON_Data::podcast_episodes(array($object_id));
+                    echo Json_Data::podcast_episodes(array($object_id));
                     break;
                 default:
                     echo XML_Data::podcast_episodes(array($object_id));
@@ -2686,7 +2687,7 @@ class Api
                 ob_end_clean();
                 switch ($input['api_format']) {
                     case 'json':
-                        echo JSON_Data::user($user, $fullinfo);
+                        echo Json_Data::user($user, $fullinfo);
                     break;
                     default:
                         echo XML_Data::user($user, $fullinfo);
@@ -2893,7 +2894,7 @@ class Api
                     ob_end_clean();
                     switch ($input['api_format']) {
                         case 'json':
-                            echo JSON_Data::users($users);
+                            echo Json_Data::users($users);
                         break;
                         default:
                             echo XML_Data::users($users);
@@ -2943,7 +2944,7 @@ class Api
                     ob_end_clean();
                     switch ($input['api_format']) {
                         case 'json':
-                            echo JSON_Data::users($users);
+                            echo Json_Data::users($users);
                         break;
                         default:
                             echo XML_Data::users($users);
@@ -3029,7 +3030,7 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::shouts($shouts);
+                echo Json_Data::shouts($shouts);
             break;
             default:
                 echo XML_Data::shouts($shouts);
@@ -3320,9 +3321,9 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::catalogs($catalogs);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::catalogs($catalogs);
                 break;
             default:
                 XML_Data::set_offset($input['offset']);
@@ -3352,7 +3353,7 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::catalogs($catalog);
+                echo Json_Data::catalogs($catalog);
                 break;
             default:
                 echo XML_Data::catalogs($catalog);
@@ -3545,7 +3546,7 @@ class Api
                         ob_end_clean();
                         switch ($input['api_format']) {
                             case 'json':
-                                echo JSON_Data::timeline($activities);
+                                echo Json_Data::timeline($activities);
                             break;
                             default:
                                 echo XML_Data::timeline($activities);
@@ -3583,7 +3584,7 @@ class Api
                 ob_end_clean();
                 switch ($input['api_format']) {
                     case 'json':
-                        echo JSON_Data::timeline($activities);
+                        echo Json_Data::timeline($activities);
                     break;
                     default:
                         echo XML_Data::timeline($activities);
@@ -4062,7 +4063,7 @@ class Api
                 Democratic::build_vote_cache($democratic->vote_ids);
                 switch ($input['api_format']) {
                     case 'json':
-                        echo JSON_Data::democratic($objects, $user->id);
+                        echo Json_Data::democratic($objects, $user->id);
                     break;
                     default:
                         echo XML_Data::democratic($objects, $user->id);
