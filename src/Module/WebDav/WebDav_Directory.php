@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,22 +20,23 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\WebDav;
+
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
 use Sabre\DAV;
+use Ampache\Module\WebDav\WebDav_File;
 
 /**
- * WebDAV Directory Class
- *
  * This class wrap Ampache albums and artist to WebDAV directories.
- *
  */
-class WebDAV_Directory extends DAV\Collection
+class WebDav_Directory extends DAV\Collection
 {
     private $libitem;
 
     /**
-     * WebDAV_Directory constructor.
      * @param library_item $libitem
      */
     public function __construct(library_item $libitem)
@@ -57,10 +57,10 @@ class WebDAV_Directory extends DAV\Collection
         foreach ($childs as $key => $child) {
             if (is_string($key)) {
                 foreach ($child as $schild) {
-                    $children[] = WebDAV_Directory::getChildFromArray($schild);
+                    $children[] = WebDav_Directory::getChildFromArray($schild);
                 }
             } else {
-                $children[] = WebDAV_Directory::getChildFromArray($child);
+                $children[] = WebDav_Directory::getChildFromArray($child);
             }
         }
 
@@ -70,14 +70,14 @@ class WebDAV_Directory extends DAV\Collection
     /**
      * getChild
      * @param string $name
-     * @return WebDAV_File|WebDAV_Directory
+     * @return WebDav_File|WebDav_Directory
      */
     public function getChild($name)
     {
         // Clean song name
         if (strtolower(get_class($this->libitem)) === "album") {
-            $splitname = explode('-', (string) $name, 3);
-            $name      = trim((string) $splitname[count($splitname) - 1]);
+            $splitname = explode('-', (string)$name, 3);
+            $name      = trim((string)$splitname[count($splitname) - 1]);
             $nameinfo  = pathinfo($name);
             $name      = $nameinfo['filename'];
         }
@@ -86,7 +86,7 @@ class WebDAV_Directory extends DAV\Collection
         // Always return first match
         // Warning: this means that two items with the same name will not be supported for now
         if (count($matches) > 0) {
-            return WebDAV_Directory::getChildFromArray($matches[0]);
+            return WebDav_Directory::getChildFromArray($matches[0]);
         }
 
         throw new DAV\Exception\NotFound('The child with name: ' . $name . ' could not be found');
@@ -95,7 +95,7 @@ class WebDAV_Directory extends DAV\Collection
     /**
      * getChildFromArray
      * @param $array
-     * @return WebDAV_File|WebDAV_Directory
+     * @return WebDav_File|WebDav_Directory
      */
     public static function getChildFromArray($array)
     {
@@ -105,9 +105,9 @@ class WebDAV_Directory extends DAV\Collection
         }
 
         if ($libitem instanceof Media) {
-            return new WebDAV_File($libitem);
+            return new WebDav_File($libitem);
         } else {
-            return new WebDAV_Directory($libitem);
+            return new WebDav_Directory($libitem);
         }
     }
 
@@ -129,6 +129,6 @@ class WebDAV_Directory extends DAV\Collection
      */
     public function getName()
     {
-        return (string) $this->libitem->get_fullname();
+        return (string)$this->libitem->get_fullname();
     }
-} // end webdav_directory.class
+}

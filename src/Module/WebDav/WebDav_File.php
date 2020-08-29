@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,21 +20,22 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\WebDav;
+
 use Ampache\Model\Media;
+use Catalog;
 use Sabre\DAV;
 
 /**
- * WebDAV File Class
- *
  * This class wrap Ampache songs to WebDAV files.
- *
  */
-class WebDAV_File extends DAV\File
+class WebDav_File extends DAV\File
 {
     private $libitem;
 
     /**
-     * WebDAV_File constructor.
      * @param Media $libitem
      */
     public function __construct(Media $libitem)
@@ -66,7 +66,8 @@ class WebDAV_File extends DAV\File
             if ($catalog->get_type() === 'local') {
                 return fopen($this->libitem->file, 'r');
             } else {
-                debug_event('webdav_file.class', 'Catalog associated to the media is not local. This is currently unsupported.', 3);
+                debug_event('webdav_file.class',
+                    'Catalog associated to the media is not local. This is currently unsupported.', 3);
             }
         } else {
             debug_event('webdav_file.class', 'No catalog associated to the media.', 3);
@@ -92,4 +93,4 @@ class WebDAV_File extends DAV\File
     {
         return md5(get_class($this->libitem) . "_" . $this->libitem->id . "_" . $this->libitem->update_time);
     }
-} // end webdav_file.class
+}

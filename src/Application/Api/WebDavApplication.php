@@ -29,8 +29,8 @@ use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use Sabre\DAV\Auth\Plugin;
 use Sabre\DAV\Server;
-use WebDAV_Auth;
-use WebDAV_Catalog;
+use Ampache\Module\WebDav\WebDav_Auth;
+use Ampache\Module\WebDav\WebDav_Catalog;
 
 final class WebDavApplication implements ApplicationInterface
 {
@@ -42,13 +42,13 @@ final class WebDavApplication implements ApplicationInterface
             return;
         }
 
-        $rootDir = new WebDAV_Catalog();
+        $rootDir = new WebDav_Catalog();
         $server  = new Server($rootDir);
 
         $baseUri = ((AmpConfig::get('raw_web_path') !== "/") ? AmpConfig::get('raw_web_path') : "") . '/webdav/index.php';
         $server->setBaseUri($baseUri);
         if (AmpConfig::get('use_auth')) {
-            $authBackend = new WebDAV_Auth();
+            $authBackend = new WebDav_Auth();
             $authBackend->setRealm('Ampache');
             $authPlugin  = new Plugin($authBackend);
             $server->addPlugin($authPlugin);

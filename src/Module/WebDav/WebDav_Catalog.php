@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,20 +20,26 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\WebDav;
+
+use AmpConfig;
+use Catalog;
 use Sabre\DAV;
+use Ampache\Module\WebDav\WebDav_Directory;
+use Ampache\Module\WebDav\WebDav_File;
 
 /**
  * WebDAV Catalog Directory Class
  *
  * This class wrap Ampache catalogs to WebDAV directories.
- *
  */
-class WebDAV_Catalog extends DAV\Collection
+class WebDav_Catalog extends DAV\Collection
 {
     private $catalog_id;
 
     /**
-     * WebDAV_Catalog constructor.
      * @param integer $catalog_id
      */
     public function __construct($catalog_id = 0)
@@ -56,7 +61,7 @@ class WebDAV_Catalog extends DAV\Collection
         }
         $artists = Catalog::get_artists($catalogs);
         foreach ($artists as $artist) {
-            $children[] = new WebDAV_Directory($artist);
+            $children[] = new WebDav_Directory($artist);
         }
 
         return $children;
@@ -65,7 +70,7 @@ class WebDAV_Catalog extends DAV\Collection
     /**
      * getChild
      * @param string $name
-     * @return WebDAV_File|WebDAV_Directory
+     * @return WebDav_File|WebDav_Directory
      */
     public function getChild($name)
     {
@@ -75,7 +80,7 @@ class WebDAV_Catalog extends DAV\Collection
         // Always return first match
         // Warning: this means that two items with the same name will not be supported for now
         if (count($matches) > 0) {
-            return WebDAV_Directory::getChildFromArray($matches[0]);
+            return WebDav_Directory::getChildFromArray($matches[0]);
         }
 
         throw new DAV\Exception\NotFound('The artist with name: ' . $name . ' could not be found');
@@ -107,4 +112,4 @@ class WebDAV_Catalog extends DAV\Collection
 
         return AmpConfig::get('site_title');
     }
-} // end webdav_catalog.class
+}

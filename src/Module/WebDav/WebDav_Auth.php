@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,6 +20,10 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\WebDav;
+
 use Ampache\Module\Authorization\Auth;
 use Sabre\DAV;
 
@@ -28,9 +31,8 @@ use Sabre\DAV;
  * WebDAV Directory Class
  *
  * This class wrap Ampache albums and artist to WebDAV directories.
- *
  */
-class WebDAV_Auth extends DAV\Auth\Backend\AbstractBasic
+class WebDav_Auth extends DAV\Auth\Backend\AbstractBasic
 {
     /**
      * validateUserPass
@@ -44,4 +46,4 @@ class WebDAV_Auth extends DAV\Auth\Backend\AbstractBasic
 
         return $auth['success'];
     }
-} // end webdav_auth.class
+}
