@@ -26,7 +26,7 @@
  */
 
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\Ajax;
+use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
 $categories = Preference::get_categories(); ?>

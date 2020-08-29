@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback;
 
 use Ampache\Model\localplay_controller;
-use Ampache\Module\Ajax;
+use Ampache\Module\Api\Ajax;
 use AmpConfig;
 use Core;
 use Preference;

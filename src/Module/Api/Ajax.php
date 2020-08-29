@@ -22,7 +22,7 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Module;
+namespace Ampache\Module\Api;
 
 use AmpConfig;
 use Ampache\Module\Util\Ui;

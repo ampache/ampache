@@ -20,7 +20,7 @@
  *
  */
 
-use Ampache\Module\Ajax;
+use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
 Ui::show_box_top(T_('Manage'));  ?>

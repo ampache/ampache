@@ -20,7 +20,7 @@
  *
  */
 
-use Ampache\Module\Ajax;
+use Ampache\Module\Api\Ajax;
 
 if (!Core::is_session_started()) {
     session_start();

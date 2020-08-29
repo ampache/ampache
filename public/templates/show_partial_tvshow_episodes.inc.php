@@ -20,7 +20,7 @@
  *
  */
 
-use Ampache\Module\Ajax;
+use Ampache\Module\Api\Ajax;
 
 ?>
 <th class="cel_episode optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=tvshow_episode&sort=episode', T_('Episode'), 'sort_video_episode'); ?></th>

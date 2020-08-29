@@ -7,7 +7,7 @@ use Ampache\Module\Util\Ui;
 use database_object;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
-use Ampache\Module\Ajax;
+use Ampache\Module\Api\Ajax;
 
 /**
  *

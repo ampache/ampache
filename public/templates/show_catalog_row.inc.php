@@ -20,7 +20,7 @@
  *
  */
 
-use Ampache\Module\Ajax;
+use Ampache\Module\Api\Ajax;
 
 $web_path = AmpConfig::get('web_path');
 

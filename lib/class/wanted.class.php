@@ -23,7 +23,7 @@ declare(strict_types=0);
 
 use Ampache\Model\Plugin;
 use database_object;
-use Ampache\Module\Ajax;
+use Ampache\Module\Api\Ajax;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use MusicBrainz\Filters\ArtistFilter;

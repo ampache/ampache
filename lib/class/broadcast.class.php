@@ -5,7 +5,7 @@ declare(strict_types=0);
 use Ampache\Module\Util\Ui;
 use database_object;
 use Ampache\Model\library_item;
-use Ampache\Module\Ajax;
+use Ampache\Module\Api\Ajax;
 
 /**
  *

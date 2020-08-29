@@ -21,7 +21,7 @@
  */
 
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\Ajax;
+use Ampache\Module\Api\Ajax;
 
 ?>
 <div class="np_group" id="np_group_1">

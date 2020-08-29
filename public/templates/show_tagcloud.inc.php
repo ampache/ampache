@@ -21,7 +21,7 @@
  */
 
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\Ajax;
+use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
 $tag_types = array(

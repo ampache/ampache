@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\Ajax;
+use Ampache\Module\Api\Ajax;
 use Album;
 use AmpConfig;
 use Artist;

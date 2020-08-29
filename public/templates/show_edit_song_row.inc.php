@@ -22,7 +22,7 @@
 
 use Ampache\Model\Metadata\Model\Metadata;
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\Ajax;
+use Ampache\Module\Api\Ajax;
 
 ?>
 <div>

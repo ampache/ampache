@@ -25,7 +25,7 @@ use Ampache\Model\Plugin;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Ui;
 use database_object;
-use Ampache\Module\Ajax;
+use Ampache\Module\Api\Ajax;
 
 /**
  * User Class

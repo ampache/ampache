@@ -22,7 +22,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Model\Query;
-use Ampache\Module\Ajax;
+use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
 /**
