@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 use AmpConfig;
 use Catalog;
 use Core;

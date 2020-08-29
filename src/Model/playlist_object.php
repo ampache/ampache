@@ -22,7 +22,7 @@
 
 namespace Ampache\Model;
 
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use AmpConfig;
 use Art;

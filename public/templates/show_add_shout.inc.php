@@ -21,7 +21,7 @@
  */
 
 use Ampache\Model\Shoutbox;
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 
 $object_type = strtolower(get_class($object)); ?>

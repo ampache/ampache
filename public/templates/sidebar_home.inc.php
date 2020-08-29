@@ -20,7 +20,7 @@
  *
  */
 
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\Playback\LocalPlay;
 use Ampache\Module\Util\Ui;

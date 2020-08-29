@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Admin;
 
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 use Album;
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;

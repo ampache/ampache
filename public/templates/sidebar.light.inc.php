@@ -20,7 +20,7 @@
  *
  */
 
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path'); ?>

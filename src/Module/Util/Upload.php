@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Util;
 
 use Album;
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 use AmpConfig;
 use Artist;
 use Catalog;

@@ -22,7 +22,7 @@
 
 /* HINT: Democratic Playlist Name */
 
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\Util\Ui;
 

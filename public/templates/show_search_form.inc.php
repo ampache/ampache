@@ -20,7 +20,7 @@
  *
  */
 
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 
 Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>

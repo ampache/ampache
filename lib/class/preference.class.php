@@ -21,7 +21,7 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 
 /**
  * Preference Class

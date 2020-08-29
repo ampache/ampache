@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api;
 
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use Ampache\Module\Authorization\Auth;

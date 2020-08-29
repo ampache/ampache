@@ -20,7 +20,7 @@
  *
  */
 
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 
 ?>
 <div>

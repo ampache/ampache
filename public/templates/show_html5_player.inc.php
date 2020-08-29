@@ -1,6 +1,6 @@
 <?php
 
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\WebPlayer;
 use Ampache\Module\Util\Ui;
 

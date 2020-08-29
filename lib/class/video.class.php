@@ -8,7 +8,7 @@ use Ampache\Module\Statistics\Stats;
 use database_object;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 
 /**
  *

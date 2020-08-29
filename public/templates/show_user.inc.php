@@ -21,7 +21,7 @@
  */
 
 use Ampache\Model\Plugin;
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 
 $last_seen   = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');

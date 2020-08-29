@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 use AmpConfig;
 use Core;
 use Dba;

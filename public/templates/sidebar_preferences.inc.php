@@ -25,7 +25,7 @@
  * links based on that, always ignore 'internal' though
  */
 
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\Util\Ui;
 

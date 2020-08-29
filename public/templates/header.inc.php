@@ -20,7 +20,7 @@
  *
  */
 
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\Util\Mailer;

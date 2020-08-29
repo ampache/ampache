@@ -7,7 +7,7 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use database_object;
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 
 /**
  *

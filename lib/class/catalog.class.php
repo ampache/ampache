@@ -33,7 +33,7 @@ use Ampache\Model\library_item;
 use Ampache\Model\Media;
 use Ampache\Model\Metadata\Repository\Metadata;
 use Ampache\Model\Metadata\Repository\MetadataField;
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 
 /**
  * Catalog Class

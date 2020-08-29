@@ -25,7 +25,7 @@
  * can't handle Cookie + Redirect
  */
 
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\Auth;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\Util\Ui;

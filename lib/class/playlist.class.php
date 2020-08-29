@@ -22,7 +22,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Model\playlist_object;
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 
 /**
  * Playlist Class

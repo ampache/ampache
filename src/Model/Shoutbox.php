@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\Mailer;

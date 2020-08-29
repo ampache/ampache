@@ -24,7 +24,7 @@
  * Apply to All button on this page
  */
 
-use Ampache\Module\Access;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 
 if (Access::check('interface', 100) && $_REQUEST['action'] == 'admin') {

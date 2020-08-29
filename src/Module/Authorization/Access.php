@@ -22,7 +22,7 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Module;
+namespace Ampache\Module\Authorization;
 
 use AmpConfig;
 use AmpError;
@@ -522,4 +522,4 @@ class Access
                 return T_('Stream Access');
         }
     }
-} // end access.class
+}
