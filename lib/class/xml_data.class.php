@@ -411,8 +411,8 @@ class XML_Data
      *
      * This returns licenses to the user, in a pretty xml document with the information
      *
-     * @param    integer[]    $licenses    (description here...)
-     * @return    string    return xml
+     * @param  integer[] $licenses(description here...)
+     * @return string return xml
      */
     public static function licenses($licenses)
     {

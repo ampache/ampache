@@ -185,7 +185,7 @@ class JSON_Data
      *
      * This returns licenses to the user, in a pretty JSON document with the information
      *
-     * @param    array    $licenses    (description here...)
+     * @param  integer[] $licenses
      * @return string return JSON
      */
     public static function licenses($licenses)
