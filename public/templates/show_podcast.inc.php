@@ -23,6 +23,7 @@
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
 use Ampache\Module\AmpacheRss;
+use Ampache\Module\Playback\Stream_Playlist;
 
 $browse = new Browse();
 $browse->set_type($object_type);

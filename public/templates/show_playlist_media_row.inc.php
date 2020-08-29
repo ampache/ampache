@@ -23,6 +23,7 @@
 // Don't show disabled medias to normal users
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
+use Ampache\Module\Playback\Stream_Playlist;
 
 if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface', 50)) { ?>
 <td class="cel_play">

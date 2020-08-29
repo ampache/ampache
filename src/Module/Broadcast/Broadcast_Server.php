@@ -32,7 +32,7 @@ use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 use Session;
 use Ampache\Module\Playback\Stream;
-use Stream_Playlist;
+use Ampache\Module\Playback\Stream_Playlist;
 use WebPlayer;
 
 class Broadcast_Server implements MessageComponentInterface

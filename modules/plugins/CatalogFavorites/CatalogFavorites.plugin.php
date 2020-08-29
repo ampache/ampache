@@ -3,6 +3,7 @@
 
 use Ampache\Model\Plugin;
 use Ampache\Module\Ajax;
+use Ampache\Module\Playback\Stream_Playlist;
 
 /**
  *

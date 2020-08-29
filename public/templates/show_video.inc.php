@@ -22,6 +22,7 @@
 
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
+use Ampache\Module\Playback\Stream_Playlist;
 
 ?>
 <?php UI::show_box_top($video->f_title . ' ' . T_('Details'), 'box box_video_details'); ?>

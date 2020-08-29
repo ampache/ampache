@@ -22,6 +22,7 @@
 
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
+use Ampache\Module\Playback\Stream_Playlist;
 
 if (!isset($video_type)) {
     $libitem = Video::create_from_id($libitem->id);

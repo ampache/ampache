@@ -4,6 +4,7 @@ declare(strict_types=0);
 
 use Ampache\Model\Media;
 use Ampache\Model\playable_item;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 
 /**

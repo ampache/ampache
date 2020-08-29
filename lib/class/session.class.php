@@ -22,6 +22,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Model\Query;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Horde_Browser;
 
 /**

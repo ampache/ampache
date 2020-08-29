@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,8 +20,20 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Module\Playback\LocalPlay;
-use Ampache\Module\Playback\Stream;
+declare(strict_types=0);
+
+namespace Ampache\Module\Playback;
+
+use AmpConfig;
+use Art;
+use Core;
+use Dba;
+use Democratic;
+use PDOStatement;
+use Session;
+use Stream_URL;
+use UI;
+use XML_Data;
 
 /**
  * Stream_Playlist Class
@@ -31,11 +42,10 @@ use Ampache\Module\Playback\Stream;
  * For Localplay this actually just sends the commands to the Localplay
  * module in question.
  */
-
 class Stream_Playlist
 {
     public $id;
-    public $urls  = array();
+    public $urls = array();
     public $user;
 
     public $title;
@@ -60,7 +70,7 @@ class Stream_Playlist
                 return false;
             }
 
-            $this->user = (int) (Core::get_global('user')->id);
+            $this->user = (int)(Core::get_global('user')->id);
 
             $sql        = 'SELECT * FROM `stream_playlist` WHERE `sid` = ? ORDER BY `id`';
             $db_results = Dba::read($sql, array($this->id));
@@ -109,9 +119,7 @@ class Stream_Playlist
      */
     public static function garbage_collection()
     {
-        $sql = 'DELETE FROM `stream_playlist` USING `stream_playlist` ' .
-            'LEFT JOIN `session` ON `session`.`id`=`stream_playlist`.`sid` ' .
-            'WHERE `session`.`id` IS NULL';
+        $sql = 'DELETE FROM `stream_playlist` USING `stream_playlist` ' . 'LEFT JOIN `session` ON `session`.`id`=`stream_playlist`.`sid` ' . 'WHERE `session`.`id` IS NULL';
 
         return Dba::write($sql);
     }
@@ -183,8 +191,8 @@ class Stream_Playlist
                 $url['url'] = $object->file;
                 // Relative path
                 if (!empty($additional_params) && strpos($url['url'], $additional_params) === 0) {
-                    $url['url'] = substr($url['url'], strlen((string) $additional_params));
-                    if (strlen((string) $url['url']) < 1) {
+                    $url['url'] = substr($url['url'], strlen((string)$additional_params));
+                    if (strlen((string)$url['url']) < 1) {
                         return null;
                     }
                     if ($url['url'][0] == DIRECTORY_SEPARATOR) {
@@ -206,7 +214,8 @@ class Stream_Playlist
                     $url['title']     = $object->title;
                     $url['author']    = $object->f_artist_full;
                     $url['info_url']  = $object->f_link;
-                    $url['image_url'] = Art::url($object->album, 'album', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
+                    $url['image_url'] = Art::url($object->album, 'album', $api_session,
+                        (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['album']     = $object->f_album_full;
                     $url['track_num'] = $object->f_track;
                     break;
@@ -221,7 +230,8 @@ class Stream_Playlist
                         $url['title'] .= ' (' . $object->site_url . ')';
                     }
                     $url['codec']     = $object->codec;
-                    $url['image_url'] = Art::url($object->id, 'live_stream', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
+                    $url['image_url'] = Art::url($object->id, 'live_stream', $api_session,
+                        (AmpConfig::get('ajax_load') ? 3 : 4));
                     break;
                 case 'song_preview':
                     $url['title']  = $object->title;
@@ -234,7 +244,8 @@ class Stream_Playlist
                     $url['title']     = $object->f_title;
                     $url['author']    = $object->f_podcast;
                     $url['info_url']  = $object->f_link;
-                    $url['image_url'] = Art::url($object->podcast, 'podcast', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
+                    $url['image_url'] = Art::url($object->podcast, 'podcast', $api_session,
+                        (AmpConfig::get('ajax_load') ? 3 : 4));
                     break;
                 case 'random':
                     $url['title'] = 'Random URL';
@@ -258,9 +269,7 @@ class Stream_Playlist
     public static function check_autoplay_append()
     {
         // For now, only iframed web player support media append in the currently played playlist
-        return ((AmpConfig::get('ajax_load') && AmpConfig::get('play_type') == 'web_player') ||
-            AmpConfig::get('play_type') == 'localplay'
-        );
+        return ((AmpConfig::get('ajax_load') && AmpConfig::get('play_type') == 'web_player') || AmpConfig::get('play_type') == 'localplay');
     }
 
     /**
@@ -322,7 +331,7 @@ class Stream_Playlist
             case 'm3u':
             default:
                 // Assume M3U if the pooch is screwed
-                $ext   = $type = 'm3u';
+                $ext   = $type   = 'm3u';
                 $ctype = 'audio/x-mpegurl';
                 break;
         }
@@ -422,7 +431,7 @@ class Stream_Playlist
     }
 
     /**
-      * get_pls_string
+     * get_pls_string
      * @return string
      */
     public function get_pls_string()
@@ -433,8 +442,7 @@ class Stream_Playlist
         foreach ($this->urls as $url) {
             $count++;
             $ret .= 'File' . $count . '=' . $url->url . "\n";
-            $ret .= 'Title' . $count . '=' . $url->author . ' - ' .
-                $url->title . "\n";
+            $ret .= 'Title' . $count . '=' . $url->author . ' - ' . $url->title . "\n";
             $ret .= 'Length' . $count . '=' . $url->time . "\n";
         }
 
@@ -500,11 +508,10 @@ class Stream_Playlist
                 'identifier' => $url->url
             );
             if ($url->type == 'video') {
-                $xml['track']['meta'] =
-                    array(
-                        'attribute' => 'rel="provider"',
-                        'value' => 'video'
-                    );
+                $xml['track']['meta'] = array(
+                    'attribute' => 'rel="provider"',
+                    'value' => 'video'
+                );
             }
             if ($url->info_url) {
                 $xml['track']['info'] = $url->info_url;
@@ -695,4 +702,4 @@ class Stream_Playlist
             echo $url->url . "\n";
         }
     } // create_ram
-} // end stream_playlist.class
+}

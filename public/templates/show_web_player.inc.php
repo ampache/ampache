@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Playback\Stream_Playlist;
+
 header('Cache-Control: no-cache');
 header('Pragma: no-cache');
 header('Expires: ' . gmdate(DATE_RFC1123, time() - 1));

@@ -25,6 +25,7 @@ use Ampache\Model\Random;
 use Ampache\Module\Access;
 use Ampache\Module\Playback\LocalPlay;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;

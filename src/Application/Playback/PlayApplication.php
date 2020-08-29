@@ -43,7 +43,7 @@ use Share;
 use Song;
 use Song_Preview;
 use Ampache\Module\Statistics\Stats;
-use Stream_Playlist;
+use Ampache\Module\Playback\Stream_Playlist;
 use UI;
 use User;
 use Video;
