@@ -23,6 +23,7 @@
 use Ampache\Model\Media;
 use Ampache\Model\Metadata\Repository\Metadata;
 use Ampache\Model\Metadata\Repository\MetadataField;
+use Ampache\Module\Util\Recommendation;
 
 /**
  * Local Catalog Class

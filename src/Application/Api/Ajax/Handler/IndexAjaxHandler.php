@@ -36,7 +36,7 @@ use Catalog;
 use Channel;
 use Core;
 use Label;
-use Recommendation;
+use Ampache\Module\Util\Recommendation;
 use Slideshow;
 use Song;
 use UI;

@@ -26,7 +26,7 @@ namespace Ampache\Module\Artist;
 
 use AmpConfig;
 use Artist;
-use Recommendation;
+use Ampache\Module\Util\Recommendation;
 use SimpleXMLElement;
 
 /**

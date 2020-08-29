@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,16 +20,23 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\Util;
+
+use AmpConfig;
+use Art;
+use Artist;
+use Catalog;
+use Core;
+use Dba;
+use PDOStatement;
+use Requests;
+use SimpleXMLElement;
+use Song;
+
 class Recommendation
 {
-    /**
-     * Constructor
-     * Not on my watch, boyo.
-     */
-    private function __construct()
-    {
-        return false;
-    } // constructor
 
     /**
      * get_lastfm_results
@@ -41,7 +47,7 @@ class Recommendation
      */
     public static function get_lastfm_results($method, $query)
     {
-        $lang     = (string) AmpConfig::get('lang');
+        $lang     = (string)AmpConfig::get('lang');
         $resp     = explode('_', $lang);
         $api_key  = AmpConfig::get('lastfm_api_key');
         $api_base = "http://ws.audioscrobbler.com/2.0/?method=";
@@ -60,7 +66,7 @@ class Recommendation
 
         $request = Requests::get($url, array(), Core::requests_options());
 
-        return simplexml_load_string((string) $request->body);
+        return simplexml_load_string((string)$request->body);
     }
 
     /**
@@ -151,7 +157,13 @@ class Recommendation
             $insertid = Dba::insert_id();
             foreach ($recommendations as $recommendation) {
                 $sql = "INSERT INTO `recommendation_item` (`recommendation`, `recommendation_id`, `name`, `rel`, `mbid`) VALUES (?, ?, ?, ?, ?)";
-                Dba::write($sql, array($insertid, $recommendation['id'], $recommendation['name'], $recommendation['rel'], $recommendation['mbid']));
+                Dba::write($sql, array(
+                    $insertid,
+                    $recommendation['id'],
+                    $recommendation['name'],
+                    $recommendation['rel'],
+                    $recommendation['mbid']
+                ));
             }
         }
     }
@@ -188,16 +200,13 @@ class Recommendation
                     $local_id = null;
 
                     $artist_name   = $child->artist->name;
-                    $s_artist_name = Catalog::trim_prefix((string) $artist_name);
+                    $s_artist_name = Catalog::trim_prefix((string)$artist_name);
 
-                    $sql = "SELECT `song`.`id` FROM `song` " .
-                        "LEFT JOIN `artist` ON " .
-                        "`song`.`artist`=`artist`.`id` ";
+                    $sql = "SELECT `song`.`id` FROM `song` " . "LEFT JOIN `artist` ON " . "`song`.`artist`=`artist`.`id` ";
                     if (AmpConfig::get('catalog_disable')) {
                         $sql .= "LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` ";
                     }
-                    $sql .= "WHERE `song`.`title` = ? " .
-                        "AND `artist`.`name` = ? ";
+                    $sql .= "WHERE `song`.`title` = ? " . "AND `artist`.`name` = ? ";
                     if (AmpConfig::get('catalog_disable')) {
                         $sql .= "AND `catalog`.`enabled` = '1'";
                     }
@@ -272,8 +281,8 @@ class Recommendation
             $xml = self::get_lastfm_results('artist.getsimilar', $query);
 
             foreach ($xml->similarartists->children() as $child) {
-                $name     = (string) $child->name;
-                $mbid     = (string) $child->mbid;
+                $name     = (string)$child->name;
+                $mbid     = (string)$child->mbid;
                 $local_id = null;
 
                 // First we check by MBID
@@ -293,8 +302,7 @@ class Recommendation
                 if ($local_id === null) {
                     $searchname = Catalog::trim_prefix($name);
                     $searchname = Dba::escape($searchname['string']);
-                    $sql        = "SELECT `artist`.`id` FROM `artist` WHERE `artist`.`name` = ? OR " .
-                                  "LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?";
+                    $sql        = "SELECT `artist`.`id` FROM `artist` WHERE `artist`.`name` = ? OR " . "LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?";
                     if (AmpConfig::get('catalog_disable')) {
                         $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
                     }
@@ -384,20 +392,21 @@ class Recommendation
 
         $xml = self::get_lastfm_results('artist.getinfo', $query);
 
-        $results                = array();
-        $results['summary']     = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "", (string) $xml->artist->bio->summary));
+        $results            = array();
+        $results['summary'] = strip_tags(preg_replace("#<a href=([^<]*)Last\.fm</a>.#", "",
+            (string)$xml->artist->bio->summary));
         $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
-        $results['placeformed'] = (string) $xml->artist->bio->placeformed;
-        $results['yearformed']  = (string) $xml->artist->bio->yearformed;
+        $results['placeformed'] = (string)$xml->artist->bio->placeformed;
+        $results['yearformed']  = (string)$xml->artist->bio->yearformed;
 
         if ($artist) {
             $results['id'] = $artist->id;
             if (!empty($results['summary'])) {
-                $artist->update_artist_info($results['summary'], $results['placeformed'], (int) $results['yearformed']);
+                $artist->update_artist_info($results['summary'], $results['placeformed'], (int)$results['yearformed']);
             }
             if (!empty($results['megaphoto']) && !Art::has_db($artist_id, 'artist')) {
                 $image = Art::get_from_source(array('url' => $results['megaphoto']), 'artist');
-                $rurl  = pathinfo((string) $results['megaphoto']);
+                $rurl  = pathinfo((string)$results['megaphoto']);
                 $mime  = 'image/' . $rurl['extension'];
                 $art   = new Art($artist->id, 'artist');
                 $art->reset();
@@ -423,4 +432,4 @@ class Recommendation
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
-} // end recommendation.class
+}

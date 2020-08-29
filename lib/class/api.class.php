@@ -28,6 +28,7 @@ use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Playback\LocalPlay;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\Mailer;
+use Ampache\Module\Util\Recommendation;
 
 /**
  * API Class
