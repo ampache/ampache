@@ -30,7 +30,7 @@ use Ampache\Module\Ajax;
 use Album;
 use AmpConfig;
 use Artist;
-use Artist_Event;
+use Ampache\Module\Artist\Artist_Event;
 use Browse;
 use Catalog;
 use Channel;
