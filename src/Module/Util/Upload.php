@@ -1,10 +1,7 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
-use Ampache\Module\Access;
-
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -24,17 +21,20 @@ use Ampache\Module\Access;
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\Util;
+
+use Album;
+use Ampache\Module\Access;
+use AmpConfig;
+use Artist;
+use Catalog;
+use Core;
+use RuntimeException;
+
 class Upload
 {
-    /**
-     * Constructor
-     * This pulls the license information from the database and returns
-     * a constructed object
-     */
-    protected function __construct()
-    {
-        return false;
-    } // Constructor
 
     /**
      * process
@@ -323,4 +323,4 @@ class Upload
 
         return $rootdir;
     } // get_root
-} // end upload.class
+}

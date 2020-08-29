@@ -22,6 +22,9 @@
 
  // jsTree file system browser
 
+use Ampache\Module\Util\FileSystem;
+use Ampache\Module\Util\Upload;
+
 define('AJAX_INCLUDE', '1');
 
 require_once __DIR__ . '/../../lib/init.php';
@@ -34,7 +37,7 @@ $rootdir .= DIRECTORY_SEPARATOR;
 ini_set('open_basedir', $rootdir);
 
 if (filter_has_var(INPUT_GET, 'operation')) {
-    $fs = new \Ampache\Module\Util\FileSystem($rootdir);
+    $fs = new FileSystem($rootdir);
     try {
         $rslt = null;
         switch (Core::get_get('operation')) {

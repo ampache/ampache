@@ -29,7 +29,7 @@ use Ampache\Module\Access;
 use AmpConfig;
 use Core;
 use Ampache\Module\Util\Ui;
-use Upload;
+use Ampache\Module\Util\Upload;
 
 final class UploadApplication implements ApplicationInterface
 {
