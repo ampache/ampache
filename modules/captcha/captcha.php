@@ -1294,7 +1294,7 @@ class easy_captcha_utility
         $BASE_URL         = CAPTCHA_BASE_URL;
         $PARAM_ID         = CAPTCHA_PARAM_ID;
         $PARAM_INPUT      = CAPTCHA_PARAM_INPUT;
-        $COLOR_CALC       =  CAPTCHA_INVERSE ? "32 +" : "224 -";
+        $COLOR_CALC       = CAPTCHA_INVERSE ? "32 +" : "224 -";
         easy_captcha_utility::js_header();
         print<<<END_____BASE__BASE__BASE__BASE__BASE__BASE__BASE__BASE_____END
 
