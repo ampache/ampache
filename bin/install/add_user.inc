@@ -29,7 +29,7 @@ define('CLI', 1);
 
 $path   = dirname(__FILE__);
 $prefix = realpath($path . '/../../');
-$a_root = realpath(__DIR__ . "/../");
+$a_root = realpath(__DIR__ . "/../../");
 require_once $a_root . '/lib/init.php';
 
 $options = getopt('e:l:n:p:u:w:');
