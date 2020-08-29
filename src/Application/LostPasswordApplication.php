@@ -81,7 +81,7 @@ final class LostPasswordApplication implements ApplicationInterface
         if ($client->has_access(100)) {
             return false;
         }
-        if ($client && $client->email == $email && Mailer::is_mail_enabled()) {
+        if ($client->email == $email && Mailer::is_mail_enabled()) {
             $newpassword = generate_password();
             $client->update_password($newpassword);
 

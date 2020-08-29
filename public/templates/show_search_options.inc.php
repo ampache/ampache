@@ -21,7 +21,9 @@
  */
 
 use Ampache\Module\Access;
-use Ampache\Module\Ajax; ?>
+use Ampache\Module\Ajax;
+
+?>
 <?php UI::show_box_top(T_('Options'), 'info-box'); ?>
 <div id="information_actions">
 <ul>

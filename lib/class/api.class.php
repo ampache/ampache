@@ -1008,14 +1008,14 @@ class Api
         if (!self::check_parameter($input, array('filter'), 'license')) {
             return false;
         }
-        $uid = scrub_in($input['filter']);
+        $uid = array((int) scrub_in($input['filter']));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::licenses(array($uid));
+                echo JSON_Data::licenses($uid);
                 break;
             default:
-                echo XML_Data::licenses(array($uid));
+                echo XML_Data::licenses($uid);
         }
         Session::extend($input['auth']);
 

@@ -20,7 +20,9 @@
  *
  */
 
-use Ampache\Module\Access; ?>
+use Ampache\Module\Access;
+
+?>
 <?php UI::show_box_top(T_('Editing Existing User')); ?>
 <?php AmpError::display('general'); ?>
 <form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/users.php"; ?>">

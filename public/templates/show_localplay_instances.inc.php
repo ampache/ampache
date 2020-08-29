@@ -20,7 +20,9 @@
  *
  */
 
-use Ampache\Module\Ajax; ?>
+use Ampache\Module\Ajax;
+
+?>
 <?php UI::show_box_top(T_('Show Localplay Instances'), 'box box_localplay_instances'); ?>
 <table class="tabledata">
 <tr>

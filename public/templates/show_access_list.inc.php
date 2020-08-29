@@ -21,7 +21,9 @@
  */
 
 use Ampache\Module\Access;
-use Ampache\Module\Ajax; ?>
+use Ampache\Module\Ajax;
+
+?>
 <?php UI::show_box_top(T_('Access Control'), 'box box_access_control');
 $addcurrent = T_('Add Current Host');
 $addrpc     = T_('Add API / RPC Host');

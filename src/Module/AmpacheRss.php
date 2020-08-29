@@ -57,7 +57,7 @@ class AmpacheRss
      */
     public function __construct($type, $rsstoken = "")
     {
-        $this->type = self::validate_type($type);
+        $this->type     = self::validate_type($type);
         $this->rsstoken = $rsstoken;
     } // constructor
 
@@ -73,7 +73,7 @@ class AmpacheRss
         if ($this->type === "podcast") {
             if ($params != null && is_array($params)) {
                 $object_type = $params['object_type'];
-                $object_id = $params['object_id'];
+                $object_id   = $params['object_id'];
                 if (InterfaceImplementationChecker::is_library_item($object_type)) {
                     $libitem = new $object_type($object_id);
                     if ($libitem->id) {
@@ -85,7 +85,7 @@ class AmpacheRss
             }
         } else {
             // Function call name
-            $data_function = 'load_' . $this->type;
+            $data_function     = 'load_' . $this->type;
             $pub_date_function = 'pubdate_' . $this->type;
 
             if ($this->rsstoken) {
@@ -181,8 +181,8 @@ class AmpacheRss
         }
 
         $rsstoken = "";
-        if ($user_id != -1) {
-            $user = new User($user_id);
+        $user     = new User($user_id);
+        if ($user->id > 0) {
             if (!$user->rsstoken) {
                 $user->generate_rsstoken();
             }
@@ -211,22 +211,22 @@ class AmpacheRss
     {
         $data = Stream::get_now_playing();
 
-        $results = array();
-        $format = AmpConfig::get('rss_format') ?: '%t - %a - %A';
+        $results    = array();
+        $format     = AmpConfig::get('rss_format') ?: '%t - %a - %A';
         $string_map = array(
             '%t' => 'title',
             '%a' => 'artist',
             '%A' => 'album'
         );
         foreach ($data as $element) {
-            $song = $element['media'];
-            $client = $element['user'];
-            $title = $format;
+            $song        = $element['media'];
+            $client      = $element['user'];
+            $title       = $format;
             $description = $format;
             foreach ($string_map as $search => $replace) {
-                $trep = 'f_' . $replace;
-                $drep = 'f_' . $replace . '_full';
-                $title = str_replace($search, $song->$trep, $title);
+                $trep        = 'f_' . $replace;
+                $drep        = 'f_' . $replace . '_full';
+                $title       = str_replace($search, $song->$trep, $title);
                 $description = str_replace($search, $song->$drep, $description);
             }
             $xml_array = array(
@@ -266,13 +266,13 @@ class AmpacheRss
      */
     public static function load_recently_played($rsstoken = "")
     {
-        $user = ($rsstoken) ? User::get_from_rsstoken($rsstoken) : null;
-        $data = ($user) ? Song::get_recently_played($user->id) : Song::get_recently_played();
+        $user    = ($rsstoken) ? User::get_from_rsstoken($rsstoken) : null;
+        $data    = ($user) ? Song::get_recently_played($user->id) : Song::get_recently_played();
         $results = array();
 
         foreach ($data as $item) {
             $client = new User($item['user']);
-            $song = new Song($item['object_id']);
+            $song   = new Song($item['object_id']);
             if ($song->enabled) {
                 $song->format();
 

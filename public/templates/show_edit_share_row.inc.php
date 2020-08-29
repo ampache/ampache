@@ -20,7 +20,9 @@
  *
  */
 
-use Ampache\Module\Access; ?>
+use Ampache\Module\Access;
+
+?>
 <div>
     <form method="post" id="edit_share_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">

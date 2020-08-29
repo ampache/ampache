@@ -132,7 +132,7 @@ class Access
      */
     private function has_info()
     {
-        $sql = 'SELECT * FROM `access_list` WHERE `id` = ?';
+        $sql        = 'SELECT * FROM `access_list` WHERE `id` = ?';
         $db_results = Dba::read($sql, array($this->id));
 
         return Dba::fetch_assoc($db_results);
@@ -147,11 +147,11 @@ class Access
     public function format()
     {
         $this->f_start = inet_ntop($this->start);
-        $this->f_end = inet_ntop($this->end);
+        $this->f_end   = inet_ntop($this->end);
 
-        $this->f_user = $this->get_user_name();
+        $this->f_user  = $this->get_user_name();
         $this->f_level = $this->get_level_name();
-        $this->f_type = $this->get_type_name();
+        $this->f_type  = $this->get_type_name();
     }
 
     /**
@@ -165,7 +165,7 @@ class Access
     private static function _verify_range($startp, $endp)
     {
         $startn = @inet_pton($startp);
-        $endn = @inet_pton($endp);
+        $endn   = @inet_pton($endp);
 
         if (!$startn && $startp != '0.0.0.0' && $startp != '::') {
             AmpError::add('start', T_('An Invalid IPv4 / IPv6 Address was entered'));
@@ -200,12 +200,12 @@ class Access
             return false;
         }
 
-        $start = @inet_pton($data['start']);
-        $end = @inet_pton($data['end']);
-        $name = $data['name'];
-        $type = self::validate_type($data['type']);
-        $level = (int)$data['level'];
-        $user = $data['user'] ?: '-1';
+        $start   = @inet_pton($data['start']);
+        $end     = @inet_pton($data['end']);
+        $name    = $data['name'];
+        $type    = self::validate_type($data['type']);
+        $level   = (int)$data['level'];
+        $user    = $data['user'] ?: '-1';
         $enabled = make_bool($data['enabled']) ? 1 : 0;
 
         $sql = 'UPDATE `access_list` SET `start` = ?, `end` = ?, `level` = ?, ' . '`user` = ?, `name` = ?, `type` = ?, `enabled` = ? WHERE `id` = ?';
@@ -238,12 +238,12 @@ class Access
             return false;
         }
 
-        $start = @inet_pton($data['start']);
-        $end = @inet_pton($data['end']);
-        $name = $data['name'];
-        $user = $data['user'] ?: '-1';
-        $level = (int)$data['level'];
-        $type = self::validate_type($data['type']);
+        $start   = @inet_pton($data['start']);
+        $end     = @inet_pton($data['end']);
+        $name    = $data['name'];
+        $user    = $data['user'] ?: '-1';
+        $level   = (int)$data['level'];
+        $type    = self::validate_type($data['type']);
         $enabled = make_bool($data['enabled']) ? 1 : 0;
 
         $sql = 'INSERT INTO `access_list` (`name`, `level`, `start`, `end`, ' . '`user`, `type`, `enabled`) VALUES (?, ?, ?, ?, ?, ?, ?)';
@@ -263,11 +263,11 @@ class Access
     public static function exists(array $data)
     {
         $start = inet_pton($data['start']);
-        $end = inet_pton($data['end']);
-        $type = self::validate_type($data['type']);
-        $user = $data['user'] ?: '-1';
+        $end   = inet_pton($data['end']);
+        $type  = self::validate_type($data['type']);
+        $user  = $data['user'] ?: '-1';
 
-        $sql = 'SELECT * FROM `access_list` WHERE `start` = ? AND `end` = ? ' . 'AND `type` = ? AND `user` = ?';
+        $sql        = 'SELECT * FROM `access_list` WHERE `start` = ? AND `end` = ? ' . 'AND `type` = ? AND `user` = ?';
         $db_results = Dba::read($sql, array($start, $end, $type, $user));
 
         if (Dba::fetch_assoc($db_results)) {
@@ -326,10 +326,9 @@ class Access
      * @param string $type
      * @param integer|string $user
      * @param integer $level
-     * @param string $apikey
      * @return boolean
      */
-    public static function check_network($type, $user = null, $level = 25, $apikey = null)
+    public static function check_network($type, $user = null, $level = 25)
     {
         if (!AmpConfig::get('access_control')) {
             switch ($type) {
@@ -345,9 +344,6 @@ class Access
             case 'init-api':
                 if ($user) {
                     $user = User::get_from_username($user);
-                    $user = $user->id;
-                } elseif ($apikey) {
-                    $user = User::get_from_apikey($apikey);
                     $user = $user->id;
                 }
             // Intentional break fall-through
@@ -365,7 +361,7 @@ class Access
         $sql = 'SELECT `id` FROM `access_list` ' . 'WHERE `start` <= ? AND `end` >= ? ' . 'AND `level` >= ? AND `type` = ?';
 
         $user_ip = Core::get_user_ip();
-        $params = array(inet_pton($user_ip), inet_pton($user_ip), $level, $type);
+        $params  = array(inet_pton($user_ip), inet_pton($user_ip), $level, $type);
 
         if (strlen((string)$user) && $user != '-1') {
             $sql .= " AND `user` IN(?, '-1')";
@@ -453,7 +449,7 @@ class Access
      */
     public static function get_access_lists()
     {
-        $sql = 'SELECT `id` FROM `access_list`';
+        $sql        = 'SELECT `id` FROM `access_list`';
         $db_results = Dba::read($sql);
 
         $results = array();

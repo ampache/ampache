@@ -21,7 +21,9 @@
  */
 
 use Ampache\Module\Access;
-use Ampache\Module\Ajax; ?>
+use Ampache\Module\Ajax;
+
+?>
 <div>
     <form method="post" id="edit_album_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">

@@ -21,7 +21,9 @@
  */
 
 use Ampache\Module\Access;
-use Ampache\Module\Ajax; ?>
+use Ampache\Module\Ajax;
+
+?>
 <?php UI::show_box_top($episode->f_title . ' - ' . $episode->f_podcast_link, 'box box_podcast_episode_details'); ?>
 <dl class="media_details">
 

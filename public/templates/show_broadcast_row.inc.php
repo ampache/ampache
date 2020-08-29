@@ -20,7 +20,9 @@
  *
  */
 
-use Ampache\Module\Ajax; ?>
+use Ampache\Module\Ajax;
+
+?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">

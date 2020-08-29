@@ -21,7 +21,9 @@
  */
 
 use Ampache\Module\Access;
-use Ampache\Module\Ajax; ?>
+use Ampache\Module\Ajax;
+
+?>
 <?php
 // strings for the main page and templates
 $t_songs     = T_('Songs');

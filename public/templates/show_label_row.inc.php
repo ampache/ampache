@@ -20,7 +20,9 @@
  *
  */
 
-use Ampache\Module\Access; ?>
+use Ampache\Module\Access;
+
+?>
 <?php
 if (Art::is_enabled()) {
     $name = scrub_out($libitem->f_name); ?>

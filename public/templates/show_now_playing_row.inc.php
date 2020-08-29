@@ -21,7 +21,9 @@
  */
 
 use Ampache\Module\Access;
-use Ampache\Module\Ajax; ?>
+use Ampache\Module\Ajax;
+
+?>
 <div class="np_group" id="np_group_1">
     <div class="np_cell cel_username">
         <label><?php echo T_('Username'); ?></label>

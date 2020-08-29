@@ -69,7 +69,7 @@ class Ajax
             $source_txt = "'#$source'";
         }
 
-        $observe = "<script>";
+        $observe   = "<script>";
         $methodact = ($method == 'click') ? "update_action();" : "";
         if (AmpConfig::get('ajax_load') && $method == 'load') {
             $source_txt = "$( document ).ready(";

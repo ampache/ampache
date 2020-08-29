@@ -68,16 +68,9 @@ final class XmlApplication implements ApplicationInterface
         }
 
         // If the session exists then let's try to pull some data from it to see if we're still allowed to do this
-        $username = null;
-        $apikey   = null;
+        $username = ($_REQUEST['action'] == 'handshake') ? $_REQUEST['user'] : Session::username($_REQUEST['auth']);
 
-        if ((Core::get_request('action') == 'handshake') && isset($_REQUEST['timestamp'])) {
-            $username = Core::get_request('user');
-        } else {
-            $apikey = Core::get_request('auth');
-        }
-
-        if (!Access::check_network('init-api', $username, 5, $apikey)) {
+        if (!Access::check_network('init-api', $username, 5)) {
             debug_event('Access Denied', 'Unauthorized access attempt to API [' . Core::get_server('REMOTE_ADDR') . ']', 3);
             ob_end_clean();
             echo XML_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));

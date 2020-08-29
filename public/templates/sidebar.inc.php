@@ -27,20 +27,20 @@ use Ampache\Module\Ajax;
 <ul id="sidebar-tabs">
 <?php
 if (User::is_registered()) {
-     if (!$_SESSION['state']['sidebar_tab']) {
-         $_SESSION['state']['sidebar_tab'] = 'home';
-     }
-     $class_name = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
+    if (!$_SESSION['state']['sidebar_tab']) {
+        $_SESSION['state']['sidebar_tab'] = 'home';
+    }
+    $class_name = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
 
-     // List of buttons ( id, title, icon, access level)
-     $sidebar_items[] = array('id' => 'home', 'title' => $t_home, 'icon' => 'home', 'access' => 5);
-     if (AmpConfig::get('allow_localplay_playback') && AmpConfig::get('localplay_controller') && Access::check('localplay', 5)) {
-         $sidebar_items[] = array('id' => 'localplay', 'title' => T_('Localplay'), 'icon' => 'volumeup', 'access' => 5);
-     }
-     $sidebar_items[] = array('id' => 'preferences', 'title' => T_('Preferences'), 'icon' => 'edit', 'access' => 5);
-     $sidebar_items[] = array('id' => 'admin', 'title' => T_('Admin'), 'icon' => 'admin', 'access' => 75);
+    // List of buttons ( id, title, icon, access level)
+    $sidebar_items[] = array('id' => 'home', 'title' => $t_home, 'icon' => 'home', 'access' => 5);
+    if (AmpConfig::get('allow_localplay_playback') && AmpConfig::get('localplay_controller') && Access::check('localplay', 5)) {
+        $sidebar_items[] = array('id' => 'localplay', 'title' => T_('Localplay'), 'icon' => 'volumeup', 'access' => 5);
+    }
+    $sidebar_items[] = array('id' => 'preferences', 'title' => T_('Preferences'), 'icon' => 'edit', 'access' => 5);
+    $sidebar_items[] = array('id' => 'admin', 'title' => T_('Admin'), 'icon' => 'admin', 'access' => 75);
 
-     $web_path = AmpConfig::get('web_path'); ?>
+    $web_path = AmpConfig::get('web_path'); ?>
     <?php
     foreach ($sidebar_items as $item) {
         if (Access::check('interface', $item['access'])) {
@@ -59,7 +59,7 @@ if (User::is_registered()) {
     <?php
         }
     }
- } else { ?>
+} else { ?>
         <li id="sb_tab_home" class="sb1">
             <div id="sidebar-page" class="sidebar-page-float">
             <?php

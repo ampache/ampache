@@ -35,8 +35,8 @@ use Ampache\Module\Ajax;
     </ul>
 </div>
 <?php if ($browse->is_show_header()) {
-     require UI::find_template('list_header.inc.php');
- } ?>
+    require UI::find_template('list_header.inc.php');
+} ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="smartplaylist">
     <thead>
         <tr class="th-top">

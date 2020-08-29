@@ -24,8 +24,8 @@ use Ampache\Module\Ajax;
 
 ?>
 <?php if ($browse->is_show_header()) {
-     require UI::find_template('list_header.inc.php');
- } ?>
+    require UI::find_template('list_header.inc.php');
+} ?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="channel">
     <thead>
         <tr class="th-top">

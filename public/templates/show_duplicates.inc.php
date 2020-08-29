@@ -20,7 +20,9 @@
  *
  */
 
-use Ampache\Module\Ajax; ?>
+use Ampache\Module\Ajax;
+
+?>
 <?php UI::show_box_top(T_('Duplicate Songs')); ?>
 <form method="post" enctype="multipart/form-data">
     <table class="tabledata">

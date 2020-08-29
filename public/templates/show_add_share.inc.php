@@ -20,7 +20,9 @@
  *
  */
 
-use Ampache\Module\Access; ?>
+use Ampache\Module\Access;
+
+?>
 <?php UI::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
 <form name="share" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=create">
 <input type="hidden" name="type" value="<?php echo scrub_out(Core::get_request('type')); ?>" />

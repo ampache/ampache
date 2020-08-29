@@ -39,6 +39,7 @@ $chanid     = 0;
 
 $cargv = count($_SERVER['argv']);
 if ($cargv > 1) {
+    $operations_string = '';
     for ($x = 1; $x < $cargv; $x++) {
         if ($_SERVER['argv'][$x] == "-c" && ($x + 1) < $cargv) {
             $chanid = (int) $_SERVER['argv'][++$x];

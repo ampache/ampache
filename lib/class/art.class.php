@@ -1431,7 +1431,7 @@ class Art extends database_object
         }
 
         $results   = array();
-        $preferred = false;
+        $preferred = array();
         // For storing which directories we've already done
         $processed = array();
 
@@ -1546,7 +1546,7 @@ class Art extends database_object
             closedir($handle);
         } // end foreach dirs
 
-        if (is_array($preferred)) {
+        if (!empty($preferred)) {
             // We found our favorite filename somewhere, so we need
             // to dump the other, less sexy ones.
             $results = $preferred;

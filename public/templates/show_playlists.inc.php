@@ -21,7 +21,9 @@
  */
 
 use Ampache\Module\Access;
-use Ampache\Module\Ajax; ?>
+use Ampache\Module\Ajax;
+
+?>
 <?php if ($browse->is_show_header()) {
     require UI::find_template('list_header.inc.php');
 } ?>

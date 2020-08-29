@@ -42,6 +42,7 @@ $options        = getopt("hn:t:mvcaguio");
 if (count($options) == 0) {
     $operations_string = "\n\t- " . T_('Doing all Catalog operations');
 } else {
+    $operations_string = '';
     if (array_key_exists('h', $options)) {
         usage();
 
@@ -125,6 +126,7 @@ if ($plimp == 1) {
     $options['parse_playlist'] = false;
 }
 // --------
+$where = "";
 if ($catname !== false) {
     $where = " name = '$catname' ";
 }

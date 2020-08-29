@@ -20,7 +20,9 @@
  *
  */
 
-use Ampache\Module\Access; ?>
+use Ampache\Module\Access;
+
+?>
     <td class="cel_username">
         <a href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo $libitem->id; ?>">
             <?php

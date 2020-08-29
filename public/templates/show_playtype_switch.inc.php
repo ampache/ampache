@@ -20,7 +20,9 @@
  *
  */
 
-use Ampache\Module\Ajax; ?>
+use Ampache\Module\Ajax;
+
+?>
 <div id="play_type_switch">
 <?php
 $name    = "is_" . AmpConfig::get('play_type');

@@ -22,7 +22,9 @@
  */
 
 use Ampache\Module\Access;
-use Ampache\Module\Ajax; ?>
+use Ampache\Module\Ajax;
+
+?>
 <ul class="sb2" id="sb_admin">
     <?php if (AmpConfig::get('browse_filter')) {
     echo "<li>";

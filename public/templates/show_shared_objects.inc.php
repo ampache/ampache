@@ -20,7 +20,9 @@
  *
  */
 
-use Ampache\Module\Ajax; ?>
+use Ampache\Module\Ajax;
+
+?>
 <table class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="share">
     <thead>
     <tr class="th-top">

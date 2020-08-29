@@ -65,7 +65,7 @@ final class JsonApplication implements ApplicationInterface
         }
 
         // If the session exists then let's try to pull some data from it to see if we're still allowed to do this
-        $username = ($_REQUEST['action'] == 'handshake' || $_REQUEST['action'] == 'ping') ? $_REQUEST['user'] : Session::username($_REQUEST['auth']);
+        $username = ($_REQUEST['action'] == 'handshake') ? $_REQUEST['user'] : Session::username($_REQUEST['auth']);
 
         if (!Access::check_network('init-api', $username, 5)) {
             debug_event('Access Denied', 'Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', 3);

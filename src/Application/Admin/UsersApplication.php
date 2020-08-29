@@ -336,7 +336,9 @@ final class UsersApplication implements ApplicationInterface
                 }
 
                 $client = new User((int) Core::get_request('user_id'));
-                $client->generate_rsstoken();
+                if ($client->id) {
+                    $client->generate_rsstoken();
+                }
 
                 $next_url = AmpConfig::get('web_path') . '/admin/users.php';
                 show_confirmation(T_('No Problem'), T_('A new user RSS token has been generated'), $next_url);

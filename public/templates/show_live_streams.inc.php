@@ -21,7 +21,9 @@
  */
 
 use Ampache\Module\Access;
-use Ampache\Module\Ajax; ?>
+use Ampache\Module\Ajax;
+
+?>
 <?php if (Access::check('interface', 50)) { ?>
 <?php UI::show_box_top(T_('Manage'), 'info-box'); ?>
 <div id="information_actions">

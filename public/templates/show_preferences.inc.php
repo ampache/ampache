@@ -30,7 +30,7 @@ use Ampache\Module\Access;
 ?>
 <?php /* HINT: Username FullName */ UI::show_box_top(sprintf(T_('Editing %s Preferences'), $fullname), 'box box_preferences'); ?>
 <?php  if (Core::get_request('tab') !== 'account' && Core::get_request('tab') !== 'modules') {
-     debug_event('show_preferences.inc', (string) Core::get_request('tab'), 5); ?>
+    debug_event('show_preferences.inc', (string) Core::get_request('tab'), 5); ?>
 
 <form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=update_preferences" enctype="multipart/form-data">
 <?php show_preference_box($preferences[$_REQUEST['tab']]); ?>
@@ -45,7 +45,7 @@ use Ampache\Module\Access;
     } ?>
 </div>
 <?php
- }  // end if not account
+}  // end if not account
 if (Core::get_request('tab') === 'account') {
     $client   = Core::get_global('user');
     $template = (AmpConfig::get('simple_user_mode') && !Access::check('interface', 100)) ? 'show_account_simple.inc.php' : 'show_account.inc.php';

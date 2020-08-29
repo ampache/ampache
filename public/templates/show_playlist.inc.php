@@ -27,7 +27,9 @@
  */
 
 use Ampache\Module\Access;
-use Ampache\Module\Ajax; ?>
+use Ampache\Module\Ajax;
+
+?>
 <?php
 ob_start();
 require UI::find_template('show_playlist_title.inc.php');
