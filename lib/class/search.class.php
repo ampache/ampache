@@ -21,6 +21,7 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Model\License;
 use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Model\playlist_object;
 

@@ -29,7 +29,7 @@ use Ampache\Module\Access;
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use Browse;
-use License;
+use Ampache\Model\License;
 use UI;
 
 final class LicenseApplication implements ApplicationInterface

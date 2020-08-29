@@ -31,7 +31,7 @@ use Artist;
 use Catalog;
 use Core;
 use Democratic;
-use License;
+use Ampache\Model\License;
 use Playlist;
 use Podcast;
 use Podcast_Episode;

@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,6 +19,12 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
+use Dba;
 
 class License
 {
@@ -87,12 +92,11 @@ class License
      */
     public static function create(array $data)
     {
-        $sql = "INSERT INTO `license` (`name`, `description`, `external_link`) " .
-            "VALUES (? , ?, ?)";
+        $sql = "INSERT INTO `license` (`name`, `description`, `external_link`) " . "VALUES (? , ?, ?)";
         Dba::write($sql, array($data['name'], $data['description'], $data['external_link']));
         $insert_id = Dba::insert_id();
 
-        return (int) $insert_id;
+        return (int)$insert_id;
     } // create
 
     /**
@@ -198,4 +202,4 @@ class License
 
         return self::create($license);
     } // get_licenses
-} // end license.class
+}

@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Model\License;
+
 $web_path = AmpConfig::get('web_path'); ?>
 <div id="information_actions">
     <ul>

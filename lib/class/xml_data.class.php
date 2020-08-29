@@ -22,6 +22,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Model\library_item;
+use Ampache\Model\License;
 
 /**
  * XML_Data Class
