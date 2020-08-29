@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Shoutbox;
 use Ampache\Module\Access;
 
 $object_type = strtolower(get_class($object)); ?>

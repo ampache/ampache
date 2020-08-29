@@ -1,13 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-
-use Ampache\Module\Access;
-use Ampache\Module\Ajax;
-use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\Mailer;
-
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -26,6 +19,24 @@ use Ampache\Module\Util\Mailer;
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
+use Ampache\Module\Access;
+use Ampache\Module\Ajax;
+use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Module\Util\Mailer;
+use AmpConfig;
+use Art;
+use Core;
+use Dba;
+use PDOStatement;
+use Preference;
+use UI;
+use User;
+use Useractivity;
 
 class Shoutbox
 {
@@ -121,7 +132,7 @@ class Shoutbox
         }
 
         // Only get as many as we need
-        $limit  = (int) ($limit) - count($shouts);
+        $limit  = (int)($limit) - count($shouts);
         $params = array();
         $sql    = "SELECT `user_shout`.`id` AS `id` FROM `user_shout` LEFT JOIN `user` ON `user`.`id` = `user_shout`.`user` WHERE `user_shout`.`sticky`='0' ";
         if ($username !== null) {
@@ -189,7 +200,7 @@ class Shoutbox
         $object = new $type($object_id);
 
         if ($object->id > 0) {
-            if (strtolower((string) $type) === 'song') {
+            if (strtolower((string)$type) === 'song') {
                 if (!$object->enabled) {
                     $object = null;
                 }
@@ -228,14 +239,14 @@ class Shoutbox
             return false;
         }
 
-        $sticky     = isset($data['sticky']) ? 1 : 0;
-        $user       = (int) ($data['user'] ?: Core::get_global('user')->id);
-        $date       = (int) ($data['date'] ?: time());
-        $comment    = strip_tags($data['comment']);
+        $sticky  = isset($data['sticky']) ? 1 : 0;
+        $user    = (int)($data['user'] ?: Core::get_global('user')->id);
+        $date    = (int)($data['date'] ?: time());
+        $comment = strip_tags($data['comment']);
 
-        $sql = "INSERT INTO `user_shout` (`user`, `date`, `text`, `sticky`, `object_id`, `object_type`, `data`) " .
-            "VALUES (? , ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, array($user, $date, $comment, $sticky, $data['object_id'], $data['object_type'], $data['data']));
+        $sql = "INSERT INTO `user_shout` (`user`, `date`, `text`, `sticky`, `object_id`, `object_type`, `data`) " . "VALUES (? , ?, ?, ?, ?, ?, ?)";
+        Dba::write($sql,
+            array($user, $date, $comment, $sticky, $data['object_id'], $data['object_type'], $data['data']));
 
         Useractivity::post_activity($user, 'shout', $data['object_type'], $data['object_id'], time());
 
@@ -256,7 +267,8 @@ class Shoutbox
                         $mailer->recipient_name = $item_owner->fullname;
                         $mailer->subject        = T_('New shout on your content');
                         /* HINT: %1 username %2 item name being commented on */
-                        $mailer->message = sprintf(T_('You just received a new shout from %1$s on your content %2$s'), Core::get_global('user')->fullname, $libitem->get_fullname());
+                        $mailer->message = sprintf(T_('You just received a new shout from %1$s on your content %2$s'),
+                            Core::get_global('user')->fullname, $libitem->get_fullname());
                         $mailer->message .= "\n\n----------------------\n\n";
                         $mailer->message .= $comment;
                         $mailer->message .= "\n\n----------------------\n\n";
@@ -291,7 +303,7 @@ class Shoutbox
     public function format()
     {
         $this->sticky = ($this->sticky == "0") ? 'No' : 'Yes';
-        $this->f_date = get_datetime((int) $this->date);
+        $this->f_date = get_datetime((int)$this->date);
         $this->f_text = preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text);
 
         return true;
@@ -329,7 +341,7 @@ class Shoutbox
         $html .= "<div class='shoutbox-info'>";
         if ($details) {
             $html .= "<div class='shoutbox-object'>" . $object->f_link . "</div>";
-            $html .= "<div class='shoutbox-date'>" . get_datetime((int) $this->date) . "</div>";
+            $html .= "<div class='shoutbox-date'>" . get_datetime((int)$this->date) . "</div>";
         }
         $html .= "<div class='shoutbox-text'>" . $this->f_text . "</div>";
         $html .= "</div>";
@@ -338,11 +350,14 @@ class Shoutbox
         if ($details) {
             $html .= "<div class='shoutbox-actions'>";
             if ($jsbuttons) {
-                $html .= Ajax::button('?page=stream&action=directplay&playtype=' . $this->object_type . '&' . $this->object_type . '_id=' . $this->object_id, 'play', T_('Play'), 'play_' . $this->object_type . '_' . $this->object_id);
-                $html .= Ajax::button('?action=basket&type=' . $this->object_type . '&id=' . $this->object_id, 'add', T_('Add'), 'add_' . $this->object_type . '_' . $this->object_id);
+                $html .= Ajax::button('?page=stream&action=directplay&playtype=' . $this->object_type . '&' . $this->object_type . '_id=' . $this->object_id,
+                    'play', T_('Play'), 'play_' . $this->object_type . '_' . $this->object_id);
+                $html .= Ajax::button('?action=basket&type=' . $this->object_type . '&id=' . $this->object_id, 'add',
+                    T_('Add'), 'add_' . $this->object_type . '_' . $this->object_id);
             }
             if (Access::check('interface', 25)) {
-                $html .= "<a href=\"" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $this->object_type . "&id=" . $this->object_id . "\">" . UI::get_icon('comment', T_('Post Shout')) . "</a>";
+                $html .= "<a href=\"" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $this->object_type . "&id=" . $this->object_id . "\">" . UI::get_icon('comment',
+                        T_('Post Shout')) . "</a>";
             }
             $html .= "</div>";
         }
@@ -397,4 +412,4 @@ class Shoutbox
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
-} // end shoutbox.class
+}

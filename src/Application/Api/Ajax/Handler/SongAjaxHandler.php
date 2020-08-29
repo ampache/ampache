@@ -28,7 +28,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 use Ampache\Module\Access;
 use Ampache\Module\Ajax;
 use Core;
-use Shoutbox;
+use Ampache\Model\Shoutbox;
 use Song;
 
 final class SongAjaxHandler implements AjaxHandlerInterface

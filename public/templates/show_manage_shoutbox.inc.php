@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Model\Shoutbox;
+
 $web_path = AmpConfig::get('web_path'); ?>
 <table class="tabledata">
     <thead>

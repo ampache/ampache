@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 use Ampache\Model\library_item;
 use Ampache\Model\License;
+use Ampache\Model\Shoutbox;
 
 /**
  * XML_Data Class

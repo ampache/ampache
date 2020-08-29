@@ -30,7 +30,7 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use AmpConfig;
 use AmpError;
 use Core;
-use Shoutbox;
+use Ampache\Model\Shoutbox;
 use UI;
 
 final class ShoutApplication implements ApplicationInterface

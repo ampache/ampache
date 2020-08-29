@@ -21,6 +21,7 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Model\Shoutbox;
 use Ampache\Module\Util\Recommendation;
 use database_object;
 use Ampache\Model\library_item;

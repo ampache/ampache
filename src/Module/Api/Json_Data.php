@@ -38,7 +38,7 @@ use Podcast_Episode;
 use Rating;
 use Search;
 use Share;
-use Shoutbox;
+use Ampache\Model\Shoutbox;
 use Song;
 use Stream;
 use Tag;

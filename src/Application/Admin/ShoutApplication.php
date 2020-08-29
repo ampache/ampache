@@ -29,7 +29,7 @@ use Ampache\Module\Access;
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use Browse;
-use Shoutbox;
+use Ampache\Model\Shoutbox;
 use UI;
 use User;
 
