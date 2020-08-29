@@ -21,6 +21,7 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Model\Query;
 use Ampache\Module\Ajax;
 
 /**
