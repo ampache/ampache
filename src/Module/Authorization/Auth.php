@@ -31,7 +31,7 @@ use Auth_OpenID_SRegRequest;
 use Auth_OpenID_SRegResponse;
 use Core;
 use Dba;
-use LDAP;
+use Ampache\Module\Authentication\Ldap\Ldap;
 use Openid;
 use Session;
 use User;
@@ -301,7 +301,7 @@ class Auth
      */
     private static function ldap_auth($username, $password)
     {
-        return LDAP::auth($username, $password);
+        return Ldap::auth($username, $password);
     }
 
     /**
