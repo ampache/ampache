@@ -336,7 +336,7 @@ class Access
 
         switch ($type) {
             case 'init-api':
-                $user = ($apikey) ?  User::get_from_apikey($apikey) : User::get_from_username($user);
+                $user = ($user) ? User::get_from_username($user) : User::get_from_apikey($apikey);
                 $user = $user->id;
                 $type = 'rpc';
                 break;
