@@ -6,6 +6,7 @@ use Ampache\Model\License;
 use Ampache\Model\Plugin;
 use Ampache\Model\Shoutbox;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Recommendation;
 use database_object;
@@ -1982,7 +1983,7 @@ class Song extends database_object implements Media, library_item
         }
         $url .= "&name=" . $media_name;
 
-        return Stream_URL::format($url);
+        return Stream_Url::format($url);
     }
 
     /**

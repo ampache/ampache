@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 use Ampache\Model\License;
 use Ampache\Model\Shoutbox;
+use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Recommendation;
 use database_object;
@@ -2411,7 +2412,7 @@ abstract class Catalog extends database_object
                 $file = trim((string) $file);
                 // Check to see if it's a url from this ampache instance
                 if (substr($file, 0, strlen(AmpConfig::get('web_path'))) == AmpConfig::get('web_path')) {
-                    $data       = Stream_URL::parse($file);
+                    $data       = Stream_Url::parse($file);
                     $sql        = 'SELECT COUNT(*) FROM `song` WHERE `id` = ?';
                     $db_results = Dba::read($sql, array($data['id']));
                     if (Dba::num_rows($db_results)) {

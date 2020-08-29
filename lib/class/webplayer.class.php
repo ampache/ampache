@@ -5,6 +5,7 @@ declare(strict_types=0);
 use Ampache\Model\Media;
 use Ampache\Model\playable_item;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 
 /**
@@ -66,7 +67,7 @@ class WebPlayer
     protected static function get_types($item, $force_type = '')
     {
         $types   = array('real' => 'mp3', 'player' => '');
-        $urlinfo = Stream_URL::parse($item->url);
+        $urlinfo = Stream_Url::parse($item->url);
         $media   = self::get_media_object($urlinfo);
 
         if ($media != null) {
@@ -292,7 +293,7 @@ class WebPlayer
         }
         $types    = self::get_types($item, $force_type);
         $item_url = $item->url;
-        $urlinfo  = Stream_URL::parse($item_url);
+        $urlinfo  = Stream_Url::parse($item_url);
         $url      = $urlinfo['base_url'];
         $media    = self::get_media_object($urlinfo);
 

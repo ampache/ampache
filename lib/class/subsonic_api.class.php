@@ -26,6 +26,7 @@ use Ampache\Module\Access;
 use Ampache\Module\Playback\LocalPlay;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;
@@ -1832,7 +1833,7 @@ class Subsonic_Api
                                 debug_event('subsonic_api.class', 'Adding ' . $url, 5);
                                 $stream        = array();
                                 $stream['url'] = $url;
-                                $ret           = $localplay->add_url(new Stream_URL($stream));
+                                $ret           = $localplay->add_url(new Stream_Url($stream));
                             }
                         }
                     }

@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,7 +20,12 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\Playback;
+
 use Ampache\Module\Util\MemoryObject;
+use AmpConfig;
 
 /**
  * Stream_URL Class
@@ -29,9 +33,20 @@ use Ampache\Module\Util\MemoryObject;
  * A class for passing around an URL and associated data
  * @property string $url
  */
-class Stream_URL extends MemoryObject
+class Stream_Url extends MemoryObject
 {
-    public $properties = array('url', 'title', 'author', 'time', 'info_url', 'image_url', 'album', 'type', 'codec', 'track_num');
+    public $properties = array(
+        'url',
+        'title',
+        'author',
+        'time',
+        'info_url',
+        'image_url',
+        'album',
+        'type',
+        'codec',
+        'track_num'
+    );
 
     /**
      * parse
@@ -58,7 +73,7 @@ class Stream_URL extends MemoryObject
             }
         }
 
-        $query    = (string) parse_url($url, PHP_URL_QUERY);
+        $query    = (string)parse_url($url, PHP_URL_QUERY);
         $elements = explode('&', $query);
         $results  = array();
 
@@ -132,4 +147,4 @@ class Stream_URL extends MemoryObject
 
         return $url;
     }
-} // end stream_url.class
+}

@@ -23,7 +23,7 @@
 namespace Ampache\Model;
 
 use AmpConfig;
-use Stream_URL;
+use Ampache\Module\Playback\Stream_Url;
 
 /**
  * localplay_controller Class
@@ -35,10 +35,10 @@ abstract class localplay_controller
 {
     // Required Functions
     /**
-     * @param Stream_URL $url
+     * @param \Ampache\Module\Playback\Stream_Url $url
      * @return mixed
      */
-    abstract public function add_url(Stream_URL $url); // Takes an array of song_ids
+    abstract public function add_url(Stream_Url $url); // Takes an array of song_ids
 
     /**
      * @param integer $object_id

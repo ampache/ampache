@@ -31,7 +31,7 @@ use Dba;
 use Democratic;
 use PDOStatement;
 use Session;
-use Stream_URL;
+use Ampache\Module\Playback\Stream_Url;
 use UI;
 use XML_Data;
 
@@ -76,7 +76,7 @@ class Stream_Playlist
             $db_results = Dba::read($sql, array($this->id));
 
             while ($row = Dba::fetch_assoc($db_results)) {
-                $this->urls[] = new Stream_URL($row);
+                $this->urls[] = new Stream_Url($row);
             }
         }
 
@@ -149,7 +149,7 @@ class Stream_Playlist
      * @param $media
      * @param string $additional_params
      * @param string $urltype
-     * @return Stream_URL
+     * @return Stream_Url
      */
     public static function media_to_url($media, $additional_params = '', $urltype = 'web')
     {
@@ -174,7 +174,7 @@ class Stream_Playlist
      * @param $object
      * @param string $additional_params
      * @param string $urltype
-     * @return Stream_URL
+     * @return Stream_Url
      */
     public static function media_object_to_url($object, $additional_params = '', $urltype = 'web')
     {
@@ -256,7 +256,7 @@ class Stream_Playlist
                     break;
             }
 
-            $surl = new Stream_URL($url);
+            $surl = new Stream_Url($url);
         }
 
         return $surl;
@@ -383,7 +383,7 @@ class Stream_Playlist
         }
 
         foreach ($urls as $url) {
-            $this->_add_url(new Stream_URL(array(
+            $this->_add_url(new Stream_Url(array(
                 'url' => $url,
                 'title' => 'URL-Add',
                 'author' => 'Ampache',
@@ -564,7 +564,7 @@ class Stream_Playlist
                 $size              = (($soffset + $ssize) <= $url->time) ? $ssize : ($url->time - $soffset);
                 $additional_params = '&transcode_to=ts&segment=' . $segment;
                 $ret .= "#EXTINF:" . $size . ",\n";
-                $purl = Stream_URL::parse($url->url);
+                $purl = Stream_Url::parse($url->url);
                 $id   = $purl['id'];
 
                 unset($purl['id']);
@@ -665,7 +665,7 @@ class Stream_Playlist
         $items = array();
 
         foreach ($this->urls as $url) {
-            $data    = Stream_URL::parse($url->url);
+            $data    = Stream_Url::parse($url->url);
             $items[] = array($data['type'], $data['id']);
         }
 
@@ -686,7 +686,7 @@ class Stream_Playlist
 
         // Header redirect baby!
         $url = current($this->urls);
-        $url = Stream_URL::add_options($url->url, '&action=download');
+        $url = Stream_Url::add_options($url->url, '&action=download');
         header('Location: ' . $url);
 
         return false;

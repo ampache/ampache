@@ -29,7 +29,7 @@ use Ampache\Module\Ajax;
 use AmpConfig;
 use Core;
 use Preference;
-use Stream_URL;
+use Ampache\Module\Playback\Stream_Url;
 
 class LocalPlay
 {
@@ -302,10 +302,10 @@ class LocalPlay
     /**
      * add_url
      * This directly adds an URL to the Localplay module.  Is more betterer.
-     * @param Stream_URL $url
+     * @param Stream_Url $url
      * @return boolean
      */
-    public function add_url(Stream_URL $url)
+    public function add_url(Stream_Url $url)
     {
         if (!$this->_player->add_url($url)) {
             debug_event('localplay.class', 'Unable to add url ' . $url->url . ', check ' . $this->type . ' controller',

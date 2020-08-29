@@ -21,6 +21,7 @@
  */
 
 use Ampache\Model\localplay_controller;
+use Ampache\Module\Playback\Stream_Url;
 
 /**
  * AmpacheUPnp Class
@@ -244,10 +245,10 @@ class AmpacheUPnP extends localplay_controller
     }
 
     /**
-     * @param Stream_URL $url
+     * @param Stream_Url $url
      * @return boolean|mixed
      */
-    public function add_url(Stream_URL $url)
+    public function add_url(Stream_Url $url)
     {
         debug_event('upnp.controller', 'add_url: ' . $url->title . " | " . $url->url, 5);
 
@@ -485,7 +486,7 @@ class AmpacheUPnP extends localplay_controller
             $data['id']    = $idx;
             $data['track'] = $idx;
 
-            $url_data = Stream_URL::parse($item['link']);
+            $url_data = Stream_Url::parse($item['link']);
             if ($url_data != null) {
                 $song = new Song($url_data['id']);
                 if ($song != null) {
@@ -528,7 +529,7 @@ class AmpacheUPnP extends localplay_controller
         $status['track']       = $item['link'];
         $status['track_title'] = $item['name'];
 
-        $url_data = Stream_URL::parse($item['link']);
+        $url_data = Stream_Url::parse($item['link']);
         if ($url_data != null) {
             $song = new Song($url_data['id']);
             if ($song != null) {

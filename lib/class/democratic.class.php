@@ -22,6 +22,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 
 /**
@@ -252,7 +253,7 @@ class Democratic extends Tmp_Playlist
     {
         $link = Stream::get_base_url() . 'uid=' . scrub_out(Core::get_global('user')->id) . '&demo_id=' . scrub_out($this->id);
 
-        return Stream_URL::format($link);
+        return Stream_Url::format($link);
     } // play_url
 
     /**

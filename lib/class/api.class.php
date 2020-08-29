@@ -27,6 +27,7 @@ use Ampache\Model\Shoutbox;
 use Ampache\Module\Access;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Playback\LocalPlay;
+use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\Mailer;
@@ -459,7 +460,7 @@ class Api
             return false;
         }
         // Don't scrub, the function needs her raw and juicy
-        $data = Stream_URL::parse($input['url']);
+        $data = Stream_Url::parse($input['url']);
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         switch ($input['api_format']) {

@@ -21,6 +21,7 @@
  */
 
 use Ampache\Model\localplay_controller;
+use Ampache\Module\Playback\Stream_Url;
 
 /**
  * AmpacheXbmc Class
@@ -242,10 +243,10 @@ class AmpacheXbmc extends localplay_controller
     } // get_active_instance
 
     /**
-     * @param Stream_URL $url
+     * @param Stream_Url $url
      * @return boolean
      */
-    public function add_url(Stream_URL $url)
+    public function add_url(Stream_Url $url)
     {
         if (!$this->_xbmc) {
             return false;

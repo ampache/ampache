@@ -4,6 +4,7 @@ declare(strict_types=0);
 
 use Ampache\Model\Plugin;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Playback\Stream_Url;
 use database_object;
 use Ampache\Model\Media;
 use Ampache\Model\playable_item;
@@ -334,7 +335,7 @@ class Song_Preview extends database_object implements Media, playable_item
 
         $url = Stream::get_base_url($local) . "type=song_preview&oid=" . $song->id . "&uid=" . $user_id . "&name=" . $song_name;
 
-        return Stream_URL::format($url . $additional_params);
+        return Stream_Url::format($url . $additional_params);
     } // play_url
 
     /**

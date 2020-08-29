@@ -21,6 +21,7 @@
  */
 
 use Ampache\Model\localplay_controller;
+use Ampache\Module\Playback\Stream_Url;
 
 /**
  * AmpacheVlc Class
@@ -247,10 +248,10 @@ class AmpacheVlc extends localplay_controller
     } // get_active_instance
 
     /**
-     * @param Stream_URL $url
+     * @param Stream_Url $url
      * @return boolean|mixed
      */
-    public function add_url(Stream_URL $url)
+    public function add_url(Stream_Url $url)
     {
         if ($this->_vlc->add($url->title, $url->url) === null) {
             debug_event('vlc.controller', 'add_url failed to add: ' . json_encode($url), 1);

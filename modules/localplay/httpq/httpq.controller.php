@@ -21,6 +21,7 @@
  */
 
 use Ampache\Model\localplay_controller;
+use Ampache\Module\Playback\Stream_Url;
 
 /**
  * AmpacheHttpq Class
@@ -265,10 +266,10 @@ class AmpacheHttpq extends localplay_controller
     /**
      * add_url
      * This is the new hotness
-     * @param Stream_URL $url
+     * @param Stream_Url $url
      * @return boolean
      */
-    public function add_url(Stream_URL $url)
+    public function add_url(Stream_Url $url)
     {
         if ($this->_httpq->add($url->title, $url->url) === null) {
             debug_event('httpq.controller', 'add_url failed to add ' . (string) $url, 1);
