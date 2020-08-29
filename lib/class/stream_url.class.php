@@ -21,13 +21,15 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Module\Util\MemoryObject;
+
 /**
  * Stream_URL Class
  *
  * A class for passing around an URL and associated data
  * @property string $url
  */
-class Stream_URL extends memory_object
+class Stream_URL extends MemoryObject
 {
     public $properties = array('url', 'title', 'author', 'time', 'info_url', 'image_url', 'album', 'type', 'codec', 'track_num');
 

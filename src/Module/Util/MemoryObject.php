@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,9 +20,11 @@ declare(strict_types=0);
  *
  */
 
-// A magical class filled with ponies
+declare(strict_types=0);
 
-class memory_object
+namespace Ampache\Module\Util;
+
+class MemoryObject
 {
     private $_data = array();
     public $properties;
@@ -64,4 +65,4 @@ class memory_object
 
         return isset($this->_data[$name]) ? $this->_data[$name] : null;
     }
-} // end memory_object.class
+}
