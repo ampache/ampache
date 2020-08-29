@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use AmpConfig;
-use Broadcast;
+use Ampache\Model\Broadcast;
 use Core;
 use Ampache\Module\Util\Ui;
 

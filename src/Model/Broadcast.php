@@ -1,13 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-
-use Ampache\Module\Util\Ui;
-use Ampache\Model\database_object;
-use Ampache\Model\library_item;
-use Ampache\Module\Api\Ajax;
-
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -27,55 +20,68 @@ use Ampache\Module\Api\Ajax;
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
+use Ampache\Module\Util\Ui;
+use Ampache\Module\Api\Ajax;
+use AmpConfig;
+use Art;
+use Core;
+use Dba;
+use PDOStatement;
+use Tag;
+
 class Broadcast extends database_object implements library_item
 {
     /**
-     *  @var integer $id
+     * @var integer $id
      */
     public $id;
     /**
-     *  @var boolean $started
+     * @var boolean $started
      */
     public $started;
     /**
-     *  @var integer $listeners
+     * @var integer $listeners
      */
     public $listeners;
     /**
-     *  @var integer $song
+     * @var integer $song
      */
     public $song;
     /**
-     *  @var integer $song_position
+     * @var integer $song_position
      */
     public $song_position;
     /**
-     *  @var string $name
+     * @var string $name
      */
     public $name;
     /**
-     *  @var integer $user
+     * @var integer $user
      */
     public $user;
 
     /**
-     *  @var array $tags
+     * @var array $tags
      */
     public $tags;
     /**
-     *  @var string $f_name
+     * @var string $f_name
      */
     public $f_name;
     /**
-     *  @var string $f_link
+     * @var string $f_link
      */
     public $f_link;
     /**
-     *  @var string $f_tags
+     * @var string $f_tags
      */
     public $f_tags;
     /**
-     *  @var boolean $is_private
+     * @var boolean $is_private
      */
     public $is_private;
 
@@ -115,8 +121,7 @@ class Broadcast extends database_object implements library_item
      */
     public function update_listeners($listeners)
     {
-        $sql = "UPDATE `broadcast` SET `listeners` = ? " .
-            "WHERE `id` = ?";
+        $sql = "UPDATE `broadcast` SET `listeners` = ? " . "WHERE `id` = ?";
         Dba::write($sql, array($listeners, $this->id));
         $this->listeners = $listeners;
     }
@@ -127,8 +132,7 @@ class Broadcast extends database_object implements library_item
      */
     public function update_song($song_id)
     {
-        $sql = "UPDATE `broadcast` SET `song` = ? " .
-            "WHERE `id` = ?";
+        $sql = "UPDATE `broadcast` SET `song` = ? " . "WHERE `id` = ?";
         Dba::write($sql, array($song_id, $this->id));
         $this->song          = $song_id;
         $this->song_position = 0;
@@ -175,8 +179,7 @@ class Broadcast extends database_object implements library_item
             Tag::update_tag_list($data['edit_tags'], 'broadcast', $this->id, true);
         }
 
-        $sql = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? " .
-            "WHERE `id` = ?";
+        $sql    = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? " . "WHERE `id` = ?";
         $params = array($data['name'], $data['description'], !empty($data['private']), $this->id);
         Dba::write($sql, $params);
 
@@ -345,7 +348,7 @@ class Broadcast extends database_object implements library_item
     public static function generate_key()
     {
         // Should be improved for security reasons!
-        return md5(uniqid((string) rand(), true));
+        return md5(uniqid((string)rand(), true));
     }
 
     /**
@@ -372,8 +375,10 @@ class Broadcast extends database_object implements library_item
     {
         if ($this->id) {
             if (Core::get_global('user')->has_access('75')) {
-                echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast Edit') . "', 'broadcast_row_')\">" . Ui::get_icon('edit', T_('Edit')) . "</a>";
-                echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_icon('delete', T_('Delete')) . "</a>";
+                echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast Edit') . "', 'broadcast_row_')\">" . Ui::get_icon('edit',
+                        T_('Edit')) . "</a>";
+                echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_icon('delete',
+                        T_('Delete')) . "</a>";
             }
         }
     }
@@ -385,7 +390,8 @@ class Broadcast extends database_object implements library_item
     public static function get_broadcast_link()
     {
         $link = "<div class=\"broadcast-action\">";
-        $link .= "<a href=\"#\" onclick=\"showBroadcastsDialog(event);\">" . Ui::get_icon('broadcast', T_('Broadcast')) . "</a>";
+        $link .= "<a href=\"#\" onclick=\"showBroadcastsDialog(event);\">" . Ui::get_icon('broadcast',
+                T_('Broadcast')) . "</a>";
         $link .= "</div>";
 
         return $link;
@@ -399,7 +405,8 @@ class Broadcast extends database_object implements library_item
     public static function get_unbroadcast_link($broadcast_id)
     {
         $link = "<div class=\"broadcast-action\">";
-        $link .= Ajax::button('?page=player&action=unbroadcast&broadcast_id=' . $broadcast_id, 'broadcast', T_('Unbroadcast'), 'broadcast_action');
+        $link .= Ajax::button('?page=player&action=unbroadcast&broadcast_id=' . $broadcast_id, 'broadcast',
+            T_('Unbroadcast'), 'broadcast_action');
         $link .= "</div>";
         $link .= "<div class=\"broadcast-info\">(<span id=\"broadcast_listeners\">0</span>)</div>";
 
@@ -446,4 +453,4 @@ class Broadcast extends database_object implements library_item
 
         return $object_id;
     }
-} // end broadcast.class
+}

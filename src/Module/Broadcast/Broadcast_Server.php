@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Broadcast;
 
 use AmpConfig;
-use Broadcast;
+use Ampache\Model\Broadcast;
 use Core;
 use Exception;
 use Ratchet\MessageComponentInterface;
@@ -61,7 +61,7 @@ class Broadcast_Server implements MessageComponentInterface
      */
     protected $listeners;
     /**
-     * @var Broadcast[] $broadcasters
+     * @var \Ampache\Model\Broadcast[] $broadcasters
      */
     protected $broadcasters;
 

@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Broadcast;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
