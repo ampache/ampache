@@ -36,7 +36,7 @@ use Ampache\Module\System\Dba;
 use PDOStatement;
 use Preference;
 use Ampache\Module\Util\Ui;
-use User;
+use Ampache\Model\User;
 use Ampache\Model\Useractivity;
 
 class Shoutbox

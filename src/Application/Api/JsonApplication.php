@@ -30,7 +30,7 @@ use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\System\Session;
-use User;
+use Ampache\Model\User;
 
 final class JsonApplication implements ApplicationInterface
 {

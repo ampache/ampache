@@ -28,7 +28,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 use Ampache\Module\Authorization\Access;
 use AmpConfig;
 use Core;
-use User;
+use Ampache\Model\User;
 
 final class UserAjaxHandler implements AjaxHandlerInterface
 {

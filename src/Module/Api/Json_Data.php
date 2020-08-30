@@ -43,7 +43,7 @@ use Ampache\Model\Shoutbox;
 use Song;
 use Ampache\Module\Playback\Stream;
 use Tag;
-use User;
+use Ampache\Model\User;
 use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;
 use Video;
@@ -882,7 +882,7 @@ class Json_Data
      *
      * This handles creating an JSON document for a user
      *
-     * @param User $user User
+     * @param \Ampache\Model\User $user User
      * @param boolean $fullinfo
      * @return string  return JSON
      */

@@ -27,7 +27,7 @@ namespace Ampache\Model;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\System\Dba;
 use Exception;
-use User;
+use Ampache\Model\User;
 
 class Plugin
 {

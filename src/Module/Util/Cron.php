@@ -36,7 +36,7 @@ use Podcast;
 use Rating;
 use Song;
 use Tag;
-use User;
+use Ampache\Model\User;
 use Ampache\Model\Userflag;
 use Video;
 

@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\User;
 use Ampache\Module\Util\Ui;
 
 $htmllang = str_replace("_", "-", AmpConfig::get('lang'));

@@ -21,6 +21,7 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Model\User;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;

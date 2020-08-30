@@ -33,7 +33,7 @@ use Ampache\Model\Channel;
 use Core;
 use Preference;
 use Ampache\Module\Util\Ui;
-use User;
+use Ampache\Model\User;
 
 final class ChannelApplication implements ApplicationInterface
 {

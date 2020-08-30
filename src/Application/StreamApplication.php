@@ -39,7 +39,7 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Tmp_Playlist;
 use Ampache\Module\Util\Ui;
-use User;
+use Ampache\Model\User;
 
 final class StreamApplication implements ApplicationInterface
 {

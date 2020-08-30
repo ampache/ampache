@@ -45,7 +45,7 @@ use Song_Preview;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
-use User;
+use Ampache\Model\User;
 use Video;
 
 final class PlayApplication implements ApplicationInterface

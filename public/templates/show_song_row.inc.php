@@ -21,6 +21,7 @@
  */
 
 // Don't show disabled songs to normal users
+use Ampache\Model\User;
 use Ampache\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;

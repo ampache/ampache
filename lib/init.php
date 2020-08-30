@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\User;
 use Ampache\Module\Authorization\Auth;
 use Ampache\Module\System\Session;
 use Ampache\Module\System\Update;

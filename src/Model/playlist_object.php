@@ -30,7 +30,7 @@ use Art;
 use Core;
 use Ampache\Model\database_object;
 use Ampache\Module\Util\Ui;
-use User;
+use Ampache\Model\User;
 
 /**
  * playlist_object

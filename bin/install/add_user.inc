@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Model\User;
+
 if(php_sapi_name() != 'cli') {
     exit(1);
 }

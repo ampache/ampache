@@ -26,7 +26,7 @@ namespace Ampache\Module\Playback\Scrobble;
 
 use Requests;
 use Thread;
-use User;
+use Ampache\Model\User;
 
 abstract class ScrobblerAsync extends Thread
 {

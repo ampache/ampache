@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use Core;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\Ui;
-use User;
+use Ampache\Model\User;
 
 final class StatsApplication implements ApplicationInterface
 {

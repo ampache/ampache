@@ -35,7 +35,7 @@ use Ampache\Module\Util\Mailer;
 use Preference;
 use Ampache\Module\User\Registration;
 use Ampache\Module\Util\Ui;
-use User;
+use Ampache\Model\User;
 
 final class UsersApplication implements ApplicationInterface
 {

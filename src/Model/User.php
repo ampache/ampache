@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,14 +20,24 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Model\Album;
-use Ampache\Model\Plugin;
-use Ampache\Model\Useractivity;
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
-use Ampache\Model\database_object;
 use Ampache\Module\Api\Ajax;
+use AmpConfig;
+use AmpError;
+use Art;
+use Artist;
+use Core;
+use Exception;
+use PDOStatement;
+use Song;
+use Tag;
+use Tmp_Playlist;
 
 /**
  * User Class
@@ -166,7 +175,7 @@ class User extends database_object
             return false;
         }
 
-        $this->id = (int) ($user_id);
+        $this->id = (int)($user_id);
 
         $info = $this->has_info();
 
@@ -179,7 +188,7 @@ class User extends database_object
         }
 
         // Make sure the Full name is always filled
-        if (strlen((string) $this->fullname) < 1) {
+        if (strlen((string)$this->fullname) < 1) {
             $this->fullname = $this->username;
         }
 
@@ -199,11 +208,9 @@ class User extends database_object
         $results          = array();
         $results['users'] = $data[0];
 
-        $time      = time();
-        $last_seen = $time - 1200;
-        $sql       = "SELECT COUNT(DISTINCT `session`.`username`) FROM `session` " .
-            "INNER JOIN `user` ON `session`.`username` = `user`.`username` " .
-            "WHERE `session`.`expire` > ? AND `user`.`last_seen` > ?";
+        $time                 = time();
+        $last_seen            = $time - 1200;
+        $sql                  = "SELECT COUNT(DISTINCT `session`.`username`) FROM `session` " . "INNER JOIN `user` ON `session`.`username` = `user`.`username` " . "WHERE `session`.`expire` > ? AND `user`.`last_seen` > ?";
         $db_results           = Dba::read($sql, array($time, $last_seen));
         $data                 = Dba::fetch_row($db_results);
         $results['connected'] = $data[0];
@@ -218,7 +225,7 @@ class User extends database_object
      */
     private function has_info()
     {
-        $user_id = (int) ($this->id);
+        $user_id = (int)($this->id);
 
         if (User::is_cached('user', $user_id)) {
             return User::get_from_cache('user', $user_id);
@@ -299,7 +306,7 @@ class User extends database_object
      */
     public static function get_from_apikey($apikey)
     {
-        $apikey    = trim((string) $apikey);
+        $apikey = trim((string)$apikey);
         if (!empty($apikey)) {
             // check for legacy unencrypted apikey
             $sql        = "SELECT `id` FROM `user` WHERE `apikey` = ?";
@@ -362,7 +369,7 @@ class User extends database_object
      */
     public static function get_from_website($website)
     {
-        $website    = rtrim((string) $website, "/");
+        $website    = rtrim((string)$website, "/");
         $sql        = "SELECT `id` FROM `user` WHERE `website` = ? LIMIT 1";
         $db_results = Dba::read($sql, array($website));
         $users      = array();
@@ -408,7 +415,7 @@ class User extends database_object
 
         $catalogs = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $catalogs[] = (int) $row['catalog'];
+            $catalogs[] = (int)$row['catalog'];
         }
 
         parent::add_to_cache('user_catalog', $this->id, $catalogs);
@@ -442,10 +449,7 @@ class User extends database_object
             }
         }
 
-        $sql = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`catagory`, `preference`.`subcatagory`, preference.level, user_preference.value " .
-            "FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` " .
-            "WHERE `user_preference`.`user` = '$user_id' " . $user_limit .
-            " ORDER BY `preference`.`catagory`, `preference`.`subcatagory`, `preference`.`description`";
+        $sql = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`catagory`, `preference`.`subcatagory`, preference.level, user_preference.value " . "FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` " . "WHERE `user_preference`.`user` = '$user_id' " . $user_limit . " ORDER BY `preference`.`catagory`, `preference`.`subcatagory`, `preference`.`description`";
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -457,8 +461,18 @@ class User extends database_object
             if ($type == 'system') {
                 $admin = true;
             }
-            $type_array[$type][$row['name']] = array('name' => $row['name'], 'level' => $row['level'], 'description' => $row['description'], 'value' => $row['value'], 'subcategory' => $row['subcatagory']);
-            $results[$type]                  = array('title' => ucwords((string) $type), 'admin' => $admin, 'prefs' => $type_array[$type]);
+            $type_array[$type][$row['name']] = array(
+                'name' => $row['name'],
+                'level' => $row['level'],
+                'description' => $row['description'],
+                'value' => $row['value'],
+                'subcategory' => $row['subcatagory']
+            );
+            $results[$type] = array(
+                'title' => ucwords((string)$type),
+                'admin' => $admin,
+                'prefs' => $type_array[$type]
+            );
         } // end while
 
         return $results;
@@ -472,9 +486,7 @@ class User extends database_object
     {
         $user_id = Dba::escape($this->id);
 
-        $sql = "SELECT `preference`.`name`, `user_preference`.`value` " .
-                " FROM `preference`, `user_preference` WHERE `user_preference`.`user` = '$user_id' " .
-            "AND `user_preference`.`preference` = `preference`.`id` AND `preference`.`type` != 'system'";
+        $sql        = "SELECT `preference`.`name`, `user_preference`.`value` " . " FROM `preference`, `user_preference` WHERE `user_preference`.`user` = '$user_id' " . "AND `user_preference`.`preference` = `preference`.`id` AND `preference`.`type` != 'system'";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -535,8 +547,7 @@ class User extends database_object
     public function get_recommendations($type)
     {
         /* First pull all of your ratings of this type */
-        $sql = "SELECT `object_id`, `user_rating` FROM `ratings` " .
-            "WHERE `object_type` = '" . Dba::escape($type) . "' AND `user` = '" . Dba::escape($this->id) . "'";
+        $sql        = "SELECT `object_id`, `user_rating` FROM `ratings` " . "WHERE `object_type` = '" . Dba::escape($type) . "' AND `user` = '" . Dba::escape($this->id) . "'";
         $db_results = Dba::read($sql);
 
         // Incase they only have one user
@@ -548,9 +559,7 @@ class User extends database_object
             $ratings[$key] = true;
 
             /* Build a key'd array of users with this same rating */
-            $sql = "SELECT `user` FROM `ratings` WHERE `object_type` = '" . Dba::escape($type) . "' " .
-                "AND `user` !='" . Dba::escape($this->id) . "' AND `object_id` = '" . Dba::escape($row['object_id']) . "' " .
-                "AND `user_rating` ='" . Dba::escape($row['user_rating']) . "'";
+            $sql          = "SELECT `user` FROM `ratings` WHERE `object_type` = '" . Dba::escape($type) . "' " . "AND `user` !='" . Dba::escape($this->id) . "' AND `object_id` = '" . Dba::escape($row['object_id']) . "' " . "AND `user_rating` ='" . Dba::escape($row['user_rating']) . "'";
             $user_results = Dba::read($sql);
 
             while ($user_info = Dba::fetch_assoc($user_results)) {
@@ -568,9 +577,7 @@ class User extends database_object
 
         foreach ($users as $user_id => $score) {
             /* Find everything they've rated at 4+ */
-            $sql = "SELECT `object_id`, `user_rating` FROM `ratings` " .
-                "WHERE `user` = '" . Dba::escape($user_id) . "' AND `user_rating` >='4' AND " .
-                "`object_type` = '" . Dba::escape($type) . "' ORDER BY `user_rating` DESC";
+            $sql        = "SELECT `object_id`, `user_rating` FROM `ratings` " . "WHERE `user` = '" . Dba::escape($user_id) . "' AND `user_rating` >='4' AND " . "`object_type` = '" . Dba::escape($type) . "' ORDER BY `user_rating` DESC";
             $db_results = Dba::read($sql);
 
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -600,8 +607,7 @@ class User extends database_object
     {
         $username = Dba::escape($this->username);
 
-        $sql = "SELECT `id`, `ip` FROM `session` WHERE `username`='$username'" .
-            " AND `expire` > " . time();
+        $sql        = "SELECT `id`, `ip` FROM `session` WHERE `username`='$username'" . " AND `expire` > " . time();
         $db_results = Dba::read($sql);
 
         if ($row = Dba::fetch_assoc($db_results)) {
@@ -789,7 +795,7 @@ class User extends database_object
      */
     public function update_website($new_website)
     {
-        $new_website = rtrim((string) $new_website, "/");
+        $new_website = rtrim((string)$new_website, "/");
         $sql         = "UPDATE `user` SET `website` = ? WHERE `id` = ?";
 
         debug_event('user.class', 'Updating website', 4);
@@ -911,7 +917,7 @@ class User extends database_object
     } // disable
 
     /**
-      * enable
+     * enable
      * this enables the current user
      */
     public function enable()
@@ -988,10 +994,10 @@ class User extends database_object
     {
         if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')) {
             $sip = filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP);
-            debug_event('user.class', 'Login from IP address: ' . (string) $sip, 3);
+            debug_event('user.class', 'Login from IP address: ' . (string)$sip, 3);
         } else {
             $sip = filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
-            debug_event('user.class', 'Login from IP address: ' . (string) $sip, 3);
+            debug_event('user.class', 'Login from IP address: ' . (string)$sip, 3);
         }
 
         // Remove port information if any
@@ -1002,12 +1008,12 @@ class User extends database_object
             } else {
                 $sipar = parse_url("http://[" . $sip . "]");
             }
-            $sip   = $sipar['host'];
+            $sip = $sipar['host'];
         }
 
-        $uip     = (!empty($sip)) ? Dba::escape(inet_pton(trim((string) $sip, "[]"))) : '';
+        $uip     = (!empty($sip)) ? Dba::escape(inet_pton(trim((string)$sip, "[]"))) : '';
         $date    = time();
-        $user_id = (int) $this->id;
+        $user_id = (int)$this->id;
         $agent   = Dba::escape(Core::get_server('HTTP_USER_AGENT'));
 
         $sql = "INSERT INTO `ip_history` (`ip`, `user`, `date`, `agent`) VALUES ('$uip', '$user_id', '$date', '$agent')";
@@ -1038,17 +1044,26 @@ class User extends database_object
      * @param boolean $encrypted
      * @return integer
      */
-    public static function create($username, $fullname, $email, $website, $password, $access, $state = '', $city = '', $disabled = false, $encrypted = false)
-    {
-        $website = rtrim((string) $website, "/");
+    public static function create(
+        $username,
+        $fullname,
+        $email,
+        $website,
+        $password,
+        $access,
+        $state = '',
+        $city = '',
+        $disabled = false,
+        $encrypted = false
+    ) {
+        $website = rtrim((string)$website, "/");
         if (!$encrypted) {
             $password = hash('sha256', $password);
         }
         $disabled = $disabled ? 1 : 0;
 
         /* Now Insert this new user */
-        $sql = "INSERT INTO `user` (`username`, `disabled`, " .
-            "`fullname`, `email`, `password`, `access`, `create_date`";
+        $sql    = "INSERT INTO `user` (`username`, `disabled`, " . "`fullname`, `email`, `password`, `access`, `create_date`";
         $params = array($username, $disabled, $fullname, $email, $password, $access, time());
 
         if (!empty($website)) {
@@ -1084,12 +1099,12 @@ class User extends database_object
         }
 
         // Get the insert_id
-        $insert_id = (int) Dba::insert_id();
+        $insert_id = (int)Dba::insert_id();
 
         // Populates any missing preferences, in this case all of them
         self::fix_preferences($insert_id);
 
-        return (int) $insert_id;
+        return (int)$insert_id;
     } // create
 
     /**
@@ -1109,8 +1124,8 @@ class User extends database_object
         debug_event('user.class', 'Updating password', 4);
 
 
-        $sql          = "UPDATE `user` SET `password` = ? WHERE `id` = ?";
-        $db_results   = Dba::write($sql, array($escaped_password, $this->id));
+        $sql        = "UPDATE `user` SET `password` = ? WHERE `id` = ?";
+        $db_results = Dba::write($sql, array($escaped_password, $this->id));
 
         // Clear this (temp fix)
         if ($db_results) {
@@ -1134,14 +1149,14 @@ class User extends database_object
         if (!$this->last_seen) {
             $this->f_last_seen = T_('Never');
         } else {
-            $this->f_last_seen = get_datetime((int) $this->last_seen);
+            $this->f_last_seen = get_datetime((int)$this->last_seen);
         }
 
         /* If they have a create date */
         if (!$this->create_date) {
             $this->f_create_date = T_('Unknown');
         } else {
-            $this->f_create_date = get_datetime((int) $this->create_date);
+            $this->f_create_date = get_datetime((int)$this->create_date);
         }
 
         $this->f_name = ($this->fullname_public ? $this->fullname : $this->username);
@@ -1152,8 +1167,7 @@ class User extends database_object
 
         if ($details) {
             /* Calculate their total Bandwidth Usage */
-            $sql = "SELECT sum(`song`.`size`) as size FROM `song` LEFT JOIN `object_count` ON `song`.`id`=`object_count`.`object_id` " .
-                "WHERE `object_count`.`user`=" . $this->id . " AND `object_count`.`object_type`='song'";
+            $sql        = "SELECT sum(`song`.`size`) as size FROM `song` LEFT JOIN `object_count` ON `song`.`id`=`object_count`.`object_id` " . "WHERE `object_count`.`user`=" . $this->id . " AND `object_count`.`object_type`='song'";
             $db_results = Dba::read($sql);
 
             $result = Dba::fetch_assoc($db_results);
@@ -1164,7 +1178,8 @@ class User extends database_object
             /* Get Users Last ip */
             if (count($data = $this->get_ip_history(1))) {
                 $user_ip          = inet_ntop($data['0']['ip']);
-                $this->ip_history = (!empty($user_ip) && filter_var($user_ip, FILTER_VALIDATE_IP)) ? $user_ip : T_('Invalid');
+                $this->ip_history = (!empty($user_ip) && filter_var($user_ip,
+                        FILTER_VALIDATE_IP)) ? $user_ip : T_('Invalid');
             } else {
                 $this->ip_history = T_('Not Enough Data');
             }
@@ -1255,8 +1270,7 @@ class User extends database_object
             /* Check for duplicates */
             if (isset($results[$pref_id])) {
                 $row['value'] = Dba::escape($row['value']);
-                $sql          = "DELETE FROM `user_preference` WHERE `user`='$user_id' AND `preference`='" . $row['preference'] . "' AND" .
-                    " `value`='" . Dba::escape($row['value']) . "'";
+                $sql          = "DELETE FROM `user_preference` WHERE `user`='$user_id' AND `preference`='" . $row['preference'] . "' AND" . " `value`='" . Dba::escape($row['value']) . "'";
                 Dba::write($sql);
             } // if its set
             else {
@@ -1266,8 +1280,7 @@ class User extends database_object
 
         /* If we aren't the -1 user before we continue grab the -1 users values */
         if ($user_id != '-1') {
-            $sql = "SELECT `user_preference`.`preference`, `user_preference`.`value` FROM `user_preference`, `preference` " .
-                "WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`catagory` !='system'";
+            $sql        = "SELECT `user_preference`.`preference`, `user_preference`.`value` FROM `user_preference`, `preference` " . "WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`catagory` !='system'";
             $db_results = Dba::read($sql);
             /* While through our base stuff */
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -1318,17 +1331,22 @@ class User extends database_object
         } // if this is an admin check for others
 
         // simple deletion queries.
-        $user_tables = array('playlist', 'object_count', 'ip_history',
-            'access_list', 'rating', 'tag_map',
-            'user_preference', 'user_vote');
+        $user_tables = array(
+            'playlist',
+            'object_count',
+            'ip_history',
+            'access_list',
+            'rating',
+            'tag_map',
+            'user_preference',
+            'user_vote'
+        );
         foreach ($user_tables as $table_id) {
             $sql = "DELETE FROM `" . $table_id . "` WHERE `user` = ?";
             Dba::write($sql, array($this->id));
         }
         // Clean up the playlist data table
-        $sql = "DELETE FROM `playlist_data` USING `playlist_data` " .
-            "LEFT JOIN `playlist` ON `playlist`.`id`=`playlist_data`.`playlist` " .
-            "WHERE `playlist`.`id` IS NULL";
+        $sql = "DELETE FROM `playlist_data` USING `playlist_data` " . "LEFT JOIN `playlist` ON `playlist`.`id`=`playlist_data`.`playlist` " . "WHERE `playlist`.`id` IS NULL";
         Dba::write($sql);
 
         // Clean out the tags
@@ -1394,9 +1412,7 @@ class User extends database_object
         }
         $ordersql = ($newest === true) ? 'DESC' : 'ASC';
 
-        $sql = "SELECT `object_id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = ? AND `user` = ? " .
-            "GROUP BY `object_id` ORDER BY `date` " . $ordersql .
-            " LIMIT " . $limit . " ";
+        $sql        = "SELECT `object_id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = ? AND `user` = ? " . "GROUP BY `object_id` ORDER BY `date` " . $ordersql . " LIMIT " . $limit . " ";
         $db_results = Dba::read($sql, array($type, $this->id));
 
         $results = array();
@@ -1417,8 +1433,8 @@ class User extends database_object
     public function get_ip_history($count = 1, $distinct = false)
     {
         $username  = Dba::escape($this->id);
-        $count     = $count ? (int) ($count) : (int) (AmpConfig::get('user_ip_cardinality'));
-        $limit_sql = ($count > 0) ? " LIMIT " . (string) ($count) : '';
+        $count     = $count ? (int)($count) : (int)(AmpConfig::get('user_ip_cardinality'));
+        $limit_sql = ($count > 0) ? " LIMIT " . (string)($count) : '';
 
         $group_sql = "";
         if ($distinct) {
@@ -1426,9 +1442,7 @@ class User extends database_object
         }
 
         /* Select ip history */
-        $sql = "SELECT `ip`, `date` FROM `ip_history` " .
-            "WHERE `user`='$username' " .
-            "$group_sql ORDER BY `date` DESC$limit_sql";
+        $sql        = "SELECT `ip`, `date` FROM `ip_history` " . "WHERE `user`='$username' " . "$group_sql ORDER BY `date` DESC$limit_sql";
         $db_results = Dba::read($sql);
 
         $results = array();
@@ -1600,7 +1614,7 @@ class User extends database_object
         $db_results = Dba::read($sql, array($this->id));
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['user'];
+            $results[] = (int)$row['user'];
         }
 
         return $results;
@@ -1617,7 +1631,7 @@ class User extends database_object
         $db_results = Dba::read($sql, array($this->id));
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['follow_user'];
+            $results[] = (int)$row['follow_user'];
         }
 
         return $results;
@@ -1694,7 +1708,9 @@ class User extends database_object
         $followed = $this->is_followed_by($user_id);
 
         $html = "<span id='button_follow_" . $this->id . "' class='followbtn'>";
-        $html .= Ajax::text('?page=user&action=flip_follow&user_id=' . $this->id, ($followed ? T_('Unfollow') : T_('Follow')) . ' (' . count($this->get_followers()) . ')', 'flip_follow_' . $this->id);
+        $html .= Ajax::text('?page=user&action=flip_follow&user_id=' . $this->id,
+            ($followed ? T_('Unfollow') : T_('Follow')) . ' (' . count($this->get_followers()) . ')',
+            'flip_follow_' . $this->id);
         $html .= "</span>";
 
         return $html;
@@ -1729,16 +1745,12 @@ class User extends database_object
     public static function rebuild_all_preferences()
     {
         // Clean out any preferences garbage left over
-        $sql = "DELETE `user_preference`.* FROM `user_preference` " .
-            "LEFT JOIN `user` ON `user_preference`.`user` = `user`.`id` " .
-            "WHERE `user_preference`.`user` != -1 AND `user`.`id` IS NULL";
+        $sql = "DELETE `user_preference`.* FROM `user_preference` " . "LEFT JOIN `user` ON `user_preference`.`user` = `user`.`id` " . "WHERE `user_preference`.`user` != -1 AND `user`.`id` IS NULL";
         Dba::write($sql);
 
         // Get only users who has less preferences than excepted
         // otherwise it would have significant performance issue with large user database
-        $sql = "SELECT `user` FROM `user_preference` " .
-            "GROUP BY `user` HAVING COUNT(*) < (" .
-            "SELECT COUNT(`id`) FROM `preference` WHERE `catagory` != 'system')";
+        $sql        = "SELECT `user` FROM `user_preference` " . "GROUP BY `user` HAVING COUNT(*) < (" . "SELECT COUNT(`id`) FROM `preference` WHERE `catagory` != 'system')";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             self::fix_preferences($row['user']);
@@ -1771,4 +1783,4 @@ class User extends database_object
 
         return true;
     }
-} // end user.class
+}

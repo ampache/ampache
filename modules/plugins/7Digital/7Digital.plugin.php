@@ -1,6 +1,7 @@
 <?php
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
+use Ampache\Model\User;
 use Ampache\Module\Util\OAuth\OAuthConsumer;
 use Ampache\Module\Util\OAuth\OAuthRequest;
 use Ampache\Module\Util\OAuth\OAuthSignatureMethod_HMAC_SHA1;

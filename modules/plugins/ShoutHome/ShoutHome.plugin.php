@@ -2,6 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
 use Ampache\Model\Shoutbox;
+use Ampache\Model\User;
 use Ampache\Module\Util\Ui;
 
 /**

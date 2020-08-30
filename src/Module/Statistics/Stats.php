@@ -31,7 +31,7 @@ use Ampache\Module\System\Dba;
 use PDOStatement;
 use Podcast_Episode;
 use Song;
-use User;
+use Ampache\Model\User;
 use Ampache\Model\Useractivity;
 use Video;
 

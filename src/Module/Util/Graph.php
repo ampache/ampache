@@ -32,7 +32,7 @@ use CpChart;
 use CpChart\Data;
 use Ampache\Module\System\Dba;
 use Ampache\Model\Plugin;
-use User;
+use Ampache\Model\User;
 
 class Graph
 {

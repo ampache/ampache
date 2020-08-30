@@ -27,7 +27,7 @@ namespace Ampache\Module\System;
 use AmpConfig;
 use AmpError;
 use Ampache\Module\System\Dba;
-use User;
+use Ampache\Model\User;
 
 /**
  * Update Class

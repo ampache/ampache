@@ -22,6 +22,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Model\Plugin;
+use Ampache\Model\User;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;

@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\User;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;

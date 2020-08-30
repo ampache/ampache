@@ -33,7 +33,7 @@ use Label;
 use Playlist;
 use Search;
 use Song;
-use User;
+use Ampache\Model\User;
 use Ampache\Model\Wanted;
 
 final class SearchAjaxHandler implements AjaxHandlerInterface

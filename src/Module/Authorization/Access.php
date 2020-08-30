@@ -28,7 +28,7 @@ use AmpConfig;
 use AmpError;
 use Core;
 use Ampache\Module\System\Dba;
-use User;
+use Ampache\Model\User;
 
 /**
  * Access Class

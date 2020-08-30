@@ -47,7 +47,7 @@ use Share;
 use SimpleXMLElement;
 use Song;
 use Tag;
-use User;
+use Ampache\Model\User;
 use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;
 use Video;
@@ -874,7 +874,7 @@ class Xml_Data
      *
      * This handles creating an xml document for a user
      *
-     * @param User $user User
+     * @param \Ampache\Model\User $user User
      * @param bool $fullinfo
      * @return string return xml
      */

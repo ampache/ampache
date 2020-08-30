@@ -21,6 +21,7 @@
  */
 
 use Ampache\Model\Shoutbox;
+use Ampache\Model\User;
 use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path'); ?>

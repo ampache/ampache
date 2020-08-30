@@ -32,7 +32,7 @@ use Core;
 use Ampache\Module\System\Dba;
 use Preference;
 use Ampache\Module\System\Session;
-use User;
+use Ampache\Model\User;
 use Video;
 
 class Stream

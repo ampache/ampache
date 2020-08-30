@@ -34,7 +34,7 @@ use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use MusicBrainz\Filters\ArtistFilter;
 use Song_preview;
-use User;
+use Ampache\Model\User;
 
 /**
  * Class Wanted

@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\User;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 

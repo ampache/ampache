@@ -33,7 +33,7 @@ use Core;
 use Preference;
 use Ampache\Module\Api\Subsonic_Api;
 use Ampache\Module\Api\Subsonic_Xml_Data;
-use User;
+use Ampache\Model\User;
 
 final class SubsonicApplication implements ApplicationInterface
 {

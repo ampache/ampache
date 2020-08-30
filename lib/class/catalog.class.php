@@ -24,6 +24,7 @@ declare(strict_types=0);
 use Ampache\Model\Album;
 use Ampache\Model\License;
 use Ampache\Model\Shoutbox;
+use Ampache\Model\User;
 use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;
 use Ampache\Module\Playback\Stream_Url;

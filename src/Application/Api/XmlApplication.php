@@ -30,7 +30,7 @@ use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use Core;
 use Ampache\Module\System\Session;
-use User;
+use Ampache\Model\User;
 use Ampache\Module\Api\Xml_Data;
 
 final class XmlApplication implements ApplicationInterface

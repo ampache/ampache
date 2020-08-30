@@ -32,7 +32,7 @@ use Exception;
 use getID3;
 use getid3_lib;
 use getid3_writetags;
-use User;
+use Ampache\Model\User;
 
 /**
  * This class takes the information pulled from getID3 and returns it in a

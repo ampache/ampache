@@ -54,7 +54,7 @@ use Share;
 use SimpleXMLElement;
 use Song;
 use Tag;
-use User;
+use Ampache\Model\User;
 use Ampache\Model\Userflag;
 
 /**

@@ -21,6 +21,7 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Model\User;
 use Ampache\Module\System\Dba;
 
 /**

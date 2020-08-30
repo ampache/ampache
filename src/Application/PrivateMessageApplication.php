@@ -30,7 +30,7 @@ use AmpConfig;
 use Core;
 use PrivateMsg;
 use Ampache\Module\Util\Ui;
-use User;
+use Ampache\Model\User;
 
 final class PrivateMessageApplication implements ApplicationInterface
 {

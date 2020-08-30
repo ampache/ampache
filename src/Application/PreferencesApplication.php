@@ -32,7 +32,7 @@ use Core;
 use Ampache\Model\Plugin;
 use Preference;
 use Ampache\Module\Util\Ui;
-use User;
+use Ampache\Model\User;
 
 final class PreferencesApplication implements ApplicationInterface
 {

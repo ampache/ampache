@@ -31,7 +31,7 @@ use AmpConfig;
 use Ampache\Module\Util\Browse;
 use Ampache\Model\Shoutbox;
 use Ampache\Module\Util\Ui;
-use User;
+use Ampache\Model\User;
 
 final class ShoutApplication implements ApplicationInterface
 {

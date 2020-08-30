@@ -45,7 +45,7 @@ use Share;
 use SimpleXMLElement;
 use Song;
 use Tag;
-use User;
+use Ampache\Model\User;
 use Ampache\Model\Userflag;
 use Video;
 
@@ -1216,7 +1216,7 @@ class Subsonic_Xml_Data
     /**
      * addUser
      * @param SimpleXMLElement $xml
-     * @param User $user
+     * @param \Ampache\Model\User $user
      */
     public static function addUser($xml, $user)
     {

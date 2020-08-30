@@ -29,7 +29,7 @@ use AmpConfig;
 use Core;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
-use User;
+use Ampache\Model\User;
 
 final class LostPasswordApplication implements ApplicationInterface
 {

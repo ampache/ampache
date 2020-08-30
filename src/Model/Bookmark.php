@@ -27,7 +27,7 @@ namespace Ampache\Model;
 use Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;
-use User;
+use Ampache\Model\User;
 
 /**
  * This manage bookmark on playable items

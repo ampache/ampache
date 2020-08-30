@@ -26,6 +26,7 @@
  * It changes depending on where it is
  */
 
+use Ampache\Model\User;
 use Ampache\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;

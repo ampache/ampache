@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\User;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
