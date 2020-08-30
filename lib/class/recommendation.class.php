@@ -271,58 +271,59 @@ class Recommendation
 
             $xml = self::get_lastfm_results('artist.getsimilar', $query);
 
-            foreach ($xml->similarartists->children() as $child) {
-                $name     = (string) $child->name;
-                $mbid     = (string) $child->mbid;
-                $local_id = null;
+            if ($xml->similarartists) {
+                foreach ($xml->similarartists->children() as $child) {
+                    $name = (string)$child->name;
+                    $mbid = (string)$child->mbid;
+                    $local_id = null;
 
-                // First we check by MBID
-                if ($mbid) {
-                    $sql = "SELECT `artist`.`id` FROM `artist` WHERE `mbid` = ?";
-                    if (AmpConfig::get('catalog_disable')) {
-                        $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
+                    // First we check by MBID
+                    if ($mbid) {
+                        $sql = "SELECT `artist`.`id` FROM `artist` WHERE `mbid` = ?";
+                        if (AmpConfig::get('catalog_disable')) {
+                            $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
+                        }
+                        $db_result = Dba::read($sql, array($mbid));
+                        if ($result = Dba::fetch_assoc($db_result)) {
+                            $local_id = $result['id'];
+                        }
                     }
-                    $db_result = Dba::read($sql, array($mbid));
-                    if ($result = Dba::fetch_assoc($db_result)) {
-                        $local_id = $result['id'];
+
+                    // Then we fall back to the less likely to work exact
+                    // name match
+                    if ($local_id === null) {
+                        $searchname = Catalog::trim_prefix($name);
+                        $searchname = Dba::escape($searchname['string']);
+                        $sql = "SELECT `artist`.`id` FROM `artist` WHERE `artist`.`name` = ? OR " .
+                            "LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?";
+                        if (AmpConfig::get('catalog_disable')) {
+                            $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
+                        }
+                        $db_result = Dba::read($sql, array($searchname, $searchname));
+                        if ($result = Dba::fetch_assoc($db_result)) {
+                            $local_id = $result['id'];
+                        }
+                    }
+
+                    // Then we give up
+                    if ($local_id === null) {
+                        debug_event('recommendation.class', "$name did not match any local artist", 5);
+                        $similars[] = array(
+                            'id' => null,
+                            'name' => $name,
+                            'mbid' => $mbid
+                        );
+                    } else {
+                        debug_event('recommendation.class', "$name matched local artist " . $local_id, 5);
+                        $similars[] = array(
+                            'id' => $local_id,
+                            'name' => $name
+                        );
                     }
                 }
-
-                // Then we fall back to the less likely to work exact
-                // name match
-                if ($local_id === null) {
-                    $searchname = Catalog::trim_prefix($name);
-                    $searchname = Dba::escape($searchname['string']);
-                    $sql        = "SELECT `artist`.`id` FROM `artist` WHERE `artist`.`name` = ? OR " .
-                                  "LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?";
-                    if (AmpConfig::get('catalog_disable')) {
-                        $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
-                    }
-                    $db_result = Dba::read($sql, array($searchname, $searchname));
-                    if ($result = Dba::fetch_assoc($db_result)) {
-                        $local_id = $result['id'];
-                    }
+                if (count($similars) > 0) {
+                    self::update_recommendation_cache('artist', $artist_id, $similars);
                 }
-
-                // Then we give up
-                if ($local_id === null) {
-                    debug_event('recommendation.class', "$name did not match any local artist", 5);
-                    $similars[] = array(
-                        'id' => null,
-                        'name' => $name,
-                        'mbid' => $mbid
-                    );
-                } else {
-                    debug_event('recommendation.class', "$name matched local artist " . $local_id, 5);
-                    $similars[] = array(
-                        'id' => $local_id,
-                        'name' => $name
-                    );
-                }
-            }
-
-            if (count($similars) > 0) {
-                self::update_recommendation_cache('artist', $artist_id, $similars);
             }
         }
 
