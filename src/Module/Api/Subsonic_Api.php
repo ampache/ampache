@@ -46,7 +46,7 @@ use Playlist;
 use Podcast;
 use Podcast_Episode;
 use Preference;
-use PrivateMsg;
+use Ampache\Model\PrivateMsg;
 use Ampache\Model\Rating;
 use Requests;
 use Ampache\Model\Search;

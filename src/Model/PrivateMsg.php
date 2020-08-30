@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,14 +20,19 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Model\database_object;
-use Ampache\Model\User;
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Mailer;
+use AmpConfig;
+use AmpError;
+use Core;
+use PDOStatement;
+use Preference;
 
 /**
- * PrivateMsg class
- *
  * This is the class responsible for handling the PrivateMsg object
  * it is related to the user_pvmsg table in the database.
  */
@@ -36,72 +40,72 @@ class PrivateMsg extends database_object
 {
     /* Variables from DB */
     /**
-     *  @var integer $id
+     * @var integer $id
      */
     public $id;
 
     /**
-     *  @var string $subject
+     * @var string $subject
      */
     public $subject;
 
     /**
-     *  @var string $message
+     * @var string $message
      */
     public $message;
 
     /**
-     *  @var integer $from_user
+     * @var integer $from_user
      */
     public $from_user;
 
     /**
-     *  @var integer $to_user
+     * @var integer $to_user
      */
     public $to_user;
 
     /**
-     *  @var integer $creation_date
+     * @var integer $creation_date
      */
     public $creation_date;
 
     /**
-     *  @var boolean $is_read
+     * @var boolean $is_read
      */
     public $is_read;
 
     /**
-     *  @var string $f_subject
+     * @var string $f_subject
      */
     public $f_subject;
 
     /**
-     *  @var string $f_message
+     * @var string $f_message
      */
     public $f_message;
 
     /**
-     *  @var string $link
+     * @var string $link
      */
     public $link;
 
     /**
-     *  @var string $f_link
+     * @var string $f_link
      */
     public $f_link;
 
     /**
-     *  @var string $f_from_user_link
+     * @var string $f_from_user_link
      */
     public $f_from_user_link;
 
     /**
-     *  @var string $f_to_user_link
+     * @var string $f_to_user_link
      */
     public $f_to_user_link;
 
     /**
-     *  @var string $f_creation_date
+     * @var string $f_creation_date
      */
     public $f_creation_date;
 
@@ -127,7 +131,7 @@ class PrivateMsg extends database_object
         unset($details); //dead code but called from other format calls
         $this->f_subject       = scrub_out($this->subject);
         $this->f_message       = scrub_out($this->message);
-        $this->f_creation_date = get_datetime((int) $this->creation_date);
+        $this->f_creation_date = get_datetime((int)$this->creation_date);
         $from_user             = new User($this->from_user);
         $from_user->format();
         $this->f_from_user_link = $from_user->f_link;
@@ -183,8 +187,7 @@ class PrivateMsg extends database_object
             $from_user     = $data['from_user'] ?: Core::get_global('user')->id;
             $creation_date = $data['creation_date'] ?: time();
             $is_read       = $data['is_read'] ?: 0;
-            $sql           = "INSERT INTO `user_pvmsg` (`subject`, `message`, `from_user`, `to_user`, `creation_date`, `is_read`) " .
-                    "VALUES (?, ?, ?, ?, ?, ?)";
+            $sql           = "INSERT INTO `user_pvmsg` (`subject`, `message`, `from_user`, `to_user`, `creation_date`, `is_read`) " . "VALUES (?, ?, ?, ?, ?, ?)";
             if (Dba::write($sql, array($subject, $message, $from_user, $to_user->id, $creation_date, $is_read))) {
                 $insert_id = Dba::insert_id();
 
@@ -198,7 +201,8 @@ class PrivateMsg extends database_object
                             $mailer->recipient_name = $to_user->fullname;
                             $mailer->subject        = "[" . T_('Private Message') . "] " . $subject;
                             /* HINT: User fullname */
-                            $mailer->message = sprintf(T_("You received a new private message from %s."), Core::get_global('user')->fullname);
+                            $mailer->message = sprintf(T_("You received a new private message from %s."),
+                                Core::get_global('user')->fullname);
                             $mailer->message .= "\n\n----------------------\n\n";
                             $mailer->message .= $message;
                             $mailer->message .= "\n\n----------------------\n\n";
@@ -243,6 +247,7 @@ class PrivateMsg extends database_object
 
         return $results;
     }
+
     /**
      * send_chat_msgs
      * Get the subsonic chat messages.
@@ -280,7 +285,7 @@ class PrivateMsg extends database_object
         self::clean_chat_msgs();
 
         $sql = "SELECT `id` FROM `user_pvmsg` WHERE `to_user` = 0 ";
-        $sql .= " AND `user_pvmsg`.`creation_date` > " . (string) $since;
+        $sql .= " AND `user_pvmsg`.`creation_date` > " . (string)$since;
         $sql .= " ORDER BY `user_pvmsg`.`creation_date` DESC";
 
         $db_results = Dba::read($sql);
@@ -300,7 +305,7 @@ class PrivateMsg extends database_object
     public static function clean_chat_msgs($days = 30)
     {
         $sql = "DELETE FROM `user_pvmsg` WHERE `to_user` = 0 AND ";
-        $sql .= "`creation_date` <= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL " . (string) $days . " day))";
+        $sql .= "`creation_date` <= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL " . (string)$days . " day))";
         Dba::write($sql);
     }
-} // end privatemsg.class
+}

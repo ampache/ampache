@@ -28,7 +28,7 @@ namespace Ampache\Application;
 use Ampache\Module\Authorization\Access;
 use AmpConfig;
 use Core;
-use PrivateMsg;
+use Ampache\Model\PrivateMsg;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\User;
 

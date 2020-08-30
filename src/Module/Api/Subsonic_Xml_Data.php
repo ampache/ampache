@@ -38,7 +38,7 @@ use Playlist;
 use Podcast;
 use Podcast_Episode;
 use Preference;
-use PrivateMsg;
+use Ampache\Model\PrivateMsg;
 use Ampache\Model\Rating;
 use Ampache\Model\Search;
 use Ampache\Model\Share;
@@ -1581,7 +1581,7 @@ class Subsonic_Xml_Data
     /**
      * addMessage
      * @param SimpleXMLElement $xml
-     * @param PrivateMsg $message
+     * @param \Ampache\Model\PrivateMsg $message
      */
     private static function addMessage($xml, $message)
     {
