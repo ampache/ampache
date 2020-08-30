@@ -35,7 +35,7 @@ use Clip;
 use Core;
 use Ampache\Model\Movie;
 use Personal_Video;
-use Rating;
+use Ampache\Model\Rating;
 use Ampache\Model\Song;
 use Ampache\Model\TvShow;
 use Ampache\Model\TVShow_Episode;

@@ -42,7 +42,7 @@ use DOMDocument;
 use Playlist;
 use Podcast;
 use Podcast_Episode;
-use Rating;
+use Ampache\Model\Rating;
 use Search;
 use Share;
 use SimpleXMLElement;

@@ -21,6 +21,7 @@
  *
  */
 
+use Ampache\Model\Rating;
 use Ampache\Model\Song;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;

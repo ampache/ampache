@@ -34,7 +34,7 @@ use Catalog;
 use Ampache\Module\System\Dba;
 use Playlist;
 use Podcast;
-use Rating;
+use Ampache\Model\Rating;
 use Ampache\Model\Song;
 use Ampache\Model\Tag;
 use Ampache\Model\User;

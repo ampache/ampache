@@ -21,6 +21,7 @@
  */
 
 // Don't show disabled medias to normal users
+use Ampache\Model\Rating;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
 use Ampache\Module\Authorization\Access;

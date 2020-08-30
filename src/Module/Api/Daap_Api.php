@@ -30,7 +30,7 @@ use Catalog;
 use Core;
 use Ampache\Module\System\Dba;
 use Playlist;
-use Rating;
+use Ampache\Model\Rating;
 use Search;
 use Ampache\Model\Song;
 use Ampache\Model\Tag;

@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Rating;
 use Ampache\Model\TvShow;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;

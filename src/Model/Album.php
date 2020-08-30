@@ -35,7 +35,7 @@ use Core;
 use Ampache\Module\System\Dba;
 use Exception;
 use PDOStatement;
-use Rating;
+use Ampache\Model\Rating;
 use Search;
 use Share;
 use Ampache\Model\Song;

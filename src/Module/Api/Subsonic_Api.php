@@ -47,7 +47,7 @@ use Podcast;
 use Podcast_Episode;
 use Preference;
 use PrivateMsg;
-use Rating;
+use Ampache\Model\Rating;
 use Requests;
 use Search;
 use Share;

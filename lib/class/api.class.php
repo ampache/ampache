@@ -24,6 +24,7 @@ declare(strict_types=0);
 use Ampache\Model\Album;
 use Ampache\Model\License;
 use Ampache\Model\Random;
+use Ampache\Model\Rating;
 use Ampache\Model\Shoutbox;
 use Ampache\Model\Song;
 use Ampache\Model\Tag;

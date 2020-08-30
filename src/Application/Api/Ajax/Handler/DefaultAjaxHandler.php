@@ -31,7 +31,7 @@ use AmpConfig;
 use Ampache\Module\Util\Browse;
 use Core;
 use Playlist;
-use Rating;
+use Ampache\Model\Rating;
 use Ampache\Model\Song;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Ui;

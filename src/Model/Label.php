@@ -30,7 +30,7 @@ use AmpConfig;
 use Art;
 use Core;
 use PDOStatement;
-use Rating;
+use Ampache\Model\Rating;
 use Search;
 
 /**

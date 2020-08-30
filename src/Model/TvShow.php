@@ -31,7 +31,7 @@ use AmpConfig;
 use Art;
 use Catalog;
 use PDOStatement;
-use Rating;
+use Ampache\Model\Rating;
 use Share;
 use Ampache\Model\TVShow_Season;
 

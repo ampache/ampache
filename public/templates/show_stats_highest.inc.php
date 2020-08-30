@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Rating;
 use Ampache\Module\Util\Browse;
 
 $sql    = Rating::get_highest_sql('song');
