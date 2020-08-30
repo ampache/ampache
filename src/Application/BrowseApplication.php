@@ -62,7 +62,7 @@ final class BrowseApplication implements ApplicationInterface
             case 'broadcast':
             case 'tvshow':
             case 'tvshow_season':
-            case 'tvshow_episode':
+            case 'Ampache\Model\TVShow_Episode':
             case 'movie':
             case 'clip':
             case 'personal_video':
@@ -177,7 +177,7 @@ final class BrowseApplication implements ApplicationInterface
                 $browse->update_browse_from_session();
                 $browse->show_objects();
                 break;
-            case 'tvshow_episode':
+            case 'Ampache\Model\TVShow_Episode':
             case 'movie':
             case 'clip':
             case 'personal_video':

@@ -38,7 +38,7 @@ use Personal_Video;
 use Rating;
 use Song;
 use Ampache\Model\TvShow;
-use TVShow_Episode;
+use Ampache\Model\TVShow_Episode;
 use TVShow_Season;
 
 class Video extends database_object implements Media, library_item
@@ -521,7 +521,7 @@ class Video extends database_object implements Media, library_item
      */
     private static function get_derived_types()
     {
-        return array('TVShow_Episode', 'Movie', 'Clip', 'Personal_Video');
+        return array('Ampache\Model\TVShow_Episode', 'Movie', 'Clip', 'Personal_Video');
     }
 
     /**

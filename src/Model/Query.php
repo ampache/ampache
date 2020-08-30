@@ -621,7 +621,7 @@ class Query
                     'season',
                     'tvshow'
                 ),
-                'tvshow_episode' => array(
+                'Ampache\Model\TVShow_Episode' => array(
                     'title',
                     'resolution',
                     'length',
@@ -718,7 +718,7 @@ class Query
             case 'license':
             case 'tvshow':
             case 'tvshow_season':
-            case 'tvshow_episode':
+            case 'Ampache\Model\TVShow_Episode':
             case 'movie':
             case 'personal_video':
             case 'clip':
@@ -1047,7 +1047,7 @@ class Query
                     $this->set_select("`tvshow_season`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `tvshow_season` ";
                     break;
-                case 'tvshow_episode':
+                case 'Ampache\Model\TVShow_Episode':
                     $this->set_select("`tvshow_episode`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `tvshow_episode` ";
                     break;
@@ -2124,7 +2124,7 @@ class Query
                         break;
                 }
                 break;
-            case 'tvshow_episode':
+            case 'Ampache\Model\TVShow_Episode':
                 switch ($field) {
                     case 'episode':
                         $sql = "`tvshow_episode`.`episode_number`";
@@ -2141,7 +2141,7 @@ class Query
                         $this->set_join('left', '`tvshow`', '`tvshow_season`.`tvshow`', '`tvshow`.`id`', 100);
                         break;
                     default:
-                        $sql = $this->sql_sort_video($field, 'tvshow_episode');
+                        $sql = $this->sql_sort_video($field, 'Ampache\Model\TVShow_Episode');
                         break;
                 }
                 break;

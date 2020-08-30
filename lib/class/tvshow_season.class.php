@@ -201,7 +201,7 @@ class TVShow_Season extends database_object implements library_item
      */
     public function get_childrens()
     {
-        return array('tvshow_episode' => $this->get_episodes());
+        return array('Ampache\Model\TVShow_Episode' => $this->get_episodes());
     }
 
     /**

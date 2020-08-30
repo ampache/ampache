@@ -87,7 +87,7 @@ $t_search    = T_('Search'); ?>
                 <li id="sb_home_browse_video_clip"><a href="<?php echo $web_path ?>/browse.php?action=clip"><?php echo T_('Music Clips') ?></a></li>
           <?php
             } ?>
-          <?php if (Video::get_item_count('TVShow_Episode')) { ?>
+          <?php if (Video::get_item_count('Ampache\Model\TVShow_Episode')) { ?>
                 <li id="sb_home_browse_video_tvShow"><a href="<?php echo $web_path ?>/browse.php?action=tvshow"><?php echo T_('TV Shows') ?></a></li>
           <?php
             } ?>

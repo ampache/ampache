@@ -1814,11 +1814,11 @@ class Art extends database_object
         switch ($type) {
             case 'tvshow':
             case 'tvshow_season':
-            case 'tvshow_episode':
-                $gtypes[]                     = 'tvshow';
-                $media_info['tvshow']         = $options['tvshow'];
-                $media_info['tvshow_season']  = $options['tvshow_season'];
-                $media_info['tvshow_episode'] = $options['tvshow_episode'];
+            case 'Ampache\Model\TVShow_Episode':
+                $gtypes[]                                   = 'tvshow';
+                $media_info['tvshow']                       = $options['tvshow'];
+                $media_info['tvshow_season']                = $options['tvshow_season'];
+                $media_info['Ampache\Model\TVShow_Episode'] = $options['Ampache\Model\TVShow_Episode'];
                 break;
             case 'song':
                 $media_info['mb_trackid'] = $options['mb_trackid'];

@@ -1,13 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-
-use Ampache\Model\Tag;
-use Ampache\Model\TvShow;
-use Ampache\Model\Video;
-use Ampache\Module\System\Dba;
-
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -26,6 +19,14 @@ use Ampache\Module\System\Dba;
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
+use Ampache\Module\System\Dba;
+use Art;
+use TVShow_Season;
 
 class TVShow_Episode extends Video
 {
@@ -85,19 +86,20 @@ class TVShow_Episode extends Video
         $tags = $data['genre'];
 
         $tvshow = TvShow::check($data['tvshow'], $data['year'], $data['tvshow_summary']);
-        if ($options['gather_art'] && $tvshow && $data['tvshow_art'] && !Art::has_db((int) $tvshow, 'tvshow')) {
-            $art = new Art((int) $tvshow, 'tvshow');
+        if ($options['gather_art'] && $tvshow && $data['tvshow_art'] && !Art::has_db((int)$tvshow, 'tvshow')) {
+            $art = new Art((int)$tvshow, 'tvshow');
             $art->insert_url($data['tvshow_art']);
         }
         $tvshow_season = TVShow_Season::check($tvshow, $data['tvshow_season']);
-        if ($options['gather_art'] && $tvshow_season && $data['tvshow_season_art'] && !Art::has_db($tvshow_season, 'tvshow_season')) {
+        if ($options['gather_art'] && $tvshow_season && $data['tvshow_season_art'] && !Art::has_db($tvshow_season,
+                'tvshow_season')) {
             $art = new Art($tvshow_season, 'tvshow_season');
             $art->insert_url($data['tvshow_season_art']);
         }
 
         if (is_array($tags)) {
             foreach ($tags as $tag) {
-                $tag = trim((string) $tag);
+                $tag = trim((string)$tag);
                 if (!empty($tag)) {
                     Tag::add('tvshow_season', $tvshow_season, $tag, false);
                     Tag::add('tvshow', $tvshow, $tag, false);
@@ -121,9 +123,14 @@ class TVShow_Episode extends Video
      */
     public static function create($data)
     {
-        $sql = "INSERT INTO `tvshow_episode` (`id`, `original_name`, `season`, `episode_number`, `summary`) " .
-            "VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($data['id'], $data['original_name'], $data['tvshow_season'], $data['tvshow_episode'], $data['summary']));
+        $sql = "INSERT INTO `tvshow_episode` (`id`, `original_name`, `season`, `episode_number`, `summary`) " . "VALUES (?, ?, ?, ?, ?)";
+        Dba::write($sql, array(
+            $data['id'],
+            $data['original_name'],
+            $data['tvshow_season'],
+            $data['Ampache\Model\TVShow_Episode'],
+            $data['summary']
+        ));
 
         return $data['id'];
     }
@@ -140,7 +147,7 @@ class TVShow_Episode extends Video
 
         $original_name  = isset($data['original_name']) ? $data['original_name'] : $this->original_name;
         $tvshow_season  = isset($data['tvshow_season']) ? $data['tvshow_season'] : $this->season;
-        $tvshow_episode = isset($data['tvshow_episode']) ? $data['tvshow_episode'] : $this->episode_number;
+        $tvshow_episode = isset($data['Ampache\Model\TVShow_Episode']) ? $data['Ampache\Model\TVShow_Episode'] : $this->episode_number;
         $summary        = isset($data['summary']) ? $data['summary'] : $this->summary;
 
         $sql = "UPDATE `tvshow_episode` SET `original_name` = ?, `season` = ?, `episode_number` = ?, `summary` = ? WHERE `id` = ?";
@@ -176,7 +183,8 @@ class TVShow_Episode extends Video
 
         $this->f_file = $this->f_tvshow;
         if ($this->episode_number) {
-            $this->f_file .= ' - S' . sprintf('%02d', $season->season_number) . 'E' . sprintf('%02d', $this->episode_number);
+            $this->f_file .= ' - S' . sprintf('%02d', $season->season_number) . 'E' . sprintf('%02d',
+                    $this->episode_number);
         }
         $this->f_file .= ' - ' . $this->f_title;
         $this->f_full_title = $this->f_file;
@@ -191,18 +199,25 @@ class TVShow_Episode extends Video
     public function get_keywords()
     {
         $keywords           = parent::get_keywords();
-        $keywords['tvshow'] = array('important' => true,
+        $keywords['tvshow'] = array(
+            'important' => true,
             'label' => T_('TV Show'),
-            'value' => $this->f_tvshow);
-        $keywords['tvshow_season'] = array('important' => false,
+            'value' => $this->f_tvshow
+        );
+        $keywords['tvshow_season'] = array(
+            'important' => false,
             'label' => T_('Season'),
-            'value' => $this->f_season);
+            'value' => $this->f_season
+        );
         if ($this->episode_number) {
-            $keywords['tvshow_episode'] = array('important' => false,
+            $keywords['Ampache\Model\TVShow_Episode'] = array(
+                'important' => false,
                 'label' => T_('Episode'),
-                'value' => $this->episode_number);
+                'value' => $this->episode_number
+            );
         }
-        $keywords['type'] = array('important' => false,
+        $keywords['type'] = array(
+            'important' => false,
             'label' => null,
             'value' => 'tvshow'
         );
@@ -225,7 +240,8 @@ class TVShow_Episode extends Video
      */
     public function get_release_item_art()
     {
-        return array('object_type' => 'tvshow_season',
+        return array(
+            'object_type' => 'tvshow_season',
             'object_id' => $this->season
         );
     }
@@ -288,4 +304,4 @@ class TVShow_Episode extends Video
 
         return $deleted;
     }
-} // end tvshow_episode.class
+}

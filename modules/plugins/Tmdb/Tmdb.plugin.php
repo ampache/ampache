@@ -183,13 +183,13 @@ class AmpacheTmdb
                                 if ($release['poster_path']) {
                                     $results['tvshow_season_art'] = $imageHelper->getUrl($release['poster_path']);
                                 }
-                                if ($media_info['tvshow_episode']) {
-                                    $release = $client->getTvEpisodeApi()->getEpisode($results['tmdb_tvshow_id'], $media_info['tvshow_season'], $media_info['tvshow_episode']);
+                                if ($media_info['Ampache\Model\TVShow_Episode']) {
+                                    $release = $client->getTvEpisodeApi()->getEpisode($results['tmdb_tvshow_id'], $media_info['tvshow_season'], $media_info['Ampache\Model\TVShow_Episode']);
                                     if ($release['id']) {
-                                        $results['tmdb_id']        = $release['id'];
-                                        $results['tvshow_season']  = $release['season_number'];
-                                        $results['tvshow_episode'] = $release['episode_number'];
-                                        $results['original_name']  = $release['name'];
+                                        $results['tmdb_id']                      = $release['id'];
+                                        $results['tvshow_season']                = $release['season_number'];
+                                        $results['Ampache\Model\TVShow_Episode'] = $release['episode_number'];
+                                        $results['original_name']                = $release['name'];
                                         if (!empty($release['air_date'])) {
                                             $results['release_date'] = strtotime($release['air_date']);
                                             $results['year']         = date("Y", $results['release_date']);

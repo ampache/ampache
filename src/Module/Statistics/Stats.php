@@ -600,7 +600,7 @@ class Stats
             case 'video':
             case 'tvshow':
             case 'tvshow_season':
-            case 'tvshow_episode':
+            case 'Ampache\Model\TVShow_Episode':
             case 'movie':
             case 'playlist':
                 return $type;

@@ -42,7 +42,7 @@ use Search;
 use Song;
 use Ampache\Model\Tag;
 use Ampache\Model\TvShow;
-use TVShow_Episode;
+use Ampache\Model\TVShow_Episode;
 use TVShow_Season;
 use Ampache\Model\Video;
 use XMLReader;
