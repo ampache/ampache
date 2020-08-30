@@ -32,7 +32,7 @@ use Core;
 use Live_Stream;
 use Playlist;
 use Search;
-use Share;
+use Ampache\Model\Share;
 use Ampache\Module\Util\Ui;
 
 final class BrowseAjaxHandler implements AjaxHandlerInterface

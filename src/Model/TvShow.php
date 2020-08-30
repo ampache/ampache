@@ -32,7 +32,7 @@ use Art;
 use Catalog;
 use PDOStatement;
 use Ampache\Model\Rating;
-use Share;
+use Ampache\Model\Share;
 use Ampache\Model\TVShow_Season;
 
 class TvShow extends database_object implements library_item

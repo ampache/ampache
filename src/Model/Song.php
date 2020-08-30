@@ -43,7 +43,7 @@ use Core;
 use PDOStatement;
 use Preference;
 use Ampache\Model\Rating;
-use Share;
+use Ampache\Model\Share;
 
 class Song extends database_object implements Media, library_item
 {

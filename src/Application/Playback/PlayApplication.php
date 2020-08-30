@@ -39,7 +39,7 @@ use Podcast_Episode;
 use Preference;
 use Ampache\Model\Random;
 use Ampache\Module\System\Session;
-use Share;
+use Ampache\Model\Share;
 use Ampache\Model\Song;
 use Song_Preview;
 use Ampache\Module\Statistics\Stats;

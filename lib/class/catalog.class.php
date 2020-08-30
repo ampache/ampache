@@ -26,6 +26,7 @@ use Ampache\Model\database_object;
 use Ampache\Model\Label;
 use Ampache\Model\License;
 use Ampache\Model\Rating;
+use Ampache\Model\Share;
 use Ampache\Model\Shoutbox;
 use Ampache\Model\Song;
 use Ampache\Model\Tag;

@@ -31,7 +31,7 @@ use AmpConfig;
 use Core;
 use Ampache\Model\Plugin;
 use Preference;
-use Share;
+use Ampache\Model\Share;
 use Ampache\Module\Util\Ui;
 
 final class ShareApplication implements ApplicationInterface

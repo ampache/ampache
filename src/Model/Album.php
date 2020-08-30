@@ -37,7 +37,7 @@ use Exception;
 use PDOStatement;
 use Ampache\Model\Rating;
 use Search;
-use Share;
+use Ampache\Model\Share;
 use Ampache\Model\Song;
 
 /**

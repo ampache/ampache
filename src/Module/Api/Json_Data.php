@@ -38,7 +38,7 @@ use Podcast;
 use Podcast_Episode;
 use Ampache\Model\Rating;
 use Search;
-use Share;
+use Ampache\Model\Share;
 use Ampache\Model\Shoutbox;
 use Ampache\Model\Song;
 use Ampache\Module\Playback\Stream;

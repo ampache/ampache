@@ -50,7 +50,7 @@ use PrivateMsg;
 use Ampache\Model\Rating;
 use Requests;
 use Search;
-use Share;
+use Ampache\Model\Share;
 use SimpleXMLElement;
 use Ampache\Model\Song;
 use Ampache\Model\Tag;

@@ -22,6 +22,7 @@
 
 use Ampache\Model\Album;
 use Ampache\Model\Rating;
+use Ampache\Model\Share;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
 use Ampache\Module\Authorization\Access;
