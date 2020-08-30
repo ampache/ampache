@@ -58,7 +58,7 @@ final class CmControlReplyApplication implements ApplicationInterface
         switch ($upnpRequest['action']) {
             case 'getprotocolinfo':
                 $responseType = 'u:GetProtocolInfoResponse';
-                //$items = Ampache\Module\Api\Upnp_Api::cm_getProtocolInfo();
+                //$items = \Ampache\Module\Api\Upnp_Api::cm_getProtocolInfo();
                 break;
         }
     }

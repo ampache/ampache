@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
 use Ampache\Config\AmpConfig;
@@ -91,7 +92,7 @@ final class XmlApplication implements ApplicationInterface
         AmpConfig::set('stream_beautiful_url', false, true);
 
         // Get the list of possible methods for the Ampache API
-        $methods = get_class_methods('api');
+        $methods = get_class_methods(Api::class);
 
         // Define list of internal functions that should be skipped
         $internal_functions = array('set_filter');
@@ -106,7 +107,7 @@ final class XmlApplication implements ApplicationInterface
             // Then let's call this function!
             if ($_GET['action'] == $method) {
                 $_GET['api_format'] = 'xml';
-                call_user_func(array('api', $method), $_GET);
+                call_user_func(array(Api::class, $method), $_GET);
                 // We only allow a single function to be called, and we assume it's cleaned up!
                 return;
             }

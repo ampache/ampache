@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,6 +19,10 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+declare(strict_types=0);
+
+namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Album;
@@ -44,8 +47,6 @@ use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;
 use Ampache\Model\Video;
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Playback\LocalPlay;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
@@ -56,6 +57,8 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;
+use AmpError;
+use Core;
 
 /**
  * API Class
@@ -63,43 +66,31 @@ use Ampache\Module\Util\Recommendation;
  * This handles functions relating to the API written for Ampache, initially
  * this is very focused on providing functionality for Amarok so it can
  * integrate with Ampache.
- *
  */
 class Api
 {
     /**
-     *  @var string $auth_version
+     * @var string $auth_version
      */
     public static $auth_version = '350001';
 
     /**
-     *  @var string $version
+     * @var string $version
      */
     public static $version = '430000';
 
     /**
-     *  @var Browse $browse
+     * @var Browse $browse
      */
     private static $browse = null;
 
-    /**
-     * constructor
-     * This really isn't anything to do here, so it's private
-     */
-    private function __construct()
-    {
-        // Rien a faire
-    } // constructor
-
-    /**
-     * _auto_init
-     * Automatically called when this class is loaded.
-     */
-    public static function _auto_init()
+    private static function getBrowse(): Browse
     {
         if (self::$browse === null) {
             self::$browse = new Browse(null, false);
         }
+
+        return self::$browse;
     }
 
     /**
@@ -146,7 +137,7 @@ class Api
      */
     public static function set_filter($filter, $value)
     {
-        if (!strlen((string) $value)) {
+        if (!strlen((string)$value)) {
             return false;
         }
 
@@ -155,30 +146,30 @@ class Api
                 // Check for a range, if no range default to gt
                 if (strpos($value, '/')) {
                     $elements = explode('/', $value);
-                    self::$browse->set_filter('add_lt', strtotime($elements['1']));
-                    self::$browse->set_filter('add_gt', strtotime($elements['0']));
+                    self::getBrowse()->set_filter('add_lt', strtotime($elements['1']));
+                    self::getBrowse()->set_filter('add_gt', strtotime($elements['0']));
                 } else {
-                    self::$browse->set_filter('add_gt', strtotime($value));
+                    self::getBrowse()->set_filter('add_gt', strtotime($value));
                 }
                 break;
             case 'update':
                 // Check for a range, if no range default to gt
                 if (strpos($value, '/')) {
                     $elements = explode('/', $value);
-                    self::$browse->set_filter('update_lt', strtotime($elements['1']));
-                    self::$browse->set_filter('update_gt', strtotime($elements['0']));
+                    self::getBrowse()->set_filter('update_lt', strtotime($elements['1']));
+                    self::getBrowse()->set_filter('update_gt', strtotime($elements['0']));
                 } else {
-                    self::$browse->set_filter('update_gt', strtotime($value));
+                    self::getBrowse()->set_filter('update_gt', strtotime($value));
                 }
                 break;
             case 'alpha_match':
-                self::$browse->set_filter('alpha_match', $value);
+                self::getBrowse()->set_filter('alpha_match', $value);
                 break;
             case 'exact_match':
-                self::$browse->set_filter('exact_match', $value);
+                self::getBrowse()->set_filter('exact_match', $value);
                 break;
             case 'enabled':
-                self::$browse->set_filter('enabled', $value);
+                self::getBrowse()->set_filter('enabled', $value);
                 break;
             default:
                 break;
@@ -206,7 +197,8 @@ class Api
             }
             if (empty($input[$parameter])) {
                 debug_event('api.class', "'" . $parameter . "' required on " . $method . " function call.", 2);
-                self::message('error', T_('Missing mandatory parameter') . " '" . $parameter . "'", '401', $input['api_format']);
+                self::message('error', T_('Missing mandatory parameter') . " '" . $parameter . "'", '401',
+                    $input['api_format']);
 
                 return false;
             }
@@ -261,7 +253,7 @@ class Api
         if (empty($passphrase)) {
             $passphrase = Core::get_post('auth');
         }
-        $username = trim((string) $input['user']);
+        $username = trim((string)$input['user']);
         $user_ip  = Core::get_user_ip();
         if (isset($input['version'])) {
             // If version is provided, use it
@@ -275,7 +267,7 @@ class Api
         debug_event('api.class', "Handshake Attempt, IP:$user_ip User:$username Version:$version", 5);
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
-        if ((int) ($version) < self::$auth_version) {
+        if ((int)($version) < self::$auth_version) {
             debug_event('api.class', 'Login Failed: Version too old', 1);
             AmpError::add('api', T_('Login failed, API version is too old'));
 
@@ -295,17 +287,19 @@ class Api
         }
 
         // Log this attempt
-        debug_event('api.class', "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
+        debug_event('api.class',
+            "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
 
         if ($user_id > 0 && Access::check_network('api', $user_id, 5)) {
             // Authentication with user/password, we still need to check the password
             if ($username) {
                 // If the timestamp isn't within 30 minutes sucks to be them
-                if (($timestamp < (time() - 1800)) ||
-                    ($timestamp > (time() + 1800))) {
+                if (($timestamp < (time() - 1800)) || ($timestamp > (time() + 1800))) {
                     debug_event('api.class', 'Login failed, timestamp is out of range ' . $timestamp . '/' . time(), 1);
                     AmpError::add('api', T_('Login failed, timestamp is out of range'));
-                    self::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '401', $input['api_format']);
+                    self::message('error',
+                        T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '401',
+                        $input['api_format']);
 
                     return false;
                 }
@@ -318,7 +312,9 @@ class Api
                 if (!$realpwd) {
                     debug_event('api.class', 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Incorrect username or password'));
-                    self::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '401', $input['api_format']);
+                    self::message('error',
+                        T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '401',
+                        $input['api_format']);
 
                     return false;
                 }
@@ -373,22 +369,24 @@ class Api
                 $counts = Catalog::count_server(true);
 
                 // send the totals
-                $outarray = array('auth' => $token,
-                                  'api' => self::$version,
-                                  'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
-                                  'update' => date("c", (int) $row['update']),
-                                  'add' => date("c", (int) $row['add']),
-                                  'clean' => date("c", (int) $row['clean']),
-                                  'songs' => (int) $counts['song'],
-                                  'albums' => (int) $counts['album'],
-                                  'artists' => (int) $counts['artist'],
-                                  'playlists' => ((int) $counts['playlist'] + (int) $counts['search']),
-                                  'videos' => (int) $counts['video'],
-                                  'catalogs' => (int) $counts['catalog']);
+                $outarray = array(
+                    'auth' => $token,
+                    'api' => self::$version,
+                    'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
+                    'update' => date("c", (int)$row['update']),
+                    'add' => date("c", (int)$row['add']),
+                    'clean' => date("c", (int)$row['clean']),
+                    'songs' => (int)$counts['song'],
+                    'albums' => (int)$counts['album'],
+                    'artists' => (int)$counts['artist'],
+                    'playlists' => ((int)$counts['playlist'] + (int)$counts['search']),
+                    'videos' => (int)$counts['video'],
+                    'catalogs' => (int)$counts['catalog']
+                );
                 switch ($input['api_format']) {
                     case 'json':
                         echo json_encode($outarray, JSON_PRETTY_PRINT);
-                    break;
+                        break;
                     default:
                         echo Xml_Data::keyed_array($outarray);
                 }
@@ -398,7 +396,8 @@ class Api
         } // end while
 
         debug_event('api.class', 'Login Failed, unable to match passphrase', 1);
-        self::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), '401', $input['api_format']);
+        self::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), '401',
+            $input['api_format']);
 
         return false;
     } // handshake
@@ -420,7 +419,9 @@ class Api
         // Check and see if we should extend the api sessions (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
             Session::extend($input['auth']);
-            $xmldata = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length') - 60)), $xmldata);
+            $xmldata = array_merge(array(
+                'session_expire' => date("c", time() + (int)AmpConfig::get('session_length') - 60)
+            ), $xmldata);
         }
 
         debug_event('api.class', 'Ping Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
@@ -429,7 +430,7 @@ class Api
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($xmldata, JSON_PRETTY_PRINT);
-            break;
+                break;
             default:
                 echo Xml_Data::keyed_array($xmldata);
         }
@@ -456,7 +457,8 @@ class Api
             $sql .= " AND `type` = 'api'";
             Dba::write($sql, array($input['auth']));
 
-            debug_event('api.class', 'Goodbye Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
+            debug_event('api.class',
+                'Goodbye Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
             ob_end_clean();
             self::message('success', 'goodbye: ' . $input['auth'], null, $input['api_format']);
 
@@ -490,7 +492,7 @@ class Api
         switch ($input['api_format']) {
             case 'json':
                 echo Json_Data::songs(array($data['id']), $user->id);
-            break;
+                break;
             default:
                 echo Xml_Data::songs(array($data['id']), $user->id);
         }
@@ -519,16 +521,16 @@ class Api
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
-        $type = (string) $input['type'];
+        $type = (string)$input['type'];
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist'))) {
             self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;
         }
-        self::$browse->reset_filters();
-        self::$browse->set_type($type);
-        self::$browse->set_sort('name', 'ASC');
+        self::getBrowse()->reset_filters();
+        self::getBrowse()->set_type($type);
+        self::getBrowse()->set_sort('name', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         self::set_filter($method, $input['filter']);
@@ -536,10 +538,10 @@ class Api
         self::set_filter('update', $input['update']);
 
         if ($type == 'playlist') {
-            self::$browse->set_filter('playlist_type', $user->id);
-            $objects = array_merge(self::$browse->get_objects(), Playlist::get_smartlists(true, $user->id));
+            self::getBrowse()->set_filter('playlist_type', $user->id);
+            $objects = array_merge(self::getBrowse()->get_objects(), Playlist::get_smartlists(true, $user->id));
         } else {
-            $objects = self::$browse->get_objects();
+            $objects = self::getBrowse()->get_objects();
         }
 
         ob_end_clean();
@@ -548,7 +550,7 @@ class Api
                 Json_Data::set_offset($input['offset']);
                 Json_Data::set_limit($input['limit']);
                 echo Json_Data::indexes($objects, $type);
-            break;
+                break;
             default:
                 Xml_Data::set_offset($input['offset']);
                 Xml_Data::set_limit($input['limit']);
@@ -577,8 +579,8 @@ class Api
         if (!self::check_parameter($input, array('type', 'filter'), 'get_similar')) {
             return false;
         }
-        $type   = (string) $input['type'];
-        $filter = (int) $input['filter'];
+        $type   = (string)$input['type'];
+        $filter = (int)$input['filter'];
         // confirm the correct data
         if (!in_array($type, array('song', 'artist'))) {
             self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
@@ -670,21 +672,21 @@ class Api
                         echo Json_Data::songs($results, $user->id);
                         break;
                 }
-            break;
+                break;
             default:
                 Xml_Data::set_offset($input['offset']);
                 Xml_Data::set_limit($input['limit']);
-            switch ($type) {
-                case 'artist':
-                    echo Xml_Data::artists($results, array(), $user->id);
-                    break;
-                case 'album':
-                    echo Xml_Data::albums($results, array(), $user->id);
-                    break;
-                default:
-                    echo Xml_Data::songs($results, $user->id);
-                    break;
-            }
+                switch ($type) {
+                    case 'artist':
+                        echo Xml_Data::artists($results, array(), $user->id);
+                        break;
+                    case 'album':
+                        echo Xml_Data::albums($results, array(), $user->id);
+                        break;
+                    default:
+                        echo Xml_Data::songs($results, $user->id);
+                        break;
+                }
         }
         Session::extend($input['auth']);
     } // advanced_search
@@ -707,9 +709,9 @@ class Api
      */
     public static function artists($input)
     {
-        self::$browse->reset_filters();
-        self::$browse->set_type('artist');
-        self::$browse->set_sort('name', 'ASC');
+        self::getBrowse()->reset_filters();
+        self::getBrowse()->set_type('artist');
+        self::getBrowse()->set_sort('name', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         self::set_filter($method, $input['filter']);
@@ -717,7 +719,7 @@ class Api
         self::set_filter('update', $input['update']);
 
 
-        $artists = self::$browse->get_objects();
+        $artists = self::getBrowse()->get_objects();
         $user    = User::get_from_username(Session::username($input['auth']));
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
 
@@ -727,7 +729,7 @@ class Api
                 Json_Data::set_offset($input['offset']);
                 Json_Data::set_limit($input['limit']);
                 echo Json_Data::artists($artists, $include, $user->id);
-            break;
+                break;
             default:
                 Xml_Data::set_offset($input['offset']);
                 Xml_Data::set_limit($input['limit']);
@@ -758,7 +760,7 @@ class Api
         switch ($input['api_format']) {
             case 'json':
                 echo Json_Data::artists(array($uid), $include, $user->id);
-            break;
+                break;
             default:
                 echo Xml_Data::artists(array($uid), $include, $user->id);
         }
@@ -794,7 +796,7 @@ class Api
                 Json_Data::set_offset($input['offset']);
                 Json_Data::set_limit($input['limit']);
                 echo Json_Data::albums($albums, array(), $user->id);
-            break;
+                break;
             default:
                 Xml_Data::set_offset($input['offset']);
                 Xml_Data::set_limit($input['limit']);
@@ -829,15 +831,15 @@ class Api
         if (!empty($songs)) {
             ob_end_clean();
             switch ($input['api_format']) {
-            case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                echo Json_Data::songs($songs, $user->id);
-            break;
-            default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::songs($songs, $user->id);
+                case 'json':
+                    Json_Data::set_offset($input['offset']);
+                    Json_Data::set_limit($input['limit']);
+                    echo Json_Data::songs($songs, $user->id);
+                    break;
+                default:
+                    Xml_Data::set_offset($input['offset']);
+                    Xml_Data::set_limit($input['limit']);
+                    echo Xml_Data::songs($songs, $user->id);
             }
         }
         Session::extend($input['auth']);
@@ -862,15 +864,15 @@ class Api
      */
     public static function albums($input)
     {
-        self::$browse->reset_filters();
-        self::$browse->set_type('album');
-        self::$browse->set_sort('name', 'ASC');
+        self::getBrowse()->reset_filters();
+        self::getBrowse()->set_type('album');
+        self::getBrowse()->set_sort('name', 'ASC');
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         self::set_filter($method, $input['filter']);
         self::set_filter('add', $input['add']);
         self::set_filter('update', $input['update']);
 
-        $albums  = self::$browse->get_objects();
+        $albums  = self::getBrowse()->get_objects();
         $user    = User::get_from_username(Session::username($input['auth']));
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
 
@@ -880,7 +882,7 @@ class Api
                 Json_Data::set_offset($input['offset']);
                 Json_Data::set_limit($input['limit']);
                 echo Json_Data::albums($albums, $include, $user->id);
-            break;
+                break;
             default:
                 Xml_Data::set_offset($input['offset']);
                 Xml_Data::set_limit($input['limit']);
@@ -905,13 +907,13 @@ class Api
         if (!self::check_parameter($input, array('filter'), 'album')) {
             return false;
         }
-        $uid     = (int) scrub_in($input['filter']);
+        $uid     = (int)scrub_in($input['filter']);
         $user    = User::get_from_username(Session::username($input['auth']));
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
         switch ($input['api_format']) {
             case 'json':
                 echo Json_Data::albums(array($uid), $include, $user->id);
-            break;
+                break;
             default:
                 echo Xml_Data::albums(array($uid), $include, $user->id);
         }
@@ -963,7 +965,7 @@ class Api
                     Json_Data::set_offset($input['offset']);
                     Json_Data::set_limit($input['limit']);
                     echo Json_Data::songs($songs, $user->id);
-                break;
+                    break;
                 default:
                     Xml_Data::set_offset($input['offset']);
                     Xml_Data::set_limit($input['limit']);
@@ -991,18 +993,19 @@ class Api
     public static function licenses($input)
     {
         if (!AmpConfig::get('licensing')) {
-            self::message('error', T_('Access Denied: licensing features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: licensing features are not enabled.'), '400',
+                $input['api_format']);
 
             return false;
         }
 
-        self::$browse->reset_filters();
-        self::$browse->set_type('license');
-        self::$browse->set_sort('name', 'ASC');
+        self::getBrowse()->reset_filters();
+        self::getBrowse()->set_type('license');
+        self::getBrowse()->set_sort('name', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         self::set_filter($method, $input['filter']);
-        $licenses = self::$browse->get_objects();
+        $licenses = self::getBrowse()->get_objects();
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -1034,14 +1037,15 @@ class Api
     public static function license($input)
     {
         if (!AmpConfig::get('licensing')) {
-            self::message('error', T_('Access Denied: licensing features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: licensing features are not enabled.'), '400',
+                $input['api_format']);
 
             return false;
         }
         if (!self::check_parameter($input, array('filter'), 'license')) {
             return false;
         }
-        $uid = array((int) scrub_in($input['filter']));
+        $uid = array((int)scrub_in($input['filter']));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
@@ -1068,7 +1072,8 @@ class Api
     public static function license_songs($input)
     {
         if (!AmpConfig::get('licensing')) {
-            self::message('error', T_('Access Denied: licensing features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: licensing features are not enabled.'), '400',
+                $input['api_format']);
 
             return false;
         }
@@ -1076,7 +1081,7 @@ class Api
             return false;
         }
         $user     = User::get_from_username(Session::username($input['auth']));
-        $song_ids = License::get_license_songs((int) scrub_in($input['filter']));
+        $song_ids = License::get_license_songs((int)scrub_in($input['filter']));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
@@ -1104,13 +1109,13 @@ class Api
      */
     public static function tags($input)
     {
-        self::$browse->reset_filters();
-        self::$browse->set_type('tag');
-        self::$browse->set_sort('name', 'ASC');
+        self::getBrowse()->reset_filters();
+        self::getBrowse()->set_type('tag');
+        self::getBrowse()->set_sort('name', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         self::set_filter($method, $input['filter']);
-        $tags = self::$browse->get_objects();
+        $tags = self::getBrowse()->get_objects();
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -1118,7 +1123,7 @@ class Api
                 Json_Data::set_offset($input['offset']);
                 Json_Data::set_limit($input['limit']);
                 echo Json_Data::tags($tags);
-            break;
+                break;
             default:
                 Xml_Data::set_offset($input['offset']);
                 Xml_Data::set_limit($input['limit']);
@@ -1147,7 +1152,7 @@ class Api
         switch ($input['api_format']) {
             case 'json':
                 echo Json_Data::tags(array($uid));
-            break;
+                break;
             default:
                 echo Xml_Data::tags(array($uid));
         }
@@ -1179,15 +1184,15 @@ class Api
 
             ob_end_clean();
             switch ($input['api_format']) {
-            case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                echo Json_Data::artists($artists, array(), $user->id);
-            break;
-            default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::artists($artists, array(), $user->id);
+                case 'json':
+                    Json_Data::set_offset($input['offset']);
+                    Json_Data::set_limit($input['limit']);
+                    echo Json_Data::artists($artists, array(), $user->id);
+                    break;
+                default:
+                    Xml_Data::set_offset($input['offset']);
+                    Xml_Data::set_limit($input['limit']);
+                    echo Xml_Data::artists($artists, array(), $user->id);
             }
         }
         Session::extend($input['auth']);
@@ -1224,7 +1229,7 @@ class Api
                     Json_Data::set_offset($input['offset']);
                     Json_Data::set_limit($input['limit']);
                     echo Json_Data::albums($albums, array(), $user->id);
-                break;
+                    break;
                 default:
                     Xml_Data::set_offset($input['offset']);
                     Xml_Data::set_limit($input['limit']);
@@ -1266,7 +1271,7 @@ class Api
                     Json_Data::set_offset($input['offset']);
                     Json_Data::set_limit($input['limit']);
                     echo Json_Data::songs($songs, $user->id);
-                break;
+                    break;
                 default:
                     Xml_Data::set_offset($input['offset']);
                     Xml_Data::set_limit($input['limit']);
@@ -1296,9 +1301,9 @@ class Api
      */
     public static function songs($input)
     {
-        self::$browse->reset_filters();
-        self::$browse->set_type('song');
-        self::$browse->set_sort('title', 'ASC');
+        self::getBrowse()->reset_filters();
+        self::getBrowse()->set_type('song');
+        self::getBrowse()->set_sort('title', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         self::set_filter($method, $input['filter']);
@@ -1307,7 +1312,7 @@ class Api
         // Filter out disabled songs
         self::set_filter('enabled', '1');
 
-        $songs = self::$browse->get_objects();
+        $songs = self::getBrowse()->get_objects();
         $user  = User::get_from_username(Session::username($input['auth']));
 
         ob_end_clean();
@@ -1316,7 +1321,7 @@ class Api
                 Json_Data::set_offset($input['offset']);
                 Json_Data::set_limit($input['limit']);
                 echo Json_Data::songs($songs, $user->id);
-            break;
+                break;
             default:
                 Xml_Data::set_offset($input['offset']);
                 Xml_Data::set_limit($input['limit']);
@@ -1346,10 +1351,10 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::songs(array((int) $song_id), $user->id);
-            break;
+                echo Json_Data::songs(array((int)$song_id), $user->id);
+                break;
             default:
-                echo Xml_Data::songs(array((int) $song_id), $user->id);
+                echo Xml_Data::songs(array((int)$song_id), $user->id);
         }
         Session::extend($input['auth']);
 
@@ -1378,9 +1383,10 @@ class Api
         $public = !Access::check('interface', 100, $user->id);
 
         // regular playlists
-        $playlist_ids = Playlist::get_playlists($public, $userid, (string) $input['filter'], $method);
+        $playlist_ids = Playlist::get_playlists($public, $userid, (string)$input['filter'], $method);
         // merge with the smartlists
-        $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($public, $userid, (string) $input['filter'], $method));
+        $playlist_ids = array_merge($playlist_ids,
+            Playlist::get_smartlists($public, $userid, (string)$input['filter'], $method));
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -1388,7 +1394,7 @@ class Api
                 Json_Data::set_offset($input['offset']);
                 Json_Data::set_limit($input['limit']);
                 echo Json_Data::playlists($playlist_ids);
-            break;
+                break;
             default:
                 Xml_Data::set_offset($input['offset']);
                 Xml_Data::set_limit($input['limit']);
@@ -1417,12 +1423,13 @@ class Api
 
         if (str_replace('smart_', '', $uid) === $uid) {
             // Playlists
-            $playlist = new Playlist((int) $uid);
+            $playlist = new Playlist((int)$uid);
         } else {
             // Smartlists
-            $playlist = new Search((int) str_replace('smart_', '', $uid), 'song', $user);
+            $playlist = new Search((int)str_replace('smart_', '', $uid), 'song', $user);
         }
-        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
+        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100,
+                    $user->id))) {
             self::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
 
             return false;
@@ -1431,7 +1438,7 @@ class Api
         switch ($input['api_format']) {
             case 'json':
                 echo Json_Data::playlists(array($uid));
-            break;
+                break;
             default:
                 echo Xml_Data::playlists(array($uid));
         }
@@ -1462,12 +1469,13 @@ class Api
         debug_event('api.class', 'User ' . $user->id . ' loading playlist: ' . $input['filter'], 5);
         if (str_replace('smart_', '', $uid) === $uid) {
             // Playlists
-            $playlist = new Playlist((int) $uid);
+            $playlist = new Playlist((int)$uid);
         } else {
             // Smartlists
-            $playlist = new Search((int) str_replace('smart_', '', $uid), 'song', $user);
+            $playlist = new Search((int)str_replace('smart_', '', $uid), 'song', $user);
         }
-        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
+        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100,
+                    $user->id))) {
             self::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
 
             return false;
@@ -1487,7 +1495,7 @@ class Api
                 Json_Data::set_offset($input['offset']);
                 Json_Data::set_limit($input['limit']);
                 echo Json_Data::songs($songs, $user->id);
-            break;
+                break;
             default:
                 Xml_Data::set_offset($input['offset']);
                 Xml_Data::set_limit($input['limit']);
@@ -1525,7 +1533,7 @@ class Api
         switch ($input['api_format']) {
             case 'json':
                 echo Json_Data::playlists(array($uid));
-            break;
+                break;
             default:
                 echo Xml_Data::playlists(array($uid));
         }
@@ -1588,7 +1596,7 @@ class Api
         if (!empty($playlist_edit)) {
             foreach ($playlist_edit as $track => $song) {
                 if ($song > 0 && $track > 0) {
-                    $playlist->set_by_track_number((int) $song, (int) $track);
+                    $playlist->set_by_track_number((int)$song, (int)$track);
                     $change_made = true;
                 }
             }
@@ -1660,7 +1668,8 @@ class Api
 
             return false;
         }
-        if ((AmpConfig::get('unique_playlist') || (int) $input['check'] == 1) && in_array($song, $playlist->get_songs())) {
+        if ((AmpConfig::get('unique_playlist') || (int)$input['check'] == 1) && in_array($song,
+                $playlist->get_songs())) {
             self::message('error', T_("Can't add a duplicate item when check is enabled"), '400', $input['api_format']);
 
             return false;
@@ -1700,11 +1709,11 @@ class Api
         if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
             self::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
         } else {
-            if ((int) $input['clear'] === 1) {
+            if ((int)$input['clear'] === 1) {
                 $playlist->delete_all();
                 self::message('success', 'all songs removed from playlist', null, $input['api_format']);
             } elseif ($input['song']) {
-                $track = (int) scrub_in($input['song']);
+                $track = (int)scrub_in($input['song']);
                 if (!$playlist->has_item($track)) {
                     self::message('error', T_('Song not found in playlist'), '404', $input['api_format']);
 
@@ -1714,7 +1723,7 @@ class Api
                 $playlist->regenerate_track_numbers();
                 self::message('success', 'song removed from playlist', null, $input['api_format']);
             } elseif ($input['track']) {
-                $track = (int) scrub_in($input['track']);
+                $track = (int)scrub_in($input['track']);
                 if (!$playlist->has_item(null, $track)) {
                     self::message('error', T_('Track ID not found in playlist'), '404', $input['api_format']);
 
@@ -1753,7 +1762,8 @@ class Api
     public static function playlist_generate($input)
     {
         // parameter defaults
-        $mode   = (!in_array($input['mode'], array('forgotten', 'recent', 'unplayed', 'random'), true)) ? 'random' : $input['mode'];
+        $mode = (!in_array($input['mode'], array('forgotten', 'recent', 'unplayed', 'random'),
+            true)) ? 'random' : $input['mode'];
         $format = (!in_array($input['format'], array('song', 'index', 'id'), true)) ? 'song' : $input['format'];
         $user   = User::get_from_username(Session::username($input['auth']));
         $array  = array();
@@ -1789,7 +1799,7 @@ class Api
             $rule_count++;
         }
         // additional rules
-        if ((int) $input['flag'] == 1) {
+        if ((int)$input['flag'] == 1) {
             debug_event('api.class', 'playlist_generate flagged', 5);
             $array['rule_' . $rule_count]               = 'favorite';
             $array['rule_' . $rule_count . '_input']    = '%';
@@ -1798,11 +1808,11 @@ class Api
         }
         if (array_key_exists('filter', $input)) {
             $array['rule_' . $rule_count]               = 'title';
-            $array['rule_' . $rule_count . '_input']    = (string) $input['filter'];
+            $array['rule_' . $rule_count . '_input']    = (string)$input['filter'];
             $array['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }
-        $album = new Album((int) $input['album']);
+        $album = new Album((int)$input['album']);
         if ((array_key_exists('album', $input)) && ($album->id == $input['album'])) {
             // set rule
             $array['rule_' . $rule_count]               = 'album';
@@ -1810,11 +1820,11 @@ class Api
             $array['rule_' . $rule_count . '_operator'] = 4;
             $rule_count++;
         }
-        $artist = new Artist((int) $input['artist']);
+        $artist = new Artist((int)$input['artist']);
         if ((array_key_exists('artist', $input)) && ($artist->id == $input['artist'])) {
             // set rule
             $array['rule_' . $rule_count]               = 'artist';
-            $array['rule_' . $rule_count . '_input']    = trim(trim((string) $artist->prefix) . ' ' . trim((string) $artist->name));
+            $array['rule_' . $rule_count . '_input']    = trim(trim((string)$artist->prefix) . ' ' . trim((string)$artist->name));
             $array['rule_' . $rule_count . '_operator'] = 4;
         }
 
@@ -1827,8 +1837,8 @@ class Api
         shuffle($song_ids);
 
         //slice the array if there is a limit
-        if ((int) $input['limit'] > 0) {
-            $song_ids = array_slice($song_ids, 0, (int) $input['limit']);
+        if ((int)$input['limit'] > 0) {
+            $song_ids = array_slice($song_ids, 0, (int)$input['limit']);
         }
 
         // output formatted XML
@@ -1837,7 +1847,7 @@ class Api
                 switch ($input['api_format']) {
                     case 'json':
                         echo json_encode($song_ids, JSON_PRETTY_PRINT);
-                    break;
+                        break;
                     default:
                         echo Xml_Data::keyed_array($song_ids);
                 }
@@ -1846,7 +1856,7 @@ class Api
                 switch ($input['api_format']) {
                     case 'json':
                         echo Json_Data::indexes($song_ids, 'song');
-                    break;
+                        break;
                     default:
                         echo Xml_Data::indexes($song_ids, 'song');
                 }
@@ -1856,7 +1866,7 @@ class Api
                 switch ($input['api_format']) {
                     case 'json':
                         echo Json_Data::songs($song_ids, $user->id);
-                    break;
+                        break;
                     default:
                         echo Xml_Data::songs($song_ids, $user->id);
                 }
@@ -1896,7 +1906,7 @@ class Api
                 Json_Data::set_offset($input['offset']);
                 Json_Data::set_limit($input['limit']);
                 echo Json_Data::songs($results, $user->id);
-            break;
+                break;
             default:
                 Xml_Data::set_offset($input['offset']);
                 Xml_Data::set_limit($input['limit']);
@@ -1929,16 +1939,16 @@ class Api
         if (!self::check_parameter($input, array('filter'), 'shares')) {
             return false;
         }
-        self::$browse->reset_filters();
-        self::$browse->set_type('share');
-        self::$browse->set_sort('title', 'ASC');
+        self::getBrowse()->reset_filters();
+        self::getBrowse()->set_type('share');
+        self::getBrowse()->set_sort('title', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         self::set_filter($method, $input['filter']);
         self::set_filter('add', $input['add']);
         self::set_filter('update', $input['update']);
 
-        $shares = self::$browse->get_objects();
+        $shares = self::getBrowse()->get_objects();
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -1946,7 +1956,7 @@ class Api
                 Json_Data::set_offset($input['offset']);
                 Json_Data::set_limit($input['limit']);
                 echo Json_Data::shares($shares);
-            break;
+                break;
             default:
                 Xml_Data::set_offset($input['offset']);
                 Xml_Data::set_limit($input['limit']);
@@ -1977,13 +1987,13 @@ class Api
         if (!self::check_parameter($input, array('filter'), 'share')) {
             return false;
         }
-        $share = array((int) $input['filter']);
+        $share = array((int)$input['filter']);
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
                 echo Json_Data::shares($share);
-            break;
+                break;
             default:
                 echo Xml_Data::shares($share);
         }
@@ -2037,7 +2047,8 @@ class Api
 
                 return false;
             }
-            $share[] = Share::create_share($object_type, $object_id, true, $download, $expire_days, generate_password(8), 0, $description);
+            $share[] = Share::create_share($object_type, $object_id, true, $download, $expire_days,
+                generate_password(8), 0, $description);
         }
         ob_end_clean();
         switch ($input['api_format']) {
@@ -2154,14 +2165,14 @@ class Api
      */
     public static function videos($input)
     {
-        self::$browse->reset_filters();
-        self::$browse->set_type('video');
-        self::$browse->set_sort('title', 'ASC');
+        self::getBrowse()->reset_filters();
+        self::getBrowse()->set_type('video');
+        self::getBrowse()->set_sort('title', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter']);
 
-        $video_ids = self::$browse->get_objects();
+        $video_ids = self::getBrowse()->get_objects();
         $user      = User::get_from_username(Session::username($input['auth']));
 
         switch ($input['api_format']) {
@@ -2169,7 +2180,7 @@ class Api
                 Json_Data::set_offset($input['offset']);
                 Json_Data::set_limit($input['limit']);
                 echo Json_Data::videos($video_ids, $user->id);
-            break;
+                break;
             default:
                 Xml_Data::set_offset($input['offset']);
                 Xml_Data::set_limit($input['limit']);
@@ -2197,7 +2208,7 @@ class Api
         switch ($input['api_format']) {
             case 'json':
                 echo Json_Data::videos(array($video_id), $user->id);
-            break;
+                break;
             default:
                 echo Xml_Data::videos(array($video_id), $user->id);
         }
@@ -2237,13 +2248,13 @@ class Api
             $user    = User::get_from_username($input['username']);
             $user_id = $user->id;
         } elseif ($input['user_id']) {
-            $user_id = (int) $input['user_id'];
+            $user_id = (int)$input['user_id'];
             $user    = new User($user_id);
         }
         // moved type to filter and allowed multiple type selection
         $type   = $input['type'];
-        $offset = (int) $input['offset'];
-        $limit  = (int) $input['limit'];
+        $offset = (int)$input['offset'];
+        $limit  = (int)$input['limit'];
         // original method only searched albums and had poor method inputs
         if (in_array($type, array('newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged'))) {
             $type            = 'album';
@@ -2294,7 +2305,7 @@ class Api
                         break;
                     case 'album':
                         $results = Album::get_random($limit, false, $user_id);
-                    }
+                }
         }
 
         if (!empty($results)) {
@@ -2304,7 +2315,7 @@ class Api
                 switch ($input['api_format']) {
                     case 'json':
                         echo Json_Data::songs($results, $user->id);
-                    break;
+                        break;
                     default:
                         echo Xml_Data::songs($results, $user->id);
                 }
@@ -2313,7 +2324,7 @@ class Api
                 switch ($input['api_format']) {
                     case 'json':
                         echo Json_Data::artists($results, array(), $user->id);
-                    break;
+                        break;
                     default:
                         echo Xml_Data::artists($results, array(), $user->id);
                 }
@@ -2322,7 +2333,7 @@ class Api
                 switch ($input['api_format']) {
                     case 'json':
                         echo Json_Data::albums($results, array(), $user->id);
-                    break;
+                        break;
                     default:
                         echo Xml_Data::albums($results, array(), $user->id);
                 }
@@ -2356,16 +2367,16 @@ class Api
 
             return false;
         }
-        self::$browse->reset_filters();
-        self::$browse->set_type('podcast');
-        self::$browse->set_sort('title', 'ASC');
+        self::getBrowse()->reset_filters();
+        self::getBrowse()->set_type('podcast');
+        self::getBrowse()->set_sort('title', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         self::set_filter($method, $input['filter']);
         self::set_filter('add', $input['add']);
         self::set_filter('update', $input['update']);
 
-        $podcasts = self::$browse->get_objects();
+        $podcasts = self::getBrowse()->get_objects();
         $episodes = $input['include'] == 'episodes';
 
         ob_end_clean();
@@ -2406,7 +2417,7 @@ class Api
         if (!self::check_parameter($input, array('filter'), 'podcast')) {
             return false;
         }
-        $object_id = (int) $input['filter'];
+        $object_id = (int)$input['filter'];
         $podcast   = new Podcast($object_id);
         if ($podcast->id > 0) {
             $episodes = $input['include'] == 'episodes';
@@ -2445,7 +2456,8 @@ class Api
 
             return false;
         }
-        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['api_format'])) {
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id,
+            'update_podcast', $input['api_format'])) {
             return false;
         }
         if (!self::check_parameter($input, array('url', 'catalog'), 'podcast_create')) {
@@ -2490,13 +2502,14 @@ class Api
 
             return false;
         }
-        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['api_format'])) {
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id,
+            'update_podcast', $input['api_format'])) {
             return false;
         }
         if (!self::check_parameter($input, array('filter'), 'podcast_delete')) {
             return false;
         }
-        $object_id = (int) $input['filter'];
+        $object_id = (int)$input['filter'];
         $podcast   = new Podcast($object_id);
         if ($podcast->id > 0) {
             if ($podcast->remove()) {
@@ -2533,7 +2546,8 @@ class Api
 
             return false;
         }
-        if (!self::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, 'edit_podcast', $input['api_format'])) {
+        if (!self::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id,
+            'edit_podcast', $input['api_format'])) {
             return false;
         }
         if (!self::check_parameter($input, array('filter'), 'podcast_edit')) {
@@ -2541,12 +2555,12 @@ class Api
         }
         $podcast_id = $input['filter'];
         if (in_array($podcast_id, Share::get_share_list())) {
-            $user          = User::get_from_username(Session::username($input['auth']));
-            $podcast       = new Share($podcast_id);
-            $description   = isset($input['description']) ? $input['description'] : $podcast->description;
-            $stream        = isset($input['stream']) ? $input['stream'] : $podcast->allow_stream;
-            $download      = isset($input['download']) ? $input['download'] : $podcast->allow_download;
-            $expires       = isset($input['expires']) ? Share::get_expiry($input['expires']) : $podcast->expire_days;
+            $user        = User::get_from_username(Session::username($input['auth']));
+            $podcast     = new Share($podcast_id);
+            $description = isset($input['description']) ? $input['description'] : $podcast->description;
+            $stream      = isset($input['stream']) ? $input['stream'] : $podcast->allow_stream;
+            $download    = isset($input['download']) ? $input['download'] : $podcast->allow_download;
+            $expires     = isset($input['expires']) ? Share::get_expiry($input['expires']) : $podcast->expire_days;
 
             $data = array(
                 'max_counter' => $podcast->max_counter,
@@ -2591,7 +2605,7 @@ class Api
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
-        $uid  = (int) scrub_in($input['filter']);
+        $uid  = (int)scrub_in($input['filter']);
         debug_event('api.class', 'User ' . $user->id . ' loading podcast: ' . $input['filter'], 5);
         $podcast = new Podcast($uid);
         $items   = $podcast->get_episodes();
@@ -2633,7 +2647,7 @@ class Api
         if (!self::check_parameter($input, array('filter'), 'podcast')) {
             return false;
         }
-        $object_id = (int) $input['filter'];
+        $object_id = (int)$input['filter'];
         $episode   = new Podcast_Episode($object_id);
         if ($episode->id > 0) {
             ob_end_clean();
@@ -2670,19 +2684,21 @@ class Api
 
             return false;
         }
-        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['api_format'])) {
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id,
+            'update_podcast', $input['api_format'])) {
             return false;
         }
         if (!self::check_parameter($input, array('filter'), 'podcast_episode_delete')) {
             return false;
         }
-        $object_id = (int) $input['filter'];
+        $object_id = (int)$input['filter'];
         $episode   = new Podcast_Episode($object_id);
         if ($episode->id > 0) {
             if ($episode->remove()) {
                 self::message('success', 'podcast_episode ' . $object_id . ' deleted', null, $input['api_format']);
             } else {
-                self::message('error', 'podcast_episode ' . $object_id . ' was not deleted', '401', $input['api_format']);
+                self::message('error', 'podcast_episode ' . $object_id . ' was not deleted', '401',
+                    $input['api_format']);
             }
         } else {
             self::message('error', 'podcast_episode ' . $object_id . ' was not found', '404', $input['api_format']);
@@ -2721,7 +2737,7 @@ class Api
                 switch ($input['api_format']) {
                     case 'json':
                         echo Json_Data::user($user, $fullinfo);
-                    break;
+                        break;
                     default:
                         echo Xml_Data::user($user, $fullinfo);
                 }
@@ -2751,7 +2767,8 @@ class Api
      */
     public static function user_create($input)
     {
-        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_create', $input['api_format'])) {
+        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id,
+            'user_create', $input['api_format'])) {
             return false;
         }
         if (!self::check_parameter($input, array('username', 'password', 'email'), 'user_create')) {
@@ -2761,7 +2778,7 @@ class Api
         $fullname = $input['fullname'] ?: $username;
         $email    = $input['email'];
         $password = $input['password'];
-        $disable  = (bool) $input['disable'];
+        $disable  = (bool)$input['disable'];
         $access   = 25;
         $user_id  = User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
 
@@ -2797,7 +2814,8 @@ class Api
      */
     public static function user_update($input)
     {
-        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_update', $input['api_format'])) {
+        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id,
+            'user_update', $input['api_format'])) {
             return false;
         }
         if (!self::check_parameter($input, array('username'), 'user_update')) {
@@ -2818,7 +2836,8 @@ class Api
         $user_id = $user->id;
 
         if ($password && Access::check('interface', 100, $user_id)) {
-            self::message('error', 'Do not update passwords for admin users! ' . $username, '400', $input['api_format']);
+            self::message('error', 'Do not update passwords for admin users! ' . $username, '400',
+                $input['api_format']);
 
             return false;
         }
@@ -2847,7 +2866,7 @@ class Api
             } elseif ($disable === '0') {
                 $user->enable();
             }
-            if ((int) $maxbitrate > 0) {
+            if ((int)$maxbitrate > 0) {
                 Preference::update('transcode_bitrate', $user_id, $maxbitrate);
             }
             self::message('success', 'successfully updated: ' . $username, null, $input['api_format']);
@@ -2873,7 +2892,8 @@ class Api
      */
     public static function user_delete($input)
     {
-        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, 'user_delete', $input['api_format'])) {
+        if (!self::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id,
+            'user_delete', $input['api_format'])) {
             return false;
         }
         if (!self::check_parameter($input, array('username'), 'user_delete')) {
@@ -2882,7 +2902,8 @@ class Api
         $username = $input['username'];
         $user     = User::get_from_username($username);
         // don't delete yourself or admins
-        if ($user->id && Session::username($input['auth']) != $username && !Access::check('interface', 100, $user->id)) {
+        if ($user->id && Session::username($input['auth']) != $username && !Access::check('interface', 100,
+                $user->id)) {
             $user->delete();
             self::message('success', 'successfully deleted: ' . $username, null, $input['api_format']);
 
@@ -2920,7 +2941,7 @@ class Api
         if (!empty($username)) {
             $user = User::get_from_username($username);
             if ($user !== null) {
-                $users    = $user->get_followers();
+                $users = $user->get_followers();
                 if (!count($users)) {
                     self::message('error', 'User `' . $username . '` has no followers.', '400', $input['api_format']);
                 } else {
@@ -2928,7 +2949,7 @@ class Api
                     switch ($input['api_format']) {
                         case 'json':
                             echo Json_Data::users($users);
-                        break;
+                            break;
                         default:
                             echo Xml_Data::users($users);
                     }
@@ -2971,14 +2992,15 @@ class Api
             if ($user !== null) {
                 $users = $user->get_following();
                 if (!count($users)) {
-                    self::message('error', 'User `' . $username . '` does not follow anyone.', '400', $input['api_format']);
+                    self::message('error', 'User `' . $username . '` does not follow anyone.', '400',
+                        $input['api_format']);
                 } else {
                     debug_event('api.class', 'User is following:  ' . print_r($users), 1);
                     ob_end_clean();
                     switch ($input['api_format']) {
                         case 'json':
                             echo Json_Data::users($users);
-                        break;
+                            break;
                         default:
                             echo Xml_Data::users($users);
                     }
@@ -3049,7 +3071,7 @@ class Api
         if (!self::check_parameter($input, array('username'), 'last_shouts')) {
             return false;
         }
-        $limit = (int) ($input['limit']);
+        $limit = (int)($input['limit']);
         if ($limit < 1) {
             $limit = AmpConfig::get('popular_threshold', 10);
         }
@@ -3064,7 +3086,7 @@ class Api
         switch ($input['api_format']) {
             case 'json':
                 echo Json_Data::shouts($shouts);
-            break;
+                break;
             default:
                 echo Xml_Data::shouts($shouts);
         }
@@ -3096,7 +3118,7 @@ class Api
             return false;
         }
         ob_end_clean();
-        $type      = (string) $input['type'];
+        $type      = (string)$input['type'];
         $object_id = $input['id'];
         $rating    = $input['rating'];
         $user      = User::get_from_username(Session::username($input['auth']));
@@ -3107,7 +3129,8 @@ class Api
             return false;
         }
         if (!in_array($rating, array('0', '1', '2', '3', '4', '5'))) {
-            self::message('error', T_('Ratings must be between [0-5]. ' . $rating . ' is invalid'), '401', $input['api_format']);
+            self::message('error', T_('Ratings must be between [0-5]. ' . $rating . ' is invalid'), '401',
+                $input['api_format']);
 
             return false;
         }
@@ -3148,7 +3171,8 @@ class Api
     public static function flag($input)
     {
         if (!AmpConfig::get('userflags')) {
-            self::message('error', T_('Access Denied: UserFlag features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: UserFlag features are not enabled.'), '400',
+                $input['api_format']);
 
             return false;
         }
@@ -3158,10 +3182,10 @@ class Api
         ob_end_clean();
         $type      = $input['type'];
         $object_id = $input['id'];
-        $flag      = (bool) $input['flag'];
+        $flag      = (bool)$input['flag'];
         $user      = User::get_from_username(Session::username($input['auth']));
         $user_id   = null;
-        if ((int) $user->id > 0) {
+        if ((int)$user->id > 0) {
             $user_id = $user->id;
         }
         // confirm the correct data
@@ -3215,7 +3239,7 @@ class Api
         }
         ob_end_clean();
         $object_id = $input['id'];
-        $user_id   = (int) $input['user'];
+        $user_id   = (int)$input['user'];
         $user      = new User($user_id);
         $valid     = in_array($user->id, User::get_valid_users());
 
@@ -3239,7 +3263,8 @@ class Api
 
             return false;
         }
-        debug_event('api.class', 'record_play: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
+        debug_event('api.class',
+            'record_play: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string)time(), 5);
 
         // internal scrobbling (user_activity and object_count tables)
         $item->set_played($user_id, $agent, array(), time());
@@ -3278,13 +3303,13 @@ class Api
         }
         ob_end_clean();
         $charset     = AmpConfig::get('site_charset');
-        $song_name   = (string) html_entity_decode(scrub_out($input['song']), ENT_QUOTES, $charset);
-        $artist_name = (string) html_entity_decode(scrub_in((string) $input['artist']), ENT_QUOTES, $charset);
-        $album_name  = (string) html_entity_decode(scrub_in((string) $input['album']), ENT_QUOTES, $charset);
-        $song_mbid   = (string) scrub_in($input['song_mbid']); //optional
-        $artist_mbid = (string) scrub_in($input['artist_mbid']); //optional
-        $album_mbid  = (string) scrub_in($input['album_mbid']); //optional
-        $date        = (is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
+        $song_name   = (string)html_entity_decode(scrub_out($input['song']), ENT_QUOTES, $charset);
+        $artist_name = (string)html_entity_decode(scrub_in((string)$input['artist']), ENT_QUOTES, $charset);
+        $album_name  = (string)html_entity_decode(scrub_in((string)$input['album']), ENT_QUOTES, $charset);
+        $song_mbid   = (string)scrub_in($input['song_mbid']); //optional
+        $artist_mbid = (string)scrub_in($input['artist_mbid']); //optional
+        $album_mbid  = (string)scrub_in($input['album_mbid']); //optional
+        $date        = (is_numeric(scrub_in($input['date']))) ? (int)scrub_in($input['date']) : time(); //optional
         $user        = User::get_from_username(Session::username($input['auth']));
         $user_id     = $user->id;
         $valid       = in_array($user->id, User::get_valid_users());
@@ -3297,7 +3322,8 @@ class Api
         }
 
         // validate minimum required options
-        debug_event('api.class', 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 4);
+        debug_event('api.class', 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name,
+            4);
         if (!$song_name || !$album_name || !$artist_name) {
             self::message('error', T_('Invalid input options'), '401', $input['api_format']);
 
@@ -3310,18 +3336,20 @@ class Api
         } else {
             $agent = 'api';
         }
-        $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, (string) $song_mbid, (string) $artist_mbid, (string) $album_mbid);
+        $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, (string)$song_mbid,
+            (string)$artist_mbid, (string)$album_mbid);
 
         if ($scrobble_id === '') {
             self::message('error', T_('Failed to scrobble: No item found!'), '401', $input['api_format']);
         } else {
-            $item = new Song((int) $scrobble_id);
+            $item = new Song((int)$scrobble_id);
             if (!$item->id) {
                 self::message('error', T_('Library item not found'), '404', $input['api_format']);
 
                 return false;
             }
-            debug_event('api.class', 'scrobble: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
+            debug_event('api.class',
+                'scrobble: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string)time(), 5);
 
             // internal scrobbling (user_activity and object_count tables)
             $item->set_played($user_id, $agent, array(), $date);
@@ -3350,8 +3378,14 @@ class Api
     public static function catalogs($input)
     {
         // filter for specific catalog types
-        $filter   = (in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie',
-            'Ampache\Model\Personal_Video', 'podcast'))) ? $input['filter'] : '';
+        $filter = (in_array($input['filter'], array(
+            'music',
+            'clip',
+            'tvshow',
+            'movie',
+            'Ampache\Model\Personal_Video',
+            'podcast'
+        ))) ? $input['filter'] : '';
         $catalogs = Catalog::get_catalogs($filter);
 
         ob_end_clean();
@@ -3384,7 +3418,7 @@ class Api
         if (!self::check_parameter($input, array('filter'), 'catalog')) {
             return false;
         }
-        $catalog = array((int) $input['filter']);
+        $catalog = array((int)$input['filter']);
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -3417,17 +3451,18 @@ class Api
         if (!self::check_parameter($input, array('catalog', 'task'), 'catalog_action')) {
             return false;
         }
-        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'catalog_action', $input['api_format'])) {
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id,
+            'catalog_action', $input['api_format'])) {
             return false;
         }
-        $task = (string) $input['task'];
+        $task = (string)$input['task'];
         // confirm the correct data
         if (!in_array($task, array('add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'))) {
             self::message('error', T_('Incorrect catalog task') . ' ' . $task, '401', $input['api_format']);
 
             return false;
         }
-        $catalog = Catalog::create_from_id((int) $input['catalog']);
+        $catalog = Catalog::create_from_id((int)$input['catalog']);
 
         if ($catalog) {
             define('API', true);
@@ -3476,19 +3511,20 @@ class Api
      */
     public static function catalog_file($input)
     {
-        $task = (string) $input['task'];
+        $task = (string)$input['task'];
         if (!AmpConfig::get('delete_from_disk') && $task == 'remove') {
             self::message('error', T_('Access Denied: delete from disk is not enabled.'), '400', $input['api_format']);
 
             return false;
         }
-        if (!self::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, 'catalog_file', $input['api_format'])) {
+        if (!self::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id,
+            'catalog_file', $input['api_format'])) {
             return false;
         }
         if (!self::check_parameter($input, array('catalog', 'file', 'task'), 'catalog_action')) {
             return false;
         }
-        $file = (string) html_entity_decode($input['file']);
+        $file = (string)html_entity_decode($input['file']);
         // confirm the correct data
         if (!in_array($task, array('add', 'clean', 'verify', 'remove'))) {
             self::message('error', T_('Incorrect file task') . ' ' . $task, '401', $input['api_format']);
@@ -3500,7 +3536,7 @@ class Api
 
             return false;
         }
-        $catalog_id = (int) $input['catalog'];
+        $catalog_id = (int)$input['catalog'];
         $catalog    = Catalog::create_from_id($catalog_id);
         if ($catalog->id < 1) {
             self::message('error', T_('Catalog not found') . ' ' . $catalog_id, '404', $input['api_format']);
@@ -3571,8 +3607,8 @@ class Api
                 return false;
             }
             $username = $input['username'];
-            $limit    = (int) ($input['limit']);
-            $since    = (int) ($input['since']);
+            $limit    = (int)($input['limit']);
+            $since    = (int)($input['since']);
 
             if (!empty($username)) {
                 $user = User::get_from_username($username);
@@ -3583,7 +3619,7 @@ class Api
                         switch ($input['api_format']) {
                             case 'json':
                                 echo Json_Data::timeline($activities);
-                            break;
+                                break;
                             default:
                                 echo Xml_Data::timeline($activities);
                         }
@@ -3611,8 +3647,8 @@ class Api
     public static function friends_timeline($input)
     {
         if (AmpConfig::get('sociable')) {
-            $limit = (int) ($input['limit']);
-            $since = (int) ($input['since']);
+            $limit = (int)($input['limit']);
+            $since = (int)($input['since']);
             $user  = User::get_from_username(Session::username($input['auth']))->id;
 
             if ($user > 0) {
@@ -3621,7 +3657,7 @@ class Api
                 switch ($input['api_format']) {
                     case 'json':
                         echo Json_Data::timeline($activities);
-                    break;
+                        break;
                     default:
                         echo Xml_Data::timeline($activities);
                 }
@@ -3648,8 +3684,8 @@ class Api
         if (!self::check_parameter($input, array('type', 'id'), 'update_from_tags')) {
             return false;
         }
-        $type   = (string) $input['type'];
-        $object = (int) $input['id'];
+        $type   = (string)$input['type'];
+        $object = (int)$input['id'];
 
         // confirm the correct data
         if (!in_array($type, array('artist', 'album', 'song'))) {
@@ -3667,7 +3703,8 @@ class Api
         // update your object
         Catalog::update_single_item($type, $object, true);
 
-        self::message('success', 'Updated tags for: ' . (string) $object . ' (' . $type . ')', null, $input['api_format']);
+        self::message('success', 'Updated tags for: ' . (string)$object . ' (' . $type . ')', null,
+            $input['api_format']);
         Session::extend($input['auth']);
 
         return true;
@@ -3689,10 +3726,11 @@ class Api
         if (!self::check_parameter($input, array('id'), 'update_artist_info')) {
             return false;
         }
-        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_artist_info', $input['api_format'])) {
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id,
+            'update_artist_info', $input['api_format'])) {
             return false;
         }
-        $object = (int) $input['id'];
+        $object = (int)$input['id'];
         $item   = new Artist($object);
         if (!$item->id) {
             self::message('error', T_('The requested item was not found'), '404', $input['api_format']);
@@ -3702,11 +3740,12 @@ class Api
         // update your object
         // need at least catalog_manager access to the db
         if (!empty(Recommendation::get_artist_info($object) || !empty(Recommendation::get_artists_like($object)))) {
-            self::message('success', 'Updated artist info: ' . (string) $object, null, $input['api_format']);
+            self::message('success', 'Updated artist info: ' . (string)$object, null, $input['api_format']);
 
             return true;
         }
-        self::message('error', T_('Failed to update_artist_info or recommendations for ' . (string) $object), '400', $input['api_format']);
+        self::message('error', T_('Failed to update_artist_info or recommendations for ' . (string)$object), '400',
+            $input['api_format']);
         Session::extend($input['auth']);
 
         return true;
@@ -3730,12 +3769,13 @@ class Api
         if (!self::check_parameter($input, array('type', 'id'), 'update_art')) {
             return false;
         }
-        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_art', $input['api_format'])) {
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id,
+            'update_art', $input['api_format'])) {
             return false;
         }
-        $type      = (string) $input['type'];
-        $object    = (int) $input['id'];
-        $overwrite = (int) $input['overwrite'] == 0;
+        $type      = (string)$input['type'];
+        $object    = (int)$input['id'];
+        $overwrite = (int)$input['overwrite'] == 0;
 
         // confirm the correct data
         if (!in_array($type, array('artist', 'album'))) {
@@ -3752,15 +3792,17 @@ class Api
         }
         // update your object
         if (Catalog::gather_art_item($type, $object, $overwrite, true)) {
-            self::message('success', 'Gathered new art for: ' . (string) $object . ' (' . $type . ')', null, $input['api_format']);
+            self::message('success', 'Gathered new art for: ' . (string)$object . ' (' . $type . ')', null,
+                $input['api_format']);
 
             return true;
         }
-        self::message('error', T_('Failed to update_art for ' . (string) $object), '400', $input['api_format']);
+        self::message('error', T_('Failed to update_art for ' . (string)$object), '400', $input['api_format']);
         Session::extend($input['auth']);
 
         return true;
     } // update_art
+
     /**
      * update_podcast
      * MINIMUM_API_VERSION=420000
@@ -3776,17 +3818,20 @@ class Api
         if (!self::check_parameter($input, array('filter'), 'update_podcast')) {
             return false;
         }
-        if (!self::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['api_format'])) {
+        if (!self::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id,
+            'update_podcast', $input['api_format'])) {
             return false;
         }
-        $object_id = (int) scrub_in($input['filter']);
+        $object_id = (int)scrub_in($input['filter']);
         $podcast   = new Podcast($object_id);
         if ($podcast->id > 0) {
             if ($podcast->sync_episodes(true)) {
-                self::message('success', 'Synced episodes for podcast: ' . (string) $object_id, null, $input['api_format']);
+                self::message('success', 'Synced episodes for podcast: ' . (string)$object_id, null,
+                    $input['api_format']);
                 Session::extend($input['auth']);
             } else {
-                self::message('error', T_('Failed to sync episodes for podcast: ' . (string) $object_id), '400', $input['api_format']);
+                self::message('error', T_('Failed to sync episodes for podcast: ' . (string)$object_id), '400',
+                    $input['api_format']);
             }
         } else {
             self::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['api_format']);
@@ -3825,7 +3870,7 @@ class Api
         $format        = $input['format']; // mp3, flv or raw
         $original      = $format && $format != 'raw';
         $timeOffset    = $input['offset'];
-        $contentLength = (int) $input['length']; // Force content-length guessing if transcode
+        $contentLength = (int)$input['length']; // Force content-length guessing if transcode
 
         $params = '&client=api';
         if ($contentLength == 1) {
@@ -3834,7 +3879,7 @@ class Api
         if ($original) {
             $params .= '&transcode_to=' . $format;
         }
-        if ((int) $maxBitRate > 0) {
+        if ((int)$maxBitRate > 0) {
             $params .= '&bitrate=' . $maxBitRate;
         }
         if ($timeOffset) {
@@ -3843,10 +3888,12 @@ class Api
 
         $url = '';
         if ($type == 'song') {
-            $url = Song::generic_play_url('song', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
+            $url = Song::generic_play_url('song', $fileid, $params, 'api', function_exists('curl_version'), $user_id,
+                $original);
         }
         if ($type == 'podcast') {
-            $url = Song::generic_play_url('Ampache\Model\Podcast_Episode', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
+            $url = Song::generic_play_url('Ampache\Model\Podcast_Episode', $fileid, $params, 'api',
+                function_exists('curl_version'), $user_id, $original);
         }
         if (!empty($url)) {
             header('Location: ' . str_replace(':443/play', '/play', $url));
@@ -3891,10 +3938,12 @@ class Api
             $params .= '&format=' . $format;
         }
         if ($type == 'song') {
-            $url = Song::generic_play_url('song', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
+            $url = Song::generic_play_url('song', $fileid, $params, 'api', function_exists('curl_version'), $user_id,
+                $original);
         }
         if ($type == 'podcast') {
-            $url = Song::generic_play_url('Ampache\Model\Podcast_Episode', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
+            $url = Song::generic_play_url('Ampache\Model\Podcast_Episode', $fileid, $params, 'api',
+                function_exists('curl_version'), $user_id, $original);
         }
         if (!empty($url)) {
             header('Location: ' . str_replace(':443/play', '/play', $url));
@@ -3979,7 +4028,7 @@ class Api
                 $thumb         = $art->get_thumb($dim);
                 if (!empty($thumb)) {
                     header('Content-type: ' . $thumb['thumb_mime']);
-                    header('Content-Length: ' . strlen((string) $thumb['thumb']));
+                    header('Content-Length: ' . strlen((string)$thumb['thumb']));
                     echo $thumb['thumb'];
 
                     return true;
@@ -3987,7 +4036,7 @@ class Api
             }
 
             header('Content-type: ' . $art->raw_mime);
-            header('Content-Length: ' . strlen((string) $art->raw));
+            header('Content-Length: ' . strlen((string)$art->raw));
             echo $art->raw;
         }
         Session::extend($input['auth']);
@@ -4020,15 +4069,15 @@ class Api
                 switch ($input['api_format']) {
                     case 'json':
                         echo json_encode($xml_array, JSON_PRETTY_PRINT);
-                    break;
+                        break;
                     default:
                         echo Xml_Data::keyed_array($xml_array);
                 }
-            break;
+                break;
             default:
                 // They are doing it wrong
                 self::message('error', T_('Invalid request'), '405', $input['api_format']);
-            break;
+                break;
         } // end switch on command
         Session::extend($input['auth']);
     } // localplay
@@ -4089,7 +4138,7 @@ class Api
                 switch ($input['api_format']) {
                     case 'json':
                         echo json_encode($xml_array, JSON_PRETTY_PRINT);
-                    break;
+                        break;
                     default:
                         echo Xml_Data::keyed_array($xml_array);
                 }
@@ -4102,7 +4151,7 @@ class Api
                 switch ($input['api_format']) {
                     case 'json':
                         echo Json_Data::democratic($objects, $user->id);
-                    break;
+                        break;
                     default:
                         echo Xml_Data::democratic($objects, $user->id);
                 }
@@ -4113,7 +4162,7 @@ class Api
                 switch ($input['api_format']) {
                     case 'json':
                         echo json_encode($xml_array, JSON_PRETTY_PRINT);
-                    break;
+                        break;
                     default:
                         echo Xml_Data::keyed_array($xml_array);
                 }
@@ -4124,4 +4173,4 @@ class Api
         } // switch on method
         Session::extend($input['auth']);
     } // democratic
-} // end api.class
+}
