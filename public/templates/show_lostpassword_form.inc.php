@@ -25,6 +25,7 @@
  * if so disable the checkbox
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
 if (AmpConfig::get('session_length') >= AmpConfig::get('remember_length')) {

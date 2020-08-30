@@ -27,7 +27,7 @@ namespace Ampache\Model;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Recommendation;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Art;
 use Ampache\Model\Catalog;
 use PDOStatement;

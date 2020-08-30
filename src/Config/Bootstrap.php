@@ -28,7 +28,7 @@ declare(strict_types=1);
  */
 namespace Ampache\Config;
 
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use DI\ContainerBuilder;
 use function DI\factory;
 

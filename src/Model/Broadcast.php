@@ -26,7 +26,7 @@ namespace Ampache\Model;
 
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Api\Ajax;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Art;
 use Core;
 use Ampache\Module\System\Dba;

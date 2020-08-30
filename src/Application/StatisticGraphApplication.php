@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\System\Session;
 

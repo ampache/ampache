@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Preference;
 use Ampache\Model\Song;
 use Ampache\Model\User;

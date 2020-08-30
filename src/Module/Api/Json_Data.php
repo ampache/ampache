@@ -26,7 +26,7 @@ namespace Ampache\Module\Api;
 
 use Ampache\Model\Album;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Art;
 use Ampache\Model\Artist;
 use Ampache\Model\Catalog;

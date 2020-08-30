@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Art;
 use Ampache\Module\Authorization\Auth;
 use Core;

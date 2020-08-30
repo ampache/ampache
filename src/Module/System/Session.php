@@ -27,7 +27,7 @@ namespace Ampache\Module\System;
 use Ampache\Model\Query;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Horde_Browser;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Core;
 use PDOStatement;
 use Ampache\Model\Song_Preview;

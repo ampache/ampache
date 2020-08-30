@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
 $logo_url = AmpConfig::get('custom_login_logo');

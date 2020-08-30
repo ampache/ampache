@@ -18,7 +18,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Ampache\Config\AmpConfig;
+
+?>
 <form style="display:inline;" name="f" method="get" action="<?php echo AmpConfig::get('web_path') . "/$action"; ?>" enctype="multipart/form-data">
     <label for="match" accesskey="S"><?php echo $text; ?></label>
     <input type="text" id="match" name="match" value="<?php echo $match; ?>" />

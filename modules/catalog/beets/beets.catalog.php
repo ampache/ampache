@@ -21,6 +21,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Beets\CliHandler;
 use Ampache\Module\System\Dba;
 

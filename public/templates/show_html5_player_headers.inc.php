@@ -1,5 +1,6 @@
 <?php
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Broadcast\Broadcast_Server;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\Ui;

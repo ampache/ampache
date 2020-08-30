@@ -28,7 +28,7 @@ namespace Ampache\Module\Playback;
 use Ampache\Model\Video;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Core;
 use Ampache\Module\System\Dba;
 use Ampache\Model\Preference;

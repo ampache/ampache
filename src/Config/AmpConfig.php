@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,6 +20,12 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Config;
+
+use AmpError;
+
 /**
  * Config Class
  *
@@ -31,19 +36,13 @@ declare(strict_types=0);
  * creating a 'Config' object will allow for local
  * config overides and/or local configs (for like dba)
  * The class should be a static var in the other classes
- *
  */
 class AmpConfig
 {
     /**
-     *  @var array $_global
+     * @var array $_global
      */
     private static $_global = array();
-
-    public function __construct()
-    {
-        // Rien a faire
-    } // __construct
 
     /**
      * get
@@ -83,7 +82,7 @@ class AmpConfig
     {
         $rating_filter = 0;
         if (self::get('rating_browse_filter')) {
-            $rating_filter = (int) self::get('rating_browse_minimum_stars');
+            $rating_filter = (int)self::get('rating_browse_minimum_stars');
         }
         if ($rating_filter > 0 && $rating_filter <= 5) {
             return $rating_filter;
@@ -141,13 +140,13 @@ class AmpConfig
     {
         $timekeeper = AmpConfig::get('skip_timer');
         $skip_time  = 20;
-        if ((int) $timekeeper > 1) {
+        if ((int)$timekeeper > 1) {
             $skip_time = $timekeeper;
         }
         if ($timekeeper < 1 && $timekeeper > 0) {
-            $skip_time = (int) ($previous_time * $timekeeper);
+            $skip_time = (int)($previous_time * $timekeeper);
         }
 
         return $skip_time;
     }
-} // end ampconfig.class
+}

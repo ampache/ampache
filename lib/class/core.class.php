@@ -21,6 +21,8 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Config\AmpConfig;
+
 /**
  * Core Class
  *

@@ -27,7 +27,7 @@ namespace Ampache\Module\Util;
 
 use Ampache\Model\Album;
 use Ampache\Model\Video;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Art;
 use Ampache\Model\Artist;
 use Ampache\Model\Catalog;

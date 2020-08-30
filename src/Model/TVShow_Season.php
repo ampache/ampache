@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Module\System\Dba;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Art;
 use PDOStatement;
 use Ampache\Model\Rating;

@@ -27,6 +27,7 @@
  * to layout this page.
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 
 if (isset($is_header) && $is_header) {

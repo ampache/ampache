@@ -27,7 +27,7 @@ namespace Ampache\Application\Admin;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Core;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;

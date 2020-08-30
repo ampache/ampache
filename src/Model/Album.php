@@ -27,7 +27,7 @@ namespace Ampache\Model;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Authorization\Access;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Art;
 use Ampache\Model\Artist;
 use Ampache\Model\Catalog;

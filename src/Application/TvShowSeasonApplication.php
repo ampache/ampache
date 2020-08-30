@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application;
 
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
 use Ampache\Model\TVShow_Season;
 use Ampache\Module\Util\Ui;

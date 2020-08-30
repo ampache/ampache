@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use Ampache\Module\Authorization\Access;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\LocalPlay;
 use Ampache\Module\Util\Ui;
 

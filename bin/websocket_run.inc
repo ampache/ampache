@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Broadcast\Broadcast_Server;
 
 define('NO_SESSION', '1');

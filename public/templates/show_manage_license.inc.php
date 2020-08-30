@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\License;
 use Ampache\Module\Util\Ui;
 

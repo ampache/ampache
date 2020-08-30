@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Core;
 use Ampache\Model\Plugin;
 use Ampache\Module\System\Session;

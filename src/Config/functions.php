@@ -22,6 +22,7 @@
 
 declare(strict_types=0);
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
 use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Model\Plugin;

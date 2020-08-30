@@ -22,6 +22,7 @@
 
 /* HINT: Catalog Name */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
 Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), $catalog->name . ' (' . $catalog->f_info . ')'), 'box box_edit_catalog'); ?>

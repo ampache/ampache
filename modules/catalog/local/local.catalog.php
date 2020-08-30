@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Album;
 use Ampache\Model\Artist;
 use Ampache\Model\Catalog;

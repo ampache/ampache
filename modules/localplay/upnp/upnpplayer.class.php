@@ -20,6 +20,7 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Song;
 use Ampache\Module\Api\Upnp_Api;
 use Ampache\Module\System\Session;

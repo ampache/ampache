@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application;
 
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Module\Util\Ui;

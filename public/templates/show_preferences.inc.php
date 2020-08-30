@@ -25,6 +25,7 @@
  * and display the information accordingly
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 

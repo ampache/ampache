@@ -21,6 +21,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\User\Registration;
 use Ampache\Module\Util\Captcha\captcha;
 use Ampache\Module\Util\Ui;

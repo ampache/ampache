@@ -27,7 +27,7 @@ namespace Ampache\Application\Api;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Auth;
 use Core;
 use Ampache\Model\Preference;

@@ -25,6 +25,7 @@
  * can't handle Cookie + Redirect
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Preference;
 use Ampache\Model\User;
 use Ampache\Module\Authorization\Access;

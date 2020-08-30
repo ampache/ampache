@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Authorization;
 
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use AmpError;
 use Core;
 use Ampache\Module\System\Dba;

@@ -32,7 +32,7 @@ use Ampache\Model\Video;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Art;
 use Ampache\Model\Artist;
 use Ampache\Model\Catalog;

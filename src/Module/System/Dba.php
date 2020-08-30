@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\System;
 
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use PDO;
 use PDOException;
 use PDOStatement;

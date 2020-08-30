@@ -41,7 +41,6 @@ if (!defined('CLI')) {
     }
 }
 
-require_once __DIR__ . '/class/ampconfig.class.php';
 require_once __DIR__ . '/class/core.class.php';
 
 // Register autoloaders

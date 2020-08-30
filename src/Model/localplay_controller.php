@@ -22,7 +22,7 @@
 
 namespace Ampache\Model;
 
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream_Url;
 
 /**

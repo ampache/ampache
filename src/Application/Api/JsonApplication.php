@@ -27,7 +27,7 @@ namespace Ampache\Application\Api;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\System\Session;
 use Ampache\Model\User;

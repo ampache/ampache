@@ -26,7 +26,7 @@ namespace Ampache\Model;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Art;
 use Core;
 use PDOStatement;

@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Model\Album;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Artist;
 use Ampache\Module\Util\Browse;
 use Core;

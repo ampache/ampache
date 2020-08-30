@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use Ampache\Module\Util\AmpacheRss;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Core;
 use Ampache\Module\Util\Ui;
 

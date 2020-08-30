@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Module\Api\Ajax;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Artist;
 use Core;
 use Ampache\Module\System\Dba;

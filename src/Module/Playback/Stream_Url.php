@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback;
 
 use Ampache\Module\Util\MemoryObject;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 
 /**
  * Stream_URL Class

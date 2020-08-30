@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Userflag;
 use Ampache\Module\Util\Browse;
 

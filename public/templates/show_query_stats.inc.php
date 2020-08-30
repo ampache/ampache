@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\database_object;
 use Ampache\Module\System\Dba;
 

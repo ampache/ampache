@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback;
 
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Art;
 use Core;
 use Ampache\Module\System\Dba;

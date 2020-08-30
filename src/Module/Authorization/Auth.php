@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Authorization;
 
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Auth_OpenID;
 use Auth_OpenID_PAPE_Request;
 use Auth_OpenID_SRegRequest;

@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Channel;
 use Ampache\Module\Util\Ui;
 

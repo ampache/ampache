@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\User;
 use Ampache\Model\Video;
 use Ampache\Module\Api\Ajax;

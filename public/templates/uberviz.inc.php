@@ -45,3 +45,4 @@
     <div class="eq" id="filter2200Hz"></div>
     <div class="eq" id="filter6000Hz"></div>
 </div>
+use Ampache\Config\AmpConfig;

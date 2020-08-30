@@ -21,6 +21,7 @@
  */
 
 // Gotta do some math here!
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
 $total_images = count($images);

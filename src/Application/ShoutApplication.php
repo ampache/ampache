@@ -27,7 +27,7 @@ namespace Ampache\Application;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use AmpError;
 use Core;
 use Ampache\Model\Shoutbox;

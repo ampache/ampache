@@ -27,7 +27,7 @@ namespace Ampache\Model;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Dba;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Artist;
 use Core;
 use PDOStatement;

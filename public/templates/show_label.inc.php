@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;

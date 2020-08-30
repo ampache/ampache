@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Util;
 
 use Ampache\Model\Album;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Art;
 use Ampache\Model\Artist;
 use Ampache\Model\Shoutbox;

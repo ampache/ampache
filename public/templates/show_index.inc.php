@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Plugin;
 use Ampache\Model\Song;
 use Ampache\Module\Api\Ajax;

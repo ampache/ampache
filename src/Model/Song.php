@@ -35,7 +35,7 @@ use Ampache\Module\Util\VaInfo;
 use Ampache\Model\Metadata\Metadata;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Art;
 use Ampache\Model\Artist;
 use Ampache\Model\Catalog;

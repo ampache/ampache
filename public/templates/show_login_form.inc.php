@@ -25,6 +25,7 @@
  * if so disable the checkbox
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 

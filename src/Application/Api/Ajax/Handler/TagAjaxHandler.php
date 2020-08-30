@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Browse;
 use Core;
 use Ampache\Model\Label;

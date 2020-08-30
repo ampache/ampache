@@ -28,7 +28,7 @@ use Ampache\Model\Media;
 use Ampache\Model\playable_item;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Democratic;
 use Ampache\Model\Song;
 use Ampache\Model\Song_Preview;

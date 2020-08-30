@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application;
 
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use AmpError;
 use Ampache\Module\Util\Captcha\captcha;
 use Core;

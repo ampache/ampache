@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 

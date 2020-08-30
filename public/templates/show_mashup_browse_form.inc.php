@@ -1,4 +1,6 @@
 <?php
+
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Video;
 
 ?>

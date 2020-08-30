@@ -29,7 +29,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Module\Authorization\Access;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Art;
 use Core;
 use PDOStatement;

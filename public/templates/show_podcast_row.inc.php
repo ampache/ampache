@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Rating;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;

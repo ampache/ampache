@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Democratic;
 use Ampache\Model\localplay_controller;
 use Ampache\Model\Preference;

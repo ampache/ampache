@@ -73,3 +73,4 @@
         </tr>
     </tbody>
 </table>
+use Ampache\Config\AmpConfig;

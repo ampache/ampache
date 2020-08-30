@@ -34,7 +34,7 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Art;
 use Ampache\Model\Artist;
 use Ampache\Model\Bookmark;

@@ -33,6 +33,7 @@
  * Cache information so we don't have to check for every file!
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Album;
 use Ampache\Model\Catalog;
 use Ampache\Module\System\Dba;

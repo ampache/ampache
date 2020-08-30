@@ -19,6 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+use Ampache\Config\AmpConfig;
+
 ?>
 <h3 class="box-title"><?php echo T_('Browse Ampache...'); ?></h3>
 <table class="tabledata">

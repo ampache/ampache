@@ -27,6 +27,7 @@
  * goes all ajaxie if you've got javascript on
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\AmpacheRss;
 use Ampache\Module\Util\Ui;
 

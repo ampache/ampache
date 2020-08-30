@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Album;
 use Ampache\Model\Rating;
 use Ampache\Model\Share;

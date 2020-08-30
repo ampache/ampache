@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\LocalPlay;
 use Ampache\Module\Util\Ui;
 

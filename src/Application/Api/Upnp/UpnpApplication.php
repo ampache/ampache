@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Upnp;
 
 use Ampache\Application\ApplicationInterface;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Core;
 use Ampache\Module\Api\Upnp_Api;
 

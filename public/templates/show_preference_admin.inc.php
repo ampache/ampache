@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
 Ui::show_box_top(T_('Preferences')); ?>

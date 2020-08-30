@@ -26,7 +26,7 @@ namespace Ampache\Model;
 
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Mailer;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use AmpError;
 use Core;
 use PDOStatement;

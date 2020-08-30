@@ -27,7 +27,7 @@ namespace Ampache\Application\Api\Upnp;
 
 use Ampache\Application\ApplicationInterface;
 use AmpacheUPnP;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use UPnPPlayer;
 
 final class PlayStatusApplication implements ApplicationInterface

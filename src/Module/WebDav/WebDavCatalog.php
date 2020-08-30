@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\WebDav;
 
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
 use Sabre\DAV;
 

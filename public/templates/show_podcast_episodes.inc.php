@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Rating;
 use Ampache\Model\User;

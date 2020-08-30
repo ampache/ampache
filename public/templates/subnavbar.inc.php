@@ -24,7 +24,10 @@
  * This file expect an array of 'items' which have ['0']['url'] ['0']['title']
  * ['0']['active'] == true/false and ['0']['cssclass'] this is called from show_submenu($items);
  */
- ?>
+
+use Ampache\Config\AmpConfig;
+
+?>
 <ul class="subnavside">
 <?php
     foreach ($items as $item) {

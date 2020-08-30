@@ -22,7 +22,7 @@
 
 namespace Ampache\Model\Metadata;
 
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Metadata\Model\MetadataField;
 use ReflectionException;
 

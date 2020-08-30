@@ -27,7 +27,7 @@ namespace Ampache\Model;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
 use Core;
 use Exception;

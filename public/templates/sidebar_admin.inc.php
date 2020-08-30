@@ -21,6 +21,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Preference;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;

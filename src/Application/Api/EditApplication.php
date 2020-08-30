@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Core;
 use Ampache\Model\Label;
 use Ampache\Model\Tag;

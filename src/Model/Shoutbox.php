@@ -29,7 +29,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Art;
 use Core;
 use Ampache\Module\System\Dba;

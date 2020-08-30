@@ -28,7 +28,7 @@ namespace Ampache\Application\Admin;
 use Ampache\Module\Authorization\Access;
 use Ampache\Model\Album;
 use Ampache\Application\ApplicationInterface;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Artist;
 use Ampache\Module\System\AutoUpdate;
 use Core;

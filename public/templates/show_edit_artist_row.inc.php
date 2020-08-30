@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Label;
 use Ampache\Model\Tag;
 use Ampache\Module\Authorization\Access;

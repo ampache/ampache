@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Metadata\Model\Metadata;
 use Ampache\Model\Song;
 use Ampache\Model\Tag;

@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Model\Album;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Artist;
 use Core;
 use Ampache\Model\Democratic;

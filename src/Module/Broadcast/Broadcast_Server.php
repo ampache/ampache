@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Broadcast;
 
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Broadcast;
 use Core;
 use Exception;

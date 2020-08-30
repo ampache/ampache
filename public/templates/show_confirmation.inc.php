@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
 $confirmation = Core::form_register($form_name); ?>

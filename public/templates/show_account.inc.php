@@ -22,6 +22,7 @@
 
 // Because this is a reset of the persons password make the form a little more secure
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 

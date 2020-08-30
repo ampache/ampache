@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Util;
 
 use Ampache\Module\Authorization\Access;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
 use Core;
 use CpChart;

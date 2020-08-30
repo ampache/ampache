@@ -22,7 +22,7 @@
 
 namespace Ampache\Module\Authentication\Ldap;
 
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 
 /**
  * This class handles all the contacts with a LDAP server

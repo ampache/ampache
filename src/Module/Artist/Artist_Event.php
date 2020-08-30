@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Artist;
 
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Artist;
 use Ampache\Module\Util\Recommendation;
 use SimpleXMLElement;

@@ -28,7 +28,7 @@ use Ampache\Model\Album;
 use Ampache\Module\Playback\LocalPlay;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Art;
 use Ampache\Model\Artist;
 use Ampache\Model\Catalog;

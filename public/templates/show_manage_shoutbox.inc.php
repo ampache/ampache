@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Shoutbox;
 use Ampache\Model\User;
 use Ampache\Module\Util\Ui;

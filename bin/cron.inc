@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Bookmark;
 use Ampache\Model\Catalog;
 use Ampache\Model\Podcast_Episode;

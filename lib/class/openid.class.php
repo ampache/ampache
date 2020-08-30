@@ -21,6 +21,8 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Config\AmpConfig;
+
 $openid_path = __DIR__ . "/../../modules";
 $path        = ini_get('include_path');
 $path        = $openid_path . PATH_SEPARATOR . $path;

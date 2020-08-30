@@ -29,7 +29,7 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use Core;
 use PDOStatement;
 

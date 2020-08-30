@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Module\Authorization\Access;
-use AmpConfig;
+use Ampache\Config\AmpConfig;
 use AmpError;
 use Ampache\Model\Catalog;
 use Core;
