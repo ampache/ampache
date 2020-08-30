@@ -33,7 +33,7 @@ use Catalog;
 use Clip;
 use DOMDocument;
 use Live_Stream;
-use Movie;
+use Ampache\Model\Movie;
 use Personal_Video;
 use Playlist;
 use Podcast;

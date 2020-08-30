@@ -33,7 +33,7 @@ use AmpConfig;
 use Art;
 use Clip;
 use Core;
-use Movie;
+use Ampache\Model\Movie;
 use Personal_Video;
 use Rating;
 use Song;

@@ -1,11 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-
-use Ampache\Model\Video;
-use Ampache\Module\System\Dba;
-
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -24,6 +19,13 @@ use Ampache\Module\System\Dba;
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
+use Ampache\Module\System\Dba;
+use Catalog;
 
 class Movie extends Video
 {
@@ -60,8 +62,7 @@ class Movie extends Video
      */
     public static function garbage_collection()
     {
-        $sql = "DELETE FROM `movie` USING `movie` LEFT JOIN `video` ON `video`.`id` = `movie`.`id` " .
-            "WHERE `video`.`id` IS NULL";
+        $sql = "DELETE FROM `movie` USING `movie` LEFT JOIN `video` ON `video`.`id` = `movie`.`id` " . "WHERE `video`.`id` IS NULL";
         Dba::write($sql);
     }
 
@@ -75,12 +76,11 @@ class Movie extends Video
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
-        $trimmed = Catalog::trim_prefix(trim((string) $data['original_name']));
+        $trimmed = Catalog::trim_prefix(trim((string)$data['original_name']));
         $name    = $trimmed['string'];
         $prefix  = $trimmed['prefix'];
 
-        $sql = "INSERT INTO `movie` (`id`, `original_name`, `prefix`, `summary`, `year`) " .
-            "VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `movie` (`id`, `original_name`, `prefix`, `summary`, `year`) " . "VALUES (?, ?, ?, ?, ?)";
         Dba::write($sql, array($data['id'], $name, $prefix, $data['summary'], $data['year']));
 
         return $data['id'];
@@ -97,7 +97,7 @@ class Movie extends Video
         parent::update($data);
 
         if (isset($data['original_name'])) {
-            $trimmed = Catalog::trim_prefix(trim((string) $data['original_name']));
+            $trimmed = Catalog::trim_prefix(trim((string)$data['original_name']));
             $name    = $trimmed['string'];
             $prefix  = $trimmed['prefix'];
         } else {
@@ -129,7 +129,7 @@ class Movie extends Video
     {
         parent::format($details);
 
-        $this->f_original_name = trim((string) $this->prefix . " " . $this->f_title);
+        $this->f_original_name = trim((string)$this->prefix . " " . $this->f_title);
         $this->f_title         = ($this->f_original_name ?: $this->f_title);
         $this->f_full_title    = $this->f_title;
         $this->f_link          = '<a href="' . $this->link . '">' . $this->f_title . '</a>';
@@ -145,7 +145,8 @@ class Movie extends Video
     public function get_keywords()
     {
         $keywords         = parent::get_keywords();
-        $keywords['type'] = array('important' => false,
+        $keywords['type'] = array(
+            'important' => false,
             'label' => null,
             'value' => 'movie'
         );
@@ -174,4 +175,4 @@ class Movie extends Video
 
         return $deleted;
     }
-} // end movie.class
+}
