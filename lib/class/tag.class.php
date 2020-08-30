@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 use Ampache\Model\library_item;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 

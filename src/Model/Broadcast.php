@@ -29,7 +29,7 @@ use Ampache\Module\Api\Ajax;
 use AmpConfig;
 use Art;
 use Core;
-use Dba;
+use Ampache\Module\System\Dba;
 use PDOStatement;
 use Tag;
 

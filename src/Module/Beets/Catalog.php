@@ -30,7 +30,7 @@ use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
 use Ampache\Module\Util\Ui;
-use Dba;
+use Ampache\Module\System\Dba;
 use Song;
 
 /**

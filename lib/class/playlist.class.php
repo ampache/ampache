@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 use Ampache\Model\playlist_object;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**

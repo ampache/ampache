@@ -29,7 +29,7 @@ use AmpConfig;
 use AmpError;
 use Catalog;
 use Core;
-use Dba;
+use Ampache\Module\System\Dba;
 
 /**
  * Query Class

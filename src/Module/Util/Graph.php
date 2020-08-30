@@ -30,7 +30,7 @@ use Catalog;
 use Core;
 use CpChart;
 use CpChart\Data;
-use Dba;
+use Ampache\Module\System\Dba;
 use Ampache\Model\Plugin;
 use User;
 

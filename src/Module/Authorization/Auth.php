@@ -30,7 +30,7 @@ use Auth_OpenID_PAPE_Request;
 use Auth_OpenID_SRegRequest;
 use Auth_OpenID_SRegResponse;
 use Core;
-use Dba;
+use Ampache\Module\System\Dba;
 use Ampache\Module\Authentication\Ldap\Ldap;
 use Openid;
 use Ampache\Module\System\Session;

@@ -22,7 +22,7 @@
 
 namespace Ampache\Model\Metadata\Repository;
 
-use Dba;
+use Ampache\Module\System\Dba;
 use Ampache\Repository\Repository;
 
 class Metadata extends Repository

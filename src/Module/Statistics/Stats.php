@@ -27,7 +27,7 @@ namespace Ampache\Module\Statistics;
 use AmpConfig;
 use Catalog;
 use Core;
-use Dba;
+use Ampache\Module\System\Dba;
 use PDOStatement;
 use Podcast_Episode;
 use Song;

@@ -27,7 +27,7 @@ namespace Ampache\Module\Util;
 use Ampache\Model\Plugin;
 use AmpConfig;
 use Core;
-use Dba;
+use Ampache\Module\System\Dba;
 
 /**
  * A collection of methods related to the user interface

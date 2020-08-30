@@ -29,7 +29,7 @@ use Art;
 use Artist;
 use Catalog;
 use Core;
-use Dba;
+use Ampache\Module\System\Dba;
 use PDOStatement;
 use Requests;
 use SimpleXMLElement;

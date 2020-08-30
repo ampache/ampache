@@ -21,6 +21,7 @@
  */
 
 use Ampache\Model\database_object;
+use Ampache\Module\System\Dba;
 
 ?>
 <?php if (AmpConfig::get('show_footer_statistics')) { ?>

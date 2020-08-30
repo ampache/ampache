@@ -28,7 +28,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Art;
 use Core;
-use Dba;
+use Ampache\Module\System\Dba;
 use Democratic;
 use PDOStatement;
 use Ampache\Module\System\Session;

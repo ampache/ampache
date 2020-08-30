@@ -24,6 +24,7 @@ use Ampache\Model\Album;
 use Ampache\Model\Media;
 use Ampache\Model\Metadata\Repository\Metadata;
 use Ampache\Model\Metadata\Repository\MetadataField;
+use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;

@@ -32,7 +32,7 @@ use AmpConfig;
 use Artist;
 use Ampache\Module\System\AutoUpdate;
 use Core;
-use Dba;
+use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Horde_Browser;
 use Song;
 use Ampache\Module\Util\Ui;

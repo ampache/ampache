@@ -28,7 +28,7 @@ use Ampache\Module\Playback\Stream;
 use AmpConfig;
 use Catalog;
 use Core;
-use Dba;
+use Ampache\Module\System\Dba;
 use PDOStatement;
 use RuntimeException;
 use Song;

@@ -10,6 +10,7 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Model\database_object;
 use Ampache\Model\Media;
 use Ampache\Model\playable_item;
+use Ampache\Module\System\Dba;
 
 /**
  *

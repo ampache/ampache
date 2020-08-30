@@ -31,7 +31,7 @@ use AmpConfig;
 use Art;
 use Catalog;
 use Core;
-use Dba;
+use Ampache\Module\System\Dba;
 use PDOStatement;
 use Playlist;
 use Song;

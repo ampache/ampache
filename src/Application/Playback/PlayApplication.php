@@ -32,7 +32,7 @@ use AmpConfig;
 use Ampache\Module\Authorization\Auth;
 use Catalog;
 use Core;
-use Dba;
+use Ampache\Module\System\Dba;
 use Democratic;
 use Ampache\Module\Util\Horde_Browser;
 use Podcast_Episode;

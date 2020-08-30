@@ -32,7 +32,7 @@ use AmpConfig;
 use Art;
 use Artist;
 use Catalog;
-use Dba;
+use Ampache\Module\System\Dba;
 use Live_Stream;
 use Playlist;
 use Podcast;

@@ -28,7 +28,7 @@ namespace Ampache\Application;
 use AmpConfig;
 use AmpError;
 use Core;
-use Dba;
+use Ampache\Module\System\Dba;
 use Exception;
 use Preference;
 use Ampache\Module\Util\Ui;

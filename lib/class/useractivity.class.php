@@ -22,6 +22,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Model\Album;
+use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**

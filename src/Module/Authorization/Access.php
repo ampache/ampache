@@ -27,7 +27,7 @@ namespace Ampache\Module\Authorization;
 use AmpConfig;
 use AmpError;
 use Core;
-use Dba;
+use Ampache\Module\System\Dba;
 use User;
 
 /**

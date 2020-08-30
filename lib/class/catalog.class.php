@@ -26,6 +26,7 @@ use Ampache\Model\License;
 use Ampache\Model\Shoutbox;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;

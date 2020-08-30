@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use AmpConfig;
-use Dba;
+use Ampache\Module\System\Dba;
 
 /**
  * This is a general object that is extended by all of the basic

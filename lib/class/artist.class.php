@@ -5,6 +5,7 @@ declare(strict_types=0);
 use Ampache\Model\Album;
 use Ampache\Model\Shoutbox;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Model\library_item;
 use Ampache\Module\Authorization\Access;

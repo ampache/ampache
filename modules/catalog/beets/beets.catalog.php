@@ -22,6 +22,7 @@
  */
 
 use Ampache\Module\Beets\CliHandler;
+use Ampache\Module\System\Dba;
 
 /**
  * Beets Catalog Class

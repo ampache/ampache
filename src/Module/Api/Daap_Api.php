@@ -28,7 +28,7 @@ use Ampache\Model\Album;
 use AmpConfig;
 use Catalog;
 use Core;
-use Dba;
+use Ampache\Module\System\Dba;
 use Playlist;
 use Rating;
 use Search;

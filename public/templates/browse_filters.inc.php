@@ -21,6 +21,7 @@
  */
 
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\System\Dba;
 
 if (!Core::is_session_started()) {
     session_start();

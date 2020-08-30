@@ -8,6 +8,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**

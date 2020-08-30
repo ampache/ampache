@@ -30,7 +30,7 @@ use AmpConfig;
 use Art;
 use Artist;
 use Catalog;
-use Dba;
+use Ampache\Module\System\Dba;
 use Playlist;
 use Podcast;
 use Rating;

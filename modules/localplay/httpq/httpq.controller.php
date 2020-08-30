@@ -22,6 +22,7 @@
 
 use Ampache\Model\localplay_controller;
 use Ampache\Module\Playback\Stream_Url;
+use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**

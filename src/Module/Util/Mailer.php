@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Util;
 
 use AmpConfig;
-use Dba;
+use Ampache\Module\System\Dba;
 use PHPMailer\PHPMailer\PHPMailer;
 
 /**

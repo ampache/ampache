@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Core;
-use Dba;
+use Ampache\Module\System\Dba;
 use Preference;
 use Ampache\Module\System\Session;
 use User;

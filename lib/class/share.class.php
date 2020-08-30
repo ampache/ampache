@@ -6,6 +6,7 @@ use Ampache\Model\Album;
 use Ampache\Model\Plugin;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Authorization\Access;

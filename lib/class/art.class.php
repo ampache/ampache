@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 use Ampache\Model\Album;
 use Ampache\Model\Plugin;
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;

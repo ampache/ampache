@@ -3,6 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Model\library_item;

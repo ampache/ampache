@@ -28,7 +28,7 @@ use Ampache\Model\Album;
 use AmpConfig;
 use Artist;
 use Core;
-use Dba;
+use Ampache\Module\System\Dba;
 use Search;
 
 /**

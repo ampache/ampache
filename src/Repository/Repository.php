@@ -24,7 +24,7 @@ namespace Ampache\Repository;
 
 use Ampache\Model\DatabaseObject;
 use Ampache\Model\Metadata\Repository\MetadataField;
-use Dba;
+use Ampache\Module\System\Dba;
 use Ampache\Model\Model;
 use ReflectionClass;
 use ReflectionException;

@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
-use Dba;
+use Ampache\Module\System\Dba;
 
 class License
 {

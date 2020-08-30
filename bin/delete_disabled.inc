@@ -25,6 +25,9 @@
  * This WILL DELETE MUSIC!!!! it does what it's name would suggest and deletes
  * any disabled songs
  */
+
+use Ampache\Module\System\Dba;
+
 $options = getopt("x");
 
 // will not delete anything if debug is true

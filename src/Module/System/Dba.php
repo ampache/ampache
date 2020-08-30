@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,13 +20,17 @@ declare(strict_types=0);
  *
  */
 
-/* Make sure they aren't directly accessing it */
-if (!defined('INIT_LOADED') || INIT_LOADED != '1') {
-    return false;
-}
+declare(strict_types=0);
+
+namespace Ampache\Module\System;
+
+use AmpConfig;
+use PDO;
+use PDOException;
+use PDOStatement;
 
 /**
- * Dba Class
+ * Ampache\Module\System\Dba Class
  *
  * This is the database abstraction class
  * It duplicates the functionality of mysql_???
@@ -43,15 +46,6 @@ class Dba
 
     private static $_sql;
     private static $_error;
-
-    /**
-     * constructor
-     * This does nothing with the DBA class
-     */
-    private function __construct()
-    {
-        // Rien a faire
-    } // construct
 
     /**
      * query
@@ -322,7 +316,7 @@ class Dba
             $dsn = 'mysql:host=' . $hostname ?: 'localhost';
         }
         if ($port) {
-            $dsn .= ';port=' . (int) ($port);
+            $dsn .= ';port=' . (int)($port);
         }
 
         try {
@@ -358,7 +352,8 @@ class Dba
 
         if ($dbh->exec('USE `' . $database . '`') === false) {
             self::$_error = json_encode($dbh->errorInfo());
-            debug_event('dba.class', 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()), 1);
+            debug_event('dba.class', 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()),
+                1);
         }
 
         if (AmpConfig::get('sql_profiling')) {
@@ -516,7 +511,7 @@ class Dba
     public static function translate_to_mysqlcharset($charset)
     {
         // Translate real charset names into fancy MySQL land names
-        switch (strtoupper((string) $charset)) {
+        switch (strtoupper((string)$charset)) {
             case 'CP1250':
             case 'WINDOWS-1250':
                 $target_charset   = AmpConfig::get('database_charset', 'cp1250');
@@ -599,14 +594,14 @@ class Dba
 
             // Iterate through the columns of the table
             while ($table = self::fetch_assoc($describe_results)) {
-                if (
-                (strpos($table['Type'], 'varchar') !== false) ||
-                (strpos($table['Type'], 'enum') !== false) ||
-                (strpos($table['Table'], 'text') !== false)) {
+                if ((strpos($table['Type'], 'varchar') !== false) || (strpos($table['Type'],
+                            'enum') !== false) || (strpos($table['Table'], 'text') !== false)) {
                     $sql             = "ALTER TABLE `" . $row['0'] . "` MODIFY `" . $table['Field'] . "` " . $table['Type'] . " CHARACTER SET " . $target_charset;
                     $charset_results = self::write($sql);
                     if (!$charset_results) {
-                        debug_event('dba.class', 'Unable to update the charset of ' . $table['Field'] . '.' . $table['Type'] . ' to ' . $target_charset, 3);
+                        debug_event('dba.class',
+                            'Unable to update the charset of ' . $table['Field'] . '.' . $table['Type'] . ' to ' . $target_charset,
+                            3);
                     } // if it fails
                 }
             }
@@ -829,4 +824,4 @@ class Dba
             self::write($sql);
         }
     }
-} // end dba.class
+}

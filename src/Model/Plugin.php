@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Dba;
+use Ampache\Module\System\Dba;
 use Exception;
 use User;
 

@@ -32,7 +32,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Art;
 use Core;
-use Dba;
+use Ampache\Module\System\Dba;
 use PDOStatement;
 use Preference;
 use Ampache\Module\Util\Ui;

@@ -21,6 +21,8 @@
  *
  */
 
+use Ampache\Module\System\Dba;
+
 /**
  * Beets Catalog Class
  *

@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\System\Dba;
+
 define('NO_SESSION', '1');
 
 require_once __DIR__ . '/../lib/init.php';

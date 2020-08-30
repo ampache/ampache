@@ -21,6 +21,7 @@
  */
 
 use Ampache\Model\Media;
+use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 
 /**

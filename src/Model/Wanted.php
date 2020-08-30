@@ -28,7 +28,7 @@ use Ampache\Module\Api\Ajax;
 use AmpConfig;
 use Artist;
 use Core;
-use Dba;
+use Ampache\Module\System\Dba;
 use Exception;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;

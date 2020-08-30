@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Module\System\Dba;
 use Ampache\Module\Util\VaInfo;
 
 define('NO_SESSION', '1');
