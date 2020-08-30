@@ -1,20 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-
-use Ampache\Model\Shoutbox;
-use Ampache\Model\Tag;
-use Ampache\Model\Useractivity;
-use Ampache\Model\Userflag;
-use Ampache\Module\Playback\Stream;
-use Ampache\Module\Statistics\Stats;
-use Ampache\Model\library_item;
-use Ampache\Model\Media;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Dba;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -34,7 +20,28 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
  *
  */
 
-class Video extends \Ampache\Model\database_object implements Media, library_item
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
+use Ampache\Module\Playback\Stream;
+use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\System\Dba;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use AmpConfig;
+use Art;
+use Clip;
+use Core;
+use Movie;
+use Personal_Video;
+use Rating;
+use Song;
+use TVShow;
+use TVShow_Episode;
+use TVShow_Season;
+
+class Video extends database_object implements Media, library_item
 {
     /**
      * @var integer $id
@@ -1155,4 +1162,4 @@ class Video extends \Ampache\Model\database_object implements Media, library_ite
 
         return 0;
     } // get_item_count
-} // end video.class
+}

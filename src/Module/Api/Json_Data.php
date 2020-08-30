@@ -46,7 +46,7 @@ use Ampache\Model\Tag;
 use Ampache\Model\User;
 use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;
-use Video;
+use Ampache\Model\Video;
 
 /**
  * JSON_Data Class

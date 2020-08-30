@@ -22,6 +22,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Model\Album;
+use Ampache\Model\database_object;
 use Ampache\Model\License;
 use Ampache\Model\Shoutbox;
 use Ampache\Model\Tag;
@@ -29,6 +30,7 @@ use Ampache\Model\Tmp_Playlist;
 use Ampache\Model\User;
 use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;
+use Ampache\Model\Video;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
@@ -49,7 +51,7 @@ use Ampache\Module\Authorization\Access;
  * it contains functions for creating/listing/updated the catalogs.
  *
  */
-abstract class Catalog extends \Ampache\Model\database_object
+abstract class Catalog extends database_object
 {
     /**
      * @var integer $id

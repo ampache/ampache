@@ -29,7 +29,6 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Horde_Browser;
 use AmpConfig;
 use Core;
-use Ampache\Module\System\Dba;
 use PDOStatement;
 use Song_Preview;
 use Ampache\Model\Tmp_Playlist;

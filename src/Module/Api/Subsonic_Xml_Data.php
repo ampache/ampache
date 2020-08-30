@@ -47,7 +47,7 @@ use Song;
 use Ampache\Model\Tag;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
-use Video;
+use Ampache\Model\Video;
 
 /**
  * XML_Data Class
@@ -964,7 +964,7 @@ class Subsonic_Xml_Data
     /**
      * addVideo
      * @param SimpleXMLElement $xml
-     * @param Video $video
+     * @param \Ampache\Model\Video $video
      * @param string $elementName
      */
     public static function addVideo($xml, $video, $elementName = 'video')

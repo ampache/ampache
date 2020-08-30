@@ -33,7 +33,7 @@ use Podcast_Episode;
 use Song;
 use Ampache\Model\User;
 use Ampache\Model\Useractivity;
-use Video;
+use Ampache\Model\Video;
 
 /**
  * Stats Class

@@ -299,7 +299,7 @@ function client_disconnect($channel, &$client_socks, &$stream_clients, $sock)
     unset($client_socks[$key]);
     unset($stream_clients[$key]);
     if (fclose($sock) === false) {
-        throw new \RuntimeException('The file handle ' . $sock . ' could not be closed');
+        throw new RuntimeException('The file handle ' . $sock . ' could not be closed');
     }
     $channel->update_listeners(count($client_socks));
     debug_event('channel_run', 'A client disconnected. Now there are total ' . count($client_socks) . ' clients.', 4);

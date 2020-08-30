@@ -30,7 +30,6 @@ use AmpConfig;
 use Artist;
 use PDOStatement;
 use Song;
-use Ampache\Model\User;
 
 class Useractivity extends database_object
 {

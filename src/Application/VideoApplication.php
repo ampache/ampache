@@ -28,7 +28,7 @@ namespace Ampache\Application;
 use AmpConfig;
 use Catalog;
 use Ampache\Module\Util\Ui;
-use Video;
+use Ampache\Model\Video;
 use function T_;
 
 final class VideoApplication implements ApplicationInterface

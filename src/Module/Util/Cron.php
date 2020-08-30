@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Util;
 
 use Ampache\Model\Album;
+use Ampache\Model\Video;
 use AmpConfig;
 use Art;
 use Artist;
@@ -38,7 +39,6 @@ use Song;
 use Ampache\Model\Tag;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
-use Video;
 
 final class Cron
 {

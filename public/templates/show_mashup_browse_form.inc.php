@@ -41,4 +41,4 @@
             </td>
         <?php } ?>
     </tr>
-</table>
+</table>use Ampache\Model\Video;

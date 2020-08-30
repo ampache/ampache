@@ -22,6 +22,7 @@
 
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
+use Ampache\Model\Video;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;

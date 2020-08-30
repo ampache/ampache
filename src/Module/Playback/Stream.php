@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
+use Ampache\Model\Video;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
@@ -33,7 +34,6 @@ use Ampache\Module\System\Dba;
 use Preference;
 use Ampache\Module\System\Session;
 use Ampache\Model\User;
-use Video;
 
 class Stream
 {
@@ -237,7 +237,7 @@ class Stream
 
     /**
      * get_image_preview
-     * @param Video $media
+     * @param \Ampache\Model\Video $media
      * @return string
      */
     public static function get_image_preview($media)

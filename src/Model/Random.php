@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
-use Ampache\Model\Album;
 use AmpConfig;
 use Artist;
 use Core;

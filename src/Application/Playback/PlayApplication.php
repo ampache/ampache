@@ -46,7 +46,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\User;
-use Video;
+use Ampache\Model\Video;
 
 final class PlayApplication implements ApplicationInterface
 {

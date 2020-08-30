@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
+use Ampache\Model\Video;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Model\Album;
@@ -40,7 +41,6 @@ use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Slideshow;
 use Song;
 use Ampache\Module\Util\Ui;
-use Video;
 use Ampache\Model\Wanted;
 
 final class IndexAjaxHandler implements AjaxHandlerInterface

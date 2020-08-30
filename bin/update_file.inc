@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Video;
 use Ampache\Module\System\Dba;
 
 define('NO_SESSION', '1');

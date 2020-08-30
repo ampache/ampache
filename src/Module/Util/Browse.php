@@ -33,7 +33,7 @@ use Catalog;
 use Playlist;
 use Song;
 use Ampache\Model\Tag;
-use Video;
+use Ampache\Model\Video;
 
 /**
  * Browse Class

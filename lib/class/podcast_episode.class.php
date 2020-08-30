@@ -2,6 +2,7 @@
 declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
+use Ampache\Model\database_object;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
@@ -30,7 +31,7 @@ use Ampache\Module\Authorization\Access;
  *
  */
 
-class Podcast_Episode extends \Ampache\Model\database_object implements Media, library_item
+class Podcast_Episode extends database_object implements Media, library_item
 {
     public $id;
     public $title;

@@ -44,7 +44,7 @@ use Ampache\Model\Tag;
 use TVShow;
 use TVShow_Episode;
 use TVShow_Season;
-use Video;
+use Ampache\Model\Video;
 use XMLReader;
 
 /**

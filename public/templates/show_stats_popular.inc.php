@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Video;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Browse;
 use Ampache\Module\Util\Ui;

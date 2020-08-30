@@ -3,6 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
 use Ampache\Model\Album;
+use Ampache\Model\database_object;
 use Ampache\Model\Shoutbox;
 use Ampache\Model\Tag;
 use Ampache\Model\Useractivity;
@@ -33,7 +34,7 @@ use Ampache\Module\Authorization\Access;
  *
  */
 
-class Artist extends \Ampache\Model\database_object implements library_item
+class Artist extends database_object implements library_item
 {
     /* Variables from DB */
 

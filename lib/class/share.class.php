@@ -3,6 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
 use Ampache\Model\Album;
+use Ampache\Model\database_object;
 use Ampache\Model\Plugin;
 use Ampache\Model\User;
 use Ampache\Module\Playback\Stream;
@@ -32,7 +33,7 @@ use Ampache\Module\Authorization\Access;
  *
  */
 
-class Share extends \Ampache\Model\database_object
+class Share extends database_object
 {
     public $id;
     public $user;

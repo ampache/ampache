@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Model\Album;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
 use Ampache\Model\playable_item;

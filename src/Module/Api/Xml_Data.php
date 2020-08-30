@@ -28,6 +28,7 @@ use Ampache\Model\Album;
 use Ampache\Model\library_item;
 use Ampache\Model\License;
 use Ampache\Model\Shoutbox;
+use Ampache\Model\Video;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
@@ -50,7 +51,6 @@ use Ampache\Model\Tag;
 use Ampache\Model\User;
 use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;
-use Video;
 
 /**
  * XML_Data Class

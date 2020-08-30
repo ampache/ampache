@@ -28,9 +28,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Art;
 use Core;
-use Ampache\Model\database_object;
 use Ampache\Module\Util\Ui;
-use Ampache\Model\User;
 
 /**
  * playlist_object

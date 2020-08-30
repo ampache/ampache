@@ -35,7 +35,6 @@ use Ampache\Module\System\Dba;
 use PDOStatement;
 use Playlist;
 use Song;
-use Ampache\Model\Tag;
 
 class Channel extends database_object implements Media, library_item
 {

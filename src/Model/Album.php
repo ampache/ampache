@@ -39,10 +39,6 @@ use Rating;
 use Search;
 use Share;
 use Song;
-use Ampache\Model\Tag;
-use Ampache\Model\Useractivity;
-use Ampache\Model\Userflag;
-use Ampache\Model\Wanted;
 
 /**
  * Album Class

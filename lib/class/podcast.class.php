@@ -2,6 +2,7 @@
 declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
+use Ampache\Model\database_object;
 use Ampache\Model\library_item;
 use Ampache\Module\System\Dba;
 
@@ -25,7 +26,7 @@ use Ampache\Module\System\Dba;
  *
  */
 
-class Podcast extends \Ampache\Model\database_object implements library_item
+class Podcast extends database_object implements library_item
 {
     /* Variables from DB */
     public $id;

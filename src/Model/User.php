@@ -36,8 +36,6 @@ use Core;
 use Exception;
 use PDOStatement;
 use Song;
-use Ampache\Model\Tag;
-use Ampache\Model\Tmp_Playlist;
 
 /**
  * User Class

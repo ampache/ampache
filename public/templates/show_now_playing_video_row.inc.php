@@ -21,6 +21,7 @@
  */
 
 use Ampache\Model\Userflag;
+use Ampache\Model\Video;
 
 $media = Video::create_from_id($media->id);
 $media->format(); ?>

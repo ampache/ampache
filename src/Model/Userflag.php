@@ -33,7 +33,6 @@ use Core;
 use Exception;
 use PDOStatement;
 use Song;
-use Ampache\Model\User;
 
 /**
  * This user flag/unflag songs, albums, artists, videos, tvshows, movies ... as favorite.
