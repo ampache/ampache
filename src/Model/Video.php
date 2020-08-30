@@ -37,7 +37,7 @@ use Ampache\Model\Movie;
 use Personal_Video;
 use Rating;
 use Song;
-use TVShow;
+use Ampache\Model\TvShow;
 use TVShow_Episode;
 use TVShow_Season;
 
@@ -459,7 +459,7 @@ class Video extends database_object implements Media, library_item
         Movie::garbage_collection();
         TVShow_Episode::garbage_collection();
         TVShow_Season::garbage_collection();
-        TVShow::garbage_collection();
+        TvShow::garbage_collection();
         Personal_Video::garbage_collection();
         Clip::garbage_collection();
     }

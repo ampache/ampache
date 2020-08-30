@@ -5,6 +5,7 @@ declare(strict_types=0);
 use Ampache\Model\database_object;
 use Ampache\Model\Shoutbox;
 use Ampache\Model\library_item;
+use Ampache\Model\TvShow;
 use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;
 use Ampache\Model\Video;
@@ -143,7 +144,7 @@ class TVShow_Season extends database_object implements library_item
     {
         $this->f_name = T_('Season') . ' ' . $this->season_number;
 
-        $tvshow = new TVShow($this->tvshow);
+        $tvshow = new TvShow($this->tvshow);
         $tvshow->format($details);
         $this->f_tvshow      = $tvshow->f_name;
         $this->f_tvshow_link = $tvshow->f_link;
@@ -268,7 +269,7 @@ class TVShow_Season extends database_object implements library_item
     public function get_description()
     {
         // No season description for now, always return tvshow description
-        $tvshow = new TVShow($this->tvshow);
+        $tvshow = new TvShow($this->tvshow);
 
         return $tvshow->get_description();
     }

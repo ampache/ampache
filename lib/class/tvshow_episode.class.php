@@ -3,6 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
 use Ampache\Model\Tag;
+use Ampache\Model\TvShow;
 use Ampache\Model\Video;
 use Ampache\Module\System\Dba;
 
@@ -83,7 +84,7 @@ class TVShow_Episode extends Video
         }
         $tags = $data['genre'];
 
-        $tvshow = TVShow::check($data['tvshow'], $data['year'], $data['tvshow_summary']);
+        $tvshow = TvShow::check($data['tvshow'], $data['year'], $data['tvshow_summary']);
         if ($options['gather_art'] && $tvshow && $data['tvshow_art'] && !Art::has_db((int) $tvshow, 'tvshow')) {
             $art = new Art((int) $tvshow, 'tvshow');
             $art->insert_url($data['tvshow_art']);

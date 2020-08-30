@@ -28,6 +28,7 @@ use Ampache\Model\License;
 use Ampache\Model\Shoutbox;
 use Ampache\Model\Tag;
 use Ampache\Model\Tmp_Playlist;
+use Ampache\Model\TvShow;
 use Ampache\Model\User;
 use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;
@@ -996,7 +997,7 @@ abstract class Catalog extends database_object
     /**
      *
      * @param integer[]|null $catalogs
-     * @return TVShow[]
+     * @return TvShow[]
      */
     public static function get_tvshows($catalogs = null)
     {
@@ -1009,7 +1010,7 @@ abstract class Catalog extends database_object
             $catalog    = self::create_from_id($catalog_id);
             $tvshow_ids = $catalog->get_tvshow_ids();
             foreach ($tvshow_ids as $tvshow_id) {
-                $results[] = new TVShow($tvshow_id);
+                $results[] = new TvShow($tvshow_id);
             }
         }
 

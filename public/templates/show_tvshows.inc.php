@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\TvShow;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
 use Ampache\Module\Api\Ajax;
@@ -73,7 +74,7 @@ $thcount  = 8; ?>
 
         /* Foreach through every tv show that has been passed to us */
         foreach ($object_ids as $tvshow_id) {
-            $libitem = new TVShow($tvshow_id);
+            $libitem = new TvShow($tvshow_id);
             $libitem->format(); ?>
         <tr id="tvshow_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
             <?php require Ui::find_template('show_tvshow_row.inc.php'); ?>

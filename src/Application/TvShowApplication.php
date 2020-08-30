@@ -27,7 +27,7 @@ namespace Ampache\Application;
 
 use AmpConfig;
 use Catalog;
-use TVShow;
+use Ampache\Model\TvShow;
 use Ampache\Module\Util\Ui;
 
 final class TvShowApplication implements ApplicationInterface
@@ -57,7 +57,7 @@ final class TvShowApplication implements ApplicationInterface
                     break;
                 }
 
-                $tvshow = new TVShow($_REQUEST['tvshow_id']);
+                $tvshow = new TvShow($_REQUEST['tvshow_id']);
                 if (!Catalog::can_remove($tvshow)) {
                     debug_event('tvshows', 'Unauthorized to remove the tvshow `.' . $tvshow->id . '`.', 1);
                     Ui::access_denied();
@@ -72,7 +72,7 @@ final class TvShowApplication implements ApplicationInterface
                 }
                 break;
             case 'show':
-                $tvshow = new TVShow($_REQUEST['tvshow']);
+                $tvshow = new TvShow($_REQUEST['tvshow']);
                 $tvshow->format();
                 $object_ids  = $tvshow->get_seasons();
                 $object_type = 'tvshow_season';

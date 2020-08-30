@@ -41,7 +41,7 @@ use Podcast_Episode;
 use Search;
 use Song;
 use Ampache\Model\Tag;
-use TVShow;
+use Ampache\Model\TvShow;
 use TVShow_Episode;
 use TVShow_Season;
 use Ampache\Model\Video;
@@ -802,7 +802,7 @@ class Upnp_Api
                         );
                         break;
                     case 2:
-                        $tvshow = new TVShow($pathreq[1]);
+                        $tvshow = new TvShow($pathreq[1]);
                         if ($tvshow->id) {
                             $tvshow->format();
                             $meta = self::_itemTVShow($tvshow, $root . '/tvshows');
@@ -937,7 +937,7 @@ class Upnp_Api
                         }
                         break;
                     case 2: // Get season list
-                        $tvshow = new TVShow($pathreq[1]);
+                        $tvshow = new TvShow($pathreq[1]);
                         if ($tvshow->id) {
                             $season_ids                  = $tvshow->get_seasons();
                             list($maxCount, $season_ids) = self::_slice($season_ids, $start, $count);
