@@ -27,7 +27,7 @@ namespace Ampache\Application;
 
 use AmpConfig;
 use Catalog;
-use Podcast_Episode;
+use Ampache\Model\Podcast_Episode;
 use Ampache\Module\Util\Ui;
 
 final class PodcastEpisodeApplication implements ApplicationInterface
@@ -59,7 +59,7 @@ final class PodcastEpisodeApplication implements ApplicationInterface
 
                 $episode = new Podcast_Episode($_REQUEST['podcast_episode_id']);
                 if (!Catalog::can_remove($episode)) {
-                    debug_event('podcast_episode', 'Unauthorized to remove the episode `.' . $episode->id . '`.', 1);
+                    debug_event('Ampache\Model\Podcast_Episode', 'Unauthorized to remove the episode `.' . $episode->id . '`.', 1);
                     Ui::access_denied();
 
                     return;
@@ -73,7 +73,7 @@ final class PodcastEpisodeApplication implements ApplicationInterface
                 break;
             case 'show':
             default:
-                $episode = new Podcast_Episode($_REQUEST['podcast_episode']);
+                $episode = new Podcast_Episode($_REQUEST['Ampache\Model\Podcast_Episode']);
                 $episode->format();
                 require_once Ui::find_template('show_podcast_episode.inc.php');
                 break;

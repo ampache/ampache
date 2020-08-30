@@ -348,7 +348,7 @@ class Browse extends Query
                 $box_title = T_('Podcasts');
                 $box_req   = Ui::find_template('show_podcasts.inc.php');
                 break;
-            case 'podcast_episode':
+            case 'Ampache\Model\Podcast_Episode':
                 $box_title = T_('Podcast Episodes');
                 $box_req   = Ui::find_template('show_podcast_episodes.inc.php');
                 break;

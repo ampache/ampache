@@ -115,7 +115,7 @@ final class PodcastApplication implements ApplicationInterface
                     $podcast = new Podcast($podcast_id);
                     $podcast->format();
                     $object_ids  = $podcast->get_episodes();
-                    $object_type = 'podcast_episode';
+                    $object_type = 'Ampache\Model\Podcast_Episode';
                     require_once Ui::find_template('show_podcast.inc.php');
                 }
                 break;

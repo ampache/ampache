@@ -156,8 +156,8 @@ final class Cron
                             // podcast_episodes
                             $podcast          = new Podcast($podcast_id);
                             $podcast_episodes = $podcast->get_episodes();
-                            Rating::build_cache('podcast_episode', $podcast_episodes, $user_id);
-                            Userflag::build_cache('podcast_episode', $podcast_episodes, $user_id);
+                            Rating::build_cache('Ampache\Model\Podcast_Episode', $podcast_episodes, $user_id);
+                            Userflag::build_cache('Ampache\Model\Podcast_Episode', $podcast_episodes, $user_id);
                         } // end foreach $podcasts
                     }
                 } // end foreach $user_id

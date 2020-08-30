@@ -4,6 +4,7 @@ declare(strict_types=0);
 
 use Ampache\Model\database_object;
 use Ampache\Model\library_item;
+use Ampache\Model\Podcast_Episode;
 use Ampache\Module\System\Dba;
 
 /**
@@ -216,7 +217,7 @@ class Podcast extends database_object implements library_item
      */
     public function get_childrens()
     {
-        return array('podcast_episode' => $this->get_episodes());
+        return array('Ampache\Model\Podcast_Episode' => $this->get_episodes());
     }
 
     /**
@@ -237,11 +238,11 @@ class Podcast extends database_object implements library_item
     public function get_medias($filter_type = null)
     {
         $medias = array();
-        if ($filter_type === null || $filter_type == 'podcast_episode') {
+        if ($filter_type === null || $filter_type == 'Ampache\Model\Podcast_Episode') {
             $episodes = $this->get_episodes('completed');
             foreach ($episodes as $episode_id) {
                 $medias[] = array(
-                    'object_type' => 'podcast_episode',
+                    'object_type' => 'Ampache\Model\Podcast_Episode',
                     'object_id' => $episode_id
                 );
             }

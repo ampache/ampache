@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Rating;
 use Ampache\Model\Share;
 use Ampache\Model\User;
@@ -38,7 +39,8 @@ use Ampache\Module\Util\Ui;
         <?php $rowparity = Ui::flip_class(); ?>
         <dt class="<?php echo $rowparity; ?>"><?php echo T_('Rating'); ?></dt>
         <dd class="<?php echo $rowparity; ?>">
-            <div id="rating_<?php echo $episode->id; ?>_podcast_episode"><?php Rating::show($episode->id, 'podcast_episode'); ?>
+            <div id="rating_<?php echo $episode->id; ?>_podcast_episode"><?php Rating::show($episode->id,
+                    'Ampache\Model\Podcast_Episode'); ?>
             </div>
         </dd>
     <?php
@@ -48,7 +50,8 @@ use Ampache\Module\Util\Ui;
         <?php $rowparity = Ui::flip_class(); ?>
         <dt class="<?php echo $rowparity; ?>"><?php echo T_('Fav.'); ?></dt>
         <dd class="<?php echo $rowparity; ?>">
-            <div id="userflag_<?php echo $episode->id; ?>_podcast_episode"><?php Userflag::show($episode->id, 'podcast_episode'); ?>
+            <div id="userflag_<?php echo $episode->id; ?>_podcast_episode"><?php Userflag::show($episode->id,
+                    'Ampache\Model\Podcast_Episode'); ?>
             </div>
         </dd>
     <?php
@@ -85,7 +88,7 @@ use Ampache\Module\Util\Ui;
     } ?>
         <?php if (Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('share')) { ?>
-                <?php Share::display_ui('podcast_episode', $episode->id, false); ?>
+                <?php Share::display_ui('Ampache\Model\Podcast_Episode', $episode->id, false); ?>
             <?php
         } ?>
         <?php

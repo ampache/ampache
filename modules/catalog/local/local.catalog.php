@@ -24,6 +24,7 @@ use Ampache\Model\Album;
 use Ampache\Model\Media;
 use Ampache\Model\Metadata\Repository\Metadata;
 use Ampache\Model\Metadata\Repository\MetadataField;
+use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Rating;
 use Ampache\Model\Song;
 use Ampache\Model\Song_Preview;

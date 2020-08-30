@@ -36,7 +36,7 @@ use Ampache\Module\System\Dba;
 use Live_Stream;
 use Playlist;
 use Podcast;
-use Podcast_Episode;
+use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Preference;
 use Ampache\Model\PrivateMsg;
 use Ampache\Model\Rating;
@@ -868,7 +868,7 @@ class Subsonic_Xml_Data
      * getAmpacheObject
      * Return the Ampache media object
      * @param integer $object_id
-     * @return \Ampache\Model\Song|Video|Podcast_Episode|null
+     * @return \Ampache\Model\Song|Video|\Ampache\Model\Podcast_Episode|null
      */
     public static function getAmpacheObject($object_id)
     {
@@ -1474,7 +1474,7 @@ class Subsonic_Xml_Data
     /**
      * addPodcastEpisode
      * @param SimpleXMLElement $xml
-     * @param Podcast_Episode $episode
+     * @param \Ampache\Model\Podcast_Episode $episode
      * @param string $elementName
      */
     private static function addPodcastEpisode($xml, $episode, $elementName = 'episode')
@@ -1496,7 +1496,7 @@ class Subsonic_Xml_Data
             $xepisode->addAttribute('coverArt', (string)self::getPodcastId($episode->podcast));
         }
 
-        self::setIfStarred($xepisode, 'podcast_episode', $episode->id);
+        self::setIfStarred($xepisode, 'Ampache\Model\Podcast_Episode', $episode->id);
 
         if ($episode->file) {
             $xepisode->addAttribute('streamId', (string)self::getPodcastEpId($episode->id));
@@ -1512,7 +1512,7 @@ class Subsonic_Xml_Data
     /**
      * addNewestPodcastEpisodes
      * @param SimpleXMLElement $xml
-     * @param Podcast_Episode[] $episodes
+     * @param \Ampache\Model\Podcast_Episode[] $episodes
      */
     public static function addNewestPodcastEpisodes($xml, $episodes)
     {

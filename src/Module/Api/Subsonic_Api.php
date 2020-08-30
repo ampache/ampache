@@ -44,7 +44,7 @@ use DOMDocument;
 use Live_Stream;
 use Playlist;
 use Podcast;
-use Podcast_Episode;
+use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Preference;
 use Ampache\Model\PrivateMsg;
 use Ampache\Model\Rating;

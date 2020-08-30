@@ -78,7 +78,7 @@ class Rating extends database_object
             'playlist',
             'label',
             'podcast',
-            'podcast_episode'
+            'Ampache\Model\Podcast_Episode'
         );
 
         if ($object_type !== null && $object_type !== '') {

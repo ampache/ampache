@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Rating;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
@@ -59,10 +60,10 @@ $thcount  = 7; ?>
     <tbody>
         <?php
         if (AmpConfig::get('ratings')) {
-            Rating::build_cache('podcast_episode', $object_ids);
+            Rating::build_cache('Ampache\Model\Podcast_Episode', $object_ids);
         }
         if (AmpConfig::get('userflags')) {
-            Userflag::build_cache('podcast_episode', $object_ids);
+            Userflag::build_cache('Ampache\Model\Podcast_Episode', $object_ids);
         }
 
         foreach ($object_ids as $episode_id) {

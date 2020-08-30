@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Song;
 use Ampache\Model\Video;
 use Ampache\Module\System\Dba;
@@ -91,7 +92,7 @@ while ($row = Dba::fetch_assoc($db_results)) {
     // Identify the catalog and file (if it exists in the DB)
     switch ($catalog->gather_types) {
         case 'podcast':
-            $type    = 'podcast_episode';
+            $type    = 'Ampache\Model\Podcast_Episode';
             $file_id = Catalog::get_id_from_file($catfile, $type);
             $media   = new Podcast_Episode(Catalog::get_id_from_file($catfile, $type));
             break;

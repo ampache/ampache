@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 use Ampache\Model\Album;
 use Ampache\Model\License;
+use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Preference;
 use Ampache\Model\Random;
 use Ampache\Model\Rating;
@@ -3500,7 +3501,7 @@ class Api
         }
         switch ($catalog->gather_types) {
             case 'podcast':
-                $type  = 'podcast_episode';
+                $type  = 'Ampache\Model\Podcast_Episode';
                 $media = new Podcast_Episode(Catalog::get_id_from_file($file, $type));
                 break;
             case 'clip':
@@ -3837,7 +3838,7 @@ class Api
             $url = Song::generic_play_url('song', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
         }
         if ($type == 'podcast') {
-            $url = Song::generic_play_url('podcast_episode', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
+            $url = Song::generic_play_url('Ampache\Model\Podcast_Episode', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
         }
         if (!empty($url)) {
             header('Location: ' . str_replace(':443/play', '/play', $url));
@@ -3885,7 +3886,7 @@ class Api
             $url = Song::generic_play_url('song', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
         }
         if ($type == 'podcast') {
-            $url = Song::generic_play_url('podcast_episode', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
+            $url = Song::generic_play_url('Ampache\Model\Podcast_Episode', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
         }
         if (!empty($url)) {
             header('Location: ' . str_replace(':443/play', '/play', $url));

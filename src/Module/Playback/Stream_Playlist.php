@@ -242,7 +242,7 @@ class Stream_Playlist
                 case 'channel':
                     $url['title'] = $object->name;
                     break;
-                case 'podcast_episode':
+                case 'Ampache\Model\Podcast_Episode':
                     $url['title']     = $object->f_title;
                     $url['author']    = $object->f_podcast;
                     $url['info_url']  = $object->f_link;

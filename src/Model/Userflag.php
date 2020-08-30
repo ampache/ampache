@@ -114,7 +114,7 @@ class Userflag extends database_object
             'tvshow',
             'Ampache\Model\TVShow_Season',
             'podcast',
-            'podcast_episode'
+            'Ampache\Model\Podcast_Episode'
         );
 
         if ($object_type !== null) {

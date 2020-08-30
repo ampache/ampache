@@ -35,7 +35,7 @@ use Core;
 use Ampache\Module\System\Dba;
 use Democratic;
 use Ampache\Module\Util\Horde_Browser;
-use Podcast_Episode;
+use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Preference;
 use Ampache\Model\Random;
 use Ampache\Module\System\Session;
@@ -360,7 +360,7 @@ final class PlayApplication implements ApplicationInterface
         } elseif ($type == 'Ampache\Model\Song_Preview') {
             $media = new Song_Preview($object_id);
             $media->format();
-        } elseif ($type == 'podcast_episode') {
+        } elseif ($type == 'Ampache\Model\Podcast_Episode') {
             $media = new Podcast_Episode($object_id);
             $media->format();
         } else {
@@ -547,7 +547,7 @@ final class PlayApplication implements ApplicationInterface
             if (!is_array($valid_types)) {
                 $valid_types = array($valid_types);
             }
-            if ($transcode_cfg != 'never' && in_array('transcode', $valid_types) && $type !== 'podcast_episode') {
+            if ($transcode_cfg != 'never' && in_array('transcode', $valid_types) && $type !== 'Ampache\Model\Podcast_Episode') {
                 if ($transcode_to) {
                     $transcode = true;
                     debug_event('play/index', 'Transcoding due to explicit request for ' . (string) $transcode_to, 5);

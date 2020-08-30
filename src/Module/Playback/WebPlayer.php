@@ -144,7 +144,7 @@ class WebPlayer
             $types['real'] = $file_type;
         }
 
-        if ($urlinfo['type'] == 'song' || $urlinfo['type'] == 'podcast_episode') {
+        if ($urlinfo['type'] == 'song' || $urlinfo['type'] == 'Ampache\Model\Podcast_Episode') {
             if ($types['real'] == "ogg" || $types['real'] == "opus") {
                 $types['player'] = "oga";
             } else {

@@ -163,7 +163,7 @@ final class StreamApplication implements ApplicationInterface
                     );
                 } elseif (isset($_REQUEST['podcast_episode_id'])) {
                     $media_ids[] = array(
-                        'object_type' => 'podcast_episode',
+                        'object_type' => 'Ampache\Model\Podcast_Episode',
                         'object_id' => scrub_in($_REQUEST['podcast_episode_id'])
                     );
                 }

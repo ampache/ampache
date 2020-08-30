@@ -25,6 +25,7 @@ use Ampache\Model\Album;
 use Ampache\Model\database_object;
 use Ampache\Model\Label;
 use Ampache\Model\License;
+use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Rating;
 use Ampache\Model\Search;
 use Ampache\Model\Share;
@@ -773,7 +774,7 @@ abstract class Catalog extends database_object
     public static function count_server($enabled = false)
     {
         // tables with media items to count, song-related tables and the rest
-        $media_tables = array('song', 'video', 'podcast_episode');
+        $media_tables = array('song', 'video', 'Ampache\Model\Podcast_Episode');
         $song_tables  = array('artist', 'album');
         $list_tables  = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog');
 
@@ -782,7 +783,7 @@ abstract class Catalog extends database_object
         $time    = '0';
         $size    = '0';
         foreach ($media_tables as $table) {
-            $enabled_sql = ($enabled && $table !== 'podcast_episode') ? " WHERE `$table`.`enabled`='1'" : '';
+            $enabled_sql = ($enabled && $table !== 'Ampache\Model\Podcast_Episode') ? " WHERE `$table`.`enabled`='1'" : '';
             $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql;
             $db_results  = Dba::read($sql);
             $data        = Dba::fetch_row($db_results);
@@ -832,7 +833,7 @@ abstract class Catalog extends database_object
 
         if ($catalog->id) {
             $table = self::get_table_from_type($catalog->gather_types);
-            if ($table == 'podcast_episode' && $catalog_id) {
+            if ($table == 'Ampache\Model\Podcast_Episode' && $catalog_id) {
                 $where_sql = "WHERE `podcast` IN ( SELECT `id` FROM `podcast` WHERE `catalog` = ?)";
             }
             $sql              = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `" . $table . "` " . $where_sql;
@@ -2147,7 +2148,7 @@ abstract class Catalog extends database_object
                 $table = 'video';
                 break;
             case 'podcast':
-                $table = 'podcast_episode';
+                $table = 'Ampache\Model\Podcast_Episode';
                 break;
             case 'music':
             default:

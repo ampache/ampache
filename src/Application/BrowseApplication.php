@@ -69,7 +69,7 @@ final class BrowseApplication implements ApplicationInterface
             case 'label':
             case 'pvmsg':
             case 'podcast':
-            case 'podcast_episode':
+            case 'Ampache\Model\Podcast_Episode':
                 $browse->set_type(Core::get_request('action'));
                 $browse->set_simple_browse(true);
                 break;
@@ -198,7 +198,7 @@ final class BrowseApplication implements ApplicationInterface
                 $browse->update_browse_from_session();
                 $browse->show_objects();
                 break;
-            case 'podcast_episode':
+            case 'Ampache\Model\Podcast_Episode':
                 if (AmpConfig::get('catalog_disable')) {
                     $browse->set_filter('catalog_enabled', '1');
                 }

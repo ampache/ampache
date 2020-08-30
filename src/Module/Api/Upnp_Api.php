@@ -37,7 +37,7 @@ use Ampache\Model\Movie;
 use Personal_Video;
 use Playlist;
 use Podcast;
-use Podcast_Episode;
+use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Search;
 use Ampache\Model\Song;
 use Ampache\Model\Tag;

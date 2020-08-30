@@ -508,7 +508,7 @@ class Query
                     'regex_not_match',
                     'starts_with'
                 ),
-                'podcast_episode' => array(
+                'Ampache\Model\Podcast_Episode' => array(
                     'alpha_match',
                     'regex_match',
                     'regex_not_match',
@@ -672,7 +672,7 @@ class Query
                 'podcast' => array(
                     'title'
                 ),
-                'podcast_episode' => array(
+                'Ampache\Model\Podcast_Episode' => array(
                     'title',
                     'category',
                     'author',
@@ -726,7 +726,7 @@ class Query
             case 'pvmsg':
             case 'follower':
             case 'podcast':
-            case 'podcast_episode':
+            case 'Ampache\Model\Podcast_Episode':
                 // Set it
                 $this->_state['type'] = $type;
                 $this->set_base_sql(true, $custom_base);
@@ -1079,7 +1079,7 @@ class Query
                     $this->set_select("`podcast`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `podcast` ";
                     break;
-                case 'podcast_episode':
+                case 'Ampache\Model\Podcast_Episode':
                     $this->set_select("`podcast_episode`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `podcast_episode` ";
                     break;
@@ -1808,7 +1808,7 @@ class Query
                         break;
                 } // end filter
                 break;
-            case 'podcast_episode':
+            case 'Ampache\Model\Podcast_Episode':
                 switch ($filter) {
                     case 'alpha_match':
                         $filter_sql = " `podcast_episode`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
@@ -2217,7 +2217,7 @@ class Query
                         break;
                 }
                 break;
-            case 'podcast_episode':
+            case 'Ampache\Model\Podcast_Episode':
                 switch ($field) {
                     case 'title':
                         $sql = "`podcast_episode`.`title`";

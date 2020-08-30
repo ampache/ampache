@@ -28,6 +28,7 @@
  */
 
 use Ampache\Model\Media;
+use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Song;
 use Ampache\Model\Song_Preview;
 use Ampache\Model\Video;

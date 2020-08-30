@@ -62,7 +62,7 @@ $catalogs = Catalog::get_catalogs(); ?>
     } ?>
             <?php if (AmpConfig::get('podcast')) { ?>
                 <td><?php echo $stats['podcast']; ?></td>
-                <td><?php echo $stats['podcast_episode']; ?></td>
+                <td><?php echo $stats['Ampache\Model\Podcast_Episode']; ?></td>
             <?php
     } ?>
             <td><?php echo $stats['tags']; ?></td>

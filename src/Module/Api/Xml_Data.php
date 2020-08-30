@@ -41,7 +41,7 @@ use Democratic;
 use DOMDocument;
 use Playlist;
 use Podcast;
-use Podcast_Episode;
+use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Rating;
 use Ampache\Model\Search;
 use Ampache\Model\Share;

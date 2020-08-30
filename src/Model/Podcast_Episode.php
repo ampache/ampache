@@ -1,18 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-
-use Ampache\Model\database_object;
-use Ampache\Model\Song;
-use Ampache\Module\Statistics\Stats;
-use Ampache\Module\System\Dba;
-use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\VaInfo;
-use Ampache\Model\library_item;
-use Ampache\Model\Media;
-use Ampache\Module\Authorization\Access;
-
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -31,6 +19,21 @@ use Ampache\Module\Authorization\Access;
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
+use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Dba;
+use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\VaInfo;
+use Ampache\Module\Authorization\Access;
+use AmpConfig;
+use Art;
+use Core;
+use PDOStatement;
+use Podcast;
 
 class Podcast_Episode extends database_object implements Media, library_item
 {
@@ -83,7 +86,7 @@ class Podcast_Episode extends database_object implements Media, library_item
             return false;
         }
 
-        $this->id = (int) $podcastep_id;
+        $this->id = (int)$podcastep_id;
 
         if ($info = $this->get_info($this->id)) {
             foreach ($info as $key => $value) {
@@ -91,7 +94,7 @@ class Podcast_Episode extends database_object implements Media, library_item
             }
             if (!empty($this->file)) {
                 $data          = pathinfo($this->file);
-                $this->type    = strtolower((string) $data['extension']);
+                $this->type    = strtolower((string)$data['extension']);
                 $this->mime    = Song::type_to_mime($this->type);
                 $this->enabled = true;
             }
@@ -139,7 +142,7 @@ class Podcast_Episode extends database_object implements Media, library_item
         $this->f_author      = scrub_out($this->author);
         $this->f_artist_full = $this->f_author;
         $this->f_website     = scrub_out($this->website);
-        $this->f_pubdate     = get_datetime((int) $this->pubdate);
+        $this->f_pubdate     = get_datetime((int)$this->pubdate);
         $this->f_state       = ucfirst($this->state);
 
         // Format the Time
@@ -174,12 +177,16 @@ class Podcast_Episode extends database_object implements Media, library_item
     public function get_keywords()
     {
         $keywords            = array();
-        $keywords['podcast'] = array('important' => true,
+        $keywords['podcast'] = array(
+            'important' => true,
             'label' => T_('Podcast'),
-            'value' => $this->f_podcast);
-        $keywords['title'] = array('important' => true,
+            'value' => $this->f_podcast
+        );
+        $keywords['title'] = array(
+            'important' => true,
             'label' => T_('Title'),
-            'value' => $this->f_title);
+            'value' => $this->f_title
+        );
 
         return $keywords;
     }
@@ -226,9 +233,9 @@ class Podcast_Episode extends database_object implements Media, library_item
     public function get_medias($filter_type = null)
     {
         $medias = array();
-        if ($filter_type === null || $filter_type == 'podcast_episode') {
+        if ($filter_type === null || $filter_type == 'Ampache\Model\Podcast_Episode') {
             $medias[] = array(
-                'object_type' => 'podcast_episode',
+                'object_type' => 'Ampache\Model\Podcast_Episode',
                 'object_id' => $this->id
             );
         }
@@ -269,9 +276,9 @@ class Podcast_Episode extends database_object implements Media, library_item
         $episode_id = null;
         $type       = null;
 
-        if (Art::has_db($this->id, 'podcast_episode')) {
+        if (Art::has_db($this->id, 'Ampache\Model\Podcast_Episode')) {
             $episode_id = $this->id;
-            $type       = 'podcast_episode';
+            $type       = 'Ampache\Model\Podcast_Episode';
         } else {
             if (Art::has_db($this->podcast, 'podcast') || $force) {
                 $episode_id = $this->podcast;
@@ -292,11 +299,11 @@ class Podcast_Episode extends database_object implements Media, library_item
      */
     public function update(array $data)
     {
-        $title          = isset($data['title']) ? $data['title'] : $this->title;
-        $website        = isset($data['website']) ? $data['website'] : $this->website;
-        $description    = isset($data['description']) ? $data['description'] : $this->description;
-        $author         = isset($data['author']) ? $data['author'] : $this->author;
-        $category       = isset($data['category']) ? $data['category'] : $this->category;
+        $title       = isset($data['title']) ? $data['title'] : $this->title;
+        $website     = isset($data['website']) ? $data['website'] : $this->website;
+        $description = isset($data['description']) ? $data['description'] : $this->description;
+        $author      = isset($data['author']) ? $data['author'] : $this->author;
+        $category    = isset($data['category']) ? $data['category'] : $this->category;
 
         $sql = 'UPDATE `podcast_episode` SET `title` = ?, `website` = ?, `description` = ?, `author` = ?, `category` = ? WHERE `id` = ?';
         Dba::write($sql, array($title, $website, $description, $author, $category, $this->id));
@@ -374,7 +381,7 @@ class Podcast_Episode extends database_object implements Media, library_item
         }
 
         /* Can't update to blank */
-        if (!strlen(trim((string) $value))) {
+        if (!strlen(trim((string)$value))) {
             return false;
         }
 
@@ -418,13 +425,20 @@ class Podcast_Episode extends database_object implements Media, library_item
      * @param boolean $original
      * @return string
      */
-    public static function play_url($object_id, $additional_params = '', $player = '', $local = false, $uid = false, $original = false)
-    {
+    public static function play_url(
+        $object_id,
+        $additional_params = '',
+        $player = '',
+        $local = false,
+        $uid = false,
+        $original = false
+    ) {
         if (!$uid) {
             $uid = Core::get_global('user')->id;
         }
 
-        return Song::generic_play_url('podcast_episode', $object_id, $additional_params, $player, $local, $uid, $original);
+        return Song::generic_play_url('Ampache\Model\Podcast_Episode', $object_id, $additional_params, $player, $local,
+            $uid, $original);
     }
 
     /**
@@ -479,7 +493,8 @@ class Podcast_Episode extends database_object implements Media, library_item
             $file    = $podcast->get_root_path();
             if (!empty($file)) {
                 $pinfo = pathinfo($this->source);
-                $file .= DIRECTORY_SEPARATOR . $this->pubdate . '-' . str_replace(array('?', '<', '>', '\\', '/'), '_', $this->title) . '-' . strtok($pinfo['basename'], '?');
+                $file .= DIRECTORY_SEPARATOR . $this->pubdate . '-' . str_replace(array('?', '<', '>', '\\', '/'), '_',
+                        $this->title) . '-' . strtok($pinfo['basename'], '?');
                 debug_event('podcast_episode.class', 'Downloading ' . $this->source . ' to ' . $file . ' ...', 4);
                 if (file_put_contents($file, fopen($this->source, 'r')) !== false) {
                     debug_event('podcast_episode.class', 'Download completed.', 4);
@@ -517,4 +532,4 @@ class Podcast_Episode extends database_object implements Media, library_item
     {
         return Song::type_to_mime($type);
     }
-} // end podcast_episode.class
+}
