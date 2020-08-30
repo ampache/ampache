@@ -68,7 +68,7 @@ Catalog::garbage_collection();
  *
  * Query::garbage_collection();
  * Stream_Playlist::garbage_collection();
- * Song_Preview::garbage_collection();
+ * Ampache\Model\Song_Preview::garbage_collection();
  * Ampache\Model\Tmp_Playlist::garbage_collection(); FIXME Duplicated with Catalog
  */
 Session::garbage_collection();

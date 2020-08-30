@@ -235,7 +235,7 @@ class Stream_Playlist
                     $url['image_url'] = Art::url($object->id, 'live_stream', $api_session,
                         (AmpConfig::get('ajax_load') ? 3 : 4));
                     break;
-                case 'song_preview':
+                case 'Ampache\Model\Song_Preview':
                     $url['title']  = $object->title;
                     $url['author'] = $object->f_artist_full;
                     break;

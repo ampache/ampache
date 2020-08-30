@@ -31,7 +31,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Democratic;
 use Ampache\Model\Song;
-use Song_Preview;
+use Ampache\Model\Song_Preview;
 
 class WebPlayer
 {
@@ -112,7 +112,7 @@ class WebPlayer
             $class_name = ObjectTypeToClassNameMapper::map($urlinfo['type']);
             $media      = new $class_name($urlinfo['id']);
         } else {
-            if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
+            if ($urlinfo['id'] && $urlinfo['type'] == 'Ampache\Model\Song_Preview') {
                 $media = new Song_Preview($urlinfo['id']);
             } else {
                 if (isset($urlinfo['demo_id'])) {

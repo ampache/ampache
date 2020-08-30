@@ -1,19 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-
-use Ampache\Model\Album;
-use Ampache\Model\Plugin;
-use Ampache\Model\Song;
-use Ampache\Model\Wanted;
-use Ampache\Module\Playback\Stream;
-use Ampache\Module\Playback\Stream_Url;
-use Ampache\Model\database_object;
-use Ampache\Model\Media;
-use Ampache\Model\playable_item;
-use Ampache\Module\System\Dba;
-
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -32,6 +19,18 @@ use Ampache\Module\System\Dba;
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
+use Ampache\Module\Playback\Stream;
+use Ampache\Module\Playback\Stream_Url;
+use Ampache\Module\System\Dba;
+use AmpConfig;
+use Artist;
+use Core;
+use PDOStatement;
 
 class Song_Preview extends database_object implements Media, playable_item
 {
@@ -68,7 +67,7 @@ class Song_Preview extends database_object implements Media, playable_item
      */
     public function __construct($object_id)
     {
-        $this->id = (int) ($object_id);
+        $this->id = (int)($object_id);
 
         if ($info = $this->has_info()) {
             foreach ($info as $key => $value) {
@@ -76,7 +75,7 @@ class Song_Preview extends database_object implements Media, playable_item
             }
             if ($this->file) {
                 $data       = pathinfo($this->file);
-                $this->type = strtolower((string) $data['extension']) ?: 'mp3';
+                $this->type = strtolower((string)$data['extension']) ?: 'mp3';
                 $this->mime = Song::type_to_mime($this->type);
             }
         } else {
@@ -97,15 +96,14 @@ class Song_Preview extends database_object implements Media, playable_item
      */
     public static function insert($results)
     {
-        if ((int) $results['disk'] == 0) {
+        if ((int)$results['disk'] == 0) {
             $results['disk'] = Album::sanitize_disk($results['disk']);
         }
-        if ((int) $results['track'] == 0) {
+        if ((int)$results['track'] == 0) {
             $results['disk']  = Album::sanitize_disk($results['track'][0]);
             $results['track'] = substr($results['track'], 1);
         }
-        $sql = 'INSERT INTO `song_preview` (`file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid`, `session`) ' .
-            ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO `song_preview` (`file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid`, `session`) ' . ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
         $db_results = Dba::write($sql, array(
             $results['file'],
@@ -120,7 +118,8 @@ class Song_Preview extends database_object implements Media, playable_item
         ));
 
         if (!$db_results) {
-            debug_event('song_preview.class', 'Unable to insert ' . $results['disk'] . '-' . $results['track'] . '-' . $results['title'], 2);
+            debug_event('song_preview.class',
+                'Unable to insert ' . $results['disk'] . '-' . $results['track'] . '-' . $results['title'], 2);
 
             return null;
         }
@@ -148,14 +147,12 @@ class Song_Preview extends database_object implements Media, playable_item
         }
 
         // Song data cache
-        $sql = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` ' .
-            'FROM `song_preview` ' .
-            "WHERE `id` IN $idlist";
+        $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` ' . 'FROM `song_preview` ' . "WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
         $artists = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('song_preview', $row['id'], $row);
+            parent::add_to_cache('Ampache\Model\Song_Preview', $row['id'], $row);
             if ($row['artist']) {
                 $artists[$row['artist']] = $row['artist'];
             }
@@ -174,12 +171,11 @@ class Song_Preview extends database_object implements Media, playable_item
     {
         $preview_id = $this->id;
 
-        if (parent::is_cached('song_preview', $preview_id)) {
-            return parent::get_from_cache('song_preview', $preview_id);
+        if (parent::is_cached('Ampache\Model\Song_Preview', $preview_id)) {
+            return parent::get_from_cache('Ampache\Model\Song_Preview', $preview_id);
         }
 
-        $sql = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` ' .
-            'FROM `song_preview` WHERE `id` = ?';
+        $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` ' . 'FROM `song_preview` WHERE `id` = ?';
         $db_results = Dba::read($sql, array($preview_id));
 
         $results = Dba::fetch_assoc($db_results);
@@ -191,7 +187,7 @@ class Song_Preview extends database_object implements Media, playable_item
                     $results['artist_mbid'] = $artist_res['mbid'];
                 }
             }
-            parent::add_to_cache('song_preview', $preview_id, $results);
+            parent::add_to_cache('Ampache\Model\Song_Preview', $preview_id, $results);
 
             return $results;
         }
@@ -297,9 +293,9 @@ class Song_Preview extends database_object implements Media, playable_item
     public function get_medias($filter_type = null)
     {
         $medias = array();
-        if ($filter_type === null || $filter_type == 'song_preview') {
+        if ($filter_type === null || $filter_type == 'Ampache\Model\Song_Preview') {
             $medias[] = array(
-                'object_type' => 'song_preview',
+                'object_type' => 'Ampache\Model\Song_Preview',
                 'object_id' => $this->id
             );
         }
@@ -331,9 +327,9 @@ class Song_Preview extends database_object implements Media, playable_item
      */
     public static function play_url($object_id, $additional_params = '', $player = null, $local = false)
     {
-        $song        = new Song_Preview($object_id);
-        $user_id     = Core::get_global('user')->id ? scrub_out(Core::get_global('user')->id) : '-1';
-        $type        = $song->type;
+        $song    = new Song_Preview($object_id);
+        $user_id = Core::get_global('user')->id ? scrub_out(Core::get_global('user')->id) : '-1';
+        $type    = $song->type;
 
         $song_name = rawurlencode($song->get_artist_name() . " - " . $song->title . "." . $type);
 
@@ -430,8 +426,7 @@ class Song_Preview extends database_object implements Media, playable_item
     {
         $songs = array();
 
-        $sql = "SELECT `id` FROM `song_preview` " .
-            "WHERE `session` = ? AND `album_mbid` = ?";
+        $sql        = "SELECT `id` FROM `song_preview` " . "WHERE `session` = ? AND `album_mbid` = ?";
         $db_results = Dba::read($sql, array(session_id(), $album_mbid));
 
         while ($results = Dba::fetch_assoc($db_results)) {
@@ -446,10 +441,8 @@ class Song_Preview extends database_object implements Media, playable_item
      */
     public static function garbage_collection()
     {
-        $sql = 'DELETE FROM `song_preview` USING `song_preview` ' .
-            'LEFT JOIN `session` ON `session`.`id`=`song_preview`.`session` ' .
-            'WHERE `session`.`id` IS NULL';
+        $sql = 'DELETE FROM `song_preview` USING `song_preview` ' . 'LEFT JOIN `session` ON `session`.`id`=`song_preview`.`session` ' . 'WHERE `session`.`id` IS NULL';
 
         return Dba::write($sql);
     }
-} // end song_preview.class
+}

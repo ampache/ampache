@@ -31,7 +31,7 @@ use Ampache\Model\Media;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Ampache\Model\playable_item;
-use Song_Preview;
+use Ampache\Model\Song_Preview;
 
 class InterfaceImplementationCheckerTest extends MockeryTestCase
 {
@@ -46,7 +46,7 @@ class InterfaceImplementationCheckerTest extends MockeryTestCase
 
     public function testIsPlayableItemReturnsFalseIfNotImplemented(): void
     {
-        $instance = Mockery::mock(Song_Preview::class);
+        $instance = new \stdClass();
 
         static::assertFalse(
             InterfaceImplementationChecker::is_playable_item(get_class($instance))
@@ -64,7 +64,7 @@ class InterfaceImplementationCheckerTest extends MockeryTestCase
 
     public function testIsLibraryItemReturnsFalseIfNotImplemented(): void
     {
-        $instance = Mockery::mock(Song_Preview::class);
+        $instance = new \stdClass();
 
         static::assertFalse(
             InterfaceImplementationChecker::is_library_item(get_class($instance))
@@ -82,7 +82,7 @@ class InterfaceImplementationCheckerTest extends MockeryTestCase
 
     public function testIsMediaReturnsFalseIfNotImplemented(): void
     {
-        $instance = Mockery::mock(Song_Preview::class);
+        $instance = new \stdClass();
 
         static::assertFalse(
             InterfaceImplementationChecker::is_media(get_class($instance))

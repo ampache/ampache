@@ -22,6 +22,7 @@
 
 use Ampache\Model\Media;
 use Ampache\Model\Song;
+use Ampache\Model\Song_Preview;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 

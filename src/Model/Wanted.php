@@ -33,7 +33,7 @@ use Exception;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use MusicBrainz\Filters\ArtistFilter;
-use Song_preview;
+use Ampache\Model\Song_preview;
 
 /**
  * Class Wanted

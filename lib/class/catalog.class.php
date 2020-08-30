@@ -30,6 +30,7 @@ use Ampache\Model\Search;
 use Ampache\Model\Share;
 use Ampache\Model\Shoutbox;
 use Ampache\Model\Song;
+use Ampache\Model\Song_Preview;
 use Ampache\Model\Tag;
 use Ampache\Model\Tmp_Playlist;
 use Ampache\Model\TvShow;

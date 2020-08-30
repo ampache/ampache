@@ -41,7 +41,7 @@ use Ampache\Model\Random;
 use Ampache\Module\System\Session;
 use Ampache\Model\Share;
 use Ampache\Model\Song;
-use Song_Preview;
+use Ampache\Model\Song_Preview;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
@@ -357,7 +357,7 @@ final class PlayApplication implements ApplicationInterface
             /* Base Checks passed create the song object */
             $media = new Song($object_id);
             $media->format();
-        } elseif ($type == 'song_preview') {
+        } elseif ($type == 'Ampache\Model\Song_Preview') {
             $media = new Song_Preview($object_id);
             $media->format();
         } elseif ($type == 'podcast_episode') {

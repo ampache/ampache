@@ -712,7 +712,7 @@ class Query
             case 'democratic':
             case 'wanted':
             case 'share':
-            case 'song_preview':
+            case 'Ampache\Model\Song_Preview':
             case 'channel':
             case 'broadcast':
             case 'license':

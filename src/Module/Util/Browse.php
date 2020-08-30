@@ -292,7 +292,7 @@ class Browse extends Query
                 $box_title = T_('Shares');
                 $box_req   = Ui::find_template('show_shared_objects.inc.php');
                 break;
-            case 'song_preview':
+            case 'Ampache\Model\Song_Preview':
                 $box_title = T_('Songs');
                 $box_req   = Ui::find_template('show_song_previews.inc.php');
                 break;

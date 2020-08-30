@@ -30,7 +30,7 @@ use Ampache\Module\Util\Horde_Browser;
 use AmpConfig;
 use Core;
 use PDOStatement;
-use Song_Preview;
+use Ampache\Model\Song_Preview;
 use Ampache\Model\Tmp_Playlist;
 
 /**
