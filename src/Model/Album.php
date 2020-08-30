@@ -40,7 +40,7 @@ use Search;
 use Share;
 use Song;
 use Tag;
-use Useractivity;
+use Ampache\Model\Useractivity;
 use Userflag;
 use Ampache\Model\Wanted;
 

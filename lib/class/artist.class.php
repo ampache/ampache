@@ -4,6 +4,7 @@ declare(strict_types=0);
 
 use Ampache\Model\Album;
 use Ampache\Model\Shoutbox;
+use Ampache\Model\Useractivity;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Recommendation;

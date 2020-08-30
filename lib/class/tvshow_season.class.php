@@ -4,6 +4,7 @@ declare(strict_types=0);
 
 use Ampache\Model\Shoutbox;
 use Ampache\Model\library_item;
+use Ampache\Model\Useractivity;
 use Ampache\Module\System\Dba;
 
 /**

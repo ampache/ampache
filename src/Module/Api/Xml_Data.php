@@ -48,7 +48,7 @@ use SimpleXMLElement;
 use Song;
 use Tag;
 use User;
-use Useractivity;
+use Ampache\Model\Useractivity;
 use Userflag;
 use Video;
 

@@ -32,7 +32,7 @@ use PDOStatement;
 use Podcast_Episode;
 use Song;
 use User;
-use Useractivity;
+use Ampache\Model\Useractivity;
 use Video;
 
 /**

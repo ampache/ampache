@@ -44,7 +44,7 @@ use Song;
 use Ampache\Module\Playback\Stream;
 use Tag;
 use User;
-use Useractivity;
+use Ampache\Model\Useractivity;
 use Userflag;
 use Video;
 

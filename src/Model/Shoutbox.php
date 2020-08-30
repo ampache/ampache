@@ -37,7 +37,7 @@ use PDOStatement;
 use Preference;
 use Ampache\Module\Util\Ui;
 use User;
-use Useractivity;
+use Ampache\Model\Useractivity;
 
 class Shoutbox
 {
