@@ -95,7 +95,7 @@ $t_search    = T_('Search'); ?>
                 <li id="sb_home_browse_video_movie"><a href="<?php echo $web_path ?>/browse.php?action=movie"><?php echo T_('Movies') ?></a></li>
           <?php
             } ?>
-          <?php if (Video::get_item_count('Personal_Video')) { ?>
+          <?php if (Video::get_item_count('Ampache\Model\Personal_Video')) { ?>
                 <li id="sb_home_browse_video_video"><a href="<?php echo $web_path ?>/browse.php?action=personal_video"><?php echo T_('Personal Videos') ?></a></li>
           <?php
             } ?>

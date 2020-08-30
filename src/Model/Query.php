@@ -645,7 +645,7 @@ class Query
                     'codec',
                     'release_date'
                 ),
-                'personal_video' => array(
+                'Ampache\Model\Personal_Video' => array(
                     'title',
                     'location',
                     'resolution',
@@ -720,7 +720,7 @@ class Query
             case 'Ampache\Model\TVShow_Season':
             case 'Ampache\Model\TVShow_Episode':
             case 'movie':
-            case 'personal_video':
+            case 'Ampache\Model\Personal_Video':
             case 'clip':
             case 'label':
             case 'pvmsg':
@@ -1059,7 +1059,7 @@ class Query
                     $this->set_select("`clip`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `clip` ";
                     break;
-                case 'personal_video':
+                case 'Ampache\Model\Personal_Video':
                     $this->set_select("`personal_video`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `personal_video` ";
                     break;
@@ -2158,13 +2158,13 @@ class Query
                         break;
                 }
                 break;
-            case 'personal_video':
+            case 'Ampache\Model\Personal_Video':
                 switch ($field) {
                     case 'location':
                         $sql = "`personal_video`.`location`";
                         break;
                     default:
-                        $sql = $this->sql_sort_video($field, 'personal_video');
+                        $sql = $this->sql_sort_video($field, 'Ampache\Model\Personal_Video');
                         break;
                 }
                 break;

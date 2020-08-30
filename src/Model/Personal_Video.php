@@ -1,11 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-
-use Ampache\Model\Video;
-use Ampache\Module\System\Dba;
-
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -24,6 +19,12 @@ use Ampache\Module\System\Dba;
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
+use Ampache\Module\System\Dba;
 
 class Personal_Video extends Video
 {
@@ -58,8 +59,7 @@ class Personal_Video extends Video
      */
     public static function garbage_collection()
     {
-        $sql = "DELETE FROM `personal_video` USING `personal_video` LEFT JOIN `video` ON `video`.`id` = `personal_video`.`id` " .
-            "WHERE `video`.`id` IS NULL";
+        $sql = "DELETE FROM `personal_video` USING `personal_video` LEFT JOIN `video` ON `video`.`id` = `personal_video`.`id` " . "WHERE `video`.`id` IS NULL";
         Dba::write($sql);
     }
 
@@ -73,8 +73,7 @@ class Personal_Video extends Video
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
-        $sql = "INSERT INTO `personal_video` (`id`, `location`, `summary`) " .
-            "VALUES (?, ?, ?)";
+        $sql = "INSERT INTO `personal_video` (`id`, `location`, `summary`) " . "VALUES (?, ?, ?)";
         Dba::write($sql, array($data['id'], $data['location'], $data['summary']));
 
         return $data['id'];
@@ -125,4 +124,4 @@ class Personal_Video extends Video
 
         return $deleted;
     }
-} // end personal_video.class
+}

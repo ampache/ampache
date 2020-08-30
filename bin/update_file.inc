@@ -99,7 +99,7 @@ while ($row = Dba::fetch_assoc($db_results)) {
         case 'clip':
         case 'tvshow':
         case 'movie':
-        case 'personal_video':
+        case 'Ampache\Model\Personal_Video':
             $type    = 'video';
             $file_id = Catalog::get_id_from_file($catfile, $type);
             $media   = new Video(Catalog::get_id_from_file($catfile, $type));

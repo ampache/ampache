@@ -709,7 +709,7 @@ abstract class Catalog extends database_object
         $gather_types   = $data['gather_media'];
 
         // Should it be an array? Not now.
-        if (!in_array($gather_types, array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) {
+        if (!in_array($gather_types, array('music', 'clip', 'tvshow', 'movie', 'Ampache\Model\Personal_Video', 'podcast'))) {
             return 0;
         }
 
@@ -2129,7 +2129,7 @@ abstract class Catalog extends database_object
         }
 
         if ($media_type == "music") {
-            $types = array_diff($types, array('personal_video', 'movie', 'tvshow', 'clip'));
+            $types = array_diff($types, array('Ampache\Model\Personal_Video', 'movie', 'tvshow', 'clip'));
         }
 
         return $types;
@@ -2146,7 +2146,7 @@ abstract class Catalog extends database_object
             case 'clip':
             case 'tvshow':
             case 'movie':
-            case 'personal_video':
+            case 'Ampache\Model\Personal_Video':
                 $table = 'video';
                 break;
             case 'podcast':

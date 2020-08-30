@@ -3345,7 +3345,8 @@ class Api
     public static function catalogs($input)
     {
         // filter for specific catalog types
-        $filter   = (in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
+        $filter   = (in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie',
+            'Ampache\Model\Personal_Video', 'podcast'))) ? $input['filter'] : '';
         $catalogs = Catalog::get_catalogs($filter);
 
         ob_end_clean();
@@ -3509,7 +3510,7 @@ class Api
             case 'clip':
             case 'tvshow':
             case 'movie':
-            case 'personal_video':
+            case 'Ampache\Model\Personal_Video':
                 $type  = 'video';
                 $media = new Video(Catalog::get_id_from_file($file, $type));
                 break;

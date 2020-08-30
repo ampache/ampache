@@ -331,7 +331,7 @@ class Browse extends Query
                 $video_type = $type;
                 $box_req    = Ui::find_template('show_videos.inc.php');
                 break;
-            case 'personal_video':
+            case 'Ampache\Model\Personal_Video':
                 $box_title  = T_('Personal Videos');
                 $video_type = $type;
                 $box_req    = Ui::find_template('show_videos.inc.php');

@@ -34,7 +34,7 @@ use Ampache\Model\Clip;
 use DOMDocument;
 use Live_Stream;
 use Ampache\Model\Movie;
-use Personal_Video;
+use Ampache\Model\Personal_Video;
 use Ampache\Model\Playlist;
 use Ampache\Model\Podcast;
 use Ampache\Model\Podcast_Episode;
@@ -871,7 +871,7 @@ class Upnp_Api
             case 'personal_videos':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::get_videos_count(null, 'personal_video');
+                        $counts = Catalog::get_videos_count(null, 'Ampache\Model\Personal_Video');
                         $meta   = array(
                             'id' => $root . '/personal_videos',
                             'parentID' => $root,
@@ -989,7 +989,7 @@ class Upnp_Api
             case 'personal_videos':
                 switch (count($pathreq)) {
                     case 1: // Get clips list
-                        $videos                  = Catalog::get_videos(null, 'personal_video');
+                        $videos                  = Catalog::get_videos(null, 'Ampache\Model\Personal_Video');
                         list($maxCount, $videos) = self::_slice($videos, $start, $count);
                         foreach ($videos as $video) {
                             $video->format();

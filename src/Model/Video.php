@@ -34,7 +34,7 @@ use Art;
 use Ampache\Model\Clip;
 use Core;
 use Ampache\Model\Movie;
-use Personal_Video;
+use Ampache\Model\Personal_Video;
 use Ampache\Model\Rating;
 use Ampache\Model\Song;
 use Ampache\Model\TvShow;
@@ -521,7 +521,7 @@ class Video extends database_object implements Media, library_item
      */
     private static function get_derived_types()
     {
-        return array('Ampache\Model\TVShow_Episode', 'Movie', 'Clip', 'Personal_Video');
+        return array('Ampache\Model\TVShow_Episode', 'Movie', 'Clip', 'Ampache\Model\Personal_Video');
     }
 
     /**
@@ -652,7 +652,7 @@ class Video extends database_object implements Media, library_item
                     return Movie::insert($data, $gtypes, $options);
                 case 'clip':
                     return Clip::insert($data, $gtypes, $options);
-                case 'personal_video':
+                case 'Ampache\Model\Personal_Video':
                     return Personal_Video::insert($data, $gtypes, $options);
                 default:
                     // Do nothing, video entry already created and no additional data for now

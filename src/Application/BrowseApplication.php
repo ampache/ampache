@@ -65,7 +65,7 @@ final class BrowseApplication implements ApplicationInterface
             case 'Ampache\Model\TVShow_Episode':
             case 'movie':
             case 'clip':
-            case 'personal_video':
+            case 'Ampache\Model\Personal_Video':
             case 'label':
             case 'pvmsg':
             case 'podcast':
@@ -180,7 +180,7 @@ final class BrowseApplication implements ApplicationInterface
             case 'Ampache\Model\TVShow_Episode':
             case 'movie':
             case 'clip':
-            case 'personal_video':
+            case 'Ampache\Model\Personal_Video':
                 if (AmpConfig::get('catalog_disable')) {
                     $browse->set_filter('catalog_enabled', '1');
                 }
