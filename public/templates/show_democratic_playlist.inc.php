@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Democratic;
 use Ampache\Model\Playlist;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;

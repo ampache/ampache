@@ -37,7 +37,7 @@ use Art;
 use Artist;
 use Catalog;
 use Core;
-use Democratic;
+use Ampache\Model\Democratic;
 use DOMDocument;
 use Ampache\Model\Playlist;
 use Ampache\Model\Podcast;

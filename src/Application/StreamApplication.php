@@ -32,7 +32,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Artist;
 use Core;
-use Democratic;
+use Ampache\Model\Democratic;
 use Ampache\Model\Playlist;
 use Ampache\Module\System\Session;
 use Ampache\Module\Playback\Stream;

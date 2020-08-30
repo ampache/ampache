@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use AmpConfig;
 use Ampache\Module\Util\Browse;
 use Core;
-use Democratic;
+use Ampache\Model\Democratic;
 
 final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
 {

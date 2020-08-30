@@ -33,7 +33,7 @@ use Ampache\Module\Authorization\Auth;
 use Catalog;
 use Core;
 use Ampache\Module\System\Dba;
-use Democratic;
+use Ampache\Model\Democratic;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Preference;

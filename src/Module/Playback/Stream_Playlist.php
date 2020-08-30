@@ -29,7 +29,7 @@ use AmpConfig;
 use Art;
 use Core;
 use Ampache\Module\System\Dba;
-use Democratic;
+use Ampache\Model\Democratic;
 use PDOStatement;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
