@@ -29,7 +29,7 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Art;
 use Ampache\Module\Util\Browse;
 use Core;
-use Live_Stream;
+use Ampache\Model\Live_Stream;
 use Ampache\Model\Playlist;
 use Ampache\Model\Search;
 use Ampache\Model\Share;
@@ -136,7 +136,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                         $playlist->delete();
                         $key = 'smartplaylist_row_' . $playlist->id;
                         break;
-                    case 'live_stream':
+                    case 'Ampache\Model\Live_Stream':
                         if (!Core::get_global('user')->has_access('75')) {
                             return;
                         }

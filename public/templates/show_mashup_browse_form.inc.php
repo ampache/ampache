@@ -29,7 +29,7 @@ use Ampache\Model\Video;
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/browse.php?action=broadcast"><?php echo T_('Broadcasts'); ?></a>
             </td>
         <?php }
-        if (AmpConfig::get('live_stream')) { ?>
+        if (AmpConfig::get('Ampache\Model\Live_Stream')) { ?>
             <td>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/browse.php?action=live_stream"><?php echo T_('Radio Stations'); ?>
             </td>

@@ -41,7 +41,7 @@ use Ampache\Model\Bookmark;
 use Catalog;
 use Core;
 use DOMDocument;
-use Live_Stream;
+use Ampache\Model\Live_Stream;
 use Ampache\Model\Playlist;
 use Ampache\Model\Podcast;
 use Ampache\Model\Podcast_Episode;

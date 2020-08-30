@@ -239,7 +239,7 @@ class Browse extends Query
                 Artist::build_cache($object_ids, true, $limit_threshold);
                 $box_req = Ui::find_template('show_artists.inc.php');
                 break;
-            case 'live_stream':
+            case 'Ampache\Model\Live_Stream':
                 $box_title = T_('Radio Stations') . $match;
                 $box_req   = Ui::find_template('show_live_streams.inc.php');
                 break;

@@ -32,7 +32,7 @@ use Artist;
 use Catalog;
 use Ampache\Model\Clip;
 use DOMDocument;
-use Live_Stream;
+use Ampache\Model\Live_Stream;
 use Ampache\Model\Movie;
 use Ampache\Model\Personal_Video;
 use Ampache\Model\Playlist;
@@ -498,7 +498,7 @@ class Upnp_Api
                             'id' => $root . '/live_streams',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['live_stream'],
+                            'childCount' => $counts['Ampache\Model\Live_Stream'],
                             'dc:title' => T_('Radio Stations'),
                             'upnp:class' => 'object.container',
                         );
@@ -757,7 +757,7 @@ class Upnp_Api
                 $mediaItems[] = self::_musicMetadata('songs');
                 $mediaItems[] = self::_musicMetadata('playlists');
                 $mediaItems[] = self::_musicMetadata('smartplaylists');
-                if (AmpConfig::get('live_stream')) {
+                if (AmpConfig::get('Ampache\Model\Live_Stream')) {
                     $mediaItems[] = self::_musicMetadata('live_streams');
                 }
                 if (AmpConfig::get('podcast')) {
@@ -1151,14 +1151,14 @@ class Upnp_Api
     }
 
     /**
-     * @param Live_Stream $radio
+     * @param \Ampache\Model\Live_Stream $radio
      * @param string $parent
      * @return array
      */
     public static function _itemLiveStream($radio, $parent)
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
-        $art_url     = Art::url($radio->id, 'live_stream', $api_session);
+        $art_url     = Art::url($radio->id, 'Ampache\Model\Live_Stream', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();
         $arrFileType    = $fileTypesByExt[$radio->codec];

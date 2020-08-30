@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,10 +20,16 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Model\database_object;
-use Ampache\Model\library_item;
-use Ampache\Model\Media;
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
 use Ampache\Module\System\Dba;
+use AmpConfig;
+use AmpError;
+use Art;
+use Catalog;
+use PDOStatement;
 
 /**
  * Radio Class
@@ -38,50 +43,50 @@ class Live_Stream extends database_object implements Media, library_item
     /* DB based variables */
 
     /**
-     *  @var integer $id
+     * @var integer $id
      */
     public $id;
     /**
-     *  @var string $name
+     * @var string $name
      */
     public $name;
     /**
-     *  @var string $site_url
+     * @var string $site_url
      */
     public $site_url;
     /**
-     *  @var string $url
+     * @var string $url
      */
     public $url;
     /**
-     *  @var string $f_link
+     * @var string $f_link
      */
     public $link;
 
     /**
-     *  @var string $codec
+     * @var string $codec
      */
     public $codec;
     /**
-     *  @var integer $catalog
+     * @var integer $catalog
      */
     public $catalog;
 
     /**
-     *  @var string $f_name
+     * @var string $f_name
      */
     public $f_name;
 
     /**
-     *  @var string $f_link
+     * @var string $f_link
      */
     public $f_link;
     /**
-     *  @var string $f_name_link
+     * @var string $f_name_link
      */
     public $f_name_link;
     /**
-     *  @var string $f_url_link
+     * @var string $f_url_link
      */
     public $f_url_link;
 
@@ -92,7 +97,7 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public function __construct($stream_id)
     {
-        $info = $this->get_info($stream_id, 'live_stream');
+        $info = $this->get_info($stream_id, 'Ampache\Model\Live_Stream');
 
         // Set the vars
         foreach ($info as $key => $value) {
@@ -111,11 +116,11 @@ class Live_Stream extends database_object implements Media, library_item
     {
         unset($details); // dead code but called from other format calls
         // Default link used on the rightbar
-        $this->f_name         = scrub_out($this->name);
-        $this->link           = AmpConfig::get('web_path') . '/radio.php?action=show&radio=' . scrub_out($this->id);
-        $this->f_link         = "<a href=\"" . $this->link . "\">" . $this->f_name . "</a>";
-        $this->f_name_link    = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->f_name . "</a>";
-        $this->f_url_link     = "<a target=\"_blank\" href=\"" . $this->url . "\">" . $this->url . "</a>";
+        $this->f_name      = scrub_out($this->name);
+        $this->link        = AmpConfig::get('web_path') . '/radio.php?action=show&radio=' . scrub_out($this->id);
+        $this->f_link      = "<a href=\"" . $this->link . "\">" . $this->f_name . "</a>";
+        $this->f_name_link = "<a target=\"_blank\" href=\"" . $this->site_url . "\">" . $this->f_name . "</a>";
+        $this->f_url_link  = "<a target=\"_blank\" href=\"" . $this->url . "\">" . $this->url . "</a>";
 
         return true;
     } // format
@@ -170,9 +175,9 @@ class Live_Stream extends database_object implements Media, library_item
     public function get_medias($filter_type = null)
     {
         $medias = array();
-        if ($filter_type === null || $filter_type == 'live_stream') {
+        if ($filter_type === null || $filter_type == 'Ampache\Model\Live_Stream') {
             $medias[] = array(
-                'object_type' => 'live_stream',
+                'object_type' => 'Ampache\Model\Live_Stream',
                 'object_id' => $this->id
             );
         }
@@ -222,8 +227,8 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public function display_art($thumb = 2, $force = false)
     {
-        if (Art::has_db($this->id, 'live_stream') || $force) {
-            Art::display('live_stream', $this->id, $this->get_fullname(), $thumb, $this->link);
+        if (Art::has_db($this->id, 'Ampache\Model\Live_Stream') || $force) {
+            Art::display('Ampache\Model\Live_Stream', $this->id, $this->get_fullname(), $thumb, $this->link);
         }
     }
 
@@ -243,14 +248,14 @@ class Live_Stream extends database_object implements Media, library_item
 
         $allowed_array = array('https', 'http', 'mms', 'mmsh', 'mmsu', 'mmst', 'rtsp', 'rtmp');
 
-        $elements = explode(":", (string) $data['url']);
+        $elements = explode(":", (string)$data['url']);
 
         if (!in_array($elements['0'], $allowed_array)) {
             AmpError::add('general', T_('URL is invalid, must be mms:// , https:// or http://'));
         }
 
         if (!empty($data['site_url'])) {
-            $elements = explode(":", (string) $data['site_url']);
+            $elements = explode(":", (string)$data['site_url']);
             if (!in_array($elements['0'], $allowed_array)) {
                 AmpError::add('site_url', T_('URL is invalid, must be http:// or https://'));
             }
@@ -261,7 +266,8 @@ class Live_Stream extends database_object implements Media, library_item
         }
 
         $sql = "UPDATE `live_stream` SET `name` = ?,`site_url` = ?,`url` = ?, codec = ? WHERE `id` = ?";
-        Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], strtolower((string) $data['codec']), $this->id));
+        Dba::write($sql,
+            array($data['name'], $data['site_url'], $data['url'], strtolower((string)$data['codec']), $this->id));
 
         return $this->id;
     } // update
@@ -276,23 +282,23 @@ class Live_Stream extends database_object implements Media, library_item
     public static function create(array $data)
     {
         // Make sure we've got a name and codec
-        if (!strlen((string) $data['name'])) {
+        if (!strlen((string)$data['name'])) {
             AmpError::add('name', T_('Name is required'));
         }
-        if (!strlen((string) $data['codec'])) {
+        if (!strlen((string)$data['codec'])) {
             AmpError::add('codec', T_('Codec is required (e.g. MP3, OGG...)'));
         }
 
         $allowed_array = array('https', 'http', 'mms', 'mmsh', 'mmsu', 'mmst', 'rtsp', 'rtmp');
 
-        $elements = explode(":", (string) $data['url']);
+        $elements = explode(":", (string)$data['url']);
 
         if (!in_array($elements['0'], $allowed_array)) {
             AmpError::add('url', T_('URL is invalid, must be http:// or https://'));
         }
 
         if (!empty($data['site_url'])) {
-            $elements = explode(":", (string) $data['site_url']);
+            $elements = explode(":", (string)$data['site_url']);
             if (!in_array($elements['0'], $allowed_array)) {
                 AmpError::add('site_url', T_('URL is invalid, must be http:// or https://'));
             }
@@ -309,10 +315,10 @@ class Live_Stream extends database_object implements Media, library_item
         }
 
         // If we've made it this far everything must be ok... I hope
-        $sql = "INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) " .
-            "VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) " . "VALUES (?, ?, ?, ?, ?)";
 
-        return Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $catalog->id, strtolower((string) $data['codec'])));
+        return Dba::write($sql,
+            array($data['name'], $data['site_url'], $data['url'], $catalog->id, strtolower((string)$data['codec'])));
     } // create
 
     /**
@@ -350,8 +356,14 @@ class Live_Stream extends database_object implements Media, library_item
      * @param string $force_http
      * @return string
      */
-    public static function play_url($object_id, $additional_params = '', $player = null, $local = false, $sid = '', $force_http = '')
-    {
+    public static function play_url(
+        $object_id,
+        $additional_params = '',
+        $player = null,
+        $local = false,
+        $sid = '',
+        $force_http = ''
+    ) {
         $radio = new Live_Stream($object_id);
 
         return $radio->url . $additional_params;
@@ -443,4 +455,4 @@ class Live_Stream extends database_object implements Media, library_item
 
         return false;
     }
-} // end live_stream.class
+}

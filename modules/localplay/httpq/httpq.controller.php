@@ -525,7 +525,7 @@ class AmpacheHttpq extends localplay_controller
                                                                 $data['name'] = $media->f_title . ' - ' . $media->f_album . ' - ' . $media->f_artist;
                                                                 $data['link'] = $media->f_link;
                                                         break;
-                                                        case 'live_stream':
+                                                        case 'Ampache\Model\Live_Stream':
                                                                 $frequency    = $media->frequency ? '[' . $media->frequency . ']' : '';
                                                                 $site_url     = $media->site_url ? '(' . $media->site_url . ')' : '';
                                                                 $data['name'] = "$media->name $frequency $site_url";

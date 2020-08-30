@@ -1023,7 +1023,9 @@ class Art extends database_object
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
-        $types = array('album', 'artist', 'tvshow', 'Ampache\Model\TVShow_Season', 'video', 'user', 'live_stream');
+        $types = array('album', 'artist', 'tvshow', 'Ampache\Model\TVShow_Season', 'video', 'user',
+            'Ampache\Model\Live_Stream'
+        );
 
         if ($object_type !== null) {
             if (in_array($object_type, $types)) {

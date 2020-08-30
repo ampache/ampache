@@ -55,7 +55,7 @@ final class BrowseApplication implements ApplicationInterface
             case 'artist':
             case 'playlist':
             case 'smartplaylist':
-            case 'live_stream':
+            case 'Ampache\Model\Live_Stream':
             case 'video':
             case 'song':
             case 'channel':
@@ -77,7 +77,8 @@ final class BrowseApplication implements ApplicationInterface
 
         Ui::show_header();
 
-        if (in_array($_REQUEST['action'], array('song', 'album', 'artist', 'label', 'channel', 'broadcast', 'live_stream', 'podcast', 'video'))) {
+        if (in_array($_REQUEST['action'], array('song', 'album', 'artist', 'label', 'channel', 'broadcast',
+            'Ampache\Model\Live_Stream', 'podcast', 'video'))) {
             Ui::show('show_browse_form.inc.php');
         }
 
@@ -131,7 +132,7 @@ final class BrowseApplication implements ApplicationInterface
                 $browse->update_browse_from_session();
                 $browse->show_objects();
                 break;
-            case 'live_stream':
+            case 'Ampache\Model\Live_Stream':
             case 'tvshow':
             case 'label':
                 if (AmpConfig::get('catalog_disable')) {

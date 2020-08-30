@@ -66,7 +66,7 @@ $t_search    = T_('Search'); ?>
             <li id="sb_home_browse_music_broadcast"><a href="<?php echo $web_path ?>/browse.php?action=broadcast"><?php echo T_('Broadcasts') ?></a></li>
             <?php
         } ?>
-            <?php if (AmpConfig::get('live_stream')) { ?>
+            <?php if (AmpConfig::get('Ampache\Model\Live_Stream')) { ?>
             <li id="sb_home_browse_music_radioStation"><a href="<?php echo $web_path ?>/browse.php?action=live_stream"><?php echo T_('Radio Stations') ?></a></li>
             <?php
         } ?>

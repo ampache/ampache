@@ -37,7 +37,8 @@ debug_event('compute_cache', 'started cache process', 5);
 $thresholds   = [ 0, AmpConfig::get('stats_threshold'), AmpConfig::get('popular_threshold', 10) ];
 $count_types  = [ 'stream', 'download', 'skip' ];
 // TODO fix playlist sql.
-$object_types = [ 'album', 'artist', 'song', 'genre', 'catalog', 'live_stream', 'video',
+$object_types = [ 'album', 'artist', 'song', 'genre', 'catalog',
+    'Ampache\Model\Live_Stream', 'video',
     'Ampache\Model\Podcast_Episode'
 ];
 

@@ -778,7 +778,7 @@ abstract class Catalog extends database_object
         // tables with media items to count, song-related tables and the rest
         $media_tables = array('song', 'video', 'Ampache\Model\Podcast_Episode');
         $song_tables  = array('artist', 'album');
-        $list_tables  = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog');
+        $list_tables  = array('search', 'playlist', 'Ampache\Model\Live_Stream', 'podcast', 'user', 'catalog');
 
         $results = array();
         $items   = '0';

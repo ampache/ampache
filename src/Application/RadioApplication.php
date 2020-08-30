@@ -28,14 +28,14 @@ namespace Ampache\Application;
 use Ampache\Module\Authorization\Access;
 use AmpConfig;
 use Core;
-use Live_Stream;
+use Ampache\Model\Live_Stream;
 use Ampache\Module\Util\Ui;
 
 final class RadioApplication implements ApplicationInterface
 {
     public function run(): void
     {
-        if (!AmpConfig::get('live_stream')) {
+        if (!AmpConfig::get('Ampache\Model\Live_Stream')) {
             Ui::access_denied();
 
             return;

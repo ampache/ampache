@@ -521,7 +521,7 @@ function install_config_use_case($case)
         'licensing' => 'false',
         'wanted' => 'false',
         'channel' => 'false',
-        'live_stream' => 'true',
+        'Ampache\Model\Live_Stream' => 'true',
         'allow_public_registration' => 'false',
         'cookie_disclaimer' => 'false',
         'share' => 'false'
@@ -537,12 +537,12 @@ function install_config_use_case($case)
 
     switch ($case) {
         case 'minimalist':
-            $trconfig['ratings']     = 'false';
-            $trconfig['userflags']   = 'false';
-            $trconfig['sociable']    = 'false';
-            $trconfig['wanted']      = 'false';
-            $trconfig['channel']     = 'false';
-            $trconfig['live_stream'] = 'false';
+            $trconfig['ratings']                   = 'false';
+            $trconfig['userflags']                 = 'false';
+            $trconfig['sociable']                  = 'false';
+            $trconfig['wanted']                    = 'false';
+            $trconfig['channel']                   = 'false';
+            $trconfig['Ampache\Model\Live_Stream'] = 'false';
 
             $dbconfig['download']    = '0';
             $dbconfig['allow_video'] = '0';
@@ -553,13 +553,13 @@ function install_config_use_case($case)
             setcookie('browse_artist_grid_view', 'false', time() + (30 * 24 * 60 * 60), '/');
             break;
         case 'community':
-            $trconfig['use_auth']                  = 'false';
-            $trconfig['licensing']                 = 'true';
-            $trconfig['wanted']                    = 'false';
-            $trconfig['live_stream']               = 'false';
-            $trconfig['allow_public_registration'] = 'true';
-            $trconfig['cookie_disclaimer']         = 'true';
-            $trconfig['share']                     = 'true';
+            $trconfig['use_auth']                                = 'false';
+            $trconfig['licensing']                               = 'true';
+            $trconfig['wanted']                                  = 'false';
+            $trconfig['Ampache\Model\Live_Stream']               = 'false';
+            $trconfig['allow_public_registration']               = 'true';
+            $trconfig['cookie_disclaimer']                       = 'true';
+            $trconfig['share']                                   = 'true';
 
             $dbconfig['download']             = '0';
             $dbconfig['share']                = '1';

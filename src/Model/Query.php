@@ -427,7 +427,7 @@ class Query
                     'composer',
                     'enabled'
                 ),
-                'live_stream' => array(
+                'Ampache\Model\Live_Stream' => array(
                     'alpha_match',
                     'regex_match',
                     'regex_not_match',
@@ -560,7 +560,7 @@ class Query
                     'user',
                     'sticky'
                 ),
-                'live_stream' => array(
+                'Ampache\Model\Live_Stream' => array(
                     'name',
                     'call_sign',
                     'frequency'
@@ -708,7 +708,7 @@ class Query
             case 'tag':
             case 'playlist_localplay':
             case 'shoutbox':
-            case 'live_stream':
+            case 'Ampache\Model\Live_Stream':
             case 'democratic':
             case 'wanted':
             case 'share':
@@ -994,7 +994,7 @@ class Query
                     $this->set_select("`user`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `user` ";
                     break;
-                case 'live_stream':
+                case 'Ampache\Model\Live_Stream':
                     $this->set_select("`live_stream`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `live_stream` ";
                     break;
@@ -1517,7 +1517,7 @@ class Query
                         break;
                 } // end filter
                 break;
-            case 'live_stream':
+            case 'Ampache\Model\Live_Stream':
                 switch ($filter) {
                     case 'alpha_match':
                         $filter_sql = " `live_stream`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
@@ -1969,7 +1969,7 @@ class Query
                         break;
                 } // end switch on $field
                 break;
-            case 'live_stream':
+            case 'Ampache\Model\Live_Stream':
                 switch ($field) {
                     case 'name':
                         $sql = "`live_stream`.`name`";

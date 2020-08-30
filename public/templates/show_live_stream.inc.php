@@ -29,8 +29,8 @@ use Ampache\Module\Util\Ui;
 <?php Ui::show_box_top($radio->f_name . ' ' . T_('Details'), 'box box_live_stream_details'); ?>
 <div class="item_right_info">
     <?php
-        $thumb = Ui::is_grid_view('live_stream') ? 2 : 11;
-        Art::display('live_stream', $radio->id, $radio->f_name, $thumb); ?>
+        $thumb = Ui::is_grid_view('Ampache\Model\Live_Stream') ? 2 : 11;
+        Art::display('Ampache\Model\Live_Stream', $radio->id, $radio->f_name, $thumb); ?>
 </div>
 <dl class="media_details">
 <?php $rowparity = Ui::flip_class(); ?>

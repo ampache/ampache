@@ -80,7 +80,7 @@ class WebPlayer
             $transcode = self::can_transcode($media, $file_type, $types, $urlinfo, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $file_type, $transcode);
         } else {
-            if ($item->type == 'live_stream') {
+            if ($item->type == 'Ampache\Model\Live_Stream') {
                 $types['real'] = $item->codec;
                 if ($types['real'] == "ogg" || $types['real'] == "opus") {
                     $types['player'] = "oga";

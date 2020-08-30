@@ -256,7 +256,7 @@ class Json_Data
                 "songs" => (int)$counts['song'],
                 "videos" => (int)$counts['video'],
                 "playlists" => (int)$counts['playlist'],
-                "stream" => (int)$counts['live_stream']
+                "stream" => (int)$counts['Ampache\Model\Live_Stream']
             ));
         } // end foreach
 

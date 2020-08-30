@@ -33,7 +33,7 @@ use Art;
 use Artist;
 use Catalog;
 use Ampache\Module\System\Dba;
-use Live_Stream;
+use Ampache\Model\Live_Stream;
 use Ampache\Model\Playlist;
 use Ampache\Model\Podcast;
 use Ampache\Model\Podcast_Episode;
@@ -1255,7 +1255,7 @@ class Subsonic_Xml_Data
     /**
      * addRadio
      * @param SimpleXMLElement $xml
-     * @param Live_Stream $radio
+     * @param \Ampache\Model\Live_Stream $radio
      */
     public static function addRadio($xml, $radio)
     {

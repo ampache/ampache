@@ -226,13 +226,13 @@ class Stream_Playlist
                     $url['author']     = $object->f_artist_full;
                     $url['resolution'] = $object->f_resolution;
                     break;
-                case 'live_stream':
+                case 'Ampache\Model\Live_Stream':
                     $url['title'] = 'Radio - ' . $object->name;
                     if (!empty($object->site_url)) {
                         $url['title'] .= ' (' . $object->site_url . ')';
                     }
                     $url['codec']     = $object->codec;
-                    $url['image_url'] = Art::url($object->id, 'live_stream', $api_session,
+                    $url['image_url'] = Art::url($object->id, 'Ampache\Model\Live_Stream', $api_session,
                         (AmpConfig::get('ajax_load') ? 3 : 4));
                     break;
                 case 'Ampache\Model\Song_Preview':
