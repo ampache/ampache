@@ -30,7 +30,7 @@ use AmpConfig;
 use Art;
 use Artist;
 use Catalog;
-use Clip;
+use Ampache\Model\Clip;
 use DOMDocument;
 use Live_Stream;
 use Ampache\Model\Movie;

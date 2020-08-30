@@ -31,7 +31,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Art;
-use Clip;
+use Ampache\Model\Clip;
 use Core;
 use Ampache\Model\Movie;
 use Personal_Video;

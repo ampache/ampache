@@ -1,12 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-
-use Ampache\Model\Song;
-use Ampache\Model\Video;
-use Ampache\Module\System\Dba;
-
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -25,6 +19,14 @@ use Ampache\Module\System\Dba;
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
+use Ampache\Module\System\Dba;
+use Artist;
+use Catalog;
 
 class Clip extends Video
 {
@@ -60,8 +62,7 @@ class Clip extends Video
      */
     public static function garbage_collection()
     {
-        $sql = "DELETE FROM `clip` USING `clip` LEFT JOIN `video` ON `video`.`id` = `clip`.`id` " .
-            "WHERE `video`.`id` IS NULL";
+        $sql = "DELETE FROM `clip` USING `clip` LEFT JOIN `video` ON `video`.`id` = `clip`.`id` " . "WHERE `video`.`id` IS NULL";
         Dba::write($sql);
     }
 
@@ -97,16 +98,16 @@ class Clip extends Video
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
-        debug_event('clips.class', 'insert ' . print_r($data,true) , 5);
+        debug_event('clips.class', 'insert ' . print_r($data, true), 5);
         $artist_id = self::_get_artist_id($data);
         $song_id   = Song::find($data);
         if (empty($song_id)) {
             $song_id = null;
         }
         if ($artist_id || $song_id) {
-            debug_event('clips.class', 'insert ' . print_r(['artist_id' => $artist_id,'song_id' => $song_id],true) , 5);
-            $sql = "INSERT INTO `clip` (`id`, `artist`, `song`) " .
-          "VALUES (?, ?, ?)";
+            debug_event('clips.class', 'insert ' . print_r(['artist_id' => $artist_id, 'song_id' => $song_id], true),
+                5);
+            $sql = "INSERT INTO `clip` (`id`, `artist`, `song`) " . "VALUES (?, ?, ?)";
             Dba::write($sql, array($data['id'], $artist_id, $song_id));
         }
 
@@ -121,10 +122,10 @@ class Clip extends Video
      */
     public function update(array $data)
     {
-        debug_event('clips.class', 'update ' . print_r($data,true) , 5);
+        debug_event('clips.class', 'update ' . print_r($data, true), 5);
         $artist_id = self::_get_artist_id($data);
         $song_id   = Song::find($data);
-        debug_event('clips.class', 'update ' . print_r(['artist_id' => $artist_id,'song_id' => $song_id],true) , 5);
+        debug_event('clips.class', 'update ' . print_r(['artist_id' => $artist_id, 'song_id' => $song_id], true), 5);
 
         $sql = "UPDATE `clip` SET `artist` = ?, `song` = ? WHERE `id` = ?";
         Dba::write($sql, array($artist_id, $song_id, $this->id));
@@ -169,9 +170,11 @@ class Clip extends Video
     {
         $keywords = parent::get_keywords();
         if ($this->artist) {
-            $keywords['artist'] = array('important' => true,
+            $keywords['artist'] = array(
+                'important' => true,
                 'label' => T_('Artist'),
-                'value' => $this->f_artist);
+                'value' => $this->f_artist
+            );
         }
 
         return $keywords;
@@ -188,4 +191,4 @@ class Clip extends Video
 
         return null;
     }
-} // end clip.class
+}
