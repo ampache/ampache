@@ -32,7 +32,7 @@ use Auth_OpenID_SRegResponse;
 use Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Authentication\Ldap\Ldap;
-use Openid;
+use Ampache\Module\Authentication\Openid;
 use Ampache\Module\System\Session;
 use Ampache\Model\User;
 
