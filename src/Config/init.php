@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,7 +20,11 @@
  *
  */
 
-use Ampache\Config\AmpConfig;
+declare(strict_types=0);
+
+namespace Ampache\Config;
+
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 use Ampache\Model\Preference;
 use Ampache\Model\User;
 use Ampache\Module\Authorization\Auth;
@@ -229,7 +233,7 @@ AmpError::init();
 
 // Load gettext mojo
 if (!class_exists('Gettext\Translations')) {
-    require_once __DIR__ . '/../public/templates/test_error_page.inc.php';
+    require_once __DIR__ . '/../../public/templates/test_error_page.inc.php';
     /** @noinspection PhpUnhandledExceptionInspection */
     throw new Exception('load_gettext()');
 } else {

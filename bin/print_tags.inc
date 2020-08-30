@@ -27,7 +27,7 @@ use Ampache\Module\Util\VaInfo;
 
 define('NO_SESSION', '1');
 
-require_once __DIR__ . '/../lib/init.php';
+require_once __DIR__ . '/../src/Config/init.php';
 
 $version = "1.0";
 

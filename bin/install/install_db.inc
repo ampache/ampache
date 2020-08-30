@@ -30,7 +30,7 @@ if(php_sapi_name() != 'cli') {
 define('NO_SESSION', 1);
 define('CLI', 1);
 
-require_once __DIR__ . '/../../lib/init-tiny.php';
+require_once __DIR__ . '/../../src/Config/init-tiny.php';
 require_once __DIR__ . '/../../src/Config/install.php';
 
 $options = getopt(

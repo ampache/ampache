@@ -36,7 +36,7 @@ $debug = !array_key_exists('x', $options);
 
 define('NO_SESSION', '1');
 
-require_once __DIR__ . '/../lib/init.php';
+require_once __DIR__ . '/../src/Config/init.php';
 
 if ($debug) {
     echo "\n" . T_('Running in Debug Mode. Use -x to execute') . "\n\n";

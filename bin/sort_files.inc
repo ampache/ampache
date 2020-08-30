@@ -41,7 +41,7 @@ use Ampache\Module\System\Dba;
 
 define('NO_SESSION', '1');
 
-require_once __DIR__ . '/../lib/init.php';
+require_once __DIR__ . '/../src/Config/init.php';
 
 // default various artist album name.
 $various_artist = "Various Artists";

@@ -27,7 +27,7 @@ use Ampache\Application\Api\Upnp\MediaServiceDescriptionApplication;
 
 define('NO_SESSION', '1');
 
-require_once __DIR__ . '/../../lib/init.php';
+require_once __DIR__ . '/../../src/Config/init.php';
 
 $dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
 

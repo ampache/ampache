@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-require_once  __DIR__ . '/../lib/init-tiny.php';
+require_once __DIR__ . '/../src/Config/init-tiny.php';
 
 use Ampache\Application\TestApplication;
 

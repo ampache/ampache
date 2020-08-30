@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 // This is playlist.php, it does playlist things.
 
-require_once __DIR__ . '/../lib/init.php';
+require_once __DIR__ . '/../src/Config/init.php';
 
 use Ampache\Application\PlaylistApplication;
 

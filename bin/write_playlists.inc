@@ -29,7 +29,7 @@ use Ampache\Module\System\Core;
 define('NO_SESSION', '1');
 
 
-require_once __DIR__ . '/../lib/init.php';
+require_once __DIR__ . '/../src/Config/init.php';
 
 $valid_exts = array('m3u', 'xspf', 'pls');
 

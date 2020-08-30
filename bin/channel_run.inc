@@ -30,7 +30,7 @@ define('CLI', 1);
 $chunk_buffer        = '';
 $nb_chunks_remainder = 0;
 
-require_once __DIR__ . '/../lib/init.php';
+require_once __DIR__ . '/../src/Config/init.php';
 
 ob_end_flush();
 

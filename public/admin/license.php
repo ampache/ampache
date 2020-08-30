@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 use Ampache\Application\Admin\CatalogApplication;
 
-require_once __DIR__ . '/../../lib/init.php';
+require_once __DIR__ . '/../../src/Config/init.php';
 
 $dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
 

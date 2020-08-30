@@ -30,7 +30,7 @@ use Ampache\Application\Api\EditApplication;
 // Set that this is an ajax include
 define('AJAX_INCLUDE', '1');
 
-require_once __DIR__ . '/../../lib/init.php';
+require_once __DIR__ . '/../../src/Config/init.php';
 
 $dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
 

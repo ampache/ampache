@@ -33,7 +33,7 @@ if (!isset($_REQUEST['type']) || (string) filter_input(INPUT_GET, 'type', FILTER
     define('OUTDATED_DATABASE_OK', 1);
 }
 
-require_once __DIR__ . '/../lib/init.php';
+require_once __DIR__ . '/../src/Config/init.php';
 
 $dic = require __DIR__ . '/../src/Config/Bootstrap.php';
 

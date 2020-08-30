@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,11 +20,16 @@
  *
  */
 
-// Minimal init for use in install
-// Do a check for PHP5.4 because nothing will work without it
+declare(strict_types=0);
+
+namespace Ampache\Config;
+
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use RuntimeException;
 
+// Minimal init for use in install
+// Do a check for PHP5.4 because nothing will work without it
 if (version_compare(phpversion(), '7.1.0', '<')) {
     echo T_("Ampache requires PHP version >= 7.1");
     throw new RuntimeException(T_("Ampache requires PHP version >= 7.1"));
@@ -33,17 +38,17 @@ if (version_compare(phpversion(), '7.1.0', '<')) {
 //error_reporting(E_ERROR); // Only show fatal errors in production
 
 $load_time_begin = microtime(true);
-$configfile      = __DIR__ . '/../config/ampache.cfg.php';
+$configfile      = __DIR__ . '/../../config/ampache.cfg.php';
 
 // We still allow scripts to run (it could be the purpose of the maintenance)
 if (!defined('CLI')) {
-    if (file_exists(__DIR__ . '/../.maintenance')) {
-        require_once  __DIR__ . '/../.maintenance';
+    if (file_exists(__DIR__ . '/../../.maintenance')) {
+        require_once  __DIR__ . '/../../.maintenance';
     }
 }
 
 // Register autoloaders
-$composer_autoload = __DIR__ . '/../vendor/autoload.php';
+$composer_autoload = __DIR__ . '/../../vendor/autoload.php';
 
 if (file_exists($composer_autoload)) {
     require_once $composer_autoload;
@@ -72,7 +77,7 @@ if (!isset($http_port) || empty($http_port)) {
 define('INIT_LOADED', 1);
 
 // Core includes we can't do with the autoloader
-require_once __DIR__ . '/../src/Config/functions.php';
+require_once __DIR__ . '/functions.php';
 
 /* Set up the flip class */
 Ui::flip_class(array('odd', 'even'));

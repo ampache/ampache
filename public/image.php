@@ -29,7 +29,7 @@ use Ampache\Application\ImageApplication;
 // this needs to be done a little better, but for now... eah
 define('NO_SESSION', '1');
 
-require_once __DIR__ . '/../lib/init.php';
+require_once __DIR__ . '/../src/Config/init.php';
 
 $dic = require __DIR__ . '/../src/Config/Bootstrap.php';
 

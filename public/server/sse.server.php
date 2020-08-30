@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 use Ampache\Application\Api\SseApplication;
 
-require_once __DIR__ . '/../../lib/init.php';
+require_once __DIR__ . '/../../src/Config/init.php';
 
 require_once __DIR__ . '/../../modules/catalog/local/local.catalog.php';
 
