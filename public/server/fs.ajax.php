@@ -22,6 +22,7 @@
 
  // jsTree file system browser
 
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\FileSystem;
 use Ampache\Module\Util\Upload;
 

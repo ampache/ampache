@@ -29,7 +29,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
 use Ampache\Module\Authorization\Auth;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;

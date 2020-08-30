@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use Ampache\Config\AmpConfig;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Model\Song;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Playback\Stream;

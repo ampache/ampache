@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Model\Art;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 final class ArtApplication implements ApplicationInterface

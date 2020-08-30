@@ -26,7 +26,7 @@ namespace Ampache\Module\Broadcast;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Broadcast;
-use Core;
+use Ampache\Module\System\Core;
 use Exception;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;

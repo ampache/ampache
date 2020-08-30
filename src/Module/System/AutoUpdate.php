@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
-use Core;
+use Ampache\Module\System\Core;
 use Exception;
 use Ampache\Model\Preference;
 use Requests;

@@ -27,7 +27,7 @@ namespace Ampache\Application;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Broadcast;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 final class BroadcastApplication implements ApplicationInterface

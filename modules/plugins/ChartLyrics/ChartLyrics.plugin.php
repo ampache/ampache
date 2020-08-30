@@ -3,6 +3,7 @@
 
 use Ampache\Model\Song;
 use Ampache\Model\User;
+use Ampache\Module\System\Core;
 
 /**
  *

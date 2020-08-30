@@ -22,6 +22,7 @@
 
 // Minimal init for use in install
 // Do a check for PHP5.4 because nothing will work without it
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 if (version_compare(phpversion(), '7.1.0', '<')) {
@@ -41,10 +42,7 @@ if (!defined('CLI')) {
     }
 }
 
-require_once __DIR__ . '/class/core.class.php';
-
 // Register autoloaders
-spl_autoload_register(array('Core', 'autoload'), true, true);
 $composer_autoload = __DIR__ . '/../vendor/autoload.php';
 
 if (file_exists($composer_autoload)) {

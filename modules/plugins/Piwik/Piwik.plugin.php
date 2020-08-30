@@ -4,6 +4,7 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Preference;
 use Ampache\Model\User;
+use Ampache\Module\System\Core;
 
 /**
  *

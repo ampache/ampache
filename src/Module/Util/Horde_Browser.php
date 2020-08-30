@@ -22,7 +22,7 @@
 
 namespace Ampache\Module\Util;
 
-use Core;
+use Ampache\Module\System\Core;
 
 /**
  *  #####################################################################

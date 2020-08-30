@@ -26,7 +26,7 @@ namespace Ampache\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Artist;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Model\Search;
 

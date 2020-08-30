@@ -30,7 +30,7 @@ use Ampache\Model\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Artist;
 use Ampache\Model\Catalog;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Model\Song;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\Wanted;

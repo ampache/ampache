@@ -28,7 +28,7 @@ namespace Ampache\Application;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Channel;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 final class ChannelApplication implements ApplicationInterface

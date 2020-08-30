@@ -39,7 +39,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
 use Ampache\Model\Artist;
 use Ampache\Model\Catalog;
-use Core;
+use Ampache\Module\System\Core;
 use PDOStatement;
 use Ampache\Model\Preference;
 use Ampache\Model\Rating;

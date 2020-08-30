@@ -29,7 +29,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
-use Core;
+use Ampache\Module\System\Core;
 use Exception;
 use PDOStatement;
 

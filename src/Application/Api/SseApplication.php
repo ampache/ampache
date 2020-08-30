@@ -30,7 +30,7 @@ use Ampache\Application\ApplicationInterface;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Model\Catalog;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 final class SseApplication implements ApplicationInterface

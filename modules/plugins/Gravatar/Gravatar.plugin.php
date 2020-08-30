@@ -3,6 +3,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\User;
+use Ampache\Module\System\Core;
 
 /**
  *

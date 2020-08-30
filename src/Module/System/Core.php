@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,67 +20,21 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\System;
+
 use Ampache\Config\AmpConfig;
+use Exception;
 
 /**
  * Core Class
  *
  * This is really just a namespace class, it's full of static functions
  * would be replaced by a namespace library once that exists in php
- *
  */
 class Core
 {
-    /**
-     * @deprecated An empty constructor which returns false? Seems to be garbage
-     *
-     * constructor
-     * This doesn't do anything
-     */
-    private function __construct()
-    {
-        return false;
-    } // construction
-
-    /**
-     * autoload
-     *
-     * This function automatically loads any missing classes as they are
-     * needed so that we don't use a million include statements which load
-     * more than we need.
-     * @param $class
-     */
-    public static function autoload($class)
-    {
-        if (strpos($class, '\\') === false) {
-            $possiblePaths = self::getNonNamespacedPaths($class);
-        } else {
-            $possiblePaths = self::getNamespacedPaths($class);
-        }
-
-        foreach ($possiblePaths as $path) {
-            if (is_file($path) && self::is_readable($path)) {
-                require_once($path);
-                self::executeAutoCall($class);
-            } else {
-                debug_event('core.class', "'$class' not found!", 1);
-            }
-        }
-    }
-
-    /**
-     * executeAutoCall
-     * Execute _auto_init if available
-     * @param string $class
-     */
-    private static function executeAutoCall($class)
-    {
-        $autocall = array($class, '_auto_init');
-        if (is_callable($autocall)) {
-            call_user_func($autocall);
-        }
-    }
-
     /**
      * get_global
      * Return a $GLOBAL variable instead of calling directly
@@ -142,13 +95,13 @@ class Core
     }
 
     /**
+     * @param string $variable
+     * @return string
      * @deprecated Not in use
      *
      * get_cookie
      * Return a $COOKIE variable instead of calling directly
      *
-     * @param string $variable
-     * @return string
      */
     public static function get_cookie($variable)
     {
@@ -228,6 +181,7 @@ class Core
 
         return filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
     }
+
     /**
      * Place a new key on a specific position in array
      * @param array $array
@@ -237,41 +191,7 @@ class Core
      */
     private static function insertInArray(array $array, $position, array $add)
     {
-        return array_slice($array, 0, $position, true) +
-                $add +
-                array_slice($array, $position, null, true);
-    }
-
-    /**
-     * Get possible filepaths of namespaced classes
-     * @param string $class
-     * @return string[]
-     */
-    private static function getNamespacedPaths($class)
-    {
-        $possiblePaths   = array();
-        $namespaceParts  = explode('\\', (string) $class);
-        $possiblePaths[] = __DIR__ . '/../../modules/' . implode('/', $namespaceParts) . '.php';
-
-        $classedPath = array('path' => __DIR__ . '/../../') +
-                self::insertInArray($namespaceParts, 1, array('add' => 'class'));
-        $possiblePaths[] = implode('/', $classedPath) . '.php';
-
-        return $possiblePaths;
-    }
-
-    /**
-     * Get possible filepaths of non namespaced classes
-     * @param string $class
-     * @return string[]
-     */
-    private static function getNonNamespacedPaths($class)
-    {
-        $possiblePaths   = array();
-        $possiblePaths[] = __DIR__ . '/../../lib/class/' .
-                strtolower((string) $class) . '.class.php';
-
-        return $possiblePaths;
+        return array_slice($array, 0, $position, true) + $add + array_slice($array, $position, null, true);
     }
 
     /**
@@ -285,7 +205,7 @@ class Core
     public static function form_register($name, $type = 'post')
     {
         // Make ourselves a nice little sid
-        $sid    = md5(uniqid((string) rand(), true));
+        $sid    = md5(uniqid((string)rand(), true));
         $window = AmpConfig::get('session_length');
         $expire = time() + $window;
 
@@ -294,7 +214,8 @@ class Core
         if (!isset($_SESSION['forms'][$sid])) {
             debug_event('core.class', "Form $sid not found in session, failed to register!", 2);
         } else {
-            debug_event('core.class', "Registered $type form $name with SID $sid and expiration $expire ($window seconds from now)", 5);
+            debug_event('core.class',
+                "Registered $type form $name with SID $sid and expiration $expire ($window seconds from now)", 5);
         }
 
         switch ($type) {
@@ -472,7 +393,7 @@ class Core
                 return false;
             }
             $offset = PHP_INT_MAX - 1;
-            $size   = (float) $offset;
+            $size   = (float)$offset;
             if (!fseek($filepointer, $offset)) {
                 return false;
             }
@@ -587,4 +508,4 @@ class Core
 
         return $tmp_dir;
     }
-} // end core.class
+}

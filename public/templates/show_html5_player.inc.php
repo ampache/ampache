@@ -4,6 +4,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Model\Broadcast;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\WebPlayer;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 $autoplay = true;

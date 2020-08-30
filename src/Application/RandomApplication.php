@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application;
 
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Model\Random;
 use Ampache\Module\Util\Ui;
 

@@ -27,7 +27,7 @@ namespace Ampache\Application;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Model\Search;
 use Ampache\Module\Util\Ui;

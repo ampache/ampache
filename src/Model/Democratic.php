@@ -30,7 +30,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
-use Core;
+use Ampache\Module\System\Core;
 use PDOStatement;
 
 /**

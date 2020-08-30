@@ -34,7 +34,7 @@ use Ampache\Module\Util\VaInfo;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\System\AmpError;
-use Core;
+use Ampache\Module\System\Core;
 use Exception;
 use getID3;
 use MusicBrainz\MusicBrainz;

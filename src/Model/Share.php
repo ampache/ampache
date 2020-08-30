@@ -31,7 +31,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
-use Core;
+use Ampache\Module\System\Core;
 use Exception;
 use PDOStatement;
 use Ampache\Model\Playlist;

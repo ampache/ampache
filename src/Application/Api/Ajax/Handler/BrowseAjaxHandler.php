@@ -28,7 +28,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Model\Art;
 use Ampache\Module\Util\Browse;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Model\Live_Stream;
 use Ampache\Model\Playlist;
 use Ampache\Model\Search;

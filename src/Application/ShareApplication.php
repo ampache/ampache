@@ -28,7 +28,7 @@ namespace Ampache\Application;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Model\Plugin;
 use Ampache\Model\Preference;
 use Ampache\Model\Share;

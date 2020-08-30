@@ -58,7 +58,7 @@ use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\System\AmpError;
-use Core;
+use Ampache\Module\System\Core;
 
 /**
  * API Class

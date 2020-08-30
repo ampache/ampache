@@ -27,6 +27,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 ?>

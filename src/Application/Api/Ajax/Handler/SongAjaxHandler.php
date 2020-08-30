@@ -27,7 +27,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Model\Shoutbox;
 use Ampache\Model\Song;
 

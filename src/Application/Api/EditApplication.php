@@ -30,7 +30,7 @@ use Ampache\Application\ApplicationInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Model\Label;
 use Ampache\Model\Tag;
 use Ampache\Module\Util\Ui;

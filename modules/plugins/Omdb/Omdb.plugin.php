@@ -3,6 +3,7 @@
 
 use Ampache\Model\Art;
 use Ampache\Model\User;
+use Ampache\Module\System\Core;
 
 /**
  *

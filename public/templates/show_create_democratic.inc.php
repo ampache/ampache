@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 Ui::show_box_top(T_('Configure Democratic Playlist')); ?>

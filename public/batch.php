@@ -23,6 +23,7 @@
 use Ampache\Model\Album;
 use Ampache\Model\User;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Browse;
 use Ampache\Module\Util\InterfaceImplementationChecker;

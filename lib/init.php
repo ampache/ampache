@@ -25,6 +25,7 @@ use Ampache\Model\Preference;
 use Ampache\Model\User;
 use Ampache\Module\Authorization\Auth;
 use Ampache\Module\System\AmpError;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Module\System\Update;
 use Ampache\Module\Util\Ui;

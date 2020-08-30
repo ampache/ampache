@@ -30,7 +30,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Artist;
 use Ampache\Model\Catalog;
-use Core;
+use Ampache\Module\System\Core;
 use RuntimeException;
 
 class Upload

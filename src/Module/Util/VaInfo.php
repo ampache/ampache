@@ -27,7 +27,7 @@ namespace Ampache\Module\Util;
 use Ampache\Model\Plugin;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
-use Core;
+use Ampache\Module\System\Core;
 use Exception;
 use getID3;
 use getid3_lib;

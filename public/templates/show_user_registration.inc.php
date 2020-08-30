@@ -23,6 +23,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
+use Ampache\Module\System\Core;
 use Ampache\Module\User\Registration;
 use Ampache\Module\Util\Captcha\captcha;
 use Ampache\Module\Util\Ui;

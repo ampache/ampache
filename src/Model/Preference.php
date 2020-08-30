@@ -27,7 +27,7 @@ namespace Ampache\Model;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
-use Core;
+use Ampache\Module\System\Core;
 
 /**
  * Preference Class

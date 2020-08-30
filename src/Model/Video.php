@@ -32,7 +32,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
 use Ampache\Model\Clip;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Model\Movie;
 use Ampache\Model\Personal_Video;
 use Ampache\Model\Rating;

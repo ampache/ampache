@@ -22,6 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Browse;
 use Ampache\Module\Util\Ui;
 

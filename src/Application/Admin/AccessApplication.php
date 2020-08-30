@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 final class AccessApplication implements ApplicationInterface

@@ -27,7 +27,7 @@ namespace Ampache\Module\Authentication;
 use Ampache\Config\AmpConfig;
 use Auth_OpenID_Consumer;
 use Auth_OpenID_FileStore;
-use Core;
+use Ampache\Module\System\Core;
 
 /**
  * Class Ampache\Module\Authentication\Openid

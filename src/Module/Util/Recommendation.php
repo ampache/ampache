@@ -28,7 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
 use Ampache\Model\Artist;
 use Ampache\Model\Catalog;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;
 use Requests;

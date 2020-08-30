@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util\OAuth;
 
-use Core;
+use Ampache\Module\System\Core;
 
 /**
  * Class OAuthUtil

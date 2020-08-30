@@ -27,7 +27,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Config\AmpConfig;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Model\Preference;
 use Ampache\Module\Util\Ui;
 

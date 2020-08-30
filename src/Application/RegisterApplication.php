@@ -28,7 +28,7 @@ namespace Ampache\Application;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Captcha\captcha;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\User\Registration;
 use Ampache\Module\Util\Ui;

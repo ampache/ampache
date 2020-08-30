@@ -27,7 +27,7 @@ namespace Ampache\Module\Util;
 use Ampache\Module\Playback\Stream;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;
 use RuntimeException;

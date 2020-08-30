@@ -27,7 +27,7 @@ namespace Ampache\Application\Api\Upnp;
 
 use Ampache\Application\ApplicationInterface;
 use Ampache\Config\AmpConfig;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Module\Api\Upnp_Api;
 
 final class UpnpApplication implements ApplicationInterface

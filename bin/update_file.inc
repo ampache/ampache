@@ -24,6 +24,7 @@ use Ampache\Model\Catalog;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Song;
 use Ampache\Model\Video;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 
 define('NO_SESSION', '1');

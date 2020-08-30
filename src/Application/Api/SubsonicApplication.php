@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Auth;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Model\Preference;
 use Ampache\Module\Api\Subsonic_Api;
 use Ampache\Module\Api\Subsonic_Xml_Data;

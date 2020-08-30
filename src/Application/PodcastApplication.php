@@ -27,7 +27,7 @@ namespace Ampache\Application;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Model\Podcast;
 use Ampache\Module\Util\Ui;
 

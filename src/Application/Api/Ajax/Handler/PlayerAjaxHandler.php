@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Model\Broadcast;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 final class PlayerAjaxHandler implements AjaxHandlerInterface

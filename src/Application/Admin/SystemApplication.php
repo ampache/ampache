@@ -31,7 +31,7 @@ use Ampache\Application\ApplicationInterface;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Artist;
 use Ampache\Module\System\AutoUpdate;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Model\Song;

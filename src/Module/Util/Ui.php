@@ -26,7 +26,7 @@ namespace Ampache\Module\Util;
 
 use Ampache\Model\Plugin;
 use Ampache\Config\AmpConfig;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 
 /**

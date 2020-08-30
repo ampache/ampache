@@ -31,7 +31,7 @@ use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;
 use Ampache\Model\Preference;

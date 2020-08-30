@@ -39,7 +39,7 @@ use Ampache\Model\Art;
 use Ampache\Model\Artist;
 use Ampache\Model\Bookmark;
 use Ampache\Model\Catalog;
-use Core;
+use Ampache\Module\System\Core;
 use DOMDocument;
 use Ampache\Model\Live_Stream;
 use Ampache\Model\Playlist;

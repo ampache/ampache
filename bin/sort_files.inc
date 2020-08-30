@@ -36,6 +36,7 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Album;
 use Ampache\Model\Catalog;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 
 define('NO_SESSION', '1');

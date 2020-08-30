@@ -27,7 +27,7 @@ namespace Ampache\Application;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Browse;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Model\Tag;
 use Ampache\Module\Util\Ui;
 

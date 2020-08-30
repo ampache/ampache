@@ -28,7 +28,7 @@ use Ampache\Model\localplay_controller;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Model\Preference;
 
 class LocalPlay

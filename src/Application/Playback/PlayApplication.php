@@ -31,7 +31,7 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Auth;
 use Ampache\Model\Catalog;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Model\Democratic;
 use Ampache\Module\Util\Horde_Browser;

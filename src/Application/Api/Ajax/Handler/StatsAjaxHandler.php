@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Model\Plugin;
 use Ampache\Module\System\Session;
 use Ampache\Module\Statistics\Stats;

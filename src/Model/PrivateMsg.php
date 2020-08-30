@@ -28,7 +28,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Mailer;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
-use Core;
+use Ampache\Module\System\Core;
 use PDOStatement;
 use Ampache\Model\Preference;
 

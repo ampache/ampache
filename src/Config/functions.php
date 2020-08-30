@@ -34,6 +34,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Playback\LocalPlay;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;

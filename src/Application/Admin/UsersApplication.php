@@ -30,7 +30,7 @@ use Ampache\Application\ApplicationInterface;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Browse;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
 use Ampache\Model\Preference;
 use Ampache\Module\User\Registration;

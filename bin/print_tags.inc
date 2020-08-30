@@ -21,6 +21,7 @@
  */
 
 use Ampache\Model\Catalog;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\VaInfo;
 

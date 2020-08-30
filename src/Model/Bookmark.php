@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;
 

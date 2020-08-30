@@ -31,7 +31,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
 use Ampache\Model\Catalog;
-use Core;
+use Ampache\Module\System\Core;
 use PDOStatement;
 
 class Artist extends database_object implements library_item

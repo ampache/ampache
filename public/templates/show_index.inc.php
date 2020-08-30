@@ -25,6 +25,7 @@ use Ampache\Model\Art;
 use Ampache\Model\Plugin;
 use Ampache\Model\Song;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 $user = Core::get_global('user');

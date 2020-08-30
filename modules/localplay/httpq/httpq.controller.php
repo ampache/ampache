@@ -26,6 +26,7 @@ use Ampache\Model\localplay_controller;
 use Ampache\Model\Preference;
 use Ampache\Model\Song;
 use Ampache\Module\Playback\Stream_Url;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 

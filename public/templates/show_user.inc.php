@@ -29,6 +29,7 @@ use Ampache\Model\Song;
 use Ampache\Model\Tmp_Playlist;
 use Ampache\Model\Useractivity;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Browse;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;

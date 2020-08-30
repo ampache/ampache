@@ -22,6 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Browse;
 
 $sql    = Catalog::get_uploads_sql('song', (int) Core::get_global('user')->id);

@@ -23,6 +23,7 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 $tag_types = array(

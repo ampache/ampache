@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Util;
 
 use Ampache\Model\Plugin;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Model\Song;
 
 class Slideshow

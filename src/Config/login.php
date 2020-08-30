@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\Auth;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\AutoUpdate;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
 

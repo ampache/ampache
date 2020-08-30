@@ -38,7 +38,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Model\Art;
 use Catalog_local;
-use Core;
+use Ampache\Module\System\Core;
 use Exception;
 use PDOStatement;
 use ReflectionException;

@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use Ampache\Module\Authorization\Access;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\User;

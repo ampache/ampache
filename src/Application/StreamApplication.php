@@ -31,7 +31,7 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Artist;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Model\Democratic;
 use Ampache\Model\Playlist;
 use Ampache\Module\System\Session;

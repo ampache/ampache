@@ -31,7 +31,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
 use Ampache\Model\Catalog;
-use Core;
+use Ampache\Module\System\Core;
 use PDOStatement;
 
 /**

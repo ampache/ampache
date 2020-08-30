@@ -30,7 +30,7 @@ use Ampache\Application\ApplicationInterface;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Model\Catalog;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Model\Song;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Playback\Stream;

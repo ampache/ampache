@@ -31,6 +31,7 @@ use Ampache\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 if ($song->enabled) {

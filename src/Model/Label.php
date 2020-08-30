@@ -28,7 +28,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
-use Core;
+use Ampache\Module\System\Core;
 use PDOStatement;
 use Ampache\Model\Rating;
 use Ampache\Model\Search;

@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util\Captcha;
 
-use Core;
+use Ampache\Module\System\Core;
 
 /**
  * Class easy_captcha_utility

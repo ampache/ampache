@@ -22,6 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Search;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 if ($playlist) {

@@ -28,7 +28,7 @@ namespace Ampache\Application;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Model\Label;
 use Ampache\Module\Util\Ui;
 

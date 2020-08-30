@@ -27,7 +27,7 @@ namespace Ampache\Application\Api;
 
 use Ampache\Application\ApplicationInterface;
 use Ampache\Module\Util\Browse;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Model\Playlist;
 
 final class RefreshReorderedApplication implements ApplicationInterface

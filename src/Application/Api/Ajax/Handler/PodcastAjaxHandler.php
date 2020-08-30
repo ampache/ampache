@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Model\Podcast;
 use Ampache\Model\Podcast_Episode;
 

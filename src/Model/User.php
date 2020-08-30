@@ -32,7 +32,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Model\Art;
 use Ampache\Model\Artist;
-use Core;
+use Ampache\Module\System\Core;
 use Exception;
 use PDOStatement;
 use Ampache\Model\Song;

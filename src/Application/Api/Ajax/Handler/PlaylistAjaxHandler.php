@@ -30,7 +30,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Browse;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Model\Playlist;
 
 final class PlaylistAjaxHandler implements AjaxHandlerInterface

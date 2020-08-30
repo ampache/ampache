@@ -26,7 +26,7 @@ namespace Ampache\Module\Statistics;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
-use Core;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;
 use Ampache\Model\Podcast_Episode;

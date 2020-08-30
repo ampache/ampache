@@ -22,6 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Playlist;
+use Ampache\Module\System\Core;
 
 ?>
 

@@ -27,7 +27,7 @@ namespace Ampache\Module\Util;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
-use Core;
+use Ampache\Module\System\Core;
 use CpChart;
 use CpChart\Data;
 use Ampache\Module\System\Dba;
