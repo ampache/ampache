@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use AmpConfig;
 use Core;
 use Ampache\Module\System\Dba;
-use Search;
+use Ampache\Model\Search;
 use Ampache\Module\Util\Ui;
 
 final class SmartPlaylistApplication implements ApplicationInterface

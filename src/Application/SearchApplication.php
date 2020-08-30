@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use AmpConfig;
 use Ampache\Module\Util\Browse;
 use Core;
-use Search;
+use Ampache\Model\Search;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\Wanted;
 

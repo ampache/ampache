@@ -28,7 +28,7 @@ use AmpConfig;
 use Artist;
 use Core;
 use Ampache\Module\System\Dba;
-use Search;
+use Ampache\Model\Search;
 
 /**
  * Random Class

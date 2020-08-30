@@ -36,7 +36,7 @@ use Ampache\Module\System\Dba;
 use Exception;
 use PDOStatement;
 use Ampache\Model\Rating;
-use Search;
+use Ampache\Model\Search;
 use Ampache\Model\Share;
 use Ampache\Model\Song;
 

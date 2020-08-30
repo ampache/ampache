@@ -31,7 +31,7 @@ use Core;
 use Ampache\Module\System\Dba;
 use Playlist;
 use Ampache\Model\Rating;
-use Search;
+use Ampache\Model\Search;
 use Ampache\Model\Song;
 use Ampache\Model\Tag;
 

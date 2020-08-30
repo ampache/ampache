@@ -31,7 +31,7 @@ use Ampache\Module\Util\Browse;
 use Core;
 use Live_Stream;
 use Playlist;
-use Search;
+use Ampache\Model\Search;
 use Ampache\Model\Share;
 use Ampache\Module\Util\Ui;
 

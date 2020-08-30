@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use Core;
-use Search;
+use Ampache\Model\Search;
 use Ampache\Module\Util\Ui;
 
 final class SearchDataApplication implements ApplicationInterface

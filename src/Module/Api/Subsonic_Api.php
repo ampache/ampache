@@ -49,7 +49,7 @@ use Preference;
 use PrivateMsg;
 use Ampache\Model\Rating;
 use Requests;
-use Search;
+use Ampache\Model\Search;
 use Ampache\Model\Share;
 use SimpleXMLElement;
 use Ampache\Model\Song;

@@ -31,7 +31,7 @@ use Art;
 use Artist;
 use Ampache\Model\Label;
 use Playlist;
-use Search;
+use Ampache\Model\Search;
 use Ampache\Model\Song;
 use Ampache\Model\User;
 use Ampache\Model\Wanted;

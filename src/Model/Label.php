@@ -31,7 +31,7 @@ use Art;
 use Core;
 use PDOStatement;
 use Ampache\Model\Rating;
-use Search;
+use Ampache\Model\Search;
 
 /**
  * Label class

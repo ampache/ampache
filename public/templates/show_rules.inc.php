@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Search;
 use Ampache\Module\Util\Ui;
 
 if ($playlist) {
