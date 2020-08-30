@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Video;
 
 ?>
 <h3 class="box-title"><?php echo T_('Browse Ampache...'); ?></h3>

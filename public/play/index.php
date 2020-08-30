@@ -31,12 +31,13 @@ declare(strict_types=1);
  */
 
 use Ampache\Application\Playback\PlayApplication;
+use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');
 
 require_once __DIR__ . '/../../src/Config/init.php';
 
-/** @var \Psr\Container\ContainerInterface $dic */
+/** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
 
 $dic->get(PlayApplication::class)->run();

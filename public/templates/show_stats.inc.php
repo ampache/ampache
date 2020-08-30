@@ -22,6 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
+use Ampache\Model\Video;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\Ui;
 

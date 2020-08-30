@@ -22,6 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
+use Ampache\Model\Video;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;

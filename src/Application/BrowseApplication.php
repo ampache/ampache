@@ -55,21 +55,21 @@ final class BrowseApplication implements ApplicationInterface
             case 'artist':
             case 'playlist':
             case 'smartplaylist':
-            case 'Ampache\Model\Live_Stream':
+            case 'Live_Stream':
             case 'video':
             case 'song':
             case 'channel':
             case 'broadcast':
             case 'tvshow':
-            case 'Ampache\Model\TVShow_Season':
-            case 'Ampache\Model\TVShow_Episode':
+            case 'TVShow_Season':
+            case 'TVShow_Episode':
             case 'movie':
             case 'clip':
-            case 'Ampache\Model\Personal_Video':
+            case 'Personal_Video':
             case 'label':
             case 'pvmsg':
             case 'podcast':
-            case 'Ampache\Model\Podcast_Episode':
+            case 'Podcast_Episode':
                 $browse->set_type(Core::get_request('action'));
                 $browse->set_simple_browse(true);
                 break;
@@ -77,8 +77,7 @@ final class BrowseApplication implements ApplicationInterface
 
         Ui::show_header();
 
-        if (in_array($_REQUEST['action'], array('song', 'album', 'artist', 'label', 'channel', 'broadcast',
-            'Ampache\Model\Live_Stream', 'podcast', 'video'))) {
+        if (in_array($_REQUEST['action'], array('song', 'album', 'artist', 'label', 'channel', 'broadcast', 'live_stream', 'podcast', 'video'))) {
             Ui::show('show_browse_form.inc.php');
         }
 

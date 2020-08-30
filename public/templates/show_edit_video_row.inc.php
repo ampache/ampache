@@ -21,6 +21,7 @@
  */
 
 use Ampache\Model\Tag;
+use Ampache\Model\Video;
 use Ampache\Module\Util\Ui;
 
 $libitem = Video::create_from_id($libitem->id);

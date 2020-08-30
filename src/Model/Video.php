@@ -512,7 +512,7 @@ class Video extends database_object implements Media, library_item
      */
     private static function get_derived_types()
     {
-        return array('Ampache\Model\TVShow_Episode', 'Movie', 'Clip', 'Ampache\Model\Personal_Video');
+        return array('TVShow_Episode', 'Movie', 'Clip', 'Personal_Video');
     }
 
     /**

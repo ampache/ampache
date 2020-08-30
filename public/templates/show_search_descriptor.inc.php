@@ -34,4 +34,4 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n"; ?>
     <OutputEncoding>UTF-8</OutputEncoding>
     <InputEncoding>UTF-8</InputEncoding>
 </OpenSearchDescription>
-use Ampache\Config\AmpConfig;
+use Ampache\Config\AmpConfig;use Ampache\Config\AmpConfig;

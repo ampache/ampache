@@ -112,7 +112,7 @@ class UPnPFind
      * Transforms discovery response string to key/value array
      *
      * @param string $res discovery response
-     * @return stdObj
+     * @return stdClass
      */
     private static function discoveryReponse2Array($res)
     {

@@ -1,3 +1,7 @@
+<?php
+use Ampache\Config\AmpConfig;
+
+?>
 <div id="uberviz">
     <div id="preloader"></div>
     <div id="viz"></div>
@@ -45,4 +49,3 @@
     <div class="eq" id="filter2200Hz"></div>
     <div class="eq" id="filter6000Hz"></div>
 </div>
-use Ampache\Config\AmpConfig;
