@@ -43,7 +43,7 @@ use Core;
 use DOMDocument;
 use Live_Stream;
 use Playlist;
-use Podcast;
+use Ampache\Model\Podcast;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Preference;
 use Ampache\Model\PrivateMsg;

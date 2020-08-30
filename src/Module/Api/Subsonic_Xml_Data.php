@@ -35,7 +35,7 @@ use Catalog;
 use Ampache\Module\System\Dba;
 use Live_Stream;
 use Playlist;
-use Podcast;
+use Ampache\Model\Podcast;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Preference;
 use Ampache\Model\PrivateMsg;
@@ -1444,7 +1444,7 @@ class Subsonic_Xml_Data
     /**
      * addPodcasts
      * @param SimpleXMLElement $xml
-     * @param Podcast[] $podcasts
+     * @param \Ampache\Model\Podcast[] $podcasts
      * @param boolean $includeEpisodes
      */
     public static function addPodcasts($xml, $podcasts, $includeEpisodes = true)

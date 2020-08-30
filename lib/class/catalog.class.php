@@ -25,6 +25,7 @@ use Ampache\Model\Album;
 use Ampache\Model\database_object;
 use Ampache\Model\Label;
 use Ampache\Model\License;
+use Ampache\Model\Podcast;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Rating;
 use Ampache\Model\Search;

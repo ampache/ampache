@@ -28,7 +28,7 @@ namespace Ampache\Application;
 use Ampache\Module\Authorization\Access;
 use AmpConfig;
 use Core;
-use Podcast;
+use Ampache\Model\Podcast;
 use Ampache\Module\Util\Ui;
 
 final class PodcastApplication implements ApplicationInterface

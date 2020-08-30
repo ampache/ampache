@@ -33,7 +33,7 @@ use Artist;
 use Catalog;
 use Ampache\Module\System\Dba;
 use Playlist;
-use Podcast;
+use Ampache\Model\Podcast;
 use Ampache\Model\Rating;
 use Ampache\Model\Song;
 use Ampache\Model\Tag;

@@ -34,7 +34,7 @@ use Core;
 use Democratic;
 use Ampache\Model\License;
 use Playlist;
-use Podcast;
+use Ampache\Model\Podcast;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Rating;
 use Ampache\Model\Search;

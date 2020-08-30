@@ -40,7 +40,7 @@ use Core;
 use Democratic;
 use DOMDocument;
 use Playlist;
-use Podcast;
+use Ampache\Model\Podcast;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Rating;
 use Ampache\Model\Search;

@@ -33,7 +33,7 @@ use AmpConfig;
 use Art;
 use Core;
 use PDOStatement;
-use Podcast;
+use Ampache\Model\Podcast;
 
 class Podcast_Episode extends database_object implements Media, library_item
 {

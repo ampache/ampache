@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 use Ampache\Model\Album;
 use Ampache\Model\License;
+use Ampache\Model\Podcast;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Preference;
 use Ampache\Model\Random;
