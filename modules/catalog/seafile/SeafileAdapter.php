@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Module\System\AmpError;
 use Seafile\Client\Http\Client;
 use Seafile\Client\Resource\Library;
 use Seafile\Client\Resource\Directory;

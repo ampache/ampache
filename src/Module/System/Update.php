@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
-use AmpError;
+use Ampache\Module\System\AmpError;
 use Ampache\Model\User;
 
 /**

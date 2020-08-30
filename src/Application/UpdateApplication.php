@@ -27,7 +27,7 @@ namespace Ampache\Application;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
-use AmpError;
+use Ampache\Module\System\AmpError;
 use Ampache\Module\System\AutoUpdate;
 use Core;
 use Ampache\Module\Util\Ui;

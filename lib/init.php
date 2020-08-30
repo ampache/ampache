@@ -24,6 +24,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Model\Preference;
 use Ampache\Model\User;
 use Ampache\Module\Authorization\Auth;
+use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Session;
 use Ampache\Module\System\Update;
 use Ampache\Module\Util\Ui;
@@ -219,6 +220,11 @@ else {
 
 // Load the Preferences from the database
 Preference::init();
+
+/**
+ * Replaces the old autoloading mechanismn
+ */
+AmpError::init();
 
 // Load gettext mojo
 if (!class_exists('Gettext\Translations')) {

@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use Ampache\Config\AmpConfig;
-use AmpError;
+use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Captcha\captcha;
 use Core;
 use Ampache\Module\Util\Mailer;

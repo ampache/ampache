@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,26 +20,20 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\System;
+
 /**
  * Error class
  *
  * This is the basic error class, its better now that we can use php5
  * hello static functions and variables
- *
  */
 class AmpError
 {
     private static $state  = false; // set to one when an error occurs
     private static $errors = array(); // Errors array key'd array with errors that have occurred
-
-    /**
-     * __constructor
-     * This does nothing... amazing isn't it!
-     */
-    private function __construct()
-    {
-        // Rien a faire
-    } // __construct
 
     /**
      * __destruct
@@ -65,16 +58,15 @@ class AmpError
     {
         // Make sure its set first
         if (!isset(AmpError::$errors[$name])) {
-            AmpError::$errors[$name]      = $message;
-            AmpError::$state              = true;
-            $_SESSION['errors'][$name]    = $message;
+            AmpError::$errors[$name]   = $message;
+            AmpError::$state           = true;
+            $_SESSION['errors'][$name] = $message;
         } elseif ($clobber) {
             // They want us to clobber it
-            AmpError::$state              = true;
-            AmpError::$errors[$name]      = $message;
-            $_SESSION['errors'][$name]    = $message;
-        }
-        // They want us to append the error, add a BR\n and then the message
+            AmpError::$state           = true;
+            AmpError::$errors[$name]   = $message;
+            $_SESSION['errors'][$name] = $message;
+        } // They want us to append the error, add a BR\n and then the message
         else {
             AmpError::$state = true;
             AmpError::$errors[$name] .= "<br />\n" . $message;
@@ -133,10 +125,9 @@ class AmpError
     } // display
 
     /**
-      * auto_init
      * This loads the errors from the session back into Ampache
      */
-    public static function auto_init()
+    public static function init()
     {
         if (is_array($_SESSION['errors'])) {
             // Re-insert them
@@ -144,5 +135,5 @@ class AmpError
                 self::add($key, $error);
             }
         }
-    } // auto_init
-} // end amperror.class
+    }
+}

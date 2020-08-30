@@ -26,6 +26,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 

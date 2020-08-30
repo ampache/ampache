@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\AmpError;
 
 if(php_sapi_name() != 'cli') {
         exit(1);

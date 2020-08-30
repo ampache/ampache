@@ -28,7 +28,7 @@ namespace Ampache\Application\Api;
 use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
 use Ampache\Config\AmpConfig;
-use AmpError;
+use Ampache\Module\System\AmpError;
 use Ampache\Model\Catalog;
 use Core;
 use Ampache\Module\Util\Ui;

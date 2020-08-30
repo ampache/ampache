@@ -28,6 +28,7 @@ use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Song;
 use Ampache\Model\Song_Preview;
 use Ampache\Model\Video;
+use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;

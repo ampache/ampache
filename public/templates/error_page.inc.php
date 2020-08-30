@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Ui;
 
 ?>

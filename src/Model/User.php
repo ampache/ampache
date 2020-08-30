@@ -29,7 +29,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
-use AmpError;
+use Ampache\Module\System\AmpError;
 use Ampache\Model\Art;
 use Ampache\Model\Artist;
 use Core;

@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\System\AmpError;
+
 require $prefix . '/templates/install_header.inc.php'; ?>
 <div class="jumbotron" style="margin-top: 70px">
     <h1><?php echo T_('Install Progress'); ?></h1>

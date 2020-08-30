@@ -24,7 +24,7 @@
 namespace Ampache\Module\Beets;
 
 use Ampache\Model\Album;
-use AmpError;
+use Ampache\Module\System\AmpError;
 use Ampache\Model\Metadata\Repository\Metadata;
 use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Model\library_item;

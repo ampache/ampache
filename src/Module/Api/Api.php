@@ -57,7 +57,7 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;
-use AmpError;
+use Ampache\Module\System\AmpError;
 use Core;
 
 /**

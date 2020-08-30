@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Config;
 
-use AmpError;
+use Ampache\Module\System\AmpError;
 
 /**
  * Config Class

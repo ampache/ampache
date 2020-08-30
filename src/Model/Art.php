@@ -33,7 +33,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use AmpError;
+use Ampache\Module\System\AmpError;
 use Core;
 use Exception;
 use getID3;

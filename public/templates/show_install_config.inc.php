@@ -21,6 +21,8 @@
  */
 
 // Try to guess the web path
+use Ampache\Module\System\AmpError;
+
 $web_path_guess = $_REQUEST['web_path'];
 if (empty($web_path_guess)) {
     $web_path_guess = get_web_path();

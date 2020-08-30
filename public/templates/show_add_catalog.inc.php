@@ -22,6 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
+use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Ui;
 
 $default_rename = "%T - %t";
