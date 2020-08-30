@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use AmpConfig;
 use Ampache\Module\Util\Browse;
 use Core;
-use Label;
+use Ampache\Model\Label;
 use Ampache\Model\Tag;
 
 final class TagAjaxHandler implements AjaxHandlerInterface

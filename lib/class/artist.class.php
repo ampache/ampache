@@ -4,6 +4,7 @@ declare(strict_types=0);
 
 use Ampache\Model\Album;
 use Ampache\Model\database_object;
+use Ampache\Model\Label;
 use Ampache\Model\Shoutbox;
 use Ampache\Model\Tag;
 use Ampache\Model\Useractivity;

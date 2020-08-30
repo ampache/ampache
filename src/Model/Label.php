@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,13 +20,18 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Model\Shoutbox;
-use Ampache\Model\database_object;
-use Ampache\Model\library_item;
-use Ampache\Model\Useractivity;
-use Ampache\Model\Userflag;
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
+use AmpConfig;
+use Art;
+use Core;
+use PDOStatement;
+use Rating;
+use Search;
 
 /**
  * Label class
@@ -40,35 +44,35 @@ class Label extends database_object implements library_item
     /* Variables from DB */
 
     /**
-     *  @var integer $id
+     * @var integer $id
      */
     public $id;
     /**
-     *  @var string $name
+     * @var string $name
      */
     public $name;
     /**
-     *  @var string $category
+     * @var string $category
      */
     public $category;
     /**
-     *  @var string $address
+     * @var string $address
      */
     public $address;
     /**
-     *  @var string $email
+     * @var string $email
      */
     public $email;
     /**
-     *  @var string $website
+     * @var string $website
      */
     public $website;
     /**
-     *  @var string $summary
+     * @var string $summary
      */
     public $summary;
     /**
-     *  @var integer $user
+     * @var integer $user
      */
     public $user;
 
@@ -122,10 +126,10 @@ class Label extends database_object implements library_item
     public function format($details = true)
     {
         unset($details);
-        $this->f_name       = scrub_out($this->name);
-        $this->link         = AmpConfig::get('web_path') . '/labels.php?action=show&label=' . scrub_out($this->id);
-        $this->f_link       = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\">" . $this->f_name;
-        $this->artists      = count($this->get_artists());
+        $this->f_name  = scrub_out($this->name);
+        $this->link    = AmpConfig::get('web_path') . '/labels.php?action=show&label=' . scrub_out($this->id);
+        $this->f_link  = "<a href=\"" . $this->link . "\" title=\"" . $this->f_name . "\">" . $this->f_name;
+        $this->artists = count($this->get_artists());
     }
 
     /**
@@ -184,9 +188,11 @@ class Label extends database_object implements library_item
     public function get_keywords()
     {
         $keywords          = array();
-        $keywords['label'] = array('important' => true,
+        $keywords['label'] = array(
+            'important' => true,
             'label' => T_('Label'),
-            'value' => $this->f_name);
+            'value' => $this->f_name
+        );
 
         return $keywords;
     }
@@ -348,8 +354,7 @@ class Label extends database_object implements library_item
         $user          = $data['user'] ?: Core::get_global('user')->id;
         $creation_date = $data['creation_date'] ?: time();
 
-        $sql = "INSERT INTO `label` (`name`, `category`, `summary`, `address`, `email`, `website`, `user`, `creation_date`) " .
-               "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `label` (`name`, `category`, `summary`, `address`, `email`, `website`, `user`, `creation_date`) " . "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($name, $category, $summary, $address, $email, $website, $user, $creation_date));
 
         return Dba::insert_id();
@@ -364,7 +369,7 @@ class Label extends database_object implements library_item
     public static function lookup(array $data, $label_id = 0)
     {
         $ret  = -1;
-        $name = trim((string) $data['name']);
+        $name = trim((string)$data['name']);
         if (!empty($name)) {
             $ret    = 0;
             $sql    = "SELECT `id` FROM `label` WHERE `name` = ?";
@@ -436,8 +441,7 @@ class Label extends database_object implements library_item
      */
     public function get_songs()
     {
-        $sql = "SELECT `song`.`id` FROM `song` " .
-               "LEFT JOIN `song_data` ON `song_data`.`song_id` = `song`.`id` ";
+        $sql = "SELECT `song`.`id` FROM `song` " . "LEFT JOIN `song_data` ON `song_data`.`song_id` = `song`.`id` ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
         }
@@ -497,9 +501,7 @@ class Label extends database_object implements library_item
      */
     public static function get_labels($artist_id)
     {
-        $sql = "SELECT `label`.`id`, `label`.`name` FROM `label` " .
-               "LEFT JOIN `label_asso` ON `label_asso`.`label` = `label`.`id` " .
-               "WHERE `label_asso`.`artist` = ?";
+        $sql        = "SELECT `label`.`id`, `label`.`name` FROM `label` " . "LEFT JOIN `label_asso` ON `label_asso`.`label` = `label`.`id` " . "WHERE `label_asso`.`artist` = ?";
         $db_results = Dba::read($sql, array($artist_id));
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -536,7 +538,7 @@ class Label extends database_object implements library_item
             $results .= ', ';
         }
 
-        $results = rtrim((string) $results, ', ');
+        $results = rtrim((string)$results, ', ');
 
         return $results;
     } // get_display
@@ -612,7 +614,7 @@ class Label extends database_object implements library_item
         $array = (is_array($labels)) ? $labels : preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labels);
         $ret   = array();
         foreach ($array as $label) {
-            $label = trim((string) $label);
+            $label = trim((string)$label);
             if (!empty($label)) {
                 if (Label::lookup(array('name' => $label)) > 0) {
                     $ret[] = $label;
@@ -622,4 +624,4 @@ class Label extends database_object implements library_item
 
         return (is_array($labels) ? $ret : implode(",", $ret));
     }
-} // end label.class
+}

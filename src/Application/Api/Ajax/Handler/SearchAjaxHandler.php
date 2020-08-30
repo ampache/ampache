@@ -29,7 +29,7 @@ use Ampache\Model\Album;
 use AmpConfig;
 use Art;
 use Artist;
-use Label;
+use Ampache\Model\Label;
 use Playlist;
 use Search;
 use Song;

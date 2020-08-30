@@ -36,7 +36,7 @@ use Ampache\Module\Util\Browse;
 use Catalog;
 use Ampache\Model\Channel;
 use Core;
-use Label;
+use Ampache\Model\Label;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Slideshow;
 use Song;

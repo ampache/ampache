@@ -1,3 +1,7 @@
+<?php
+use Ampache\Model\Video;
+
+?>
 <h3 class="box-title"><?php echo T_('Browse Ampache...'); ?></h3>
 <table class="tabledata">
     <tr id="browse_location">
@@ -41,4 +45,4 @@
             </td>
         <?php } ?>
     </tr>
-</table>use Ampache\Model\Video;
+</table>

@@ -3,6 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
 use Ampache\Model\Album;
+use Ampache\Model\Label;
 use Ampache\Model\License;
 use Ampache\Model\Plugin;
 use Ampache\Model\Shoutbox;

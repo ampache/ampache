@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use AmpConfig;
 use Catalog;
 use Core;
-use Label;
+use Ampache\Model\Label;
 use Ampache\Module\Util\Ui;
 
 final class LabelApplication implements ApplicationInterface
