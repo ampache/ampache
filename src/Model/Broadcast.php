@@ -31,7 +31,7 @@ use Art;
 use Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;
-use Tag;
+use Ampache\Model\Tag;
 
 class Broadcast extends database_object implements library_item
 {

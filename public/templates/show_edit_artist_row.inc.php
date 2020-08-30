@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Tag;
 use Ampache\Module\Authorization\Access;
 
 ?>

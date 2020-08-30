@@ -3,6 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
 use Ampache\Model\Shoutbox;
+use Ampache\Model\Tag;
 use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;
 use Ampache\Module\Statistics\Stats;

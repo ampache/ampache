@@ -30,7 +30,7 @@ use AmpConfig;
 use Ampache\Module\Util\Browse;
 use Core;
 use Label;
-use Tag;
+use Ampache\Model\Tag;
 
 final class TagAjaxHandler implements AjaxHandlerInterface
 {

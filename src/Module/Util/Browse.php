@@ -32,7 +32,7 @@ use Artist;
 use Catalog;
 use Playlist;
 use Song;
-use Tag;
+use Ampache\Model\Tag;
 use Video;
 
 /**

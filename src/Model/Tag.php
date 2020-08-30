@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,19 +20,26 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Model\library_item;
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use AmpConfig;
+use Art;
+use Catalog;
+use Core;
+use PDOStatement;
 
 /**
  * Tag Class
  *
  * This class handles all of the tag relation operations
- *
  */
-class Tag extends \Ampache\Model\database_object implements library_item
+class Tag extends database_object implements library_item
 {
     public $id;
     public $name;
@@ -119,17 +125,25 @@ class Tag extends \Ampache\Model\database_object implements library_item
 
         $idlist = '(' . implode(',', $ids) . ')';
 
-        $sql = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`object_id`, `tag_map`.`user` FROM `tag` " .
-            "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " .
-            "WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id` IN $idlist";
+        $sql = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`object_id`, `tag_map`.`user` FROM `tag` " . "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " . "WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id` IN $idlist";
 
         $db_results = Dba::read($sql);
 
         $tags    = array();
         $tag_map = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $tags[$row['object_id']][$row['tag_id']] = array('user' => $row['user'], 'id' => $row['tag_id'], 'name' => $row['name']);
-            $tag_map[$row['object_id']]              = array('id' => $row['id'], 'tag_id' => $row['tag_id'], 'user' => $row['user'], 'object_type' => $type, 'object_id' => $row['object_id']);
+            $tags[$row['object_id']][$row['tag_id']] = array(
+                'user' => $row['user'],
+                'id' => $row['tag_id'],
+                'name' => $row['name']
+            );
+            $tag_map[$row['object_id']] = array(
+                'id' => $row['id'],
+                'tag_id' => $row['tag_id'],
+                'user' => $row['user'],
+                'object_type' => $type,
+                'object_id' => $row['object_id']
+            );
         }
 
         // Run through our original ids as we also want to cache NULL
@@ -168,14 +182,14 @@ class Tag extends \Ampache\Model\database_object implements library_item
 
         $cleaned_value = str_replace('Folk, World, & Country', 'Folk World & Country', $value);
 
-        if (!strlen((string) $cleaned_value)) {
+        if (!strlen((string)$cleaned_value)) {
             return false;
         }
 
         if ($user === true) {
-            $uid = (int) (Core::get_global('user')->id);
+            $uid = (int)(Core::get_global('user')->id);
         } else {
-            $uid = (int) ($user);
+            $uid = (int)($user);
         }
 
         // Check and see if the tag exists, if not create it, we need the tag id from this
@@ -191,11 +205,11 @@ class Tag extends \Ampache\Model\database_object implements library_item
         }
 
         // We've got the tag id, let's see if it's already got a map, if not then create the map and return the value
-        if (!$map_id = self::tag_map_exists($type, $object_id, (int) $tag_id, $uid)) {
-            $map_id = self::add_tag_map($type, $object_id, (int) $tag_id, $user);
+        if (!$map_id = self::tag_map_exists($type, $object_id, (int)$tag_id, $uid)) {
+            $map_id = self::add_tag_map($type, $object_id, (int)$tag_id, $user);
         }
 
-        return (int) $map_id;
+        return (int)$map_id;
     } // add
 
     /**
@@ -206,13 +220,13 @@ class Tag extends \Ampache\Model\database_object implements library_item
      */
     public static function add_tag($value)
     {
-        if (!strlen((string) $value)) {
+        if (!strlen((string)$value)) {
             return null;
         }
 
         $sql = "REPLACE INTO `tag` SET `name` = ?";
         Dba::write($sql, array($value));
-        $insert_id = (int) Dba::insert_id();
+        $insert_id = (int)Dba::insert_id();
 
         parent::add_to_cache('tag_name', $value, array($insert_id));
 
@@ -227,7 +241,7 @@ class Tag extends \Ampache\Model\database_object implements library_item
      */
     public function update(array $data)
     {
-        if (!strlen((string) $data['name'])) {
+        if (!strlen((string)$data['name'])) {
             return false;
         }
         debug_event('tag.class', 'Updating tag {' . $this->id . '} with name {' . $data['name'] . '}...', 5);
@@ -237,8 +251,8 @@ class Tag extends \Ampache\Model\database_object implements library_item
 
         if ($data['edit_tags']) {
             $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $data['edit_tags']);
-            $filterunder = str_replace('_',', ', $filterfolk);
-            $filter      = str_replace(';',', ', $filterunder);
+            $filterunder = str_replace('_', ', ', $filterfolk);
+            $filter      = str_replace(';', ', ', $filterunder);
             $filter_list = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
             $tag_names   = (is_array($filter_list)) ? array_unique($filter_list) : array();
 
@@ -276,15 +290,7 @@ class Tag extends \Ampache\Model\database_object implements library_item
         if ($this->id != $merge_to) {
             debug_event('tag.class', 'Merging tag ' . $this->id . ' into ' . $merge_to . ')...', 5);
 
-            $sql = "INSERT IGNORE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) " .
-                   "SELECT " . $merge_to . ",`user`, `object_type`, `object_id` " .
-                   "FROM `tag_map` AS `tm` " .
-                   "WHERE `tm`.`tag_id` = " . $this->id . " AND NOT EXISTS (" .
-                       "SELECT 1 FROM `tag_map` " .
-                       "WHERE `tag_map`.`tag_id` = " . $merge_to . " " .
-                         "AND `tag_map`.`object_id` = `tm`.`object_id` " .
-                         "AND `tag_map`.`object_type` = `tm`.`object_type` " .
-                         "AND `tag_map`.`user` = `tm`.`user`)";
+            $sql = "INSERT IGNORE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) " . "SELECT " . $merge_to . ",`user`, `object_type`, `object_id` " . "FROM `tag_map` AS `tm` " . "WHERE `tm`.`tag_id` = " . $this->id . " AND NOT EXISTS (" . "SELECT 1 FROM `tag_map` " . "WHERE `tag_map`.`tag_id` = " . $merge_to . " " . "AND `tag_map`.`object_id` = `tm`.`object_id` " . "AND `tag_map`.`object_type` = `tm`.`object_type` " . "AND `tag_map`.`user` = `tm`.`user`)";
             Dba::write($sql);
             if ($is_persistent) {
                 $sql = 'INSERT INTO `tag_merge` (`tag_id`, `merged_to`) VALUES (?, ?)';
@@ -300,11 +306,7 @@ class Tag extends \Ampache\Model\database_object implements library_item
      */
     public function get_merged_tags()
     {
-        $sql = "SELECT `tag`.`id`, `tag`.`name`" .
-            "FROM `tag_merge` " .
-            "INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` " .
-            "WHERE `tag_merge`.`tag_id` = ? " .
-            "ORDER BY `tag`.`name` ";
+        $sql = "SELECT `tag`.`id`, `tag`.`name`" . "FROM `tag_merge` " . "INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` " . "WHERE `tag_merge`.`tag_id` = ? " . "ORDER BY `tag`.`name` ";
 
         $db_results = Dba::read($sql, array($this->id));
 
@@ -328,9 +330,9 @@ class Tag extends \Ampache\Model\database_object implements library_item
     public static function add_tag_map($type, $object_id, $tag_id, $user = true)
     {
         if ($user === true) {
-            $uid = (int) (Core::get_global('user')->id);
+            $uid = (int)(Core::get_global('user')->id);
         } else {
-            $uid = (int) ($user);
+            $uid = (int)($user);
         }
 
         if (!InterfaceImplementationChecker::is_library_item($type)) {
@@ -338,8 +340,8 @@ class Tag extends \Ampache\Model\database_object implements library_item
 
             return false;
         }
-        $tag_id  = (int) ($tag_id);
-        $item_id = (int) ($object_id);
+        $tag_id  = (int)($tag_id);
+        $item_id = (int)($object_id);
 
         if (!$tag_id || !$item_id) {
             return false;
@@ -352,13 +354,13 @@ class Tag extends \Ampache\Model\database_object implements library_item
             $merges[] = array('id' => $parent->id, 'name' => $parent->name);
         }
         foreach ($merges as $tag) {
-            $sql = "INSERT INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) " .
-                "VALUES (?, ?, ?, ?)";
+            $sql = "INSERT INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) " . "VALUES (?, ?, ?, ?)";
             Dba::write($sql, array($tag['id'], $uid, $type, $item_id));
         }
-        $insert_id = (int) Dba::insert_id();
+        $insert_id = (int)Dba::insert_id();
 
-        parent::add_to_cache('tag_map_' . $type, $insert_id, array('tag_id' => $tag_id, 'user' => $uid, 'object_type' => $type, 'object_id' => $item_id));
+        parent::add_to_cache('tag_map_' . $type, $insert_id,
+            array('tag_id' => $tag_id, 'user' => $uid, 'object_type' => $type, 'object_id' => $item_id));
 
         return $insert_id;
     } // add_tag_map
@@ -371,28 +373,21 @@ class Tag extends \Ampache\Model\database_object implements library_item
      */
     public static function garbage_collection()
     {
-        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `song` ON `song`.`id`=`tag_map`.`object_id` " .
-            "WHERE `tag_map`.`object_type`='song' AND `song`.`id` IS NULL";
+        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `song` ON `song`.`id`=`tag_map`.`object_id` " . "WHERE `tag_map`.`object_type`='song' AND `song`.`id` IS NULL";
         Dba::write($sql);
 
-        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `album` ON `album`.`id`=`tag_map`.`object_id` " .
-            "WHERE `tag_map`.`object_type`='album' AND `album`.`id` IS NULL";
+        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `album` ON `album`.`id`=`tag_map`.`object_id` " . "WHERE `tag_map`.`object_type`='album' AND `album`.`id` IS NULL";
         Dba::write($sql);
 
-        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `artist` ON `artist`.`id`=`tag_map`.`object_id` " .
-            "WHERE `tag_map`.`object_type`='artist' AND `artist`.`id` IS NULL";
+        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `artist` ON `artist`.`id`=`tag_map`.`object_id` " . "WHERE `tag_map`.`object_type`='artist' AND `artist`.`id` IS NULL";
         Dba::write($sql);
 
         // Now nuke the tags themselves
-        $sql = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` " .
-            "WHERE `tag_map`.`id` IS NULL " .
-            "AND NOT EXISTS (SELECT 1 FROM `tag_merge` WHERE `tag_merge`.`tag_id` = `tag`.`id`)";
+        $sql = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` " . "WHERE `tag_map`.`id` IS NULL " . "AND NOT EXISTS (SELECT 1 FROM `tag_merge` WHERE `tag_merge`.`tag_id` = `tag`.`id`)";
         Dba::write($sql);
 
         // delete duplicates
-        $sql = "DELETE `b` FROM `tag_map` AS `a`, `tag_map` AS `b` " .
-               "WHERE `a`.`id` < `b`.`id` AND `a`.`tag_id` <=> `b`.`tag_id` AND " .
-               "`a`.`object_id` <=> `b`.`object_id` AND `a`.`object_type` <=> `b`.`object_type`";
+        $sql = "DELETE `b` FROM `tag_map` AS `a`, `tag_map` AS `b` " . "WHERE `a`.`id` < `b`.`id` AND `a`.`tag_id` <=> `b`.`tag_id` AND " . "`a`.`object_id` <=> `b`.`object_id` AND `a`.`object_type` <=> `b`.`object_type`";
         Dba::write($sql);
     }
 
@@ -406,8 +401,7 @@ class Tag extends \Ampache\Model\database_object implements library_item
         $sql = "DELETE FROM `tag_map` WHERE `tag_map`.`tag_id` = ?";
         Dba::write($sql, array($this->id));
 
-        $sql = "DELETE FROM `tag_merge` " .
-               "WHERE `tag_merge`.`tag_id` = ?";
+        $sql = "DELETE FROM `tag_merge` " . "WHERE `tag_merge`.`tag_id` = ?";
         Dba::write($sql, array($this->id));
 
         $sql = "DELETE FROM `tag` WHERE `tag`.`id` = ? ";
@@ -428,7 +422,7 @@ class Tag extends \Ampache\Model\database_object implements library_item
     public static function tag_exists($value)
     {
         if (parent::is_cached('tag_name', $value)) {
-            return (int) (parent::get_from_cache('tag_name', $value))[0];
+            return (int)(parent::get_from_cache('tag_name', $value))[0];
         }
 
         $sql        = "SELECT `id` FROM `tag` WHERE `name` = ?";
@@ -438,7 +432,7 @@ class Tag extends \Ampache\Model\database_object implements library_item
 
         parent::add_to_cache('tag_name', $results['name'], $results);
 
-        return (int) $results['id'];
+        return (int)$results['id'];
     } // tag_exists
 
     /**
@@ -459,8 +453,7 @@ class Tag extends \Ampache\Model\database_object implements library_item
             return false;
         }
 
-        $sql = "SELECT * FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id` = `tag_map`.`tag_id` LEFT JOIN `tag_merge` ON `tag`.`id`=`tag_merge`.`tag_id` " .
-            "WHERE (`tag_map`.`tag_id` = ? OR `tag_map`.`tag_id` = `tag_merge`.`merged_to`) AND `tag_map`.`user` = ? AND `tag_map`.`object_id` = ? AND `tag_map`.`object_type` = ?";
+        $sql        = "SELECT * FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id` = `tag_map`.`tag_id` LEFT JOIN `tag_merge` ON `tag`.`id`=`tag_merge`.`tag_id` " . "WHERE (`tag_map`.`tag_id` = ? OR `tag_map`.`tag_id` = `tag_merge`.`merged_to`) AND `tag_map`.`user` = ? AND `tag_map`.`object_id` = ? AND `tag_map`.`object_type` = ?";
         $db_results = Dba::read($sql, array($tag_id, $user, $object_id, $type));
 
         $results = Dba::fetch_assoc($db_results);
@@ -482,13 +475,10 @@ class Tag extends \Ampache\Model\database_object implements library_item
             return array();
         }
 
-        $object_id = (int) ($object_id);
+        $object_id = (int)($object_id);
 
-        $limit = (int) ($limit);
-        $sql   = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " .
-            "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " .
-            "WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id`='$object_id' " .
-            "LIMIT $limit";
+        $limit = (int)($limit);
+        $sql   = "SELECT `tag_map`.`id`, `tag_map`.`tag_id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " . "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " . "WHERE `tag_map`.`object_type`='$type' AND `tag_map`.`object_id`='$object_id' " . "LIMIT $limit";
 
         $db_results = Dba::read($sql);
 
@@ -515,9 +505,7 @@ class Tag extends \Ampache\Model\database_object implements library_item
         }
 
         $params = array($type);
-        $sql    = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " .
-            "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " .
-            "WHERE `tag_map`.`object_type` = ?";
+        $sql    = "SELECT `tag_map`.`id`, `tag`.`name`, `tag_map`.`user` FROM `tag` " . "LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` " . "WHERE `tag_map`.`object_type` = ?";
         if ($object_id !== null) {
             $sql .= " AND `tag_map`.`object_id` = ?";
             $params[] = $object_id;
@@ -551,13 +539,12 @@ class Tag extends \Ampache\Model\database_object implements library_item
         if ($count) {
             $limit_sql = " LIMIT ";
             if ($offset) {
-                $limit_sql .= (string) ($offset) . ', ';
+                $limit_sql .= (string)($offset) . ', ';
             }
-            $limit_sql .= (string) ($count);
+            $limit_sql .= (string)($count);
         }
 
-        $sql = "SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` " .
-            "WHERE `tag_map`.`tag_id` = ? AND `tag_map`.`object_type` = ? ";
+        $sql = "SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` " . "WHERE `tag_map`.`tag_id` = ? AND `tag_map`.`object_type` = ? ";
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
         }
@@ -567,7 +554,7 @@ class Tag extends \Ampache\Model\database_object implements library_item
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['object_id'];
+            $results[] = (int)$row['object_id'];
         }
 
         return $results;
@@ -591,13 +578,12 @@ class Tag extends \Ampache\Model\database_object implements library_item
         if ($count) {
             $limit_sql = " LIMIT ";
             if ($offset) {
-                $limit_sql .= (string) ($offset) . ', ';
+                $limit_sql .= (string)($offset) . ', ';
             }
-            $limit_sql .= (string) ($count);
+            $limit_sql .= (string)($count);
         }
 
-        $sql = "SELECT DISTINCT `tag_map`.`tag_id` FROM `tag_map` " .
-            "WHERE `tag_map`.`object_type` = ? ";
+        $sql = "SELECT DISTINCT `tag_map`.`tag_id` FROM `tag_map` " . "WHERE `tag_map`.`object_type` = ? ";
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
         }
@@ -607,11 +593,12 @@ class Tag extends \Ampache\Model\database_object implements library_item
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['tag_id'];
+            $results[] = (int)$row['tag_id'];
         }
 
         return $results;
     } // get_tag_ids
+
     /**
      * get_tags
      * This is a non-object non type dependent function that just returns tags
@@ -631,13 +618,9 @@ class Tag extends \Ampache\Model\database_object implements library_item
 
         $results = array();
 
-        $sql = "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` " .
-            "FROM `tag_map` " .
-            "LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` " .
-            "WHERE `tag`.`is_hidden` = false " .
-            "GROUP BY `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden` ";
+        $sql = "SELECT `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` " . "FROM `tag_map` " . "LEFT JOIN `tag` ON `tag`.`id`=`tag_map`.`tag_id` " . "WHERE `tag`.`is_hidden` = false " . "GROUP BY `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden` ";
         if (!empty($type)) {
-            $sql .= ", `tag_map`.`object_type` = '" . (string) scrub_in($type) . "' ";
+            $sql .= ", `tag_map`.`object_type` = '" . (string)scrub_in($type) . "' ";
         }
         $order = "`" . $order . "`";
         if ($order == 'count') {
@@ -651,7 +634,12 @@ class Tag extends \Ampache\Model\database_object implements library_item
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['tag_id']] = array('id' => $row['tag_id'], 'name' => $row['name'], 'is_hidden' => $row['is_hidden'], 'count' => $row['count']);
+            $results[$row['tag_id']] = array(
+                'id' => $row['tag_id'],
+                'name' => $row['name'],
+                'is_hidden' => $row['is_hidden'],
+                'count' => $row['count']
+            );
         }
 
         parent::add_to_cache('tags_list', 'no_name', $results);
@@ -690,7 +678,7 @@ class Tag extends \Ampache\Model\database_object implements library_item
             $results .= ', ';
         }
 
-        $results = rtrim((string) $results, ', ');
+        $results = rtrim((string)$results, ', ');
 
         return $results;
     } // get_display
@@ -706,12 +694,13 @@ class Tag extends \Ampache\Model\database_object implements library_item
      */
     public static function update_tag_list($tags_comma, $type, $object_id, $overwrite)
     {
-        debug_event('tag.class', 'Updating tags for values {' . $tags_comma . '} type {' . $type . '} object_id {' . $object_id . '}', 5);
+        debug_event('tag.class',
+            'Updating tags for values {' . $tags_comma . '} type {' . $type . '} object_id {' . $object_id . '}', 5);
 
         $ctags       = self::get_top_tags($type, $object_id);
         $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags_comma);
-        $filterunder = str_replace('_',', ', $filterfolk);
-        $filter      = str_replace(';',', ', $filterunder);
+        $filterunder = str_replace('_', ', ', $filterfolk);
+        $filter      = str_replace(';', ', ', $filterunder);
         $filter_list = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
         $editedTags  = (is_array($filter_list)) ? array_unique($filter_list) : array();
 
@@ -731,7 +720,8 @@ class Tag extends \Ampache\Model\database_object implements library_item
                     unset($editedTags[$ctag->name]);
                 } else {
                     if ($overwrite && $ctv['user'] == 0) {
-                        debug_event('tag.class', 'The tag {' . $ctag->name . '} was not found in the new list. Delete it.', 5);
+                        debug_event('tag.class',
+                            'The tag {' . $ctag->name . '} was not found in the new list. Delete it.', 5);
                         $ctag->remove_map($type, $object_id, false);
                     }
                 }
@@ -758,15 +748,15 @@ class Tag extends \Ampache\Model\database_object implements library_item
             $taglist = $tags;
         } else {
             $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags);
-            $filterunder = str_replace('_',', ', $filterfolk);
-            $filter      = str_replace(';',', ', $filterunder);
+            $filterunder = str_replace('_', ', ', $filterfolk);
+            $filter      = str_replace(';', ', ', $filterunder);
             $filter_list = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
             $taglist     = (is_array($filter_list)) ? array_unique($filter_list) : array();
         }
 
         $ret = array();
         foreach ($taglist as $tag) {
-            $tag = trim((string) $tag);
+            $tag = trim((string)$tag);
             if (!empty($tag)) {
                 if (self::tag_exists($tag)) {
                     $ret[] = $tag;
@@ -826,9 +816,9 @@ class Tag extends \Ampache\Model\database_object implements library_item
         }
 
         if ($user === true) {
-            $uid = (int) (Core::get_global('user')->id);
+            $uid = (int)(Core::get_global('user')->id);
         } else {
-            $uid = (int) ($user);
+            $uid = (int)($user);
         }
 
         $sql = "DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? AND `user` = ?";
@@ -852,9 +842,11 @@ class Tag extends \Ampache\Model\database_object implements library_item
     public function get_keywords()
     {
         $keywords        = array();
-        $keywords['tag'] = array('important' => true,
+        $keywords['tag'] = array(
+            'important' => true,
             'label' => T_('Tag'),
-            'value' => $this->name);
+            'value' => $this->name
+        );
 
         return $keywords;
     }
@@ -976,9 +968,9 @@ class Tag extends \Ampache\Model\database_object implements library_item
     public static function can_edit_tag_map($object_type, $object_id, $user = true)
     {
         if ($user === true) {
-            $uid = (int) (Core::get_global('user')->id);
+            $uid = (int)(Core::get_global('user')->id);
         } else {
-            $uid = (int) ($user);
+            $uid = (int)($user);
         }
 
         if ($uid > 0) {
@@ -1013,4 +1005,4 @@ class Tag extends \Ampache\Model\database_object implements library_item
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
-} // end tag.class
+}

@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Tag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 

@@ -18,7 +18,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Ampache\Model\Tag;
+
+?>
 <div>
     <form method="post" id="edit_broadcast_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">

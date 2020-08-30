@@ -53,7 +53,7 @@ use Search;
 use Share;
 use SimpleXMLElement;
 use Song;
-use Tag;
+use Ampache\Model\Tag;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
 

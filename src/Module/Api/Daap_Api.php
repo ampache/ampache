@@ -33,7 +33,7 @@ use Playlist;
 use Rating;
 use Search;
 use Song;
-use Tag;
+use Ampache\Model\Tag;
 
 /**
  * DAAP Class

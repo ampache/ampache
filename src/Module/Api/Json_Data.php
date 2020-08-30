@@ -42,7 +42,7 @@ use Share;
 use Ampache\Model\Shoutbox;
 use Song;
 use Ampache\Module\Playback\Stream;
-use Tag;
+use Ampache\Model\Tag;
 use Ampache\Model\User;
 use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;

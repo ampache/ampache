@@ -40,7 +40,7 @@ use Podcast;
 use Podcast_Episode;
 use Search;
 use Song;
-use Tag;
+use Ampache\Model\Tag;
 use TVShow;
 use TVShow_Episode;
 use TVShow_Season;

@@ -32,7 +32,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Core;
 use Label;
-use Tag;
+use Ampache\Model\Tag;
 use Ampache\Module\Util\Ui;
 
 final class EditApplication implements ApplicationInterface
