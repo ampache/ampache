@@ -62,7 +62,7 @@ use Ampache\Module\Util\Ui;
         </li>
     <?php
 } ?>
-<?php if (Access::check_function('batch_download') && check_can_zip('tmp_playlist')) { ?>
+<?php if (Access::check_function('batch_download') && check_can_zip('Ampache\Model\Tmp_Playlist')) { ?>
     <li>
         <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo Core::get_global('user')->playlist->id; ?>">
             <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>

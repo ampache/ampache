@@ -25,6 +25,7 @@ use Ampache\Model\Album;
 use Ampache\Model\License;
 use Ampache\Model\Shoutbox;
 use Ampache\Model\Tag;
+use Ampache\Model\Tmp_Playlist;
 use Ampache\Model\User;
 use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;

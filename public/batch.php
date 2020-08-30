@@ -89,7 +89,7 @@ if (InterfaceImplementationChecker::is_playable_item($object_type)) {
 } else {
     // Switch on the actions
     switch ($object_type) {
-        case 'tmp_playlist':
+        case 'Ampache\Model\Tmp_Playlist':
             $media_ids = Core::get_global('user')->playlist->get_items();
             $name      = Core::get_global('user')->username . ' - Playlist';
             break;

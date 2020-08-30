@@ -54,7 +54,7 @@ debug_event('cron', 'started cron process', 3);
  * Ampache\Model\Userflag::garbage_collection();
  * Ampache\Model\Useractivity::garbage_collection();
  * Playlist::garbage_collection();
- * Tmp_Playlist::garbage_collection(); FIXME Duplicated with Session
+ * Ampache\Model\Tmp_Playlist::garbage_collection(); FIXME Duplicated with Session
  * Shoutbox::garbage_collection();
  * Tag::garbage_collection();
  * Metadata::garbage_collection();
@@ -68,7 +68,7 @@ Catalog::garbage_collection();
  * Query::garbage_collection();
  * Stream_Playlist::garbage_collection();
  * Song_Preview::garbage_collection();
- * Tmp_Playlist::garbage_collection(); FIXME Duplicated with Catalog
+ * Ampache\Model\Tmp_Playlist::garbage_collection(); FIXME Duplicated with Catalog
  */
 Session::garbage_collection();
 

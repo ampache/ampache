@@ -32,7 +32,7 @@ use Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;
 use Song_Preview;
-use Tmp_Playlist;
+use Ampache\Model\Tmp_Playlist;
 
 /**
  *
