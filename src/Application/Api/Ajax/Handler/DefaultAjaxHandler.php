@@ -28,7 +28,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
-use Browse;
+use Ampache\Module\Util\Browse;
 use Core;
 use Playlist;
 use Rating;

@@ -21,6 +21,7 @@
  */
 
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Util\Browse;
 
 $sql    = Stats::get_recent_sql('album', $user_id);
 $browse = new Browse();

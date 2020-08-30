@@ -21,6 +21,7 @@
  */
 
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Util\Browse;
 use Ampache\Module\Util\Ui;
 
 $threshold = AmpConfig::get('stats_threshold');

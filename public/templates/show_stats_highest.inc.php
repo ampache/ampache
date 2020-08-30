@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Util\Browse;
+
 $sql    = Rating::get_highest_sql('song');
 $browse = new Browse();
 $browse->set_type('song', $sql);

@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,10 +20,20 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\Util;
+
 use Ampache\Model\Album;
 use Ampache\Model\Query;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Util\Ui;
+use AmpConfig;
+use Artist;
+use Catalog;
+use Playlist;
+use Song;
+use Tag;
+use Video;
 
 /**
  * Browse Class
@@ -82,7 +91,7 @@ class Browse extends Query
      */
     public function add_supplemental_object($class, $uid)
     {
-        $_SESSION['browse']['supplemental'][$this->id][$class] = (int) ($uid);
+        $_SESSION['browse']['supplemental'][$this->id][$class] = (int)($uid);
 
         return true;
     } // add_supplemental_object
@@ -151,14 +160,8 @@ class Browse extends Query
 
         // Limit is based on the user's preferences if this is not a
         // simple browse because we've got too much here
-        if ($this->get_start() >= 0 && (count($object_ids) > $this->get_start()) &&
-            ! $this->is_simple()) {
-            $object_ids = array_slice(
-                $object_ids,
-                $this->get_start(),
-                $this->get_offset(),
-                true
-            );
+        if ($this->get_start() >= 0 && (count($object_ids) > $this->get_start()) && !$this->is_simple()) {
+            $object_ids = array_slice($object_ids, $this->get_start(), $this->get_offset(), true);
         } else {
             if (!count($object_ids)) {
                 $this->set_total(0);
@@ -176,16 +179,16 @@ class Browse extends Query
         $match = '';
         // Format any matches we have so we can show them to the masses
         if ($filter_value = $this->get_filter('alpha_match')) {
-            $match = ' (' . (string) $filter_value . ')';
+            $match = ' (' . (string)$filter_value . ')';
         } elseif ($filter_value = $this->get_filter('starts_with')) {
-            $match = ' (' . (string) $filter_value . ')';
+            $match = ' (' . (string)$filter_value . ')';
         /*} elseif ($filter_value = $this->get_filter('regex_match')) {
             $match = ' (' . (string) $filter_value . ')';
         } elseif ($filter_value = $this->get_filter('regex_not_match')) {
             $match = ' (' . (string) $filter_value . ')';*/
         } elseif ($filter_value = $this->get_filter('catalog')) {
             // Get the catalog title
-            $catalog = Catalog::create_from_id((int) ((string) $filter_value));
+            $catalog = Catalog::create_from_id((int)((string)$filter_value));
             $match   = ' (' . $catalog->name . ')';
         }
 
@@ -199,7 +202,7 @@ class Browse extends Query
         // Set the correct classes based on type
         $class = "box browse_" . $type;
 
-        $argument_param = ($argument ? '&argument=' . scrub_in((string) $argument) : '');
+        $argument_param = ($argument ? '&argument=' . scrub_in((string)$argument) : '');
 
         debug_event('browse.class', 'Show objects called for type {' . $type . '}', 5);
 
@@ -291,7 +294,7 @@ class Browse extends Query
                 break;
             case 'song_preview':
                 $box_title = T_('Songs');
-                $box_req   =  Ui::find_template('show_song_previews.inc.php');
+                $box_req   = Ui::find_template('show_song_previews.inc.php');
                 break;
             case 'channel':
                 $box_title = T_('Channels');
@@ -299,7 +302,7 @@ class Browse extends Query
                 break;
             case 'broadcast':
                 $box_title = T_('Broadcasts');
-                $box_req   =  Ui::find_template('show_broadcasts.inc.php');
+                $box_req   = Ui::find_template('show_broadcasts.inc.php');
                 break;
             case 'license':
                 $box_title = T_('Media Licenses');
@@ -346,8 +349,8 @@ class Browse extends Query
                 $box_req   = Ui::find_template('show_podcasts.inc.php');
                 break;
             case 'podcast_episode':
-                $box_title  = T_('Podcast Episodes');
-                $box_req    = Ui::find_template('show_podcast_episodes.inc.php');
+                $box_title = T_('Podcast Episodes');
+                $box_req   = Ui::find_template('show_podcast_episodes.inc.php');
                 break;
             default:
                 break;
@@ -402,7 +405,7 @@ class Browse extends Query
     {
         foreach ($request as $key => $value) {
             // reinterpret v as a list of int
-            $list = explode(',', (string) $value);
+            $list = explode(',', (string)$value);
             $ok   = true;
             foreach ($list as $item) {
                 if (!is_numeric($item)) {
@@ -429,20 +432,24 @@ class Browse extends Query
     {
         $name = 'browse_' . $type . '_pages';
         if ((filter_has_var(INPUT_COOKIE, $name))) {
-            $this->set_use_pages(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
+            $this->set_use_pages(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
+                    FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
         }
         $name = 'browse_' . $type . '_alpha';
         if ((filter_has_var(INPUT_COOKIE, $name))) {
-            $this->set_use_alpha(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
+            $this->set_use_alpha(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
+                    FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
         } else {
-            $default_alpha = (!AmpConfig::get('libitem_browse_alpha')) ? array() : explode(",", AmpConfig::get('libitem_browse_alpha'));
+            $default_alpha = (!AmpConfig::get('libitem_browse_alpha')) ? array() : explode(",",
+                AmpConfig::get('libitem_browse_alpha'));
             if (in_array($type, $default_alpha)) {
                 $this->set_use_alpha(true, false);
             }
         }
         $name = 'browse_' . $type . '_grid_view';
         if ((filter_has_var(INPUT_COOKIE, $name))) {
-            $this->set_grid_view(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
+            $this->set_grid_view(filter_input(INPUT_COOKIE, $name, FILTER_SANITIZE_STRING,
+                    FILTER_FLAG_NO_ENCODE_QUOTES) == 'true');
         }
 
         parent::set_type($type, $custom_base);
@@ -585,7 +592,7 @@ class Browse extends Query
      */
     public function get_threshold()
     {
-        return (string) $this->_state['threshold'];
+        return (string)$this->_state['threshold'];
     }
 
     /**
@@ -601,4 +608,4 @@ class Browse extends Query
 
         return $css;
     }
-} // end browse.class
+}

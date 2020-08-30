@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use AmpConfig;
-use Browse;
+use Ampache\Module\Util\Browse;
 use Core;
 use Tag;
 use Ampache\Module\Util\Ui;

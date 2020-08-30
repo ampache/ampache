@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use AmpError;
-use Browse;
+use Ampache\Module\Util\Browse;
 use Core;
 use Ampache\Module\Util\Mailer;
 use Preference;

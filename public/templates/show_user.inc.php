@@ -22,6 +22,7 @@
 
 use Ampache\Model\Plugin;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Util\Browse;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 

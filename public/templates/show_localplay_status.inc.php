@@ -21,6 +21,7 @@
  */
 
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Util\Browse;
 use Ampache\Module\Util\Ui;
 
 $status      = $localplay->status();

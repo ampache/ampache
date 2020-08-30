@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application\Api;
 
 use Ampache\Application\ApplicationInterface;
-use Browse;
+use Ampache\Module\Util\Browse;
 use Core;
 use Playlist;
 

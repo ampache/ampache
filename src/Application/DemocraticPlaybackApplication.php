@@ -27,7 +27,7 @@ namespace Ampache\Application;
 
 use Ampache\Module\Authorization\Access;
 use AmpConfig;
-use Browse;
+use Ampache\Module\Util\Browse;
 use Core;
 use Democratic;
 use Song;

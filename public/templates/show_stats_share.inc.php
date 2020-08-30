@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Util\Browse;
+
 $object_ids = Share::get_share_list();
 $browse     = new Browse();
 $browse->set_type('share');

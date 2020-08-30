@@ -31,7 +31,7 @@ use Ampache\Model\Album;
 use AmpConfig;
 use Artist;
 use Ampache\Module\Artist\Artist_Event;
-use Browse;
+use Ampache\Module\Util\Browse;
 use Catalog;
 use Ampache\Model\Channel;
 use Core;

@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Module\Util\Browse;
 use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path');

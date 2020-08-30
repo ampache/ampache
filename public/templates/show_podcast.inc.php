@@ -24,6 +24,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\AmpacheRss;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Browse;
 use Ampache\Module\Util\Ui;
 
 $browse = new Browse();

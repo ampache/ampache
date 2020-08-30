@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Util\Browse;
+
 $sql    = Userflag::get_latest_sql('album');
 $browse = new Browse();
 $browse->set_type('album', $sql);

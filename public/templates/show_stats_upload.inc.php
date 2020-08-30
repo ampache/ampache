@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Util\Browse;
+
 $sql    = Catalog::get_uploads_sql('song', (int) Core::get_global('user')->id);
 $browse = new Browse();
 $browse->set_type('song', $sql);
