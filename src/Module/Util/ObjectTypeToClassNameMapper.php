@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Util;
 
 use Ampache\Model\Album;
+use Ampache\Model\Playlist;
 use Ampache\Model\Song;
 
 /**
@@ -37,6 +38,7 @@ final class ObjectTypeToClassNameMapper
     private const OBJECT_TYPE_MAPPING = [
         'album' => Album::class,
         'song' => Song::class,
+        'playlist' => Playlist::class,
     ];
 
     public static function map(string $object_type)

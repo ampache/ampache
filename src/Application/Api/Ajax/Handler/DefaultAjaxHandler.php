@@ -30,7 +30,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Ampache\Module\Util\Browse;
 use Core;
-use Playlist;
+use Ampache\Model\Playlist;
 use Ampache\Model\Rating;
 use Ampache\Model\Song;
 use Ampache\Module\Statistics\Stats;

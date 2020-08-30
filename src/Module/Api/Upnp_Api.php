@@ -35,7 +35,7 @@ use DOMDocument;
 use Live_Stream;
 use Ampache\Model\Movie;
 use Personal_Video;
-use Playlist;
+use Ampache\Model\Playlist;
 use Ampache\Model\Podcast;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Search;

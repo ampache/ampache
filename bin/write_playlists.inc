@@ -21,6 +21,7 @@
  */
 
 use Ampache\Model\Album;
+use Ampache\Model\Playlist;
 use Ampache\Module\Playback\Stream_Playlist;
 
 define('NO_SESSION', '1');

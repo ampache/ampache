@@ -30,7 +30,7 @@ use Ampache\Module\Api\Ajax;
 use AmpConfig;
 use Artist;
 use Catalog;
-use Playlist;
+use Ampache\Model\Playlist;
 use Ampache\Model\Song;
 use Ampache\Model\Tag;
 use Ampache\Model\Video;

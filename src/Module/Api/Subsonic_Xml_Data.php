@@ -34,7 +34,7 @@ use Artist;
 use Catalog;
 use Ampache\Module\System\Dba;
 use Live_Stream;
-use Playlist;
+use Ampache\Model\Playlist;
 use Ampache\Model\Podcast;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Preference;
@@ -1027,7 +1027,7 @@ class Subsonic_Xml_Data
     /**
      * addPlaylist
      * @param SimpleXMLElement $xml
-     * @param Playlist $playlist
+     * @param \Ampache\Model\Playlist $playlist
      * @param boolean $songs
      */
     public static function addPlaylist($xml, $playlist, $songs = false)

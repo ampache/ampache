@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Playlist;
 use Ampache\Model\Plugin;
 use Ampache\Model\Preference;
 use Ampache\Model\Song;

@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,15 +20,20 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Model\playlist_object;
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use AmpConfig;
+use Core;
+use PDOStatement;
 
 /**
  * Playlist Class
  * This class handles playlists in ampache. it references the playlist* tables
- *
  */
 class Playlist extends playlist_object
 {
@@ -138,7 +142,7 @@ class Playlist extends playlist_object
         $db_results = Dba::read($sql, $params);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;
@@ -208,8 +212,8 @@ class Playlist extends playlist_object
         $this->link   = AmpConfig::get('web_path') . '/playlist.php?action=show_playlist&playlist_id=' . $this->id;
         $this->f_link = '<a href="' . $this->link . '">' . $this->f_name . '</a>';
 
-        $this->f_date        = $this->date ? get_datetime((int) $this->date) : T_('Unknown');
-        $this->f_last_update = $this->last_update ? get_datetime((int) $this->last_update) : T_('Unknown');
+        $this->f_date        = $this->date ? get_datetime((int)$this->date) : T_('Unknown');
+        $this->f_last_update = $this->last_update ? get_datetime((int)$this->last_update) : T_('Unknown');
     } // format
 
     /**
@@ -263,10 +267,9 @@ class Playlist extends playlist_object
     {
         $results = array();
 
-        $limit_sql = $limit ? 'LIMIT ' . (string) ($limit) : '';
+        $limit_sql = $limit ? 'LIMIT ' . (string)($limit) : '';
 
-        $sql = "SELECT `object_id`, `object_type` FROM `playlist_data` " .
-            "WHERE `playlist` = ? ORDER BY RAND() $limit_sql";
+        $sql        = "SELECT `object_id`, `object_type` FROM `playlist_data` " . "WHERE `playlist` = ? ORDER BY RAND() $limit_sql";
         $db_results = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -288,8 +291,8 @@ class Playlist extends playlist_object
     {
         $results = array();
 
-        $sql         = "SELECT * FROM `playlist_data` WHERE `playlist` = ? AND `object_type` = 'song' ORDER BY `track`";
-        $db_results  = Dba::read($sql, array($this->id));
+        $sql        = "SELECT * FROM `playlist_data` WHERE `playlist` = ? AND `object_type` = 'song' ORDER BY `track`";
+        $db_results = Dba::read($sql, array($this->id));
         //debug_event('playlist.class', 'get_songs ' . $sql . ' ' . $this->id, 5);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -308,8 +311,8 @@ class Playlist extends playlist_object
      */
     public function get_media_count($type = '')
     {
-        $params     = array($this->id);
-        $sql        = "SELECT COUNT(`id`) FROM `playlist_data` WHERE `playlist` = ?";
+        $params = array($this->id);
+        $sql    = "SELECT COUNT(`id`) FROM `playlist_data` WHERE `playlist` = ?";
         if (!empty($type)) {
             $sql .= " AND `object_type` = ?";
             $params[] = $type;
@@ -322,10 +325,10 @@ class Playlist extends playlist_object
     } // get_media_count
 
     /**
-    * get_total_duration
-    * Get the total duration of all songs.
-    * @return string|null
-    */
+     * get_total_duration
+     * Get the total duration of all songs.
+     * @return string|null
+     */
     public function get_total_duration()
     {
         $songs  = $this->get_songs();
@@ -429,7 +432,7 @@ class Playlist extends playlist_object
             return false;
         }
 
-        $sql        = "UPDATE `playlist` SET `$field` = ? WHERE `id` = ?";
+        $sql = "UPDATE `playlist` SET `$field` = ? WHERE `id` = ?";
 
         return Dba::write($sql, array($value, $this->id));
     } // update_item
@@ -497,14 +500,15 @@ class Playlist extends playlist_object
             $class_name = ObjectTypeToClassNameMapper::map($data['object_type']);
             $media      = new $class_name($data['object_id']);
             if (AmpConfig::get('unique_playlist') && in_array($media->id, $track_data)) {
-                debug_event('playlist.class', "Can't add a duplicate " . $data['object_type'] . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
+                debug_event('playlist.class',
+                    "Can't add a duplicate " . $data['object_type'] . " (" . $data['object_id'] . ") when unique_playlist is enabled",
+                    3);
             } elseif ($media->id) {
                 $count++;
                 $track = $base_track + $count;
                 debug_event('playlist.class', 'Adding Media; Track number: ' . $track, 5);
 
-                $sql = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) " .
-                    " VALUES (?, ?, ?, ?)";
+                $sql = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) " . " VALUES (?, ?, ?, ?)";
                 Dba::write($sql, array($this->id, $data['object_id'], $data['object_type'], $track));
             } // if valid id
         } // end foreach medias
@@ -527,9 +531,7 @@ class Playlist extends playlist_object
         }
         // check for duplicates
         $results    = array();
-        $sql        = "SELECT `id` FROM `playlist` WHERE `name` = '" . Dba::escape($name) . "'" .
-                      " AND `user` = " . $user_id .
-                      " AND `type` = '" . Dba::escape($type) . "'";
+        $sql        = "SELECT `id` FROM `playlist` WHERE `name` = '" . Dba::escape($name) . "'" . " AND `user` = " . $user_id . " AND `type` = '" . Dba::escape($type) . "'";
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -633,8 +635,7 @@ class Playlist extends playlist_object
      */
     public function set_by_track_number($object_id, $track)
     {
-        $sql = "UPDATE `playlist_data` SET `object_id` = ? " .
-               "WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ?";
+        $sql = "UPDATE `playlist_data` SET `object_id` = ? " . "WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ?";
         Dba::write($sql, array($object_id, $this->id, $track));
         debug_event('playlist.class', 'Set track ' . $track . ' to ' . $object_id . ' for playlist: ' . $this->id, 5);
 
@@ -644,12 +645,12 @@ class Playlist extends playlist_object
     } // delete_track_number
 
     /**
-    * has_item
-    * look for the track id or the object id in a playlist
-    * @param integer $object
-    * @param integer $track
-    * @return boolean
-    */
+     * has_item
+     * look for the track id or the object id in a playlist
+     * @param integer $object
+     * @param integer $track
+     * @return boolean
+     */
     public function has_item($object = null, $track = null)
     {
         $results = array();
@@ -690,8 +691,8 @@ class Playlist extends playlist_object
     } // delete
 
     /**
-    * Sort the tracks and save the new position
-    */
+     * Sort the tracks and save the new position
+     */
     public function sort_tracks()
     {
         /* First get all of the songs in order of their tracks */
@@ -712,10 +713,10 @@ class Playlist extends playlist_object
         $results = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $new_data               = array();
-            $new_data['id']         = $row['id'];
-            $new_data['track']      = $count;
-            $results[]              = $new_data;
+            $new_data          = array();
+            $new_data['id']    = $row['id'];
+            $new_data['track'] = $count;
+            $results[]         = $new_data;
             $count++;
         } // end while results
 
@@ -728,4 +729,4 @@ class Playlist extends playlist_object
 
         return true;
     } // sort_tracks
-} // end playlist.class
+}

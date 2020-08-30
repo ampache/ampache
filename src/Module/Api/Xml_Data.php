@@ -39,7 +39,7 @@ use Catalog;
 use Core;
 use Democratic;
 use DOMDocument;
-use Playlist;
+use Ampache\Model\Playlist;
 use Ampache\Model\Podcast;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Rating;

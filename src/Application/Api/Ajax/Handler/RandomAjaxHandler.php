@@ -30,7 +30,7 @@ use AmpConfig;
 use Artist;
 use Ampache\Module\Util\Browse;
 use Core;
-use Playlist;
+use Ampache\Model\Playlist;
 use Ampache\Model\Random;
 use Ampache\Module\Util\Ui;
 

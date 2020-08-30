@@ -42,7 +42,7 @@ use Catalog;
 use Core;
 use DOMDocument;
 use Live_Stream;
-use Playlist;
+use Ampache\Model\Playlist;
 use Ampache\Model\Podcast;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Preference;

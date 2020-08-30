@@ -30,7 +30,7 @@ use AmpConfig;
 use Art;
 use Artist;
 use Ampache\Model\Label;
-use Playlist;
+use Ampache\Model\Playlist;
 use Ampache\Model\Search;
 use Ampache\Model\Song;
 use Ampache\Model\User;

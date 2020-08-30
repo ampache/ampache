@@ -29,7 +29,7 @@ use Ampache\Module\System\Dba;
 use AmpConfig;
 use Catalog;
 use Core;
-use Playlist;
+use Ampache\Model\Playlist;
 
 /**
  * Search Class

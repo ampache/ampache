@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use AmpConfig;
 use Catalog;
 use Core;
-use Playlist;
+use Ampache\Model\Playlist;
 use Ampache\Module\Util\Ui;
 
 final class PlaylistApplication implements ApplicationInterface

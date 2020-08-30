@@ -32,7 +32,7 @@ use Art;
 use Artist;
 use Catalog;
 use Ampache\Module\System\Dba;
-use Playlist;
+use Ampache\Model\Playlist;
 use Ampache\Model\Podcast;
 use Ampache\Model\Rating;
 use Ampache\Model\Song;

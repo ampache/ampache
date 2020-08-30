@@ -21,6 +21,7 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Model\Playlist;
 use Ampache\Model\Preference;
 use Ampache\Model\Tmp_Playlist;
 use Ampache\Model\User;

@@ -30,7 +30,7 @@ use Art;
 use Ampache\Module\Util\Browse;
 use Core;
 use Live_Stream;
-use Playlist;
+use Ampache\Model\Playlist;
 use Ampache\Model\Search;
 use Ampache\Model\Share;
 use Ampache\Module\Util\Ui;

@@ -33,7 +33,7 @@ use Catalog;
 use Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;
-use Playlist;
+use Ampache\Model\Playlist;
 use Ampache\Model\Song;
 
 class Channel extends database_object implements Media, library_item

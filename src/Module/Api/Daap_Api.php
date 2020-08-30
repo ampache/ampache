@@ -29,7 +29,7 @@ use AmpConfig;
 use Catalog;
 use Core;
 use Ampache\Module\System\Dba;
-use Playlist;
+use Ampache\Model\Playlist;
 use Ampache\Model\Rating;
 use Ampache\Model\Search;
 use Ampache\Model\Song;
@@ -593,7 +593,7 @@ class Daap_Api
     }
 
     /**
-     * @param Playlist|Search $playlist
+     * @param \Ampache\Model\Playlist|Search $playlist
      * @return string
      */
     public static function tlv_playlist($playlist)

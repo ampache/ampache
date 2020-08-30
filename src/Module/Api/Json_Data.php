@@ -33,7 +33,7 @@ use Catalog;
 use Core;
 use Democratic;
 use Ampache\Model\License;
-use Playlist;
+use Ampache\Model\Playlist;
 use Ampache\Model\Podcast;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Rating;
