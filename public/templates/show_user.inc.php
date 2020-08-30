@@ -21,6 +21,7 @@
  */
 
 use Ampache\Model\Plugin;
+use Ampache\Model\Preference;
 use Ampache\Model\Song;
 use Ampache\Model\Tmp_Playlist;
 use Ampache\Model\Useractivity;

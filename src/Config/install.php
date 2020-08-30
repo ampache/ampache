@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Preference;
 use Ampache\Model\User;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Horde_Browser;

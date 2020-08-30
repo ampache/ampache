@@ -34,7 +34,7 @@ use Art;
 use Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;
-use Preference;
+use Ampache\Model\Preference;
 use Ampache\Module\Util\Ui;
 
 class Shoutbox

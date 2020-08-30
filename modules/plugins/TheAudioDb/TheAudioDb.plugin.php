@@ -1,6 +1,7 @@
 <?php
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
+use Ampache\Model\Preference;
 use Ampache\Model\User;
 
 /**

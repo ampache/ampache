@@ -27,7 +27,7 @@ namespace Ampache\Application;
 
 use AmpConfig;
 use Exception;
-use Preference;
+use Ampache\Model\Preference;
 
 final class TestApplication implements ApplicationInterface
 {

@@ -32,7 +32,7 @@ use Catalog;
 use Core;
 use Ampache\Module\Playback\LocalPlay;
 use Ampache\Model\Plugin;
-use Preference;
+use Ampache\Model\Preference;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\User;
 

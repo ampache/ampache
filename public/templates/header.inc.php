@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Preference;
 use Ampache\Model\PrivateMsg;
 use Ampache\Model\User;
 use Ampache\Module\Authorization\Access;

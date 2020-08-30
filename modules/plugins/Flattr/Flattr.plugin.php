@@ -2,6 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
 use Ampache\Model\library_item;
+use Ampache\Model\Preference;
 use Ampache\Model\User;
 
 /**

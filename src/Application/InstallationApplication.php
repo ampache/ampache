@@ -30,7 +30,7 @@ use AmpError;
 use Core;
 use Ampache\Module\System\Dba;
 use Exception;
-use Preference;
+use Ampache\Model\Preference;
 use Ampache\Module\Util\Ui;
 
 final class InstallationApplication implements ApplicationInterface

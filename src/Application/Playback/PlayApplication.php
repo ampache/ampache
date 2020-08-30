@@ -36,7 +36,7 @@ use Ampache\Module\System\Dba;
 use Democratic;
 use Ampache\Module\Util\Horde_Browser;
 use Podcast_Episode;
-use Preference;
+use Ampache\Model\Preference;
 use Ampache\Model\Random;
 use Ampache\Module\System\Session;
 use Ampache\Model\Share;

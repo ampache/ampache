@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Preference;
 use Ampache\Module\Api\Ajax;
 
 ?>

@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Model\Plugin;
+use Ampache\Model\Preference;
 use Ampache\Model\Rating;
 use Ampache\Model\Song;
 use Ampache\Model\TVShow_Season;

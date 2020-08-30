@@ -45,7 +45,7 @@ use Live_Stream;
 use Playlist;
 use Podcast;
 use Podcast_Episode;
-use Preference;
+use Ampache\Model\Preference;
 use Ampache\Model\PrivateMsg;
 use Ampache\Model\Rating;
 use Requests;

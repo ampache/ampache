@@ -23,6 +23,7 @@ declare(strict_types=0);
 
 use Ampache\Model\Album;
 use Ampache\Model\License;
+use Ampache\Model\Preference;
 use Ampache\Model\Random;
 use Ampache\Model\Rating;
 use Ampache\Model\Search;

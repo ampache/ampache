@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,15 +20,19 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Model\database_object;
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
+use AmpConfig;
+use Core;
 
 /**
  * Preference Class
  *
  * This handles all of the preference stuff for Ampache
- *
  */
 class Preference extends database_object
 {
@@ -52,12 +55,12 @@ class Preference extends database_object
     public static function get_by_user($user_id, $pref_name)
     {
         //debug_event('preference.class', 'Getting preference {'.$pref_name.'} for user identifier {'.$user_id.'}...', 5);
-        $user_id   = (int) Dba::escape($user_id);
+        $user_id   = (int)Dba::escape($user_id);
         $pref_name = Dba::escape($pref_name);
         $pref_id   = self::id_from_name($pref_name);
 
         if (parent::is_cached('get_by_user', $user_id)) {
-            return (int) (parent::get_from_cache('get_by_user', $user_id))[0];
+            return (int)(parent::get_from_cache('get_by_user', $user_id))[0];
         }
 
         $sql        = "SELECT `value` FROM `user_preference` WHERE `preference`='$pref_id' AND `user`='$user_id'";
@@ -70,9 +73,8 @@ class Preference extends database_object
 
         parent::add_to_cache('get_by_user', $user_id, $data);
 
-        return (int) $data['value'];
+        return (int)$data['value'];
     } // get_by_user
-
 
     /**
      * update
@@ -112,7 +114,7 @@ class Preference extends database_object
         $value = Dba::escape($value);
 
         if (self::has_access($name)) {
-            $user_id = (int) Dba::escape($user_id);
+            $user_id = (int)Dba::escape($user_id);
             $sql     = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$pref_id'$user_check";
             Dba::write($sql);
             self::clear_from_session();
@@ -121,7 +123,9 @@ class Preference extends database_object
 
             return true;
         } else {
-            debug_event('preference.class', Core::get_global('user') ? Core::get_global('user')->username : '???' . ' attempted to update ' . $name . ' but does not have sufficient permissions', 3);
+            debug_event('preference.class',
+                Core::get_global('user') ? Core::get_global('user')->username : '???' . ' attempted to update ' . $name . ' but does not have sufficient permissions',
+                3);
         }
 
         return false;
@@ -161,8 +165,8 @@ class Preference extends database_object
      */
     public static function update_all($preference_id, $value)
     {
-        $preference_id = (string) Dba::escape($preference_id);
-        $value         = (string) Dba::escape($value);
+        $preference_id = (string)Dba::escape($preference_id);
+        $value         = (string)Dba::escape($value);
 
         $sql = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$preference_id'";
         Dba::write($sql);
@@ -226,7 +230,7 @@ class Preference extends database_object
         $name = Dba::escape($name);
 
         if (parent::is_cached('id_from_name', $name)) {
-            return (int) (parent::get_from_cache('id_from_name', $name))[0];
+            return (int)(parent::get_from_cache('id_from_name', $name))[0];
         }
 
         $sql        = "SELECT `id` FROM `preference` WHERE `name`='$name'";
@@ -235,7 +239,7 @@ class Preference extends database_object
 
         parent::add_to_cache('id_from_name', $name, $row);
 
-        return (int) $row['id'];
+        return (int)$row['id'];
     } // id_from_name
 
     /**
@@ -258,7 +262,7 @@ class Preference extends database_object
     } // name_from_id
 
     /**
-      * get_categories
+     * get_categories
      * This returns an array of the names of the different possible sections
      * it ignores the 'internal' category
      */
@@ -293,16 +297,19 @@ class Preference extends database_object
             $user_limit = "AND `preference`.`catagory` != 'system'";
         }
 
-        $sql = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`subcatagory`, `user_preference`.`value` FROM `preference` " .
-            " INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` " .
-            " WHERE `user_preference`.`user`='$user_id' AND `preference`.`catagory` != 'internal' $user_limit " .
-            " ORDER BY `preference`.`subcatagory`, `preference`.`description`";
+        $sql = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`subcatagory`, `user_preference`.`value` FROM `preference` " . " INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` " . " WHERE `user_preference`.`user`='$user_id' AND `preference`.`catagory` != 'internal' $user_limit " . " ORDER BY `preference`.`subcatagory`, `preference`.`description`";
 
         $db_results = Dba::read($sql);
         $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array('name' => $row['name'], 'level' => $row['level'], 'description' => $row['description'], 'value' => $row['value'], 'subcategory' => $row['subcatagory']);
+            $results[] = array(
+                'name' => $row['name'],
+                'level' => $row['level'],
+                'description' => $row['description'],
+                'value' => $row['value'],
+                'subcategory' => $row['subcatagory']
+            );
         }
 
         return $results;
@@ -324,11 +331,11 @@ class Preference extends database_object
     public static function insert($name, $description, $default, $level, $type, $category, $subcategory = null)
     {
         if ($subcategory !== null) {
-            $subcategory = strtolower((string) $subcategory);
+            $subcategory = strtolower((string)$subcategory);
         }
-        $sql = "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) " .
-            "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($name, $description, $default, (int) ($level), $type, $category, $subcategory));
+        $sql        = "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) " . "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $db_results = Dba::write($sql,
+            array($name, $description, $default, (int)($level), $type, $category, $subcategory));
 
         if (!$db_results) {
             return false;
@@ -389,8 +396,7 @@ class Preference extends database_object
     public static function clean_preferences()
     {
         // First remove garbage
-        $sql = "DELETE FROM `user_preference` USING `user_preference` LEFT JOIN `preference` ON `preference`.`id`=`user_preference`.`preference` " .
-            "WHERE `preference`.`id` IS NULL";
+        $sql = "DELETE FROM `user_preference` USING `user_preference` LEFT JOIN `preference` ON `preference`.`id`=`user_preference`.`preference` " . "WHERE `preference`.`id` IS NULL";
         Dba::write($sql);
     } // rebuild_preferences
 
@@ -404,21 +410,25 @@ class Preference extends database_object
     public static function fix_preferences($results)
     {
         $arrays = array(
-            'auth_methods', 'getid3_tag_order', 'metadata_order',
-            'metadata_order_video', 'art_order', 'registration_display_fields',
+            'auth_methods',
+            'getid3_tag_order',
+            'metadata_order',
+            'metadata_order_video',
+            'art_order',
+            'registration_display_fields',
             'registration_mandatory_fields'
         );
 
         foreach ($arrays as $item) {
-            $results[$item] = (trim((string) $results[$item])) ? explode(',', $results[$item]) : array();
+            $results[$item] = (trim((string)$results[$item])) ? explode(',', $results[$item]) : array();
         }
 
         foreach ($results as $key => $data) {
             if (!is_array($data)) {
-                if (strcasecmp((string) $data, "true") == "0") {
+                if (strcasecmp((string)$data, "true") == "0") {
                     $results[$key] = 1;
                 }
-                if (strcasecmp((string) $data, "false") == "0") {
+                if (strcasecmp((string)$data, "false") == "0") {
                     $results[$key] = 0;
                 }
             }
@@ -433,95 +443,7 @@ class Preference extends database_object
      */
     public static function set_defaults()
     {
-        $sql = "INSERT IGNORE INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES " .
-               "(1, 'download', '1', 'Allow Downloads', 100, 'boolean', 'options', 'feature'), " .
-               "(4, 'popular_threshold', '10', 'Popular Threshold', 25, 'integer', 'interface', 'query'), " .
-               "(19, 'transcode_bitrate', '64', 'Transcode Bitrate', 25, 'string', 'streaming', 'transcoding'), " .
-               "(22, 'site_title', 'Ampache :: For the Love of Music', 'Website Title', 100, 'string', 'interface', 'custom'), " .
-               "(23, 'lock_songs', '0', 'Lock Songs', 100, 'boolean', 'system', null), " .
-               "(24, 'force_http_play', '0', 'Force HTTP playback regardless of port', 100, 'boolean', 'system', null), " .
-               "(41, 'localplay_controller', '0', 'Localplay Type', 100, 'special', 'options', 'localplay'), " .
-               "(29, 'play_type', 'web_player', 'Playback Type', 25, 'special', 'streaming', null), " .
-               "(31, 'lang', 'en_US', 'Language', 100, 'special', 'interface', null), " .
-               "(32, 'playlist_type', 'm3u', 'Playlist Type', 100, 'special', 'playlist', null), " .
-               "(33, 'theme_name', 'reborn', 'Theme', 0, 'special', 'interface', 'theme'), " .
-               "(51, 'offset_limit', '50', 'Offset Limit', 5, 'integer', 'interface', 'query'), " .
-               "(40, 'localplay_level', '0', 'Localplay Access', 100, 'special', 'options', 'localplay'), " .
-               "(44, 'allow_stream_playback', '1', 'Allow Streaming', 100, 'boolean', 'options', 'feature'), " .
-               "(45, 'allow_democratic_playback', '0', 'Allow Democratic Play', 100, 'boolean', 'options', 'feature'), " .
-               "(46, 'allow_localplay_playback', '0', 'Allow Localplay Play', 100, 'boolean', 'options', 'localplay'), " .
-               "(47, 'stats_threshold', '7', 'Statistics Day Threshold', 25, 'integer', 'interface', 'query'), " .
-               "(52, 'rate_limit', '8192', 'Rate Limit', 100, 'integer', 'streaming', 'transcoding'), " .
-               "(53, 'playlist_method', 'default', 'Playlist Method', 5, 'string', 'playlist', null), " .
-               "(55, 'transcode', 'default', 'Allow Transcoding', 25, 'string', 'streaming', 'transcoding'), " .
-               "(69, 'show_lyrics', '0', 'Show lyrics', 0, 'boolean', 'interface', 'player'), " .
-               "(70, 'mpd_active', '0', 'MPD Active Instance', 25, 'integer', 'internal', 'mpd'), " .
-               "(71, 'httpq_active', '0', 'httpQ Active Instance', 25, 'integer', 'internal', 'httpq'), " .
-               "(77, 'lastfm_grant_link', '', 'Last.FM Grant URL', 25, 'string', 'internal', 'lastfm'), " .
-               "(78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', 25, 'string', 'internal', 'lastfm'), " .
-               "(102, 'share', '0', 'Allow Share', 100, 'boolean', 'options', 'feature'), " .
-               "(123, 'ajax_load', '1', 'Ajax page load', 25, 'boolean', 'interface', null), " .
-               "(82, 'now_playing_per_user', '1', 'Now Playing filtered per user', 50, 'boolean', 'interface', 'home'), " .
-               "(83, 'album_sort', '0', 'Album - Default sort', 25, 'string', 'interface', 'library'), " .
-               "(84, 'show_played_times', '0', 'Show # played', 25, 'string', 'interface', 'library'), " .
-               "(85, 'song_page_title', '1', 'Show current song in Web player page title', 25, 'boolean', 'interface', 'player'), " .
-               "(86, 'subsonic_backend', '1', 'Use Subsonic backend', 100, 'boolean', 'system', 'backend'), " .
-               "(88, 'webplayer_flash', '1', 'Authorize Flash Web Player', 25, 'boolean', 'streaming', 'player'), " .
-               "(89, 'webplayer_html5', '1', 'Authorize HTML5 Web Player', 25, 'boolean', 'streaming', 'player'), " .
-               "(90, 'allow_personal_info_now', '1', 'Share Now Playing information', 25, 'boolean', 'interface', 'privacy'), " .
-               "(91, 'allow_personal_info_recent', '1', 'Share Recently Played information', 25, 'boolean', 'interface', 'privacy'), " .
-               "(92, 'allow_personal_info_time', '1', 'Share Recently Played information - Allow access to streaming date/time', 25, 'boolean', 'interface', 'privacy'), " .
-               "(93, 'allow_personal_info_agent', '1', 'Share Recently Played information - Allow access to streaming agent', 25, 'boolean', 'interface', 'privacy'), " .
-               "(94, 'ui_fixed', '0', 'Fix header position on compatible themes', 25, 'boolean', 'interface', 'theme'), " .
-               "(95, 'autoupdate', '1', 'Check for Ampache updates automatically', 25, 'boolean', 'system', 'update'), " .
-               "(96, 'autoupdate_lastcheck', '', 'AutoUpdate last check time', 25, 'string', 'internal', 'update'), " .
-               "(97, 'autoupdate_lastversion', '', 'AutoUpdate last version from last check', 25, 'string', 'internal', 'update'), " .
-               "(98, 'autoupdate_lastversion_new', '', 'AutoUpdate last version from last check is newer', 25, 'boolean', 'internal', 'update'), " .
-               "(99, 'webplayer_confirmclose', '0', 'Confirmation when closing current playing window', 25, 'boolean', 'interface', 'player'), " .
-               "(100, 'webplayer_pausetabs', '1', 'Auto-pause between tabs', 25, 'boolean', 'interface', 'player'), " .
-               "(101, 'stream_beautiful_url', '0', 'Enable URL Rewriting', 100, 'boolean', 'streaming', null), " .
-               "(103, 'share_expire', '7', 'Share links default expiration days (0=never)', 100, 'integer', 'system', 'share'), " .
-               "(104, 'slideshow_time', '0', 'Artist slideshow inactivity time', 25, 'integer', 'interface', 'player'), " .
-               "(105, 'broadcast_by_default', '0', 'Broadcast web player by default', 25, 'boolean', 'streaming', 'player'), " .
-               "(106, 'concerts_limit_future', '0', 'Limit number of future events', 25, 'integer', 'interface', 'query'), " .
-               "(107, 'concerts_limit_past', '0', 'Limit number of past events', 25, 'integer', 'interface', 'query'), " .
-               "(108, 'album_group', '1', 'Album - Group multiple disks', 25, 'boolean', 'interface', 'library'), " .
-               "(109, 'topmenu', '0', 'Top menu', 25, 'boolean', 'interface', 'theme'), " .
-               "(110, 'demo_clear_sessions', '0', 'Democratic - Clear votes for expired user sessions', 25, 'boolean', 'playlist', null), " .
-               "(111, 'show_donate', '1', 'Show donate button in footer', 25, 'boolean', 'interface', null), " .
-               "(112, 'upload_catalog', '-1', 'Destination catalog', 75, 'integer', 'system', 'upload'), " .
-               "(113, 'allow_upload', '0', 'Allow user uploads', 75, 'boolean', 'system', 'upload'), " .
-               "(114, 'upload_subdir', '1', 'Create a subdirectory per user', 75, 'boolean', 'system', 'upload'), " .
-               "(115, 'upload_user_artist', '0', 'Consider the user sender as the track''s artist', 75, 'boolean', 'system', 'upload'), " .
-               "(116, 'upload_script', '', 'Post-upload script (current directory = upload target directory)', 75, 'string', 'system', 'upload'), " .
-               "(117, 'upload_allow_edit', '1', 'Allow users to edit uploaded songs', 75, 'boolean', 'system', 'upload'), " .
-               "(118, 'daap_backend', '0', 'Use DAAP backend', 100, 'boolean', 'system', 'backend'), " .
-               "(119, 'daap_pass', '', 'DAAP backend password', 100, 'string', 'system', 'backend'), " .
-               "(120, 'upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system', 'backend'), " .
-               "(121, 'allow_video', '0', 'Allow Video Features', 75, 'integer', 'options', 'feature'), " .
-               "(122, 'album_release_type', '1', 'Album - Group per release type', 25, 'boolean', 'interface', 'library'), " .
-               "(124, 'direct_play_limit', '0', 'Limit direct play to maximum media count', 25, 'integer', 'interface', 'player'), " .
-               "(125, 'home_moment_albums', '1', 'Show Albums of the Moment', 25, 'integer', 'interface', 'home'), " .
-               "(126, 'home_moment_videos', '0', 'Show Videos of the Moment', 25, 'integer', 'interface', 'home'), " .
-               "(127, 'home_recently_played', '1', 'Show Recently Played', 25, 'integer', 'interface', 'home'), " .
-               "(128, 'home_now_playing', '1', 'Show Now Playing', 25, 'integer', 'interface', 'home'), " .
-               "(129, 'custom_logo', '', 'Custom URL - Logo', 25, 'string', 'interface', 'custom'), " .
-               "(130, 'album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type sort', 25, 'string', 'interface', 'library'), " .
-               "(131, 'browser_notify', '1', 'Web Player browser notifications', 25, 'integer', 'interface', 'notification'), " .
-               "(132, 'browser_notify_timeout', '10', 'Web Player browser notifications timeout (seconds)', 25, 'integer', 'interface', 'notification'), " .
-               "(133, 'geolocation', '0', 'Allow Geolocation', 25, 'integer', 'options', 'feature'), " .
-               "(134, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player', 25, 'boolean', 'streaming', 'player'), " .
-               "(135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', 75, 'boolean', 'system', 'upload'), " .
-               "(136, 'custom_login_logo', '', 'Custom URL - Login page logo', 75, 'string', 'interface', 'custom'), " .
-               "(137, 'custom_favicon', '', 'Custom URL - Favicon', 75, 'string', 'interface', 'custom'), " .
-               "(138, 'custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface', 'custom'), " .
-               "(139, 'webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system', 'backend'), " .
-               "(140, 'notify_email', '0', 'Allow E-mail notifications', 25, 'boolean', 'options', null), " .
-               "(141, 'theme_color', 'dark', 'Theme color', 0, 'special', 'interface', 'theme'), " .
-               "(142, 'disabled_custom_metadata_fields', '', 'Custom metadata - Disable these fields', 100, 'string', 'system', 'metadata'), " .
-               "(143, 'disabled_custom_metadata_fields_input', '', 'Custom metadata - Define field list', 100, 'string', 'system', 'metadata'), " .
-               "(144, 'podcast_keep', '0', '# latest episodes to keep', 100, 'integer', 'system', 'podcast'), " .
-               "(145, 'podcast_new_download', '0', '# episodes to download when new episodes are available', 100, 'integer', 'system', 'podcast');";
+        $sql = "INSERT IGNORE INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) VALUES " . "(1, 'download', '1', 'Allow Downloads', 100, 'boolean', 'options', 'feature'), " . "(4, 'popular_threshold', '10', 'Popular Threshold', 25, 'integer', 'interface', 'query'), " . "(19, 'transcode_bitrate', '64', 'Transcode Bitrate', 25, 'string', 'streaming', 'transcoding'), " . "(22, 'site_title', 'Ampache :: For the Love of Music', 'Website Title', 100, 'string', 'interface', 'custom'), " . "(23, 'lock_songs', '0', 'Lock Songs', 100, 'boolean', 'system', null), " . "(24, 'force_http_play', '0', 'Force HTTP playback regardless of port', 100, 'boolean', 'system', null), " . "(41, 'localplay_controller', '0', 'Localplay Type', 100, 'special', 'options', 'localplay'), " . "(29, 'play_type', 'web_player', 'Playback Type', 25, 'special', 'streaming', null), " . "(31, 'lang', 'en_US', 'Language', 100, 'special', 'interface', null), " . "(32, 'playlist_type', 'm3u', 'Playlist Type', 100, 'special', 'playlist', null), " . "(33, 'theme_name', 'reborn', 'Theme', 0, 'special', 'interface', 'theme'), " . "(51, 'offset_limit', '50', 'Offset Limit', 5, 'integer', 'interface', 'query'), " . "(40, 'localplay_level', '0', 'Localplay Access', 100, 'special', 'options', 'localplay'), " . "(44, 'allow_stream_playback', '1', 'Allow Streaming', 100, 'boolean', 'options', 'feature'), " . "(45, 'allow_democratic_playback', '0', 'Allow Democratic Play', 100, 'boolean', 'options', 'feature'), " . "(46, 'allow_localplay_playback', '0', 'Allow Localplay Play', 100, 'boolean', 'options', 'localplay'), " . "(47, 'stats_threshold', '7', 'Statistics Day Threshold', 25, 'integer', 'interface', 'query'), " . "(52, 'rate_limit', '8192', 'Rate Limit', 100, 'integer', 'streaming', 'transcoding'), " . "(53, 'playlist_method', 'default', 'Playlist Method', 5, 'string', 'playlist', null), " . "(55, 'transcode', 'default', 'Allow Transcoding', 25, 'string', 'streaming', 'transcoding'), " . "(69, 'show_lyrics', '0', 'Show lyrics', 0, 'boolean', 'interface', 'player'), " . "(70, 'mpd_active', '0', 'MPD Active Instance', 25, 'integer', 'internal', 'mpd'), " . "(71, 'httpq_active', '0', 'httpQ Active Instance', 25, 'integer', 'internal', 'httpq'), " . "(77, 'lastfm_grant_link', '', 'Last.FM Grant URL', 25, 'string', 'internal', 'lastfm'), " . "(78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', 25, 'string', 'internal', 'lastfm'), " . "(102, 'share', '0', 'Allow Share', 100, 'boolean', 'options', 'feature'), " . "(123, 'ajax_load', '1', 'Ajax page load', 25, 'boolean', 'interface', null), " . "(82, 'now_playing_per_user', '1', 'Now Playing filtered per user', 50, 'boolean', 'interface', 'home'), " . "(83, 'album_sort', '0', 'Album - Default sort', 25, 'string', 'interface', 'library'), " . "(84, 'show_played_times', '0', 'Show # played', 25, 'string', 'interface', 'library'), " . "(85, 'song_page_title', '1', 'Show current song in Web player page title', 25, 'boolean', 'interface', 'player'), " . "(86, 'subsonic_backend', '1', 'Use Subsonic backend', 100, 'boolean', 'system', 'backend'), " . "(88, 'webplayer_flash', '1', 'Authorize Flash Web Player', 25, 'boolean', 'streaming', 'player'), " . "(89, 'webplayer_html5', '1', 'Authorize HTML5 Web Player', 25, 'boolean', 'streaming', 'player'), " . "(90, 'allow_personal_info_now', '1', 'Share Now Playing information', 25, 'boolean', 'interface', 'privacy'), " . "(91, 'allow_personal_info_recent', '1', 'Share Recently Played information', 25, 'boolean', 'interface', 'privacy'), " . "(92, 'allow_personal_info_time', '1', 'Share Recently Played information - Allow access to streaming date/time', 25, 'boolean', 'interface', 'privacy'), " . "(93, 'allow_personal_info_agent', '1', 'Share Recently Played information - Allow access to streaming agent', 25, 'boolean', 'interface', 'privacy'), " . "(94, 'ui_fixed', '0', 'Fix header position on compatible themes', 25, 'boolean', 'interface', 'theme'), " . "(95, 'autoupdate', '1', 'Check for Ampache updates automatically', 25, 'boolean', 'system', 'update'), " . "(96, 'autoupdate_lastcheck', '', 'AutoUpdate last check time', 25, 'string', 'internal', 'update'), " . "(97, 'autoupdate_lastversion', '', 'AutoUpdate last version from last check', 25, 'string', 'internal', 'update'), " . "(98, 'autoupdate_lastversion_new', '', 'AutoUpdate last version from last check is newer', 25, 'boolean', 'internal', 'update'), " . "(99, 'webplayer_confirmclose', '0', 'Confirmation when closing current playing window', 25, 'boolean', 'interface', 'player'), " . "(100, 'webplayer_pausetabs', '1', 'Auto-pause between tabs', 25, 'boolean', 'interface', 'player'), " . "(101, 'stream_beautiful_url', '0', 'Enable URL Rewriting', 100, 'boolean', 'streaming', null), " . "(103, 'share_expire', '7', 'Share links default expiration days (0=never)', 100, 'integer', 'system', 'share'), " . "(104, 'slideshow_time', '0', 'Artist slideshow inactivity time', 25, 'integer', 'interface', 'player'), " . "(105, 'broadcast_by_default', '0', 'Broadcast web player by default', 25, 'boolean', 'streaming', 'player'), " . "(106, 'concerts_limit_future', '0', 'Limit number of future events', 25, 'integer', 'interface', 'query'), " . "(107, 'concerts_limit_past', '0', 'Limit number of past events', 25, 'integer', 'interface', 'query'), " . "(108, 'album_group', '1', 'Album - Group multiple disks', 25, 'boolean', 'interface', 'library'), " . "(109, 'topmenu', '0', 'Top menu', 25, 'boolean', 'interface', 'theme'), " . "(110, 'demo_clear_sessions', '0', 'Democratic - Clear votes for expired user sessions', 25, 'boolean', 'playlist', null), " . "(111, 'show_donate', '1', 'Show donate button in footer', 25, 'boolean', 'interface', null), " . "(112, 'upload_catalog', '-1', 'Destination catalog', 75, 'integer', 'system', 'upload'), " . "(113, 'allow_upload', '0', 'Allow user uploads', 75, 'boolean', 'system', 'upload'), " . "(114, 'upload_subdir', '1', 'Create a subdirectory per user', 75, 'boolean', 'system', 'upload'), " . "(115, 'upload_user_artist', '0', 'Consider the user sender as the track''s artist', 75, 'boolean', 'system', 'upload'), " . "(116, 'upload_script', '', 'Post-upload script (current directory = upload target directory)', 75, 'string', 'system', 'upload'), " . "(117, 'upload_allow_edit', '1', 'Allow users to edit uploaded songs', 75, 'boolean', 'system', 'upload'), " . "(118, 'daap_backend', '0', 'Use DAAP backend', 100, 'boolean', 'system', 'backend'), " . "(119, 'daap_pass', '', 'DAAP backend password', 100, 'string', 'system', 'backend'), " . "(120, 'upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system', 'backend'), " . "(121, 'allow_video', '0', 'Allow Video Features', 75, 'integer', 'options', 'feature'), " . "(122, 'album_release_type', '1', 'Album - Group per release type', 25, 'boolean', 'interface', 'library'), " . "(124, 'direct_play_limit', '0', 'Limit direct play to maximum media count', 25, 'integer', 'interface', 'player'), " . "(125, 'home_moment_albums', '1', 'Show Albums of the Moment', 25, 'integer', 'interface', 'home'), " . "(126, 'home_moment_videos', '0', 'Show Videos of the Moment', 25, 'integer', 'interface', 'home'), " . "(127, 'home_recently_played', '1', 'Show Recently Played', 25, 'integer', 'interface', 'home'), " . "(128, 'home_now_playing', '1', 'Show Now Playing', 25, 'integer', 'interface', 'home'), " . "(129, 'custom_logo', '', 'Custom URL - Logo', 25, 'string', 'interface', 'custom'), " . "(130, 'album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type sort', 25, 'string', 'interface', 'library'), " . "(131, 'browser_notify', '1', 'Web Player browser notifications', 25, 'integer', 'interface', 'notification'), " . "(132, 'browser_notify_timeout', '10', 'Web Player browser notifications timeout (seconds)', 25, 'integer', 'interface', 'notification'), " . "(133, 'geolocation', '0', 'Allow Geolocation', 25, 'integer', 'options', 'feature'), " . "(134, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player', 25, 'boolean', 'streaming', 'player'), " . "(135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', 75, 'boolean', 'system', 'upload'), " . "(136, 'custom_login_logo', '', 'Custom URL - Login page logo', 75, 'string', 'interface', 'custom'), " . "(137, 'custom_favicon', '', 'Custom URL - Favicon', 75, 'string', 'interface', 'custom'), " . "(138, 'custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface', 'custom'), " . "(139, 'webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system', 'backend'), " . "(140, 'notify_email', '0', 'Allow E-mail notifications', 25, 'boolean', 'options', null), " . "(141, 'theme_color', 'dark', 'Theme color', 0, 'special', 'interface', 'theme'), " . "(142, 'disabled_custom_metadata_fields', '', 'Custom metadata - Disable these fields', 100, 'string', 'system', 'metadata'), " . "(143, 'disabled_custom_metadata_fields_input', '', 'Custom metadata - Define field list', 100, 'string', 'system', 'metadata'), " . "(144, 'podcast_keep', '0', '# latest episodes to keep', 100, 'integer', 'system', 'podcast'), " . "(145, 'podcast_new_download', '0', '# episodes to download when new episodes are available', 100, 'integer', 'system', 'podcast');";
         Dba::write($sql);
     } // set_defaults
 
@@ -562,18 +484,41 @@ class Preference extends database_object
      */
     public static function is_boolean($key)
     {
-        $boolean_array = array('session_cookiesecure', 'require_session',
-                    'access_control', 'require_localnet_session',
-                    'downsample_remote', 'track_user_ip',
-                    'xml_rpc', 'allow_zip_download', 'ratings',
-                    'shoutbox', 'resize_images', 'show_played_times', 'show_skipped_times',
-                    'show_album_art', 'allow_public_registration',
-                    'captcha_public_reg', 'admin_notify_reg',
-                    'use_rss', 'download', 'force_http_play', 'cookie_secure',
-                    'allow_stream_playback', 'allow_democratic_playback',
-                    'use_auth', 'allow_localplay_playback', 'debug', 'lock_songs',
-                    'transcode_m4a', 'transcode_mp3', 'transcode_ogg', 'transcode_flac',
-                    'httpq_active', 'show_lyrics');
+        $boolean_array = array(
+            'session_cookiesecure',
+            'require_session',
+            'access_control',
+            'require_localnet_session',
+            'downsample_remote',
+            'track_user_ip',
+            'xml_rpc',
+            'allow_zip_download',
+            'ratings',
+            'shoutbox',
+            'resize_images',
+            'show_played_times',
+            'show_skipped_times',
+            'show_album_art',
+            'allow_public_registration',
+            'captcha_public_reg',
+            'admin_notify_reg',
+            'use_rss',
+            'download',
+            'force_http_play',
+            'cookie_secure',
+            'allow_stream_playback',
+            'allow_democratic_playback',
+            'use_auth',
+            'allow_localplay_playback',
+            'debug',
+            'lock_songs',
+            'transcode_m4a',
+            'transcode_mp3',
+            'transcode_ogg',
+            'transcode_flac',
+            'httpq_active',
+            'show_lyrics'
+        );
 
         if (in_array($key, $boolean_array)) {
             return true;
@@ -583,14 +528,14 @@ class Preference extends database_object
     } // is_boolean
 
     /**
-      * init
+     * init
      * This grabs the preferences and then loads them into conf it should be run on page load
      * to initialize the needed variables
      * @return boolean
      */
     public static function init()
     {
-        $user_id = Core::get_global('user')->id ? (int) (Core::get_global('user')->id) : -1;
+        $user_id = Core::get_global('user')->id ? (int)(Core::get_global('user')->id) : -1;
 
         // First go ahead and try to load it from the preferences
         if (self::load_from_session($user_id)) {
@@ -598,9 +543,7 @@ class Preference extends database_object
         }
 
         /* Get Global Preferences */
-        $sql = "SELECT `preference`.`name`, `user_preference`.`value`, `syspref`.`value` AS `system_value` FROM `preference` " .
-            "LEFT JOIN `user_preference` `syspref` ON `syspref`.`preference`=`preference`.`id` AND `syspref`.`user`='-1' AND `preference`.`catagory`='system' " .
-            "LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user` = ? AND `preference`.`catagory`!='system'";
+        $sql        = "SELECT `preference`.`name`, `user_preference`.`value`, `syspref`.`value` AS `system_value` FROM `preference` " . "LEFT JOIN `user_preference` `syspref` ON `syspref`.`preference`=`preference`.`id` AND `syspref`.`user`='-1' AND `preference`.`catagory`='system' " . "LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user` = ? AND `preference`.`catagory`!='system'";
         $db_results = Dba::read($sql, array($user_id));
 
         $results = array();
@@ -611,7 +554,7 @@ class Preference extends database_object
         } // end while sys prefs
 
         /* Set the Theme mojo */
-        if (strlen((string) $results['theme_name']) > 0) {
+        if (strlen((string)$results['theme_name']) > 0) {
             // In case the theme was removed
             if (!Core::is_readable(__DIR__ . '/../../public/themes/' . $results['theme_name'])) {
                 unset($results['theme_name']);
@@ -631,7 +574,7 @@ class Preference extends database_object
         $themecfg                  = get_theme($results['theme_name']);
         $results['theme_css_base'] = $themecfg['base'];
 
-        if (strlen((string) $results['theme_color']) > 0) {
+        if (strlen((string)$results['theme_color']) > 0) {
             // In case the color was removed
             if (!Core::is_readable(__DIR__ . '/../../public/themes/' . $results['theme_name'] . '/templates/' . $results['theme_color'] . '.css')) {
                 unset($results['theme_color']);
@@ -640,7 +583,7 @@ class Preference extends database_object
             unset($results['theme_color']);
         }
         if (!isset($results['theme_color'])) {
-            $results['theme_color'] = strtolower((string) $themecfg['colors'][0]);
+            $results['theme_color'] = strtolower((string)$themecfg['colors'][0]);
         }
 
         AmpConfig::set_by_array($results, true);
@@ -649,4 +592,4 @@ class Preference extends database_object
 
         return true;
     } // init
-} // end preference.class
+}

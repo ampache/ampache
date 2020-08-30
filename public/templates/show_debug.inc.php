@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Preference;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\Util\Cron;
 use Ampache\Module\Util\Ui;

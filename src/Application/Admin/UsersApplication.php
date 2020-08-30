@@ -32,7 +32,7 @@ use AmpError;
 use Ampache\Module\Util\Browse;
 use Core;
 use Ampache\Module\Util\Mailer;
-use Preference;
+use Ampache\Model\Preference;
 use Ampache\Module\User\Registration;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\User;

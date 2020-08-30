@@ -31,7 +31,7 @@ use AmpConfig;
 use Ampache\Module\Authorization\Auth;
 use Ampache\Model\Channel;
 use Core;
-use Preference;
+use Ampache\Model\Preference;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\User;
 

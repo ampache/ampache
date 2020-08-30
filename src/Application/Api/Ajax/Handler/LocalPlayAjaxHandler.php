@@ -30,7 +30,7 @@ use AmpConfig;
 use Ampache\Module\Util\Browse;
 use Core;
 use Ampache\Module\Playback\LocalPlay;
-use Preference;
+use Ampache\Model\Preference;
 use Ampache\Module\Util\Ui;
 
 final class LocalPlayAjaxHandler implements AjaxHandlerInterface

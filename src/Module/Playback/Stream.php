@@ -31,7 +31,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Core;
 use Ampache\Module\System\Dba;
-use Preference;
+use Ampache\Model\Preference;
 use Ampache\Module\System\Session;
 use Ampache\Model\User;
 

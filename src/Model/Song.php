@@ -41,7 +41,7 @@ use Artist;
 use Catalog;
 use Core;
 use PDOStatement;
-use Preference;
+use Ampache\Model\Preference;
 use Ampache\Model\Rating;
 use Ampache\Model\Share;
 

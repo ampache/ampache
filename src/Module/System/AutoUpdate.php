@@ -27,7 +27,7 @@ namespace Ampache\Module\System;
 use AmpConfig;
 use Core;
 use Exception;
-use Preference;
+use Ampache\Model\Preference;
 use Requests;
 
 /**

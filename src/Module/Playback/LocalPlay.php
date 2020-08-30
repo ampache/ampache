@@ -29,7 +29,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Core;
-use Preference;
+use Ampache\Model\Preference;
 
 class LocalPlay
 {

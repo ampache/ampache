@@ -30,7 +30,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Core;
 use Ampache\Model\Plugin;
-use Preference;
+use Ampache\Model\Preference;
 use Ampache\Model\Share;
 use Ampache\Module\Util\Ui;
 

@@ -2,6 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
 use Ampache\Model\Plugin;
+use Ampache\Model\Preference;
 use Ampache\Model\Song;
 use Ampache\Model\User;
 use Ampache\Module\Playback\Scrobble\Scrobbler;

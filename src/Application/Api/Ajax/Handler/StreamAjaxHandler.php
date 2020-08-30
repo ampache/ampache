@@ -28,7 +28,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use AmpConfig;
 use Core;
-use Preference;
+use Ampache\Model\Preference;
 use Ampache\Module\Util\Ui;
 
 final class StreamAjaxHandler implements AjaxHandlerInterface

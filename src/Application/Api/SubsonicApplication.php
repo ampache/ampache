@@ -30,7 +30,7 @@ use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use Ampache\Module\Authorization\Auth;
 use Core;
-use Preference;
+use Ampache\Model\Preference;
 use Ampache\Module\Api\Subsonic_Api;
 use Ampache\Module\Api\Subsonic_Xml_Data;
 use Ampache\Model\User;
