@@ -273,8 +273,8 @@ class Recommendation
 
             if ($xml->similarartists) {
                 foreach ($xml->similarartists->children() as $child) {
-                    $name = (string)$child->name;
-                    $mbid = (string)$child->mbid;
+                    $name     = (string)$child->name;
+                    $mbid     = (string)$child->mbid;
                     $local_id = null;
 
                     // First we check by MBID
@@ -294,7 +294,7 @@ class Recommendation
                     if ($local_id === null) {
                         $searchname = Catalog::trim_prefix($name);
                         $searchname = Dba::escape($searchname['string']);
-                        $sql = "SELECT `artist`.`id` FROM `artist` WHERE `artist`.`name` = ? OR " .
+                        $sql        = "SELECT `artist`.`id` FROM `artist` WHERE `artist`.`name` = ? OR " .
                             "LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?";
                         if (AmpConfig::get('catalog_disable')) {
                             $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
