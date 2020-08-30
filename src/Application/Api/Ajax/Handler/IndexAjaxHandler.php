@@ -41,7 +41,7 @@ use Ampache\Module\Util\Slideshow;
 use Song;
 use Ampache\Module\Util\Ui;
 use Video;
-use Wanted;
+use Ampache\Model\Wanted;
 
 final class IndexAjaxHandler implements AjaxHandlerInterface
 {

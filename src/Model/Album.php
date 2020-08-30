@@ -42,7 +42,7 @@ use Song;
 use Tag;
 use Useractivity;
 use Userflag;
-use Wanted;
+use Ampache\Model\Wanted;
 
 /**
  * Album Class

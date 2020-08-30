@@ -31,7 +31,7 @@ use Browse;
 use Core;
 use Search;
 use Ampache\Module\Util\Ui;
-use Wanted;
+use Ampache\Model\Wanted;
 
 final class SearchApplication implements ApplicationInterface
 {

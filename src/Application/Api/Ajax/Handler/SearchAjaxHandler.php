@@ -34,7 +34,7 @@ use Playlist;
 use Search;
 use Song;
 use User;
-use Wanted;
+use Ampache\Model\Wanted;
 
 final class SearchAjaxHandler implements AjaxHandlerInterface
 {

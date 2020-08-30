@@ -33,7 +33,7 @@ use Catalog;
 use Core;
 use Song;
 use Ampache\Module\Util\Ui;
-use Wanted;
+use Ampache\Model\Wanted;
 
 final class AlbumApplication implements ApplicationInterface
 {

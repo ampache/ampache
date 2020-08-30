@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Model\Wanted;
+
 $object_ids = Wanted::get_wanted_list();
 $browse     = new Browse();
 $browse->set_type('wanted');

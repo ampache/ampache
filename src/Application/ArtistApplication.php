@@ -29,7 +29,7 @@ use AmpConfig;
 use Artist;
 use Catalog;
 use Ampache\Module\Util\Ui;
-use Wanted;
+use Ampache\Model\Wanted;
 
 final class ArtistApplication implements ApplicationInterface
 {

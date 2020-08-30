@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,17 +20,26 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Model\Album;
-use Ampache\Model\Plugin;
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
 use Ampache\Module\Api\Ajax;
+use AmpConfig;
+use Artist;
+use Core;
+use Dba;
+use Exception;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use MusicBrainz\Filters\ArtistFilter;
+use Song_preview;
+use User;
 
 /**
  * Class Wanted
  */
-class Wanted extends \Ampache\Model\database_object
+class Wanted extends database_object
 {
     /* Variables from DB */
 
@@ -138,10 +146,10 @@ class Wanted extends \Ampache\Model\database_object
             $albums = $artist->get_albums();
             foreach ($albums as $albumid) {
                 $album = new Album($albumid);
-                if (trim((string) $album->mbid_group)) {
+                if (trim((string)$album->mbid_group)) {
                     $owngroups[] = $album->mbid_group;
                 } else {
-                    if (trim((string) $album->mbid)) {
+                    if (trim((string)$album->mbid)) {
                         $malbum = $mbrainz->lookup('release', $album->mbid, array('release-groups'));
                         if ($malbum->{'release-group'}) {
                             if (!in_array($malbum->{'release-group'}->id, $owngroups)) {
@@ -160,12 +168,12 @@ class Wanted extends \Ampache\Model\database_object
 
         $results = array();
         foreach ($martist->{'release-groups'} as $group) {
-            if (in_array(strtolower((string) $group->{'primary-type'}), $types)) {
+            if (in_array(strtolower((string)$group->{'primary-type'}), $types)) {
                 $add     = true;
                 $g_count = count($group->{'secondary-types'});
 
                 for ($i = 0; $i < $g_count && $add; ++$i) {
-                    $add = in_array(strtolower((string) $group->{'secondary-types'}[$i]), $types);
+                    $add = in_array(strtolower((string)$group->{'secondary-types'}[$i]), $types);
                 }
 
                 if ($add) {
@@ -184,7 +192,7 @@ class Wanted extends \Ampache\Model\database_object
                             }
                             $wanted->name = $group->title;
                             if (!empty($group->{'first-release-date'})) {
-                                if (strlen((string) $group->{'first-release-date'}) == 4) {
+                                if (strlen((string)$group->{'first-release-date'}) == 4) {
                                     $wanted->year = $group->{'first-release-date'};
                                 } else {
                                     $wanted->year = date("Y", strtotime($group->{'first-release-date'}));
@@ -303,7 +311,7 @@ class Wanted extends \Ampache\Model\database_object
     public static function delete_wanted($mbid)
     {
         $sql    = "DELETE FROM `wanted` WHERE `mbid` = ?";
-        $params = array( $mbid );
+        $params = array($mbid);
         if (!Core::get_global('user')->has_access('75')) {
             $sql .= " AND `user` = ?";
             $params[] = Core::get_global('user')->id;
@@ -336,7 +344,7 @@ class Wanted extends \Ampache\Model\database_object
     public static function delete_wanted_by_name($artist, $album_name, $year)
     {
         $sql    = "DELETE FROM `wanted` WHERE `artist` = ? AND `name` = ? AND `year` = ?";
-        $params = array( $artist, $album_name, $year );
+        $params = array($artist, $album_name, $year);
         if (!Core::get_global('user')->has_access('75')) {
             $sql .= " AND `user` = ?";
             $params[] = Core::get_global('user')->id;
@@ -352,7 +360,7 @@ class Wanted extends \Ampache\Model\database_object
     {
         if (Core::get_global('user')->has_access('75')) {
             $sql = "UPDATE `wanted` SET `accepted` = '1' WHERE `mbid` = ?";
-            Dba::write($sql, array( $this->mbid ));
+            Dba::write($sql, array($this->mbid));
             $this->accepted = true;
 
             foreach (Plugin::get_plugins('process_wanted') as $plugin_name) {
@@ -403,11 +411,11 @@ class Wanted extends \Ampache\Model\database_object
         Dba::write($sql, $params);
 
         if ($accept) {
-            $wanted_id = (int) Dba::insert_id();
+            $wanted_id = (int)Dba::insert_id();
             $wanted    = new Wanted($wanted_id);
             $wanted->accept();
 
-            \Ampache\Model\database_object::remove_from_cache('wanted', $wanted_id);
+            database_object::remove_from_cache('wanted', $wanted_id);
         }
     }
 
@@ -419,14 +427,17 @@ class Wanted extends \Ampache\Model\database_object
         if ($this->id) {
             if (!$this->accepted) {
                 if (Core::get_global('user')->has_access('75')) {
-                    echo Ajax::button('?page=index&action=accept_wanted&mbid=' . $this->mbid, 'enable', T_('Accept'), 'wanted_accept_' . $this->mbid);
+                    echo Ajax::button('?page=index&action=accept_wanted&mbid=' . $this->mbid, 'enable', T_('Accept'),
+                        'wanted_accept_' . $this->mbid);
                 }
             }
             if (Core::get_global('user')->has_access('75') || (Wanted::has_wanted($this->mbid) && $this->accepted != '1')) {
-                echo " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->mbid, 'disable', T_('Remove'), 'wanted_remove_' . $this->mbid);
+                echo " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->mbid, 'disable', T_('Remove'),
+                        'wanted_remove_' . $this->mbid);
             }
         } else {
-            echo Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . ($this->artist ? '&artist=' . $this->artist : '&artist_mbid=' . $this->artist_mbid) . '&name=' . urlencode($this->name) . '&year=' . $this->year, 'add_wanted', T_('Add to wanted list'), 'wanted_add_' . $this->mbid);
+            echo Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . ($this->artist ? '&artist=' . $this->artist : '&artist_mbid=' . $this->artist_mbid) . '&name=' . urlencode($this->name) . '&year=' . $this->year,
+                'add_wanted', T_('Add to wanted list'), 'wanted_add_' . $this->mbid);
         }
     }
 
@@ -440,7 +451,7 @@ class Wanted extends \Ampache\Model\database_object
         $this->songs = array();
 
         try {
-            $group = $mbrainz->lookup('release-group', $this->mbid, array( 'releases' ));
+            $group = $mbrainz->lookup('release-group', $this->mbid, array('releases'));
             // Set fresh data
             $this->name = $group->title;
             $this->year = date("Y", strtotime($group->{'first-release-date'}));
@@ -451,7 +462,7 @@ class Wanted extends \Ampache\Model\database_object
                 $this->release_mbid = $group->releases[0]->id;
                 if ($track_details && count($this->songs) == 0) {
                     // Use the first release as reference for track content
-                    $release = $mbrainz->lookup('release', $this->release_mbid, array( 'recordings' ));
+                    $release = $mbrainz->lookup('release', $this->release_mbid, array('recordings'));
                     foreach ($release->media as $media) {
                         foreach ($media->tracks as $track) {
                             $song          = array();
@@ -478,7 +489,8 @@ class Wanted extends \Ampache\Model\database_object
                             foreach (Plugin::get_plugins('get_song_preview') as $plugin_name) {
                                 $plugin = new Plugin($plugin_name);
                                 if ($plugin->load(Core::get_global('user'))) {
-                                    $song['file'] = $plugin->_plugin->get_song_preview($track->id, $artist_name, $track->title);
+                                    $song['file'] = $plugin->_plugin->get_song_preview($track->id, $artist_name,
+                                        $track->title);
                                     if ($song['file'] != null) {
                                         break;
                                     }
@@ -486,7 +498,7 @@ class Wanted extends \Ampache\Model\database_object
                             }
 
                             if ($song != null) {
-                                $this->songs[] = new Song_Preview(Song_preview::insert($song));
+                                $this->songs[] = new Song_preview(Song_preview::insert($song));
                             }
                         }
                     }
@@ -531,7 +543,7 @@ class Wanted extends \Ampache\Model\database_object
         $sql = "SELECT `id` FROM `wanted` ";
 
         if (!Core::get_global('user')->has_access('75')) {
-            $sql .= "WHERE `user` = '" . (string) Core::get_global('user')->id . "'";
+            $sql .= "WHERE `user` = '" . (string)Core::get_global('user')->id . "'";
         }
 
         return $sql;
@@ -553,4 +565,4 @@ class Wanted extends \Ampache\Model\database_object
 
         return $results;
     }
-} // end wanted.class
+}
