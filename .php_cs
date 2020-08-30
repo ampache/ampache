@@ -3,9 +3,9 @@
 $finder = PhpCsFixer\Finder::create()
     ->exclude('public/lib/components')
     ->exclude('vendor')
-    ->exclude('modules')
-    ->in(__DIR__)
-    ->in(__DIR__ . '/modules/plugins')
+    ->in('public/')
+    ->in('src/')
+    ->in('tests/')
 ;
 
 return PhpCsFixer\Config::create()

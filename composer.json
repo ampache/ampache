@@ -66,11 +66,13 @@
         "kunalvarma05/dropbox-php-sdk": "^0.2.1",
         "maennchen/zipstream-php": "0.4.*",
         "mikealmond/musicbrainz": "dev-master",
+        "moinax/tvdb": "1.*",
         "mptre/php-soundcloud": "2.*",
         "needim/noty": "2.4.*",
         "oomphinc/composer-installers-extender": "^2.0",
         "openid/php-openid": "^3",
         "php-di/php-di": "^6.0",
+        "php-tmdb/api": "2.*",
         "phpmailer/phpmailer": "6.1.*",
         "pklauzinski/jscroll": "2.*",
         "rmccue/requests": "1.7.*",
@@ -84,7 +86,6 @@
         "symfony/routing": "^3.0",
         "tightenco/collect": "5.2.*",
         "vakata/jstree": "3.*",
-        "wikimedia/composer-merge-plugin": "1.*",
         "xdan/datetimepicker": "2.*"
     },
     "require-dev": {
@@ -351,14 +352,6 @@
         }
     ],
     "extra": {
-        "merge-plugin": {
-            "include": [
-                "modules/plugins/*/composer.module.json"
-            ],
-            "recurse": false,
-            "replace": false,
-            "merge-extra": false
-        },
         "sort-packages": true,
         "installer-types": ["component"],
         "installer-paths": {

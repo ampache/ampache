@@ -24,9 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\System\Dba;
-use Exception;
+use Ampache\Plugin\PluginEnum;
 
 class Plugin
 {
@@ -52,45 +51,22 @@ class Plugin
         return true;
     } // Constructor
 
-
     /**
      * has_info
-     * This actually loads the config file for the plugin the name of the
-     * class contained within the config file must be Plugin[NAME OF FILE]
+
      * @param string $cname
      * @return boolean
      */
     public function has_info($cname)
     {
-        try {
-            $basedir = __DIR__ . '/../../modules/plugins';
-            if (is_dir($basedir . '/' . $cname)) {
-                $name = $cname;
-            } else {
-                $name = 'ampache-' . strtolower((string)$cname);
-            }
-
-            /* Require the file we want */
-            if (!include_once($basedir . '/' . $name . '/' . $cname . '.plugin.php')) {
-                debug_event('plugin.class', 'Cannot include plugin `' . $cname . '`.', 1);
-
-                return false;
-            }
-
-            $plugin_name   = ObjectTypeToClassNameMapper::map("Ampache$cname");
-            $this->_plugin = new $plugin_name();
-
-            if (!$this->is_valid()) {
-                return false;
-            }
-        } catch (Exception $ex) {
-            debug_event('plugin.class', 'Error when initializing plugin `' . $cname . '`: ' . $ex->getMessage(), 1);
-
-            return false;
+        $controller = PluginEnum::LIST[strtolower($cname)] ?? null;
+        if ($controller === null) {
+            debug_event('plugin.class', 'Cannot find plugin `' . $cname . '`.', 1);
         }
+        $this->_plugin = new $controller();
 
-        return true;
-    } // has_info
+        return $this->is_valid();
+    }
 
     /**
      * get_plugins
@@ -108,56 +84,25 @@ class Plugin
 
         $plugins_list[$type] = array();
 
-        // Open up the plugin dir
-        $basedir = __DIR__ . '/../../modules/plugins';
-        $handle  = opendir($basedir);
-
-        if (!is_resource($handle)) {
-            debug_event('plugin.class', 'Unable to read plugins directory', 1);
-        }
-
-        // Recurse the directory
-        while (false !== ($file = readdir($handle))) {
-            if ($file === '.' || $file === '..') {
-                continue;
-            }
-            // Take care of directories only
-            if (!is_dir($basedir . '/' . $file)) {
-                debug_event('plugin.class', $file . ' is not a directory.', 3);
-                continue;
-            }
-
-            // If directory name start with ampache-, this is an external plugin and some parsing is required
-            if (strpos($file, "ampache-") === 0) {
-                $cfile = ucfirst(substr($file, 8));
-            } else {
-                $cfile = $file;
-            }
-
-            // Make sure the plugin base file exists inside the plugin directory
-            if (!file_exists($basedir . '/' . $file . '/' . $cfile . '.plugin.php')) {
-                debug_event('plugin.class', 'Missing class for ' . $cfile, 3);
-                continue;
-            }
-
+        foreach (PluginEnum::LIST as $name => $className) {
             if ($type != '') {
-                $plugin = new Plugin($cfile);
+                $plugin = new Plugin($name);
                 if (!Plugin::is_installed($plugin->_plugin->name)) {
                     debug_event('plugin.class', 'Plugin ' . $plugin->_plugin->name . ' is not installed, skipping', 6);
                     continue;
                 }
                 if (!$plugin->is_valid()) {
-                    debug_event('plugin.class', 'Plugin ' . $cfile . ' is not valid, skipping', 6);
+                    debug_event('plugin.class', 'Plugin ' . $name . ' is not valid, skipping', 6);
                     continue;
                 }
                 if (!method_exists($plugin->_plugin, $type)) {
-                    debug_event('plugin.class', 'Plugin ' . $cfile . ' does not support ' . $type . ', skipping', 6);
+                    debug_event('plugin.class', 'Plugin ' . $name . ' does not support ' . $type . ', skipping', 6);
                     continue;
                 }
             }
             // It's a plugin record it
-            $plugins_list[$type][$cfile] = $cfile;
-        } // end while
+            $plugins_list[$type][$name] = $name;
+        }
 
         // Little stupid but hey
         ksort($plugins_list[$type]);
