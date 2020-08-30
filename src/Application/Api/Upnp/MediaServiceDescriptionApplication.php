@@ -27,7 +27,7 @@ namespace Ampache\Application\Api\Upnp;
 
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;
-use Upnp_Api;
+use Ampache\Module\Api\Upnp_Api;
 
 final class MediaServiceDescriptionApplication implements ApplicationInterface
 {

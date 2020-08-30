@@ -27,7 +27,7 @@ namespace Ampache\Application\Api\Upnp;
 
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;
-use Upnp_Api;
+use Ampache\Module\Api\Upnp_Api;
 
 final class CmControlReplyApplication implements ApplicationInterface
 {
@@ -58,7 +58,7 @@ final class CmControlReplyApplication implements ApplicationInterface
         switch ($upnpRequest['action']) {
             case 'getprotocolinfo':
                 $responseType = 'u:GetProtocolInfoResponse';
-                //$items = Upnp_Api::cm_getProtocolInfo();
+                //$items = Ampache\Module\Api\Upnp_Api::cm_getProtocolInfo();
                 break;
         }
     }

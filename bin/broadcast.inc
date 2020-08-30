@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Module\Api\Upnp_Api;
+
 define('NO_SESSION', '1');
 define('CLI', 1);
 

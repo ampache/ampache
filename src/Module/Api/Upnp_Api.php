@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,18 +20,40 @@ declare(strict_types=0);
  *
  */
 
-/**
- * This class is a derived work from UMSP project (http://wiki.wdlxtv.com/UMSP).
- */
+declare(strict_types=0);
+
+namespace Ampache\Module\Api;
 
 use Ampache\Model\Album;
 use Ampache\Module\Playback\Stream;
+use AmpConfig;
+use Art;
+use Artist;
+use Catalog;
+use Clip;
+use DOMDocument;
+use Live_Stream;
+use Movie;
+use Personal_Video;
+use Playlist;
+use Podcast;
+use Podcast_Episode;
+use Search;
+use Song;
+use Tag;
+use TVShow;
+use TVShow_Episode;
+use TVShow_Season;
+use Video;
+use XMLReader;
 
 /**
  * UPnP Class
  *
  * This class wrap Ampache to UPnP API functions.
  * These are all static calls.
+ *
+ * This class is a derived work from UMSP project (http://wiki.wdlxtv.com/UMSP).
  *
  */
 class Upnp_Api
@@ -47,23 +68,16 @@ class Upnp_Api
      */
 
     /**
-     * constructor
-     * This really isn't anything to do here, so it's private
-     */
-    private function __construct()
-    {
-    }
-
-    /**
      * @return string
      */
     public static function get_uuidStr()
     {
         // Create uuid based on host
-        $key     = 'ampache_' . AmpConfig::get('http_host');
-        $hash    = hash('md5', $key);
+        $key  = 'ampache_' . AmpConfig::get('http_host');
+        $hash = hash('md5', $key);
 
-        return substr($hash, 0, 8) . '-' . substr($hash, 8, 4) . '-' . substr($hash, 12, 4) . '-' . substr($hash, 16, 4) . '-' . substr($hash, 20);
+        return substr($hash, 0, 8) . '-' . substr($hash, 8, 4) . '-' . substr($hash, 12, 4) . '-' . substr($hash, 16,
+                4) . '-' . substr($hash, 20);
     }
 
     /**
@@ -76,7 +90,7 @@ class Upnp_Api
     {
         $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
         socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);
-        socket_sendto($socket, $buf, strlen((string) $buf), 0, $host, $port);
+        socket_sendto($socket, $buf, strlen((string)$buf), 0, $host, $port);
         socket_close($socket);
         usleep($delay * 1000);
     }
@@ -89,7 +103,7 @@ class Upnp_Api
      */
     public static function sddpSend($delay = 15, $host = "239.255.255.250", $port = 1900, $prefix = "NT")
     {
-        $strHeader  = 'NOTIFY * HTTP/1.1' . "\r\n";
+        $strHeader = 'NOTIFY * HTTP/1.1' . "\r\n";
         $strHeader .= 'HOST: ' . $host . ':' . $port . "\r\n";
         $strHeader .= 'LOCATION: http://' . AmpConfig::get('http_host') . ':' . AmpConfig::get('http_port') . AmpConfig::get('raw_web_path') . '/upnp/MediaServerServiceDesc.php' . "\r\n";
         $strHeader .= 'SERVER: DLNADOC/1.50 UPnP/1.0 Ampache/' . AmpConfig::get('version') . "\r\n";
@@ -288,7 +302,8 @@ class Upnp_Api
                         $ndTag = $xmlDoc->createElement($key);
                         $ndItem->appendChild($ndTag);
                         // check if string is already utf-8 encoded
-                        $ndTag_text = $xmlDoc->createTextNode((mb_detect_encoding($value, 'auto') == 'UTF-8')?$value:utf8_encode($value));
+                        $ndTag_text = $xmlDoc->createTextNode((mb_detect_encoding($value,
+                                'auto') == 'UTF-8') ? $value : utf8_encode($value));
                         $ndTag->appendChild($ndTag_text);
                 }
                 if ($useRes) {
@@ -309,8 +324,13 @@ class Upnp_Api
      * @param string $prmUpdateID
      * @return DOMDocument
      */
-    public static function createSOAPEnvelope($prmDIDL, $prmNumRet, $prmTotMatches, $prmResponseType = 'u:BrowseResponse', $prmUpdateID = '0')
-    {
+    public static function createSOAPEnvelope(
+        $prmDIDL,
+        $prmNumRet,
+        $prmTotMatches,
+        $prmResponseType = 'u:BrowseResponse',
+        $prmUpdateID = '0'
+    ) {
         /*
          * $prmDIDL is DIDL XML string
          * XML-Layout:
@@ -801,7 +821,7 @@ class Upnp_Api
                             $video->format();
                             $meta = self::_itemVideo($video, $root . '/tvshows/' . $pathreq[1] . '/' . $pathreq[2]);
                         }
-                    break;
+                        break;
                 }
                 break;
             case 'clips':
@@ -1330,4 +1350,4 @@ class Upnp_Api
             '3gp' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mp4:*',),
         );
     }
-} // end upnp_api.class
+}
