@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
+use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;

@@ -29,8 +29,6 @@ use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;
-use Ampache\Model\Podcast_Episode;
-use Ampache\Model\Song;
 use Ampache\Model\User;
 use Ampache\Model\Useractivity;
 use Ampache\Model\Video;
@@ -302,7 +300,7 @@ class Stats
     /**
      * has_played_history
      * this checks to see if the current object has been played recently by the user
-     * @param \Ampache\Model\Song|\Ampache\Model\Podcast_Episode|Video $object
+     * @param Song|Podcast_Episode|Video $object
      * @param integer $user
      * @param string $agent
      * @param integer $date

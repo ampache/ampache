@@ -1,6 +1,6 @@
 <?php
-declare(strict_types=0);
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,10 +20,15 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\Playback\Localplay\Upnp;
+
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Song;
 use Ampache\Module\Api\Upnp_Api;
 use Ampache\Module\System\Session;
+use SimpleXMLElement;
 
 /**
  * UPnPPlayer Class
@@ -78,9 +83,6 @@ class UPnPPlayer
      */
     public function __construct($name = "noname", $description_url = "http://localhost")
     {
-        require_once __DIR__ . '/../../../modules/localplay/upnp/UPnPDevice.php';
-        require_once __DIR__ . '/../../../modules/localplay/upnp/UPnPPlaylist.php';
-
         debug_event('upnpplayer.class', 'constructor: ' . $name . ' | ' . $description_url, 5);
         $this->_description_url = $description_url;
 
@@ -127,10 +129,10 @@ class UPnPPlayer
     }
 
     /**
-    * GetPlayListItems
-    * This returns a delimited string of all of the filenames
-    * current in your playlist, only url's at the moment
-    */
+     * GetPlayListItems
+     * This returns a delimited string of all of the filenames
+     * current in your playlist, only url's at the moment
+     */
     public function GetPlaylistItems()
     {
         return $this->Playlist()->AllItems();
@@ -167,7 +169,7 @@ class UPnPPlayer
     public function Next($forcePlay = true)
     {
         // get current internal play state, for case if someone has changed it
-        if (! $forcePlay) {
+        if (!$forcePlay) {
             $this->ReadIndState();
         }
         if (($forcePlay || ($this->_intState == 1)) && ($this->Playlist()->Next())) {
@@ -266,7 +268,7 @@ class UPnPPlayer
         $currentSongArgs = $this->prepareURIRequest($this->Playlist()->CurrentItem(), "Current");
         $response        = $this->Device()->sendRequestToDevice('SetAVTransportURI', $currentSongArgs, 'AVTransport');
 
-        $args     = array( 'InstanceID' => 0, 'Speed' => 1);
+        $args     = array('InstanceID' => 0, 'Speed' => 1);
         $response = $this->Device()->sendRequestToDevice('Play', $args, 'AVTransport');
 
         //!! UPNP subscription work not for all renderers, and works strange
@@ -311,7 +313,7 @@ class UPnPPlayer
         if ($state == 'PLAYING') {
             $response = $this->Device()->instanceOnly('Pause');
         } else {
-            $args     = array( 'InstanceID' => 0, 'Speed' => 1);
+            $args     = array('InstanceID' => 0, 'Speed' => 1);
             $response = $this->Device()->sendRequestToDevice('Play', $args, 'AVTransport');
         }
 
@@ -423,8 +425,8 @@ class UPnPPlayer
 
         $sid  = 'upnp_ply_' . $this->_description_url;
         $data = json_encode($this->_intState);
-        if (! Session::exists('stream', $sid)) {
-            Session::create(array('type' => 'stream', 'sid' => $sid, 'value' => $data ));
+        if (!Session::exists('stream', $sid)) {
+            Session::create(array('type' => 'stream', 'sid' => $sid, 'value' => $data));
         } else {
             Session::write($sid, $data);
         }
@@ -439,4 +441,4 @@ class UPnPPlayer
         $this->_intState = json_decode($data, true);
         debug_event('upnpplayer.class', 'ReadIndState:' . $this->_intState, 5);
     }
-} // End UPnPPlayer Class
+}

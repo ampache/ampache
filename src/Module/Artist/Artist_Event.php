@@ -54,7 +54,7 @@ class Artist_Event
     /**
      * get_upcoming_events
      * Returns a list of upcoming events
-     * @param \Ampache\Model\Artist $artist
+     * @param Artist $artist
      * @return SimpleXMLElement|boolean
      */
     public static function get_upcoming_events(Artist $artist)
@@ -82,7 +82,7 @@ class Artist_Event
     /**
      * get_past_events
      * Returns a list of past events
-     * @param \Ampache\Model\Artist $artist
+     * @param Artist $artist
      * @return SimpleXMLElement|boolean
      */
     public static function get_past_events(Artist $artist)

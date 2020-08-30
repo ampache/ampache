@@ -27,7 +27,7 @@ namespace Ampache\Module\Api;
 use Ampache\Model\Album;
 use Ampache\Model\Random;
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\Playback\LocalPlay;
+use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\Stream_Url;

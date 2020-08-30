@@ -1042,7 +1042,7 @@ class Upnp_Api
     }
 
     /**
-     * @param \Ampache\Model\Artist $artist
+     * @param Artist $artist
      * @param string $parent
      * @return array
      */
@@ -1114,7 +1114,7 @@ class Upnp_Api
     }
 
     /**
-     * @param \Ampache\Model\Song $song
+     * @param Song $song
      * @param string $parent
      * @return array
      */
@@ -1151,7 +1151,7 @@ class Upnp_Api
     }
 
     /**
-     * @param \Ampache\Model\Live_Stream $radio
+     * @param Live_Stream $radio
      * @param string $parent
      * @return array
      */
@@ -1194,7 +1194,7 @@ class Upnp_Api
     }
 
     /**
-     * @param \Ampache\Model\TVShow_Season $season
+     * @param TVShow_Season $season
      * @param string $parent
      * @return array
      */

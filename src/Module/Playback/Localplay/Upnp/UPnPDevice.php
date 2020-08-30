@@ -1,10 +1,31 @@
 <?php
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright 2001 - 2020 Ampache.org
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+declare(strict_types=0);
+
+namespace Ampache\Module\Playback\Localplay\Upnp;
 
 use Ampache\Module\System\Session;
 
-/**
- * Class UPnPDevice
- */
 class UPnPDevice
 {
     private $_settings = array(
@@ -21,7 +42,7 @@ class UPnPDevice
      */
     public function __construct($descriptionUrl)
     {
-        if (! $this->restoreDescriptionUrl($descriptionUrl)) {
+        if (!$this->restoreDescriptionUrl($descriptionUrl)) {
             $this->parseDescriptionUrl($descriptionUrl);
         }
     }
@@ -65,8 +86,8 @@ class UPnPDevice
             $serviceType                                      = $service->serviceType;
             $serviceTypeNames                                 = explode(":", $serviceType);
             $serviceTypeName                                  = $serviceTypeNames[3];
-            $this->_settings['controlURLs'][$serviceTypeName] = (string) $service->controlURL;
-            $this->_settings['eventURLs'][$serviceTypeName]   = (string) $service->eventSubURL;
+            $this->_settings['controlURLs'][$serviceTypeName] = (string)$service->controlURL;
+            $this->_settings['eventURLs'][$serviceTypeName]   = (string)$service->eventSubURL;
         }
 
         $urldata                 = parse_url($descriptionUrl);
@@ -91,7 +112,7 @@ class UPnPDevice
      */
     public function sendRequestToDevice($method, $arguments, $type = 'RenderingControl')
     {
-        $body  ='<?xml version="1.0" encoding="utf-8"?>';
+        $body = '<?xml version="1.0" encoding="utf-8"?>';
         $body .= '<s:Envelope s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body>';
         $body .= '  <u:' . $method . ' xmlns:u="urn:schemas-upnp-org:service:' . $type . ':1">';
         foreach ($arguments as $arg => $value) {
@@ -100,7 +121,8 @@ class UPnPDevice
         $body .= '  </u:' . $method . '>';
         $body .= '</s:Body></s:Envelope>';
 
-        $controlUrl = $this->_settings['host'] . ((substr($this->_settings['controlURLs'][$type], 0, 1) != "/") ? "/" : "") . $this->_settings['controlURLs'][$type];
+        $controlUrl = $this->_settings['host'] . ((substr($this->_settings['controlURLs'][$type], 0,
+                    1) != "/") ? "/" : "") . $this->_settings['controlURLs'][$type];
 
         //!! TODO - need to use scheme in header ??
         $header = array(
@@ -180,7 +202,7 @@ class UPnPDevice
     // helper function for calls that require only an instance id
     public function instanceOnly($command, $type = 'AVTransport', $instance_id = 0)
     {
-        $args     = array( 'InstanceID' => $instance_id );
+        $args = array('InstanceID' => $instance_id);
         //$response = \Format::forge($response, 'xml:ns')->to_array();
         //return $response['s:Body']['u:' . $command . 'Response'];
 

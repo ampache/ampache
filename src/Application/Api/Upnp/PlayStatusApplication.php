@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Upnp;
 
 use Ampache\Application\ApplicationInterface;
-use AmpacheUPnP;
+use Ampache\Module\Playback\Localplay\Upnp\AmpacheUPnP;
 use Ampache\Config\AmpConfig;
-use UPnPPlayer;
+use Ampache\Module\Playback\Localplay\Upnp\UPnPPlayer;
 
 final class PlayStatusApplication implements ApplicationInterface
 {

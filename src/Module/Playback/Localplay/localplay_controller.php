@@ -20,7 +20,7 @@
  *
  */
 
-namespace Ampache\Model;
+namespace Ampache\Module\Playback\Localplay;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream_Url;

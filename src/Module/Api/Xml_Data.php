@@ -874,7 +874,7 @@ class Xml_Data
      *
      * This handles creating an xml document for a user
      *
-     * @param \Ampache\Model\User $user User
+     * @param User $user User
      * @param bool $fullinfo
      * @return string return xml
      */

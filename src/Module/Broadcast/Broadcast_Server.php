@@ -61,7 +61,7 @@ class Broadcast_Server implements MessageComponentInterface
      */
     protected $listeners;
     /**
-     * @var \Ampache\Model\Broadcast[] $broadcasters
+     * @var Broadcast[] $broadcasters
      */
     protected $broadcasters;
 

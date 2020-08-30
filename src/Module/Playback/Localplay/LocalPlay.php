@@ -22,14 +22,18 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Module\Playback;
+namespace Ampache\Module\Playback\Localplay;
 
-use Ampache\Model\localplay_controller;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Model\Preference;
+use Ampache\Module\Playback\Localplay\HttpQ\AmpacheHttpq;
+use Ampache\Module\Playback\Localplay\Mpd\AmpacheMpd;
+use Ampache\Module\Playback\Localplay\Upnp\AmpacheUPnP;
+use Ampache\Module\Playback\Localplay\Vlc\AmpacheVlc;
+use Ampache\Module\Playback\Localplay\Xbmc\AmpacheXbmc;
 
 class LocalPlay
 {
@@ -109,25 +113,30 @@ class LocalPlay
             return false;
         }
 
-        $filename = __DIR__ . '/../../../modules/localplay/' . $this->type . '/' . $this->type . '.controller.php';
-        $include  = require_once $filename;
+        $typeMapping = [
+            'httpq' => AmpacheHttpq::class,
+            'mpd' => AmpacheMpd::class,
+            'upnp' => AmpacheUPnP::class,
+            'vlc' => AmpacheVlc::class,
+            'xbmc' => AmpacheXbmc::class,
+        ];
 
-        if (!$include) {
+        $controller = $typeMapping[$this->type] ?? null;
+
+        if ($controller === null) {
             /* Throw Error Here */
             debug_event('localplay.class', 'Unable to load ' . $this->type . ' controller', 2);
 
             return false;
-        } // include
-        else {
-            $class_name    = ObjectTypeToClassNameMapper::map("Ampache" . $this->type);
-            $this->_player = new $class_name();
-            if (!($this->_player instanceof localplay_controller)) {
-                debug_event('localplay.class', $this->type . ' not an instance of controller abstract, unable to load',
-                    1);
-                unset($this->_player);
+        }
 
-                return false;
-            }
+        $this->_player = new $controller();
+        if (!($this->_player instanceof localplay_controller)) {
+            debug_event('localplay.class', $this->type . ' not an instance of controller abstract, unable to load',
+                1);
+            unset($this->_player);
+
+            return false;
         }
 
         return true;

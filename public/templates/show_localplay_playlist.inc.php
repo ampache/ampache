@@ -22,7 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Playback\LocalPlay;
+use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
 
 $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));

@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,13 +20,16 @@
  *
  */
 
+namespace Ampache\Module\Playback\Localplay\Upnp;
+
 use Ampache\Config\AmpConfig;
-use Ampache\Model\localplay_controller;
+use Ampache\Module\Playback\Localplay\localplay_controller;
 use Ampache\Model\Preference;
 use Ampache\Model\Song;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use PDOStatement;
 
 /**
  * AmpacheUPnp Class
@@ -44,18 +47,6 @@ class AmpacheUPnP extends localplay_controller
 
     /* @var UPnPPlayer $object */
     private $_upnp;
-
-
-    /**
-     * Constructor
-     * This returns the array map for the Localplay object
-     * REQUIRED for Localplay
-     */
-    public function __construct()
-    {
-        /* Do a Require Once On the needed Libraries */
-        require_once __DIR__ . '/../../../modules/localplay/upnp/upnpplayer.class.php';
-    }
 
     /**
      * get_description
@@ -97,11 +88,7 @@ class AmpacheUPnP extends localplay_controller
         $charset   = (AmpConfig::get('database_charset', 'utf8'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `localplay_upnp` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-            "`name` VARCHAR( 128 ) COLLATE $collation NOT NULL , " .
-            "`owner` INT( 11 ) NOT NULL, " .
-            "`url` VARCHAR( 255 ) COLLATE $collation NOT NULL  " .
-            ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `localplay_upnp` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`name` VARCHAR( 128 ) COLLATE $collation NOT NULL , " . "`owner` INT( 11 ) NOT NULL, " . "`url` VARCHAR( 255 ) COLLATE $collation NOT NULL  " . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
@@ -133,8 +120,7 @@ class AmpacheUPnP extends localplay_controller
      */
     public function add_instance($data)
     {
-        $sql = "INSERT INTO `localplay_upnp` (`name`, `url`, `owner`) " .
-            "VALUES (?, ?, ?)";
+        $sql = "INSERT INTO `localplay_upnp` (`name`, `url`, `owner`) " . "VALUES (?, ?, ?)";
 
         return Dba::query($sql, array($data['name'], $data['url'], Core::get_global('user')->id));
     }
@@ -555,7 +541,8 @@ class AmpacheUPnP extends localplay_controller
     public function connect()
     {
         $options = self::get_instance();
-        debug_event('upnp.controller', 'Trying to connect UPnP instance ' . $options['name'] . ' ( ' . $options['url'] . ' )', 5);
+        debug_event('upnp.controller',
+            'Trying to connect UPnP instance ' . $options['name'] . ' ( ' . $options['url'] . ' )', 5);
         $this->_upnp = new UPnPPlayer($options['name'], $options['url']);
         debug_event('upnp.controller', 'Connected.', 5);
 

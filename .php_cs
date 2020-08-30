@@ -12,7 +12,6 @@ $finder = PhpCsFixer\Finder::create()
     ->exclude('nbproject')
     ->notPath('src/Symfony/Component/Translation/Tests/fixtures/resources.php')
     ->in(__DIR__)
-    ->in(__DIR__ . '/modules/localplay')
     ->in(__DIR__ . '/modules/catalog')
     ->in(__DIR__ . '/modules/plugins')
 ;

@@ -170,7 +170,7 @@
                         ]
                     }
                 }
-             }
+            }
 
         },
         {
@@ -340,7 +340,6 @@
         "merge-plugin": {
             "include": [
                 "modules/catalog/*/composer.module.json",
-                "modules/localplay/*/composer.module.json",
                 "modules/plugins/*/composer.module.json"
             ],
             "recurse": false,
@@ -368,10 +367,10 @@
     },
     "scripts": {
         "coverage": "./vendor/bin/phpunit --warm-coverage-cache && ./vendor/bin/phpunit --coverage-html build/coverage tests",
-	"tests": "./vendor/bin/phpunit tests",
+        "tests": "./vendor/bin/phpunit tests",
         "codestyle": "resources/scripts/tests/codestyle.sh",
         "syntax": "resources/scripts/tests/syntax.sh",
-	"fix-cs": "vendor/bin/php-cs-fixer fix -v ."
+        "fix-cs": "vendor/bin/php-cs-fixer fix -v ."
     },
     "suggest": {
         "szymach/c-pchart": "Enable graphical statistics",

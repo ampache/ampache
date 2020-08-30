@@ -30,8 +30,8 @@ header('Connection: Close');
 set_time_limit(0);
 
 require_once __DIR__ . '/../../src/Config/init.php';
-require_once __DIR__ . '/../../modules/localplay/upnp/upnp.controller.php';
-require_once __DIR__ . '/../../modules/localplay/upnp/upnpplayer.class.php';
+require_once __DIR__ . '/../../modules/localplay/upnp/AmpacheUPnP.php';
+require_once __DIR__ . '/../../modules/localplay/upnp/UPnPPlayer.php';
 
 $dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
 

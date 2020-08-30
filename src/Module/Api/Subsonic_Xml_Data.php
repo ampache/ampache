@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Model\Album;
-use Ampache\Module\Playback\LocalPlay;
+use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Config\AmpConfig;
@@ -35,7 +35,6 @@ use Ampache\Model\Catalog;
 use Ampache\Module\System\Dba;
 use Ampache\Model\Live_Stream;
 use Ampache\Model\Playlist;
-use Ampache\Model\Podcast;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Preference;
 use Ampache\Model\PrivateMsg;
@@ -524,7 +523,7 @@ class Subsonic_Xml_Data
     /**
      * addArtist
      * @param SimpleXMLElement $xml
-     * @param \Ampache\Model\Artist $artist
+     * @param Artist $artist
      * @param boolean $extra
      * @param boolean $albums
      * @param boolean $albumsSet
@@ -868,7 +867,7 @@ class Subsonic_Xml_Data
      * getAmpacheObject
      * Return the Ampache media object
      * @param integer $object_id
-     * @return \Ampache\Model\Song|Video|\Ampache\Model\Podcast_Episode|null
+     * @return Song|Video|Podcast_Episode|null
      */
     public static function getAmpacheObject($object_id)
     {
@@ -1027,7 +1026,7 @@ class Subsonic_Xml_Data
     /**
      * addPlaylist
      * @param SimpleXMLElement $xml
-     * @param \Ampache\Model\Playlist $playlist
+     * @param Playlist $playlist
      * @param boolean $songs
      */
     public static function addPlaylist($xml, $playlist, $songs = false)
@@ -1255,7 +1254,7 @@ class Subsonic_Xml_Data
     /**
      * addRadio
      * @param SimpleXMLElement $xml
-     * @param \Ampache\Model\Live_Stream $radio
+     * @param Live_Stream $radio
      */
     public static function addRadio($xml, $radio)
     {
@@ -1444,7 +1443,7 @@ class Subsonic_Xml_Data
     /**
      * addPodcasts
      * @param SimpleXMLElement $xml
-     * @param \Ampache\Model\Podcast[] $podcasts
+     * @param Podcast[] $podcasts
      * @param boolean $includeEpisodes
      */
     public static function addPodcasts($xml, $podcasts, $includeEpisodes = true)
@@ -1474,7 +1473,7 @@ class Subsonic_Xml_Data
     /**
      * addPodcastEpisode
      * @param SimpleXMLElement $xml
-     * @param \Ampache\Model\Podcast_Episode $episode
+     * @param Podcast_Episode $episode
      * @param string $elementName
      */
     private static function addPodcastEpisode($xml, $episode, $elementName = 'episode')
@@ -1512,7 +1511,7 @@ class Subsonic_Xml_Data
     /**
      * addNewestPodcastEpisodes
      * @param SimpleXMLElement $xml
-     * @param \Ampache\Model\Podcast_Episode[] $episodes
+     * @param Podcast_Episode[] $episodes
      */
     public static function addNewestPodcastEpisodes($xml, $episodes)
     {
@@ -1581,7 +1580,7 @@ class Subsonic_Xml_Data
     /**
      * addMessage
      * @param SimpleXMLElement $xml
-     * @param \Ampache\Model\PrivateMsg $message
+     * @param PrivateMsg $message
      */
     private static function addMessage($xml, $message)
     {

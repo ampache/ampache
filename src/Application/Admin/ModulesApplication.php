@@ -30,7 +30,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
-use Ampache\Module\Playback\LocalPlay;
+use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Model\Plugin;
 use Ampache\Model\Preference;
 use Ampache\Module\Util\Ui;

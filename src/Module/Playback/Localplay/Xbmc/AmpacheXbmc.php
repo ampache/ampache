@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,27 +20,31 @@
  *
  */
 
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+namespace Ampache\Module\Playback\Localplay\Xbmc;
+
 use Ampache\Config\AmpConfig;
-use Ampache\Model\localplay_controller;
+use Ampache\Module\Playback\Localplay\localplay_controller;
 use Ampache\Model\Preference;
 use Ampache\Model\Song;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use PDOStatement;
+use XBMC_RPC_ConnectionException;
+use XBMC_RPC_Exception;
+use XBMC_RPC_HTTPClient;
 
 /**
- * AmpacheXbmc Class
- *
  * This is the class for the XBMC Localplay method to remote control
  * a XBMC Instance
- *
  */
 class AmpacheXbmc extends localplay_controller
 {
     /* Variables */
-    private $version        = '000001';
-    private $description    = 'Controls a XBMC instance';
-
+    private $version     = '000001';
+    private $description = 'Controls a XBMC instance';
 
     /* Constructed variables */
     private $_xbmc;
@@ -89,14 +93,7 @@ class AmpacheXbmc extends localplay_controller
         $charset   = (AmpConfig::get('database_charset', 'utf8'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `localplay_xbmc` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-            "`name` VARCHAR( 128 ) COLLATE $collation NOT NULL , " .
-            "`owner` INT( 11 ) NOT NULL, " .
-            "`host` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
-            "`port` INT( 11 ) UNSIGNED NOT NULL , " .
-            "`user` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
-            "`pass` VARCHAR( 255 ) COLLATE $collation NOT NULL" .
-            ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `localplay_xbmc` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`name` VARCHAR( 128 ) COLLATE $collation NOT NULL , " . "`owner` INT( 11 ) NOT NULL, " . "`host` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`port` INT( 11 ) UNSIGNED NOT NULL , " . "`user` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`pass` VARCHAR( 255 ) COLLATE $collation NOT NULL" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
@@ -128,10 +125,16 @@ class AmpacheXbmc extends localplay_controller
      */
     public function add_instance($data)
     {
-        $sql = "INSERT INTO `localplay_xbmc` (`name`, `host`, `port`, `user`, `pass`, `owner`) " .
-            "VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `localplay_xbmc` (`name`, `host`, `port`, `user`, `pass`, `owner`) " . "VALUES (?, ?, ?, ?, ?, ?)";
 
-        return Dba::query($sql, array($data['name'], $data['host'], $data['port'], $data['user'], $data['pass'], Core::get_global('user')->id));
+        return Dba::query($sql, array(
+            $data['name'],
+            $data['host'],
+            $data['port'],
+            $data['user'],
+            $data['pass'],
+            Core::get_global('user')->id
+        ));
     } // add_instance
 
     /**
@@ -337,13 +340,13 @@ class AmpacheXbmc extends localplay_controller
             $status = $this->status();
             if ($status['state'] == 'stop') {
                 $this->_xbmc->Player->Open(array(
-                    'item' => array('playlistid' => $this->_playlistId))
-                );
+                    'item' => array('playlistid' => $this->_playlistId)
+                ));
             } else {
                 $this->_xbmc->Player->PlayPause(array(
                     'playerid' => $this->_playlistId,
-                    'play' => true)
-                );
+                    'play' => true
+                ));
             }
 
             return true;
@@ -367,8 +370,8 @@ class AmpacheXbmc extends localplay_controller
         try {
             $this->_xbmc->Player->PlayPause(array(
                 'playerid' => $this->_playerId,
-                'play' => false)
-            );
+                'play' => false
+            ));
 
             return true;
         } catch (XBMC_RPC_Exception $ex) {
@@ -662,7 +665,7 @@ class AmpacheXbmc extends localplay_controller
             $appprop = $this->_xbmc->Application->GetProperties(array(
                 'properties' => array('volume')
             ));
-            $array['volume']    = (int) ($appprop['volume']);
+            $array['volume'] = (int)($appprop['volume']);
 
             try {
                 $currentplay = $this->_xbmc->Player->GetItem(array(
@@ -676,19 +679,20 @@ class AmpacheXbmc extends localplay_controller
                     'playerid' => $this->_playerId,
                     'properties' => array('repeat', 'shuffled')
                 ));
-                $array['repeat']    = ($playprop['repeat'] != "off");
-                $array['random']    = (strtolower($playprop['shuffled']) == 1) ;
-                $array['track']     = $currentplay['file'];
+                $array['repeat'] = ($playprop['repeat'] != "off");
+                $array['random'] = (strtolower($playprop['shuffled']) == 1);
+                $array['track']  = $currentplay['file'];
 
                 $url_data = $this->parse_url($array['track']);
                 $song     = new Song($url_data['oid']);
                 if ($song->title || $song->get_artist_name() || $song->get_album_name()) {
-                    $array['track_title']      = $song->title;
-                    $array['track_artist']     = $song->get_artist_name();
-                    $array['track_album']      = $song->get_album_name();
+                    $array['track_title']  = $song->title;
+                    $array['track_artist'] = $song->get_artist_name();
+                    $array['track_album']  = $song->get_album_name();
                 }
             } catch (XBMC_RPC_Exception $ex) {
-                debug_event('xbmc.controller', 'get current item failed, player probably stopped. ' . $ex->getMessage(), 1);
+                debug_event('xbmc.controller', 'get current item failed, player probably stopped. ' . $ex->getMessage(),
+                    1);
                 $array['state'] = 'stop';
             }
         } catch (XBMC_RPC_Exception $ex) {
@@ -708,7 +712,8 @@ class AmpacheXbmc extends localplay_controller
     {
         $options = self::get_instance();
         try {
-            debug_event('xbmc.controller', 'Trying to connect xbmc instance ' . $options['host'] . ':' . $options['port'] . '.', 5);
+            debug_event('xbmc.controller',
+                'Trying to connect xbmc instance ' . $options['host'] . ':' . $options['port'] . '.', 5);
             $this->_xbmc = new XBMC_RPC_HTTPClient($options);
             debug_event('xbmc.controller', 'Connected.', 5);
 
@@ -719,4 +724,4 @@ class AmpacheXbmc extends localplay_controller
             return false;
         }
     } // connect
-} // end xbmc.controller
+}

@@ -1,6 +1,30 @@
 <?php
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright 2001 - 2020 Ampache.org
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
 declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
+namespace Ampache\Module\Playback\Localplay\Mpd;
+
 /**
  *  mpd.class.php - PHP Object Interface to the MPD Music Player Daemon
  *  Version 1.3
@@ -112,11 +136,11 @@ class mpd
     const COMMAND_SHUTDOWN = 'shutdown';
 
     // Deprecated commands
-    const COMMAND_VOLUME      = 'volume';
+    const COMMAND_VOLUME = 'volume';
 
     // Bulk commands
-    const COMMAND_START_BULK  = 'command_list_begin';
-    const COMMAND_END_BULK    = 'command_list_end';
+    const COMMAND_START_BULK = 'command_list_begin';
+    const COMMAND_END_BULK   = 'command_list_end';
 
     // Predefined MPD Response messages
     const RESPONSE_ERR = 'ACK';
@@ -138,17 +162,17 @@ class mpd
 
     // Table holding version compatibility information
     private static $_COMPATIBILITY_TABLE = array(
-    self::COMMAND_CONSUME => array('min' => '0.15.0', 'max' => false),
-    self::COMMAND_IDLE => array('min' => '0.14.0', 'max' => false),
-    self::COMMAND_PASSWORD => array('min' => '0.10.0', 'max' => false),
-    self::COMMAND_MOVETRACK => array('min' => '0.9.1', 'max' => false),
-    self::COMMAND_PLSWAPTRACK => array('min' => '0.9.1', 'max' => false),
-    self::COMMAND_RANDOM => array('min' => '0.9.1', 'max' => false),
-    self::COMMAND_SEEK => array('min' => '0.9.1', 'max' => false),
-    self::COMMAND_SETVOL => array('min' => '0.10.0', 'max' => false),
-    self::COMMAND_SINGLE => array('min' => '0.15.0', 'max' => false),
-    self::COMMAND_STICKER => array('min' => '0.15.0', 'max' => false),
-    self::COMMAND_VOLUME => array('min' => false, 'max' => '0.10.0')
+        self::COMMAND_CONSUME => array('min' => '0.15.0', 'max' => false),
+        self::COMMAND_IDLE => array('min' => '0.14.0', 'max' => false),
+        self::COMMAND_PASSWORD => array('min' => '0.10.0', 'max' => false),
+        self::COMMAND_MOVETRACK => array('min' => '0.9.1', 'max' => false),
+        self::COMMAND_PLSWAPTRACK => array('min' => '0.9.1', 'max' => false),
+        self::COMMAND_RANDOM => array('min' => '0.9.1', 'max' => false),
+        self::COMMAND_SEEK => array('min' => '0.9.1', 'max' => false),
+        self::COMMAND_SETVOL => array('min' => '0.10.0', 'max' => false),
+        self::COMMAND_SINGLE => array('min' => '0.15.0', 'max' => false),
+        self::COMMAND_STICKER => array('min' => '0.15.0', 'max' => false),
+        self::COMMAND_VOLUME => array('min' => false, 'max' => '0.10.0')
     );
 
     // TCP/Connection variables
@@ -251,7 +275,7 @@ class mpd
     public function Connect()
     {
         $this->_debug('mpd.class', "host: " . $this->host . ", port: " . $this->port, 5);
-        $this->_mpd_sock = fsockopen($this->host, (int) $this->port, $err, $err_str, 6);
+        $this->_mpd_sock = fsockopen($this->host, (int)$this->port, $err, $err_str, 6);
         // Vollmerize this bizatch
         /* Set the timeout on the connection */
         stream_set_timeout($this->_mpd_sock, 6);
@@ -304,7 +328,7 @@ class mpd
     public function SendCommand($command, $arguments = null, $refresh_info = true)
     {
         $this->_debug('SendCommand', "cmd: $command, args: " . json_encode($arguments), 5);
-        if (! $this->connected) {
+        if (!$this->connected) {
             $this->_error('SendCommand', 'Not connected', 1);
 
             return false;
@@ -369,7 +393,7 @@ class mpd
     public function QueueCommand($command, $arguments = '')
     {
         $this->_debug('QueueCommand', "start; cmd: $command args: " . json_encode($arguments), 5);
-        if (! $this->connected) {
+        if (!$this->connected) {
             $this->_error('QueueCommand', 'Not connected');
 
             return false;
@@ -405,7 +429,7 @@ class mpd
     public function SendCommandQueue()
     {
         $this->_debug('SendCommandQueue', 'start', 5);
-        if (! $this->connected) {
+        if (!$this->connected) {
             _error('SendCommandQueue', 'Not connected');
 
             return false;
@@ -464,7 +488,7 @@ class mpd
     public function AdjustVolume($value)
     {
         $this->_debug('AdjustVolume', 'start', 5);
-        if (! is_numeric($value)) {
+        if (!is_numeric($value)) {
             $this->_error('AdjustVolume', "argument must be numeric: $value");
 
             return false;
@@ -496,7 +520,7 @@ class mpd
         }
 
         // Forcibly prevent out of range errors
-        $value = $value > 0   ? $value : 0;
+        $value = $value > 0 ? $value : 0;
         $value = $value < 100 ? $value : 100;
 
         // If we're not compatible with SETVOL, we'll try adjusting
@@ -679,7 +703,7 @@ class mpd
      */
     public function PLRemove($id)
     {
-        if (! is_numeric($id)) {
+        if (!is_numeric($id)) {
             $this->_error('PLRemove', "id must be numeric: $id");
 
             return false;
@@ -821,7 +845,7 @@ class mpd
     public function SkipTo($idx)
     {
         $this->_debug('SkipTo', 'start', 5);
-        if (! is_numeric($idx)) {
+        if (!is_numeric($idx)) {
             $this->_error('SkipTo', "argument must be numeric: $idx");
 
             return false;
@@ -847,12 +871,12 @@ class mpd
     public function SeekTo($pos, $track = -1)
     {
         $this->_debug('SeekTo', 'start', 5);
-        if (! is_numeric($pos)) {
+        if (!is_numeric($pos)) {
             $this->_error('SeekTo', "pos must be numeric: $pos");
 
             return false;
         }
-        if (! is_numeric($track)) {
+        if (!is_numeric($track)) {
             $this->_error('SeekTo', "track must be numeric: $track");
 
             return false;
@@ -915,9 +939,7 @@ class mpd
     {
         $this->_debug('Search', 'start', 5);
 
-        if ($type != self::SEARCH_ARTIST &&
-            $type != self::SEARCH_ALBUM &&
-            $type != self::SEARCH_TITLE) {
+        if ($type != self::SEARCH_ARTIST && $type != self::SEARCH_ALBUM && $type != self::SEARCH_TITLE) {
             $this->_error('Search', 'invalid search type');
 
             return false;
@@ -950,9 +972,7 @@ class mpd
     public function Find($type, $string)
     {
         $this->_debug('Find', 'start', 5);
-        if ($type != self::SEARCH_ARTIST &&
-            $type != self::SEARCH_ALBUM &&
-            $type != self::SEARCH_TITLE) {
+        if ($type != self::SEARCH_ARTIST && $type != self::SEARCH_ALBUM && $type != self::SEARCH_TITLE) {
             $this->_error('Find', 'invalid find type');
 
             return false;
@@ -1085,7 +1105,8 @@ class mpd
             if ($min_version) {
                 $min = self::_computeVersionValue($min_version);
                 if ($mpd < $min) {
-                    $this->_error('compatibility', "Command '$cmd' is not compatible with this version of MPD, version $min_version required");
+                    $this->_error('compatibility',
+                        "Command '$cmd' is not compatible with this version of MPD, version $min_version required");
 
                     return false;
                 }
@@ -1095,7 +1116,8 @@ class mpd
                 $max = self::_computeVersionValue($max_version);
 
                 if ($mpd >= $max) {
-                    $this->_error('compatibility', "Command '$cmd' has been deprecated in this version of MPD.  Last compatible version: $max_version");
+                    $this->_error('compatibility',
+                        "Command '$cmd' has been deprecated in this version of MPD.  Last compatible version: $max_version");
 
                     return false;
                 }

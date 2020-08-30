@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,13 +20,14 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\Playback\Localplay\Vlc;
+
 /**
- * VlcPlayer Class
- *
  * This player controls an instance of VLC webinterface
  * which in turn controls VLC. All functions
  * return null on failure.
- *
  */
 class VlcPlayer
 {
@@ -359,10 +359,10 @@ class VlcPlayer
     } // clear_playlist
 
     /**
-    * get_tracks
-    * This returns a delimiated string of all of the filenames
-    * current in your playlist, only url's at the moment,normal files put in the playlist with VLC wil not show'
-    */
+     * get_tracks
+     * This returns a delimiated string of all of the filenames
+     * current in your playlist, only url's at the moment,normal files put in the playlist with VLC wil not show'
+     */
     public function get_tracks()
     {
 
@@ -387,7 +387,7 @@ class VlcPlayer
      */
     private function sendCommand($cmd, $args)
     {
-        $fsock = fsockopen($this->host, (int) $this->port, $errno, $errstr);
+        $fsock = fsockopen($this->host, (int)$this->port, $errno, $errstr);
 
         if (!$fsock) {
             debug_event('vlcplayer.class', "VLCPlayer: $errstr ($errno)", 1);
@@ -424,7 +424,7 @@ class VlcPlayer
         } while (strpos($header, "\r\n\r\n") === false);
 
         // now put the body in variable $data
-        while (! feof($fsock)) {
+        while (!feof($fsock)) {
             $data .= fgets($fsock);
         }
 
@@ -456,7 +456,8 @@ class VlcPlayer
 
         // Get the XML parser of PHP - PHP must have this module for the parser to work
         $parser = xml_parser_create('');
-        xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING, "UTF-8"); # http://minutillo.com/steve/weblog/2004/6/17/php-xml-and-character-encodings-a-tale-of-sadness-rage-and-data-loss
+        xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING,
+            "UTF-8"); # http://minutillo.com/steve/weblog/2004/6/17/php-xml-and-character-encodings-a-tale-of-sadness-rage-and-data-loss
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
         xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
         xml_parse_into_struct($parser, trim($contents), $xml_values);
@@ -525,7 +526,10 @@ class VlcPlayer
                         $repeated_tag_index[$tag . '_' . $level]++;
                     } else {
                         // This section will make the value an array if multiple tags with the same name appear together
-                        $current[$tag]                           = array($current[$tag], $result); // This will combine the existing item and the new item together to make an array
+                        $current[$tag] = array(
+                            $current[$tag],
+                            $result
+                        ); // This will combine the existing item and the new item together to make an array
                         $repeated_tag_index[$tag . '_' . $level] = 2;
 
                         if (isset($current[$tag . '_attr'])) { // The attribute of the last(0th) tag must be moved as well
@@ -557,7 +561,10 @@ class VlcPlayer
                         $repeated_tag_index[$tag . '_' . $level]++;
                     } else {
                         // If it is not an array...
-                        $current[$tag]                           = array($current[$tag], $result); // ...Make it an array using using the existing value and the new value
+                        $current[$tag] = array(
+                            $current[$tag],
+                            $result
+                        ); // ...Make it an array using using the existing value and the new value
                         $repeated_tag_index[$tag . '_' . $level] = 1;
                         if ($priority == 'tag' && $get_attributes) {
                             if (isset($current[$tag . '_attr'])) { // The attribute of the last(0th) tag must be moved as well
@@ -578,6 +585,6 @@ class VlcPlayer
             }
         }
 
-        return($bigxml_array);
+        return ($bigxml_array);
     }   // xml parser
-} // end vlcplayer.class
+}

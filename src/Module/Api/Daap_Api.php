@@ -593,7 +593,7 @@ class Daap_Api
     }
 
     /**
-     * @param \Ampache\Model\Playlist|Search $playlist
+     * @param Playlist|Search $playlist
      * @return string
      */
     public static function tlv_playlist($playlist)

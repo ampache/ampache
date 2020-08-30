@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Browse;
 use Ampache\Module\System\Core;
-use Ampache\Module\Playback\LocalPlay;
+use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Model\Preference;
 use Ampache\Module\Util\Ui;
 

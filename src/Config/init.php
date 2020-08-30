@@ -235,7 +235,7 @@ AmpError::init();
 if (!class_exists('Gettext\Translations')) {
     require_once __DIR__ . '/../../public/templates/test_error_page.inc.php';
     /** @noinspection PhpUnhandledExceptionInspection */
-    throw new Exception('load_gettext()');
+    throw new \Exception('load_gettext()');
 } else {
     load_gettext();
 }

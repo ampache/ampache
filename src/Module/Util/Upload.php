@@ -290,7 +290,7 @@ class Upload
 
     /**
      * get_root
-     * @param \Ampache\Model\Catalog $catalog
+     * @param Catalog $catalog
      * @param string $username
      * @return string
      */

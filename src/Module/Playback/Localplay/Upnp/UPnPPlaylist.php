@@ -1,5 +1,6 @@
 <?php
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -19,11 +20,12 @@
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\Playback\Localplay\Upnp;
+
 use Ampache\Module\System\Session;
 
-/**
- * UPnPPlaylist Class
- */
 class UPnPPlaylist
 {
     private $_deviceGUID;
@@ -39,7 +41,7 @@ class UPnPPlaylist
     {
         $this->_deviceGUID = $deviceGUID;
         $this->PlayListRead();
-        if (! is_array($this->_songs)) {
+        if (!is_array($this->_songs)) {
             $this->Clear();
         }
     }
@@ -168,8 +170,8 @@ class UPnPPlaylist
             'upnp_playlist' => $this->_songs,
             'upnp_current' => $this->_current
         ));
-        if (! Session::exists('stream', $sid)) {
-            Session::create(array('type' => 'stream', 'sid' => $sid, 'value' => $pls_data ));
+        if (!Session::exists('stream', $sid)) {
+            Session::create(array('type' => 'stream', 'sid' => $sid, 'value' => $pls_data));
         } else {
             Session::write($sid, $pls_data);
         }
