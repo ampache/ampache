@@ -26,7 +26,7 @@ namespace Ampache\Module\Playback;
 
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
-use Art;
+use Ampache\Model\Art;
 use Core;
 use Ampache\Module\System\Dba;
 use Ampache\Model\Democratic;

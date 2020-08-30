@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Art;
 use Ampache\Module\Util\Ui;
 
 ?>

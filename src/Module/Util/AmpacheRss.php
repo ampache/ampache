@@ -26,7 +26,7 @@ namespace Ampache\Module\Util;
 
 use Ampache\Model\Album;
 use Ampache\Config\AmpConfig;
-use Art;
+use Ampache\Model\Art;
 use Ampache\Model\Artist;
 use Ampache\Model\Shoutbox;
 use Ampache\Model\Song;

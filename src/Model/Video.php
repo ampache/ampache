@@ -30,7 +30,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
-use Art;
+use Ampache\Model\Art;
 use Ampache\Model\Clip;
 use Core;
 use Ampache\Model\Movie;

@@ -22,6 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Album;
+use Ampache\Model\Art;
 use Ampache\Model\Artist;
 use Ampache\Model\Catalog;
 use Ampache\Model\Media;

@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Module\System\Dba;
-use Art;
+use Ampache\Model\Art;
 use Ampache\Model\TVShow_Season;
 
 class TVShow_Episode extends Video

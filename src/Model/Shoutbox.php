@@ -30,7 +30,7 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
-use Art;
+use Ampache\Model\Art;
 use Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;

@@ -28,7 +28,7 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
-use Art;
+use Ampache\Model\Art;
 use Ampache\Model\Catalog;
 use Core;
 use Ampache\Module\System\Dba;

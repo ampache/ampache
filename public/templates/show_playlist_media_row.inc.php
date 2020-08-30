@@ -22,6 +22,7 @@
 
 // Don't show disabled medias to normal users
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Art;
 use Ampache\Model\Rating;
 use Ampache\Model\Share;
 use Ampache\Model\User;

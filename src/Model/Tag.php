@@ -29,7 +29,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
-use Art;
+use Ampache\Model\Art;
 use Ampache\Model\Catalog;
 use Core;
 use PDOStatement;

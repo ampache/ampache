@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Art;
 use Ampache\Module\Util\Browse;
 use Ampache\Module\Util\Ui;
 

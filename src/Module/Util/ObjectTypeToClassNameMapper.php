@@ -28,7 +28,7 @@ use Ampache\Model\Album;
 use Ampache\Model\Artist;
 use Ampache\Model\Playlist;
 use Ampache\Model\Song;
-use Art;
+use Ampache\Model\Art;
 
 /**
  * This class maps object types like `album` to their corresponding php class name (if known)

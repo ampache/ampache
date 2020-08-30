@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Art;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Browse;

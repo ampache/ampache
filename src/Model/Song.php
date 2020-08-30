@@ -36,7 +36,7 @@ use Ampache\Model\Metadata\Metadata;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
-use Art;
+use Ampache\Model\Art;
 use Ampache\Model\Artist;
 use Ampache\Model\Catalog;
 use Core;

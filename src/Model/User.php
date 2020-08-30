@@ -30,7 +30,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
 use AmpError;
-use Art;
+use Ampache\Model\Art;
 use Ampache\Model\Artist;
 use Core;
 use Exception;

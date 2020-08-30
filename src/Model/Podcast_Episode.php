@@ -30,7 +30,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
-use Art;
+use Ampache\Model\Art;
 use Core;
 use PDOStatement;
 use Ampache\Model\Podcast;

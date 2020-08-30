@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Art;
 use Ampache\Model\Podcast;
 use Ampache\Model\Rating;
 use Ampache\Model\User;

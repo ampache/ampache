@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Art;
 use Ampache\Module\System\Dba;
 
 define('NO_SESSION', '1');

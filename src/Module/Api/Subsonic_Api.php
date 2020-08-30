@@ -35,7 +35,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Config\AmpConfig;
-use Art;
+use Ampache\Model\Art;
 use Ampache\Model\Artist;
 use Ampache\Model\Bookmark;
 use Ampache\Model\Catalog;
