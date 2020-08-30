@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
 $default_rename = "%T - %t";

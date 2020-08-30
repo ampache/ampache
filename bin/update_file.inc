@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Catalog;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Song;
 use Ampache\Model\Video;

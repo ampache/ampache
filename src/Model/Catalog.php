@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,27 +20,10 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Model\Album;
-use Ampache\Model\Artist;
-use Ampache\Model\database_object;
-use Ampache\Model\Label;
-use Ampache\Model\License;
-use Ampache\Model\Playlist;
-use Ampache\Model\Podcast;
-use Ampache\Model\Podcast_Episode;
-use Ampache\Model\Rating;
-use Ampache\Model\Search;
-use Ampache\Model\Share;
-use Ampache\Model\Shoutbox;
-use Ampache\Model\Song;
-use Ampache\Model\Song_Preview;
-use Ampache\Model\Tag;
-use Ampache\Model\Tmp_Playlist;
-use Ampache\Model\TvShow;
-use Ampache\Model\User;
-use Ampache\Model\Useractivity;
-use Ampache\Model\Userflag;
-use Ampache\Model\Video;
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
@@ -49,18 +31,23 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
-use Ampache\Model\library_item;
-use Ampache\Model\Media;
 use Ampache\Model\Metadata\Repository\Metadata;
 use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Module\Authorization\Access;
+use AmpConfig;
+use AmpError;
+use Art;
+use Catalog_local;
+use Core;
+use Exception;
+use PDOStatement;
+use ReflectionException;
 
 /**
  * Catalog Class
  *
  * This class handles all actual work in regards to the catalog,
  * it contains functions for creating/listing/updated the catalogs.
- *
  */
 abstract class Catalog extends database_object
 {
@@ -160,36 +147,41 @@ abstract class Catalog extends database_object
     /**
      * @var array $albums
      */
-    protected static $albums    = array();
+    protected static $albums = array();
     /**
      * @var array $artists
      */
-    protected static $artists    = array();
+    protected static $artists = array();
     /**
      * @var array $tags
      */
-    protected static $tags    = array();
+    protected static $tags = array();
 
     /**
      * @return string
      */
     abstract public function get_type();
+
     /**
      * @return string
      */
     abstract public function get_description();
+
     /**
      * @return string
      */
     abstract public function get_version();
+
     /**
      * @return string
      */
     abstract public function get_create_help();
+
     /**
      * @return boolean
      */
     abstract public function is_installed();
+
     /**
      * @return boolean
      */
@@ -336,9 +328,7 @@ abstract class Catalog extends database_object
      */
     public static function show_catalog_types($divback = 'catalog_type_fields')
     {
-        echo '<script>' .
-            "var type_fields = new Array();" .
-            "type_fields['none'] = '';";
+        echo '<script>' . "var type_fields = new Array();" . "type_fields['none'] = '';";
         $seltypes = '<option value="none">[' . T_("Select") . ']</option>';
         $types    = self::get_catalog_types();
         foreach ($types as $type) {
@@ -368,13 +358,7 @@ abstract class Catalog extends database_object
             }
         }
 
-        echo "function catalogTypeChanged() {" .
-            "var sel = document.getElementById('catalog_type');" .
-            "var seltype = sel.options[sel.selectedIndex].value;" .
-            "var ftbl = document.getElementById('" . $divback . "');" .
-            "ftbl.innerHTML = '<table class=\"tabledata\">' + type_fields[seltype] + '</table>';" .
-            "} </script>" .
-            "<select name=\"type\" id=\"catalog_type\" onChange=\"catalogTypeChanged();\">" . $seltypes . "</select>";
+        echo "function catalogTypeChanged() {" . "var sel = document.getElementById('catalog_type');" . "var seltype = sel.options[sel.selectedIndex].value;" . "var ftbl = document.getElementById('" . $divback . "');" . "ftbl.innerHTML = '<table class=\"tabledata\">' + type_fields[seltype] + '</table>';" . "} </script>" . "<select name=\"type\" id=\"catalog_type\" onChange=\"catalogTypeChanged();\">" . $seltypes . "</select>";
     }
 
     /**
@@ -420,13 +404,13 @@ abstract class Catalog extends database_object
                 continue;
             }
             /* Make sure it is a dir */
-            if (! is_dir($basedir . '/' . $file)) {
+            if (!is_dir($basedir . '/' . $file)) {
                 debug_event('catalog.class', $file . ' is not a directory.', 3);
                 continue;
             }
 
             // Make sure the plugin base file exists inside the plugin directory
-            if (! file_exists($basedir . '/' . $file . '/' . $file . '.catalog.php')) {
+            if (!file_exists($basedir . '/' . $file . '/' . $file . '.catalog.php')) {
                 debug_event('catalog.class', 'Missing class for ' . $file, 3);
                 continue;
             }
@@ -512,11 +496,9 @@ abstract class Catalog extends database_object
             if ($type == "song") {
                 $type = "id";
             }
-            $sql = "(SELECT COUNT(`song_dis`.`id`) FROM `song` AS `song_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `song_dis`.`catalog` " .
-                "WHERE `song_dis`.`" . $type . "`=" . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `song_dis`.`" . $type . "`) > 0";
+            $sql = "(SELECT COUNT(`song_dis`.`id`) FROM `song` AS `song_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `song_dis`.`catalog` " . "WHERE `song_dis`.`" . $type . "`=" . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `song_dis`.`" . $type . "`) > 0";
         } elseif ($type == "video") {
-            $sql = "(SELECT COUNT(`video_dis`.`id`) FROM `video` AS `video_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `video_dis`.`catalog` " .
-                "WHERE `video_dis`.`id`=" . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `video_dis`.`id`) > 0";
+            $sql = "(SELECT COUNT(`video_dis`.`id`) FROM `video` AS `video_dis` LEFT JOIN `catalog` AS `catalog_dis` ON `catalog_dis`.`id` = `video_dis`.`catalog` " . "WHERE `video_dis`.`id`=" . $catalog_id . " AND `catalog_dis`.`enabled` = '1' GROUP BY `video_dis`.`id`) > 0";
         }
 
         return $sql;
@@ -537,14 +519,14 @@ abstract class Catalog extends database_object
 
             // Populate the filecache
             while ($results = Dba::fetch_assoc($db_results)) {
-                $this->_filecache[strtolower((string) $results['file'])] = $results['id'];
+                $this->_filecache[strtolower((string)$results['file'])] = $results['id'];
             }
 
             $sql        = 'SELECT `id`, `file` FROM `video` WHERE `catalog` = ?';
             $db_results = Dba::read($sql, array($this->id));
 
             while ($results = Dba::fetch_assoc($db_results)) {
-                $this->_filecache[strtolower((string) $results['file'])] = 'v_' . $results['id'];
+                $this->_filecache[strtolower((string)$results['file'])] = 'v_' . $results['id'];
             }
         }
 
@@ -582,7 +564,7 @@ abstract class Catalog extends database_object
         }
 
         /* Can't update to blank */
-        if (!strlen(trim((string) $value))) {
+        if (!strlen(trim((string)$value))) {
             return false;
         }
 
@@ -603,9 +585,9 @@ abstract class Catalog extends database_object
         $this->f_name   = $this->name;
         $this->link     = AmpConfig::get('web_path') . '/admin/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id;
         $this->f_link   = '<a href="' . $this->link . '" title="' . scrub_out($this->name) . '">' . scrub_out($this->f_name) . '</a>';
-        $this->f_update = $this->last_update ? get_datetime((int) $this->last_update) : T_('Never');
-        $this->f_add    = $this->last_add ? get_datetime((int) $this->last_add) : T_('Never');
-        $this->f_clean  = $this->last_clean ? get_datetime((int) $this->last_clean) : T_('Never');
+        $this->f_update = $this->last_update ? get_datetime((int)$this->last_update) : T_('Never');
+        $this->f_add    = $this->last_add ? get_datetime((int)$this->last_add) : T_('Never');
+        $this->f_clean  = $this->last_clean ? get_datetime((int)$this->last_clean) : T_('Never');
     }
 
     /**
@@ -618,8 +600,8 @@ abstract class Catalog extends database_object
      */
     public static function get_catalogs($filter_type = '')
     {
-        $params     = array();
-        $sql        = "SELECT `id` FROM `catalog` ";
+        $params = array();
+        $sql    = "SELECT `id` FROM `catalog` ";
         if (!empty($filter_type)) {
             $sql .= "WHERE `gather_types` = ? ";
             $params[] = $filter_type;
@@ -710,7 +692,8 @@ abstract class Catalog extends database_object
         $gather_types   = $data['gather_media'];
 
         // Should it be an array? Not now.
-        if (!in_array($gather_types, array('music', 'clip', 'tvshow', 'movie', 'Ampache\Model\Personal_Video', 'podcast'))) {
+        if (!in_array($gather_types,
+            array('music', 'clip', 'tvshow', 'movie', 'Ampache\Model\Personal_Video', 'podcast'))) {
             return 0;
         }
 
@@ -719,8 +702,7 @@ abstract class Catalog extends database_object
         $include   = require_once $filename;
 
         if ($include) {
-            $sql = 'INSERT INTO `catalog` (`name`, `catalog_type`, ' .
-                '`rename_pattern`, `sort_pattern`, `gather_types`) VALUES (?, ?, ?, ?, ?)';
+            $sql = 'INSERT INTO `catalog` (`name`, `catalog_type`, ' . '`rename_pattern`, `sort_pattern`, `gather_types`) VALUES (?, ?, ?, ?, ?)';
             Dba::write($sql, array(
                 $name,
                 $type,
@@ -746,7 +728,7 @@ abstract class Catalog extends database_object
             }
         }
 
-        return (int) $insert_id;
+        return (int)$insert_id;
     }
 
     /**
@@ -861,7 +843,7 @@ abstract class Catalog extends database_object
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
-        $user_id = (int) ($user_id);
+        $user_id = (int)($user_id);
 
         switch ($type) {
             case 'song':
@@ -893,9 +875,7 @@ abstract class Catalog extends database_object
 
         $sql = 'SELECT DISTINCT(`song`.`album`) AS `album` FROM `song` WHERE `song`.`catalog` = ?';
         if ($filter === 'art') {
-            $sql = "SELECT DISTINCT(`song`.`album`) AS `album` FROM `song`" .
-                   "LEFT JOIN `image` ON `song`.`album` = `image`.`object_id` AND `object_type` = 'album'" .
-                   "WHERE `song`.`catalog` = ? AND `image`.`object_id` IS NULL";
+            $sql = "SELECT DISTINCT(`song`.`album`) AS `album` FROM `song`" . "LEFT JOIN `image` ON `song`.`album` = `image`.`object_id` AND `object_type` = 'album'" . "WHERE `song`.`catalog` = ? AND `image`.`object_id` IS NULL";
         }
         $db_results = Dba::read($sql, array($this->id));
 
@@ -968,7 +948,7 @@ abstract class Catalog extends database_object
             $sql .= "JOIN `" . $type . "` ON `" . $type . "`.`id` = `video`.`id` ";
         }
         if ($catalog_id) {
-            $sql .= "WHERE `video`.`catalog` = `" . (string) ($catalog_id) . "`";
+            $sql .= "WHERE `video`.`catalog` = `" . (string)($catalog_id) . "`";
         }
         $db_results = Dba::read($sql);
         $video_cnt  = 0;
@@ -1038,16 +1018,13 @@ abstract class Catalog extends database_object
     {
         $results = array();
 
-        $sql        = 'SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song` WHERE `song`.`catalog` = ?';
+        $sql = 'SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song` WHERE `song`.`catalog` = ?';
         if ($filter === 'art') {
-            $sql = "SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song`" .
-                "LEFT JOIN `image` ON `song`.`artist` = `image`.`object_id` AND `object_type` = 'artist'" .
-                "WHERE `song`.`catalog` = ? AND `image`.`object_id` IS NULL";
+            $sql = "SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song`" . "LEFT JOIN `image` ON `song`.`artist` = `image`.`object_id` AND `object_type` = 'artist'" . "WHERE `song`.`catalog` = ? AND `image`.`object_id` IS NULL";
         }
         if ($filter === 'info') {
             // only update info when you haven't done it for 6 months
-            $sql = "SELECT DISTINCT(`artist`.`id`) AS `id` FROM `artist`" .
-                "WHERE `artist`.`last_update` > (UNIX_TIMESTAMP() - 15768000) ";
+            $sql = "SELECT DISTINCT(`artist`.`id`) AS `id` FROM `artist`" . "WHERE `artist`.`last_update` > (UNIX_TIMESTAMP() - 15768000) ";
         }
         $db_results = Dba::read($sql, array($this->id));
 
@@ -1086,11 +1063,7 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT " . $offset . ", 18446744073709551615";
         }
 
-        $sql = "SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, (SELECT COUNT(DISTINCT album) from `song` as `inner_song` WHERE `inner_song`.`artist` = `song`.`artist`) AS `albums`" .
-                "FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` " .
-                $sql_where .
-                "GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist` ORDER BY `artist`.`name` " .
-                $sql_limit;
+        $sql = "SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, (SELECT COUNT(DISTINCT album) from `song` as `inner_song` WHERE `inner_song`.`artist` = `song`.`artist`) AS `albums`" . "FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` " . $sql_where . "GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist` ORDER BY `artist`.`name` " . $sql_limit;
 
         $results    = array();
         $db_results = Dba::read($sql);
@@ -1117,7 +1090,7 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql, array($file_path));
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            return (int) $results['id'];
+            return (int)$results['id'];
         }
 
         return 0;
@@ -1161,7 +1134,7 @@ abstract class Catalog extends database_object
      * @param integer $offset
      * @param integer[]|null $catalogs
      * @return integer[]
-    */
+     */
     public static function get_albums($size = 0, $offset = 0, $catalogs = null)
     {
         $sql_where = "";
@@ -1221,9 +1194,7 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT $offset, 18446744073709551615";
         }
 
-        $sql = "SELECT `song`.`album` as 'id' FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` " .
-            "LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where " .
-        "GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` $sql_limit";
+        $sql = "SELECT `song`.`album` as 'id' FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` " . "LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where " . "GROUP BY `song`.`album`, `artist`.`name`, `artist`.`id`, `album`.`name` ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` $sql_limit";
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -1288,12 +1259,9 @@ abstract class Catalog extends database_object
     {
         $results = array();
 
-        $sql = 'SELECT `podcast_episode`.`id` FROM `podcast_episode` ' .
-                'INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` ' .
-                'WHERE `podcast`.`catalog` = ? ' .
-                'ORDER BY `podcast_episode`.`pubdate` DESC';
+        $sql = 'SELECT `podcast_episode`.`id` FROM `podcast_episode` ' . 'INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` ' . 'WHERE `podcast`.`catalog` = ? ' . 'ORDER BY `podcast_episode`.`pubdate` DESC';
         if ($count > 0) {
-            $sql .= ' LIMIT ' . (string) $count;
+            $sql .= ' LIMIT ' . (string)$count;
         }
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1379,7 +1347,7 @@ abstract class Catalog extends database_object
         foreach ($results as $result) {
             // Pull the string representation from the source
             $image = Art::get_from_source($result, $type);
-            if (strlen((string) $image) > '5') {
+            if (strlen((string)$image) > '5') {
                 $inserted = $art->insert($image, $result['mime']);
                 // If they've enabled resizing of images generate a thumbnail
                 if (AmpConfig::get('resize_images')) {
@@ -1463,7 +1431,7 @@ abstract class Catalog extends database_object
             $searches['video'] = $videos;
         }
 
-        debug_event('catalog.class', 'gather_art found ' . (string) count($searches) . ' items missing art', 4);
+        debug_event('catalog.class', 'gather_art found ' . (string)count($searches) . ' items missing art', 4);
         // Run through items and get the art!
         foreach ($searches as $key => $values) {
             foreach ($values as $object_id) {
@@ -1494,15 +1462,15 @@ abstract class Catalog extends database_object
         // Prevent the script from timing out
         set_time_limit(0);
 
-        $search_count       = 0;
-        $searches           = array();
+        $search_count = 0;
+        $searches     = array();
         if (empty($artist_list)) {
             $searches['artist'] = $this->get_artist_ids();
         } else {
             $searches['artist'] = $artist_list;
         }
 
-        debug_event('catalog.class', 'gather_artist_info found ' . (string) count($searches) . 'items to check', 4);
+        debug_event('catalog.class', 'gather_artist_info found ' . (string)count($searches) . 'items to check', 4);
         // Run through items and refresh info
         foreach ($searches as $key => $values) {
             foreach ($values as $object_id) {
@@ -1550,6 +1518,7 @@ abstract class Catalog extends database_object
 
         return $results;
     }
+
     /**
      * get_song_ids
      *
@@ -1603,8 +1572,7 @@ abstract class Catalog extends database_object
 
             // Try the preferred filename, if that fails use folder.???
             $preferred_filename = AmpConfig::get('album_art_preferred_filename');
-            if (!$preferred_filename ||
-                strpos($preferred_filename, '%') !== false) {
+            if (!$preferred_filename || strpos($preferred_filename, '%') !== false) {
                 $preferred_filename = "folder.$extension";
             }
 
@@ -1742,10 +1710,10 @@ abstract class Catalog extends database_object
             // don't echo useless info when using api
             if (($info['change']) && (!$api)) {
                 if ($info['element'][$type]) {
-                    $change = explode(' --> ', (string) $info['element'][$type]);
-                    $result = (int) $change[1];
+                    $change = explode(' --> ', (string)$info['element'][$type]);
+                    $result = (int)$change[1];
                 }
-                $file   = scrub_out($song->file);
+                $file = scrub_out($song->file);
                 echo '<tr class="' . Ui::flip_class() . '">' . "\n";
                 echo "<td>$file</td><td>" . T_('Updated') . "</td>\n";
                 echo $info['text'];
@@ -1792,8 +1760,12 @@ abstract class Catalog extends database_object
      * @param string $rename_pattern
      * @return array
      */
-    public static function update_media_from_tags($media, $gather_types = array('music'), $sort_pattern = '', $rename_pattern = '')
-    {
+    public static function update_media_from_tags(
+        $media,
+        $gather_types = array('music'),
+        $sort_pattern = '',
+        $rename_pattern = ''
+    ) {
         $catalog = self::create_from_id($media->catalog);
         if ($catalog === null) {
             debug_event('catalog.class', 'update_media_from_tags: Error loading catalog ' . $media->catalog, 2);
@@ -1810,16 +1782,17 @@ abstract class Catalog extends database_object
         $extension    = strtolower(pathinfo($media->file, PATHINFO_EXTENSION));
         $results      = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
         if (in_array($extension, $invalid_exts)) {
-            debug_event('catalog.class', 'update_media_from_tags: ' . $extension . ' extension: Updating from file name', 2);
+            debug_event('catalog.class',
+                'update_media_from_tags: ' . $extension . ' extension: Updating from file name', 2);
             $patres  = VaInfo::parse_pattern($media->file, $catalog->sort_pattern, $catalog->rename_pattern);
             $results = array_merge($results, $patres);
 
-            return call_user_func(array('Catalog', $function), $results, $media);
+            return call_user_func(array('Ampache\Model\Catalog', $function), $results, $media);
         }
         debug_event('catalog.class', 'Reading tags from ' . $media->file, 4);
 
 
-        return call_user_func(array('Catalog', $function), $results, $media);
+        return call_user_func(array('Ampache\Model\Catalog', $function), $results, $media);
     } // update_media_from_tags
 
     /**
@@ -1837,30 +1810,29 @@ abstract class Catalog extends database_object
     public static function update_song_from_tags($results, Song $song)
     {
         // info for the song table. This is all the primary file data that is song related
-        $new_song           = new Song();
-        $new_song->file     = $results['file'];
-        $new_song->year     = (strlen((string) $results['year']) > 4) ? (int) substr($results['year'], -4, 4) : (int) ($results['year']);
-        $new_song->title    = self::check_length(self::check_title($results['title'], $new_song->file));
-        $new_song->bitrate  = $results['bitrate'];
-        $new_song->rate     = $results['rate'];
-        $new_song->mode     = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
-        $new_song->size     = $results['size'];
-        $new_song->time     = (strlen((string) $results['time']) > 5) ? (int) substr($results['time'], -5, 5) : (int) ($results['time']);
+        $new_song       = new Song();
+        $new_song->file = $results['file'];
+        $new_song->year = (strlen((string)$results['year']) > 4) ? (int)substr($results['year'], -4,
+            4) : (int)($results['year']);
+        $new_song->title   = self::check_length(self::check_title($results['title'], $new_song->file));
+        $new_song->bitrate = $results['bitrate'];
+        $new_song->rate    = $results['rate'];
+        $new_song->mode    = ($results['mode'] == 'cbr') ? 'cbr' : 'vbr';
+        $new_song->size    = $results['size'];
+        $new_song->time    = (strlen((string)$results['time']) > 5) ? (int)substr($results['time'], -5,
+            5) : (int)($results['time']);
         if ($new_song->time < 0) {
             // fall back to last time if you fail to scan correctly
             $new_song->time = $song->time;
         }
-        $new_song->track    = self::check_track((string) $results['track']);
+        $new_song->track    = self::check_track((string)$results['track']);
         $new_song->mbid     = $results['mb_trackid'];
         $new_song->composer = self::check_length($results['composer']);
         $new_song->mime     = $results['mime'];
 
         // info for the song_data table. used in Song::update_song
-        $new_song->comment     = $results['comment'];
-        $new_song->lyrics      = str_replace(
-                        array("\r\n", "\r", "\n"),
-                        '<br />',
-                        strip_tags($results['lyrics']));
+        $new_song->comment = $results['comment'];
+        $new_song->lyrics  = str_replace(array("\r\n", "\r", "\n"), '<br />', strip_tags($results['lyrics']));
         $new_song->license = isset($results['license']) ? License::lookup($results['license']) : null;
         $new_song->label   = isset($results['publisher']) ? Catalog::check_length($results['publisher'], 128) : null;
         if ($song->label && AmpConfig::get('label')) {
@@ -1889,9 +1861,9 @@ abstract class Catalog extends database_object
         $albumartist_mbid = $results['mb_albumartistid'];
 
         // info for the album table.
-        $album            = self::check_length($results['album']);
-        $album_mbid       = $results['mb_albumid'];
-        $disk             = $results['disk'];
+        $album      = self::check_length($results['album']);
+        $album_mbid = $results['mb_albumid'];
+        $disk       = $results['disk'];
         // year is also included in album
         $album_mbid_group = $results['mb_albumid_group'];
         $release_type     = $results['release_type'];
@@ -1909,12 +1881,12 @@ abstract class Catalog extends database_object
 
         // check whether this album exists
         $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group,
-                                        $new_song->albumartist, $release_type, false, $original_year, $barcode, $catalog_number);
+            $new_song->albumartist, $release_type, false, $original_year, $barcode, $catalog_number);
 
         // set `song`.`update_time` when artist or album details change
         $update_time = time();
-        if (self::migrate('artist', $song->artist, $new_song->artist) ||
-                self::migrate('album', $song->album, $new_song->album)) {
+        if (self::migrate('artist', $song->artist, $new_song->artist) || self::migrate('album', $song->album,
+                $new_song->album)) {
             Song::update_utime($song->id, $update_time);
         }
 
@@ -2034,10 +2006,10 @@ abstract class Catalog extends database_object
         $tags                     = Tag::get_object_tags('video', $video->id);
         if ($tags) {
             foreach ($tags as $tag) {
-                $video->tags[]     = $tag['name'];
+                $video->tags[] = $tag['name'];
             }
         }
-        $new_video->tags        = $results['genre'];
+        $new_video->tags = $results['genre'];
 
         $info = Video::compare_video_information($video, $new_video);
         if ($info['change']) {
@@ -2063,11 +2035,7 @@ abstract class Catalog extends database_object
      */
     private static function get_clean_metadata(library_item $libraryItem, $metadata)
     {
-        $tags = array_diff_key(
-            $metadata,
-            get_object_vars($libraryItem),
-            array_flip($libraryItem::$aliases ?: array())
-        );
+        $tags = array_diff_key($metadata, get_object_vars($libraryItem), array_flip($libraryItem::$aliases ?: array()));
 
         return array_filter($tags);
     }
@@ -2167,13 +2135,12 @@ abstract class Catalog extends database_object
      */
     public static function clean_empty_albums()
     {
-        $sql = "SELECT `id` FROM `album` WHERE NOT EXISTS " .
-            "(SELECT `id` FROM `song` WHERE `song`.`album` = `album`.`id`)";
+        $sql        = "SELECT `id` FROM `album` WHERE NOT EXISTS " . "(SELECT `id` FROM `song` WHERE `song`.`album` = `album`.`id`)";
         $db_results = Dba::read($sql);
         while ($albumid = Dba::fetch_assoc($db_results)) {
-            $object_id   = $albumid['id'];
-            $sql         = "DELETE FROM `album` WHERE `id` = ?";
-            $db_results  = Dba::write($sql, array($object_id));
+            $object_id  = $albumid['id'];
+            $sql        = "DELETE FROM `album` WHERE `id` = ?";
+            $db_results = Dba::write($sql, array($object_id));
         }
     }
 
@@ -2203,7 +2170,8 @@ abstract class Catalog extends database_object
         if (!defined('SSE_OUTPUT')) {
             Ui::show_box_top();
         }
-        Ui::update_text(T_("Catalog Cleaned"), sprintf(nT_("%d file removed.", "%d files removed.", $dead_total), $dead_total));
+        Ui::update_text(T_("Catalog Cleaned"),
+            sprintf(nT_("%d file removed.", "%d files removed.", $dead_total), $dead_total));
         if (!defined('SSE_OUTPUT')) {
             Ui::show_box_bottom();
         }
@@ -2228,7 +2196,8 @@ abstract class Catalog extends database_object
         if (!defined('SSE_OUTPUT')) {
             Ui::show_box_top();
         }
-        Ui::update_text(T_("Catalog Verified"), sprintf(nT_('%d file updated.', '%d files updated.', $verified['updated']), $verified['updated']));
+        Ui::update_text(T_("Catalog Verified"),
+            sprintf(nT_('%d file updated.', '%d files updated.', $verified['updated']), $verified['updated']));
         if (!defined('SSE_OUTPUT')) {
             Ui::show_box_bottom();
         }
@@ -2271,12 +2240,13 @@ abstract class Catalog extends database_object
      */
     public static function trim_prefix($string)
     {
-        $prefix_pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern'))) . '\\s)(.*)/i';
+        $prefix_pattern = '/^(' . implode('\\s|',
+                explode('|', AmpConfig::get('catalog_prefix_pattern'))) . '\\s)(.*)/i';
         preg_match($prefix_pattern, $string, $matches);
 
         if (count($matches)) {
-            $string = trim((string) $matches[2]);
-            $prefix = trim((string) $matches[1]);
+            $string = trim((string)$matches[2]);
+            $prefix = trim((string)$matches[1]);
         } else {
             $prefix = null;
         }
@@ -2294,7 +2264,7 @@ abstract class Catalog extends database_object
             return 0;
         }
 
-        $year = (int) ($year);
+        $year = (int)($year);
         if ($year < 0 || $year > 9999) {
             return 0;
         }
@@ -2313,15 +2283,15 @@ abstract class Catalog extends database_object
         $first = '';
         if ($string) {
             $items = explode("\x00", $string);
-            $first = trim((string) $items[0]);
+            $first = trim((string)$items[0]);
             // if first is the same as string, nothing was exploded, try other delimiters
             if ($first === $string) {
                 // try splitting with ; and then /
                 $items = explode(";", $string);
-                $first = trim((string) $items[0]);
+                $first = trim((string)$items[0]);
                 if ($first === $string) {
                     $items = explode("/", $string);
-                    $first = trim((string) $items[0]);
+                    $first = trim((string)$items[0]);
                 }
             }
         }
@@ -2351,7 +2321,7 @@ abstract class Catalog extends database_object
      */
     public static function check_title($title, $file = '')
     {
-        if (strlen(trim((string) $title)) < 1) {
+        if (strlen(trim((string)$title)) < 1) {
             $title = Dba::escape($file);
         }
 
@@ -2368,7 +2338,7 @@ abstract class Catalog extends database_object
      */
     public static function check_length($string, $max_length = 255)
     {
-        $string = (string) $string;
+        $string = (string)$string;
         if (false !== $encoding = mb_detect_encoding($string, null, true)) {
             $string = trim(mb_substr($string, 0, $max_length, $encoding));
         } else {
@@ -2387,8 +2357,8 @@ abstract class Catalog extends database_object
      */
     public static function check_track($track)
     {
-        $retval = ((int) $track > 32767 || (int) $track < -32767) ? (int) substr($track, -4, 4) : (int) $track;
-        if ((int) $track !== $retval) {
+        $retval = ((int)$track > 32767 || (int)$track < -32767) ? (int)substr($track, -4, 4) : (int)$track;
+        if ((int)$track !== $retval) {
             debug_event('catalog.class', "check_track: '{$track}' out of range. Changed into '{$retval}'", 4);
         }
 
@@ -2432,7 +2402,7 @@ abstract class Catalog extends database_object
         $pinfo = pathinfo($playlist);
         if (isset($files)) {
             foreach ($files as $file) {
-                $file = trim((string) $file);
+                $file = trim((string)$file);
                 // Check to see if it's a url from this ampache instance
                 if (substr($file, 0, strlen(AmpConfig::get('web_path'))) == AmpConfig::get('web_path')) {
                     $data       = Stream_Url::parse($file);
@@ -2486,20 +2456,21 @@ abstract class Catalog extends database_object
         debug_event('catalog.class', "import_playlist Parsed " . $playlist . ", found " . count($songs) . " songs", 5);
 
         if (count($songs)) {
-            $name        = $pinfo['extension'] . " - " . $pinfo['filename'];
+            $name = $pinfo['extension'] . " - " . $pinfo['filename'];
             // Search for existing playlist
             $playlist_search = Playlist::get_playlists(true, null, $name);
             if (empty($playlist_search)) {
                 // New playlist
                 $playlist_id   = Playlist::create($name, 'public');
                 $current_songs = array();
-                $playlist      = ((int) $playlist_id > 0) ? new Playlist((int) $playlist_id) : null;
+                $playlist      = ((int)$playlist_id > 0) ? new Playlist((int)$playlist_id) : null;
             } else {
                 // Existing playlist
-                $playlist_id    = $playlist_search[0];
-                $playlist       = new Playlist($playlist_id);
-                $current_songs  = $playlist->get_songs();
-                debug_event('catalog.class', "import_playlist playlist has " . (string) count($current_songs) . " songs", 5);
+                $playlist_id   = $playlist_search[0];
+                $playlist      = new Playlist($playlist_id);
+                $current_songs = $playlist->get_songs();
+                debug_event('catalog.class', "import_playlist playlist has " . (string)count($current_songs) . " songs",
+                    5);
             }
 
             if (!$playlist_id) {
@@ -2513,7 +2484,8 @@ abstract class Catalog extends database_object
             $new_songs = $songs;
             if (count($current_songs)) {
                 $new_songs = array_diff($songs, $current_songs);
-                debug_event('catalog.class', "import_playlist filtered existing playlist, found " . count($new_songs) . " new songs", 5);
+                debug_event('catalog.class',
+                    "import_playlist filtered existing playlist, found " . count($new_songs) . " new songs", 5);
             }
             $playlist->add_songs($new_songs, true);
 
@@ -2542,7 +2514,7 @@ abstract class Catalog extends database_object
         $results = explode("\n", $data);
 
         foreach ($results as $value) {
-            $value = trim((string) $value);
+            $value = trim((string)$value);
             if (!empty($value) && substr($value, 0, 1) != '#') {
                 $files[] = $value;
             }
@@ -2563,9 +2535,9 @@ abstract class Catalog extends database_object
         $results = explode("\n", $data);
 
         foreach ($results as $value) {
-            $value = trim((string) $value);
+            $value = trim((string)$value);
             if (preg_match("/file[0-9]+[\s]*\=(.*)/i", $value, $matches)) {
-                $file = trim((string) $matches[1]);
+                $file = trim((string)$matches[1]);
                 if (!empty($file)) {
                     $files[] = $file;
                 }
@@ -2588,7 +2560,7 @@ abstract class Catalog extends database_object
 
         if ($xml) {
             foreach ($xml->entry as $entry) {
-                $file = trim((string) $entry->ref['href']);
+                $file = trim((string)$entry->ref['href']);
                 if (!empty($file)) {
                     $files[] = $file;
                 }
@@ -2610,7 +2582,7 @@ abstract class Catalog extends database_object
         $xml   = simplexml_load_string($data);
         if ($xml) {
             foreach ($xml->trackList->track as $track) {
-                $file = trim((string) $track->location);
+                $file = trim((string)$track->location);
                 if (!empty($file)) {
                     $files[] = $file;
                 }
@@ -2679,9 +2651,7 @@ abstract class Catalog extends database_object
         // Select all songs in catalog
         $params = array();
         if ($catalog_id) {
-            $sql = 'SELECT `id` FROM `song` ' .
-                "WHERE `catalog`= ? " .
-                'ORDER BY `album`, `track`';
+            $sql      = 'SELECT `id` FROM `song` ' . "WHERE `catalog`= ? " . 'ORDER BY `album`, `track`';
             $params[] = $catalog_id;
         } else {
             $sql = 'SELECT `id` FROM `song` ORDER BY `album`, `track`';
@@ -2697,20 +2667,21 @@ abstract class Catalog extends database_object
 
                     $xml                         = array();
                     $xml['key']                  = $results['id'];
-                    $xml['dict']['Track ID']     = (int) ($results['id']);
+                    $xml['dict']['Track ID']     = (int)($results['id']);
                     $xml['dict']['Name']         = $song->title;
                     $xml['dict']['Artist']       = $song->f_artist_full;
                     $xml['dict']['Album']        = $song->f_album_full;
-                    $xml['dict']['Total Time']   = (int) ($song->time) * 1000; // iTunes uses milliseconds
-                    $xml['dict']['Track Number'] = (int) ($song->track);
-                    $xml['dict']['Year']         = (int) ($song->year);
-                    $xml['dict']['Date Added']   = get_datetime((int) $song->addition_time, 'short', 'short', "Y-m-d\TH:i:s\Z");
-                    $xml['dict']['Bit Rate']     = (int) ($song->bitrate / 1000);
-                    $xml['dict']['Sample Rate']  = (int) ($song->rate);
-                    $xml['dict']['Play Count']   = (int) ($song->played);
-                    $xml['dict']['Track Type']   = "URL";
-                    $xml['dict']['Location']     = Song::play_url($song->id);
-                    echo (string) xoutput_from_array($xml, true, 'itunes');
+                    $xml['dict']['Total Time']   = (int)($song->time) * 1000; // iTunes uses milliseconds
+                    $xml['dict']['Track Number'] = (int)($song->track);
+                    $xml['dict']['Year']         = (int)($song->year);
+                    $xml['dict']['Date Added']   = get_datetime((int)$song->addition_time, 'short', 'short',
+                        "Y-m-d\TH:i:s\Z");
+                    $xml['dict']['Bit Rate']    = (int)($song->bitrate / 1000);
+                    $xml['dict']['Sample Rate'] = (int)($song->rate);
+                    $xml['dict']['Play Count']  = (int)($song->played);
+                    $xml['dict']['Track Type']  = "URL";
+                    $xml['dict']['Location']    = Song::play_url($song->id);
+                    echo (string)xoutput_from_array($xml, true, 'itunes');
                     // flush output buffer
                 } // while result
                 echo xml_get_footer('itunes');
@@ -2720,17 +2691,7 @@ abstract class Catalog extends database_object
                 while ($results = Dba::fetch_assoc($db_results)) {
                     $song = new Song($results['id']);
                     $song->format();
-                    echo '"' . $song->id . '","' .
-                        $song->title . '","' .
-                        $song->f_artist_full . '","' .
-                        $song->f_album_full . '","' .
-                        $song->f_time . '","' .
-                        $song->f_track . '","' .
-                        $song->year . '","' .
-                        get_datetime((int) $song->addition_time) . '","' .
-                        $song->f_bitrate . '","' .
-                        $song->played . '","' .
-                        $song->file . '"' . "\n";
+                    echo '"' . $song->id . '","' . $song->title . '","' . $song->f_artist_full . '","' . $song->f_album_full . '","' . $song->f_time . '","' . $song->f_track . '","' . $song->year . '","' . get_datetime((int)$song->addition_time) . '","' . $song->f_bitrate . '","' . $song->played . '","' . $song->file . '"' . "\n";
                 }
                 break;
         } // end switch
@@ -2766,11 +2727,8 @@ abstract class Catalog extends database_object
     protected static function getSongTags($type, $object_id)
     {
         $tags       = array();
-        $db_results = Dba::read('SELECT `tag`.`name` FROM `tag`'
-                        . ' JOIN `tag_map` ON `tag`.`id` = `tag_map`.`tag_id`'
-                        . ' JOIN `song` ON `tag_map`.`object_id` = `song`.`id`'
-                        . ' WHERE `song`.`' . $type . '` = ? AND `tag_map`.`object_type` = "song"'
-                        . ' GROUP BY `tag`.`id`, `tag`.`name`', array($object_id));
+        $db_results = Dba::read('SELECT `tag`.`name` FROM `tag`' . ' JOIN `tag_map` ON `tag`.`id` = `tag_map`.`tag_id`' . ' JOIN `song` ON `tag_map`.`object_id` = `song`.`id`' . ' WHERE `song`.`' . $type . '` = ? AND `tag_map`.`object_type` = "song"' . ' GROUP BY `tag`.`id`, `tag`.`name`',
+            array($object_id));
         while ($row = Dba::fetch_assoc($db_results)) {
             $tags[] = $row['name'];
         }
@@ -2797,7 +2755,8 @@ abstract class Catalog extends database_object
             return false;
         }
 
-        return (Access::check('interface', 75) || ($libitem->get_user_owner() == $user_id && AmpConfig::get('upload_allow_remove')));
+        return (Access::check('interface',
+                75) || ($libitem->get_user_owner() == $user_id && AmpConfig::get('upload_allow_remove')));
     }
 
     /**
@@ -2815,7 +2774,7 @@ abstract class Catalog extends database_object
         switch ($action) {
             case 'add_to_all_catalogs':
                 $catalogs = self::get_catalogs();
-                // intentional fall through
+            // intentional fall through
             case 'add_to_catalog':
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {
@@ -2832,7 +2791,7 @@ abstract class Catalog extends database_object
                 break;
             case 'update_all_catalogs':
                 $catalogs = self::get_catalogs();
-                // intentional fall through
+            // intentional fall through
             case 'update_catalog':
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {
@@ -2861,7 +2820,7 @@ abstract class Catalog extends database_object
                 break;
             case 'clean_all_catalogs':
                 $catalogs = self::get_catalogs();
-                // intentional fall through
+            // intentional fall through
             case 'clean_catalog':
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {
@@ -2876,7 +2835,7 @@ abstract class Catalog extends database_object
             case 'update_from':
                 $catalog_id = 0;
                 // First see if we need to do an add
-                if ($options['add_path'] != '/' && strlen((string) $options['add_path'])) {
+                if ($options['add_path'] != '/' && strlen((string)$options['add_path'])) {
                     if ($catalog_id = Catalog_local::get_from_path($options['add_path'])) {
                         $catalog = self::create_from_id($catalog_id);
                         if ($catalog !== null) {
@@ -2886,7 +2845,7 @@ abstract class Catalog extends database_object
                 } // end if add
 
                 // Now check for an update
-                if ($options['update_path'] != '/' && strlen((string) $options['update_path'])) {
+                if ($options['update_path'] != '/' && strlen((string)$options['update_path'])) {
                     if ($catalog_id = Catalog_local::get_from_path($options['update_path'])) {
                         $songs = Song::get_from_path($options['update_path']);
                         foreach ($songs as $song_id) {
@@ -2896,7 +2855,8 @@ abstract class Catalog extends database_object
                 } // end if update
 
                 if ($catalog_id < 1) {
-                    AmpError::add('general', T_("This subdirectory is not inside an existing Catalog. The update can not be processed."));
+                    AmpError::add('general',
+                        T_("This subdirectory is not inside an existing Catalog. The update can not be processed."));
                 }
                 break;
             case 'gather_media_art':
@@ -2932,7 +2892,8 @@ abstract class Catalog extends database_object
     public static function migrate($object_type, $old_object_id, $new_object_id)
     {
         if ($old_object_id != $new_object_id) {
-            debug_event('catalog.class', 'migrate ' . $object_type . ' from ' . $old_object_id . ' to ' . $new_object_id, 4);
+            debug_event('catalog.class',
+                'migrate ' . $object_type . ' from ' . $old_object_id . ' to ' . $new_object_id, 4);
 
             Stats::migrate($object_type, $old_object_id, $new_object_id);
             UserActivity::migrate($object_type, $old_object_id, $new_object_id);
@@ -2949,4 +2910,4 @@ abstract class Catalog extends database_object
 
         return false;
     }
-} // end catalog.class
+}

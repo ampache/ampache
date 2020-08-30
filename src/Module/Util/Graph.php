@@ -26,7 +26,7 @@ namespace Ampache\Module\Util;
 
 use Ampache\Module\Authorization\Access;
 use AmpConfig;
-use Catalog;
+use Ampache\Model\Catalog;
 use Core;
 use CpChart;
 use CpChart\Data;

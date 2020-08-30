@@ -22,6 +22,7 @@
 
 use Ampache\Model\Album;
 use Ampache\Model\Artist;
+use Ampache\Model\Catalog;
 use Ampache\Model\Media;
 use Ampache\Model\Metadata\Repository\Metadata;
 use Ampache\Model\Metadata\Repository\MetadataField;

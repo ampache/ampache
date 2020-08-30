@@ -20,6 +20,8 @@
  *
  */
 
+use Ampache\Model\Catalog;
+
 define('NO_SESSION', '1');
 
 require_once __DIR__ . '/../lib/init.php';

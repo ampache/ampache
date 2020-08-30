@@ -30,7 +30,7 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Art;
-use Catalog;
+use Ampache\Model\Catalog;
 use Core;
 use PDOStatement;
 

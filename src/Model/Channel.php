@@ -29,7 +29,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Api\Ajax;
 use AmpConfig;
 use Art;
-use Catalog;
+use Ampache\Model\Catalog;
 use Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;

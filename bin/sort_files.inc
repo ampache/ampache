@@ -34,6 +34,7 @@
  */
 
 use Ampache\Model\Album;
+use Ampache\Model\Catalog;
 use Ampache\Module\System\Dba;
 
 define('NO_SESSION', '1');

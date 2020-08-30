@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Model\Album;
 use AmpConfig;
 use Ampache\Model\Artist;
-use Catalog;
+use Ampache\Model\Catalog;
 use Core;
 use Ampache\Model\Song;
 use Ampache\Module\Util\Ui;

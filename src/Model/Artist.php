@@ -30,7 +30,7 @@ use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Authorization\Access;
 use AmpConfig;
 use Art;
-use Catalog;
+use Ampache\Model\Catalog;
 use Core;
 use PDOStatement;
 

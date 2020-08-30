@@ -38,7 +38,7 @@ use Ampache\Module\Api\Ajax;
 use AmpConfig;
 use Art;
 use Ampache\Model\Artist;
-use Catalog;
+use Ampache\Model\Catalog;
 use Core;
 use PDOStatement;
 use Ampache\Model\Preference;

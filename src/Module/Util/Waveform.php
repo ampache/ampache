@@ -26,7 +26,7 @@ namespace Ampache\Module\Util;
 
 use Ampache\Module\Playback\Stream;
 use AmpConfig;
-use Catalog;
+use Ampache\Model\Catalog;
 use Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;

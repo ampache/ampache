@@ -38,7 +38,7 @@ use Ampache\Model\Song;
  *
  * @author raziel
  */
-abstract class Catalog extends \Catalog
+abstract class Catalog extends \Ampache\Model\Catalog
 {
     /**
      * Added Songs counter

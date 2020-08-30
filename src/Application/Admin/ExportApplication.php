@@ -27,7 +27,7 @@ namespace Ampache\Application\Admin;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
-use Catalog;
+use Ampache\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
 final class ExportApplication implements ApplicationInterface

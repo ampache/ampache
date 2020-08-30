@@ -27,7 +27,7 @@ namespace Ampache\Module\Util;
 use AmpConfig;
 use Art;
 use Ampache\Model\Artist;
-use Catalog;
+use Ampache\Model\Catalog;
 use Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;

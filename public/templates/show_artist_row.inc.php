@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Catalog;
 use Ampache\Model\Rating;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;

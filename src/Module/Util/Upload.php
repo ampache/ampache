@@ -29,7 +29,7 @@ use Ampache\Model\Album;
 use Ampache\Module\Authorization\Access;
 use AmpConfig;
 use Ampache\Model\Artist;
-use Catalog;
+use Ampache\Model\Catalog;
 use Core;
 use RuntimeException;
 
@@ -290,7 +290,7 @@ class Upload
 
     /**
      * get_root
-     * @param Catalog $catalog
+     * @param \Ampache\Model\Catalog $catalog
      * @param string $username
      * @return string
      */

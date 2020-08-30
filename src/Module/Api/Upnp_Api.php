@@ -29,7 +29,7 @@ use Ampache\Module\Playback\Stream;
 use AmpConfig;
 use Art;
 use Ampache\Model\Artist;
-use Catalog;
+use Ampache\Model\Catalog;
 use Ampache\Model\Clip;
 use DOMDocument;
 use Ampache\Model\Live_Stream;

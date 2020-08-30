@@ -35,7 +35,7 @@ use Ampache\Module\Util\Ui;
 use AmpConfig;
 use Art;
 use Ampache\Model\Artist;
-use Catalog;
+use Ampache\Model\Catalog;
 use Core;
 use Ampache\Model\Democratic;
 use DOMDocument;

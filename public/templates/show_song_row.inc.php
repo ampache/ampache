@@ -21,6 +21,7 @@
  */
 
 // Don't show disabled songs to normal users
+use Ampache\Model\Catalog;
 use Ampache\Model\Rating;
 use Ampache\Model\Share;
 use Ampache\Model\User;

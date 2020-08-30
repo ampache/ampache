@@ -31,7 +31,7 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use AmpConfig;
 use Art;
 use Ampache\Model\Artist;
-use Catalog;
+use Ampache\Model\Catalog;
 use Ampache\Module\System\Dba;
 use Ampache\Model\Live_Stream;
 use Ampache\Model\Playlist;

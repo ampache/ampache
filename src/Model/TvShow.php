@@ -29,7 +29,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Recommendation;
 use AmpConfig;
 use Art;
-use Catalog;
+use Ampache\Model\Catalog;
 use PDOStatement;
 use Ampache\Model\Rating;
 use Ampache\Model\Share;

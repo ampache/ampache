@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path'); ?>

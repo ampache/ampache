@@ -28,7 +28,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 use AmpConfig;
-use Catalog;
+use Ampache\Model\Catalog;
 use Core;
 use Exception;
 use PDOStatement;

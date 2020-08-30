@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use AmpConfig;
-use Catalog;
+use Ampache\Model\Catalog;
 use Ampache\Model\TvShow;
 use Ampache\Module\Util\Ui;
 

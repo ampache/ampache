@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Statistics;
 
 use AmpConfig;
-use Catalog;
+use Ampache\Model\Catalog;
 use Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;

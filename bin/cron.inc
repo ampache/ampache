@@ -21,6 +21,7 @@
  */
 
 use Ampache\Model\Bookmark;
+use Ampache\Model\Catalog;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Share;
 use Ampache\Module\Playback\Stream;

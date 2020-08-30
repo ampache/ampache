@@ -21,6 +21,7 @@
  *
  */
 
+use Ampache\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
 $name    = 'export_' . $_REQUEST['export_format'];

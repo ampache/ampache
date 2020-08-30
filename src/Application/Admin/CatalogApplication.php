@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use AmpError;
-use Catalog;
+use Ampache\Model\Catalog;
 use Core;
 use Ampache\Model\Song;
 use Ampache\Module\Statistics\Stats;

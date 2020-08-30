@@ -38,7 +38,7 @@ use AmpConfig;
 use Art;
 use Ampache\Model\Artist;
 use Ampache\Model\Bookmark;
-use Catalog;
+use Ampache\Model\Catalog;
 use Core;
 use DOMDocument;
 use Ampache\Model\Live_Stream;

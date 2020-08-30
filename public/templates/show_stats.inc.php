@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Catalog;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\Ui;
 

@@ -26,7 +26,7 @@ namespace Ampache\Module\Api;
 
 use Ampache\Model\Album;
 use AmpConfig;
-use Catalog;
+use Ampache\Model\Catalog;
 use Core;
 use Ampache\Module\System\Dba;
 use Ampache\Model\Playlist;

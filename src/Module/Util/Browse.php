@@ -29,7 +29,7 @@ use Ampache\Model\Query;
 use Ampache\Module\Api\Ajax;
 use AmpConfig;
 use Ampache\Model\Artist;
-use Catalog;
+use Ampache\Model\Catalog;
 use Ampache\Model\Playlist;
 use Ampache\Model\Song;
 use Ampache\Model\Tag;

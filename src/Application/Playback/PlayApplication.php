@@ -30,7 +30,7 @@ use Ampache\Application\ApplicationInterface;
 use Ampache\Module\Playback\Stream;
 use AmpConfig;
 use Ampache\Module\Authorization\Auth;
-use Catalog;
+use Ampache\Model\Catalog;
 use Core;
 use Ampache\Module\System\Dba;
 use Ampache\Model\Democratic;

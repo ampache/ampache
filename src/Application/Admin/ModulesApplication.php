@@ -28,7 +28,7 @@ namespace Ampache\Application\Admin;
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;
 use AmpError;
-use Catalog;
+use Ampache\Model\Catalog;
 use Core;
 use Ampache\Module\Playback\LocalPlay;
 use Ampache\Model\Plugin;

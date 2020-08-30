@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Module\System\Dba;
-use Catalog;
+use Ampache\Model\Catalog;
 
 class Movie extends Video
 {

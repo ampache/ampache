@@ -33,7 +33,7 @@ use AmpConfig;
 use Ampache\Model\Artist;
 use Ampache\Module\Artist\Artist_Event;
 use Ampache\Module\Util\Browse;
-use Catalog;
+use Ampache\Model\Catalog;
 use Ampache\Model\Channel;
 use Core;
 use Ampache\Model\Label;

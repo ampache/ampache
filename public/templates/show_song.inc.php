@@ -21,6 +21,7 @@
  *
  */
 
+use Ampache\Model\Catalog;
 use Ampache\Model\Rating;
 use Ampache\Model\Share;
 use Ampache\Model\Song;

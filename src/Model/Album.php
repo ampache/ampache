@@ -30,7 +30,7 @@ use Ampache\Module\Authorization\Access;
 use AmpConfig;
 use Art;
 use Ampache\Model\Artist;
-use Catalog;
+use Ampache\Model\Catalog;
 use Core;
 use Ampache\Module\System\Dba;
 use Exception;

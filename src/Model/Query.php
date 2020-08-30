@@ -27,7 +27,7 @@ namespace Ampache\Model;
 use Ampache\Module\Authorization\Access;
 use AmpConfig;
 use AmpError;
-use Catalog;
+use Ampache\Model\Catalog;
 use Core;
 use Ampache\Module\System\Dba;
 
