@@ -1,7 +1,6 @@
 <?php
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,17 +20,19 @@
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\Catalog;
+
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Beets\Catalog;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Dba;
 
 /**
- * Beets Catalog Class
- *
  * This class handles all actual work in regards to remote Beets catalogs.
- *
  */
-class Catalog_beetsremote extends \Ampache\Module\Beets\Catalog
+class Catalog_beetsremote extends Catalog
 {
     protected $version     = '000001';
     protected $type        = 'beetsremote';
@@ -51,10 +52,7 @@ class Catalog_beetsremote extends \Ampache\Module\Beets\Catalog
      */
     public function get_create_help()
     {
-        return "<ul>" .
-                "<li>Install Beets web plugin: http://beets.readthedocs.org/en/latest/plugins/web.html</li>" .
-                "<li>Start Beets web server</li>" .
-                "<li>Specify URI including port (like http://localhost:8337). It will be shown when starting Beets web in console.</li></ul>";
+        return "<ul>" . "<li>Install Beets web plugin: http://beets.readthedocs.org/en/latest/plugins/web.html</li>" . "<li>Start Beets web server</li>" . "<li>Specify URI including port (like http://localhost:8337). It will be shown when starting Beets web in console.</li></ul>";
     }
 
     /**
@@ -79,10 +77,7 @@ class Catalog_beetsremote extends \Ampache\Module\Beets\Catalog
         $charset   = (AmpConfig::get('database_charset', 'utf8'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `catalog_beetsremote` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-                "`uri` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
-                "`catalog_id` INT( 11 ) NOT NULL" .
-                ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `catalog_beetsremote` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`uri` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`catalog_id` INT( 11 ) NOT NULL" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;
@@ -151,11 +146,12 @@ class Catalog_beetsremote extends \Ampache\Module\Beets\Catalog
     public function checkSong($song)
     {
         if ($song['added'] < $this->last_add) {
-            debug_event('beetsremote.catalog', 'Skipping ' . $song['file'] . ' File modify time before last add run', 3);
+            debug_event('beetsremote.catalog', 'Skipping ' . $song['file'] . ' File modify time before last add run',
+                3);
 
             return true;
         }
 
-        return (boolean) $this->getIdFromPath($song['file']);
+        return (boolean)$this->getIdFromPath($song['file']);
     }
 }

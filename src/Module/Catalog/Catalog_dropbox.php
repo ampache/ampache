@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,6 +20,8 @@
  *
  */
 
+namespace Ampache\Module\Catalog;
+
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
 use Ampache\Model\Catalog;
@@ -32,22 +34,21 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
+use Exception;
 use Kunnu\Dropbox\DropboxApp;
 use Kunnu\Dropbox\Dropbox;
 use Kunnu\Dropbox\DropboxFile;
 use Kunnu\Dropbox\Exceptions\DropboxClientException;
+use ReflectionException;
 
 /**
- * Dropbox Catalog Class
- *
  * This class handles all actual work in regards to remote Dropbox catalogs.
- *
  */
 class Catalog_dropbox extends Catalog
 {
-    private $version        = '000002';
-    private $type           = 'dropbox';
-    private $description    = 'Dropbox Remote Catalog';
+    private $version     = '000002';
+    private $type        = 'dropbox';
+    private $description = 'Dropbox Remote Catalog';
 
     /**
      * get_description
@@ -82,13 +83,7 @@ class Catalog_dropbox extends Catalog
      */
     public function get_create_help()
     {
-        return "<ul><li>" . T_("Go to https://www.dropbox.com/developers/apps/create") . "</li>" .
-            "<li>" . T_("Select 'Dropbox API app'") . "</li>" .
-            "<li>" . T_("Select 'Full Dropbox'") . "</li>" .
-            "<li>" . T_("Give a name to your application and create it") . "</li>" .
-            "<li>" . T_("Click the 'Generate' button to create an Access Token") . "</li>" .
-            "<li>" . T_("Copy your App key and App secret and Access Token into the following fields.") . "</li>" .
-            "</ul>";
+        return "<ul><li>" . T_("Go to https://www.dropbox.com/developers/apps/create") . "</li>" . "<li>" . T_("Select 'Dropbox API app'") . "</li>" . "<li>" . T_("Select 'Full Dropbox'") . "</li>" . "<li>" . T_("Give a name to your application and create it") . "</li>" . "<li>" . T_("Click the 'Generate' button to create an Access Token") . "</li>" . "<li>" . T_("Copy your App key and App secret and Access Token into the following fields.") . "</li>" . "</ul>";
     } // get_create_help
 
     /**
@@ -113,14 +108,7 @@ class Catalog_dropbox extends Catalog
         $charset   = (AmpConfig::get('database_charset', 'utf8'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `catalog_dropbox` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-            "`apikey` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
-            "`secret` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
-            "`path` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
-            "`authtoken` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
-            "`getchunk` TINYINT(1) NOT NULL, " .
-            "`catalog_id` INT( 11 ) NOT NULL" .
-            ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `catalog_dropbox` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`apikey` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`secret` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`path` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`authtoken` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`getchunk` TINYINT(1) NOT NULL, " . "`catalog_id` INT( 11 ) NOT NULL" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;
@@ -131,11 +119,15 @@ class Catalog_dropbox extends Catalog
      */
     public function catalog_fields()
     {
-        $fields['apikey']        = array('description' => T_('API Key'), 'type' => 'text');
-        $fields['secret']        = array('description' => T_('Secret'), 'type' => 'password');
-        $fields['authtoken']     = array('description' => T_('Access Token'), 'type' => 'text');
-        $fields['path']          = array('description' => T_('Path'), 'type' => 'text', 'value' => '/');
-        $fields['getchunk']      = array('description' => T_('Get chunked files on analyze'), 'type' => 'checkbox', 'value' => true);
+        $fields['apikey']    = array('description' => T_('API Key'), 'type' => 'text');
+        $fields['secret']    = array('description' => T_('Secret'), 'type' => 'password');
+        $fields['authtoken'] = array('description' => T_('Access Token'), 'type' => 'text');
+        $fields['path']      = array('description' => T_('Path'), 'type' => 'text', 'value' => '/');
+        $fields['getchunk']  = array(
+            'description' => T_('Get chunked files on analyze'),
+            'type' => 'checkbox',
+            'value' => true
+        );
 
         return $fields;
     }
@@ -156,7 +148,7 @@ class Catalog_dropbox extends Catalog
     public function perform_ready()
     {
         // $this->authcode = $_REQUEST['authcode'];
-       // $this->completeAuthToken();
+        // $this->completeAuthToken();
     }
 
     public $apikey;
@@ -174,7 +166,7 @@ class Catalog_dropbox extends Catalog
     public function __construct($catalog_id = null)
     {
         if ($catalog_id) {
-            $this->id = (int) $catalog_id;
+            $this->id = (int)$catalog_id;
             $info     = $this->get_info($catalog_id);
 
             foreach ($info as $key => $value) {
@@ -276,9 +268,9 @@ class Catalog_dropbox extends Catalog
      */
     public function update_remote_catalog()
     {
-        $app             = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
-        $dropbox         = new Dropbox($app);
-        $this->count     = 0;
+        $app         = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
+        $dropbox     = new Dropbox($app);
+        $this->count = 0;
         $this->add_files($dropbox, $this->path);
         /* Update the Catalog last_add */
         $this->update_last_add();
@@ -352,7 +344,8 @@ class Catalog_dropbox extends Catalog
                     if ($is_video_file) {
                         $this->insert_video($dropbox, $path);
                     } else {
-                        debug_event('dropbox.catalog', "read " . $path . " ignored, bad media type for this video catalog.", 5);
+                        debug_event('dropbox.catalog',
+                            "read " . $path . " ignored, bad media type for this video catalog.", 5);
 
                         return false;
                     }
@@ -386,7 +379,8 @@ class Catalog_dropbox extends Catalog
             // Download File
             $this->download($dropbox, $path, -1, $outfile);
 
-            $vainfo = new VaInfo($outfile, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern, $readfile);
+            $vainfo = new VaInfo($outfile, $this->get_gather_types('music'), '', '', '', $this->sort_pattern,
+                $this->rename_pattern, $readfile);
             $vainfo->get_info();
 
             $key     = VaInfo::get_tag_type($vainfo->tags);
@@ -407,7 +401,9 @@ class Catalog_dropbox extends Catalog
                 $sql             = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
                 Dba::write($sql, array($results['file'], $song_id));
             } else {
-                debug_event('dropbox.catalog', $results['file'] . " ignored because it is an orphan songs. Please check your catalog patterns.", 5);
+                debug_event('dropbox.catalog',
+                    $results['file'] . " ignored because it is an orphan songs. Please check your catalog patterns.",
+                    5);
             }
             unlink($outfile);
 
@@ -442,16 +438,17 @@ class Catalog_dropbox extends Catalog
             $res = $this->download($dropbox, $path, 40960, $outfile);
 
             if ($res) {
-                $gtypes      = $this->get_gather_types('video');
-                $vainfo      = new VaInfo($outfile, $gtypes, '', '', '', $this->sort_pattern, $this->rename_pattern, $readfile);
+                $gtypes = $this->get_gather_types('video');
+                $vainfo = new VaInfo($outfile, $gtypes, '', '', '', $this->sort_pattern, $this->rename_pattern,
+                    $readfile);
                 $vainfo->get_info();
 
                 $tag_name           = VaInfo::get_tag_type($vainfo->tags, 'metadata_order_video');
                 $results            = VaInfo::clean_tag_info($vainfo->tags, $tag_name, $outfile);
                 $results['catalog'] = $this->id;
 
-                $results['file']       = $outfile;
-                $video_id              = Video::insert($results, $gtypes, []);
+                $results['file'] = $outfile;
+                $video_id        = Video::insert($results, $gtypes, []);
                 if ($results['art']) {
                     $art = new Art($video_id, 'video');
                     $art->insert_url($results['art']);
@@ -491,7 +488,8 @@ class Catalog_dropbox extends Catalog
         }
 
         // Make Dropbox File if target is specified
-        $dropboxFile = $dropboxFile ? $dropbox->makeDropboxFile($dropboxFile, $maxlen, null, DropboxFile::MODE_WRITE) : null;
+        $dropboxFile = $dropboxFile ? $dropbox->makeDropboxFile($dropboxFile, $maxlen, null,
+            DropboxFile::MODE_WRITE) : null;
 
         // Download File
         $response = $dropbox->postToContent('/files/download', ['path' => $path], null, $dropboxFile);
@@ -512,14 +510,15 @@ class Catalog_dropbox extends Catalog
 
         set_time_limit(0);
 
-        $app             = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
-        $dropbox         = new Dropbox($app);
+        $app     = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
+        $dropbox = new Dropbox($app);
         try {
             $sql        = 'SELECT `id`, `file`, `title` FROM `song` WHERE `catalog` = ?';
             $db_results = Dba::read($sql, array($this->id));
             while ($row = Dba::fetch_assoc($db_results)) {
                 $updated['total']++;
-                debug_event('dropbox.catalog', 'Starting verify on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
+                debug_event('dropbox.catalog', 'Starting verify on ' . $row['file'] . '(' . $row['id'] . ')', 5,
+                    'ampache-catalog');
                 $path     = $row['file'];
                 $readfile = true;
                 $filesize = 40960;
@@ -531,7 +530,8 @@ class Catalog_dropbox extends Catalog
                     debug_event('dropbox.catalog', 'updating song', 5, 'ampache-catalog');
                     $song = new Song($row['id']);
 
-                    $vainfo = new VaInfo($outfile, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern, $readfile);
+                    $vainfo = new VaInfo($outfile, $this->get_gather_types('music'), '', '', '', $this->sort_pattern,
+                        $this->rename_pattern, $readfile);
                     $vainfo->forceSize($filesize);
                     $vainfo->get_info();
 
@@ -575,8 +575,9 @@ class Catalog_dropbox extends Catalog
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            debug_event('dropbox.catalog', 'Starting clean on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
-            $file     = $row['file'];
+            debug_event('dropbox.catalog', 'Starting clean on ' . $row['file'] . '(' . $row['id'] . ')', 5,
+                'ampache-catalog');
+            $file = $row['file'];
             try {
                 $metadata = $dropbox->getMetadata($file, ["include_deleted" => true]);
             } catch (DropboxClientException $e) {
@@ -605,9 +606,9 @@ class Catalog_dropbox extends Catalog
     {
         $is_audio_file = Catalog::is_audio_file($file);
         if ($is_audio_file) {
-            $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
+            $sql = 'SELECT `id` FROM `song` WHERE `file` = ?';
         } else {
-            $sql        = 'SELECT `id` FROM `video` WHERE `file` = ?';
+            $sql = 'SELECT `id` FROM `video` WHERE `file` = ?';
         }
         $db_results = Dba::read($sql, array($file));
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -662,7 +663,7 @@ class Catalog_dropbox extends Catalog
         $dropbox = new Dropbox($app);
         try {
             set_time_limit(0);
-            $meta    = $dropbox->getMetadata($media->file);
+            $meta = $dropbox->getMetadata($media->file);
 
             $outfile = sys_get_temp_dir() . "/" . $meta->getName();
 
@@ -699,9 +700,9 @@ class Catalog_dropbox extends Catalog
 
             return true;
         }
-        $app             = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
-        $dropbox         = new Dropbox($app);
-        $songs           = $this->get_songs();
+        $app     = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
+        $dropbox = new Dropbox($app);
+        $songs   = $this->get_songs();
 
         // Prevent the script from timing out
         set_time_limit(0);
@@ -722,10 +723,10 @@ class Catalog_dropbox extends Catalog
                     // Download File
                     $res = $this->download($dropbox, $song->file, 40960, $outfile);
                     if ($res) {
-                        $sql             = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
+                        $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
                         Dba::write($sql, array($outfile, $song->id));
                         parent::gather_art([$song->id], null);
-                        $sql             = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
+                        $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
                         Dba::write($sql, array($song->file, $song->id));
                         $search_count++;
                         if (Ui::check_ticker()) {
@@ -741,4 +742,4 @@ class Catalog_dropbox extends Catalog
 
         return true;
     }
-} // end of dropbox.catalog class
+}

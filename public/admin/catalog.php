@@ -27,9 +27,6 @@ use Ampache\Application\Admin\CatalogApplication;
 
 require_once __DIR__ . '/../../src/Config/init.php';
 
-/** @deprecated include */
-require_once __DIR__ . '/../../modules/catalog/local/local.catalog.php';
-
 $dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
 
 $dic->get(CatalogApplication::class)->run();

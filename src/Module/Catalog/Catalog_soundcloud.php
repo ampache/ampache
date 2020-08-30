@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,6 +20,10 @@
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\Catalog;
+
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
 use Ampache\Model\Media;
@@ -31,18 +35,19 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
+use Exception;
+use Services_Soundcloud;
+use Services_Soundcloud_Invalid_Http_Response_Code_Exception;
+use Services_Soundcloud_Missing_Client_Id_Exception;
 
 /**
- * SoundCloud Catalog Class
- *
  * This class handles all actual work in regards to SoundCloud.
- *
  */
 class Catalog_soundcloud extends Catalog
 {
-    private $version        = '000001';
-    private $type           = 'soundcloud';
-    private $description    = 'SoundCloud Remote Catalog';
+    private $version     = '000001';
+    private $type        = 'soundcloud';
+    private $description = 'SoundCloud Remote Catalog';
 
     /**
      * get_description
@@ -77,10 +82,7 @@ class Catalog_soundcloud extends Catalog
      */
     public function get_create_help()
     {
-        return "<ul><li>Go to http://soundcloud.com/you/apps/new</li>" .
-            "<li>Give a name to your application and click Register</li>" .
-            "<li>Add the following OAuth redirect URIs: <i>" . $this->getRedirectUri() . "</i></li>" .
-            "<li>Copy your Client ID and Secret here, and Save the app</li></ul>";
+        return "<ul><li>Go to http://soundcloud.com/you/apps/new</li>" . "<li>Give a name to your application and click Register</li>" . "<li>Add the following OAuth redirect URIs: <i>" . $this->getRedirectUri() . "</i></li>" . "<li>Copy your Client ID and Secret here, and Save the app</li></ul>";
     } // get_create_help
 
     /**
@@ -105,12 +107,7 @@ class Catalog_soundcloud extends Catalog
         $charset   = AmpConfig::get('database_charset', 'utf8');
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `catalog_soundcloud` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-            "`userid` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
-            "`secret` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
-            "`authtoken` VARCHAR( 255 ) COLLATE $collation NULL , " .
-            "`catalog_id` INT( 11 ) NOT NULL" .
-            ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `catalog_soundcloud` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`userid` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`secret` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`authtoken` VARCHAR( 255 ) COLLATE $collation NULL , " . "`catalog_id` INT( 11 ) NOT NULL" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;
@@ -121,8 +118,8 @@ class Catalog_soundcloud extends Catalog
      */
     public function catalog_fields()
     {
-        $fields['userid']      = array('description' => T_('User ID'), 'type' => 'text');
-        $fields['secret']      = array('description' => T_('Secret'), 'type' => 'password');
+        $fields['userid'] = array('description' => T_('User ID'), 'type' => 'text');
+        $fields['secret'] = array('description' => T_('Secret'), 'type' => 'password');
 
         return $fields;
     }
@@ -160,7 +157,7 @@ class Catalog_soundcloud extends Catalog
     public function __construct($catalog_id = null)
     {
         if ($catalog_id) {
-            $this->id = (int) ($catalog_id);
+            $this->id = (int)($catalog_id);
             $info     = $this->get_info($catalog_id);
 
             foreach ($info as $key => $value) {
@@ -238,7 +235,8 @@ class Catalog_soundcloud extends Catalog
         $token           = $api->accessToken($this->authcode);
         $this->authtoken = $token['access_token'];
 
-        debug_event('soundcloud.catalog', 'SoundCloud authentication token generated for userid ' . $this->userid . '.', 1);
+        debug_event('soundcloud.catalog', 'SoundCloud authentication token generated for userid ' . $this->userid . '.',
+            1);
 
         $sql = 'UPDATE `catalog_soundcloud` SET `authtoken` = ? WHERE `catalog_id` = ?';
         Dba::write($sql, array($this->authtoken, $this->catalog_id));
@@ -319,7 +317,7 @@ class Catalog_soundcloud extends Catalog
                             $data['comment'] = $song->description;
                             $data['file']    = $song->stream_url . '.mp3'; // Always stream as mp3, if evolve => $song->original_format;
                             $data['size']    = $song->original_content_size;
-                            $data['time']    = (int) ($song->duration / 1000);
+                            $data['time']    = (int)($song->duration / 1000);
                             if ($this->check_remote_song($data)) {
                                 debug_event('soundcloud.catalog', 'Skipping existing song ' . $data['file'], 5);
                             } else {
@@ -335,9 +333,9 @@ class Catalog_soundcloud extends Catalog
                         }
                     }
 
-                    Ui::update_text(T_("Updated"), T_('Completed updating SoundCloud Catalog(s)') . " " .
-                        /* HINT: Number of Songs added */
-                        sprintf(nT_('%s Song added', '%s Songs added', $songsadded), $songsadded));
+                    Ui::update_text(T_("Updated"),
+                        T_('Completed updating SoundCloud Catalog(s)') . " " . /* HINT: Number of Songs added */ sprintf(nT_('%s Song added',
+                            '%s Songs added', $songsadded), $songsadded));
 
                     // Update the last update value
                     $this->update_last_update();
@@ -380,7 +378,8 @@ class Catalog_soundcloud extends Catalog
                 $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
                 $db_results = Dba::read($sql, array($this->id));
                 while ($row = Dba::fetch_assoc($db_results)) {
-                    debug_event('soundcloud.catalog', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
+                    debug_event('soundcloud.catalog', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5,
+                        'ampache-catalog');
                     $remove = false;
                     try {
                         $track = $this->url_to_track($row['file']);
@@ -392,7 +391,8 @@ class Catalog_soundcloud extends Catalog
                         if ($error->getHttpCode() == '404') {
                             $remove = true;
                         } else {
-                            debug_event('soundcloud.catalog', 'Clean error: ' . $error->getMessage(), 5, 'ampache-catalog');
+                            debug_event('soundcloud.catalog', 'Clean error: ' . $error->getMessage(), 5,
+                                'ampache-catalog');
                         }
                     } catch (Exception $error) {
                         debug_event('soundcloud.catalog', 'Clean error: ' . $error->getMessage(), 5, 'ampache-catalog');
@@ -506,4 +506,4 @@ class Catalog_soundcloud extends Catalog
 
         return null;
     }
-} // end of soundcloud.catalog class
+}

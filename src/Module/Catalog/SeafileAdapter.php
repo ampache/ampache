@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,16 +20,16 @@
  *
  */
 
+namespace Ampache\Module\Catalog;
+
 use Ampache\Module\System\AmpError;
+use Exception;
 use Seafile\Client\Http\Client;
 use Seafile\Client\Resource\Library;
 use Seafile\Client\Resource\Directory;
 use Seafile\Client\Resource\File;
 use GuzzleHttp\Exception\ClientException;
 
-/**
- * Class SeafileAdapter
- */
 class SeafileAdapter
 {
     // request API key from Seafile Server based on username and password
@@ -50,7 +50,7 @@ class SeafileAdapter
             )
         );
 
-        $result  = file_get_contents($server_uri . '/api2/auth-token/', false, stream_context_create($options));
+        $result = file_get_contents($server_uri . '/api2/auth-token/', false, stream_context_create($options));
 
         if (!$result) {
             throw new Exception(T_("Could not authenticate with Seafile"));
@@ -98,10 +98,7 @@ class SeafileAdapter
      */
     public function ready()
     {
-        return $this->server != null &&
-            $this->api_key != null &&
-            $this->library_name != null &&
-            $this->call_delay != null;
+        return $this->server != null && $this->api_key != null && $this->library_name != null && $this->call_delay != null;
     }
 
     // create API client object & find library
@@ -147,7 +144,8 @@ class SeafileAdapter
         }));
 
         if (count($matches) == 0) {
-            AmpError::add('general', sprintf(T_('Could not find the Seafile library called "%s", no media was updated'), $this->library_name));
+            AmpError::add('general', sprintf(T_('Could not find the Seafile library called "%s", no media was updated'),
+                $this->library_name));
 
             return false;
         }
@@ -169,17 +167,17 @@ class SeafileAdapter
             try {
                 return $func();
             } catch (ClientException $error) {
-                if ($e->getResponse()->getStatusCode() !== 429) {
-                    throw $e;
+                if ($error->getResponse()->getStatusCode() !== 429) {
+                    throw $error;
                 }
 
-                $resp = $e->getResponse()->getBody();
+                $resp = $error->getResponse()->getBody();
 
                 $error = json_decode($resp)->detail;
 
                 preg_match('(\d+) sec', $error, $matches);
 
-                $secs = (int) $matches[1][0];
+                $secs = (int)$matches[1][0];
 
                 debug_event('SeafileAdapter', sprintf('Throttled by Seafile, waiting %d seconds.', $secs), 5);
                 sleep($secs + 1);
@@ -234,12 +232,12 @@ class SeafileAdapter
 
                 return $directory;
             } catch (ClientException $error) {
-                if ($e->getResponse()->getStatusCode() == 404) {
+                if ($error->getResponse()->getStatusCode() == 404) {
                     $this->directory_cache[$path] = false;
 
                     return null;
                 } else {
-                    throw $e;
+                    throw $error;
                 }
             }
         }
@@ -311,9 +309,9 @@ class SeafileAdapter
         });
 
         if ($partial) {
-            $opts = ['curl' => [ CURLOPT_RANGE => '0-2097152' ]];
+            $opts = ['curl' => [CURLOPT_RANGE => '0-2097152']];
         } else {
-            $opts = [ 'delay' => 0 ];
+            $opts = ['delay' => 0];
         }
         // grab a full 2 meg in case meta has image in it or something
         $response = $this->throttle_check(function () use ($url, $opts) {

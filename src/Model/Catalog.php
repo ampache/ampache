@@ -36,8 +36,15 @@ use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
-use Catalog_local;
+use Ampache\Module\Catalog\Catalog_beets;
+use Ampache\Module\Catalog\Catalog_beetsremote;
+use Ampache\Module\Catalog\Catalog_dropbox;
+use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Module\System\Core;
+use Ampache\Module\Catalog\Catalog_remote;
+use Ampache\Module\Catalog\Catalog_Seafile;
+use Ampache\Module\Catalog\Catalog_soundcloud;
+use Ampache\Module\Catalog\Catalog_subsonic;
 use Exception;
 use PDOStatement;
 use ReflectionException;
@@ -50,6 +57,17 @@ use ReflectionException;
  */
 abstract class Catalog extends database_object
 {
+    private const CATALOG_TYPES = [
+        'beets' => Catalog_beets::class,
+        'beetsremote' => Catalog_beetsremote::class,
+        'dropbox' => Catalog_dropbox::class,
+        'local' => Catalog_local::class,
+        'remote' => Catalog_remote::class,
+        'seafile' => Catalog_Seafile::class,
+        'soundcloud' => Catalog_soundcloud::class,
+        'subsonic' => Catalog_subsonic::class,
+    ];
+
     /**
      * @var integer $id
      */
@@ -277,7 +295,6 @@ abstract class Catalog extends database_object
     /**
      * create_catalog_type
      * This function attempts to create a catalog type
-     * all Catalog modules should be located in /modules/catalog/<name>/<name>.class.php
      * @param string $type
      * @param integer $catalog_id
      * @return Catalog|null
@@ -288,38 +305,34 @@ abstract class Catalog extends database_object
             return null;
         }
 
-        $filename = __DIR__ . '/../../modules/catalog/' . $type . '/' . $type . '.catalog.php';
-        $include  = require_once $filename;
+        $controller = self::CATALOG_TYPES[$type] ?? null;
 
-        if (!$include) {
+        if ($controller === null) {
             /* Throw Error Here */
             debug_event('catalog.class', 'Unable to load ' . $type . ' catalog type', 2);
 
             return null;
         } // include
-        else {
-            $class_name = ObjectTypeToClassNameMapper::map("Catalog_" . $type);
-            if ($catalog_id > 0) {
-                $catalog = new $class_name($catalog_id);
-            } else {
-                $catalog = new $class_name();
-            }
-            if (!($catalog instanceof Catalog)) {
-                debug_event('catalog.class', $type . ' not an instance of Catalog abstract, unable to load', 1);
-
-                return null;
-            }
-            // identify if it's actually enabled
-            $sql        = 'SELECT `enabled` FROM `catalog` WHERE `id` = ?';
-            $db_results = Dba::read($sql, array($catalog->id));
-
-            while ($results = Dba::fetch_assoc($db_results)) {
-                $catalog->enabled = $results['enabled'];
-            }
-
-            return $catalog;
+        if ($catalog_id > 0) {
+            $catalog = new $controller($catalog_id);
+        } else {
+            $catalog = new $controller();
         }
-    } // create_catalog_type
+        if (!($catalog instanceof Catalog)) {
+            debug_event('catalog.class', $type . ' not an instance of Catalog abstract, unable to load', 1);
+
+            return null;
+        }
+        // identify if it's actually enabled
+        $sql        = 'SELECT `enabled` FROM `catalog` WHERE `id` = ?';
+        $db_results = Dba::read($sql, array($catalog->id));
+
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $catalog->enabled = $results['enabled'];
+        }
+
+        return $catalog;
+    }
 
     /**
      * Show dropdown catalog types.
@@ -386,39 +399,8 @@ abstract class Catalog extends database_object
      */
     public static function get_catalog_types()
     {
-        /* First open the dir */
-        $basedir = __DIR__ . '/../../modules/catalog';
-        $handle  = opendir($basedir);
-
-        if (!is_resource($handle)) {
-            debug_event('catalog.class', 'Error: Unable to read catalog types directory', 1);
-
-            return array();
-        }
-
-        $results = array();
-
-        while (false !== ($file = readdir($handle))) {
-            if ($file === '.' || $file === '..') {
-                continue;
-            }
-            /* Make sure it is a dir */
-            if (!is_dir($basedir . '/' . $file)) {
-                debug_event('catalog.class', $file . ' is not a directory.', 3);
-                continue;
-            }
-
-            // Make sure the plugin base file exists inside the plugin directory
-            if (!file_exists($basedir . '/' . $file . '/' . $file . '.catalog.php')) {
-                debug_event('catalog.class', 'Missing class for ' . $file, 3);
-                continue;
-            }
-
-            $results[] = $file;
-        } // end while
-
-        return $results;
-    } // get_catalog_types
+        return array_keys(self::CATALOG_TYPES);
+    }
 
     /**
      * Check if a file is an audio.
@@ -692,39 +674,40 @@ abstract class Catalog extends database_object
 
         // Should it be an array? Not now.
         if (!in_array($gather_types,
-            array('music', 'clip', 'tvshow', 'movie', 'Ampache\Model\Personal_Video', 'podcast'))) {
+            array('music', 'clip', 'tvshow', 'movie', 'Personal_Video', 'podcast'))) {
             return 0;
         }
 
         $insert_id = 0;
-        $filename  = __DIR__ . '/../../modules/catalog/' . $type . '/' . $type . '.catalog.php';
-        $include   = require_once $filename;
 
-        if ($include) {
-            $sql = 'INSERT INTO `catalog` (`name`, `catalog_type`, ' . '`rename_pattern`, `sort_pattern`, `gather_types`) VALUES (?, ?, ?, ?, ?)';
-            Dba::write($sql, array(
-                $name,
-                $type,
-                $rename_pattern,
-                $sort_pattern,
-                $gather_types
-            ));
+        $classname = self::CATALOG_TYPES[$type] ?? null;
 
-            $insert_id = Dba::insert_id();
+        if ($classname === null) {
+            return $insert_id;
+        }
 
-            if (!$insert_id) {
-                AmpError::add('general', T_('Failed to create the catalog, check the debug logs'));
-                debug_event('catalog.class', 'Insert failed: ' . json_encode($data), 2);
+        $sql = 'INSERT INTO `catalog` (`name`, `catalog_type`, ' . '`rename_pattern`, `sort_pattern`, `gather_types`) VALUES (?, ?, ?, ?, ?)';
+        Dba::write($sql, array(
+            $name,
+            $type,
+            $rename_pattern,
+            $sort_pattern,
+            $gather_types
+        ));
 
-                return 0;
-            }
+        $insert_id = Dba::insert_id();
 
-            $classname = 'Catalog_' . $type;
-            if (!$classname::create_type($insert_id, $data)) {
-                $sql = 'DELETE FROM `catalog` WHERE `id` = ?';
-                Dba::write($sql, array($insert_id));
-                $insert_id = 0;
-            }
+        if (!$insert_id) {
+            AmpError::add('general', T_('Failed to create the catalog, check the debug logs'));
+            debug_event('catalog.class', 'Insert failed: ' . json_encode($data), 2);
+
+            return 0;
+        }
+
+        if (!$classname::create_type($insert_id, $data)) {
+            $sql = 'DELETE FROM `catalog` WHERE `id` = ?';
+            Dba::write($sql, array($insert_id));
+            $insert_id = 0;
         }
 
         return (int)$insert_id;
@@ -1772,8 +1755,9 @@ abstract class Catalog extends database_object
             return array();
         }
 
+        $type = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
         // Figure out what type of object this is and call the right  function
-        $name     = (get_class($media) == 'Song') ? 'song' : 'video';
+        $name     = ($type == 'song') ? 'song' : 'video';
         $function = 'update_' . $name . '_from_tags';
 
         // check for files without tags and try to update from their file name instead
@@ -1786,12 +1770,12 @@ abstract class Catalog extends database_object
             $patres  = VaInfo::parse_pattern($media->file, $catalog->sort_pattern, $catalog->rename_pattern);
             $results = array_merge($results, $patres);
 
-            return call_user_func(array('Ampache\Model\Catalog', $function), $results, $media);
+            return call_user_func(array(Catalog::class, $function), $results, $media);
         }
         debug_event('catalog.class', 'Reading tags from ' . $media->file, 4);
 
 
-        return call_user_func(array('Ampache\Model\Catalog', $function), $results, $media);
+        return call_user_func(array(Catalog::class, $function), $results, $media);
     } // update_media_from_tags
 
     /**

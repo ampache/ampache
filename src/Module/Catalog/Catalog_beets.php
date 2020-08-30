@@ -1,7 +1,6 @@
 <?php
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -21,18 +20,22 @@
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Module\Catalog;
+
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Beets\Catalog;
 use Ampache\Module\Beets\CliHandler;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Dba;
+use DateTime;
+use Exception;
 
 /**
- * Beets Catalog Class
- *
  * This class handles all actual work in regards to local Beets catalogs.
- *
  */
-class Catalog_beets extends \Ampache\Module\Beets\Catalog
+class Catalog_beets extends Catalog
 {
     protected $version     = '000001';
     protected $type        = 'beets';
@@ -52,9 +55,7 @@ class Catalog_beets extends \Ampache\Module\Beets\Catalog
      */
     public function get_create_help()
     {
-        return "<ul>" .
-                "<li>Fetch songs from beets command over CLI.</li>" .
-                "<li>You have to ensure that the beets command ( beet ), the music directories and the Database file are accessible by the Webserver.</li></ul>";
+        return "<ul>" . "<li>Fetch songs from beets command over CLI.</li>" . "<li>You have to ensure that the beets command ( beet ), the music directories and the Database file are accessible by the Webserver.</li></ul>";
     }
 
     /**
@@ -79,10 +80,7 @@ class Catalog_beets extends \Ampache\Module\Beets\Catalog
         $charset   = (AmpConfig::get('database_charset', 'utf8'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `catalog_beets` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-                "`beetsdb` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
-                "`catalog_id` INT( 11 ) NOT NULL" .
-                ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `catalog_beets` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`beetsdb` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`catalog_id` INT( 11 ) NOT NULL" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;
@@ -160,7 +158,7 @@ class Catalog_beets extends \Ampache\Module\Beets\Catalog
             return true;
         }
 
-        return (boolean) $this->getIdFromPath($song['file']);
+        return (boolean)$this->getIdFromPath($song['file']);
     }
 
     /**

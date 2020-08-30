@@ -66,6 +66,7 @@
         "kunalvarma05/dropbox-php-sdk": "^0.2.1",
         "maennchen/zipstream-php": "0.4.*",
         "mikealmond/musicbrainz": "dev-master",
+        "mptre/php-soundcloud": "2.*",
         "needim/noty": "2.4.*",
         "oomphinc/composer-installers-extender": "^2.0",
         "openid/php-openid": "^3",
@@ -73,6 +74,7 @@
         "phpmailer/phpmailer": "6.1.*",
         "pklauzinski/jscroll": "2.*",
         "rmccue/requests": "1.7.*",
+        "rsd/seafile-php-sdk": "^1",
         "sabre/dav": "3.*.*",
         "scaron/prettyphoto": "3.*",
         "swisnl/jquery-contextmenu": "2.1.*",
@@ -93,6 +95,18 @@
     },
     "repositories":
     [
+        {
+            "type": "package",
+            "package": {
+                "name": "mptre/php-soundcloud",
+                "version": "2.3.2",
+                "source": {
+                    "url": "https://github.com/mptre/php-soundcloud.git",
+                    "type": "git",
+                    "reference": "v2.3.2"
+                }
+            }
+        },
         {
             "type": "package",
             "package": {
@@ -339,7 +353,6 @@
     "extra": {
         "merge-plugin": {
             "include": [
-                "modules/catalog/*/composer.module.json",
                 "modules/plugins/*/composer.module.json"
             ],
             "recurse": false,

@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,8 +20,13 @@
  *
  */
 
-// SubsonicClient inspired from https://github.com/webeight/SubExt
+/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 
+namespace Ampache\Module\Catalog;
+
+/**
+ * SubsonicClient inspired from https://github.com/webeight/SubExt
+ */
 class SubsonicClient
 {
     protected $_serverUrl;
@@ -42,47 +47,47 @@ class SubsonicClient
         $this->setServer($serverUrl, $port);
 
         $this->_creds = array(
-                'u' => $username,
-                'p' => $password,
-                'v' => '1.8.0',
-                'c' => $client,
-                'f' => 'json'
+            'u' => $username,
+            'p' => $password,
+            'v' => '1.8.0',
+            'c' => $client,
+            'f' => 'json'
         );
 
         $this->_commands = array(
-                'ping',
-                'getLicense',
-                'getMusicFolders',
-                'getNowPlaying',
-                'getIndexes',
-                'getSong',
-                'getMusicDirectory',
-                'getArtistInfo',
-                'search',
-                'search2',
-                'getPlaylists',
-                'getPlaylist',
-                'createPlaylist',
-                'deletePlaylist',
-                'download',
-                'stream',
-                'getCoverArt',
-                'scrobble',
-                'changePassword',
-                'getUser',
-                'createUser',
-                'deleteUser',
-                'getChatMessages',
-                'addChatMessage',
-                'getAlbumList',
-                'getRandomSongs',
-                'getLyrics',
-                'jukeboxControl',
-                'getPordcasts',
-                'createShare',
-                'updateShare',
-                'deleteShare',
-                'setRating',
+            'ping',
+            'getLicense',
+            'getMusicFolders',
+            'getNowPlaying',
+            'getIndexes',
+            'getSong',
+            'getMusicDirectory',
+            'getArtistInfo',
+            'search',
+            'search2',
+            'getPlaylists',
+            'getPlaylist',
+            'createPlaylist',
+            'deletePlaylist',
+            'download',
+            'stream',
+            'getCoverArt',
+            'scrobble',
+            'changePassword',
+            'getUser',
+            'createUser',
+            'deleteUser',
+            'getChatMessages',
+            'addChatMessage',
+            'getAlbumList',
+            'getRandomSongs',
+            'getLyrics',
+            'jukeboxControl',
+            'getPordcasts',
+            'createShare',
+            'updateShare',
+            'deleteShare',
+            'setRating',
         );
     }
 
@@ -128,7 +133,7 @@ class SubsonicClient
                 CURLOPT_CONNECTTIMEOUT => 8,
                 CURLOPT_SSL_VERIFYPEER => 0,
                 CURLOPT_FOLLOWLOCATION => 1,
-                CURLOPT_PORT => (int) ($this->_serverPort)
+                CURLOPT_PORT => (int)($this->_serverPort)
             );
             $curl = curl_init();
             if ($curl) {
@@ -199,7 +204,7 @@ class SubsonicClient
     {
         error_log($error . "\n" . print_r($data, true));
 
-        return (object) array("success" => false, "error" => $error, "data" => $data);
+        return (object)array("success" => false, "error" => $error, "data" => $data);
     }
 
     /**
@@ -210,7 +215,7 @@ class SubsonicClient
     {
         $arr = json_decode($response, true);
         if ($arr['subsonic-response']) {
-            $response = (array) $arr['subsonic-response'];
+            $response = (array)$arr['subsonic-response'];
             $data     = $response;
 
             return array("success" => ($response['status'] == "ok"), "data" => $data);
@@ -235,7 +240,7 @@ class SubsonicClient
      */
     public function __call($action, $arguments)
     {
-        $object = count($arguments) ? (array) $arguments[0] : array();
+        $object = count($arguments) ? (array)$arguments[0] : array();
 
         return $this->_querySubsonic($action, $object);
     }

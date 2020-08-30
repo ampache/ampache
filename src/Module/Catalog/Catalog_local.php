@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -19,6 +19,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Album;
@@ -40,18 +42,16 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
+use Exception;
 
 /**
- * Local Catalog Class
- *
  * This class handles all actual work in regards to local catalogs.
- *
  */
 class Catalog_local extends Catalog
 {
-    private $version        = '000001';
-    private $type           = 'local';
-    private $description    = 'Local Catalog';
+    private $version     = '000001';
+    private $type        = 'local';
+    private $description = 'Local Catalog';
 
     private $count;
     private $added_songs_to_gather;
@@ -115,10 +115,7 @@ class Catalog_local extends Catalog
         $charset   = (AmpConfig::get('database_charset', 'utf8'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `catalog_local` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-            "`path` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
-            "`catalog_id` INT( 11 ) NOT NULL" .
-            ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `catalog_local` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`path` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`catalog_id` INT( 11 ) NOT NULL" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;
@@ -129,7 +126,7 @@ class Catalog_local extends Catalog
      */
     public function catalog_fields()
     {
-        $fields['path']      = array('description' => T_('Path'), 'type' => 'text');
+        $fields['path'] = array('description' => T_('Path'), 'type' => 'text');
 
         return $fields;
     }
@@ -145,7 +142,7 @@ class Catalog_local extends Catalog
     public function __construct($catalog_id = null)
     {
         if ($catalog_id) {
-            $this->id = (int) ($catalog_id);
+            $this->id = (int)($catalog_id);
             $info     = $this->get_info($catalog_id);
 
             foreach ($info as $key => $value) {
@@ -222,7 +219,8 @@ class Catalog_local extends Catalog
         if (!Core::is_readable($path)) {
             debug_event('local.catalog', 'Cannot add catalog at unopenable path ' . $path, 1);
             /* HINT: directory (file path) */
-            AmpError::add('general', sprintf(T_("The folder couldn't be read. Does it exist? %s"), scrub_out($data['path'])));
+            AmpError::add('general',
+                sprintf(T_("The folder couldn't be read. Does it exist? %s"), scrub_out($data['path'])));
 
             return false;
         }
@@ -423,7 +421,9 @@ class Catalog_local extends Catalog
                     $convok = (strcmp($enc_full_file, $full_file) == 0);
                 }
                 if (!$convok) {
-                    debug_event('local.catalog', $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file, 1);
+                    debug_event('local.catalog',
+                        $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file,
+                        1);
                     /* HINT: FullFile */
                     AmpError::add('catalog_add', sprintf(T_('"%s" does not match site charset'), $full_file));
 
@@ -447,7 +447,8 @@ class Catalog_local extends Catalog
                     if ($is_audio_file) {
                         $this->insert_local_song($full_file, $options);
                     } else {
-                        debug_event('local.catalog', $full_file . " ignored, bad media type for this music catalog.", 5);
+                        debug_event('local.catalog', $full_file . " ignored, bad media type for this music catalog.",
+                            5);
 
                         return false;
                     }
@@ -456,7 +457,8 @@ class Catalog_local extends Catalog
                         if ($is_video_file) {
                             $this->insert_local_video($full_file, $options);
                         } else {
-                            debug_event('local.catalog', $full_file . " ignored, bad media type for this video catalog.", 5);
+                            debug_event('local.catalog',
+                                $full_file . " ignored, bad media type for this video catalog.", 5);
 
                             return false;
                         }
@@ -556,7 +558,9 @@ class Catalog_local extends Catalog
 
         if (!defined('SSE_OUTPUT')) {
             Ui::show_box_top();
-            Ui::update_text(T_('Catalog Updated'), sprintf(T_('Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'), date('i:s', $time_diff), $this->count, $rate));
+            Ui::update_text(T_('Catalog Updated'),
+                sprintf(T_('Total Time: [%s] Total Media: [%s] Media Per Second: [%s]'), date('i:s', $time_diff),
+                    $this->count, $rate));
             Ui::show_box_bottom();
         }
     } // add_to_catalog
@@ -612,8 +616,7 @@ class Catalog_local extends Catalog
         $count   = $chunk * $chunk_size;
         $changed = 0;
 
-        $sql = "SELECT `id`, `file` FROM `$media_type` " .
-            "WHERE `catalog`='$this->id' ORDER BY `$media_type`.`update_time` ASC, `$media_type`.`file` LIMIT $count, $chunk_size";
+        $sql        = "SELECT `id`, `file` FROM `$media_type` " . "WHERE `catalog`='$this->id' ORDER BY `$media_type`.`update_time` ASC, `$media_type`.`file` LIMIT $count, $chunk_size";
         $db_results = Dba::read($sql);
 
         if (AmpConfig::get('memory_cache')) {
@@ -641,7 +644,8 @@ class Catalog_local extends Catalog
 
             $class_name = ObjectTypeToClassNameMapper::map($media_type);
             $media      = new $class_name($row['id']);
-            $info       = self::update_media_from_tags($media, $this->get_gather_types(), $this->sort_pattern, $this->rename_pattern);
+            $info       = self::update_media_from_tags($media, $this->get_gather_types(), $this->sort_pattern,
+                $this->rename_pattern);
             if ($info['change']) {
                 $changed++;
             }
@@ -696,8 +700,7 @@ class Catalog_local extends Catalog
             }
             if ($dead_count) {
                 $dead_total += $dead_count;
-                $sql = "DELETE FROM `$media_type` WHERE `id` IN " .
-                    '(' . implode(',', $dead) . ')';
+                $sql        = "DELETE FROM `$media_type` WHERE `id` IN " . '(' . implode(',', $dead) . ')';
                 $db_results = Dba::write($sql);
             }
         }
@@ -723,8 +726,7 @@ class Catalog_local extends Catalog
         $dead  = array();
         $count = $chunk * $chunk_size;
 
-        $sql = "SELECT `id`, `file` FROM `$media_type` " .
-            "WHERE `catalog`='$this->id' LIMIT $count, $chunk_size";
+        $sql        = "SELECT `id`, `file` FROM `$media_type` " . "WHERE `catalog`='$this->id' LIMIT $count, $chunk_size";
         $db_results = Dba::read($sql);
 
         while ($results = Dba::fetch_assoc($db_results)) {
@@ -792,7 +794,8 @@ class Catalog_local extends Catalog
      */
     private function insert_local_song($file, $options = array())
     {
-        $vainfo = new VaInfo($file, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern);
+        $vainfo = new VaInfo($file, $this->get_gather_types('music'), '', '', '', $this->sort_pattern,
+            $this->rename_pattern);
         $vainfo->get_info();
 
         $key = VaInfo::get_tag_type($vainfo->tags);
@@ -808,7 +811,7 @@ class Catalog_local extends Catalog
             $results['license'] = $options['license'];
         }
 
-        if ((int) $options['artist_id'] > 0) {
+        if ((int)$options['artist_id'] > 0) {
             $results['artist_id']      = $options['artist_id'];
             $results['albumartist_id'] = $options['artist_id'];
             $artist                    = new Artist($results['artist_id']);
@@ -817,7 +820,7 @@ class Catalog_local extends Catalog
             }
         }
 
-        if ((int) $options['album_id'] > 0) {
+        if ((int)$options['album_id'] > 0) {
             $results['album_id'] = $options['album_id'];
             $album               = new Album($results['album_id']);
             if ($album->id) {
@@ -849,7 +852,8 @@ class Catalog_local extends Catalog
                             $pattern = str_replace($value, $results[$key], $pattern);
                         }
                         $mvfile .= DIRECTORY_SEPARATOR . $pattern . '.' . pathinfo($file, PATHINFO_EXTENSION);
-                        debug_event('local.catalog', 'Unmatching pattern, moving `' . $file . '` to `' . $mvfile . '`...', 5);
+                        debug_event('local.catalog',
+                            'Unmatching pattern, moving `' . $file . '` to `' . $mvfile . '`...', 5);
 
                         $mvdir = pathinfo($mvfile, PATHINFO_DIRNAME);
                         if (!is_dir($mvdir)) {
@@ -908,8 +912,8 @@ class Catalog_local extends Catalog
     public function insert_local_video($file, $options = array())
     {
         /* Create the vainfo object and get info */
-        $gtypes     = $this->get_gather_types('video');
-        $vainfo     = new VaInfo($file, $gtypes, '', '', '', $this->sort_pattern, $this->rename_pattern);
+        $gtypes = $this->get_gather_types('video');
+        $vainfo = new VaInfo($file, $gtypes, '', '', '', $this->sort_pattern, $this->rename_pattern);
         $vainfo->get_info();
 
         $tag_name           = VaInfo::get_tag_type($vainfo->tags, 'metadata_order_video');
@@ -982,7 +986,7 @@ class Catalog_local extends Catalog
     {
         $catalog_path = rtrim($this->path, "/");
 
-        return(str_replace($catalog_path . "/", "", $file_path));
+        return (str_replace($catalog_path . "/", "", $file_path));
     }
 
     /**
@@ -1006,4 +1010,4 @@ class Catalog_local extends Catalog
         // Do nothing, it's just file...
         return $media;
     }
-} // end of local.catalog class
+}

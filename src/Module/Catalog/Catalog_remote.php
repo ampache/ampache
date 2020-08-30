@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,6 +20,8 @@
  *
  */
 
+namespace Ampache\Module\Catalog;
+
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
 use Ampache\Model\Media;
@@ -30,18 +32,17 @@ use Ampache\Model\Video;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
+use AmpacheApi;
+use Exception;
 
 /**
- * Remote Catalog Class
- *
  * This class handles all actual work in regards to remote catalogs.
- *
  */
 class Catalog_remote extends Catalog
 {
-    private $version        = '000001';
-    private $type           = 'remote';
-    private $description    = 'Ampache Remote Catalog';
+    private $version     = '000001';
+    private $type        = 'remote';
+    private $description = 'Ampache Remote Catalog';
 
     /**
      * get_description
@@ -101,12 +102,7 @@ class Catalog_remote extends Catalog
         $charset   = (AmpConfig::get('database_charset', 'utf8'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql = "CREATE TABLE `catalog_remote` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-            "`uri` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
-            "`username` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
-            "`password` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
-            "`catalog_id` INT( 11 ) NOT NULL" .
-            ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        $sql = "CREATE TABLE `catalog_remote` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " . "`uri` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`username` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`password` VARCHAR( 255 ) COLLATE $collation NOT NULL , " . "`catalog_id` INT( 11 ) NOT NULL" . ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;
@@ -117,9 +113,9 @@ class Catalog_remote extends Catalog
      */
     public function catalog_fields()
     {
-        $fields['uri']           = array('description' => T_('URI'), 'type' => 'url');
-        $fields['username']      = array('description' => T_('Username'), 'type' => 'text');
-        $fields['password']      = array('description' => T_('Password'), 'type' => 'password');
+        $fields['uri']      = array('description' => T_('URI'), 'type' => 'url');
+        $fields['username'] = array('description' => T_('Username'), 'type' => 'text');
+        $fields['password'] = array('description' => T_('Password'), 'type' => 'password');
 
         return $fields;
     }
@@ -137,7 +133,7 @@ class Catalog_remote extends Catalog
     public function __construct($catalog_id = null)
     {
         if ($catalog_id) {
-            $this->id = (int) ($catalog_id);
+            $this->id = (int)($catalog_id);
             $info     = $this->get_info($catalog_id);
 
             foreach ($info as $key => $value) {
@@ -270,10 +266,8 @@ class Catalog_remote extends Catalog
         // Get the song count, etc.
         $remote_catalog_info = $remote_handle->info();
 
-        Ui::update_text(T_("Remote Catalog Updated"),
-                /* HINT: count of songs found*/
-                sprintf(nT_('%s song was found', '%s songs were found', $remote_catalog_info['songs']),
-                $remote_catalog_info['songs']));
+        Ui::update_text(T_("Remote Catalog Updated"), /* HINT: count of songs found*/ sprintf(nT_('%s song was found',
+            '%s songs were found', $remote_catalog_info['songs']), $remote_catalog_info['songs']));
 
         // Hardcoded for now
         $step    = 500;
@@ -345,7 +339,8 @@ class Catalog_remote extends Catalog
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
         $db_results = Dba::read($sql, array($this->id));
         while ($row = Dba::fetch_assoc($db_results)) {
-            debug_event('remote.catalog', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5, 'ampache-catalog');
+            debug_event('remote.catalog', 'Starting work on ' . $row['file'] . '(' . $row['id'] . ')', 5,
+                'ampache-catalog');
             try {
                 $song = $remote_handle->send_command('url_to_song', array('url' => $row['file']));
             } catch (Exception $error) {
@@ -395,7 +390,7 @@ class Catalog_remote extends Catalog
     {
         $catalog_path = rtrim($this->uri, "/");
 
-        return(str_replace($catalog_path . "/", "", $file_path));
+        return (str_replace($catalog_path . "/", "", $file_path));
     }
 
     /**
@@ -434,4 +429,4 @@ class Catalog_remote extends Catalog
 
         return null;
     }
-} // end of remote.catalog class
+}
