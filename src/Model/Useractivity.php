@@ -27,7 +27,7 @@ namespace Ampache\Model;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
-use Artist;
+use Ampache\Model\Artist;
 use PDOStatement;
 use Ampache\Model\Song;
 

@@ -26,7 +26,7 @@ namespace Ampache\Module\Util;
 
 use AmpConfig;
 use Art;
-use Artist;
+use Ampache\Model\Artist;
 use Catalog;
 use Core;
 use Ampache\Module\System\Dba;

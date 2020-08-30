@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Model\Album;
 use Ampache\Application\ApplicationInterface;
 use AmpConfig;
-use Artist;
+use Ampache\Model\Artist;
 use Ampache\Module\System\AutoUpdate;
 use Core;
 use Ampache\Module\System\Dba;

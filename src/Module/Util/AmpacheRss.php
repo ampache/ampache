@@ -27,7 +27,7 @@ namespace Ampache\Module\Util;
 use Ampache\Model\Album;
 use AmpConfig;
 use Art;
-use Artist;
+use Ampache\Model\Artist;
 use Ampache\Model\Shoutbox;
 use Ampache\Model\Song;
 use Ampache\Module\Statistics\Stats;

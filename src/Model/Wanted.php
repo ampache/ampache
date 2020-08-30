@@ -26,7 +26,7 @@ namespace Ampache\Model;
 
 use Ampache\Module\Api\Ajax;
 use AmpConfig;
-use Artist;
+use Ampache\Model\Artist;
 use Core;
 use Ampache\Module\System\Dba;
 use Exception;

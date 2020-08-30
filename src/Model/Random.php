@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use AmpConfig;
-use Artist;
+use Ampache\Model\Artist;
 use Core;
 use Ampache\Module\System\Dba;
 use Ampache\Model\Search;

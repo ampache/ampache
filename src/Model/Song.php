@@ -37,7 +37,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use AmpConfig;
 use Art;
-use Artist;
+use Ampache\Model\Artist;
 use Catalog;
 use Core;
 use PDOStatement;

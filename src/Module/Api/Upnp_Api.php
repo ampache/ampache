@@ -28,7 +28,7 @@ use Ampache\Model\Album;
 use Ampache\Module\Playback\Stream;
 use AmpConfig;
 use Art;
-use Artist;
+use Ampache\Model\Artist;
 use Catalog;
 use Ampache\Model\Clip;
 use DOMDocument;
@@ -1042,7 +1042,7 @@ class Upnp_Api
     }
 
     /**
-     * @param Artist $artist
+     * @param \Ampache\Model\Artist $artist
      * @param string $parent
      * @return array
      */

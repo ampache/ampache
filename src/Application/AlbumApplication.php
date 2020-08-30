@@ -28,7 +28,7 @@ namespace Ampache\Application;
 use Ampache\Module\Authorization\Access;
 use Ampache\Model\Album;
 use AmpConfig;
-use Artist;
+use Ampache\Model\Artist;
 use Catalog;
 use Core;
 use Ampache\Model\Song;

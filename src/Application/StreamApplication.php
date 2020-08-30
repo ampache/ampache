@@ -30,7 +30,7 @@ use Ampache\Model\Album;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
-use Artist;
+use Ampache\Model\Artist;
 use Core;
 use Ampache\Model\Democratic;
 use Ampache\Model\Playlist;

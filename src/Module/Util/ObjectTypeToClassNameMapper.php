@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Util;
 
 use Ampache\Model\Album;
+use Ampache\Model\Artist;
 use Ampache\Model\Playlist;
 use Ampache\Model\Song;
 
@@ -39,6 +40,7 @@ final class ObjectTypeToClassNameMapper
         'album' => Album::class,
         'song' => Song::class,
         'playlist' => Playlist::class,
+        'artist' => Artist::class,
     ];
 
     public static function map(string $object_type)

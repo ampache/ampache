@@ -30,7 +30,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use AmpConfig;
 use Art;
-use Artist;
+use Ampache\Model\Artist;
 use Catalog;
 use Ampache\Module\System\Dba;
 use Ampache\Model\Live_Stream;
@@ -524,7 +524,7 @@ class Subsonic_Xml_Data
     /**
      * addArtist
      * @param SimpleXMLElement $xml
-     * @param Artist $artist
+     * @param \Ampache\Model\Artist $artist
      * @param boolean $extra
      * @param boolean $albums
      * @param boolean $albumsSet

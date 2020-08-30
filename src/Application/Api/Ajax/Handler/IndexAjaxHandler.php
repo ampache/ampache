@@ -30,7 +30,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Model\Album;
 use AmpConfig;
-use Artist;
+use Ampache\Model\Artist;
 use Ampache\Module\Artist\Artist_Event;
 use Ampache\Module\Util\Browse;
 use Catalog;

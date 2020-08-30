@@ -28,7 +28,7 @@ use Ampache\Model\Album;
 use Ampache\Model\Query;
 use Ampache\Module\Api\Ajax;
 use AmpConfig;
-use Artist;
+use Ampache\Model\Artist;
 use Catalog;
 use Ampache\Model\Playlist;
 use Ampache\Model\Song;

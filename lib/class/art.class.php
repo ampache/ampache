@@ -22,6 +22,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Model\Album;
+use Ampache\Model\Artist;
 use Ampache\Model\Plugin;
 use Ampache\Model\Song;
 use Ampache\Model\Video;

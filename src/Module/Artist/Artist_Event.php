@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Artist;
 
 use AmpConfig;
-use Artist;
+use Ampache\Model\Artist;
 use Ampache\Module\Util\Recommendation;
 use SimpleXMLElement;
 
@@ -54,7 +54,7 @@ class Artist_Event
     /**
      * get_upcoming_events
      * Returns a list of upcoming events
-     * @param Artist $artist
+     * @param \Ampache\Model\Artist $artist
      * @return SimpleXMLElement|boolean
      */
     public static function get_upcoming_events(Artist $artist)
@@ -82,7 +82,7 @@ class Artist_Event
     /**
      * get_past_events
      * Returns a list of past events
-     * @param Artist $artist
+     * @param \Ampache\Model\Artist $artist
      * @return SimpleXMLElement|boolean
      */
     public static function get_past_events(Artist $artist)

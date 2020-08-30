@@ -31,7 +31,7 @@ use Ampache\Module\Api\Ajax;
 use AmpConfig;
 use AmpError;
 use Art;
-use Artist;
+use Ampache\Model\Artist;
 use Core;
 use Exception;
 use PDOStatement;

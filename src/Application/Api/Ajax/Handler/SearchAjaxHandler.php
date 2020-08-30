@@ -28,7 +28,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 use Ampache\Model\Album;
 use AmpConfig;
 use Art;
-use Artist;
+use Ampache\Model\Artist;
 use Ampache\Model\Label;
 use Ampache\Model\Playlist;
 use Ampache\Model\Search;

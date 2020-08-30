@@ -36,7 +36,7 @@ use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;
 use AmpConfig;
 use Art;
-use Artist;
+use Ampache\Model\Artist;
 use Ampache\Model\Bookmark;
 use Catalog;
 use Core;

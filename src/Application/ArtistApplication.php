@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use AmpConfig;
-use Artist;
+use Ampache\Model\Artist;
 use Catalog;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\Wanted;

@@ -34,7 +34,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use AmpConfig;
 use Art;
-use Artist;
+use Ampache\Model\Artist;
 use Catalog;
 use Core;
 use Ampache\Model\Democratic;

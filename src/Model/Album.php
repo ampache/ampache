@@ -29,7 +29,7 @@ use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Authorization\Access;
 use AmpConfig;
 use Art;
-use Artist;
+use Ampache\Model\Artist;
 use Catalog;
 use Core;
 use Ampache\Module\System\Dba;

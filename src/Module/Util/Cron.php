@@ -29,7 +29,7 @@ use Ampache\Model\Album;
 use Ampache\Model\Video;
 use AmpConfig;
 use Art;
-use Artist;
+use Ampache\Model\Artist;
 use Catalog;
 use Ampache\Module\System\Dba;
 use Ampache\Model\Playlist;

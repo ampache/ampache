@@ -28,7 +28,7 @@ use Ampache\Model\Album;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Art;
-use Artist;
+use Ampache\Model\Artist;
 use Catalog;
 use Core;
 use Ampache\Model\Democratic;
