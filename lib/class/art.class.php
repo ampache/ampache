@@ -88,11 +88,6 @@ class Art extends database_object
     public $thumb_mime;
 
     /**
-     *  @var bool $enabled
-     */
-    private static $enabled;
-
-    /**
      * Constructor
      * Art constructor, takes the UID of the object and the
      * object type.
@@ -147,48 +142,15 @@ class Art extends database_object
     } // build_cache
 
     /**
-     * _auto_init
-     * Called on creation of the class
-     */
-    public static function _auto_init()
-    {
-        if (!isset($_SESSION['art_enabled'])) {
-            $_SESSION['art_enabled'] = true;
-        }
-
-        self::$enabled = $_SESSION['art_enabled'];
-        //setcookie('art_enabled', self::$enabled, time() + 31536000, "/");
-    }
-
-    /**
+     * @deprecated There was no way to explicitly deactivate the art - so I assume, it's not needed in the first place
+     *
      * is_enabled
      * Checks whether the user currently wants art
      * @return boolean
      */
     public static function is_enabled()
     {
-        if (self::$enabled) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * set_enabled
-     * Changes the value of enabled
-     * @param boolean|null $value
-     */
-    public static function set_enabled($value = null)
-    {
-        if ($value === null) {
-            self::$enabled = self::$enabled ? false : true;
-        } else {
-            self::$enabled = $value;
-        }
-
-        $_SESSION['art_enabled'] = self::$enabled;
-        //setcookie('art_enabled', self::$enabled, time() + 31536000, "/");
+        return true;
     }
 
     /**

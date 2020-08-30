@@ -158,8 +158,6 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'show_art':
-                Art::set_enabled();
-
                 ob_start();
                 $browse->show_objects(null, $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
