@@ -28,17 +28,10 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
-use Ampache\Model\Artist;
-use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Exception;
 use PDOStatement;
-use Ampache\Model\Rating;
-use Ampache\Model\Search;
-use Ampache\Model\Share;
-use Ampache\Model\Song;
 
 /**
  * Album Class

@@ -574,7 +574,7 @@ class Subsonic_Xml_Data
     /**
      * addAlbum
      * @param SimpleXMLElement $xml
-     * @param \Ampache\Model\Album $album
+     * @param Album $album
      * @param boolean $songs
      * @param boolean $addAmpacheInfo
      * @param string $elementName
@@ -826,7 +826,7 @@ class Subsonic_Xml_Data
 
     /**
      * formatAlbum
-     * @param \Ampache\Model\Album $album
+     * @param Album $album
      * @return string|null
      */
     private static function formatAlbum($album)
@@ -907,7 +907,7 @@ class Subsonic_Xml_Data
     /**
      * addAlbumDirectory
      * @param SimpleXMLElement $xml
-     * @param \Ampache\Model\Album $album
+     * @param Album $album
      */
     public static function addAlbumDirectory($xml, $album)
     {
@@ -964,7 +964,7 @@ class Subsonic_Xml_Data
     /**
      * addVideo
      * @param SimpleXMLElement $xml
-     * @param \Ampache\Model\Video $video
+     * @param Video $video
      * @param string $elementName
      */
     public static function addVideo($xml, $video, $elementName = 'video')
@@ -1216,7 +1216,7 @@ class Subsonic_Xml_Data
     /**
      * addUser
      * @param SimpleXMLElement $xml
-     * @param \Ampache\Model\User $user
+     * @param User $user
      */
     public static function addUser($xml, $user)
     {

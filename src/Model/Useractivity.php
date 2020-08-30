@@ -27,9 +27,7 @@ namespace Ampache\Model;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Artist;
 use PDOStatement;
-use Ampache\Model\Song;
 
 class Useractivity extends database_object
 {

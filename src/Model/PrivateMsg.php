@@ -30,7 +30,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use PDOStatement;
-use Ampache\Model\Preference;
 
 /**
  * This is the class responsible for handling the PrivateMsg object

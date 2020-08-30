@@ -34,7 +34,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Exception;
 use PDOStatement;
-use Ampache\Model\Playlist;
 
 class Share extends database_object
 {

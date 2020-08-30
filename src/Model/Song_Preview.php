@@ -28,7 +28,6 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Artist;
 use Ampache\Module\System\Core;
 use PDOStatement;
 

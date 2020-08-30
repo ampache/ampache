@@ -36,14 +36,8 @@ use Ampache\Model\Metadata\Metadata;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
-use Ampache\Model\Artist;
-use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
 use PDOStatement;
-use Ampache\Model\Preference;
-use Ampache\Model\Rating;
-use Ampache\Model\Share;
 
 class Song extends database_object implements Media, library_item
 {

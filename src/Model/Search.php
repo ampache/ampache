@@ -27,9 +27,7 @@ namespace Ampache\Model;
 use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
-use Ampache\Model\Playlist;
 
 /**
  * Search Class

@@ -30,16 +30,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
-use Ampache\Model\Clip;
 use Ampache\Module\System\Core;
-use Ampache\Model\Movie;
-use Ampache\Model\Personal_Video;
-use Ampache\Model\Rating;
-use Ampache\Model\Song;
-use Ampache\Model\TvShow;
-use Ampache\Model\TVShow_Episode;
-use Ampache\Model\TVShow_Season;
 
 class Video extends database_object implements Media, library_item
 {

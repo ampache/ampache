@@ -30,10 +30,8 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
 use Ampache\Module\System\Core;
 use PDOStatement;
-use Ampache\Model\Podcast;
 
 class Podcast_Episode extends database_object implements Media, library_item
 {

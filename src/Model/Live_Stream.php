@@ -27,8 +27,6 @@ namespace Ampache\Model;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
-use Ampache\Model\Art;
-use Ampache\Model\Catalog;
 use PDOStatement;
 
 /**

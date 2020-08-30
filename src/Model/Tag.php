@@ -29,8 +29,6 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
-use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
 use PDOStatement;
 

@@ -28,12 +28,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
-use Ampache\Model\Catalog;
 use PDOStatement;
-use Ampache\Model\Rating;
-use Ampache\Model\Share;
-use Ampache\Model\TVShow_Season;
 
 class TvShow extends database_object implements library_item
 {

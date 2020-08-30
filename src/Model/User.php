@@ -30,12 +30,9 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
-use Ampache\Model\Art;
-use Ampache\Model\Artist;
 use Ampache\Module\System\Core;
 use Exception;
 use PDOStatement;
-use Ampache\Model\Song;
 
 /**
  * User Class

@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Model\Art;
 use Ampache\Module\Util\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Model\Live_Stream;

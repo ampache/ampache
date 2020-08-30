@@ -25,8 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Module\System\Dba;
-use Ampache\Model\Artist;
-use Ampache\Model\Catalog;
 
 class Clip extends Video
 {

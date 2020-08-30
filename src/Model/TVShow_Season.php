@@ -26,9 +26,7 @@ namespace Ampache\Model;
 
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
 use PDOStatement;
-use Ampache\Model\Rating;
 
 class TVShow_Season extends database_object implements library_item
 {

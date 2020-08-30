@@ -36,7 +36,6 @@ use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
-use Ampache\Model\Art;
 use Catalog_local;
 use Ampache\Module\System\Core;
 use Exception;

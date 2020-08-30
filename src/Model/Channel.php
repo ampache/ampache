@@ -28,13 +28,9 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
-use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;
-use Ampache\Model\Playlist;
-use Ampache\Model\Song;
 
 class Channel extends database_object implements Media, library_item
 {

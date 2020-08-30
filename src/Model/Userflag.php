@@ -28,11 +28,9 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
 use Exception;
 use PDOStatement;
-use Ampache\Model\Song;
 
 /**
  * This user flag/unflag songs, albums, artists, videos, tvshows, movies ... as favorite.
