@@ -38,6 +38,8 @@ use PDOStatement;
  */
 class Live_Stream extends database_object implements Media, library_item
 {
+    protected const DB_TABLENAME = 'live_stream';
+
     /* DB based variables */
 
     /**
@@ -95,7 +97,7 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public function __construct($stream_id)
     {
-        $info = $this->get_info($stream_id, 'Ampache\Model\Live_Stream');
+        $info = $this->get_info($stream_id, 'live_stream');
 
         // Set the vars
         foreach ($info as $key => $value) {
@@ -173,9 +175,9 @@ class Live_Stream extends database_object implements Media, library_item
     public function get_medias($filter_type = null)
     {
         $medias = array();
-        if ($filter_type === null || $filter_type == 'Ampache\Model\Live_Stream') {
+        if ($filter_type === null || $filter_type == 'live_stream') {
             $medias[] = array(
-                'object_type' => 'Ampache\Model\Live_Stream',
+                'object_type' => 'live_stream',
                 'object_id' => $this->id
             );
         }
@@ -225,8 +227,8 @@ class Live_Stream extends database_object implements Media, library_item
      */
     public function display_art($thumb = 2, $force = false)
     {
-        if (Art::has_db($this->id, 'Ampache\Model\Live_Stream') || $force) {
-            Art::display('Ampache\Model\Live_Stream', $this->id, $this->get_fullname(), $thumb, $this->link);
+        if (Art::has_db($this->id, 'live_stream') || $force) {
+            Art::display('live_stream', $this->id, $this->get_fullname(), $thumb, $this->link);
         }
     }
 

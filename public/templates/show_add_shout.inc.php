@@ -24,9 +24,10 @@ use Ampache\Config\AmpConfig;
 use Ampache\Model\Shoutbox;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
-$object_type = strtolower(get_class($object)); ?>
+$object_type = ObjectTypeToClassNameMapper::reverseMap($object); ?>
 <div>
 <?php if (Access::check('interface', 25)) { ?>
 <div style="float: right">

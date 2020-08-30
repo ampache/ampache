@@ -34,6 +34,8 @@ use Ampache\Module\System\Core;
 
 class Video extends database_object implements Media, library_item
 {
+    protected const DB_TABLENAME = 'video';
+
     /**
      * @var integer $id
      */
@@ -643,7 +645,7 @@ class Video extends database_object implements Media, library_item
                     return Movie::insert($data, $gtypes, $options);
                 case 'clip':
                     return Clip::insert($data, $gtypes, $options);
-                case 'Ampache\Model\Personal_Video':
+                case 'personal_video':
                     return Personal_Video::insert($data, $gtypes, $options);
                 default:
                     // Do nothing, video entry already created and no additional data for now

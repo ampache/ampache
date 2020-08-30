@@ -34,13 +34,13 @@ use Ampache\Module\System\Core;
 use PDOStatement;
 
 /**
- * Democratic Class
- *
  * This class handles democratic play, which is a fancy
  * name for voting based playback.
  */
 class Democratic extends Tmp_Playlist
 {
+    protected const DB_TABLENAME = 'democratic';
+
     public $name;
     public $cooldown;
     public $level;

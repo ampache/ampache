@@ -75,7 +75,7 @@ final class TvShowSeasonApplication implements ApplicationInterface
                 $season = new TVShow_Season($_REQUEST['season']);
                 $season->format();
                 $object_ids  = $season->get_episodes();
-                $object_type = 'Ampache\Model\TVShow_Episode';
+                $object_type = 'tvshow_episode';
                 require_once Ui::find_template('show_tvshow_season.inc.php');
                 break;
         } // end switch

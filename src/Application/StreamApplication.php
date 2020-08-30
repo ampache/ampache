@@ -77,7 +77,7 @@ final class StreamApplication implements ApplicationInterface
                 }
                 break;
             /* This is run if we need to gather info based on a tmp playlist */
-            case 'Ampache\Model\Tmp_Playlist':
+            case 'tmp_playlist':
                 $tmp_playlist = new Tmp_Playlist($_REQUEST['tmpplaylist_id']);
                 $media_ids    = $tmp_playlist->get_items();
                 break;
@@ -163,7 +163,7 @@ final class StreamApplication implements ApplicationInterface
                     );
                 } elseif (isset($_REQUEST['podcast_episode_id'])) {
                     $media_ids[] = array(
-                        'object_type' => 'Ampache\Model\Podcast_Episode',
+                        'object_type' => 'podcast_episode',
                         'object_id' => scrub_in($_REQUEST['podcast_episode_id'])
                     );
                 }

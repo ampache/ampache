@@ -80,7 +80,7 @@ class WebPlayer
             $transcode = self::can_transcode($media, $file_type, $types, $urlinfo, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $file_type, $transcode);
         } else {
-            if ($item->type == 'Ampache\Model\Live_Stream') {
+            if ($item->type == 'live_stream') {
                 $types['real'] = $item->codec;
                 if ($types['real'] == "ogg" || $types['real'] == "opus") {
                     $types['player'] = "oga";
@@ -112,7 +112,7 @@ class WebPlayer
             $class_name = ObjectTypeToClassNameMapper::map($urlinfo['type']);
             $media      = new $class_name($urlinfo['id']);
         } else {
-            if ($urlinfo['id'] && $urlinfo['type'] == 'Ampache\Model\Song_Preview') {
+            if ($urlinfo['id'] && $urlinfo['type'] == 'song_preview') {
                 $media = new Song_Preview($urlinfo['id']);
             } else {
                 if (isset($urlinfo['demo_id'])) {
@@ -144,7 +144,7 @@ class WebPlayer
             $types['real'] = $file_type;
         }
 
-        if ($urlinfo['type'] == 'song' || $urlinfo['type'] == 'Ampache\Model\Podcast_Episode') {
+        if ($urlinfo['type'] == 'song' || $urlinfo['type'] == 'podcast_episode') {
             if ($types['real'] == "ogg" || $types['real'] == "opus") {
                 $types['player'] = "oga";
             } else {

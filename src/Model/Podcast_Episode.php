@@ -35,6 +35,8 @@ use PDOStatement;
 
 class Podcast_Episode extends database_object implements Media, library_item
 {
+    protected const DB_TABLENAME = 'podcast_episode';
+
     public $id;
     public $title;
     public $guid;
@@ -231,9 +233,9 @@ class Podcast_Episode extends database_object implements Media, library_item
     public function get_medias($filter_type = null)
     {
         $medias = array();
-        if ($filter_type === null || $filter_type == 'Ampache\Model\Podcast_Episode') {
+        if ($filter_type === null || $filter_type == 'podcast_episode') {
             $medias[] = array(
-                'object_type' => 'Ampache\Model\Podcast_Episode',
+                'object_type' => 'podcast_episode',
                 'object_id' => $this->id
             );
         }
@@ -274,9 +276,9 @@ class Podcast_Episode extends database_object implements Media, library_item
         $episode_id = null;
         $type       = null;
 
-        if (Art::has_db($this->id, 'Ampache\Model\Podcast_Episode')) {
+        if (Art::has_db($this->id, 'podcast_episode')) {
             $episode_id = $this->id;
-            $type       = 'Ampache\Model\Podcast_Episode';
+            $type       = 'podcast_episode';
         } else {
             if (Art::has_db($this->podcast, 'podcast') || $force) {
                 $episode_id = $this->podcast;
@@ -435,7 +437,7 @@ class Podcast_Episode extends database_object implements Media, library_item
             $uid = Core::get_global('user')->id;
         }
 
-        return Song::generic_play_url('Ampache\Model\Podcast_Episode', $object_id, $additional_params, $player, $local,
+        return Song::generic_play_url('podcast_episode', $object_id, $additional_params, $player, $local,
             $uid, $original);
     }
 

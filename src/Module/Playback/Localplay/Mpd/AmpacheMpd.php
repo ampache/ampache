@@ -502,7 +502,7 @@ class AmpacheMpd extends localplay_controller
                                 $data['name'] = $media->f_title . ' - ' . $media->f_album . ' - ' . $media->f_artist;
                                 $data['link'] = $media->f_link;
                                 break;
-                            case 'Ampache\Model\Live_Stream':
+                            case 'live_stream':
                                 $frequency    = $media->frequency ? '[' . $media->frequency . ']' : '';
                                 $site_url     = $media->site_url ? '(' . $media->site_url . ')' : '';
                                 $data['name'] = "$media->name $frequency $site_url";

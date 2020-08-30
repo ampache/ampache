@@ -30,12 +30,12 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 
 /**
- * Preference Class
- *
  * This handles all of the preference stuff for Ampache
  */
 class Preference extends database_object
 {
+    protected const DB_TABLENAME = 'preference';
+
     /**
      * __constructor
      * This does nothing... amazing isn't it!

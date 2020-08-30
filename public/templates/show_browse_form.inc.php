@@ -65,8 +65,8 @@ use Ampache\Model\Video;
             echo T_('Broadcasts');
         } ?></td>
     <?php }
-    if (AmpConfig::get('Ampache\Model\Live_Stream')) { ?>
-        <td><?php if ((string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) != 'Ampache\Model\Live_Stream') { ?>
+    if (AmpConfig::get('live_stream')) { ?>
+        <td><?php if ((string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) != 'live_stream') { ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/browse.php?action=live_stream"><?php echo T_('Radio Stations'); ?></a><?php
         } else {
             echo T_('Radio Stations');

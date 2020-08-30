@@ -68,7 +68,7 @@ $t_search    = T_('Search'); ?>
             <li id="sb_home_browse_music_broadcast"><a href="<?php echo $web_path ?>/browse.php?action=broadcast"><?php echo T_('Broadcasts') ?></a></li>
             <?php
         } ?>
-            <?php if (AmpConfig::get('Ampache\Model\Live_Stream')) { ?>
+            <?php if (AmpConfig::get('live_stream')) { ?>
             <li id="sb_home_browse_music_radioStation"><a href="<?php echo $web_path ?>/browse.php?action=live_stream"><?php echo T_('Radio Stations') ?></a></li>
             <?php
         } ?>
@@ -89,7 +89,7 @@ $t_search    = T_('Search'); ?>
                 <li id="sb_home_browse_video_clip"><a href="<?php echo $web_path ?>/browse.php?action=clip"><?php echo T_('Music Clips') ?></a></li>
           <?php
             } ?>
-          <?php if (Video::get_item_count('Ampache\Model\TVShow_Episode')) { ?>
+          <?php if (Video::get_item_count('tvshow_episode')) { ?>
                 <li id="sb_home_browse_video_tvShow"><a href="<?php echo $web_path ?>/browse.php?action=tvshow"><?php echo T_('TV Shows') ?></a></li>
           <?php
             } ?>
@@ -97,7 +97,7 @@ $t_search    = T_('Search'); ?>
                 <li id="sb_home_browse_video_movie"><a href="<?php echo $web_path ?>/browse.php?action=movie"><?php echo T_('Movies') ?></a></li>
           <?php
             } ?>
-          <?php if (Video::get_item_count('Ampache\Model\Personal_Video')) { ?>
+          <?php if (Video::get_item_count('personal_video')) { ?>
                 <li id="sb_home_browse_video_video"><a href="<?php echo $web_path ?>/browse.php?action=personal_video"><?php echo T_('Personal Videos') ?></a></li>
           <?php
             } ?>

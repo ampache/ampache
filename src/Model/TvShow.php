@@ -32,6 +32,8 @@ use PDOStatement;
 
 class TvShow extends database_object implements library_item
 {
+    protected const DB_TABLENAME = 'tvshow';
+
     /* Variables from DB */
     public $id;
     public $name;
@@ -234,7 +236,7 @@ class TvShow extends database_object implements library_item
      */
     public function get_childrens()
     {
-        return array('Ampache\Model\TVShow_Season' => $this->get_seasons());
+        return array('tvshow_season' => $this->get_seasons());
     }
 
     /**

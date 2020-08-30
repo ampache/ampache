@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\WebDav;
 
+use Ampache\Model\Album;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -75,7 +76,7 @@ class WebDavDirectory extends DAV\Collection
     public function getChild($name)
     {
         // Clean song name
-        if (strtolower(get_class($this->libitem)) === "album") {
+        if (get_class($this->libitem) === Album::class) {
             $splitname = explode('-', (string)$name, 3);
             $name      = trim((string)$splitname[count($splitname) - 1]);
             $nameinfo  = pathinfo($name);

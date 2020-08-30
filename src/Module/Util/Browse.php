@@ -239,7 +239,7 @@ class Browse extends Query
                 Artist::build_cache($object_ids, true, $limit_threshold);
                 $box_req = Ui::find_template('show_artists.inc.php');
                 break;
-            case 'Ampache\Model\Live_Stream':
+            case 'live_stream':
                 $box_title = T_('Radio Stations') . $match;
                 $box_req   = Ui::find_template('show_live_streams.inc.php');
                 break;
@@ -292,7 +292,7 @@ class Browse extends Query
                 $box_title = T_('Shares');
                 $box_req   = Ui::find_template('show_shared_objects.inc.php');
                 break;
-            case 'Ampache\Model\Song_Preview':
+            case 'song_preview':
                 $box_title = T_('Songs');
                 $box_req   = Ui::find_template('show_song_previews.inc.php');
                 break;
@@ -312,11 +312,11 @@ class Browse extends Query
                 $box_title = T_('TV Shows');
                 $box_req   = Ui::find_template('show_tvshows.inc.php');
                 break;
-            case 'Ampache\Model\TVShow_Season':
+            case 'tvshow_season':
                 $box_title = T_('Seasons');
                 $box_req   = Ui::find_template('show_tvshow_seasons.inc.php');
                 break;
-            case 'Ampache\Model\TVShow_Episode':
+            case 'tvshow_episode':
                 $box_title  = T_('Episodes');
                 $video_type = $type;
                 $box_req    = Ui::find_template('show_videos.inc.php');
@@ -331,7 +331,7 @@ class Browse extends Query
                 $video_type = $type;
                 $box_req    = Ui::find_template('show_videos.inc.php');
                 break;
-            case 'Ampache\Model\Personal_Video':
+            case 'personal_video':
                 $box_title  = T_('Personal Videos');
                 $video_type = $type;
                 $box_req    = Ui::find_template('show_videos.inc.php');
@@ -348,7 +348,7 @@ class Browse extends Query
                 $box_title = T_('Podcasts');
                 $box_req   = Ui::find_template('show_podcasts.inc.php');
                 break;
-            case 'Ampache\Model\Podcast_Episode':
+            case 'podcast_episode':
                 $box_title = T_('Podcast Episodes');
                 $box_req   = Ui::find_template('show_podcast_episodes.inc.php');
                 break;

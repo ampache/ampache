@@ -33,11 +33,10 @@ use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use MusicBrainz\Filters\ArtistFilter;
 
-/**
- * Class Wanted
- */
 class Wanted extends database_object
 {
+    protected const DB_TABLENAME = 'wanted';
+
     /* Variables from DB */
 
     /**

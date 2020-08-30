@@ -450,7 +450,7 @@ class Xml_Data
         foreach ($tags as $tag_id) {
             $tag    = new Tag($tag_id);
             $counts = $tag->count();
-            $string .= "<tag id=\"$tag_id\">\n" . "\t<name><![CDATA[$tag->name]]></name>\n" . "\t<albums>" . (int)($counts['album']) . "</albums>\n" . "\t<artists>" . (int)($counts['artist']) . "</artists>\n" . "\t<songs>" . (int)($counts['song']) . "</songs>\n" . "\t<videos>" . (int)($counts['video']) . "</videos>\n" . "\t<playlists>" . (int)($counts['playlist']) . "</playlists>\n" . "\t<stream>" . (int)($counts['Ampache\Model\Live_Stream']) . "</stream>\n" . "</tag>\n";
+            $string .= "<tag id=\"$tag_id\">\n" . "\t<name><![CDATA[$tag->name]]></name>\n" . "\t<albums>" . (int)($counts['album']) . "</albums>\n" . "\t<artists>" . (int)($counts['artist']) . "</artists>\n" . "\t<songs>" . (int)($counts['song']) . "</songs>\n" . "\t<videos>" . (int)($counts['video']) . "</videos>\n" . "\t<playlists>" . (int)($counts['playlist']) . "</playlists>\n" . "\t<stream>" . (int)($counts['live_stream']) . "</stream>\n" . "</tag>\n";
         } // end foreach
 
         return self::output_xml($string);
@@ -1096,9 +1096,10 @@ class Xml_Data
         $xchannel = $xml->addChild("channel");
         $xchannel->addChild("title", htmlspecialchars($libitem->get_fullname() . " Podcast"));
         //$xlink = $xchannel->addChild("atom:link", htmlentities($libitem->link));
-        if (Art::has_db($libitem->id, get_class($libitem))) {
+        $libitem_type = ObjectTypeToClassNameMapper::reverseMap(get_class($libitem));
+        if (Art::has_db($libitem->id, $libitem_type)) {
             $ximg = $xchannel->addChild("xmlns:itunes:image");
-            $ximg->addAttribute("href", Art::url($libitem->id, get_class($libitem)));
+            $ximg->addAttribute("href", Art::url($libitem->id, $libitem_type));
         }
         $summary = $libitem->get_description();
         if (!empty($summary)) {

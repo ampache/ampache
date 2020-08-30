@@ -34,6 +34,8 @@ use PDOStatement;
 
 class Channel extends database_object implements Media, library_item
 {
+    protected const DB_TABLENAME = 'channel';
+
     public $id;
     public $is_private;
     public $interface;

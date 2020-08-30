@@ -35,15 +35,14 @@ use Exception;
 use PDOStatement;
 
 /**
- * User Class
- *
  * This class handles all of the user related functions including the creation
  * and deletion of the user objects from the database by default you construct it
  * with a user_id from user.id
- *
  */
 class User extends database_object
 {
+    protected const DB_TABLENAME = 'user';
+
     // Basic Components
     /**
      * @var integer $id

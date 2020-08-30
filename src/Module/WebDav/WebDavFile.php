@@ -26,6 +26,7 @@ namespace Ampache\Module\WebDav;
 
 use Ampache\Model\Media;
 use Ampache\Model\Catalog;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Sabre\DAV;
 
 /**
@@ -91,6 +92,6 @@ class WebDavFile extends DAV\File
      */
     public function getETag()
     {
-        return md5(get_class($this->libitem) . "_" . $this->libitem->id . "_" . $this->libitem->update_time);
+        return md5(ObjectTypeToClassNameMapper::reverseMap(get_class($this->libitem)) . "_" . $this->libitem->id . "_" . $this->libitem->update_time);
     }
 }

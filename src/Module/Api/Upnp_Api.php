@@ -498,7 +498,7 @@ class Upnp_Api
                             'id' => $root . '/live_streams',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['Ampache\Model\Live_Stream'],
+                            'childCount' => $counts['live_stream'],
                             'dc:title' => T_('Radio Stations'),
                             'upnp:class' => 'object.container',
                         );
@@ -757,7 +757,7 @@ class Upnp_Api
                 $mediaItems[] = self::_musicMetadata('songs');
                 $mediaItems[] = self::_musicMetadata('playlists');
                 $mediaItems[] = self::_musicMetadata('smartplaylists');
-                if (AmpConfig::get('Ampache\Model\Live_Stream')) {
+                if (AmpConfig::get('live_stream')) {
                     $mediaItems[] = self::_musicMetadata('live_streams');
                 }
                 if (AmpConfig::get('podcast')) {
@@ -871,7 +871,7 @@ class Upnp_Api
             case 'personal_videos':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::get_videos_count(null, 'Ampache\Model\Personal_Video');
+                        $counts = Catalog::get_videos_count(null, 'personal_video');
                         $meta   = array(
                             'id' => $root . '/personal_videos',
                             'parentID' => $root,
@@ -989,7 +989,7 @@ class Upnp_Api
             case 'personal_videos':
                 switch (count($pathreq)) {
                     case 1: // Get clips list
-                        $videos                  = Catalog::get_videos(null, 'Ampache\Model\Personal_Video');
+                        $videos                  = Catalog::get_videos(null, 'personal_video');
                         list($maxCount, $videos) = self::_slice($videos, $start, $count);
                         foreach ($videos as $video) {
                             $video->format();
@@ -1158,7 +1158,7 @@ class Upnp_Api
     public static function _itemLiveStream($radio, $parent)
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
-        $art_url     = Art::url($radio->id, 'Ampache\Model\Live_Stream', $api_session);
+        $art_url     = Art::url($radio->id, 'live_stream', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();
         $arrFileType    = $fileTypesByExt[$radio->codec];

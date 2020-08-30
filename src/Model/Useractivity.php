@@ -31,6 +31,8 @@ use PDOStatement;
 
 class Useractivity extends database_object
 {
+    protected const DB_TABLENAME = 'user_activity';
+
     /* Variables from DB */
     public $id;
     public $user;
@@ -92,7 +94,7 @@ class Useractivity extends database_object
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
-        $types = array('song', 'album', 'artist', 'video', 'tvshow', 'Ampache\Model\TVShow_Season');
+        $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season');
 
         if ($object_type !== null) {
             if (in_array($object_type, $types)) {

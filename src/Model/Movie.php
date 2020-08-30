@@ -28,6 +28,8 @@ use Ampache\Module\System\Dba;
 
 class Movie extends Video
 {
+    protected const DB_TABLENAME = 'movie';
+
     public $original_name;
     public $prefix;
     public $summary;

@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application;
 
+use Ampache\Model\Song;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Config\AmpConfig;
@@ -84,7 +85,7 @@ final class ShoutApplication implements ApplicationInterface
                 }
 
                 $object->format();
-                if (get_class($object) == 'Song') {
+                if (get_class($object) == Song::class) {
                     $data = $_REQUEST['offset'];
                 }
 

@@ -37,6 +37,8 @@ use PDOStatement;
  */
 class Userflag extends database_object
 {
+    protected const DB_TABLENAME = 'user_flag';
+
     // Public variables
     public $id;        // The ID of the object flagged
     public $type;        // The type of object we want
@@ -110,9 +112,9 @@ class Userflag extends database_object
             'video',
             'playlist',
             'tvshow',
-            'Ampache\Model\TVShow_Season',
+            'tvshow_season',
             'podcast',
-            'Ampache\Model\Podcast_Episode'
+            'podcast_episode'
         );
 
         if ($object_type !== null) {

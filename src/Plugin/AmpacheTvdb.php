@@ -165,22 +165,22 @@ class AmpacheTvdb
                             }
                         }
 
-                        if ($media_info['Ampache\Model\TVShow_Season'] && !$results['tvshow_season_art']) {
-                            if ($banner->type == "season" && $banner->season == $media_info['Ampache\Model\TVShow_Season']) {
+                        if ($media_info['tvshow_season'] && !$results['tvshow_season_art']) {
+                            if ($banner->type == "season" && $banner->season == $media_info['tvshow_season']) {
                                 $results['tvshow_season_art'] = $tvdburl . '/banners/' . $banner->path;
                             }
                         }
                     }
                 }
 
-                if ($media_info['Ampache\Model\TVShow_Season'] && $media_info['Ampache\Model\TVShow_Episode']) {
+                if ($media_info['tvshow_season'] && $media_info['tvshow_episode']) {
                     $release = $client->getEpisode($results['tvdb_tvshow_id'],
-                        ltrim($media_info['Ampache\Model\TVShow_Season'], "0"),
-                        ltrim($media_info['Ampache\Model\TVShow_Episode'], "0"));
+                        ltrim($media_info['tvshow_season'], "0"),
+                        ltrim($media_info['tvshow_episode'], "0"));
                     if ($release->id) {
                         $results['tvdb_id']                      = $release->id;
-                        $results['Ampache\Model\TVShow_Season']  = $release->season;
-                        $results['Ampache\Model\TVShow_Episode'] = $release->number;
+                        $results['tvshow_season']                = $release->season;
+                        $results['tvshow_episode']               = $release->number;
                         $results['original_name']                = $release->name;
                         $results['imdb_id']                      = $release->imdbId;
                         if ($release->firstAired) {

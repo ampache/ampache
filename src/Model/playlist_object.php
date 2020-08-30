@@ -179,7 +179,7 @@ abstract class playlist_object extends database_object implements library_item
      */
     public function search_childrens($name)
     {
-        debug_event('Ampache\Model\playlist_object.abstract', 'search_childrens ' . $name, 5);
+        debug_event('playlist_object.abstract', 'search_childrens ' . $name, 5);
 
         return array();
     }

@@ -33,6 +33,8 @@ use PDOStatement;
 
 class Song_Preview extends database_object implements Media, playable_item
 {
+    protected const DB_TABLENAME = 'song_preview';
+
     public $id;
     public $file;
     public $artist; // artist.id (Int)
@@ -151,7 +153,7 @@ class Song_Preview extends database_object implements Media, playable_item
 
         $artists = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('Ampache\Model\Song_Preview', $row['id'], $row);
+            parent::add_to_cache('song_preview', $row['id'], $row);
             if ($row['artist']) {
                 $artists[$row['artist']] = $row['artist'];
             }
@@ -170,8 +172,8 @@ class Song_Preview extends database_object implements Media, playable_item
     {
         $preview_id = $this->id;
 
-        if (parent::is_cached('Ampache\Model\Song_Preview', $preview_id)) {
-            return parent::get_from_cache('Ampache\Model\Song_Preview', $preview_id);
+        if (parent::is_cached('song_preview', $preview_id)) {
+            return parent::get_from_cache('song_preview', $preview_id);
         }
 
         $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` ' . 'FROM `song_preview` WHERE `id` = ?';
@@ -186,7 +188,7 @@ class Song_Preview extends database_object implements Media, playable_item
                     $results['artist_mbid'] = $artist_res['mbid'];
                 }
             }
-            parent::add_to_cache('Ampache\Model\Song_Preview', $preview_id, $results);
+            parent::add_to_cache('song_preview', $preview_id, $results);
 
             return $results;
         }
@@ -292,9 +294,9 @@ class Song_Preview extends database_object implements Media, playable_item
     public function get_medias($filter_type = null)
     {
         $medias = array();
-        if ($filter_type === null || $filter_type == 'Ampache\Model\Song_Preview') {
+        if ($filter_type === null || $filter_type == 'song_preview') {
             $medias[] = array(
-                'object_type' => 'Ampache\Model\Song_Preview',
+                'object_type' => 'song_preview',
                 'object_id' => $this->id
             );
         }

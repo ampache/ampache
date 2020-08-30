@@ -1959,7 +1959,7 @@ class Subsonic_Api
             $media->format();
 
             // submission is true: go to scrobble plugins (Plugin::get_plugins('save_mediaplay'))
-            if (($submission === 'true' || $submission === '1') && get_class($media) == 'Song') {
+            if (($submission === 'true' || $submission === '1') && get_class($media) == Song::class) {
                 // stream has finished
                 debug_event('subsonic_api.class', $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
                 User::save_mediaplay($user, $media);

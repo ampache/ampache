@@ -94,14 +94,14 @@ while ($row = Dba::fetch_assoc($db_results)) {
     // Identify the catalog and file (if it exists in the DB)
     switch ($catalog->gather_types) {
         case 'podcast':
-            $type    = 'Ampache\Model\Podcast_Episode';
+            $type    = 'podcast_episode';
             $file_id = Catalog::get_id_from_file($catfile, $type);
             $media   = new Podcast_Episode(Catalog::get_id_from_file($catfile, $type));
             break;
         case 'clip':
         case 'tvshow':
         case 'movie':
-        case 'Ampache\Model\Personal_Video':
+        case 'personal_video':
             $type    = 'video';
             $file_id = Catalog::get_id_from_file($catfile, $type);
             $media   = new Video(Catalog::get_id_from_file($catfile, $type));

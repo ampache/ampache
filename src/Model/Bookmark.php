@@ -33,6 +33,8 @@ use PDOStatement;
  */
 class Bookmark extends database_object
 {
+    protected const DB_TABLENAME = 'bookmark';
+
     // Public variables
     public $id;
     public $user;
@@ -93,7 +95,7 @@ class Bookmark extends database_object
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
-        $types = array('song', 'video', 'Ampache\Model\Podcast_Episode');
+        $types = array('song', 'video', 'podcast_episode');
 
         if ($object_type) {
             if (in_array($object_type, $types)) {

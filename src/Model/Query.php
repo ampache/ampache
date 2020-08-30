@@ -426,7 +426,7 @@ class Query
                     'composer',
                     'enabled'
                 ),
-                'Ampache\Model\Live_Stream' => array(
+                'live_stream' => array(
                     'alpha_match',
                     'regex_match',
                     'regex_not_match',
@@ -475,7 +475,7 @@ class Query
                     'year_gt',
                     'year_eq'
                 ),
-                'Ampache\Model\TVShow_Season' => array(
+                'tvshow_season' => array(
                     'season_lt',
                     'season_lg',
                     'season_eq'
@@ -507,7 +507,7 @@ class Query
                     'regex_not_match',
                     'starts_with'
                 ),
-                'Ampache\Model\Podcast_Episode' => array(
+                'podcast_episode' => array(
                     'alpha_match',
                     'regex_match',
                     'regex_not_match',
@@ -559,7 +559,7 @@ class Query
                     'user',
                     'sticky'
                 ),
-                'Ampache\Model\Live_Stream' => array(
+                'live_stream' => array(
                     'name',
                     'call_sign',
                     'frequency'
@@ -616,11 +616,11 @@ class Query
                     'name',
                     'year'
                 ),
-                'Ampache\Model\TVShow_Season' => array(
+                'tvshow_season' => array(
                     'season',
                     'tvshow'
                 ),
-                'Ampache\Model\TVShow_Episode' => array(
+                'tvshow_episode' => array(
                     'title',
                     'resolution',
                     'length',
@@ -644,7 +644,7 @@ class Query
                     'codec',
                     'release_date'
                 ),
-                'Ampache\Model\Personal_Video' => array(
+                'personal_video' => array(
                     'title',
                     'location',
                     'resolution',
@@ -671,7 +671,7 @@ class Query
                 'podcast' => array(
                     'title'
                 ),
-                'Ampache\Model\Podcast_Episode' => array(
+                'podcast_episode' => array(
                     'title',
                     'category',
                     'author',
@@ -707,25 +707,25 @@ class Query
             case 'tag':
             case 'playlist_localplay':
             case 'shoutbox':
-            case 'Ampache\Model\Live_Stream':
+            case 'live_stream':
             case 'democratic':
             case 'wanted':
             case 'share':
-            case 'Ampache\Model\Song_Preview':
+            case 'song_preview':
             case 'channel':
             case 'broadcast':
             case 'license':
             case 'tvshow':
-            case 'Ampache\Model\TVShow_Season':
-            case 'Ampache\Model\TVShow_Episode':
+            case 'tvshow_season':
+            case 'tvshow_episode':
             case 'movie':
-            case 'Ampache\Model\Personal_Video':
+            case 'personal_video':
             case 'clip':
             case 'label':
             case 'pvmsg':
             case 'follower':
             case 'podcast':
-            case 'Ampache\Model\Podcast_Episode':
+            case 'podcast_episode':
                 // Set it
                 $this->_state['type'] = $type;
                 $this->set_base_sql(true, $custom_base);
@@ -993,7 +993,7 @@ class Query
                     $this->set_select("`user`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `user` ";
                     break;
-                case 'Ampache\Model\Live_Stream':
+                case 'live_stream':
                     $this->set_select("`live_stream`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `live_stream` ";
                     break;
@@ -1042,11 +1042,11 @@ class Query
                     $this->set_select("`tvshow`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `tvshow` ";
                     break;
-                case 'Ampache\Model\TVShow_Season':
+                case 'tvshow_season':
                     $this->set_select("`tvshow_season`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `tvshow_season` ";
                     break;
-                case 'Ampache\Model\TVShow_Episode':
+                case 'tvshow_episode':
                     $this->set_select("`tvshow_episode`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `tvshow_episode` ";
                     break;
@@ -1058,7 +1058,7 @@ class Query
                     $this->set_select("`clip`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `clip` ";
                     break;
-                case 'Ampache\Model\Personal_Video':
+                case 'personal_video':
                     $this->set_select("`personal_video`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `personal_video` ";
                     break;
@@ -1078,7 +1078,7 @@ class Query
                     $this->set_select("`podcast`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `podcast` ";
                     break;
-                case 'Ampache\Model\Podcast_Episode':
+                case 'podcast_episode':
                     $this->set_select("`podcast_episode`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `podcast_episode` ";
                     break;
@@ -1516,7 +1516,7 @@ class Query
                         break;
                 } // end filter
                 break;
-            case 'Ampache\Model\Live_Stream':
+            case 'live_stream':
                 switch ($filter) {
                     case 'alpha_match':
                         $filter_sql = " `live_stream`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
@@ -1701,7 +1701,7 @@ class Query
                         break;
                 } // end filter
                 break;
-            case 'Ampache\Model\TVShow_Season':
+            case 'tvshow_season':
                 switch ($filter) {
                     case 'season_lt':
                         $filter_sql = " `tvshow_season`.`season_number` < '" . Dba::escape($value) . "' AND ";
@@ -1807,7 +1807,7 @@ class Query
                         break;
                 } // end filter
                 break;
-            case 'Ampache\Model\Podcast_Episode':
+            case 'podcast_episode':
                 switch ($filter) {
                     case 'alpha_match':
                         $filter_sql = " `podcast_episode`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
@@ -1968,7 +1968,7 @@ class Query
                         break;
                 } // end switch on $field
                 break;
-            case 'Ampache\Model\Live_Stream':
+            case 'live_stream':
                 switch ($field) {
                     case 'name':
                         $sql = "`live_stream`.`name`";
@@ -2112,7 +2112,7 @@ class Query
                         break;
                 }
                 break;
-            case 'Ampache\Model\TVShow_Season':
+            case 'tvshow_season':
                 switch ($field) {
                     case 'season':
                         $sql = "`tvshow_season`.`season_number`";
@@ -2123,7 +2123,7 @@ class Query
                         break;
                 }
                 break;
-            case 'Ampache\Model\TVShow_Episode':
+            case 'tvshow_episode':
                 switch ($field) {
                     case 'episode':
                         $sql = "`tvshow_episode`.`episode_number`";
@@ -2140,7 +2140,7 @@ class Query
                         $this->set_join('left', '`tvshow`', '`tvshow_season`.`tvshow`', '`tvshow`.`id`', 100);
                         break;
                     default:
-                        $sql = $this->sql_sort_video($field, 'Ampache\Model\TVShow_Episode');
+                        $sql = $this->sql_sort_video($field, 'tvshow_episode');
                         break;
                 }
                 break;
@@ -2157,13 +2157,13 @@ class Query
                         break;
                 }
                 break;
-            case 'Ampache\Model\Personal_Video':
+            case 'personal_video':
                 switch ($field) {
                     case 'location':
                         $sql = "`personal_video`.`location`";
                         break;
                     default:
-                        $sql = $this->sql_sort_video($field, 'Ampache\Model\Personal_Video');
+                        $sql = $this->sql_sort_video($field, 'personal_video');
                         break;
                 }
                 break;
@@ -2216,7 +2216,7 @@ class Query
                         break;
                 }
                 break;
-            case 'Ampache\Model\Podcast_Episode':
+            case 'podcast_episode':
                 switch ($field) {
                     case 'title':
                         $sql = "`podcast_episode`.`title`";

@@ -33,12 +33,12 @@ use Exception;
 use PDOStatement;
 
 /**
- * Rating class
- *
  * This tracks ratings for songs, albums, artists, videos, tvshows, movies ...
  */
 class Rating extends database_object
 {
+    protected const DB_TABLENAME = 'rating';
+
     // Public variables
     public $id;        // The ID of the object rated
     public $type;        // The type of object we want
@@ -73,11 +73,11 @@ class Rating extends database_object
             'artist',
             'video',
             'tvshow',
-            'Ampache\Model\TVShow_Season',
+            'tvshow_season',
             'playlist',
             'label',
             'podcast',
-            'Ampache\Model\Podcast_Episode'
+            'podcast_episode'
         );
 
         if ($object_type !== null && $object_type !== '') {

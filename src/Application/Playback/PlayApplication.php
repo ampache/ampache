@@ -44,6 +44,7 @@ use Ampache\Model\Song;
 use Ampache\Model\Song_Preview;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\User;
 use Ampache\Model\Video;
@@ -357,10 +358,10 @@ final class PlayApplication implements ApplicationInterface
             /* Base Checks passed create the song object */
             $media = new Song($object_id);
             $media->format();
-        } elseif ($type == 'Ampache\Model\Song_Preview') {
+        } elseif ($type == 'song_preview') {
             $media = new Song_Preview($object_id);
             $media->format();
-        } elseif ($type == 'Ampache\Model\Podcast_Episode') {
+        } elseif ($type == 'podcast_episode') {
             $media = new Podcast_Episode($object_id);
             $media->format();
         } else {
@@ -547,7 +548,7 @@ final class PlayApplication implements ApplicationInterface
             if (!is_array($valid_types)) {
                 $valid_types = array($valid_types);
             }
-            if ($transcode_cfg != 'never' && in_array('transcode', $valid_types) && $type !== 'Ampache\Model\Podcast_Episode') {
+            if ($transcode_cfg != 'never' && in_array('transcode', $valid_types) && $type !== 'podcast_episode') {
                 if ($transcode_to) {
                     $transcode = true;
                     debug_event('play/index', 'Transcoding due to explicit request for ' . (string) $transcode_to, 5);
@@ -665,7 +666,7 @@ final class PlayApplication implements ApplicationInterface
             header('ETag: ' . $media->id);
         }
         if (($action != 'download') && $record_stats) {
-            Stream::insert_now_playing((int) $media->id, (int) $uid, (int) $media->time, $sid, get_class($media));
+            Stream::insert_now_playing((int) $media->id, (int) $uid, (int) $media->time, $sid, ObjectTypeToClassNameMapper::reverseMap(get_class($media)));
         }
         // Handle Content-Range
 
@@ -715,7 +716,7 @@ final class PlayApplication implements ApplicationInterface
                 if (!$share_id && $record_stats) {
                     if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                         debug_event('play/index', 'Registering stream for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 4);
-                        if ($user->id && get_class($media) == 'Song') {
+                        if ($user->id && get_class($media) == Song::class) {
                             // scrobble songs for the user
                             User::save_mediaplay($user, $media);
                         }

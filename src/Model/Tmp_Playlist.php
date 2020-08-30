@@ -35,6 +35,8 @@ use Ampache\Module\System\Dba;
  */
 class Tmp_Playlist extends database_object
 {
+    protected const DB_TABLENAME = 'tmp_playlist';
+
     /* Variables from the Datbase */
     public $id;
     public $session;

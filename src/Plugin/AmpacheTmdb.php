@@ -183,21 +183,21 @@ class AmpacheTmdb
                         }
                         $results['genre']          = self::get_genres($release);
                         $results['tvshow_summary'] = substr($release['overview'], 0, 255);
-                        if ($media_info['Ampache\Model\TVShow_Season']) {
+                        if ($media_info['tvshow_season']) {
                             $release = $client->getTvSeasonApi()->getSeason($results['tmdb_tvshow_id'],
-                                $media_info['Ampache\Model\TVShow_Season']);
+                                $media_info['tvshow_season']);
                             if ($release['id']) {
                                 if ($release['poster_path']) {
                                     $results['tvshow_season_art'] = $imageHelper->getUrl($release['poster_path']);
                                 }
-                                if ($media_info['Ampache\Model\TVShow_Episode']) {
+                                if ($media_info['tvshow_episode']) {
                                     $release = $client->getTvEpisodeApi()->getEpisode($results['tmdb_tvshow_id'],
-                                        $media_info['Ampache\Model\TVShow_Season'],
-                                        $media_info['Ampache\Model\TVShow_Episode']);
+                                        $media_info['tvshow_season'],
+                                        $media_info['tvshow_episode']);
                                     if ($release['id']) {
                                         $results['tmdb_id']                      = $release['id'];
-                                        $results['Ampache\Model\TVShow_Season']  = $release['season_number'];
-                                        $results['Ampache\Model\TVShow_Episode'] = $release['episode_number'];
+                                        $results['tvshow_season']                = $release['season_number'];
+                                        $results['tvshow_episode']               = $release['episode_number'];
                                         $results['original_name']                = $release['name'];
                                         if (!empty($release['air_date'])) {
                                             $results['release_date'] = strtotime($release['air_date']);

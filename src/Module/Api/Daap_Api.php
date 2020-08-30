@@ -599,7 +599,7 @@ class Daap_Api
     public static function tlv_playlist($playlist)
     {
         $isSmart = false;
-        if (get_class($playlist) == 'Search') {
+        if (get_class($playlist) == Search::class) {
             $isSmart = true;
         }
         $pl_id = (($isSmart) ? Daap_Api::AMPACHEID_SMARTPL : 0) + $playlist->id;

@@ -26,8 +26,11 @@ namespace Ampache\Module\Statistics;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
+use Ampache\Model\Podcast_Episode;
+use Ampache\Model\Song;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use PDOStatement;
 use Ampache\Model\User;
 use Ampache\Model\Useractivity;
@@ -74,7 +77,7 @@ class Stats
      */
     public static function garbage_collection()
     {
-        foreach (array('song', 'album', 'artist', 'Ampache\Model\Live_Stream', 'video') as $object_type) {
+        foreach (array('song', 'album', 'artist', 'live_stream', 'video') as $object_type) {
             Dba::write("DELETE FROM `object_count` USING `object_count` LEFT JOIN `$object_type` ON `$object_type`.`id` = `object_count`.`object_id` WHERE `object_type` = '$object_type' AND `$object_type`.`id` IS NULL");
         }
     }
@@ -319,7 +322,7 @@ class Stats
         // this object was your last play and the length between plays is too short.
         if ($previous['object_id'] == $object->id && $diff < ($item_time)) {
             debug_event('stats.class',
-                'Repeated the same ' . get_class($object) . ' too quickly (' . $diff . '/' . ($item_time) . 's), not recording stats for {' . $object->id . '}',
+                'Repeated the same ' . ObjectTypeToClassNameMapper::reverseMap(get_class($object)) . ' too quickly (' . $diff . '/' . ($item_time) . 's), not recording stats for {' . $object->id . '}',
                 3);
 
             return false;
@@ -597,8 +600,8 @@ class Stats
             case 'song':
             case 'video':
             case 'tvshow':
-            case 'Ampache\Model\TVShow_Season':
-            case 'Ampache\Model\TVShow_Episode':
+            case 'tvshow_season':
+            case 'tvshow_episode':
             case 'movie':
             case 'playlist':
                 return $type;

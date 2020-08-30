@@ -28,6 +28,8 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Song;
+use Ampache\Model\Video;
 use Ampache\Module\Util\AmpacheRss;
 use Ampache\Module\Util\Ui;
 
@@ -53,9 +55,9 @@ foreach ($results as $item) {
         } ?>
 <div class="np_row">
 <?php
-if (get_class($media) == 'Song') {
+if (get_class($media) == Song::class) {
             require Ui::find_template('show_now_playing_row.inc.php');
-        } elseif (get_class($media) == 'Video') {
+        } elseif (get_class($media) == Video::class) {
             require Ui::find_template('show_now_playing_video_row.inc.php');
         } ?>
 </div>

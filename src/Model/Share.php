@@ -37,6 +37,8 @@ use PDOStatement;
 
 class Share extends database_object
 {
+    protected const DB_TABLENAME = 'share';
+
     public $id;
     public $user;
     public $object_type;

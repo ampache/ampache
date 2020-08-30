@@ -22,11 +22,12 @@
 
 use Ampache\Model\Tag;
 use Ampache\Model\Video;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 $libitem = Video::create_from_id($libitem->id);
 $libitem->format();
-$video_type = strtolower(get_class($libitem)); ?>
+$video_type = ObjectTypeToClassNameMapper::reverseMap(get_class($libitem)); ?>
 <div>
     <form method="post" id="edit_video_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">

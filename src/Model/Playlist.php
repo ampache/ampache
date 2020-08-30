@@ -32,11 +32,12 @@ use Ampache\Module\System\Core;
 use PDOStatement;
 
 /**
- * Playlist Class
  * This class handles playlists in ampache. it references the playlist* tables
  */
 class Playlist extends playlist_object
 {
+    protected const DB_TABLENAME = 'playlist';
+
     /* Variables from the database */
     public $genre;
     public $date;

@@ -31,13 +31,13 @@ use Ampache\Module\System\Core;
 use PDOStatement;
 
 /**
- * Label class
- *
  * This is the class responsible for handling the Label object
  * it is related to the label table in the database.
  */
 class Label extends database_object implements library_item
 {
+    protected const DB_TABLENAME = 'label';
+
     /* Variables from DB */
 
     /**

@@ -43,6 +43,8 @@ class Song extends database_object implements Media, library_item
 {
     use Metadata;
 
+    protected const DB_TABLENAME = 'song';
+
     /* Variables from DB */
 
     /**
@@ -1914,7 +1916,7 @@ class Song extends database_object implements Media, library_item
      */
     public static function get_fields()
     {
-        $fields = get_class_vars('Ampache\Model\Song');
+        $fields = get_class_vars(Song::class);
 
         unset($fields['id'], $fields['_transcoded'], $fields['_fake'], $fields['cache_hit'], $fields['mime'], $fields['type']);
 

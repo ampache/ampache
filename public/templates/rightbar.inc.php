@@ -66,7 +66,7 @@ use Ampache\Module\Util\Ui;
         </li>
     <?php
 } ?>
-<?php if (Access::check_function('batch_download') && check_can_zip('Ampache\Model\Tmp_Playlist')) { ?>
+<?php if (Access::check_function('batch_download') && check_can_zip('tmp_playlist')) { ?>
     <li>
         <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo Core::get_global('user')->playlist->id; ?>">
             <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
@@ -129,7 +129,7 @@ use Ampache\Module\Util\Ui;
         $objects   = array_slice($objects, 0, 100, true);
     }
 
-    $normal_array = array('Ampache\Model\Live_Stream', 'song', 'video', 'random', 'Ampache\Model\Song_Preview');
+    $normal_array = array('live_stream', 'song', 'video', 'random', 'song_preview');
 
     foreach ($objects as $object_data) {
         $uid  = $object_data['track_id'];

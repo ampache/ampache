@@ -68,7 +68,7 @@ if (count($images) > 0 && !empty($images[0]['url'])) {
 <div>
 <?php
     $browse = new Browse();
-    $browse->set_type('Ampache\Model\Song_Preview');
+    $browse->set_type('song_preview');
     $browse->set_static_content(true);
     $browse->show_objects($walbum->songs); ?>
 </div>

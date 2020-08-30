@@ -33,6 +33,8 @@ use PDOStatement;
 
 class Broadcast extends database_object implements library_item
 {
+    protected const DB_TABLENAME = 'broadcast';
+
     /**
      * @var integer $id
      */

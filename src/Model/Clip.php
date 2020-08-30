@@ -28,6 +28,8 @@ use Ampache\Module\System\Dba;
 
 class Clip extends Video
 {
+    protected const DB_TABLENAME = 'clip';
+
     public $artist;
     public $song;
     public $video;

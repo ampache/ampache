@@ -523,7 +523,7 @@ function install_config_use_case($case)
         'licensing' => 'false',
         'wanted' => 'false',
         'channel' => 'false',
-        'Ampache\Model\Live_Stream' => 'true',
+        'live_stream' => 'true',
         'allow_public_registration' => 'false',
         'cookie_disclaimer' => 'false',
         'share' => 'false'
@@ -544,7 +544,7 @@ function install_config_use_case($case)
             $trconfig['sociable']                  = 'false';
             $trconfig['wanted']                    = 'false';
             $trconfig['channel']                   = 'false';
-            $trconfig['Ampache\Model\Live_Stream'] = 'false';
+            $trconfig['live_stream']               = 'false';
 
             $dbconfig['download']    = '0';
             $dbconfig['allow_video'] = '0';
@@ -558,7 +558,7 @@ function install_config_use_case($case)
             $trconfig['use_auth']                                = 'false';
             $trconfig['licensing']                               = 'true';
             $trconfig['wanted']                                  = 'false';
-            $trconfig['Ampache\Model\Live_Stream']               = 'false';
+            $trconfig['live_stream']                             = 'false';
             $trconfig['allow_public_registration']               = 'true';
             $trconfig['cookie_disclaimer']                       = 'true';
             $trconfig['share']                                   = 'true';

@@ -125,7 +125,7 @@ class AmpacheLastfm
     public function save_mediaplay($song)
     {
         // Only support songs
-        if (get_class($song) != 'Song') {
+        if (get_class($song) != Song::class) {
             return false;
         }
         // Make sure there's actually a session before we keep going

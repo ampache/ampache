@@ -3383,7 +3383,7 @@ class Api
             'clip',
             'tvshow',
             'movie',
-            'Ampache\Model\Personal_Video',
+            'personal_video',
             'podcast'
         ))) ? $input['filter'] : '';
         $catalogs = Catalog::get_catalogs($filter);
@@ -3545,13 +3545,13 @@ class Api
         }
         switch ($catalog->gather_types) {
             case 'podcast':
-                $type  = 'Ampache\Model\Podcast_Episode';
+                $type  = 'podcast_episode';
                 $media = new Podcast_Episode(Catalog::get_id_from_file($file, $type));
                 break;
             case 'clip':
             case 'tvshow':
             case 'movie':
-            case 'Ampache\Model\Personal_Video':
+            case 'personal_video':
                 $type  = 'video';
                 $media = new Video(Catalog::get_id_from_file($file, $type));
                 break;
@@ -3892,7 +3892,7 @@ class Api
                 $original);
         }
         if ($type == 'podcast') {
-            $url = Song::generic_play_url('Ampache\Model\Podcast_Episode', $fileid, $params, 'api',
+            $url = Song::generic_play_url('podcast_episode', $fileid, $params, 'api',
                 function_exists('curl_version'), $user_id, $original);
         }
         if (!empty($url)) {
@@ -3942,7 +3942,7 @@ class Api
                 $original);
         }
         if ($type == 'podcast') {
-            $url = Song::generic_play_url('Ampache\Model\Podcast_Episode', $fileid, $params, 'api',
+            $url = Song::generic_play_url('podcast_episode', $fileid, $params, 'api',
                 function_exists('curl_version'), $user_id, $original);
         }
         if (!empty($url)) {

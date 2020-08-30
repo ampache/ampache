@@ -87,7 +87,7 @@ class Random
     {
         $method_name = 'get_' . $type;
 
-        if (!method_exists('Ampache\Model\Random', $method_name)) {
+        if (!method_exists(Random::class, $method_name)) {
             $method_name = 'get_default';
         }
         $song_ids = self::$method_name(1);

@@ -39,6 +39,8 @@ use PDOStatement;
  */
 class Tag extends database_object implements library_item
 {
+    protected const DB_TABLENAME = 'tag';
+
     public $id;
     public $name;
     public $f_name;

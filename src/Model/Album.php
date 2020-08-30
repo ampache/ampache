@@ -34,8 +34,6 @@ use Exception;
 use PDOStatement;
 
 /**
- * Album Class
- *
  * This is the class responsible for handling the Album object
  * it is related to the album table in the database.
  */

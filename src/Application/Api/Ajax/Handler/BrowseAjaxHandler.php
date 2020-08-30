@@ -135,7 +135,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                         $playlist->delete();
                         $key = 'smartplaylist_row_' . $playlist->id;
                         break;
-                    case 'Ampache\Model\Live_Stream':
+                    case 'live_stream':
                         if (!Core::get_global('user')->has_access('75')) {
                             return;
                         }

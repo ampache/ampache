@@ -30,6 +30,8 @@ use PDOStatement;
 
 class TVShow_Season extends database_object implements library_item
 {
+    protected const DB_TABLENAME = 'tvshow_season';
+
     /* Variables from DB */
     public $id;
     public $season_number;
@@ -163,7 +165,7 @@ class TVShow_Season extends database_object implements library_item
             'label' => T_('TV Show'),
             'value' => $this->f_tvshow
         );
-        $keywords['Ampache\Model\TVShow_Season'] = array(
+        $keywords['tvshow_season'] = array(
             'important' => false,
             'label' => T_('Season'),
             'value' => $this->season_number
@@ -198,7 +200,7 @@ class TVShow_Season extends database_object implements library_item
      */
     public function get_childrens()
     {
-        return array('Ampache\Model\TVShow_Episode' => $this->get_episodes());
+        return array('tvshow_episode' => $this->get_episodes());
     }
 
     /**
@@ -280,9 +282,9 @@ class TVShow_Season extends database_object implements library_item
         $tvshow_id = null;
         $type      = null;
 
-        if (Art::has_db($this->id, 'Ampache\Model\TVShow_Season')) {
+        if (Art::has_db($this->id, 'tvshow_season')) {
             $tvshow_id = $this->id;
-            $type      = 'Ampache\Model\TVShow_Season';
+            $type      = 'tvshow_season';
         } else {
             if (Art::has_db($this->tvshow, 'tvshow') || $force) {
                 $tvshow_id = $this->tvshow;
@@ -383,11 +385,11 @@ class TVShow_Season extends database_object implements library_item
             $sql     = "DELETE FROM `tvshow_season` WHERE `id` = ?";
             $deleted = Dba::write($sql, array($this->id));
             if ($deleted) {
-                Art::garbage_collection('Ampache\Model\TVShow_Season', $this->id);
-                Userflag::garbage_collection('Ampache\Model\TVShow_Season', $this->id);
-                Rating::garbage_collection('Ampache\Model\TVShow_Season', $this->id);
-                Shoutbox::garbage_collection('Ampache\Model\TVShow_Season', $this->id);
-                Useractivity::garbage_collection('Ampache\Model\TVShow_Season', $this->id);
+                Art::garbage_collection('tvshow_season', $this->id);
+                Userflag::garbage_collection('tvshow_season', $this->id);
+                Rating::garbage_collection('tvshow_season', $this->id);
+                Shoutbox::garbage_collection('tvshow_season', $this->id);
+                Useractivity::garbage_collection('tvshow_season', $this->id);
             }
         }
 

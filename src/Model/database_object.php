@@ -31,7 +31,6 @@ use Ampache\Module\System\Dba;
  * This is a general object that is extended by all of the basic
  * database based objects in ampache. It attempts to do some standard
  * caching for all of the objects to cut down on the database calls
- *
  */
 abstract class database_object
 {

@@ -34,6 +34,8 @@ use PDOStatement;
 
 class Artist extends database_object implements library_item
 {
+    protected const DB_TABLENAME = 'artist';
+
     /* Variables from DB */
 
     /**

@@ -37,6 +37,8 @@ use PDOStatement;
  */
 class PrivateMsg extends database_object
 {
+    protected const DB_TABLENAME = 'user_pvmsg';
+
     /* Variables from DB */
     /**
      * @var integer $id

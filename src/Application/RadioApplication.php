@@ -35,7 +35,7 @@ final class RadioApplication implements ApplicationInterface
 {
     public function run(): void
     {
-        if (!AmpConfig::get('Ampache\Model\Live_Stream')) {
+        if (!AmpConfig::get('live_stream')) {
             Ui::access_denied();
 
             return;

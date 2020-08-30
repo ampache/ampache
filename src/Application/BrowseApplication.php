@@ -131,7 +131,7 @@ final class BrowseApplication implements ApplicationInterface
                 $browse->update_browse_from_session();
                 $browse->show_objects();
                 break;
-            case 'Ampache\Model\Live_Stream':
+            case 'live_stream':
             case 'tvshow':
             case 'label':
                 if (AmpConfig::get('catalog_disable')) {
@@ -169,7 +169,7 @@ final class BrowseApplication implements ApplicationInterface
                 $browse->update_browse_from_session();
                 $browse->show_objects();
                 break;
-            case 'Ampache\Model\TVShow_Season':
+            case 'tvshow_season':
                 if (AmpConfig::get('catalog_disable')) {
                     $browse->set_filter('catalog_enabled', '1');
                 }
@@ -177,10 +177,10 @@ final class BrowseApplication implements ApplicationInterface
                 $browse->update_browse_from_session();
                 $browse->show_objects();
                 break;
-            case 'Ampache\Model\TVShow_Episode':
+            case 'tvshow_episode':
             case 'movie':
             case 'clip':
-            case 'Ampache\Model\Personal_Video':
+            case 'personal_video':
                 if (AmpConfig::get('catalog_disable')) {
                     $browse->set_filter('catalog_enabled', '1');
                 }
@@ -198,7 +198,7 @@ final class BrowseApplication implements ApplicationInterface
                 $browse->update_browse_from_session();
                 $browse->show_objects();
                 break;
-            case 'Ampache\Model\Podcast_Episode':
+            case 'podcast_episode':
                 if (AmpConfig::get('catalog_disable')) {
                     $browse->set_filter('catalog_enabled', '1');
                 }

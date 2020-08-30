@@ -30,11 +30,12 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 
 /**
- * Search Class
  * Search-related voodoo.  Beware tentacles.
  */
 class Search extends playlist_object
 {
+    protected const DB_TABLENAME = 'search';
+
     public $searchtype;
     public $rules;
     public $logic_operator = 'AND';

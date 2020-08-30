@@ -50,13 +50,13 @@ use PDOStatement;
 use ReflectionException;
 
 /**
- * Catalog Class
- *
  * This class handles all actual work in regards to the catalog,
  * it contains functions for creating/listing/updated the catalogs.
  */
 abstract class Catalog extends database_object
 {
+    protected const DB_TABLENAME = 'catalog';
+
     private const CATALOG_TYPES = [
         'beets' => Catalog_beets::class,
         'beetsremote' => Catalog_beetsremote::class,
@@ -741,16 +741,16 @@ abstract class Catalog extends database_object
     public static function count_server($enabled = false)
     {
         // tables with media items to count, song-related tables and the rest
-        $media_tables = array('song', 'video', 'Ampache\Model\Podcast_Episode');
+        $media_tables = array('song', 'video', 'podcast_episode');
         $song_tables  = array('artist', 'album');
-        $list_tables  = array('search', 'playlist', 'Ampache\Model\Live_Stream', 'podcast', 'user', 'catalog');
+        $list_tables  = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog');
 
         $results = array();
         $items   = '0';
         $time    = '0';
         $size    = '0';
         foreach ($media_tables as $table) {
-            $enabled_sql = ($enabled && $table !== 'Ampache\Model\Podcast_Episode') ? " WHERE `$table`.`enabled`='1'" : '';
+            $enabled_sql = ($enabled && $table !== 'podcast_episode') ? " WHERE `$table`.`enabled`='1'" : '';
             $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql;
             $db_results  = Dba::read($sql);
             $data        = Dba::fetch_row($db_results);
@@ -800,7 +800,7 @@ abstract class Catalog extends database_object
 
         if ($catalog->id) {
             $table = self::get_table_from_type($catalog->gather_types);
-            if ($table == 'Ampache\Model\Podcast_Episode' && $catalog_id) {
+            if ($table == 'podcast_episode' && $catalog_id) {
                 $where_sql = "WHERE `podcast` IN ( SELECT `id` FROM `podcast` WHERE `catalog` = ?)";
             }
             $sql              = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `" . $table . "` " . $where_sql;
@@ -2081,7 +2081,7 @@ abstract class Catalog extends database_object
         }
 
         if ($media_type == "music") {
-            $types = array_diff($types, array('Ampache\Model\Personal_Video', 'movie', 'tvshow', 'clip'));
+            $types = array_diff($types, array('personal_video', 'movie', 'tvshow', 'clip'));
         }
 
         return $types;
@@ -2098,11 +2098,11 @@ abstract class Catalog extends database_object
             case 'clip':
             case 'tvshow':
             case 'movie':
-            case 'Ampache\Model\Personal_Video':
+            case 'personal_video':
                 $table = 'video';
                 break;
             case 'podcast':
-                $table = 'Ampache\Model\Podcast_Episode';
+                $table = 'podcast_episode';
                 break;
             case 'music':
             default:

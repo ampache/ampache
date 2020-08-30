@@ -47,14 +47,14 @@ use SpotifyWebAPI\Session as SpotifySession;
 use SpotifyWebAPI\SpotifyWebAPIException;
 
 /**
- * Art Class
- *
  * This class handles the images / artwork in ampache
  * This was initially in the album class, but was pulled out
  * to be more general and potentially apply to albums, artists, movies etc
  */
 class Art extends database_object
 {
+    protected const DB_TABLENAME = 'art';
+
     /**
      * @var integer $id
      */
@@ -1002,10 +1002,10 @@ class Art extends database_object
             'album',
             'artist',
             'tvshow',
-            'Ampache\Model\TVShow_Season',
+            'tvshow_season',
             'video',
             'user',
-            'Ampache\Model\Live_Stream'
+            'live_stream'
         );
 
         if ($object_type !== null) {
@@ -1095,7 +1095,7 @@ class Art extends database_object
             return array();
         }
         $config  = AmpConfig::get('art_order');
-        $methods = get_class_methods('Ampache\Model\Art');
+        $methods = get_class_methods(Art::class);
 
         /* If it's not set */
         if (empty($config)) {
@@ -1617,7 +1617,7 @@ class Art extends database_object
      */
     protected function gather_media_tags($media)
     {
-        $mtype  = strtolower(get_class($media));
+        $mtype  = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
         $data   = array();
         $getID3 = new getID3();
         try {
@@ -1795,12 +1795,12 @@ class Art extends database_object
         $media_info = array();
         switch ($type) {
             case 'tvshow':
-            case 'Ampache\Model\TVShow_Season':
-            case 'Ampache\Model\TVShow_Episode':
+            case 'tvshow_season':
+            case 'tvshow_episode':
                 $gtypes[]                                   = 'tvshow';
                 $media_info['tvshow']                       = $options['tvshow'];
-                $media_info['Ampache\Model\TVShow_Season']  = $options['Ampache\Model\TVShow_Season'];
-                $media_info['Ampache\Model\TVShow_Episode'] = $options['Ampache\Model\TVShow_Episode'];
+                $media_info['tvshow_season']                = $options['tvshow_season'];
+                $media_info['tvshow_episode']               = $options['tvshow_episode'];
                 break;
             case 'song':
                 $media_info['mb_trackid'] = $options['mb_trackid'];
@@ -1923,7 +1923,7 @@ class Art extends database_object
      */
     public static function display_item($item, $thumb, $link = null)
     {
-        return self::display($item->type ?: strtolower(get_class($item)), $item->id, $item->get_fullname(), $thumb,
+        return self::display($item->type ?: ObjectTypeToClassNameMapper::reverseMap(get_class($item)), $item->id, $item->get_fullname(), $thumb,
             $link);
     }
 
