@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Song;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
 use Ampache\Module\Api\Ajax;

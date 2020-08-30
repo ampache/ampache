@@ -29,7 +29,7 @@ use AmpConfig;
 use Art;
 use Artist;
 use Ampache\Model\Shoutbox;
-use Song;
+use Ampache\Model\Song;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Playback\Stream;
 use Ampache\Model\User;

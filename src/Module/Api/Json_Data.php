@@ -40,7 +40,7 @@ use Rating;
 use Search;
 use Share;
 use Ampache\Model\Shoutbox;
-use Song;
+use Ampache\Model\Song;
 use Ampache\Module\Playback\Stream;
 use Ampache\Model\Tag;
 use Ampache\Model\User;

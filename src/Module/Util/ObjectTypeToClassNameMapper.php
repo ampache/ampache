@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Util;
 
 use Ampache\Model\Album;
+use Ampache\Model\Song;
 
 /**
  * This class maps object types like `album` to their corresponding php class name (if known)
@@ -35,10 +36,16 @@ final class ObjectTypeToClassNameMapper
 {
     private const OBJECT_TYPE_MAPPING = [
         'album' => Album::class,
+        'song' => Song::class,
     ];
 
     public static function map(string $object_type)
     {
         return self::OBJECT_TYPE_MAPPING[$object_type] ?? $object_type;
+    }
+
+    public static function reverseMap(string $class_name): string
+    {
+        return array_flip(self::OBJECT_TYPE_MAPPING)[$class_name] ?? $class_name;
     }
 }

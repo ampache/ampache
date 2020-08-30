@@ -40,7 +40,7 @@ use Preference;
 use Ampache\Model\Random;
 use Ampache\Module\System\Session;
 use Share;
-use Song;
+use Ampache\Model\Song;
 use Song_Preview;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Playback\Stream_Playlist;

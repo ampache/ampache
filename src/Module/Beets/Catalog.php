@@ -31,7 +31,7 @@ use Ampache\Model\library_item;
 use Ampache\Model\Media;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\System\Dba;
-use Song;
+use Ampache\Model\Song;
 
 /**
  * Catalog parent for local and remote beets catalog

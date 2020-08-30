@@ -30,7 +30,7 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Democratic;
-use Song;
+use Ampache\Model\Song;
 use Song_Preview;
 
 class WebPlayer

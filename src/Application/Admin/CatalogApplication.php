@@ -31,7 +31,7 @@ use AmpConfig;
 use AmpError;
 use Catalog;
 use Core;
-use Song;
+use Ampache\Model\Song;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\Ui;

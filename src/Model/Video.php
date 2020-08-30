@@ -36,7 +36,7 @@ use Core;
 use Ampache\Model\Movie;
 use Personal_Video;
 use Rating;
-use Song;
+use Ampache\Model\Song;
 use Ampache\Model\TvShow;
 use Ampache\Model\TVShow_Episode;
 use Ampache\Model\TVShow_Season;

@@ -31,7 +31,7 @@ use AmpConfig;
 use Artist;
 use Catalog;
 use Core;
-use Song;
+use Ampache\Model\Song;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\Wanted;
 

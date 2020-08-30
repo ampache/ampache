@@ -35,7 +35,7 @@ use Artist;
 use Core;
 use Exception;
 use PDOStatement;
-use Song;
+use Ampache\Model\Song;
 
 /**
  * User Class

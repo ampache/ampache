@@ -21,6 +21,7 @@
  */
 
 use Ampache\Model\Channel;
+use Ampache\Model\Song;
 
 define('NO_SESSION', '1');
 define('CLI', 1);

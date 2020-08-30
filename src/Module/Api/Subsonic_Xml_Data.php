@@ -43,7 +43,7 @@ use Rating;
 use Search;
 use Share;
 use SimpleXMLElement;
-use Song;
+use Ampache\Model\Song;
 use Ampache\Model\Tag;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
@@ -868,7 +868,7 @@ class Subsonic_Xml_Data
      * getAmpacheObject
      * Return the Ampache media object
      * @param integer $object_id
-     * @return Song|Video|Podcast_Episode|null
+     * @return \Ampache\Model\Song|Video|Podcast_Episode|null
      */
     public static function getAmpacheObject($object_id)
     {

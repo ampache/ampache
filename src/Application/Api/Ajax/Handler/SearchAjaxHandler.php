@@ -32,7 +32,7 @@ use Artist;
 use Ampache\Model\Label;
 use Playlist;
 use Search;
-use Song;
+use Ampache\Model\Song;
 use Ampache\Model\User;
 use Ampache\Model\Wanted;
 

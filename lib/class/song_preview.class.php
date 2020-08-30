@@ -4,6 +4,7 @@ declare(strict_types=0);
 
 use Ampache\Model\Album;
 use Ampache\Model\Plugin;
+use Ampache\Model\Song;
 use Ampache\Model\Wanted;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;

@@ -31,7 +31,7 @@ use AmpConfig;
 use Artist;
 use Catalog;
 use Playlist;
-use Song;
+use Ampache\Model\Song;
 use Ampache\Model\Tag;
 use Ampache\Model\Video;
 

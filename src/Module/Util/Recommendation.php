@@ -33,7 +33,7 @@ use Ampache\Module\System\Dba;
 use PDOStatement;
 use Requests;
 use SimpleXMLElement;
-use Song;
+use Ampache\Model\Song;
 
 class Recommendation
 {

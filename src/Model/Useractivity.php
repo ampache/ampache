@@ -29,7 +29,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use AmpConfig;
 use Artist;
 use PDOStatement;
-use Song;
+use Ampache\Model\Song;
 
 class Useractivity extends database_object
 {

@@ -32,7 +32,7 @@ use Ampache\Module\System\Dba;
 use Playlist;
 use Rating;
 use Search;
-use Song;
+use Ampache\Model\Song;
 use Ampache\Model\Tag;
 
 /**

@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Core;
 use Ampache\Model\Shoutbox;
-use Song;
+use Ampache\Model\Song;
 
 final class SongAjaxHandler implements AjaxHandlerInterface
 {

@@ -25,6 +25,7 @@ use Ampache\Model\Album;
 use Ampache\Model\License;
 use Ampache\Model\Random;
 use Ampache\Model\Shoutbox;
+use Ampache\Model\Song;
 use Ampache\Model\Tag;
 use Ampache\Model\User;
 use Ampache\Model\Useractivity;

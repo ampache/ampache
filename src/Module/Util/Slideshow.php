@@ -26,7 +26,7 @@ namespace Ampache\Module\Util;
 
 use Ampache\Model\Plugin;
 use Core;
-use Song;
+use Ampache\Model\Song;
 
 class Slideshow
 {

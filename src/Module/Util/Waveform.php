@@ -31,7 +31,7 @@ use Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;
 use RuntimeException;
-use Song;
+use Ampache\Model\Song;
 
 /**
  * Waveform code generation license:

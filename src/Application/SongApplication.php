@@ -27,7 +27,7 @@ namespace Ampache\Application;
 
 use AmpConfig;
 use Catalog;
-use Song;
+use Ampache\Model\Song;
 use Ampache\Module\Util\Ui;
 
 final class SongApplication implements ApplicationInterface

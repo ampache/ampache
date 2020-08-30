@@ -46,7 +46,7 @@ use Rating;
 use Search;
 use Share;
 use SimpleXMLElement;
-use Song;
+use Ampache\Model\Song;
 use Ampache\Model\Tag;
 use Ampache\Model\User;
 use Ampache\Model\Useractivity;

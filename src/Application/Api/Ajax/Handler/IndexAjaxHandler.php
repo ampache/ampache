@@ -39,7 +39,7 @@ use Core;
 use Ampache\Model\Label;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Slideshow;
-use Song;
+use Ampache\Model\Song;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\Wanted;
 

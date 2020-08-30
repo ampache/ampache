@@ -30,7 +30,7 @@ use AmpConfig;
 use Ampache\Module\Util\Browse;
 use Core;
 use Democratic;
-use Song;
+use Ampache\Model\Song;
 use Ampache\Module\Util\Ui;
 
 final class DemocraticPlaybackApplication implements ApplicationInterface

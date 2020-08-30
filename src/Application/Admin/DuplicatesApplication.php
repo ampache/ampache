@@ -27,7 +27,7 @@ namespace Ampache\Application\Admin;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
-use Song;
+use Ampache\Model\Song;
 use Ampache\Module\Util\Ui;
 
 final class DuplicatesApplication implements ApplicationInterface

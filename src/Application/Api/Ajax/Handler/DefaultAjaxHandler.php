@@ -32,7 +32,7 @@ use Ampache\Module\Util\Browse;
 use Core;
 use Playlist;
 use Rating;
-use Song;
+use Ampache\Model\Song;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\User;

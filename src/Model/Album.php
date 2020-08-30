@@ -38,7 +38,7 @@ use PDOStatement;
 use Rating;
 use Search;
 use Share;
-use Song;
+use Ampache\Model\Song;
 
 /**
  * Album Class

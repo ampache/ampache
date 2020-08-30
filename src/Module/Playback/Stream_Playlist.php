@@ -182,7 +182,8 @@ class Stream_Playlist
         $surl = null;
         $url  = array();
 
-        $type        = strtolower(get_class($object));
+        $class_name  = get_class($object);
+        $type        = ObjectTypeToClassNameMapper::reverseMap($class_name);
         $url['type'] = $type;
 
         // Don't add disabled media objects to the stream playlist
@@ -202,7 +203,7 @@ class Stream_Playlist
                 }
             } else {
                 // FIXME: play_url shouldn't be static
-                $url['url'] = $type::play_url($object->id, $additional_params);
+                $url['url'] = $class_name::play_url($object->id, $additional_params);
             }
 
             $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;

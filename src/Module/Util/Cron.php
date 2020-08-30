@@ -35,7 +35,7 @@ use Ampache\Module\System\Dba;
 use Playlist;
 use Podcast;
 use Rating;
-use Song;
+use Ampache\Model\Song;
 use Ampache\Model\Tag;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;

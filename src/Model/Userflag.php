@@ -32,7 +32,7 @@ use Catalog;
 use Core;
 use Exception;
 use PDOStatement;
-use Song;
+use Ampache\Model\Song;
 
 /**
  * This user flag/unflag songs, albums, artists, videos, tvshows, movies ... as favorite.

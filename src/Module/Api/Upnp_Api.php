@@ -39,7 +39,7 @@ use Playlist;
 use Podcast;
 use Podcast_Episode;
 use Search;
-use Song;
+use Ampache\Model\Song;
 use Ampache\Model\Tag;
 use Ampache\Model\TvShow;
 use Ampache\Model\TVShow_Episode;
@@ -1114,7 +1114,7 @@ class Upnp_Api
     }
 
     /**
-     * @param Song $song
+     * @param \Ampache\Model\Song $song
      * @param string $parent
      * @return array
      */

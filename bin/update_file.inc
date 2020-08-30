@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Song;
 use Ampache\Model\Video;
 use Ampache\Module\System\Dba;
 
