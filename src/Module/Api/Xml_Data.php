@@ -49,7 +49,7 @@ use Song;
 use Tag;
 use User;
 use Ampache\Model\Useractivity;
-use Userflag;
+use Ampache\Model\Userflag;
 use Video;
 
 /**

@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Userflag;
 use Ampache\Module\Util\Browse;
 
 $sql    = Userflag::get_latest_sql('album');

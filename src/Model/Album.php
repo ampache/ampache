@@ -41,7 +41,7 @@ use Share;
 use Song;
 use Tag;
 use Ampache\Model\Useractivity;
-use Userflag;
+use Ampache\Model\Userflag;
 use Ampache\Model\Wanted;
 
 /**

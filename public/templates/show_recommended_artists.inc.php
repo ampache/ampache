@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Userflag;
 use Ampache\Module\Util\Ui;
 
 $thcount = 8; ?>

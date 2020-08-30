@@ -21,6 +21,7 @@
  */
 
 // Don't show disabled medias to normal users
+use Ampache\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;

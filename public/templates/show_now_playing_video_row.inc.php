@@ -19,6 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+use Ampache\Model\Userflag;
+
 $media = Video::create_from_id($media->id);
 $media->format(); ?>
 <div class="np_group" id="np_group_1">

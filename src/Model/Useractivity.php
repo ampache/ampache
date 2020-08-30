@@ -32,11 +32,6 @@ use PDOStatement;
 use Song;
 use User;
 
-/**
- * Userflag class
- *
- * This user flag/unflag songs, albums, artists, videos, tvshows, movies ... as favorite.
- */
 class Useractivity extends database_object
 {
     /* Variables from DB */

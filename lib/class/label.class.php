@@ -25,6 +25,7 @@ use Ampache\Model\Shoutbox;
 use Ampache\Model\database_object;
 use Ampache\Model\library_item;
 use Ampache\Model\Useractivity;
+use Ampache\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
 

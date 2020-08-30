@@ -55,7 +55,7 @@ use SimpleXMLElement;
 use Song;
 use Tag;
 use User;
-use Userflag;
+use Ampache\Model\Userflag;
 
 /**
  * Subsonic Class

@@ -26,6 +26,7 @@ use Ampache\Model\License;
 use Ampache\Model\Random;
 use Ampache\Model\Shoutbox;
 use Ampache\Model\Useractivity;
+use Ampache\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;

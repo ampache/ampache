@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\AmpacheRss;

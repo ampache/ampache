@@ -51,7 +51,7 @@ debug_event('cron', 'started cron process', 3);
  * Art::garbage_collection();
  * Stats::garbage_collection();
  * Rating::garbage_collection();
- * Userflag::garbage_collection();
+ * Ampache\Model\Userflag::garbage_collection();
  * Ampache\Model\Useractivity::garbage_collection();
  * Playlist::garbage_collection();
  * Tmp_Playlist::garbage_collection(); FIXME Duplicated with Session

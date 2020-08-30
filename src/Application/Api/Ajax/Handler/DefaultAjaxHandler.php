@@ -36,7 +36,7 @@ use Song;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Ui;
 use User;
-use Userflag;
+use Ampache\Model\Userflag;
 
 final class DefaultAjaxHandler implements AjaxHandlerInterface
 {

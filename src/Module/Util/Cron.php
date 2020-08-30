@@ -37,7 +37,7 @@ use Rating;
 use Song;
 use Tag;
 use User;
-use Userflag;
+use Ampache\Model\Userflag;
 use Video;
 
 final class Cron
