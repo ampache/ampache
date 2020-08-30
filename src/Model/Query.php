@@ -476,7 +476,7 @@ class Query
                     'year_gt',
                     'year_eq'
                 ),
-                'tvshow_season' => array(
+                'Ampache\Model\TVShow_Season' => array(
                     'season_lt',
                     'season_lg',
                     'season_eq'
@@ -617,7 +617,7 @@ class Query
                     'name',
                     'year'
                 ),
-                'tvshow_season' => array(
+                'Ampache\Model\TVShow_Season' => array(
                     'season',
                     'tvshow'
                 ),
@@ -717,7 +717,7 @@ class Query
             case 'broadcast':
             case 'license':
             case 'tvshow':
-            case 'tvshow_season':
+            case 'Ampache\Model\TVShow_Season':
             case 'Ampache\Model\TVShow_Episode':
             case 'movie':
             case 'personal_video':
@@ -1043,7 +1043,7 @@ class Query
                     $this->set_select("`tvshow`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `tvshow` ";
                     break;
-                case 'tvshow_season':
+                case 'Ampache\Model\TVShow_Season':
                     $this->set_select("`tvshow_season`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `tvshow_season` ";
                     break;
@@ -1702,7 +1702,7 @@ class Query
                         break;
                 } // end filter
                 break;
-            case 'tvshow_season':
+            case 'Ampache\Model\TVShow_Season':
                 switch ($filter) {
                     case 'season_lt':
                         $filter_sql = " `tvshow_season`.`season_number` < '" . Dba::escape($value) . "' AND ";
@@ -2113,7 +2113,7 @@ class Query
                         break;
                 }
                 break;
-            case 'tvshow_season':
+            case 'Ampache\Model\TVShow_Season':
                 switch ($field) {
                     case 'season':
                         $sql = "`tvshow_season`.`season_number`";

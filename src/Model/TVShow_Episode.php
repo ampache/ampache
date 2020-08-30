@@ -26,7 +26,7 @@ namespace Ampache\Model;
 
 use Ampache\Module\System\Dba;
 use Art;
-use TVShow_Season;
+use Ampache\Model\TVShow_Season;
 
 class TVShow_Episode extends Video
 {
@@ -90,10 +90,10 @@ class TVShow_Episode extends Video
             $art = new Art((int)$tvshow, 'tvshow');
             $art->insert_url($data['tvshow_art']);
         }
-        $tvshow_season = TVShow_Season::check($tvshow, $data['tvshow_season']);
+        $tvshow_season = TVShow_Season::check($tvshow, $data['Ampache\Model\TVShow_Season']);
         if ($options['gather_art'] && $tvshow_season && $data['tvshow_season_art'] && !Art::has_db($tvshow_season,
-                'tvshow_season')) {
-            $art = new Art($tvshow_season, 'tvshow_season');
+                'Ampache\Model\TVShow_Season')) {
+            $art = new Art($tvshow_season, 'Ampache\Model\TVShow_Season');
             $art->insert_url($data['tvshow_season_art']);
         }
 
@@ -101,7 +101,7 @@ class TVShow_Episode extends Video
             foreach ($tags as $tag) {
                 $tag = trim((string)$tag);
                 if (!empty($tag)) {
-                    Tag::add('tvshow_season', $tvshow_season, $tag, false);
+                    Tag::add('Ampache\Model\TVShow_Season', $tvshow_season, $tag, false);
                     Tag::add('tvshow', $tvshow, $tag, false);
                 }
             }
@@ -109,8 +109,8 @@ class TVShow_Episode extends Video
 
         $sdata = $data;
         // Replace relation name with db ids
-        $sdata['tvshow']        = $tvshow;
-        $sdata['tvshow_season'] = $tvshow_season;
+        $sdata['tvshow']                      = $tvshow;
+        $sdata['Ampache\Model\TVShow_Season'] = $tvshow_season;
 
         return self::create($sdata);
     }
@@ -127,7 +127,7 @@ class TVShow_Episode extends Video
         Dba::write($sql, array(
             $data['id'],
             $data['original_name'],
-            $data['tvshow_season'],
+            $data['Ampache\Model\TVShow_Season'],
             $data['Ampache\Model\TVShow_Episode'],
             $data['summary']
         ));
@@ -146,7 +146,7 @@ class TVShow_Episode extends Video
         parent::update($data);
 
         $original_name  = isset($data['original_name']) ? $data['original_name'] : $this->original_name;
-        $tvshow_season  = isset($data['tvshow_season']) ? $data['tvshow_season'] : $this->season;
+        $tvshow_season  = isset($data['Ampache\Model\TVShow_Season']) ? $data['Ampache\Model\TVShow_Season'] : $this->season;
         $tvshow_episode = isset($data['Ampache\Model\TVShow_Episode']) ? $data['Ampache\Model\TVShow_Episode'] : $this->episode_number;
         $summary        = isset($data['summary']) ? $data['summary'] : $this->summary;
 
@@ -204,7 +204,7 @@ class TVShow_Episode extends Video
             'label' => T_('TV Show'),
             'value' => $this->f_tvshow
         );
-        $keywords['tvshow_season'] = array(
+        $keywords['Ampache\Model\TVShow_Season'] = array(
             'important' => false,
             'label' => T_('Season'),
             'value' => $this->f_season
@@ -231,7 +231,7 @@ class TVShow_Episode extends Video
      */
     public function get_parent()
     {
-        return array('object_type' => 'tvshow_season', 'object_id' => $this->season);
+        return array('object_type' => 'Ampache\Model\TVShow_Season', 'object_id' => $this->season);
     }
 
     /**
@@ -241,7 +241,7 @@ class TVShow_Episode extends Video
     public function get_release_item_art()
     {
         return array(
-            'object_type' => 'tvshow_season',
+            'object_type' => 'Ampache\Model\TVShow_Season',
             'object_id' => $this->season
         );
     }
@@ -274,9 +274,9 @@ class TVShow_Episode extends Video
             $episode_id = $this->id;
             $type       = 'video';
         } else {
-            if (Art::has_db($this->season, 'tvshow_season')) {
+            if (Art::has_db($this->season, 'Ampache\Model\TVShow_Season')) {
                 $episode_id = $this->season;
-                $type       = 'tvshow_season';
+                $type       = 'Ampache\Model\TVShow_Season';
             } else {
                 $season = new TVShow_Season($this->season);
                 if (Art::has_db($season->tvshow, 'tvshow') || $force) {

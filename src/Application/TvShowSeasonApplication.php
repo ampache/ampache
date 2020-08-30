@@ -27,7 +27,7 @@ namespace Ampache\Application;
 
 use AmpConfig;
 use Catalog;
-use TVShow_Season;
+use Ampache\Model\TVShow_Season;
 use Ampache\Module\Util\Ui;
 
 final class TvShowSeasonApplication implements ApplicationInterface

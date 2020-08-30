@@ -22,7 +22,7 @@
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('TV Show Season') ?></td>
                 <td>
-                    <?php show_tvshow_season_select('tvshow_season', $libitem->season); ?>
+                    <?php show_tvshow_season_select('Ampache\Model\TVShow_Season', $libitem->season); ?>
                 </td>
             </tr>
             <tr>

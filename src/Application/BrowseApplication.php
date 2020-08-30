@@ -61,7 +61,7 @@ final class BrowseApplication implements ApplicationInterface
             case 'channel':
             case 'broadcast':
             case 'tvshow':
-            case 'tvshow_season':
+            case 'Ampache\Model\TVShow_Season':
             case 'Ampache\Model\TVShow_Episode':
             case 'movie':
             case 'clip':
@@ -169,7 +169,7 @@ final class BrowseApplication implements ApplicationInterface
                 $browse->update_browse_from_session();
                 $browse->show_objects();
                 break;
-            case 'tvshow_season':
+            case 'Ampache\Model\TVShow_Season':
                 if (AmpConfig::get('catalog_disable')) {
                     $browse->set_filter('catalog_enabled', '1');
                 }

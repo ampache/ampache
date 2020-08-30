@@ -138,7 +138,7 @@ final class ImageApplication implements ApplicationInterface
                 switch ($type) {
                     case 'video':
                     case 'tvshow':
-                    case 'tvshow_season':
+                    case 'Ampache\Model\TVShow_Season':
                         $mime       = 'image/png';
                         $defaultimg = AmpConfig::get('custom_blankmovie');
                         if (empty($defaultimg) || (strpos($defaultimg, "http://") !== 0 && strpos($defaultimg, "https://") !== 0)) {

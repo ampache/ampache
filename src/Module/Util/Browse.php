@@ -312,7 +312,7 @@ class Browse extends Query
                 $box_title = T_('TV Shows');
                 $box_req   = Ui::find_template('show_tvshows.inc.php');
                 break;
-            case 'tvshow_season':
+            case 'Ampache\Model\TVShow_Season':
                 $box_title = T_('Seasons');
                 $box_req   = Ui::find_template('show_tvshow_seasons.inc.php');
                 break;

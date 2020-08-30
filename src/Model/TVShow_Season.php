@@ -1,17 +1,6 @@
 <?php
-declare(strict_types=0);
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-
-use Ampache\Model\database_object;
-use Ampache\Model\Shoutbox;
-use Ampache\Model\library_item;
-use Ampache\Model\TvShow;
-use Ampache\Model\Useractivity;
-use Ampache\Model\Userflag;
-use Ampache\Model\Video;
-use Ampache\Module\System\Dba;
-
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -31,6 +20,16 @@ use Ampache\Module\System\Dba;
  *
  */
 
+declare(strict_types=0);
+
+namespace Ampache\Model;
+
+use Ampache\Module\System\Dba;
+use AmpConfig;
+use Art;
+use PDOStatement;
+use Rating;
+
 class TVShow_Season extends database_object implements library_item
 {
     /* Variables from DB */
@@ -45,7 +44,6 @@ class TVShow_Season extends database_object implements library_item
     public $f_tvshow_link;
     public $link;
     public $f_link;
-
 
     // Constructed vars
     private static $_mapcache = array();
@@ -74,8 +72,7 @@ class TVShow_Season extends database_object implements library_item
      */
     public static function garbage_collection()
     {
-        $sql = "DELETE FROM `tvshow_season` USING `tvshow_season` LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` " .
-            "WHERE `tvshow_episode`.`id` IS NULL";
+        $sql = "DELETE FROM `tvshow_season` USING `tvshow_season` LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` " . "WHERE `tvshow_episode`.`id` IS NULL";
         Dba::write($sql);
     }
 
@@ -117,10 +114,7 @@ class TVShow_Season extends database_object implements library_item
         if (parent::is_cached('tvshow_extra', $this->id)) {
             $row = parent::get_from_cache('tvshow_extra', $this->id);
         } else {
-            $sql = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_episode` " .
-                "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` " .
-                "WHERE `tvshow_episode`.`season` = ?" .
-                "GROUP BY `catalog_id`";
+            $sql = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_episode` " . "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` " . "WHERE `tvshow_episode`.`season` = ?" . "GROUP BY `catalog_id`";
 
             $db_results = Dba::read($sql, array($this->id));
             $row        = Dba::fetch_assoc($db_results);
@@ -166,13 +160,18 @@ class TVShow_Season extends database_object implements library_item
     public function get_keywords()
     {
         $keywords           = array();
-        $keywords['tvshow'] = array('important' => true,
+        $keywords['tvshow'] = array(
+            'important' => true,
             'label' => T_('TV Show'),
-            'value' => $this->f_tvshow);
-        $keywords['tvshow_season'] = array('important' => false,
+            'value' => $this->f_tvshow
+        );
+        $keywords['Ampache\Model\TVShow_Season'] = array(
+            'important' => false,
             'label' => T_('Season'),
-            'value' => $this->season_number);
-        $keywords['type'] = array('important' => false,
+            'value' => $this->season_number
+        );
+        $keywords['type'] = array(
+            'important' => false,
             'label' => null,
             'value' => 'tvshow'
         );
@@ -283,9 +282,9 @@ class TVShow_Season extends database_object implements library_item
         $tvshow_id = null;
         $type      = null;
 
-        if (Art::has_db($this->id, 'tvshow_season')) {
+        if (Art::has_db($this->id, 'Ampache\Model\TVShow_Season')) {
             $tvshow_id = $this->id;
-            $type      = 'tvshow_season';
+            $type      = 'Ampache\Model\TVShow_Season';
         } else {
             if (Art::has_db($this->tvshow, 'tvshow') || $force) {
                 $tvshow_id = $this->tvshow;
@@ -330,7 +329,7 @@ class TVShow_Season extends database_object implements library_item
             $exists    = true;
         }
 
-        if ($exists && (int) $object_id > 0) {
+        if ($exists && (int)$object_id > 0) {
             self::$_mapcache[$name]['null'] = $object_id;
 
             return $object_id;
@@ -340,8 +339,7 @@ class TVShow_Season extends database_object implements library_item
             return null;
         }
 
-        $sql = 'INSERT INTO `tvshow_season` (`tvshow`, `season_number`) ' .
-            'VALUES(?, ?)';
+        $sql = 'INSERT INTO `tvshow_season` (`tvshow`, `season_number`) ' . 'VALUES(?, ?)';
 
         $db_results = Dba::write($sql, array($tvshow, $season_number));
         if (!$db_results) {
@@ -387,11 +385,11 @@ class TVShow_Season extends database_object implements library_item
             $sql     = "DELETE FROM `tvshow_season` WHERE `id` = ?";
             $deleted = Dba::write($sql, array($this->id));
             if ($deleted) {
-                Art::garbage_collection('tvshow_season', $this->id);
-                Userflag::garbage_collection('tvshow_season', $this->id);
-                Rating::garbage_collection('tvshow_season', $this->id);
-                Shoutbox::garbage_collection('tvshow_season', $this->id);
-                Useractivity::garbage_collection('tvshow_season', $this->id);
+                Art::garbage_collection('Ampache\Model\TVShow_Season', $this->id);
+                Userflag::garbage_collection('Ampache\Model\TVShow_Season', $this->id);
+                Rating::garbage_collection('Ampache\Model\TVShow_Season', $this->id);
+                Shoutbox::garbage_collection('Ampache\Model\TVShow_Season', $this->id);
+                Useractivity::garbage_collection('Ampache\Model\TVShow_Season', $this->id);
             }
         }
 
@@ -409,4 +407,4 @@ class TVShow_Season extends database_object implements library_item
 
         return Dba::write($sql, array($tvshow_id, $season_id));
     }
-} // end tvshow_season.class
+}

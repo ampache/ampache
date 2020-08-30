@@ -599,7 +599,7 @@ class Stats
             case 'song':
             case 'video':
             case 'tvshow':
-            case 'tvshow_season':
+            case 'Ampache\Model\TVShow_Season':
             case 'Ampache\Model\TVShow_Episode':
             case 'movie':
             case 'playlist':

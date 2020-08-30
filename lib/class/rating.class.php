@@ -64,7 +64,8 @@ class Rating extends database_object
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
-        $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season', 'playlist', 'label', 'podcast', 'podcast_episode');
+        $types = array('song', 'album', 'artist', 'video', 'tvshow',
+            'Ampache\Model\TVShow_Season', 'playlist', 'label', 'podcast', 'podcast_episode');
 
         if ($object_type !== null && $object_type !== '') {
             if (in_array($object_type, $types)) {

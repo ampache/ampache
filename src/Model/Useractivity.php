@@ -94,7 +94,7 @@ class Useractivity extends database_object
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
-        $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season');
+        $types = array('song', 'album', 'artist', 'video', 'tvshow', 'Ampache\Model\TVShow_Season');
 
         if ($object_type !== null) {
             if (in_array($object_type, $types)) {

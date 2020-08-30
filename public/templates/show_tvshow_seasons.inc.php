@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Model\TVShow_Season;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
 use Ampache\Module\Api\Ajax;

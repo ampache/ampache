@@ -36,19 +36,19 @@ $browse->set_type($object_type);
 Ui::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box'); ?>
 <div class="item_right_info">
     <?php
-    Art::display('tvshow_season', $season->id, $season->f_name, 6); ?>
+    Art::display('Ampache\Model\TVShow_Season', $season->id, $season->f_name, 6); ?>
 </div>
 <?php if (User::is_registered()) { ?>
     <?php
     if (AmpConfig::get('ratings')) { ?>
     <div id="rating_<?php echo (int) ($season->id); ?>_tvshow_season" style="display:inline;">
-        <?php show_rating($season->id, 'tvshow_season'); ?>
+        <?php show_rating($season->id, 'Ampache\Model\TVShow_Season'); ?>
     </div>
     <?php
     } ?>
     <?php if (AmpConfig::get('userflags')) { ?>
     <div style="display:table-cell;" id="userflag_<?php echo $season->id; ?>_tvshow_season">
-            <?php Userflag::show($season->id, 'tvshow_season'); ?>
+            <?php Userflag::show($season->id, 'Ampache\Model\TVShow_Season'); ?>
     </div>
     <?php
     } ?>

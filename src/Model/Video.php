@@ -39,7 +39,7 @@ use Rating;
 use Song;
 use Ampache\Model\TvShow;
 use Ampache\Model\TVShow_Episode;
-use TVShow_Season;
+use Ampache\Model\TVShow_Season;
 
 class Video extends database_object implements Media, library_item
 {

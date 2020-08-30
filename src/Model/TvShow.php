@@ -33,7 +33,7 @@ use Catalog;
 use PDOStatement;
 use Rating;
 use Share;
-use TVShow_Season;
+use Ampache\Model\TVShow_Season;
 
 class TvShow extends database_object implements library_item
 {
@@ -239,7 +239,7 @@ class TvShow extends database_object implements library_item
      */
     public function get_childrens()
     {
-        return array('tvshow_season' => $this->get_seasons());
+        return array('Ampache\Model\TVShow_Season' => $this->get_seasons());
     }
 
     /**

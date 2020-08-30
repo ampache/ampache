@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Model\Plugin;
+use Ampache\Model\TVShow_Season;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Playback\LocalPlay;

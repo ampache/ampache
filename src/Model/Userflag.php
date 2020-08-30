@@ -112,7 +112,7 @@ class Userflag extends database_object
             'video',
             'playlist',
             'tvshow',
-            'tvshow_season',
+            'Ampache\Model\TVShow_Season',
             'podcast',
             'podcast_episode'
         );

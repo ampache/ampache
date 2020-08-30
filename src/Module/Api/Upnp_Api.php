@@ -43,7 +43,7 @@ use Song;
 use Ampache\Model\Tag;
 use Ampache\Model\TvShow;
 use Ampache\Model\TVShow_Episode;
-use TVShow_Season;
+use Ampache\Model\TVShow_Season;
 use Ampache\Model\Video;
 use XMLReader;
 
@@ -1194,7 +1194,7 @@ class Upnp_Api
     }
 
     /**
-     * @param TVShow_Season $season
+     * @param \Ampache\Model\TVShow_Season $season
      * @param string $parent
      * @return array
      */
