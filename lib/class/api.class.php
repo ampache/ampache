@@ -1803,7 +1803,7 @@ class Api
                         echo json_encode($song_ids, JSON_PRETTY_PRINT);
                     break;
                     default:
-                        echo XML_Data::keyed_array($song_ids);
+                        echo XML_Data::keyed_array($song_ids, false, 'id');
                 }
                 break;
             case 'index':

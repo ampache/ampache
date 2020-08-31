@@ -286,7 +286,7 @@ class XML_Data
      * @param    string|boolean    $callback    (description here...)
      * @return    string    return xml
      */
-    public static function keyed_array($array, $callback = '')
+    public static function keyed_array($array, $callback = '', $object = false)
     {
         $string = '';
         // Foreach it
@@ -301,9 +301,9 @@ class XML_Data
             // If it's an array, run again
             if (is_array($value)) {
                 $value = self::keyed_array($value, 1);
-                $string .= "<$key$attribute>\n$value\n</$key>\n";
+                $string .= ($object) ? "<$object>\n$value\n</$object>\n" : "<$key$attribute>\n$value\n</$key>\n";
             } else {
-                $string .= "\t<$key$attribute><![CDATA[$value]]></$key>\n";
+                $string .= ($object) ? "\t<$object index=\"" . $key . "\"><![CDATA[$value]]></$object>\n" : "\t<$key$attribute><![CDATA[$value]]></$key>\n";
             }
         } // end foreach
 
