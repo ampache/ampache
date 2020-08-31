@@ -42,8 +42,8 @@
         <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'video') { ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=video"><?php echo T_('Videos'); ?></a>
             <?php } else {
-                echo T_('Videos');
-            } ?></td>
+        echo T_('Videos');
+    } ?></td>
     <?php } ?>
 </tr>
 </table>
