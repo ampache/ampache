@@ -85,7 +85,7 @@ $(function() {
             if ($header.children(".header-img").hasClass("collapsed")) {
                 sbstate = "collapsed";
             }
-            $.cookie('sb_' + $header.children(".header-img").attr('id'), sbstate, { expires: 30, path: '/'});
+            $.cookie('sb_' + $header.children(".header-img").attr('id'), sbstate, { expires: 30, path: '/; samesite=strict'});
         });
 
     });
