@@ -2,7 +2,7 @@
 
 Advanced search is the API method to access the search rules used in the WEB UI. It can be confusing to process how the rules are generated so this has been split into it's own page.
 
-### Using advanced_search
+## Using advanced_search
 
 Perform an advanced search given passed rules. This works in a similar way to the web/UI search pages.
 You can pass multiple rules as well as joins to create in depth search results
@@ -15,7 +15,7 @@ Use operator ('and'|'or') to choose whether to join or separate each rule when s
   * rule operator (e.g. rule_1_operator[0], rule_2_operator[3])
   * rule input (e.g. rule_1_input['Prodigy'], rule_2_input['Land'])
 
-#### Available search rules
+### Available search rules
 
 Select the type of search based on the type of data you are searching for. (songs, playlists, etc)
 
@@ -69,7 +69,7 @@ Select the type of search based on the type of data you are searching for. (song
 |image_width   |Image Width          |numeric          |album,artist         |
 |username      |Username             |text             |user                 |
 
-#### Available search operators
+### Available search operators
 
 Select your operator (integer only!) based on the type or your selected search
 
@@ -98,7 +98,7 @@ Send the correct input based on the type of search.
 Operators for metadata are using the text/tag types **AND** numeric types in a single list as they can be ints/strings/dates.
 Currently there is not a simple way to identify what metadata types you have saved. New methods will be created for this.
 
-#### Metadata operator table
+### Metadata operator table
 
 |rule_1_operator| Metadata                        |
 |:-------------:| ------------------------------- |
@@ -126,7 +126,7 @@ To search a mixed type like metadata you must search using 4 rules.
   * rule input (e.g. rule_1_input['Prodigy'], rule_2_input['120'])
   * rule subtype (e.g. rule_1_subtype['4'], rule_2_subtype['9'])
 
-#### advanced_search parameters
+### advanced_search parameters
 
 @param array $input
 

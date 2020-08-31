@@ -282,11 +282,12 @@ class XML_Data
      *
      * This will build an xml document from a key'd array,
      *
-     * @param    array    $array    (description here...)
-     * @param    string|boolean    $callback    (description here...)
-     * @return    string    return xml
+     * @param  array $array (description here...)
+     * @param  boolean $callback (don't output xml when true)
+     * @param  string|boolean $object
+     * @return string return xml
      */
-    public static function keyed_array($array, $callback = '', $object = false)
+    public static function keyed_array($array, $callback = false, $object = false)
     {
         $string = '';
         // Foreach it
@@ -300,7 +301,7 @@ class XML_Data
 
             // If it's an array, run again
             if (is_array($value)) {
-                $value = self::keyed_array($value, 1);
+                $value = self::keyed_array($value, true);
                 $string .= ($object) ? "<$object>\n$value\n</$object>\n" : "<$key$attribute>\n$value\n</$key>\n";
             } else {
                 $string .= ($object) ? "\t<$object index=\"" . $key . "\"><![CDATA[$value]]></$object>\n" : "\t<$key$attribute><![CDATA[$value]]></$key>\n";
@@ -1168,7 +1169,7 @@ class XML_Data
         // Pass it to the keyed array xml function
         foreach ($data as $item) {
             // We need to enclose it in an item tag
-            $string .= self::keyed_array(array('item' => $item), 1);
+            $string .= self::keyed_array(array('item' => $item), true);
         }
 
         return self::_header() . $string . self::_footer();
