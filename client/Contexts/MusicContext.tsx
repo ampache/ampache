@@ -133,6 +133,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     };
 
     const startPlayingWithNewQueue = async (song: Song, newQueue: Song[]) => {
+        //TODO: can't we simplify this by removing the first parameter, and just adding an optional starting position
         if (song.id === currentPlayingSongRef.current?.id) return;
 
         const queueIndex = newQueue.findIndex((o) => o.id === song.id);

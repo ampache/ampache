@@ -3,15 +3,16 @@ import { Link } from 'react-router-dom';
 import { Album } from '~logic/Album';
 import useContextMenu from 'react-use-context-menu';
 
+import style from './index.module.styl';
+
 interface AlbumDisplayProps {
     album: Album;
     showGoToAlbum?: boolean;
     playSongFromAlbum?: (albumID: number, random: boolean) => void;
+    className?: string;
 }
 
-const AlbumDisplay: React.FC<AlbumDisplayProps> = (
-    props: AlbumDisplayProps
-) => {
+const Index: React.FC<AlbumDisplayProps> = (props: AlbumDisplayProps) => {
     const [
         bindMenu,
         bindMenuItems,
@@ -24,10 +25,10 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (
         <>
             <Link
                 to={`/album/${props.album.id}`}
-                className='albumDisplayContainer'
+                className={`${style.albumDisplayContainer} ${props.className}`}
             >
-                <div {...bindTrigger} className='albumDisplay'>
-                    <div className='imageContainer'>
+                <div {...bindTrigger} className={style.albumDisplay}>
+                    <div className={style.imageContainer}>
                         <img
                             src={props.album.art + '&thumb=true'}
                             alt='Album Cover'
@@ -71,4 +72,4 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (
     );
 };
 
-export default AlbumDisplay;
+export default Index;

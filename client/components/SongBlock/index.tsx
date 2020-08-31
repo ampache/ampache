@@ -2,22 +2,28 @@ import { Song } from '~logic/Song';
 import { Link } from 'react-router-dom';
 import React from 'react';
 
+import style from './index.module.styl';
+
 interface SongBlockProps {
     song: Song;
     currentlyPlaying: boolean;
     playSong: (song: Song) => void;
+    className?: string;
 }
 
-const SongBlock = (props: SongBlockProps) => {
+const Index = (props: SongBlockProps) => {
     return (
         <div
             onClick={() => props.playSong(props.song)}
-            className={(props.currentlyPlaying ? 'playing ' : '') + 'songBlock'}
+            className={`${props.className} ${style.songBlock} ${
+                props.currentlyPlaying ? style.playing : ''
+            }`}
+            tabIndex={1}
         >
             <img src={props.song.art} alt='Album Cover' />
-            <div className='details'>
-                <div className='title'>{props.song.title}</div>
-                <div className='bottom'>
+            <div className={style.details}>
+                <div className={style.title}>{props.song.title}</div>
+                <div className={style.bottom}>
                     <Link
                         to={`/album/${props.song.album.id}`}
                         onClick={(e) => {
@@ -40,4 +46,4 @@ const SongBlock = (props: SongBlockProps) => {
     );
 };
 
-export default SongBlock;
+export default Index;

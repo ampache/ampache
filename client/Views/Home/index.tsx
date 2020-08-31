@@ -1,12 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Album, getRandomAlbums } from '~logic/Album';
-import AlbumDisplay from '~components/AlbumDisplay';
+import AlbumDisplay from '~components/AlbumDisplay/';
 import { User } from '~logic/User';
 import AmpacheError from '../../logic/AmpacheError';
 import { MusicContext } from '~Contexts/MusicContext';
 import { playSongFromAlbum } from '~Helpers/playAlbumHelper';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
+
+import style from './index.module.styl';
 
 interface HomeViewProps {
     user: User;
@@ -33,7 +35,7 @@ const HomeView: React.FC<HomeViewProps> = (props) => {
 
     if (error) {
         return (
-            <div className='albumPage'>
+            <div className={style.homePage}>
                 <span>Error: {error.message}</span>
             </div>
         );
@@ -42,10 +44,10 @@ const HomeView: React.FC<HomeViewProps> = (props) => {
         return <ReactLoading color='#FF9D00' type={'bubbles'} />;
     }
     return (
-        <div className='homePage'>
+        <div className={style.homePage}>
             <section>
                 <h1>Random Albums</h1>
-                <div className='randomAlbums'>
+                <div className={style.randomAlbums}>
                     {!randomAlbums && (
                         <ReactLoading color='#FF9D00' type={'bubbles'} />
                     )}
@@ -62,6 +64,7 @@ const HomeView: React.FC<HomeViewProps> = (props) => {
                                     );
                                 }}
                                 key={theAlbum.id}
+                                className={style.albumDisplayContainer}
                             />
                         );
                     })}

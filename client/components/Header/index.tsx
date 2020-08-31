@@ -3,6 +3,8 @@ import { Link, withRouter } from 'react-router-dom';
 import logo from '~images/ampache-dark.png';
 import userIcon from '~images/icons/svg/user.svg';
 
+import style from './index.module.styl';
+
 interface HeaderProps {
     history: any;
     username: string;
@@ -18,13 +20,13 @@ const Header = withRouter(({ history, ...props }: any) => {
     };
 
     return (
-        <header>
-            <div className='logoContainer'>
-                <Link className='logo' to='/'>
+        <header className={style.header}>
+            <div className={style.logoContainer}>
+                <Link className={style.logo} to='/'>
                     <img src={logo} alt='Ampache Logo' />
                 </Link>
             </div>
-            <div className='search'>
+            <div className={style.search}>
                 <form onSubmit={(e) => searchSubmit(e)}>
                     <input
                         type='text'
@@ -35,9 +37,9 @@ const Header = withRouter(({ history, ...props }: any) => {
                     />
                 </form>
             </div>
-            <div className='account'>
+            <div className={style.account}>
                 <img src={userIcon} alt='user icon' />
-                <div className='options'>
+                <div className={style.options}>
                     <ul>
                         <li>
                             <Link to='/account'>{props.username}</Link>

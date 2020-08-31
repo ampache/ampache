@@ -8,6 +8,8 @@ import SongBlock from '~components/SongBlock';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 
+import style from './index.module.styl';
+
 interface SearchProps {
     user: User;
     match: {
@@ -42,22 +44,22 @@ const SearchView: React.FC<SearchProps> = (props) => {
 
     if (error) {
         return (
-            <div className='searchPage'>
+            <div className={style.searchPage}>
                 <span>Error: {error.message}</span>
             </div>
         );
     }
     if (!searchResults) {
         return (
-            <div className='searchPage'>
+            <div className={style.searchPage}>
                 <ReactLoading color='#FF9D00' type={'bubbles'} />
             </div>
         );
     }
     return (
-        <div className='searchPage'>
+        <div className={style.searchPage}>
             Search: {props.match.params.searchQuery}
-            <div className='songs'>
+            <div className={style.songs}>
                 {searchResults.map((song: Song) => {
                     return (
                         <SongBlock
@@ -67,6 +69,7 @@ const SearchView: React.FC<SearchProps> = (props) => {
                             }
                             playSong={playSong}
                             key={song.id}
+                            className={style.songBlock}
                         />
                     );
                 })}

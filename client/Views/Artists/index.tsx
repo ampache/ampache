@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Artist, getArtists } from '~logic/Artist';
 import { User } from '~logic/User';
 import AmpacheError from '~logic/AmpacheError';
-import ArtistDisplay from '~components/ArtistDisplay';
+import ArtistDisplay from '~components/ArtistDisplay/';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
+
+import style from './index.module.styl';
 
 interface ArtistsViewProps {
     user: User;
@@ -27,21 +29,21 @@ const ArtistsView: React.FC<ArtistsViewProps> = (props: ArtistsViewProps) => {
 
     if (error) {
         return (
-            <div className='artistsPage'>
+            <div className={style.artistsPage}>
                 <span>Error: {error.message}</span>
             </div>
         );
     }
     if (!artists) {
         return (
-            <div className='artistsPage'>
+            <div className={style.artistsPage}>
                 <ReactLoading color='#FF9D00' type={'bubbles'} />
             </div>
         );
     }
     return (
-        <div className='artistsPage'>
-            <div className='details'>
+        <div className={style.artistsPage}>
+            <div className={style.details}>
                 {/*<div className='imageContainer'>*/}
                 {/*    <img*/}
                 {/*        src={this.state.theArtist.art}*/}
@@ -51,10 +53,14 @@ const ArtistsView: React.FC<ArtistsViewProps> = (props: ArtistsViewProps) => {
                 {/*Name: {this.state.theArtist.name}*/}
             </div>
             <h1>Artists</h1>
-            <div className='artists'>
+            <div className={style.artists}>
                 {artists.map((theArtist) => {
                     return (
-                        <ArtistDisplay artist={theArtist} key={theArtist.id} />
+                        <ArtistDisplay
+                            artist={theArtist}
+                            key={theArtist.id}
+                            className={style.artistDisplayContainer}
+                        />
                     );
                 })}
             </div>

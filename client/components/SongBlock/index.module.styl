@@ -1,8 +1,11 @@
+@import "~/stylus/color.styl"
+
 .songBlock
   display flex
   width 450px
   height 90px
   cursor pointer
+  border 1px solid transparent
   img
     width 20%
   &:hover
@@ -19,5 +22,11 @@
         clear both
         float left
         color inherit
-        &:hover
+        &:hover, &:focus
           color linkHoverColor
+  &.playing
+    color currentlyPlayingColor
+  &:focus
+    border 1px solid linkHoverColor
+    &:before
+      opacity 0.5

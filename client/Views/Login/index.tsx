@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import logo from '~images/ampache-dark.png';
 import AmpacheError from '~logic/AmpacheError';
 
+import style from './index.module.styl';
+
 interface LoginProps {
     handleLogin: (
         apiKey: string,
@@ -22,9 +24,9 @@ const LoginView: React.FC<LoginProps> = (props) => {
     };
 
     return (
-        <div className='loginPage'>
+        <div className={style.loginPage}>
             <div>{error?.message}</div>
-            <img src={logo} className='logo' alt='Ampache Logo' />
+            <img src={logo} className={style.logo} alt='Ampache Logo' />
             <form onSubmit={handleSubmit}>
                 <label htmlFor='username'>Username</label>
                 <input
@@ -43,7 +45,7 @@ const LoginView: React.FC<LoginProps> = (props) => {
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                 />
-                <button className='submit'>Submit</button>
+                <button className={style.submit}>Submit</button>
             </form>
         </div>
     );

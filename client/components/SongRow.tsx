@@ -45,6 +45,7 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                 }
                 {...bindTrigger}
                 onClick={props.startPlaying}
+                tabIndex={1}
             >
                 <span
                     className='verticalMenu'
