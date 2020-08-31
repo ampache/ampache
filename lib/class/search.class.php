@@ -587,18 +587,20 @@ class Search extends playlist_object
         }
         $this->type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs);
 
-        $metadataFields          = array();
-        $metadataFieldRepository = new MetadataField();
-        foreach ($metadataFieldRepository->findAll() as $metadata) {
-            $metadataFields[$metadata->getId()] = $metadata->getName();
+        if (AmpConfig::get('enable_custom_metadata')) {
+            $metadataFields = array();
+            $metadataFieldRepository = new MetadataField();
+            foreach ($metadataFieldRepository->findAll() as $metadata) {
+                $metadataFields[$metadata->getId()] = $metadata->getName();
+            }
+            $this->types[] = array(
+                'name' => 'metadata',
+                'label' => T_('Metadata'),
+                'type' => 'multiple',
+                'subtypes' => $metadataFields,
+                'widget' => array('subtypes', array('input', 'text'))
+            );
         }
-        $this->types[] = array(
-            'name' => 'metadata',
-            'label' => T_('Metadata'),
-            'type' => 'multiple',
-            'subtypes' => $metadataFields,
-            'widget' => array('subtypes', array('input', 'text'))
-        );
     }
 
     /**
@@ -639,7 +641,7 @@ class Search extends playlist_object
         }
         $this->type_select('other_user', T_('Another User'), 'user_numeric', $users);
 
-        $this->type_boolean('has image', T_('Local Image'));
+        $this->type_boolean('has_image', T_('Local Image'));
         $this->type_numeric('image width', T_('Image Width'));
         $this->type_numeric('image height', T_('Image Height'));
     } // artisttypes
@@ -692,7 +694,7 @@ class Search extends playlist_object
         }
         $this->type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs);
 
-        $this->type_boolean('has image', T_('Local Image'));
+        $this->type_boolean('has_image', T_('Local Image'));
         $this->type_numeric('image width', T_('Image Width'));
         $this->type_numeric('image height', T_('Image Height'));
     } // albumtypes
@@ -1398,6 +1400,7 @@ class Search extends playlist_object
                     }
                     break;
                 case 'has image':
+                case 'has_image':
                     $where[]            = ($sql_match_operator == '1') ? "`has_image`.`object_id` IS NOT NULL" : "`has_image`.`object_id` IS NULL";
                     $table['has_image'] = "LEFT JOIN (SELECT `object_id` from `image` WHERE `object_type` = 'album') as `has_image` ON `album`.`id` = `has_image`.`object_id`";
                     break;
@@ -1545,6 +1548,7 @@ class Search extends playlist_object
                         "AND `favorite_artist_$userid`.`object_type` = 'artist' " : ' ';
                     break;
                 case 'has image':
+                case 'has_image':
                     $where[]            = ($sql_match_operator == '1') ? "`has_image`.`object_id` IS NOT NULL" : "`has_image`.`object_id` IS NULL";
                     $table['has_image'] = "LEFT JOIN (SELECT `object_id` from `image` WHERE `object_type` = 'artist') as `has_image` ON `artist`.`id` = `has_image`.`object_id`";
                     break;
