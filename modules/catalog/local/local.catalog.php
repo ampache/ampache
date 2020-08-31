@@ -321,7 +321,6 @@ class Catalog_local extends Catalog
      */
     public function add_file($full_file, $options, $counter = 0)
     {
-        debug_event('local.catalog', "add_file: $full_file", 5);
         // Ensure that we've got our cache
         $this->_create_filecache();
 
@@ -332,7 +331,7 @@ class Catalog_local extends Catalog
             return false;
         }
 
-        // Incase this is the second time through clear this variable
+        // In case this is the second time through clear this variable
         // if it was set the day before
         unset($failed_check);
 
