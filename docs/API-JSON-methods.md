@@ -117,6 +117,7 @@ Refer to the [Advanced Search](API-advanced-search.md) page for details about cr
     * operator = (string) 'and'|'or' (whether to match one rule or all)
     * rules = (array) = [[rule_1,rule_1_operator,rule_1_input], [rule_2,rule_2_operator,rule_2_input], [etc]]
     * type = (string) 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video'
+    * random = (integer) 0|1 (random order of results; default to 0)
     * offset = (integer)
     * limit' = (integer)
 
