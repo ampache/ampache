@@ -1,9 +1,6 @@
 <?php
-
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,25 +20,11 @@ declare(strict_types=1);
  *
  */
 
-/**
- * This file creates and initializes the central DI-Container
- */
-namespace Ampache\Config;
+namespace Ampache\Module\Authentication\Authenticator;
 
-use DI\ContainerBuilder;
-use function DI\factory;
+interface AuthenticatorInterface
+{
+    public function auth(string $username, string $password): array;
 
-$builder = new ContainerBuilder();
-$builder->addDefinitions([
-    ConfigContainerInterface::class => factory(static function (): ConfigContainerInterface {
-        return new ConfigContainer(AmpConfig::get_all());
-    }),
-]);
-$builder->addDefinitions(
-    require_once __DIR__ . '/../Application/service_definition.php',
-    require_once __DIR__ . '/../Module/Util/service_definition.php',
-    require_once __DIR__ . '/../Module/WebDav/service_definition.php',
-    require_once __DIR__ . '/../Module/Authentication/service_definition.php',
-);
-
-return $builder->build();
+    public function postAuth(): ?array;
+}

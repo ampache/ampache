@@ -22,35 +22,36 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Module\WebDav;
+namespace Ampache\Module\Authentication\Authenticator;
 
-use Ampache\Module\Authentication\AuthenticationManagerInterface;
-use Sabre\DAV;
-
-/**
- * This class wrap Ampache albums and artist to WebDAV directories.
- */
-final class WebDavAuth extends DAV\Auth\Backend\AbstractBasic
+final class PamAuthenticator implements AuthenticatorInterface
 {
-    protected $realm = 'Ampache';
+    public function auth(string $username, string $password): array
+    {
+        $results = [];
+        if (!function_exists('pam_auth')) {
+            $results['success'] = false;
+            $results['error']   = 'The PAM PHP module is not installed';
 
-    private AuthenticationManagerInterface $authenticationManager;
+            return $results;
+        }
 
-    public function __construct(
-        AuthenticationManagerInterface $authenticationManager
-    ) {
-        $this->authenticationManager = $authenticationManager;
+        $password = scrub_in($password);
+
+        if (pam_auth($username, $password)) {
+            $results['success']  = true;
+            $results['type']     = 'pam';
+            $results['username'] = $username;
+        } else {
+            $results['success'] = false;
+            $results['error']   = 'PAM login attempt failed';
+        }
+
+        return $results;
     }
 
-    /**
-     * @param $username
-     * @param $password
-     * @return mixed
-     */
-    protected function validateUserPass($username, $password)
+    public function postAuth(): ?array
     {
-        $auth = $this->authenticationManager->login($username, $password, true);
-
-        return $auth['success'];
+        return null;
     }
 }

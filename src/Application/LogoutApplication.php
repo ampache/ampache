@@ -2,8 +2,8 @@
 
 declare(strict_types=0);
 
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\Authorization\Auth;
+use Ampache\Module\Authentication\AuthenticationManagerInterface;
 
 /**
  * This is the logout page. It kills any cookies you have in your browser,
@@ -35,18 +35,22 @@ use Ampache\Module\Authorization\Auth;
  */
 final class LogoutApplication implements ApplicationInterface
 {
-    private $configContainer;
+    private ConfigContainerInterface $configContainer;
+
+    private AuthenticationManagerInterface $authenticationManager;
 
     public function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        AuthenticationManagerInterface $authenticationManager
     ) {
-        $this->configContainer = $configContainer;
+        $this->configContainer       = $configContainer;
+        $this->authenticationManager = $authenticationManager;
     }
     public function run(): void
     {
         // To end a legitimate session, just call logout.
         setcookie($this->configContainer->getSessionName() . '_remember', null, -1);
 
-        Auth::logout('', false);
+        $this->authenticationManager->logout('', false);
     }
 }

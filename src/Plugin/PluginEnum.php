@@ -24,41 +24,6 @@ declare(strict_types=1);
 
 namespace Ampache\Plugin;
 
-use Ampache\Plugin\Ampache7digital;
-use Ampache\Plugin\AmpacheAmazon;
-use Ampache\Plugin\AmpacheBitly;
-use Ampache\Plugin\AmpacheCatalogFavorites;
-use Ampache\Plugin\Ampachechartlyrics;
-use Ampache\Plugin\AmpacheDiscogs;
-use Ampache\Plugin\AmpacheFacebook;
-use Ampache\Plugin\AmpacheFlattr;
-use Ampache\Plugin\Ampacheflickr;
-use Ampache\Plugin\AmpacheFriendsTimeline;
-use Ampache\Plugin\AmpacheGoogleAnalytics;
-use Ampache\Plugin\AmpacheGoogleMaps;
-use Ampache\Plugin\AmpacheGravatar;
-use Ampache\Plugin\AmpacheHeadphones;
-use Ampache\Plugin\AmpacheLastfm;
-use Ampache\Plugin\AmpacheLibravatar;
-use Ampache\Plugin\Ampachelibrefm;
-use Ampache\Plugin\Ampachelistenbrainz;
-use Ampache\Plugin\Ampachelyricwiki;
-use Ampache\Plugin\AmpacheMatomo;
-use Ampache\Plugin\AmpacheMusicBrainz;
-use Ampache\Plugin\AmpacheOmdb;
-use Ampache\Plugin\AmpachePaypal;
-use Ampache\Plugin\AmpachePiwik;
-use Ampache\Plugin\AmpacheRSSView;
-use Ampache\Plugin\AmpacheShoutHome;
-use Ampache\Plugin\AmpacheStreamBandwidth;
-use Ampache\Plugin\AmpacheStreamHits;
-use Ampache\Plugin\AmpacheStreamTime;
-use Ampache\Plugin\AmpacheTheaudiodb;
-use Ampache\Plugin\AmpacheTmdb;
-use Ampache\Plugin\AmpacheTvdb;
-use Ampache\Plugin\AmpacheTwitter;
-use Ampache\Plugin\AmpacheYourls;
-
 /**
  * This class contains informations about plugins
  */

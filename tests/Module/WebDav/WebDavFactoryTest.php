@@ -24,18 +24,28 @@ declare(strict_types=1);
 
 namespace Ampache\Module\WebDav;
 
+use Ampache\Module\Authentication\AuthenticationManagerInterface;
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery\MockInterface;
 use Sabre\DAV\Auth\Plugin;
 use Sabre\DAV\Server;
 
 class WebDavFactoryTest extends MockeryTestCase
 {
+    /** @var AuthenticationManagerInterface|MockInterface|null */
+    private $authenticationManager;
+
     /** @var WebDavFactory|null */
     private $subject;
 
     public function setUp(): void
     {
-        $this->subject = new WebDavFactory();
+        $this->authenticationManager = Mockery::mock(AuthenticationManagerInterface::class);
+
+        $this->subject = new WebDavFactory(
+            $this->authenticationManager
+        );
     }
 
     /**

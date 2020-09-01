@@ -25,10 +25,10 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api;
 
+use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Authorization\Auth;
 use Ampache\Module\System\Core;
 use Ampache\Model\Preference;
 use Ampache\Module\Api\Subsonic_Api;
@@ -37,6 +37,14 @@ use Ampache\Model\User;
 
 final class SubsonicApplication implements ApplicationInterface
 {
+    private AuthenticationManagerInterface $authenticationManager;
+
+    public function __construct(
+        AuthenticationManagerInterface $authenticationManager
+    ) {
+        $this->authenticationManager = $authenticationManager;
+    }
+
     public function run(): void
     {
         if (!AmpConfig::get('subsonic_backend')) {
@@ -95,7 +103,10 @@ final class SubsonicApplication implements ApplicationInterface
         $password = Subsonic_Api::decrypt_password($password);
 
         // Check user authentication
-        $auth = Auth::login($user, $password, true, $token, $salt);
+        $auth = $this->authenticationManager->tokenLogin($user, $token, $salt);
+        if ($auth === []) {
+            $auth = $this->authenticationManager->login($user, $password, true);
+        }
         if (!$auth['success']) {
             debug_event('rest/index', 'Invalid authentication attempt to Subsonic API for user [' . $user . ']', 3);
             ob_end_clean();

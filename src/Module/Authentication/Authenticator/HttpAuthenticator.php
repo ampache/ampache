@@ -22,35 +22,32 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Module\WebDav;
+namespace Ampache\Module\Authentication\Authenticator;
 
-use Ampache\Module\Authentication\AuthenticationManagerInterface;
-use Sabre\DAV;
+use Ampache\Module\System\Core;
 
-/**
- * This class wrap Ampache albums and artist to WebDAV directories.
- */
-final class WebDavAuth extends DAV\Auth\Backend\AbstractBasic
+final class HttpAuthenticator implements AuthenticatorInterface
 {
-    protected $realm = 'Ampache';
+    public function auth(string $username, string $password): array
+    {
+        unset($password);
+        $results = array();
+        if (Core::get_server('REMOTE_USER') == $username || Core::get_server('HTTP_REMOTE_USER') == $username) {
+            $results['success']  = true;
+            $results['type']     = 'http';
+            $results['username'] = $username;
+            $results['name']     = $username;
+            $results['email']    = '';
+        } else {
+            $results['success'] = false;
+            $results['error']   = 'HTTP auth login attempt failed';
+        }
 
-    private AuthenticationManagerInterface $authenticationManager;
-
-    public function __construct(
-        AuthenticationManagerInterface $authenticationManager
-    ) {
-        $this->authenticationManager = $authenticationManager;
+        return $results;
     }
 
-    /**
-     * @param $username
-     * @param $password
-     * @return mixed
-     */
-    protected function validateUserPass($username, $password)
+    public function postAuth(): ?array
     {
-        $auth = $this->authenticationManager->login($username, $password, true);
-
-        return $auth['success'];
+        return null;
     }
 }

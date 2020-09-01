@@ -27,12 +27,13 @@ namespace Ampache\Config;
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 use Ampache\Model\Preference;
 use Ampache\Model\User;
-use Ampache\Module\Authorization\Auth;
+use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Module\System\Update;
 use Ampache\Module\Util\Ui;
+use Psr\Container\ContainerInterface;
 
 // Use output buffering, this gains us a few things and
 // fixes some CSS issues
@@ -128,6 +129,7 @@ $results = Preference::fix_preferences($results);
 
 AmpConfig::set_by_array($results, true);
 
+/** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/Bootstrap.php';
 
 // Set a new Error Handler
@@ -153,12 +155,14 @@ set_memory_limit($results['memory_limit']);
 
 /**** END Set PHP Vars ****/
 
+
 // If we want a session
 if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
+    $auth = $dic->get(AuthenticationManagerInterface::class);
     // Verify their session
     if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
         if (!Session::auth_remember()) {
-            Auth::logout($_COOKIE[AmpConfig::get('session_name')]);
+            $auth->logout($_COOKIE[AmpConfig::get('session_name')]);
 
             return false;
         }
@@ -172,7 +176,7 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
 
     // If the user ID doesn't exist deny them
     if (!Core::get_global('user')->id && !AmpConfig::get('demo_mode')) {
-        Auth::logout(session_id());
+        $auth->logout(session_id());
 
         return false;
     }
@@ -206,7 +210,7 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
             $GLOBALS['user']->access   = (int) ($auth['access']);
         }
         if (!Core::get_global('user')->id && !AmpConfig::get('demo_mode')) {
-            Auth::logout(session_id());
+            $auth->logout(session_id());
 
             return false;
         }

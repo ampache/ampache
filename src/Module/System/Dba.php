@@ -30,15 +30,12 @@ use PDOException;
 use PDOStatement;
 
 /**
- * Ampache\Module\System\Dba Class
- *
  * This is the database abstraction class
  * It duplicates the functionality of mysql_???
  * with a few exceptions, the row and assoc will always
  * return an array, simplifying checking on the far end
  * it will also auto-connect as needed, and has a default
  * database simplifying queries in most cases.
- *
  */
 class Dba
 {

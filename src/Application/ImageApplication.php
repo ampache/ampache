@@ -2,8 +2,8 @@
 
 declare(strict_types=0);
 
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -25,10 +25,10 @@ declare(strict_types=0);
 
 namespace Ampache\Application;
 
+use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
-use Ampache\Module\Authorization\Auth;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\System\Session;
@@ -44,17 +44,25 @@ final class ImageApplication implements ApplicationInterface
 {
     private Horde_Browser $browser;
 
+    private AuthenticationManagerInterface $authenticationManager;
+
     public function __construct(
-        Horde_Browser $browser
+        Horde_Browser $browser,
+        AuthenticationManagerInterface $authenticationManager
     ) {
-        $this->browser = $browser;
+        $this->browser               = $browser;
+        $this->authenticationManager = $authenticationManager;
     }
 
     public function run(): void
     {
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
             // Check to see if they've got an interface session or a valid API session, if not GTFO
-            $token_check = Auth::token_check(Core::get_request('u'), Core::get_request('t'), Core::get_request('s'));
+            $token_check = $this->authenticationManager->tokenLogin(
+                Core::get_request('u'),
+                Core::get_request('t'),
+                Core::get_request('s')
+            );
             if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')]) && !Session::exists('api', Core::get_request('auth')) && !empty($token_check)) {
                 $auth = (Core::get_request('auth') !== '') ? Core::get_request('auth') : Core::get_request('t');
                 debug_event('image', 'Access denied, checked cookie session:' . $_COOKIE[AmpConfig::get('session_name')] . ' and auth:' . $auth, 2);

@@ -1,9 +1,6 @@
 <?php
-
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,25 +20,30 @@ declare(strict_types=1);
  *
  */
 
-/**
- * This file creates and initializes the central DI-Container
- */
-namespace Ampache\Config;
+declare(strict_types=1);
 
-use DI\ContainerBuilder;
-use function DI\factory;
+namespace Ampache\Module\Authentication;
 
-$builder = new ContainerBuilder();
-$builder->addDefinitions([
-    ConfigContainerInterface::class => factory(static function (): ConfigContainerInterface {
-        return new ConfigContainer(AmpConfig::get_all());
-    }),
-]);
-$builder->addDefinitions(
-    require_once __DIR__ . '/../Application/service_definition.php',
-    require_once __DIR__ . '/../Module/Util/service_definition.php',
-    require_once __DIR__ . '/../Module/WebDav/service_definition.php',
-    require_once __DIR__ . '/../Module/Authentication/service_definition.php',
-);
+interface AuthenticationManagerInterface
+{
+    public function login(
+        string $username,
+        string $password,
+        bool $allow_ui = false
+    ): array;
 
-return $builder->build();
+    public function postAuth(string $method): ?array;
+
+    public function tokenLogin(
+        string $username,
+        string $token,
+        string $salt
+    ): array;
+
+    /**
+     * This is called when you want to log out and nuke your session.
+     * This is the function used for the Ajax logouts, if no id is passed
+     * it tries to find one from the session,
+     */
+    public function logout(string $key = '', bool $relogin = true): void;
+}

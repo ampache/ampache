@@ -25,10 +25,10 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Playback;
 
+use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Authorization\Auth;
 use Ampache\Model\Channel;
 use Ampache\Module\System\Core;
 use Ampache\Model\Preference;
@@ -37,6 +37,14 @@ use Ampache\Model\User;
 
 final class ChannelApplication implements ApplicationInterface
 {
+    private AuthenticationManagerInterface $authenticationManager;
+
+    public function __construct(
+        AuthenticationManagerInterface $authenticationManager
+    ) {
+        $this->authenticationManager = $authenticationManager;
+    }
+
     public function run(): void
     {
         ob_end_clean();
@@ -63,7 +71,7 @@ final class ChannelApplication implements ApplicationInterface
                 $htusername = Core::get_server('PHP_AUTH_USER');
                 $htpassword = Core::get_server('PHP_AUTH_PW');
 
-                $auth = Auth::login($htusername, $htpassword);
+                $auth = $this->authenticationManager->login($htusername, $htpassword);
                 debug_event('channel/index', 'Auth Attempt for ' . $htusername, 5);
                 if ($auth['success']) {
                     debug_event('channel/index', 'Auth SUCCESS', 3);

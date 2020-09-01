@@ -25,11 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Playback;
 
+use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Authorization\Auth;
 use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -53,10 +53,14 @@ final class PlayApplication implements ApplicationInterface
 {
     private Horde_Browser $browser;
 
+    private AuthenticationManagerInterface $authenticationManager;
+
     public function __construct(
-        Horde_Browser $browser
+        Horde_Browser $browser,
+        AuthenticationManagerInterface $authenticationManager
     ) {
-        $this->browser = $browser;
+        $this->browser               = $browser;
+        $this->authenticationManager = $authenticationManager;
     }
 
     public function run(): void
@@ -179,7 +183,7 @@ final class PlayApplication implements ApplicationInterface
                 $user_authenticated = true;
             }
         } elseif (!empty($username) && !empty($password)) {
-            $auth = Auth::login($username, $password);
+            $auth = $this->authenticationManager->login($username, $password);
             if ($auth['success']) {
                 $user            = User::get_from_username($auth['username']);
                 $GLOBALS['user'] = $user;
