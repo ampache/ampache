@@ -40,7 +40,7 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
         echo T_('Artists');
     } ?></td>
     <?php if (AmpConfig::get('label')) { ?>
-        <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'video') { ?>
+        <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'label') { ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=label"><?php echo T_('Labels'); ?></a> <?php
         } else {
             echo T_('Labels');
