@@ -22,6 +22,7 @@ If you choose to use utf8mb4 Ampache will convert your table engine to InnoDB to
 * Add 'Original Year', 'Release Type' to Album searches
 * Ping your active channels in cron.inc to keep the socket alive
 * Allow setting custom databse collation and charset without overwriting your changes
+* Put 'Labels' into search, browse headers and sidebar when enabled
 * NEW database options
   * rsstoken: Identify users by token when generating RSS feeds
 * NEW config options (config_version 45)

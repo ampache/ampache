@@ -24,32 +24,39 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
 <form id="search" name="search" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=<?php echo (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) ? scrub_out((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) : 'song'; ?>" enctype="multipart/form-data" style="Display:inline">
 <table class="tabledata">
     <tr id="search_location">
-        <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'song') {
-    ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=song"><?php echo T_('Songs'); ?></a><?php
-} else {
+    <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'song') { ?>
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=song"><?php echo T_('Songs'); ?></a><?php
+    } else {
         echo T_('Songs');
     } ?></td>
-        <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'album') {
-        ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=album"><?php echo T_('Albums'); ?></a><?php
+    <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'album') { ?>
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=album"><?php echo T_('Albums'); ?></a><?php
     } else {
         echo T_('Albums');
     } ?></td>
-        <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'artist') {
-        ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=artist"><?php echo T_('Artists'); ?></a><?php
+    <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'artist') { ?>
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=artist"><?php echo T_('Artists'); ?></a><?php
     } else {
         echo T_('Artists');
     } ?></td>
-        <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'playlist') {
-        ?><a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=playlist"><?php echo T_('Playlists'); ?></a><?php
-    } else {
-        echo T_('Playlists');
-    } ?></td>
+    <?php if (AmpConfig::get('label')) { ?>
+        <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'video') { ?>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=label"><?php echo T_('Labels'); ?></a> <?php
+        } else {
+            echo T_('Labels');
+        } ?></td>
+    <?php } ?>
+        <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'playlist') { ?>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=playlist"><?php echo T_('Playlists'); ?></a> <?php
+        } else {
+            echo T_('Playlists');
+        } ?></td>
     <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
         <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'video') { ?>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=video"><?php echo T_('Videos'); ?></a>
-        <?php } else {
-        echo T_('Videos');
-    } ?></td>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=video"><?php echo T_('Videos'); ?></a> <?php
+        } else {
+            echo T_('Videos');
+        } ?></td>
     <?php } ?>
     </tr>
 </table>
