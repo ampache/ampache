@@ -1294,7 +1294,7 @@ class Search extends playlist_object
                     $table['favorite'] .= (!strpos($table['favorite'], "favorite_album_$userid")) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
                         "FROM `user_flag` WHERE `user` = $userid) AS `favorite_album_$userid` " .
-                        "ON `song`.`id`=`favorite_album_$userid`.`object_id` " .
+                        "ON `album`.`id`=`favorite_album_$userid`.`object_id` " .
                         "AND `favorite_album_$userid`.`object_type` = 'album' " : ' ';
                     break;
                 case 'myrating':
@@ -1546,7 +1546,7 @@ class Search extends playlist_object
                     $table['favorite'] .= (!strpos($table['favorite'], "favorite_artist_$userid")) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
                         "FROM `user_flag` WHERE `user` = $userid) AS `favorite_artist_$userid` " .
-                        "ON `song`.`artist`=`favorite_artist_$userid`.`object_id` " .
+                        "ON `artist`.`id`=`favorite_artist_$userid`.`object_id` " .
                         "AND `favorite_artist_$userid`.`object_type` = 'artist' " : ' ';
                     break;
                 case 'has image':
