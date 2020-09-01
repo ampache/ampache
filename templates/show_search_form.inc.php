@@ -67,20 +67,20 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
                 <select name="limit">
                         <option value="0"><?php echo T_('Unlimited'); ?></option>
                         <option value="25" <?php if ((int) filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT) == 25) {
-        echo "selected=\"selected\"";
-    }?>>25</option>
+            echo "selected=\"selected\"";
+        }?>>25</option>
                         <option value="50" <?php if ((int) filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT) == 50) {
-        echo "selected=\"selected\"";
-    }?>>50</option>
+            echo "selected=\"selected\"";
+        }?>>50</option>
                         <option value="100" <?php if ((int) filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT) == 100) {
-        echo "selected=\"selected\"";
-    }?>>100</option>
+            echo "selected=\"selected\"";
+        }?>>100</option>
                         <option value="250" <?php if ((int) filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT) == 250) {
-        echo "selected=\"selected\"";
-    }?>>250</option>
+            echo "selected=\"selected\"";
+        }?>>250</option>
                         <option value="500" <?php if ((int) filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT) == 500) {
-        echo "selected=\"selected\"";
-    }?>>500</option>
+            echo "selected=\"selected\"";
+        }?>>500</option>
                 </select>
         </td>
     </tr>

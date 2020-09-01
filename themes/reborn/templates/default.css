@@ -976,6 +976,10 @@ table.tabledata thead .th-top {
     border-bottom: 1px solid;
 }
 
+table.tabledata thead th.cel_rating {
+    padding-left: 7px;
+}
+
 table.tabledata tfoot .th-bottom {
     border-top: 1px solid;
     display: none;
@@ -986,6 +990,7 @@ table.tabledata td {
     overflow: hidden;
     padding: 3px 10px 3px 0;
     word-wrap: break-word;
+    min-width: 50px;
 }
 
 table.tabledata tr:hover,
@@ -1059,6 +1064,10 @@ table.tabledata tbody .cel_action {
 
 table.tabledata tbody .cel_action_text {
     max-width: 100% !important;
+}
+
+table.tabledata tbody td.cel_counter {
+    text-align: center;
 }
 
 table.tabledata tbody td.cel_rating {
