@@ -1295,8 +1295,11 @@ class Search extends playlist_object
                 case 'favorite':
                     $where[] = "(`album`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $sql_match_operator '$input') " . "AND `favorite_album_$userid`.`user` = $userid " . "AND `favorite_album_$userid`.`object_type` = 'album'";
                     // flag once per user
-                    $table['favorite'] .= (!strpos($table['favorite'],
-                        "favorite_album_$userid")) ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " . "FROM `user_flag` WHERE `user` = $userid) AS `favorite_album_$userid` " . "ON `song`.`id`=`favorite_album_$userid`.`object_id` " . "AND `favorite_album_$userid`.`object_type` = 'album' " : ' ';
+                    $table['favorite'] .= (!strpos($table['favorite'], "favorite_album_$userid")) ?
+                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
+                        "FROM `user_flag` WHERE `user` = $userid) AS `favorite_album_$userid` " .
+                        "ON `album`.`id`=`favorite_album_$userid`.`object_id` " .
+                        "AND `favorite_album_$userid`.`object_type` = 'album' " : ' ';
                     break;
                 case 'myrating':
                 case 'artistrating':
@@ -1504,8 +1507,11 @@ class Search extends playlist_object
                 case 'favorite':
                     $where[] = "(`artist`.`name` $sql_match_operator '$input'  OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input') " . "AND `favorite_artist_$userid`.`user` = $userid " . "AND `favorite_artist_$userid`.`object_type` = 'artist'";
                     // flag once per user
-                    $table['favorite'] .= (!strpos($table['favorite'],
-                        "favorite_artist_$userid")) ? "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " . "FROM `user_flag` WHERE `user` = $userid) AS `favorite_artist_$userid` " . "ON `song`.`artist`=`favorite_artist_$userid`.`object_id` " . "AND `favorite_artist_$userid`.`object_type` = 'artist' " : ' ';
+                    $table['favorite'] .= (!strpos($table['favorite'], "favorite_artist_$userid")) ?
+                        "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
+                        "FROM `user_flag` WHERE `user` = $userid) AS `favorite_artist_$userid` " .
+                        "ON `artist`.`id`=`favorite_artist_$userid`.`object_id` " .
+                        "AND `favorite_artist_$userid`.`object_type` = 'artist' " : ' ';
                     break;
                 case 'has image':
                 case 'has_image':
