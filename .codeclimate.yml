@@ -47,6 +47,8 @@ plugins:
     checks:
       Controversial/CamelCaseMethodName:
         enabled: false
+      Controversial/CamelCasePropertyName:
+        enabled: false
       Controversial/CamelCaseVariableName:
         enabled: false
       CleanCode/StaticAccess:
@@ -55,3 +57,4 @@ plugins:
         enabled: false
   sonar-php:
     enabled: true
+
