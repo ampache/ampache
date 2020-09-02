@@ -33,7 +33,7 @@ ob_end_flush();
 $options = getopt("hn:f:mvcaguio");
 
 // catalog name and file are mandatory
-if (array_key_exists('h', $options) || (!array_key_exists('n', $options) && array_key_exists('f', $options))) {
+if (array_key_exists('h', $options) || (!array_key_exists('n', $options) && !array_key_exists('f', $options))) {
     usage();
 
     return false;
