@@ -19,6 +19,10 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 
 * get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
 
+### Fixed
+
+* Stop skips duplicating recent stat inserts
+
 ### API develop
 
 No Changes
