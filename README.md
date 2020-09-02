@@ -7,6 +7,7 @@
 
 **News:**
 
+* API documentation has been moved from the wiki to the [ampache.org](http://ampache.org/api/) website!
 * Develop **DATABASE CHANGES** You can now force a default collation and charset on your database. (Read the changelog!)
 * Get your docker images without sql using the new ampache/ampache:nosql image!
 * Develop branch now has a **mandatory** requirement of php-intl for date formatting.

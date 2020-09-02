@@ -8,23 +8,38 @@ Look here for the code to change your 'custom_datetime' string [(<http://usergui
 
 This means Ampache now **requires** php-intl module/dll to be enabled.
 
-**DATABASE CHANGES** You can now force a default collation and charset on your database.
-If you choose to use utf8mb4 Ampache will convert your table engine to InnoDB to handle the extra bytes.
-
 ### Added
 
 * php-intl is now required for translation of date formats into your locale
+* Generate rsstokens for each user allowing unique feed URLs
+* Allow setting custom databse collation and charset without overwriting your changes
+  * rsstoken: Identify users by token when generating RSS feeds
+
+### Changed
+
+* get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
+
+### API develop
+
+No Changes
+
+## Ampache 4.2.2-release
+
+**DATABASE CHANGES** You can now force a default collation and charset on your database.
+If you choose to use utf8mb4; Ampache will convert your table engine to InnoDB to handle the extra bytes.
+
+### Added
+
 * Numeric 'Played/Skipped ratio' added to search. (Set using (stream/skip)*100.)
   * ```> 0 & < 100```: Skipped more than played
   * ```100```: Equal plays and skips
   * ```> 100```: Played more than skipped
-* Generate rsstokens for each user allowing unique feed URLs
 * Add 'Original Year', 'Release Type' to Album searches
-* Ping your active channels in cron.inc to keep the socket alive
-* Allow setting custom databse collation and charset without overwriting your changes
+* Allow setting custom database collation and charset without overwriting your changes
+* Video search added to random.php
+* 'samesite=strict' on JS cookies
+* Translation updates (August 2020)
 * Put 'Labels' into search, browse headers and sidebar when enabled
-* NEW database options
-  * rsstoken: Identify users by token when generating RSS feeds
 * NEW config options (config_version 45)
   * database_charset: Set a default charset for your database
   * database_collation: Set a default collation for your database
@@ -37,16 +52,16 @@ If you choose to use utf8mb4 Ampache will convert your table engine to InnoDB to
 
 ### Changed
 
-* get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
-* stats.php: Show total 'Item Count'  on Statistics page instead of trying to shoehorn songs/videos/etc into different columns
+* stats.php: Show total 'Item Count' on Statistics page instead of trying to shoehorn songs/videos/etc into different columns
 * ampache.sql updated after about 4 years... no more updates on install!
 * Searching by "Rating (average)" now ignores private/public and always returns the average.
-* Hide '# Skipped' and 'Played/Skipped ratio' when 'Show # skipped' is Off
+* Hide searches for '# Skipped' and 'Played/Skipped ratio' when 'Show # skipped' is Off
 * Search items rearranged to try to match each other
-* Sort 'Playlist' and 'Smart Platlist' browse pages by name
+* Sort 'Playlist' and 'Smart Playlist' browse pages by name
 * Display the blankuser avatar in now playing if missing
-* Swap 'Random' and 'Playlists' in the sidebar (css order numbers)
+* Swap 'Random' and 'Playlists' in the sidebar (CSS order numbers)
 * Don't hide artist art when you disable lastfm_api_key in the config
+* Hide 'Metadata' search when 'enable_custom_metadata' is disabled
 
 ### Deprecated
 
@@ -71,12 +86,14 @@ If you choose to use utf8mb4 Ampache will convert your table engine to InnoDB to
 * Logic searching 'My Rating' includes unrated (0 Stars) in a better way
 * Captcha was not generated for registration
 * Enforce lowercase codec for live streams
+* Parsing integer search rules was overwriting index values
+* Handle empty XML on similar artist requests to last.fm
 
 ### Security
 
 Fix CVE-2020-15153 - Unauthenticated SQL injection in Ampache
 
-### API develop
+### API 4.2.2
 
 Minor bugfixes
 
@@ -84,9 +101,22 @@ Minor bugfixes
 
 * Api::advanced_search added parameter 'random' (0|1) to shuffle your searches
 
+### Changed
+
+* Remove spaces from advanced_search rule names. (Backwards compatible with old names)
+  * 'has image' => 'has_image'
+  * 'image height' => 'image_height'
+  * 'image width' => 'image_width'
+  * 'filename' => 'file' (Video search)
+
+### Deprecated
+
+* Search rules 'has image','image height', 'image width', 'filename'. (Removed in Ampache 5.0.0)
+
 ### Fixed
 
 * Api::stream, Api::download Api::playlist_generate 'format' parameter was overwritten with 'xml' or 'json'
+* Produce valid XML for playlist_generate using the 'id' format in XML
 
 ## 4.2.1-release
 
@@ -143,7 +173,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Add 250 for search form limits in the web UI. (Jump from 100 to 500 is pretty big)
 * Add Recently updated/added to search rules
 * Add regex searching to text fields. ([<https://mariadb.com/kb/en/regexp/>])
-  * Refer to the wiki for information about search rules. (<https://github.com/ampache/ampache/wiki/advanced-search>)
+  * Refer to the wiki for information about search rules. (<http://ampache.org/api/api-advanced-search>)
 * When labels are enabled, automatically generate and associate artists with their publisher/label tag values.
 * Enforced stat recording for videos. (podcasts and episodes to be added later)
 * Add tags (Genres) to "Anywhere" text searches.
@@ -382,7 +412,7 @@ Bump API version to 400003 (4.0.0 build 003)
 
 #### Added
 
-* user_numeric searches also available in the API. ([<https://github.com/ampache/ampache/wiki/XML-methods>])
+* user_numeric searches also available in the API. ([<http://ampache.org/api/api-xml-methods>])
 
 #### Changed
 
@@ -570,7 +600,7 @@ Notes about this release that can't be summed up in a log line
 
 #### Added
 
-* Documented the Ampache API [<https://github.com/ampache/ampache/wiki/XML-methods>]
+* Documented the Ampache API [<http://ampache.org/api/api-xml-methods>]
 * Include smartlists in the API playlist calls.
 * Authentication: allow sha256 encrypted apikey for auth
   * You must send an encrypted api key in the following fashion. (Hash key joined with username)
