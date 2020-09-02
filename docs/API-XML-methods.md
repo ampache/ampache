@@ -43,9 +43,7 @@ Destroy a session using the auth parameter.
 |------|------|-----------|-------:|
 |'auth'|string|(Session ID) returns version information and extends the session if passed|NO     |
 
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/goodbye.xml)
-
 
 ## url_to_song
 
@@ -83,11 +81,9 @@ ARTIST
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/get_indexes%20(artists).xml)
 
-
 ALBUM
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/get_indexes%20(albums).xml)
-
 
 PLAYLIST
 
@@ -234,48 +230,6 @@ This returns the songs of a specified album
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/album_songs.xml)
 
-## licenses
-
-* **NEW** in 4.2.0
-
-This returns the licenses based on the specified filter
-@param array $input
-
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |Value is Alpha Match for returned results, may be more than one letter/number|YES     |
-|'exact' |boolean|if true filter is exact rather then fuzzy|YES     |
-|'offset'|    |           |YES     |
-|'limit' |    |           |YES     |
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/licenses.xml)
-
-## license
-
-* **NEW** in 4.2.0
-
-This returns a single license based on UID
-@param array $input
-
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of license, returns license XML|NO      |
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/license.xml)
-
-## license_songs
-
-* **NEW** in 4.2.0
-
-This returns a list of songs based on the filter ID
-@param array $input
-
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of license, returns song XML|NO      |
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/license_songs.xml)
-
 ## tags
 
 This returns the tags (Genres) based on the specified filter
@@ -380,7 +334,6 @@ This returns playlists based on the specified filter
 |'update' |set_filter|ISO 8601 Date Format assumed filter method is newer then specified date, however [START]/[END] can be specified to receive only results updated between two dates|YES     |
 |'offset'|    |           |YES     |
 |'limit' |    |           |YES     |
-
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/playlists.xml)
 
@@ -549,7 +502,6 @@ Takes the file id with optional description and expires parameters.
 |'type'  |string|object_type|NO|
 |'description'|string|description (will be filled for you if empty)|YES|
 |'expires'|integer|days to keep active|YES|
-
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/share_create.xml)
 
@@ -1298,4 +1250,3 @@ Video XML Document -- Attention UIDs for video elements are non-unique against s
 </video>
 </root>
 ```
-

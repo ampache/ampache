@@ -120,6 +120,7 @@ Currently there is not a simple way to identify what metadata types you have sav
 |15             |is less than                     |
 
 To search a mixed type like metadata you must search using 4 rules.
+
 * Search rule 1 for band containing 'Prodigy', Search Rule 2 for bbm > 120
   * rule name (e.g. rule_1['metadata'], rule_2['metadata'])
   * rule operator (e.g. rule_1_operator[0], rule_2_operator[12])
@@ -139,4 +140,3 @@ To search a mixed type like metadata you must search using 4 rules.
     * random = (integer) 0|1 (random order of results; default to 0)
     * offset = (integer)
     * limit' = (integer)
-
