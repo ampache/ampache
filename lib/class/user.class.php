@@ -309,7 +309,7 @@ class User extends database_object
                 return User::get_from_username($results['username']);
             }
             // check for sha256 hashed apikey for client
-            // https://github.com/ampache/ampache/wiki/Ampache-API
+            // http://ampache.org/api/
             $sql        = "SELECT `id`, `apikey`, `username` FROM `user`";
             $db_results = Dba::read($sql);
             while ($row = Dba::fetch_assoc($db_results)) {

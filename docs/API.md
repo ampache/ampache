@@ -159,8 +159,8 @@ You can also pass it `limit=none` to overcome the `limit` limitation and return 
 
 For more in depth information regarding the different api servers you can view the following documentation pages.
 
-* [XML Documentation (develop)](API-XML-methods.md)
-* [JSON Documentation (develop)](API-JSON-methods.md)
+* [XML Documentation (develop)](http://ampache.org/api/api-xml-methods)
+* [JSON Documentation (develop)](http://ampache.org/api/api-json-methods)
 
 ### Non-Data Methods
 
@@ -188,7 +188,7 @@ For more in depth information regarding the different api servers you can view t
 * tag_songs
 * songs
 * song
-* [advanced_search](https://github.com/ampache/ampache/wiki/advanced-search-4-2-0)
+* [advanced_search](http://ampache.org/api/api-advanced-search)
 * stats
 * playlists
 * playlist
