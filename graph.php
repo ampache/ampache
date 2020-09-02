@@ -44,8 +44,8 @@ if (!Core::is_library_item($object_type)) {
     $object_type = null;
 }
 $object_id  = (int) ($_REQUEST['object_id']);
-$start_date = scrub_in($_REQUEST['start_date']);
-$end_date   = scrub_in($_REQUEST['end_date']);
+$start_date = (int) scrub_in($_REQUEST['start_date']);
+$end_date   = (int) scrub_in($_REQUEST['end_date']);
 $zoom       = (string) scrub_in($_REQUEST['zoom']);
 
 $width  = (int) ($_REQUEST['width']);

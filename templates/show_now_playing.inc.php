@@ -43,6 +43,9 @@ foreach ($results as $item) {
         }
         if (!$np_user->fullname) {
             $np_user->fullname = "Ampache User";
+        }
+        if (!$np_user->f_avatar_medium) {
+            $np_user->f_avatar_medium = '<img src="' . AmpConfig::get('web_path') . '/images/blankuser.png' . '" title="User Avatar" style="width: 64px; height: 64px;" />';
         } ?>
 <div class="np_row">
 <?php

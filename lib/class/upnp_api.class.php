@@ -360,17 +360,16 @@ class Upnp_Api
             case 'artists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_medias();
+                        $counts = Catalog::count_server();
                         $meta   = array(
                             'id' => $root . '/artists',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['artists'],
+                            'childCount' => $counts['artist'],
                             'dc:title' => T_('Artists'),
                             'upnp:class' => 'object.container',
                         );
                     break;
-
                     case 2:
                         $artist = new Artist($pathreq[1]);
                         if ($artist->id) {
@@ -380,21 +379,19 @@ class Upnp_Api
                     break;
                 }
             break;
-
             case 'albums':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_medias();
+                        $counts = Catalog::count_server();
                         $meta   = array(
                             'id' => $root . '/albums',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['albums'],
+                            'childCount' => $counts['album'],
                             'dc:title' => T_('Albums'),
                             'upnp:class' => 'object.container',
                         );
                     break;
-
                     case 2:
                         $album = new Album($pathreq[1]);
                         if ($album->id) {
@@ -404,21 +401,19 @@ class Upnp_Api
                     break;
                 }
             break;
-
             case 'songs':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_medias();
+                        $counts = Catalog::count_server();
                         $meta   = array(
                             'id' => $root . '/songs',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['songs'],
+                            'childCount' => $counts['song'],
                             'dc:title' => T_('Songs'),
                             'upnp:class' => 'object.container',
                         );
                     break;
-
                     case 2:
                         $song = new Song($pathreq[1]);
                         if ($song->id) {
@@ -428,21 +423,19 @@ class Upnp_Api
                     break;
                 }
             break;
-
             case 'playlists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_medias();
+                        $counts = Catalog::count_server();
                         $meta   = array(
                             'id' => $root . '/playlists',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['playlists'],
+                            'childCount' => $counts['playlist'],
                             'dc:title' => T_('Playlists'),
                             'upnp:class' => 'object.container',
                         );
                     break;
-
                     case 2:
                         $playlist = new Playlist($pathreq[1]);
                         if ($playlist->id) {
@@ -452,21 +445,19 @@ class Upnp_Api
                     break;
                 }
             break;
-
             case 'smartplaylists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_medias();
+                        $counts = Catalog::count_server();
                         $meta   = array(
                             'id' => $root . '/smartplaylists',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['smartplaylists'],
+                            'childCount' => $counts['smartplaylist'],
                             'dc:title' => T_('Smart Playlists'),
                             'upnp:class' => 'object.container',
                         );
                     break;
-
                     case 2:
                         $playlist = new Search($pathreq[1], 'song');
                         if ($playlist->id) {
@@ -476,21 +467,19 @@ class Upnp_Api
                     break;
                 }
             break;
-
             case 'live_streams':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_medias();
+                        $counts = Catalog::count_server();
                         $meta   = array(
                             'id' => $root . '/live_streams',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['live_streams'],
+                            'childCount' => $counts['live_stream'],
                             'dc:title' => T_('Radio Stations'),
                             'upnp:class' => 'object.container',
                         );
                     break;
-
                     case 2:
                         $radio = new Live_Stream($pathreq[1]);
                         if ($radio->id) {
@@ -500,21 +489,19 @@ class Upnp_Api
                     break;
                 }
             break;
-
             case 'podcasts':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_medias();
+                        $counts = Catalog::count_server();
                         $meta   = array(
                             'id' => $root . '/podcasts',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['podcasts'],
+                            'childCount' => $counts['podcast'],
                             'dc:title' => T_('Podcasts'),
                             'upnp:class' => 'object.container',
                         );
                     break;
-
                     case 2:
                         $podcast = new Podcast($pathreq[1]);
                         if ($podcast->id) {
@@ -522,7 +509,6 @@ class Upnp_Api
                             $meta = self::_itemPodcast($podcast, $root . '/podcasts');
                         }
                     break;
-
                     case 3:
                         $episode = new Podcast_Episode($pathreq[2]);
                         if ($episode->id !== null) {
@@ -532,7 +518,6 @@ class Upnp_Api
                     break;
                 }
             break;
-
             default:
                 $meta = array(
                     'id' => $root,
@@ -609,7 +594,6 @@ class Upnp_Api
                     break;
                 }
             break;
-
             case 'albums':
                 switch (count($pathreq)) {
                     case 1: // Get albums list
@@ -637,7 +621,6 @@ class Upnp_Api
                     break;
                 }
             break;
-
             case 'songs':
                 switch (count($pathreq)) {
                     case 1: // Get songs list
@@ -654,7 +637,6 @@ class Upnp_Api
                     break;
                 }
             break;
-
             case 'playlists':
                 switch (count($pathreq)) {
                     case 1: // Get playlists list
@@ -682,7 +664,6 @@ class Upnp_Api
                     break;
                 }
             break;
-
             case 'smartplaylists':
                 switch (count($pathreq)) {
                     case 1: // Get playlists list
@@ -710,7 +691,6 @@ class Upnp_Api
                     break;
                 }
             break;
-
             case 'live_streams':
                 switch (count($pathreq)) {
                     case 1: // Get radios list
@@ -724,7 +704,6 @@ class Upnp_Api
                     break;
                 }
             break;
-
             case 'podcasts':
                 switch (count($pathreq)) {
                     case 1: // Get podcasts list
@@ -749,7 +728,6 @@ class Upnp_Api
                     break;
                 }
             break;
-
             default:
                 $mediaItems[] = self::_musicMetadata('artists');
                 $mediaItems[] = self::_musicMetadata('albums');
@@ -800,7 +778,6 @@ class Upnp_Api
                             'upnp:class' => 'object.container',
                         );
                     break;
-
                     case 2:
                         $tvshow = new TVShow($pathreq[1]);
                         if ($tvshow->id) {
@@ -808,7 +785,6 @@ class Upnp_Api
                             $meta = self::_itemTVShow($tvshow, $root . '/tvshows');
                         }
                     break;
-
                     case 3:
                         $season = new TVShow_Season($pathreq[2]);
                         if ($season->id) {
@@ -816,7 +792,6 @@ class Upnp_Api
                             $meta = self::_itemTVShowSeason($season, $root . '/tvshows/' . $pathreq[1]);
                         }
                     break;
-
                     case 4:
                         $video = new TVShow_Episode($pathreq[3]);
                         if ($video->id) {
@@ -826,7 +801,6 @@ class Upnp_Api
                     break;
                 }
             break;
-
             case 'clips':
                 switch (count($pathreq)) {
                     case 1:
@@ -840,7 +814,6 @@ class Upnp_Api
                             'upnp:class' => 'object.container',
                         );
                     break;
-
                     case 2:
                         $video = new Clip($pathreq[1]);
                         if ($video->id) {
@@ -850,7 +823,6 @@ class Upnp_Api
                     break;
                 }
             break;
-
             case 'movies':
                 switch (count($pathreq)) {
                     case 1:
@@ -864,7 +836,6 @@ class Upnp_Api
                             'upnp:class' => 'object.container',
                         );
                     break;
-
                     case 2:
                         $video = new Movie($pathreq[1]);
                         if ($video->id) {
@@ -874,7 +845,6 @@ class Upnp_Api
                     break;
                 }
             break;
-
             case 'personal_videos':
                 switch (count($pathreq)) {
                     case 1:
@@ -888,7 +858,6 @@ class Upnp_Api
                             'upnp:class' => 'object.container',
                         );
                     break;
-
                     case 2:
                         $video = new Personal_Video($pathreq[1]);
                         if ($video->id) {
@@ -898,7 +867,6 @@ class Upnp_Api
                     break;
                 }
             break;
-
             default:
                 $meta = array(
                     'id' => $root,
@@ -971,7 +939,6 @@ class Upnp_Api
                     break;
                 }
             break;
-
             case 'clips':
                 switch (count($pathreq)) {
                     case 1: // Get clips list
@@ -984,7 +951,6 @@ class Upnp_Api
                     break;
                 }
             break;
-
             case 'movies':
                 switch (count($pathreq)) {
                     case 1: // Get clips list
@@ -997,7 +963,6 @@ class Upnp_Api
                     break;
                 }
             break;
-
             case 'personal_videos':
                 switch (count($pathreq)) {
                     case 1: // Get clips list
@@ -1010,7 +975,6 @@ class Upnp_Api
                     break;
                 }
             break;
-
             default:
                 $mediaItems[] = self::_videoMetadata('clips');
                 $mediaItems[] = self::_videoMetadata('tvshows');

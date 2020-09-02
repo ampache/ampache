@@ -93,11 +93,15 @@ class Catalog_local extends Catalog
      */
     public function install()
     {
+        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+
         $sql = "CREATE TABLE `catalog_local` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-            "`path` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
+            "`path` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
             "`catalog_id` INT( 11 ) NOT NULL" .
-            ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-        $db_results = Dba::query($sql);
+            ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        Dba::query($sql);
 
         return true;
     } // install
@@ -317,7 +321,6 @@ class Catalog_local extends Catalog
      */
     public function add_file($full_file, $options, $counter = 0)
     {
-        debug_event('local.catalog', "add_file: $full_file", 5);
         // Ensure that we've got our cache
         $this->_create_filecache();
 
@@ -328,7 +331,7 @@ class Catalog_local extends Catalog
             return false;
         }
 
-        // Incase this is the second time through clear this variable
+        // In case this is the second time through clear this variable
         // if it was set the day before
         unset($failed_check);
 
@@ -549,14 +552,14 @@ class Catalog_local extends Catalog
         set_time_limit(0);
 
         $stats         = self::get_stats($this->id);
-        $number        = $stats['videos'] + $stats['songs'];
+        $number        = $stats['items'];
         $total_updated = 0;
         $this->count   = 0;
 
         $this->update_last_update();
 
         foreach (array('video', 'song') as $media_type) {
-            $total = $stats[$media_type . 's']; // UGLY
+            $total = $stats['items'];
             if ($total == 0) {
                 continue;
             }
@@ -651,7 +654,7 @@ class Catalog_local extends Catalog
         $stats       = self::get_stats($this->id);
         $this->count = 0;
         foreach (array('video', 'song') as $media_type) {
-            $total = $stats[$media_type . 's']; // UGLY
+            $total = $stats['items'];
             if ($total == 0) {
                 continue;
             }

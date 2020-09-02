@@ -1,4 +1,4 @@
-# XML Methods 4.2.1
+# XML Methods Ampache 4.2.2
 
 Lets go through come calls and examples that you can do for each XML method.
 
@@ -110,7 +110,7 @@ You can pass multiple rules as well as joins to create in depth search results
 Rules must be sent in groups of 3 using an int (starting from 1) to designate which rules are combined.
 Use operator ('and'|'or') to choose whether to join or separate each rule when searching.
 
-Refer to the [Advanced Search](advanced-search) page for details about creating searches.
+Refer to the [Advanced Search](API-advanced-search.md) page for details about creating searches.
 
 @param array $input
 
@@ -120,6 +120,7 @@ Refer to the [Advanced Search](advanced-search) page for details about creating 
     * operator = (string) 'and'|'or' (whether to match one rule or all)
     * rules = (array) = [[rule_1,rule_1_operator,rule_1_input], [rule_2,rule_2_operator,rule_2_input], [etc]]
     * type = (string) 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video'
+    * random = (integer) 0|1 (random order of results; default to 0)
     * offset = (integer)
     * limit' = (integer)
 
@@ -235,7 +236,7 @@ This returns the songs of a specified album
 
 ## licenses
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 This returns the licenses based on the specified filter
 @param array $input
@@ -251,7 +252,7 @@ This returns the licenses based on the specified filter
 
 ## license
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 This returns a single license based on UID
 @param array $input
@@ -264,7 +265,7 @@ This returns a single license based on UID
 
 ## license_songs
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 This returns a list of songs based on the filter ID
 @param array $input
@@ -507,7 +508,7 @@ ID
 
 ## shares
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 This searches the shares and returns... shares
 @param array $input
@@ -523,7 +524,7 @@ This searches the shares and returns... shares
 
 ## share
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 Return shares by UID
 @param array $input
@@ -536,7 +537,7 @@ Return shares by UID
 
 ## share_create
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 Create a public url that can be used by anyone to stream media.
 Takes the file id with optional description and expires parameters.
@@ -554,7 +555,7 @@ Takes the file id with optional description and expires parameters.
 
 ## share_edit
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 Update the description and/or expiration date for an existing share.
 Takes the share id to update with optional description and expires parameters.
@@ -572,7 +573,7 @@ Takes the share id to update with optional description and expires parameters.
 
 ## share_delete
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 Delete an existing share.
 
@@ -585,7 +586,7 @@ Delete an existing share.
 
 ## get_similar
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 Return similar artist id's or similar song ids compared to the input filter
 @param array $input
@@ -667,7 +668,7 @@ ALBUM
 
 ## podcasts
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 Get information about podcasts
 @param array $input
@@ -680,7 +681,7 @@ Get information about podcasts
 
 ## podcast
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 Get the podcast from it's id.
 @param array $input
@@ -693,7 +694,7 @@ Get the podcast from it's id.
 
 ## podcast_create
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 Create a podcast that can be used by anyone to stream media.
 Takes the url and catalog parameters.
@@ -707,7 +708,7 @@ Takes the url and catalog parameters.
 
 ## podcast_edit
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 Update the description and/or expiration date for an existing podcast.
 Takes the podcast id to update with optional description and expires parameters.
@@ -721,7 +722,7 @@ Takes the podcast id to update with optional description and expires parameters.
 
 ## podcast_delete
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 Delete an existing podcast.
 @param array $input
@@ -734,7 +735,7 @@ Delete an existing podcast.
 
 ## podcast_episodes
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 This returns the episodes for a podcast
 @param array $input
@@ -747,7 +748,7 @@ This returns the episodes for a podcast
 
 ## podcast_episode
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 Get the podcast_episode from it's id.
 @param array $input
@@ -760,7 +761,7 @@ Get the podcast_episode from it's id.
 
 ## podcast_episode_delete
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 Delete an existing podcast_episode.
 @param array $input
@@ -829,7 +830,7 @@ Delete an existing user.
 
 ## licenses
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 This returns licenses based on the specified filter
 @param array $input
@@ -847,7 +848,7 @@ This returns licenses based on the specified filter
 
 ## license
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 This returns a single license
 @param array $input
@@ -860,7 +861,7 @@ This returns a single license
 
 ## license_songs
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 This returns the songs for a license
 @param array $input
@@ -980,7 +981,7 @@ Search for a song using text info and then record a play if found. This allows o
 
 ## catalogs
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 This searches the catalogs and returns... catalogs
 @param array $input
@@ -993,7 +994,7 @@ This searches the catalogs and returns... catalogs
 
 ## catalog
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 Return catalog by UID
 @param array $input
@@ -1020,7 +1021,7 @@ Kick off a catalog update or clean for the selected catalog
 
 ## catalog_file
 
-* **NEW** in 4.2.1
+* **NEW** in 4.2.0
 
 Perform actions on local catalog files.
 Single file versions of catalog add, clean, verify and remove (delete)
@@ -1297,3 +1298,4 @@ Video XML Document -- Attention UIDs for video elements are non-unique against s
 </video>
 </root>
 ```
+

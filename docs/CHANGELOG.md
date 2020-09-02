@@ -1,8 +1,103 @@
 # CHANGELOG
 
+## Ampache 4.2.2-release
+
+**DATABASE CHANGES** You can now force a default collation and charset on your database.
+If you choose to use utf8mb4; Ampache will convert your table engine to InnoDB to handle the extra bytes.
+
+### Added
+
+* Numeric 'Played/Skipped ratio' added to search. (Set using (stream/skip)*100.)
+  * ```> 0 & < 100```: Skipped more than played
+  * ```100```: Equal plays and skips
+  * ```> 100```: Played more than skipped
+* Add 'Original Year', 'Release Type' to Album searches
+* Allow setting custom database collation and charset without overwriting your changes
+* Video search added to random.php
+* 'samesite=strict' on JS cookies
+* Translation updates (August 2020)
+* Put 'Labels' into search, browse headers and sidebar when enabled
+* NEW config options (config_version 45)
+  * database_charset: Set a default charset for your database
+  * database_collation: Set a default collation for your database
+  * simple_user_mode: Don't allow users to edit their account values (used for demo sites that allow login)
+* NEW files
+  * bin/update_file.inc: Update your catalog when individual files are changed using inotifywait.sh
+  * bin/update_db.inc: Update your database collation, charset and table engine from the cli
+  * docs/examples/inotifywait.sh: script to use inotifywait and update_file.inc to update as file changes happen
+  * docs/examples/inotifywait.service: systemd example service for inotifywait.sh
+
+### Changed
+
+* stats.php: Show total 'Item Count' on Statistics page instead of trying to shoehorn songs/videos/etc into different columns
+* ampache.sql updated after about 4 years... no more updates on install!
+* Searching by "Rating (average)" now ignores private/public and always returns the average.
+* Hide searches for '# Skipped' and 'Played/Skipped ratio' when 'Show # skipped' is Off
+* Search items rearranged to try to match each other
+* Sort 'Playlist' and 'Smart Playlist' browse pages by name
+* Display the blankuser avatar in now playing if missing
+* Swap 'Random' and 'Playlists' in the sidebar (CSS order numbers)
+* Don't hide artist art when you disable lastfm_api_key in the config
+* Hide 'Metadata' search when 'enable_custom_metadata' is disabled
+
+### Deprecated
+
+* Drop version number from the release string in develop. ('4.3.0-develop' => 'develop')
+  * This should stop a bit of confusion when removing / adding requirements
+* The '-release' suffix in version number will be dropped for Ampache 5.0.0
+
+### Removed
+
+* Remove stat recording from channels
+* Don't reset the database charset and collation after each db update
+
+### Fixed
+
+* Fixed a few issues on the Statistics page
+  * Report 'Catalog Size' correctly for podcasts
+  * Report 'Item Count' correctly for podcasts and video catalogs
+* Searching albums for artist name
+* Mashup 'Newest' would incorrectly apply an offset missing the newest items
+* Search by 'Smart Playlist' rules fixed when added with other rules
+* Use LEFT JOIN instead of HAVING for search rules to allow more complicated lists
+* Logic searching 'My Rating' includes unrated (0 Stars) in a better way
+* Captcha was not generated for registration
+* Enforce lowercase codec for live streams
+* Parsing integer search rules was overwriting index values
+* Handle empty XML on similar artist requests to last.fm
+
+### Security
+
+Fix CVE-2020-15153 - Unauthenticated SQL injection in Ampache
+
+### API 4.2.2
+
+Minor bugfixes
+
+### Added
+
+* Api::advanced_search added parameter 'random' (0|1) to shuffle your searches
+
+### Changed
+
+* Remove spaces from advanced_search rule names. (Backwards compatible with old names)
+  * 'has image' => 'has_image'
+  * 'image height' => 'image_height'
+  * 'image width' => 'image_width'
+  * 'filename' => 'file' (Video search)
+
+### Deprecated
+
+* Search rules 'has image','image height', 'image width', 'filename'. (Removed in Ampache 5.0.0)
+
+### Fixed
+
+* Api::stream, Api::download Api::playlist_generate 'format' parameter was overwritten with 'xml' or 'json'
+* Produce valid XML for playlist_generate using the 'id' format in XML
+
 ## 4.2.1-release
 
-**NOTICE** Ampache 4.3.0 will require **php-intl** module/dll to be enabled.
+**NOTICE** Ampache 5.0.0 will require **php-intl** module/dll to be enabled.
 
 ### Added
 
@@ -106,7 +201,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Searches using numeric rules must use an integer. ('1 Star' => 1, '2 Stars' => 2, etc)
 * bin/delete_disabled.inc require -x to execute. (previously you needed to edit the file)
 
-#### Deprecated
+### Deprecated
 
 * Horde_Browser::getIPAddress(). Use Core::get_user_ip() instead.
 
@@ -201,7 +296,7 @@ API 5.0.0-release will be the first Ampache release to match the release string.
   * tracks = (string) comma-separated playlisttrack numbers matched to items in order //optional
 * Random albums will get songs for all disks if album_group enabled
 
-#### Deprecated
+### Deprecated
 
 * API Build number is depreciated (the last 3 digits of the api version)
   * API 5.0.0 will be released with a string version ("5.0.0-release")
@@ -414,7 +509,8 @@ Notes about this release that can't be summed up in a log line
   * Add: rating_browse_filter, rating_browse_minimum_stars - filter based on a star rating.
   * Add: send_full_stream - allow pushing the full track instead of segmenting
   * Add: github_force_branch - Allow any official Ampache git branch set in config
-  * Add: subsonic_stream_scrobble - set to false to force all caching to count as a download. This is to be used with the subsonic client set to scrobble. (Ampache will now scrobble to itself over subsonic.)
+  * Add: subsonic_stream_scrobble - set to false to force all caching to count as a download.
+    This is to be used with the subsonic client set to scrobble. (Ampache will now scrobble to itself over subsonic.)
   * Add: waveform_height, waveform_width - customize waveform size
   * Add: of_the_moment - set custom amount of albums/videos in "of the moment areas"
   * Add: use_now_playing_embedded, now_playing_refresh_limit, now_playing_css_file - Show a user forum tag "Now playing / last played"
@@ -428,7 +524,8 @@ Notes about this release that can't be summed up in a log line
 * Move some $_GET, POST, $_REQUEST calls to Core
 * HTML5 doctype across the board. (DOCTYPE html)
 * Lots of HTML and UI fixes courtesy of @kuzi-moto
-* If you are using charts/graphs there has been a change regarding c-pchart [chart-faq](https://github.com/ampache/ampache/wiki/chart-faq)
+* If you are using charts/graphs there has been a change regarding c-pchart
+  * [chart-faq](https://github.com/ampache/ampache/wiki/chart-faq)
 * Numerous catalog updates to allow data migration when updating file tags meaning faster tag updates/catalog verify! (Updating an album would update each file multiple times)
   * UserActivity::migrate, Userflag::migrate, Rating::migrate, Catalog::migrate,
   * Shoutbox::migrate, Recommendation::migrate, Tag::migrate, Share::migrate
@@ -510,8 +607,10 @@ Notes about this release that can't be summed up in a log line
 
 * Authentication: Require a handshake and generate unique sessions at all times
 * advanced_search
-  * 'is not' has been added shifting values down the list. (0=contains, 1=does not contain, 2=starts with, 3=ends with, 4=is, 5=is not, 6=sounds like, 7=does not sound like)
-  * rule_1['name'] is depreciated. Instead of multiple searches for the same thing rule_1'name' has been replaced with 'title' (I have put a temp workaround into the search rules to alleviate this change)
+  * 'is not' has been added shifting values down the list.
+    (0=contains, 1=does not contain, 2=starts with, 3=ends with, 4=is, 5=is not, 6=sounds like, 7=does not sound like)
+  * rule_1['name'] is depreciated. Instead of multiple searches for the same thing rule_1'name'
+    has been replaced with 'title' (I have put a temp workaround into the search rules to alleviate this change)
 * stats
   * allow songs|artists|albums (instead of just albums)
 * playlists
@@ -726,7 +825,8 @@ Notes about this release that can't be summed up in a log line
 * Added track number on streaming playlist (thanks Fondor1)
 * Fixed catalog export (thanks shellshocker)
 * Fixed file change detection
-* Improved XML API with more information and new functions (advanced_search, toggle_follow, last_shouts, rate, timeline, friends_timeline)
+* Improved XML API with more information and new functions
+  * (advanced_search, toggle_follow, last_shouts, rate, timeline, friends_timeline)
 * Fixed 'Next' button when browsing start offset is aligned to offset limit (thanks wagnered)
 * Fixed stream kill OS detection (thanks nan4k7)
 * Fixed calculate_art_size script to support storage on disk (thanks nan4k7)
@@ -1388,7 +1488,7 @@ Notes about this release that can't be summed up in a log line
 * Added caching to Video
 * Added Video calls to the API
 * Remove redundent code from Browse class by making it extend
-  nwe Query class
+  new Query class
 * Update Prototype to 1.6.0.3
 * Add Time range to advanced search
 * Add sorting to Video Browse

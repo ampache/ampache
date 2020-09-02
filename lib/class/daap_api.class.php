@@ -369,8 +369,8 @@ class Daap_Api
             $tlv = self::tlv('dmap.itemid', 1);
             $tlv .= self::tlv('dmap.persistentid', 1);
             $tlv .= self::tlv('dmap.itemname', 'Ampache');
-            $counts = Catalog::count_medias();
-            $tlv .= self::tlv('dmap.itemcount', $counts['songs']);
+            $counts = Catalog::count_server();
+            $tlv .= self::tlv('dmap.itemcount', $counts['song']);
             $tlv .= self::tlv('dmap.containercount', count(Playlist::get_playlists()));
             $tlv = self::tlv('dmap.listingitem', $tlv);
             $output .= self::tlv('dmap.listing', $tlv);
@@ -579,8 +579,8 @@ class Daap_Api
         $library .= self::tlv('dmap.persistentid', Daap_Api::BASE_LIBRARY);
         $library .= self::tlv('dmap.itemname', 'Music');
         $library .= self::tlv('daap.baseplaylist', 1);
-        $stats = Catalog::count_medias();
-        $library .= self::tlv('dmap.itemcount', $stats['songs']);
+        $counts = Catalog::count_server();
+        $library .= self::tlv('dmap.itemcount', $counts['song']);
 
         return self::tlv('dmap.listingitem', $library);
     }

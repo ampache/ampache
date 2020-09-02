@@ -31,7 +31,6 @@ It's easy to use a program like github desktop to compare between branches.
 * Create a zip package named "ampache-4.x.x_all.zip and add the entire ampache directory tree. (excluding git/development specific files)
 
 ```shell
-  cd ampache
   zip -r -q -u -9 --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml  --exclude=.tgitconfig --exclude=.travis.yml ../ampache-4.x.x_all.zip ./
 ```
 
@@ -57,8 +56,8 @@ md5sum ../ampache-4.x.x_all.zip
 ## Post release
 
 * Update develop from master **don't push**
-* Set the next version in init.php, (Release + 0.1.0 usually) update the changelog
-* Commit and push "Begin 4.3.0"
+* Set the next version in init.php back to 'develop' and update the changelog
+* Commit and push "Begin Ampache develop"
 
 ## Additional requirements
 
@@ -106,4 +105,12 @@ Build develop images and push to docker hub.
 git clone -b develop https://github.com/ampache/ampache-docker.git ampache-docker-develop/
 cd ampache-docker-develop
 docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/ampache:develop --push .
+```
+
+Build nosql images and push to docker hub.
+
+```bash
+git clone -b nosql https://github.com/ampache/ampache-docker.git ampache-docker-nosql/
+cd ampache-docker-nosql
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/ampache:nosql --push .
 ```

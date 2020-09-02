@@ -324,7 +324,7 @@ class Playlist extends playlist_object
     */
     public function get_total_duration()
     {
-        $songs  = self::get_songs();
+        $songs  = $this->get_songs();
         $idlist = '(' . implode(',', $songs) . ')';
         if ($idlist == '()') {
             return null;

@@ -55,7 +55,7 @@ function update_preferences($user_id = 0)
         $apply_to_all    = 'check_' . $data['name'];
         $new_level       = 'level_' . $data['name'];
         $pref_id         = $data['id'];
-        $value           = (string) scrub_in($_REQUEST[$name]);
+        $value           = scrub_in($_REQUEST[$name]);
 
         /* Some preferences require some extra checks to be performed */
         switch ($name) {
@@ -71,7 +71,7 @@ function update_preferences($user_id = 0)
                 unset($_REQUEST[$name]);
             } else {
                 if (preg_match('/md5_pass$/', $name)) {
-                    $value = md5($value);
+                    $value = md5((string) $value);
                 }
             }
         }

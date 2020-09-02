@@ -644,14 +644,13 @@ abstract class Catalog extends database_object
      */
     public static function get_stats($catalog_id = null)
     {
-        $results         = self::count_medias($catalog_id);
-        $results         = array_merge(User::count(), $results);
-        $results['tags'] = self::count_tags();
+        $counts         = ($catalog_id) ? self::count_catalog($catalog_id) : self::count_server();
+        $counts         = array_merge(User::count(), $counts);
+        $counts['tags'] = self::count_tags();
 
-        $hours = floor($results['time'] / 3600);
+        $counts['formatted_size'] = UI::format_bytes($counts['size']);
 
-        $results['formatted_size'] = UI::format_bytes($results['size']);
-
+        $hours = floor($counts['time'] / 3600);
         $days  = floor($hours / 24);
         $hours = $hours % 24;
 
@@ -660,9 +659,9 @@ abstract class Catalog extends database_object
         $time_text .= ", $hours ";
         $time_text .= nT_('hour', 'hours', $hours);
 
-        $results['time_text'] = $time_text;
+        $counts['time_text'] = $time_text;
 
-        return $results;
+        return $counts;
     }
 
     /**
@@ -738,75 +737,85 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * count_medias
+     * count_server
      *
      * This returns the current number of songs, videos, albums, and artists
-     * in this catalog.
-     * @param integer|null $catalog_id
+     * across all catalogs on the server
+     * @param bool $enabled
      * @return array
      */
-    public static function count_medias($catalog_id = null)
+    public static function count_server($enabled = false)
+    {
+        // tables with media items to count, song-related tables and the rest
+        $media_tables = array('song', 'video', 'podcast_episode');
+        $song_tables  = array('artist', 'album');
+        $list_tables  = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog');
+
+        $results = array();
+        $items   = '0';
+        $time    = '0';
+        $size    = '0';
+        foreach ($media_tables as $table) {
+            $enabled_sql = ($enabled && $table !== 'podcast_episode') ? " WHERE `$table`.`enabled`='1'" : '';
+            $sql         = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `$table`" . $enabled_sql;
+            $db_results  = Dba::read($sql);
+            $data        = Dba::fetch_row($db_results);
+            // save the object and add to the current size
+            $results[$table] = $data[0];
+            $items += $data[0];
+            $time += $data[1];
+            $size += $data[2];
+        }
+        // return the totals for all media tables
+        $results['items'] = $items;
+        $results['size']  = $size;
+        $results['time']  = $time;
+
+        foreach ($song_tables as $table) {
+            $sql        = "SELECT COUNT(DISTINCT(`$table`)) FROM `song`";
+            $db_results = Dba::read($sql);
+            $data       = Dba::fetch_row($db_results);
+            // save the object count
+            $results[$table] = $data[0];
+        }
+
+        foreach ($list_tables as $table) {
+            $sql        = "SELECT COUNT(`id`) FROM `$table`";
+            $db_results = Dba::read($sql);
+            $data       = Dba::fetch_row($db_results);
+            // save the object count
+            $results[$table] = $data[0];
+        }
+
+        return $results;
+    }
+
+    /**
+     * count_catalog
+     *
+     * This returns the current number of songs, videos, podcast_episodes in this catalog.
+     * @param integer $catalog_id
+     * @return array
+     */
+    public static function count_catalog($catalog_id)
     {
         $where_sql = $catalog_id ? 'WHERE `catalog` = ?' : '';
         $params    = $catalog_id ? array($catalog_id) : array();
+        $results   = array();
+        $catalog   = self::create_from_id($catalog_id);
 
-        $sql = 'SELECT COUNT(`id`), SUM(`time`), SUM(`size`) FROM `song` ' .
-            $where_sql;
-        $db_results = Dba::read($sql, $params);
-        $data       = Dba::fetch_row($db_results);
-        $songs      = $data[0];
-        $time       = $data[1];
-        $size       = $data[2];
-
-        $sql = 'SELECT COUNT(`id`), SUM(`time`), SUM(`size`) FROM `video` ' .
-            $where_sql;
-        $db_results = Dba::read($sql, $params);
-        $data       = Dba::fetch_row($db_results);
-        $videos     = $data[0];
-        $time += $data[1];
-        $size += $data[2];
-
-        $sql        = 'SELECT COUNT(DISTINCT(`album`)) FROM `song` ' . $where_sql;
-        $db_results = Dba::read($sql, $params);
-        $data       = Dba::fetch_row($db_results);
-        $albums     = $data[0];
-
-        $sql        = 'SELECT COUNT(DISTINCT(`artist`)) FROM `song` ' . $where_sql;
-        $db_results = Dba::read($sql, $params);
-        $data       = Dba::fetch_row($db_results);
-        $artists    = $data[0];
-
-        $sql            = 'SELECT COUNT(`id`) FROM `search`';
-        $db_results     = Dba::read($sql, $params);
-        $data           = Dba::fetch_row($db_results);
-        $smartplaylists = $data[0];
-
-        $sql        = 'SELECT COUNT(`id`) FROM `playlist`';
-        $db_results = Dba::read($sql, $params);
-        $data       = Dba::fetch_row($db_results);
-        $playlists  = $data[0];
-
-        $sql          = 'SELECT COUNT(`id`) FROM `live_stream`';
-        $db_results   = Dba::read($sql, $params);
-        $data         = Dba::fetch_row($db_results);
-        $live_streams = $data[0];
-
-        $sql          = 'SELECT COUNT(`id`) FROM `podcast`';
-        $db_results   = Dba::read($sql, $params);
-        $data         = Dba::fetch_row($db_results);
-        $podcasts     = $data[0];
-
-        $results                   = array();
-        $results['songs']          = $songs;
-        $results['videos']         = $videos;
-        $results['albums']         = $albums;
-        $results['artists']        = $artists;
-        $results['playlists']      = $playlists;
-        $results['smartplaylists'] = $smartplaylists;
-        $results['live_stream']    = $live_streams;
-        $results['podcasts']       = $podcasts;
-        $results['size']           = $size;
-        $results['time']           = $time;
+        if ($catalog->id) {
+            $table = self::get_table_from_type($catalog->gather_types);
+            if ($table == 'podcast_episode' && $catalog_id) {
+                $where_sql = "WHERE `podcast` IN ( SELECT `id` FROM `podcast` WHERE `catalog` = ?)";
+            }
+            $sql              = "SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`), 0) FROM `" . $table . "` " . $where_sql;
+            $db_results       = Dba::read($sql, $params);
+            $data             = Dba::fetch_row($db_results);
+            $results['items'] = $data[0];
+            $results['time']  = $data[1];
+            $results['size']  = $data[2];
+        }
 
         return $results;
     }
@@ -828,11 +837,9 @@ abstract class Catalog extends database_object
             case 'song':
                 $sql = "SELECT `song`.`id` as `id` FROM `song` WHERE `song`.`user_upload` = '" . $user_id . "'";
                 break;
-
             case 'album':
                 $sql = "SELECT `album`.`id` as `id` FROM `album` JOIN `song` ON `song`.`album` = `album`.`id` WHERE `song`.`user_upload` = '" . $user_id . "' GROUP BY `album`.`id`";
                 break;
-
             case 'artist':
             default:
                 $sql = "SELECT `artist`.`id` as `id` FROM `artist` JOIN `song` ON `song`.`artist` = `artist`.`id` WHERE `song`.`user_upload` = '" . $user_id . "' GROUP BY `artist`.`id`";
@@ -2099,6 +2106,32 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get_table_from_type
+     * @param string $gather_type
+     * @return string
+     */
+    public static function get_table_from_type($gather_type)
+    {
+        switch ($gather_type) {
+            case 'clip':
+            case 'tvshow':
+            case 'movie':
+            case 'personal_video':
+                $table = 'video';
+                break;
+            case 'podcast':
+                $table = 'podcast_episode';
+                break;
+            case 'music':
+            default:
+                $table = 'song';
+                break;
+        }
+
+        return $table;
+    }
+
+    /**
      * clean_empty_albums
      */
     public static function clean_empty_albums()
@@ -2651,7 +2684,6 @@ abstract class Catalog extends database_object
                     // flush output buffer
                 } // while result
                 echo xml_get_footer('itunes');
-
                 break;
             case 'csv':
                 echo "ID,Title,Artist,Album,Length,Track,Year,Date Added,Bitrate,Played,File\n";

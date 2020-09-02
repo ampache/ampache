@@ -44,8 +44,9 @@
 <?php
  }  // end if not account
 if (Core::get_request('tab') === 'account') {
-    $client = Core::get_global('user');
-    require AmpConfig::get('prefix') . UI::find_template('show_account.inc.php');
+    $client   = Core::get_global('user');
+    $template = (AmpConfig::get('simple_user_mode') && !Access::check('interface', 100)) ? 'show_account_simple.inc.php' : 'show_account.inc.php';
+    require AmpConfig::get('prefix') . UI::find_template($template);
 } ?>
 </form>
 

@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 44
+config_version = 45
 
 ; Allow you to hard code a default git branch for Ampache
 ; If you set this value the inbuilt updater will use this branch for updates.
@@ -77,6 +77,26 @@ database_username = username
 ; will not work (except if using socket authentication)
 ; DEFAULT: none
 database_password = password
+
+; Set a default charset for your database
+; Don't change this unless you understand how to BACKUP and RESTORE a database!
+;
+; Usually "utf8" or "utf8mb4". If you set "utf8mb4" as your charset
+; Ampache will change the storage engine on all tables to InnoDB
+; to support the extra character bytes needed in table KEYs
+; DEFAULT: "utf8"
+;database_charset = "utf8"
+
+; Set a default collation for your database
+; Don't change this unless you understand how to BACKUP and RESTORE a database!
+;
+; There are a ton of options but you'll probably want one of these.
+; "utf8_unicode_ci"        = Regular unicode (3 bytes per character)
+; "utf8mb4_unicode_ci"     = 4 bytes per character
+; "utf8mb4_unicode_520_ci" = Supports more characters and is based on UCA 5.2.0 weight keys
+;   http://www.unicode.org/Public/UCA/5.2.0/allkeys.txt
+; DEFAULT: "utf8_unicode_ci"
+;database_collation = "utf8_unicode_ci"
 
 
 ;#########################################################
@@ -457,6 +477,13 @@ sociable = "true"
 ; DEFAULT: "false"
 ;demo_mode = "false"
 
+; This options will turn on/off Simple User Mode
+; If simple_user_mode is true you can not edit your profile or make
+; changes to your account unless you are an admin
+; This is for shared accounts or simple sites like the ampache demo
+; DEFAULT: "false"
+;simple_user_mode = "false"
+
 ; Caching
 ; This turns the caching mechanisms on or off, due to a large number of
 ; problems with people with very large catalogs and low memory settings
@@ -635,7 +662,7 @@ wanted_types = "album,official"
 ; Channels
 ; Set this to true to enable channels and the
 ; possibility for users to create channels from playlists
-; DEFAULT: "true"
+; DEFAULT: "false"
 channel = "false"
 
 ; Live Streams
