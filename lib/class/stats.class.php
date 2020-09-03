@@ -179,7 +179,7 @@ class Stats
 
                 return true;
             }
-            // if you've recorded in less than 5 secons i don't believe you
+            // if you've recorded in less than 5 seconds i don't believe you
             if (($row['date'] < $time && $row['date'] > ($time - 5))) {
                 debug_event('stats.class', 'Too fast! Skipping {' . (string) $object_id . '} date: ' . (string) $time, 5);
 
@@ -697,7 +697,7 @@ class Stats
      * @param integer $count
      * @param integer $offset
      * @param integer $catalog
-     * @return array
+     * @return integer[]
      */
     public static function get_newest($type, $count = 0, $offset = 0, $catalog = 0)
     {
@@ -717,7 +717,7 @@ class Stats
         $items = array();
 
         while ($row = Dba::fetch_row($db_results)) {
-            $items[] = $row[0];
+            $items[] = (int) $row[0];
         } // end while results
 
         return $items;

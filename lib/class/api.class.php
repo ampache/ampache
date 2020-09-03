@@ -717,15 +717,15 @@ class Api
         if (!self::check_parameter($input, array('filter'), 'artist')) {
             return false;
         }
-        $uid     = scrub_in($input['filter']);
+        $uid     = array((int) scrub_in($input['filter']));
         $user    = User::get_from_username(Session::username($input['auth']));
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::artists(array($uid), $include, $user->id);
+                echo JSON_Data::artists($uid, $include, $user->id);
             break;
             default:
-                echo XML_Data::artists(array($uid), $include, $user->id);
+                echo XML_Data::artists($uid, $include, $user->id);
         }
         Session::extend($input['auth']);
 
@@ -3882,7 +3882,7 @@ class Api
         if (!self::check_parameter($input, array('id', 'type'), 'get_art')) {
             return false;
         }
-        $object_id = $input['id'];
+        $object_id = (int) $input['id'];
         $type      = $input['type'];
         $size      = $input['size'];
         $user      = User::get_from_username(Session::username($input['auth']));
@@ -3910,7 +3910,7 @@ class Api
         } elseif ($type == 'podcast') {
             $art = new Art($object_id, 'podcast');
         } elseif ($type == 'search') {
-            $smartlist = new Search($object_id . 'song', $user);
+            $smartlist = new Search($object_id, 'song', $user);
             $listitems = $smartlist->get_items();
             $item      = $listitems[array_rand($listitems)];
             $art       = new Art($item['object_id'], $item['object_type']);
