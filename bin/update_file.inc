@@ -134,7 +134,7 @@ while ($row = Dba::fetch_assoc($db_results)) {
         }
         if ($artadd == 1 && $file_id) {
             // Look for media art after adding new files
-            Catalog::gather_art_item($type, $file_id);
+            Catalog::gather_art_item($type, $file_id, true);
         }
     }
 }
