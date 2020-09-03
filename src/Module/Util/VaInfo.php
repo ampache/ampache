@@ -132,7 +132,7 @@ class VaInfo
             if (AmpConfig::get('mb_detect_order')) {
                 $mb_order = AmpConfig::get('mb_detect_order');
             } elseif (function_exists('mb_detect_order')) {
-                $mb_order = implode(", ", mb_detect_order());
+                $mb_order = (mb_detect_order()) ? implode(", ", mb_detect_order()) : 'auto';
             } else {
                 $mb_order = "auto";
             }
@@ -656,7 +656,7 @@ class VaInfo
     private function _get_plugin_tags()
     {
         $tag_order = $this->get_metadata_order();
-        if (!is_array($tag_order)) {
+        if (!empty($tag_order)) {
             $tag_order = array($tag_order);
         }
 

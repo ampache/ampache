@@ -82,8 +82,6 @@ ob_start("ob_html_strip",'1024',true);
 
 while ($row = Dba::fetch_assoc($db_results)) {
     $catalog = Catalog::create_from_id($row['id']);
-    /* HINT: File path */
-    printf(T_('Reading File: "%s"'), $catfile);
     ob_flush();
     echo "\n";
     if (!$catalog->id) {
@@ -113,8 +111,18 @@ while ($row = Dba::fetch_assoc($db_results)) {
             $media   = new Song($file_id);
             break;
     }
+    // deleted file
+    if (!is_file($catfile) && $catclean == 1) {
+        $catalog->clean_file($catfile, $type);
+        /* HINT: File path */
+        printf(T_('Removing File: "%s"'), $catfile);
+
+        return false;
+    }
     // existing files
     if (is_file($catfile) && Core::is_readable($catfile)) {
+        /* HINT: File path */
+        printf(T_('Reading File: "%s"'), $catfile);
         if ($media->id && $catverify == 1) {
             // Verify Existing files
             $catalog = $media->catalog;
@@ -130,12 +138,8 @@ while ($row = Dba::fetch_assoc($db_results)) {
         }
         if ($artadd == 1 && $file_id) {
             // Look for media art after adding new files
-            Catalog::gather_art_item($type, $file_id);
+            Catalog::gather_art_item($type, $file_id, true);
         }
-    }
-    // deleted file
-    if (!is_file($catfile) && $catclean == 1) {
-        $catalog->clean_file($catfile, $type);
     }
 }
 
