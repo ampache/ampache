@@ -26,12 +26,12 @@
  */
 
 use Ampache\Application\Api\EditApplication;
+use Psr\Container\ContainerInterface;
 
 // Set that this is an ajax include
 define('AJAX_INCLUDE', '1');
 
-require_once __DIR__ . '/../../src/Config/init.php';
-
-$dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
+/** @var ContainerInterface $dic */
+$dic = require __DIR__ . '/../../src/Config/init.php';
 
 $dic->get(EditApplication::class)->run();

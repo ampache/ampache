@@ -24,12 +24,12 @@ declare(strict_types=1);
  */
 
 use Ampache\Application\RegisterApplication;
+use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');
 $_SESSION['login'] = true;
 
-require_once __DIR__ . '/../src/Config/init.php';
-
-$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+/** @var ContainerInterface $dic */
+$dic = require __DIR__ . '/../src/Config/init.php';
 
 $dic->get(RegisterApplication::class)->run();

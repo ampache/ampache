@@ -24,6 +24,7 @@ declare(strict_types=1);
  */
 
 use Ampache\Application\UpdateApplication;
+use Psr\Container\ContainerInterface;
 
 session_start();
 
@@ -33,8 +34,7 @@ if (!isset($_REQUEST['type']) || (string) filter_input(INPUT_GET, 'type', FILTER
     define('OUTDATED_DATABASE_OK', 1);
 }
 
-require_once __DIR__ . '/../src/Config/init.php';
-
-$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+/** @var ContainerInterface $dic */
+$dic = require __DIR__ . '/../src/Config/init.php';
 
 $dic->get(UpdateApplication::class)->run();

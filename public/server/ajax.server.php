@@ -24,10 +24,10 @@ declare(strict_types=1);
  */
 
 use Ampache\Application\Api\Ajax\AjaxApplication;
+use Psr\Container\ContainerInterface;
 
-require_once __DIR__ . '/../../src/Config/init.php';
-
-$dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
+/** @var ContainerInterface $dic */
+$dic = require __DIR__ . '/../../src/Config/init.php';
 
 // Set that this is an ajax include
 define('AJAX_INCLUDE', '1');

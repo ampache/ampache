@@ -23,12 +23,10 @@ declare(strict_types=1);
  *
  */
 
-// This is playlist.php, it does playlist things.
-
-require_once __DIR__ . '/../src/Config/init.php';
-
 use Ampache\Application\PlaylistApplication;
+use Psr\Container\ContainerInterface;
 
-$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+/** @var ContainerInterface $dic */
+$dic = require __DIR__ . '/../src/Config/init.php';
 
 $dic->get(PlaylistApplication::class)->run();

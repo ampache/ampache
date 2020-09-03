@@ -22,10 +22,11 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-require_once __DIR__ . '/../src/Config/init.php';
 
 use Ampache\Application\PrivateMessageApplication;
+use Psr\Container\ContainerInterface;
 
-$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+/** @var ContainerInterface $dic */
+$dic = require __DIR__ . '/../src/Config/init.php';
 
 $dic->get(PrivateMessageApplication::class)->run();

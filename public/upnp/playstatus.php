@@ -24,15 +24,13 @@ declare(strict_types=1);
  */
 
 use Ampache\Application\Api\Upnp\PlayStatusApplication;
+use Psr\Container\ContainerInterface;
 
 // Send response to client to close connection
 header('Connection: Close');
 set_time_limit(0);
 
-require_once __DIR__ . '/../../src/Config/init.php';
-require_once __DIR__ . '/../../modules/localplay/upnp/AmpacheUPnP.php';
-require_once __DIR__ . '/../../modules/localplay/upnp/UPnPPlayer.php';
-
-$dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
+/** @var ContainerInterface $dic */
+$dic = require __DIR__ . '/../../src/Config/init.php';
 
 $dic->get(PlayStatusApplication::class)->run();

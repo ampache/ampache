@@ -35,9 +35,7 @@ use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');
 
-require_once __DIR__ . '/../../src/Config/init.php';
-
 /** @var ContainerInterface $dic */
-$dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
+$dic = require __DIR__ . '/../../src/Config/init.php';
 
 $dic->get(PlayApplication::class)->run();

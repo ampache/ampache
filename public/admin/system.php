@@ -24,9 +24,9 @@ declare(strict_types=0);
  */
 
 use Ampache\Application\Admin\SystemApplication;
+use Psr\Container\ContainerInterface;
 
-require_once __DIR__ . '/../../src/Config/init.php';
-
-$dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
+/** @var ContainerInterface $dic */
+$dic = require __DIR__ . '/../../src/Config/init.php';
 
 $dic->get(SystemApplication::class)->run();

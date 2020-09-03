@@ -24,10 +24,11 @@ declare(strict_types=1);
  */
 
 define('NO_SESSION', '1');
-require_once __DIR__ . '/../src/Config/init.php';
 
 use Ampache\Application\RssApplication;
+use Psr\Container\ContainerInterface;
 
-$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+/** @var ContainerInterface $dic */
+$dic = require __DIR__ . '/../src/Config/init.php';
 
 $dic->get(RssApplication::class)->run();

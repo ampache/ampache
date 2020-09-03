@@ -26,11 +26,11 @@ declare(strict_types=1);
 // No event subscribe support but avoid few players error (e.g. Windows Media Player).
 
 use Ampache\Application\Api\Upnp\EventReplyApplication;
+use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');
 
-require_once __DIR__ . '/../../src/Config/init.php';
-
-$dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
+/** @var ContainerInterface $dic */
+$dic = require __DIR__ . '/../../src/Config/init.php';
 
 $dic->get(EventReplyApplication::class)->run();

@@ -128,6 +128,8 @@ $results = Preference::fix_preferences($results);
 
 AmpConfig::set_by_array($results, true);
 
+$dic = require __DIR__ . '/Bootstrap.php';
+
 // Set a new Error Handler
 $old_error_handler = set_error_handler('ampache_error_handler');
 
@@ -282,3 +284,5 @@ $user_agent         = (string) $_SERVER['HTTP_USER_AGENT'];
 if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($user_agent, 'iPad') || strpos($user_agent, 'iPhone'))) {
     $_SESSION['mobile'] = true;
 }
+
+return $dic;

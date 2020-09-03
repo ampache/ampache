@@ -24,13 +24,13 @@ declare(strict_types=1);
  */
 
 use Ampache\Application\ImageApplication;
+use Psr\Container\ContainerInterface;
 
 // This file is a little weird it needs to allow API session
 // this needs to be done a little better, but for now... eah
 define('NO_SESSION', '1');
 
-require_once __DIR__ . '/../src/Config/init.php';
-
-$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+/** @var ContainerInterface $dic */
+$dic = require __DIR__ . '/../src/Config/init.php';
 
 $dic->get(ImageApplication::class)->run();

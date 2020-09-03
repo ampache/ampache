@@ -24,12 +24,12 @@ declare(strict_types=0);
  */
 
 use Ampache\Application\Api\SubsonicApplication;
+use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');
 define('OUTDATED_DATABASE_OK', 1);
 
-require_once __DIR__ . '/../../src/Config/init.php';
-
-$dic = require __DIR__ . '/../../src/Config/Bootstrap.php';
+/** @var ContainerInterface $dic */
+$dic = require __DIR__ . '/../../src/Config/init.php';
 
 $dic->get(SubsonicApplication::class)->run();

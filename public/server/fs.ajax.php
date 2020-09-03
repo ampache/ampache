@@ -25,10 +25,12 @@
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\FileSystem;
 use Ampache\Module\Util\Upload;
+use Psr\Container\ContainerInterface;
 
 define('AJAX_INCLUDE', '1');
 
-require_once __DIR__ . '/../../src/Config/init.php';
+/** @var ContainerInterface $dic */
+$dic = require __DIR__ . '/../../src/Config/init.php';
 
 $rootdir = Upload::get_root();
 if (empty($rootdir)) {

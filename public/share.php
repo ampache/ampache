@@ -24,14 +24,15 @@ declare(strict_types=1);
  */
 
 use Ampache\Application\ShareApplication;
+use Psr\Container\ContainerInterface;
 
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
 if (empty($action) || $action == 'stream' || $action == 'download') {
     define('NO_SESSION', '1');
 }
-require_once __DIR__ . '/../src/Config/init.php';
 
-$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+/** @var ContainerInterface $dic */
+$dic = require __DIR__ . '/../src/Config/init.php';
 
 $dic->get(ShareApplication::class)->run();
