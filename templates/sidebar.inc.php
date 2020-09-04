@@ -53,6 +53,8 @@ if (User::is_registered()) {
             } ?>
         </li>
     <?php
+        } elseif ($item['title'] === 'Admin' && !AmpConfig::get('simple_user_mode')) {
+            echo "<li id='sb_tab_" . $item['id'] . "' class='sb1" . $active . "'>" . UI::get_icon('lock', T_('Admin Disabled')) . "</li>";
         }
     }
  } else { ?>
