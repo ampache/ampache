@@ -14,6 +14,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Generate rsstokens for each user allowing unique feed URLs
 * Allow setting custom databse collation and charset without overwriting your changes
   * rsstoken: Identify users by token when generating RSS feeds
+* Replace 'Admin' icon with padlock in sidebar when access check fails. (Hide this new icon with 'simple_user_mode')
 
 ### Changed
 
