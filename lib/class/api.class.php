@@ -3973,14 +3973,13 @@ class Api
             return false;
         }
         // Load their Localplay instance
-        $command   = (string) $input['command'];
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->connect();
 
+        $result_status = false;
         switch ($input['command']) {
             case 'add':
                 // for add commands get the object details
-                $user  = User::get_from_username(Session::username($input['auth']));
                 $oid   = (int) $input['oid'];
                 $type  = $input['type'] ? (string) $input['type'] : 'Song';
                 $clear = (int) $input['clear'];
