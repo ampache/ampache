@@ -26,7 +26,15 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 
 ### API develop
 
-No Changes
+Enhance... Enhance... Enhance...
+
+### Added
+
+* Api::localplay added new options to 'command' ('pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip')
+* Api::localplay added parameters:
+  * 'oid' (integer) object_id to add //optional
+  * 'type' (string) Default: 'Song' ('Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream') //optional
+  * 'clear' (integer) 0|1 clear the current playlist on add //optional
 
 ## Ampache 4.2.2-release
 

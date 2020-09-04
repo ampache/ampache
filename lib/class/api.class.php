@@ -3957,38 +3957,91 @@ class Api
     /**
      * localplay
      * MINIMUM_API_VERSION=380001
+     * CHANGED_IN_API_VERSION=430000
      *
      * This is for controlling Localplay
      *
      * @param array $input
-     * command   = (string) 'next', 'prev', 'stop', 'play'
+     * command = (string) 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip'
+     * oid     = (integer) object_id //optional
+     * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream' //optional
+     * clear   = (integer) 0,1 Clear the current playlist before adding //optional
      */
     public static function localplay($input)
     {
+        if (!self::check_parameter($input, array('command'), 'localplay')) {
+            return false;
+        }
         // Load their Localplay instance
+        $command   = (string) $input['command'];
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->connect();
 
         switch ($input['command']) {
-            case 'next':
-            case 'prev':
-            case 'play':
-            case 'stop':
-                $result_status = $localplay->$input['command']();
-                $xml_array     = array('localplay' => array('command' => array($input['command'] => make_bool($result_status))));
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo json_encode($xml_array, JSON_PRETTY_PRINT);
-                    break;
-                    default:
-                        echo XML_Data::keyed_array($xml_array);
+            case 'add':
+                // for add commands get the object details
+                $user  = User::get_from_username(Session::username($input['auth']));
+                $oid   = (int) $input['oid'];
+                $type  = $input['type'] ? (string) $input['type'] : 'Song';
+                $clear = (int) $input['clear'];
+                // clear before the add
+                if ($clear == 1) {
+                    $localplay->delete_all();
                 }
-            break;
+                $media = array(
+                    'object_type' => $type,
+                    'object_id' => $oid,
+                );
+                $playlist = new Stream_Playlist();
+                $playlist->add(array($media));
+                foreach ($playlist->urls as $streams) {
+                    $result_status = $localplay->add_url($streams);
+                }
+                break;
+            case 'next':
+                $result_status = $localplay->next();
+                break;
+            case 'prev':
+                $result_status = $localplay->prev();
+                break;
+            case 'stop':
+                $result_status = $localplay->stop();
+                break;
+            case 'play':
+                $result_status = $localplay->play();
+                break;
+            case 'pause':
+                $result_status = $localplay->pause();
+                break;
+            case 'volume_up':
+                $result_status = $localplay->volume_up();
+                break;
+            case 'volume_down':
+                $result_status = $localplay->volume_down();
+                break;
+            case 'volume_mute':
+                $result_status = $localplay->volume_mute();
+                break;
+            case 'delete_all':
+                $result_status = $localplay->volume_down();
+                break;
+            case 'skip':
+                $result_status = $localplay->volume_mute();
+                break;
             default:
                 // They are doing it wrong
                 self::message('error', T_('Invalid request'), '405', $input['api_format']);
-            break;
+
+                return;
         } // end switch on command
+        $output_array     = array('localplay' => array('command' => array($input['command'] => make_bool($result_status))));
+        switch ($input['api_format']) {
+            case 'json':
+                echo json_encode($output_array, JSON_PRETTY_PRINT);
+                break;
+            default:
+                echo XML_Data::keyed_array($output_array);
+        }
         Session::extend($input['auth']);
     } // localplay
 
