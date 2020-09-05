@@ -553,7 +553,7 @@ class Search extends playlist_object
 
         $this->type_text('comment', T_('Comment'));
         $this->type_text('lyrics', T_('Lyrics'));
-        $this->type_text('file', T_('filename'));
+        $this->type_text('file', T_('Filename'));
         $bitrate_array = array(
             '32',
             '40',
@@ -587,18 +587,20 @@ class Search extends playlist_object
         }
         $this->type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs);
 
-        $metadataFields          = array();
-        $metadataFieldRepository = new MetadataField();
-        foreach ($metadataFieldRepository->findAll() as $metadata) {
-            $metadataFields[$metadata->getId()] = $metadata->getName();
+        if (AmpConfig::get('enable_custom_metadata')) {
+            $metadataFields          = array();
+            $metadataFieldRepository = new MetadataField();
+            foreach ($metadataFieldRepository->findAll() as $metadata) {
+                $metadataFields[$metadata->getId()] = $metadata->getName();
+            }
+            $this->types[] = array(
+                'name' => 'metadata',
+                'label' => T_('Metadata'),
+                'type' => 'multiple',
+                'subtypes' => $metadataFields,
+                'widget' => array('subtypes', array('input', 'text'))
+            );
         }
-        $this->types[] = array(
-            'name' => 'metadata',
-            'label' => T_('Metadata'),
-            'type' => 'multiple',
-            'subtypes' => $metadataFields,
-            'widget' => array('subtypes', array('input', 'text'))
-        );
     }
 
     /**
@@ -639,9 +641,9 @@ class Search extends playlist_object
         }
         $this->type_select('other_user', T_('Another User'), 'user_numeric', $users);
 
-        $this->type_boolean('has image', T_('Local Image'));
-        $this->type_numeric('image width', T_('Image Width'));
-        $this->type_numeric('image height', T_('Image Height'));
+        $this->type_boolean('has_image', T_('Local Image'));
+        $this->type_numeric('image_width', T_('Image Width'));
+        $this->type_numeric('image_height', T_('Image Height'));
     } // artisttypes
 
     /**
@@ -692,9 +694,9 @@ class Search extends playlist_object
         }
         $this->type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs);
 
-        $this->type_boolean('has image', T_('Local Image'));
-        $this->type_numeric('image width', T_('Image Width'));
-        $this->type_numeric('image height', T_('Image Height'));
+        $this->type_boolean('has_image', T_('Local Image'));
+        $this->type_numeric('image_width', T_('Image Width'));
+        $this->type_numeric('image_height', T_('Image Height'));
     } // albumtypes
 
     /**
@@ -704,7 +706,7 @@ class Search extends playlist_object
      */
     private function video_types()
     {
-        $this->type_text('filename', T_('Filename'));
+        $this->type_text('file', T_('Filename'));
     }
 
     /**
@@ -836,6 +838,7 @@ class Search extends playlist_object
     {
         $limit  = (int) ($data['limit']);
         $offset = (int) ($data['offset']);
+        $random = ((int) $data['random'] > 0) ? 1 : 0;
         $data   = self::clean_request($data);
 
         $search = new Search(null, $data['type'], $user);
@@ -862,6 +865,9 @@ class Search extends playlist_object
             if (!empty($search_info['having_sql'])) {
                 $sql .= ' HAVING ' . $search_info['having_sql'];
             }
+        }
+        if ($random > 0) {
+            $sql .= " ORDER BY RAND()";
         }
         $sql .= ' ' . $limit_sql;
         $sql = trim((string) $sql);
@@ -1288,7 +1294,7 @@ class Search extends playlist_object
                     $table['favorite'] .= (!strpos($table['favorite'], "favorite_album_$userid")) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
                         "FROM `user_flag` WHERE `user` = $userid) AS `favorite_album_$userid` " .
-                        "ON `song`.`id`=`favorite_album_$userid`.`object_id` " .
+                        "ON `album`.`id`=`favorite_album_$userid`.`object_id` " .
                         "AND `favorite_album_$userid`.`object_type` = 'album' " : ' ';
                     break;
                 case 'myrating':
@@ -1394,12 +1400,15 @@ class Search extends playlist_object
                     }
                     break;
                 case 'has image':
+                case 'has_image':
                     $where[]            = ($sql_match_operator == '1') ? "`has_image`.`object_id` IS NOT NULL" : "`has_image`.`object_id` IS NULL";
                     $table['has_image'] = "LEFT JOIN (SELECT `object_id` from `image` WHERE `object_type` = 'album') as `has_image` ON `album`.`id` = `has_image`.`object_id`";
                     break;
                 case 'image height':
+                case 'image_height':
                 case 'image width':
-                    $looking       = str_replace('image ', '', $rule[0]);
+                case 'image_width':
+                    $looking       = strpos($rule[0], "image_") ? str_replace('image_', '', $rule[0]) : str_replace('image ', '', $rule[0]);
                     $where[]       = "`image`.`$looking` $sql_match_operator '$input'";
                     $join['image'] = true;
                     break;
@@ -1537,16 +1546,19 @@ class Search extends playlist_object
                     $table['favorite'] .= (!strpos($table['favorite'], "favorite_artist_$userid")) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
                         "FROM `user_flag` WHERE `user` = $userid) AS `favorite_artist_$userid` " .
-                        "ON `song`.`artist`=`favorite_artist_$userid`.`object_id` " .
+                        "ON `artist`.`id`=`favorite_artist_$userid`.`object_id` " .
                         "AND `favorite_artist_$userid`.`object_type` = 'artist' " : ' ';
                     break;
                 case 'has image':
+                case 'has_image':
                     $where[]            = ($sql_match_operator == '1') ? "`has_image`.`object_id` IS NOT NULL" : "`has_image`.`object_id` IS NULL";
                     $table['has_image'] = "LEFT JOIN (SELECT `object_id` from `image` WHERE `object_type` = 'artist') as `has_image` ON `artist`.`id` = `has_image`.`object_id`";
                     break;
                 case 'image height':
+                case 'image_height':
                 case 'image width':
-                    $looking       = str_replace('image ', '', $rule[0]);
+                case 'image_width':
+                    $looking       = strpos($rule[0], "image_") ? str_replace('image_', '', $rule[0]) : str_replace('image ', '', $rule[0]);
                     $where[]       = "`image`.`$looking` $sql_match_operator '$input'";
                     $join['image'] = true;
                     break;
@@ -2188,6 +2200,7 @@ class Search extends playlist_object
 
             switch ($rule[0]) {
                 case 'filename':
+                case 'file':
                     $where[] = "`video`.`file` $sql_match_operator '$input'";
                     break;
                 default:

@@ -477,6 +477,13 @@ sociable = "true"
 ; DEFAULT: "false"
 ;demo_mode = "false"
 
+; This options will turn on/off Simple User Mode
+; If simple_user_mode is true you can not edit your profile or make
+; changes to your account unless you are an admin
+; This is for shared accounts or simple sites like the ampache demo
+; DEFAULT: "false"
+;simple_user_mode = "false"
+
 ; Caching
 ; This turns the caching mechanisms on or off, due to a large number of
 ; problems with people with very large catalogs and low memory settings
@@ -655,7 +662,7 @@ wanted_types = "album,official"
 ; Channels
 ; Set this to true to enable channels and the
 ; possibility for users to create channels from playlists
-; DEFAULT: "true"
+; DEFAULT: "false"
 channel = "false"
 
 ; Live Streams

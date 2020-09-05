@@ -107,7 +107,7 @@ You can pass multiple rules as well as joins to create in depth search results
 Rules must be sent in groups of 3 using an int (starting from 1) to designate which rules are combined.
 Use operator ('and'|'or') to choose whether to join or separate each rule when searching.
 
-Refer to the [Advanced Search](API-advanced-search.md) page for details about creating searches.
+Refer to the [Advanced Search](http://ampache.org/api/api-advanced-search) page for details about creating searches.
 
 @param array $input
 
@@ -117,6 +117,7 @@ Refer to the [Advanced Search](API-advanced-search.md) page for details about cr
     * operator = (string) 'and'|'or' (whether to match one rule or all)
     * rules = (array) = [[rule_1,rule_1_operator,rule_1_input], [rule_2,rule_2_operator,rule_2_input], [etc]]
     * type = (string) 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video'
+    * random = (integer) 0|1 (random order of results; default to 0)
     * offset = (integer)
     * limit' = (integer)
 
@@ -148,7 +149,6 @@ This takes a collection of inputs and returns artist objects.
 |'limit'  |    |           |YES     |
 |'include'|array|Array specified using GET convention, can contain `albums` or `songs` and will include the corresponding JSON nested in the artist JSON|NO      |
 
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/artists.json)
 
 ## artist
@@ -174,7 +174,6 @@ This returns the albums of an artist
 |'offset'|    |           |YES     |
 |'limit' |    |           |YES     |
 
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/artist_albums.json)
 
 ## artist_songs
@@ -187,7 +186,6 @@ This returns the songs of the specified artist
 |'filter'|    |UID of Artist, returns Song JSON|NO      |
 |'offset'|    |           |YES     |
 |'limit' |    |           |YES     |
-
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/artist_songs.json)
 
@@ -206,7 +204,6 @@ This returns albums based on the provided search filters
 |'limit'  |    |           |YES     |
 |'include'|array|Array specified using GET convention, can contain `songs` and will include the corresponding JSON nested in the album JSON|YES     |
 
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/albums.json)
 
 ## album
@@ -218,7 +215,6 @@ This returns a single album based on the UID provided
 |---------|----|-----------|-------:|
 |'filter' |    |UID of Album, returns album JSON|NO      |
 |'include'|array|Array specified using GET convention, can contain `songs` and will include the corresponding JSON nested in the album JSON|NO      |
-
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/album.json)
 
@@ -233,50 +229,7 @@ This returns the songs of a specified album
 |'offset'|    |           |YES     |
 |'limit' |    |           |YES     |
 
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/album_songs.json)
-
-## licenses
-
-* **NEW** in 4.2.0
-
-This returns the licenses based on the specified filter
-@param array $input
-
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |Value is Alpha Match for returned results, may be more than one letter/number|YES     |
-|'exact' |boolean|if true filter is exact rather then fuzzy|YES     |
-|'offset'|    |           |YES     |
-|'limit' |    |           |YES     |
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/licenses.json)
-
-## license
-
-* **NEW** in 4.2.0
-
-This returns a single license based on UID
-@param array $input
-
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of license, returns license JSON|NO      |
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/license.json)
-
-## license_songs
-
-* **NEW** in 4.2.0
-
-This returns a list of songs based on the filter ID
-@param array $input
-
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of license, returns song JSON|NO      |
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/license_songs.json)
 
 ## tags
 
@@ -356,7 +309,6 @@ Returns songs based on the specified filter
 |'offset'|    |           |YES     |
 |'limit' |    |           |YES     |
 
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/songs.json)
 
 ## song
@@ -367,7 +319,6 @@ returns a single song
 |Input   |Type|Description|Optional|
 |--------|----|-----------|-------:|
 |'filter'|    |UID of Song, returns song JSON|NO      |
-
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/song.json)
 
@@ -385,7 +336,6 @@ This returns playlists based on the specified filter
 |'offset'|    |           |YES     |
 |'limit' |    |           |YES     |
 
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/playlists.json)
 
 ## playlist
@@ -396,7 +346,6 @@ This returns a single playlist
 |Input   |Type|Description|Optional|
 |--------|----|-----------|-------:|
 |'filter'|    |UID of playlist, returns playlist JSON|NO      |
-
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/playlist.json)
 
@@ -410,7 +359,6 @@ This returns the songs for a playlist
 |'filter'|    |UID of Playlist, returns song JSON|NO      |
 |'offset'|    |           |YES     |
 |'limit' |    |           |YES     |
-
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/playlist_songs.json)
 
@@ -512,7 +460,6 @@ ID
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/playlist_generate%20(id).json)
 
-
 ## shares
 
 * **NEW** in 4.2.0
@@ -538,7 +485,7 @@ Return shares by UID
 
 |Input   |Type|Description|Optional|
 |--------|----|-----------|-------:|
-|'filter'|    |UID of Share, returns song JSON 	NO|NO      |
+|'filter'|    |UID of Share, returns song JSON|NO      |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/share.json)
 
@@ -616,7 +563,6 @@ This searches the songs and returns... songs
 |'filter'|    |Value is Alpha Match for Song Title, Artist Name, Album Name, Genre Name returns song JSON|NO      |
 |'offset'|    |           |YES     |
 |'limit' |    |           |YES     |
-
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/search_songs.json)
 

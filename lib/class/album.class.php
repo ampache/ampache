@@ -1017,7 +1017,7 @@ class Album extends database_object implements library_item
         $current_id = $this->id;
 
         $updated = false;
-        $songs   = null;
+        $songs   = array();
 
         if (!empty($data['album_artist_name'])) {
             // Need to create new artist according the name
@@ -1027,9 +1027,7 @@ class Album extends database_object implements library_item
         $album_id = self::check($name, $year, $disk, $mbid, $mbid_group, $album_artist, $release_type);
         if ($album_id != $this->id) {
             debug_event('album.class', "Updating $this->id to new id and migrating stats {" . $album_id . '}.', 4);
-            if (!is_array($songs)) {
-                $songs = $this->get_songs();
-            }
+            $songs = $this->get_songs();
             foreach ($songs as $song_id) {
                 Song::update_album($album_id, $song_id, $this->id);
                 Song::update_year($year, $song_id);
@@ -1080,7 +1078,7 @@ class Album extends database_object implements library_item
         $this->barcode        = $barcode;
         $this->catalog_number = $catalog_number;
 
-        if ($updated && is_array($songs)) {
+        if ($updated && !empty($songs)) {
             foreach ($songs as $song_id) {
                 Song::update_utime($song_id);
             } // foreach song of album

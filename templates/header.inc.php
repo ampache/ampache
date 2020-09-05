@@ -497,7 +497,7 @@ $t_logout    = T_('Log out'); ?>
                     $('#sidebar').show(500);
                 });
 
-                $.cookie('sidebar_state', newstate, { expires: 30, path: '/'});
+                $.cookie('sidebar_state', newstate, { expires: 30, path: '/; samesite=strict'});
             });
             </script>
             <div id="rightbar" class="rightbar-fixed">

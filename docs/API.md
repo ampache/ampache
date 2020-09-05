@@ -4,6 +4,7 @@
 
 * 4.2.0-release
 * 4.2.1-release
+* 4.2.2-release
 * Ampache develop
 
 Ampache Provides an API for pulling out it's meta data in the form of simple XML documents. This was originally created for use by [Amarok](http://amarok.kde.org/), but there is no reason it couldn't be used to create other front-ends to the Ampache data. Access to the API is controlled by the Internal [Access Control Lists](API-acls.md). The KEY defined in the ACL is the passphrase that must be used to establish an API session. Currently all requests are limited to a maximum of 5000 results for performance reasons. To get additional results pass offset as an additional parameter.
@@ -83,25 +84,27 @@ Optionally, you can also provide geolocation information `&geo_latitude=$latitud
 If your authenticated User and IP match a row in the Access List the following will be returned.
 
 For XML
+
 ```XML
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
-	<auth><%AUTHENTICATION TOKEN%></auth>
-	<api><%APIVERSION%></api>
-	<session_expire><![CDATA[2019-12-03T09:36:46+10:00]]></session_expire>
-	<update><![CDATA[2019-11-26T16:35:05+10:00]]></update>
-	<add><![CDATA[2019-12-03T06:42:55+10:00]]></add>
-	<clean><![CDATA[2019-12-03T06:41:02+10:00]]></clean>
-	<songs><![CDATA[268302]]></songs>
-	<albums><![CDATA[25686]]></albums>
-	<artists><![CDATA[11055]]></artists>
-	<playlists><![CDATA[20]]></playlists>
-	<videos><![CDATA[0]]></videos>
-	<catalogs><![CDATA[4]]></catalogs>
+    <auth><%AUTHENTICATION TOKEN%></auth>
+    <api><%APIVERSION%></api>
+    <session_expire><![CDATA[2019-12-03T09:36:46+10:00]]></session_expire>
+    <update><![CDATA[2019-11-26T16:35:05+10:00]]></update>
+    <add><![CDATA[2019-12-03T06:42:55+10:00]]></add>
+    <clean><![CDATA[2019-12-03T06:41:02+10:00]]></clean>
+    <songs><![CDATA[268302]]></songs>
+    <albums><![CDATA[25686]]></albums>
+    <artists><![CDATA[11055]]></artists>
+    <playlists><![CDATA[20]]></playlists>
+    <videos><![CDATA[0]]></videos>
+    <catalogs><![CDATA[4]]></catalogs>
 </root>
 ```
 
 For JSON
+
 ```JSON
 {
     "auth": "%AUTHENTICATION TOKEN%",
@@ -156,8 +159,8 @@ You can also pass it `limit=none` to overcome the `limit` limitation and return 
 
 For more in depth information regarding the different api servers you can view the following documentation pages.
 
-* [XML Documentation (develop)](API-XML-methods.md)
-* [JSON Documentation (develop)](API-JSON-methods.md)
+* [XML Documentation (develop)](http://ampache.org/api/api-xml-methods)
+* [JSON Documentation (develop)](http://ampache.org/api/api-json-methods)
 
 ### Non-Data Methods
 
@@ -185,7 +188,7 @@ For more in depth information regarding the different api servers you can view t
 * tag_songs
 * songs
 * song
-* [advanced_search](https://github.com/ampache/ampache/wiki/advanced-search-4-2-0)
+* [advanced_search](http://ampache.org/api/api-advanced-search)
 * stats
 * playlists
 * playlist
@@ -254,23 +257,27 @@ For the purpose of this example the Ampache host is 'localhost' and the path to 
 ### Requesting all genres whose name starts with Rock
 
 XML
-```
+
+```XML
 http://localhost/ampache/server/xml.server.php?action=tags&auth=1234567890123456789012345678901&filter=Rock
 ```
 
 JSON
-```
+
+```JSON
 http://localhost/ampache/server/json.server.php?action=tags&auth=1234567890123456789012345678901&filter=Rock
 ```
 
 ### Requesting all song titles, with an offset of 5000
 
 XML
-```
+
+```XML
 http://localhost/ampache/server/xml.server.php?action=songs&auth=12345678901234567890123456789012&offset=5000
 ```
 
 JSON
-```
+
+```JSON
 http://localhost/ampache/server/json.server.php?action=songs&auth=12345678901234567890123456789012&offset=5000
 ```

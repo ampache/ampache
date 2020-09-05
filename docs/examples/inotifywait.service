@@ -1,0 +1,21 @@
+[Unit]
+Description=inotifywait_catalog1
+After=network.target remote-fs.target nss-lookup.target
+Documentation=https://github.com/ampache/ampache/wiki
+
+[Service]
+PrivateTmp=true
+KillMode=mixed
+Type=exec
+User=root
+Group=root
+Restart=always
+RestartSec=30
+ExecStart=/var/www/bin/inotifywait.sh
+PIDFile=/run/php/ampache_inotifywait_catalog1.pid
+ExecReload=/bin/kill -HUP $MAINPID
+WorkingDirectory=/var/www
+ProtectSystem=yes
+
+[Install]
+WantedBy=multi-user.target

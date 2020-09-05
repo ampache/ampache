@@ -157,9 +157,9 @@ class Stats
     public static function is_already_inserted($type, $object_id, $user, $agent, $time)
     {
         $agent = Dba::escape($agent);
-        $sql   = "SELECT `object_id` FROM `object_count` " .
+        $sql   = "SELECT `object_id`, `date`, `count_type` FROM `object_count` " .
                 "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND " .
-                "(`object_count`.`date` >= ($time - 5) AND `object_count`.`date` <= ($time + 5)) ";
+                "(`object_count`.`date` >= ($time - 20) AND `object_count`.`date` <= ($time + 5)) ";
         if ($agent !== '') {
             $sql .= "AND `object_count`.`agent` = '$agent' ";
         }
@@ -167,8 +167,21 @@ class Stats
 
         $db_results = Dba::read($sql, array($user, $type));
         while ($row = Dba::fetch_assoc($db_results)) {
+            // Stop double ups within 20s
             if ($row['object_id'] == $object_id) {
                 debug_event('stats.class', 'Object already inserted {' . (string) $object_id . '} date: ' . (string) $time, 5);
+
+                return true;
+            }
+            // if you've skipped recently it's also not needed!
+            if (($row['date'] < $time && $row['date'] > ($time - 20)) && $row['count_type'] == 'skip') {
+                debug_event('stats.class', 'Recent skip inserted {' . (string) $row['object_id'] . '} date: ' . (string) $row['date'], 5);
+
+                return true;
+            }
+            // if you've recorded in less than 5 seconds i don't believe you
+            if (($row['date'] < $time && $row['date'] > ($time - 5))) {
+                debug_event('stats.class', 'Too fast! Skipping {' . (string) $object_id . '} date: ' . (string) $time, 5);
 
                 return true;
             }
@@ -684,7 +697,7 @@ class Stats
      * @param integer $count
      * @param integer $offset
      * @param integer $catalog
-     * @return array
+     * @return integer[]
      */
     public static function get_newest($type, $count = 0, $offset = 0, $catalog = 0)
     {
@@ -704,7 +717,7 @@ class Stats
         $items = array();
 
         while ($row = Dba::fetch_row($db_results)) {
-            $items[] = $row[0];
+            $items[] = (int) $row[0];
         } // end while results
 
         return $items;

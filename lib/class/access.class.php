@@ -319,10 +319,9 @@ class Access
      * @param string $type
      * @param integer|string $user
      * @param integer $level
-     * @param string $apikey
      * @return boolean
      */
-    public static function check_network($type, $user = null, $level = 25, $apikey = null)
+    public static function check_network($type, $user = null, $level = 25)
     {
         if (!AmpConfig::get('access_control')) {
             switch ($type) {
@@ -338,9 +337,6 @@ class Access
             case 'init-api':
                 if ($user) {
                     $user = User::get_from_username($user);
-                    $user = $user->id;
-                } elseif ($apikey) {
-                    $user = User::get_from_apikey($apikey);
                     $user = $user->id;
                 }
             // Intentional break fall-through
