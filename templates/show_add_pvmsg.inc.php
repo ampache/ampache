@@ -24,15 +24,13 @@
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Recipient'); ?></td>
-    <td>
-        <input type="text" name="to_user" value="<?php echo scrub_out($_REQUEST['to_user']); ?>" id="pvmsg_to_user" />
+    <td><input type="text" name="to_user" value="<?php echo scrub_out($_REQUEST['to_user']); ?>" id="pvmsg_to_user" />
         <?php AmpError::display('to_user'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Subject'); ?></td>
-    <td>
-        <input type="text" name="subject" value="<?php echo scrub_out($_REQUEST['subject']); ?>" />
+    <td><input type="text" name="subject" value="<?php echo scrub_out($_REQUEST['subject']); ?>" />
         <?php AmpError::display('subject'); ?>
     </td>
 </tr>

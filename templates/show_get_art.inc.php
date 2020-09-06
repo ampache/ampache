@@ -29,9 +29,7 @@
                     <td>
                         <?php echo $word['label']; ?>&nbsp;
                     </td>
-                    <td>
-                        <input type="text" id="option_<?php echo $key; ?>" name="option_<?php echo $key; ?>" value="<?php echo scrub_out(unhtmlentities($word['value'])); ?>" />
-                    </td>
+                    <td><input type="text" id="option_<?php echo $key; ?>" name="option_<?php echo $key; ?>" value="<?php echo scrub_out(unhtmlentities($word['value'])); ?>" /></td>
                 </tr>
         <?php
             }
@@ -40,17 +38,13 @@
             <td>
                 <?php echo T_('Direct URL to Image'); ?>
             </td>
-            <td>
-                <input type="text" id="cover" name="cover" value="" />
-            </td>
+            <td><input type="text" id="cover" name="cover" value="" /></td>
         </tr>
         <tr>
             <td>
                 <?php echo T_('Local Image'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)
             </td>
-            <td>
-                <input type="file" id="file" name="file" value="" />
-            </td>
+            <td><input type="file" id="file" name="file" value="" /></td>
         </tr>
     </table>
     <div class="formValidation">

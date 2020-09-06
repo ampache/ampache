@@ -38,9 +38,7 @@
 } ?>/> <strong><?php echo T_('Stick this comment'); ?></strong></td>
 </tr>
 <tr>
-    <td>
-        <input type="submit" value="<?php echo T_('Update'); ?>" />
-    </td>
+    <td><input type="submit" value="<?php echo T_('Update'); ?>" /></td>
 </tr>
 </table>
 </form>

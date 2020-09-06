@@ -24,29 +24,25 @@
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Name'); ?></td>
-    <td>
-        <input type="text" name="name" value="<?php echo scrub_out($_REQUEST['name']); ?>" />
+    <td><input type="text" name="name" value="<?php echo scrub_out($_REQUEST['name']); ?>" />
         <?php AmpError::display('name'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Homepage'); ?></td>
-    <td>
-        <input type="text" name="site_url" value="<?php echo scrub_out($_REQUEST['site_url']); ?>" />
+    <td><input type="text" name="site_url" value="<?php echo scrub_out($_REQUEST['site_url']); ?>" />
         <?php AmpError::display('site_url'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Stream URL'); ?></td>
-    <td>
-        <input type="text" name="url" value="<?php echo scrub_out($_REQUEST['url']); ?>" />
+    <td><input type="text" name="url" value="<?php echo scrub_out($_REQUEST['url']); ?>" />
         <?php AmpError::display('url'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Codec'); ?></td>
-    <td>
-        <input type="text" name="codec" value="<?php echo scrub_out($_REQUEST['codec']); ?>" />
+    <td><input type="text" name="codec" value="<?php echo scrub_out($_REQUEST['codec']); ?>" />
         <?php AmpError::display('codec'); ?>
     </td>
 </tr>
