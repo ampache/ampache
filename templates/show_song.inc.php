@@ -145,7 +145,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
     }
     $songprops[T_('Album')]         = $song->f_album_link . ($song->year ? " (" . scrub_out($song->year) . ")" : "");
     $songprops[T_('Composer')]      = scrub_out($song->composer);
-    $songprops[T_('Tags')]          = $song->f_tags;
+    $songprops[T_('Genres')]          = $song->f_tags;
     $songprops[T_('Year')]          = $song->year;
     $songprops[T_('Original Year')] = scrub_out($song->get_album_original_year($song->album));
     $songprops[T_('Links')]         = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>";

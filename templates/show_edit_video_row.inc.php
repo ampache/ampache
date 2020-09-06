@@ -39,7 +39,7 @@ if ($video_type != 'video') {
     require AmpConfig::get('prefix') . UI::find_template('show_partial_edit_' . $video_type . '_row.inc.php');
 } ?>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Genres') ?></td>
                 <td>
                     <input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" />
                 </td>

@@ -45,7 +45,7 @@ $thcount  = 8; ?>
             <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
             <?php
     } ?>
-            <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
+            <th class="cel_tags optional"><?php echo T_('Genres'); ?></th>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) {
         ++$thcount; ?>
@@ -114,7 +114,7 @@ $thcount  = 8; ?>
             <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
             <?php
         } ?>
-            <th class="cel_tags"><?php echo T_('Tags'); ?></th>
+            <th class="cel_tags"><?php echo T_('Genres'); ?></th>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) { ?>
                     <th class="cel_rating"><?php echo T_('Rating'); ?></th>
