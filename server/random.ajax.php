@@ -44,7 +44,7 @@ switch ($_REQUEST['action']) {
             Core::get_global('user')->playlist->add_object($song_id, 'song');
         }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
-    break;
+        break;
     case 'album':
         $album_id = Album::get_random(null, false, Core::get_global('user')->id);
 
@@ -72,7 +72,7 @@ switch ($_REQUEST['action']) {
             Core::get_global('user')->playlist->add_object($song_id, 'song');
         }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
-    break;
+        break;
     case 'artist':
         $artist_id = Random::artist();
 
@@ -87,7 +87,7 @@ switch ($_REQUEST['action']) {
             Core::get_global('user')->playlist->add_object($song_id, 'song');
         }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
-    break;
+        break;
     case 'playlist':
         $playlist_id = Random::playlist();
 
@@ -102,7 +102,7 @@ switch ($_REQUEST['action']) {
             Core::get_global('user')->playlist->add_object($item['object_id'], $item['object_type']);
         }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
-    break;
+        break;
     case 'advanced_random':
         $object_ids = Random::advanced('song', $_POST);
 
@@ -122,10 +122,10 @@ switch ($_REQUEST['action']) {
         $browse->show_objects();
         $results['browse'] = ob_get_contents();
         ob_end_clean();
-    break;
+        break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 } // switch on action;
 
 // We always do this

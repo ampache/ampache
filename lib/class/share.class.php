@@ -277,9 +277,8 @@ class Share extends database_object
         }
         $this->f_allow_stream   = $this->allow_stream;
         $this->f_allow_download = $this->allow_download;
-        $time_format            = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i:s';
-        $this->f_creation_date  = get_datetime($time_format, (int) $this->creation_date);
-        $this->f_lastvisit_date = ($this->lastvisit_date > 0) ? get_datetime($time_format, (int) $this->creation_date) : '';
+        $this->f_creation_date  = get_datetime((int) $this->creation_date);
+        $this->f_lastvisit_date = ($this->lastvisit_date > 0) ? get_datetime((int) $this->creation_date) : '';
     }
 
     /**
@@ -387,13 +386,13 @@ class Share extends database_object
                 foreach ($songs as $song) {
                     $medias[] = $song;
                 }
-            break;
+                break;
             default:
                 $medias[] = array(
                     'object_type' => $this->object_type,
                     'object_id' => $this->object_id,
                 );
-            break;
+                break;
         }
 
         $playlist->add($medias, '&share_id=' . $this->id . '&share_secret=' . $this->secret);
@@ -419,10 +418,10 @@ class Share extends database_object
                         break;
                     }
                 }
-            break;
+                break;
             default:
                 $is_shared = (($this->object_type == 'song' || $this->object_type == 'video') && $this->object_id == $media_id);
-            break;
+                break;
         }
 
         return $is_shared;

@@ -20,7 +20,8 @@
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 UI::show_header();
 
@@ -32,12 +33,13 @@ switch ($_REQUEST['action']) {
         }
 
         $artist_id = (string) scrub_in($_REQUEST['artist_id']);
-        show_confirmation(T_('Are You Sure?'), T_("The Artist and all files will be deleted"),
+        show_confirmation(T_('Are You Sure?'),
+            T_("The Artist and all files will be deleted"),
             AmpConfig::get('web_path') . "/artists.php?action=confirm_delete&artist_id=" . $artist_id,
             1,
             'delete_artist'
         );
-    break;
+        break;
     case 'confirm_delete':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -56,7 +58,7 @@ switch ($_REQUEST['action']) {
         } else {
             show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Artist."), AmpConfig::get('web_path'));
         }
-    break;
+        break;
     case 'show':
         $artist = new Artist($_REQUEST['artist']);
         $artist->format();
@@ -72,7 +74,7 @@ switch ($_REQUEST['action']) {
         } else {
             require_once AmpConfig::get('prefix') . UI::find_template('show_artist.inc.php');
         }
-    break;
+        break;
     case 'show_all_songs':
         $artist = new Artist($_REQUEST['artist']);
         $artist->format();
@@ -85,7 +87,7 @@ switch ($_REQUEST['action']) {
         $object_id  = (int) filter_input(INPUT_GET, 'artist', FILTER_SANITIZE_NUMBER_INT);
         $target_url = AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $object_id;
         require_once AmpConfig::get('prefix') . UI::find_template('show_update_items.inc.php');
-    break;
+        break;
     case 'match':
     case 'Match':
         $match = scrub_in($_REQUEST['match']);
@@ -112,14 +114,14 @@ switch ($_REQUEST['action']) {
                 show_artists($chr);
             }
         }
-    break;
+        break;
     case 'show_missing':
         set_time_limit(600);
         $mbid    = $_REQUEST['mbid'];
         $wartist = Wanted::get_missing_artist($mbid);
 
         require AmpConfig::get('prefix') . UI::find_template('show_missing_artist.inc.php');
-    break;
+        break;
 } // end switch
 
 // Show the Footer

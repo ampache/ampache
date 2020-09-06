@@ -20,7 +20,8 @@
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 /* Make sure they have access to this */
 if (!AmpConfig::get('allow_democratic_playback')) {
@@ -46,7 +47,7 @@ switch ($_REQUEST['action']) {
 
         // Show the create page
         require_once AmpConfig::get('prefix') . UI::find_template('show_create_democratic.inc.php');
-    break;
+        break;
     case 'delete':
         if (!Access::check('interface', 75)) {
             UI::access_denied();
@@ -56,7 +57,7 @@ switch ($_REQUEST['action']) {
         Democratic::delete($_REQUEST['democratic_id']);
 
         show_confirmation(T_('No Problem'), T_('The Playlist has been deleted'), AmpConfig::get('web_path') . '/democratic.php?action=manage_playlists');
-    break;
+        break;
     case 'create':
         // Only power users here
         if (!Access::check('interface', 75)) {
@@ -87,7 +88,7 @@ switch ($_REQUEST['action']) {
         }
 
         header("Location: " . AmpConfig::get('web_path') . "/democratic.php?action=show");
-    break;
+        break;
     case 'manage_playlists':
         if (!Access::check('interface', 75)) {
             UI::access_denied();
@@ -98,7 +99,7 @@ switch ($_REQUEST['action']) {
 
         require_once AmpConfig::get('prefix') . UI::find_template('show_manage_democratic.inc.php');
 
-    break;
+        break;
     case 'show_playlist':
     default:
         $democratic = Democratic::get_current_playlist();
@@ -119,7 +120,7 @@ switch ($_REQUEST['action']) {
         $browse->save_objects($objects);
         $browse->show_objects();
         $browse->store();
-    break;
+        break;
 } // end switch on action
 
 // Show the Footer

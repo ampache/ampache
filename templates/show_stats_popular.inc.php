@@ -50,7 +50,7 @@ $browse->show_objects();
 $browse->store();
 
 if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) {
-    $sql    = Stats::get_top_sql('video');
+    $sql    = Stats::get_top_sql('video', $thresh_value);
     $browse = new Browse();
     $browse->set_type('video', $sql);
     $browse->set_simple_browse(true);

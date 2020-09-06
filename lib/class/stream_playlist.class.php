@@ -206,12 +206,12 @@ class Stream_Playlist
                     $url['image_url'] = Art::url($object->album, 'album', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['album']     = $object->f_album_full;
                     $url['track_num'] = $object->f_track;
-                break;
+                    break;
                 case 'video':
                     $url['title']      = 'Video - ' . $object->title;
                     $url['author']     = $object->f_artist_full;
                     $url['resolution'] = $object->f_resolution;
-                break;
+                    break;
                 case 'live_stream':
                     $url['title'] = 'Radio - ' . $object->name;
                     if (!empty($object->site_url)) {
@@ -219,27 +219,27 @@ class Stream_Playlist
                     }
                     $url['codec']     = $object->codec;
                     $url['image_url'] = Art::url($object->id, 'live_stream', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
-                break;
+                    break;
                 case 'song_preview':
                     $url['title']  = $object->title;
                     $url['author'] = $object->f_artist_full;
-                break;
+                    break;
                 case 'channel':
                     $url['title'] = $object->name;
-                break;
+                    break;
                 case 'podcast_episode':
                     $url['title']     = $object->f_title;
                     $url['author']    = $object->f_podcast;
                     $url['info_url']  = $object->f_link;
                     $url['image_url'] = Art::url($object->podcast, 'podcast', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
-                break;
+                    break;
                 case 'random':
                     $url['title'] = 'Random URL';
-                break;
+                    break;
                 default:
                     $url['title'] = 'URL-Add';
                     $url['time']  = -1;
-                break;
+                    break;
             }
 
             $surl = new Stream_URL($url);
@@ -295,33 +295,33 @@ class Stream_Playlist
                 $ctype    = "";
                 $redirect = false;
                 unset($ext);
-            break;
+                break;
             case 'asx':
                 $ctype = 'video/x-ms-asf';
-            break;
+                break;
             case 'pls':
                 $ctype = 'audio/x-scpls';
-            break;
+                break;
             case 'ram':
                 $ctype = 'audio/x-pn-realaudio ram';
-            break;
+                break;
             case 'simple_m3u':
                 $ext   = 'm3u';
                 $ctype = 'audio/x-mpegurl';
-            break;
+                break;
             case 'xspf':
                 $ctype = 'application/xspf+xml';
-            break;
+                break;
             case 'hls':
                 $ext   = 'm3u8';
                 $ctype = 'application/vnd.apple.mpegurl';
-            break;
+                break;
             case 'm3u':
             default:
                 // Assume M3U if the pooch is screwed
                 $ext   = $type = 'm3u';
                 $ctype = 'audio/x-mpegurl';
-            break;
+                break;
         }
 
         if ($redirect) {

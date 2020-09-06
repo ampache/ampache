@@ -28,7 +28,8 @@
  */
 
 define('NO_SESSION', '1');
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 ob_end_clean();
 
 set_time_limit(0);
@@ -63,9 +64,9 @@ if ($channel->is_private) {
             Preference::init();
 
             if (AmpConfig::get('access_control')) {
-                if (!Access::check_network('stream', Core::get_global('user')->id, '25') &&
-                    !Access::check_network('network', Core::get_global('user')->id, '25')) {
-                    debug_event('channel/index', "UI::access_denied: Streaming Access Denied: " . Core::get_server('REMOTE_ADDR') . " does not have stream level access", 2);
+                if (!Access::check_network('stream', Core::get_global('user')->id, 25) &&
+                    !Access::check_network('network', Core::get_global('user')->id, 25)) {
+                    debug_event('channel/index', "UI::access_denied: Streaming Access Denied: " . Core::get_user_ip() . " does not have stream level access", 2);
                     UI::access_denied();
 
                     return false;
@@ -94,17 +95,19 @@ foreach ($headers as $key => $value) {
 }
 
 $curl = curl_init($url);
-curl_setopt_array($curl, array(
-    CURLOPT_HTTPHEADER => $reqheaders,
-    CURLOPT_HEADER => false,
-    CURLOPT_RETURNTRANSFER => false,
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_HEADERFUNCTION => 'output_header',
-    CURLOPT_NOPROGRESS => false,
-    CURLOPT_PROGRESSFUNCTION => 'progress',
-));
-curl_exec($curl);
-curl_close($curl);
+if ($curl) {
+    curl_setopt_array($curl, array(
+        CURLOPT_HTTPHEADER => $reqheaders,
+        CURLOPT_HEADER => false,
+        CURLOPT_RETURNTRANSFER => false,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HEADERFUNCTION => 'output_header',
+        CURLOPT_NOPROGRESS => false,
+        CURLOPT_PROGRESSFUNCTION => 'progress',
+    ));
+    curl_exec($curl);
+    curl_close($curl);
+}
 
 /**
  *

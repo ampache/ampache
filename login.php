@@ -21,7 +21,8 @@
  */
 
 define('NO_SESSION', '1');
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 // Avoid form login if still connected
 if (AmpConfig::get('use_auth') && !filter_has_var(INPUT_GET, 'force_display')) {
     $auth = false;
@@ -38,6 +39,7 @@ if (AmpConfig::get('use_auth') && !filter_has_var(INPUT_GET, 'force_display')) {
         return false;
     }
 }
-require_once 'lib/login.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/login.php';
 
 require AmpConfig::get('prefix') . UI::find_template('show_login_form.inc.php');

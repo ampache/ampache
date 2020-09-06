@@ -21,7 +21,8 @@
  */
 
 define('NO_SESSION', '1');
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 /* Check Perms */
 if (!Mailer::is_mail_enabled() || AmpConfig::get('demo_mode')) {
@@ -68,7 +69,7 @@ function send_newpassword($email, $current_ip)
     if ($client->has_access(100)) {
         return false;
     }
-    if ($client && $client->email == $email && Mailer::is_mail_enabled()) {
+    if ($client->email == $email && Mailer::is_mail_enabled()) {
         $newpassword = generate_password();
         $client->update_password($newpassword);
 

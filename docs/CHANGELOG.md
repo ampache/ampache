@@ -1,24 +1,180 @@
 # CHANGELOG
 
-## 4.3.0-develop
+## Ampache develop
+
+**IMPORTANT** instead of using date() we are now using IntlDateFormatter and your locale to identify formats.
+This means that 'custom_datetime' based on the date() format is incorrect and will look weird.
+Look here for the code to change your 'custom_datetime' string [(<http://userguide.icu-project.org/formatparse/datetime>)]
+
+This means Ampache now **requires** php-intl module/dll to be enabled.
 
 ### Added
 
+* php-intl is now required for translation of date formats into your locale
+* Generate rsstokens for each user allowing unique feed URLs
+* Allow setting custom databse collation and charset without overwriting your changes
+  * rsstoken: Identify users by token when generating RSS feeds
+* Replace 'Admin' icon with padlock in sidebar when access check fails. (Hide this new icon with 'simple_user_mode')
+* Disable API/Subsonic password resets in 'simple_user_mode'
+
+### Changed
+
+* get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
+
+### Fixed
+
+* Stop skips duplicating recent stat inserts
+
+### API develop
+
+Enhance... Enhance... Enhance...
+
+### Added
+
+* Api::localplay added new options to 'command' ('pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip')
+* Api::localplay added parameters:
+  * 'oid' (integer) object_id to add //optional
+  * 'type' (string) Default: 'Song' ('Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream') //optional
+  * 'clear' (integer) 0|1 clear the current playlist on add //optional
+
+## Ampache 4.2.2-release
+
+**DATABASE CHANGES** You can now force a default collation and charset on your database.
+If you choose to use utf8mb4; Ampache will convert your table engine to InnoDB to handle the extra bytes.
+
+### Added
+
+* Numeric 'Played/Skipped ratio' added to search. (Set using (stream/skip)*100.)
+  * ```> 0 & < 100```: Skipped more than played
+  * ```100```: Equal plays and skips
+  * ```> 100```: Played more than skipped
+* Add 'Original Year', 'Release Type' to Album searches
+* Allow setting custom database collation and charset without overwriting your changes
+* Video search added to random.php
+* 'samesite=strict' on JS cookies
+* Translation updates (August 2020)
+* Put 'Labels' into search, browse headers and sidebar when enabled
+* NEW config options (config_version 45)
+  * database_charset: Set a default charset for your database
+  * database_collation: Set a default collation for your database
+  * simple_user_mode: Don't allow users to edit their account values (used for demo sites that allow login)
+* NEW files
+  * bin/update_file.inc: Update your catalog when individual files are changed using inotifywait.sh
+  * bin/update_db.inc: Update your database collation, charset and table engine from the cli
+  * docs/examples/inotifywait.sh: script to use inotifywait and update_file.inc to update as file changes happen
+  * docs/examples/inotifywait.service: systemd example service for inotifywait.sh
+
+### Changed
+
+* stats.php: Show total 'Item Count' on Statistics page instead of trying to shoehorn songs/videos/etc into different columns
+* ampache.sql updated after about 4 years... no more updates on install!
+* Searching by "Rating (average)" now ignores private/public and always returns the average.
+* Hide searches for '# Skipped' and 'Played/Skipped ratio' when 'Show # skipped' is Off
+* Search items rearranged to try to match each other
+* Sort 'Playlist' and 'Smart Playlist' browse pages by name
+* Display the blankuser avatar in now playing if missing
+* Swap 'Random' and 'Playlists' in the sidebar (CSS order numbers)
+* Don't hide artist art when you disable lastfm_api_key in the config
+* Hide 'Metadata' search when 'enable_custom_metadata' is disabled
+
+### Deprecated
+
+* Drop version number from the release string in develop. ('4.3.0-develop' => 'develop')
+  * This should stop a bit of confusion when removing / adding requirements
+* The '-release' suffix in version number will be dropped for Ampache 5.0.0
+
+### Removed
+
+* Remove stat recording from channels
+* Don't reset the database charset and collation after each db update
+
+### Fixed
+
+* Fixed a few issues on the Statistics page
+  * Report 'Catalog Size' correctly for podcasts
+  * Report 'Item Count' correctly for podcasts and video catalogs
+* Searching albums for artist name
+* Mashup 'Newest' would incorrectly apply an offset missing the newest items
+* Search by 'Smart Playlist' rules fixed when added with other rules
+* Use LEFT JOIN instead of HAVING for search rules to allow more complicated lists
+* Logic searching 'My Rating' includes unrated (0 Stars) in a better way
+* Captcha was not generated for registration
+* Enforce lowercase codec for live streams
+* Parsing integer search rules was overwriting index values
+* Handle empty XML on similar artist requests to last.fm
+
+### Security
+
+Fix CVE-2020-15153 - Unauthenticated SQL injection in Ampache
+
+### API 4.2.2
+
+Minor bugfixes
+
+### Added
+
+* Api::advanced_search added parameter 'random' (0|1) to shuffle your searches
+
+### Changed
+
+* Remove spaces from advanced_search rule names. (Backwards compatible with old names)
+  * 'has image' => 'has_image'
+  * 'image height' => 'image_height'
+  * 'image width' => 'image_width'
+  * 'filename' => 'file' (Video search)
+
+### Deprecated
+
+* Search rules 'has image','image height', 'image width', 'filename'. (Removed in Ampache 5.0.0)
+
+### Fixed
+
+* Api::stream, Api::download Api::playlist_generate 'format' parameter was overwritten with 'xml' or 'json'
+* Produce valid XML for playlist_generate using the 'id' format in XML
+
+## 4.2.1-release
+
+**NOTICE** Ampache 4.3.0 will require **php-intl** module/dll to be enabled.
+
+### Added
+
+* Numeric ('1 Star'-'5 Stars') searches now include '0 Stars' to show unrated objects
+* Ajax refresh localplay "Now Playing" same as the index "Now Playing" section
+* Add 'has not rated' to "Another User" searches
+* Add higher bitrates (640, 1280) to search to allow for lossless files
+* Put strings ('1 Star', '2 Stars', etc) back into numeric searches for ratings
+* When using a string title for numeric searches use the order of the items starting with 0
 * NEW files
   * Include API docs from the wiki. (API.md, API-JSON-methods.md, API-XML-methods.md, API-advanced-search.md)
+* 'Filters' added to each sidebar tab if enabled (previously only 'Home' and 'Admin')
 
 ### Changed
 
 * Use binary (.mo) translation files to speed up translation processing
+* Don't show 'Generate new API key' if you don't have access
+* QR Code in account page is now just the API Key (redundant link removed too)
+* Require minimum version of Ampache 3.8.2 to upgrade database
+* Added an icon to webplayer to go to album. Clicking on song title now directs to song
+
+### Fixed
+
+* Waveform config option 'get_tmp_dir' was ignored if set
+* Rightbar: 'Add to New Playlist' not adding on new playlists
+* Translate preference subcategories and status
+* 'podcast_new_download' logic fix
+* Filters box would show up in the Admin tab if you disabled 'browse_filter'
+* Update album when 'release_type' changes
+* Parse 'Release Type' from tags in a less terrible way
+
+### API 4.2.1
+
+No functional changes from 4.2.0
+
+### Fixed
+
+* Filter in "playlist" and "playlist_songs" fixed
 
 ## 4.2.0-release
-
-A big visual change in the interface is that Ampache now defaults to US time for dates. ('Month/Day/Year')
-For everyone who isn't American you have control over date formats using custom_datetime.
-Admin => Server Config => Interface => Custom datetime
-
-e.g. "Y/m/d H:i" will convert to "2020/04/14 10:42"
-Check the php manual for help making your desired string. ([<https://www.php.net/manual/en/function.date.php>])
 
 The API changelog for this version has been separated into a new sub-heading below to make it easier to follow.
 
@@ -31,7 +187,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Add 250 for search form limits in the web UI. (Jump from 100 to 500 is pretty big)
 * Add Recently updated/added to search rules
 * Add regex searching to text fields. ([<https://mariadb.com/kb/en/regexp/>])
-  * Refer to the wiki for information about search rules. (<https://github.com/ampache/ampache/wiki/advanced-search>)
+  * Refer to the wiki for information about search rules. (<http://ampache.org/api/api-advanced-search>)
 * When labels are enabled, automatically generate and associate artists with their publisher/label tag values.
 * Enforced stat recording for videos. (podcasts and episodes to be added later)
 * Add tags (Genres) to "Anywhere" text searches.
@@ -41,7 +197,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Tag->f_name (New property on tag that was being set hackily)
 * Add "Album" to Find Duplicates in admin/duplicates.php.
 * "Local Image" added to Artist & Album search. Find out whether you have art stored in Ampache
-* PHP_CodeSniffer checks and settings added to Scrutinizer. (phpcs --standard=.phpcs.xml lib/class) 
+* PHP_CodeSniffer checks and settings added to Scrutinizer. (phpcs --standard=.phpcs.xml lib/class)
 * NEW database options
   * cron_cache: Speed up the interface by allowing background caching of data
   * show_skipped_times: Add "# skipped" to the UI. (disabled by default)
@@ -82,7 +238,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Searches using numeric rules must use an integer. ('1 Star' => 1, '2 Stars' => 2, etc)
 * bin/delete_disabled.inc require -x to execute. (previously you needed to edit the file)
 
-#### Deprecated
+### Deprecated
 
 * Horde_Browser::getIPAddress(). Use Core::get_user_ip() instead.
 
@@ -177,7 +333,7 @@ API 5.0.0-release will be the first Ampache release to match the release string.
   * tracks = (string) comma-separated playlisttrack numbers matched to items in order //optional
 * Random albums will get songs for all disks if album_group enabled
 
-#### Deprecated
+### Deprecated
 
 * API Build number is depreciated (the last 3 digits of the api version)
   * API 5.0.0 will be released with a string version ("5.0.0-release")
@@ -270,7 +426,7 @@ Bump API version to 400003 (4.0.0 build 003)
 
 #### Added
 
-* user_numeric searches also available in the API. ([<https://github.com/ampache/ampache/wiki/XML-methods>])
+* user_numeric searches also available in the API. ([<http://ampache.org/api/api-xml-methods>])
 
 #### Changed
 
@@ -458,7 +614,7 @@ Notes about this release that can't be summed up in a log line
 
 #### Added
 
-* Documented the Ampache API [<https://github.com/ampache/ampache/wiki/XML-methods>]
+* Documented the Ampache API [<http://ampache.org/api/api-xml-methods>]
 * Include smartlists in the API playlist calls.
 * Authentication: allow sha256 encrypted apikey for auth
   * You must send an encrypted api key in the following fashion. (Hash key joined with username)
@@ -1364,7 +1520,7 @@ Notes about this release that can't be summed up in a log line
 * Added caching to Video
 * Added Video calls to the API
 * Remove redundent code from Browse class by making it extend
-  nwe Query class
+  new Query class
 * Update Prototype to 1.6.0.3
 * Add Time range to advanced search
 * Add sorting to Video Browse

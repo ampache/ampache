@@ -210,6 +210,10 @@ class Update
                          "* Truncate database tracks to 0 when greater than 32,767<br />";
         $version[]     = array('version' => '400011', 'description' => $update_string);
 
+        $update_string = "* Add a rss token to allow the use of RSS unauthenticated feeds<br/ >";
+        $version[]     = array('version' => '400012', 'description' => $update_string);
+
+
         return $version;
     }
 
@@ -284,8 +288,8 @@ class Update
 
         // Run a check to make sure that they don't try to upgrade from a version that
         // won't work.
-        if ($current_version < '340002') {
-            echo '<p class="database-update">Database version too old, please upgrade to <a href="http://ampache.org/downloads/ampache-3.3.3.5.tar.gz">Ampache-3.3.3.5</a> first</p>';
+        if ($current_version < '380004') {
+            echo '<p class="database-update">Database version too old, please upgrade to <a href="https://github.com/ampache/ampache/releases/download/3.8.2/ampache-3.8.2_all.zip">Ampache-3.8.2</a> first</p>';
 
             return false;
         }
@@ -317,12 +321,6 @@ class Update
                 }
             }
         } // end foreach version
-
-        // Once we've run all of the updates let's re-sync the character set as
-        // the user can change this between updates and cause mis-matches on any
-        // new tables.
-        debug_event('update.class', 'run_update: starting reset_db_charset', 5);
-        Dba::reset_db_charset();
 
         // Let's also clean up the preferences unconditionally
         debug_event('update.class', 'run_update: starting rebuild_all_preferences', 5);
@@ -418,10 +416,10 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " .
-            "VALUES ('browse_filter', '1', 'Show filter box on browse',25, 'boolean', 'interface', 'library')";
+            "VALUES ('browse_filter', '0', 'Show filter box on browse',25, 'boolean', 'interface', 'library')";
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '1')";
+        $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '0')";
         $retval &= Dba::write($sql, array($row_id));
 
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " .
@@ -1139,16 +1137,19 @@ class Update
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
         $retval &= Dba::write($sql, array($row_id));
 
-        $tables = [ 'cache_object_count', 'cache_object_count_run' ];
+        $tables    = [ 'cache_object_count', 'cache_object_count_run' ];
+        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
         foreach ($tables as $table) {
             $sql = "CREATE TABLE IF NOT EXISTS `" . $table . "` (" .
               "`object_id` int(11) unsigned NOT NULL," .
-              "`object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast_episode') CHARACTER SET utf8 NOT NULL," .
+              "`object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast_episode') CHARACTER SET $charset NOT NULL," .
               "`count` int(11) unsigned NOT NULL DEFAULT '0'," .
               "`threshold` int(11) unsigned NOT NULL DEFAULT '0'," .
               "`count_type` varchar(16) NOT NULL," .
               "PRIMARY KEY (`object_id`, `object_type`, `threshold`, `count_type`)" .
-              ") ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+              ") ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
             $retval &= Dba::write($sql);
         }
 
@@ -1204,6 +1205,20 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql    = "ALTER TABLE `song` MODIFY COLUMN `track` SMALLINT DEFAULT NULL NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400012
+     *
+     * Add a rss token to use an RSS unauthenticated feed.
+     */
+    public static function update_400012()
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `user` ADD `rsstoken` VARCHAR(255) NULL;";
         $retval &= Dba::write($sql);
 
         return $retval;

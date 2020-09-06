@@ -26,7 +26,8 @@
  */
 define('NO_SESSION', '1');
 define('OUTDATED_DATABASE_OK', 1);
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 // If it's not a handshake then we can allow it to take up lots of time
 if ($_REQUEST['action'] != 'handshake') {
@@ -57,7 +58,7 @@ if (!Session::exists('api', $_REQUEST['auth']) && $_REQUEST['action'] != 'handsh
 }
 
 // If the session exists then let's try to pull some data from it to see if we're still allowed to do this
-$username = ($_REQUEST['action'] == 'handshake' || $_REQUEST['action'] == 'ping') ? $_REQUEST['user'] : Session::username($_REQUEST['auth']);
+$username = ($_REQUEST['action'] == 'handshake') ? $_REQUEST['user'] : Session::username($_REQUEST['auth']);
 
 if (!Access::check_network('init-api', $username, 5)) {
     debug_event('Access Denied', 'Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', 3);
@@ -89,7 +90,7 @@ foreach ($methods as $method) {
     // If the method is the same as the action being called
     // Then let's call this function!
     if ($_GET['action'] == $method) {
-        $_GET['format'] = 'json';
+        $_GET['api_format'] = 'json';
         call_user_func(array('api', $method),$_GET);
         // We only allow a single function to be called, and we assume it's cleaned up!
         exit;

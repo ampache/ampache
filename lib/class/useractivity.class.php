@@ -275,8 +275,7 @@ class Useractivity extends database_object
         $libitem->format();
 
         echo '<div>';
-        $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
-        $fdate       = get_datetime($time_format, (int) $this->activity_date);
+        $fdate = get_datetime((int) $this->activity_date);
 
         echo $fdate . ' ';
 

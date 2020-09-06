@@ -1159,7 +1159,6 @@ class Subsonic_XML_Data
             if (AmpConfig::get('userflags')) {
                 $starred = new Userflag($object_id, $objectType);
                 if ($res = $starred->get_flag(null, true)) {
-                    $format = AmpConfig::get('custom_datetime') ? preg_replace("/[^dmY\s]/", "", (string) AmpConfig::get('custom_datetime')) : 'd-m-Y';
                     $xml->addAttribute('starred', date("Y-m-d\TH:i:s\Z", (int) $res[1]));
                 }
             }

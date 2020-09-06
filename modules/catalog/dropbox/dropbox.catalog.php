@@ -97,14 +97,18 @@ class Catalog_dropbox extends Catalog
      */
     public function install()
     {
+        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+
         $sql = "CREATE TABLE `catalog_dropbox` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-            "`apikey` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
-            "`secret` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
-            "`path` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
-            "`authtoken` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
+            "`apikey` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
+            "`secret` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
+            "`path` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
+            "`authtoken` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
             "`getchunk` TINYINT(1) NOT NULL, " .
             "`catalog_id` INT( 11 ) NOT NULL" .
-            ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+            ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;

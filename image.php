@@ -30,7 +30,8 @@
 // This file is a little weird it needs to allow API session
 // this needs to be done a little better, but for now... eah
 define('NO_SESSION', '1');
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
     // Check to see if they've got an interface session or a valid API session, if not GTFO
@@ -74,7 +75,7 @@ if (filter_has_var(INPUT_GET, 'type')) {
         case 'popup':
             $typeManaged = true;
             require_once AmpConfig::get('prefix') . UI::find_template('show_big_art.inc.php');
-        break;
+            break;
         case 'session':
             // If we need to pull the data out of the session
             Session::check();
@@ -82,7 +83,7 @@ if (filter_has_var(INPUT_GET, 'type')) {
             $image       = Art::get_from_source($_SESSION['form']['images'][$filename], 'album');
             $mime        = $_SESSION['form']['images'][$filename]['mime'];
             $typeManaged = true;
-        break;
+            break;
     }
 }
 if (!$typeManaged) {

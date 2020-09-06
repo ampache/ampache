@@ -527,6 +527,10 @@ class Album extends database_object implements library_item
             $sql .= 'AND `album`.`original_year` = ? ';
             $params[] = $original_year;
         }
+        if ($release_type) {
+            $sql .= 'AND `album`.`release_type` = ? ';
+            $params[] = $release_type;
+        }
 
         $db_results = Dba::read($sql, $params);
 
@@ -740,10 +744,10 @@ class Album extends database_object implements library_item
             }
 
             if ($this->album_artist) {
-                $Album_artist = new Artist($this->album_artist);
-                $Album_artist->format();
-                $this->album_artist_name   = $Album_artist->name;
-                $this->f_album_artist_name = $Album_artist->f_name;
+                $album_artist = new Artist($this->album_artist);
+                $album_artist->format();
+                $this->album_artist_name   = $album_artist->name;
+                $this->f_album_artist_name = $album_artist->f_name;
                 $this->f_album_artist_link = "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->album_artist_name) . "\">" . $this->f_album_artist_name . "</a>";
             }
 
@@ -1013,7 +1017,7 @@ class Album extends database_object implements library_item
         $current_id = $this->id;
 
         $updated = false;
-        $songs   = null;
+        $songs   = array();
 
         if (!empty($data['album_artist_name'])) {
             // Need to create new artist according the name
@@ -1023,9 +1027,7 @@ class Album extends database_object implements library_item
         $album_id = self::check($name, $year, $disk, $mbid, $mbid_group, $album_artist, $release_type);
         if ($album_id != $this->id) {
             debug_event('album.class', "Updating $this->id to new id and migrating stats {" . $album_id . '}.', 4);
-            if (!is_array($songs)) {
-                $songs = $this->get_songs();
-            }
+            $songs = $this->get_songs();
             foreach ($songs as $song_id) {
                 Song::update_album($album_id, $song_id, $this->id);
                 Song::update_year($year, $song_id);
@@ -1076,7 +1078,7 @@ class Album extends database_object implements library_item
         $this->barcode        = $barcode;
         $this->catalog_number = $catalog_number;
 
-        if ($updated && is_array($songs)) {
+        if ($updated && !empty($songs)) {
             foreach ($songs as $song_id) {
                 Song::update_utime($song_id);
             } // foreach song of album

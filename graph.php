@@ -23,7 +23,8 @@
 // This file is a little weird it needs to allow API session
 // this needs to be done a little better, but for now... eah
 define('NO_SESSION', '1');
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 // Check to see if they've got an interface session or a valid API session, if not GTFO
 if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')]) && !Session::exists('api', $_REQUEST['auth'])) {
@@ -44,8 +45,8 @@ if (!Core::is_library_item($object_type)) {
     $object_type = null;
 }
 $object_id  = (int) ($_REQUEST['object_id']);
-$start_date = scrub_in($_REQUEST['start_date']);
-$end_date   = scrub_in($_REQUEST['end_date']);
+$start_date = (int) scrub_in($_REQUEST['start_date']);
+$end_date   = (int) scrub_in($_REQUEST['end_date']);
 $zoom       = (string) scrub_in($_REQUEST['zoom']);
 
 $width  = (int) ($_REQUEST['width']);

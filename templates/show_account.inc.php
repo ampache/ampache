@@ -103,32 +103,40 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
         <tr>
             <td>
                 <?php echo T_('API Key'); ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('random', T_('Generate new API key')); ?></a>
+                <?php if (Access::check('interface', 100)) { ?>
+                    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('random', T_('Generate new API key')); ?></a>
+                <?php } ?>
             </td>
             <td>
                 <span>
-                    <?php if ($client->apikey) {
-                    $urlinfo       = parse_url(AmpConfig::get('web_path'));
-                    $apikey_qrcode = "https://" . $client->apikey . "@" . $urlinfo['host'];
-                    if ($urlinfo['port'] && $urlinfo['port'] != 80) {
-                        $apikey_qrcode .= ":" . $urlinfo['port'];
-                    }
-                    $apikey_qrcode .= $urlinfo['path'];
-                    if ($urlinfo['scheme'] == "https" || AmpConfig::get('force_ssl')) {
-                        $apikey_qrcode .= "#ssl=true";
-                    } ?>
+                    <?php if ($client->apikey) { ?>
                     <br />
                     <div style="background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;">
-                        <a href="<?php echo $apikey_qrcode; ?>" class="nohtml"><div id="apikey_qrcode"></div></a>
+                        <div id="apikey_qrcode"></div>
                     </div>
                     <br />
-                    <script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '<?php echo $apikey_qrcode; ?>', background: '#ffffff', foreground: '#000000'});</script>
+                    <script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '<?php echo $client->apikey; ?>', background: '#ffffff', foreground: '#000000'});</script>
                     <?php echo $client->apikey; ?>
                     <?php
                 } ?>
                 </span>
             </td>
         </tr>
+        <?php if ($client->rsstoken) { ?>
+        <tr>
+            <td>
+                <?php echo T_('RSS Token'); ?>
+                <?php if (Access::check('interface', 100)) { ?>
+                    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('random', T_('Generate new RSS token')); ?></a>
+                <?php } ?>
+            </td>
+            <td>
+                <span>
+                    <?php echo $client->rsstoken; ?>
+                </span>
+            </td>
+        </tr>
+        <?php } ?>
         <tr>
             <td><?php echo T_('Clear Stats'); ?>:</td>
             <td>

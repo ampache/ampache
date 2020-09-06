@@ -27,7 +27,8 @@
  * This is also where it decides if you need to be downsampled.
  */
 define('NO_SESSION', '1');
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 ob_end_clean();
 
 //debug_event('play/index', print_r(apache_request_headers(), true), 5);
@@ -189,14 +190,14 @@ if (!$share_id) {
 
         // If require session is set then we need to make sure we're legit
         if ($use_auth && AmpConfig::get('require_session')) {
-            if (!AmpConfig::get('require_localnet_session') && Access::check_network('network', Core::get_global('user')->id, '5')) {
+            if (!AmpConfig::get('require_localnet_session') && Access::check_network('network', Core::get_global('user')->id, 5)) {
                 debug_event('play/index', 'Streaming access allowed for local network IP ' . Core::get_server('REMOTE_ADDR'), 4);
             } else {
                 if (!Session::exists('stream', $sid)) {
                     // No valid session id given, try with cookie session from web interface
                     $sid = $_COOKIE[AmpConfig::get('session_name')];
                     if (!Session::exists('interface', $sid)) {
-                        debug_event('play/index', 'Streaming access denied: ' . Core::get_global('user')->username . "'s session has expired", 3);
+                        debug_event('play/index', "Streaming access denied: Session $sid has expired", 3);
                         header('HTTP/1.1 403 Session Expired');
 
                         return false;
@@ -232,11 +233,17 @@ if (!$share_id) {
     Preference::init();
 }
 
-/* If we are in demo mode.. die here */
+// If we are in demo mode.. die here
+if (AmpConfig::get('demo_mode')) {
+    debug_event('play/index', "Streaming Access Denied: Disable demo_mode in 'config/ampache.cfg.php'", 3);
+    UI::access_denied();
 
+    return false;
+}
+// Check whether streaming is allowed
 $prefs = AmpConfig::get('allow_stream_playback') && $_SESSION['userdata']['preferences']['allow_stream_playback'];
-if (AmpConfig::get('demo_mode') || !$prefs) {
-    debug_event('play/index', "Streaming Access Denied:" . AmpConfig::get('demo_mode') . "is the value of demo_mode. Current user level is " . Core::get_global('user')->access, 3);
+if (!$prefs) {
+    debug_event('play/index', "Streaming Access Denied: Enable 'Allow Streaming' in Server Config -> Options", 3);
     UI::access_denied();
 
     return false;
@@ -244,9 +251,9 @@ if (AmpConfig::get('demo_mode') || !$prefs) {
 
 // If they are using access lists let's make sure that they have enough access to play this mojo
 if (AmpConfig::get('access_control')) {
-    if (!Access::check_network('stream', Core::get_global('user')->id, '25') &&
-        !Access::check_network('network', Core::get_global('user')->id, '25')) {
-        debug_event('play/index', "Streaming Access Denied: " . Core::get_server('REMOTE_ADDR') . " does not have stream level access", 3);
+    if (!Access::check_network('stream', Core::get_global('user')->id, 25) &&
+        !Access::check_network('network', Core::get_global('user')->id, 25)) {
+        debug_event('play/index', "Streaming Access Denied: " . Core::get_user_ip() . " does not have stream level access", 3);
         UI::access_denied();
 
         return false;
@@ -484,7 +491,7 @@ if (AmpConfig::get('track_user_ip')) {
 
 $force_downsample = false;
 if (AmpConfig::get('downsample_remote')) {
-    if (!Access::check_network('network', Core::get_global('user')->id, '0')) {
+    if (!Access::check_network('network', Core::get_global('user')->id, 0)) {
         debug_event('play/index', 'Downsampling enabled for non-local address ' . Core::get_server('REMOTE_ADDR'), 5);
         $force_downsample = true;
     }

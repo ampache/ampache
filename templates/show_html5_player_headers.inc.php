@@ -441,8 +441,7 @@ function receiveBroadcastMessage(e)
                             jp.pause();
                         }
                     }
-                break;
-
+                    break;
                 case 'SONG':
                     addMedia($.parseJSON(atob(msg[1])));
                     brLoadingSong = true;
@@ -456,31 +455,26 @@ function receiveBroadcastMessage(e)
                         brLoadingSong = false;
                     }, 1000);
                     jplaylist.next();
-                break;
-
+                    break;
                 case 'SONG_POSITION':
                     if (brLoadingSong) {
                         brBufferingSongPos = parseFloat(msg[1]);
                     } else {
                         jp.play(parseFloat(msg[1]));
                     }
-                break;
-
+                    break;
                 case 'NB_LISTENERS':
                     $('#broadcast_listeners').html(msg[1]);
-                break;
-
+                    break;
                 case 'INFO':
                     // Display information notification to user here
-                break;
-
+                    break;
                 case 'ENDED':
                     jp.stop();
-                break;
-
+                    break;
                 default:
                     alert('Unknown message code');
-                break;
+                    break;
             }
         }
     }
@@ -508,7 +502,7 @@ window.parent.onbeforeunload = function (evt) {
     if ($("#jquery_jplayer_1") !== undefined && $("#jquery_jplayer_1").data("jPlayer") !== undefined && !$("#jquery_jplayer_1").data("jPlayer").status.paused &&
             (document.activeElement === undefined || (document.activeElement.href.indexOf('/batch.php') < 0 && document.activeElement.href.indexOf('/stream.php') < 0))) {
         var message = '<?php echo T_('Media is currently playing, are you sure you want to close?') . ' ' . AmpConfig::get('site_title') . '?'; ?>';
-        if (typeof evt == 'undefined') {
+        if (typeof evt == "undefined") {
             evt = window.event;
         }
         if (evt) {

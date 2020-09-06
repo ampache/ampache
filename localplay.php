@@ -20,7 +20,8 @@
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 UI::show_header();
 
@@ -29,6 +30,17 @@ if (!AmpConfig::get('allow_localplay_playback') || !Access::check('interface', 2
     UI::access_denied();
 
     return false;
+}
+
+/**
+ * Check for the refresh mojo, if it's there then require the
+ * refresh_javascript include. Must be greater then 5, I'm not
+ * going to let them break their servers
+ */
+$refresh_limit = AmpConfig::get('refresh_limit', 0);
+if ($refresh_limit > 5) {
+    $ajax_url      = '?page=localplay&action=command&command=refresh';
+    require_once AmpConfig::get('prefix') . UI::find_template('javascript_refresh.inc.php');
 }
 
 switch ($_REQUEST['action']) {
@@ -43,7 +55,7 @@ switch ($_REQUEST['action']) {
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $fields    = $localplay->get_instance_fields();
         require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_add_instance.inc.php');
-    break;
+        break;
     case 'add_instance':
         // This requires 50 or better!
         if (!Access::check('localplay', 75)) {
@@ -55,7 +67,7 @@ switch ($_REQUEST['action']) {
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->add_instance($_POST);
         header("Location:" . AmpConfig::get('web_path') . "/localplay.php?action=show_instances");
-    break;
+        break;
     case 'update_instance':
         // Make sure they gots them rights
         if (!Access::check('localplay', 75)) {
@@ -65,7 +77,7 @@ switch ($_REQUEST['action']) {
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->update_instance($_REQUEST['instance'], $_POST);
         header("Location:" . AmpConfig::get('web_path') . "/localplay.php?action=show_instances");
-    break;
+        break;
     case 'edit_instance':
         // Check to make sure they've got the access
         if (!Access::check('localplay', 75)) {
@@ -76,7 +88,7 @@ switch ($_REQUEST['action']) {
         $instance  = $localplay->get_instance($_REQUEST['instance']);
         $fields    = $localplay->get_instance_fields();
         require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_edit_instance.inc.php');
-    break;
+        break;
     case 'show_instances':
         // First build the Localplay object and then get the instances
         if (!Access::check('localplay', 5)) {
@@ -87,7 +99,7 @@ switch ($_REQUEST['action']) {
         $instances = $localplay->get_instances();
         $fields    = $localplay->get_instance_fields();
         require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_instances.inc.php');
-    break;
+        break;
     case 'show_playlist':
     default:
         if (!Access::check('localplay', 5)) {
@@ -101,7 +113,7 @@ switch ($_REQUEST['action']) {
         // Pull the current playlist and require the template
         $objects = $localplay->get();
         require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_status.inc.php');
-    break;
+        break;
 } // end switch action
 
 // Show the Footer

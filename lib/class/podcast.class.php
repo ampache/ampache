@@ -162,9 +162,8 @@ class Podcast extends database_object implements library_item
         $this->f_copyright     = scrub_out($this->copyright);
         $this->f_generator     = scrub_out($this->generator);
         $this->f_website       = scrub_out($this->website);
-        $time_format           = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
-        $this->f_lastbuilddate = get_datetime($time_format, (int) $this->lastbuilddate);
-        $this->f_lastsync      = get_datetime($time_format, (int) $this->lastsync);
+        $this->f_lastbuilddate = get_datetime((int) $this->lastbuilddate);
+        $this->f_lastsync      = get_datetime((int) $this->lastsync);
         $this->link            = AmpConfig::get('web_path') . '/podcast.php?action=show&podcast=' . $this->id;
         $this->f_link          = '<a href="' . $this->link . '" title="' . $this->f_title . '">' . $this->f_title . '</a>';
 
@@ -424,13 +423,13 @@ class Podcast extends database_object implements library_item
         }
 
         // Select episodes to download
-        $dlnb = AmpConfig::get('podcast_new_download');
-        if ($dlnb != 0) {
+        $dlnb = (int) AmpConfig::get('podcast_new_download');
+        if ($dlnb <> 0) {
             $sql = "SELECT `podcast_episode`.`id` FROM `podcast_episode` INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` " .
                     "WHERE `podcast`.`id` = ? AND `podcast_episode`.`addition_time` > `podcast`.`lastsync` " .
                     "ORDER BY `podcast_episode`.`pubdate` DESC";
-            if ($dlnb != -1) {
-                $sql .= " LIMIT " . $dlnb;
+            if ($dlnb > 0) {
+                $sql .= " LIMIT " . (string) $dlnb;
             }
             $db_results = Dba::read($sql, array($this->id));
             while ($row = Dba::fetch_row($db_results)) {

@@ -295,11 +295,11 @@ class Core
         switch ($type) {
             case 'get':
                 $string = $sid;
-            break;
+                break;
             case 'post':
             default:
                 $string = '<input type="hidden" name="form_validation" value="' . $sid . '" />';
-            break;
+                break;
         } // end switch on type
 
         return $string;
@@ -320,16 +320,16 @@ class Core
         switch ($type) {
             case 'post':
                 $sid = $_POST['form_validation'];
-            break;
+                break;
             case 'get':
                 $sid = $_GET['form_validation'];
-            break;
+                break;
             case 'cookie':
                 $sid = $_COOKIE['form_validation'];
-            break;
+                break;
             case 'request':
                 $sid = $_REQUEST['form_validation'];
-            break;
+                break;
             default:
                 return false;
         }
@@ -605,7 +605,9 @@ class Core
      */
     public static function get_tmp_dir()
     {
-        $tmp_dir = AmpConfig::get('tmp_dir_path');
+        if (AmpConfig::get('tmp_dir_path')) {
+            return AmpConfig::get('tmp_dir_path');
+        }
         if (function_exists('sys_get_temp_dir')) {
             $tmp_dir = sys_get_temp_dir();
         } else {

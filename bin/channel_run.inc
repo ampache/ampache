@@ -25,9 +25,11 @@ define('CLI', 1);
 
 $chunk_buffer        = '';
 $nb_chunks_remainder = 0;
-$path                = dirname(__FILE__);
-$prefix              = realpath($path . '/../');
-require_once $prefix . '/lib/init.php';
+
+$path   = dirname(__FILE__);
+$prefix = realpath($path . '/../');
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 ob_end_flush();
 
 $metadata_interval = 16000;
@@ -39,6 +41,7 @@ $chanid     = 0;
 
 $cargv = count($_SERVER['argv']);
 if ($cargv > 1) {
+    $operations_string = '';
     for ($x = 1; $x < $cargv; $x++) {
         if ($_SERVER['argv'][$x] == "-c" && ($x + 1) < $cargv) {
             $chanid = (int) $_SERVER['argv'][++$x];
@@ -58,12 +61,18 @@ if ($chanid < 1) {
 
     return false;
 }
+if (!AmpConfig::get('channel')) {
+    echo ('Cannot start channel, enable channels in your server config first.');
 
+    return false;
+}
 // Transcode is mandatory to have consistent stream codec
 $transcode_cfg = AmpConfig::get('transcode');
 
 if ($transcode_cfg == 'never') {
-    die('Cannot start channel, transcoding is mandatory to work');
+    echo ('Cannot start channel, transcoding is mandatory to work');
+
+    return false;
 }
 
 echo T_("Starting Channel...") . $operations_string . "\n";
@@ -456,7 +465,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                     $xsl .= "</tr>" . "\n";
                     $xsl .= "<tr>" . "\n";
                     $xsl .= "<td>Mount Start:</td>" . "\n";
-                    $xsl .= "<td class=\"streamdata\">" . get_datetime((string) AmpConfig::get('custom_datetime'), $channel->start_date) . "</td>" . "\n";
+                    $xsl .= "<td class=\"streamdata\">" . get_datetime($channel->start_date) . "</td>" . "\n";
                     $xsl .= "</tr>" . "\n";
                     $xsl .= "<tr>" . "\n";
                     $xsl .= "<td>Bitrate:</td>" . "\n";

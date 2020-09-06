@@ -36,7 +36,8 @@
 define('NO_SESSION', '1');
 $path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
-require_once $prefix . '/lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 // default various artist album name.
 $various_artist = "Various Artists";
@@ -46,7 +47,7 @@ $options        = getopt("xv:");
 $test_mode = !array_key_exists('x', $options);
 
 if (array_key_exists('v', $options)) {
-    $operations_string .= "\n\t- " . T_('Setting Various Artists name to: ' . $options['n']);
+    echo "\n\t- " . T_('Setting Various Artists name to: ' . $options['n']);
     $various_artist = Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $options['n']));
 }
 

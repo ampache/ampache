@@ -20,7 +20,8 @@
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 UI::show_header();
 
@@ -32,12 +33,13 @@ switch ($_REQUEST['action']) {
         }
 
         $tvshow_id = (string) scrub_in($_REQUEST['tvshow_id']);
-        show_confirmation(T_('Are You Sure?'), T_("The TV Show and its files will be deleted"),
+        show_confirmation(T_('Are You Sure?'),
+            T_("The TV Show and its files will be deleted"),
             AmpConfig::get('web_path') . "/tvshows.php?action=confirm_delete&tvshow_id=" . $tvshow_id,
             1,
             'delete_tvshow'
         );
-    break;
+        break;
     case 'confirm_delete':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -56,7 +58,7 @@ switch ($_REQUEST['action']) {
         } else {
             show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this TV Show"), AmpConfig::get('web_path'));
         }
-    break;
+        break;
     case 'show':
         $tvshow = new TVShow($_REQUEST['tvshow']);
         $tvshow->format();
@@ -90,7 +92,7 @@ switch ($_REQUEST['action']) {
                 show_tvshows($chr);
             }
         }
-    break;
+        break;
 } // end switch
 
 // Show the Footer

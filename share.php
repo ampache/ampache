@@ -25,7 +25,8 @@ $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 if (empty($action) || $action == 'stream' || $action == 'download') {
     define('NO_SESSION', '1');
 }
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 Preference::init();
 
@@ -165,7 +166,7 @@ switch ($_REQUEST['action']) {
  * page if they aren't in the ACL
  */
 if (AmpConfig::get('access_control')) {
-    if (!Access::check_network('interface', '', '5')) {
+    if (!Access::check_network('interface', '', 5)) {
         debug_event('share', 'Access Denied:' . Core::get_server('REMOTE_ADDR') . ' is not in the Interface Access list', 3);
         UI::access_denied();
 

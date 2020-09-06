@@ -1,6 +1,6 @@
 #uberviz {
-        visibility: hidden;
-        z-index: 99999;
+    visibility: hidden;
+    z-index: 99999;
 }
 
 #uberviz #viz {
@@ -85,7 +85,7 @@
     margin-right: 5px;
 }
 
-#equalizer  .eq {
+#equalizer .eq {
     display: inline-block;
     height: 45px;
     width: 8px;

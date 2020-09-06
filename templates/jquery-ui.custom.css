@@ -1,4 +1,5 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,11 +20,11 @@
  *
  */
 
-/*.ui-autocomplete {
+/* .ui-autocomplete {
     width: 424px;
     margin: 0;
     padding: 0 0 14px 0;
-}*/
+} */
 
 .ui-autocomplete-category {
     font-size: 10px;

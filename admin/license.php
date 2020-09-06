@@ -20,7 +20,8 @@
  *
  */
 
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 if (!Access::check('interface', 75)) {
     UI::access_denied();
@@ -44,7 +45,7 @@ switch ($_REQUEST['action']) {
             $text = T_('A new License has been created');
         }
         show_confirmation(T_('No Problem'), $text, AmpConfig::get('web_path') . '/admin/license.php');
-    break;
+        break;
     case 'show_edit':
         $license = new License($_REQUEST['license_id']);
         // intentional fall through
@@ -54,7 +55,7 @@ switch ($_REQUEST['action']) {
     case 'delete':
         License::delete($_REQUEST['license_id']);
         show_confirmation(T_('No Problem'), T_('The License has been deleted'), AmpConfig::get('web_path') . '/admin/license.php');
-    break;
+        break;
     default:
         $browse = new Browse();
         $browse->set_type('license');
@@ -62,7 +63,7 @@ switch ($_REQUEST['action']) {
         $license_ids = $browse->get_objects();
         $browse->show_objects($license_ids);
         $browse->store();
-    break;
+        break;
 }
 
 // Show the Footer

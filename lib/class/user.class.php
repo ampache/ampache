@@ -88,6 +88,10 @@ class User extends database_object
      * @var string $apikey
      */
     public $apikey;
+    /**
+     * @var string $rsstoken
+     */
+    public $rsstoken;
 
     // Constructed variables
     /**
@@ -188,9 +192,9 @@ class User extends database_object
 
         $time      = time();
         $last_seen = $time - 1200;
-        $sql       = 'SELECT COUNT(DISTINCT `session`.`username`) FROM `session` ' .
-            'INNER JOIN `user` ON `session`.`username` = `user`.`username` ' .
-            'WHERE `session`.`expire` > ? and `user`.`last_seen` > ?';
+        $sql       = "SELECT COUNT(DISTINCT `session`.`username`) FROM `session` " .
+            "INNER JOIN `user` ON `session`.`username` = `user`.`username` " .
+            "WHERE `session`.`expire` > ? AND `user`.`last_seen` > ?";
         $db_results           = Dba::read($sql, array($time, $last_seen));
         $data                 = Dba::fetch_row($db_results);
         $results['connected'] = $data[0];
@@ -305,7 +309,7 @@ class User extends database_object
                 return User::get_from_username($results['username']);
             }
             // check for sha256 hashed apikey for client
-            // https://github.com/ampache/ampache/wiki/Ampache-API
+            // http://ampache.org/api/
             $sql        = "SELECT `id`, `apikey`, `username` FROM `user`";
             $db_results = Dba::read($sql);
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -359,6 +363,25 @@ class User extends database_object
 
         return $users;
     } // get_from_website
+
+    /**
+     * get_from_rsstoken
+     * This returns a built user from a rsstoken. This is a
+     * static function so it doesn't require an instance
+     * @param $rsstoken
+     * @return User|null
+     */
+    public static function get_from_rsstoken($rsstoken)
+    {
+        $user_id    = null;
+        $sql        = "SELECT `id` FROM `user` WHERE `rsstoken` = ?";
+        $db_results = Dba::read($sql, array($rsstoken));
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $user_id = new User($results['id']);
+        }
+
+        return $user_id;
+    } // get_from_rsstoken
 
     /**
      * get_catalogs
@@ -454,7 +477,7 @@ class User extends database_object
     /**
      * get_favorites
      * returns an array of your $type favorites
-     * @param $type
+     * @param string $type
      * @return array
      */
     public function get_favorites($type)
@@ -664,13 +687,12 @@ class User extends database_object
                         $function = 'update_' . $name;
                         $this->$function($value);
                     }
-                break;
+                    break;
                 case 'clear_stats':
                     Stats::clear($this->id);
-                break;
+                    break;
                 default:
-                    // Rien a faire
-                break;
+                    break;
             }
         }
 
@@ -803,10 +825,24 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `apikey` = ? WHERE `id` = ?";
 
-        debug_event('user.class', 'Updating apikey', 4);
+        debug_event('user.class', 'Updating apikey for ' . $this->id, 4);
 
         Dba::write($sql, array($new_apikey, $this->id));
-    } // update_website
+    } // update_apikey
+
+    /**
+     * update_rsstoken
+     * Updates their RSS token
+     * @param string $new_rsstoken
+     */
+    public function update_rsstoken($new_rsstoken)
+    {
+        $sql = "UPDATE `user` SET `rsstoken` = ? WHERE `id` = ?";
+
+        debug_event('user.class', 'Updating rsstoken for ' . $this->id, 4);
+
+        Dba::write($sql, array($new_rsstoken, $this->id));
+    } // update_rsstoken
 
     /**
      * generate_apikey
@@ -816,6 +852,16 @@ class User extends database_object
     {
         $apikey = hash('md5', time() . $this->username . $this->get_password());
         $this->update_apikey($apikey);
+    }
+
+    /**
+     * generate_rsstoken
+     * Generate a new user RSS token
+     */
+    public function generate_rsstoken()
+    {
+        $rsstoken = bin2hex(random_bytes(32));
+        $this->update_rsstoken($rsstoken);
     }
 
     /**
@@ -887,7 +933,7 @@ class User extends database_object
         $new_access = Dba::escape($new_access);
         $sql        = "UPDATE `user` SET `access`='$new_access' WHERE `id`='$this->id'";
 
-        debug_event('user.class', 'Updating access level', 4);
+        debug_event('user.class', 'Updating access level for ' . $this->id, 4);
 
         Dba::write($sql);
 
@@ -1075,19 +1121,18 @@ class User extends database_object
         if (!$this->id) {
             return;
         }
-        $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
         /* If they have a last seen date */
         if (!$this->last_seen) {
             $this->f_last_seen = T_('Never');
         } else {
-            $this->f_last_seen = get_datetime($time_format, (int) $this->last_seen);
+            $this->f_last_seen = get_datetime((int) $this->last_seen);
         }
 
         /* If they have a create date */
         if (!$this->create_date) {
             $this->f_create_date = T_('Unknown');
         } else {
-            $this->f_create_date = get_datetime($time_format, (int) $this->create_date);
+            $this->f_create_date = get_datetime((int) $this->create_date);
         }
 
         $this->f_name = ($this->fullname_public ? $this->fullname : $this->username);
@@ -1452,7 +1497,7 @@ class User extends database_object
      */
     public function update_avatar($data, $mime = '')
     {
-        debug_event('user.class', 'Updating avatar', 4);
+        debug_event('user.class', 'Updating avatar for ' . $this->id, 4);
 
         $art = new Art($this->id, 'user');
 

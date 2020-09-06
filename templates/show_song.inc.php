@@ -149,7 +149,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
     $songprops[T_('Year')]          = $song->year;
     $songprops[T_('Original Year')] = scrub_out($song->get_album_original_year($song->album));
     $songprops[T_('Links')]         = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>";
-    $songprops[T_('Links')] .= "<a href=\"https://www.duckduckgo.com/?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
+    $songprops[T_('Links')] .= "&nbsp;<a href=\"https://www.duckduckgo.com/?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
     $songprops[T_('Links')] .= "&nbsp;<a href=\"http://www.last.fm/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
     $songprops[T_('Length')]         = scrub_out($song->f_time);
     $songprops[T_('Comment')]        = scrub_out($song->comment);
@@ -173,9 +173,9 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         $songprops[T_('Filename')]   = scrub_out($song->file) . " " . $song->f_size;
     }
     if ($song->update_time) {
-        $songprops[T_('Last Updated')]   = get_datetime($time_format, (int) $song->update_time);
+        $songprops[T_('Last Updated')]   = get_datetime((int) $song->update_time);
     }
-    $songprops[T_('Added')]   = get_datetime($time_format, (int) $song->addition_time);
+    $songprops[T_('Added')]   = get_datetime((int) $song->addition_time);
     if (AmpConfig::get('show_played_times')) {
         $songprops[T_('# Played')]   = scrub_out($song->object_cnt);
     }

@@ -106,6 +106,15 @@
     </td>
 </tr>
 <tr>
+    <td><?php echo T_('PHP intl extension'); ?></td>
+    <td>
+        <?php echo debug_wresult(check_php_intl()); ?>
+    </td>
+    <td>
+        <?php echo T_('This tests whether you have the intl extension enabled. This extension is required by Ampache.'); ?>
+    </td>
+</tr>
+<tr>
     <td><?php echo T_('PHP cURL extension'); ?></td>
     <td>
     <?php echo debug_wresult(check_php_curl()); ?>

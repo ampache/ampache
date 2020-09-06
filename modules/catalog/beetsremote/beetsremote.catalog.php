@@ -71,10 +71,14 @@ class Catalog_beetsremote extends Beets\Catalog
      */
     public function install()
     {
+        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+
         $sql = "CREATE TABLE `catalog_beetsremote` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-                "`uri` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
+                "`uri` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
                 "`catalog_id` INT( 11 ) NOT NULL" .
-                ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+                ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;

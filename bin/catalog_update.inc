@@ -25,7 +25,8 @@ define('CLI', 1);
 
 $path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
-require_once $prefix . '/lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 ob_end_flush();
 
@@ -44,6 +45,7 @@ $options        = getopt("hn:t:mvcaguio");
 if (count($options) == 0) {
     $operations_string = "\n\t- " . T_('Doing all Catalog operations');
 } else {
+    $operations_string = '';
     if (array_key_exists('h', $options)) {
         usage();
 
@@ -127,6 +129,7 @@ if ($plimp == 1) {
     $options['parse_playlist'] = false;
 }
 // --------
+$where = "";
 if ($catname !== false) {
     $where = " name = '$catname' ";
 }

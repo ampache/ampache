@@ -143,24 +143,26 @@ class Subsonic_Api
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
             debug_event('subsonic_api.class', 'Stream proxy: ' . $url, 5);
             $curl = curl_init($url);
-            curl_setopt_array($curl, array(
-                CURLOPT_FAILONERROR => true,
-                CURLOPT_HTTPHEADER => $reqheaders,
-                CURLOPT_HEADER => false,
-                CURLOPT_RETURNTRANSFER => false,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_WRITEFUNCTION => array('Subsonic_Api', 'output_body'),
-                CURLOPT_HEADERFUNCTION => array('Subsonic_Api', 'output_header'),
-                // Ignore invalid certificate
-                // Default trusted chain is crap anyway and currently no custom CA option
-                CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_SSL_VERIFYHOST => false,
-                CURLOPT_TIMEOUT => 0
-            ));
-            if (curl_exec($curl) === false) {
-                debug_event('subsonic_api.class', 'Stream error: ' . curl_error($curl), 1);
+            if ($curl) {
+                curl_setopt_array($curl, array(
+                    CURLOPT_FAILONERROR => true,
+                    CURLOPT_HTTPHEADER => $reqheaders,
+                    CURLOPT_HEADER => false,
+                    CURLOPT_RETURNTRANSFER => false,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_WRITEFUNCTION => array('Subsonic_Api', 'output_body'),
+                    CURLOPT_HEADERFUNCTION => array('Subsonic_Api', 'output_header'),
+                    // Ignore invalid certificate
+                    // Default trusted chain is crap anyway and currently no custom CA option
+                    CURLOPT_SSL_VERIFYPEER => false,
+                    CURLOPT_SSL_VERIFYHOST => false,
+                    CURLOPT_TIMEOUT => 0
+                ));
+                if (curl_exec($curl) === false) {
+                    debug_event('subsonic_api.class', 'Stream error: ' . curl_error($curl), 1);
+                }
+                curl_close($curl);
             }
-            curl_close($curl);
         } else {
             // Stream media using http redirect if no curl support
             // Bug fix for android clients looking for /rest/ in destination url
@@ -1676,7 +1678,7 @@ class Subsonic_Api
 
             if ($user_id > 0) {
                 // update password
-                if ($password) {
+                if ($password && !AmpConfig::get('simple_user_mode')) {
                     $password = self::decrypt_password($password);
                     $user->update_password($password);
                 }
@@ -1747,7 +1749,7 @@ class Subsonic_Api
 
         if ($myuser->username == $username || Access::check('interface', 100)) {
             $user = User::get_from_username((string) $username);
-            if ($user->id) {
+            if ($user->id && !AmpConfig::get('simple_user_mode')) {
                 $user->update_password($password);
                 $response = Subsonic_XML_Data::createSuccessResponse('changepassword');
             } else {
@@ -1931,9 +1933,7 @@ class Subsonic_Api
                 ++$count;
             }
 
-            $query = new Search(null, 'song');
-            $songs = Search::run($search);
-
+            $songs    = Search::run($search);
             $response = Subsonic_XML_Data::createSuccessResponse('getlyrics');
             if (count($songs) > 0) {
                 Subsonic_XML_Data::addLyrics($response, $artist, $title, $songs[0]);

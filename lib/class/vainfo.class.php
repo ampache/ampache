@@ -113,7 +113,7 @@ class vainfo
             if (AmpConfig::get('mb_detect_order')) {
                 $mb_order = AmpConfig::get('mb_detect_order');
             } elseif (function_exists('mb_detect_order')) {
-                $mb_order = implode(", ", mb_detect_order());
+                $mb_order = (mb_detect_order()) ? implode(", ", mb_detect_order()) : 'auto';
             } else {
                 $mb_order = "auto";
             }
@@ -552,47 +552,47 @@ class vainfo
                     case 'matroska':
                         debug_event('vainfo.class', 'Cleaning ' . $key, 5);
                         $parsed = $this->_cleanup_generic($tag_array);
-                    break;
+                        break;
                     case 'vorbiscomment':
                         debug_event('vainfo.class', 'Cleaning vorbis', 5);
                         $parsed = $this->_cleanup_vorbiscomment($tag_array);
-                    break;
+                        break;
                     case 'id3v1':
                         debug_event('vainfo.class', 'Cleaning id3v1', 5);
                         $parsed = $this->_cleanup_id3v1($tag_array);
-                    break;
+                        break;
                     case 'id3v2':
                         debug_event('vainfo.class', 'Cleaning id3v2', 5);
                         $parsed = $this->_cleanup_id3v2($tag_array);
-                    break;
+                        break;
                     case 'quicktime':
                         debug_event('vainfo.class', 'Cleaning quicktime', 5);
                         $parsed = $this->_cleanup_quicktime($tag_array);
-                    break;
+                        break;
                     case 'riff':
                         debug_event('vainfo.class', 'Cleaning riff', 5);
                         $parsed = $this->_cleanup_riff($tag_array);
-                    break;
+                        break;
                     case 'mpg':
                     case 'mpeg':
                         $key = 'mpeg';
                         debug_event('vainfo.class', 'Cleaning MPEG', 5);
                         $parsed = $this->_cleanup_generic($tag_array);
-                    break;
+                        break;
                     case 'asf':
                     case 'wmv':
                         $key = 'asf';
                         debug_event('vainfo.class', 'Cleaning WMV/WMA/ASF', 5);
                         $parsed = $this->_cleanup_generic($tag_array);
-                    break;
+                        break;
                     case 'lyrics3':
                         debug_event('vainfo.class', 'Cleaning lyrics3', 5);
                         $parsed = $this->_cleanup_lyrics($tag_array);
-                    break;
+                        break;
                     default:
                         debug_event('vainfo.class', 'Cleaning unrecognised tag type ' . $key . ' for file ' . $this->filename, 5);
                         $parsed = $this->_cleanup_generic($tag_array);
-                    break;
+                        break;
                 }
 
                 $results[$key] = $parsed;
@@ -637,7 +637,7 @@ class vainfo
     private function _get_plugin_tags()
     {
         $tag_order = $this->get_metadata_order();
-        if (!is_array($tag_order)) {
+        if (!empty($tag_order)) {
             $tag_order = array($tag_order);
         }
 
@@ -785,7 +785,8 @@ class vainfo
                     $parsed['mb_trackid'] = $data[0];
                     break;
                 case 'musicbrainz_albumtype':
-                    $parsed['release_type'] = $data[0];
+                    $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) :
+                        implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 default:
                     $parsed[$tagname] = $data[0];
@@ -838,15 +839,15 @@ class vainfo
                     break;
                 case 'tracknumber':
                     $parsed['track'] = $data[0];
-                break;
+                    break;
                 case 'discnumber':
                     $elements             = explode('/', $data[0]);
                     $parsed['disk']       = $elements[0];
                     $parsed['totaldisks'] = $elements[1];
-                break;
+                    break;
                 case 'date':
                     $parsed['year'] = $data[0];
-                break;
+                    break;
                 case 'musicbrainz_artistid':
                     $parsed['mb_artistid'] = $data[0];
                     break;
@@ -863,7 +864,8 @@ class vainfo
                     $parsed['mb_trackid'] = $data[0];
                     break;
                 case 'musicbrainz_albumtype':
-                    $parsed['release_type'] = $data[0];
+                    $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) :
+                        implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
                     break;
                 case 'unsyncedlyrics':
                 case 'unsynced lyrics':
@@ -891,7 +893,7 @@ class vainfo
                     break;
                 default:
                     $parsed[$tag] = $data[0];
-                break;
+                    break;
             }
         }
 
@@ -940,14 +942,14 @@ class vainfo
                     $elements             = explode('/', $data[0]);
                     $parsed['disk']       = $elements[0];
                     $parsed['totaldisks'] = $elements[1];
-                break;
+                    break;
                 case 'track_number':
                     $parsed['track'] = $data[0];
-                break;
+                    break;
                 case 'comment':
                     // First array key can be xFF\xFE in case of UTF-8, better to get it this way
                     $parsed['comment'] = reset($data);
-                break;
+                    break;
                 case 'composer':
                     $BOM = chr(0xff) . chr(0xfe);
                     if (strlen($data[0]) == 2 && $data[0] == $BOM) {
@@ -976,7 +978,7 @@ class vainfo
                     break;
                 default:
                     $parsed[$tag] = $data[0];
-                break;
+                    break;
             }
         }
 
@@ -1013,7 +1015,8 @@ class vainfo
                         $parsed['mb_albumartistid'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     case 'musicbrainz album type':
-                        $parsed['release_type'] = $id3v2['comments']['text'][$txxx['description']];
+                        $parsed['release_type'] = (is_array($id3v2['comments']['text'][$txxx['description']])) ? implode(", ", $id3v2['comments']['text'][$txxx['description']]) :
+                            implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $id3v2['comments']['text'][$txxx['description']]), array('')));
                         break;
                     case 'replaygain_track_gain':
                         $parsed['replaygain_track_gain'] = floatval($txxx['data']);
@@ -1112,34 +1115,35 @@ class vainfo
                         $data[0] = date('Y', $parsed['release_date']);
                     }
                     $parsed['year'] = $data[0];
-                break;
+                    break;
                 case 'musicbrainz track id':
                     $parsed['mb_trackid'] = $data[0];
-                break;
+                    break;
                 case 'musicbrainz album id':
                     $parsed['mb_albumid'] = $data[0];
-                break;
+                    break;
                 case 'musicbrainz album artist id':
                     $parsed['mb_albumartistid'] = $data[0];
-                break;
+                    break;
                 case 'musicbrainz release group id':
                     $parsed['mb_albumid_group'] = $data[0];
-                break;
+                    break;
                 case 'musicbrainz artist id':
                     $parsed['mb_artistid'] = $data[0];
-                break;
+                    break;
                 case 'musicbrainz album type':
-                $parsed['release_type'] = $data[0];
-                break;
+                $parsed['release_type'] = (is_array($data[0])) ? implode(", ", $data[0]) :
+                    implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                    break;
                 case 'track_number':
                     $parsed['track'] = $data[0];
-                break;
+                    break;
                 case 'disc_number':
                     $parsed['disk'] = $data[0];
-                break;
+                    break;
                 case 'album_artist':
                     $parsed['albumartist'] = $data[0];
-                break;
+                    break;
                 case 'originalyear':
                     $parsed['original_year'] = $data[0];
                     break;
@@ -1151,19 +1155,19 @@ class vainfo
                     break;
                 case 'label':
                     $parsed['publisher'] = $data[0];
-                break;
+                    break;
                 case 'tv_episode':
                     $parsed['tvshow_episode'] = $data[0];
-                break;
+                    break;
                 case 'tv_season':
                     $parsed['tvshow_season'] = $data[0];
-                break;
+                    break;
                 case 'tv_show_name':
                     $parsed['tvshow'] = $data[0];
-                break;
+                    break;
                 default:
                     $parsed[$tag] = $data[0];
-                break;
+                    break;
             }
         }
 

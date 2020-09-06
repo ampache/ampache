@@ -1,11 +1,11 @@
-/***********************************************
-           jQuery edit dialog
-***********************************************/
+/* --------------------------
+      jQuery edit dialog
+   -------------------------- */
 .editdialogstyle.ui-dialog {
     background-image: url('../images/background.png');
     background-repeat: repeat;
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
-    font-family: "DejaVuSansCondensed",Helvetica,Arial,sans-serif;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    font-family: "DejaVuSansCondensed", Helvetica, Arial, sans-serif;
     font-weight: normal;
     font-size: 16px;
     line-height: 1.5em;
@@ -17,7 +17,7 @@
     height: 100%;
 }
 
-.editdialogstyle.ui-dialog  .ui-dialog-titlebar {
+.editdialogstyle.ui-dialog .ui-dialog-titlebar {
     background: rgba(255, 255, 255, 0.1) none;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
@@ -27,9 +27,6 @@
     -moz-box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     padding: 7px;
-}
-
-.editdialogstyle.ui-dialog  .ui-dialog-title {
 }
 
 .editdialogstyle.ui-dialog .ui-dialog-content {
@@ -53,12 +50,12 @@
 
 .editdialogstyle.ui-dialog .ui-dialog-buttonset button {
     background: none;
-    background-image: -moz-linear-gradient(top,#ff9d00,#cc6200);
-    background-image: -ms-linear-gradient(top,#ff9d00,#cc6200);
-    background-image: -webkit-gradient(linear,0 0,0 100%,from(#ff9d00),to(#cc6200));
-    background-image: -webkit-linear-gradient(top,#ff9d00,#cc6200);
-    background-image: -o-linear-gradient(top,#ff9d00,#cc6200);
-    background-image: linear-gradient(top,#ff9d00,#cc6200);
+    background-image: -moz-linear-gradient(top, #ff9d00, #cc6200);
+    background-image: -ms-linear-gradient(top, #ff9d00, #cc6200);
+    background-image: -webkit-gradient(linear, 0, 0 100%, from(#ff9d00), to(#cc6200));
+    background-image: -webkit-linear-gradient(top, #ff9d00, #cc6200);
+    background-image: -o-linear-gradient(top, #ff9d00, #cc6200);
+    background-image: linear-gradient(top, #ff9d00, #cc6200);
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
     position: relative;
@@ -67,9 +64,9 @@
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0,0,0,0.2);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0,0,0,0.2);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0,0,0,0.2);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     color: #fff;
     min-width: 100px;
@@ -79,24 +76,24 @@
 .editdialogstyle.ui-dialog .ui-dialog-buttonset button:hover {
     background-position: 0 -10px;
     background-color: #cc6200;
-    -webkit-transition: background-position .1s linear;
-    -moz-transition: background-position .1s linear;
-    -ms-transition: background-position .1s linear;
-    -o-transition: background-position .1s linear;
-    transition: background-position .1s linear;
-    text-shadow: 0 -1px 0 rgba(0,0,0,0.5);
+    -webkit-transition: background-position 0.1s linear;
+    -moz-transition: background-position 0.1s linear;
+    -ms-transition: background-position 0.1s linear;
+    -o-transition: background-position 0.1s linear;
+    transition: background-position 0.1s linear;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
     text-decoration: none;
 }
 
 .editdialogstyle.ui-dialog .ui-dialog-buttonset button:focus:active {
-    -webkit-box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255, 255, 255, 0.1);
-    -moz-box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255, 255, 255, 0.1);
-    box-shadow: inset 0 0 3px #000,0 1px 0 rgba(255, 255, 255, 0.1);
-    -webkit-transition: background-position .1s linear;
-    -moz-transition: background-position .1s linear;
-    -ms-transition: background-position .1s linear;
-    -o-transition: background-position .1s linear;
-    transition: background-position .1s linear;
+    -webkit-box-shadow: inset 0 0 3px #000, 0 1px 0 rgba(255, 255, 255, 0.1);
+    -moz-box-shadow: inset 0 0 3px #000, 0 1px 0 rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 0 3px #000, 0 1px 0 rgba(255, 255, 255, 0.1);
+    -webkit-transition: background-position 0.1s linear;
+    -moz-transition: background-position 0.1s linear;
+    -ms-transition: background-position 0.1s linear;
+    -o-transition: background-position 0.1s linear;
+    transition: background-position 0.1s linear;
 }
 
 .edit_dialog_content {
@@ -112,13 +109,14 @@
     padding-bottom: 20px;
 }
 
-.edit_dialog_content input[type=text] , .edit_dialog_content select {
+.edit_dialog_content input[type=text],
+.edit_dialog_content select {
     width: 430px;
     height: 30px;
     background: #333;
     background: rgba(255, 255, 255, 0.2);
     border-color: #222;
-    border-color: rgba(0,0,0,0.7);
+    border-color: rgba(0, 0, 0, 0.7);
 }
 
 .edit_dialog_content input:focus, .edit_dialog_content select:focus {
@@ -132,9 +130,9 @@
     display: none;
 }
 
-/***********************************************
-           jQuery add to playlist dialog
-***********************************************/
+/* ------------------------------
+   jQuery add to playlist dialog
+   ------------------------------ */
 .playlistdialogstyle.ui-dialog {
     background-color: #222;
     font-size: 10px;
@@ -162,7 +160,7 @@
     cursor: pointer;
 }
 
-.playlistdialogstyle.ui-dialog  .ui-dialog-titlebar {
+.playlistdialogstyle.ui-dialog .ui-dialog-titlebar {
     display: none;
 }
 
@@ -192,9 +190,9 @@
     display: none;
 }
 
-/***********************************************
-           jQuery broadcasts dialog
-***********************************************/
+/* --------------------------
+   jQuery broadcasts dialog
+   -------------------------- */
 .broadcastsdialogstyle.ui-dialog {
     background-color: #222;
     font-size: 10px;
@@ -222,7 +220,7 @@
     cursor: pointer;
 }
 
-.broadcastsdialogstyle.ui-dialog  .ui-dialog-titlebar {
+.broadcastsdialogstyle.ui-dialog .ui-dialog-titlebar {
     display: none;
 }
 
@@ -252,9 +250,9 @@
     display: none;
 }
 
-/***********************************************
-           jQuery share dialog
-***********************************************/
+/* --------------------------
+   jQuery share dialog
+   -------------------------- */
 .sharedialogstyle.ui-dialog {
     background-color: #222;
     font-size: 10px;
@@ -282,11 +280,11 @@
     cursor: pointer;
 }
 
-.sharedialogstyle.ui-dialog  .ui-dialog-titlebar {
+.sharedialogstyle.ui-dialog .ui-dialog-titlebar {
     display: none;
 }
 
-.sharedialogstyle.ui-dialog  .ui-dialog-title {
+.sharedialogstyle.ui-dialog .ui-dialog-title {
     display: none;
 }
 

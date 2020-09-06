@@ -20,7 +20,8 @@
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 require_once AmpConfig::get('prefix') . UI::find_template('header.inc.php');
 
@@ -50,7 +51,7 @@ switch ($_REQUEST['action']) {
         $art = new Art($object_id, $object_type);
         $art->reset();
         show_confirmation(T_('No Problem'), T_('Art information has been removed from the database'), $burl);
-    break;
+        break;
     // Upload art
     case 'upload_art':
         // we didn't find anything
@@ -77,7 +78,7 @@ switch ($_REQUEST['action']) {
             show_confirmation(T_("There Was a Problem"), T_('Art could not be located at this time. This may be due to write access error, or the file was not received correctly'), $burl);
         }
 
-    break;
+        break;
     case 'find_art':
         // Prevent the script from timing out
         set_time_limit(0);
@@ -142,8 +143,7 @@ switch ($_REQUEST['action']) {
         }
 
         require_once AmpConfig::get('prefix') . UI::find_template('show_get_art.inc.php');
-
-    break;
+        break;
     case 'select_art':
 
         /* Check to see if we have the image url still */
@@ -173,7 +173,7 @@ switch ($_REQUEST['action']) {
         }
 
         header("Location:" . $burl);
-    break;
+        break;
 }
 
 // Show the Footer

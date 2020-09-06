@@ -141,9 +141,36 @@
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('random', T_('Generate new API Key')); ?></a>
             </td>
             <td>
-                <span><?php echo $client->apikey; ?></span>
+                <span>
+                    <?php if ($client->apikey) { ?>
+                    <br />
+                    <div style="background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;">
+                        <div id="apikey_qrcode"></div>
+                    </div>
+                    <br />
+                    <script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '<?php echo $client->apikey; ?>', background: '#ffffff', foreground: '#000000'});</script>
+                    <?php echo $client->apikey; ?>
+                    <?php
+                } ?>
+                </span>
             </td>
         </tr>
+        <?php if ($client->rsstoken) { ?>
+        <tr>
+            <td>
+                <?php echo T_('RSS Token'); ?>
+                <?php if (Access::check('interface', 100)) { ?>
+                    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('random', T_('Generate new RSS token')); ?></a>
+                <?php } ?>
+            </td>
+            <td>
+                <span>
+                    <?php echo $client->rsstoken; ?>
+                </span>
+            </td>
+        </tr>
+        <?php } ?>
+
         <tr>
             <td><?php echo T_('Config Preset'); ?></td>
             <td>
