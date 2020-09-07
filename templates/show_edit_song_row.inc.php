@@ -71,7 +71,7 @@ use Lib\Metadata\Model\Metadata;
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Composer') ?></td>
                 <td><input type="text" name="composer" value="<?php echo scrub_out($libitem->composer); ?>" /></td>
-          </tr>
+            </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Comment') ?></td>
                 <td><input type="text" name="comment" value="<?php echo scrub_out($libitem->comment); ?>" /></td>
