@@ -48,9 +48,7 @@
 </tr>
 <tr>
     <td><?php echo T_('Catalog'); ?></td>
-    <td>
-        <?php echo show_catalog_select('catalog', (int) ($_REQUEST['catalog'])); ?>
-    </td>
+    <td><?php echo show_catalog_select('catalog', (int) ($_REQUEST['catalog'])); ?></td>
 </tr>
 </table>
 <div class="formValidation">

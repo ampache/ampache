@@ -60,18 +60,14 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
     } ?>
         <tr>
             <td><?php echo T_('New Password'); ?>:</td>
-            <td>
-                <?php AmpError::display('password'); ?>
-                <input type="password" name="password1" id="password1" /></td>
+            <td><?php AmpError::display('password'); ?><input type="password" name="password1" id="password1" /></td>
         </tr>
         <tr>
             <td><?php echo T_('Confirm Password'); ?>:</td>
             <td><input type="password" name="password2" id="password2" /></td>
         </tr>
         <tr>
-            <td>
-                <?php echo T_('Avatar'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)
-            </td>
+            <td><?php echo T_('Avatar'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)</td>
             <td><input type="file" id="avatar" name="avatar" value="" />
         </tr>
         <tr>

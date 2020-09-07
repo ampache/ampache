@@ -26,9 +26,7 @@
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Stream Source'); ?></td>
-    <td>
-        <?php echo $object->f_link; ?>
-    </td>
+    <td><?php echo $object->f_link; ?></td>
 </tr>
 <tr>
     <td><?php echo T_('Name'); ?></td>

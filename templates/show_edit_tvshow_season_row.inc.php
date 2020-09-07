@@ -28,9 +28,7 @@
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('TV Show') ?></td>
-                <td>
-                    <?php show_tvshow_select('tvshow', $libitem->tvshow); ?>
-                </td>
+                <td><?php show_tvshow_select('tvshow', $libitem->tvshow); ?></td>
             </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />

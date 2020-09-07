@@ -27,9 +27,7 @@
             <th colspan="2"><?php echo T_('User Properties'); ?></th>
         </tr>
         <tr>
-            <td>
-                <?php echo T_('Username'); ?>:
-            </td>
+            <td><?php echo T_('Username'); ?>:</td>
             <td><input type="text" name="username" maxlength="128" value="<?php echo scrub_out($client->username); ?>" autofocus />
                 <?php AmpError::display('username'); ?>
             </td>
@@ -44,55 +42,41 @@
             </td>
         </tr>
         <tr>
-            <td>
-                <?php echo T_('E-mail'); ?>:
-            </td>
+            <td><?php echo T_('E-mail'); ?>:</td>
             <td><input type="text" name="email" value="<?php echo scrub_out($client->email); ?>" />
                 <?php AmpError::display('email'); ?>
             </td>
         </tr>
         <tr>
-            <td>
-                <?php echo  T_('Website'); ?>:
-            </td>
+            <td><?php echo  T_('Website'); ?>:</td>
             <td><input type="text" name="website" value="<?php echo scrub_out($client->website); ?>" />
                 <?php AmpError::display('website'); ?>
             </td>
         </tr>
         <tr>
-            <td>
-                <?php echo  T_('State'); ?>:
-            </td>
+            <td><?php echo  T_('State'); ?>:</td>
             <td><input type="text" name="state" value="<?php echo scrub_out($client->state); ?>" autocomplete="off" />
                 <?php AmpError::display('state'); ?>
             </td>
         </tr>
         <tr>
-            <td>
-                <?php echo  T_('City'); ?>:
-            </td>
+            <td><?php echo  T_('City'); ?>:</td>
             <td><input type="text" name="city" value="<?php echo scrub_out($client->city); ?>" autocomplete="off" />
                 <?php AmpError::display('city'); ?>
             </td>
         </tr>
         <tr>
-            <td>
-                <?php echo T_('Password'); ?>:
-            </td>
+            <td><?php echo T_('Password'); ?>:</td>
             <td><input type="password" name="password_1" value="" autocomplete="off" />
                 <?php AmpError::display('password'); ?>
             </td>
         </tr>
         <tr>
-            <td>
-                <?php echo T_('Confirm Password'); ?>:
-            </td>
+            <td><?php echo T_('Confirm Password'); ?>:</td>
             <td><input type="password" name="password_2" value="" autocomplete="off" /></td>
         </tr>
         <tr>
-            <td>
-                <?php echo  T_('User Access Level'); ?>:
-            </td>
+            <td><?php echo  T_('User Access Level'); ?>:</td>
             <td>
                 <?php $var_name = "on_" . $client->access; ${$var_name} = 'selected="selected"'; ?>
                 <select name="access">
@@ -105,9 +89,7 @@
             </td>
         </tr>
         <tr>
-            <td>
-                <?php echo T_('Avatar'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)
-            </td>
+            <td><?php echo T_('Avatar'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)</td>
             <td><input type="file" id="avatar" name="avatar" value="" />
         </tr>
         <tr>
