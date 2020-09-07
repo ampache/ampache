@@ -71,7 +71,10 @@ class Search extends playlist_object
             }
             $this->rules = json_decode((string) $this->rules, true);
         }
-        $this->date = time();
+        // workaround null dates/values
+        $this->last_count    = (int) $this->last_count;
+        $this->last_duration = (int) $this->last_duration;
+        $this->date          = time();
 
         $this->stars = array(
             T_('0 Stars'),
