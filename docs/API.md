@@ -1,4 +1,8 @@
-# Ampache's XML (& JSON!) API Ampache develop
+---
+title: "Ampache API 4.2.2"
+metaTitle: "Ampache API 4.2.2"
+metaDescription: "API documentation"
+---
 
 **Compatible Versions:**
 
@@ -7,12 +11,18 @@
 * 4.2.2-release
 * Ampache develop
 
-Ampache Provides an API for pulling out it's meta data in the form of simple XML documents. This was originally created for use by [Amarok](http://amarok.kde.org/), but there is no reason it couldn't be used to create other front-ends to the Ampache data. Access to the API is controlled by the Internal [Access Control Lists](API-acls.md). The KEY defined in the ACL is the passphrase that must be used to establish an API session. Currently all requests are limited to a maximum of 5000 results for performance reasons. To get additional results pass offset as an additional parameter.
-If you have any questions or requests for this API please submit a [Feature Request](https://github.com/ampache/ampache/issues?state=closed). All dates in the API calls should be passed as [ISO 8601](http://en.wikipedia.org/wiki/ISO_8601) dates.
+Ampache Provides an API for pulling out it's meta data in the form of XML and JSON documents. This was originally created for use 
+by [Amarok](http://amarok.kde.org/), but there is no reason it couldn't be used to create other front-ends to the Ampache data.
+Access to the API is controlled by the Internal [Access Control Lists](http://ampache.org/api/api-acls). The KEY defined in the
+ACL is the passphrase that must be used to establish an API session. Currently all requests are limited to a maximum of 5000 
+results for performance reasons. To get additional results pass offset as an additional parameter.
+
+If you have any questions or requests for this API please submit a [Feature Request](https://github.com/ampache/ampache/issues/new?assignees=&labels=&template=feature_request.md&title=%5BFeature+Request%5D).
+All dates in the API calls should be passed as [ISO 8601](http://en.wikipedia.org/wiki/ISO_8601) dates.
 
 ## Sending Handshake Request
 
-Multiple authentication methods are available, described in the next sections.
+Multiple authentication methods are available, described in the following sections.
 
 ### User / Password
 
@@ -26,8 +36,8 @@ The key that must be passed to Ampache is `SHA256(TIME+KEY)` where `KEY` is `SHA
 
 ```PHP
 $time = time();
-$key = hash('sha256','mypassword');
-$passphrase = hash('sha256',$time . $key);
+$key = hash('sha256', 'mypassword');
+$passphrase = hash('sha256', $time . $key);
 ```
 
 Once you've generated the encoded passphrase, you can call the following URL (localhost/ampache is the location of your Ampache installation)
@@ -38,13 +48,14 @@ http://localhost/ampache/server/xml.server.php?action=handshake&auth=PASSPHRASE&
 
 ### Api Key
 
-The key that must be passed to Ampache is the API Key generated for a specific user (none by default, only the administrator can generate one). Then call the following URL (localhost/ampache is the location of your Ampache installation):
+The key that must be passed to Ampache is the API Key generated for a specific user (none by default, only the administrator can generate one).
+Then call the following URL (localhost/ampache is the location of your Ampache installation):
 
 ```Text
 http://localhost/ampache/server/xml.server.php?action=handshake&auth=API_KEY&version=350001
 ```
 
-In API 400001 the key that must be passed to Ampache is `SHA256(USER+KEY)` where `KEY` is `SHA256('APIKEY')`. Below is a PHP example
+In API 4.0.0 and higher; the key can be passed to Ampache using `SHA256(USER+KEY)` where `KEY` is `SHA256('APIKEY')`. Below is a PHP example
 
 ```PHP
 $user = 'username';
@@ -126,14 +137,24 @@ All future interactions with the Ampache API must include the `AUTHENTICATION_TO
 
 ## Errors
 
-Ampache's XML errors are loosely based around the HTTP status codes. All errors are returned in the form of an XML Document however the string error message provided is translated into the language of the Ampache server in question. All services should only use the code value.
+Ampache's API errors are loosely based around the HTTP status codes.
+All errors are returned in the form of an XML/JSON Document however the string error message provided is translated into the language of the Ampache server in question. All services should only use the code value.
 
-## Example Error
+## Example Error messages
 
 ```xml
 <root>
       <error code="501">Access Control Not Enabled</error>
 </root>
+```
+
+```JSON
+{
+    "error": {
+        "code": "404",
+        "message": "share 107 was not found"
+    }
+}
 ```
 
 ## Current Error Codes
@@ -159,8 +180,8 @@ You can also pass it `limit=none` to overcome the `limit` limitation and return 
 
 For more in depth information regarding the different api servers you can view the following documentation pages.
 
-* [XML Documentation (develop)](http://ampache.org/api/api-xml-methods)
-* [JSON Documentation (develop)](http://ampache.org/api/api-json-methods)
+* [XML Documentation (4.2.2)](http://ampache.org/api/api-xml-methods)
+* [JSON Documentation (4.2.2)](http://ampache.org/api/api-json-methods)
 
 ### Non-Data Methods
 

@@ -47,7 +47,7 @@ $catalogs = Catalog::get_catalogs(); ?>
                 <th><?php echo T_('Podcast Episodes'); ?></th>
             <?php
     } ?>
-            <th><?php echo T_('Tags'); ?></th>
+            <th><?php echo T_('Genres'); ?></th>
             <th><?php echo T_('Catalog Size'); ?></th>
             <th><?php echo T_('Catalog Time'); ?></th>
         </tr>

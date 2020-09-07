@@ -45,7 +45,7 @@ $t_play      = T_('Play');
 $t_artists   = T_('Artists');
 $t_albums    = T_('Albums');
 $t_playlists = T_('Playlists');
-$t_tagcloud  = T_('Tag Cloud');
+$t_tagcloud  = T_('Genres');
 $t_favorites = T_('Favorites');
 $t_upload    = T_('Upload');
 $t_logout    = T_('Log out'); ?>
@@ -392,7 +392,7 @@ $t_logout    = T_('Log out'); ?>
                     <?php
                         } else { ?>
                         <span id="loginInfo">
-                            <a href="<?php echo $web_path; ?>/login.php" class="nohtml"><?php echo T_('Login'); ?></a>
+                            <a href="<?php echo $web_path; ?>/login.php?force_display=1" class="nohtml"><?php echo T_('Login'); ?></a>
                         <?php
                             if (AmpConfig::get('allow_public_registration') && Mailer::is_mail_enabled()) { ?>
                                 / <a href="<?php echo $web_path; ?>/register.php" class="nohtml"><?php echo T_('Register'); ?></a>

@@ -76,7 +76,7 @@ use Ampache\Module\Api\Ajax;
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Composer') ?></td>
                 <td><input type="text" name="composer" value="<?php echo scrub_out($libitem->composer); ?>" /></td>
-          </tr>
+            </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Comment') ?></td>
                 <td><input type="text" name="comment" value="<?php echo scrub_out($libitem->comment); ?>" /></td>
@@ -90,10 +90,8 @@ use Ampache\Module\Api\Ajax;
                 <td><input type="text" name="year" value="<?php echo scrub_out($libitem->year); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>
-                <td>
-                    <input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" />
-                </td>
+                <td class="edit_dialog_content_header"><?php echo T_('Genres') ?></td>
+                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" /></td>
             </tr>
             <?php
                 if (AmpConfig::get('licensing')) { ?>

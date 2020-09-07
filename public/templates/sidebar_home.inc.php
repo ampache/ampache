@@ -37,7 +37,7 @@ $t_artists   = T_('Artists');
 $t_albums    = T_('Albums');
 $t_labels    = T_('Labels');
 $t_playlists = T_('Playlists');
-$t_tagcloud  = T_('Tag Cloud');
+$t_tagcloud  = T_('Genres');
 $t_expander  = T_('Expand/Collapse');
 $t_search    = T_('Search'); ?>
 <ul class="sb2" id="sb_home">

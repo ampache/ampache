@@ -48,6 +48,7 @@ use Ampache\Model\Userflag;
 use Ampache\Model\Video;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\Localplay\LocalPlay;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
@@ -1097,10 +1098,10 @@ class Api
     } // license_songs
 
     /**
-     * tags
+     * genres
      * MINIMUM_API_VERSION=380001
      *
-     * This returns the tags (Genres) based on the specified filter
+     * This returns the genres (Tags) based on the specified filter
      *
      * @param array $input
      * filter = (string) Alpha-numeric search term //optional
@@ -1108,7 +1109,7 @@ class Api
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
-    public static function tags($input)
+    public static function genres($input)
     {
         self::getBrowse()->reset_filters();
         self::getBrowse()->set_type('tag');
@@ -1123,50 +1124,50 @@ class Api
             case 'json':
                 Json_Data::set_offset($input['offset']);
                 Json_Data::set_limit($input['limit']);
-                echo Json_Data::tags($tags);
+                echo Json_Data::genres($tags);
                 break;
             default:
                 Xml_Data::set_offset($input['offset']);
                 Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::tags($tags);
+                echo Xml_Data::genres($tags);
         }
         Session::extend($input['auth']);
-    } // tags
+    } // genres
 
     /**
-     * tag
+     * genre
      * MINIMUM_API_VERSION=380001
      *
-     * This returns a single tag based on UID
+     * This returns a single genre based on UID
      *
      * @param array $input
-     * filter = (string) UID of Tag
+     * filter = (string) UID of Genre
      * @return boolean
      */
-    public static function tag($input)
+    public static function genre($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'tag')) {
+        if (!self::check_parameter($input, array('filter'), 'genre')) {
             return false;
         }
         $uid = scrub_in($input['filter']);
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::tags(array($uid));
+                echo Json_Data::genres(array($uid));
                 break;
             default:
-                echo Xml_Data::tags(array($uid));
+                echo Xml_Data::genres(array($uid));
         }
         Session::extend($input['auth']);
 
         return true;
-    } // tag
+    } // genre
 
     /**
-     * tag_artists
+     * genre_artists
      * MINIMUM_API_VERSION=380001
      *
-     * This returns the artists associated with the tag in question as defined by the UID
+     * This returns the artists associated with the genre in question as defined by the UID
      *
      * @param array $input
      * filter = (string) UID of Album
@@ -1174,9 +1175,9 @@ class Api
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function tag_artists($input)
+    public static function genre_artists($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'tag_artists')) {
+        if (!self::check_parameter($input, array('filter'), 'genre_artists')) {
             return false;
         }
         $artists = Tag::get_tag_objects('artist', $input['filter']);
@@ -1199,23 +1200,23 @@ class Api
         Session::extend($input['auth']);
 
         return true;
-    } // tag_artists
+    } // genre_artists
 
     /**
-     * tag_albums
+     * genre_albums
      * MINIMUM_API_VERSION=380001
      *
-     * This returns the albums associated with the tag in question
+     * This returns the albums associated with the genre in question
      *
      * @param array $input
-     * filter = (string) UID of Tag
+     * filter = (string) UID of Genre
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function tag_albums($input)
+    public static function genre_albums($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'tag_albums')) {
+        if (!self::check_parameter($input, array('filter'), 'genre_albums')) {
             return false;
         }
         $albums = Tag::get_tag_objects('album', $input['filter']);
@@ -1240,23 +1241,23 @@ class Api
         Session::extend($input['auth']);
 
         return true;
-    } // tag_albums
+    } // genre_albums
 
     /**
-     * tag_songs
+     * genre_songs
      * MINIMUM_API_VERSION=380001
      *
-     * returns the songs for this tag
+     * returns the songs for this genre
      *
      * @param array $input
-     * filter = (string) UID of Tag
+     * filter = (string) UID of Genre
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function tag_songs($input)
+    public static function genre_songs($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'tag_songs')) {
+        if (!self::check_parameter($input, array('filter'), 'genre_songs')) {
             return false;
         }
         $songs = Tag::get_tag_objects('song', $input['filter']);
@@ -1282,7 +1283,7 @@ class Api
         Session::extend($input['auth']);
 
         return true;
-    } // tag_songs
+    } // genre_songs
 
     /**
      * songs
@@ -2844,7 +2845,7 @@ class Api
         }
 
         if ($user_id > 0) {
-            if ($password) {
+            if ($password && !AmpConfig::get('simple_user_mode')) {
                 $user->update_password('', $password);
             }
             if ($fullname) {
@@ -4048,39 +4049,93 @@ class Api
     /**
      * localplay
      * MINIMUM_API_VERSION=380001
+     * CHANGED_IN_API_VERSION=430000
      *
      * This is for controlling Localplay
      *
      * @param array $input
-     * command   = (string) 'next', 'prev', 'stop', 'play'
+     * command = (string) 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip'
+     * oid     = (integer) object_id //optional
+     * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream' //optional
+     * clear   = (integer) 0,1 Clear the current playlist before adding //optional
      */
     public static function localplay($input)
     {
+        if (!self::check_parameter($input, array('command'), 'localplay')) {
+            return false;
+        }
         // Load their Localplay instance
         $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
         $localplay->connect();
 
+        $result_status = false;
         switch ($input['command']) {
-            case 'next':
-            case 'prev':
-            case 'play':
-            case 'stop':
-                $result_status = $localplay->$input['command']();
-                $xml_array     = array('localplay' => array('command' => array($input['command'] => make_bool($result_status))));
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo json_encode($xml_array, JSON_PRETTY_PRINT);
-                        break;
-                    default:
-                        echo Xml_Data::keyed_array($xml_array);
+            case 'add':
+                // for add commands get the object details
+                $oid   = (int) $input['oid'];
+                $type  = $input['type'] ? (string) $input['type'] : 'Song';
+                $clear = (int) $input['clear'];
+                // clear before the add
+                if ($clear == 1) {
+                    $localplay->delete_all();
                 }
+                $media = array(
+                    'object_type' => $type,
+                    'object_id' => $oid,
+                );
+                $playlist = new Stream_Playlist();
+                $playlist->add(array($media));
+                foreach ($playlist->urls as $streams) {
+                    $result_status = $localplay->add_url($streams);
+                }
+                break;
+            case 'next':
+                $result_status = $localplay->next();
+                break;
+            case 'prev':
+                $result_status = $localplay->prev();
+                break;
+            case 'stop':
+                $result_status = $localplay->stop();
+                break;
+            case 'play':
+                $result_status = $localplay->play();
+                break;
+            case 'pause':
+                $result_status = $localplay->pause();
+                break;
+            case 'volume_up':
+                $result_status = $localplay->volume_up();
+                break;
+            case 'volume_down':
+                $result_status = $localplay->volume_down();
+                break;
+            case 'volume_mute':
+                $result_status = $localplay->volume_mute();
+                break;
+            case 'delete_all':
+                $result_status = $localplay->volume_down();
+                break;
+            case 'skip':
+                $result_status = $localplay->volume_mute();
                 break;
             default:
                 // They are doing it wrong
                 self::message('error', T_('Invalid request'), '405', $input['api_format']);
-                break;
+
+                return false;
         } // end switch on command
+        $output_array     = array('localplay' => array('command' => array($input['command'] => make_bool($result_status))));
+        switch ($input['api_format']) {
+            case 'json':
+                echo json_encode($output_array, JSON_PRETTY_PRINT);
+                break;
+            default:
+                echo XML_Data::keyed_array($output_array);
+        }
         Session::extend($input['auth']);
+
+        return true;
     } // localplay
 
     /**

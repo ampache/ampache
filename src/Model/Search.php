@@ -516,7 +516,7 @@ class Search extends playlist_object
         $this->type_boolean('myplayedartist', T_('Played by Me (Artist)'));
         $this->type_numeric('time', T_('Length (in minutes)'));
 
-        $this->type_text('tag', T_('Tags'));
+        $this->type_text('tag', T_('Genre'));
         $this->type_text('album_tag', T_('Album Tag'));
         $this->type_text('artist_tag', T_('Artist Tag'));
 
@@ -638,7 +638,7 @@ class Search extends playlist_object
         $this->type_boolean('myplayed', T_('Played by Me'));
         $this->type_numeric('time', T_('Length (in minutes)'));
 
-        $this->type_text('tag', T_('Tag'));
+        $this->type_text('tag', T_('Genre'));
 
         $users = array();
         foreach (User::get_valid_users() as $userid) {
@@ -683,7 +683,7 @@ class Search extends playlist_object
         $this->type_boolean('myplayed', T_('Played by Me'));
         $this->type_numeric('time', T_('Length (in minutes)'));
 
-        $this->type_text('tag', T_('Tag'));
+        $this->type_text('tag', T_('Genre'));
 
         $users = array();
         foreach (User::get_valid_users() as $userid) {

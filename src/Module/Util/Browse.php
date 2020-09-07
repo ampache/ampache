@@ -271,8 +271,8 @@ class Browse extends Query
                 break;
             case 'tag':
                 Tag::build_cache($object_ids);
-                $box_title = T_('Tag Cloud');
-                $box_req   = Ui::find_template('show_tagcloud.inc.php');
+                $box_title = T_('Genres');
+                $box_req   = UI::find_template('show_tagcloud.inc.php');
                 break;
             case 'video':
                 Video::build_cache($object_ids);

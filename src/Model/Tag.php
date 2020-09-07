@@ -841,12 +841,12 @@ class Tag extends database_object implements library_item
      */
     public function get_keywords()
     {
-        $keywords        = array();
-        $keywords['tag'] = array(
+        $keywords        = [];
+        $keywords['tag'] = [
             'important' => true,
-            'label' => T_('Tag'),
+            'label' => T_('Genre'),
             'value' => $this->name
-        );
+        ];
 
         return $keywords;
     }

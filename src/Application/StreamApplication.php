@@ -53,7 +53,7 @@ final class StreamApplication implements ApplicationInterface
 
         if (!defined('NO_SESSION')) {
             /* If we are running a demo, quick while you still can! */
-            if (AmpConfig::get('demo_mode') || (AmpConfig::get('use_auth')) && !Access::check('interface', 25)) {
+            if (AmpConfig::get('demo_mode') || (AmpConfig::get('use_auth') && !Access::check('interface', 25))) {
                 Ui::access_denied();
 
                 return;

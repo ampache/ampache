@@ -127,14 +127,14 @@ class Json_Data
     } // success
 
     /**
-     * tags_array
+     * genre_array
      *
-     * This returns the formatted 'tags' array for a JSON document
+     * This returns the formatted 'genre' array for a JSON document
      * @param array $tags
      * @param boolean $simple
      * @return array
      */
-    private static function tags_array($tags, $simple = false)
+    private static function genre_array($tags, $simple = false)
     {
         $JSON = array();
 
@@ -166,7 +166,7 @@ class Json_Data
         }
 
         return $JSON;
-    } // tags_array
+    } // genre_array
 
     /**
      * indexes
@@ -229,14 +229,14 @@ class Json_Data
     } // licenses
 
     /**
-     * tags
+     * genres
      *
-     * This returns tags to the user, in a pretty JSON document with the information
+     * This returns genres to the user, in a pretty JSON document with the information
      *
      * @param array $tags (description here...)
      * @return string return JSON
      */
-    public static function tags($tags)
+    public static function genres($tags)
     {
         if (count($tags) > self::$limit || self::$offset > 0) {
             $tags = array_splice($tags, self::$offset, self::$limit);
@@ -262,11 +262,11 @@ class Json_Data
 
         // return a tag object
         array_push($JSON, array(
-            "tag" => $TAGS
+            "genre" => $TAGS
         ));
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
-    } // tags
+    } // genres
 
     /**
      * artists
@@ -316,9 +316,9 @@ class Json_Data
             array_push($JSON, array(
                 "id" => (string)$artist->id,
                 "name" => $artist->f_full_name,
-                "albums" => (int)$albums,
-                "songs" => (int)$songs,
-                "tag" => self::tags_array($artist->tags),
+                "albums" => (int) $albums,
+                "songs" => (int) $songs,
+                "genre" => self::genre_array($artist->tags),
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
                 "preciserating" => ($rating->get_user_rating() ?: null),
@@ -404,10 +404,10 @@ class Json_Data
                 $disk = (count($album->album_suite) <= 1) ? $album->disk : count($album->album_suite);
             }
 
-            $theArray['year']          = (int)$album->year;
-            $theArray['tracks']        = (int)$songs;
-            $theArray['disk']          = (int)$disk;
-            $theArray['tag']           = self::tags_array($album->tags);
+            $theArray['year']          = (int) $album->year;
+            $theArray['tracks']        = (int) $songs;
+            $theArray['disk']          = (int) $disk;
+            $theArray['genre']         = self::genre_array($album->tags);
             $theArray['art']           = $art_url;
             $theArray['flag']          = (!$flag->get_flag($user_id, false) ? 0 : 1);
             $theArray['preciserating'] = ($rating->get_user_rating() ?: null);
@@ -727,10 +727,9 @@ class Json_Data
                     "name" => $song->get_artist_name()
                 ),
                 "album" => array(
-                    "id" => (string)$song->album,
-                    "name" => $song->get_album_name()
-                ),
-                "tag" => self::tags_array($song->tags),
+                    "id" => (string) $song->album,
+                    "name" => $song->get_album_name()),
+                "genre" => self::genre_array($song->tags)
             );
             if ($song->albumartist) {
                 $ourSong['albumartist'] = array(
@@ -773,7 +772,6 @@ class Json_Data
             $ourSong['replaygain_album_peak'] = $song->replaygain_album_peak;
             $ourSong['replaygain_track_gain'] = $song->replaygain_track_gain;
             $ourSong['replaygain_track_peak'] = $song->replaygain_track_peak;
-            $ourSong['genre']                 = self::tags_array($song->tags, true);
 
             if (Song::isCustomMetadataEnabled()) {
                 foreach ($song->getMetadata() as $metadata) {
@@ -817,8 +815,8 @@ class Json_Data
                 "title" => $video->title,
                 "mime" => $video->mime,
                 "resolution" => $video->f_resolution,
-                "size" => (int)$video->size,
-                "tag" => self::tags_array($video->tags),
+                "size" => (int) $video->size,
+                "genre" => self::genre_array($video->tags),
                 "url" => Video::play_url($video->id, '', 'api', false, $user_id)
             ));
         } // end foreach
@@ -857,11 +855,11 @@ class Json_Data
             array_push($JSON, array(
                 "id" => (string)$song->id,
                 "title" => $song->title,
-                "artist" => array("id" => (string)$song->artist, "name" => $song->f_artist_full),
-                "album" => array("id" => (string)$song->album, "name" => $song->f_album_full),
-                "tag" => self::tags_array($song->tags),
-                "track" => (int)$song->track,
-                "time" => (int)$song->time,
+                "artist" => array("id" => (string) $song->artist, "name" => $song->f_artist_full),
+                "album" => array("id" => (string) $song->album, "name" => $song->f_album_full),
+                "genre" => self::genre_array($song->tags),
+                "track" => (int) $song->track,
+                "time" => (int) $song->time,
                 "mime" => $song->mime,
                 "url" => Song::play_url($song->id, '', 'api', false, $user_id),
                 "size" => (int)$song->size,
@@ -869,8 +867,7 @@ class Json_Data
                 "preciserating" => ($rating->get_user_rating() ?: null),
                 "rating" => ($rating->get_user_rating() ?: null),
                 "averagerating" => ($rating->get_average_rating() ?: null),
-                "vote" => $democratic->get_vote($row_id),
-                "genre" => self::tags_array($song->tags, true)
+                "vote" => $democratic->get_vote($row_id)
             ));
         } // end foreach
 

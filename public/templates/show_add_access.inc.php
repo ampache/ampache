@@ -36,14 +36,11 @@ $all          = T_('All'); ?>
     <table class="tabledata">
         <tr>
             <td><?php echo T_('Name') . ':'; ?></td>
-            <td>
-                <input type="text" name="name" value="<?php echo scrub_out(Core::get_request('name')); ?>" />
-            </td>
+            <td><input type="text" name="name" value="<?php echo scrub_out(Core::get_request('name')); ?>" /></td>
         </tr>
         <tr>
             <td><?php echo T_('Level') . ':'; ?></td>
-            <td>
-                <input name="level" type="radio" checked="checked" value="5" /> <?php echo T_('View'); ?>
+            <td><input name="level" type="radio" checked="checked" value="5" /> <?php echo T_('View'); ?>
                 <input name="level" type="radio" value="25" /> <?php echo T_('Read'); ?>
                 <input name="level" type="radio" value="50" /> <?php echo T_('Read/Write'); ?>
                 <input name="level" type="radio" value="75" /> <?php echo $all; ?>
@@ -102,8 +99,7 @@ $all          = T_('All'); ?>
                     echo scrub_out(Core::get_server('REMOTE_ADDR'));
                 } else {
                     echo scrub_out(Core::get_request('start'));
-                } ?>" />
-            </td>
+                } ?>" /></td>
             <td>
                 <?php echo T_('End'); ?>:
                     <?php AmpError::display('end'); ?>
@@ -112,8 +108,7 @@ $all          = T_('All'); ?>
                         echo scrub_out(Core::get_server('REMOTE_ADDR'));
                     } else {
                         echo scrub_out(Core::get_request('end'));
-                    } ?>" />
-            </td>
+                    } ?>" /></td>
         </tr>
     </table>
     <div class="formValidation">

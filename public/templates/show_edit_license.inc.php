@@ -50,9 +50,7 @@ use Ampache\Module\Util\Ui;
 } ?>" /></td>
 </tr>
 <tr>
-    <td>
-        <input type="submit" value="<?php echo T_('Confirm'); ?>" />
-    </td>
+    <td><input type="submit" value="<?php echo T_('Confirm'); ?>" /></td>
 </tr>
 </table>
 </form>

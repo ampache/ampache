@@ -88,7 +88,7 @@ use Ampache\Model\Tag;
                 <td><input type="text" name="bitrate" value="<?php echo scrub_out($libitem->bitrate); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Genre') ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Genres') ?></td>
                 <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" /></td>
             </tr>
         </table>

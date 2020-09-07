@@ -181,14 +181,14 @@ class Xml_Data
     } // footer
 
     /**
-     * tags_string
+     * genre_string
      *
-     * This returns the formatted 'tags' string for an xml document
+     * This returns the formatted 'genre' string for an xml document
      * @input array $tags
      * @param $tags
      * @return string
      */
-    private static function tags_string($tags)
+    private static function genre_string($tags)
     {
         $string = '';
 
@@ -206,12 +206,14 @@ class Xml_Data
             }
 
             foreach ($atags as $tag => $data) {
-                $string .= "\t<tag id=\"" . $tag . "\" " . "count=\"" . $data['count'] . "\" " . "><![CDATA[" . $data['name'] . "]]></tag>\n";
+                $string .= "\t<genre id=\"" . $tag . "\" " .
+                        "count=\"" . $data['count'] . "\" " .
+                        "><![CDATA[" . $data['name'] . "]]></genre>\n";
             }
         }
 
         return $string;
-    } // tags_string
+    } // genre_string
 
     /**
      * output_xml_from_array
@@ -434,14 +436,14 @@ class Xml_Data
     } // licenses
 
     /**
-     * tags
+     * genres
      *
-     * This returns tags to the user, in a pretty xml document with the information
+     * This returns genres to the user, in a pretty xml document with the information
      *
      * @param array $tags (description here...)
      * @return    string    return xml
      */
-    public static function tags($tags)
+    public static function genres($tags)
     {
         if (count($tags) > self::$limit || self::$offset > 0) {
             $tags = array_splice($tags, self::$offset, self::$limit);
@@ -451,11 +453,19 @@ class Xml_Data
         foreach ($tags as $tag_id) {
             $tag    = new Tag($tag_id);
             $counts = $tag->count();
-            $string .= "<tag id=\"$tag_id\">\n" . "\t<name><![CDATA[$tag->name]]></name>\n" . "\t<albums>" . (int)($counts['album']) . "</albums>\n" . "\t<artists>" . (int)($counts['artist']) . "</artists>\n" . "\t<songs>" . (int)($counts['song']) . "</songs>\n" . "\t<videos>" . (int)($counts['video']) . "</videos>\n" . "\t<playlists>" . (int)($counts['playlist']) . "</playlists>\n" . "\t<stream>" . (int)($counts['live_stream']) . "</stream>\n" . "</tag>\n";
+            $string .= "<genre id=\"$tag_id\">\n" .
+                    "\t<name><![CDATA[$tag->name]]></name>\n" .
+                    "\t<albums>" . (int) ($counts['album']) . "</albums>\n" .
+                    "\t<artists>" . (int) ($counts['artist']) . "</artists>\n" .
+                    "\t<songs>" . (int) ($counts['song']) . "</songs>\n" .
+                    "\t<videos>" . (int) ($counts['video']) . "</videos>\n" .
+                    "\t<playlists>" . (int) ($counts['playlist']) . "</playlists>\n" .
+                    "\t<stream>" . (int) ($counts['live_stream']) . "</stream>\n" .
+                    "</genre>\n";
         } // end foreach
 
         return self::output_xml($string);
-    } // tags
+    } // genres
 
     /**
      * artists
@@ -484,7 +494,7 @@ class Xml_Data
 
             $rating     = new Rating($artist_id, 'artist');
             $flag       = new Userflag($artist_id, 'artist');
-            $tag_string = self::tags_string($artist->tags);
+            $tag_string = self::genre_string($artist->tags);
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist&auth=' . scrub_out(Core::get_request('auth'));
@@ -569,8 +579,17 @@ class Xml_Data
                 $disk = (count($album->album_suite) <= 1) ? $album->disk : count($album->album_suite);
             }
 
-            $string .= "\t<year>" . $album->year . "</year>\n" . "\t<tracks>" . $songs . "</tracks>\n" . "\t<disk>" . $disk . "</disk>\n" . self::tags_string($album->tags) . "\t<art><![CDATA[$art_url]]></art>\n" . "\t<flag>" . (!$flag->get_flag($user_id,
-                    false) ? 0 : 1) . "</flag>\n" . "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" . "\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" . "\t<averagerating>" . ($rating->get_average_rating() ?: null) . "</averagerating>\n" . "\t<mbid><![CDATA[" . $album->mbid . "]]></mbid>\n" . "</album>\n";
+            $string .= "\t<year>" . $album->year . "</year>\n" .
+                    "\t<tracks>" . $songs . "</tracks>\n" .
+                    "\t<disk>" . $disk . "</disk>\n" .
+                    self::genre_string($album->tags) .
+                    "\t<art><![CDATA[$art_url]]></art>\n" .
+                    "\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n" .
+                    "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
+                    "\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" .
+                    "\t<averagerating>" . ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
+                    "\t<mbid><![CDATA[" . $album->mbid . "]]></mbid>\n" .
+                    "</album>\n";
         } // end foreach
 
         return self::output_xml($string, $full_xml);
@@ -766,7 +785,7 @@ class Xml_Data
             }
 
             $song->format();
-            $tag_string = self::tags_string(Tag::get_top_tags('song', $song_id));
+            $tag_string = self::genre_string(Tag::get_top_tags('song', $song_id));
             $rating     = new Rating($song_id, 'song');
             $flag       = new Userflag($song_id, 'song');
             $art_url    = Art::url($song->album, 'album', Core::get_request('auth'));
@@ -791,9 +810,6 @@ class Xml_Data
                         $metadata->getField()->getName());
                     $string .= "\t<" . $meta_name . "><![CDATA[" . $metadata->getData() . "]]></" . $meta_name . ">\n";
                 }
-            }
-            foreach ($song->tags as $tag) {
-                $string .= "\t<genre><![CDATA[" . $tag['name'] . "]]></genre>\n";
             }
 
             $string .= "</song>\n";
@@ -822,9 +838,16 @@ class Xml_Data
             $video = new Video($video_id);
             $video->format();
 
-            $string .= "<video id=\"" . $video->id . "\">\n" . // Title is an alias for name
-                "\t<title><![CDATA[" . $video->title . "]]></title>\n" . "\t<name><![CDATA[" . $video->title . "]]></name>\n" . "\t<mime><![CDATA[" . $video->mime . "]]></mime>\n" . "\t<resolution><![CDATA[" . $video->f_resolution . "]]></resolution>\n" . "\t<size>" . $video->size . "</size>\n" . self::tags_string($video->tags) . "\t<url><![CDATA[" . Video::play_url($video->id,
-                    '', 'api', false, $user_id) . "]]></url>\n" . "</video>\n";
+            $string .= "<video id=\"" . $video->id . "\">\n" .
+                    // Title is an alias for name
+                    "\t<title><![CDATA[" . $video->title . "]]></title>\n" .
+                    "\t<name><![CDATA[" . $video->title . "]]></name>\n" .
+                    "\t<mime><![CDATA[" . $video->mime . "]]></mime>\n" .
+                    "\t<resolution><![CDATA[" . $video->f_resolution . "]]></resolution>\n" .
+                    "\t<size>" . $video->size . "</size>\n" .
+                    self::genre_string($video->tags) .
+                    "\t<url><![CDATA[" . Video::play_url($video->id, '', 'api', false, $user_id) . "]]></url>\n" .
+                    "</video>\n";
         } // end foreach
 
         return self::output_xml($string);
@@ -855,7 +878,7 @@ class Xml_Data
             $song->genre   = $tag->id;
             $song->f_genre = $tag->name;
 
-            $tag_string = self::tags_string($song->tags);
+            $tag_string = self::genre_string($song->tags);
 
             $rating = new Rating($song->id, 'song');
 

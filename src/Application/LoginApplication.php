@@ -174,7 +174,7 @@ final class LoginApplication implements ApplicationInterface
                 $city       = array_key_exists('city', $auth) ? $auth['city']    : '';
 
                 // Attempt to create the user
-                if (User::create($username, $name, $email, $website, hash('sha256', mt_rand()), $access, $state, $city) > 0) {
+                if (User::create($username, $fullname, $email, $website, hash('sha256', mt_rand()), $access, $state, $city) > 0) {
                     $user = User::get_from_username($username);
 
                     if (array_key_exists('avatar', $auth)) {
