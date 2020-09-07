@@ -36,7 +36,7 @@ $thcount = 8; ?>
             <th class="cel_songs"><?php echo T_('Songs');  ?></th>
             <th class="cel_albums"><?php echo T_('Albums'); ?></th>
             <th class="cel_time"><?php echo T_('Time'); ?></th>
-            <th class="cel_tags"><?php echo T_('Tags'); ?></th>
+            <th class="cel_tags"><?php echo T_('Genres'); ?></th>
         <?php if (AmpConfig::get('ratings')) {
         ++$thcount; ?>
             <th class="cel_rating"><?php echo T_('Rating'); ?></th>
@@ -98,7 +98,7 @@ $thcount = 8; ?>
             <th class="cel_songs"> <?php echo T_('Songs');  ?> </th>
             <th class="cel_albums"> <?php echo T_('Albums'); ?> </th>
             <th class="cel_time"> <?php echo T_('Time'); ?> </th>
-            <th class="cel_tags"><?php echo T_('Tags'); ?></th>
+            <th class="cel_tags"><?php echo T_('Genres'); ?></th>
         <?php if (AmpConfig::get('ratings')) { ?>
             <th class="cel_rating"><?php echo T_('Rating'); ?></th>
         <?php
