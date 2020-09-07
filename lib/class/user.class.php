@@ -633,7 +633,7 @@ class User extends database_object
             return false;
         }
 
-        if (!AmpConfig::get('use_auth') && Core::get_global('user')->access < 5) {
+        if (!AmpConfig::get('use_auth') && Core::get_global('user')->access <= 5) {
             return false;
         }
 
