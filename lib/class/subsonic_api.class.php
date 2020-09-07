@@ -1678,7 +1678,7 @@ class Subsonic_Api
 
             if ($user_id > 0) {
                 // update password
-                if ($password) {
+                if ($password && !AmpConfig::get('simple_user_mode')) {
                     $password = self::decrypt_password($password);
                     $user->update_password($password);
                 }
@@ -1749,7 +1749,7 @@ class Subsonic_Api
 
         if ($myuser->username == $username || Access::check('interface', 100)) {
             $user = User::get_from_username((string) $username);
-            if ($user->id) {
+            if ($user->id && !AmpConfig::get('simple_user_mode')) {
                 $user->update_password($password);
                 $response = Subsonic_XML_Data::createSuccessResponse('changepassword');
             } else {

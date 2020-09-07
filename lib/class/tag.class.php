@@ -847,7 +847,7 @@ class Tag extends database_object implements library_item
     {
         $keywords        = array();
         $keywords['tag'] = array('important' => true,
-            'label' => T_('Tag'),
+            'label' => T_('Genre'),
             'value' => $this->name);
 
         return $keywords;

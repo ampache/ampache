@@ -41,10 +41,7 @@ $web_path = AmpConfig::get('web_path'); ?>
 if (!count($object_ids)) {
     $playlist = new Playlist($democratic->base_playlist); ?>
 <tr>
-<td>
-    <?php echo T_('Playing from base playlist'); ?>.
-    </a>
-</td>
+<td><?php echo T_('Playing from base playlist'); ?>.</a></td>
 </tr>
 <?php
 } // if no songs
