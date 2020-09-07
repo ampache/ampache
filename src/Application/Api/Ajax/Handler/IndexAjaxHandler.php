@@ -26,12 +26,12 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Model\Video;
+use Ampache\Module\Artist\ArtistEventRetrieverInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Model\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Artist;
-use Ampache\Module\Artist\Artist_Event;
 use Ampache\Module\Util\Browse;
 use Ampache\Model\Catalog;
 use Ampache\Model\Channel;
@@ -45,6 +45,14 @@ use Ampache\Model\Wanted;
 
 final class IndexAjaxHandler implements AjaxHandlerInterface
 {
+    private ArtistEventRetrieverInterface $artistEventRetriever;
+
+    public function __construct(
+        ArtistEventRetrieverInterface $artistEventRetriever
+    ) {
+        $this->artistEventRetriever = $artistEventRetriever;
+    }
+    
     public function handle(): void
     {
         $results = array();
@@ -134,24 +142,8 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $artist = new Artist($_REQUEST['artist']);
                     $artist->format();
                     if ($artist->id) {
-                        $up_concerts     = Artist_Event::get_upcoming_events($artist);
-                        $past_concerts   = Artist_Event::get_past_events($artist);
-                        $coming_concerts = array();
-                        $concerts        = array();
-                        if ($up_concerts) {
-                            foreach ($up_concerts->children() as $item) {
-                                if ($item->getName() == 'event') {
-                                    $coming_concerts[] = $item;
-                                }
-                            }
-                        }
-                        if ($past_concerts) {
-                            foreach ($past_concerts->children() as $item) {
-                                if ($item->getName() == 'event') {
-                                    $concerts[] = $item;
-                                }
-                            }
-                        }
+                        $coming_concerts = $this->artistEventRetriever->getUpcomingEvents($artist);
+                        $concerts        = $this->artistEventRetriever->getPastEvents($artist);
                     }
                     ob_start();
                     require_once Ui::find_template('show_concerts.inc.php');
