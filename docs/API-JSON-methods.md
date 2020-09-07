@@ -1,4 +1,8 @@
-# JSON Methods Ampache develop
+---
+title: "JSON Methods"
+metaTitle: "JSON Methods"
+metaDescription: "API documentation"
+---
 
 Lets go through come calls and examples that you can do for each JSON method.
 
@@ -29,7 +33,7 @@ This can be called without being authenticated, it is useful for determining if 
 
 |Input |Type  |Description|Optional|
 |------|------|-----------|-------:|
-|'auth'|string|(Session ID) destroys the session if it exists|YES      |
+|'auth'|string|(Session ID) returns version information and extends the session if passed|YES      |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/ping.json)
 
@@ -41,7 +45,7 @@ Destroy a session using the auth parameter.
 
 |Input |Type  |Description|Optional|
 |------|------|-----------|-------:|
-|'auth'|string|(Session ID) returns version information and extends the session if passed|NO     |
+|'auth'|string|(Session ID) destroys the session if it exists|NO     |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/goodbye.json)
 
@@ -497,6 +501,7 @@ Create a public url that can be used by anyone to stream media.
 Takes the file id with optional description and expires parameters.
 
 @param array $input
+
 |Input   |Type|Description|Optional|
 |--------|----|-----------|-------:|
 |'filter'|    |UID of object you are sharing| NO      |
@@ -514,6 +519,7 @@ Update the description and/or expiration date for an existing share.
 Takes the share id to update with optional description and expires parameters.
 
 @param array $input
+
 |Input   |Type|Description|Optional|
 |--------|----|-----------|-------:|
 |'filter'|string|Alpha-numeric search term| NO      |

@@ -1,4 +1,8 @@
-# XML Methods Ampache develop
+---
+title: "XML Methods"
+metaTitle: "XML Methods"
+metaDescription: "API documentation"
+---
 
 Lets go through come calls and examples that you can do for each XML method.
 
@@ -29,7 +33,7 @@ This can be called without being authenticated, it is useful for determining if 
 
 |Input |Type  |Description|Optional|
 |------|------|-----------|-------:|
-|'auth'|string|(Session ID) destroys the session if it exists|YES      |
+|'auth'|string|(Session ID) returns version information and extends the session if passed|YES      |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/ping.xml)
 
@@ -41,7 +45,7 @@ Destroy a session using the auth parameter.
 
 |Input |Type  |Description|Optional|
 |------|------|-----------|-------:|
-|'auth'|string|(Session ID) returns version information and extends the session if passed|NO     |
+|'auth'|string|(Session ID) destroys the session if it exists|NO     |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/goodbye.xml)
 
@@ -496,6 +500,7 @@ Create a public url that can be used by anyone to stream media.
 Takes the file id with optional description and expires parameters.
 
 @param array $input
+
 |Input   |Type|Description|Optional|
 |--------|----|-----------|-------:|
 |'filter'|    |UID of object you are sharing| NO      |
@@ -513,6 +518,7 @@ Update the description and/or expiration date for an existing share.
 Takes the share id to update with optional description and expires parameters.
 
 @param array $input
+
 |Input   |Type|Description|Optional|
 |--------|----|-----------|-------:|
 |'filter'|string|Alpha-numeric search term| NO      |
@@ -530,6 +536,7 @@ Takes the share id to update with optional description and expires parameters.
 Delete an existing share.
 
 @param array $input
+
 |Input   |Type|Description|Optional|
 |--------|----|-----------|-------:|
 |'filter'|    |UID of Share to delete|NO      |
@@ -1129,10 +1136,10 @@ This is for controlling democratic play
 |'action'|string|           |NO      |
 
 ```XML
-TBC
+ TBC
 ```
 
-All XML Documents that have a \<tag> element may have 0 or more tag elements associated with them. Each tag element has an attribute "count" that indicates the number of people who have specified this tag.
+All XML Documents that have a ```<tag>``` element may have 0 or more tag elements associated with them. Each tag element has an attribute "count" that indicates the number of people who have specified this tag.
 
 Artists XML Document. ID's are Ampache's unique Identifier for the artist.
 

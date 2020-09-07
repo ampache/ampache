@@ -20,6 +20,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 ### Changed
 
 * get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
+* Renamed 'Tag' strings to 'Genre'
 
 ### Fixed
 
@@ -27,7 +28,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 
 ### API develop
 
-Enhance... Enhance... Enhance...
+All API code that used 'Tag' now references 'Genre' instead
 
 ### Added
 
@@ -36,6 +37,15 @@ Enhance... Enhance... Enhance...
   * 'oid' (integer) object_id to add //optional
   * 'type' (string) Default: 'Song' ('Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream') //optional
   * 'clear' (integer) 0|1 clear the current playlist on add //optional
+
+### Changed
+
+* Renamed functions (Backcompatible string replacement until 5.0.0):
+  * tags => genres
+  * tag => genre
+  * tag_artists => genre_artists
+  * tag_albums => genre_albums
+  * tag_songs => genre_songs
 
 ## Ampache 4.2.2-release
 

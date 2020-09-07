@@ -1056,10 +1056,10 @@ class Api
     } // license_songs
 
     /**
-     * tags
+     * genres
      * MINIMUM_API_VERSION=380001
      *
-     * This returns the tags (Genres) based on the specified filter
+     * This returns the genres (Tags) based on the specified filter
      *
      * @param array $input
      * filter = (string) Alpha-numeric search term //optional
@@ -1067,7 +1067,7 @@ class Api
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
-    public static function tags($input)
+    public static function genres($input)
     {
         self::$browse->reset_filters();
         self::$browse->set_type('tag');
@@ -1082,50 +1082,50 @@ class Api
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::tags($tags);
+                echo JSON_Data::genres($tags);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::tags($tags);
+                echo XML_Data::genres($tags);
         }
         Session::extend($input['auth']);
-    } // tags
+    } // genres
 
     /**
-     * tag
+     * genre
      * MINIMUM_API_VERSION=380001
      *
-     * This returns a single tag based on UID
+     * This returns a single genre based on UID
      *
      * @param array $input
-     * filter = (string) UID of Tag
+     * filter = (string) UID of Genre
      * @return boolean
      */
-    public static function tag($input)
+    public static function genre($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'tag')) {
+        if (!self::check_parameter($input, array('filter'), 'genre')) {
             return false;
         }
         $uid = scrub_in($input['filter']);
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::tags(array($uid));
+                echo JSON_Data::genres(array($uid));
             break;
             default:
-                echo XML_Data::tags(array($uid));
+                echo XML_Data::genres(array($uid));
         }
         Session::extend($input['auth']);
 
         return true;
-    } // tag
+    } // genre
 
     /**
-     * tag_artists
+     * genre_artists
      * MINIMUM_API_VERSION=380001
      *
-     * This returns the artists associated with the tag in question as defined by the UID
+     * This returns the artists associated with the genre in question as defined by the UID
      *
      * @param array $input
      * filter = (string) UID of Album
@@ -1133,9 +1133,9 @@ class Api
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function tag_artists($input)
+    public static function genre_artists($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'tag_artists')) {
+        if (!self::check_parameter($input, array('filter'), 'genre_artists')) {
             return false;
         }
         $artists = Tag::get_tag_objects('artist', $input['filter']);
@@ -1158,23 +1158,23 @@ class Api
         Session::extend($input['auth']);
 
         return true;
-    } // tag_artists
+    } // genre_artists
 
     /**
-     * tag_albums
+     * genre_albums
      * MINIMUM_API_VERSION=380001
      *
-     * This returns the albums associated with the tag in question
+     * This returns the albums associated with the genre in question
      *
      * @param array $input
-     * filter = (string) UID of Tag
+     * filter = (string) UID of Genre
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function tag_albums($input)
+    public static function genre_albums($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'tag_albums')) {
+        if (!self::check_parameter($input, array('filter'), 'genre_albums')) {
             return false;
         }
         $albums = Tag::get_tag_objects('album', $input['filter']);
@@ -1199,23 +1199,23 @@ class Api
         Session::extend($input['auth']);
 
         return true;
-    } // tag_albums
+    } // genre_albums
 
     /**
-     * tag_songs
+     * genre_songs
      * MINIMUM_API_VERSION=380001
      *
-     * returns the songs for this tag
+     * returns the songs for this genre
      *
      * @param array $input
-     * filter = (string) UID of Tag
+     * filter = (string) UID of Genre
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function tag_songs($input)
+    public static function genre_songs($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'tag_songs')) {
+        if (!self::check_parameter($input, array('filter'), 'genre_songs')) {
             return false;
         }
         $songs = Tag::get_tag_objects('song', $input['filter']);
@@ -1241,7 +1241,7 @@ class Api
         Session::extend($input['auth']);
 
         return true;
-    } // tag_songs
+    } // genre_songs
 
     /**
      * songs
@@ -4031,7 +4031,7 @@ class Api
                 // They are doing it wrong
                 self::message('error', T_('Invalid request'), '405', $input['api_format']);
 
-                return;
+                return false;
         } // end switch on command
         $output_array     = array('localplay' => array('command' => array($input['command'] => make_bool($result_status))));
         switch ($input['api_format']) {
@@ -4042,6 +4042,8 @@ class Api
                 echo XML_Data::keyed_array($output_array);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // localplay
 
     /**
