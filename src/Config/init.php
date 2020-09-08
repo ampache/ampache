@@ -91,36 +91,36 @@ if (isset($ow_config) && is_array($ow_config)) {
     }
 }
 
-$results['raw_web_path'] = $results['web_path'];
-if (empty($results['http_host'])) {
-    $results['http_host'] = $_SERVER['SERVER_NAME'];
-}
-if (empty($results['local_web_path'])) {
-    $results['local_web_path'] = $http_type . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $results['raw_web_path'];
-}
-$results['http_port'] = (!empty($results['http_port'])) ? $results['http_port'] : $http_port;
-
-$results['web_path'] = $http_type . $results['http_host'] .
-    (($results['http_port'] != 80 && $results['http_port'] != 443) ? ':' . $results['http_port'] : '') .
-    $results['web_path'];
-
-$results['site_charset'] = $results['site_charset'] ?: 'UTF-8';
-$results['raw_web_path'] = $results['raw_web_path'] ?: '/';
-if (!isset($results['max_upload_size'])) {
-    $results['max_upload_size'] = 1048576;
-}
 if (!defined('CLI')) {
-    $_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?: '';
-}
-if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) {
-    $results['user_ip_cardinality'] = 42;
-}
+    $results['raw_web_path'] = $results['web_path'];
+    if (empty($results['http_host'])) {
+        $results['http_host'] = $_SERVER['SERVER_NAME'];
+    }
+    if (empty($results['local_web_path'])) {
+        $results['local_web_path'] = $http_type . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $results['raw_web_path'];
+    }
+    $results['http_port'] = (!empty($results['http_port'])) ? $results['http_port'] : $http_port;
 
-// Variables needed for Auth class
-$results['cookie_path']   = $results['raw_web_path'];
-$results['cookie_domain'] = $results['http_port'];
-$results['cookie_life']   = $results['session_cookielife'];
-$results['cookie_secure'] = $results['session_cookiesecure'];
+    $results['web_path'] = $http_type . $results['http_host'] .
+        (($results['http_port'] != 80 && $results['http_port'] != 443) ? ':' . $results['http_port'] : '') .
+        $results['web_path'];
+
+    $results['site_charset'] = $results['site_charset'] ?: 'UTF-8';
+    $results['raw_web_path'] = $results['raw_web_path'] ?: '/';
+    if (!isset($results['max_upload_size'])) {
+        $results['max_upload_size'] = 1048576;
+    }
+    $_SERVER['SERVER_NAME'] = $_SERVER['SERVER_NAME'] ?: '';
+    if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) {
+        $results['user_ip_cardinality'] = 42;
+    }
+
+    // Variables needed for Auth class
+    $results['cookie_path']   = $results['raw_web_path'];
+    $results['cookie_domain'] = $results['http_port'];
+    $results['cookie_life']   = $results['session_cookielife'];
+    $results['cookie_secure'] = $results['session_cookiesecure'];
+}
 
 // Make sure all default preferences are set
 Preference::set_defaults();

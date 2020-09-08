@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,25 +20,15 @@
  *
  */
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Upnp_Api;
+declare(strict_types=1);
 
-define('NO_SESSION', '1');
-define('CLI', 1);
+namespace Ampache\Module\Cli;
 
-require_once __DIR__ . '/../src/Config/init.php';
+use function DI\autowire;
 
-ob_end_flush();
-
-echo T_("Starting broadcasts...") . "\n";
-
-if (AmpConfig::get('upnp_backend')) {
-    echo T_("UPnP broadcast... ");
-    Upnp_Api::sddpSend();
-    echo T_("Done") . "\n";
-} else {
-    echo T_("UPnP backend disabled. Broadcast skipped.") . "\n";
-}
-
-ob_end_flush();
-echo "\n";
+return [
+    BroadcastCommand::class => autowire(BroadcastCommand::class),
+    ComputeCacheCommand::class => autowire(ComputeCacheCommand::class),
+    CronProcessCommand::class => autowire(CronProcessCommand::class),
+    ArtSizeCalculationCommand::class => autowire(ArtSizeCalculationCommand::class),
+];
