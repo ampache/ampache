@@ -162,7 +162,7 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
     // Verify their session
     if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
         if (!Session::auth_remember()) {
-            $auth->logout($_COOKIE[AmpConfig::get('session_name')]);
+            $auth->logout($_COOKIE[AmpConfig::get('session_name')] ?? '');
 
             return false;
         }

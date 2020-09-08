@@ -22,7 +22,7 @@
 
 use Ampache\Module\System\AmpError;
 
-require $prefix . '/templates/install_header.inc.php'; ?>
+require __DIR__ . '/install_header.inc.php'; ?>
 <div class="jumbotron" style="margin-top: 70px">
     <h1><?php echo T_('Install Progress'); ?></h1>
     <div class="progress">
@@ -100,7 +100,7 @@ require $prefix . '/templates/install_header.inc.php'; ?>
         </div>
     </div>
     <div class="form-group">
-        <label for="create_tables" class="col-sm-4 control-label"><?php echo T_('Create Tables'); ?> (<a href="sql/ampache.sql">ampache.sql</a>)</label>
+        <label for="create_tables" class="col-sm-4 control-label"><?php echo T_('Create Tables'); ?></label>
         <div class="col-sm-8">
             <input
                 type="checkbox" value="1" checked
@@ -137,4 +137,4 @@ require $prefix . '/templates/install_header.inc.php'; ?>
         <button type="submit" class="btn btn-warning"><?php echo T_('Insert Database'); ?></button>
     </div>
 </form>
-<?php require $prefix . '/templates/install_footer.inc.php'; ?>
+<?php require __DIR__ . '/install_footer.inc.php'; ?>

@@ -22,7 +22,7 @@
 
 use Ampache\Module\System\AmpError;
 
-require $prefix . '/templates/install_header.inc.php'; ?>
+require __DIR__ . '/install_header.inc.php'; ?>
 <div class="jumbotron" style="margin-top: 70px">
     <h1><?php echo T_('Install Progress'); ?></h1>
     <div class="progress">
@@ -70,4 +70,4 @@ require $prefix . '/templates/install_header.inc.php'; ?>
     <button type="submit" class="btn btn-warning"><?php echo T_('Create Account'); ?></button>
 </div>
 </form>
-<?php require $prefix . '/templates/install_footer.inc.php'; ?>
+<?php require __DIR__ . '/install_footer.inc.php'; ?>

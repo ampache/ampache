@@ -22,7 +22,7 @@
 
 use Ampache\Module\System\AmpError;
 
-require $prefix . '/templates/install_header.inc.php'; ?>
+require __DIR__ . '/install_header.inc.php'; ?>
         <!-- Main jumbotron for a primary marketing message or call to action -->
         <br><br>
         <div class="page-header">
@@ -47,4 +47,4 @@ require $prefix . '/templates/install_header.inc.php'; ?>
             </div>
             <button type="submit" class="btn btn-warning"><?php echo T_('Start Configuration'); ?></button>
         </form>
-<?php require $prefix . '/templates/install_footer.inc.php'; ?>
+<?php require __DIR__ . '/install_footer.inc.php'; ?>

@@ -38,7 +38,7 @@ if (empty($local_pass)) {
     $local_pass = scrub_out($_REQUEST['local_pass']);
 }
 
-require $prefix . '/templates/install_header.inc.php'; ?>
+require __DIR__ . '/install_header.inc.php'; ?>
         <div class="jumbotron" style="margin-top: 70px">
             <h1><?php echo T_('Install Progress'); ?></h1>
             <div class="progress">
@@ -54,7 +54,7 @@ require $prefix . '/templates/install_header.inc.php'; ?>
             <p><?php echo T_('Step 1 - Create the Ampache database'); ?></p>
                 <p><strong><?php echo T_('Step 2 - Create configuration files (ampache.cfg.php ...)'); ?></strong></p>
                 <dl>
-                    <dd><?php printf(T_('This step takes the basic config values and generates the config file. If your config/ directory is writable, you can select "write" to have Ampache write the config file directly to the correct location. If you select "download" it will prompt you to download the config file, and you can then manually place the config file in %s.'), $prefix); ?></dd>
+                    <dd><?php printf(T_('This step takes the basic config values and generates the config file. If your config/ directory is writable, you can select "write" to have Ampache write the config file directly to the correct location. If you select "download" it will prompt you to download the config file, and you can then manually place the config file in %s.'), realpath(__DIR__ . '/../../config')); ?></dd>
                 </dl>
             <ul class="list-unstyled">
                 <li><?php echo T_('Step 3 - Set up the initial account'); ?></li>
@@ -292,4 +292,4 @@ require $prefix . '/templates/install_header.inc.php'; ?>
 </div>
 </form>
 
-<?php require $prefix . '/templates/install_footer.inc.php'; ?>
+<?php require __DIR__ . '/install_footer.inc.php'; ?>
