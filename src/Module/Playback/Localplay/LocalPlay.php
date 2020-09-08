@@ -113,15 +113,7 @@ class LocalPlay
             return false;
         }
 
-        $typeMapping = [
-            'httpq' => AmpacheHttpq::class,
-            'mpd' => AmpacheMpd::class,
-            'upnp' => AmpacheUPnP::class,
-            'vlc' => AmpacheVlc::class,
-            'xbmc' => AmpacheXbmc::class,
-        ];
-
-        $controller = $typeMapping[$this->type] ?? null;
+        $controller = LocalPlayTypeEnum::TYPE_MAPPING[$this->type] ?? null;
 
         if ($controller === null) {
             /* Throw Error Here */
@@ -159,46 +151,6 @@ class LocalPlay
 
         return $name;
     } // format_name
-
-    /**
-     * get_controllers
-     * This returns the controllers that are currently loaded into this instance
-     */
-    public static function get_controllers()
-    {
-        /* First open the dir */
-        $basedir = __DIR__ . '/../../../modules/localplay';
-        $handle  = opendir($basedir);
-
-        if (!is_resource($handle)) {
-            debug_event('localplay.class', 'Error: Unable to read localplay controller directory', 1);
-
-            return array();
-        }
-
-        $results = array();
-
-        while (false !== ($file = readdir($handle))) {
-            if ($file === '.' || $file === '..') {
-                continue;
-            }
-            /* Make sure it is a dir */
-            if (!is_dir($basedir . '/' . $file)) {
-                debug_event('localplay.class', $file . ' is not a directory.', 3);
-                continue;
-            }
-
-            // Make sure the plugin base file exists inside the plugin directory
-            if (!file_exists($basedir . '/' . $file . '/' . $file . '.controller.php')) {
-                debug_event('localplay.class', 'Missing class for ' . $file, 3);
-                continue;
-            }
-
-            $results[] = $file;
-        } // end while
-
-        return $results;
-    } // get_controllers
 
     /**
      * is_enabled

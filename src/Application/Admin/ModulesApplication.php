@@ -27,6 +27,7 @@ namespace Ampache\Application\Admin;
 
 use Ampache\Application\ApplicationInterface;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\System\AmpError;
 use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
@@ -207,7 +208,7 @@ final class ModulesApplication implements ApplicationInterface
                 Ui::show_box_bottom();
                 break;
             case 'show_localplay':
-                $controllers = LocalPlay::get_controllers();
+                $controllers = array_keys(LocalPlayTypeEnum::TYPE_MAPPING);
                 Ui::show_box_top(T_('Localplay Controllers'), 'box box_localplay_controllers');
                 require_once Ui::find_template('show_localplay_controllers.inc.php');
                 Ui::show_box_bottom();

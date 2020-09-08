@@ -49,6 +49,9 @@ final class RegisterApplication implements ApplicationInterface
         /* Don't even include it if we aren't going to use it */
         if (AmpConfig::get('captcha_public_reg')) {
             define("CAPTCHA_INVERSE", 1);
+            /**
+             * @todo broken, the path does not exist anylonger
+             */
             define("CAPTCHA_BASE_URL", AmpConfig::get('web_path') . '/modules/captcha/captcha.php');
             require_once __DIR__ . '/../../src/Module/Util/Captcha/init.php';
         }

@@ -33,6 +33,7 @@ use Ampache\Model\TVShow_Season;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Playback\Localplay\LocalPlay;
+use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -830,7 +831,7 @@ function create_preference_input($name, $value)
             echo "</select>\n";
             break;
         case 'localplay_controller':
-            $controllers = LocalPlay::get_controllers();
+            $controllers = array_keys(LocalPlayTypeEnum::TYPE_MAPPING);
             echo "<select name=\"$name\">\n";
             echo "\t<option value=\"\">" . T_('None') . "</option>\n";
             foreach ($controllers as $controller) {
