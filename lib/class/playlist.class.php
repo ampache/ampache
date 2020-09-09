@@ -719,7 +719,9 @@ class Playlist extends playlist_object
             foreach ($results as $data) {
                 $sql .= "(" . Dba::escape($data['id']) . ", " . Dba::escape($data['track']) . "), ";
             } // foreach re-ordered results
-            $sql = substr_replace($sql ,";", -2);
+
+            //replace the last comma
+            $sql = substr_replace($sql ,"", -2);
             $sql .= "ON DUPLICATE KEY UPDATE `track`=VALUES(`track`)";
 
             // do this in one go
