@@ -354,8 +354,8 @@ class Podcast extends database_object implements library_item
         $arturl        = '';
 
         // don't allow duplicate podcasts
-        $sql        = "SELECT `id` FROM `podcast` WHERE `feed`= ?";
-        $db_results = Dba::read($sql, $feed);
+        $sql        = "SELECT `id` FROM `podcast` WHERE `feed`= '" . Dba::escape($feed) . "'";
+        $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results, false)) {
             if ((int) $row['id'] > 0) {
                 return (int) $row['id'];
