@@ -497,7 +497,7 @@ if (AmpConfig::get('downsample_remote')) {
     }
 }
 
-debug_event('play/index', 'Playing file (' . $media->file . '}...', 5);
+debug_event('play/index', $action . ' file (' . $media->file . '}...', 5);
 debug_event('play/index', 'Media type {' . $media->type . '}', 5);
 
 $cpaction = $_REQUEST['custom_play_action'];
