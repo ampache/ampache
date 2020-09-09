@@ -715,13 +715,15 @@ class Playlist extends playlist_object
             $count++;
         } // end while results
         if (!empty($results)) {
-            $sql = "REPLACE INTO `playlist_data` (`id`, `track`) VALUES ";
+            $sql = "INSERT INTO `playlist_data` (`id`, `track`) VALUES ";
             foreach ($results as $data) {
                 $sql .= "(" . Dba::escape($data['id']) . ", " . Dba::escape($data['track']) . "), ";
             } // foreach re-ordered results
+            $sql = substr_replace($sql ,";", -2);
+            $sql .= "ON DUPLICATE KEY UPDATE `track`=VALUES(`track`)";
 
             // do this in one go
-            Dba::write(substr_replace($sql ,";", -2));
+            Dba::write($sql);
         }
         $this->update_last_update();
 
