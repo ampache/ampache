@@ -38,6 +38,7 @@ All API code that used 'Tag' now references 'Genre' instead
   * 'oid' (integer) object_id to add //optional
   * 'type' (string) Default: 'Song' ('Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream') //optional
   * 'clear' (integer) 0|1 clear the current playlist on add //optional
+* API::playlist_edit added new parameter 'sort': (0,1) sort the playlist by 'Artist, Album, Song' //optional
 
 ### Changed
 

@@ -1513,6 +1513,7 @@ class Api
      * type   = (string) 'public', 'private' //optional
      * items  = (string) comma-separated song_id's (replace existing items with a new object_id) //optional
      * tracks = (string) comma-separated playlisttrack numbers matched to items in order //optional
+     * sort   = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
      * @return boolean
      */
     public static function playlist_edit($input)
@@ -1524,6 +1525,7 @@ class Api
         $type  = $input['type'];
         $items = explode(',', $input['items']);
         $order = explode(',', $input['tracks']);
+        $sort  = (int) $input['sort'];
         // calculate whether we are editing the track order too
         $playlist_edit = array();
         if (count($items) == count($order) && count($items) > 0) {
@@ -1557,6 +1559,10 @@ class Api
                     $change_made = true;
                 }
             }
+        }
+        if ($sort > 0) {
+            $playlist->sort_tracks();
+            $change_made = true;
         }
         Session::extend($input['auth']);
         // if you didn't make any changes; tell me
