@@ -48,6 +48,7 @@ All API code that used 'Tag' now references 'Genre' instead
   * tag_artists => genre_artists
   * tag_albums => genre_albums
   * tag_songs => genre_songs
+* Don't allow duplicate podcast feeds
 
 ## Ampache 4.2.2-release
 
