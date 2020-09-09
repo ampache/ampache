@@ -194,7 +194,7 @@ class Stats
                 return true;
             }
             // if you've recorded in less than 5 seconds i don't believe you
-            if (($row['date'] < $time && $row['date'] > ($time - 5))) {
+            if (($row['date'] < $time && $row['date'] > ($time - 5)) && $row['count_type'] !== 'download') {
                 debug_event('stats.class', 'Too fast! Skipping {' . (string) $object_id . '} date: ' . (string) $time, 5);
 
                 return true;

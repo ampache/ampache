@@ -578,8 +578,6 @@ final class PlayApplication implements ApplicationInterface
                                     if (!empty($subtitle)) {
                                         $transcode = true;
                                         debug_event('play/index', 'Transcoding because subtitle requested', 5);
-                                    } else {
-                                        debug_event('play/index', 'Decided not to transcode', 5);
                                     }
                                 }
                             }
