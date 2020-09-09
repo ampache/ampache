@@ -2083,11 +2083,11 @@ class Search extends playlist_object
                     break;
                 case 'mbid_album':
                     $table['album'] = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
-                    $where[] = "`album`.`mbid` $sql_match_operator '$input'";
+                    $where[]        = "`album`.`mbid` $sql_match_operator '$input'";
                     break;
                 case 'mbid_artist':
                     $table['artist'] = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
-                    $where[] = "`artist`.`mbid` $sql_match_operator '$input'";
+                    $where[]         = "`artist`.`mbid` $sql_match_operator '$input'";
                     break;
                 case 'metadata':
                     $field = (int) $rule[3];

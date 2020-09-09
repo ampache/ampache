@@ -479,8 +479,8 @@ class Catalog_local extends Catalog
         }
 
         $this->count                  = 0;
-        $this->songs_to_gather  = array();
-        $this->videos_to_gather = array();
+        $this->songs_to_gather        = array();
+        $this->videos_to_gather       = array();
 
         if (!defined('SSE_OUTPUT')) {
             require AmpConfig::get('prefix') . UI::find_template('show_adds_catalog.inc.php');
