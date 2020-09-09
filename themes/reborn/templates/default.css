@@ -218,7 +218,8 @@ input[type=submit]:focus {
     text-decoration: none;
 }
 
-input[type=button]:focus:active, input[type=submit]:focus:active {
+input[type=button]:focus:active,
+input[type=submit]:focus:active {
     -webkit-transition: background-position 0.1s linear;
     -moz-transition: background-position 0.1s linear;
     -o-transition: background-position 0.1s linear;
@@ -322,7 +323,8 @@ div#autoupdate > span {
     width: 100%;
 }
 
-#sb_Subsearch, #play_type_switch {
+#sb_Subsearch,
+#play_type_switch {
     display: inline-block;
     margin: 15px auto auto 50px;
 }
@@ -956,9 +958,7 @@ span#sidebar-header-content::after {
 
 table.tabledata {
     width: 100%;
-    /* table-layout: fixed; */
     text-align: left;
-    /* border:1px solid #bbb; */
     font-size: 14px;
     margin-bottom: 20px;
 }
@@ -1265,7 +1265,7 @@ tr#search_max_results td {
     width: 150px;
     overflow: hidden;
     display: inline-block;
-    white-space: nowrap
+    white-space: nowrap;
 }
 
 div.box.box_rules {

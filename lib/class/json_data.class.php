@@ -33,7 +33,6 @@ class JSON_Data
     // This is added so that we don't pop any webservers
     private static $limit  = 5000;
     private static $offset = 0;
-    private static $type   = '';
 
     /**
      * constructor
