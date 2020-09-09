@@ -35,10 +35,10 @@ UI::show_header();
 // Switch on the actions
 switch ($_REQUEST['action']) {
     case 'manage':
-                $democratic = Democratic::get_current_playlist();
-                $democratic->set_parent();
-                $democratic->format();
-    // intentional fall through
+        $democratic = Democratic::get_current_playlist();
+        $democratic->set_parent();
+        $democratic->format();
+        // Intentional break fall-through
     case 'show_create':
         if (!Access::check('interface', 75)) {
             UI::access_denied();
