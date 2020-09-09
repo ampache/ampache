@@ -119,7 +119,8 @@
     border-color: rgba(0, 0, 0, 0.7);
 }
 
-.edit_dialog_content input:focus, .edit_dialog_content select:focus {
+.edit_dialog_content input:focus,
+.edit_dialog_content select:focus {
     color: #555;
     background: #fff;
     background: rgba(255, 255, 255, 0.9);

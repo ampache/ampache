@@ -1267,13 +1267,13 @@ function return_bytes($val)
     $val  = trim((string) $val);
     $last = strtolower((string) $val[strlen((string) $val) - 1]);
     switch ($last) {
-        // The 'G' modifier is available since PHP 5.1.0
+            // The 'G' modifier is available since PHP 5.1.0
         case 'g':
             $val *= 1024;
-        // intentional fall through
+            // Intentional break fall-through
         case 'm':
             $val *= 1024;
-        // intentional fall through
+            // Intentional break fall-through
         case 'k':
             $val *= 1024;
             break;

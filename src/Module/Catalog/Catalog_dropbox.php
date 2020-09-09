@@ -457,7 +457,7 @@ class Catalog_dropbox extends Catalog
                         Video::generate_preview($video_id);
                     }
                 } else {
-                    $this->added_videos_to_gather[] = $video_id;
+                    $this->videos_to_gather[] = $video_id;
                 }
                 $results['file'] = $path;
                 $sql             = "UPDATE `video` SET `file` = ? WHERE `id` = ?";

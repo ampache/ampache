@@ -1558,6 +1558,7 @@ class Api
      * type   = (string) 'public', 'private' //optional
      * items  = (string) comma-separated song_id's (replace existing items with a new object_id) //optional
      * tracks = (string) comma-separated playlisttrack numbers matched to items in order //optional
+     * sort   = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
      * @return boolean
      */
     public static function playlist_edit($input)
@@ -1569,6 +1570,7 @@ class Api
         $type  = $input['type'];
         $items = explode(',', $input['items']);
         $order = explode(',', $input['tracks']);
+        $sort  = (int) $input['sort'];
         // calculate whether we are editing the track order too
         $playlist_edit = array();
         if (count($items) == count($order) && count($items) > 0) {
@@ -1602,6 +1604,10 @@ class Api
                     $change_made = true;
                 }
             }
+        }
+        if ($sort > 0) {
+            $playlist->sort_tracks();
+            $change_made = true;
         }
         Session::extend($input['auth']);
         // if you didn't make any changes; tell me
@@ -4054,10 +4060,11 @@ class Api
      * This is for controlling Localplay
      *
      * @param array $input
-     * command = (string) 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip'
+     * command = (string) 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip', 'status'
      * oid     = (integer) object_id //optional
      * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream' //optional
      * clear   = (integer) 0,1 Clear the current playlist before adding //optional
+     * @return bool
      */
     public static function localplay($input)
     {
@@ -4068,7 +4075,8 @@ class Api
         $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
         $localplay->connect();
 
-        $result_status = false;
+        $result = false;
+        $status = false;
         switch ($input['command']) {
             case 'add':
                 // for add commands get the object details
@@ -4086,38 +4094,41 @@ class Api
                 $playlist = new Stream_Playlist();
                 $playlist->add(array($media));
                 foreach ($playlist->urls as $streams) {
-                    $result_status = $localplay->add_url($streams);
+                    $result = $localplay->add_url($streams);
                 }
                 break;
             case 'next':
-                $result_status = $localplay->next();
+                $result = $localplay->next();
                 break;
             case 'prev':
-                $result_status = $localplay->prev();
+                $result = $localplay->prev();
                 break;
             case 'stop':
-                $result_status = $localplay->stop();
+                $result = $localplay->stop();
                 break;
             case 'play':
-                $result_status = $localplay->play();
+                $result = $localplay->play();
                 break;
             case 'pause':
-                $result_status = $localplay->pause();
+                $result = $localplay->pause();
                 break;
             case 'volume_up':
-                $result_status = $localplay->volume_up();
+                $result = $localplay->volume_up();
                 break;
             case 'volume_down':
-                $result_status = $localplay->volume_down();
+                $result = $localplay->volume_down();
                 break;
             case 'volume_mute':
-                $result_status = $localplay->volume_mute();
+                $result = $localplay->volume_mute();
                 break;
             case 'delete_all':
-                $result_status = $localplay->volume_down();
+                $result = $localplay->volume_down();
                 break;
             case 'skip':
-                $result_status = $localplay->volume_mute();
+                $result = $localplay->volume_mute();
+                break;
+            case 'status':
+                $status = $localplay->status();
                 break;
             default:
                 // They are doing it wrong
@@ -4125,7 +4136,9 @@ class Api
 
                 return false;
         } // end switch on command
-        $output_array     = array('localplay' => array('command' => array($input['command'] => make_bool($result_status))));
+        $output_array = (!empty($status))
+            ? array('localplay' => array('command' => array($input['command'] => $status)))
+            : array('localplay' => array('command' => array($input['command'] => make_bool($result))));
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($output_array, JSON_PRETTY_PRINT);

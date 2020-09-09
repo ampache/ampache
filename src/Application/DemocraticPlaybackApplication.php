@@ -52,7 +52,7 @@ final class DemocraticPlaybackApplication implements ApplicationInterface
                 $democratic = Democratic::get_current_playlist();
                 $democratic->set_parent();
                 $democratic->format();
-            // intentional fall through
+                // Intentional break fall-through
             case 'show_create':
                 if (!Access::check('interface', 75)) {
                     Ui::access_denied();

@@ -119,7 +119,7 @@ final class LabelApplication implements ApplicationInterface
 
                     return;
                 }
-            // intentional fall through
+                // Intentional break fall-through
             case 'show_add_label':
                 if (Access::check('interface', 50) || AmpConfig::get('upload_allow_edit')) {
                     require_once Ui::find_template('show_add_label.inc.php');

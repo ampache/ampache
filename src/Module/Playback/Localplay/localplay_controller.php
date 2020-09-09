@@ -54,8 +54,6 @@ abstract class localplay_controller
 
     abstract public function connect();
 
-    abstract public function status();
-
     abstract public function get_version(); // Returns the version of this plugin
 
     abstract public function get_description(); // Returns the description
@@ -65,6 +63,11 @@ abstract class localplay_controller
     abstract public function install();
 
     abstract public function uninstall();
+
+    /**
+     * @return array
+     */
+    abstract public function status();
 
     // For display we need the following 'instance' functions
 

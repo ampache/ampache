@@ -2757,7 +2757,7 @@ abstract class Catalog extends database_object
         switch ($action) {
             case 'add_to_all_catalogs':
                 $catalogs = self::get_catalogs();
-            // intentional fall through
+                // Intentional break fall-through
             case 'add_to_catalog':
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {
@@ -2774,7 +2774,7 @@ abstract class Catalog extends database_object
                 break;
             case 'update_all_catalogs':
                 $catalogs = self::get_catalogs();
-            // intentional fall through
+                // Intentional break fall-through
             case 'update_catalog':
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {
@@ -2803,7 +2803,7 @@ abstract class Catalog extends database_object
                 break;
             case 'clean_all_catalogs':
                 $catalogs = self::get_catalogs();
-            // intentional fall through
+                // Intentional break fall-through
             case 'clean_catalog':
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {

@@ -346,10 +346,10 @@ class Access
                     $user = User::get_from_username($user);
                     $user = $user->id;
                 }
-            // Intentional break fall-through
+                // Intentional break fall-through
             case 'api':
                 $type = 'rpc';
-            // Intentional break fall-through
+                // Intentional break fall-through
             case 'network':
             case 'interface':
             case 'stream':

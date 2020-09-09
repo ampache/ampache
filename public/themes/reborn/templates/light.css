@@ -548,7 +548,7 @@ div.jp-video div.jp-interface {
 
 div.jp-title,
 div.jp-playlist {
-    background-color: #D4D4D4;
+    background-color: #d4d4d4;
     border-top: 1px solid #f8f8f8;
 }
 
@@ -574,7 +574,7 @@ div.jp-interface {
 }
 
 div.jp-playlist li {
-    border-bottom: 1px solid #BFBFBF;
+    border-bottom: 1px solid #bfbfbf;
 }
 
 /* ------------------------
@@ -587,7 +587,7 @@ div.jp-playlist li {
 }
 
 .followbtn {
-   background-color: #167FC2;
+   background-color: #167fc2;
 }
 
 .missing_album {

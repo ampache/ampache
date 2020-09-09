@@ -61,7 +61,7 @@ final class LicenseApplication implements ApplicationInterface
                 break;
             case 'show_edit':
                 $license = new License($_REQUEST['license_id']);
-            // intentional fall through
+                // Intentional break fall-through
             case 'show_create':
                 require_once Ui::find_template('show_edit_license.inc.php');
                 break;

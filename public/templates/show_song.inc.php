@@ -176,6 +176,9 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
     $songprops[T_('Barcode')]        = scrub_out($song->get_album_barcode($song->album));
     $songprops[T_('Bitrate')]        = scrub_out($song->f_bitrate);
     $songprops[T_('Channels')]       = scrub_out($song->channels);
+    $songprops[T_('Song MBID')]      = scrub_out($song->mbid);
+    $songprops[T_('Album MBID')]     = scrub_out($song->album_mbid);
+    $songprops[T_('Artist MBID')]    = scrub_out($song->artist_mbid);
     if ($song->replaygain_track_gain != 0) {
         $songprops[T_('ReplayGain Track Gain')]   = scrub_out($song->replaygain_track_gain);
     }

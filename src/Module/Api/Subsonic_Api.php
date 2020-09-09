@@ -1877,7 +1877,7 @@ class Subsonic_Api
                     break;
                 case 'set':
                     $localplay->delete_all();
-                // Intentional break fall-through
+                    // Intentional break fall-through
                 case 'add':
                     if ($id) {
                         if (!is_array($id)) {

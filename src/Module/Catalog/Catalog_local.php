@@ -54,8 +54,8 @@ class Catalog_local extends Catalog
     private $description = 'Local Catalog';
 
     private $count;
-    private $added_songs_to_gather;
-    private $added_videos_to_gather;
+    private $songs_to_gather;
+    private $videos_to_gather;
 
     /**
      * get_description
@@ -499,8 +499,8 @@ class Catalog_local extends Catalog
         }
 
         $this->count                  = 0;
-        $this->added_songs_to_gather  = array();
-        $this->added_videos_to_gather = array();
+        $this->songs_to_gather        = array();
+        $this->videos_to_gather       = array();
 
         if (!defined('SSE_OUTPUT')) {
             require Ui::find_template('show_adds_catalog.inc.php');
@@ -542,7 +542,7 @@ class Catalog_local extends Catalog
                     require Ui::find_template('show_gather_art.inc.php');
                     flush();
                 }
-                $this->gather_art($this->added_songs_to_gather, $this->added_videos_to_gather);
+                $this->gather_art($this->songs_to_gather, $this->videos_to_gather);
             }
         }
 
@@ -889,7 +889,7 @@ class Catalog_local extends Catalog
                 $results = array_diff_key($results, array_flip($song->getDisabledMetadataFields()));
                 self::add_metadata($song, $results);
             }
-            $this->added_songs_to_gather[] = $song_id;
+            $this->songs_to_gather[] = $song_id;
 
             $this->_filecache[strtolower($file)] = $song_id;
         }
@@ -928,7 +928,7 @@ class Catalog_local extends Catalog
                 Video::generate_preview($video_id);
             }
         } else {
-            $this->added_videos_to_gather[] = $video_id;
+            $this->videos_to_gather[] = $video_id;
         }
 
         $this->_filecache[strtolower($file)] = 'v_' . $video_id;
