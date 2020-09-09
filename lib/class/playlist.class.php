@@ -695,10 +695,12 @@ class Playlist extends playlist_object
            LEFT JOIN `artist` AS C ON B.artist = C.id
            LEFT JOIN `album` AS D ON B.album = D.id
                WHERE A.`playlist` = ?
-            ORDER BY C.`name` ASC,
-                     B.`title` ASC,
-                     D.`year` ASC,
+            ORDER BY D.`album_artist` ASC,
                      D.`name` ASC,
+                     D.`year` ASC,
+                     D.`disk` ASC,
+                     B.`track` ASC,
+                     B.`title` ASC,
                      B.`track` ASC";
         $db_results = Dba::query($sql, array($this->id));
 
