@@ -587,6 +587,10 @@ class Search extends playlist_object
         }
         $this->type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs);
 
+        $this->type_text('mbid', T_('MusicBrainz ID'));
+        $this->type_text('mbid_album', T_('MusicBrainz ID (Album)'));
+        $this->type_text('mbid_artist', T_('MusicBrainz ID (Artist)'));
+
         if (AmpConfig::get('enable_custom_metadata')) {
             $metadataFields          = array();
             $metadataFieldRepository = new MetadataField();
@@ -641,6 +645,8 @@ class Search extends playlist_object
         }
         $this->type_select('other_user', T_('Another User'), 'user_numeric', $users);
 
+        $this->type_text('mbid', T_('MusicBrainz ID'));
+
         $this->type_boolean('has_image', T_('Local Image'));
         $this->type_numeric('image_width', T_('Image Width'));
         $this->type_numeric('image_height', T_('Image Height'));
@@ -693,6 +699,8 @@ class Search extends playlist_object
             $catalogs[$catid] = $catalog->f_name;
         }
         $this->type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs);
+
+        $this->type_text('mbid', T_('MusicBrainz ID'));
 
         $this->type_boolean('has_image', T_('Local Image'));
         $this->type_numeric('image_width', T_('Image Width'));
@@ -1416,9 +1424,12 @@ class Search extends playlist_object
                     $where[]         = "(`artist`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input')";
                     $table['artist'] = "LEFT JOIN `artist` ON `album`.`album_artist`=`artist`.`id`";
                     break;
+                case 'mbid':
+                    $where[] = "`album`.`mbid` $sql_match_operator '$input'";
+                    break;
                 default:
                     break;
-            } // switch on ruletype
+            } // switch on ruletype album
         } // foreach rule
 
         $join['song']    = $join['song'] || AmpConfig::get('catalog_disable');
@@ -1645,9 +1656,12 @@ class Search extends playlist_object
                             "`rating_" . $my_type . "_" . $userid . "`.`user` = $userid " : ' ';
                     }
                     break;
+                case 'mbid':
+                    $where[] = "`artist`.`mbid` $sql_match_operator '$input'";
+                    break;
                 default:
                     break;
-            } // switch on ruletype
+            } // switch on ruletype artist
         } // foreach rule
 
         $join['song']    = $join['song'] || AmpConfig::get('catalog_disable');
@@ -2064,6 +2078,17 @@ class Search extends playlist_object
                     $where[]                 = "`update_time_$key`.`id` IS NOT NULL";
                     $table['update_' . $key] = "LEFT JOIN (SELECT `id` from `song` ORDER BY $sql_match_operator DESC LIMIT $input) as `update_time_$key` ON `song`.`id` = `update_time_$key`.`id`";
                     break;
+                case 'mbid':
+                    $where[] = "`song`.`mbid` $sql_match_operator '$input'";
+                    break;
+                case 'mbid_album':
+                    $table['album'] = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
+                    $where[] = "`album`.`mbid` $sql_match_operator '$input'";
+                    break;
+                case 'mbid_artist':
+                    $table['artist'] = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
+                    $where[] = "`artist`.`mbid` $sql_match_operator '$input'";
+                    break;
                 case 'metadata':
                     $field = (int) $rule[3];
                     if ($sql_match_operator === '=' && strlen($input) == 0) {
@@ -2078,7 +2103,7 @@ class Search extends playlist_object
                     break;
                 default:
                     break;
-            } // switch on type
+            } // switch on ruletype song
         } // foreach over rules
 
         // translate metadata queries into sql for each field
