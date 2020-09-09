@@ -336,7 +336,7 @@ class Podcast extends database_object implements library_item
      */
     public static function create(array $data, $return_id = false)
     {
-        $feed = $data['feed'];
+        $feed = (string) $data['feed'];
         // Feed must be http/https
         if (strpos($feed, "http://") !== 0 && strpos($feed, "https://") !== 0) {
             AmpError::add('feed', T_('Feed URL is invalid'));
@@ -365,6 +365,15 @@ class Podcast extends database_object implements library_item
         $lastbuilddate = 0;
         $episodes      = array();
         $arturl        = '';
+
+        // don't allow duplicate podcasts
+        $sql        = "SELECT `id` FROM `podcast` WHERE `feed`= '" . Dba::escape($feed) . "'";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results, false)) {
+            if ((int) $row['id'] > 0) {
+                return (int) $row['id'];
+            }
+        }
 
         $xmlstr = file_get_contents($feed, false, stream_context_create(Core::requests_options()));
         if ($xmlstr === false) {
