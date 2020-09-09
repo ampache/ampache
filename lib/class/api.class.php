@@ -2422,7 +2422,7 @@ class Api
             return false;
         }
         $data            = array();
-        $data['feed']    = $input['url'];
+        $data['feed']    = html_entity_decode($input['url']);
         $data['catalog'] = $input['catalog'];
         $podcast         = Podcast::create($data, true);
         if ($podcast) {
