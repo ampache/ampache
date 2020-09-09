@@ -715,9 +715,9 @@ class Playlist extends playlist_object
             $count++;
         } // end while results
 
-        $sql = "REPLACE INTO `playlist_data` (`id`, `track`) ";
+        $sql = "REPLACE INTO `playlist_data` (`id`, `track`) VALUES";
         foreach ($results as $data) {
-            $sql .= "VALUES(" . Dba::escape($data['id']) . ", " . Dba::escape($data['track']) . "), ";
+            $sql .= "(" . Dba::escape($data['id']) . ", " . Dba::escape($data['track']) . "), ";
         } // foreach re-ordered results
 
         // do this in one go
