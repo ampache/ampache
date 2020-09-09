@@ -509,7 +509,13 @@ class Channel extends database_object implements Media, library_item
      */
     public function start_channel()
     {
-        exec("php " . __DIR__ . '/../../bin/channel_run.inc -c ' . $this->id . ' > /dev/null &');
+        $path = __DIR__ . '/../../bin/cli';
+        $cmd  = sprintf(
+            'env php %s run:channel %d > /dev/null &',
+            $path,
+            $this->id
+        );
+        exec($cmd);
     }
 
     /**
@@ -675,7 +681,7 @@ class Channel extends database_object implements Media, library_item
                                 $clchunk                      = '';
                             }
                         }
-                        // see bin/channel_run.inc for explanation what's happening here
+                        // see ChannelRunner for explanation what's happening here
                         while ($this->strtohex(substr($clchunk, 0, 4)) == "4F676753") {
                             $hex                = $this->strtohex(substr($clchunk, 0, 27));
                             $ogg_nr_of_segments = hexdec(substr($hex, 26 * 2, 2));

@@ -22,14 +22,11 @@
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Cli;
+namespace Ampache\Module\Channel;
 
 use function DI\autowire;
 
 return [
-    BroadcastCommand::class => autowire(BroadcastCommand::class),
-    ComputeCacheCommand::class => autowire(ComputeCacheCommand::class),
-    CronProcessCommand::class => autowire(CronProcessCommand::class),
-    ArtSizeCalculationCommand::class => autowire(ArtSizeCalculationCommand::class),
-    RunChannelCommand::class => autowire(RunChannelCommand::class),
+    ChannelRunnerInterface::class => autowire(ChannelRunner::class),
+    HttpServerInterface::class => autowire(HttpServer::class),
 ];
