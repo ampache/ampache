@@ -3977,7 +3977,8 @@ class Api
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->connect();
 
-        $result_status = false;
+        $result = false;
+        $status = false;
         switch ($input['command']) {
             case 'add':
                 // for add commands get the object details
@@ -3995,58 +3996,51 @@ class Api
                 $playlist = new Stream_Playlist();
                 $playlist->add(array($media));
                 foreach ($playlist->urls as $streams) {
-                    $result_status = $localplay->add_url($streams);
+                    $result = $localplay->add_url($streams);
                 }
                 break;
             case 'next':
-                $result_status = $localplay->next();
+                $result = $localplay->next();
                 break;
             case 'prev':
-                $result_status = $localplay->prev();
+                $result = $localplay->prev();
                 break;
             case 'stop':
-                $result_status = $localplay->stop();
+                $result = $localplay->stop();
                 break;
             case 'play':
-                $result_status = $localplay->play();
+                $result = $localplay->play();
                 break;
             case 'pause':
-                $result_status = $localplay->pause();
+                $result = $localplay->pause();
                 break;
             case 'volume_up':
-                $result_status = $localplay->volume_up();
+                $result = $localplay->volume_up();
                 break;
             case 'volume_down':
-                $result_status = $localplay->volume_down();
+                $result = $localplay->volume_down();
                 break;
             case 'volume_mute':
-                $result_status = $localplay->volume_mute();
+                $result = $localplay->volume_mute();
                 break;
             case 'delete_all':
-                $result_status = $localplay->volume_down();
+                $result = $localplay->volume_down();
                 break;
             case 'skip':
-                $result_status = $localplay->volume_mute();
+                $result = $localplay->volume_mute();
                 break;
             case 'status':
                 $status = $localplay->status();
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo json_encode($status, JSON_PRETTY_PRINT);
-                        break;
-                    default:
-                        echo XML_Data::keyed_array($status);
-                }
-                Session::extend($input['auth']);
-
-                return true;
+                break;
             default:
                 // They are doing it wrong
                 self::message('error', T_('Invalid request'), '405', $input['api_format']);
 
                 return false;
         } // end switch on command
-        $output_array     = array('localplay' => array('command' => array($input['command'] => make_bool($result_status))));
+        $output_array = (!empty($status))
+            ? array('localplay' => array('command' => array($input['command'] => $status)))
+            : array('localplay' => array('command' => array($input['command'] => make_bool($result))));
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($output_array, JSON_PRETTY_PRINT);

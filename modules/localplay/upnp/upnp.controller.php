@@ -506,18 +506,18 @@ class AmpacheUPnP extends localplay_controller
      * This returns bool/int values for features, loop, repeat and any other features
      * that this Localplay method supports.
      * This works as in requesting the UPnP properties
+     * @return array
      */
     public function status()
     {
         debug_event('upnp.controller', 'status', 5);
-
+        $status = array();
         if (!$this->_upnp) {
-            return false;
+            return $status;
         }
 
         $item = $this->_upnp->GetCurrentItem();
 
-        $status = array();
 
         $status['state']       = $this->_upnp->GetState();
         $status['volume']      = $this->_upnp->GetVolume();
