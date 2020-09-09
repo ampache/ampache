@@ -721,7 +721,7 @@ class Playlist extends playlist_object
         } // foreach re-ordered results
 
         // do this in one go
-        Dba::write(substr_replace($sql ,";", -1));
+        Dba::write(substr_replace($sql ,";", -2));
 
         $this->update_last_update();
 
