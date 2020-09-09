@@ -32,4 +32,5 @@ return [
     CronProcessCommand::class => autowire(CronProcessCommand::class),
     ArtSizeCalculationCommand::class => autowire(ArtSizeCalculationCommand::class),
     RunChannelCommand::class => autowire(RunChannelCommand::class),
+    PrintTagsCommand::class => autowire(PrintTagsCommand::class),
 ];

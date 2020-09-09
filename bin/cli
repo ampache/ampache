@@ -43,6 +43,7 @@ $app->add($dic->get(Cli\ComputeCacheCommand::class));
 $app->add($dic->get(Cli\CronProcessCommand::class));
 $app->add($dic->get(Cli\ArtSizeCalculationCommand::class));
 $app->add($dic->get(Cli\RunChannelCommand::class));
+$app->add($dic->get(Cli\PrintTagsCommand::class));
 
 $logo = <<<LOGO
     _                               _          
