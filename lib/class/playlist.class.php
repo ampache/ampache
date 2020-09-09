@@ -715,10 +715,13 @@ class Playlist extends playlist_object
             $count++;
         } // end while results
 
+        $sql = "REPLACE INTO `playlist_data` (`id`, `track`)";
         foreach ($results as $data) {
-            $sql = "UPDATE `playlist_data` SET `track` = ? WHERE `id` = ?";
-            Dba::write($sql, array($data['track'], $data['id']));
+            $sql .= "VALUES(" . Dba::escape(['track']) . ", " . Dba::escape($data['id']) . "),";
         } // foreach re-ordered results
+
+        // do this in one go
+        Dba::write(substr_replace($sql ,";", -1));
 
         $this->update_last_update();
 
