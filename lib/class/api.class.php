@@ -3962,10 +3962,11 @@ class Api
      * This is for controlling Localplay
      *
      * @param array $input
-     * command = (string) 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip'
+     * command = (string) 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip', 'status'
      * oid     = (integer) object_id //optional
      * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream' //optional
      * clear   = (integer) 0,1 Clear the current playlist before adding //optional
+     * @return bool
      */
     public static function localplay($input)
     {
@@ -4027,6 +4028,18 @@ class Api
             case 'skip':
                 $result_status = $localplay->volume_mute();
                 break;
+            case 'status':
+                $status = $localplay->status();
+                switch ($input['api_format']) {
+                    case 'json':
+                        echo json_encode($status, JSON_PRETTY_PRINT);
+                        break;
+                    default:
+                        echo XML_Data::keyed_array($status);
+                }
+                Session::extend($input['auth']);
+
+                return true;
             default:
                 // They are doing it wrong
                 self::message('error', T_('Invalid request'), '405', $input['api_format']);
