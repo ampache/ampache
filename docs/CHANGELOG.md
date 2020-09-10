@@ -51,6 +51,10 @@ All API code that used 'Tag' now references 'Genre' instead
 * Don't allow duplicate podcast feeds
 * Extend democratic cooldown past 255 and show an error when out of range
 
+### Fixed
+
+* Api::podcast_edit wasn't able to edit a podcast...
+
 ## Ampache 4.2.2-release
 
 **DATABASE CHANGES** You can now force a default collation and charset on your database.

@@ -2067,10 +2067,10 @@ class Api
      *
      * @param array $input
      * filter      = (string) Alpha-numeric search term
-     * stream      = (boolean) 0,1 // optional
-     * download    = (boolean) 0,1 // optional
-     * expires     = (integer) number of whole days before expiry // optional
-     * description = (string) update description // optional
+     * stream      = (boolean) 0,1 //optional
+     * download    = (boolean) 0,1 //optional
+     * expires     = (integer) number of whole days before expiry //optional
+     * description = (string) update description //optional
      * @return boolean
      */
     public static function share_edit($input)
@@ -2314,7 +2314,7 @@ class Api
      *
      * @param array $input
      * filter  = (string) Alpha-numeric search term
-     * include = (string) 'episodes' (include episodes in the response) // optional
+     * include = (string) 'episodes' (include episodes in the response) //optional
      * offset  = (integer) //optional
      * limit   = (integer) //optional
      * @return boolean
@@ -2363,7 +2363,7 @@ class Api
      *
      * @param array $input
      * filter  = (integer) Podcast ID number
-     * include = (string) 'episodes' (include episodes in the response) // optional
+     * include = (string) 'episodes' (include episodes in the response) //optional
      * @return boolean
      */
     public static function podcast($input)
@@ -2378,7 +2378,7 @@ class Api
         }
         $object_id = (int) $input['filter'];
         $podcast   = new Podcast($object_id);
-        if ($podcast->id > 0) {
+        if ($podcast->id) {
             $episodes = $input['include'] == 'episodes';
 
             ob_end_clean();
@@ -2460,7 +2460,8 @@ class Api
 
             return false;
         }
-        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['api_format'])) {
+        $user = User::get_from_username(Session::username($input['auth']));
+        if (!self::check_access('interface', 75, $user->id, 'update_podcast', $input['api_format'])) {
             return false;
         }
         if (!self::check_parameter($input, array('filter'), 'podcast_delete')) {
@@ -2468,7 +2469,7 @@ class Api
         }
         $object_id = (int) $input['filter'];
         $podcast   = new Podcast($object_id);
-        if ($podcast->id > 0) {
+        if ($podcast->id) {
             if ($podcast->remove()) {
                 self::message('success', 'podcast ' . $object_id . ' deleted', null, $input['api_format']);
             } else {
@@ -2485,15 +2486,18 @@ class Api
     /**
      * podcast_edit
      * MINIMUM_API_VERSION=420000
+     * CHANGED_IN_API_VERSION=430000
      * Update the description and/or expiration date for an existing podcast.
      * Takes the podcast id to update with optional description and expires parameters.
      *
      * @param array $input
      * filter      = (string) Alpha-numeric search term //optional
-     * stream      = (boolean) 0,1 // optional
-     * download    = (boolean) 0,1 // optional
-     * expires     = (integer) number of whole days before expiry // optional
-     * description = (string) update description // optional
+     * feed        = (string) feed url (xml!) //optional
+     * title       = (string) title string //optional
+     * website     = (string) source website url //optional
+     * description = (string) //optional
+     * generator   = (string) //optional
+     * copyright   = (string) //optional
      * @return boolean
      */
     public static function podcast_edit($input)
@@ -2503,27 +2507,30 @@ class Api
 
             return false;
         }
-        if (!self::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, 'edit_podcast', $input['api_format'])) {
+        $user = User::get_from_username(Session::username($input['auth']));
+        if (!self::check_access('interface', 50, $user->id, 'edit_podcast', $input['api_format'])) {
             return false;
         }
         if (!self::check_parameter($input, array('filter'), 'podcast_edit')) {
             return false;
         }
         $podcast_id = $input['filter'];
-        if (in_array($podcast_id, Share::get_share_list())) {
-            $user          = User::get_from_username(Session::username($input['auth']));
-            $podcast       = new Share($podcast_id);
-            $description   = isset($input['description']) ? $input['description'] : $podcast->description;
-            $stream        = isset($input['stream']) ? $input['stream'] : $podcast->allow_stream;
-            $download      = isset($input['download']) ? $input['download'] : $podcast->allow_download;
-            $expires       = isset($input['expires']) ? Share::get_expiry($input['expires']) : $podcast->expire_days;
+        $podcast    = new Podcast($podcast_id);
+        if ($podcast->id) {
+            $feed           = filter_var($input['feed'], FILTER_VALIDATE_URL) ? $input['feed'] : $podcast->feed;
+            $title          = isset($input['title']) ? scrub_in($input['title']) : $podcast->title;
+            $website        = filter_var($input['website'], FILTER_VALIDATE_URL) ? scrub_in($input['website']) : $podcast->website;
+            $description    = isset($input['description']) ? scrub_in($input['description']) : $podcast->description;
+            $generator      = isset($input['generator']) ? scrub_in($input['generator']) : $podcast->generator;
+            $copyright      = isset($input['copyright']) ? scrub_in($input['copyright']) : $podcast->copyright;
 
             $data = array(
-                'max_counter' => $podcast->max_counter,
-                'expire' => $expires,
-                'allow_stream' => $stream,
-                'allow_download' => $download,
-                'description' => $description
+                'feed' => $feed,
+                'title' => $title,
+                'website' => $website,
+                'description' => $description,
+                'generator' => $generator,
+                'copyright' => $copyright
             );
             if ($podcast->update($data, $user)) {
                 self::message('success', 'podcast ' . $podcast_id . ' updated', null, $input['api_format']);
