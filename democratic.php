@@ -79,7 +79,11 @@ switch ($_REQUEST['action']) {
             Democratic::create($_POST);
             $democratic = Democratic::get_current_playlist();
         } else {
-            $democratic->update($_POST);
+            if (!$democratic->update($_POST)) {
+                show_confirmation(T_("There Was a Problem"),
+                    T_("Cooldown out of range."),
+                    AmpConfig::get('web_path') . "/democratic.php?action=show");
+            }
         }
 
         // Now check for additional things we might have to do
