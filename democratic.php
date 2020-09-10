@@ -82,7 +82,8 @@ switch ($_REQUEST['action']) {
             if (!$democratic->update($_POST)) {
                 show_confirmation(T_("There Was a Problem"),
                     T_("Cooldown out of range."),
-                    AmpConfig::get('web_path') . "/democratic.php?action=show");
+                    AmpConfig::get('web_path') . "/democratic.php?action=manage");
+                break;
             }
         }
 
