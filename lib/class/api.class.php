@@ -1885,7 +1885,7 @@ class Api
      * Get information about shared media this user is allowed to manage.
      *
      * @param array $input
-     * filter = (string) Alpha-numeric search term
+     * filter = (string) Alpha-numeric search term //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
@@ -1897,9 +1897,7 @@ class Api
 
             return false;
         }
-        if (!self::check_parameter($input, array('filter'), 'shares')) {
-            return false;
-        }
+
         self::$browse->reset_filters();
         self::$browse->set_type('share');
         self::$browse->set_sort('title', 'ASC');
@@ -2491,7 +2489,7 @@ class Api
      * Takes the podcast id to update with optional description and expires parameters.
      *
      * @param array $input
-     * filter      = (string) Alpha-numeric search term //optional
+     * filter      = (string) Alpha-numeric search term
      * feed        = (string) feed url (xml!) //optional
      * title       = (string) title string //optional
      * website     = (string) source website url //optional

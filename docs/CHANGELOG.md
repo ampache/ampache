@@ -50,6 +50,7 @@ All API code that used 'Tag' now references 'Genre' instead
   * tag_songs => genre_songs
 * Don't allow duplicate podcast feeds
 * Extend democratic cooldown past 255 and show an error when out of range
+* Api::shares filter is optional
 
 ### Fixed
 
