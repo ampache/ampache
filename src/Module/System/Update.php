@@ -188,6 +188,8 @@ class Update
         $update_string = "* Add a rss token to allow the use of RSS unauthenticated feeds<br/ >";
         $version[]     = array('version' => '400012', 'description' => $update_string);
 
+        $update_string = "* Extend Democratic cooldown beyond 255.<br/ >";
+        $version[]     = array('version' => '400013', 'description' => $update_string);
 
         return $version;
     }
@@ -960,6 +962,20 @@ class Update
     {
         $retval = true;
         $sql    = "ALTER TABLE `user` ADD `rsstoken` VARCHAR(255) NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400013
+     *
+     * Extend Democratic cooldown beyond 255.
+     */
+    public static function update_400013()
+    {
+        $retval = true;
+        $sql    = "ALTER TABLE `democratic` MODIFY COLUMN `cooldown` int(11) unsigned DEFAULT NULL NULL;";
         $retval &= Dba::write($sql);
 
         return $retval;

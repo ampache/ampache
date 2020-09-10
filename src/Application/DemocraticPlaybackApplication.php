@@ -93,7 +93,11 @@ final class DemocraticPlaybackApplication implements ApplicationInterface
                     Democratic::create($_POST);
                     $democratic = Democratic::get_current_playlist();
                 } else {
-                    $democratic->update($_POST);
+                    if (!$democratic->update($_POST)) {
+                        show_confirmation(T_("There Was a Problem"),
+                            T_("Cooldown out of range."),
+                            AmpConfig::get('web_path') . "/democratic.php?action=manage");
+                    }
                 }
 
                 // Now check for additional things we might have to do

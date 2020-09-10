@@ -49,6 +49,12 @@ All API code that used 'Tag' now references 'Genre' instead
   * tag_albums => genre_albums
   * tag_songs => genre_songs
 * Don't allow duplicate podcast feeds
+* Extend democratic cooldown past 255 and show an error when out of range
+* Api::shares filter is optional
+
+### Fixed
+
+* Api::podcast_edit wasn't able to edit a podcast...
 
 ## Ampache 4.2.2-release
 
