@@ -174,9 +174,10 @@ class Json_Data
      *
      * @param array $objects (description here...)
      * @param string $type (description here...)
+     * @param bool $include (add the extra songs details if a playlist)
      * @return string return JSON
      */
-    public static function indexes($objects, $type)
+    public static function indexes($objects, $type, $include = false)
     {
         //here is where we call the object type
         // 'artist'|'album'|'song'|'playlist'|'share'|'podcast'
@@ -188,7 +189,7 @@ class Json_Data
             case 'artist':
                 return self::artists($objects);
             case 'playlist':
-                return self::playlists($objects);
+                return self::playlists($objects, $include);
             case 'share':
                 return self::shares($objects);
             case 'podcast':
@@ -430,9 +431,10 @@ class Json_Data
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
      * @param array $playlists (description here...)
+     * @param bool $songs
      * @return string return JSON
      */
-    public static function playlists($playlists)
+    public static function playlists($playlists, $songs = false)
     {
         if (count($playlists) > self::$limit || self::$offset > 0) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
@@ -470,14 +472,27 @@ class Json_Data
                 $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
                 $playlist_type  = $playlist->type;
             }
+
+            if ($songs) {
+                $items          = array();
+                $trackcount     = 1;
+                $playlisttracks = $playlist->get_items();
+                foreach ($playlisttracks as $objects) {
+                    array_push($items,array("id" => (string) $objects['object_id'], "playlisttrack" => $trackcount));
+                    $trackcount++;
+                }
+            } else {
+                $items = ($playitem_total ?: 0);
+            }
+
             // Build this element
             array_push($allPlaylists, [
                 "id" => (string)$playlist_id,
                 "name" => $playlist_name,
                 "owner" => $playlist_user,
-                "items" => (int)$playitem_total,
-                "type" => $playlist_type
-            ]);
+                "items" => $items,
+                "type" => $playlist_type]
+            );
         } // end foreach
 
         return json_encode($allPlaylists, JSON_PRETTY_PRINT);
@@ -730,12 +745,11 @@ class Json_Data
                     "name" => $song->get_album_name()),
                 "genre" => self::genre_array($song->tags)
             );
-            if ($song->albumartist) {
-                $ourSong['albumartist'] = array(
-                    "id" => (string)$song->albumartist,
-                    "name" => $song->get_album_artist_name()
-                );
-            }
+            //always get album artist
+            $ourSong['albumartist'] = array(
+                "id" => (string) $song->albumartist,
+                "name" => $song->get_album_artist_name()
+            );
 
             $ourSong['filename']         = $song->file;
             $ourSong['track']            = (int)$song->track;

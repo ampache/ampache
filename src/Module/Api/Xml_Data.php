@@ -347,7 +347,7 @@ class Xml_Data
      * @param bool $full_xml whether to return a full XML document or just the node.
      * @return   string   return xml
      */
-    public static function indexes($objects, $object_type, $full_xml = true)
+    public static function indexes($objects, $object_type, $full_xml = true, $songs = false)
     {
         if (count($objects) > self::$limit || self::$offset > 0) {
             $objects = array_splice($objects, self::$offset, self::$limit);
@@ -394,14 +394,14 @@ class Xml_Data
                     $playitem_total = ($playlist->limit == 0) ? 5000 : $playlist->limit;
                 }
                 // don't allow unlimited smartlists or empty playlists into xml
-                if ((int)$playitem_total > 0) {
+                if ($songs && (int) $playitem_total > 0) {
                     $songs = $playlist->get_items();
                     $string .= "<$object_type id=\"" . $object_id . "\">\n" . "\t<name><![CDATA[" . $playlist_name . "]]></name>\n";
                     $playlist_track = 0;
                     foreach ($songs as $song_id) {
                         if ($song_id['object_type'] == 'song') {
                             $playlist_track++;
-                            $string .= "\t\t<playlisttrack>" . $playlist_track . "</playlisttrack>\n";
+                            $string .= "\t\t<playlisttrack id=\"" . $song_id['object_id'] . "\">" . $playlist_track . "</playlisttrack>\n";
                         }
                     }
                     $string .= "</$object_type>\n";
@@ -791,15 +791,45 @@ class Xml_Data
             $art_url    = Art::url($song->album, 'album', Core::get_request('auth'));
             $playlist_track++;
 
-            $string .= "<song id=\"" . $song->id . "\">\n" . // Title is an alias for name
-                "\t<title><![CDATA[" . $song->title . "]]></title>\n" . "\t<name><![CDATA[" . $song->title . "]]></name>\n" . "\t<artist id=\"" . $song->artist . '"><![CDATA[' . $song->get_artist_name() . "]]></artist>\n" . "\t<album id=\"" . $song->album . '"><![CDATA[' . $song->get_album_name() . "]]></album>\n";
-            if ($song->albumartist) {
-                $string .= "\t<albumartist id=\"" . $song->albumartist . "\"><![CDATA[" . $song->get_album_artist_name() . "]]></albumartist>\n";
-            }
-            $string .= $tag_string . "\t<filename><![CDATA[" . $song->file . "]]></filename>\n" . "\t<track>" . $song->track . "</track>\n" . "\t<playlisttrack>" . $playlist_track . "</playlisttrack>\n" . "\t<time>" . $song->time . "</time>\n" . "\t<year>" . $song->year . "</year>\n" . "\t<bitrate>" . $song->bitrate . "</bitrate>\n" . "\t<rate>" . $song->rate . "</rate>\n" . "\t<mode><![CDATA[" . $song->mode . "]]></mode>\n" . "\t<mime><![CDATA[" . $song->mime . "]]></mime>\n" . "\t<url><![CDATA[" . Song::play_url($song->id,
-                    '', 'api', false, $user_id,
-                    true) . "]]></url>\n" . "\t<size>" . $song->size . "</size>\n" . "\t<mbid><![CDATA[" . $song->mbid . "]]></mbid>\n" . "\t<album_mbid><![CDATA[" . $song->album_mbid . "]]></album_mbid>\n" . "\t<artist_mbid><![CDATA[" . $song->artist_mbid . "]]></artist_mbid>\n" . "\t<albumartist_mbid><![CDATA[" . $song->albumartist_mbid . "]]></albumartist_mbid>\n" . "\t<art><![CDATA[" . $art_url . "]]></art>\n" . "\t<flag>" . (!$flag->get_flag($user_id,
-                    false) ? 0 : 1) . "</flag>\n" . "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" . "\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" . "\t<averagerating>" . (string)($rating->get_average_rating() ?: null) . "</averagerating>\n" . "\t<playcount>" . $song->played . "</playcount>\n" . "\t<catalog>" . $song->catalog . "</catalog>\n" . "\t<composer><![CDATA[" . $song->composer . "]]></composer>\n" . "\t<channels>" . $song->channels . "</channels>\n" . "\t<comment><![CDATA[" . $song->comment . "]]></comment>\n";
+            $string .= "<song id=\"" . $song->id . "\">\n" .
+                    // Title is an alias for name
+                    "\t<title><![CDATA[" . $song->title . "]]></title>\n" .
+                    "\t<name><![CDATA[" . $song->title . "]]></name>\n" .
+                    "\t<artist id=\"" . $song->artist .
+                    '"><![CDATA[' . $song->get_artist_name() .
+                    "]]></artist>\n" .
+                    "\t<album id=\"" . $song->album .
+                    '"><![CDATA[' . $song->get_album_name() .
+                    "]]></album>\n" .
+                    "\t<albumartist id=\"" . $song->albumartist .
+                    "\"><![CDATA[" . $song->get_album_artist_name() .
+                    "]]></albumartist>\n";
+            $string .= $tag_string .
+                    "\t<filename><![CDATA[" . $song->file . "]]></filename>\n" .
+                    "\t<track>" . $song->track . "</track>\n" .
+                    "\t<playlisttrack>" . $playlist_track . "</playlisttrack>\n" .
+                    "\t<time>" . $song->time . "</time>\n" .
+                    "\t<year>" . $song->year . "</year>\n" .
+                    "\t<bitrate>" . $song->bitrate . "</bitrate>\n" .
+                    "\t<rate>" . $song->rate . "</rate>\n" .
+                    "\t<mode><![CDATA[" . $song->mode . "]]></mode>\n" .
+                    "\t<mime><![CDATA[" . $song->mime . "]]></mime>\n" .
+                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api', false, $user_id, true) . "]]></url>\n" .
+                    "\t<size>" . $song->size . "</size>\n" .
+                    "\t<mbid><![CDATA[" . $song->mbid . "]]></mbid>\n" .
+                    "\t<album_mbid><![CDATA[" . $song->album_mbid . "]]></album_mbid>\n" .
+                    "\t<artist_mbid><![CDATA[" . $song->artist_mbid . "]]></artist_mbid>\n" .
+                    "\t<albumartist_mbid><![CDATA[" . $song->albumartist_mbid . "]]></albumartist_mbid>\n" .
+                    "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
+                    "\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n" .
+                    "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
+                    "\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" .
+                    "\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
+                    "\t<playcount>" . $song->played . "</playcount>\n" .
+                    "\t<catalog>" . $song->catalog . "</catalog>\n" .
+                    "\t<composer><![CDATA[" . $song->composer . "]]></composer>\n" .
+                    "\t<channels>" . $song->channels . "</channels>\n" .
+                    "\t<comment><![CDATA[" . $song->comment . "]]></comment>\n";
             if (AmpConfig::get('licensing')) {
                 $string .= "\t<license><![CDATA[" . $song->f_license . "]]></license>\n";
             }
