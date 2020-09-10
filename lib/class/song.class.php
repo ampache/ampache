@@ -1633,6 +1633,9 @@ class Song extends database_object implements media, library_item
             $this->tags   = Tag::get_top_tags('song', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'song');
         }
+        // force the album artist.
+        $album = new Album($this->album);
+        $this->albumartist = (!empty($this->albumartist)) ? $this->albumartist : $album->album_artist;
 
         // Format the album name
         $this->f_album_full = $this->get_album_name();
