@@ -465,16 +465,20 @@ class Api
     /**
      * get_indexes
      * MINIMUM_API_VERSION=400001
+     * CHANGED_IN_API_VERSION=430000
      *
      * This takes a collection of inputs and returns ID + name for the object type
+     * Added 'include' to allow indexing all song tracks (enabled for xml by default)
      *
      * @param array $input
-     * type   = (string) 'song'|'album'|'artist'|'playlist'
-     * filter = (string) //optional
-     * add    = self::set_filter(date) //optional
-     * update = self::set_filter(date) //optional
-     * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * type    = (string) 'song'|'album'|'artist'|'playlist'
+     * filter  = (string) //optional
+     * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * add     = self::set_filter(date) //optional
+     * update  = self::set_filter(date) //optional
+     * include = (integer) 0,1 include songs if available for that object //optional
+     * offset  = (integer) //optional
+     * limit   = (integer) //optional
      * @return boolean
      */
     public static function get_indexes($input)
@@ -482,8 +486,9 @@ class Api
         if (!self::check_parameter($input, array('type'), 'get_indexes')) {
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
-        $type = (string) $input['type'];
+        $user    = User::get_from_username(Session::username($input['auth']));
+        $type    = (string) $input['type'];
+        $include = ((int) $input['include'] == 1 || ($input['api_format'] == 'xml' && !isset($input['include']))) ? true : false;
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist'))) {
             self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
@@ -511,12 +516,12 @@ class Api
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::indexes($objects, $type);
+                echo JSON_Data::indexes($objects, $type, $include);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::indexes($objects, $type);
+                echo XML_Data::indexes($objects, $type, true, $include);
         }
         Session::extend($input['auth']);
 
@@ -1969,7 +1974,7 @@ class Api
      *
      * @param array $input
      * filter      = (string) object_id
-     * type        = (string) object_type
+     * type        = (string) object_type ('song', 'album', 'artist')
      * description = (string) description (will be filled for you if empty) //optional
      * expires     = (integer) days to keep active //optional
      * @return boolean
