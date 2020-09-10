@@ -45,6 +45,7 @@ $builder->addDefinitions(
     require_once __DIR__ . '/../Module/Cli/service_definition.php',
     require_once __DIR__ . '/../Module/Cache/service_definition.php',
     require_once __DIR__ . '/../Module/Channel/service_definition.php',
+    require_once __DIR__ . '/../Module/Song/service_definition.php',
 );
 
 return $builder->build();
