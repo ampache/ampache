@@ -546,9 +546,6 @@ class XML_Data
         if ($include == null || $include == '') {
             $include = array();
         }
-        if (is_string($include)) {
-            $include = explode(',', $include);
-        }
 
         if ((count($albums) > self::$limit || self::$offset > 0) && self::$limit) {
             $albums = array_splice($albums, self::$offset, self::$limit);
