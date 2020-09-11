@@ -2586,7 +2586,7 @@ class Api
                 'generator' => $generator,
                 'copyright' => $copyright
             );
-            if ($podcast->update($data, $user)) {
+            if ($podcast->update($data)) {
                 self::message('success', 'podcast ' . $podcast_id . ' updated', null, $input['api_format']);
             } else {
                 self::message('error', 'podcast ' . $podcast_id . ' was not updated', '401', $input['api_format']);

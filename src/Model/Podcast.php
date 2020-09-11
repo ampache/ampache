@@ -332,7 +332,7 @@ class Podcast extends database_object implements library_item
      * create
      * @param array $data
      * @param boolean $return_id
-     * @return PDOStatement|boolean
+     * @return boolean|integer
      */
     public static function create(array $data, $return_id = false)
     {
@@ -363,7 +363,7 @@ class Podcast extends database_object implements library_item
         $copyright     = null;
         $generator     = null;
         $lastbuilddate = 0;
-        $episodes      = array();
+        $episodes      = false;
         $arturl        = '';
 
         // don't allow duplicate podcasts
@@ -431,15 +431,17 @@ class Podcast extends database_object implements library_item
                 $art = new Art((int)$podcast_id, 'podcast');
                 $art->insert_url($arturl);
             }
-            if (count($episodes) > 0) {
+            if ($episodes) {
                 $podcast->add_episodes($episodes);
             }
             if ($return_id) {
                 return (int)$podcast_id;
             }
+
+            return true;
         }
 
-        return $db_results;
+        return false;
     }
 
     /**
@@ -504,15 +506,14 @@ class Podcast extends database_object implements library_item
         if ($episode->enclosure) {
             $source = $episode->enclosure['url'];
         }
-        $itunes = $episode->children('itunes', true);
-        if ($itunes) {
-            $duration = (string)$itunes->duration;
-            if (preg_grep("/^[0-9][0-9]\:[0-9][0-9]$/", array($duration))) {
-                $duration = '00:' . $duration;
-            }
-            $ptime = date_parse((string)$duration);
-            $time  = (int)$ptime['hour'] * 3600 + (int)$ptime['minute'] * 60 + (int)$ptime['second'];
+        $itunes   = $episode->children('itunes', true);
+        $duration = (string) $itunes->duration;
+        if (preg_grep("/^[0-9][0-9]\:[0-9][0-9]$/", array($duration))) {
+            $duration = '00:' . $duration;
         }
+        $ptime = date_parse((string) $duration);
+        $time  = (int) $ptime['hour'] * 3600 + (int) $ptime['minute'] * 60 + (int) $ptime['second'];
+
         $pubdate    = 0;
         $pubdatestr = (string)$episode->pubDate;
         if ($pubdatestr) {
