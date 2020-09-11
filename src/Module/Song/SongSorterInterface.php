@@ -20,13 +20,11 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Song;
 
-use function DI\autowire;
+use Ahc\Cli\IO\Interactor;
 
-return [
-    SongFilesystemCleanupInterface::class => autowire(SongFilesystemCleanup::class),
-    SongSorterInterface::class => autowire(SongSorter::class),
-];
+interface SongSorterInterface
+{
+    public function sort(Interactor $interactor, bool $dryRun = true, ?string $various_artist_override = null): void;
+}
