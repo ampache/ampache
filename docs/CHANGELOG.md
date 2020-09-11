@@ -60,6 +60,7 @@ All API code that used 'Tag' now references 'Genre' instead
 ### Fixed
 
 * Api::podcast_edit wasn't able to edit a podcast...
+* Setting a limit of 'none' would slice away all the results
 
 ## Ampache 4.2.2-release
 
