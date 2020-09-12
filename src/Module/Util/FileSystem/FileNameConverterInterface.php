@@ -20,15 +20,15 @@
  *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\Util\FileSystem;
 
-namespace Ampache\Module\Util;
+use Ahc\Cli\IO\Interactor;
 
-use Ampache\Module\Util\FileSystem\FileNameConverter;
-use Ampache\Module\Util\FileSystem\FileNameConverterInterface;
-use function DI\autowire;
-
-return [
-    Horde_Browser::class => autowire(Horde_Browser::class),
-    FileNameConverterInterface::class => autowire(FileNameConverter::class),
-];
+interface FileNameConverterInterface
+{
+    public function convert(
+        Interactor $interactor,
+        string $source_encoding,
+        bool $force = false
+    ): void;
+}
