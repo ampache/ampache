@@ -1193,7 +1193,8 @@
                         "src/qrcode.js"
                     ]
                 }
-            }
+            },
+            "time": "2020-08-06T05:49:39+00:00"
         },
         {
             "name": "jwilsson/spotify-web-api-php",
@@ -1419,7 +1420,8 @@
                         "responsive-elements.js"
                     ]
                 }
-            }
+            },
+            "time": "2020-08-06T05:49:39+00:00"
         },
         {
             "name": "kunalvarma05/dropbox-php-sdk",
@@ -4236,12 +4238,12 @@
             "version": "v5.2.43",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tightenco/collect.git",
+                "url": "https://github.com/tighten/collect.git",
                 "reference": "6add72fba3816232c71a3338081ed8cbef41974d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tightenco/collect/zipball/6add72fba3816232c71a3338081ed8cbef41974d",
+                "url": "https://api.github.com/repos/tighten/collect/zipball/6add72fba3816232c71a3338081ed8cbef41974d",
                 "reference": "6add72fba3816232c71a3338081ed8cbef41974d",
                 "shasum": ""
             },
@@ -5687,16 +5689,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.3.8",
+            "version": "9.3.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "93d78d8e2a06393a0d0c1ead6fe9984f1af1f88c"
+                "reference": "60c90ba713075e83bd039db4760226df7ad9a5cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/93d78d8e2a06393a0d0c1ead6fe9984f1af1f88c",
-                "reference": "93d78d8e2a06393a0d0c1ead6fe9984f1af1f88c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/60c90ba713075e83bd039db4760226df7ad9a5cb",
+                "reference": "60c90ba713075e83bd039db4760226df7ad9a5cb",
                 "shasum": ""
             },
             "require": {
@@ -5710,7 +5712,7 @@
                 "myclabs/deep-copy": "^1.10.1",
                 "phar-io/manifest": "^2.0.1",
                 "phar-io/version": "^3.0.2",
-                "php": "^7.3 || ^8.0",
+                "php": ">=7.3",
                 "phpspec/prophecy": "^1.11.1",
                 "phpunit/php-code-coverage": "^9.1.5",
                 "phpunit/php-file-iterator": "^3.0.4",
@@ -5782,7 +5784,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-08-27T06:30:58+00:00"
+            "time": "2020-09-11T12:42:34+00:00"
         },
         {
             "name": "psr/cache",
