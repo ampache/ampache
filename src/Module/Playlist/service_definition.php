@@ -22,16 +22,10 @@
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Cli;
+namespace Ampache\Module\Playlist;
 
 use function DI\autowire;
 
 return [
-    BroadcastCommand::class => autowire(BroadcastCommand::class),
-    ComputeCacheCommand::class => autowire(ComputeCacheCommand::class),
-    CronProcessCommand::class => autowire(CronProcessCommand::class),
-    ArtSizeCalculationCommand::class => autowire(ArtSizeCalculationCommand::class),
-    RunChannelCommand::class => autowire(RunChannelCommand::class),
-    PrintTagsCommand::class => autowire(PrintTagsCommand::class),
-
+    PlaylistExporterInterface::class => autowire(PlaylistExporter::class),
 ];

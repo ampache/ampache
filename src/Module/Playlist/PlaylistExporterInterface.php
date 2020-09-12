@@ -20,18 +20,11 @@
  *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\Playlist;
 
-namespace Ampache\Module\Cli;
+use Ahc\Cli\IO\Interactor;
 
-use function DI\autowire;
-
-return [
-    BroadcastCommand::class => autowire(BroadcastCommand::class),
-    ComputeCacheCommand::class => autowire(ComputeCacheCommand::class),
-    CronProcessCommand::class => autowire(CronProcessCommand::class),
-    ArtSizeCalculationCommand::class => autowire(ArtSizeCalculationCommand::class),
-    RunChannelCommand::class => autowire(RunChannelCommand::class),
-    PrintTagsCommand::class => autowire(PrintTagsCommand::class),
-
-];
+interface PlaylistExporterInterface
+{
+    public function export(Interactor $interactor, string $dirname, string $type, string $ext): void;
+}
