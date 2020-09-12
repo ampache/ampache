@@ -1,6 +1,6 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,25 +20,12 @@
  *
  */
 
+namespace Ampache\Module\Album;
+
+use Ahc\Cli\IO\Interactor;
 use Ampache\Model\Catalog;
 
-define('NO_SESSION', '1');
-
-require_once __DIR__ . '/../src/Config/init.php';
-
-// Turn off output buffering we don't need it for a command line script
-ob_end_clean();
-
-$meta = 'linux';
-
-// Take input from the command line, two options linux or windows
-if (count($_SERVER['argv']) > 1) {
-    $meta = ($_SERVER['argv']['1'] == 'windows') ? 'windows' : 'linux';
-}
-
-$catalogs = Catalog::get_catalogs();
-
-foreach ($catalogs as $catalog_id) {
-    $catalog = Catalog::create_from_id($catalog_id);
-    $catalog->dump_album_art(array('metadata' => $meta));
+interface AlbumArtExporterInterface
+{
+    public function export(Interactor $interactor, Catalog $catalog, array $methods = []): void;
 }
