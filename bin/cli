@@ -48,6 +48,7 @@ $app->add($dic->get(Cli\SongCleanupCommand::class));
 $app->add($dic->get(Cli\SortFilesCommand::class));
 $app->add($dic->get(Cli\ExportPlaylistCommand::class));
 $app->add($dic->get(Cli\ExportAlbumArtCommand::class));
+$app->add($dic->get(Cli\ArtCleanupCommand::class));
 
 $logo = <<<LOGO
     _                               _          

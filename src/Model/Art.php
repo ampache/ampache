@@ -462,43 +462,6 @@ class Art extends database_object
     }
 
     /**
-     * clean_art_by_dimension
-     *
-     * look for art in the image table that doesn't fit min or max dimensions and delete it
-     * @return boolean
-     */
-    public static function clean_art_by_dimension()
-    {
-        $minw = (AmpConfig::get('album_art_min_width')) ? AmpConfig::get('album_art_min_width') : null;
-        $maxw = (AmpConfig::get('album_art_max_width')) ? AmpConfig::get('album_art_max_width') : null;
-        $minh = (AmpConfig::get('album_art_min_height')) ? AmpConfig::get('album_art_min_height') : null;
-        $maxh = (AmpConfig::get('album_art_max_height')) ? AmpConfig::get('album_art_max_height') : null;
-
-        // minimum width is set and current width is too low
-        if ($minw) {
-            $sql = 'DELETE FROM `image` WHERE `width` < ? AND `width` > 0';
-            Dba::write($sql, array($minw));
-        }
-        // max width is set and current width is too high
-        if ($maxw) {
-            $sql = 'DELETE FROM `image` WHERE `width` > ? AND `width` > 0';
-            Dba::write($sql, array($maxw));
-        }
-        // min height is set and current width is too low
-        if ($minh) {
-            $sql = 'DELETE FROM `image` WHERE `height` < ? AND `height` > 0';
-            Dba::write($sql, array($minh));
-        }
-        // max height is set and current height is too high
-        if ($maxh) {
-            $sql = 'DELETE FROM `image` WHERE `height` > ? AND `height` > 0';
-            Dba::write($sql, array($maxh));
-        }
-
-        return true;
-    } // clean_art_by_dimension
-
-    /**
      * get_dir_on_disk
      * @param string $type
      * @param string $uid
