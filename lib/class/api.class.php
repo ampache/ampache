@@ -1481,7 +1481,7 @@ class Api
      */
     public static function playlist_create($input)
     {
-        if (!self::check_parameter($input, array('name', 'type'), 'playlist_create')) {
+        if (!self::check_parameter($input, array('name'), 'playlist_create')) {
             return false;
         }
         $name = $input['name'];
