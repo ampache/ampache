@@ -30,6 +30,7 @@ use Ampache\Model\Album;
 use Ampache\Application\ApplicationInterface;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Artist;
+use Ampache\Module\Database\DatabaseCharsetUpdaterInterface;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -41,10 +42,14 @@ final class SystemApplication implements ApplicationInterface
 {
     private Horde_Browser $browser;
 
+    private DatabaseCharsetUpdaterInterface $databaseCharsetUpdater;
+
     public function __construct(
-        Horde_Browser $browser
+        Horde_Browser $browser,
+        DatabaseCharsetUpdaterInterface $databaseCharsetUpdater
     ) {
-        $this->browser = $browser;
+        $this->browser                = $browser;
+        $this->databaseCharsetUpdater = $databaseCharsetUpdater;
     }
 
     public function run(): void
@@ -76,7 +81,8 @@ final class SystemApplication implements ApplicationInterface
 
                 return ;
             case 'reset_db_charset':
-                Dba::reset_db_charset();
+                $this->databaseCharsetUpdater->update();
+
                 show_confirmation(T_('No Problem'), T_('Your database and associated tables have been updated to match your currently configured charset'), AmpConfig::get('web_path') . '/admin/system.php?action=show_debug');
                 break;
             case 'show_debug':
