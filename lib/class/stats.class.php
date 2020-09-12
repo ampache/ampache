@@ -314,8 +314,8 @@ class Stats
         $item_time = $object->time;
         $skip_time = AmpConfig::get_skip_timer($previous['time']);
 
-        // if your song is 30 seconds and your skip timer if 40 you don't want to keep skipping it.
-        if ($object->time > 0 && $object->time < $skip_time) {
+        // if your last song is 30 seconds and your skip timer if 40 you don't want to keep skipping it.
+        if ($previous['time'] > 0 && $previous['time'] < $skip_time) {
             return true;
         }
 
