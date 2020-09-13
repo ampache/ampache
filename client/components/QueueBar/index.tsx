@@ -3,6 +3,8 @@ import { Song } from '~logic/Song';
 import { MusicContext } from '~Contexts/MusicContext';
 import QueueSong from './components/QueueSong';
 
+import style from './index.module.styl';
+
 interface QueueBarProps {
     visible: boolean;
 }
@@ -13,11 +15,16 @@ const QueueBar: React.FC<QueueBarProps> = (props) => {
     return (
         <div
             className={
-                props.visible ? 'sidebar queueBar visible' : 'sidebar queueBar'
+                props.visible
+                    ? `${style.sidebar} ${style.queueBar} ${style.visible}`
+                    : `${style.sidebar} ${style.queueBar}`
             }
         >
-            <div className='title'>Your Queue</div>
-            <ul className='songs'>
+            <div className={style.title}>Your Queue</div>
+            <ul className={style.songs}>
+                {musicContext.songQueue.length == 0 && (
+                    <div className={style.emptyQueue}>Nothing in the queue</div>
+                )}
                 {musicContext.songQueue.map((song: Song) => {
                     return (
                         <QueueSong

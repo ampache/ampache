@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Sidebar: React.FC = () => {
+import style from './index.module.styl';
+
+const Index: React.FC = () => {
     return (
-        <div className='sidebar'>
+        <div className={style.sidebar}>
             <section>
                 <h4>Browse Music</h4>
                 <ul>
@@ -48,4 +50,4 @@ const Sidebar: React.FC = () => {
     );
 };
 
-export default Sidebar;
+export default Index;

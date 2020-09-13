@@ -3,22 +3,24 @@ import { MusicContext } from '~Contexts/MusicContext';
 import CDImage from '/images/icons/svg/CD.svg';
 import { Link } from 'react-router-dom';
 
+import style from './index.module.styl';
+
 const CurrentPlaying: React.FC = () => {
     const musicContext = useContext(MusicContext);
 
     return (
-        <div className='currentPlaying'>
+        <div className={style.currentPlaying}>
             {musicContext.currentPlayingSong == undefined && (
                 <img
                     src={CDImage}
                     alt='default cover art'
-                    className='albumArt'
+                    className={style.albumArt}
                 />
             )}
             {musicContext.currentPlayingSong != undefined && (
                 <>
                     <Link
-                        className='albumArt'
+                        className={style.albumArt}
                         to={`/album/${musicContext.currentPlayingSong.album.id}`}
                     >
                         <img
@@ -27,12 +29,12 @@ const CurrentPlaying: React.FC = () => {
                         />
                     </Link>
 
-                    <div className='info'>
-                        <div className='songName'>
+                    <div className={style.info}>
+                        <div className={style.songName}>
                             {musicContext.currentPlayingSong?.title}
                         </div>
                         <Link
-                            className='artistName'
+                            className={style.artistName}
                             to={`/artist/${musicContext.currentPlayingSong?.artist.id}`}
                         >
                             {musicContext.currentPlayingSong?.artist.name}

@@ -8,18 +8,24 @@ interface QueueSongProps {
     onClick: any;
 }
 
+import style from './index.module.styl';
+
 const QueueSong: React.FC<QueueSongProps> = (props) => {
     return (
         <li
-            className={props.currentlyPlaying ? 'song playing' : 'song'}
+            className={
+                props.currentlyPlaying
+                    ? `${style.song} ${style.playing}`
+                    : `${style.song}`
+            }
             onClick={props.onClick}
         >
-            <div className='imageWrapper'>
+            <div className={style.imageWrapper}>
                 <img src={props.song.art} alt='Album Cover' />
             </div>
-            <div className='details'>
-                <div className='songName'>{props.song.title}</div>
-                <div className='albumArtist'>
+            <div className={style.details}>
+                <div className={style.songName}>{props.song.title}</div>
+                <div className={style.albumArtist}>
                     <Link
                         to={`/artist/${props.song.artist.id}`}
                         onClick={(e) => {
@@ -28,7 +34,7 @@ const QueueSong: React.FC<QueueSongProps> = (props) => {
                     >
                         {props.song.artist.name}
                     </Link>
-                    <span className='gap'>-</span>
+                    <span className={style.gap}>-</span>
                     <Link
                         to={`/album/${props.song.album.id}`}
                         onClick={(e) => {

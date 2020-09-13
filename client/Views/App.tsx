@@ -6,7 +6,7 @@ import { User } from '~logic/User';
 import Header from '~components/Header';
 import ReactLoading from 'react-loading';
 import MusicControl from '~components/MusicControl';
-import QueueBar from '~components/QueueBar/QueueBar';
+import QueueBar from '~components/QueueBar/';
 
 interface AppViewProps {
     user: User;

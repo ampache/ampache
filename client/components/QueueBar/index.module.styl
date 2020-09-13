@@ -1,0 +1,37 @@
+@import "~stylus/sizes.styl"
+
+.queueBar
+  width 0
+  transition 0.2s width
+  user-select none
+  z-index 100
+  titleHeight = 44px
+  @media all and (max-width: 600px)
+    position absolute
+    right 0
+  &.visible
+    width queueBarWidth
+    @media all and (max-width: 600px)
+      width 100%
+      .songs
+        padding-bottom: 100px;
+        height: 100%;
+        position initial
+  .title
+    text-align center
+    font-size 24px
+    height titleHeight
+    box-sizing border-box
+    padding 10px 0
+    white-space nowrap
+    overflow hidden
+  .songs
+    height "calc(100vh - %s - %s - %s)" % (headerHeight musicPlayerHeight titleHeight)
+    overflow-y scroll
+    position sticky
+    top 0
+    display flex
+    flex-direction column
+    white-space nowrap
+    .emptyQueue
+      margin auto

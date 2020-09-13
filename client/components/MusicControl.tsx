@@ -4,7 +4,7 @@ import { MusicContext } from '~Contexts/MusicContext';
 import InputRange from 'react-input-range';
 
 import listIcon from '~images/icons/svg/list.svg';
-import CurrentPlaying from './CurrentPlaying';
+import CurrentPlaying from '~components/CurrentPlaying/';
 
 interface MusicControlProps {
     toggleQueueBar: () => void;
