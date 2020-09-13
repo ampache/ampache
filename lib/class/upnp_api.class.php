@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -69,7 +69,7 @@ class Upnp_Api
      * @param string $host
      * @param integer $port
      */
-    private static function udpSend($buf, $delay=15, $host="239.255.255.250", $port=1900)
+    private static function udpSend($buf, $delay = 15, $host = "239.255.255.250", $port = 1900)
     {
         $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
         socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);
@@ -182,9 +182,10 @@ class Upnp_Api
                         break;
                 } // end switch
             } // end if
-        } //end while
+        } // end while
+
         return $retArr;
-    } //end function
+    } // end function
 
 
     /**
@@ -297,7 +298,6 @@ class Upnp_Api
         return $xmlDoc;
     }
 
-
     /**
      * @param $prmDIDL
      * @param $prmNumRet
@@ -360,179 +360,164 @@ class Upnp_Api
             case 'artists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_medias();
+                        $counts = Catalog::count_server();
                         $meta   = array(
                             'id' => $root . '/artists',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['artists'],
+                            'childCount' => $counts['artist'],
                             'dc:title' => T_('Artists'),
                             'upnp:class' => 'object.container',
                         );
-                    break;
-
+                        break;
                     case 2:
                         $artist = new Artist($pathreq[1]);
                         if ($artist->id) {
                             $artist->format();
                             $meta = self::_itemArtist($artist, $root . '/artists');
                         }
-                    break;
+                        break;
                 }
-            break;
-
+                break;
             case 'albums':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_medias();
+                        $counts = Catalog::count_server();
                         $meta   = array(
                             'id' => $root . '/albums',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['albums'],
+                            'childCount' => $counts['album'],
                             'dc:title' => T_('Albums'),
                             'upnp:class' => 'object.container',
                         );
-                    break;
-
+                        break;
                     case 2:
                         $album = new Album($pathreq[1]);
                         if ($album->id) {
                             $album->format();
                             $meta = self::_itemAlbum($album, $root . '/albums');
                         }
-                    break;
+                        break;
                 }
-            break;
-
+                break;
             case 'songs':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_medias();
+                        $counts = Catalog::count_server();
                         $meta   = array(
                             'id' => $root . '/songs',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['songs'],
+                            'childCount' => $counts['song'],
                             'dc:title' => T_('Songs'),
                             'upnp:class' => 'object.container',
                         );
-                    break;
-
+                        break;
                     case 2:
                         $song = new Song($pathreq[1]);
                         if ($song->id) {
                             $song->format();
                             $meta = self::_itemSong($song, $root . '/songs');
                         }
-                    break;
+                        break;
                 }
-            break;
-
+                break;
             case 'playlists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_medias();
+                        $counts = Catalog::count_server();
                         $meta   = array(
                             'id' => $root . '/playlists',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['playlists'],
+                            'childCount' => $counts['playlist'],
                             'dc:title' => T_('Playlists'),
                             'upnp:class' => 'object.container',
                         );
-                    break;
-
+                        break;
                     case 2:
                         $playlist = new Playlist($pathreq[1]);
                         if ($playlist->id) {
                             $playlist->format();
                             $meta = self::_itemPlaylist($playlist, $root . '/playlists');
                         }
-                    break;
+                        break;
                 }
-            break;
-
+                break;
             case 'smartplaylists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_medias();
+                        $counts = Catalog::count_server();
                         $meta   = array(
                             'id' => $root . '/smartplaylists',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['smartplaylists'],
+                            'childCount' => $counts['smartplaylist'],
                             'dc:title' => T_('Smart Playlists'),
                             'upnp:class' => 'object.container',
                         );
-                    break;
-
+                        break;
                     case 2:
                         $playlist = new Search($pathreq[1], 'song');
                         if ($playlist->id) {
                             $playlist->format();
                             $meta = self::_itemSmartPlaylist($playlist, $root . '/smartplaylists');
                         }
-                    break;
+                        break;
                 }
-            break;
-
+                break;
             case 'live_streams':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_medias();
+                        $counts = Catalog::count_server();
                         $meta   = array(
                             'id' => $root . '/live_streams',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['live_streams'],
+                            'childCount' => $counts['live_stream'],
                             'dc:title' => T_('Radio Stations'),
                             'upnp:class' => 'object.container',
                         );
-                    break;
-
+                        break;
                     case 2:
                         $radio = new Live_Stream($pathreq[1]);
                         if ($radio->id) {
                             $radio->format();
                             $meta = self::_itemLiveStream($radio, $root . '/live_streams');
                         }
-                    break;
+                        break;
                 }
-            break;
-
+                break;
             case 'podcasts':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_medias();
+                        $counts = Catalog::count_server();
                         $meta   = array(
                             'id' => $root . '/podcasts',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['podcasts'],
+                            'childCount' => $counts['podcast'],
                             'dc:title' => T_('Podcasts'),
                             'upnp:class' => 'object.container',
                         );
-                    break;
-
+                        break;
                     case 2:
                         $podcast = new Podcast($pathreq[1]);
                         if ($podcast->id) {
                             $podcast->format();
                             $meta = self::_itemPodcast($podcast, $root . '/podcasts');
                         }
-                    break;
-
+                        break;
                     case 3:
                         $episode = new Podcast_Episode($pathreq[2]);
                         if ($episode->id !== null) {
                             $episode->format();
                             $meta = self::_itemPodcastEpisode($episode, $root . '/podcasts/' . $pathreq[1]);
                         }
-                    break;
+                        break;
                 }
-            break;
-
+                break;
             default:
                 $meta = array(
                     'id' => $root,
@@ -542,7 +527,7 @@ class Upnp_Api
                     'dc:title' => T_('Music'),
                     'upnp:class' => 'object.container',
                 );
-            break;
+                break;
         }
 
         return $meta;
@@ -586,15 +571,15 @@ class Upnp_Api
             case 'artists':
                 switch (count($pathreq)) {
                     case 1: // Get artists list
-                        //$artists = Catalog::get_artists();
-                        //list($maxCount, $artists) = self::_slice($artists, $start, $count);
+                        // $artists = Catalog::get_artists();
+                        // list($maxCount, $artists) = self::_slice($artists, $start, $count);
                         $artists                  = Catalog::get_artists(null, $count, $start);
                         list($maxCount, $artists) = array(999999, $artists);
                         foreach ($artists as $artist) {
                             $artist->format();
                             $mediaItems[] = self::_itemArtist($artist, $parent);
                         }
-                    break;
+                        break;
                     case 2: // Get artist's albums list
                         $artist = new Artist($pathreq[1]);
                         if ($artist->id) {
@@ -606,10 +591,9 @@ class Upnp_Api
                                 $mediaItems[] = self::_itemAlbum($album, $parent);
                             }
                         }
-                    break;
+                        break;
                 }
-            break;
-
+                break;
             case 'albums':
                 switch (count($pathreq)) {
                     case 1: // Get albums list
@@ -622,7 +606,7 @@ class Upnp_Api
                             $album->format();
                             $mediaItems[] = self::_itemAlbum($album, $parent);
                         }
-                    break;
+                        break;
                     case 2: // Get album's songs list
                         $album = new Album($pathreq[1]);
                         if ($album->id) {
@@ -634,10 +618,9 @@ class Upnp_Api
                                 $mediaItems[] = self::_itemSong($song, $parent);
                             }
                         }
-                    break;
+                        break;
                 }
-            break;
-
+                break;
             case 'songs':
                 switch (count($pathreq)) {
                     case 1: // Get songs list
@@ -651,10 +634,9 @@ class Upnp_Api
                                 $mediaItems[] = self::_itemSong($song, $parent);
                             }
                         }
-                    break;
+                        break;
                 }
-            break;
-
+                break;
             case 'playlists':
                 switch (count($pathreq)) {
                     case 1: // Get playlists list
@@ -665,7 +647,7 @@ class Upnp_Api
                             $playlist->format();
                             $mediaItems[] = self::_itemPlaylist($playlist, $parent);
                         }
-                    break;
+                        break;
                     case 2: // Get playlist's songs list
                         $playlist = new Playlist($pathreq[1]);
                         if ($playlist->id) {
@@ -679,10 +661,9 @@ class Upnp_Api
                                 }
                             }
                         }
-                    break;
+                        break;
                 }
-            break;
-
+                break;
             case 'smartplaylists':
                 switch (count($pathreq)) {
                     case 1: // Get playlists list
@@ -693,7 +674,7 @@ class Upnp_Api
                             $playlist->format();
                             $mediaItems[] = self::_itemPlaylist($playlist, $parent);
                         }
-                    break;
+                        break;
                     case 2: // Get playlist's songs list
                         $playlist = new Search($pathreq[1], 'song');
                         if ($playlist->id) {
@@ -707,10 +688,9 @@ class Upnp_Api
                                 }
                             }
                         }
-                    break;
+                        break;
                 }
-            break;
-
+                break;
             case 'live_streams':
                 switch (count($pathreq)) {
                     case 1: // Get radios list
@@ -721,10 +701,9 @@ class Upnp_Api
                             $radio->format();
                             $mediaItems[] = self::_itemLiveStream($radio, $parent);
                         }
-                    break;
+                        break;
                 }
-            break;
-
+                break;
             case 'podcasts':
                 switch (count($pathreq)) {
                     case 1: // Get podcasts list
@@ -734,7 +713,7 @@ class Upnp_Api
                             $podcast->format();
                             $mediaItems[] = self::_itemPodcast($podcast, $parent);
                         }
-                    break;
+                        break;
                     case 2: // Get podcast episodes list
                         $podcast = new Podcast($pathreq[1]);
                         if ($podcast->id) {
@@ -746,10 +725,9 @@ class Upnp_Api
                                 $mediaItems[] = self::_itemPodcastEpisode($episode, $parent);
                             }
                         }
-                    break;
+                        break;
                 }
-            break;
-
+                break;
             default:
                 $mediaItems[] = self::_musicMetadata('artists');
                 $mediaItems[] = self::_musicMetadata('albums');
@@ -762,7 +740,7 @@ class Upnp_Api
                 if (AmpConfig::get('podcast')) {
                     $mediaItems[] = self::_musicMetadata('podcasts');
                 }
-            break;
+                break;
         }
 
         if ($maxCount == 0) {
@@ -799,24 +777,21 @@ class Upnp_Api
                             'dc:title' => T_('TV Shows'),
                             'upnp:class' => 'object.container',
                         );
-                    break;
-
+                        break;
                     case 2:
                         $tvshow = new TVShow($pathreq[1]);
                         if ($tvshow->id) {
                             $tvshow->format();
                             $meta = self::_itemTVShow($tvshow, $root . '/tvshows');
                         }
-                    break;
-
+                        break;
                     case 3:
                         $season = new TVShow_Season($pathreq[2]);
                         if ($season->id) {
                             $season->format();
                             $meta = self::_itemTVShowSeason($season, $root . '/tvshows/' . $pathreq[1]);
                         }
-                    break;
-
+                        break;
                     case 4:
                         $video = new TVShow_Episode($pathreq[3]);
                         if ($video->id) {
@@ -825,8 +800,7 @@ class Upnp_Api
                         }
                     break;
                 }
-            break;
-
+                break;
             case 'clips':
                 switch (count($pathreq)) {
                     case 1:
@@ -839,18 +813,16 @@ class Upnp_Api
                             'dc:title' => T_('Clips'),
                             'upnp:class' => 'object.container',
                         );
-                    break;
-
+                        break;
                     case 2:
                         $video = new Clip($pathreq[1]);
                         if ($video->id) {
                             $video->format();
                             $meta = self::_itemVideo($video, $root . '/clips');
                         }
-                    break;
+                        break;
                 }
-            break;
-
+                break;
             case 'movies':
                 switch (count($pathreq)) {
                     case 1:
@@ -863,18 +835,16 @@ class Upnp_Api
                             'dc:title' => T_('Movies'),
                             'upnp:class' => 'object.container',
                         );
-                    break;
-
+                        break;
                     case 2:
                         $video = new Movie($pathreq[1]);
                         if ($video->id) {
                             $video->format();
                             $meta = self::_itemVideo($video, $root . '/movies');
                         }
-                    break;
+                        break;
                 }
-            break;
-
+                break;
             case 'personal_videos':
                 switch (count($pathreq)) {
                     case 1:
@@ -887,18 +857,16 @@ class Upnp_Api
                             'dc:title' => T_('Personal Videos'),
                             'upnp:class' => 'object.container',
                         );
-                    break;
-
+                        break;
                     case 2:
                         $video = new Personal_Video($pathreq[1]);
                         if ($video->id) {
                             $video->format();
                             $meta = self::_itemVideo($video, $root . '/personal_videos');
                         }
-                    break;
+                        break;
                 }
-            break;
-
+                break;
             default:
                 $meta = array(
                     'id' => $root,
@@ -908,7 +876,7 @@ class Upnp_Api
                     'dc:title' => T_('Video'),
                     'upnp:class' => 'object.container',
                 );
-            break;
+                break;
         }
 
         return $meta;
@@ -944,7 +912,7 @@ class Upnp_Api
                             $tvshow->format();
                             $mediaItems[] = self::_itemTVShow($tvshow, $parent);
                         }
-                    break;
+                        break;
                     case 2: // Get season list
                         $tvshow = new TVShow($pathreq[1]);
                         if ($tvshow->id) {
@@ -956,7 +924,7 @@ class Upnp_Api
                                 $mediaItems[] = self::_itemTVShowSeason($season, $parent);
                             }
                         }
-                    break;
+                        break;
                     case 3: // Get episode list
                         $season = new TVShow_Season($pathreq[2]);
                         if ($season->id) {
@@ -968,10 +936,9 @@ class Upnp_Api
                                 $mediaItems[] = self::_itemVideo($video, $parent);
                             }
                         }
-                    break;
+                        break;
                 }
-            break;
-
+                break;
             case 'clips':
                 switch (count($pathreq)) {
                     case 1: // Get clips list
@@ -981,10 +948,9 @@ class Upnp_Api
                             $video->format();
                             $mediaItems[] = self::_itemVideo($video, $parent);
                         }
-                    break;
+                        break;
                 }
-            break;
-
+                break;
             case 'movies':
                 switch (count($pathreq)) {
                     case 1: // Get clips list
@@ -994,10 +960,9 @@ class Upnp_Api
                             $video->format();
                             $mediaItems[] = self::_itemVideo($video, $parent);
                         }
-                    break;
+                        break;
                 }
-            break;
-
+                break;
             case 'personal_videos':
                 switch (count($pathreq)) {
                     case 1: // Get clips list
@@ -1007,16 +972,15 @@ class Upnp_Api
                             $video->format();
                             $mediaItems[] = self::_itemVideo($video, $parent);
                         }
-                    break;
+                        break;
                 }
-            break;
-
+                break;
             default:
                 $mediaItems[] = self::_videoMetadata('clips');
                 $mediaItems[] = self::_videoMetadata('tvshows');
                 $mediaItems[] = self::_videoMetadata('movies');
                 $mediaItems[] = self::_videoMetadata('personal_videos');
-            break;
+                break;
         }
 
         if ($maxCount == 0) {
@@ -1067,7 +1031,7 @@ class Upnp_Api
             'restricted' => '1',
             'childCount' => $artist->albums,
             'dc:title' => self::_replaceSpecialSymbols($artist->f_name),
-            'upnp:class' => 'object.container',   // object.container.person.musicArtist
+            'upnp:class' => 'object.container', // object.container.person.musicArtist
         );
     }
 
@@ -1087,7 +1051,7 @@ class Upnp_Api
             'restricted' => '1',
             'childCount' => $album->song_count,
             'dc:title' => self::_replaceSpecialSymbols($album->f_title),
-            'upnp:class' => 'object.container',  // object.container.album.musicAlbum
+            'upnp:class' => 'object.container', // object.container.album.musicAlbum
             'upnp:albumArtURI' => $art_url,
         );
     }
@@ -1105,7 +1069,7 @@ class Upnp_Api
             'restricted' => '1',
             'childCount' => count($playlist->get_items()),
             'dc:title' => self::_replaceSpecialSymbols($playlist->f_name),
-            'upnp:class' => 'object.container',  // object.container.playlistContainer
+            'upnp:class' => 'object.container', // object.container.playlistContainer
         );
     }
 

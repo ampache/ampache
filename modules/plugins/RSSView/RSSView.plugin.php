@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -58,8 +58,8 @@ class AmpacheRSSView
             return false;
         }
 
-        Preference::insert('rssview_feed_url', T_('RSS Feed URL'), '', '25', 'string', 'plugins', $this->name);
-        Preference::insert('rssview_max_items', T_('RSS Feed max items'), '5', '25', 'integer', 'plugins', $this->name);
+        Preference::insert('rssview_feed_url', T_('RSS Feed URL'), '', 25, 'string', 'plugins', $this->name);
+        Preference::insert('rssview_max_items', T_('RSS Feed max items'), 5, 25, 'integer', 'plugins', $this->name);
 
         return true;
     }
@@ -94,7 +94,6 @@ class AmpacheRSSView
     {
         $xmlstr      = file_get_contents($this->feed_url, false, stream_context_create(Core::requests_options()));
         $xml         = simplexml_load_string($xmlstr);
-        $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
         if ($xml->channel) {
             UI::show_box_top($xml->channel->title);
             $count = 0;
@@ -103,7 +102,7 @@ class AmpacheRSSView
                 echo '<tr class="' . ((($count % 2) == 0) ? 'even' : 'odd') . '"><td>';
                 echo '<div>';
                 echo '<div style="float: left; font-weight: bold;"><a href="' . $item->link . '" target="_blank">' . $item->title . '</a></div>';
-                echo '<div style="float: right;">' . get_datetime($time_format, strtotime($item->pubDate)) . '</div>';
+                echo '<div style="float: right;">' . get_datetime(strtotime($item->pubDate), 'short', 'short', "m/d/Y H:i") . '</div>';
                 echo '</div><br />';
                 echo '<div style="margin-left: 30px;">';
                 if (isset($item->image)) {

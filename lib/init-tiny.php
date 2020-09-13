@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
 // Minimal init for use in install
+$a_root = realpath(__DIR__ . "/../");
 
 // Do a check for PHP5.4 because nothing will work without it
 if (version_compare(phpversion(), '7.1.0', '<')) {
@@ -31,33 +32,27 @@ if (version_compare(phpversion(), '7.1.0', '<')) {
 error_reporting(E_ERROR); // Only show fatal errors in production
 
 $load_time_begin = microtime(true);
-
-$ampache_path = dirname(__FILE__);
-$prefix       = realpath($ampache_path . "/../");
-$configfile   = $prefix . '/config/ampache.cfg.php';
+$configfile      = $a_root . '/config/ampache.cfg.php';
 
 // We still allow scripts to run (it could be the purpose of the maintenance)
 if (!defined('CLI')) {
-    if (file_exists($prefix . '/.maintenance')) {
-        require_once $prefix . '/.maintenance';
+    if (file_exists($a_root . '/.maintenance')) {
+        require_once $a_root . '/.maintenance';
     }
 }
 
-require_once $prefix . '/lib/general.lib.php';
-require_once $prefix . '/lib/class/ampconfig.class.php';
-require_once $prefix . '/lib/class/core.class.php';
-require_once $prefix . '/lib/cron.lib.php';
+require_once $a_root . '/lib/general.lib.php';
+require_once $a_root . '/lib/class/ampconfig.class.php';
+require_once $a_root . '/lib/class/core.class.php';
 
 // Define some base level config options
-AmpConfig::set('prefix', $prefix);
+AmpConfig::set('prefix', $a_root);
 
 // Register autoloaders
 spl_autoload_register(array('Core', 'autoload'), true, true);
-$composer_autoload = $prefix . '/lib/vendor/autoload.php';
+$composer_autoload = $a_root . '/lib/vendor/autoload.php';
 if (file_exists($composer_autoload)) {
     require_once $composer_autoload;
-    require_once $prefix . '/lib/vendor/Afterster/php-echonest-api/lib/EchoNest/Autoloader.php';
-    EchoNest_Autoloader::register();
 }
 
 // Check to see if this is http or https
@@ -83,20 +78,20 @@ if (!isset($http_port) || empty($http_port)) {
 define('INIT_LOADED', 1);
 
 // Core includes we can't do with the autoloader
-require_once $prefix . '/lib/preferences.php';
-require_once $prefix . '/lib/debug.lib.php';
-require_once $prefix . '/lib/log.lib.php';
-require_once $prefix . '/lib/ui.lib.php';
-require_once $prefix . '/lib/i18n.php';
-require_once $prefix . '/lib/batch.lib.php';
-require_once $prefix . '/lib/themes.php';
-require_once $prefix . '/lib/class/localplay_controller.abstract.php';
-require_once $prefix . '/lib/class/database_object.abstract.php';
-require_once $prefix . '/lib/class/media.interface.php';
-require_once $prefix . '/lib/class/playable_item.interface.php';
-require_once $prefix . '/lib/class/library_item.interface.php';
-require_once $prefix . '/lib/class/playlist_object.abstract.php';
-require_once $prefix . '/modules/horde/Browser.php';
+require_once $a_root . '/lib/preferences.php';
+require_once $a_root . '/lib/debug.lib.php';
+require_once $a_root . '/lib/log.lib.php';
+require_once $a_root . '/lib/ui.lib.php';
+require_once $a_root . '/lib/i18n.php';
+require_once $a_root . '/lib/batch.lib.php';
+require_once $a_root . '/lib/themes.php';
+require_once $a_root . '/lib/class/localplay_controller.abstract.php';
+require_once $a_root . '/lib/class/database_object.abstract.php';
+require_once $a_root . '/lib/class/media.interface.php';
+require_once $a_root . '/lib/class/playable_item.interface.php';
+require_once $a_root . '/lib/class/library_item.interface.php';
+require_once $a_root . '/lib/class/playlist_object.abstract.php';
+require_once $a_root . '/modules/horde/Browser.php';
 
 /* Set up the flip class */
 UI::flip_class(array('odd', 'even'));

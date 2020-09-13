@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <td class="cel_play">
@@ -85,14 +85,14 @@ if (Art::is_enabled()) {
         }
     } ?>
 <td class="cel_action">
-    <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) {
+    <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
         if (AmpConfig::get('sociable') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) { ?>
         <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&amp;id=<?php echo $libitem->id; ?>">
             <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
         </a>
     <?php
     }
-        if (Access::check('interface', '25')) {
+        if (Access::check('interface', 25)) {
             if (AmpConfig::get('share') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) {
                 Share::display_ui('album', $libitem->id, false);
             }
@@ -103,7 +103,7 @@ if (Art::is_enabled()) {
             </a>
     <?php
     }
-        if (Access::check('interface', '50') && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) { ?>
+        if (Access::check('interface', 50) && (!$libitem->allow_group_disks || ($libitem->allow_group_disks && count($libitem->album_suite) <= 1))) { ?>
             <a id="<?php echo 'edit_album_' . $libitem->id ?>" onclick="showEditDialog('album_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_album_' . $libitem->id ?>', '<?php echo T_('Album Edit') ?>', 'album_')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>

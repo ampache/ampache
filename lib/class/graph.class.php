@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -245,17 +245,15 @@ class Graph
         if (!$catalog) {
             $catalog_ids = Catalog::get_catalogs();
             foreach ($catalog_ids as $catalog_id) {
-                $c              = Catalog::create_from_id($catalog_id);
+                $catalog        = Catalog::create_from_id($catalog_id);
                 $catalog_values = $this->get_all_type_pts($fct, $catalog_id, $object_type, $object_id, $start_date, $end_date, $zoom);
-                $pv             = 0;
                 foreach ($values as $date => $value) {
                     if (array_key_exists($date, $catalog_values)) {
-                        $value = $catalog_values[$date];
-                        $pv    = $value;
+                        $value    = $catalog_values[$date];
                     } else {
-                        $value = $pv;
+                        $value = 0;
                     }
-                    $MyData->addPoints($value, $c->name);
+                    $MyData->addPoints($value, $catalog->name);
                 }
             }
         }
@@ -355,7 +353,7 @@ class Graph
         $start_date = $start_date ?: ($end_date ?: time()) - 864000;
         $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
         $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog, $start_date, $end_date);
-        $sql        = "SELECT " . $dateformat . " AS `zoom_date`,  ((SELECT COUNT(`t2`.`id`) FROM `" . $object_type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`) + COUNT(`" . $object_type . "`.`id`)) AS `files` FROM `" . $object_type . "` " . $where .
+        $sql        = "SELECT " . $dateformat . " AS `zoom_date`, ((SELECT COUNT(`t2`.`id`) FROM `" . $object_type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`) + COUNT(`" . $object_type . "`.`id`)) AS `files` FROM `" . $object_type . "` " . $where .
                 " GROUP BY " . $dateformat;
         $db_results = Dba::read($sql);
 
@@ -381,7 +379,7 @@ class Graph
         $start_date = $start_date ?: ($end_date ?: time()) - 864000;
         $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
         $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog, $start_date, $end_date);
-        $sql        = "SELECT " . $dateformat . " AS `zoom_date`,  ((SELECT SUM(`t2`.`size`) FROM `" . $object_type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`) + SUM(`" . $object_type . "`.`size`)) AS `storage` FROM `" . $object_type . "` " . $where .
+        $sql        = "SELECT " . $dateformat . " AS `zoom_date`, ((SELECT SUM(`t2`.`size`) FROM `" . $object_type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`) + SUM(`" . $object_type . "`.`size`)) AS `storage` FROM `" . $object_type . "` " . $where .
                       " GROUP BY " . $dateformat;
         $db_results = Dba::read($sql);
 
@@ -412,7 +410,7 @@ class Graph
         }
         $sql = "SELECT `geo_latitude`, `geo_longitude`, `geo_name`, MAX(`date`) AS `last_date`, COUNT(`id`) AS `hits` FROM `object_count` " .
                 $where . " AND `geo_latitude` IS NOT NULL AND `geo_longitude` IS NOT NULL " .
-                "GROUP BY `geo_latitude`, `geo_longitude` ORDER BY `last_date`, `geo_name` DESC"; //TODO mysql8 test
+                "GROUP BY `geo_latitude`, `geo_longitude` ORDER BY `last_date`, `geo_name` DESC"; // TODO mysql8 test
         $db_results = Dba::read($sql);
         while ($results = Dba::fetch_assoc($db_results)) {
             $pts[] = array(
@@ -560,7 +558,7 @@ class Graph
      * @param integer $user
      * @param integer $start_date
      * @param integer $end_date
-     * @return int
+     * @return integer
      */
     public function get_total_bandwidth($user = 0, $start_date = null, $end_date = null)
     {
@@ -577,7 +575,7 @@ class Graph
      * @param integer $user
      * @param integer $start_date
      * @param integer $end_date
-     * @return int
+     * @return integer
      */
     public function get_total_time($user = 0, $start_date = null, $end_date = null)
     {
@@ -594,7 +592,7 @@ class Graph
      * @param integer $user
      * @param integer $start_date
      * @param integer $end_date
-     * @return int
+     * @return integer
      */
     public function get_total_hits($user = 0, $start_date = null, $end_date = null)
     {
@@ -684,15 +682,14 @@ class Graph
             $owner_id = $libitem->get_user_owner();
         }
 
-        if (($owner_id <= 0 || $owner_id != Core::get_global('user')->id) && !Access::check('interface', '50')) {
+        if (($owner_id < 1 || $owner_id != Core::get_global('user')->id) && !Access::check('interface', 50)) {
             UI::access_denied();
         } else {
-            $time_format  = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
-            $user_id      = Core::get_request('user_id');
+            $user_id      = (int) Core::get_request('user_id');
             $end_date     = $_REQUEST['end_date'] ? strtotime($_REQUEST['end_date']) : time();
-            $f_end_date   = get_datetime($time_format, (int) $end_date);
+            $f_end_date   = get_datetime((int) $end_date);
             $start_date   = $_REQUEST['start_date'] ? strtotime($_REQUEST['start_date']) : ($end_date - 864000);
-            $f_start_date = get_datetime($time_format, (int) $start_date);
+            $f_start_date = get_datetime((int) $start_date);
             $zoom         = $_REQUEST['zoom'] ?: 'day';
 
             $gtypes   = array();

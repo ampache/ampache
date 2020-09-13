@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -84,18 +84,22 @@ class AmpacheHttpq extends localplay_controller
      */
     public function install()
     {
+        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+
         $sql = "CREATE TABLE `localplay_httpq` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-            "`name` VARCHAR( 128 ) COLLATE utf8_unicode_ci NOT NULL , " .
+            "`name` VARCHAR( 128 ) COLLATE $collation NOT NULL , " .
             "`owner` INT( 11 ) NOT NULL, " .
-            "`host` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
+            "`host` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
             "`port` INT( 11 ) UNSIGNED NOT NULL , " .
-            "`password` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
+            "`password` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
             "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" .
-            ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-        $db_results = Dba::write($sql);
+            ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('httpq_active', T_('HTTPQ Active Instance'), '0', '25', 'integer', 'internal', 'httpq');
+        Preference::insert('httpq_active', T_('HTTPQ Active Instance'), 0, 25, 'integer', 'internal', 'httpq');
 
         return true;
     } // install
@@ -277,7 +281,7 @@ class AmpacheHttpq extends localplay_controller
      * delete_track
      * This must take an ID (as returned by our get function)
      * and delete it from httpQ
-     * @param $object_id
+     * @param integer $object_id
      * @return boolean
      */
     public function delete_track($object_id)
@@ -541,6 +545,7 @@ class AmpacheHttpq extends localplay_controller
      * status
      * This returns bool/int values for features, loop, repeat and any other features
      * That this Localplay method supports. required function
+     * @return array
      */
     public function status()
     {
@@ -582,4 +587,4 @@ class AmpacheHttpq extends localplay_controller
 
         return false;
     } // connect
-} //end of AmpacheHttpq
+} // end httpq.controller

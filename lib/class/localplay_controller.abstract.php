@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-/*
+/**
  * localplay_controller Class
  *
  * This is the abstract class for any Localplay controller
@@ -36,7 +36,7 @@ abstract class localplay_controller
     abstract public function add_url(Stream_URL $url); // Takes an array of song_ids
 
     /**
-     * @param $object_id
+     * @param integer $object_id
      * @return mixed
      */
     abstract public function delete_track($object_id); // Takes a single object_id and removes it from the playlist
@@ -44,12 +44,16 @@ abstract class localplay_controller
     abstract public function stop();
     abstract public function get();
     abstract public function connect();
-    abstract public function status();
     abstract public function get_version(); // Returns the version of this plugin
     abstract public function get_description(); // Returns the description
     abstract public function is_installed(); // Returns an boolean t/f
     abstract public function install();
     abstract public function uninstall();
+
+    /**
+     * @return array
+     */
+    abstract public function status();
 
     // For display we need the following 'instance' functions
 

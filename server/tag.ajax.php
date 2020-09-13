@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -33,15 +33,15 @@ $action  = Core::get_request('action');
 // Switch on the actions
 switch ($_REQUEST['action']) {
     case 'show_add_tag':
-    break;
+        break;
     case 'get_tag_map':
         $tags            = Tag::get_display(Tag::get_tags());
         $results['tags'] = $tags;
-    break;
+        break;
     case 'get_labels':
         $labels            = Label::get_display(Label::get_all_labels());
         $results['labels'] = $labels;
-    break;
+        break;
     case 'add_tag':
         if (!Tag::can_edit_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), false)) {
             debug_event('tag.ajax', Core::get_global('user')->username . ' attempted to add unauthorized tag map', 1);
@@ -49,19 +49,19 @@ switch ($_REQUEST['action']) {
             return false;
         }
         debug_event('tag.ajax', 'Adding new tag...', 5);
-        Tag::add_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), (int) $_GET['tag_id'], false);
-    break;
+        Tag::add_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), (int) $_GET['tag_id'], false);
+        break;
     case 'add_tag_by_name':
-        if (!Access::check('interface', '75')) {
+        if (!Access::check('interface', 75)) {
             debug_event('tag.ajax', Core::get_global('user')->username . ' attempted to add new tag', 1);
 
             return false;
         }
         debug_event('tag.ajax', 'Adding new tag by name...', 5);
         Tag::add(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $_GET['tag_name'], false);
-    break;
+        break;
     case 'delete':
-        if (!Access::check('interface', '75')) {
+        if (!Access::check('interface', 75)) {
             debug_event('tag.ajax', Core::get_global('user')->username . ' attempted to delete tag', 1);
 
             return false;
@@ -81,12 +81,12 @@ switch ($_REQUEST['action']) {
         debug_event('tag.ajax', 'Removing tag map...', 5);
         $tag = new Tag($_GET['tag_id']);
         $tag->remove_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), false);
-    break;
+        break;
     case 'browse_type':
         $browse = new Browse($_GET['browse_id']);
         $browse->set_filter('object_type', filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
         $browse->store();
-    break;
+        break;
     case 'add_filter':
         $browse = new Browse($_GET['browse_id']);
         $browse->set_filter('tag', $_GET['tag_id']);
@@ -96,12 +96,12 @@ switch ($_REQUEST['action']) {
         $results[$browse->get_content_div()] = ob_get_clean();
         $browse->store();
         // Retrieve current objects of type based on combined filters
-    break;
+        break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 } // switch on action;
 
 
 // We always do this
-echo xoutput_from_array($results);
+echo (string) xoutput_from_array($results);

@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -103,7 +103,7 @@ class Random
      * nothing special here...
      * @param string $limit
      * @param integer $user_id
-     * @return array
+     * @return integer[]
      */
     public static function get_default($limit = '', $user_id = null)
     {
@@ -140,7 +140,7 @@ class Random
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
@@ -214,7 +214,7 @@ class Random
             $multi_where = 'AND';
         }
         if (AmpConfig::get('album_group')) {
-            $sql .= " LEFT JOIN `album` on `rating`.`object_id` = `album`.`id` and `rating`.`object_type` = 'album'";
+            $sql .= " LEFT JOIN `album` ON `rating`.`object_id` = `album`.`id` AND `rating`.`object_type` = 'album'";
         }
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user')) {
@@ -355,7 +355,6 @@ class Random
         $time_total = 0;
         $fuzzy_time = 0;
         while ($row = Dba::fetch_assoc($db_results)) {
-
             // If size limit is specified
             if ($data['size_limit']) {
                 // Convert
@@ -453,7 +452,7 @@ class Random
                         $sql .= ' WHERE ' . $search_info['where_sql'];
                     }
                 }
-            break;
+                break;
             case 'album':
                 $sql = "SELECT `album`.`id`, SUM(`song`.`size`) AS `size`, SUM(`song`.`time`) AS `time` FROM `album` ";
                 if (!$search_info || !$search_info['join']['song']) {
@@ -471,7 +470,7 @@ class Random
                     }
                 }
                 $sql .= ' GROUP BY `album`.`id`';
-            break;
+                break;
             case 'artist':
                 $sql = "SELECT `artist`.`id`, SUM(`song`.`size`) AS `size`, SUM(`song`.`time`) AS `time` FROM `artist` ";
                 if (!$search_info || !$search_info['join']['song']) {
@@ -489,7 +488,7 @@ class Random
                     }
                 }
                 $sql .= ' GROUP BY `artist`.`id`';
-            break;
+                break;
         }
         $sql .= " ORDER BY RAND() $limit_sql";
 

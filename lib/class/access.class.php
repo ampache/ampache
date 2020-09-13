@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -319,10 +319,9 @@ class Access
      * @param string $type
      * @param integer|string $user
      * @param integer $level
-     * @param string $apikey
      * @return boolean
      */
-    public static function check_network($type, $user = null, $level = 25, $apikey = null)
+    public static function check_network($type, $user = null, $level = 25)
     {
         if (!AmpConfig::get('access_control')) {
             switch ($type) {
@@ -339,14 +338,11 @@ class Access
                 if ($user) {
                     $user = User::get_from_username($user);
                     $user = $user->id;
-                } elseif ($apikey) {
-                    $user = User::get_from_apikey($apikey);
-                    $user = $user->id;
                 }
-            // Intentional break fall-through
+                // Intentional break fall-through
             case 'api':
                 $type = 'rpc';
-            // Intentional break fall-through
+                // Intentional break fall-through
             case 'network':
             case 'interface':
             case 'stream':
@@ -407,7 +403,6 @@ class Access
         if ($user_id !== null) {
             $user = new User($user_id);
         }
-        $level = (int) $level;
 
         // Switch on the type
         switch ($type) {

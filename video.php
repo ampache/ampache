@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 UI::show_header();
 
@@ -32,12 +33,13 @@ switch ($_REQUEST['action']) {
         }
 
         $video_id = (string) scrub_in(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
-        show_confirmation(T_('Are You Sure?'), T_("The Video will be deleted"),
+        show_confirmation(T_('Are You Sure?'),
+            T_("The Video will be deleted"),
             AmpConfig::get('web_path') . "/video.php?action=confirm_delete&video_id=" . $video_id,
             1,
             'delete_video'
         );
-    break;
+        break;
     case 'confirm_delete':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -56,16 +58,15 @@ switch ($_REQUEST['action']) {
         } else {
             show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Video."), AmpConfig::get('web_path'));
         }
-    break;
+        break;
     case 'show_video':
     default:
         $video = Video::create_from_id(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $video->format();
-        $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
         require_once AmpConfig::get('prefix') . UI::find_template('show_video.inc.php');
-    break;
+        break;
 }
 
-/* Show the Footer */
+// Show the Footer
 UI::show_query_stats();
 UI::show_footer();

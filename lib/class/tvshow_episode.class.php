@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -126,7 +126,7 @@ class TVShow_Episode extends Video
      * update
      * This takes a key'd array of data as input and updates a tv show episode entry
      * @param array $data
-     * @return int
+     * @return integer
      */
     public function update(array $data)
     {
@@ -245,27 +245,27 @@ class TVShow_Episode extends Video
      */
     public function display_art($thumb = 2, $force = false)
     {
-        $id   = null;
-        $type = null;
+        $episode_id = null;
+        $type       = null;
 
         if (Art::has_db($this->id, 'video')) {
-            $id   = $this->id;
-            $type = 'video';
+            $episode_id = $this->id;
+            $type       = 'video';
         } else {
             if (Art::has_db($this->season, 'tvshow_season')) {
-                $id   = $this->season;
-                $type = 'tvshow_season';
+                $episode_id = $this->season;
+                $type       = 'tvshow_season';
             } else {
                 $season = new TVShow_Season($this->season);
                 if (Art::has_db($season->tvshow, 'tvshow') || $force) {
-                    $id   = $season->tvshow;
-                    $type = 'tvshow';
+                    $episode_id = $season->tvshow;
+                    $type       = 'tvshow';
                 }
             }
         }
 
-        if ($id !== null && $type !== null) {
-            Art::display($type, $id, $this->get_fullname(), $thumb, $this->link);
+        if ($episode_id !== null && $type !== null) {
+            Art::display($type, $episode_id, $this->get_fullname(), $thumb, $this->link);
         }
     }
 

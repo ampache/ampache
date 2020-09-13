@@ -3,7 +3,7 @@
 
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -49,7 +49,7 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
-    <title><?php echo AmpConfig::get('site_title'); ?></title>
+    <title><?php echo scrub_out(AmpConfig::get('site_title')); ?></title>
 </head>
 
 <body id="loginPage">
@@ -60,7 +60,7 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
     echo "</div>";
 } ?>
         <div id="loginbox">
-            <h2><?php echo AmpConfig::get('site_title'); ?></h2>
+            <h2><?php echo scrub_out(AmpConfig::get('site_title')); ?></h2>
             <form name="login" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/login.php">
                 <div class="loginfield" id="usernamefield">
                     <label for="username"><?php echo  T_('Username'); ?>:</label>

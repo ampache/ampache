@@ -2,7 +2,7 @@
 declare(strict_types=0);
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -65,7 +65,6 @@ class UPnPPlayer
         return $this->_playlist;
     }
 
-
     /**
      * UPnPPlayer
      * This is the constructor,
@@ -88,7 +87,7 @@ class UPnPPlayer
      * append a song to the playlist
      * $name    Name to be shown in the playlist
      * $link    URL of the song
-     * @param $name
+     * @param string $name
      * @param $link
      * @return boolean
      */
@@ -240,11 +239,13 @@ class UPnPPlayer
     private function CallAsyncURL($url)
     {
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
-        curl_setopt($curl, CURLOPT_HEADER, false);
-        curl_exec($curl);
-        curl_close($curl);
+        if ($curl) {
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
+            curl_setopt($curl, CURLOPT_HEADER, false);
+            curl_exec($curl);
+            curl_close($curl);
+        }
     }
 
     /**
@@ -346,7 +347,6 @@ class UPnPPlayer
         return "";
     }
 
-
     /**
      * VolumeUp
      * increases the volume
@@ -409,7 +409,6 @@ class UPnPPlayer
         return $volume;
     }
 
-
     /**
      * @param $state
      */
@@ -419,8 +418,8 @@ class UPnPPlayer
 
         $sid  = 'upnp_ply_' . $this->_description_url;
         $data = json_encode($this->_intState);
-        if (! Session::exists('api', $sid)) {
-            Session::create(array('type' => 'api', 'sid' => $sid, 'value' => $data ));
+        if (! Session::exists('stream', $sid)) {
+            Session::create(array('type' => 'stream', 'sid' => $sid, 'value' => $data ));
         } else {
             Session::write($sid, $data);
         }

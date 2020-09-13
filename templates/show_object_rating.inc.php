@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -41,7 +41,7 @@ if ($global_rating) {
     //set the current rating background
     echo '<li class="current-rating" style="width:' . $width . '%" >';
     echo T_('Current rating') . ': ';
-    if ($rate <= 0) {
+    if ($rate < 1) {
         echo T_('not rated yet') . "</li>\n";
     } else {
         /* HINT: object rating */

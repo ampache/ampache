@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
     <td class="cel_username">
@@ -67,7 +67,7 @@
                 <?php echo UI::get_icon('preferences', T_('Preferences')); ?>
             </a>
         <?php
-            //FIXME: Fix this for the extra permission levels
+            // FIXME: Fix this for the extra permission levels
             if ($libitem->disabled == '1') {
                 echo "<a href=\"" . $web_path . "/admin/users.php?action=enable&amp;user_id=$libitem->id\">" . UI::get_icon('enable', T_('Enable')) . "</a>";
             } else {

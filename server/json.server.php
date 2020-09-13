@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2016 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -24,8 +24,10 @@
  * This is accessed remotly to allow outside scripts access to ampache information
  * as such it needs to verify the session id that is passed
  */
-define('NO_SESSION','1');
-require_once '../lib/init.php';
+define('NO_SESSION', '1');
+define('OUTDATED_DATABASE_OK', 1);
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 // If it's not a handshake then we can allow it to take up lots of time
 if ($_REQUEST['action'] != 'handshake') {
@@ -39,7 +41,7 @@ header("Content-type: application/json; charset=" . AmpConfig::get('site_charset
 // If we don't even have access control on then we can't use this!
 if (!AmpConfig::get('access_control')) {
     ob_end_clean();
-    debug_event('Access Control','Error Attempted to use JSON API with Access Control turned off','3');
+    debug_event('Access Control', 'Error Attempted to use JSON API with Access Control turned off', 3);
     echo JSON_Data::error('501', T_('Access Control not Enabled'));
     exit;
 }
@@ -48,27 +50,24 @@ if (!AmpConfig::get('access_control')) {
  * Verify the existance of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
  */
-if (!Session::exists('api', $_REQUEST['auth']) and $_REQUEST['action'] != 'handshake' and $_REQUEST['action'] != 'ping') {
-    debug_event('Access Denied','Invalid Session attempt to API [' . $_REQUEST['action'] . ']','3');
+if (!Session::exists('api', $_REQUEST['auth']) && $_REQUEST['action'] != 'handshake' && $_REQUEST['action'] != 'ping') {
+    debug_event('Access Denied', 'Invalid Session attempt to API [' . $_REQUEST['action'] . ']', 3);
     ob_end_clean();
     echo JSON_Data::error('401', T_('Session Expired'));
     exit();
 }
 
 // If the session exists then let's try to pull some data from it to see if we're still allowed to do this
-$username =
-    ($_REQUEST['action'] == 'handshake' || $_REQUEST['action'] == 'ping')
-    ? $_REQUEST['user']
-    : Session::username($_REQUEST['auth']);
+$username = ($_REQUEST['action'] == 'handshake') ? $_REQUEST['user'] : Session::username($_REQUEST['auth']);
 
 if (!Access::check_network('init-api', $username, 5)) {
-    debug_event('Access Denied','Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', '3');
+    debug_event('Access Denied', 'Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', 3);
     ob_end_clean();
     echo JSON_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
     exit();
 }
 
-if ($_REQUEST['action'] != 'handshake' and $_REQUEST['action'] != 'ping') {
+if ($_REQUEST['action'] != 'handshake' && $_REQUEST['action'] != 'ping') {
     Session::extend($_REQUEST['auth']);
     $GLOBALS['user'] = User::get_from_username($username);
 }
@@ -90,8 +89,8 @@ foreach ($methods as $method) {
 
     // If the method is the same as the action being called
     // Then let's call this function!
-    if ($_GET['action'] == $method) {
-        $_GET['format'] = 'json';
+    if (str_replace('tag', 'genre', $_GET['action']) == $method) {
+        $_GET['api_format'] = 'json';
         call_user_func(array('api', $method),$_GET);
         // We only allow a single function to be called, and we assume it's cleaned up!
         exit;

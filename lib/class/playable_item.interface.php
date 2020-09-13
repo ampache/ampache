@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -62,7 +62,7 @@ interface playable_item
      * search_childrens
      *
      * Search for direct childrens. Return an array of `object_type`, `object_id` childrens matching the criteria.
-     * @param $name
+     * @param string $name
      */
     public function search_childrens($name);
 
@@ -70,9 +70,7 @@ interface playable_item
      * get_medias
      *
      * Get all medias from all childrens. Return an array of `object_type`, `object_id` medias.
-     */
-    /**
-     * @param $filter_type
+     * @param string $filter_type
      * @return mixed
      */
     public function get_medias($filter_type = null);

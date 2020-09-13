@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -57,7 +57,7 @@ class AmpacheFriendsTimeline
             return false;
         }
 
-        Preference::insert('ftl_max_items', T_('Friends timeline max items'), '5', '25', 'integer', 'plugins', $this->name);
+        Preference::insert('ftl_max_items', T_('Friends timeline max items'), 5, 25, 'integer', 'plugins', $this->name);
 
         return true;
     }
@@ -97,8 +97,8 @@ class AmpacheFriendsTimeline
                 if (count($activities) > 0) {
                     UI::show_box_top(T_('Friends Timeline'));
                     Useractivity::build_cache($activities);
-                    foreach ($activities as $aid) {
-                        $activity = new Useractivity($aid);
+                    foreach ($activities as $activity_id) {
+                        $activity = new Useractivity($activity_id);
                         $activity->show();
                     }
                     UI::show_box_bottom();

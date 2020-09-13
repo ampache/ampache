@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -251,13 +251,13 @@ class Tmp_Playlist extends database_object
      * This deletes any other tmp_playlists associated with this
      * session
      * @param $sessid
-     * @param string|null $id
+     * @param string|null $plist_id
      * @return boolean
      */
-    public static function session_clean($sessid, $id)
+    public static function session_clean($sessid, $plist_id)
     {
         $sql = "DELETE FROM `tmp_playlist` WHERE `session`= ? AND `id` != ?";
-        Dba::write($sql, array($sessid, $id));
+        Dba::write($sql, array($sessid, $plist_id));
 
         /* Remove associated tracks */
         self::prune_tracks();
@@ -273,7 +273,7 @@ class Tmp_Playlist extends database_object
     {
         self::prune_playlists();
         self::prune_tracks();
-        //Dba::write("DELETE FROM `tmp_playlist_data` USING `tmp_playlist_data` LEFT JOIN `song` ON `tmp_playlist_data`.`object_id` = `song`.`id` WHERE `song`.`id` IS NULL");
+        // Dba::write("DELETE FROM `tmp_playlist_data` USING `tmp_playlist_data` LEFT JOIN `song` ON `tmp_playlist_data`.`object_id` = `song`.`id` WHERE `song`.`id` IS NULL");
     }
 
     /**
@@ -312,8 +312,8 @@ class Tmp_Playlist extends database_object
      * add_object
      * This adds the object of $this->object_type to this tmp playlist
      * it takes an optional type, default is song
-     * @param $object_id
-     * @param $object_type
+     * @param integer $object_id
+     * @param string $object_type
      * @return boolean
      */
     public function add_object($object_id, $object_type)

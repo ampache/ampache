@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -91,29 +91,29 @@ class Broadcast_Server implements MessageComponentInterface
                 if (count($cmdinfo) == 2) {
                     switch ($cmdinfo[0]) {
                         case self::BROADCAST_SONG:
-                            $this->notifySong($from, $cmdinfo[1]);
-                        break;
+                            $this->notifySong($from, (int) $cmdinfo[1]);
+                            break;
                         case self::BROADCAST_SONG_POSITION:
                             $this->notifySongPosition($from, (int) $cmdinfo[1]);
-                        break;
+                            break;
                         case self::BROADCAST_PLAYER_PLAY:
                             $this->notifyPlayerPlay($from, make_bool($cmdinfo[1]));
-                        break;
+                            break;
                         case self::BROADCAST_ENDED:
                             $this->notifyEnded($from);
-                        break;
+                            break;
                         case self::BROADCAST_REGISTER_BROADCAST:
                             $this->registerBroadcast($from, (int) $cmdinfo[1]);
-                        break;
+                            break;
                         case self::BROADCAST_REGISTER_LISTENER:
                             $this->registerListener($from, (int) $cmdinfo[1]);
-                        break;
+                            break;
                         case self::BROADCAST_AUTH_SID:
                             $this->authSid($from, $cmdinfo[1]);
-                        break;
+                            break;
                         default:
                             self::echo_message($this->verbose, "[" . time() . "][warning]Unknown message code." . "\r\n");
-                        break;
+                            break;
                     }
                 } else {
                     self::echo_message($this->verbose, "[" . time() . "][error]Wrong message format (" . $command . ")." . "\r\n");
@@ -252,21 +252,21 @@ class Broadcast_Server implements MessageComponentInterface
     }
 
     /**
-     *
+     * getRunningBroadcast
      * @param integer $broadcast_id
      * @return Broadcast
      */
     protected function getRunningBroadcast($broadcast_id)
     {
-        $broadcast = null;
-        foreach ($this->broadcasters as $conn_id => $br) {
-            if ($br->id == $broadcast_id) {
-                $broadcast = $br;
+        $result = null;
+        foreach ($this->broadcasters as $broadcast) {
+            if ($broadcast->id == $broadcast_id) {
+                $result = $broadcast;
                 break;
             }
         }
 
-        return $broadcast;
+        return $result;
     }
 
     /**
@@ -318,7 +318,7 @@ class Broadcast_Server implements MessageComponentInterface
                 unset($this->listeners[$broadcast_id][$lindex]);
                 echo "[info]Listener leaved broadcast " . $broadcast_id . "." . "\r\n";
 
-                foreach ($this->broadcasters as $broadcaster_id => $broadcast) {
+                foreach ($this->broadcasters as $broadcast) {
                     if ($broadcast->id == $broadcast_id) {
                         $this->notifyNbListeners($broadcast);
                         break;

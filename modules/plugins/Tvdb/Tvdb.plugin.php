@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -55,7 +55,7 @@ class AmpacheTvdb
             return false;
         }
 
-        Preference::insert('tvdb_api_key', T_('TVDb API key'), '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('tvdb_api_key', T_('TVDb API key'), '', 75, 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -102,9 +102,9 @@ class AmpacheTvdb
     /**
      * get_metadata
      * Returns song metadata for what we're passed in.
-     * @param $gather_types
+     * @param array $gather_types
      * @param $media_info
-     * @return null
+     * @return array
      */
     public function get_metadata($gather_types, $media_info)
     {
@@ -114,7 +114,7 @@ class AmpacheTvdb
         if (!in_array('tvshow', $gather_types)) {
             debug_event('tvdb.plugin', 'Not a valid media type, skipped.', 5);
 
-            return null;
+            return array();
         }
 
         try {
@@ -131,7 +131,7 @@ class AmpacheTvdb
                 $release                   = $this->getReleaseByTitle($releases, $media_info['tvshow'], $media_info['year']);
                 $results['tvdb_tvshow_id'] = $release->id;
                 $results['tvshow_imdb_id'] = $release->imdbId ;
-                $results['tvshow_summary'] = substr($release->overview, 0, 255);   //Summary column in db is only 256 characters.
+                $results['tvshow_summary'] = substr($release->overview, 0, 255); // Summary column in db is only 256 characters.
                 $results['tvshow']         = $release->name;
 
                 if ($release->FirstAired) {

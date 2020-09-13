@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -97,14 +97,18 @@ class Catalog_dropbox extends Catalog
      */
     public function install()
     {
+        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+
         $sql = "CREATE TABLE `catalog_dropbox` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-            "`apikey` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
-            "`secret` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
-            "`path` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
-            "`authtoken` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
+            "`apikey` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
+            "`secret` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
+            "`path` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
+            "`authtoken` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
             "`getchunk` TINYINT(1) NOT NULL, " .
             "`catalog_id` INT( 11 ) NOT NULL" .
-            ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+            ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;
@@ -185,7 +189,7 @@ class Catalog_dropbox extends Catalog
         $path      = $data['path'];
         $getchunk  = $data['getchunk'];
 
-        if (!strlen($apikey) or !strlen($secret) or !strlen($authtoken)) {
+        if (!strlen($apikey) || !strlen($secret) || !strlen($authtoken)) {
             AmpError::add('general', T_('Error: API Key, Secret and Access Token Required for Dropbox Catalogs'));
 
             return false;
@@ -241,7 +245,6 @@ class Catalog_dropbox extends Catalog
             $this->authcode = $options['authcode'];
         }
 
-
         if (!defined('SSE_OUTPUT')) {
             UI::show_box_top(T_('Running Dropbox Remote Update') . '. . .');
         }
@@ -269,7 +272,7 @@ class Catalog_dropbox extends Catalog
         $this->update_last_add();
 
         UI::update_text('', sprintf(T_('Catalog Update Finished.  Total Media: [%s]'), $this->count));
- 
+
         return true;
     }
 
@@ -367,8 +370,8 @@ class Catalog_dropbox extends Catalog
             $readfile = true;
             $meta     = $dropbox->getMetadata($path);
             $outfile  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
-            //Download File
 
+            // Download File
             $this->download($dropbox, $path, -1, $outfile);
 
             $vainfo = new vainfo($outfile, $this->get_gather_types('music'), '', '', '', $this->sort_pattern, $this->rename_pattern, $readfile);
@@ -422,8 +425,8 @@ class Catalog_dropbox extends Catalog
             $readfile = true;
             $meta     = $dropbox->getMetadata($path);
             $outfile  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
-            //Download File
 
+            // Download File
             $res = $this->download($dropbox, $path, 40960, $outfile);
 
             if ($res) {
@@ -445,7 +448,7 @@ class Catalog_dropbox extends Catalog
                         Video::generate_preview($video_id);
                     }
                 } else {
-                    $this->added_videos_to_gather[] = $video_id;
+                    $this->videos_to_gather[] = $video_id;
                 }
                 $results['file'] = $path;
                 $sql             = "UPDATE `video` SET `file` = ? WHERE `id` = ?";
@@ -470,15 +473,15 @@ class Catalog_dropbox extends Catalog
      */
     public function download($dropbox, $path, $maxlen, $dropboxFile = null)
     {
-        //Path cannot be null
+        // Path cannot be null
         if (is_null($path)) {
             throw new DropboxClientException("Path cannot be null.");
         }
 
-        //Make Dropbox File if target is specified
+        // Make Dropbox File if target is specified
         $dropboxFile = $dropboxFile ? $dropbox->makeDropboxFile($dropboxFile, $maxlen, null, DropboxFile::MODE_WRITE) : null;
 
-        //Download File
+        // Download File
         $response = $dropbox->postToContent('/files/download', ['path' => $path], null, $dropboxFile);
         if ($response->getHttpStatusCode() == 200) {
             return true;
@@ -522,7 +525,7 @@ class Catalog_dropbox extends Catalog
 
                     $key     = vainfo::get_tag_type($vainfo->tags);
                     $results = vainfo::clean_tag_info($vainfo->tags, $key, $outfile);
-                    //Must compare to original path, not temporary location.
+                    // Must compare to original path, not temporary location.
                     $results['file'] = $path;
                     $info            = self::update_song_from_tags($results, $song);
                     if ($info['change']) {
@@ -577,7 +580,6 @@ class Catalog_dropbox extends Catalog
 
         return $dead;
     }
-
 
     /**
      * check_remote_song
@@ -651,8 +653,8 @@ class Catalog_dropbox extends Catalog
             $meta    = $dropbox->getMetadata($media->file);
 
             $outfile = sys_get_temp_dir() . "/" . $meta->getName();
-            //Download File
 
+            // Download File
             $this->download($dropbox, $media->file, null, $outfile);
             $media->file = $outfile;
             // Generate browser class for sending headers
@@ -704,9 +706,9 @@ class Catalog_dropbox extends Catalog
                 if ($song->id) {
                     $meta    = $dropbox->getMetadata($song->file);
                     $outfile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
-                    //Download File
 
-                    $res          = $this->download($dropbox, $song->file, 40960, $outfile);
+                    // Download File
+                    $res = $this->download($dropbox, $song->file, 40960, $outfile);
                     if ($res) {
                         $sql             = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
                         Dba::write($sql, array($outfile, $song->id));

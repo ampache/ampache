@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,12 +16,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-$last_seen   = $client->last_seen ? get_datetime($time_format, (int) $client->last_seen) : T_('Never');
-$create_date = $client->create_date ? get_datetime($time_format, (int) $client->create_date) : T_('Unknown');
+$last_seen   = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');
+$create_date = $client->create_date ? get_datetime((int) $client->create_date) : T_('Unknown');
 $client->format(); ?>
 <?php UI::show_box_top($client->f_name); ?>
 <div class="user_avatar">
@@ -51,13 +51,13 @@ if ($client->f_avatar) {
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Display Name'); ?></dt>
     <dd class="<?php echo $rowparity; ?>">
         <?php echo $client->f_name; ?>
-        <?php if (Access::check('interface', '25') && AmpConfig::get('sociable')) { ?>
+        <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
             <a id="<?php echo 'reply_pvmsg_' . $client->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $client->username; ?>">
                 <?php echo UI::get_icon('mail', T_('Send private message')); ?>
             </a>
         <?php
     } ?>
-        <?php if (Access::check('interface', '100')) { ?>
+        <?php if (Access::check('interface', 100)) { ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_edit&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('edit', T_('Edit')); ?></a>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_preferences&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('preferences', T_('Preferences')); ?></a>
         <?php
@@ -79,7 +79,7 @@ if ($client->f_avatar) {
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Last Seen'); ?></dt>
     <dd class="<?php echo $rowparity; ?>"><?php echo $last_seen; ?></dd>
     <?php $rowparity = UI::flip_class(); ?>
-    <?php if (Access::check('interface', '50')) { ?>
+    <?php if (Access::check('interface', 50)) { ?>
     <dt class="<?php echo $rowparity; ?>"><?php echo T_('Activity'); ?></dt>
     <dd class="<?php echo $rowparity; ?>"><?php echo $client->f_usage; ?></dd>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) {
@@ -197,8 +197,8 @@ if ($client->f_avatar) {
                 if (Preference::get_by_user($client->id, 'allow_personal_info_recent')) {
                     $activities = Useractivity::get_activities($client->id);
                     Useractivity::build_cache($activities);
-                    foreach ($activities as $aid) {
-                        $activity = new Useractivity($aid);
+                    foreach ($activities as $activity_id) {
+                        $activity = new Useractivity($activity_id);
                         $activity->show();
                     }
                 } ?>

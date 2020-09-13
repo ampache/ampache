@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -62,13 +62,13 @@ class License
     /**
      * has_info
      * does the db call, reads from the license table
-     * @param integer $id
+     * @param integer $license_id
      * @return boolean
      */
-    private function has_info($id)
+    private function has_info($license_id)
     {
         $sql        = "SELECT * FROM `license` WHERE `id` = ?";
-        $db_results = Dba::read($sql, array($id));
+        $db_results = Dba::read($sql, array($license_id));
 
         $data = Dba::fetch_assoc($db_results);
 
@@ -116,7 +116,7 @@ class License
     public function format()
     {
         $this->f_link = ($this->external_link) ? '<a href="' . $this->external_link . '">' . $this->name . '</a>' : $this->name;
-    } //format
+    } // format
 
     /**
      * delete
@@ -146,6 +146,26 @@ class License
 
         return $results;
     } // get_licenses
+
+    /**
+     * get_license_songs
+     * Returns a list of song ID's attached to a license ID.
+     *
+     * @param integer $license_id
+     * @return integer[]
+     */
+    public static function get_license_songs($license_id)
+    {
+        $sql        = 'SELECT `id` from `song` WHERE `song`.`license` = ?';
+        $db_results = Dba::read($sql, array($license_id));
+
+        $results = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = $row['id'];
+        }
+
+        return $results;
+    } // get_license_songs
 
     /**
      * lookup

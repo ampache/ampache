@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,25 +16,37 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 UI::show_header();
 
 // Check to see if we've got the rights to be here
-if (!AmpConfig::get('allow_localplay_playback') || !Access::check('interface', '25')) {
+if (!AmpConfig::get('allow_localplay_playback') || !Access::check('interface', 25)) {
     UI::access_denied();
 
     return false;
 }
 
+/**
+ * Check for the refresh mojo, if it's there then require the
+ * refresh_javascript include. Must be greater then 5, I'm not
+ * going to let them break their servers
+ */
+$refresh_limit = AmpConfig::get('refresh_limit', 0);
+if ($refresh_limit > 5) {
+    $ajax_url      = '?page=localplay&action=command&command=refresh';
+    require_once AmpConfig::get('prefix') . UI::find_template('javascript_refresh.inc.php');
+}
+
 switch ($_REQUEST['action']) {
     case 'show_add_instance':
         // This requires 50 or better
-        if (!Access::check('localplay', '75')) {
+        if (!Access::check('localplay', 75)) {
             UI::access_denied();
             break;
         }
@@ -43,10 +55,10 @@ switch ($_REQUEST['action']) {
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $fields    = $localplay->get_instance_fields();
         require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_add_instance.inc.php');
-    break;
+        break;
     case 'add_instance':
         // This requires 50 or better!
-        if (!Access::check('localplay', '75')) {
+        if (!Access::check('localplay', 75)) {
             UI::access_denied();
             break;
         }
@@ -55,20 +67,20 @@ switch ($_REQUEST['action']) {
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->add_instance($_POST);
         header("Location:" . AmpConfig::get('web_path') . "/localplay.php?action=show_instances");
-    break;
+        break;
     case 'update_instance':
         // Make sure they gots them rights
-        if (!Access::check('localplay', '75')) {
+        if (!Access::check('localplay', 75)) {
             UI::access_denied();
             break;
         }
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->update_instance($_REQUEST['instance'], $_POST);
         header("Location:" . AmpConfig::get('web_path') . "/localplay.php?action=show_instances");
-    break;
+        break;
     case 'edit_instance':
         // Check to make sure they've got the access
-        if (!Access::check('localplay', '75')) {
+        if (!Access::check('localplay', 75)) {
             UI::access_denied();
             break;
         }
@@ -76,10 +88,10 @@ switch ($_REQUEST['action']) {
         $instance  = $localplay->get_instance($_REQUEST['instance']);
         $fields    = $localplay->get_instance_fields();
         require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_edit_instance.inc.php');
-    break;
+        break;
     case 'show_instances':
         // First build the Localplay object and then get the instances
-        if (!Access::check('localplay', '5')) {
+        if (!Access::check('localplay', 5)) {
             UI::access_denied();
             break;
         }
@@ -87,10 +99,10 @@ switch ($_REQUEST['action']) {
         $instances = $localplay->get_instances();
         $fields    = $localplay->get_instance_fields();
         require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_instances.inc.php');
-    break;
+        break;
     case 'show_playlist':
     default:
-        if (!Access::check('localplay', '5')) {
+        if (!Access::check('localplay', 5)) {
             UI::access_denied();
             break;
         }
@@ -101,9 +113,9 @@ switch ($_REQUEST['action']) {
         // Pull the current playlist and require the template
         $objects = $localplay->get();
         require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_status.inc.php');
-    break;
+        break;
 } // end switch action
 
-/* Show the Footer */
+// Show the Footer
 UI::show_query_stats();
 UI::show_footer();

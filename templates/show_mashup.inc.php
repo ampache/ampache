@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,20 +16,17 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
 $threshold = AmpConfig::get('stats_threshold');
 $user_id   = Core::get_global('user')->id;
-$count     = AmpConfig::get('popular_threshold'); ?>
-<p>
-    <input type="button" value="<?php echo T_('Browse Library') ?>" onclick="NavigateTo('<?php echo AmpConfig::get('web_path') ?>/browse.php?action=<?php echo $object_type ?>');" />
-    <br /><br /><br />
-</p>
-<?php
+$limit     = AmpConfig::get('popular_threshold', 10);
+
+UI::show('show_mashup_browse_form.inc.php');
 UI::show_box_top(T_('Trending'));
-$object_ids = Stats::get_top($object_type, $count, $threshold);
+$object_ids = Stats::get_top($object_type, $limit, $threshold);
 $browse     = new Browse();
 $browse->set_type($object_type);
 $browse->set_show_header(false);
@@ -39,7 +36,7 @@ UI::show_box_bottom();
  ?>
 <a href="<?php echo AmpConfig::get('web_path') ?>/stats.php?action=newest#browse_content_<?php echo $object_type ?>"><?php UI::show_box_top(T_('Newest')) ?></a>
 <?php
-$object_ids = Stats::get_newest($object_type, $count, $threshold);
+$object_ids = Stats::get_newest($object_type, $limit);
 $browse     = new Browse();
 $browse->set_type($object_type);
 $browse->set_show_header(false);
@@ -48,9 +45,9 @@ $browse->show_objects($object_ids);
 UI::show_box_bottom(); ?>
 <a href="<?php echo AmpConfig::get('web_path') ?>/stats.php?action=popular"><?php UI::show_box_top(T_('Popular')) ?></a>
 <?php
-$object_ids = array_slice(Stats::get_top($object_type, $count, '', '', $user_id), 0, 100);
+$object_ids = array_slice(Stats::get_top($object_type, $limit, 0, 0, $user_id), 0, 100);
 shuffle($object_ids);
-$object_ids = array_slice($object_ids, 0, $count);
+$object_ids = array_slice($object_ids, 0, $limit);
 $browse     = new Browse();
 $browse->set_type($object_type);
 $browse->set_show_header(false);

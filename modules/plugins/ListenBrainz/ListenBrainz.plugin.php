@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -63,7 +63,7 @@ class Ampachelistenbrainz
             return false;
         }
 
-        Preference::insert('listenbrainz_token', T_('ListenBrainz User Token'), '', '25', 'string', 'plugins', $this->name);
+        Preference::insert('listenbrainz_token', T_('ListenBrainz User Token'), '', 25, 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -96,7 +96,7 @@ class Ampachelistenbrainz
     public function save_mediaplay($song)
     {
         // Only support songs
-        if (strtolower(get_class($song)) != 'song') {
+        if (get_class($song) != 'Song') {
             return false;
         }
 
@@ -108,7 +108,7 @@ class Ampachelistenbrainz
         }
 
         // Before we start let's pull the last song submitted by this user
-        $previous = Stats::get_last_song($this->user_id);
+        $previous = Stats::get_last_play($this->user_id);
 
         $diff = time() - $previous['date'];
 
@@ -132,7 +132,7 @@ class Ampachelistenbrainz
         if ($artist->mbid) {
             $additional_info['artist_mbid'] = $artist->mbid;
         }
-        $track_metadata =  array(
+        $track_metadata = array(
                 'additional_info' => $additional_info,
                 'artist_name' => $artist->name,
                 'track_name' => $song->title,
@@ -193,8 +193,8 @@ class Ampachelistenbrainz
     /**
      * set_flag
      * This takes care of spreading your love on ListenBrainz
-     * @param $song
-     * @param $flagged
+     * @param Song $song
+     * @param boolean $flagged
      * @return boolean
      */
     public function set_flag($song, $flagged)

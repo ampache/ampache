@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,10 +16,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
-<?php if (Access::check('interface', '50')) { ?>
+<?php if (Access::check('interface', 50)) { ?>
 <?php UI::show_box_top(T_('Manage'), 'info-box'); ?>
 <div id="information_actions">
 <ul>
@@ -54,7 +54,7 @@
             <?php require AmpConfig::get('prefix') . UI::find_template('show_live_stream_row.inc.php'); ?>
         </tr>
         <?php
-        } //end foreach ($artists as $artist)?>
+        } // end foreach ($artists as $artist)?>
         <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="6"><span class="nodata"><?php echo T_('No live stream found'); ?></span></td>

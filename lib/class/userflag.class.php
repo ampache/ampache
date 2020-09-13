@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -37,8 +37,8 @@ class Userflag extends database_object
      * Constructor
      * This is run every time a new object is created, and requires
      * the id and type of object that we need to pull the flag for
-     * @param $object_id
-     * @param $type
+     * @param integer $object_id
+     * @param string $type
      */
     public function __construct($object_id, $type)
     {
@@ -59,7 +59,7 @@ class Userflag extends database_object
      */
     public static function build_cache($type, $ids, $user_id = null)
     {
-        if (!is_array($ids) || !count($ids)) {
+        if (empty($ids)) {
             return false;
         }
         if ($user_id === null) {
@@ -76,11 +76,11 @@ class Userflag extends database_object
             $userflags[$row['object_id']] = $row['date'];
         }
 
-        foreach ($ids as $objectid) {
-            if (isset($userflags[$objectid])) {
-                parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $objectid, array(1, $userflags[$objectid]));
+        foreach ($ids as $object_id) {
+            if (isset($userflags[$object_id])) {
+                parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $object_id, array(1, $userflags[$object_id]));
             } else {
-                parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $objectid, array(false));
+                parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $object_id, array(false));
             }
         }
 
@@ -92,11 +92,11 @@ class Userflag extends database_object
      *
      * Remove userflag for items that no longer exist.
      * @param string $object_type
-     * @param string $object_id
+     * @param integer $object_id
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
-        $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season', 'podcast', 'podcast_episode');
+        $types = array('song', 'album', 'artist', 'video', 'playlist', 'tvshow', 'tvshow_season', 'podcast', 'podcast_episode');
 
         if ($object_type !== null) {
             if (in_array($object_type, $types)) {
@@ -145,8 +145,8 @@ class Userflag extends database_object
             } else {
                 $flagged = array(1);
             }
+            parent::add_to_cache($key, $this->id, $flagged);
         }
-        parent::add_to_cache($key, $this->id, $flagged);
 
         return $flagged;
     }
@@ -194,31 +194,43 @@ class Userflag extends database_object
             $params = array($this->id, $this->type, $user_id, $date);
             parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, array(1, $date));
 
-            Useractivity::post_activity($user_id, 'userflag', $this->type, $this->id);
+            Useractivity::post_activity($user_id, 'userflag', $this->type, $this->id, time());
         }
         Dba::write($sql, $params);
 
-        // Forward flag to last.fm and Libre.fm (song only)
         if ($this->type == 'song') {
             $user = new User($user_id);
             $song = new Song($this->id);
-            if ($song) {
+            if ($song->id) {
                 $song->format();
-                foreach (Plugin::get_plugins('save_mediaplay') as $plugin_name) {
-                    try {
-                        $plugin = new Plugin($plugin_name);
-                        if ($plugin->load($user)) {
-                            $plugin->_plugin->set_flag($song, $flagged);
-                        }
-                    } catch (Exception $error) {
-                        debug_event('userflag.class', 'Stats plugin error: ' . $error->getMessage(), 1);
-                    }
-                }
+                self::save_flag($user, $song, $flagged);
             }
         }
 
         return true;
     } // set_flag
+
+    /**
+     * save_flag
+     * Forward flag to last.fm and Libre.fm (song only)
+     * @param User $user
+     * @param Song $song
+     * @param boolean $flagged
+     */
+    public static function save_flag($user, $song, $flagged)
+    {
+        foreach (Plugin::get_plugins('set_flag') as $plugin_name) {
+            try {
+                $plugin = new Plugin($plugin_name);
+                if ($plugin->load($user)) {
+                    debug_event('userflag.class', 'save_flag...' . $plugin->_plugin->name, 5);
+                    $plugin->_plugin->set_flag($song, $flagged);
+                }
+            } catch (Exception $error) {
+                debug_event('userflag.class', 'save_flag plugin error: ' . $error->getMessage(), 1);
+            }
+        }
+    }
 
     /**
      * set_flag_for_group
@@ -265,7 +277,7 @@ class Userflag extends database_object
                 "VALUES (?, ?, ?, ?)";
                 $params = array($album_id, 'album', $user_id, time());
 
-                Useractivity::post_activity($user_id, 'userflag', 'album', $album_id);
+                Useractivity::post_activity($user_id, 'userflag', 'album', $album_id, time());
                 Dba::write($sql, $params);
             }
 
@@ -278,7 +290,7 @@ class Userflag extends database_object
     /**
      * get_latest_sql
      * Get the latest sql
-     * @param string|null $type
+     * @param string $type
      * @param string $user_id
      * @return string
      */
@@ -288,29 +300,27 @@ class Userflag extends database_object
             $user_id = Core::get_global('user')->id;
         }
         $user_id = (int) ($user_id);
-
-        $sql = "SELECT `user_flag`.`object_id` as `id`, `user_flag`.`object_type` as `type`, `user_flag`.`user` as `user` FROM `user_flag`";
-        if ($user_id <= 0) {
+        $type    = Stats::validate_type($type);
+        $sql     = "SELECT DISTINCT(`user_flag`.`object_id`) as `id`, `user_flag`.`object_type` as `type`, " .
+                   "MAX(`user_flag`.`user`) as `user` FROM `user_flag`";
+        if ($user_id < 1) {
             // Get latest only from user rights >= content manager
             $sql .= " LEFT JOIN `user` ON `user`.`id` = `user_flag`.`user`" .
                     " WHERE `user`.`access` >= 50";
         }
-        if ($type !== null) {
-            if ($user_id <= 0) {
-                $sql .= " AND";
-            } else {
-                $sql .= " WHERE";
-            }
-            $type = Stats::validate_type($type);
-            $sql .= " `user_flag`.`object_type` = '" . $type . "'";
-            if ($user_id > 0) {
-                $sql .= " AND `user_flag`.`user` = '" . $user_id . "'";
-            }
-            if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
-                $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
-            }
+        if ($user_id < 1) {
+            $sql .= " AND";
+        } else {
+            $sql .= " WHERE";
         }
-        $sql .= " ORDER BY `user_flag`.`date` DESC ";
+        $sql .= " `user_flag`.`object_type` = '" . $type . "'";
+        if ($user_id > 0) {
+            $sql .= " AND `user_flag`.`user` = '" . $user_id . "'";
+        }
+        if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
+            $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
+        }
+        $sql .= " GROUP BY `object_id`, `type` ORDER BY `user_flag`.`date` DESC ";
 
         return $sql;
     }
@@ -320,29 +330,23 @@ class Userflag extends database_object
      * Get the latest user flagged objects
      * @param string $type
      * @param string $user_id
-     * @param string $count
-     * @param string $offset
+     * @param integer $count
+     * @param integer $offset
      * @return array
      */
-    public static function get_latest($type = null, $user_id = null, $count = '', $offset = '')
+    public static function get_latest($type = null, $user_id = null, $count = 0, $offset = 0)
     {
-        if (!$count) {
-            $count = AmpConfig::get('popular_threshold');
+        if ($count < 1) {
+            $count = AmpConfig::get('popular_threshold', 10);
         }
-        $count = (int) ($count);
-        if (!$offset) {
-            $limit = $count;
-        } else {
-            $limit = (int) ($offset) . "," . $count;
-        }
+        $limit = ($offset < 1) ? $count : $offset . "," . $count;
 
         /* Select Top objects counting by # of rows */
         $sql = self::get_latest_sql($type, $user_id);
         $sql .= "LIMIT $limit";
+
         $db_results = Dba::read($sql);
-
-        $results = array();
-
+        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($type === null) {
                 $results[] = $row;
@@ -388,4 +392,4 @@ class Userflag extends database_object
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
-} //end userflag.class
+} // end userflag.class

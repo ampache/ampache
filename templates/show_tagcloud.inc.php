@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -49,11 +49,11 @@ $tag_types = array(
             <span id="click_tag_<?php echo $data['id']; ?>"><?php echo $data['name']; ?></span>
             <?php echo Ajax::observe('click_tag_' . $data['id'], 'click', Ajax::action('?page=tag&action=add_filter&browse_id=' . $browse2->id . '&tag_id=' . $data['id'], '')); ?>
         </div>
-        <?php if (Access::check('interface', '50')) { ?>
+        <?php if (Access::check('interface', 50)) { ?>
         <div class="tag_actions">
             <ul>
                 <li>
-                    <a class="tag_edit" id="<?php echo 'edit_tag_' . $data['id'] ?>" onclick="showEditDialog('tag_row', '<?php echo $data['id'] ?>', '<?php echo 'edit_tag_' . $data['id'] ?>', '<?php echo T_('Tag Edit') ?>', 'click_tag_')">
+                    <a class="tag_edit" id="<?php echo 'edit_tag_' . $data['id'] ?>" onclick="showEditDialog('tag_row', '<?php echo $data['id'] ?>', '<?php echo 'edit_tag_' . $data['id'] ?>', '<?php echo T_('Edit') ?>', 'click_tag_')">
                         <?php echo UI::get_icon('edit', T_('Edit')); ?>
                     </a>
                 </li>

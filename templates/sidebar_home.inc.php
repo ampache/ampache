@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <?php
@@ -24,11 +24,18 @@
 $t_songs     = T_('Songs');
 $t_artists   = T_('Artists');
 $t_albums    = T_('Albums');
+$t_labels    = T_('Labels');
 $t_playlists = T_('Playlists');
-$t_tagcloud  = T_('Tag Cloud');
+$t_tagcloud  = T_('Genres');
 $t_expander  = T_('Expand/Collapse');
 $t_search    = T_('Search'); ?>
 <ul class="sb2" id="sb_home">
+    <?php if (AmpConfig::get('browse_filter')) {
+    echo "<li>";
+    Ajax::start_container('browse_filters');
+    Ajax::end_container();
+    echo "</li>";
+} ?>
     <li class="sb2_music"><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Browse Music'); ?>"><?php echo T_('Music'); ?></span><?php echo UI::get_icon('all', $t_expander, 'browse_music', 'header-img ' . (($_COOKIE['sb_browse_music'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
         <?php
         $text = (string) scrub_in(Core::get_request('action')) . '_ac';
@@ -40,7 +47,7 @@ $t_search    = T_('Search'); ?>
             <li id="sb_home_browse_music_album"><a href="<?php echo $web_path; ?>/mashup.php?action=album"><?php echo $t_albums; ?></a></li>
             <li id="sb_home_browse_music_artist"><a href="<?php echo $web_path; ?>/mashup.php?action=artist"><?php echo $t_artists; ?></a></li>
             <?php if (AmpConfig::get('label')) { ?>
-            <li id="sb_home_browse_music_label"><a href="<?php echo $web_path ?>/browse.php?action=label"><?php echo T_('Labels') ?></a></li>
+            <li id="sb_home_browse_music_label"><a href="<?php echo $web_path ?>/browse.php?action=label"><?php echo $t_labels ?></a></li>
             <?php
         } ?>
             <?php if (AmpConfig::get('channel')) { ?>
@@ -59,7 +66,7 @@ $t_search    = T_('Search'); ?>
             <li id="sb_home_browse_music_podcast"><a href="<?php echo $web_path ?>/browse.php?action=podcast"><?php echo T_('Podcasts') ?></a></li>
             <?php
         } ?>
-            <?php if (AmpConfig::get('allow_upload') && Access::check('interface', '25')) { ?>
+            <?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25)) { ?>
             <li id="sb_home_browse_music_upload"><a href="<?php echo $web_path ?>/upload.php"><?php echo T_('Upload') ?></a></li>
             <?php
         } ?>
@@ -109,6 +116,10 @@ $t_search    = T_('Search'); ?>
           <li id="sb_home_search_song"><a href="<?php echo $web_path; ?>/search.php?type=song"><?php echo $t_songs; ?></a></li>
           <li id="sb_home_search_album"><a href="<?php echo $web_path; ?>/search.php?type=album"><?php echo $t_albums; ?></a></li>
           <li id="sb_home_search_artist"><a href="<?php echo $web_path; ?>/search.php?type=artist"><?php echo $t_artists; ?></a></li>
+          <?php if (AmpConfig::get('label')) { ?>
+          <li id="sb_home_search_label"><a href="<?php echo $web_path; ?>/search.php?type=label"><?php echo $t_labels; ?></a></li>
+                <?php
+            } ?>
           <li id="sb_home_search_playlist"><a href="<?php echo $web_path; ?>/search.php?type=playlist"><?php echo $t_playlists; ?></a></li>
           <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
             <li id="sb_home_search_video"><a href="<?php echo $web_path ?>/search.php?type=video"><?php echo T_('Videos') ?></a></li>
@@ -116,16 +127,10 @@ $t_search    = T_('Search'); ?>
         } ?>
         </ul>
     </li>
-        <li>
-    <?php
-    if (AmpConfig::get('browse_filter')) {
-        Ajax::start_container('browse_filters');
-        Ajax::end_container();
-    } ?>
-    <?php if (Access::check('interface', '25')) { ?>
+    <?php if (Access::check('interface', 25)) { ?>
     <li class="sb2_playlist">
     <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Playlist'); ?>"><?php echo $t_playlists; ?></span><?php echo UI::get_icon('all', $t_expander, 'playlist', 'header-img ' . (($_COOKIE['sb_home_playlist'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
-        <?php if (AmpConfig::get('home_now_playing') || AmpConfig::get('allow_democratic_playback') || Access::check('interface', '50')) { ?>
+        <?php if (AmpConfig::get('home_now_playing') || AmpConfig::get('allow_democratic_playback') || Access::check('interface', 50)) { ?>
         <ul class="sb3" id="sb_home_playlist">
             <li id="sb_home_browse_music_playlist"><a href="<?php echo $web_path; ?>/browse.php?action=playlist"><?php echo $t_playlists; ?></a></li>
             <li id="sb_home_browse_music_smartPlaylist"><a href="<?php echo $web_path; ?>/browse.php?action=smartplaylist"><?php echo T_('Smart Playlists'); ?></a></li>
@@ -133,7 +138,7 @@ $t_search    = T_('Search'); ?>
             <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path ?>/democratic.php?action=show_playlist"><?php echo T_('Democratic') ?></a></li>
             <?php
             } ?>
-            <?php if (($server_allow == AmpConfig::get('allow_localplay_playback')) && ($controller == AmpConfig::get('localplay_controller')) && ($access_check == Access::check('localplay', '5'))) { ?>
+            <?php if (($server_allow == AmpConfig::get('allow_localplay_playback')) && ($controller == AmpConfig::get('localplay_controller')) && ($access_check == Access::check('localplay', 5))) { ?>
             <?php
                 // Little bit of work to be done here
                 $localplay             = new Localplay(AmpConfig::get('localplay_controller'));
@@ -176,7 +181,7 @@ $t_search    = T_('Search'); ?>
                 <li id="sb_home_info_upload"><a href="<?php echo $web_path ?>/stats.php?action=upload"><?php echo T_('Uploads') ?></a></li>
                 <?php
         } ?>
-                <?php if (Access::check('interface', '50')) { ?>
+                <?php if (Access::check('interface', 50)) { ?>
                     <li id="sb_home_info_statistic"><a href="<?php echo $web_path ?>/stats.php?action=show"><?php echo T_('Statistics') ?></a></li>
                 <?php
         } ?>

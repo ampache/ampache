@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,39 +16,37 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-define('NO_SESSION','1');
+define('NO_SESSION', '1');
 define('CLI', 1);
-define('NO_CRON_CACHE','1');
-$path   = dirname(__FILE__); 
-$prefix = realpath($path . '/../'); 
-require_once $prefix . '/lib/init.php';
+define('NO_CRON_CACHE', '1');
+$path   = dirname(__FILE__);
+$prefix = realpath($path . '/../');
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 // Turn off output buffering we don't need it for a command line script
-ob_end_clean(); 
+ob_end_clean();
 
-debug_event('compute_cache', 'started cache process', 3);
+debug_event('compute_cache', 'started cache process', 5);
 
-$thresholds   = [ 0, AmpConfig::get('stats_threshold'), AmpConfig::get('popular_threshold') ];
+$thresholds   = [ 0, AmpConfig::get('stats_threshold'), AmpConfig::get('popular_threshold', 10) ];
 $count_types  = [ 'stream', 'download', 'skip' ];
 // TODO fix playlist sql.
 $object_types = [ 'album', 'artist', 'song', 'genre', 'catalog', 'live_stream', 'video', 'podcast_episode' ];
 
-debug_event('compute_cache', 'started cache process.', 3);
 foreach ($thresholds as $threshold) {
-	foreach ($count_types as $count_type) {
-		foreach ($object_types as $object_type) {
-			debug_event('compute_cache', "Computing object_count stats for threshold `" . $threshold . "`, count_type `" . $count_type . "` and object_type `" . $object_type . "` ...", 5);
-
-			$sql = "INSERT INTO `cache_object_count_run` ( `object_id`, `count`, `object_type`, `count_type`, `threshold` ) ";
-			$sql .= Stats::get_top_sql($object_type, $threshold, $count_type, null);
-			$sql .= " ON DUPLICATE KEY UPDATE `count` = VALUES ( `count` )";
-			Dba::write($sql);
-		}
-	}
+    foreach ($count_types as $count_type) {
+        foreach ($object_types as $object_type) {
+            $sql = "INSERT INTO `cache_object_count_run` ( `object_id`, `count`, `object_type`, `count_type`, `threshold` ) ";
+            $sql .= Stats::get_top_sql($object_type, $threshold, $count_type, null);
+            $sql .= " ON DUPLICATE KEY UPDATE `count` = VALUES ( `count` )";
+            Dba::write($sql);
+        }
+    }
 }
 
 $sql = "RENAME TABLE `cache_object_count_run` TO `cache_object_count_tmp`, `cache_object_count` TO `cache_object_count_run`, `cache_object_count_tmp` TO `cache_object_count`";
@@ -56,4 +54,4 @@ Dba::write($sql);
 $sql = "TRUNCATE `cache_object_count_run`";
 Dba::write($sql);
 
-debug_event('compute_cache', 'Completed cache process', 4);
+debug_event('compute_cache', 'Completed cache process', 5);

@@ -5,7 +5,7 @@ declare(strict_types=0);
 
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 // A collection of methods related to the user interface
@@ -42,7 +42,7 @@ class UI
      * Return the path to the template file wanted. The file can be overwriten
      * by the theme if it's not a php file, or if it is and if option
      * allow_php_themes is set to true.
-     * @param $template
+     * @param string $template
      * @return string
      */
     public static function find_template($template)
@@ -79,7 +79,7 @@ class UI
      *
      * Does some trickery with the output buffer to return the output of a
      * template.
-     * @param $template
+     * @param string $template
      * @return string
      */
     public static function ajax_include($template)
@@ -242,19 +242,19 @@ class UI
         switch ($unit) {
             case 'p':
                 $value *= 1024;
-            // Intentional break fall-through
+                // Intentional break fall-through
             case 't':
                 $value *= 1024;
-            // Intentional break fall-through
+                // Intentional break fall-through
             case 'g':
                 $value *= 1024;
-            // Intentional break fall-through
+                // Intentional break fall-through
             case 'm':
                 $value *= 1024;
-            // Intentional break fall-through
+                // Intentional break fall-through
             case 'k':
                 $value *= 1024;
-            // Intentional break fall-through
+                // Intentional break fall-through
         }
 
         return (string) $value;
@@ -302,7 +302,7 @@ class UI
                 $svgicon->addAttribute('id', $id_attrib);
             }
 
-            $class_attrib = ($class_attrib) ?: 'icon icon-' . $name ;
+            $class_attrib = ($class_attrib) ?: 'icon icon-' . $name;
             $svgicon->addAttribute('class', $class_attrib);
 
             $tag = explode("\n", $svgicon->asXML(), 2)[1];
@@ -331,7 +331,7 @@ class UI
      * _find_icon
      *
      * Does the finding icon thing. match svg first over png
-     * @param $name
+     * @param string $name
      * @return string
      */
     private static function _find_icon($name)
@@ -401,7 +401,7 @@ class UI
                 $svgimage->addAttribute('id', $id_attrib);
             }
 
-            $class_attrib = ($class_attrib) ?: 'image image-' . $name ;
+            $class_attrib = ($class_attrib) ?: 'image image-' . $name;
             $svgimage->addAttribute('class', $class_attrib);
 
             $tag = explode("\n", $svgimage->asXML(), 2)[1];
@@ -430,7 +430,7 @@ class UI
      * _find_image
      *
      * Does the finding image thing. match svg first over png
-     * @param $name
+     * @param string $name
      * @return string
      */
     private static function _find_image($name)
@@ -476,15 +476,15 @@ class UI
     }
 
     /**
-     * show_browse_form
+     * show
      *
-     * For now this just shows the header template
+     * Show the requested template file
+     * @param string $template
      */
-    public static function show_browse_form()
+    public static function show(string $template)
     {
-        require_once AmpConfig::get('prefix') . self::find_template('show_browse_form.inc.php');
+        require_once AmpConfig::get('prefix') . self::find_template($template);
     }
-
 
     /**
      * show_footer

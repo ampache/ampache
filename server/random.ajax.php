@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -44,7 +44,7 @@ switch ($_REQUEST['action']) {
             Core::get_global('user')->playlist->add_object($song_id, 'song');
         }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
-    break;
+        break;
     case 'album':
         $album_id = Album::get_random(null, false, Core::get_global('user')->id);
 
@@ -54,12 +54,25 @@ switch ($_REQUEST['action']) {
         }
 
         $album = new Album($album_id[0]);
-        $songs = $album->get_songs();
+        // songs for all disks
+        if (AmpConfig::get('album_group')) {
+            $disc_ids = $album->get_group_disks_ids();
+            foreach ($disc_ids as $discid) {
+                $disc     = new Album($discid);
+                $allsongs = $disc->get_songs();
+                foreach ($allsongs as $songid) {
+                    $songs[] = $songid;
+                }
+            }
+        } else {
+            // songs for just this disk
+            $songs = $album->get_songs();
+        }
         foreach ($songs as $song_id) {
             Core::get_global('user')->playlist->add_object($song_id, 'song');
         }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
-    break;
+        break;
     case 'artist':
         $artist_id = Random::artist();
 
@@ -74,7 +87,7 @@ switch ($_REQUEST['action']) {
             Core::get_global('user')->playlist->add_object($song_id, 'song');
         }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
-    break;
+        break;
     case 'playlist':
         $playlist_id = Random::playlist();
 
@@ -89,7 +102,7 @@ switch ($_REQUEST['action']) {
             Core::get_global('user')->playlist->add_object($item['object_id'], $item['object_type']);
         }
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
-    break;
+        break;
     case 'advanced_random':
         $object_ids = Random::advanced('song', $_POST);
 
@@ -109,11 +122,11 @@ switch ($_REQUEST['action']) {
         $browse->show_objects();
         $results['browse'] = ob_get_contents();
         ob_end_clean();
-    break;
+        break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 } // switch on action;
 
 // We always do this
-echo xoutput_from_array($results);
+echo (string) xoutput_from_array($results);

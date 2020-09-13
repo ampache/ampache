@@ -3,7 +3,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,12 +17,14 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-require_once 'lib/init.php';
 
-if (!Access::check('interface', '25') || !AmpConfig::get('sociable')) {
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
+
+if (!Access::check('interface', 25) || !AmpConfig::get('sociable')) {
     debug_event('pvmsg', 'Access Denied: sociable features are not enabled.', 3);
     UI::access_denied();
 
@@ -96,7 +98,8 @@ switch ($_REQUEST['action']) {
         }
 
         $msgs = scrub_out($_REQUEST['msgs']);
-        show_confirmation(T_('Are You Sure?'), T_('The Message will be deleted'),
+        show_confirmation(T_('Are You Sure?'),
+            T_('The Message will be deleted'),
                 AmpConfig::get('web_path') . "/pvmsg.php?action=confirm_delete&msgs=" . $msgs,
                 1,
                 'delete_message'
@@ -142,6 +145,6 @@ switch ($_REQUEST['action']) {
         break;
 }
 
-/* Show the Footer */
+// Show the Footer
 UI::show_query_stats();
 UI::show_footer();

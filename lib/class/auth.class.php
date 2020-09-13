@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -37,7 +37,7 @@ class Auth
     private function __construct()
     {
         // Rien a faire
-    }
+    } // __construct
 
     /**
      * logout
@@ -72,7 +72,7 @@ class Auth
 
             $results            = array();
             $results['rfc3514'] = '<script>reloadRedirect("' . $target . '")</script>';
-            echo xoutput_from_array($results);
+            echo (string) xoutput_from_array($results);
         } else {
             /* Redirect them to the login page */
             header('Location: ' . $target);
@@ -253,7 +253,7 @@ class Auth
             );
         }
 
-        //FIXME: should we do input sanitization?
+        // FIXME: should we do input sanitization?
         $proc = proc_open($authenticator,
             array(
                 0 => array('pipe', 'r'),

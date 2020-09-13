@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -66,7 +66,7 @@ class Useractivity extends database_object
      */
     public static function build_cache($ids)
     {
-        if (!is_array($ids) || !count($ids)) {
+        if (empty($ids)) {
             return false;
         }
 
@@ -115,11 +115,8 @@ class Useractivity extends database_object
      * @param integer $date
      * @return PDOStatement|boolean
      */
-    public static function post_activity($user_id, $action, $object_type, $object_id, $date = null)
+    public static function post_activity($user_id, $action, $object_type, $object_id, $date)
     {
-        if (!is_int($date)) {
-            $date = time();
-        }
         if ($object_type === 'song') {
             // insert fields to be more like last.fm activity stats
             $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`," .
@@ -133,7 +130,7 @@ class Useractivity extends database_object
             $mbid_song   = $song->mbid;
             $mbid_artist = $song->artist_mbid;
             $mbid_album  = $song->album_mbid;
-            debug_event('useractivity.class', 'Inserting details for ' . $name_song . ' - ' . $name_artist . ' - ' . $name_album . '.', 5);
+            debug_event('useractivity.class', 'post_activity: ' . $action . ' ' . $object_type . ' by user: ' . $user_id . ': {' . $object_id . '}', 5);
 
             if ($name_song && $name_artist && $name_album) {
                 return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date, $name_song, $name_artist, $name_album, $mbid_song, $mbid_artist, $mbid_album));
@@ -150,7 +147,7 @@ class Useractivity extends database_object
             $artist->format();
             $name_artist = $artist->f_name;
             $mbid_artist = $artist->mbid;
-            debug_event('useractivity.class', 'Inserting details for ' . $name_artist . '.', 5);
+            debug_event('useractivity.class', 'post_activity: ' . $action . ' ' . $object_type . ' by user: ' . $user_id . ': {' . $object_id . '}', 5);
 
             if ($name_artist) {
                 return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date, $name_artist, $mbid_artist));
@@ -171,7 +168,7 @@ class Useractivity extends database_object
             $mbid_artist  = $album->mbid_group;
 
             if ($name_artist && $name_album) {
-                debug_event('useractivity.class', 'Inserting details for ' . $name_artist . ' - ' . $name_album . '.', 5);
+                debug_event('useractivity.class', 'post_activity: ' . $action . ' ' . $object_type . ' by user: ' . $user_id . ': {' . $object_id . '}', 5);
 
                 return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date, $name_artist, $name_album, $mbid_artist, $mbid_album));
             }
@@ -179,8 +176,8 @@ class Useractivity extends database_object
 
             return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date));
         }
-
         // This is probably a good feature to keep by default
+        debug_event('useractivity.class', 'post_activity: ' . $action . ' ' . $object_type . ' by user: ' . $user_id . ': {' . $object_id . '}', 5);
         $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
 
         return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date));
@@ -188,16 +185,17 @@ class Useractivity extends database_object
 
     /**
      * del_activity
-     * Deletes last activity
-     * @param integer $object_id
-     * @param string $object_type
+     * Delete activity by date
+     * @param integer $date
+     * @param string $action
+     * @param integer $user_id
      * @return PDOStatement|boolean
      */
-    public static function del_activity($object_id, $object_type = 'song')
+    public static function del_activity($date, $action, $user_id = 0)
     {
-        $sql = "DELETE FROM `user_activity` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `activity_date` DESC LIMIT 1";
+        $sql = "DELETE FROM `user_activity` WHERE `activity_date` = ? AND `action` = ? AND `user` = ?";
 
-        return Dba::write($sql, array($object_type, $object_id));
+        return Dba::write($sql, array($date, $action, $user_id));
     }
 
     /**
@@ -209,8 +207,8 @@ class Useractivity extends database_object
      */
     public static function get_activities($user_id, $limit = 0, $since = 0)
     {
-        if ($limit <= 0) {
-            $limit = AmpConfig::get('popular_threshold');
+        if ($limit < 1) {
+            $limit = AmpConfig::get('popular_threshold', 10);
         }
 
         $params = array($user_id);
@@ -238,8 +236,8 @@ class Useractivity extends database_object
      */
     public static function get_friends_activities($user_id, $limit = 0, $since = 0)
     {
-        if ($limit <= 0) {
-            $limit = AmpConfig::get('popular_threshold');
+        if ($limit < 1) {
+            $limit = AmpConfig::get('popular_threshold', 10);
         }
 
         $params = array($user_id);
@@ -277,16 +275,9 @@ class Useractivity extends database_object
         $libitem->format();
 
         echo '<div>';
-        $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
-        $fdate       = get_datetime($time_format, (int) $this->activity_date);
-        /*
-        echo '<div class="shoutbox-date">';
-        if ($user->f_avatar_mini) {
-            echo '<a href="' . $user->link . '">' . $user->f_avatar_mini . '</a> ';
-        }
-         */
+        $fdate = get_datetime((int) $this->activity_date);
+
         echo $fdate . ' ';
-        //echo '</div>';
 
         $descr = $user->f_link . ' ';
         switch ($this->action) {
@@ -310,7 +301,6 @@ class Useractivity extends database_object
                 break;
         }
         $descr .= ' ' . $libitem->f_link;
-        //echo '<div>';
         echo $descr;
 
         /*
@@ -339,4 +329,4 @@ class Useractivity extends database_object
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
-} //end useractivity.class
+} // end useractivity.class

@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <script>
@@ -33,12 +33,12 @@
     <li>
         <?php echo Ajax::button('?page=stream&action=basket', 'all', $t_play, 'rightbar_play'); ?>
     </li>
-    <?php if (Access::check('interface', '25')) { ?>
+    <?php if (Access::check('interface', 25)) { ?>
         <li id="pl_add">
             <?php echo UI::get_icon('playlist_add', T_('Add to playlist')); ?>
             <ul id="pl_action_additems" class="submenu">
                 <li>
-                    <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to new playlist'), 'rb_create_playlist'); ?>
+                    <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist'); ?>
                 </li>
             <?php
                 $playlists = Playlist::get_users(Core::get_global('user')->id);
@@ -93,7 +93,7 @@
 <?php
     $objects = array();
 
-    //FIXME :: this is kludgy
+    // FIXME :: this is kludgy
     if (!defined('NO_SONGS') && Core::get_global('user')->playlist) {
         $objects = Core::get_global('user')->playlist->get_items();
     } ?>

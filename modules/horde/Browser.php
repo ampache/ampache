@@ -1,13 +1,13 @@
 <?php
 /**
-   #####################################################################
-   #                               Warning                             #
-   #                               #######                             #
-   # This external file is Ampache-adapted and probably unsynced with  #
-   # origin because abandonned by its original authors.                #
-   #                                                                   #
-   #####################################################################
-
+ *  #####################################################################
+ *  #                               Warning                             #
+ *  #                               #######                             #
+ *  # This external file is Ampache-adapted and probably unsynced with  #
+ *  # origin because abandonned by its original authors.                #
+ *  #                                                                   #
+ *  #####################################################################
+ *
  * This provides capability information for the current web client.
  *
  * Browser identification is performed by examining the HTTP_USER_AGENT
@@ -791,7 +791,7 @@ class Horde_Browser
      */
     public function setMobile($mobile)
     {
-        $this->_mobile = (bool)$mobile;
+        $this->_mobile = (bool) $mobile;
     }
 
     /**
@@ -813,7 +813,7 @@ class Horde_Browser
      */
     public function setTablet($tablet)
     {
-        $this->_tablet = (bool)$tablet;
+        $this->_tablet = (bool) $tablet;
     }
 
     /**
@@ -951,9 +951,7 @@ class Horde_Browser
      */
     public function getQuirk($quirk)
     {
-        return isset($this->_quirks[$quirk])
-               ? $this->_quirks[$quirk]
-               : null;
+        return (isset($this->_quirks[$quirk])) ? $this->_quirks[$quirk] : null;
     }
 
     /**
@@ -1014,9 +1012,7 @@ class Horde_Browser
      */
     public function getFeature($feature)
     {
-        return isset($this->_features[$feature])
-               ? $this->_features[$feature]
-               : null;
+        return (isset($this->_features[$feature])) ? $this->_features[$feature] : null;
     }
 
     /**
@@ -1038,21 +1034,17 @@ class Horde_Browser
      */
     public function getHTTPProtocol()
     {
-        return (filter_has_var(INPUT_SERVER, 'SERVER_PROTOCOL') && ($pos = strrpos($_SERVER['SERVER_PROTOCOL'], '/')))
-            ? substr($_SERVER['SERVER_PROTOCOL'], $pos + 1)
-            : null;
+        return (filter_has_var(INPUT_SERVER, 'SERVER_PROTOCOL') && ($pos = strrpos($_SERVER['SERVER_PROTOCOL'], '/'))) ? substr($_SERVER['SERVER_PROTOCOL'], $pos + 1) : null;
     }
 
     /**
-     * Returns the IP address of the client.
+     * DEPRECIATED FUNCTION, will be removed
      *
      * @return string  The client IP address.
      */
     public function getIPAddress()
     {
-        return filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')
-            ? filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
-            : filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
+        return Core::get_user_ip();
     }
 
     /**

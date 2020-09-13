@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -27,9 +27,10 @@ if(php_sapi_name() != 'cli') {
 define('NO_SESSION', 1);
 define('CLI', 1);
 
-$path = dirname(__FILE__);
+$path   = dirname(__FILE__);
 $prefix = realpath($path . '/../../');
-require_once $prefix . '/lib/init.php';
+$a_root = realpath(__DIR__ . "/../../");
+require_once $a_root . '/lib/init.php';
 
 $options = getopt('e:l:n:p:u:w:');
 if (empty($options) || !isset($options['u'])) {
@@ -45,12 +46,12 @@ if (empty($options) || !isset($options['u'])) {
 
 $username = $options['u'];
 $password = isset($options['p']) ? $options['p'] : mt_rand();
-$access = isset($options['l']) ? $options['l'] : AmpConfig::get('auto_user');
-$access = isset($access) ? $access : 'guest';
-$access = is_numeric($access) ? $access : User::access_name_to_level($access);
-$email = isset($options['e']) ? $options['e'] : '';
-$website = isset($options['w']) ? $options['w'] : '';
-$name = isset($options['n']) ? $options['n'] : '';
+$access   = isset($options['l']) ? $options['l'] : AmpConfig::get('auto_user');
+$access   = (isset($access)) ? $access : 5;
+$access   = is_numeric($access) ? (int) $access : User::access_name_to_level($access);
+$email    = isset($options['e']) ? $options['e'] : '';
+$website  = isset($options['w']) ? $options['w'] : '';
+$name     = isset($options['n']) ? $options['n'] : '';
 
 if ((int) User::create($username, $name, $email, $website, $password, $access) < 1) {
     /* HINT: %1 Access Level (Administrator/User/etc), %2 Username, %3 password */

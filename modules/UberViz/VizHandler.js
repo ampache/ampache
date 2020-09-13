@@ -99,7 +99,6 @@ var VizHandler = (function() {
 
     }
 
-
     function onResize(){
 
         var renderW;

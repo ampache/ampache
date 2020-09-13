@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 if (!AmpConfig::get('live_stream')) {
     UI::access_denied();
@@ -41,7 +42,7 @@ switch ($_REQUEST['action']) {
 
         require_once AmpConfig::get('prefix') . UI::find_template('show_add_live_stream.inc.php');
 
-    break;
+        break;
     case 'create':
         if (!Access::check('interface', 75) || AmpConfig::get('demo_mode')) {
             UI::access_denied();
@@ -65,15 +66,15 @@ switch ($_REQUEST['action']) {
             $title = '';
             show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=live_stream');
         }
-    break;
+        break;
     case 'show':
     default:
         $radio = new Live_Stream($_REQUEST['radio']);
         $radio->format();
         require AmpConfig::get('prefix') . UI::find_template('show_live_stream.inc.php');
-    break;
+        break;
 } // end data collection
 
-/* Show the Footer */
+// Show the Footer
 UI::show_query_stats();
 UI::show_footer();

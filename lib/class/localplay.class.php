@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -127,14 +127,14 @@ class Localplay
      * This function takes the track name and checks to see if 'skip'
      * is supported in the current player, if so it returns a 'skip to'
      * link, otherwise it returns just the text
-     * @param $name
-     * @param $id
+     * @param string $name
+     * @param integer $object_id
      * @return string
      */
-    public function format_name($name, $id)
+    public function format_name($name, $object_id)
     {
         $name = scrub_out($name);
-        $name = Ajax::text('?page=localplay&action=command&command=skip&id=' . $id, $name, 'localplay_skip_' . $id);
+        $name = Ajax::text('?page=localplay&action=command&command=skip&id=' . $object_id, $name, 'localplay_skip_' . $object_id);
 
         return $name;
     } // format_name
@@ -344,12 +344,13 @@ class Localplay
      * status
      * This returns current information about the state of the player
      * There is an expected array format
+     * @return array|false
      */
     public function status()
     {
         $data = $this->_player->status();
 
-        if (!count($data)) {
+        if (empty($data)) {
             debug_event('localplay.class', 'Error Unable to get status, check ' . $this->type . ' controller', 1);
 
             return false;
@@ -596,7 +597,7 @@ class Localplay
      * delete_track
      * This removes songs from the players playlist it takes a single ID as provided
      * by the get command
-     * @param $object_id
+     * @param integer $object_id
      * @return boolean
      */
     public function delete_track($object_id)
@@ -606,7 +607,6 @@ class Localplay
 
             return false;
         }
-
 
         return true;
     } // delete

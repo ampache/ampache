@@ -3,7 +3,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -72,10 +72,14 @@ class Catalog_beets extends Beets\Catalog
      */
     public function install()
     {
+        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+
         $sql = "CREATE TABLE `catalog_beets` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-                "`beetsdb` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
+                "`beetsdb` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
                 "`catalog_id` INT( 11 ) NOT NULL" .
-                ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+                ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;
@@ -146,7 +150,8 @@ class Catalog_beets extends Beets\Catalog
     {
         $date       = new DateTime($song['added']);
         $last_added = date("Y-m-d H:i:s", $this->last_add);
-        if (date_diff($date, $last_added) < 0) {
+        $last_date  = new DateTime($last_added);
+        if (date_diff($date, $last_date) < 0) {
             debug_event('Check', 'Skipping ' . $song['file'] . ' File modify time before last add run', 3);
 
             return true;

@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,12 +17,16 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-// A class for passing around an URL and associated data
-
+/**
+ * Stream_URL Class
+ *
+ * A class for passing around an URL and associated data
+ * @property string $url
+ */
 class Stream_URL extends memory_object
 {
     public $properties = array('url', 'title', 'author', 'time', 'info_url', 'image_url', 'album', 'type', 'codec', 'track_num');
@@ -63,12 +67,12 @@ class Stream_URL extends memory_object
             switch ($key) {
                 case 'oid':
                     $key = 'id';
-                break;
+                    break;
                 case 'video':
                     if (make_bool($value)) {
                         $results['type'] = 'video';
                     }
-                break;
+                    break;
             }
             $results[$key] = $value;
         }

@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -25,14 +25,15 @@ if (!isset($_REQUEST['type']) || (string) filter_input(INPUT_GET, 'type', FILTER
     define('NO_SESSION', 1);
     define('OUTDATED_DATABASE_OK', 1);
 }
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 // Get the version and format it
 $version = Update::get_version();
 
 if (Core::get_request('action') == 'update') {
     if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) == 'sources') {
-        if (!Access::check('interface', '100')) {
+        if (!Access::check('interface', 100)) {
             UI::access_denied();
 
             return false;
@@ -45,10 +46,9 @@ if (Core::get_request('action') == 'update') {
 
         return false;
     } else {
-        /* Run the Update Mojo Here */
         Update::run_update();
 
-        /* Get the New Version */
+        // Get the New Version
         $version = Update::get_version();
     }
 }
@@ -67,7 +67,7 @@ $htmllang = str_replace("_", "-", AmpConfig::get('lang')); ?>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
+        <div class="container" style="height: 70px;">
             <a class="navbar-brand" href="#">
                 <img src="<?php echo UI::get_logo_url('dark'); ?>" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
                 <?php echo T_('Ampache') . ' :: ' . T_('For the Love of Music') . ' - ' . T_('Installation'); ?>

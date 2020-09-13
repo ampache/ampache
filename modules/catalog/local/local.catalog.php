@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -36,8 +36,8 @@ class Catalog_local extends Catalog
     private $description    = 'Local Catalog';
 
     private $count;
-    private $added_songs_to_gather;
-    private $added_videos_to_gather;
+    private $songs_to_gather;
+    private $videos_to_gather;
 
     /**
      * get_description
@@ -93,11 +93,15 @@ class Catalog_local extends Catalog
      */
     public function install()
     {
+        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+
         $sql = "CREATE TABLE `catalog_local` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-            "`path` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
+            "`path` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
             "`catalog_id` INT( 11 ) NOT NULL" .
-            ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-        $db_results = Dba::query($sql);
+            ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
+        Dba::query($sql);
 
         return true;
     } // install
@@ -229,15 +233,13 @@ class Catalog_local extends Catalog
      * Recurses through $this->path and pulls out all mp3s and returns the
      * full path in an array. Passes gather_type to determine if we need to
      * check id3 information against the db.
-     * @param $path
-     * @param $options
+     * @param string $path
+     * @param array $options
+     * @param integer $counter
      * @return boolean
      */
-    public function add_files($path, $options)
+    public function add_files($path, $options, $counter = 0)
     {
-        // Profile the memory a bit
-        debug_event('local.catalog', UI::format_bytes(memory_get_usage(true)), 5);
-
         // See if we want a non-root path for the add
         if (isset($options['subdirectory'])) {
             $path = $options['subdirectory'];
@@ -275,24 +277,27 @@ class Catalog_local extends Catalog
             return false;
         }
 
-        debug_event('local.catalog', UI::format_bytes(memory_get_usage(true)), 5);
-
         /* Recurse through this dir and create the files array */
         while (false !== ($file = readdir($handle))) {
             /* Skip to next if we've got . or .. */
             if (substr($file, 0, 1) == '.') {
                 continue;
             }
-
-            debug_event('local.catalog', "Reading $file inside $path", 5);
-            debug_event('local.catalog', "Memory usage: " . (string) UI::format_bytes(memory_get_usage(true)), 5);
+            // reduce the crazy log info
+            if ($counter % 1000 == 0) {
+                debug_event('local.catalog', "Reading $file inside $path", 5);
+                debug_event('local.catalog', "Memory usage: " . (string)UI::format_bytes(memory_get_usage(true)), 5);
+            }
+            $counter++;
 
             /* Create the new path */
             $full_file = $path . $slash_type . $file;
-            $this->add_file($full_file, $options);
+            $this->add_file($full_file, $options, $counter);
         } // end while reading directory
 
-        debug_event('local.catalog', "Finished reading $path , closing handle", 5);
+        if ($counter % 1000 == 0) {
+            debug_event('local.catalog', "Finished reading $path , closing handle", 5);
+        }
 
         // This should only happen on the last run
         if ($path == $this->path) {
@@ -309,11 +314,12 @@ class Catalog_local extends Catalog
      * add_file
      *
      * @param $full_file
-     * @param $options
+     * @param array $options
+     * @param integer $counter
      * @return boolean
      * @throws Exception
      */
-    public function add_file($full_file, $options)
+    public function add_file($full_file, $options, $counter = 0)
     {
         // Ensure that we've got our cache
         $this->_create_filecache();
@@ -325,7 +331,7 @@ class Catalog_local extends Catalog
             return false;
         }
 
-        // Incase this is the second time through clear this variable
+        // In case this is the second time through clear this variable
         // if it was set the day before
         unset($failed_check);
 
@@ -339,7 +345,7 @@ class Catalog_local extends Catalog
 
         /* If it's a dir run this function again! */
         if (is_dir($full_file)) {
-            $this->add_files($full_file, $options);
+            $this->add_files($full_file, $options, $counter);
 
             /* Change the dir so is_dir works correctly */
             if (!chdir($full_file)) {
@@ -350,7 +356,7 @@ class Catalog_local extends Catalog
 
             /* Skip to the next file */
             return true;
-        } //it's a directory
+        } // it's a directory
 
         $is_audio_file = Catalog::is_audio_file($full_file);
         $is_video_file = false;
@@ -445,10 +451,13 @@ class Catalog_local extends Catalog
                     UI::update_text('add_dir_' . $this->id, scrub_out($file));
                 } // update our current state
             } // if it's not an m3u
+
             return true;
-        } //if it matches the pattern
+        } // if it matches the pattern
         else {
-            debug_event('local.catalog', "$full_file ignored, non-audio file or 0 bytes", 5);
+            if ($counter % 1000 == 0) {
+                debug_event('local.catalog', "$full_file ignored, non-audio file or 0 bytes", 5);
+            }
 
             return false;
         } // else not an audio file
@@ -470,8 +479,8 @@ class Catalog_local extends Catalog
         }
 
         $this->count                  = 0;
-        $this->added_songs_to_gather  = array();
-        $this->added_videos_to_gather = array();
+        $this->songs_to_gather        = array();
+        $this->videos_to_gather       = array();
 
         if (!defined('SSE_OUTPUT')) {
             require AmpConfig::get('prefix') . UI::find_template('show_adds_catalog.inc.php');
@@ -513,7 +522,7 @@ class Catalog_local extends Catalog
                     require AmpConfig::get('prefix') . UI::find_template('show_gather_art.inc.php');
                     flush();
                 }
-                $this->gather_art($this->added_songs_to_gather, $this->added_videos_to_gather);
+                $this->gather_art($this->songs_to_gather, $this->videos_to_gather);
             }
         }
 
@@ -522,7 +531,7 @@ class Catalog_local extends Catalog
 
         $time_diff = ($current_time - $start_time) ?: 0;
         $rate      = number_format(($time_diff > 0) ? $this->count / $time_diff : 0, 2);
-        if ($rate <= 0) {
+        if ($rate < 1) {
             $rate = T_('N/A');
         }
 
@@ -543,18 +552,14 @@ class Catalog_local extends Catalog
         set_time_limit(0);
 
         $stats         = self::get_stats($this->id);
-        $number        = $stats['videos'] + $stats['songs'];
+        $number        = $stats['items'];
         $total_updated = 0;
         $this->count   = 0;
 
-        if (!defined('SSE_OUTPUT')) {
-            require_once AmpConfig::get('prefix') . UI::find_template('show_verify_catalog.inc.php');
-            flush();
-        }
         $this->update_last_update();
 
         foreach (array('video', 'song') as $media_type) {
-            $total = $stats[$media_type . 's']; // UGLY
+            $total = $stats['items'];
             if ($total == 0) {
                 continue;
             }
@@ -580,7 +585,7 @@ class Catalog_local extends Catalog
      * @param $media_type
      * @param $chunk
      * @param $chunk_size
-     * @return int
+     * @return integer
      */
     private function _verify_chunk($media_type, $chunk, $chunk_size)
     {
@@ -649,7 +654,7 @@ class Catalog_local extends Catalog
         $stats       = self::get_stats($this->id);
         $this->count = 0;
         foreach (array('video', 'song') as $media_type) {
-            $total = $stats[$media_type . 's']; // UGLY
+            $total = $stats['items'];
             if ($total == 0) {
                 continue;
             }
@@ -719,7 +724,7 @@ class Catalog_local extends Catalog
 
                 // Store it in an array we'll delete it later...
                 $dead[] = $results['id'];
-            } //if error
+            } // if error
             else {
                 if (!Core::is_readable(Core::conv_lc_file($results['file']))) {
                     debug_event('local.catalog', $results['file'] . ' is not readable, but does exist', 1);
@@ -747,13 +752,13 @@ class Catalog_local extends Catalog
             AmpError::add('general', sprintf(T_('File was not found or is 0 Bytes: %s'), $file));
             $sql = "DELETE FROM `$media_type` WHERE `file` = '" . $file . "'";
             Dba::write($sql);
-        } //if error
+        } // if error
         else {
             if (!Core::is_readable(Core::conv_lc_file($file))) {
                 debug_event('local.catalog', $file . ' is not readable, but does exist', 1);
             }
         }
-    } //clean_file
+    } // clean_file
 
     /**
      * insert_local_song
@@ -840,33 +845,33 @@ class Catalog_local extends Catalog
             }
         }
 
-        $id = Song::insert($results);
-        if ($id) {
+        $song_id = Song::insert($results);
+        if ($song_id) {
             // If song rating tag exists and is well formed (array user=>rating), add it
             if (array_key_exists('rating', $results) && is_array($results['rating'])) {
                 // For each user's ratings, call the function
                 foreach ($results['rating'] as $user => $rating) {
-                    debug_event('local.catalog', "Setting rating for Song $id to $rating for user $user", 5);
-                    $o_rating = new Rating($id, 'song');
+                    debug_event('local.catalog', "Setting rating for Song $song_id to $rating for user $user", 5);
+                    $o_rating = new Rating($song_id, 'song');
                     $o_rating->set_rating($rating, $user);
                 }
             }
             // Extended metadata loading is not deferred, retrieve it now
             if (!AmpConfig::get('deferred_ext_metadata')) {
-                $song = new Song($id);
+                $song = new Song($song_id);
                 Recommendation::get_artist_info($song->artist);
             }
             if (Song::isCustomMetadataEnabled()) {
-                $song    = new Song($id);
+                $song    = new Song($song_id);
                 $results = array_diff_key($results, array_flip($song->getDisabledMetadataFields()));
                 self::add_metadata($song, $results);
             }
-            $this->added_songs_to_gather[] = $id;
+            $this->songs_to_gather[] = $song_id;
 
-            $this->_filecache[strtolower($file)] = $id;
+            $this->_filecache[strtolower($file)] = $song_id;
         }
 
-        return $id;
+        return $song_id;
     }
 
     /**
@@ -876,7 +881,7 @@ class Catalog_local extends Catalog
      * here
      * @param $file
      * @param array $options
-     * @return int
+     * @return integer
      * @throws Exception
      * @throws Exception
      */
@@ -891,21 +896,21 @@ class Catalog_local extends Catalog
         $results            = vainfo::clean_tag_info($vainfo->tags, $tag_name, $file);
         $results['catalog'] = $this->id;
 
-        $id = Video::insert($results, $gtypes, $options);
+        $video_id = Video::insert($results, $gtypes, $options);
         if ($results['art']) {
-            $art = new Art($id, 'video');
+            $art = new Art($video_id, 'video');
             $art->insert_url($results['art']);
 
             if (AmpConfig::get('generate_video_preview')) {
-                Video::generate_preview($id);
+                Video::generate_preview($video_id);
             }
         } else {
-            $this->added_videos_to_gather[] = $id;
+            $this->videos_to_gather[] = $video_id;
         }
 
-        $this->_filecache[strtolower($file)] = 'v_' . $id;
+        $this->_filecache[strtolower($file)] = 'v_' . $video_id;
 
-        return $id;
+        return $video_id;
     } // insert_local_video
 
     private function sync_podcasts()
@@ -925,7 +930,7 @@ class Catalog_local extends Catalog
     /**
      * check_local_mp3
      * Checks the song to see if it's there already returns true if found, false if not
-     * @param $full_file
+     * @param string $full_file
      * @param string $gather_type
      * @return boolean
      */
@@ -941,13 +946,13 @@ class Catalog_local extends Catalog
         $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
         $db_results = Dba::read($sql, array($full_file));
 
-        //If it's found then return true
+        // If it's found then return true
         if (Dba::fetch_row($db_results)) {
             return true;
         }
 
         return false;
-    } //check_local_mp3
+    } // check_local_mp3
 
     /**
      * @param string $file_path

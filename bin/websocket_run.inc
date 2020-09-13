@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,30 +16,29 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-define('NO_SESSION','1');
+define('NO_SESSION', '1');
 define('CLI', 1);
 
-$path = dirname(__FILE__);
+$path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
-require_once $prefix . '/lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 ob_end_flush();
 
 $verbose = false;
-$port = 8100;
+$port    = 8100;
 
 $cargv = count($_SERVER['argv']);
 if ($cargv > 1) {
     for ($x = 1; $x < $cargv; $x++) {
-
         if ($_SERVER['argv'][$x] == "-v") {
             $operations_string .= "\n\t- " . T_('Verbose');
             $verbose = true;
-        } 
-        elseif ($_SERVER['argv'][$x] == "-p" && ($x + 1) < $cargv) {
+        } elseif ($_SERVER['argv'][$x] == "-p" && ($x + 1) < $cargv) {
             $port = (int) $_SERVER['argv'][++$x];
             $operations_string .= "\n\t- " . T_('Port') . ' ' . $port;
         }
@@ -47,13 +46,13 @@ if ($cargv > 1) {
 }
 
 $urlinfo = parse_url(AmpConfig::get('websocket_address'));
-$host = $urlinfo['host'];
+$host    = $urlinfo['host'];
 if (empty($host)) {
     $host = "localhost";
 }
 
-$app = new Ratchet\App($host, $port, '0.0.0.0');
-$brserver = new Broadcast_Server();
+$app               = new Ratchet\App($host, $port, '0.0.0.0');
+$brserver          = new Broadcast_Server();
 $brserver->verbose = $verbose;
 $app->route('/broadcast', $brserver);
 $app->route('/echo', new Ratchet\Server\EchoServer, array('*'));

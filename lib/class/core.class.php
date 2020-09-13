@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -216,17 +216,12 @@ class Core
      */
     public static function get_user_ip()
     {
-        $user_ip = '';
-        // Clean incoming variables
-        if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')) {
-            $user_ip = (filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
-                ? filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)
-                : filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP));
-        } else {
-            $user_ip = filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
+        // get the x forward if it's valid
+        if (filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)) {
+            return filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP);
         }
 
-        return $user_ip;
+        return filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
     }
     /**
      * Place a new key on a specific position in array
@@ -278,14 +273,14 @@ class Core
      * form_register
      * This registers a form with a SID, inserts it into the session
      * variables and then returns a string for use in the HTML form
-     * @param $name
+     * @param string $name
      * @param string $type
      * @return string
      */
     public static function form_register($name, $type = 'post')
     {
         // Make ourselves a nice little sid
-        $sid    =  md5(uniqid((string) rand(), true));
+        $sid    = md5(uniqid((string) rand(), true));
         $window = AmpConfig::get('session_length');
         $expire = time() + $window;
 
@@ -300,11 +295,11 @@ class Core
         switch ($type) {
             case 'get':
                 $string = $sid;
-            break;
+                break;
             case 'post':
             default:
                 $string = '<input type="hidden" name="form_validation" value="' . $sid . '" />';
-            break;
+                break;
         } // end switch on type
 
         return $string;
@@ -316,7 +311,7 @@ class Core
      * This takes a form name and then compares it with the posted sid, if
      * they don't match then it returns false and doesn't let the person
      * continue
-     * @param $name
+     * @param string $name
      * @param string $type
      * @return boolean
      */
@@ -325,16 +320,16 @@ class Core
         switch ($type) {
             case 'post':
                 $sid = $_POST['form_validation'];
-            break;
+                break;
             case 'get':
                 $sid = $_GET['form_validation'];
-            break;
+                break;
             case 'cookie':
                 $sid = $_COOKIE['form_validation'];
-            break;
+                break;
             case 'request':
                 $sid = $_REQUEST['form_validation'];
-            break;
+                break;
             default:
                 return false;
         }
@@ -610,7 +605,9 @@ class Core
      */
     public static function get_tmp_dir()
     {
-        $tmp_dir = AmpConfig::get('tmp_dir_path');
+        if (AmpConfig::get('tmp_dir_path')) {
+            return AmpConfig::get('tmp_dir_path');
+        }
         if (function_exists('sys_get_temp_dir')) {
             $tmp_dir = sys_get_temp_dir();
         } else {

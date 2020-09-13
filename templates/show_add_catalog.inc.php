@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -46,7 +46,14 @@ $default_sort   = "%a/%A"; ?>
                 <span class="format-specifier">%Y</span> = <?php echo T_('Original Year'); ?><br />
                 <span class="format-specifier">%r</span> = <?php echo T_('Release Type'); ?><br />
                 <span class="format-specifier">%b</span> = <?php echo T_('Barcode'); ?><br />
-                <strong><a id="video-help" href="https://github.com/ampache/ampache/wiki/TV-Shows-and-Movies" title="<?php echo T_('Refer to the wiki for TV Shows and Movies'); ?>" target="_blank"><?php echo T_('Refer to the wiki for TV Shows and Movies'); ?></a></strong><br />
+                <?php if (AmpConfig::get('allow_video')) { ?>
+                    <strong><?php echo T_("TV Shows"); ?>:</strong><br />
+                    <span class="format-specifier">%S</span> = <?php echo T_('TV Show'); ?><br />
+                    <span class="format-specifier">%n</span> = <?php echo T_('Season'); ?><br />
+                    <span class="format-specifier">%e</span> = <?php echo T_('Episode'); ?><br />
+                    <span class="format-specifier">%t</span> = <?php echo T_('Title'); ?><br />
+                    <strong><a id="video-help" href="https://github.com/ampache/ampache/wiki/TV-Shows-and-Movies" title="<?php echo T_('Refer to the wiki for TV Shows and Movies'); ?>" target="_blank"><?php echo T_('Refer to the wiki for TV Shows and Movies'); ?></a></strong><br />
+                <?php } ?>
             </td>
         </tr>
         <tr>

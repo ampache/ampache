@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -27,11 +27,11 @@
  * to layout this page.
  */
 
- if (isset($is_header) && $is_header) {
-     $is_header = false;
- } else {
-     $is_header = true;
- }
+if (isset($is_header) && $is_header) {
+    $is_header = false;
+} else {
+    $is_header = true;
+}
 
 // Pull these variables out to allow shorthand (easier for lazy programmers)
 $limit = $browse->get_offset();

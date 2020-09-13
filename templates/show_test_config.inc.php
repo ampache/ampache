@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <!DOCTYPE html>
@@ -32,7 +32,7 @@
 </head>
 <body>
         <div class="navbar navbar-inverse" role="navigation">
-            <div class="container">
+            <div class="container" style="height: 70px;">
                 <a class="navbar-brand" href="#">
                     <img src="./images/ampache-dark.png" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
                     <?php echo T_('Ampache') . ' :: ' . T_('For the Love of Music'); ?>
@@ -40,7 +40,7 @@
             </div>
         </div>
   <div class="container" role="main">
-    <div class="jumbotron">
+    <div class="jumbotron" style="margin-top: 70px">
       <h1><?php echo T_('Ampache Configuration Parse Error'); ?></h1>
       <p><?php /* HINT: ampache config file path */ echo sprintf(T_('You may have reached this page because your %s configuration file was not parsable'), '<strong>/config/ampache.cfg.php</strong>'); ?></p>
       <p><a href="https://github.com/ampache/ampache/wiki/FAQ#im-getting-ampache-configuration-parse-error" rel="nofollow"><?php echo T_('Please visit the wiki for help'); ?></a></p>

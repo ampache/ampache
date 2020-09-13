@@ -33,6 +33,8 @@ vendor/
 .vscode/
 .idea/
 web.config
+phpcbf*
+phpcs*
 *#
 *.log
 *.phpproj
@@ -42,3 +44,4 @@ web.config
 *.swp
 *.v11.suo
 *~
+composer.phar

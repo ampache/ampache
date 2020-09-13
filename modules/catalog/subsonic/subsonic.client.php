@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -111,15 +111,15 @@ class SubsonicClient
 
     /**
      * @param $action
-     * @param array $o
+     * @param array $object
      * @param boolean $rawAnswer
      * @return array|boolean|object|string
      */
-    protected function _querySubsonic($action, $o = array(), $rawAnswer = false)
+    protected function _querySubsonic($action, $object = array(), $rawAnswer = false)
     {
         // Make sure the command is in the list of commands
         if ($this->isCommand($action)) {
-            $url = $this->parameterize($this->getServer() . "/rest/" . $action . ".view?", $o);
+            $url = $this->parameterize($this->getServer() . "/rest/" . $action . ".view?", $object);
 
             $options = array(
                 CURLOPT_URL => $url,
@@ -131,17 +131,21 @@ class SubsonicClient
                 CURLOPT_PORT => (int) ($this->_serverPort)
             );
             $curl = curl_init();
-            curl_setopt_array($curl, $options);
-            $answer = curl_exec($curl);
-            curl_close($curl);
-            if ($rawAnswer) {
-                return $answer;
-            } else {
-                return $this->parseResponse($answer);
+            if ($curl) {
+                curl_setopt_array($curl, $options);
+                $answer = curl_exec($curl);
+                curl_close($curl);
+                if ($rawAnswer) {
+                    return $answer;
+                } else {
+                    return $this->parseResponse($answer);
+                }
             }
         } else {
             return $this->error("Error: Invalid subsonic command: " . $action);
         }
+
+        return false;
     }
 
     /**
@@ -206,12 +210,12 @@ class SubsonicClient
     {
         $arr = json_decode($response, true);
         if ($arr['subsonic-response']) {
-            $response = (array)$arr['subsonic-response'];
+            $response = (array) $arr['subsonic-response'];
             $data     = $response;
 
             return array("success" => ($response['status'] == "ok"), "data" => $data);
         } else {
-            return $this->error("Invalid response from server!", $object);
+            return $this->error("Invalid response from server!");
         }
     }
 
@@ -231,8 +235,8 @@ class SubsonicClient
      */
     public function __call($action, $arguments)
     {
-        $o = count($arguments) ? (array) $arguments[0] : array();
+        $object = count($arguments) ? (array) $arguments[0] : array();
 
-        return $this->_querySubsonic($action, $o);
+        return $this->_querySubsonic($action, $object);
     }
 }

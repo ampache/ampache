@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,20 +16,21 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
 define('AJAX_INCLUDE', '1');
 
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 debug_event('refresh_reordered.server', 'Called for action: {' . Core::get_request('action') . '}', 5);
 
 // Switch on the actions
 switch ($_REQUEST['action']) {
     case 'refresh_playlist_medias':
-        $playlist = new Playlist(Core::get_request('id'));
+        $playlist = new Playlist((int) Core::get_request('id'));
         $playlist->format();
         $object_ids = $playlist->get_items();
         $browse     = new Browse();
@@ -38,7 +39,7 @@ switch ($_REQUEST['action']) {
         $browse->set_static_content(true);
         $browse->show_objects($object_ids);
         $browse->store();
-    break;
+        break;
     case 'refresh_album_songs':
         $browse = new Browse();
         $browse->set_show_header(true);
@@ -51,5 +52,5 @@ switch ($_REQUEST['action']) {
         $browse->show_objects(null, true); // true argument is set to show the reorder column
         $browse->store();
         echo "</div>";
-    break;
+        break;
 } // switch on the action

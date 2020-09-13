@@ -28,8 +28,8 @@ var WhiteRing = (function() {
         groupHolder = new THREE.Object3D();
         VizHandler.getVizHolder().add(groupHolder);
 
-        material = new THREE.MeshBasicMaterial( { 
-            color: 0xFFFFFF, 
+        material = new THREE.MeshBasicMaterial( {
+            color: 0xFFFFFF,
             wireframe: false,
             //blending: THREE.AdditiveBlending,
             depthWrite:false,
@@ -82,7 +82,7 @@ var WhiteRing = (function() {
     }
 
     function update() {
-        groupHolder.rotation.z += 0.01; 
+        groupHolder.rotation.z += 0.01;
         var gotoScale = AudioHandler.getVolume()*1.2 + .1;
         scl += (gotoScale - scl)/3;
         groupHolder.scale.x = groupHolder.scale.y = groupHolder.scale.z = scl;

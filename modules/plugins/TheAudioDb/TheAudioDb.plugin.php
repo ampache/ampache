@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -56,7 +56,7 @@ class AmpacheTheaudiodb
         }
 
         // API Key requested in TheAudioDB forum, see http://www.theaudiodb.com/forum/viewtopic.php?f=6&t=8&start=140
-        Preference::insert('tadb_api_key', T_('TheAudioDb API key'), '41214789306c4690752dfb', '75', 'string', 'plugins', $this->name);
+        Preference::insert('tadb_api_key', T_('TheAudioDb API key'), '41214789306c4690752dfb', 75, 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -105,7 +105,7 @@ class AmpacheTheaudiodb
      * Returns song metadata for what we're passed in.
      * @param array $gather_types
      * @param array $media_info
-     * @return null
+     * @return array
      */
     public function get_metadata($gather_types, $media_info)
     {
@@ -113,9 +113,10 @@ class AmpacheTheaudiodb
         if (!in_array('music', $gather_types)) {
             debug_event('theaudiodb.plugin', 'Not a valid media type, skipped.', 5);
 
-            return null;
+            return array();
         }
 
+        $results = array();
         try {
             if (in_array('album', $gather_types)) {
                 debug_event('theaudiodb.plugin', 'Getting album metadata from TheAudioDb...', 5);

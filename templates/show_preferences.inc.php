@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -36,7 +36,7 @@
     <?php echo Core::form_register('update_preference'); ?>
     <input type="hidden" name="tab" value="<?php echo scrub_out(Core::get_request('tab')); ?>" />
     <input type="hidden" name="method" value="<?php echo scrub_out(Core::get_request('action')); ?>" />
-    <?php if (Access::check('interface', '100')) { ?>
+    <?php if (Access::check('interface', 100)) { ?>
         <input type="hidden" name="user_id" value="<?php echo scrub_out(Core::get_request('user_id')); ?>" />
     <?php
     } ?>
@@ -44,8 +44,9 @@
 <?php
  }  // end if not account
 if (Core::get_request('tab') === 'account') {
-    $client = Core::get_global('user');
-    require AmpConfig::get('prefix') . UI::find_template('show_account.inc.php');
+    $client   = Core::get_global('user');
+    $template = (AmpConfig::get('simple_user_mode') && !Access::check('interface', 100)) ? 'show_account_simple.inc.php' : 'show_account.inc.php';
+    require AmpConfig::get('prefix') . UI::find_template($template);
 } ?>
 </form>
 

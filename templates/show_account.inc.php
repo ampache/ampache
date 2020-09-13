@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -29,64 +29,46 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
         <?php if (in_array('fullname', $display_fields)) { ?>
             <tr>
                 <td><?php echo T_('Full Name'); ?>:</td>
-                <td>
-                    <input type="text" name="fullname" id="fullname" value="<?php echo scrub_out($client->fullname); ?>" />
-                </td>
+                <td><input type="text" name="fullname" id="fullname" value="<?php echo scrub_out($client->fullname); ?>" /></td>
             </tr>
         <?php
 } ?>
         <tr>
             <td><?php echo T_('E-mail'); ?>:</td>
-            <td>
-                <input type="text" name="email" id="email" value="<?php echo scrub_out($client->email); ?>" />
-            </td>
+            <td><input type="text" name="email" id="email" value="<?php echo scrub_out($client->email); ?>" /></td>
         </tr>
         <?php if (in_array('website', $display_fields)) { ?>
             <tr>
                 <td><?php echo T_('Website'); ?>:</td>
-                <td>
-                    <input type="text" name="website" id="website" value="<?php echo scrub_out($client->website); ?>" />
-                </td>
+                <td><input type="text" name="website" id="website" value="<?php echo scrub_out($client->website); ?>" /></td>
             </tr>
         <?php
     } ?>
         <?php if (in_array('state', $display_fields)) { ?>
             <tr>
                 <td><?php echo T_('State'); ?>:</td>
-                <td>
-                    <input type="text" name="state" id="state" value="<?php echo scrub_out($client->state); ?>" />
-                </td>
+                <td><input type="text" name="state" id="state" value="<?php echo scrub_out($client->state); ?>" /></td>
             </tr>
         <?php
     } ?>
         <?php if (in_array('city', $display_fields)) { ?>
             <tr>
                 <td><?php echo T_('City'); ?>:</td>
-                <td>
-                    <input type="text" name="city" id="city" value="<?php echo scrub_out($client->city); ?>" />
-                </td>
+                <td><input type="text" name="city" id="city" value="<?php echo scrub_out($client->city); ?>" /></td>
             </tr>
         <?php
     } ?>
         <tr>
             <td><?php echo T_('New Password'); ?>:</td>
-            <td>
-                <?php AmpError::display('password'); ?>
-                <input type="password" name="password1" id="password1" />
-            </td>
+            <td><?php AmpError::display('password'); ?><input type="password" name="password1" id="password1" /></td>
         </tr>
         <tr>
             <td><?php echo T_('Confirm Password'); ?>:</td>
-            <td>
-                <input type="password" name="password2" id="password2" />
-            </td>
+            <td><input type="password" name="password2" id="password2" /></td>
         </tr>
         <tr>
-            <td>
-                <?php echo T_('Avatar'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)
-            </td>
-            <td>
-                <input type="file" id="avatar" name="avatar" value="" />
+            <td><?php echo T_('Avatar'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)</td>
+            <td><input type="file" id="avatar" name="avatar" value="" />
         </tr>
         <tr>
             <td>
@@ -97,43 +79,48 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
                     echo $client->f_avatar;
                 } ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_delete_avatar&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
-                <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
-            </td>
+                <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" /></td>
         </tr>
         <tr>
             <td>
                 <?php echo T_('API Key'); ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('random', T_('Generate new API key')); ?></a>
+                <?php if (Access::check('interface', 100)) { ?>
+                    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('random', T_('Generate new API key')); ?></a>
+                <?php } ?>
             </td>
             <td>
                 <span>
-                    <?php if ($client->apikey) {
-                    $urlinfo       = parse_url(AmpConfig::get('web_path'));
-                    $apikey_qrcode = "https://" . $client->apikey . "@" . $urlinfo['host'];
-                    if ($urlinfo['port'] && $urlinfo['port'] != 80) {
-                        $apikey_qrcode .= ":" . $urlinfo['port'];
-                    }
-                    $apikey_qrcode .= $urlinfo['path'];
-                    if ($urlinfo['scheme'] == "https" || AmpConfig::get('force_ssl')) {
-                        $apikey_qrcode .= "#ssl=true";
-                    } ?>
+                    <?php if ($client->apikey) { ?>
                     <br />
                     <div style="background-color: #ffffff; border: 8px solid #ffffff; width: 128px; height: 128px;">
-                        <a href="<?php echo $apikey_qrcode; ?>" class="nohtml"><div id="apikey_qrcode"></div></a>
+                        <div id="apikey_qrcode"></div>
                     </div>
                     <br />
-                    <script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '<?php echo $apikey_qrcode; ?>', background: '#ffffff', foreground: '#000000'});</script>
+                    <script>$('#apikey_qrcode').qrcode({width: 128, height: 128, text: '<?php echo $client->apikey; ?>', background: '#ffffff', foreground: '#000000'});</script>
                     <?php echo $client->apikey; ?>
                     <?php
                 } ?>
                 </span>
             </td>
         </tr>
+        <?php if ($client->rsstoken) { ?>
+        <tr>
+            <td>
+                <?php echo T_('RSS Token'); ?>
+                <?php if (Access::check('interface', 100)) { ?>
+                    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('random', T_('Generate new RSS token')); ?></a>
+                <?php } ?>
+            </td>
+            <td>
+                <span>
+                    <?php echo $client->rsstoken; ?>
+                </span>
+            </td>
+        </tr>
+        <?php } ?>
         <tr>
             <td><?php echo T_('Clear Stats'); ?>:</td>
-            <td>
-                <input type="checkbox" name="clear_stats" value="1" />
-            </td>
+            <td><input type="checkbox" name="clear_stats" value="1" /></td>
         </tr>
     </table>
     <div class="formValidation">

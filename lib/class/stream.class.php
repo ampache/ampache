@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -36,7 +36,7 @@ class Stream
      * This overrides the normal session value, without adding
      * an additional session into the database, should be called
      * with care
-     * @param integer $sid
+     * @param integer|string $sid
      */
     public static function set_session($sid)
     {
@@ -166,7 +166,7 @@ class Stream
             // Validate the bitrate
             $bit_rate = self::validate_bitrate($bit_rate);
         } elseif ($bit_rate > (int) $options['bitrate'] || $bit_rate = 0) {
-            //use the file bitrate if lower than the gathered
+            // use the file bitrate if lower than the gathered
             $bit_rate = $options['bitrate'];
         }
 
@@ -185,7 +185,7 @@ class Stream
 
         $string_map = array(
             '%FILE%' => $song_file,
-            '%SAMPLE%' => $bit_rate,   // Deprecated
+            '%SAMPLE%' => $bit_rate, // Deprecated
             '%BITRATE%' => $bit_rate
         );
         if (isset($options['maxbitrate'])) {
@@ -284,10 +284,8 @@ class Stream
             $cmdPrefix = "start /B ";
         }
 
-
         debug_event('stream.class', "Transcode command prefix: " . $cmdPrefix, 3);
 
-        $parray  = array();
         $process = proc_open($cmdPrefix . $command, $descriptors, $pipes);
         if ($process === false) {
             debug_event('stream.class', 'Transcode command failed to open.', 1);
@@ -359,19 +357,19 @@ class Stream
      * insert_now_playing
      *
      * This will insert the Now Playing data.
-     * @param integer $oid
+     * @param integer $object_id
      * @param integer $uid
      * @param integer $length
      * @param string $sid
      * @param string $type
      */
-    public static function insert_now_playing($oid, $uid, $length, $sid, $type)
+    public static function insert_now_playing($object_id, $uid, $length, $sid, $type)
     {
         // Ensure that this client only has a single row
         $sql = 'REPLACE INTO `now_playing` ' .
             '(`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`) ' .
             'VALUES (?, ?, ?, ?, ?, ?)';
-        Dba::write($sql, array($sid, $oid, strtolower((string) $type), $uid, (int) (time() + (int) $length), time()));
+        Dba::write($sql, array($sid, $object_id, strtolower((string) $type), $uid, (int) (time() + (int) $length), time()));
     }
 
     /**
@@ -379,7 +377,7 @@ class Stream
      *
      * There really isn't anywhere else for this function, shouldn't have
      * deleted it in the first place.
-     * @return true
+     * @return boolean
      */
     public static function clear_now_playing()
     {
@@ -411,7 +409,7 @@ class Stream
         }
         $sql .= "WHERE `np`.`object_type` IN ('song', 'video')";
 
-        if (!Access::check('interface', '100')) {
+        if (!Access::check('interface', 100)) {
             // We need to check only for users which have allowed view of personnal info
             $personal_info_id = Preference::id_from_name('allow_personal_info_now');
             if ($personal_info_id) {
@@ -484,15 +482,14 @@ class Stream
         switch (AmpConfig::get('playlist_method')) {
             case 'send':
                 $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket';
-            break;
+                break;
             case 'send_clear':
                 $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket&playlist_method=clear';
-            break;
+                break;
             case 'clear':
             case 'default':
             default:
                 return true;
-
         } // end switch on method
 
         // Load our javascript

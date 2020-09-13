@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -75,7 +75,7 @@ class Shoutbox
      *
      * Cleans out orphaned shoutbox items
      * @param string $object_type
-     * @param string $object_id
+     * @param integer $object_id
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
@@ -170,9 +170,9 @@ class Shoutbox
     /**
      * get_object
      * This takes a type and an ID and returns a created object
-     * @param $type
-     * @param $object_id
-     * @return null
+     * @param string $type
+     * @param integer $object_id
+     * @return Object
      */
     public static function get_object($type, $object_id)
     {
@@ -231,7 +231,7 @@ class Shoutbox
             "VALUES (? , ?, ?, ?, ?, ?, ?)";
         Dba::write($sql, array($user, $date, $comment, $sticky, $data['object_id'], $data['object_type'], $data['data']));
 
-        Useractivity::post_activity($user, 'shout', $data['object_type'], $data['object_id']);
+        Useractivity::post_activity($user, 'shout', $data['object_type'], $data['object_id'], time());
 
         $insert_id = Dba::insert_id();
 
@@ -285,12 +285,11 @@ class Shoutbox
     public function format()
     {
         $this->sticky = ($this->sticky == "0") ? 'No' : 'Yes';
-        $time_format  = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i:s';
-        $this->f_date = get_datetime($time_format, (int) $this->date);
+        $this->f_date = get_datetime((int) $this->date);
         $this->f_text = preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text);
 
         return true;
-    } //format
+    } // format
 
     /**
      * delete
@@ -323,9 +322,8 @@ class Shoutbox
         }
         $html .= "<div class='shoutbox-info'>";
         if ($details) {
-            $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i:s';
             $html .= "<div class='shoutbox-object'>" . $object->f_link . "</div>";
-            $html .= "<div class='shoutbox-date'>" . get_datetime($time_format, (int) $this->date) . "</div>";
+            $html .= "<div class='shoutbox-date'>" . get_datetime((int) $this->date) . "</div>";
         }
         $html .= "<div class='shoutbox-text'>" . $this->f_text . "</div>";
         $html .= "</div>";
@@ -337,7 +335,7 @@ class Shoutbox
                 $html .= Ajax::button('?page=stream&action=directplay&playtype=' . $this->object_type . '&' . $this->object_type . '_id=' . $this->object_id, 'play', T_('Play'), 'play_' . $this->object_type . '_' . $this->object_id);
                 $html .= Ajax::button('?action=basket&type=' . $this->object_type . '&id=' . $this->object_id, 'add', T_('Add'), 'add_' . $this->object_type . '_' . $this->object_id);
             }
-            if (Access::check('interface', '25')) {
+            if (Access::check('interface', 25)) {
                 $html .= "<a href=\"" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=" . $this->object_type . "&id=" . $this->object_id . "\">" . UI::get_icon('comment', T_('Post Shout')) . "</a>";
             }
             $html .= "</div>";
@@ -363,8 +361,8 @@ class Shoutbox
     }
 
     /**
-     * @param $object_type
-     * @param $object_id
+     * @param string $object_type
+     * @param integer $object_id
      * @return array
      */
     public static function get_shouts($object_type, $object_id)

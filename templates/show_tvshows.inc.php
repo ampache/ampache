@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -39,7 +39,7 @@ $thcount  = 8; ?>
             <th class="cel_tvshow essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=tvshow&sort=name', T_('TV Show'), 'tvshow_sort_name'); ?></th>
             <th class="cel_episodes optional"><?php echo T_('Episodes');  ?></th>
             <th class="cel_seasons optional"><?php echo T_('Seasons'); ?></th>
-            <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
+            <th class="cel_tags optional"><?php echo T_('Genres'); ?></th>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) {
         ++$thcount; ?>
@@ -92,7 +92,7 @@ $thcount  = 8; ?>
             <th class="cel_tvshow essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=tvshow&sort=name', T_('TV Show'), 'tvshow_sort_name'); ?></th>
             <th class="cel_episodes optional"><?php echo T_('Episodes');  ?></th>
             <th class="cel_seasons optional"><?php echo T_('Seasons'); ?></th>
-            <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
+            <th class="cel_tags optional"><?php echo T_('Genres'); ?></th>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) { ?>
                     <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>

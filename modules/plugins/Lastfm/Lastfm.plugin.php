@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -65,8 +65,8 @@ class AmpacheLastfm
             return false;
         }
 
-        Preference::insert('lastfm_challenge', T_('Last.FM Submit Challenge'), '', '25', 'string', 'internal', $this->name);
-        Preference::insert('lastfm_grant_link', T_('Last.FM Grant URL'), '', '25', 'string', 'plugins', $this->name);
+        Preference::insert('lastfm_challenge', T_('Last.FM Submit Challenge'), '', 25, 'string', 'internal', $this->name);
+        Preference::insert('lastfm_grant_link', T_('Last.FM Grant URL'), '', 25, 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -98,7 +98,7 @@ class AmpacheLastfm
             Preference::delete('lastfm_url');
             Preference::delete('lastfm_host');
             Preference::delete('lastfm_port');
-            Preference::insert('lastfm_grant_link', T_('Last.FM Grant URL'), '', '25', 'string', 'plugins');
+            Preference::insert('lastfm_grant_link', T_('Last.FM Grant URL'), '', 25, 'string', 'plugins');
         }
 
         return true;
@@ -113,7 +113,7 @@ class AmpacheLastfm
     public function save_mediaplay($song)
     {
         // Only support songs
-        if (strtolower(get_class($song)) != 'song') {
+        if (get_class($song) != 'Song') {
             return false;
         }
         // Make sure there's actually a session before we keep going
@@ -124,7 +124,7 @@ class AmpacheLastfm
         }
 
         // Let's pull the last song submitted by this user
-        $previous = Stats::get_last_song($this->user_id);
+        $previous = Stats::get_last_play($this->user_id);
 
         $diff = time() - $previous['date'];
 

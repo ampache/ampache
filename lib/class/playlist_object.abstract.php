@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -70,7 +70,7 @@ abstract class playlist_object extends database_object implements library_item
      */
     public function format($details = true)
     {
-        $this->f_name =  $this->name;
+        $this->f_name = $this->name;
         $this->f_type = ($this->type == 'private') ? UI::get_icon('lock', T_('Private')) : '';
 
         if ($details) {
@@ -104,7 +104,7 @@ abstract class playlist_object extends database_object implements library_item
     } // has_access
 
     /**
-     * @param $filter_type
+     * @param string $filter_type
      * @return array|mixed
      */
     public function get_medias($filter_type = null)
@@ -165,7 +165,7 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return array
      */
     public function search_childrens($name)

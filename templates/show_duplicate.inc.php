@@ -3,7 +3,7 @@
 
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <?php UI::show_box_top(T_('Find Duplicates'), 'box box_duplicate'); ?>
@@ -26,7 +26,8 @@
         <strong><?php echo T_('Search Type'); ?>:</strong><br />
         <input type="radio" name="search_type" id="title" value="title" /><label for="title"><?php echo T_('Title'); ?></label><br />
         <input type="radio" name="search_type" id="artist_title" value="artist_title" /><label for="artist_title"><?php echo T_('Artist and Title'); ?></label><br />
-        <input type="radio" name="search_type" id="artist_album_title" value="artist_album_title" /><label for="artist_album_title"><?php echo T_('Artist, Album and Title'); ?></label>
+        <input type="radio" name="search_type" id="artist_album_title" value="artist_album_title" /><label for="artist_album_title"><?php echo T_('Artist, Album and Title'); ?></label><br />
+        <input type="radio" name="search_type" id="album" value="album" /><label for="album"><?php echo T_('Album'); ?></label>
     </div>
     <div class="formValidation">
         <input type="submit" value="<?php echo T_('Find Duplicates'); ?>" />

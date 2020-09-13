@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,21 +16,22 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
+$a_root = realpath(__DIR__);
 if (!defined('NO_SESSION')) {
     if (isset($_REQUEST['ssid'])) {
         define('NO_SESSION', 1);
-        require_once 'lib/init.php';
+        require_once $a_root . '/lib/init.php';
         if (!Session::exists('stream', $_REQUEST['ssid'])) {
             UI::access_denied();
 
             return false;
         }
     } else {
-        require_once 'lib/init.php';
+        require_once $a_root . '/lib/init.php';
     }
 }
 
@@ -47,7 +48,7 @@ set_time_limit(0);
 
 $media_ids    = array();
 $default_name = "Unknown.zip";
-$object_type  = (!$object_type) ? (string) scrub_in(Core::get_request('action')) : $object_type;
+$object_type  = (string) scrub_in(Core::get_request('action'));
 $name         = $default_name;
 
 if ($object_type == 'browse') {
@@ -82,7 +83,7 @@ if (Core::is_playable_item($object_type)) {
         case 'tmp_playlist':
             $media_ids = Core::get_global('user')->playlist->get_items();
             $name      = Core::get_global('user')->username . ' - Playlist';
-        break;
+            break;
         case 'browse':
             $object_id        = (int) scrub_in(Core::get_post('browse_id'));
             $browse           = new Browse($object_id);
@@ -92,20 +93,19 @@ if (Core::is_playable_item($object_type)) {
                     case 'album':
                         $album     = new Album($media_id);
                         $media_ids = array_merge($media_ids, $album->get_songs());
-                    break;
+                        break;
                     case 'song':
                         $media_ids[] = $media_id;
-                    break;
+                        break;
                     case 'video':
                         $media_ids[] = array('object_type' => 'Video', 'object_id' => $media_id);
-                    break;
+                        break;
                 } // switch on type
             } // foreach media_id
-            $time_format = AmpConfig::get('custom_datetime') ? preg_replace("/[^dmY\s]/", "", (string) AmpConfig::get('custom_datetime')) : "m-d-Y";
-            $name        = 'Batch-' . get_datetime($time_format, time());
+            $name = 'Batch-' . get_datetime(time(), 'short', 'none', 'y-MM-dd');
+            break;
         default:
-            // Rien a faire
-        break;
+            break;
     } // action switch
 }
 

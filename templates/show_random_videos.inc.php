@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -39,9 +39,6 @@ if ($videos) {
                 $thumb = UI::is_grid_view('video') ? 7 : 6;
                 Art::display('video', $video->id, $video->f_full_title, $thumb, $video->link);
             }
-            //$release_art = $video->get_release_item_art();
-            //$thumb       = UI::is_grid_view('video') ? 6 : 7;
-            //Art::display($release_art['object_type'], $release_art['object_id'], $video->get_fullname(), $thumb, $video->link);
         } else { ?>
                 <?php echo $video->get_fullname(); ?>
             <?php
@@ -58,7 +55,7 @@ if ($videos) {
         } ?>
         </div>
         <?php
-        if (AmpConfig::get('ratings') && Access::check('interface', '25')) {
+        if (AmpConfig::get('ratings') && Access::check('interface', 25)) {
             echo "<div id=\"rating_" . $video->id . "_video\">";
             show_rating($video->id, 'video');
             echo "</div>";

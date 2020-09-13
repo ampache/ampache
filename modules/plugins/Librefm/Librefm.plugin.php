@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -65,8 +65,8 @@ class Ampachelibrefm
             return false;
         }
 
-        Preference::insert('librefm_challenge', T_('Libre.FM Submit Challenge'), '', '25', 'string', 'internal', $this->name);
-        Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', '25', 'string', 'plugins', $this->name);
+        Preference::insert('librefm_challenge', T_('Libre.FM Submit Challenge'), '', 25, 'string', 'internal', $this->name);
+        Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', 25, 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -98,7 +98,7 @@ class Ampachelibrefm
             Preference::delete('librefm_url');
             Preference::delete('librefm_host');
             Preference::delete('librefm_port');
-            Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', '25', 'string', 'plugins');
+            Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', 25, 'string', 'plugins');
         }
 
         return true;
@@ -113,7 +113,7 @@ class Ampachelibrefm
     public function save_mediaplay($song)
     {
         // Only support songs
-        if (strtolower(get_class($song)) != 'song') {
+        if (get_class($song) != 'Song') {
             return false;
         }
 
@@ -125,7 +125,7 @@ class Ampachelibrefm
         }
 
         // Before we start let's pull the last song submitted by this user
-        $previous = Stats::get_last_song($this->user_id);
+        $previous = Stats::get_last_play($this->user_id);
 
         $diff = time() - $previous['date'];
 

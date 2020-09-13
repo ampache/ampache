@@ -84,7 +84,7 @@ var AudioHandler = (function() {
 
         levelBins = Math.floor(binCount / levelsCount); //number of bins in each level
 
-        freqByteData = new Uint8Array(binCount); 
+        freqByteData = new Uint8Array(binCount);
         timeByteData = new Uint8Array(binCount);
 
         var length = 256;
@@ -155,7 +155,7 @@ var AudioHandler = (function() {
             "max": 30,
             "animate": true,
             "step": 0.01,
-            "slide"(event, ui) {  
+            "slide"(event, ui) {
                 filter1.gain.value = ui.value;
 
              },
@@ -172,7 +172,7 @@ var AudioHandler = (function() {
             "max": 30,
             "animate": true,
             "step": 0.01,
-            "slide"(event, ui) {  
+            "slide"(event, ui) {
                 filter2.gain.value = ui.value;
 
              },
@@ -189,7 +189,7 @@ var AudioHandler = (function() {
             "max": 30,
             "animate": true,
             "step": 0.01,
-            "slide"(event, ui) {  
+            "slide"(event, ui) {
                 filter3.gain.value = ui.value;
 
              },
@@ -206,7 +206,7 @@ var AudioHandler = (function() {
             "max": 30,
             "animate": true,
             "step": 0.01,
-            "slide"(event, ui) {  
+            "slide"(event, ui) {
                 filter4.gain.value = ui.value;
 
              },
@@ -223,7 +223,7 @@ var AudioHandler = (function() {
             "max": 30,
             "animate": true,
             "step": 0.01,
-            "slide"(event, ui) {  
+            "slide"(event, ui) {
                 filter5.gain.value = ui.value;
 
              },
@@ -315,7 +315,6 @@ var AudioHandler = (function() {
 
     }
 
-
     //called every frame
     //update published viz data
     function update(){
@@ -376,7 +375,6 @@ var AudioHandler = (function() {
                 beatCutOff = Math.max(beatCutOff,BEAT_MIN);
             }
         }
-
 
         bpmTime = (new Date().getTime() - bpmStart)/msecsAvg;
         //trace(bpmStart);

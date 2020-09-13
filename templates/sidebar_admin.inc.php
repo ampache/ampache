@@ -3,7 +3,7 @@
 
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,10 +17,16 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <ul class="sb2" id="sb_admin">
+    <?php if (AmpConfig::get('browse_filter')) {
+    echo "<li>";
+    Ajax::start_container('browse_filters');
+    Ajax::end_container();
+    echo "</li>";
+} ?>
   <li>
     <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Catalogs'); ?>"><?php echo T_('Catalogs'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'catalogs', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_catalogs')) ? $_COOKIE['sb_catalogs'] : 'expanded')); ?></h4>
     <ul class="sb3" id="sb_admin_catalogs">
@@ -34,7 +40,7 @@
 } ?>
     </ul>
   </li>
-  <?php if (Access::check('interface', '100')) { ?>
+  <?php if (Access::check('interface', 100)) { ?>
     <li>
       <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('User Tools'); ?>"><?php echo T_('User Tools'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'user_tools', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_user_tools')) ? $_COOKIE['sb_user_tools'] : 'expanded')); ?></h4>
       <ul class="sb3" id="sb_admin_ut">
@@ -58,10 +64,6 @@
         <li id="sb_admin_acl_AddAccess"><a href="<?php echo $web_path; ?>/admin/access.php?action=show_add_advanced"><?php echo T_('Add ACL'); ?></a></li>
         <li id="sb_admin_acl_ShowAccess"><a href="<?php echo $web_path; ?>/admin/access.php"><?php echo T_('Show ACL(s)'); ?></a></li>
       </ul>
-    </li>
-    <li>
-      <?php Ajax::start_container('browse_filters'); ?>
-      <?php Ajax::end_container(); ?>
     </li>
     <li>
       <ul class="sb2" id="sb_modules">

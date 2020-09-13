@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,12 +16,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
 $thcount = 6; ?>
-<?php if (Access::check('interface', '50') || AmpConfig::get('upload_allow_edit')) { ?>
+<?php if (Access::check('interface', 50) || AmpConfig::get('upload_allow_edit')) { ?>
 <div id="information_actions">
     <ul>
         <li><?php echo UI::get_icon('add', T_('Add')); ?> <a href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=show_add_label"><?php echo T_('Create Label'); ?></a></li>

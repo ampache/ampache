@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -61,18 +61,18 @@ class Share extends database_object
         }
 
         return true;
-    } //constructor
+    } // constructor
 
     /**
      * delete_share
-     * @param $id
+     * @param $share_id
      * @param User $user
      * @return PDOStatement|boolean
      */
-    public static function delete_share($id, $user)
+    public static function delete_share($share_id, $user)
     {
         $sql    = "DELETE FROM `share` WHERE `id` = ?";
-        $params = array( $id );
+        $params = array($share_id);
         if (!$user->has_access('75')) {
             $sql .= " AND `user` = ?";
             $params[] = $user->id;
@@ -92,8 +92,8 @@ class Share extends database_object
 
     /**
      * delete_shares
-     * @param $object_type
-     * @param $object_id
+     * @param string $object_type
+     * @param integer $object_id
      */
     public static function delete_shares($object_type, $object_id)
     {
@@ -231,8 +231,8 @@ class Share extends database_object
 
     /**
      * get_shares
-     * @param $object_type
-     * @param $object_id
+     * @param string $object_type
+     * @param integer $object_id
      * @return array
      */
     public static function get_shares($object_type, $object_id)
@@ -277,9 +277,8 @@ class Share extends database_object
         }
         $this->f_allow_stream   = $this->allow_stream;
         $this->f_allow_download = $this->allow_download;
-        $time_format            = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i:s';
-        $this->f_creation_date  = get_datetime($time_format, (int) $this->creation_date);
-        $this->f_lastvisit_date = ($this->lastvisit_date > 0) ? get_datetime($time_format, (int) $this->creation_date) : '';
+        $this->f_creation_date  = get_datetime((int) $this->creation_date);
+        $this->f_lastvisit_date = ($this->lastvisit_date > 0) ? get_datetime((int) $this->creation_date) : '';
     }
 
     /**
@@ -387,13 +386,13 @@ class Share extends database_object
                 foreach ($songs as $song) {
                     $medias[] = $song;
                 }
-            break;
+                break;
             default:
                 $medias[] = array(
                     'object_type' => $this->object_type,
                     'object_id' => $this->object_id,
                 );
-            break;
+                break;
         }
 
         $playlist->add($medias, '&share_id=' . $this->id . '&share_secret=' . $this->secret);
@@ -419,10 +418,10 @@ class Share extends database_object
                         break;
                     }
                 }
-            break;
+                break;
             default:
                 $is_shared = (($this->object_type == 'song' || $this->object_type == 'video') && $this->object_id == $media_id);
-            break;
+                break;
         }
 
         return $is_shared;
@@ -456,7 +455,7 @@ class Share extends database_object
                 $expire_days = round(($expires - time()) / 86400, 0, PHP_ROUND_HALF_EVEN);
             }
         } else {
-            //fall back to config defaults
+            // fall back to config defaults
             $expire_days = AmpConfig::get('share_expire');
         }
 
@@ -464,8 +463,8 @@ class Share extends database_object
     }
 
     /**
-     * @param $object_type
-     * @param $object_id
+     * @param string $object_type
+     * @param integer $object_id
      * @param boolean $show_text
      */
     public static function display_ui($object_type, $object_id, $show_text = true)
@@ -478,8 +477,8 @@ class Share extends database_object
     }
 
     /**
-     * @param $object_type
-     * @param $object_id
+     * @param string $object_type
+     * @param integer $object_id
      */
     public static function display_ui_links($object_type, $object_id)
     {

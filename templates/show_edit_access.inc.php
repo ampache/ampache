@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <?php UI::show_box_top(T_('Edit Access Control List')); ?>
@@ -30,8 +30,7 @@ $all          = T_('All'); ?>
         <tr>
             <td><?php echo T_('Name') . ':'; ?></td>
             <td colspan="3">
-                <input type="text" name="name" value="<?php echo scrub_out($access->name); ?>" autofocus />
-            </td>
+                <input type="text" name="name" value="<?php echo scrub_out($access->name); ?>" autofocus /></td>
         </tr>
         <tr>
             <td><?php echo T_('Level') . ':'; ?></td>
@@ -73,13 +72,11 @@ $all          = T_('All'); ?>
             <td><?php echo T_('Start') . ':'; ?></td>
             <td>
                 <?php AmpError::display('start'); ?>
-                <input type="text" name="start" value="<?php echo $access->f_start; ?>" />
-            </td>
+                <input type="text" name="start" value="<?php echo $access->f_start; ?>" /></td>
             <td><?php echo T_('End') . ':'; ?></td>
             <td>
                 <?php AmpError::display('end'); ?>
-                <input type="text" name="end" value="<?php echo $access->f_end; ?>" />
-            </td>
+                <input type="text" name="end" value="<?php echo $access->f_end; ?>" /></td>
         </tr>
     </table>
     <div class="formValidation">

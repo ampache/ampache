@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <td class="cel_play">
@@ -55,7 +55,7 @@
     } ?>
 <td class="cel_action">
 <?php
-    if (Access::check('interface', '50')) { ?>
+    if (Access::check('interface', 50)) { ?>
     <a id="<?php echo 'edit_tvshow_' . $libitem->id ?>" onclick="showEditDialog('tvshow_row', '<?php echo $libitem->id ?>', '<?php echo 'edit_tvshow_' . $libitem->id ?>', '<?php echo T_('TV Show Edit') ?>', 'tvshow_')">
         <?php echo UI::get_icon('edit', T_('Edit')); ?>
     </a>

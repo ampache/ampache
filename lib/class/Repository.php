@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -68,14 +68,14 @@ class Repository
 
     /**
      *
-     * @param $object_id
-     * @return DatabaseObject
+     * @param integer $object_id
+     * @return Metadata\Repository\MetadataField
      */
     public function findById($object_id)
     {
         $rows = $this->findBy(array('id'), array($object_id));
 
-        return count($rows) ? reset($rows) : null;
+        return reset($rows);
     }
 
     /**
@@ -175,7 +175,6 @@ class Repository
     {
         $sql = 'INSERT INTO ' . $this->getTableName() . ' (' . implode(',', array_keys($properties)) . ')'
                 . ' VALUES(' . implode(',', array_fill(0, count($properties), '?')) . ')';
-        //print_r($properties);
         Dba::write(
                 $sql,
                 array_values($this->resolveObjects($properties))
@@ -185,15 +184,15 @@ class Repository
     }
 
     /**
-     * @param $id
+     * @param integer $object_id
      * @param $properties
      */
-    protected function updateRecord($id, $properties)
+    protected function updateRecord($object_id, $properties)
     {
         $sql = 'UPDATE ' . $this->getTableName()
                 . ' SET ' . implode(',', $this->getKeyValuePairs($properties))
                 . ' WHERE id = ?';
-        $properties[] = $id;
+        $properties[] = $object_id;
         Dba::write(
                 $sql,
                 array_values($this->resolveObjects($properties))
@@ -201,7 +200,7 @@ class Repository
     }
 
     /**
-     * @param $object_id
+     * @param integer $object_id
      */
     protected function deleteRecord($object_id)
     {
@@ -281,7 +280,8 @@ class Repository
     }
 
     /**
-     * @param $string
+     * camelCaseToUnderscore
+     * @param  string $string
      * @return string
      */
     public function camelCaseToUnderscore($string)

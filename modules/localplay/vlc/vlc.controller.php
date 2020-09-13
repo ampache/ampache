@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -84,18 +84,22 @@ class AmpacheVlc extends localplay_controller
      */
     public function install()
     {
+        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+
         $sql = "CREATE TABLE `localplay_vlc` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-                "`name` VARCHAR( 128 ) COLLATE utf8_unicode_ci NOT NULL , " .
+                "`name` VARCHAR( 128 ) COLLATE $collation NOT NULL , " .
                 "`owner` INT( 11 ) NOT NULL, " .
-                "`host` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
+                "`host` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
                 "`port` INT( 11 ) UNSIGNED NOT NULL , " .
-                "`password` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
+                "`password` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
                 "`access` SMALLINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'" .
-                ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+                ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('vlc_active', T_('VLC Active Instance'), '0', '25', 'integer', 'internal', 'vlc');
+        Preference::insert('vlc_active', T_('VLC Active Instance'), 0, 25, 'integer', 'internal', 'vlc');
 
         return true;
     } // install
@@ -259,7 +263,7 @@ class AmpacheVlc extends localplay_controller
      * delete_track
      * This must take an array of ID's (as passed by get function) from Ampache
      * and delete them from VLC webinterface
-     * @param $object_id
+     * @param integer $object_id
      * @return boolean
      */
     public function delete_track($object_id)
@@ -454,85 +458,84 @@ class AmpacheVlc extends localplay_controller
         if (!$list) {
             return array();
         }
-        $counterforarray = 0;
+        $songs   = array();
+        $song_id = array();
+        $results = array();
+        $counter = 0;
         // here we look if there are song in the playlist when media libary is used
-        if ($list['node']['node'][0]['leaf'][$counterforarray]['attr']['uri']) {
-            while ($list['node']['node'][0]['leaf'][$counterforarray]) {
-                $songs[]  = htmlspecialchars_decode($list['node']['node'][0]['leaf'][$counterforarray]['attr']['uri'], ENT_NOQUOTES);
-                $songid[] = $list['node']['node'][0]['leaf'][$counterforarray]['attr']['id'];
-                $counterforarray++;
+        if ($list['node']['node'][0]['leaf'][$counter]['attr']['uri']) {
+            while ($list['node']['node'][0]['leaf'][$counter]) {
+                $songs[]   = htmlspecialchars_decode($list['node']['node'][0]['leaf'][$counter]['attr']['uri'], ENT_NOQUOTES);
+                $song_id[] = $list['node']['node'][0]['leaf'][$counter]['attr']['id'];
+                $counter++;
             }
-            // if there is only one song look here,and media libary is used
         } elseif ($list['node']['node'][0]['leaf']['attr']['uri']) {
-            $songs[]  = htmlspecialchars_decode($list['node']['node'][0]['leaf']['attr']['uri'], ENT_NOQUOTES);
-            $songid[] = $list['node']['node'][0]['leaf']['attr']['id'];
-        }
-        // look for songs when media libary isn't used
-        elseif ($list['node']['node']['leaf'][$counterforarray]['attr']['uri']) {
-            while ($list['node']['node']['leaf'][$counterforarray]) {
-                $songs[]  = htmlspecialchars_decode($list['node']['node']['leaf'][$counterforarray]['attr']['uri'], ENT_NOQUOTES);
-                $songid[] = $list['node']['node']['leaf'][$counterforarray]['attr']['id'];
-                $counterforarray++;
+            // if there is only one song look here,and media library is used
+            $songs[]   = htmlspecialchars_decode($list['node']['node'][0]['leaf']['attr']['uri'], ENT_NOQUOTES);
+            $song_id[] = $list['node']['node'][0]['leaf']['attr']['id'];
+        } elseif ($list['node']['node']['leaf'][$counter]['attr']['uri']) {
+            // look for songs when media library isn't used
+            while ($list['node']['node']['leaf'][$counter]) {
+                $songs[]   = htmlspecialchars_decode($list['node']['node']['leaf'][$counter]['attr']['uri'], ENT_NOQUOTES);
+                $song_id[] = $list['node']['node']['leaf'][$counter]['attr']['id'];
+                $counter++;
             }
         } elseif ($list['node']['node']['leaf']['attr']['uri']) {
-            $songs[]  = htmlspecialchars_decode($list['node']['node']['leaf']['attr']['uri'], ENT_NOQUOTES);
-            $songid[] = $list['node']['node']['leaf']['attr']['id'];
+            $songs[]   = htmlspecialchars_decode($list['node']['node']['leaf']['attr']['uri'], ENT_NOQUOTES);
+            $song_id[] = $list['node']['node']['leaf']['attr']['id'];
         } else {
             return array();
         }
 
-        $counterforarray = 0;
-
+        $counter = 0;
         foreach ($songs as $key => $entry) {
             $data = array();
 
             /* Required Elements */
-            $data['id']     = $songid[$counterforarray]; // id number of the files in the VLC playlist, needed for other operations
-            $data['raw']    = $entry;
+            $data['id']  = $song_id[$counter]; // id number of the files in the VLC playlist, needed for other operations
+            $data['raw'] = $entry;
 
             $url_data = $this->parse_url($entry);
             switch ($url_data['primary_key']) {
-                                case 'oid':
-                                        $data['oid'] = $url_data['oid'];
-                                        $song        = new Song($data['oid']);
-                                        $song->format();
-                                        $data['name']   = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
-                                        $data['link']   = $song->f_link;
-                                break;
-                                case 'demo_id':
-                                        $democratic     = new Democratic($url_data['demo_id']);
-                                        $data['name']   = T_('Democratic') . ' - ' . $democratic->name;
-                                        $data['link']   = '';
-                                break;
+                case 'oid':
+                        $data['oid'] = $url_data['oid'];
+                        $song        = new Song($data['oid']);
+                        $song->format();
+                        $data['name']   = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
+                        $data['link']   = $song->f_link;
+                    break;
+                case 'demo_id':
+                        $democratic     = new Democratic($url_data['demo_id']);
+                        $data['name']   = T_('Democratic') . ' - ' . $democratic->name;
+                        $data['link']   = '';
+                    break;
                 case 'random':
                     $data['name'] = T_('Random') . ' - ' . scrub_out(ucfirst($url_data['type']));
                     $data['link'] = '';
-                break;
-                                default:
-                                        /* If we don't know it, look up by filename */
-                                        $filename = Dba::escape($entry);
-                                        $sql      = "SELECT `name` FROM `live_stream` WHERE `url`='$filename' ";
+                    break;
+                default:
+                    // If we don't know it, look up by filename
+                    $filename = Dba::escape($entry);
+                    $sql      = "SELECT `name` FROM `live_stream` WHERE `url`='$filename' ";
 
-                                        $db_results = Dba::read($sql);
-                                        if ($row = Dba::fetch_assoc($db_results)) {
-                                            //if stream is known just send name
-                                            $data['name'] = htmlspecialchars(substr($row['name'], 0, 50));
-                                        }
-                                            //if it's a http stream not in ampacha's database just show the url'
-                                          elseif (strncmp($entry, 'http', 4) == 0) {
-                                              $data['name'] = htmlspecialchars("(VLC stream) " . substr($entry, 0, 50));
-                                          }
-                                          //if it's a file get the last output after  and show that, hard to take every output possible in account
-                                          else {
-                                              $getlast      = explode("/", $entry);
-                                              $lastis       = count($getlast) - 1;
-                                              $data['name'] = htmlspecialchars("(VLC local) " . substr($getlast[$lastis], 0, 50));
-                                          } // end if loop
-                                break;
-                        } // end switch on primary key type
+                    $db_results = Dba::read($sql);
+                    if ($row = Dba::fetch_assoc($db_results)) {
+                        // if stream is known just send name
+                        $data['name'] = htmlspecialchars(substr($row['name'], 0, 50));
+                    } elseif (strncmp($entry, 'http', 4) == 0) {
+                        // if it's a http stream not in ampacha's database just show the url'
+                        $data['name'] = htmlspecialchars("(VLC stream) " . substr($entry, 0, 50));
+                    } else {
+                        // it's a file get the last output after  and show that, hard to take every output possible in account
+                        $getlast      = explode("/", $entry);
+                        $lastis       = count($getlast) - 1;
+                        $data['name'] = htmlspecialchars("(VLC local) " . substr($getlast[$lastis], 0, 50));
+                    } // end if loop
+                    break;
+            } // end switch on primary key type
 
             $data['track']    = $key + 1;
-            $counterforarray++;
+            $counter++;
             $results[] = $data;
         } // foreach playlist items
 
@@ -544,16 +547,17 @@ class AmpacheVlc extends localplay_controller
      * This returns bool/int values for features, loop, repeat and any other features
      * That this Localplay method supports. required function
      * This works as in requesting the status.xml file from VLC.
+     * @return array
      */
     public function status()
     {
-        $arrayholder = $this->_vlc->fullstate();    //get status.xml via parser xmltoarray
+        $arrayholder = $this->_vlc->fullstate(); //get status.xml via parser xmltoarray
         /* Construct the Array */
         $currentstat = $arrayholder['root']['state']['value'];
 
         if ($currentstat == 'playing') {
             $state = 'play';
-        }   //change to something ampache understands
+        } // change to something ampache understands
         if ($currentstat == 'stop') {
             $state = 'stop';
         }
@@ -565,7 +569,7 @@ class AmpacheVlc extends localplay_controller
         $array['volume']    = (int) (((int) ($arrayholder['root']['volume']['value']) / 2.6));
         $array['repeat']    = $arrayholder['root']['repeat']['value'];
         $array['random']    = $arrayholder['root']['random']['value'];
-        $array['track']     =   htmlspecialchars_decode($arrayholder['root']['information']['meta-information']['title']['value'], ENT_NOQUOTES);
+        $array['track']     = htmlspecialchars_decode($arrayholder['root']['information']['meta-information']['title']['value'], ENT_NOQUOTES);
 
         $url_data = $this->parse_url($array['track']);
         $song     = new Song($url_data['oid']);
@@ -577,7 +581,7 @@ class AmpacheVlc extends localplay_controller
         // if not a known format
         else {
             $array['track_title']  = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['title']['value'], 0, 25));
-            $array['track_artist'] =  htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['artist']['value'], 0, 20));
+            $array['track_artist'] = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['artist']['value'], 0, 20));
         }
 
         return $array;
@@ -595,11 +599,11 @@ class AmpacheVlc extends localplay_controller
         $this->_vlc = new VlcPlayer($options['host'], $options['password'], $options['port']);
 
         // Test our connection by retriving the version, no version in status file, just need to see if returned
-        //Not yet working all values returned are true for beta testing purpose
+        // Not yet working all values returned are true for beta testing purpose
         if ($this->_vlc->version() !== null) {
             return true;
         }
 
         return false;
     } // connect
-} //end of AmpacheVlc
+} // end vlc.controller

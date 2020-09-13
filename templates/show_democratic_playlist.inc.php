@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -32,7 +32,7 @@ $web_path = AmpConfig::get('web_path'); ?>
   <col id="col_album" />
   <col id="col_artist" />
   <col id="col_time" />
-  <?php if (Access::check('interface', '100')) { ?>
+  <?php if (Access::check('interface', 100)) { ?>
   <col id="col_admin" />
   <?php
 } ?>
@@ -41,10 +41,7 @@ $web_path = AmpConfig::get('web_path'); ?>
 if (!count($object_ids)) {
     $playlist = new Playlist($democratic->base_playlist); ?>
 <tr>
-<td>
-    <?php echo T_('Playing from base playlist'); ?>.
-    </a>
-</td>
+<td><?php echo T_('Playing from base playlist'); ?>.</a></td>
 </tr>
 <?php
 } // if no songs
@@ -58,7 +55,7 @@ else { ?>
         <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
         <th class="cel_time"><?php echo T_('Time'); ?></th>
-        <?php if (Access::check('interface', '100')) { ?>
+        <?php if (Access::check('interface', 100)) { ?>
         <th class="cel_admin"><?php echo T_('Admin'); ?></th>
         <?php
     } ?>
@@ -84,12 +81,12 @@ $democratic = Democratic::get_current_playlist();
     <?php
         } ?>
     </td>
-    <td class="cel_votes" ><?php echo scrub_out($democratic->get_vote($item['id'])); ?></td>
+    <td class="cel_votes" ><?php echo scrub_out((string) $democratic->get_vote($item['id'])); ?></td>
     <td class="cel_title"><?php echo $media->f_link; ?></td>
     <td class="cel_album"><?php echo $media->f_album_link; ?></td>
     <td class="cel_artist"><?php echo $media->f_artist_link; ?></td>
     <td class="cel_time"><?php echo $media->f_time; ?></td>
-    <?php if (Access::check('interface', '100')) { ?>
+    <?php if (Access::check('interface', 100)) { ?>
     <td class="cel_admin">
     <?php echo Ajax::button('?page=democratic&action=delete&row_id=' . $item['id'], 'disable', T_('Delete'), 'delete_row_' . $item['id']); ?>
     </td>
@@ -107,7 +104,7 @@ $democratic = Democratic::get_current_playlist();
         <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
         <th class="cel_time"><?php echo T_('Time'); ?></th>
-        <?php if (Access::check('interface', '100')) { ?>
+        <?php if (Access::check('interface', 100)) { ?>
         <th class="cel_admin"><?php echo T_('Admin'); ?></th>
         <?php
     } ?>

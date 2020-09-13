@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -30,7 +30,7 @@ if (!defined('AJAX_INCLUDE')) {
 // Switch on the actions
 switch ($_REQUEST['action']) {
     case 'sync':
-        if (!Access::check('interface', '75')) {
+        if (!Access::check('interface', 75)) {
             debug_event('podcast.ajax', Core::get_global('user')->username . ' attempted to sync podcast', 1);
 
             return false;
@@ -52,11 +52,11 @@ switch ($_REQUEST['action']) {
             }
         }
         $results['rfc3514'] = '0x1';
-    break;
+        break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 }
 
 // We always do this
-echo xoutput_from_array($results);
+echo (string) xoutput_from_array($results);

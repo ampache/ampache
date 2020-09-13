@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <br />
@@ -40,7 +40,7 @@
                     <td class="cel_album"><?php echo $song->get_album_name($song->album); ?></td>
                     <td class="cel_artist"><?php echo $song->get_artist_name($song->album); ?></td>
                     <td class="cel_filename"><?php echo $song->file; ?></td>
-                    <td class="cel_additiontime"><?php echo get_datetime($time_format, (int) $song->addition_time); ?></td>
+                    <td class="cel_additiontime"><?php echo get_datetime((int) $song->addition_time); ?></td>
                 </tr>
             <?php
 } if (!count($songs)) { ?>

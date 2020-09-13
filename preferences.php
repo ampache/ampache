@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 $title             = "";
 $text              = "";
@@ -31,7 +32,7 @@ $action            = Core::get_request('action');
 // Switch on the actions
 switch ($_REQUEST['action']) {
     case 'update_preferences':
-        if (Core::get_post('method') == 'admin' && !Access::check('interface', '100')) {
+        if (Core::get_post('method') == 'admin' && !Access::check('interface', 100)) {
             UI::access_denied();
 
             return false;
@@ -70,10 +71,10 @@ switch ($_REQUEST['action']) {
         } else {
             $notification_text = T_('User preferences updated successfully');
         }
-    break;
+        break;
     case 'admin_update_preferences':
         // Make sure only admins here
-        if (!Access::check('interface', '100')) {
+        if (!Access::check('interface', 100)) {
             UI::access_denied();
 
             return false;
@@ -85,33 +86,33 @@ switch ($_REQUEST['action']) {
             return false;
         }
 
-        update_preferences(Core::get_post('user_id'));
+        update_preferences((int) Core::get_post('user_id'));
 
         header("Location: " . AmpConfig::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . scrub_out(Core::get_post('user_id')));
-    break;
+        break;
     case 'admin':
         // Make sure only admins here
-        if (!Access::check('interface', '100')) {
+        if (!Access::check('interface', 100)) {
             UI::access_denied();
 
             return false;
         }
         $fullname    = T_('Server');
         $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab'], true);
-    break;
+        break;
     case 'user':
-        if (!Access::check('interface', '100')) {
+        if (!Access::check('interface', 100)) {
             UI::access_denied();
 
             return false;
         }
-        $client      = new User(Core::get_request('user_id'));
+        $client      = new User((int) Core::get_request('user_id'));
         $fullname    = $client->fullname;
         $preferences = $client->get_preferences($_REQUEST['tab']);
-    break;
+        break;
     case 'update_user':
         // Make sure we're a user and they came from the form
-        if (!Access::check('interface', '25') && Core::get_global('user')->id > 0) {
+        if (!Access::check('interface', 25) && Core::get_global('user')->id > 0) {
             UI::access_denied();
 
             return false;
@@ -156,10 +157,10 @@ switch ($_REQUEST['action']) {
         }
 
         $notification_text = T_('User updated successfully');
-    break;
+        break;
     case 'grant':
         // Make sure we're a user and they came from the form
-        if (!Access::check('interface', '25') && Core::get_global('user')->id > 0) {
+        if (!Access::check('interface', 25) && Core::get_global('user')->id > 0) {
             UI::access_denied();
 
             return false;
@@ -181,11 +182,11 @@ switch ($_REQUEST['action']) {
         }
         $fullname    = Core::get_global('user')->fullname;
         $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab']);
-    break;
+        break;
     default:
         $fullname    = Core::get_global('user')->fullname;
         $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab']);
-    break;
+        break;
 } // End Switch Action
 
 UI::show_header();
@@ -197,17 +198,16 @@ switch ($_REQUEST['action']) {
     case 'confirm':
     case 'grant':
         show_confirmation($title, $text, $next_url, $cancel);
-    break;
+        break;
     default:
         if (!empty($notification_text)) {
             display_notification($notification_text);
         }
-
         // Show the default preferences page
         require AmpConfig::get('prefix') . UI::find_template('show_preferences.inc.php');
-    break;
+        break;
 } // end switch on action
 
-/* Show the Footer */
+// Show the Footer
 UI::show_query_stats();
 UI::show_footer();

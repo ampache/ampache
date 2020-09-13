@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 if (!AmpConfig::get('podcast')) {
     UI::access_denied();
@@ -41,7 +42,7 @@ switch ($_REQUEST['action']) {
 
         require_once AmpConfig::get('prefix') . UI::find_template('show_add_podcast.inc.php');
 
-    break;
+        break;
     case 'create':
         if (!Access::check('interface', 75) || AmpConfig::get('demo_mode')) {
             UI::access_denied();
@@ -65,7 +66,7 @@ switch ($_REQUEST['action']) {
             $body   = T_('Subscribed to the Podcast');
             show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=podcast');
         }
-    break;
+        break;
     case 'delete':
         if (!Access::check('interface', 75) || AmpConfig::get('demo_mode')) {
             UI::access_denied();
@@ -74,12 +75,13 @@ switch ($_REQUEST['action']) {
         }
 
         $podcast_id = (string) scrub_in($_REQUEST['podcast_id']);
-        show_confirmation(T_('Are You Sure?'), T_("The Podcast will be removed from the database"),
+        show_confirmation(T_('Are You Sure?'),
+            T_("The Podcast will be removed from the database"),
             AmpConfig::get('web_path') . "/podcast.php?action=confirm_delete&podcast_id=" . $podcast_id,
             1,
             'delete_podcast'
         );
-    break;
+        break;
     case 'confirm_delete':
         if (!Access::check('interface', 75) || AmpConfig::get('demo_mode')) {
             UI::access_denied();
@@ -87,13 +89,13 @@ switch ($_REQUEST['action']) {
             return false;
         }
 
-        $podcast = new Podcast($_REQUEST['podcast_id']);
+        $podcast = new Podcast((int) $_REQUEST['podcast_id']);
         if ($podcast->remove()) {
             show_confirmation(T_('No Problem'), T_('Podcast has been deleted'), AmpConfig::get('web_path') . '/browse.php?action=podcast');
         } else {
             show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Podcast."), AmpConfig::get('web_path') . '/browse.php?action=podcast');
         }
-    break;
+        break;
     case 'show':
         $podcast_id = (int) filter_input(INPUT_GET, 'podcast', FILTER_SANITIZE_NUMBER_INT);
         if ($podcast_id > 0) {
@@ -103,9 +105,9 @@ switch ($_REQUEST['action']) {
             $object_type = 'podcast_episode';
             require_once AmpConfig::get('prefix') . UI::find_template('show_podcast.inc.php');
         }
-    break;
+        break;
 } // end data collection
 
-/* Show the Footer */
+// Show the Footer
 UI::show_query_stats();
 UI::show_footer();

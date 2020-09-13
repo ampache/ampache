@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -87,7 +87,7 @@ function scrub_in($input)
  * This function is used to escape user data that is getting redisplayed
  * onto the page, it htmlentities the mojo
  * This is the inverse of the scrub_in function
- * @param string $string
+ * @param string|null $string
  * @return string
  */
 function scrub_out($string)
@@ -108,7 +108,7 @@ function scrub_out($string)
 function unhtmlentities($string)
 {
     return html_entity_decode((string) $string, ENT_QUOTES, AmpConfig::get('site_charset'));
-} //unhtmlentities
+} // unhtmlentities
 
 /**
  * scrub_arg
@@ -417,7 +417,7 @@ function generate_config($current)
                 }
                 // Else, unable to generate a cryptographically secure token, use the default one
             } elseif (isset($current[$key])) {
-                $line = $key . ' = "' . escape_ini($current[$key]) . '"';
+                $line = $key . ' = "' . escape_ini((string) $current[$key]) . '"';
                 unset($current[$key]);
             }
         }
@@ -494,7 +494,7 @@ if (!function_exists('apache_request_headers')) {
 }
 
 /**
- * @return mixed
+ * @return string
  */
 function get_current_path()
 {
@@ -504,30 +504,38 @@ function get_current_path()
         $root = $_SERVER['REQUEST_URI'];
     }
 
-    return $root;
+    return (string) $root;
 }
 
 /**
- * @return string|string[]|null
+ * @return string
  */
 function get_web_path()
 {
     $root = get_current_path();
 
-    return preg_replace('#(.*)/(\w+\.php)$#', '$1', $root);
+    return (string) preg_replace('#(.*)/(\w+\.php)$#', '$1', $root);
 }
 
 /**
  * get_datetime
- * @param string $date
  * @param integer $time
+ * @param string $dateformat
+ * @param string $timeformat
+ * @param string $overwrite
  * @return string
  */
-function get_datetime($date, $time)
+function get_datetime($time, $date_format = 'short', $time_format = 'short', $overwrite = '')
 {
-    if (empty($date)) {
-        $date = 'm/d/Y H:i';
-    }
+    // allow time or date only
+    $date_type = ($date_format == 'none') ? IntlDateFormatter::NONE : IntlDateFormatter::SHORT;
+    $time_type = ($time_format == 'none') ? IntlDateFormatter::NONE : IntlDateFormatter::SHORT;
+    // if no override is set but you have a custom_datetime
+    $pattern = ($overwrite == '') ? (string) AmpConfig::get('custom_datetime', '') : $overwrite;
 
-    return date($date, $time);
+    // get your locale and set the date based on that, unless you have 'custom_datetime set'
+    $locale = AmpConfig::get('lang', 'en_US');
+    $format = new IntlDateFormatter($locale, $date_type, $time_type, null, null, $pattern);
+
+    return $format->format($time);
 }

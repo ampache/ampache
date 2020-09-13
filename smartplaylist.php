@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,16 +16,17 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 // We special-case this so we can send a 302 if the delete succeeded
 if (Core::get_request('action') == 'delete_playlist') {
     // Check rights
-    $playlist = new Search($_REQUEST['playlist_id'], 'song');
+    $playlist = new Search((int) $_REQUEST['playlist_id'], 'song');
     if ($playlist->has_access()) {
         $playlist->delete();
         // Go elsewhere
@@ -41,7 +42,7 @@ UI::show_header();
 switch ($_REQUEST['action']) {
     case 'create_playlist':
         /* Check rights */
-        if (!Access::check('interface', '25')) {
+        if (!Access::check('interface', 25)) {
             UI::access_denied();
             break;
         }
@@ -58,10 +59,10 @@ switch ($_REQUEST['action']) {
         switch ($_REQUEST['operator']) {
             case 'or':
                 $operator = 'OR';
-            break;
+                break;
             default:
                 $operator = 'AND';
-            break;
+                break;
         } // end switch on operator
 
         $playlist_name    = (string) scrub_in($_REQUEST['playlist_name']);
@@ -72,19 +73,19 @@ switch ($_REQUEST['action']) {
         $playlist->name           = $playlist_name;
         $playlist->save();
 
-    break;
+        break;
     case 'delete_playlist':
         // If we made it here, we didn't have sufficient rights.
         UI::access_denied();
-    break;
+        break;
     case 'show_playlist':
-        $playlist = new Search($_REQUEST['playlist_id'], 'song');
+        $playlist = new Search((int) $_REQUEST['playlist_id'], 'song');
         $playlist->format();
         $object_ids = $playlist->get_items();
         require_once AmpConfig::get('prefix') . UI::find_template('show_search.inc.php');
-    break;
+        break;
     case 'update_playlist':
-        $playlist = new Search($_REQUEST['playlist_id'], 'song');
+        $playlist = new Search((int) $_REQUEST['playlist_id'], 'song');
         if ($playlist->has_access()) {
             $playlist->parse_rules(Search::clean_request($_REQUEST));
             $playlist->update();
@@ -95,13 +96,13 @@ switch ($_REQUEST['action']) {
         }
         $object_ids = $playlist->get_items();
         require_once AmpConfig::get('prefix') . UI::find_template('show_search.inc.php');
-    break;
+        break;
     default:
         $object_ids = $playlist->get_items();
         require_once AmpConfig::get('prefix') . UI::find_template('show_search.inc.php');
-    break;
+        break;
 } // switch on the action
 
-/* Show the Footer */
+// Show the Footer
 UI::show_query_stats();
 UI::show_footer();

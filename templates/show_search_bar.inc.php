@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <?php
@@ -33,7 +33,7 @@ $t_search = T_('Search'); ?>
             <option value="album"><?php echo $t_albums?></option>
             <option value="artist"><?php echo $t_artists?></option>
             <option value="playlist_name"><?php echo $t_playlists?></option>
-            <option value="tag"><?php echo T_('Tags')?></option>
+            <option value="tag"><?php echo T_('Genres')?></option>
             <?php if (AmpConfig::get('label')) { ?>
                 <option value="label"><?php echo T_('Labels')?></option>
             <?php

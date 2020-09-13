@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -24,7 +24,8 @@
 
 define('AJAX_INCLUDE', '1');
 
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 $rootdir = Upload::get_root();
 if (empty($rootdir)) {
     return false;
@@ -124,7 +125,7 @@ class fs
                 continue;
             }
             if (is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
-                $res[] = array('text' => $item, 'children' => true,  'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item), 'icon' => 'folder');
+                $res[] = array('text' => $item, 'children' => true, 'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item), 'icon' => 'folder');
             }
         }
         if ($with_root && $this->id($dir) === '/') {
@@ -193,7 +194,7 @@ class fs
 
     /**
      * @param $fs_id
-     * @param $name
+     * @param string $name
      * @param boolean $mkdir
      * @return array
      * @throws Exception
@@ -216,7 +217,7 @@ class fs
 
     /**
      * @param $fs_id
-     * @param $name
+     * @param string $name
      * @return array
      * @throws Exception
      */
@@ -314,7 +315,7 @@ class fs
     }
 }
 
-if (isset($_GET['operation'])) {
+if (filter_has_var(INPUT_GET, 'operation')) {
     $fs = new fs($rootdir);
     try {
         $rslt = null;

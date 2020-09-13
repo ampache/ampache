@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,12 +16,13 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
 define('NO_SESSION', '1');
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 /* Check Perms */
 if (!AmpConfig::get('use_rss') || AmpConfig::get('demo_mode')) {
@@ -33,9 +34,10 @@ if (!AmpConfig::get('use_rss') || AmpConfig::get('demo_mode')) {
 // Add in our base hearder defining the content type
 header("Content-Type: application/xml; charset=" . AmpConfig::get('site_charset'));
 
-$type   = Core::get_request('type');
-$rss    = new Ampache_RSS($type);
-$params = null;
+$type      = Core::get_request('type');
+$rsstoken  = Core::get_request('rsstoken');
+$rss       = new Ampache_RSS($type, $rsstoken);
+$params    = null;
 if ($type === "podcast") {
     $params                = array();
     $params['object_type'] = Core::get_request('object_type');

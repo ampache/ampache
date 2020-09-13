@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 UI::show_header();
 
@@ -32,12 +33,13 @@ switch ($_REQUEST['action']) {
         }
 
         $episode_id = (string) scrub_in($_REQUEST['podcast_episode_id']);
-        show_confirmation(T_('Are You Sure?'), T_("The Podcast Episode will be deleted"),
+        show_confirmation(T_('Are You Sure?'),
+            T_("The Podcast Episode will be deleted"),
             AmpConfig::get('web_path') . "/podcast_episode.php?action=confirm_delete&podcast_episode_id=" . $episode_id,
             1,
             'delete_podcast_episode'
         );
-    break;
+        break;
     case 'confirm_delete':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -56,15 +58,15 @@ switch ($_REQUEST['action']) {
         } else {
             show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Podcast Episode"), AmpConfig::get('web_path'));
         }
-    break;
+        break;
     case 'show':
     default:
         $episode = new Podcast_Episode($_REQUEST['podcast_episode']);
         $episode->format();
         require_once AmpConfig::get('prefix') . UI::find_template('show_podcast_episode.inc.php');
-    break;
+        break;
 }
 
-/* Show the Footer */
+// Show the Footer
 UI::show_query_stats();
 UI::show_footer();

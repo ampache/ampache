@@ -1,6 +1,7 @@
 <?php
 define('NO_SESSION', '1');
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 if (!AmpConfig::get('upnp_backend')) {
     echo T_("Disabled");
@@ -86,6 +87,8 @@ $rootMediaItems[] = Upnp_Api::_videoMetadata('');
                         break;
                 }
             }
+            break;
+        default:
             break;
     }
 

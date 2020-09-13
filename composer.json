@@ -9,7 +9,6 @@
     {
         "vendor-dir": "lib/vendor",
         "component-dir": "lib/components",
-
         "platform": {
             "ext-curl": "1.0",
             "ext-gd": "1.0",
@@ -26,81 +25,58 @@
             "ext-xmlwriter": "1.0",
             "ext-xmlreader": "1.0",
             "lib-libxml": "2.7.0"
-        }
+        },
+        "sort-packages": true
     },
     "require": {
-        "php": ">=7.2",
-        "wikimedia/composer-merge-plugin": "1.*",
-
-        "doctrine/cache": "1.*.*",
-        "gettext/gettext": "4.*.*",
-        "james-heinrich/getid3": "dev-master",
-        "mikealmond/musicbrainz": "dev-master",
-        "phpmailer/phpmailer": "6.1.*",
-        "rmccue/requests": "1.7.*",
+        "ext-intl": "*",
+        "ext-json": "*",
+        "ext-openssl": "*",
+        "ext-pdo": "*",
+        "ext-xml": "*",
+        "aehlke/tag-it": "2.*",
+        "ampache/ampacheapi-php": "^1.0",
+        "aterrien/jquery-knob": "1.2.*",
+        "blueimp/jquery-file-upload": "10.2.0",
+        "carhartl/jquery-cookie": "1.*",
         "cboden/ratchet": "0.4.*",
-        "symfony/event-dispatcher": "^3.0",
-        "symfony/routing": "^3.0",
-        "symfony/http-foundation": "^3.0",
-        "symfony/process": "^3.0",
-        "evenement/evenement": "2.*",
-        "happyworm/jplayer": "2.*",
-        "needim/noty": "2.4.*",
-        "openid/php-openid": "2.*",
-        "sabre/dav": "3.*.*",
-        "maennchen/zipstream-php": "0.4.*",
-
-        "afterster/php-echonest-api": "dev-master",
-
+        "components/bootstrap": "3.*",
         "components/jquery": "2.2.*",
         "components/jqueryui": "1.*",
-        "vakata/jstree": "3.*",
-        "components/bootstrap": "3.*",
-        "aehlke/tag-it": "2.*",
-        "scaron/prettyphoto": "3.*",
-        "jeromeetienne/jquery-qrcode": "dev-master",
-        "carhartl/jquery-cookie": "1.*",
-        "xdan/datetimepicker": "2.*",
-        "aterrien/jquery-knob": "1.2.*",
-        "pklauzinski/jscroll": "2.*",
-        "kumailht/responsive-elements": "dev-master",
-        "swisnl/jquery-contextmenu": "2.1.*",
-        "blueimp/jquery-file-upload": "10.2.0",
-        "krixon/xbmc-php-rpc": "dev-master",
-        "kunalvarma05/dropbox-php-sdk": "^0.2.1",
-        "tightenco/collect": "5.2.*",
-        "ampache/ampacheapi-php": "^1.0",
-        "ext-json": "*",
-        "ext-xml": "*",
-        "oomphinc/composer-installers-extender": "^1.1"
-    },
+        "php": ">=7.2",
 
+        "doctrine/cache": "1.*.*",
+        "evenement/evenement": "2.*",
+        "gettext/gettext": "4.*.*",
+        "happyworm/jplayer": "2.*",
+        "james-heinrich/getid3": "dev-master",
+        "jeromeetienne/jquery-qrcode": "dev-master",
+        "jwilsson/spotify-web-api-php": "^3.5",
+        "krixon/xbmc-php-rpc": "dev-master",
+        "kumailht/responsive-elements": "dev-master",
+        "kunalvarma05/dropbox-php-sdk": "^0.2.1",
+        "maennchen/zipstream-php": "0.4.*",
+        "mikealmond/musicbrainz": "dev-master",
+        "needim/noty": "2.4.*",
+        "oomphinc/composer-installers-extender": "^1.1",
+        "openid/php-openid": "2.*",
+        "phpmailer/phpmailer": "6.1.*",
+        "pklauzinski/jscroll": "2.*",
+        "rmccue/requests": "1.7.*",
+        "sabre/dav": "3.*.*",
+        "scaron/prettyphoto": "3.*",
+        "swisnl/jquery-contextmenu": "2.1.*",
+        "symfony/event-dispatcher": "^3.0",
+        "symfony/http-foundation": "^3.0",
+        "symfony/process": "^3.0",
+        "symfony/routing": "^3.0",
+        "tightenco/collect": "5.2.*",
+        "vakata/jstree": "3.*",
+        "wikimedia/composer-merge-plugin": "1.*",
+        "xdan/datetimepicker": "2.*"
+    },
     "repositories":
     [
-        {
-            "type": "package",
-            "package": {
-                "name": "Afterster/php-echonest-api",
-                "version": "dev-master",
-                "source": {
-                    "url": "https://github.com/Afterster/php-echonest-api.git",
-                    "type": "git",
-                    "reference": "master"
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "krixon/xbmc-php-rpc",
-                "version": "dev-master",
-                "source": {
-                    "url": "https://github.com/krixon/xbmc-php-rpc.git",
-                    "type": "git",
-                    "reference": "master"
-                }
-            }
-                },
         {
             "type": "package",
             "package": {
@@ -344,7 +320,6 @@
             }
         }
     ],
-
     "extra": {
         "merge-plugin": {
             "include": [
@@ -357,7 +332,6 @@
             "merge-extra": false
         }
     },
-
     "autoload": {
         "psr-4": {
             "Lib\\": "lib/class",

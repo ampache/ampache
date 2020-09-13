@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -39,7 +39,7 @@ switch ($_REQUEST['action']) {
     case 'delete_vote':
         $democratic->remove_vote($_REQUEST['row_id']);
         $show_browse = true;
-    break;
+        break;
     case 'add_vote':
         $democratic->add_vote(array(
             array(
@@ -48,30 +48,30 @@ switch ($_REQUEST['action']) {
             )
         ));
         $show_browse = true;
-    break;
+        break;
     case 'delete':
         if (!Core::get_global('user')->has_access('75')) {
-            echo xoutput_from_array(array('rfc3514' => '0x1'));
+            echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
 
             return false;
         }
 
         $democratic->delete_votes($_REQUEST['row_id']);
         $show_browse = true;
-    break;
+        break;
     case 'send_playlist':
-        if (!Access::check('interface', '75')) {
-            echo xoutput_from_array(array('rfc3514' => '0x1'));
+        if (!Access::check('interface', 75)) {
+            echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
 
             return false;
         }
 
         $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=democratic&democratic_id=' . scrub_out($_REQUEST['democratic_id']);
         $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
-    break;
+        break;
     case 'clear_playlist':
-        if (!Access::check('interface', '100')) {
-            echo xoutput_from_array(array('rfc3514' => '0x1'));
+        if (!Access::check('interface', 100)) {
+            echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
 
             return false;
         }
@@ -81,10 +81,10 @@ switch ($_REQUEST['action']) {
         $democratic->clear();
 
         $show_browse = true;
-    break;
+        break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 } // switch on action;
 
 if ($show_browse) {
@@ -100,4 +100,4 @@ if ($show_browse) {
 }
 
 // We always do this
-echo xoutput_from_array($results);
+echo (string) xoutput_from_array($results);

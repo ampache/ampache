@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <?php /* HINT: Username */ UI::show_box_top(sprintf(T_('%s IP History'), $working_user->fullname)); ?>
@@ -49,10 +49,10 @@
 <?php foreach ($history as $data) { ?>
 <tr class="<?php echo UI::flip_class(); ?>">
     <td class="cel_date">
-        <?php echo get_datetime($time_format, (int) $data['date']); ?>
+        <?php echo get_datetime((int) $data['date']); ?>
     </td>
     <td class="cel_ipaddress">
-        <?php echo inet_ntop($data['ip']); ?>
+        <?php echo (inet_ntop($data['ip'])) ? inet_ntop($data['ip']) : T_('Invalid'); ?>
     </td>
 </tr>
 <?php

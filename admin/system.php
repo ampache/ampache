@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 if (!Access::check('interface', 100) || AmpConfig::get('demo_mode')) {
     UI::access_denied();
@@ -52,15 +53,14 @@ switch ($_REQUEST['action']) {
     case 'reset_db_charset':
         Dba::reset_db_charset();
         show_confirmation(T_('No Problem'), T_('Your database and associated tables have been updated to match your currently configured charset'), AmpConfig::get('web_path') . '/admin/system.php?action=show_debug');
-    break;
+        break;
     case 'show_debug':
         $configuration = AmpConfig::get_all();
-        $time_format   = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
         if (Core::get_request('autoupdate') == 'force') {
             $version = AutoUpdate::get_latest_version(true);
         }
         require_once AmpConfig::get('prefix') . UI::find_template('show_debug.inc.php');
-    break;
+        break;
     case 'clear_cache':
         switch ($_REQUEST['type']) {
             case 'song':
@@ -74,12 +74,11 @@ switch ($_REQUEST['action']) {
                 break;
         }
         show_confirmation(T_('No Problem'), T_('Your cache has been cleared successfully'), AmpConfig::get('web_path') . '/admin/system.php?action=show_debug');
-    break;
+        break;
     default:
-        // Rien a faire
-    break;
+        break;
 } // end switch
 
-/* Show the Footer */
+// Show the Footer
 UI::show_query_stats();
 UI::show_footer();

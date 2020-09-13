@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -28,11 +28,9 @@ class UPnPPlaylist
     private $_songs;
     private $_current = 0;
 
-    /*
-     * Playlist is its own for each UPnP device
-     */
     /**
      * UPnPPlaylist constructor.
+     * Playlist is its own for each UPnP device
      * @param $deviceGUID
      */
     public function __construct($deviceGUID)
@@ -45,7 +43,7 @@ class UPnPPlaylist
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @param $link
      */
     public function Add($name, $link)
@@ -84,7 +82,7 @@ class UPnPPlaylist
     }
 
     /**
-     * @return int
+     * @return integer
      */
     public function CurrentPos()
     {
@@ -107,7 +105,7 @@ class UPnPPlaylist
     }
 
     /**
-     * @return null
+     * @return integer|null
      */
     public function NextItem()
     {
@@ -168,8 +166,8 @@ class UPnPPlaylist
             'upnp_playlist' => $this->_songs,
             'upnp_current' => $this->_current
         ));
-        if (! Session::exists('api', $sid)) {
-            Session::create(array('type' => 'api', 'sid' => $sid, 'value' => $pls_data ));
+        if (! Session::exists('stream', $sid)) {
+            Session::create(array('type' => 'stream', 'sid' => $sid, 'value' => $pls_data ));
         } else {
             Session::write($sid, $pls_data);
         }

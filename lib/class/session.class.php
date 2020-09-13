@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -114,11 +114,10 @@ class Session
     /**
      * garbage_collection
      *
-     * This function is randomly called and it cleans up the spoo
+     * This function is randomly called and it cleans up the expired sessions
      */
     public static function garbage_collection()
     {
-        debug_event('session.class', 'Session cleanup started', 4);
         $sql = 'DELETE FROM `session` WHERE `expire` < ?';
         Dba::write($sql, array(time()));
 
@@ -130,7 +129,6 @@ class Session
         Tmp_Playlist::garbage_collection();
         Stream_Playlist::garbage_collection();
         Song_Preview::garbage_collection();
-        debug_event('session.class', 'Session cleanup ended', 4);
     }
 
     /**
@@ -159,7 +157,7 @@ class Session
         $db_results = Dba::read($sql, array($key, time()));
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            //debug_event('session.class', 'Read session from key ' . $key . ' ' . $results[$column], 3);
+            // debug_event('session.class', 'Read session from key ' . $key . ' ' . $results[$column], 3);
             return $results[$column];
         }
 
@@ -205,15 +203,11 @@ class Session
         // Regenerate the session ID to prevent fixation
         switch ($data['type']) {
             case 'api':
-                $key = isset($data['apikey'])
-                    ? md5(((string) $data['apikey'] . (string) time()))
-                    : md5(uniqid((string) rand(), true));
+                $key = (isset($data['apikey'])) ? md5(((string) $data['apikey'] . (string) time())) : md5(uniqid((string) rand(), true));
                 break;
             case 'stream':
-                $key = isset($data['sid'])
-                    ? $data['sid']
-                    : md5(uniqid((string) rand(), true));
-            break;
+                $key = (isset($data['sid'])) ? $data['sid'] : md5(uniqid((string) rand(), true));
+                break;
             case 'mysql':
             default:
                 session_regenerate_id();
@@ -221,7 +215,7 @@ class Session
                 // Before refresh we don't have the cookie so we
                 // have to use session ID
                 $key = session_id();
-            break;
+                break;
         } // end switch on data type
 
         $username = '';
@@ -290,7 +284,6 @@ class Session
 
             return false;
         }
-        debug_event('session.class', 'Existing session found', 4);
 
         // Set up the cookie params before we start the session.
         // This is vital
@@ -338,7 +331,7 @@ class Session
                 if (Dba::num_rows($db_results)) {
                     return true;
                 }
-            break;
+                break;
             case 'interface':
                 $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ?';
                 if (AmpConfig::get('use_auth')) {
@@ -352,7 +345,7 @@ class Session
                 if (Dba::num_rows($db_results)) {
                     return true;
                 }
-            break;
+                break;
             default:
                 return false;
         }

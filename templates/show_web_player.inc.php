@@ -2,7 +2,7 @@
 /* vim:set tabstop=4 softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -28,8 +28,8 @@ header('Expires: ' . gmdate(DATE_RFC1123, time() - 1));
 <html>
 <head>
 <!-- Propelled by Ampache | ampache.org -->
-<title><?php echo AmpConfig::get('site_title'); ?></title>
-<meta property="og:title" content="<?php echo AmpConfig::get('site_title'); ?>" />
+<title><?php echo scrub_out(AmpConfig::get('site_title')); ?></title>
+<meta property="og:title" content="<?php echo scrub_out(AmpConfig::get('site_title')); ?>" />
 <meta property="og:image" content="<?php echo UI::get_logo_url(); ?>"/>
 <meta property="og:description" content="A web based audio/video streaming application and file manager allowing you to access your music & videos from anywhere, using almost any internet enabled device." />
 <meta property="og:site_name" content="Ampache"/>

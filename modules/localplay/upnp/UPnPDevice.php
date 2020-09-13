@@ -63,8 +63,8 @@ class UPnPDevice
             $serviceType                                      = $service->serviceType;
             $serviceTypeNames                                 = explode(":", $serviceType);
             $serviceTypeName                                  = $serviceTypeNames[3];
-            $this->_settings['controlURLs'][$serviceTypeName] = (string)$service->controlURL;
-            $this->_settings['eventURLs'][$serviceTypeName]   = (string)$service->eventSubURL;
+            $this->_settings['controlURLs'][$serviceTypeName] = (string) $service->controlURL;
+            $this->_settings['eventURLs'][$serviceTypeName]   = (string) $service->eventSubURL;
         }
 
         $urldata                 = parse_url($descriptionUrl);
@@ -73,7 +73,7 @@ class UPnPDevice
         $this->_settings['descriptionURL'] = $descriptionUrl;
 
         Session::create(array(
-            'type' => 'api',
+            'type' => 'stream',
             'sid' => 'upnp_dev_' . $descriptionUrl,
             'value' => json_encode($this->_settings)
         ));
@@ -176,15 +176,14 @@ class UPnPDevice
     */
 
     // helper function for calls that require only an instance id
-    public function instanceOnly($command, $type = 'AVTransport', $id = 0)
+    public function instanceOnly($command, $type = 'AVTransport', $instance_id = 0)
     {
-        $args     = array( 'InstanceID' => $id );
-        ///$response = \Format::forge($response, 'xml:ns')->to_array();
-        ///return $response['s:Body']['u:' . $command . 'Response'];
+        $args     = array( 'InstanceID' => $instance_id );
+        //$response = \Format::forge($response, 'xml:ns')->to_array();
+        //return $response['s:Body']['u:' . $command . 'Response'];
 
         return $this->sendRequestToDevice($command, $args, $type);
     }
-
 
     //!! UPNP subscription work not for all renderers, and works strange
     //!! so now is not used

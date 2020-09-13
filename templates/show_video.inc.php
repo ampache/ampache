@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
  ?>
@@ -25,7 +25,7 @@
 <?php
 $gart = false;
 // The release type is not the video itself, we probably want preview
-if (strtolower(get_class($video)) != 'movie') {
+if (get_class($video) != 'Movie') {
     $gart = Art::display('video', $video->id, $video->f_title, 8, null, false, 'preview');
 }
 if (!$gart) {
@@ -85,14 +85,14 @@ $subtitles = $video->get_subtitles();
         <?php
     } ?>
         <?php echo Ajax::button('?action=basket&type=video&id=' . $video->id, 'add', T_('Add to temporary playlist'), 'add_video_' . $video->id); ?>
-        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) { ?>
+        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $video->id; ?>"><?php echo UI::get_icon('comment', T_('Post Shout')); ?></a>
             <?php
         } ?>
         <?php
     } ?>
-    <?php if (Access::check('interface', '25')) { ?>
+    <?php if (Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('share')) { ?>
                 <?php Share::display_ui('video', $video->id, false); ?>
             <?php
@@ -104,7 +104,7 @@ $subtitles = $video->get_subtitles();
             <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
         <?php
     } ?>
-        <?php if (Access::check('interface', '50')) { ?>
+        <?php if (Access::check('interface', 50)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=video&object_id=<?php echo $video->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
             <?php
@@ -124,7 +124,7 @@ $subtitles = $video->get_subtitles();
 <?php
   $videoprops[T_('Title')]   = scrub_out($video->f_title);
   $videoprops[T_('Length')]  = scrub_out($video->f_time);
-if (strtolower(get_class($video)) != 'video') {
+if (get_class($video) != 'Video') {
     require AmpConfig::get('prefix') . UI::find_template('show_partial_' . strtolower(get_class($video)) . '.inc.php');
 }
   $videoprops[T_('Release Date')]    = scrub_out($video->f_release_date);
@@ -135,13 +135,13 @@ if (strtolower(get_class($video)) != 'video') {
   $videoprops[T_('Video Bitrate')]   = scrub_out($video->f_video_bitrate);
   $videoprops[T_('Frame Rate')]      = scrub_out($video->f_frame_rate);
   $videoprops[T_('Channels')]        = scrub_out($video->channels);
-  if (Access::check('interface', '75')) {
+  if (Access::check('interface', 75)) {
       $videoprops[T_('Filename')]   = scrub_out($video->file) . " " . $video->f_size;
   }
   if ($video->update_time) {
-      $videoprops[T_('Last Updated')]   = get_datetime($time_format, (int) $video->update_time);
+      $videoprops[T_('Last Updated')]   = get_datetime((int) $video->update_time);
   }
-  $videoprops[T_('Added')]   = get_datetime($time_format, (int) $video->addition_time);
+  $videoprops[T_('Added')]   = get_datetime((int) $video->addition_time);
   if (AmpConfig::get('show_played_times')) {
       $videoprops[T_('# Played')]   = scrub_out($video->object_cnt);
   }

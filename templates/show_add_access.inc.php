@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <?php UI::show_box_top(T_('Add Access Control List'), 'box box_add_access'); ?>
@@ -29,14 +29,11 @@ $all          = T_('All'); ?>
     <table class="tabledata">
         <tr>
             <td><?php echo T_('Name') . ':'; ?></td>
-            <td>
-                <input type="text" name="name" value="<?php echo scrub_out(Core::get_request('name')); ?>" />
-            </td>
+            <td><input type="text" name="name" value="<?php echo scrub_out(Core::get_request('name')); ?>" /></td>
         </tr>
         <tr>
             <td><?php echo T_('Level') . ':'; ?></td>
-            <td>
-                <input name="level" type="radio" checked="checked" value="5" /> <?php echo T_('View'); ?>
+            <td><input name="level" type="radio" checked="checked" value="5" /> <?php echo T_('View'); ?>
                 <input name="level" type="radio" value="25" /> <?php echo T_('Read'); ?>
                 <input name="level" type="radio" value="50" /> <?php echo T_('Read/Write'); ?>
                 <input name="level" type="radio" value="75" /> <?php echo $all; ?>
@@ -55,16 +52,16 @@ $all          = T_('All'); ?>
                 <input type="hidden" name="type" value="rpc" />
                 <select name="addtype">
                     <option value="rpc"><?php echo $apirpc; ?></option>
-                    <option selected="selected" value="stream"><?php $apirpc . ' + ' . $streamaccess; ?></option>
-                    <option value="all"><?php $apirpc . ' + ' . $all; ?></option>
+                    <option selected="selected" value="stream"><?php echo $apirpc . ' + ' . $streamaccess; ?></option>
+                    <option value="all"><?php echo $apirpc . ' + ' . $all; ?></option>
         <?php
 } else {
     if ($action == 'show_add_local') { ?>
                 <input type="hidden" name="type" value="local" />
                 <select name="addtype">
                     <option value="network"><?php echo $localnetwork; ?></option>
-                    <option value="stream"><?php $localnetwork . ' + ' . $streamaccess; ?></option>
-                    <option selected="selected" value="all"><?php $localnetwork . ' + ' . $all; ?></option>
+                    <option value="stream"><?php echo $localnetwork . ' + ' . $streamaccess; ?></option>
+                    <option selected="selected" value="all"><?php echo $localnetwork . ' + ' . $all; ?></option>
         <?php
         } else { ?>
                 <select name="type">
@@ -95,8 +92,7 @@ $all          = T_('All'); ?>
                     echo scrub_out(Core::get_server('REMOTE_ADDR'));
                 } else {
                     echo scrub_out(Core::get_request('start'));
-                } ?>" />
-            </td>
+                } ?>" /></td>
             <td>
                 <?php echo T_('End'); ?>:
                     <?php AmpError::display('end'); ?>
@@ -105,8 +101,7 @@ $all          = T_('All'); ?>
                         echo scrub_out(Core::get_server('REMOTE_ADDR'));
                     } else {
                         echo scrub_out(Core::get_request('end'));
-                    } ?>" />
-            </td>
+                    } ?>" /></td>
         </tr>
     </table>
     <div class="formValidation">

@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 
@@ -46,8 +46,7 @@
         <tr>
             <td><?php echo T_('Subject'); ?>:</td>
             <td colspan="3">
-                <input name="subject" value="<?php echo scrub_out(Core::get_post('subject')); ?>" />
-            </td>
+                <input name="subject" value="<?php echo scrub_out(Core::get_post('subject')); ?>" /></td>
         </tr>
         <tr>
             <td><?php echo T_('Message'); ?>:</td>

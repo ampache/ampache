@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -33,7 +33,7 @@ $web_path = AmpConfig::get('web_path'); ?>
         <meta http-equiv="refresh" content="10;URL=<?php echo(AmpConfig::get('web_path'));?>" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?php T_("Ampache") . ' -- ' . T_("Debug Page"); ?></title>
+        <title><?php echo T_("Ampache") . ' -- ' . T_("Debug Page"); ?></title>
         <?php UI::show_custom_style(); ?>
         <link href="<?php echo $web_path; ?>/lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="<?php echo $web_path; ?>/lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
@@ -41,15 +41,15 @@ $web_path = AmpConfig::get('web_path'); ?>
     </head>
     <body>
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <div class="container">
+            <div class="container" style="height: 70px;">
                 <a class="navbar-brand" href="#">
                     <img src="<?php echo $logo_url; ?>" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
-                    <?php echo AmpConfig::get('site_title'); ?>
+                    <?php echo scrub_out(AmpConfig::get('site_title')); ?>
                 </a>
             </div>
         </div>
         <div id="guts" class="container" role="main">
-            <div class="jumbotron">
+            <div class="jumbotron" style="margin-top: 70px">
                 <h1><?php echo T_('Access Denied'); ?></h1>
                 <p><?php echo T_('This event has been logged'); ?></p>
             </div>

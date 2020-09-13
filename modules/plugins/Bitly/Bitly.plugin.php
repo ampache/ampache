@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -59,8 +59,8 @@ class AmpacheBitly
             return false;
         }
 
-        Preference::insert('bitly_username', T_('Bit.ly Username'), '', '75', 'string', 'plugins', $this->name);
-        Preference::insert('bitly_api_key', T_('Bit.ly API key'), '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('bitly_username', T_('Bit.ly Username'), '', 75, 'string', 'plugins', $this->name);
+        Preference::insert('bitly_api_key', T_('Bit.ly API key'), '', 75, 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -101,9 +101,8 @@ class AmpacheBitly
         try {
             debug_event('bitly.plugin', 'Bit.ly api call: ' . $apiurl, 5);
             $request  = Requests::get($apiurl, array(), Core::requests_options());
-            $shorturl = json_decode($request->body)->data->url;
 
-            return $shorturl;
+            return json_decode($request->body)->data->url;
         } catch (Exception $error) {
             debug_event('bitly.plugin', 'Bit.ly api http exception: ' . $error->getMessage(), 1);
 

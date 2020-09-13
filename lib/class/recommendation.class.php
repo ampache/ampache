@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -30,14 +30,14 @@ class Recommendation
     private function __construct()
     {
         return false;
-    } //constructor
+    } // constructor
 
     /**
      * get_lastfm_results
      * Runs a last.fm query and returns the parsed results
      * @param string $method
      * @param string $query
-     * @return SimpleXMLElement
+     * @return SimpleXMLElement|false
      */
     public static function get_lastfm_results($method, $query)
     {
@@ -52,16 +52,15 @@ class Recommendation
 
     /**
      * @param string $url
-     * @return SimpleXMLElement
+     * @return SimpleXMLElement|false
      */
     public static function query_lastfm($url)
     {
         debug_event('recommendation.class', 'search url : ' . $url, 5);
 
         $request = Requests::get($url, array(), Core::requests_options());
-        $content = $request->body;
 
-        return simplexml_load_string($content);
+        return simplexml_load_string((string) $request->body);
     }
 
     /**
@@ -69,26 +68,12 @@ class Recommendation
      *
      * @param $artist
      * @param $album
-     * @return SimpleXMLElement
+     * @return SimpleXMLElement|false
      */
     public static function album_search($artist, $album)
     {
         $api_key = AmpConfig::get('lastfm_api_key');
         $url     = 'http://ws.audioscrobbler.com/2.0/?method=album.getInfo&artist=' . urlencode($artist) . '&album=' . urlencode($album) . '&api_key=' . $api_key;
-
-        return self::query_lastfm($url);
-    }
-
-    /**
-     * artist_search
-     *
-     * @param $artist
-     * @return SimpleXMLElement
-     */
-    public static function artist_search($artist)
-    {
-        $api_key = AmpConfig::get('lastfm_api_key');
-        $url     = 'http://ws.audioscrobbler.com/2.0/?method=artist.getInfo&artist=' . urlencode($artist) . '&api_key=' . $api_key;
 
         return self::query_lastfm($url);
     }
@@ -105,18 +90,18 @@ class Recommendation
 
     /**
      * @param string $type
-     * @param integer $id
+     * @param integer $object_id
      * @param boolean $get_items
      * @return array
      */
-    protected static function get_recommendation_cache($type, $id, $get_items = false)
+    protected static function get_recommendation_cache($type, $object_id, $get_items = false)
     {
         if (!AmpConfig::get('cron_cache')) {
             self::garbage_collection();
         }
 
         $sql        = "SELECT `id`, `last_update` FROM `recommendation` WHERE `object_type` = ? AND `object_id` = ?";
-        $db_results = Dba::read($sql, array($type, $id));
+        $db_results = Dba::read($sql, array($type, $object_id));
 
         if ($cache = Dba::fetch_assoc($db_results)) {
             if ($get_items) {
@@ -138,12 +123,13 @@ class Recommendation
     }
 
     /**
+     * delete_recommendation_cache
      * @param string $type
-     * @param integer $id
+     * @param integer $object_id
      */
-    protected static function delete_recommendation_cache($type, $id)
+    protected static function delete_recommendation_cache($type, $object_id)
     {
-        $cache = self::get_recommendation_cache($type, $id);
+        $cache = self::get_recommendation_cache($type, $object_id);
         if ($cache['id']) {
             Dba::write('DELETE FROM `recommendation_item` WHERE `recommendation` = ?', array($cache['id']));
             Dba::write('DELETE FROM `recommendation` WHERE `id` = ?', array($cache['id']));
@@ -151,16 +137,17 @@ class Recommendation
     }
 
     /**
+     * update_recommendation_cache
      * @param string $type
-     * @param integer $id
+     * @param integer $object_id
      * @param $recommendations
      */
-    protected static function update_recommendation_cache($type, $id, $recommendations)
+    protected static function update_recommendation_cache($type, $object_id, $recommendations)
     {
         if (count($recommendations) > 0) {
-            self::delete_recommendation_cache($type, $id);
+            self::delete_recommendation_cache($type, $object_id);
             $sql = "INSERT INTO `recommendation` (`object_type`, `object_id`, `last_update`) VALUES (?, ?, ?)";
-            Dba::write($sql, array($type, $id, time()));
+            Dba::write($sql, array($type, $object_id, time()));
             $insertid = Dba::insert_id();
             foreach ($recommendations as $recommendation) {
                 $sql = "INSERT INTO `recommendation_item` (`recommendation`, `recommendation_id`, `name`, `rel`, `mbid`) VALUES (?, ?, ?, ?, ?)";
@@ -219,7 +206,7 @@ class Recommendation
 
                     if ($result = Dba::fetch_assoc($db_result)) {
                         $local_id = $result['id'];
-                        debug_event('recommendation.class', "$name matched local song $local_id", 5);
+                        debug_event('recommendation.class', "$name matched local song $local_id", 4);
                         $similars[] = array(
                             'id' => $local_id,
                             'name' => $name,
@@ -284,58 +271,59 @@ class Recommendation
 
             $xml = self::get_lastfm_results('artist.getsimilar', $query);
 
-            foreach ($xml->similarartists->children() as $child) {
-                $name     = (string) $child->name;
-                $mbid     = (string) $child->mbid;
-                $local_id = null;
+            if ($xml->similarartists) {
+                foreach ($xml->similarartists->children() as $child) {
+                    $name     = (string)$child->name;
+                    $mbid     = (string)$child->mbid;
+                    $local_id = null;
 
-                // First we check by MBID
-                if ($mbid) {
-                    $sql = "SELECT `artist`.`id` FROM `artist` WHERE `mbid` = ?";
-                    if (AmpConfig::get('catalog_disable')) {
-                        $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
+                    // First we check by MBID
+                    if ($mbid) {
+                        $sql = "SELECT `artist`.`id` FROM `artist` WHERE `mbid` = ?";
+                        if (AmpConfig::get('catalog_disable')) {
+                            $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
+                        }
+                        $db_result = Dba::read($sql, array($mbid));
+                        if ($result = Dba::fetch_assoc($db_result)) {
+                            $local_id = $result['id'];
+                        }
                     }
-                    $db_result = Dba::read($sql, array($mbid));
-                    if ($result = Dba::fetch_assoc($db_result)) {
-                        $local_id = $result['id'];
+
+                    // Then we fall back to the less likely to work exact
+                    // name match
+                    if ($local_id === null) {
+                        $searchname = Catalog::trim_prefix($name);
+                        $searchname = Dba::escape($searchname['string']);
+                        $sql        = "SELECT `artist`.`id` FROM `artist` WHERE `artist`.`name` = ? OR " .
+                            "LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?";
+                        if (AmpConfig::get('catalog_disable')) {
+                            $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
+                        }
+                        $db_result = Dba::read($sql, array($searchname, $searchname));
+                        if ($result = Dba::fetch_assoc($db_result)) {
+                            $local_id = $result['id'];
+                        }
+                    }
+
+                    // Then we give up
+                    if ($local_id === null) {
+                        debug_event('recommendation.class', "$name did not match any local artist", 5);
+                        $similars[] = array(
+                            'id' => null,
+                            'name' => $name,
+                            'mbid' => $mbid
+                        );
+                    } else {
+                        debug_event('recommendation.class', "$name matched local artist " . $local_id, 5);
+                        $similars[] = array(
+                            'id' => $local_id,
+                            'name' => $name
+                        );
                     }
                 }
-
-                // Then we fall back to the less likely to work exact
-                // name match
-                if ($local_id === null) {
-                    $searchname = Catalog::trim_prefix($name);
-                    $searchname = Dba::escape($searchname['string']);
-                    $sql        = "SELECT `artist`.`id` FROM `artist` WHERE `artist`.`name` = ? OR " .
-                                  "LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?";
-                    if (AmpConfig::get('catalog_disable')) {
-                        $sql .= " AND " . Catalog::get_enable_filter('artist', '`artist`.`id`');
-                    }
-                    $db_result = Dba::read($sql, array($searchname, $searchname));
-                    if ($result = Dba::fetch_assoc($db_result)) {
-                        $local_id = $result['id'];
-                    }
+                if (count($similars) > 0) {
+                    self::update_recommendation_cache('artist', $artist_id, $similars);
                 }
-
-                // Then we give up
-                if ($local_id === null) {
-                    debug_event('recommendation.class', "$name did not match any local artist", 5);
-                    $similars[] = array(
-                        'id' => null,
-                        'name' => $name,
-                        'mbid' => $mbid
-                    );
-                } else {
-                    debug_event('recommendation.class', "$name matched local artist " . $local_id, 5);
-                    $similars[] = array(
-                        'id' => $local_id,
-                        'name' => $name
-                    );
-                }
-            }
-
-            if (count($similars) > 0) {
-                self::update_recommendation_cache('artist', $artist_id, $similars);
             }
         }
 
@@ -402,10 +390,6 @@ class Recommendation
         $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
         $results['placeformed'] = (string) $xml->artist->bio->placeformed;
         $results['yearformed']  = (string) $xml->artist->bio->yearformed;
-        $results['smallphoto']  = $xml->artist->image[0];
-        $results['mediumphoto'] = $xml->artist->image[1];
-        $results['largephoto']  = $xml->artist->image[2];
-        $results['megaphoto']   = $xml->artist->image[4];
 
         if ($artist) {
             $results['id'] = $artist->id;
@@ -431,7 +415,7 @@ class Recommendation
      * Migrate an object associate stats to a new object
      * @param string $object_type
      * @param integer $old_object_id
-     * @param string $new_object_id
+     * @param integer $new_object_id
      * @return PDOStatement|boolean
      */
     public static function migrate($object_type, $old_object_id, $new_object_id)

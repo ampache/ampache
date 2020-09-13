@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,21 +16,13 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <table class="tabledata">
     <thead>
         <tr class="th-top">
-            <?php if (AmpConfig::get('echonest_api_key')) { ?>
-                <th class="cel_play"></th>
-            <?php
-} ?>
             <th class="cel_song"><?php echo T_('Song Title'); ?></th>
-            <?php if (AmpConfig::get('echonest_api_key')) { ?>
-                <th class="cel_add"></th>
-            <?php
-    } ?>
             <th class="cel_artist"><?php echo T_('Artist'); ?></th>
             <th class="cel_album"><?php echo T_('Album'); ?></th>
             <th class="cel_track"><?php echo T_('Track'); ?></th>

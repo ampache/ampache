@@ -86,14 +86,14 @@ var ADTSDemuxer = AV.Demuxer.extend(function() {
  * Created by Devon Govett
  * Copyright (c) 2012, Official.fm Labs
  *
- * AAC.js is free software; you can redistribute it and/or modify it 
- * under the terms of the GNU Lesser General Public License as 
- * published by the Free Software Foundation; either version 3 of the 
+ * AAC.js is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of the
  * License, or (at your option) any later version.
  *
- * AAC.js is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General 
+ * AAC.js is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
@@ -249,14 +249,14 @@ module.exports = CCEElement;
  * Created by Devon Govett
  * Copyright (c) 2012, Official.fm Labs
  *
- * AAC.js is free software; you can redistribute it and/or modify it 
- * under the terms of the GNU Lesser General Public License as 
- * published by the Free Software Foundation; either version 3 of the 
+ * AAC.js is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of the
  * License, or (at your option) any later version.
  *
- * AAC.js is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General 
+ * AAC.js is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
@@ -300,7 +300,7 @@ CPEElement.prototype.decode = function(stream, config) {
                 }
                 break;
 
-            case MASK_TYPE_ALL_0:    
+            case MASK_TYPE_ALL_0:
             case MASK_TYPE_ALL_1:
                 var val = !!mask;
                 for (var i = 0; i < MAX_MS_MASK; i++) {
@@ -328,14 +328,14 @@ module.exports = CPEElement;
  * Created by Devon Govett
  * Copyright (c) 2012, Official.fm Labs
  *
- * AAC.js is free software; you can redistribute it and/or modify it 
- * under the terms of the GNU Lesser General Public License as 
- * published by the Free Software Foundation; either version 3 of the 
+ * AAC.js is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of the
  * License, or (at your option) any later version.
  *
- * AAC.js is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General 
+ * AAC.js is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
@@ -434,7 +434,7 @@ var AACDecoder = AV.Decoder.extend(function() {
                 throw new Error('AAC profile ' + this.config.profile + ' not supported.');
         }
 
-        this.filter_bank = new FilterBank(false, this.config.chanConfig);        
+        this.filter_bank = new FilterBank(false, this.config.chanConfig);
         this.ics = new ICStream(this.config);
         this.cpe = new CPEElement(this.config);
         this.cce = new CCEElement(this.config);
@@ -626,7 +626,7 @@ var AACDecoder = AV.Decoder.extend(function() {
         if (profile === AOT_AAC_MAIN)
             throw new Error("Main prediction unimplemented");
 
-        // Intensity stereo    
+        // Intensity stereo
         this.processIS(element, l_data, r_data);
 
         if (profile === AOT_AAC_LTP)
@@ -770,14 +770,14 @@ module.exports = AACDecoder;
  * Created by Devon Govett
  * Copyright (c) 2012, Official.fm Labs
  *
- * AAC.js is free software; you can redistribute it and/or modify it 
- * under the terms of the GNU Lesser General Public License as 
- * published by the Free Software Foundation; either version 3 of the 
+ * AAC.js is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of the
  * License, or (at your option) any later version.
  *
- * AAC.js is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General 
+ * AAC.js is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
@@ -818,7 +818,7 @@ function FFT(length) {
     this.a = new Float32Array(2);
     this.b = new Float32Array(2);
     this.c = new Float32Array(2);
-    this.d = new Float32Array(2);     
+    this.d = new Float32Array(2);
     this.e1 = new Float32Array(2);
     this.e2 = new Float32Array(2);
 }
@@ -966,14 +966,14 @@ module.exports = FFT;
  * Created by Devon Govett
  * Copyright (c) 2012, Official.fm Labs
  *
- * AAC.js is free software; you can redistribute it and/or modify it 
- * under the terms of the GNU Lesser General Public License as 
- * published by the Free Software Foundation; either version 3 of the 
+ * AAC.js is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of the
  * License, or (at your option) any later version.
  *
- * AAC.js is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General 
+ * AAC.js is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
@@ -1125,7 +1125,7 @@ FilterBank.prototype.process = function(info, input, output, channel) {
 
             // window the second half and save as overlap for next frame
             for (var i = 0; i < shortLen; i++) {
-                if(i >= trans) 
+                if(i >= trans)
                     overlap[mid + 4 * shortLen + i - length] = (buf[shortLen * 7 + i] * shortWindows[shortLen - 1 - i]) + (buf[shortLen * 8 + i] * shortWindows[i]);
 
                 overlap[mid + 5 * shortLen + i - length] = (buf[shortLen * 9 + i] * shortWindows[shortLen - 1 - i]) + (buf[shortLen * 10 + i] * shortWindows[i]);
@@ -1174,14 +1174,14 @@ module.exports = FilterBank;
  * Created by Devon Govett
  * Copyright (c) 2012, Official.fm Labs
  *
- * AAC.js is free software; you can redistribute it and/or modify it 
- * under the terms of the GNU Lesser General Public License as 
- * published by the Free Software Foundation; either version 3 of the 
+ * AAC.js is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of the
  * License, or (at your option) any later version.
  *
- * AAC.js is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General 
+ * AAC.js is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
@@ -2590,7 +2590,7 @@ const HCB_SF = [
 
 const CODEBOOKS = [HCB1, HCB2, HCB3, HCB4, HCB5, HCB6, HCB7, HCB8, HCB9, HCB10, HCB11];
 const UNSIGNED = [false, false, true, true, false, false, true, true, true, true, true],
-      QUAD_LEN = 4, 
+      QUAD_LEN = 4,
       PAIR_LEN = 2;
 
 var Huffman = {
@@ -2650,7 +2650,7 @@ var Huffman = {
         } else if (cb === 11 || cb > 15) {
             this.signValues(stream, data, off, cb < 5 ? QUAD_LEN : PAIR_LEN);
 
-            if (Math.abs(data[off]) === 16) 
+            if (Math.abs(data[off]) === 16)
                 data[off] = this.getEscape(stream, data[off]);
 
             if (Math.abs(data[off + 1]) === 16)
@@ -2669,14 +2669,14 @@ module.exports = Huffman;
  * Created by Devon Govett
  * Copyright (c) 2012, Official.fm Labs
  *
- * AAC.js is free software; you can redistribute it and/or modify it 
- * under the terms of the GNU Lesser General Public License as 
- * published by the Free Software Foundation; either version 3 of the 
+ * AAC.js is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of the
  * License, or (at your option) any later version.
  *
- * AAC.js is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General 
+ * AAC.js is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
@@ -2827,7 +2827,7 @@ ICStream.prototype = {
                     default:
                         for(; i < runEnd; i++, idx++) {
                             offset[0] += Huffman.decodeScaleFactor(stream) - SF_DELTA;
-                            if(offset[0] > 255) 
+                            if(offset[0] > 255)
                                 throw new Error("Scalefactor out of range: " + offset[0]);
 
                             scaleFactors[idx] = tables.SCALEFACTOR_TABLE[offset[0] - 100 + SF_OFFSET];
@@ -3005,14 +3005,14 @@ module.exports = ICStream;
  * Created by Devon Govett
  * Copyright (c) 2012, Official.fm Labs
  *
- * AAC.js is free software; you can redistribute it and/or modify it 
- * under the terms of the GNU Lesser General Public License as 
- * published by the Free Software Foundation; either version 3 of the 
+ * AAC.js is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of the
  * License, or (at your option) any later version.
  *
- * AAC.js is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General 
+ * AAC.js is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
@@ -3124,14 +3124,14 @@ module.exports = MDCT;
  * Created by Devon Govett
  * Copyright (c) 2012, Official.fm Labs
  *
- * AAC.js is free software; you can redistribute it and/or modify it 
- * under the terms of the GNU Lesser General Public License as 
- * published by the Free Software Foundation; either version 3 of the 
+ * AAC.js is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of the
  * License, or (at your option) any later version.
  *
- * AAC.js is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General 
+ * AAC.js is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
@@ -3719,9 +3719,9 @@ exports.MDCT_TABLE_256 = [
     [0.006231782743558, 0.088168389368510],
     [0.004066145255116, 0.088294770302461],
     [0.001898058472816, 0.088367965768336]
-];                                      
+];
 
-exports.MDCT_TABLE_1920 = [             
+exports.MDCT_TABLE_1920 = [
     [0.032274858518097, 0.000013202404176],
     [0.032274642494505, 0.000118821372483],
     [0.032274080835421, 0.000224439068308],
@@ -4204,7 +4204,7 @@ exports.MDCT_TABLE_1920 = [
     [0.000092416705518, 0.032274728903884]
 ];
 
-exports.MDCT_TABLE_240 = [              
+exports.MDCT_TABLE_240 = [
     [0.091286604111815, 0.000298735779793],
     [0.091247502481454, 0.002688238127538],
     [0.091145864370807, 0.005075898091152],
@@ -4265,21 +4265,21 @@ exports.MDCT_TABLE_240 = [
     [0.006864449533597, 0.091028636515846],
     [0.004479245345574, 0.091177133616206],
     [0.002090971306534, 0.091263142463585]
-];                    
+];
 },{}],11:[function(require,module,exports){
 /*
  * AAC.js - Advanced Audio Coding decoder in JavaScript
  * Created by Devon Govett
  * Copyright (c) 2012, Official.fm Labs
  *
- * AAC.js is free software; you can redistribute it and/or modify it 
- * under the terms of the GNU Lesser General Public License as 
- * published by the Free Software Foundation; either version 3 of the 
+ * AAC.js is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of the
  * License, or (at your option) any later version.
  *
- * AAC.js is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General 
+ * AAC.js is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
@@ -4461,7 +4461,7 @@ exports.IQ_TABLE = (function() {
 
 exports.SAMPLE_RATES = new Int32Array([
     96000, 88200, 64000, 48000, 44100, 32000,
-    24000, 22050, 16000, 12000, 11025, 8000, 7350    
+    24000, 22050, 16000, 12000, 11025, 8000, 7350
 ]);
 
 },{}],12:[function(require,module,exports){
@@ -4470,14 +4470,14 @@ exports.SAMPLE_RATES = new Int32Array([
  * Created by Devon Govett
  * Copyright (c) 2012, Official.fm Labs
  *
- * AAC.js is free software; you can redistribute it and/or modify it 
- * under the terms of the GNU Lesser General Public License as 
- * published by the Free Software Foundation; either version 3 of the 
+ * AAC.js is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of the
  * License, or (at your option) any later version.
  *
- * AAC.js is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General 
+ * AAC.js is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General
  * Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public

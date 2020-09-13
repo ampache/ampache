@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -24,13 +24,13 @@
 // fixes some CSS issues
 ob_start();
 
-$ampache_path = dirname(__FILE__);
-$prefix       = realpath($ampache_path . "/../");
-require_once $prefix . '/lib/init-tiny.php';
+$prefix = realpath(__DIR__ . "/../");
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init-tiny.php';
 
 // Explicitly load and enable the custom session handler.
 // Relying on autoload may not always load it before sessiony things are done.
-require_once $prefix . '/lib/class/session.class.php';
+require_once $a_root . '/lib/class/session.class.php';
 Session::_auto_init();
 
 // Set up for redirection on important error cases
@@ -48,14 +48,14 @@ if (!file_exists($configfile)) {
     // Make sure the config file is set up and parsable
     $results = parse_ini_file($configfile);
 
-    if (!count($results)) {
+    if (empty($results)) {
         $link = $path . '/test.php?action=config';
     }
 }
 
 // Verify that a few important but commonly disabled PHP functions exist and
 // that we're on a usable version
-if (!check_php() || !check_dependencies_folder()) {
+if (!check_php() || !check_dependencies_folder() || !check_php_intl()) {
     $link = $path . '/test.php';
 }
 
@@ -68,8 +68,8 @@ if (!empty($link)) {
 
 $results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluff nothing more... **/
-$results['version']            = '4.2.0-develop';
-$results['int_config_version'] = '40';
+$results['version']            = 'develop';
+$results['int_config_version'] = '45';
 
 if (!empty($results['force_ssl'])) {
     $http_type = 'https://';
@@ -106,7 +106,7 @@ if (isset($results['user_ip_cardinality']) && !$results['user_ip_cardinality']) 
     $results['user_ip_cardinality'] = 42;
 }
 
-/* Variables needed for Auth class */
+// Variables needed for Auth class
 $results['cookie_path']   = $results['raw_web_path'];
 $results['cookie_domain'] = $results['http_port'];
 $results['cookie_life']   = $results['session_cookielife'];
@@ -115,26 +115,25 @@ $results['cookie_secure'] = $results['session_cookiesecure'];
 // Library and module includes we can't do with the autoloader
 require_once $prefix . '/modules/infotools/AmazonSearchEngine.class.php';
 
-//require_once $prefix . '/lib/vendor/phpmailer/phpmailer/class.phpmailer.php';
-//require_once $prefix . '/lib/vendor/phpmailer/phpmailer/class.smtp.php';
-
-/* Temp Fixes */
+// Make sure all default preferences are set
+Preference::set_defaults();
+// Temp Fixes
 $results = Preference::fix_preferences($results);
 
 AmpConfig::set_by_array($results, true);
 
 // Modules (These are conditionally included depending upon config values)
 if (AmpConfig::get('ratings')) {
-    require_once $prefix . '/lib/rating.lib.php';
+    require_once $a_root . '/lib/rating.lib.php';
 }
 
-/* Set a new Error Handler */
+// Set a new Error Handler
 $old_error_handler = set_error_handler('ampache_error_handler');
 
-/* Check their PHP Vars to make sure we're cool here */
+// Check their PHP Vars to make sure we're cool here
 $post_size = @ini_get('post_max_size');
 if (substr($post_size, strlen((string) $post_size) - 1, strlen((string) $post_size)) != 'M') {
-    /* Sane value time */
+    // Sane value time
     ini_set('post_max_size', '8M');
 }
 
@@ -153,7 +152,7 @@ set_memory_limit($results['memory_limit']);
 
 // If we want a session
 if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
-    /* Verify their session */
+    // Verify their session
     if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')])) {
         if (!Session::auth_remember()) {
             Auth::logout($_COOKIE[AmpConfig::get('session_name')]);
@@ -165,17 +164,17 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
     // This actually is starting the session
     Session::check();
 
-    /* Create the new user */
+    // Create the new user
     $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
 
-    /* If the user ID doesn't exist deny them */
+    // If the user ID doesn't exist deny them
     if (!Core::get_global('user')->id && !AmpConfig::get('demo_mode')) {
         Auth::logout(session_id());
 
         return false;
     }
 
-    /* Load preferences and theme */
+    // Load preferences and theme
     Core::get_global('user')->update_last_seen();
 } elseif (!AmpConfig::get('use_auth')) {
     $auth['success']      = 1;
@@ -210,9 +209,8 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
         }
         Core::get_global('user')->update_last_seen();
     }
-}
-// If Auth, but no session is set
-else {
+} else {
+    // If Auth, but no session is set
     if (isset($_REQUEST['sid'])) {
         session_name(AmpConfig::get('session_name'));
         session_id(scrub_in((string) $_REQUEST['sid']));
@@ -243,18 +241,18 @@ if (session_id()) {
     Core::get_global('user')->load_playlist();
 }
 
-/* Add in some variables for ajax done here because we need the user */
+// Add in some variables for ajax done here because we need the user
 AmpConfig::set('ajax_url', AmpConfig::get('web_path') . '/server/ajax.server.php', true);
 AmpConfig::set('ajax_server', AmpConfig::get('web_path') . '/server', true);
 
-/* Set CHARSET */
+// Set CHARSET
 header("Content-Type: text/html; charset=" . AmpConfig::get('site_charset'));
 
-/* Clean up a bit */
+// Clean up a bit
 unset($array);
 unset($results);
 
-/* Check to see if we need to perform an update */
+// Check to see if we need to perform an update
 if (!defined('OUTDATED_DATABASE_OK')) {
     if (Update::need_update()) {
         header("Location: " . AmpConfig::get('web_path') . "/update.php");

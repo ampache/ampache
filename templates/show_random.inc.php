@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <?php UI::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
@@ -38,6 +38,13 @@
     } else {
         echo T_('Artists');
     } ?></td>
+    <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
+        <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'video') { ?>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=video"><?php echo T_('Videos'); ?></a>
+            <?php } else {
+        echo T_('Videos');
+    } ?></td>
+    <?php } ?>
 </tr>
 </table>
 <table class="tabledata">
@@ -48,13 +55,11 @@
 <?php
         foreach (array(1, 5, 10, 20, 30, 50, 100, 500, 1000) as $i) {
             echo "\t\t\t" . '<option value="' . $i . '" ' .
-                ($_POST['random'] == $i
-                    ? 'selected="selected"' : '') . '>' .
+                (($_POST['random'] == $i) ? 'selected="selected"' : '') . '>' .
                 $i . "</option>\n";
         }
             echo "\t\t\t" . '<option value="-1" ' .
-                ($_POST['random'] == '-1'
-                    ? 'selected="selected"' : '') . '>' .
+                (($_POST['random'] == '-1') ? 'selected="selected"' : '') . '>' .
                 T_('All') . "</option>\n"; ?>
         </select>
         </td>
@@ -66,13 +71,11 @@
                 <select name="length">
 <?php
             echo "\t\t\t" . '<option value="0" ' .
-                ($_POST['length'] == 0
-                    ? 'selected="selected"' : '') . '>' .
+                (($_POST['length'] == 0) ? 'selected="selected"' : '') . '>' .
                 T_('Unlimited') . "</option>\n";
         foreach (array(15, 30, 60, 120, 240, 480, 960) as $i) {
             echo "\t\t\t" . '<option value="' . $i . '" ' .
-                ($_POST['length'] == $i
-                    ? 'selected="selected"' : '') . '>';
+                (($_POST['length'] == $i) ? 'selected="selected"' : '') . '>';
             if ($i < 60) {
                 printf(nT_('%d minute', '%d minutes', $i), $i);
             } else {
@@ -89,13 +92,11 @@
                 <select name="size_limit">
 <?php
             echo "\t\t\t" . '<option value="0" ' .
-                ($_POST['size_limit'] == 0
-                    ? 'selected="selected"' : '') . '>' .
+                (($_POST['size_limit'] == 0) ? 'selected="selected"' : '') . '>' .
                 T_('Unlimited') . "</option>\n";
         foreach (array(64, 128, 256, 512, 1024) as $i) {
             echo "\t\t\t" . '<option value="' . $i . '"' .
-                ($_POST['size_limit'] == $i
-                    ? 'selected="selected"' : '') . '>' .
+                (($_POST['size_limit'] == $i) ? 'selected="selected"' : '') . '>' .
                 UI::format_bytes($i * 1048576) . "</option>\n";
         } ?>
                 </select>
@@ -121,3 +122,4 @@
         echo Ajax::observe('window', 'load', Ajax::action('?action=refresh_rightbar', 'playlist_refresh_load'));
     } ?>
 </div>
+

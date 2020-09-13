@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -43,14 +43,14 @@ class AmpConfig
     public function __construct()
     {
         // Rien a faire
-    }
+    } // __construct
 
     /**
      * get
      *
      * This returns a config value.
      * @param string $name
-     * @param string $default
+     * @param mixed $default
      * @return mixed|null
      */
     public static function get($name, $default = null)
@@ -128,5 +128,26 @@ class AmpConfig
         foreach ($array as $name => $value) {
             self::set($name, $value, $clobber);
         }
+    }
+
+    /**
+     * get_skip_timer
+     *
+     * pull the timer and check using the time of the song for %complete skips
+     * @param integer $previous_time
+     * @return integer
+     */
+    public static function get_skip_timer($previous_time)
+    {
+        $timekeeper = AmpConfig::get('skip_timer');
+        $skip_time  = 20;
+        if ((int) $timekeeper > 1) {
+            $skip_time = $timekeeper;
+        }
+        if ($timekeeper < 1 && $timekeeper > 0) {
+            $skip_time = (int) ($previous_time * $timekeeper);
+        }
+
+        return $skip_time;
     }
 } // end ampconfig.class

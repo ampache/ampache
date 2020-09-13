@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,12 +16,13 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
 define('NO_SESSION', '1');
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 // Avoid form login if still connected
 if (AmpConfig::get('use_auth') && !filter_has_var(INPUT_GET, 'force_display')) {
     $auth = false;
@@ -38,6 +39,7 @@ if (AmpConfig::get('use_auth') && !filter_has_var(INPUT_GET, 'force_display')) {
         return false;
     }
 }
-require_once 'lib/login.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/login.php';
 
 require AmpConfig::get('prefix') . UI::find_template('show_login_form.inc.php');

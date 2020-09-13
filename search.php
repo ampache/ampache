@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 UI::show_header();
 
@@ -40,7 +41,7 @@ switch ($_REQUEST['action']) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_missing_artists.inc.php');
             echo '<a href="http://musicbrainz.org/search?query=' . rawurlencode($_REQUEST['rule_1_input']) . '&type=artist&method=indexed" target="_blank">' . T_('View on MusicBrainz') . '</a><br />';
         }
-    break;
+        break;
     case 'save_as_smartplaylist':
         if (!Access::check('interface', 25)) {
             UI::access_denied();
@@ -53,7 +54,7 @@ switch ($_REQUEST['action']) {
         show_confirmation(T_('No Problem'),
                 /* HINT: playlist name */
                 sprintf(T_('Your search has been saved as a Smart Playlist with the name %s'), $playlist->name), AmpConfig::get('web_path') . "/browse.php?action=smartplaylist");
-    break;
+        break;
     case 'descriptor':
         // This is a little special we don't want header/footers so trash what we've got in the OB
         ob_clean();
@@ -62,9 +63,9 @@ switch ($_REQUEST['action']) {
         return false;
     default:
         require_once AmpConfig::get('prefix') . UI::find_template('show_search_form.inc.php');
-    break;
+        break;
 }
 
-/* Show the Footer */
+// Show the Footer
 UI::show_query_stats();
 UI::show_footer();

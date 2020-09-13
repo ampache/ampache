@@ -11,12 +11,12 @@ Now that version 4 is out all previous 3.x releases are considered unsupported.
 
 ## Reporting a Vulnerability
 
-Report all security issues directly to me lachlan.00 [at] gmail [dot] com
+Report all security issues directly to me security \[at] ampache \[dot] dev
 
 Use the following format
 
 Subject:
-Security Issue, Amapche [version number of git branch]
+Security Issue, Amapche \[version number or git branch]
 
 Body:
 Description, execution steps and contact information to reply. (A github account to tag in the created issue would be good)

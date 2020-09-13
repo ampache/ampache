@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -33,7 +33,10 @@ while ($count <= $rows) {
     while ($j < 4) {
         $key        = $count * 4 + $j;
         $image_url  = AmpConfig::get('web_path') . '/image.php?type=session&image_index=' . $key . '&cache_bust=' . date('YmdHis') . mt_rand();
-        $dimensions = Core::image_dimensions(Art::get_from_source($_SESSION['form']['images'][$key], $object_type));
+        $dimensions = array('width' => 0, 'height' => 0);
+        if (!empty($_SESSION['form']['images'][$key])) {
+            $dimensions = Core::image_dimensions(Art::get_from_source($_SESSION['form']['images'][$key], $object_type));
+        }
         if ((int) $dimensions['width'] == 0 || (int) $dimensions['height'] == 0) {
             $image_url = AmpConfig::get('web_path') . '/images/blankalbum.png';
         }

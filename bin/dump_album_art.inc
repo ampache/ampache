@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,23 +16,24 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-define('NO_SESSION','1');
-$path = dirname(__FILE__); 
-$prefix = realpath($path . '/../'); 
-require_once $prefix . '/lib/init.php';
+define('NO_SESSION', '1');
+$path   = dirname(__FILE__);
+$prefix = realpath($path . '/../');
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 // Turn off output buffering we don't need it for a command line script
-ob_end_clean(); 
+ob_end_clean();
 
-$meta = 'linux'; 
+$meta = 'linux';
 
 // Take input from the command line, two options linux or windows
-if (count($_SERVER['argv']) > 1) { 
-    $meta = ($_SERVER['argv']['1'] == 'windows') ? 'windows' : 'linux';  
+if (count($_SERVER['argv']) > 1) {
+    $meta = ($_SERVER['argv']['1'] == 'windows') ? 'windows' : 'linux';
 }
 
 $catalogs = Catalog::get_catalogs();

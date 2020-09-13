@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <?php UI::show_box_top(T_('Compose Message'), 'box box_add_pvmsg'); ?>
@@ -24,15 +24,13 @@
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Recipient'); ?></td>
-    <td>
-        <input type="text" name="to_user" value="<?php echo scrub_out($_REQUEST['to_user']); ?>" id="pvmsg_to_user" />
+    <td><input type="text" name="to_user" value="<?php echo scrub_out($_REQUEST['to_user']); ?>" id="pvmsg_to_user" />
         <?php AmpError::display('to_user'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Subject'); ?></td>
-    <td>
-        <input type="text" name="subject" value="<?php echo scrub_out($_REQUEST['subject']); ?>" />
+    <td><input type="text" name="subject" value="<?php echo scrub_out($_REQUEST['subject']); ?>" />
         <?php AmpError::display('subject'); ?>
     </td>
 </tr>

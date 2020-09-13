@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -36,7 +36,7 @@ $thcount = 8; ?>
             <th class="cel_songs"><?php echo T_('Songs');  ?></th>
             <th class="cel_albums"><?php echo T_('Albums'); ?></th>
             <th class="cel_time"><?php echo T_('Time'); ?></th>
-            <th class="cel_tags"><?php echo T_('Tags'); ?></th>
+            <th class="cel_tags"><?php echo T_('Genres'); ?></th>
         <?php if (AmpConfig::get('ratings')) {
         ++$thcount; ?>
             <th class="cel_rating"><?php echo T_('Rating'); ?></th>
@@ -98,7 +98,7 @@ $thcount = 8; ?>
             <th class="cel_songs"> <?php echo T_('Songs');  ?> </th>
             <th class="cel_albums"> <?php echo T_('Albums'); ?> </th>
             <th class="cel_time"> <?php echo T_('Time'); ?> </th>
-            <th class="cel_tags"><?php echo T_('Tags'); ?></th>
+            <th class="cel_tags"><?php echo T_('Genres'); ?></th>
         <?php if (AmpConfig::get('ratings')) { ?>
             <th class="cel_rating"><?php echo T_('Rating'); ?></th>
         <?php

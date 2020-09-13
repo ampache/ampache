@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -51,15 +51,14 @@ switch ($_REQUEST['action']) {
                     break 2;
                 }
                 $new = Core::get_post('type');
-            break;
+                break;
             case 'web_player':
                 $new = 'web_player';
-                // Rien a faire
-            break;
+                break;
             default:
                 $new                = 'stream';
                 $results['rfc3514'] = '0x1';
-            break 2;
+                break 2;
         } // end switch
 
         $current = AmpConfig::get('play_type');
@@ -74,7 +73,7 @@ switch ($_REQUEST['action']) {
         }
 
         $results['rfc3514'] = '0x0';
-    break;
+        break;
     case 'directplay':
         $object_type = Core::get_request('object_type');
         $object_id   = $_GET['object_id'];
@@ -103,7 +102,7 @@ switch ($_REQUEST['action']) {
             }
             $results['rfc3514'] = '<script>' . Core::get_reloadutil() . '(\'' . AmpConfig::get('web_path') . '/util.php\');</script>';
         }
-    break;
+        break;
     case 'basket':
         // Go ahead and see if we should clear the playlist here or not,
         // we might not actually clear it in the session.
@@ -117,11 +116,11 @@ switch ($_REQUEST['action']) {
         // We need to set the basket up!
         $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method']);
         $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '(\'' . AmpConfig::get('web_path') . '/util.php\');</script>';
-    break;
+        break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 } // switch on action;
 
 // We always do this
-echo xoutput_from_array($results);
+echo (string) xoutput_from_array($results);

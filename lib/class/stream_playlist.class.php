@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -40,7 +40,7 @@ class Stream_Playlist
     /**
      * Stream_Playlist constructor
      * If an ID is passed, it should be a stream session ID.
-     * @param integer $session_id
+     * @param integer|string $session_id
      */
     public function __construct($session_id = null)
     {
@@ -189,11 +189,11 @@ class Stream_Playlist
                     }
                 }
             } else {
-                //FIXME: play_url shouldn't be static
+                // FIXME: play_url shouldn't be static
                 $url['url'] = $type::play_url($object->id, $additional_params);
             }
 
-            $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : '';
+            $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
 
             // Set a default which can be overridden
             $url['author'] = 'Ampache';
@@ -206,12 +206,12 @@ class Stream_Playlist
                     $url['image_url'] = Art::url($object->album, 'album', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['album']     = $object->f_album_full;
                     $url['track_num'] = $object->f_track;
-                break;
+                    break;
                 case 'video':
                     $url['title']      = 'Video - ' . $object->title;
                     $url['author']     = $object->f_artist_full;
                     $url['resolution'] = $object->f_resolution;
-                break;
+                    break;
                 case 'live_stream':
                     $url['title'] = 'Radio - ' . $object->name;
                     if (!empty($object->site_url)) {
@@ -219,27 +219,27 @@ class Stream_Playlist
                     }
                     $url['codec']     = $object->codec;
                     $url['image_url'] = Art::url($object->id, 'live_stream', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
-                break;
+                    break;
                 case 'song_preview':
                     $url['title']  = $object->title;
                     $url['author'] = $object->f_artist_full;
-                break;
+                    break;
                 case 'channel':
                     $url['title'] = $object->name;
-                break;
+                    break;
                 case 'podcast_episode':
                     $url['title']     = $object->f_title;
                     $url['author']    = $object->f_podcast;
                     $url['info_url']  = $object->f_link;
                     $url['image_url'] = Art::url($object->podcast, 'podcast', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
-                break;
+                    break;
                 case 'random':
                     $url['title'] = 'Random URL';
-                break;
+                    break;
                 default:
                     $url['title'] = 'URL-Add';
                     $url['time']  = -1;
-                break;
+                    break;
             }
 
             $surl = new Stream_URL($url);
@@ -295,33 +295,33 @@ class Stream_Playlist
                 $ctype    = "";
                 $redirect = false;
                 unset($ext);
-            break;
+                break;
             case 'asx':
                 $ctype = 'video/x-ms-asf';
-            break;
+                break;
             case 'pls':
                 $ctype = 'audio/x-scpls';
-            break;
+                break;
             case 'ram':
                 $ctype = 'audio/x-pn-realaudio ram';
-            break;
+                break;
             case 'simple_m3u':
                 $ext   = 'm3u';
                 $ctype = 'audio/x-mpegurl';
-            break;
+                break;
             case 'xspf':
                 $ctype = 'application/xspf+xml';
-            break;
+                break;
             case 'hls':
                 $ext   = 'm3u8';
                 $ctype = 'application/vnd.apple.mpegurl';
-            break;
+                break;
             case 'm3u':
             default:
                 // Assume M3U if the pooch is screwed
                 $ext   = $type = 'm3u';
                 $ctype = 'audio/x-mpegurl';
-            break;
+                break;
         }
 
         if ($redirect) {
@@ -460,7 +460,7 @@ class Stream_Playlist
             $ret .= "<ENTRY>\n";
             $ret .= '<TITLE>' . scrub_out($url->title) . "</TITLE>\n";
             $ret .= '<AUTHOR>' . scrub_out($url->author) . "</AUTHOR>\n";
-            //FIXME: duration looks hacky and wrong
+            // FIXME: duration looks hacky and wrong
             $ret .= "\t\t" . '<DURATION VALUE="00:00:' . $url->time . '" />' . "\n";
             $ret .= "\t\t" . '<PARAM NAME="Album" Value="' . scrub_out($url->album) . '" />' . "\n";
             $ret .= "\t\t" . '<PARAM NAME="Composer" Value="' . scrub_out($url->author) . '" />' . "\n";
@@ -680,7 +680,7 @@ class Stream_Playlist
         header('Location: ' . $url);
 
         return false;
-    } //create_download
+    } // create_download
 
     /**
      * create_ram

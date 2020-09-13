@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -33,7 +33,7 @@ class Personal_Video extends Video
      * Constructor
      * This pulls the personal video information from the database and returns
      * a constructed object
-     * @param $object_id
+     * @param integer $object_id
      */
     public function __construct($object_id)
     {
@@ -80,7 +80,7 @@ class Personal_Video extends Video
      * update
      * This takes a key'd array of data as input and updates a personal video entry
      * @param array $data
-     * @return int
+     * @return integer
      */
     public function update(array $data)
     {
@@ -106,7 +106,7 @@ class Personal_Video extends Video
         $this->f_location = $this->location;
 
         return true;
-    } //format
+    } // format
 
     /**
      * Remove the video from disk.

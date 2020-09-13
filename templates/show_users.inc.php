@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -67,9 +67,8 @@ $web_path = AmpConfig::get('web_path');
 foreach ($object_ids as $user_id) {
         $libitem = new User($user_id);
         $libitem->format();
-        $format         = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
-        $last_seen      = $libitem->last_seen ? get_datetime($time_format, $libitem->last_seen) : T_('Never');
-        $create_date    = $libitem->create_date ? get_datetime($time_format, $libitem->create_date) : T_('Unknown'); ?>
+        $last_seen      = $libitem->last_seen ? get_datetime($libitem->last_seen) : T_('Never');
+        $create_date    = $libitem->create_date ? get_datetime($libitem->create_date) : T_('Unknown'); ?>
 <tr class="<?php echo UI::flip_class(); ?>" id="admin_user_<?php echo $libitem->id; ?>">
     <?php require AmpConfig::get('prefix') . UI::find_template('show_user_row.inc.php'); ?>
 </tr>

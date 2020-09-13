@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,26 +16,26 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-/*
-
- This is the wrapper for opening music streams from this server.  This script
-   will play the local version or redirect to the remote server if that be
-   the case.  Also this will update local statistics for songs as well.
-   This is also where it decides if you need to be downsampled.
-*/
+/**
+ * This is the wrapper for opening music streams from this server.  This script
+ * will play the local version or redirect to the remote server if that be
+ * the case.  Also this will update local statistics for songs as well.
+ * This is also where it decides if you need to be downsampled.
+ */
 define('NO_SESSION', '1');
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 ob_end_clean();
 
 //debug_event('play/index', print_r(apache_request_headers(), true), 5);
 
 /* These parameters had better come in on the url. */
 $uid          = scrub_in($_REQUEST['uid']);
-$oid          = scrub_in($_REQUEST['oid']);
+$object_id    = scrub_in($_REQUEST['oid']);
 $sid          = scrub_in($_REQUEST['ssid']);
 $type         = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 $cache        = scrub_in($_REQUEST['cache']);
@@ -49,8 +49,17 @@ $use_auth     = AmpConfig::get('use_auth');
 $share_id = (int) filter_input(INPUT_GET, 'share_id', FILTER_SANITIZE_NUMBER_INT);
 $secret   = $_REQUEST['share_secret'];
 
+// This is specifically for tmp playlist requests
+$demo_id    = Dba::escape($_REQUEST['demo_id']);
+$random     = Dba::escape($_REQUEST['random']);
+
+// democratic play url doesn't include these
+if ($demo_id !== '') {
+    $type   = 'song';
+    $action = 'stream';
+}
 // allow disabling stat recording from the play url
-if ($cache === '1' || $type == 'podcast_episode') {
+if ($cache === '1' || !in_array($type, array('song', 'video'))) {
     debug_event('play/index', 'record_stats disabled: cache {' . $type . "}", 5);
     $record_stats = false;
 }
@@ -61,6 +70,7 @@ $bitrate      = 0;
 $maxbitrate   = 0;
 $resolution   = '';
 $quality      = 0;
+$time         = time();
 
 if (isset($_REQUEST['player'])) {
     $player = $_REQUEST['player'];
@@ -104,15 +114,11 @@ debug_event('play/index', 'Asked for type {' . $type . "}", 5);
 
 if ($type == 'playlist') {
     $playlist_type = scrub_in($_REQUEST['playlist_type']);
-    $oid           = $sid;
+    $object_id     = $sid;
 }
 
-/* This is specifically for tmp playlist requests */
-$demo_id    = Dba::escape($_REQUEST['demo_id']);
-$random     = Dba::escape($_REQUEST['random']);
-
 /* First things first, if we don't have a uid/oid stop here */
-if (empty($oid) && empty($demo_id) && empty($random)) {
+if (empty($object_id) && empty($demo_id) && empty($random)) {
     debug_event('play/index', 'No object UID specified, nothing to play', 2);
     header('HTTP/1.1 400 Nothing To Play');
 
@@ -184,14 +190,14 @@ if (!$share_id) {
 
         // If require session is set then we need to make sure we're legit
         if ($use_auth && AmpConfig::get('require_session')) {
-            if (!AmpConfig::get('require_localnet_session') && Access::check_network('network', Core::get_global('user')->id, '5')) {
+            if (!AmpConfig::get('require_localnet_session') && Access::check_network('network', Core::get_global('user')->id, 5)) {
                 debug_event('play/index', 'Streaming access allowed for local network IP ' . Core::get_server('REMOTE_ADDR'), 4);
             } else {
                 if (!Session::exists('stream', $sid)) {
                     // No valid session id given, try with cookie session from web interface
                     $sid = $_COOKIE[AmpConfig::get('session_name')];
                     if (!Session::exists('interface', $sid)) {
-                        debug_event('play/index', 'Streaming access denied: ' . Core::get_global('user')->username . "'s session has expired", 3);
+                        debug_event('play/index', "Streaming access denied: Session $sid has expired", 3);
                         header('HTTP/1.1 403 Session Expired');
 
                         return false;
@@ -217,7 +223,7 @@ if (!$share_id) {
         return false;
     }
 
-    if (!$share->is_shared_media($oid)) {
+    if (!$share->is_shared_media($object_id)) {
         header('HTTP/1.1 403 Access Unauthorized');
 
         return false;
@@ -227,24 +233,27 @@ if (!$share_id) {
     Preference::init();
 }
 
-/* If we are in demo mode.. die here */
+// If we are in demo mode.. die here
+if (AmpConfig::get('demo_mode')) {
+    debug_event('play/index', "Streaming Access Denied: Disable demo_mode in 'config/ampache.cfg.php'", 3);
+    UI::access_denied();
 
+    return false;
+}
+// Check whether streaming is allowed
 $prefs = AmpConfig::get('allow_stream_playback') && $_SESSION['userdata']['preferences']['allow_stream_playback'];
-if (AmpConfig::get('demo_mode') || !$prefs) {
-    debug_event('play/index', "Streaming Access Denied:" . AmpConfig::get('demo_mode') . "is the value of demo_mode. Current user level is " . Core::get_global('user')->access, 3);
+if (!$prefs) {
+    debug_event('play/index', "Streaming Access Denied: Enable 'Allow Streaming' in Server Config -> Options", 3);
     UI::access_denied();
 
     return false;
 }
 
-/*
-   If they are using access lists let's make sure
-   that they have enough access to play this mojo
-*/
+// If they are using access lists let's make sure that they have enough access to play this mojo
 if (AmpConfig::get('access_control')) {
-    if (!Access::check_network('stream', Core::get_global('user')->id, '25') &&
-        !Access::check_network('network', Core::get_global('user')->id, '25')) {
-        debug_event('play/index', "Streaming Access Denied: " . Core::get_server('REMOTE_ADDR') . " does not have stream level access", 3);
+    if (!Access::check_network('stream', Core::get_global('user')->id, 25) &&
+        !Access::check_network('network', Core::get_global('user')->id, 25)) {
+        debug_event('play/index', "Streaming Access Denied: " . Core::get_user_ip() . " does not have stream level access", 3);
         UI::access_denied();
 
         return false;
@@ -253,7 +262,7 @@ if (AmpConfig::get('access_control')) {
 
 // Handle playlist downloads
 if ($type == 'playlist' && isset($playlist_type)) {
-    $playlist = new Stream_Playlist($oid);
+    $playlist = new Stream_Playlist($object_id);
     // Some rudimentary security
     if ($uid != $playlist->user) {
         UI::access_denied();
@@ -277,15 +286,15 @@ if ($demo_id !== '') {
     // If there is a cooldown we need to make sure this song isn't a repeat
     if (!$democratic->cooldown) {
         /* This takes into account votes etc and removes the */
-        $oid = $democratic->get_next_object();
+        $object_id = $democratic->get_next_object();
     } else {
         // Pull history
         $song_cool_check = 0;
-        $oid             = $democratic->get_next_object($song_cool_check);
-        $oids            = $democratic->get_cool_songs();
-        while (in_array($oid, $oids)) {
+        $object_id       = $democratic->get_next_object($song_cool_check);
+        $object_ids      = $democratic->get_cool_songs();
+        while (in_array($object_id, $object_ids)) {
             $song_cool_check++;
-            $oid = $democratic->get_next_object($song_cool_check);
+            $object_id = $democratic->get_next_object($song_cool_check);
             if ($song_cool_check >= '5') {
                 break;
             }
@@ -303,29 +312,29 @@ if ($random !== '') {
         } else {
             $rtype = $type;
         }
-        $oid = Random::get_single_song($rtype);
-        if ($oid) {
+        $object_id = Random::get_single_song($rtype);
+        if ($object_id) {
             // Save this one in case we do a seek
-            $_SESSION['random']['last'] = $oid;
+            $_SESSION['random']['last'] = $object_id;
         }
     } else {
-        $oid = $_SESSION['random']['last'];
+        $object_id = $_SESSION['random']['last'];
     }
 } // if random
 
 if ($type == 'song') {
     /* Base Checks passed create the song object */
-    $media = new Song($oid);
+    $media = new Song($object_id);
     $media->format();
 } elseif ($type == 'song_preview') {
-    $media = new Song_Preview($oid);
+    $media = new Song_Preview($object_id);
     $media->format();
 } elseif ($type == 'podcast_episode') {
-    $media = new Podcast_Episode($oid);
+    $media = new Podcast_Episode($object_id);
     $media->format();
 } else {
     $type  = 'video';
-    $media = new Video($oid);
+    $media = new Video($object_id);
     if (isset($_REQUEST['subtitle'])) {
         $subtitle = $media->get_subtitle_file($_REQUEST['subtitle']);
     }
@@ -348,7 +357,7 @@ if ($media->catalog) {
         debug_event('play/index', "Error: $media->file is currently disabled, song skipped", 3);
         // Check to see if this is a democratic playlist, if so remove it completely
         if ($demo_id !== '' && isset($democratic)) {
-            $democratic->delete_from_oid($oid, $type);
+            $democratic->delete_from_oid($object_id, $type);
         }
         header('HTTP/1.1 404 File disabled');
 
@@ -377,7 +386,7 @@ if ($media->catalog) {
 if ($media == null) {
     // Handle democratic removal
     if ($demo_id !== '' && isset($democratic)) {
-        $democratic->delete_from_oid($oid, $type);
+        $democratic->delete_from_oid($object_id, $type);
     }
 
     return false;
@@ -385,16 +394,15 @@ if ($media == null) {
 
 /* If we don't have a file, or the file is not readable */
 if (!$media->file || !Core::is_readable(Core::conv_lc_file($media->file))) {
-
     // We need to make sure this isn't democratic play, if it is then remove
     // the media from the vote list
     if (is_object($tmp_playlist)) {
-        $tmp_playlist->delete_track($oid);
+        $tmp_playlist->delete_track($object_id);
     }
     // FIXME: why are these separate?
     // Remove the media votes if this is a democratic song
     if ($demo_id !== '' && isset($democratic)) {
-        $democratic->delete_from_oid($oid, $type);
+        $democratic->delete_from_oid($object_id, $type);
     }
 
     debug_event('play/index', "Media $media->file ($media->title) does not have a valid filename specified", 2);
@@ -425,7 +433,7 @@ if ($action == 'download' && !$original) {
             $sessionkey = $sid ?: Stream::get_session();
             $agent      = Session::agent($sessionkey);
             $location   = Session::get_geolocation($sessionkey);
-            Stats::insert($type, $media->id, $uid, $agent, $location, 'download');
+            Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
         }
     }
     $record_stats = false;
@@ -450,10 +458,10 @@ if ($action == 'download' && !$original) {
             $sessionkey = $sid ?: Stream::get_session();
             $agent      = Session::agent($sessionkey);
             $location   = Session::get_geolocation($sessionkey);
-            Stats::insert($type, $media->id, $uid, $agent, $location, 'download');
+            Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
         }
     } else {
-        Stats::insert($type, $media->id, $uid, 'share.php', null, 'download');
+        Stats::insert($type, $media->id, $uid, 'share.php', array(), 'download', $time);
     }
 
     // Check to see if we should be throttling because we can get away with it
@@ -483,13 +491,13 @@ if (AmpConfig::get('track_user_ip')) {
 
 $force_downsample = false;
 if (AmpConfig::get('downsample_remote')) {
-    if (!Access::check_network('network', Core::get_global('user')->id, '0')) {
+    if (!Access::check_network('network', Core::get_global('user')->id, 0)) {
         debug_event('play/index', 'Downsampling enabled for non-local address ' . Core::get_server('REMOTE_ADDR'), 5);
         $force_downsample = true;
     }
 }
 
-debug_event('play/index', 'Playing file (' . $media->file . '}...', 5);
+debug_event('play/index', $action . ' file (' . $media->file . '}...', 5);
 debug_event('play/index', 'Media type {' . $media->type . '}', 5);
 
 $cpaction = $_REQUEST['custom_play_action'];
@@ -537,8 +545,6 @@ if (!$cpaction && !$original) {
                             if (!empty($subtitle)) {
                                 $transcode = true;
                                 debug_event('play/index', 'Transcoding because subtitle requested', 5);
-                            } else {
-                                debug_event('play/index', 'Decided not to transcode', 5);
                             }
                         }
                     }
@@ -661,8 +667,6 @@ if ($range_values > 0 && ($start > 0 || $end > 0)) {
             header('Content-Range: bytes ' . $range);
         }
     }
-} else {
-    debug_event('play/index', 'Starting stream of ' . $media->file . ' with size ' . $media->size, 5);
 }
 
 if (!isset($_REQUEST['segment'])) {
@@ -680,21 +684,21 @@ if (!isset($_REQUEST['segment'])) {
         $location   = Session::get_geolocation($sessionkey);
         if (!$share_id && $record_stats) {
             if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
-                debug_event('play/index', 'Registering stream stats for ' . $uid . ' {' . $media->get_stream_name() . '}...', 4);
-                if ($use_auth) {
-                    $user = new User($uid);
-                    $user->update_stats($type, $media->id, $agent, $location);
-                } else {
-                    Stats::insert($type, $media->id, 0, $agent, $location, 'stream');
+                debug_event('play/index', 'Registering stream for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 4);
+                if ($user->id && get_class($media) == 'Song') {
+                    // scrobble songs for the user
+                    User::save_mediaplay($user, $media);
                 }
+                // internal stats (object_count, user_activity)
+                $media->set_played($uid, $agent, $location, $time);
             }
         } elseif (!$share_id && !$record_stats) {
             if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
-                debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
-                Stats::insert($type, $media->id, $uid, $agent, $location, 'download');
+                debug_event('play/index', 'Registering download for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 5);
+                Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
             }
         } elseif ($share_id) {
-            Stats::insert($type, $media->id, $uid, 'share.php', null, 'stream');
+            Stats::insert($type, $media->id, $uid, 'share.php', array(), 'stream', $time);
         }
     }
 }
@@ -708,10 +712,11 @@ if ($transcode || $demo_id) {
 $mime = $media->mime;
 if ($transcode && isset($transcoder)) {
     $mime = $media->type_to_mime($transcoder['format']);
-    // Non-blocking stream doesn't work in Windows (php bug since 2005 and still here in 2015...)
-    // We don't want to wait indefinitly for a potential error so we just ignore it.
+    // Non-blocking stream doesn't work in Windows (php bug since 2005 and still here in 2020...)
+    // We don't want to wait indefinitely for a potential error so we just ignore it.
+    // https://bugs.php.net/bug.php?id=47918
     if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-        // This to avoid hang, see http://php.net/manual/es/function.proc-open.php#89338
+        // This to avoid hang, see http://php.net/manual/en/function.proc-open.php#89338
         $transcode_error = fread($transcoder['stderr'], 4096);
         if (!empty($transcode_error)) {
             debug_event('play/index', 'Transcode stderr: ' . $transcode_error, 1);
@@ -723,7 +728,7 @@ if ($transcode && isset($transcoder)) {
 // If this is a democratic playlist remove the entry.
 // We do this regardless of play amount.
 if ($demo_id && isset($democratic)) {
-    $democratic->delete_from_oid($oid, $type);
+    $democratic->delete_from_oid($object_id, $type);
 }
 
 // Close sql connection

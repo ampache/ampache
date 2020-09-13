@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -197,7 +197,7 @@ if ($upload_max > 0) { ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Music License') ?></td>
     <td class="upload_select">
-        <?php show_license_select('license', '', '0'); ?>
+        <?php show_license_select('license', 0, 0); ?>
         <div id="album_select_license_<?php echo $song->license ?>">
             <?php echo Ajax::observe('license_select', 'change', 'check_inline_song_edit("license", "0")'); ?>
         </div>

@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -58,7 +58,7 @@ class scrobbler
      * @param array $vars
      * @return string
      */
-    public function get_api_sig($vars = null)
+    public function get_api_sig($vars = array())
     {
         ksort($vars);
         $sig = '';
@@ -152,10 +152,10 @@ class scrobbler
             'api_key' => $this->api_key,
             'token' => $token
             );
-            //sign the call
+            // sign the call
             $sig             = $this->get_api_sig($vars);
             $vars['api_sig'] = $sig;
-            //call the getSession API
+            // call the getSession API
             $response=$this->call_url('/2.0/', 'GET', $vars);
             $xml     = simplexml_load_string($response);
             if ($xml) {
@@ -232,14 +232,14 @@ class scrobbler
             return false;
         }
 
-        //sort array by timestamp
+        // sort array by timestamp
         ksort($this->queued_tracks);
 
         // Build the query string (encoded per RFC1738 by the call method)
         $count   = 0;
         $vars    = array();
         foreach ($this->queued_tracks as $track) {
-            //construct array of parameters for each song
+            // construct array of parameters for each song
             $vars["artist[$count]"]      = $track['artist'];
             $vars["track[$count]"]       = $track['title'];
             $vars["timestamp[$count]"]   = $track['time'];

@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -68,7 +68,8 @@ class Waveform
     /**
      * Get a song waveform.
      * @param integer $song_id
-     * @return binary|string|null
+     * @return binary|string|null|boolean
+     * @throws RuntimeException
      */
     public static function get($song_id)
     {
@@ -121,7 +122,6 @@ class Waveform
                                 Stream::kill_process($transcoder);
 
                                 $waveform = self::create_waveform($tmpfile);
-                                //$waveform = self::create_waveform("C:\\tmp\\test.wav");
 
                                 if (unlink($tmpfile) === false) {
                                     throw new RuntimeException('The file handle ' . $tmpfile . ' could not be unlinked');
@@ -236,7 +236,7 @@ class Waveform
     /**
      * Create waveform from song file.
      * @param string $filename
-     * @return null|string
+     * @return string|null
      */
     protected static function create_waveform($filename)
     {
@@ -317,24 +317,24 @@ class Waveform
                 }
 
                 switch ($byte) {
-                // get value for 8-bit wav
-                case 1:
-                  $data = self::findValues($bytes[0], $bytes[1]);
-                break;
-                // get value for 16-bit wav
-                case 2:
-                  if (ord($bytes[1]) & 128) {
-                      $temp = 0;
-                  } else {
-                      $temp = 128;
-                  }
-                  $temp = chr((ord($bytes[1]) & 127) + $temp);
-                  $data = floor(self::findValues($bytes[0], $temp) / 256);
-                break;
-                default:
-                    $data = 0;
-                break;
-              }
+                    case 1:
+                        // get value for 8-bit wav
+                        $data = self::findValues($bytes[0], $bytes[1]);
+                        break;
+                    case 2:
+                        // get value for 16-bit wav
+                        if (ord($bytes[1]) & 128) {
+                            $temp = 0;
+                        } else {
+                            $temp = 128;
+                        }
+                            $temp = chr((ord($bytes[1]) & 127) + $temp);
+                            $data = floor(self::findValues($bytes[0], $temp) / 256);
+                            break;
+                    default:
+                        $data = 0;
+                        break;
+                }
 
                 // skip bytes for memory optimization
                 fseek($handle, $ratio, SEEK_CUR);
@@ -348,17 +348,17 @@ class Waveform
                 if (!($value / $height == 0.5 && !$draw_flat)) {
                     // draw the line on the image using the $value and centering it vertically on the canvas
                     imageline(
-                  $img,
-                  // x1
-                  (int) ($data_point / $detail),
-                  // y1: height of the image minus  as a percentage of the height for the wave amplitude
-                  $height - $value,
-                  // x2
-                  (int) ($data_point / $detail),
-                  // y2: same as y1, but from the bottom of the image
-                  $height - ($height - $value),
-                  imagecolorallocate($img, $red, $green, $blue)
-                );
+                        $img,
+                        // x1
+                        (int) ($data_point / $detail),
+                        // y1: height of the image minus  as a percentage of the height for the wave amplitude
+                        $height - $value,
+                        // x2
+                        (int) ($data_point / $detail),
+                        // y2: same as y1, but from the bottom of the image
+                        $height - ($height - $value),
+                        imagecolorallocate($img, (int) $red, (int) $green, (int) $blue)
+                    );
                 }
             } else {
                 // skip this one due to lack of detail

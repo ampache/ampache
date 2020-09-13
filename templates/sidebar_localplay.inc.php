@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 
@@ -24,17 +24,23 @@
 <?php
 $server_allow = AmpConfig::get('allow_localplay_playback');
 $controller   = AmpConfig::get('localplay_controller');
-$access_check = Access::check('localplay', '5');
+$access_check = Access::check('localplay', 5);
 if ($server_allow && $controller && $access_check) { ?>
 <?php
     // Little bit of work to be done here
     $localplay        = new Localplay(AmpConfig::get('localplay_controller'));
     $current_instance = $localplay->current_instance();
     $class            = $current_instance ? '' : ' class="active_instance"'; ?>
-<?php if (Access::check('localplay', '25')) { ?>
+<?php if (Access::check('localplay', 25)) { ?>
+    <?php if (AmpConfig::get('browse_filter')) {
+        echo "<li>";
+        Ajax::start_container('browse_filters');
+        Ajax::end_container();
+        echo "</li>";
+    } ?>
   <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Localplay'); ?>"><?php echo T_('Localplay'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'localplay', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_localplay')) ? $_COOKIE['sb_localplay'] : 'expanded')); ?></h4>
     <ul class="sb3" id="sb_localplay_info">
-<?php if (Access::check('localplay', '75')) { ?>
+<?php if (Access::check('localplay', 75)) { ?>
     <li id="sb_localplay_info_add_instance"><a href="<?php echo $web_path; ?>/localplay.php?action=show_add_instance"><?php echo T_('Add Instance'); ?></a></li>
     <li id="sb_localplay_info_show_instances"><a href="<?php echo $web_path; ?>/localplay.php?action=show_instances"><?php echo T_('Show Instances'); ?></a></li>
 <?php

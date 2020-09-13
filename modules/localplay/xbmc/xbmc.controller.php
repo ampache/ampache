@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -90,18 +90,22 @@ class AmpacheXbmc extends localplay_controller
      */
     public function install()
     {
+        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+
         $sql = "CREATE TABLE `localplay_xbmc` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-            "`name` VARCHAR( 128 ) COLLATE utf8_unicode_ci NOT NULL , " .
+            "`name` VARCHAR( 128 ) COLLATE $collation NOT NULL , " .
             "`owner` INT( 11 ) NOT NULL, " .
-            "`host` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
+            "`host` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
             "`port` INT( 11 ) UNSIGNED NOT NULL , " .
-            "`user` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
-            "`pass` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL" .
-            ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+            "`user` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
+            "`pass` VARCHAR( 255 ) COLLATE $collation NOT NULL" .
+            ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('xbmc_active', T_('XBMC Active Instance'), '0', '25', 'integer', 'internal', 'xbmc');
+        Preference::insert('xbmc_active', T_('XBMC Active Instance'), 0, 25, 'integer', 'internal', 'xbmc');
 
         return true;
     } // install
@@ -651,14 +655,15 @@ class AmpacheXbmc extends localplay_controller
      * This returns bool/int values for features, loop, repeat and any other features
      * that this Localplay method supports.
      * This works as in requesting the xbmc properties
+     * @return array
      */
     public function status()
     {
+        $array = array();
         if (!$this->_xbmc) {
-            return false;
+            return $array;
         }
 
-        $array = array();
         try {
             $appprop = $this->_xbmc->Application->GetProperties(array(
                 'properties' => array('volume')
@@ -679,7 +684,7 @@ class AmpacheXbmc extends localplay_controller
                 ));
                 $array['repeat']    = ($playprop['repeat'] != "off");
                 $array['random']    = (strtolower($playprop['shuffled']) == 1) ;
-                $array['track']     =   $currentplay['file'];
+                $array['track']     = $currentplay['file'];
 
                 $url_data = $this->parse_url($array['track']);
                 $song     = new Song($url_data['oid']);
@@ -720,4 +725,4 @@ class AmpacheXbmc extends localplay_controller
             return false;
         }
     } // connect
-} //end of AmpacheXbmc
+} // end xbmc.controller

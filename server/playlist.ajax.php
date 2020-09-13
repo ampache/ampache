@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -52,25 +52,21 @@ switch ($_REQUEST['action']) {
         $browse->store();
 
         $results[$browse->get_content_div()] = ob_get_clean();
-    break;
+        break;
     case 'append_item':
         // Only song item are supported with playlists
-
-        debug_event('playlist.ajax', 'Appending items to playlist {' . Core::get_request('playlist_id') . '}...', 5);
-
         if (!isset($_REQUEST['playlist_id']) || empty($_REQUEST['playlist_id'])) {
-            if (!Access::check('interface', '25')) {
+            if (!Access::check('interface', 25)) {
                 debug_event('playlist.ajax', 'Error:' . Core::get_global('user')->username . ' does not have user access, unable to create playlist', 1);
                 break;
             }
 
             $name        = $_REQUEST['name'];
             if (empty($name)) {
-                $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
-                $name        = Core::get_global('user')->username . ' - ' . get_datetime($time_format, time());
+                $name = Core::get_global('user')->username . ' - ' . get_datetime(time());
             }
-            $playlist_id = Playlist::create($name, 'private');
-            if ($playlist_id === null) {
+            $playlist_id = (int) Playlist::create($name, 'private');
+            if ($playlist_id < 1) {
                 break;
             }
             $playlist = new Playlist($playlist_id);
@@ -81,6 +77,7 @@ switch ($_REQUEST['action']) {
         if (!$playlist->has_access()) {
             break;
         }
+        debug_event('playlist.ajax', 'Appending items to playlist {' . $playlist->id . '}...', 5);
 
         $medias    = array();
         $item_id   = $_REQUEST['item_id'];
@@ -109,10 +106,10 @@ switch ($_REQUEST['action']) {
         } else {
             debug_event('playlist.ajax', 'No item to add. Aborting...', 5);
         }
-    break;
+        break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 }
 
-echo xoutput_from_array($results);
+echo (string) xoutput_from_array($results);

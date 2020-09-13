@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,13 +16,15 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
 define('NO_SESSION', '1');
 $_SESSION['login'] = true;
-require_once 'lib/init.php';
+
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 /* Check Perms */
 if (!AmpConfig::get('allow_public_registration') && !Mailer::is_mail_enabled()) {
@@ -45,7 +47,7 @@ switch ($_REQUEST['action']) {
         $username      = scrub_in(Core::get_get('username'));
         $validation    = scrub_in(Core::get_get('auth'));
         require_once AmpConfig::get('prefix') . UI::find_template('show_user_activate.inc.php');
-    break;
+        break;
     case 'add_user':
         /**
          * User information has been entered
@@ -138,23 +140,23 @@ switch ($_REQUEST['action']) {
         }
 
         /* Attempt to create the new user */
-        $access = '5';
+        $access = 5;
         switch (AmpConfig::get('auto_user')) {
             case 'admin':
-                $access = '100';
-            break;
+                $access = 100;
+                break;
             case 'user':
-                $access = '25';
-            break;
+                $access = 25;
+                break;
             case 'guest':
             default:
-                $access = '5';
-            break;
+                $access = 5;
+                break;
         } // auto-user level
 
         $new_user = User::create($username, $fullname, $email, (string) $website, $pass1, $access, (string) $state, (string) $city, AmpConfig::get('admin_enable_required'));
 
-        if ($new_user > 0) {
+        if (!$new_user > 0) {
             AmpError::add('duplicate_user', T_("Failed to create user"));
             require_once AmpConfig::get('prefix') . UI::find_template('show_user_registration.inc.php');
             break;
@@ -170,9 +172,9 @@ switch ($_REQUEST['action']) {
         }
 
         require_once AmpConfig::get('prefix') . UI::find_template('show_registration_confirmation.inc.php');
-    break;
+        break;
     case 'show_add_user':
     default:
         require_once AmpConfig::get('prefix') . UI::find_template('show_user_registration.inc.php');
-    break;
+        break;
 } // end switch on action

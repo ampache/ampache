@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -25,7 +25,9 @@
  * as such it needs to verify the session id that is passed
  */
 define('NO_SESSION', '1');
-require_once '../lib/init.php';
+define('OUTDATED_DATABASE_OK', 1);
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 // If it's not a handshake then we can allow it to take up lots of time
 if (Core::get_request('action') != 'handshake') {
@@ -58,16 +60,9 @@ if (!Session::exists('api', Core::get_request('auth')) && Core::get_request('act
 }
 
 // If the session exists then let's try to pull some data from it to see if we're still allowed to do this
-$username = null;
-$apikey   = null;
+$username = ($_REQUEST['action'] == 'handshake') ? $_REQUEST['user'] : Session::username($_REQUEST['auth']);
 
-if ((Core::get_request('action') == 'handshake') && isset($_REQUEST['timestamp'])) {
-    $username = Core::get_request('user');
-} else {
-    $apikey = Core::get_request('auth');
-}
-
-if (!Access::check_network('init-api', $username, 5, $apikey)) {
+if (!Access::check_network('init-api', $username, 5)) {
     debug_event('Access Denied', 'Unauthorized access attempt to API [' . Core::get_server('REMOTE_ADDR') . ']', 3);
     ob_end_clean();
     echo XML_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
@@ -101,8 +96,8 @@ foreach ($methods as $method) {
 
     // If the method is the same as the action being called
     // Then let's call this function!
-    if ($_GET['action'] == $method) {
-        $_GET['format'] = 'xml';
+    if (str_replace('tag', 'genre', $_GET['action']) == $method) {
+        $_GET['api_format'] = 'xml';
         call_user_func(array('api', $method), $_GET);
         // We only allow a single function to be called, and we assume it's cleaned up!
         return false;

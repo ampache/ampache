@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <?php UI::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
@@ -26,42 +26,32 @@
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Share'); ?></td>
-    <td>
-        <?php echo $object->f_link; ?>
-    </td>
+    <td><?php echo $object->f_link; ?></td>
 </tr>
 <tr>
     <td><?php echo T_('Secret'); ?></td>
-    <td>
-        <input type="text" name="secret" value="<?php echo scrub_out($_REQUEST['secret'] ?: generate_password(8)); ?>" />
+    <td><input type="text" name="secret" value="<?php echo scrub_out($_REQUEST['secret'] ?: generate_password(8)); ?>" />
         <?php AmpError::display('secret'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Max Counter'); ?></td>
-    <td>
-        <input type="text" name="max_counter" value="<?php echo scrub_out($_REQUEST['max_counter'] ?: '0'); ?>" />
+    <td><input type="text" name="max_counter" value="<?php echo scrub_out($_REQUEST['max_counter'] ?: '0'); ?>" />
         <?php AmpError::display('max_counter'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Expiry Days'); ?></td>
-    <td>
-        <input type="text" name="expire" value="<?php echo scrub_out($_REQUEST['expire'] ?: AmpConfig::get('share_expire')); ?>" />
-    </td>
+    <td><input type="text" name="expire" value="<?php echo scrub_out($_REQUEST['expire'] ?: AmpConfig::get('share_expire')); ?>" /></td>
 </tr>
 <tr>
     <td><?php echo T_('Allow Stream'); ?></td>
-    <td>
-        <input type="checkbox" name="allow_stream" value="1" <?php echo ($_REQUEST['allow_stream'] || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> />
-    </td>
+    <td><input type="checkbox" name="allow_stream" value="1" <?php echo ($_REQUEST['allow_stream'] || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> /></td>
 </tr>
 <?php if (((Core::get_request('type') == 'song' || Core::get_request('type') == 'video') && (Access::check_function('download')) || Access::check_function('batch_download'))) { ?>
 <tr>
     <td><?php echo T_('Allow Download'); ?></td>
-    <td>
-        <input type="checkbox" name="allow_download" value="1" <?php echo ($_REQUEST['allow_download'] || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> />
-    </td>
+    <td><input type="checkbox" name="allow_download" value="1" <?php echo ($_REQUEST['allow_download'] || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> /></td>
 </tr>
 <?php
 } ?>

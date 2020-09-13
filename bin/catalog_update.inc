@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,90 +16,93 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-define('NO_SESSION','1');
+define('NO_SESSION', '1');
 define('CLI', 1);
 
-$path = dirname(__FILE__);
+$path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
-require_once $prefix . '/lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 ob_end_flush();
 
-$tmpmemlimoff = 0;        //All off by default
-$catclean = 0;
-$catverify = 0;
-$catadd = 0;
-$artadd = 0;
-$infoupdate = 0;
-$plimp = 0;
+$tmpmemlimoff   = 0;        //All off by default
+$catclean       = 0;
+$catverify      = 0;
+$catadd         = 0;
+$artadd         = 0;
+$infoupdate     = 0;
+$plimp          = 0;
 $optimizetables = 0;
-$cattype = false;
-$catname = false;
-$options = getopt("hn:t:mvcaguio");
+$cattype        = false;
+$catname        = false;
+$options        = getopt("hn:t:mvcaguio");
 
 if (count($options) == 0) {
-    $operations_string = "\n\t- ". T_('Doing all Catalog operations');
+    $operations_string = "\n\t- " . T_('Doing all Catalog operations');
 } else {
+    $operations_string = '';
+    if (array_key_exists('h', $options)) {
+        usage();
 
-        if (array_key_exists('h', $options)) {
-            usage();
-            return false;
-        }
-        if (array_key_exists('m', $options)) {
-            $operations_string .= "\n\t- " . T_('Temporarily deactivating PHP memory limit');
-            $tmpmemlimoff = 1;
-        }
-        if (array_key_exists('n', $options)) {
-            $operations_string .= "\n\t- " . T_('Setting Catalog name');
-            $catname = Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $options['n']));
-        }
-        if (array_key_exists('t', $options)) {
-            $operations_string .= "\n\t- " . T_('Setting Catalog type');
-            $cattype = strtolower($options['t']);
-        }
-        if (array_key_exists('c', $options)) {
-            $operations_string .= "\n\t- " . T_('Cleaning Catalog/s');
-            $catclean = 1;
-        }
-        if (array_key_exists('v', $options)) {
-            $operations_string .= "\n\t- " . T_('Verifying Catalog/s');
-            $catverify = 1;
-        }
-        if (array_key_exists('a', $options)) {
-            $operations_string .= "\n\t- " . T_('Adding new media to Catalog/s');
-            $catadd = 1;
-        }
-        if (array_key_exists('g', $options)) {
-            $operations_string .= "\n\t- " . T_('Gathering new media art');
-            $artadd = 1;
-        }
-        if (array_key_exists('u', $options)) {
-            $operations_string .= "\n\t- " . T_('Update artist information and fetch similar artists from last.fm');
-            $infoupdate = 1;
-        }
-        if (array_key_exists('i', $options)) {
-            $operations_string .= "\n\t- " . T_('Importing playlist/s');
-            $plimp = 1;
-        }
-        if (array_key_exists('o', $options)) {
-            $operations_string .= "\n\t- " . T_('Database table optimization');
-            $optimizetables = 1;
-        }
+        return false;
+    }
+    if (array_key_exists('m', $options)) {
+        $operations_string .= "\n\t- " . T_('Temporarily deactivating PHP memory limit');
+        $tmpmemlimoff = 1;
+    }
+    if (array_key_exists('n', $options)) {
+        $operations_string .= "\n\t- " . T_('Setting Catalog name');
+        $catname = Dba::escape(preg_replace("/[^a-z0-9\. -]/i", "", $options['n']));
+    }
+    if (array_key_exists('t', $options)) {
+        $operations_string .= "\n\t- " . T_('Setting Catalog type');
+        $cattype = strtolower($options['t']);
+    }
+    if (array_key_exists('c', $options)) {
+        $operations_string .= "\n\t- " . T_('Cleaning Catalog/s');
+        $catclean = 1;
+    }
+    if (array_key_exists('v', $options)) {
+        $operations_string .= "\n\t- " . T_('Verifying Catalog/s');
+        $catverify = 1;
+    }
+    if (array_key_exists('a', $options)) {
+        $operations_string .= "\n\t- " . T_('Adding new media to Catalog/s');
+        $catadd = 1;
+    }
+    if (array_key_exists('g', $options)) {
+        $operations_string .= "\n\t- " . T_('Gathering new media art');
+        $artadd = 1;
+    }
+    if (array_key_exists('u', $options)) {
+        $operations_string .= "\n\t- " . T_('Update artist information and fetch similar artists from last.fm');
+        $infoupdate = 1;
+    }
+    if (array_key_exists('i', $options)) {
+        $operations_string .= "\n\t- " . T_('Importing playlist/s');
+        $plimp = 1;
+    }
+    if (array_key_exists('o', $options)) {
+        $operations_string .= "\n\t- " . T_('Database table optimization');
+        $optimizetables = 1;
+    }
 }
 if (count($_SERVER['argv']) != 1 && $artadd != 1 && $infoupdate != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1 && $plimp != 1) {
     usage();
+
     return false;
 }
 
 if ($catclean == 0 && $catverify == 0 && $catadd == 0 && $artadd == 0 && $optimizetables == 0 && $plimp == 0 && $infoupdate != 1) {    //didn't pass any clean/verify/add arguments
-    $catclean = 1;     //set them all to on
-    $catverify = 1;
-    $catadd = 1;
-    $artadd = 1;
+    $catclean       = 1;     //set them all to on
+    $catverify      = 1;
+    $catadd         = 1;
+    $artadd         = 1;
     $optimizetables = 1;
 }
 echo "\n----------------------------------------------------------\n";
@@ -117,15 +120,16 @@ if ($tmpmemlimoff == 1) {
 //$options = array(); // for $catadd
 if ($artadd == 1) {
     $options['gather_art'] = true;
-    } else {
+} else {
     $options['gather_art'] = false;
 }
 if ($plimp == 1) {
     $options['parse_playlist'] = true;
-    } else {
+} else {
     $options['parse_playlist'] = false;
 }
 // --------
+$where = "";
 if ($catname !== false) {
     $where = " name = '$catname' ";
 }
@@ -143,7 +147,6 @@ $db_results = Dba::read($sql);
 ob_start("ob_html_strip",'1024',true);
 
 while ($row = Dba::fetch_assoc($db_results)) {
-
     $catalog = Catalog::create_from_id($row['id']);
     /* HINT: Catalog Name */
     printf(T_('Reading Catalog: "%s"'), $catalog->name);
@@ -170,8 +173,7 @@ while ($row = Dba::fetch_assoc($db_results)) {
         echo "\n";
         $catalog->add_to_catalog($options);
         echo "----------------\n\n";
-    }
-    elseif ($artadd == 1) {
+    } elseif ($artadd == 1) {
         // Look for media art
         echo "- " . T_('Start searching new media art') . " - \n";
         echo "\n";
@@ -200,23 +202,22 @@ echo "\n";
 
 /**
  * ob_html_strip
- * @param $string
+ * @param string $string
  * @return string|string[]|null
  */
-function ob_html_strip($string) {
-
-    //$string = preg_replace("/update_txt\('.+'\);update_txt\('(.+)','.+'\);/","$1",$string);
-    //$string = preg_replace("/update_.+/","",$string);
+function ob_html_strip($string)
+{
     $string = str_replace('<br />', "\n", $string);
     $string = strip_tags($string);
     $string = html_entity_decode($string);
     $string = preg_replace("/[\r\n]+[\s\t]*[\r\n]+/","\n",$string);
     $string = trim($string);
-    return $string;
 
+    return $string;
 } // ob_html_strip
 
-function usage() {
+function usage()
+{
     echo "\n";
     echo "----------------------------------------------------------\n\t\t";
     echo T_("Usage:") . " \n\033[32m";

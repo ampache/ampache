@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -101,15 +101,18 @@ class Catalog_Seafile extends Catalog
      */
     public function install()
     {
+        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+
         $sql = "CREATE TABLE `" . self::$table_name . "` (" .
             "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-            "`server_uri` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
-            "`api_key` VARCHAR( 100 ) COLLATE utf8_unicode_ci NOT NULL , " .
-            "`library_name` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL , " .
+            "`server_uri` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
+            "`api_key` VARCHAR( 100 ) COLLATE $collation NOT NULL , " .
+            "`library_name` VARCHAR( 255 ) COLLATE $collation NOT NULL , " .
             "`api_call_delay` INT NOT NULL , " .
             "`catalog_id` INT( 11 ) NOT NULL" .
-            ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-
+            ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         return true;
@@ -282,7 +285,7 @@ class Catalog_Seafile extends Catalog
                     /* HINT: count of songs updated */
                     sprintf(T_('Total Media: [%s]'), $count));
 
-            if ($count <= 0) {
+            if ($count < 1) {
                 AmpError::add('general', T_('No media was updated, did you respect the patterns?'));
             } else {
                 $success = true;
@@ -317,7 +320,7 @@ class Catalog_Seafile extends Catalog
                 $results = $this->download_metadata($file);
                 /* HINT: filename (File path) */
                 UI::update_text('', sprintf(T_('Adding a new song: %s'), $file->name));
-                $added =  Song::insert($results);
+                $added = Song::insert($results);
 
                 if ($added) {
                     $this->count++;
@@ -339,14 +342,14 @@ class Catalog_Seafile extends Catalog
      * @param $file
      * @param string $sort_pattern
      * @param string $rename_pattern
-     * @param $gather_types
+     * @param array $gather_types
      * @return array
      * @throws Exception
      */
     private function download_metadata($file, $sort_pattern = '', $rename_pattern = '', $gather_types = null)
     {
         // Check for patterns
-        if (!$sort_pattern or !$rename_pattern) {
+        if (!$sort_pattern || !$rename_pattern) {
             $sort_pattern   = $this->sort_pattern;
             $rename_pattern = $this->rename_pattern;
         }
@@ -430,7 +433,7 @@ class Catalog_Seafile extends Catalog
 
     /**
      * @param media $media
-     * @param $gather_types
+     * @param array $gather_types
      * @param string $sort_pattern
      * @param string $rename_pattern
      * @return array|null
@@ -518,7 +521,6 @@ class Catalog_Seafile extends Catalog
 
         return false;
     }
-
 
     /**
      * format

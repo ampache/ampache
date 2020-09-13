@@ -3,7 +3,7 @@
 
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -88,7 +88,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         <?php
     } ?>
         <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id, 'add', T_('Add to temporary playlist'), 'add_song_' . $song->id); ?>
-        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) { ?>
+        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
         <?php if (AmpConfig::get('sociable')) { ?>
         <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=song&id=<?php echo $song->id; ?>">
             <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
@@ -97,7 +97,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         } ?>
         <?php
     } ?>
-        <?php if (Access::check('interface', '25')) { ?>
+        <?php if (Access::check('interface', 25)) { ?>
         <?php if (AmpConfig::get('share')) { ?>
         <?php Share::display_ui('song', $song->id, false); ?>
         <?php
@@ -109,7 +109,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
         <?php
         } ?>
-        <?php if (($song->user_upload > 0 && $song->user_upload == $GLOBALS['user']->id) || Access::check('interface', '50')) {
+        <?php if (($song->user_upload > 0 && $song->user_upload == $GLOBALS['user']->id) || Access::check('interface', 50)) {
             ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) {
                 ?>
@@ -118,14 +118,14 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
             } ?>
         <?php
         } ?>
-        <?php if (Access::check('interface', '50') || ($song->user_upload == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit'))) { ?>
+        <?php if (Access::check('interface', 50) || ($song->user_upload == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit'))) { ?>
         <a onclick="showEditDialog('song_row', '<?php echo $song->id ?>', '<?php echo 'edit_song_' . $song->id ?>', '<?php echo T_('Song Edit') ?>', '')">
             <?php echo UI::get_icon('edit', T_('Edit')); ?>
         </a>
         <?php
         } ?>
-        <?php if (Access::check('interface', '75') || ($song->user_upload == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit'))) { ?>
-        <span id="<?php echo($button_flip_state_id); ?>">
+        <?php if (Access::check('interface', 75) || ($song->user_upload == Core::get_global('user')->id && AmpConfig::get('upload_allow_edit'))) { ?>
+        <span id="<?php echo $button_flip_state_id; ?>">
             <?php echo Ajax::button('?page=song&action=flip_state&song_id=' . $song->id, $icon, $icontext, 'flip_song_' . $song->id); ?>
         </span>
         <?php
@@ -145,33 +145,40 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
     }
     $songprops[T_('Album')]         = $song->f_album_link . ($song->year ? " (" . scrub_out($song->year) . ")" : "");
     $songprops[T_('Composer')]      = scrub_out($song->composer);
-    $songprops[T_('Genre')]         = $song->f_tags;
+    $songprops[T_('Genres')]        = $song->f_tags;
     $songprops[T_('Year')]          = $song->year;
     $songprops[T_('Original Year')] = scrub_out($song->get_album_original_year($song->album));
-    $songprops[T_('Links')]         = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>";
-    $songprops[T_('Links')] .= "<a href=\"https://www.duckduckgo.com/?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
-    $songprops[T_('Links')] .= "&nbsp;<a href=\"http://www.last.fm/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
-    $songprops[T_('Length')]         = scrub_out($song->f_time);
-    $songprops[T_('Comment')]        = scrub_out($song->comment);
-    $songprops[T_('Label')]          = AmpConfig::get('label') ? "<a href=\"" . AmpConfig::get('web_path') . "/labels.php?action=show&name=" . scrub_out($song->label) . "\">" . scrub_out($song->label) . "</a>" : scrub_out($song->label);
+    $songprops[T_('Links')]         = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>" .
+        "&nbsp;<a href=\"https://www.duckduckgo.com/?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>" .
+        "&nbsp;<a href=\"http://www.last.fm/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
+    $songprops[T_('Length')]        = scrub_out($song->f_time);
+    $songprops[T_('Comment')]       = scrub_out($song->comment);
+    $label_string                   = '';
+    foreach (array_map('trim', explode(';', $song->label)) as $label_name) {
+        $label_string .= "<a href=\"" . AmpConfig::get('web_path') . "/labels.php?action=show&name=" . scrub_out($label_name) . "\">" . scrub_out($label_name) . "</a> ";
+    }
+    $songprops[T_('Label')]          = AmpConfig::get('label') ? $label_string : scrub_out($song->label);
     $songprops[T_('Song Language')]  = scrub_out($song->language);
     $songprops[T_('Catalog Number')] = scrub_out($song->get_album_catalog_number($song->album));
     $songprops[T_('Barcode')]        = scrub_out($song->get_album_barcode($song->album));
     $songprops[T_('Bitrate')]        = scrub_out($song->f_bitrate);
     $songprops[T_('Channels')]       = scrub_out($song->channels);
+    $songprops[T_('Song MBID')]      = scrub_out($song->mbid);
+    $songprops[T_('Album MBID')]     = scrub_out($song->album_mbid);
+    $songprops[T_('Artist MBID')]    = scrub_out($song->artist_mbid);
     if ($song->replaygain_track_gain != 0) {
         $songprops[T_('ReplayGain Track Gain')]   = scrub_out($song->replaygain_track_gain);
     }
     if ($song->replaygain_album_gain != 0) {
         $songprops[T_('ReplayGain Album Gain')]   = scrub_out($song->replaygain_album_gain);
     }
-    if (Access::check('interface', '75')) {
+    if (Access::check('interface', 75)) {
         $songprops[T_('Filename')]   = scrub_out($song->file) . " " . $song->f_size;
     }
     if ($song->update_time) {
-        $songprops[T_('Last Updated')]   = get_datetime($time_format, (int) $song->update_time);
+        $songprops[T_('Last Updated')]   = get_datetime((int) $song->update_time);
     }
-    $songprops[T_('Added')]   = get_datetime($time_format, (int) $song->addition_time);
+    $songprops[T_('Added')]   = get_datetime((int) $song->addition_time);
     if (AmpConfig::get('show_played_times')) {
         $songprops[T_('# Played')]   = scrub_out($song->object_cnt);
     }

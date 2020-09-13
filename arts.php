@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 require_once AmpConfig::get('prefix') . UI::find_template('header.inc.php');
 
@@ -50,7 +51,7 @@ switch ($_REQUEST['action']) {
         $art = new Art($object_id, $object_type);
         $art->reset();
         show_confirmation(T_('No Problem'), T_('Art information has been removed from the database'), $burl);
-    break;
+        break;
     // Upload art
     case 'upload_art':
         // we didn't find anything
@@ -77,7 +78,7 @@ switch ($_REQUEST['action']) {
             show_confirmation(T_("There Was a Problem"), T_('Art could not be located at this time. This may be due to write access error, or the file was not received correctly'), $burl);
         }
 
-    break;
+        break;
     case 'find_art':
         // Prevent the script from timing out
         set_time_limit(0);
@@ -112,10 +113,8 @@ switch ($_REQUEST['action']) {
                 $word['value'] = $_REQUEST['option_' . $key];
             }
             $options[$key] = $word['value'];
-            if ($word['important']) {
-                if (!empty($word['value'])) {
-                    $keyword .= ' ' . $word['value'];
-                }
+            if ($word['important'] && !empty($word['value'])) {
+                $keyword .= ' ' . $word['value'];
             }
         }
         $options['keyword'] = trim($keyword);
@@ -130,7 +129,6 @@ switch ($_REQUEST['action']) {
         }
         $images = array_merge($cover_url, $images);
 
-        debug_event('arts', 'HOW MANY IMAGES?:' . (string) count($images), 3);
         // If we've found anything then go for it!
         if (count($images)) {
             // We don't want to store raw's in here so we need to strip them out into a separate array
@@ -145,8 +143,7 @@ switch ($_REQUEST['action']) {
         }
 
         require_once AmpConfig::get('prefix') . UI::find_template('show_get_art.inc.php');
-
-    break;
+        break;
     case 'select_art':
 
         /* Check to see if we have the image url still */
@@ -176,9 +173,9 @@ switch ($_REQUEST['action']) {
         }
 
         header("Location:" . $burl);
-    break;
+        break;
 }
 
-/* Show the Footer */
+// Show the Footer
 UI::show_query_stats();
 UI::show_footer();

@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -51,9 +51,9 @@ class Podcast extends database_object implements library_item
     /**
      * Podcast
      * Takes the ID of the podcast and pulls the info from the db
-     * @param string $podcast_id
+     * @param integer $podcast_id
      */
-    public function __construct($podcast_id = '')
+    public function __construct($podcast_id = 0)
     {
         /* If they failed to pass in an id, just run for it */
         if (!$podcast_id) {
@@ -68,7 +68,7 @@ class Podcast extends database_object implements library_item
         } // foreach info
 
         return true;
-    } //constructor
+    } // constructor
 
     /**
      * garbage_collection
@@ -126,6 +126,7 @@ class Podcast extends database_object implements library_item
     /**
      * _get_extra info
      * This returns the extra information for the podcast, this means totals etc
+     * @return array
      */
     private function _get_extra_info()
     {
@@ -161,9 +162,8 @@ class Podcast extends database_object implements library_item
         $this->f_copyright     = scrub_out($this->copyright);
         $this->f_generator     = scrub_out($this->generator);
         $this->f_website       = scrub_out($this->website);
-        $time_format           = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
-        $this->f_lastbuilddate = get_datetime($time_format, (int) $this->lastbuilddate);
-        $this->f_lastsync      = get_datetime($time_format, (int) $this->lastsync);
+        $this->f_lastbuilddate = get_datetime((int) $this->lastbuilddate);
+        $this->f_lastsync      = get_datetime((int) $this->lastsync);
         $this->link            = AmpConfig::get('web_path') . '/podcast.php?action=show&podcast=' . $this->id;
         $this->f_link          = '<a href="' . $this->link . '" title="' . $this->f_title . '">' . $this->f_title . '</a>';
 
@@ -215,7 +215,7 @@ class Podcast extends database_object implements library_item
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return array
      */
     public function search_childrens($name)
@@ -226,7 +226,7 @@ class Podcast extends database_object implements library_item
     }
 
     /**
-     * @param $filter_type
+     * @param string $filter_type
      * @return array|mixed
      */
     public function get_medias($filter_type = null)
@@ -319,18 +319,18 @@ class Podcast extends database_object implements library_item
      * create
      * @param array $data
      * @param boolean $return_id
-     * @return PDOStatement|boolean|integer
+     * @return boolean|integer
      */
     public static function create(array $data, $return_id = false)
     {
-        $feed = $data['feed'];
+        $feed = (string) $data['feed'];
         // Feed must be http/https
         if (strpos($feed, "http://") !== 0 && strpos($feed, "https://") !== 0) {
             AmpError::add('feed', T_('Feed URL is invalid'));
         }
 
         $catalog_id = (int) ($data['catalog']);
-        if ($catalog_id <= 0) {
+        if ($catalog_id < 1) {
             AmpError::add('catalog', T_('Target Catalog is required'));
         } else {
             $catalog = Catalog::create_from_id($catalog_id);
@@ -350,8 +350,17 @@ class Podcast extends database_object implements library_item
         $copyright     = null;
         $generator     = null;
         $lastbuilddate = 0;
-        $episodes      = array();
+        $episodes      = false;
         $arturl        = '';
+
+        // don't allow duplicate podcasts
+        $sql        = "SELECT `id` FROM `podcast` WHERE `feed`= '" . Dba::escape($feed) . "'";
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results, false)) {
+            if ((int) $row['id'] > 0) {
+                return (int) $row['id'];
+            }
+        }
 
         $xmlstr = file_get_contents($feed, false, stream_context_create(Core::requests_options()));
         if ($xmlstr === false) {
@@ -387,7 +396,7 @@ class Podcast extends database_object implements library_item
         $sql        = "INSERT INTO `podcast` (`feed`, `catalog`, `title`, `website`, `description`, `language`, `copyright`, `generator`, `lastbuilddate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, array($feed, $catalog_id, $title, $website, $description, $language, $copyright, $generator, $lastbuilddate));
         if ($db_results) {
-            $podcast_id = Dba::insert_id();
+            $podcast_id = (int) Dba::insert_id();
             $podcast    = new Podcast($podcast_id);
             $dirpath    = $podcast->get_root_path();
             if (!is_dir($dirpath)) {
@@ -399,15 +408,17 @@ class Podcast extends database_object implements library_item
                 $art = new Art((int) $podcast_id, 'podcast');
                 $art->insert_url($arturl);
             }
-            if (count($episodes) > 0) {
+            if ($episodes) {
                 $podcast->add_episodes($episodes);
             }
             if ($return_id) {
                 return (int) $podcast_id;
             }
+
+            return true;
         }
 
-        return $db_results;
+        return false;
     }
 
     /**
@@ -423,13 +434,13 @@ class Podcast extends database_object implements library_item
         }
 
         // Select episodes to download
-        $dlnb = AmpConfig::get('podcast_new_download');
-        if ($dlnb != 0) {
+        $dlnb = (int) AmpConfig::get('podcast_new_download');
+        if ($dlnb <> 0) {
             $sql = "SELECT `podcast_episode`.`id` FROM `podcast_episode` INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` " .
                     "WHERE `podcast`.`id` = ? AND `podcast_episode`.`addition_time` > `podcast`.`lastsync` " .
                     "ORDER BY `podcast_episode`.`pubdate` DESC";
-            if ($dlnb != -1) {
-                $sql .= " LIMIT " . $dlnb;
+            if ($dlnb > 0) {
+                $sql .= " LIMIT " . (string) $dlnb;
             }
             $db_results = Dba::read($sql, array($this->id));
             while ($row = Dba::fetch_row($db_results)) {
@@ -475,21 +486,20 @@ class Podcast extends database_object implements library_item
         if ($episode->enclosure) {
             $source = $episode->enclosure['url'];
         }
-        $itunes = $episode->children('itunes', true);
-        if ($itunes) {
-            $duration = (string) $itunes->duration;
-            if (preg_grep("/^[0-9][0-9]\:[0-9][0-9]$/", array($duration))) {
-                $duration = '00:' . $duration;
-            }
-            $ptime = date_parse((string) $duration);
-            $time  = (int) $ptime['hour'] * 3600 + (int) $ptime['minute'] * 60 + (int) $ptime['second'];
+        $itunes   = $episode->children('itunes', true);
+        $duration = (string) $itunes->duration;
+        if (preg_grep("/^[0-9][0-9]\:[0-9][0-9]$/", array($duration))) {
+            $duration = '00:' . $duration;
         }
+        $ptime = date_parse((string) $duration);
+        $time  = (int) $ptime['hour'] * 3600 + (int) $ptime['minute'] * 60 + (int) $ptime['second'];
+
         $pubdate    = 0;
         $pubdatestr = (string) $episode->pubDate;
         if ($pubdatestr) {
             $pubdate = strtotime($pubdatestr);
         }
-        if ($pubdate <= 0) {
+        if ($pubdate < 1) {
             debug_event('podcast.class', 'Invalid episode publication date, skipped', 3);
 
             return false;

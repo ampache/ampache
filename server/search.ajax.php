@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -41,11 +41,11 @@ switch ($_REQUEST['action']) {
                 'limit' => $limit,
                 'type' => 'artist',
                 'rule_1_input' => $search,
-                'rule_1_operator' => '2',   // Starts with...
+                'rule_1_operator' => '2', // Starts with...
                 'rule_1' => 'name',
             );
             $sres = Search::run($searchreq);
-            // Litmit not reach, new search with another operator
+            // Limit not reached, new search with another operator
             if (count($sres) < $limit) {
                 $searchreq['limit']           = $limit - count($sres);
                 $searchreq['rule_1_operator'] = '0';
@@ -70,11 +70,11 @@ switch ($_REQUEST['action']) {
                 'limit' => $limit,
                 'type' => 'album',
                 'rule_1_input' => $search,
-                'rule_1_operator' => '2',   // Starts with...
+                'rule_1_operator' => '2', // Starts with...
                 'rule_1' => 'title',
             );
             $sres = Search::run($searchreq);
-            // Litmit not reach, new search with another operator
+            // Limit not reached, new search with another operator
             if (count($sres) < $limit) {
                 $searchreq['limit']           = $limit - count($sres);
                 $searchreq['rule_1_operator'] = '0';
@@ -103,11 +103,11 @@ switch ($_REQUEST['action']) {
                 'limit' => $limit,
                 'type' => 'song',
                 'rule_1_input' => $search,
-                'rule_1_operator' => '2',   // Starts with...
+                'rule_1_operator' => '2', // Starts with...
                 'rule_1' => 'title',
             );
             $sres = Search::run($searchreq);
-            // Litmit not reach, new search with another operator
+            // Limit not reached, new search with another operator
             if (count($sres) < $limit) {
                 $searchreq['limit']           = $limit - count($sres);
                 $searchreq['rule_1_operator'] = '0';
@@ -132,11 +132,11 @@ switch ($_REQUEST['action']) {
                 'limit' => $limit,
                 'type' => 'playlist',
                 'rule_1_input' => $search,
-                'rule_1_operator' => '2',   // Starts with...
+                'rule_1_operator' => '2', // Starts with...
                 'rule_1' => 'name',
             );
             $sres = Search::run($searchreq);
-            // Litmit not reach, new search with another operator
+            // Limit not reached, new search with another operator
             if (count($sres) < $limit) {
                 $searchreq['limit']           = $limit - count($sres);
                 $searchreq['rule_1_operator'] = '0';
@@ -161,12 +161,12 @@ switch ($_REQUEST['action']) {
                 'limit' => $limit,
                 'type' => 'label',
                 'rule_1_input' => $search,
-                'rule_1_operator' => '2',   // Starts with...
+                'rule_1_operator' => '2', // Starts with...
                 'rule_1' => 'name',
             );
             $sres = Search::run($searchreq);
 
-            // Litmit not reach, new search with another operator
+            // Limit not reached, new search with another operator
             if (count($sres) < $limit) {
                 $searchreq['limit']           = $limit - count($sres);
                 $searchreq['rule_1_operator'] = '0';
@@ -211,12 +211,12 @@ switch ($_REQUEST['action']) {
                 'limit' => $limit,
                 'type' => 'user',
                 'rule_1_input' => $search,
-                'rule_1_operator' => '2',   // Starts with...
+                'rule_1_operator' => '2', // Starts with...
                 'rule_1' => 'username',
             );
             $sres = Search::run($searchreq);
 
-            // Litmit not reach, new search with another operator
+            // Limit not reached, new search with another operator
             if (count($sres) < $limit) {
                 $searchreq['limit']           = $limit - count($sres);
                 $searchreq['rule_1_operator'] = '0';
@@ -237,11 +237,11 @@ switch ($_REQUEST['action']) {
             }
         }
 
-    break;
+        break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 } // switch on action;
 
 // We always do this
-echo xoutput_from_array($results);
+echo (string) xoutput_from_array($results);

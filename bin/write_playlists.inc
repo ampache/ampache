@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,20 +16,21 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-define('NO_SESSION','1');
+define('NO_SESSION', '1');
 
-$path = dirname(__FILE__);
+$path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
 require_once($prefix . '/lib/init.php');
 
-$valid_exts = array ('m3u', 'xspf', 'pls');
+$valid_exts = array('m3u', 'xspf', 'pls');
 
-if (!Core::get_global('argv')[1] || Core::get_global('argv')[1] == '-h') { write_plist_usage(); }
-else {
+if (!Core::get_global('argv')[1] || Core::get_global('argv')[1] == '-h') {
+    write_plist_usage();
+} else {
     $dirname    = Core::get_global('argv')[1];
     $type       = Core::get_global('argv')[2];
     $ext        = Core::get_global('argv')[3];
@@ -41,7 +42,7 @@ else {
 // Make sure the output dir is valid and writeable
 if (!is_writeable($dirname)) {
     /* HINT: Directory (File path) */
-    printf (T_("There was a problem creating this directory: %s"), $dirname);
+    printf(T_("There was a problem creating this directory: %s"), $dirname);
     echo "\n";
 }
 
@@ -49,7 +50,7 @@ if (!is_writeable($dirname)) {
 // here
 switch ($type) {
     case 'albums':
-        $ids = Catalog::get_albums();
+        $ids   = Catalog::get_albums();
         $items = array();
         foreach ($ids as $albumid) {
             $items[] = new Album($albumid);
@@ -59,7 +60,7 @@ switch ($type) {
         $items = Catalog::get_artists();
     break;
     default:
-        $ids = Playlist::get_playlists(false, -1);
+        $ids   = Playlist::get_playlists(false, -1);
         $items = array();
         foreach ($ids as $playlistid) {
             $items[] = new Playlist($playlistid);
@@ -72,11 +73,11 @@ foreach ($items as $item) {
     $name = $item->get_fullname();
     // We don't know about file system encoding / specificity
     // For now, we only keep simple characters to be sure it will work everywhere
-    $name = preg_replace('/[:]/', '.', $name);
-    $name = preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
-    $filename = $dirname . DIRECTORY_SEPARATOR . $item->id . '. ' . $name . '.' . $ext;
-    $medias = $item->get_medias();
-    $pl = new Stream_Playlist(-1);
+    $name      = preg_replace('/[:]/', '.', $name);
+    $name      = preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
+    $filename  = $dirname . DIRECTORY_SEPARATOR . $item->id . '. ' . $name . '.' . $ext;
+    $medias    = $item->get_medias();
+    $pl        = new Stream_Playlist(-1);
     $pl->title = $item->get_fullname();
     foreach ($medias as $media) {
         $pl->urls[] = Stream_Playlist::media_to_url($media, $dirname, 'file');
@@ -97,7 +98,8 @@ foreach ($items as $item) {
 echo "Playlist export completed.\n";
 
 /* FUNCTIONS */
-function write_plist_usage() {
+function write_plist_usage()
+{
     $desc1 = T_("This will dump a collection of playlists files based on type");
     $desc2 = T_("Playlists");
     $desc3 = T_("Dumps all of your playlists");
@@ -114,7 +116,5 @@ function write_plist_usage() {
             artists       $desc5
         $desc6\n\n";
 
-        echo $string;
-
-        return;
+    echo $string;
 } // usage

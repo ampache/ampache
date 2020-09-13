@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -53,8 +53,8 @@ class AmpacheDiscogs
         if (Preference::exists('discogs_api_key')) {
             return false;
         }
-        Preference::insert('discogs_api_key', T_('Discogs consumer key'), '', '75', 'string', 'plugins', $this->name);
-        Preference::insert('discogs_secret_api_key', T_('Discogs secret'), '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('discogs_api_key', T_('Discogs consumer key'), '', 75, 'string', 'plugins', $this->name);
+        Preference::insert('discogs_secret_api_key', T_('Discogs secret'), '', 75, 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -134,7 +134,7 @@ class AmpacheDiscogs
     }
 
     /**
-     * @param $object_id
+     * @param integer $object_id
      * @return mixed
      */
     protected function get_artist($object_id)
@@ -157,7 +157,7 @@ class AmpacheDiscogs
     }
 
     /**
-     * @param $object_id
+     * @param integer $object_id
      * @return mixed
      */
     protected function get_album($object_id)
@@ -170,15 +170,15 @@ class AmpacheDiscogs
     /**
      * get_metadata
      * Returns song metadata for what we're passed in.
-     * @param $gather_types
-     * @param $media_info
+     * @param array $gather_types
+     * @param array $media_info
      * @return array|null
      */
     public function get_metadata($gather_types, $media_info)
     {
         debug_event('discogs.plugin', 'Getting metadata from Discogs...', 5);
 
-        // TVShow and Movie metadata only
+        // MUSIC metadata only
         if (!in_array('music', $gather_types)) {
             debug_event('discogs.plugin', 'Not a valid media type, skipped.', 5);
 

@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -40,6 +40,7 @@ class Channel extends database_object implements media, library_item
     public $bitrate;
     public $name;
     public $description;
+    public $fixed_endpoint;
 
     public $header_chunk;
     public $chunk_size              = 4096;
@@ -71,7 +72,7 @@ class Channel extends database_object implements media, library_item
         }
 
         return true;
-    } //constructor
+    } // constructor
 
     /**
      * update_start
@@ -168,7 +169,7 @@ class Channel extends database_object implements media, library_item
      * @param string $description
      * @param string $url
      * @param string $object_type
-     * @param string $object_id
+     * @param integer $object_id
      * @param array $interface
      * @param array $port
      * @param string $admin_password
@@ -425,7 +426,7 @@ class Channel extends database_object implements media, library_item
 
     /**
      * get_channel_list
-     * @return array
+     * @return integer[]
      */
     public static function get_channel_list()
     {
@@ -434,7 +435,7 @@ class Channel extends database_object implements media, library_item
         $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
@@ -596,7 +597,7 @@ class Channel extends database_object implements media, library_item
                     $this->media_bytes_streamed += strlen((string) $chunk);
 
                     if ((ftell($this->transcoder['handle']) < 10000 && strtolower((string) $this->stream_type) == "ogg") || $this->header_chunk_remainder) {
-                        //debug_event('channel.class', 'File handle pointer: ' . ftell($this->transcoder['handle']), 5);
+                        // debug_event('channel.class', 'File handle pointer: ' . ftell($this->transcoder['handle']), 5);
                         $clchunk = $chunk;
 
                         if ($this->header_chunk_remainder) {
@@ -613,29 +614,26 @@ class Channel extends database_object implements media, library_item
                         while ($this->strtohex(substr($clchunk, 0, 4)) == "4F676753") {
                             $hex                = $this->strtohex(substr($clchunk, 0, 27));
                             $ogg_nr_of_segments = hexdec(substr($hex, 26 * 2, 2));
-                            if ((substr($clchunk, 27 + $ogg_nr_of_segments + 1, 6) == "vorbis") || (substr($clchunk, 27 + $ogg_nr_of_segments, 4) == "Opus")) {
-                                $hex .= $this->strtohex(substr($clchunk, 27, $ogg_nr_of_segments));
+                            if ((substr($clchunk, (int) (27 + $ogg_nr_of_segments + 1), 6) == "vorbis") || (substr($clchunk, (int) (27 + $ogg_nr_of_segments), 4) == "Opus")) {
+                                $hex .= $this->strtohex(substr($clchunk, 27, (int) $ogg_nr_of_segments));
                                 $ogg_sum_segm_laces = 0;
                                 for ($segm = 0; $segm < $ogg_nr_of_segments; $segm++) {
                                     $ogg_sum_segm_laces += hexdec(substr($hex, 27 * 2 + $segm * 2, 2));
                                 }
-                                $this->header_chunk .= substr($clchunk, 0, 27 + $ogg_nr_of_segments + $ogg_sum_segm_laces);
+                                $this->header_chunk .= substr($clchunk, 0, (int) (27 + $ogg_nr_of_segments + $ogg_sum_segm_laces));
                                 if (strlen((string) $clchunk) < (27 + $ogg_nr_of_segments + $ogg_sum_segm_laces)) {
                                     $this->header_chunk_remainder = (int) (27 + $ogg_nr_of_segments + $ogg_sum_segm_laces - strlen((string) $clchunk));
                                 }
-                                $clchunk = substr($clchunk, 27 + $ogg_nr_of_segments + $ogg_sum_segm_laces);
-                            } else { //no more interesting headers
+                                $clchunk = substr($clchunk, (int) (27 + $ogg_nr_of_segments + $ogg_sum_segm_laces));
+                            } else {
+                                // no more interesting headers
                                 $clchunk = '';
                             }
                         }
                     }
-                    //debug_event('channel.class', 'File handle pointer: ' . ftell($this->transcoder['handle']), 5);
-                    //debug_event('channel.class', 'CHUNK : ' . $chunk, 5);
-                    //debug_event('channel.class', 'Chunk size: ' . strlen((string) $chunk), 5);
 
                     // End of file, prepare to move on for next call
                     if (feof($this->transcoder['handle'])) {
-                        $this->media->set_played(-1, 'Ampache', array());
                         if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
                             fread($this->transcoder['stderr'], 4096);
                             fclose($this->transcoder['stderr']);
@@ -673,15 +671,15 @@ class Channel extends database_object implements media, library_item
 
     /**
      * play_url
-     * @param integer $oid
+     * @param integer $object_id
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
      * @return string
      */
-    public static function play_url($oid, $additional_params = '', $player = null, $local = false)
+    public static function play_url($object_id, $additional_params = '', $player = null, $local = false)
     {
-        $channel = new Channel($oid);
+        $channel = new Channel($object_id);
 
         return $channel->get_stream_proxy_url() . '?rt=' . time() . '&filename=' . urlencode($channel->name) . '.' . $channel->stream_type . $additional_params;
     }
@@ -707,25 +705,32 @@ class Channel extends database_object implements media, library_item
     }
 
     /**
-     * @param $user
-     * @param $agent
-     * @param $location
-     * @return mixed|void
+     * @param integer $user
+     * @param string $agent
+     * @param array $location
+     * @param integer $date
+     * @return boolean
      */
-    public function set_played($user, $agent, $location)
+    public function set_played($user, $agent, $location, $date = null)
     {
         // Do nothing
+        unset($user, $agent, $location, $date);
+
+        return false;
     }
 
     /**
-     * @param $user
-     * @param $agent
-     * @return mixed|void
+     * @param integer $user
+     * @param string $agent
+     * @param integer $date
+     * @return boolean
      */
-    public function check_play_history($user, $agent)
+    public function check_play_history($user, $agent, $date)
     {
-        unset($user, $agent);
         // Do nothing
+        unset($user, $agent, $date);
+
+        return false;
     }
 
     /**

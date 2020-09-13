@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -33,7 +33,7 @@ class Plugin
      * Constructor
      * This constructor loads the Plugin config file which defines how to
      * install/uninstall the plugin from Ampache's database
-     * @param $name
+     * @param string $name
      */
     public function __construct($name)
     {
@@ -50,7 +50,7 @@ class Plugin
      * has_info
      * This actually loads the config file for the plugin the name of the
      * class contained within the config file must be Plugin[NAME OF FILE]
-     * @param $cname
+     * @param string $cname
      * @return boolean
      */
     public function has_info($cname)

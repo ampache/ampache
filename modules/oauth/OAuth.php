@@ -2,15 +2,15 @@
 // vim: foldmethod=marker
 
 /**
-   #####################################################################
-   #                               Warning                             #
-   #                               #######                             #
-   # This external file is Ampache-adapted and probably unsynced with  #
-   # origin because abandonned by its original authors.                #
-   #                                                                   #
-   #####################################################################
-
-   Code origin from http://oauth.googlecode.com/svn/code/php/OAuth.php
+ * #####################################################################
+ * #                               Warning                             #
+ * #                               #######                             #
+ * # This external file is Ampache-adapted and probably unsynced with  #
+ * # origin because abandonned by its original authors.                #
+ * #                                                                   #
+ * #####################################################################
+ *
+ * Code origin from http://oauth.googlecode.com/svn/code/php/OAuth.php
  */
 
 // Avoid http://php.net/manual/fr/class.oauthexception.php conflict
@@ -360,7 +360,6 @@ class OAuthRequest
         $this->http_url    = $http_url;
     }
 
-
     /**
      * from_request
      * attempt to build up a request from what was passed to the server
@@ -371,14 +370,8 @@ class OAuthRequest
      */
     public static function from_request($http_method = null, $http_url = null, $parameters = null)
     {
-        $scheme = (!filter_has_var(INPUT_SERVER, 'HTTPS') || Core::get_server('HTTPS') != "on")
-              ? 'http'
-              : 'https';
-        $http_url = ($http_url) ? $http_url : $scheme .
-                              '://' . $_SERVER['SERVER_NAME'] .
-                              ':' .
-                              $_SERVER['SERVER_PORT'] .
-                              $_SERVER['REQUEST_URI'];
+        $scheme      = (!filter_has_var(INPUT_SERVER, 'HTTPS') || Core::get_server('HTTPS') != "on") ? 'http' : 'https';
+        $http_url    = ($http_url) ? $http_url : $scheme . '://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'];
         $http_method = ($http_method) ? $http_method : $_SERVER['REQUEST_METHOD'];
 
         // We weren't handed any parameters, so let's find the ones relevant to
@@ -444,7 +437,7 @@ class OAuthRequest
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @param $value
      * @param boolean $allow_duplicates
      */
@@ -465,7 +458,7 @@ class OAuthRequest
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return mixed|null
      */
     public function get_parameter($name)
@@ -482,7 +475,7 @@ class OAuthRequest
     }
 
     /**
-     * @param $name
+     * @param string $name
      */
     public function unset_parameter($name)
     {
@@ -620,7 +613,6 @@ class OAuthRequest
         return $this->to_url();
     }
 
-
     /**
      * @param $signature_method
      * @param $consumer
@@ -661,10 +653,10 @@ class OAuthRequest
      */
     private static function generate_nonce()
     {
-        $mt   = microtime();
-        $rand = mt_rand();
+        $mtime = microtime();
+        $rand  = mt_rand();
 
-        return md5($mt . $rand); // md5s look nicer than numbers
+        return md5($mtime . $rand); // md5s look nicer than numbers
     }
 }
 
@@ -719,6 +711,7 @@ class OAuthServer
 
         // Rev A change
         $callback    = $request->get_parameter('oauth_callback');
+
         return $this->data_store->new_request_token($consumer, $callback);
     }
 
@@ -742,6 +735,7 @@ class OAuthServer
 
         // Rev A change
         $verifier    = $request->get_parameter('oauth_verifier');
+
         return $this->data_store->new_access_token($token, $consumer, $verifier);
     }
 
@@ -792,9 +786,7 @@ class OAuthServer
      */
     private function get_signature_method($request)
     {
-        $signature_method = $request instanceof OAuthRequest
-        ? $request->get_parameter("oauth_signature_method")
-        : null;
+        $signature_method = $request instanceof OAuthRequest ? $request->get_parameter("oauth_signature_method") : null;
 
         if (!$signature_method) {
             // According to chapter 7 ("Accessing Protected Ressources") the signature-method
@@ -822,9 +814,7 @@ class OAuthServer
      */
     private function get_consumer($request)
     {
-        $consumer_key = $request instanceof OAuthRequest
-        ? $request->get_parameter("oauth_consumer_key")
-        : null;
+        $consumer_key = $request instanceof OAuthRequest ? $request->get_parameter("oauth_consumer_key") : null;
 
         if (!$consumer_key) {
             throw new OAuthException("Invalid consumer key");
@@ -849,7 +839,7 @@ class OAuthServer
     private function get_token($request, $consumer, $token_type="access")
     {
         $token_field = $request instanceof OAuthRequest ? $request->get_parameter('oauth_token') : null;
-        $token = $this->data_store->lookup_token($consumer, $token_type, $token_field);
+        $token       = $this->data_store->lookup_token($consumer, $token_type, $token_field);
         if (!$token) {
             throw new OAuthException("Invalid $token_type token: $token_field");
         }
@@ -868,12 +858,8 @@ class OAuthServer
     private function check_signature($request, $consumer, $token)
     {
         // this should probably be in a different method
-        $timestamp = $request instanceof OAuthRequest
-        ? $request->get_parameter('oauth_timestamp')
-        : null;
-        $nonce = $request instanceof OAuthRequest
-        ? $request->get_parameter('oauth_nonce')
-        : null;
+        $timestamp = $request instanceof OAuthRequest ? $request->get_parameter('oauth_timestamp') : null;
+        $nonce     = $request instanceof OAuthRequest ? $request->get_parameter('oauth_nonce') : null;
 
         $this->check_timestamp($timestamp);
         $this->check_nonce($consumer, $token, $nonce, $timestamp);
@@ -1025,12 +1011,11 @@ class OAuthUtil
         }
     }
 
-
     // This decode function isn't taking into consideration the above
     // modifications to the encoding process. However, this method doesn't
     // seem to be used anywhere so leaving it as is.
     /**
-     * @param $string
+     * @param string $string
      * @return string
      */
     public static function urldecode_rfc3986($string)
@@ -1045,13 +1030,13 @@ class OAuthUtil
     //                  see http://code.google.com/p/oauth/issues/detail?id=163
     /**
      * @param $header
-     * @param boolean $only_allow_oauth_parameters
+     * @param boolean $oauth_parameters
      * @return array
      */
-    public static function split_header($header, $only_allow_oauth_parameters = true)
+    public static function split_header($header, $oauth_parameters = true)
     {
         $params = array();
-        if (preg_match_all('/(' . ($only_allow_oauth_parameters ? 'oauth_' : '') . '[a-z_-]*)=(:?"([^"]*)"|([^,]*))/', $header, $matches)) {
+        if (preg_match_all('/(' . ($oauth_parameters ? 'oauth_' : '') . '[a-z_-]*)=(:?"([^"]*)"|([^,]*))/', $header, $matches)) {
             foreach ($matches[1] as $i => $h) {
                 $params[$h] = OAuthUtil::urldecode_rfc3986(empty($matches[3][$i]) ? $matches[4][$i] : $matches[3][$i]);
             }
@@ -1095,7 +1080,7 @@ class OAuthUtil
             if (filter_has_var(INPUT_SERVER, 'CONTENT_TYPE')) {
                 $out['Content-Type'] = Core::get_server('CONTENT_TYPE');
             }
-            if (isset($_ENV['CONTENT_TYPE'])) {
+            if (filter_has_var(INPUT_ENV, 'CONTENT_TYPE')) {
                 $out['Content-Type'] = $_ENV['CONTENT_TYPE'];
             }
 
@@ -1169,8 +1154,8 @@ class OAuthUtil
 
         // Urlencode both keys and values
         $keys       = OAuthUtil::urlencode_rfc3986(array_keys($params));
-        $values = OAuthUtil::urlencode_rfc3986(array_values($params));
-        $params = array_combine($keys, $values);
+        $values     = OAuthUtil::urlencode_rfc3986(array_values($params));
+        $params     = array_combine($keys, $values);
 
         // Parameters are sorted by name, using lexicographical byte value ordering.
         // Ref: Spec: 9.1.1 (1)

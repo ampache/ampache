@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <?php UI::show_box_top(T_('Add Label'), 'box box_add_label'); ?>
@@ -24,8 +24,7 @@
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Name'); ?></td>
-    <td>
-        <input type="text" name="name" value="<?php echo scrub_out($_REQUEST['name']); ?>" />
+    <td><input type="text" name="name" value="<?php echo scrub_out($_REQUEST['name']); ?>" />
         <?php AmpError::display('name'); ?>
     </td>
 </tr>
@@ -54,22 +53,19 @@
 </tr>
 <tr>
     <td><?php echo T_('Address'); ?></td>
-    <td>
-        <input type="text" name="address" value="<?php echo scrub_out($_REQUEST['address']); ?>" />
+    <td><input type="text" name="address" value="<?php echo scrub_out($_REQUEST['address']); ?>" />
         <?php AmpError::display('address'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('E-mail'); ?></td>
-    <td>
-        <input type="text" name="email" value="<?php echo scrub_out($_REQUEST['email']); ?>" />
+    <td><input type="text" name="email" value="<?php echo scrub_out($_REQUEST['email']); ?>" />
         <?php AmpError::display('email'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Website'); ?></td>
-    <td>
-        <input type="text" name="website" value="<?php echo scrub_out($_REQUEST['website']); ?>" />
+    <td><input type="text" name="website" value="<?php echo scrub_out($_REQUEST['website']); ?>" />
         <?php AmpError::display('website'); ?>
     </td>
 </tr>

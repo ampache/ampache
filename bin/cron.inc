@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,21 +16,25 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-define('NO_SESSION','1');
+use Lib\Cron;
+
+define('NO_SESSION', '1');
 define('CLI', 1);
 
 $path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
-require_once $prefix . '/lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 ob_end_flush();
 
 if (!AmpConfig::get('cron_cache')) {
     debug_event('cron.inc', 'ENABLE \'Cache computed SQL data (eg. media hits stats) using a cron\'\n * In Admin -> Server Config -> System -> Catalog\n', 5);
+
     return false;
 }
 debug_event('cron', 'started cron process', 3);
@@ -79,8 +83,9 @@ Recommendation::garbage_collection();
 /**
  * Run compute_cache
  */
-require_once $prefix . '/bin/compute_cache.inc';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/bin/compute_cache.inc';
 
 // mark the date this cron was completed.
-set_cron_date();
+Cron::set_cron_date();
 debug_event('cron', 'finished cron process', 4);

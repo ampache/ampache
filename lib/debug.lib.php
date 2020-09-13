@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-/*
+/**
  * check_php
  * check for required modules
  * @return boolean
@@ -94,6 +94,16 @@ function check_php_json()
 function check_php_curl()
 {
     return function_exists('curl_version');
+}
+
+/**
+ * check_php_intl
+ * check for required module
+ * @return boolean
+ */
+function check_php_intl()
+{
+    return (extension_loaded('intl'));
 }
 
 /**
@@ -268,7 +278,7 @@ function check_upload_size()
     $post_max   = return_bytes(ini_get('post_max_size'));
     $mini       = 20971520; // 20M
 
-    return (($upload_max >= $mini || $upload_max <= 0) && ($post_max >= $mini || $post_max <= 0));
+    return (($upload_max >= $mini || $upload_max < 1) && ($post_max >= $mini || $post_max < 1));
 }
 
 /**
@@ -315,10 +325,10 @@ function return_bytes($val)
         // The 'G' modifier is available since PHP 5.1.0
         case 'g':
             $val *= 1024;
-            // intentional fall through
+            // Intentional break fall-through
         case 'm':
             $val *= 1024;
-            // intentional fall through
+            // Intentional break fall-through
         case 'k':
             $val *= 1024;
             break;

@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <?php if ($browse->is_show_header()) {
@@ -57,7 +57,7 @@
             $libitem->format();
 
             // Don't show empty playlist if not admin or the owner
-            if (Access::check('interface', '100') || $libitem->get_user_owner() == Core::get_global('user')->id || $libitem->get_media_count() > 0) { ?>
+            if (Access::check('interface', 100) || $libitem->get_user_owner() == Core::get_global('user')->id || $libitem->get_media_count() > 0) { ?>
         <tr class="<?php echo UI::flip_class(); ?>" id="playlist_row_<?php echo $libitem->id; ?>">
             <?php require AmpConfig::get('prefix') . UI::find_template('show_playlist_row.inc.php'); ?>
         </tr>

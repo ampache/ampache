@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -30,7 +30,7 @@ if (!defined('AJAX_INCLUDE')) {
 // Switch on the actions
 switch ($_REQUEST['action']) {
     case 'flip_state':
-        if (!Access::check('interface', '75')) {
+        if (!Access::check('interface', 75)) {
             debug_event('song.ajax', Core::get_global('user')->username . ' attempted to change the state of a song', 1);
 
             return false;
@@ -42,7 +42,7 @@ switch ($_REQUEST['action']) {
         $song->enabled = $new_enabled;
         $song->format();
 
-        //Return the new Ajax::button
+        // Return the new Ajax::button
         $id           = 'button_flip_state_' . $song->id;
         if ($new_enabled) {
             $button     = 'disable';
@@ -52,7 +52,7 @@ switch ($_REQUEST['action']) {
             $buttontext = T_('Enable');
         }
         $results[$id] = Ajax::button('?page=song&action=flip_state&song_id=' . $song->id, $button, $buttontext, 'flip_state_' . $song->id);
-    break;
+        break;
     case 'shouts':
         ob_start();
         $type   = Core::get_request('object_type');
@@ -74,11 +74,11 @@ switch ($_REQUEST['action']) {
             echo "</script>\r\n";
         }
         $results['shouts_data'] = ob_get_clean();
-    break;
+        break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 } // switch on action;
 
 // We always do this
-echo xoutput_from_array($results);
+echo (string) xoutput_from_array($results);

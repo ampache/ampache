@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -68,7 +68,7 @@ UI::show_box_top($podcast->f_title, 'info-box'); ?>
         </li>
         <?php
     } ?>
-        <?php if (Access::check('interface', '50')) { ?>
+        <?php if (Access::check('interface', 50)) { ?>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=podcast&object_id=<?php echo $podcast->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
@@ -79,7 +79,7 @@ UI::show_box_top($podcast->f_title, 'info-box'); ?>
     <?php if (AmpConfig::get('use_rss')) {
             ?>
         <li>
-            <?php echo Ampache_RSS::get_display('podcast', T_('RSS Feed'), array('object_type' => 'podcast', 'object_id' => $podcast->id)); ?>
+            <?php echo Ampache_RSS::get_display('podcast', -1, T_('RSS Feed'), array('object_type' => 'podcast', 'object_id' => $podcast->id)); ?>
         </li>
         <?php
         } ?>
@@ -97,7 +97,7 @@ UI::show_box_top($podcast->f_title, 'info-box'); ?>
         </li>
         <?php
     } ?>
-        <?php if (Access::check('interface', '75')) { ?>
+        <?php if (Access::check('interface', 75)) { ?>
         <li>
             <a id="<?php echo 'delete_podcast_' . $podcast->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=delete&podcast_id=<?php echo $podcast->id; ?>">
                 <?php echo UI::get_icon('delete', T_('Delete')); ?> &nbsp;<?php echo T_('Delete'); ?>

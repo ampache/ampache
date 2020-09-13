@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -52,7 +52,7 @@ class Song_Preview extends database_object implements media, playable_item
      * Constructor
      *
      * Song Preview class
-     * @param $object_id
+     * @param integer $object_id
      */
     public function __construct($object_id)
     {
@@ -80,7 +80,7 @@ class Song_Preview extends database_object implements media, playable_item
      * insert
      *
      * This inserts the song preview described by the passed array
-     * @param $results
+     * @param array $results
      * @return string|null
      */
     public static function insert($results)
@@ -110,7 +110,7 @@ class Song_Preview extends database_object implements media, playable_item
         if (!$db_results) {
             debug_event('song_preview.class', 'Unable to insert ' . $results['disk'] . '-' . $results['track'] . '-' . $results['title'], 2);
 
-            return false;
+            return null;
         }
 
         return Dba::insert_id();
@@ -127,7 +127,7 @@ class Song_Preview extends database_object implements media, playable_item
      */
     public static function build_cache($song_ids)
     {
-        if (!is_array($song_ids) || !count($song_ids)) {
+        if (empty($song_ids)) {
             return false;
         }
         $idlist = '(' . implode(',', $song_ids) . ')';
@@ -156,18 +156,19 @@ class Song_Preview extends database_object implements media, playable_item
 
     /**
      * has_info
+     * @return array
      */
     private function has_info()
     {
-        $id = $this->id;
+        $preview_id = $this->id;
 
-        if (parent::is_cached('song_preview', $id)) {
-            return parent::get_from_cache('song_preview', $id);
+        if (parent::is_cached('song_preview', $preview_id)) {
+            return parent::get_from_cache('song_preview', $preview_id);
         }
 
         $sql = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` ' .
             'FROM `song_preview` WHERE `id` = ?';
-        $db_results = Dba::read($sql, array($id));
+        $db_results = Dba::read($sql, array($preview_id));
 
         $results = Dba::fetch_assoc($db_results);
         if (!empty($results['id'])) {
@@ -178,12 +179,12 @@ class Song_Preview extends database_object implements media, playable_item
                     $results['artist_mbid'] = $artist_res['mbid'];
                 }
             }
-            parent::add_to_cache('song_preview', $id, $results);
+            parent::add_to_cache('song_preview', $preview_id, $results);
 
             return $results;
         }
 
-        return false;
+        return array();
     }
 
     /**
@@ -215,7 +216,7 @@ class Song_Preview extends database_object implements media, playable_item
      */
     public function format($details = true)
     {
-        unset($details); //dead code but called from other format calls
+        unset($details); // dead code but called from other format calls
         // Format the artist name
         if ($this->artist) {
             $this->f_artist_full = $this->get_artist_name();
@@ -267,7 +268,7 @@ class Song_Preview extends database_object implements media, playable_item
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return array
      */
     public function search_childrens($name)
@@ -278,7 +279,7 @@ class Song_Preview extends database_object implements media, playable_item
     }
 
     /**
-     * @param $filter_type
+     * @param string $filter_type
      * @return array|mixed
      */
     public function get_medias($filter_type = null)
@@ -310,15 +311,15 @@ class Song_Preview extends database_object implements media, playable_item
      * This function takes all the song information and correctly formats a
      * a stream URL taking into account the downsampling mojo and everything
      * else, this is the true function
-     * @param $oid
+     * @param integer $object_id
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
      * @return string
      */
-    public static function play_url($oid, $additional_params = '', $player = null, $local = false)
+    public static function play_url($object_id, $additional_params = '', $player = null, $local = false)
     {
-        $song        = new Song_Preview($oid);
+        $song        = new Song_Preview($object_id);
         $user_id     = Core::get_global('user')->id ? scrub_out(Core::get_global('user')->id) : '-1';
         $type        = $song->type;
 
@@ -381,25 +382,32 @@ class Song_Preview extends database_object implements media, playable_item
     }
 
     /**
-     * @param $user
-     * @param $agent
-     * @param $location
-     * @return mixed|void
+     * @param integer $user
+     * @param string $agent
+     * @param array $location
+     * @param integer $date
+     * @return boolean
      */
-    public function set_played($user, $agent, $location)
+    public function set_played($user, $agent, $location, $date = null)
     {
         // Do nothing
+        unset($user, $agent, $location, $date);
+
+        return false;
     }
 
     /**
-     * @param $user
-     * @param $agent
-     * @return mixed|void
+     * @param integer $user
+     * @param string $agent
+     * @param integer $date
+     * @return boolean
      */
-    public function check_play_history($user, $agent)
+    public function check_play_history($user, $agent, $date)
     {
-        unset($user, $agent);
         // Do nothing
+        unset($user, $agent, $date);
+
+        return false;
     }
 
     /**

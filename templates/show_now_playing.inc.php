@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -43,12 +43,15 @@ foreach ($results as $item) {
         }
         if (!$np_user->fullname) {
             $np_user->fullname = "Ampache User";
+        }
+        if (!$np_user->f_avatar_medium) {
+            $np_user->f_avatar_medium = '<img src="' . AmpConfig::get('web_path') . '/images/blankuser.png' . '" title="User Avatar" style="width: 64px; height: 64px;" />';
         } ?>
 <div class="np_row">
 <?php
-if (strtolower(get_class($media)) == 'song') {
+if (get_class($media) == 'Song') {
             require AmpConfig::get('prefix') . UI::find_template('show_now_playing_row.inc.php');
-        } elseif (strtolower(get_class($media)) == 'video') {
+        } elseif (get_class($media) == 'Video') {
             require AmpConfig::get('prefix') . UI::find_template('show_now_playing_video_row.inc.php');
         } ?>
 </div>

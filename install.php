@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,13 +16,15 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
 $prefix = dirname(__FILE__);
-require_once $prefix . '/lib/init-tiny.php';
-require_once $prefix . '/lib/install.lib.php';
+
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init-tiny.php';
+require_once $a_root . '/lib/install.lib.php';
 
 set_error_handler('ampache_error_handler');
 
@@ -140,10 +142,10 @@ switch ($_REQUEST['action']) {
         }
 
         // Now that it's inserted save the lang preference
-        Preference::update('lang', '-1', AmpConfig::get('lang'));
+        Preference::update('lang', -1, AmpConfig::get('lang'));
     case 'show_create_config':
         require_once 'templates/show_install_config.inc.php';
-    break;
+        break;
     case 'create_config':
         $all  = (filter_has_var(INPUT_POST, 'create_all'));
         $skip = (filter_has_var(INPUT_POST, 'skip_config'));
@@ -191,7 +193,7 @@ switch ($_REQUEST['action']) {
         } else {
             header("Location: " . $web_path . '/login.php');
         }
-    break;
+        break;
     case 'create_account':
         $results = parse_ini_file($configfile);
         AmpConfig::set_by_array($results, true);
@@ -204,15 +206,15 @@ switch ($_REQUEST['action']) {
         }
 
         header("Location: " . $web_path . '/index.php');
-    break;
+        break;
     case 'init':
         require_once 'templates/show_install.inc.php';
-    break;
+        break;
     case 'check':
         require_once 'templates/show_install_check.inc.php';
-    break;
+        break;
     default:
         // Show the language options first
         require_once 'templates/show_install_lang.inc.php';
-    break;
+        break;
 } // end action switch

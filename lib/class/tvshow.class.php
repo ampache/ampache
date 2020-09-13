@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -58,7 +58,7 @@ class TVShow extends database_object implements library_item
         } // foreach info
 
         return true;
-    } //constructor
+    } // constructor
 
     /**
      * garbage_collection
@@ -75,7 +75,7 @@ class TVShow extends database_object implements library_item
     /**
      * get_from_name
      * This gets a tv show object based on the tv show name
-     * @param $name
+     * @param string $name
      * @return TVShow
      */
     public static function get_from_name($name)
@@ -135,6 +135,7 @@ class TVShow extends database_object implements library_item
     /**
      * _get_extra info
      * This returns the extra information for the tv show, this means totals etc
+     * @return array
      */
     private function _get_extra_info()
     {
@@ -145,7 +146,8 @@ class TVShow extends database_object implements library_item
             $sql = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_season` " .
                 "LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` " .
                 "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` " .
-                "WHERE `tvshow_season`.`tvshow` = ?";
+                "WHERE `tvshow_season`.`tvshow` = ? " .
+                "GROUP BY `catalog_id`";
             $db_results = Dba::read($sql, array($this->id));
             $row        = Dba::fetch_assoc($db_results);
 
@@ -230,7 +232,7 @@ class TVShow extends database_object implements library_item
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return array
      */
     public function search_childrens($name)
@@ -241,7 +243,7 @@ class TVShow extends database_object implements library_item
     }
 
     /**
-     * @param $filter_type
+     * @param string $filter_type
      * @return array|mixed
      */
     public function get_medias($filter_type = null)
@@ -311,7 +313,7 @@ class TVShow extends database_object implements library_item
      * check
      *
      * Checks for an existing tv show; if none exists, insert one.
-     * @param $name
+     * @param string $name
      * @param $year
      * @param $tvshow_summary
      * @param boolean $readonly
@@ -324,7 +326,7 @@ class TVShow extends database_object implements library_item
             return self::$_mapcache[$name]['null'];
         }
 
-        $id         = 0;
+        $tvshow_id  = 0;
         $exists     = false;
         $trimmed    = Catalog::trim_prefix(trim((string) $name));
         $name       = $trimmed['string'];
@@ -338,14 +340,14 @@ class TVShow extends database_object implements library_item
         }
 
         if (count($id_array)) {
-            $id     = array_shift($id_array);
-            $exists = true;
+            $tvshow_id = array_shift($id_array);
+            $exists    = true;
         }
 
-        if ($exists) {
-            self::$_mapcache[$name]['null'] = $id;
+        if ($exists && (int) $tvshow_id > 0) {
+            self::$_mapcache[$name]['null'] = $tvshow_id;
 
-            return $id;
+            return $tvshow_id;
         }
 
         if ($readonly) {
@@ -357,11 +359,11 @@ class TVShow extends database_object implements library_item
         if (!$db_results) {
             return null;
         }
-        $show_id = Dba::insert_id();
+        $tvshow_id = Dba::insert_id();
 
-        self::$_mapcache[$name]['null'] = $show_id;
+        self::$_mapcache[$name]['null'] = $tvshow_id;
 
-        return $show_id;
+        return $tvshow_id;
     }
 
     /**
@@ -386,18 +388,18 @@ class TVShow extends database_object implements library_item
             if ($tvshow_id != $this->id && $tvshow_id != null) {
                 $seasons = $this->get_seasons();
                 foreach ($seasons as $season_id) {
-                    Season::update_tvshow($tvshow_id, $season_id);
+                    TVShow_Season::update_tvshow($tvshow_id, $season_id);
                 }
                 $current_id = $tvshow_id;
-                Stats::migrate('tvshow', $this->id, $tvshow_id);
-                UserActivity::migrate('tvshow', $this->id, $tvshow_id);
-                Recommendation::migrate('tvshow', $this->id, $tvshow_id);
-                Share::migrate('tvshow', $this->id, $tvshow_id);
-                Shoutbox::migrate('tvshow', $this->id, $tvshow_id);
-                Tag::migrate('tvshow', $this->id, $tvshow_id);
-                Userflag::migrate('tvshow', $this->id, $tvshow_id);
-                Rating::migrate('tvshow', $this->id, $tvshow_id);
-                Art::migrate('tvshow', $this->id, $tvshow_id);
+                Stats::migrate('tvshow', $this->id, (int) $tvshow_id);
+                UserActivity::migrate('tvshow', $this->id, (int) $tvshow_id);
+                Recommendation::migrate('tvshow', $this->id, (int) $tvshow_id);
+                Share::migrate('tvshow', $this->id, (int) $tvshow_id);
+                Shoutbox::migrate('tvshow', $this->id, (int) $tvshow_id);
+                Tag::migrate('tvshow', $this->id, (int) $tvshow_id);
+                Userflag::migrate('tvshow', $this->id, (int) $tvshow_id);
+                Rating::migrate('tvshow', $this->id, (int) $tvshow_id);
+                Art::migrate('tvshow', $this->id, (int) $tvshow_id);
                 if (!AmpConfig::get('cron_cache')) {
                     self::garbage_collection();
                 }

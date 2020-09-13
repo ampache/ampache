@@ -141,14 +141,14 @@ class mpd
     self::COMMAND_CONSUME => array('min' => '0.15.0', 'max' => false),
     self::COMMAND_IDLE => array('min' => '0.14.0', 'max' => false),
     self::COMMAND_PASSWORD => array('min' => '0.10.0', 'max' => false),
-    self::COMMAND_MOVETRACK => array('min' => '0.9.1',  'max' => false),
-    self::COMMAND_PLSWAPTRACK => array('min' => '0.9.1',  'max' => false),
-    self::COMMAND_RANDOM => array('min' => '0.9.1',  'max' => false),
-    self::COMMAND_SEEK => array('min' => '0.9.1',  'max' => false),
+    self::COMMAND_MOVETRACK => array('min' => '0.9.1', 'max' => false),
+    self::COMMAND_PLSWAPTRACK => array('min' => '0.9.1', 'max' => false),
+    self::COMMAND_RANDOM => array('min' => '0.9.1', 'max' => false),
+    self::COMMAND_SEEK => array('min' => '0.9.1', 'max' => false),
     self::COMMAND_SETVOL => array('min' => '0.10.0', 'max' => false),
     self::COMMAND_SINGLE => array('min' => '0.15.0', 'max' => false),
     self::COMMAND_STICKER => array('min' => '0.15.0', 'max' => false),
-    self::COMMAND_VOLUME => array('min' => false,    'max' => '0.10.0')
+    self::COMMAND_VOLUME => array('min' => false, 'max' => '0.10.0')
     );
 
     // TCP/Connection variables
@@ -268,7 +268,7 @@ class mpd
             return false;
         } else {
             while (!feof($this->_mpd_sock) && !$status['timed_out']) {
-                $response =  fgets($this->_mpd_sock, 1024);
+                $response = fgets($this->_mpd_sock, 1024);
                 if (function_exists('socket_get_status')) {
                     $status = socket_get_status($this->_mpd_sock);
                 }
@@ -527,7 +527,7 @@ class mpd
      * places the results into a multidimensional array. If no directory is
      * specified the directory listing is at the base of the MPD music path.
      * @param string $dir
-     * @return array|bool
+     * @return array|boolean
      */
     public function GetDir($dir = '')
     {
@@ -600,9 +600,7 @@ class mpd
             return false;
         }
         $new_position = $new_position > 0 ? $new_position : 0;
-        $new_position = $new_position < count($this->playlist)
-            ? $new_position
-            : count($this->playlist);
+        $new_position = ($new_position < count($this->playlist)) ? $new_position : count($this->playlist);
 
         $response = $this->SendCommand(self::COMMAND_MOVETRACK, array($current_position, $new_position));
 
@@ -909,9 +907,9 @@ class mpd
      *     self::SEARCH_ARTIST, self::SEARCH_TITLE, self::SEARCH_ALBUM
      * The search <string> is a case-insensitive locator string. Anything
      * that contains <string> will be returned in the results.
-     * @param $type
-     * @param $string
-     * @return array|bool
+     * @param string $type
+     * @param string $string
+     * @return array|boolean
      */
     public function Search($type, $string)
     {
@@ -945,9 +943,9 @@ class mpd
      *    self::SEARCH_ARTIST, self::SEARCH_TITLE, self::SEARCH_ALBUM
      * The find <string> is a case-insensitive locator string. Anything that
      * exactly matches <string> will be returned in the results.
-     * @param $type
-     * @param $string
-     * @return array|bool
+     * @param string $type
+     * @param string $string
+     * @return array|boolean
      */
     public function Find($type, $string)
     {
@@ -993,7 +991,7 @@ class mpd
      * GetArtists
      *
      * Returns the list of artists in the database in an associative array.
-     * @return array|bool
+     * @return array|boolean
      */
     public function GetArtists()
     {
@@ -1023,7 +1021,7 @@ class mpd
      * Optional parameter is an artist Name which will list all albums by a
      * particular artist.
      * @param $artist
-     * @return array|bool
+     * @return array|boolean
      */
     public function GetAlbums($artist = null)
     {
@@ -1057,7 +1055,7 @@ class mpd
      *
      * Computes numeric value from a version string
      *
-     * @param $string
+     * @param string $string
      * @return float|integer|mixed
      */
     private static function _computeVersionValue($string)
@@ -1112,7 +1110,7 @@ class mpd
      *
      * Builds a multidimensional array with MPD response lists.
      * @param $response
-     * @return array|bool
+     * @return array|boolean
      */
     private static function _parseFileListResponse($response)
     {
@@ -1139,7 +1137,7 @@ class mpd
      * _parseResponse
      * Turns a response into an array
      * @param $response
-     * @return array|bool
+     * @return array|boolean
      */
     private static function _parseResponse($response)
     {

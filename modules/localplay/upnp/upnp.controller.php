@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -85,15 +85,19 @@ class AmpacheUPnP extends localplay_controller
      */
     public function install()
     {
+        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+
         $sql = "CREATE TABLE `localplay_upnp` (`id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY , " .
-            "`name` VARCHAR( 128 ) COLLATE utf8_unicode_ci NOT NULL , " .
+            "`name` VARCHAR( 128 ) COLLATE $collation NOT NULL , " .
             "`owner` INT( 11 ) NOT NULL, " .
-            "`url` VARCHAR( 255 ) COLLATE utf8_unicode_ci NOT NULL  " .
-            ") ENGINE = MYISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+            "`url` VARCHAR( 255 ) COLLATE $collation NOT NULL  " .
+            ") ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('upnp_active', T_('UPnP Active Instance'), '0', '25', 'integer', 'internal', 'upnp');
+        Preference::insert('upnp_active', T_('UPnP Active Instance'), 0, 25, 'integer', 'internal', 'upnp');
 
         return true;
     }
@@ -236,7 +240,6 @@ class AmpacheUPnP extends localplay_controller
     public function get_active_instance()
     {
     }
-
 
     /**
      * @param Stream_URL $url
@@ -503,18 +506,18 @@ class AmpacheUPnP extends localplay_controller
      * This returns bool/int values for features, loop, repeat and any other features
      * that this Localplay method supports.
      * This works as in requesting the UPnP properties
+     * @return array
      */
     public function status()
     {
         debug_event('upnp.controller', 'status', 5);
-
+        $status = array();
         if (!$this->_upnp) {
-            return false;
+            return $status;
         }
 
         $item = $this->_upnp->GetCurrentItem();
 
-        $status = array();
 
         $status['state']       = $this->_upnp->GetState();
         $status['volume']      = $this->_upnp->GetVolume();

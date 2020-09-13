@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,13 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Lib\Cron;
+
+?>
 <?php UI::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>
     <div id="information_actions">
         <ul>
@@ -59,7 +63,7 @@
 
 <?php if ((string) AmpConfig::get('cron_cache') !== '') { ?>
     <?php UI::show_box_top(T_('Ampache Cron'), 'box'); ?>
-        <div><?php echo T_('The last cron was completed'); ?>: <?php echo get_datetime($time_format, get_cron_date()); ?></div>
+        <div><?php echo T_('The last cron was completed'); ?>: <?php echo get_datetime(Cron::get_cron_date()); ?></div>
         <br />
     <?php UI::show_box_bottom();
 } ?>
@@ -89,10 +93,6 @@
                 <td><?php set_time_limit(0); echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
             </tr>
             <tr class="<?php echo UI::flip_class(); ?>">
-                <td><?php echo T_('Safe Mode'); ?></td>
-                <td><?php echo print_bool(ini_get('safe_mode')); ?></td>
-            </tr>
-            <tr class="<?php echo UI::flip_class(); ?>">
                 <td><?php T_('Open Basedir'); ?></td>
                 <td><?php echo ini_get('open_basedir'); ?></td>
             </tr>
@@ -111,6 +111,10 @@
             <tr class="<?php echo UI::flip_class(); ?>">
                 <td><?php echo T_('Gettext Support'); ?></td>
                 <td><?php echo print_bool(function_exists('bindtextdomain')); ?></td>
+            </tr>
+            <tr class="<?php echo UI::flip_class(); ?>">
+                <td><?php echo T_('PHP intl extension'); ?></td>
+                <td><?php echo print_bool(check_php_intl()); ?></td>
             </tr>
             </tbody>
         </table>

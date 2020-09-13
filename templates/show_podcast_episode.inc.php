@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <?php UI::show_box_top($episode->f_title . ' - ' . $episode->f_podcast_link, 'box box_podcast_episode_details'); ?>
@@ -63,7 +63,7 @@
         <?php echo Ajax::button('?action=basket&type=podcast_episode&id=' . $episode->id, 'add', T_('Add to temporary playlist'), 'add_podcast_episode_' . $episode->id); ?>
         <?php
     } ?>
-        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) { ?>
+        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=podcast_episode&id=<?php echo $episode->id; ?>">
                 <?php echo UI::get_icon('comment', T_('Post Shout')); ?>
@@ -72,7 +72,7 @@
         } ?>
         <?php
     } ?>
-        <?php if (Access::check('interface', '25')) { ?>
+        <?php if (Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('share')) { ?>
                 <?php Share::display_ui('podcast_episode', $episode->id, false); ?>
             <?php
@@ -84,7 +84,7 @@
             <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;podcast_episode_id=<?php echo $episode->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
         <?php
     } ?>
-        <?php if (Access::check('interface', '50')) { ?>
+        <?php if (Access::check('interface', 50)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=podcast_episode&object_id=<?php echo $episode->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>
             <?php

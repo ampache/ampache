@@ -9,7 +9,7 @@
 
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -53,7 +53,7 @@ function show_confirmation($title, $text, $next_url, $cancel = 0, $form_name = '
 /**
  * @param $action
  * @param $catalogs
- * @param $options
+ * @param array $options
  */
 function catalog_worker($action, $catalogs = null, $options = null)
 {
@@ -150,11 +150,8 @@ function get_location()
         case 'preferences.php':
             $location['title'] = T_('Preferences');
             break;
-        case 'admin/index.php':
-            $location['title']   = T_('Admin-Catalog');
-            $location['section'] = 'admin';
-            break;
         case 'admin/catalog.php':
+        case 'admin/index.php':
             $location['title']   = T_('Admin-Catalog');
             $location['section'] = 'admin';
             break;
@@ -381,7 +378,7 @@ function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_i
 } // show_tvshow_select
 
 /**
- * @param $name
+ * @param string $name
  * @param $season_id
  * @param boolean $allow_add
  * @param integer $video_id
@@ -483,7 +480,7 @@ function show_license_select($name, $license_id = 0, $song_id = 0)
     static $license_id_cnt = 0;
 
     // Generate key to use for HTML element ID
-    if ($song_id) {
+    if ($song_id > 0) {
         $key = "license_select_" . $song_id;
     } else {
         $key = "license_select_c" . ++$license_id_cnt;
@@ -652,7 +649,7 @@ function xml_get_header($type)
         default:
             return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
     }
-} //xml_get_header
+} // xml_get_header
 
 /**
  * xml_get_footer

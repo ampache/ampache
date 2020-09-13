@@ -384,7 +384,7 @@
                             pause();
                         }
                         if(settings.autoPlay){
-                            vars.buttons.play.addClass("disabled");    
+                            vars.buttons.play.addClass("disabled");
                         }
                     }
                 }

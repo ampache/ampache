@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -57,11 +57,11 @@ class AmpacheAmazon
             return false;
         }
 
-        Preference::insert('amazon_base_url', T_('Amazon base url'), 'http://webservices.amazon.com', '75', 'string', 'plugins', $this->name);
-        Preference::insert('amazon_max_results_pages', T_('Amazon max results pages'), '1', '75', 'integer', 'plugins', $this->name);
-        Preference::insert('amazon_developer_public_key', T_('Amazon Access Key ID'), '', '75', 'string', 'plugins', $this->name);
-        Preference::insert('amazon_developer_private_api_key', T_('Amazon Secret Access Key'), '', '75', 'string', 'plugins', $this->name);
-        Preference::insert('amazon_developer_associate_tag', T_('Amazon associate tag'), '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('amazon_base_url', T_('Amazon base url'), 'http://webservices.amazon.com', 75, 'string', 'plugins', $this->name);
+        Preference::insert('amazon_max_results_pages', T_('Amazon max results pages'), 1, 75, 'integer', 'plugins', $this->name);
+        Preference::insert('amazon_developer_public_key', T_('Amazon Access Key ID'), '', 75, 'string', 'plugins', $this->name);
+        Preference::insert('amazon_developer_private_api_key', T_('Amazon Secret Access Key'), '', 75, 'string', 'plugins', $this->name);
+        Preference::insert('amazon_developer_associate_tag', T_('Amazon associate tag'), '', 75, 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -131,7 +131,7 @@ class AmpacheAmazon
         }
 
         if (strlen(trim($data['amazon_max_results_pages']))) {
-            $this->amazon_max_results_pages = trim($data['amazon_max_results_pages']);
+            $this->amazon_max_results_pages = (int) trim($data['amazon_max_results_pages']);
         } else {
             $this->amazon_max_results_pages = 1;
         }

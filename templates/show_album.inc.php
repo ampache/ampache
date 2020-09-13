@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -33,7 +33,7 @@ if ($album->disk && !AmpConfig::get('album_group') && count($album->get_album_su
 $title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ? $album->f_album_artist_link : $album->f_artist_link);
 
 $show_direct_play  = AmpConfig::get('directplay');
-$show_playlist_add = Access::check('interface', '25');
+$show_playlist_add = Access::check('interface', 25);
 $directplay_limit  = AmpConfig::get('direct_play_limit');
 
 if ($directplay_limit > 0) {
@@ -143,11 +143,11 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     } ?>
         <?php if (AmpConfig::get('use_rss')) { ?>
         <li>
-            <?php echo Ampache_RSS::get_display('podcast', T_('RSS Feed'), array('object_type' => 'album', 'object_id' => $album->id)); ?>
+            <?php echo Ampache_RSS::get_display('podcast', -1, T_('RSS Feed'), array('object_type' => 'album', 'object_id' => $album->id)); ?>
         </li>
         <?php
     } ?>
-        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) { ?>
+        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) {
         $postshout = T_('Post Shout'); ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>"><?php echo UI::get_icon('comment', $postshout); ?></a>
@@ -156,7 +156,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     } ?>
         <?php
     } ?>
-    <?php if (Access::check('interface', '25')) { ?>
+    <?php if (Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('share')) { ?>
             <li>
                 <?php Share::display_ui('album', $album->id); ?>
@@ -165,7 +165,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         } ?>
         <?php
     } ?>
-        <?php if (($owner_id > 0 && $owner_id == (int) Core::get_global('user')->id) || Access::check('interface', '50')) {
+        <?php if (($owner_id > 0 && $owner_id == (int) Core::get_global('user')->id) || Access::check('interface', 50)) {
         $saveorder  = T_('Save Track Order'); ?>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>

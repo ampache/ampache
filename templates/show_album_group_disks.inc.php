@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -28,7 +28,7 @@ $title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')';
 $title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ? $album->f_album_artist_link : $album->f_artist_link);
 
 $show_direct_play_cfg = AmpConfig::get('directplay');
-$show_playlist_add    = Access::check('interface', '25');
+$show_playlist_add    = Access::check('interface', 25);
 $show_direct_play     = $show_direct_play_cfg;
 $directplay_limit     = AmpConfig::get('direct_play_limit');
 
@@ -42,7 +42,7 @@ if ($directplay_limit > 0) {
 <div class="item_right_info">
     <div class="external_links">
         <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($album->f_artist); ?>%22+%22<?php echo rawurlencode($album->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('google', T_('Search on Google ...')); ?></a>
-        <a href="https://www.duckduckgo.com/s?q=%22<?php echo rawurlencode($label->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
+        <a href="https://www.duckduckgo.com/s?q=%22<?php echo rawurlencode($album->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
         <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($album->f_name); ?>%22&go=Go" target="_blank"><?php echo UI::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
         <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($album->f_artist); ?>%22+%22<?php echo rawurlencode($album->f_name); ?>%22&type=album" target="_blank"><?php echo UI::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
     </div>
@@ -96,6 +96,12 @@ if ($directplay_limit > 0) {
         </li>
         <?php
     } ?>
+        <?php if (Access::check('interface', 50)) { ?>
+            <li>
+                <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_group_from_tags&amp;album_id=<?php echo $album->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo UI::get_icon('file_refresh', T_('Update from tags')); ?> &nbsp;&nbsp;<?php echo T_('Update from tags'); ?></a>
+            </li>
+            <?php
+        } ?>
         <?php if (Access::check_function('batch_download') && check_can_zip('album')) { ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
@@ -117,7 +123,7 @@ if ($directplay_limit > 0) {
         $c_album->format();
         $c_title           = scrub_out($c_album->name) . "<span class=\"discnb disc" . $c_album->disk . "\">, " . T_('Disk') . " " . $c_album->disk . "</span>";
         $show_direct_play  = $show_direct_play_cfg;
-        $show_playlist_add = Access::check('interface', '25');
+        $show_playlist_add = Access::check('interface', 25);
         if ($directplay_limit > 0) {
             $show_playlist_add = ($c_album->song_count <= $directplay_limit);
             if ($show_direct_play) {
@@ -137,7 +143,7 @@ if ($directplay_limit > 0) {
             echo Ajax::button('?action=basket&type=album&' . $c_album->get_http_album_query_ids('id'), 'add', T_('Add to temporary playlist'), 'play_full_' . $c_album->id);
             echo Ajax::button('?action=basket&type=album_random&' . $c_album->get_http_album_query_ids('id'), 'random', T_('Random to temporary playlist'), 'play_random_' . $c_album->id);
         } ?>
-        <?php if (Access::check('interface', '25')) { ?>
+        <?php if (Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
                 <a href="<?php echo AmpConfig::get('web_path') ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $c_album->id ?>"><?php echo UI::get_icon('comment', T_('Post shout')) ?></a>
             <?php
@@ -152,7 +158,7 @@ if ($directplay_limit > 0) {
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $c_album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
         <?php
         } ?>
-        <?php if (Access::check('interface', '50')) { ?>
+        <?php if (Access::check('interface', 50)) { ?>
             <a onclick="submitNewItemsOrder('<?php echo $c_album->id ?>', 'reorder_songs_table_<?php echo $c_album->id ?>', 'song_',
                                             '<?php echo AmpConfig::get('web_path') ?>/albums.php?action=set_track_numbers', 'refresh_album_songs')">
                 <?php echo UI::get_icon('save', T_('Save Track Order')); ?>

@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -55,7 +55,7 @@ class TVShow_Season extends database_object implements library_item
         } // foreach info
 
         return true;
-    } //constructor
+    } // constructor
 
     /**
      * garbage_collection
@@ -109,7 +109,8 @@ class TVShow_Season extends database_object implements library_item
         } else {
             $sql = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_episode` " .
                 "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` " .
-                "WHERE `tvshow_episode`.`season` = ?";
+                "WHERE `tvshow_episode`.`season` = ?" .
+                "GROUP BY `catalog_id`";
 
             $db_results = Dba::read($sql, array($this->id));
             $row        = Dba::fetch_assoc($db_results);
@@ -194,7 +195,7 @@ class TVShow_Season extends database_object implements library_item
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return array
      */
     public function search_childrens($name)
@@ -269,21 +270,21 @@ class TVShow_Season extends database_object implements library_item
      */
     public function display_art($thumb = 2, $force = false)
     {
-        $id   = null;
-        $type = null;
+        $tvshow_id = null;
+        $type      = null;
 
         if (Art::has_db($this->id, 'tvshow_season')) {
-            $id   = $this->id;
-            $type = 'tvshow_season';
+            $tvshow_id = $this->id;
+            $type      = 'tvshow_season';
         } else {
             if (Art::has_db($this->tvshow, 'tvshow') || $force) {
-                $id   = $this->tvshow;
-                $type = 'tvshow';
+                $tvshow_id = $this->tvshow;
+                $type      = 'tvshow';
             }
         }
 
-        if ($id !== null && $type !== null) {
-            Art::display($type, $id, $this->get_fullname(), $thumb, $this->link);
+        if ($tvshow_id !== null && $type !== null) {
+            Art::display($type, $tvshow_id, $this->get_fullname(), $thumb, $this->link);
         }
     }
 
@@ -319,7 +320,7 @@ class TVShow_Season extends database_object implements library_item
             $exists    = true;
         }
 
-        if ($exists) {
+        if ($exists && (int) $object_id > 0) {
             self::$_mapcache[$name]['null'] = $object_id;
 
             return $object_id;
@@ -361,13 +362,13 @@ class TVShow_Season extends database_object implements library_item
      */
     public function remove()
     {
-        $deleted   = true;
-        $video_ids = $this->get_episodes();
-        foreach ($video_ids as $videos) {
-            $video   = Video::create_from_id($videos);
+        $deleted = true;
+        $videos  = $this->get_episodes();
+        foreach ($videos as $video_id) {
+            $video   = Video::create_from_id($video_id);
             $deleted = $video->remove();
             if (!$deleted) {
-                debug_event('tvshow_season.class', 'Error when deleting the video `' . $videos . '`.', 1);
+                debug_event('tvshow_season.class', 'Error when deleting the video `' . $video_id . '`.', 1);
                 break;
             }
         }

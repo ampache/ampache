@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <?php UI::show_box_top(T_('Importing a Playlist from a File'), 'box box_import_playlist'); ?>
@@ -26,7 +26,7 @@
             <td>
                 <?php echo T_('Filename'); ?> (<?php echo AmpConfig::get('catalog_playlist_pattern'); ?>):
             </td>
-            <td><input type="file" name="filename" value="<?php echo scrub_out($_REQUEST['filename']); ?>" /></td>
+            <td><input type="file" name="filename" value="<?php echo scrub_out(Core::get_request('filename')); ?>" /></td>
         </tr>
     </table>
     <div class="formValidation">

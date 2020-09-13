@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,13 +16,13 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
 $web_path          = AmpConfig::get('web_path');
 $show_direct_play  = AmpConfig::get('directplay');
-$show_playlist_add = Access::check('interface', '25');
+$show_playlist_add = Access::check('interface', 25);
 $directplay_limit  = AmpConfig::get('direct_play_limit');
 
 if ($directplay_limit > 0) {
@@ -33,22 +33,24 @@ if ($directplay_limit > 0) {
 } ?>
 <?php
 UI::show_box_top($artist->f_name, 'info-box'); ?>
-<?php
-if (AmpConfig::get('lastfm_api_key')) {
+<div class="item_right_info">
+    <div class="external_links">
+        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('google', T_('Search on Google ...')); ?></a>
+        <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode($artist->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
+        <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($artist->f_name); ?>%22&go=Go" target="_blank"><?php echo UI::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
+        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22&type=artist" target="_blank"><?php echo UI::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
+    </div>
+    <?php if (AmpConfig::get('lastfm_api_key')) {
     echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=artist_info&artist=' . $artist->id, 'artist_info')); ?>
-    <div class="item_right_info">
-        <div class="external_links">
-            <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('google', T_('Search on Google ...')); ?></a>
-            <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode($artist->f_name); ?>%22" target="_blank"><?php echo UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
-            <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($artist->f_name); ?>%22&go=Go" target="_blank"><?php echo UI::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
-            <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($artist->f_name); ?>%22&type=artist" target="_blank"><?php echo UI::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
-        </div>
         <div id="artist_biography">
             <?php echo T_('Loading...'); ?>
         </div>
-    </div>
-<?php
-} ?>
+    <?php
+} else {
+        $thumb = UI::is_grid_view('artist') ? 2 : 11;
+        Art::display('artist', $artist->id, $artist->f_name, $thumb);
+    } ?>
+</div>
 
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) {
@@ -136,13 +138,19 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </li>
         <?php
     } ?>
-        <?php if (AmpConfig::get('use_rss')) { ?>
+        <?php if (Access::check('interface', 50)) { ?>
         <li>
-            <?php echo Ampache_RSS::get_display('podcast', T_('RSS Feed'), array('object_type' => 'artist', 'object_id' => $artist->id)); ?>
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');"><?php echo UI::get_icon('file_refresh', T_('Update from tags')); ?> &nbsp;&nbsp;<?php echo T_('Update from tags'); ?></a>
         </li>
         <?php
     } ?>
-        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', '25')) { ?>
+        <?php if (AmpConfig::get('use_rss')) { ?>
+        <li>
+            <?php echo Ampache_RSS::get_display('podcast', -1, T_('RSS Feed'), array('object_type' => 'artist', 'object_id' => $artist->id)); ?>
+        </li>
+        <?php
+    } ?>
+        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) {
         $postshout = T_('Post Shout'); ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('comment', $postshout); ?></a>
@@ -159,7 +167,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </li>
         <?php
     } ?>
-        <?php if (($owner_id > 0 && $owner_id == $GLOBALS['user']->id) || Access::check('interface', '50')) { ?>
+        <?php if (($owner_id > 0 && $owner_id == $GLOBALS['user']->id) || Access::check('interface', 50)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <li>
                     <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>"><?php echo UI::get_icon('statistics', T_('Graphs')); ?></a>

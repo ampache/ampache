@@ -152,17 +152,17 @@ if (!$isVideo && !$isRadio && !$is_share) {
                 echo "ajaxPut(jsAjaxUrl + '?page=song&action=shouts&object_type=song&object_id=' + currenti.attr('data-media_id'), 'shouts_data');";
             }
             echo "ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=song&object_id=' + currenti.attr('data-media_id'));";
-            echo "var titleobj = (currenti.attr('data-album_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/albums.php?action=show&album=' + currenti.attr('data-album_id') + '\');\" title=\"' + obj.title + '\">' + obj.title + '</a>' : obj.title;";
-            echo "var artistobj = (currenti.attr('data-artist_id') !== 'undefined') ?'<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/artists.php?action=show&artist=' + currenti.attr('data-artist_id') + '\');\" title=\"' + obj.artist + '\">' + obj.artist + '</a>' : obj.artist;";
+            echo "var titleobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/song.php?action=show_song&song_id=' + currenti.attr('data-media_id') + '\');\" title=\"' + obj.title + '\">' + obj.title + '</a>';";
+            echo "var artistobj = (currenti.attr('data-artist_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/artists.php?action=show&artist=' + currenti.attr('data-artist_id') + '\');\" title=\"' + obj.artist + '\">' + obj.artist + '</a>' : obj.artist;";
             echo "var lyricsobj = '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/song.php?action=show_lyrics&song_id=' + currenti.attr('data-media_id') + '\');\">" . T_('Show Lyrics') . "</a>';";
-            echo "var actionsobj = '';";
-            if (AmpConfig::get('sociable') && (!AmpConfig::get('use_auth') || Access::check('interface', '25'))) {
+            echo "var actionsobj = (currenti.attr('data-album_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/albums.php?action=show&album=' + currenti.attr('data-album_id') + '\');\" title=\"" . T_('Show Album') . "\">" . UI::get_icon('album', T_('Show Album')) . "</a> |' : '';";
+            if (AmpConfig::get('sociable') && (!AmpConfig::get('use_auth') || Access::check('interface', 25))) {
                 echo "actionsobj += ' <a href=\"javascript:NavigateTo(\'" . AmpConfig::get('web_path') . "/shout.php?action=show_add_shout&type=song&id=' + currenti.attr('data-media_id') + '\');\">" . UI::get_icon('comment', T_('Post Shout')) . "</a> |';";
             }
             echo "actionsobj += '<div id=\'action_buttons\'></div>';";
             if (AmpConfig::get('waveform') && !$is_share) {
                 echo "var waveformobj = '';";
-                if (AmpConfig::get('sociable') && Access::check('interface', '25')) {
+                if (AmpConfig::get('sociable') && Access::check('interface', 25)) {
                     echo "waveformobj += '<a href=\"#\" title=\"" . T_('Double click to post a new shout') . "\" onClick=\"javascript:WaveformClick(' + currenti.attr('data-media_id') + ', ClickTimeOffset(event));\">';";
                 }
                 echo "waveformobj += '<div class=\"waveform-shouts\"></div>';";
@@ -243,7 +243,7 @@ if (AmpConfig::get('song_page_title') && !$is_share) {
     });
 
     $("#jquery_jplayer_1").bind($.jPlayer.event.volumechange, function(event) {
-        $.cookie('jp_volume', event.jPlayer.options.volume, { expires: 7, path: '/'});
+        $.cookie('jp_volume', event.jPlayer.options.volume, { expires: 7, path: '/; samesite=strict'});
     });
 
     $("#jquery_jplayer_1").bind($.jPlayer.event.resize, function (event) {
@@ -325,7 +325,7 @@ if ($is_share && $isVideo) { ?>
 <style>
     div.jp-jplayer
     {
-        bottom: 0px !important;
+        bottom: 0 !important;
         top: 100px !important;
     }
 </style>
@@ -445,7 +445,7 @@ if ($isVideo) { ?>
       </div>
 <?php if (!$is_share && !$_SESSION['mobile']) { ?>
       <div class="player_actions">
-<?php if (AmpConfig::get('broadcast') && Access::check('interface', '25')) { ?>
+<?php if (AmpConfig::get('broadcast') && Access::check('interface', 25)) { ?>
         <div id="broadcast" class="broadcast action_button">
 <?php
         if (AmpConfig::get('broadcast_by_default')) {
@@ -467,7 +467,7 @@ if ($isVideo) { ?>
 <?php
         } ?>
 <?php if ($iframed) { ?>
-        <?php if (Access::check('interface', '25')) { ?>
+        <?php if (Access::check('interface', 25)) { ?>
             <div class="action_button">
                 <a onclick="javascript:SaveToExistingPlaylist(event);">
                     <?php echo UI::get_icon('playlist_add_all', T_('Add All to playlist')) ?>

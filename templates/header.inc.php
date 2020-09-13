@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -34,7 +34,7 @@ $t_play      = T_('Play');
 $t_artists   = T_('Artists');
 $t_albums    = T_('Albums');
 $t_playlists = T_('Playlists');
-$t_tagcloud  = T_('Tag Cloud');
+$t_tagcloud  = T_('Genres');
 $t_favorites = T_('Favorites');
 $t_upload    = T_('Upload');
 $t_logout    = T_('Log out'); ?>
@@ -57,7 +57,7 @@ $t_logout    = T_('Log out'); ?>
             } ?>
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=<?php echo AmpConfig::get('site_charset'); ?>" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?php echo AmpConfig::get('site_title'); ?> - <?php echo $location['title']; ?></title>
+        <title><?php echo scrub_out(AmpConfig::get('site_title')); ?> - <?php echo $location['title']; ?></title>
 
         <?php require_once AmpConfig::get('prefix') . UI::find_template('stylesheets.inc.php'); ?>
 
@@ -361,7 +361,7 @@ $t_logout    = T_('Log out'); ?>
             <div id="header" class="header-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><!-- This is the header -->
                 <h1 id="headerlogo">
                   <a href="<?php echo $web_path; ?>/index.php">
-                    <img src="<?php echo UI::get_logo_url(); ?>" title="<?php echo AmpConfig::get('site_title'); ?>" alt="<?php echo AmpConfig::get('site_title'); ?>" />
+                    <img src="<?php echo UI::get_logo_url(); ?>" title="<?php echo scrub_out(AmpConfig::get('site_title')); ?>" alt="<?php echo scrub_out(AmpConfig::get('site_title')); ?>" />
                   </a>
                 </h1>
                 <div id="headerbox">
@@ -381,7 +381,7 @@ $t_logout    = T_('Log out'); ?>
                     <?php
                         } else { ?>
                         <span id="loginInfo">
-                            <a href="<?php echo $web_path; ?>/login.php" class="nohtml"><?php echo T_('Login'); ?></a>
+                            <a href="<?php echo $web_path; ?>/login.php?force_display=1" class="nohtml"><?php echo T_('Login'); ?></a>
                         <?php
                             if (AmpConfig::get('allow_public_registration') && Mailer::is_mail_enabled()) { ?>
                                 / <a href="<?php echo $web_path; ?>/register.php" class="nohtml"><?php echo T_('Register'); ?></a>
@@ -429,7 +429,7 @@ $t_logout    = T_('Log out'); ?>
                 </div>
 
                 <?php
-                    if (AmpConfig::get('userflags') && Access::check('interface', '25')) { ?>
+                    if (AmpConfig::get('userflags') && Access::check('interface', 25)) { ?>
 
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/stats.php?action=userflag">
@@ -440,7 +440,7 @@ $t_logout    = T_('Log out'); ?>
 
                 <?php
                     }
-                    if (AmpConfig::get('allow_upload') && Access::check('interface', '25')) { ?>
+                    if (AmpConfig::get('allow_upload') && Access::check('interface', 25)) { ?>
 
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path ?>/upload.php">
@@ -497,7 +497,7 @@ $t_logout    = T_('Log out'); ?>
                     $('#sidebar').show(500);
                 });
 
-                $.cookie('sidebar_state', newstate, { expires: 30, path: '/'});
+                $.cookie('sidebar_state', newstate, { expires: 30, path: '/; samesite=strict'});
             });
             </script>
             <div id="rightbar" class="rightbar-fixed">
@@ -512,7 +512,7 @@ $t_logout    = T_('Log out'); ?>
             <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo(($count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild'); echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
                 <?php
-                    if (Access::check('interface', '100')) {
+                    if (Access::check('interface', 100)) {
                         echo '<div id=update_notify>';
                         if (AmpConfig::get('autoupdate') && AutoUpdate::is_update_available()) {
                             AutoUpdate::show_new_version();
@@ -533,5 +533,5 @@ $t_logout    = T_('Log out'); ?>
                     }
                 if (AmpConfig::get("ajax_load")) {
                     require AmpConfig::get('prefix') . UI::find_template('show_web_player_embedded.inc.php');
-                } //load the web_player early to make sure the browser doesn't block audio playback?>
+                } // load the web_player early to make sure the browser doesn't block audio playback?>
                 <div id="guts">

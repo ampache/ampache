@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -42,12 +42,12 @@ interface media
      * play_url
      *
      * Returns the url to stream the specified object
-     * @param integer $oid
+     * @param integer $object_id
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
      */
-    public static function play_url($oid, $additional_params = '', $player = '', $local = false);
+    public static function play_url($object_id, $additional_params = '', $player = '', $local = false);
 
     /**
      * get_transcode_settings
@@ -69,17 +69,19 @@ interface media
     public function get_stream_name();
 
     /**
-     * @param $user
-     * @param $agent
-     * @param $location
-     * @return mixed
+     * @param integer $user
+     * @param string $agent
+     * @param array $location
+     * @param integer $date
+     * @return boolean
      */
-    public function set_played($user, $agent, $location);
+    public function set_played($user, $agent, $location, $date = null);
 
     /**
-     * @param $user
-     * @param $agent
-     * @return mixed
+     * @param integer $user
+     * @param string $agent
+     * @param integer $date
+     * @return boolean
      */
-    public function check_play_history($user, $agent);
+    public function check_play_history($user, $agent, $date);
 } // end media.interface

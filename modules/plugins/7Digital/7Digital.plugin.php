@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -55,8 +55,8 @@ class Ampache7digital
         if (Preference::exists('7digital_api_key')) {
             return false;
         }
-        Preference::insert('7digital_api_key', T_('7digital consumer key'), '', '75', 'string', 'plugins', $this->name);
-        Preference::insert('7digital_secret_api_key', T_('7digital secret'), '', '75', 'string', 'plugins', $this->name);
+        Preference::insert('7digital_api_key', T_('7digital consumer key'), '', 75, 'string', 'plugins', $this->name);
+        Preference::insert('7digital_secret_api_key', T_('7digital secret'), '', 75, 'string', 'plugins', $this->name);
 
         return true;
     } // install
@@ -92,38 +92,7 @@ class Ampache7digital
      */
     public function get_song_preview($track_mbid, $artist_name, $title)
     {
-        $file     = null;
-        $echonest = new EchoNest_Client(new EchoNest_HttpClient_Requests());
-        $echonest->authenticate(AmpConfig::get('echonest_api_key'));
-        $enSong = null;
-        try {
-            $enProfile = $echonest->getTrackApi()->profile('musicbrainz:track:' . $track_mbid);
-            $enSong    = $echonest->getSongApi()->profile($enProfile['song_id'], array( 'id:7digital-US', 'audio_summary', 'tracks'));
-        } catch (Exception $error) {
-            debug_event('7digital.plugin', 'EchoNest track error on `' . $track_mbid . '` (' . $title . '): ' . $error->getMessage(), 1);
-        }
-
-        // Wans't able to get the song with MusicBrainz ID, try a search
-        if ($enSong == null) {
-            try {
-                $enSong = $echonest->getSongApi()->search(array(
-                    'results' => '1',
-                    'artist' => $artist_name,
-                    'title' => $title,
-                    'bucket' => array( 'id:7digital-US', 'audio_summary', 'tracks'),
-                ));
-            } catch (Exception $error) {
-                debug_event('7digital.plugin', 'EchoNest song search error: ' . $error->getMessage(), 1);
-            }
-        }
-
-        if ($enSong != null) {
-            $file = $enSong[0]['tracks'][0]['preview_url'];
-
-            debug_event('7digital.plugin', 'EchoNest `' . $title . '` preview: ' . $file, 1);
-        }
-
-        return $file;
+        return null;
     }
 
     /**

@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <?php UI::show_box_top(T_('Add Radio Station'), 'box box_add_live_stream'); ?>
@@ -24,37 +24,31 @@
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Name'); ?></td>
-    <td>
-        <input type="text" name="name" value="<?php echo scrub_out($_REQUEST['name']); ?>" />
+    <td><input type="text" name="name" value="<?php echo scrub_out($_REQUEST['name']); ?>" />
         <?php AmpError::display('name'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Homepage'); ?></td>
-    <td>
-        <input type="text" name="site_url" value="<?php echo scrub_out($_REQUEST['site_url']); ?>" />
+    <td><input type="text" name="site_url" value="<?php echo scrub_out($_REQUEST['site_url']); ?>" />
         <?php AmpError::display('site_url'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Stream URL'); ?></td>
-    <td>
-        <input type="text" name="url" value="<?php echo scrub_out($_REQUEST['url']); ?>" />
+    <td><input type="text" name="url" value="<?php echo scrub_out($_REQUEST['url']); ?>" />
         <?php AmpError::display('url'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Codec'); ?></td>
-    <td>
-        <input type="text" name="codec" value="<?php echo scrub_out($_REQUEST['codec']); ?>" />
+    <td><input type="text" name="codec" value="<?php echo scrub_out($_REQUEST['codec']); ?>" />
         <?php AmpError::display('codec'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Catalog'); ?></td>
-    <td>
-        <?php echo show_catalog_select('catalog', (int) ($_REQUEST['catalog'])); ?>
-    </td>
+    <td><?php echo show_catalog_select('catalog', (int) ($_REQUEST['catalog'])); ?></td>
 </tr>
 </table>
 <div class="formValidation">

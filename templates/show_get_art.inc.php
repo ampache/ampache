@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <?php UI::show_box_top(T_('Customize Search'), 'box box_get_albumart'); ?>
@@ -29,9 +29,7 @@
                     <td>
                         <?php echo $word['label']; ?>&nbsp;
                     </td>
-                    <td>
-                        <input type="text" id="option_<?php echo $key; ?>" name="option_<?php echo $key; ?>" value="<?php echo scrub_out(unhtmlentities($word['value'])); ?>" />
-                    </td>
+                    <td><input type="text" id="option_<?php echo $key; ?>" name="option_<?php echo $key; ?>" value="<?php echo scrub_out(unhtmlentities($word['value'])); ?>" /></td>
                 </tr>
         <?php
             }
@@ -40,17 +38,13 @@
             <td>
                 <?php echo T_('Direct URL to Image'); ?>
             </td>
-            <td>
-                <input type="text" id="cover" name="cover" value="" />
-            </td>
+            <td><input type="text" id="cover" name="cover" value="" /></td>
         </tr>
         <tr>
             <td>
                 <?php echo T_('Local Image'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)
             </td>
-            <td>
-                <input type="file" id="file" name="file" value="" />
-            </td>
+            <td><input type="file" id="file" name="file" value="" /></td>
         </tr>
     </table>
     <div class="formValidation">

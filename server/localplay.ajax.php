@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -34,7 +34,7 @@ $action  = Core::get_request('action');
 switch ($_REQUEST['action']) {
     case 'set_instance':
         // Make sure they they are allowed to do this
-        if (!Access::check('localplay', '5')) {
+        if (!Access::check('localplay', 5)) {
             debug_event('localplay.ajax', 'Error attempted to set instance without required level', 1);
 
             return false;
@@ -51,10 +51,10 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . UI::find_template('sidebar.inc.php');
         $results['sidebar-content'] = ob_get_contents();
         ob_end_clean();
-    break;
+        break;
     case 'command':
         // Make sure they are allowed to do this
-        if (!Access::check('localplay', '50')) {
+        if (!Access::check('localplay', 50)) {
             debug_event('localplay.ajax', 'Attempted to control Localplay without sufficient access', 1);
 
             return false;
@@ -65,6 +65,13 @@ switch ($_REQUEST['action']) {
 
         // Switch on valid commands
         switch ($_REQUEST['command']) {
+            case 'refresh':
+                ob_start();
+                $objects = $localplay->get();
+                require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_status.inc.php');
+                $results['localplay_status'] = ob_get_contents();
+                ob_end_clean();
+                break;
             case 'prev':
             case 'next':
             case 'stop':
@@ -72,7 +79,7 @@ switch ($_REQUEST['action']) {
             case 'pause':
                 $command = scrub_in($_REQUEST['command']);
                 $localplay->$command();
-            break;
+                break;
             case 'volume_up':
             case 'volume_down':
             case 'volume_mute':
@@ -85,7 +92,7 @@ switch ($_REQUEST['action']) {
                 require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_status.inc.php');
                 $results['localplay_status'] = ob_get_contents();
                 ob_end_clean();
-            break;
+                break;
             case 'delete_all':
                 $localplay->delete_all();
                 ob_start();
@@ -97,7 +104,7 @@ switch ($_REQUEST['action']) {
                 $browse->store();
                 $results[$browse->get_content_div()] = ob_get_contents();
                 ob_end_clean();
-            break;
+                break;
             case 'skip':
                 $localplay->skip((int) filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT));
                 $objects = $localplay->get();
@@ -110,16 +117,15 @@ switch ($_REQUEST['action']) {
                 $browse->store();
                 $results[$browse->get_content_div()] = ob_get_contents();
                 ob_end_clean();
-            break;
+                break;
             default:
-                // Nothing
-            break;
+                break;
         } // end whitelist
 
-    break;
+        break;
     case 'delete_track':
         // Load Connect... yada yada
-        if (!Access::check('localplay', '50')) {
+        if (!Access::check('localplay', 50)) {
             debug_event('localplay.ajax', 'Attempted to delete track without access', 1);
 
             return false;
@@ -147,10 +153,10 @@ switch ($_REQUEST['action']) {
         $results[$browse->get_content_div()] = ob_get_contents();
         ob_end_clean();
 
-    break;
+        break;
     case 'delete_instance':
         // Make sure that you have access to do this...
-        if (!Access::check('localplay', '75')) {
+        if (!Access::check('localplay', 75)) {
             debug_event('localplay.ajax', 'Attempted to delete instance without access', 1);
 
             return false;
@@ -162,10 +168,10 @@ switch ($_REQUEST['action']) {
 
         $key           = 'localplay_instance_' . $_REQUEST['instance'];
         $results[$key] = '';
-    break;
+        break;
     case 'repeat':
         // Make sure that they have access to do this again no clue
-        if (!Access::check('localplay', '50')) {
+        if (!Access::check('localplay', 50)) {
             debug_event('localplay.ajax', 'Attempted to set repeat without access', 1);
 
             return false;
@@ -182,10 +188,10 @@ switch ($_REQUEST['action']) {
         $results['localplay_status'] = ob_get_contents();
         ob_end_clean();
 
-    break;
+        break;
     case 'random':
         // Make sure that they have access to do this
-        if (!Access::check('localplay', '50')) {
+        if (!Access::check('localplay', 50)) {
             debug_event('localplay.ajax', 'Attempted to set random without access', 1);
 
             return false;
@@ -202,11 +208,11 @@ switch ($_REQUEST['action']) {
         $results['localplay_status'] = ob_get_contents();
         ob_end_clean();
 
-    break;
+        break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 } // switch on action;
 
 // We always do this
-echo xoutput_from_array($results);
+echo (string) xoutput_from_array($results);

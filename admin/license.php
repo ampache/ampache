@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,13 +16,14 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
-if (!Access::check('interface', '75')) {
+if (!Access::check('interface', 75)) {
     UI::access_denied();
 
     return false;
@@ -44,17 +45,17 @@ switch ($_REQUEST['action']) {
             $text = T_('A new License has been created');
         }
         show_confirmation(T_('No Problem'), $text, AmpConfig::get('web_path') . '/admin/license.php');
-    break;
+        break;
     case 'show_edit':
         $license = new License($_REQUEST['license_id']);
-        // intentional fall through
+        // Intentional break fall-through
     case 'show_create':
         require_once AmpConfig::get('prefix') . UI::find_template('show_edit_license.inc.php');
         break;
     case 'delete':
         License::delete($_REQUEST['license_id']);
         show_confirmation(T_('No Problem'), T_('The License has been deleted'), AmpConfig::get('web_path') . '/admin/license.php');
-    break;
+        break;
     default:
         $browse = new Browse();
         $browse->set_type('license');
@@ -62,9 +63,9 @@ switch ($_REQUEST['action']) {
         $license_ids = $browse->get_objects();
         $browse->show_objects($license_ids);
         $browse->store();
-    break;
+        break;
 }
 
-/* Show the Footer */
+// Show the Footer
 UI::show_query_stats();
 UI::show_footer();

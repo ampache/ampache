@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -31,7 +31,7 @@ declare(strict_types=0);
  */
 class User extends database_object
 {
-    //Basic Components
+    // Basic Components
     /**
      * @var integer $id
      */
@@ -88,6 +88,10 @@ class User extends database_object
      * @var string $apikey
      */
     public $apikey;
+    /**
+     * @var string $rsstoken
+     */
+    public $rsstoken;
 
     // Constructed variables
     /**
@@ -188,9 +192,9 @@ class User extends database_object
 
         $time      = time();
         $last_seen = $time - 1200;
-        $sql       = 'SELECT COUNT(DISTINCT `session`.`username`) FROM `session` ' .
-            'INNER JOIN `user` ON `session`.`username` = `user`.`username` ' .
-            'WHERE `session`.`expire` > ? and `user`.`last_seen` > ?';
+        $sql       = "SELECT COUNT(DISTINCT `session`.`username`) FROM `session` " .
+            "INNER JOIN `user` ON `session`.`username` = `user`.`username` " .
+            "WHERE `session`.`expire` > ? AND `user`.`last_seen` > ?";
         $db_results           = Dba::read($sql, array($time, $last_seen));
         $data                 = Dba::fetch_row($db_results);
         $results['connected'] = $data[0];
@@ -201,6 +205,7 @@ class User extends database_object
     /**
      * has_info
      * This function returns the information for this object
+     * @return array
      */
     private function has_info()
     {
@@ -304,7 +309,7 @@ class User extends database_object
                 return User::get_from_username($results['username']);
             }
             // check for sha256 hashed apikey for client
-            // https://github.com/ampache/ampache/wiki/XML-API
+            // http://ampache.org/api/
             $sql        = "SELECT `id`, `apikey`, `username` FROM `user`";
             $db_results = Dba::read($sql);
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -360,8 +365,28 @@ class User extends database_object
     } // get_from_website
 
     /**
+     * get_from_rsstoken
+     * This returns a built user from a rsstoken. This is a
+     * static function so it doesn't require an instance
+     * @param $rsstoken
+     * @return User|null
+     */
+    public static function get_from_rsstoken($rsstoken)
+    {
+        $user_id    = null;
+        $sql        = "SELECT `id` FROM `user` WHERE `rsstoken` = ?";
+        $db_results = Dba::read($sql, array($rsstoken));
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $user_id = new User($results['id']);
+        }
+
+        return $user_id;
+    } // get_from_rsstoken
+
+    /**
      * get_catalogs
      * This returns the catalogs as an array of ids that this user is allowed to access
+     * @return integer[]
      */
     public function get_catalogs()
     {
@@ -374,7 +399,7 @@ class User extends database_object
 
         $catalogs = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $catalogs[] = $row['catalog'];
+            $catalogs[] = (int) $row['catalog'];
         }
 
         parent::add_to_cache('user_catalog', $this->id, $catalogs);
@@ -407,7 +432,6 @@ class User extends database_object
                 $user_limit = "AND preference.catagory = '" . Dba::escape($type) . "'";
             }
         }
-
 
         $sql = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`catagory`, `preference`.`subcatagory`, preference.level, user_preference.value " .
             "FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` " .
@@ -453,45 +477,39 @@ class User extends database_object
     /**
      * get_favorites
      * returns an array of your $type favorites
-     * @param $type
+     * @param string $type
      * @return array
      */
     public function get_favorites($type)
     {
-        $results = Stats::get_user(AmpConfig::get('popular_threshold'), $type, $this->id, 1);
+        $count   = AmpConfig::get('popular_threshold', 10);
+        $results = Stats::get_user($count, $type, $this->id, 1);
 
         $items = array();
 
         foreach ($results as $row) {
-            /* If its a song */
+            // If its a song
             if ($type == 'song') {
                 $data        = new Song($row['object_id']);
                 $data->count = $row['count'];
                 $data->format();
                 $data->f_link;
                 $items[] = $data;
-            }
-            /* If its an album */
-            elseif ($type == 'album') {
+            } elseif ($type == 'album') {
+                // If its an album
                 $data = new Album($row['object_id']);
-                //$data->count = $row['count'];
                 $data->format();
                 $items[] = $data;
-            }
-            /* If its an artist */
-            elseif ($type == 'artist') {
+            } elseif ($type == 'artist') {
+                // If its an artist
                 $data = new Artist($row['object_id']);
-                //$data->count = $row['count'];
                 $data->format();
                 $data->f_name = $data->f_link;
                 $items[]      = $data;
-            }
-            /* If it's a genre */
-            elseif (($type == 'genre' || $type == 'tag')) {
-                $data = new Tag($row['object_id']);
-                //$data->count = $row['count'];
-                $data->f_name = $data->name;
-                $items[]      = $data;
+            } elseif (($type == 'genre' || $type == 'tag')) {
+                // If it's a genre
+                $data    = new Tag($row['object_id']);
+                $items[] = $data;
             }
         } // end foreach
 
@@ -540,7 +558,6 @@ class User extends database_object
         asort($users);
 
         foreach ($users as $user_id => $score) {
-
             /* Find everything they've rated at 4+ */
             $sql = "SELECT `object_id`, `user_rating` FROM `ratings` " .
                 "WHERE `user` = '" . Dba::escape($user_id) . "' AND `user_rating` >='4' AND " .
@@ -670,13 +687,12 @@ class User extends database_object
                         $function = 'update_' . $name;
                         $this->$function($value);
                     }
-                break;
+                    break;
                 case 'clear_stats':
                     Stats::clear($this->id);
-                break;
+                    break;
                 default:
-                    // Rien a faire
-                break;
+                    break;
             }
         }
 
@@ -809,10 +825,24 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `apikey` = ? WHERE `id` = ?";
 
-        debug_event('user.class', 'Updating apikey', 4);
+        debug_event('user.class', 'Updating apikey for ' . $this->id, 4);
 
         Dba::write($sql, array($new_apikey, $this->id));
-    } // update_website
+    } // update_apikey
+
+    /**
+     * update_rsstoken
+     * Updates their RSS token
+     * @param string $new_rsstoken
+     */
+    public function update_rsstoken($new_rsstoken)
+    {
+        $sql = "UPDATE `user` SET `rsstoken` = ? WHERE `id` = ?";
+
+        debug_event('user.class', 'Updating rsstoken for ' . $this->id, 4);
+
+        Dba::write($sql, array($new_rsstoken, $this->id));
+    } // update_rsstoken
 
     /**
      * generate_apikey
@@ -822,6 +852,16 @@ class User extends database_object
     {
         $apikey = hash('md5', time() . $this->username . $this->get_password());
         $this->update_apikey($apikey);
+    }
+
+    /**
+     * generate_rsstoken
+     * Generate a new user RSS token
+     */
+    public function generate_rsstoken()
+    {
+        $rsstoken = bin2hex(random_bytes(32));
+        $this->update_rsstoken($rsstoken);
     }
 
     /**
@@ -893,61 +933,22 @@ class User extends database_object
         $new_access = Dba::escape($new_access);
         $sql        = "UPDATE `user` SET `access`='$new_access' WHERE `id`='$this->id'";
 
-        debug_event('user.class', 'Updating access level', 4);
+        debug_event('user.class', 'Updating access level for ' . $this->id, 4);
 
         Dba::write($sql);
 
         return true;
     } // update_access
 
-    /*!
-        @function update_last_seen
-        @discussion updates the last seen data for this user
-    */
+    /**
+     * update_last_seen
+     * updates the last seen data for this user
+     */
     public function update_last_seen()
     {
         $sql = "UPDATE user SET last_seen='" . time() . "' WHERE `id`='$this->id'";
         Dba::write($sql);
     } // update_last_seen
-
-    /**
-     * update_user_stats
-     * updates the playcount mojo for this specific user
-     * @param string $media_type
-     * @param $media_id
-     * @param string $agent
-     * @param array $location
-     * @param integer $date
-     * @return boolean
-     */
-    public function update_stats($media_type, $media_id, $agent = '', $location = array(), $date = null)
-    {
-        debug_event('user.class', 'Updating stats for {' . $media_type . '/' . $media_id . '} {' . $agent . '}...', 5);
-        $media = new $media_type($media_id);
-        $media->format();
-        $user_id = (int) $this->id;
-
-        // We shouldn't test on file only
-        if (!strlen((string) $media->file)) {
-            return false;
-        }
-
-        $this->set_preferences();
-        // If pthreads available, we call save_mediaplay in a new thread to quickly return
-        if (class_exists("Thread", false)) {
-            $thread = new scrobbler_async(Core::get_global('user'), $media);
-            if ($thread->start()) {
-                debug_event('user.class', 'Calling save_mediaplay plugins in a new thread...', 5);
-            } else {
-                debug_event('user.class', 'Error when starting the thread.', 1);
-            }
-        } else {
-            self::save_mediaplay(Core::get_global('user'), $media);
-        }
-        $media->set_played($user_id, $agent, $location, $date);
-
-        return true;
-    } // update_stats
 
     /**
      * save_mediaplay
@@ -956,15 +957,15 @@ class User extends database_object
      */
     public static function save_mediaplay($user, $media)
     {
-        debug_event('user.class', 'save_mediaplay...', 5);
         foreach (Plugin::get_plugins('save_mediaplay') as $plugin_name) {
             try {
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->load($user)) {
                     $plugin->_plugin->save_mediaplay($media);
+                    debug_event('user.class', 'save_mediaplay... ' . $plugin->_plugin->name, 5);
                 }
             } catch (Exception $error) {
-                debug_event('user.class', 'Stats plugin error: ' . $error->getMessage(), 1);
+                debug_event('user.class', 'save_mediaplay plugin error: ' . $error->getMessage(), 1);
             }
         }
     }
@@ -1074,9 +1075,9 @@ class User extends database_object
         }
 
         // Get the insert_id
-        $insert_id = Dba::insert_id();
+        $insert_id = (int) Dba::insert_id();
 
-        /* Populates any missing preferences, in this case all of them */
+        // Populates any missing preferences, in this case all of them
         self::fix_preferences($insert_id);
 
         return (int) $insert_id;
@@ -1120,19 +1121,18 @@ class User extends database_object
         if (!$this->id) {
             return;
         }
-        $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
         /* If they have a last seen date */
         if (!$this->last_seen) {
             $this->f_last_seen = T_('Never');
         } else {
-            $this->f_last_seen = get_datetime($time_format, (int) $this->last_seen);
+            $this->f_last_seen = get_datetime((int) $this->last_seen);
         }
 
         /* If they have a create date */
         if (!$this->create_date) {
             $this->f_create_date = T_('Unknown');
         } else {
-            $this->f_create_date = get_datetime($time_format, (int) $this->create_date);
+            $this->f_create_date = get_datetime((int) $this->create_date);
         }
 
         $this->f_name = ($this->fullname_public ? $this->fullname : $this->username);
@@ -1154,10 +1154,8 @@ class User extends database_object
 
             /* Get Users Last ip */
             if (count($data = $this->get_ip_history(1))) {
-                $userip = inet_ntop($data['0']['ip']);
-                if (!empty($userip) && filter_var($userip, FILTER_VALIDATE_IP)) {
-                    $this->ip_history = $userip;
-                }
+                $user_ip          = inet_ntop($data['0']['ip']);
+                $this->ip_history = (!empty($user_ip) && filter_var($user_ip, FILTER_VALIDATE_IP)) ? $user_ip : T_('Invalid');
             } else {
                 $this->ip_history = T_('Not Enough Data');
             }
@@ -1179,24 +1177,24 @@ class User extends database_object
      * access_name_to_level
      * This takes the access name for the user and returns the level
      * @param string $name
-     * @return string
+     * @return integer
      */
     public static function access_name_to_level($name)
     {
         switch ($name) {
             case 'admin':
-                return '100';
+                return 100;
             case 'user':
-                return '25';
+                return 25;
             case 'manager':
-                return '75';
+                return 75;
             // FIXME why is content manager not here?
             //case 'manager':
-            //    return '50';
+            //    return 50;
             case 'guest':
-                return '5';
+                return 5;
             default:
-                return '0';
+                return 0;
         }
     } // access_name_to_level
 
@@ -1301,10 +1299,7 @@ class User extends database_object
      */
     public function delete()
     {
-        /*
-          Before we do anything make sure that they aren't the last
-          admin
-        */
+        // Before we do anything make sure that they aren't the last admin
         if ($this->has_access(100)) {
             $sql        = "SELECT `id` FROM `user` WHERE `access`='100' AND id != ?";
             $db_results = Dba::read($sql, array($this->id));
@@ -1391,7 +1386,8 @@ class User extends database_object
         $ordersql = ($newest === true) ? 'DESC' : 'ASC';
 
         $sql = "SELECT `object_id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = ? AND `user` = ? " .
-            "ORDER BY `date` " . $ordersql . " LIMIT " . $limit;
+            "GROUP BY `object_id` ORDER BY `date` " . $ordersql .
+            " LIMIT " . $limit . " ";
         $db_results = Dba::read($sql, array($type, $this->id));
 
         $results = array();
@@ -1404,32 +1400,26 @@ class User extends database_object
 
     /**
      * get_ip_history
-     * This returns the ip_history from the
-     * last AmpConfig::get('user_ip_cardinality') days
-     * @param string $count
-     * @param string $distinct
+     * This returns the ip_history from the last AmpConfig::get('user_ip_cardinality') days
+     * @param integer $count
+     * @param boolean $distinct
      * @return array
      */
-    public function get_ip_history($count = '', $distinct = '')
+    public function get_ip_history($count = 1, $distinct = false)
     {
-        $username     = Dba::escape($this->id);
-        $count        = $count ? (int) ($count) : (int) (AmpConfig::get('user_ip_cardinality'));
-
-        // Make sure it's something
-        if ($count < 1) {
-            $count = '1';
-        }
-        $limit_sql = "LIMIT " . (string) ($count);
+        $username  = Dba::escape($this->id);
+        $count     = $count ? (int) ($count) : (int) (AmpConfig::get('user_ip_cardinality'));
+        $limit_sql = ($count > 0) ? " LIMIT " . (string) ($count) : '';
 
         $group_sql = "";
         if ($distinct) {
-            $group_sql = "GROUP BY `ip`";
+            $group_sql = "GROUP BY `ip`, `date`";
         }
 
         /* Select ip history */
-        $sql = "SELECT `ip`, `date` FROM `ip_history`" .
-            " WHERE `user`='$username'" .
-            " $group_sql ORDER BY `date` DESC $limit_sql";
+        $sql = "SELECT `ip`, `date` FROM `ip_history` " .
+            "WHERE `user`='$username' " .
+            "$group_sql ORDER BY `date` DESC$limit_sql";
         $db_results = Dba::read($sql);
 
         $results = array();
@@ -1507,7 +1497,7 @@ class User extends database_object
      */
     public function update_avatar($data, $mime = '')
     {
-        debug_event('user.class', 'Updating avatar', 4);
+        debug_event('user.class', 'Updating avatar for ' . $this->id, 4);
 
         $art = new Art($this->id, 'user');
 
@@ -1527,7 +1517,7 @@ class User extends database_object
             $upload['mime'] = 'image/' . $path_info['extension'];
             $image_data     = Art::get_from_source($upload, 'user');
 
-            if ($image_data !== null) {
+            if ($image_data !== '') {
                 return $this->update_avatar($image_data, $upload['mime']);
             }
         }
@@ -1584,9 +1574,9 @@ class User extends database_object
             return false;
         }
 
-        //FIXME: Ok really what we will do is check the MD5 of the HTTP_REFERER
-        //FIXME: combined with the song title to make sure that the REFERER
-        //FIXME: is in the access list with full rights
+        // FIXME: Ok really what we will do is check the MD5 of the HTTP_REFERER
+        // FIXME: combined with the song title to make sure that the REFERER
+        // FIXME: is in the access list with full rights
         return true;
     } // is_xmlrpc
 
@@ -1655,7 +1645,7 @@ class User extends database_object
     /**
      * toggle_follow
      * @param integer $user_id
-     * @return boolean
+     * @return PDOStatement|boolean
      */
     public function toggle_follow($user_id)
     {
@@ -1670,7 +1660,7 @@ class User extends database_object
             $sql      = "INSERT INTO `user_follower` (`user`, `follow_user`, `follow_date`) VALUES (?, ?, ?)";
             $params[] = time();
 
-            Useractivity::post_activity($this->id, 'follow', 'user', $user_id);
+            Useractivity::post_activity($this->id, 'follow', 'user', $user_id, time());
         }
 
         return Dba::write($sql, $params);

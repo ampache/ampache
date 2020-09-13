@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -75,9 +75,7 @@ class LDAP
         debug_event('ldap.class', '__construct has been called. This should not happen', 2);
     }
 
-
     /** Utility functions */
-
 
     /**
      * clean_search_results
@@ -171,27 +169,26 @@ class LDAP
         ldap_unbind($link);
     }
 
-
     /**
      * Read attributes for a DN from the LDAP
      * @param $link
-     * @param $dn
+     * @param string $base_dn
      * @param array $attrs
      * @param string $filter
      * @return mixed
      * @throws LDAPException
      */
-    private static function read($link, $dn, $attrs = [], $filter = 'objectClass=*')
+    private static function read($link, $base_dn, $attrs = [], $filter = 'objectClass=*')
     {
         $attrs_json = json_encode($attrs);
-        debug_event('ldap.class', "reading attributes $attrs_json in `$dn`", 5);
+        debug_event('ldap.class', "reading attributes $attrs_json in `$base_dn`", 5);
 
-        if (! $result = ldap_read($link, $dn, $filter, $attrs)) {
-            throw new LDAPException("Could not read attributes `$attrs_json` for dn `$dn`");
+        if (! $result = ldap_read($link, $base_dn, $filter, $attrs)) {
+            throw new LDAPException("Could not read attributes `$attrs_json` for dn `$base_dn`");
         }
 
         if (! $infos = ldap_get_entries($link, $result)) {
-            throw new LDAPException("Empty search result for dn `$dn`");
+            throw new LDAPException("Empty search result for dn `$base_dn`");
         }
 
         return $infos[0];

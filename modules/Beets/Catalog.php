@@ -3,7 +3,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -153,16 +153,15 @@ abstract class Catalog extends \Catalog
             debug_event('beets_catalog', 'Skipping existing song ' . $song['file'], 5);
         } else {
             $album_id = Album::check($song['album'], $song['year'], $song['disc'], $song['mbid'],
-                $song['mb_releasegroupid'], $song['album_artist'], null, null );
+                $song['mb_releasegroupid'], $song['album_artist'], null, null);
             $song['album_id'] = $album_id;
-            $songId = $this->insertSong($song);
+            $songId           = $this->insertSong($song);
             if (Song::isCustomMetadataEnabled() && $songId) {
                 $songObj = new Song($songId);
                 $this->addMetadata($songObj, $song);
                 $this->updateUi('add', ++$this->addedSongs, $song);
             }
         }
-
     }
 
     /**
@@ -229,7 +228,7 @@ abstract class Catalog extends \Catalog
         debug_event('beets_catalog', 'Verify: Starting on ' . $this->name, 5);
         set_time_limit(0);
 
-        /* @var $parser Handler */
+        /* @var Handler $parser */
         $parser = $this->getParser();
         $parser->setHandler($this, 'verifySong');
         $parser->start($parser->getTimedCommand($this->listCommand, 'mtime', $this->last_update));
@@ -245,7 +244,7 @@ abstract class Catalog extends \Catalog
      */
     public function verifySong($beetsSong)
     {
-        $song = new Song($this->getIdFromPath($beetsSong['file']));
+        $song                  = new Song($this->getIdFromPath($beetsSong['file']));
         $beetsSong['album_id'] = $song->album;
 
         if ($song->id) {
@@ -272,7 +271,7 @@ abstract class Catalog extends \Catalog
         $parser->start($this->listCommand);
         $count = count($this->songs);
         if ($count > 0) {
-           $this->deleteSongs($this->songs);
+            $this->deleteSongs($this->songs);
         }
         if (Song::isCustomMetadataEnabled()) {
             Metadata::garbage_collection();

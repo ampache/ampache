@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -45,7 +45,7 @@ $thcount  = 8; ?>
             <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
             <?php
     } ?>
-            <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
+            <th class="cel_tags optional"><?php echo T_('Genres'); ?></th>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) {
         ++$thcount; ?>
@@ -80,7 +80,7 @@ $thcount  = 8; ?>
             $libitem = new Artist($artist_id, $_SESSION['catalog']);
             $libitem->format(true, $limit_threshold);
             $show_direct_play  = $show_direct_play_cfg;
-            $show_playlist_add = Access::check('interface', '25');
+            $show_playlist_add = Access::check('interface', 25);
             if ($directplay_limit > 0) {
                 $show_playlist_add = ($libitem->songs <= $directplay_limit);
                 if ($show_direct_play) {
@@ -91,7 +91,7 @@ $thcount  = 8; ?>
             <?php require AmpConfig::get('prefix') . UI::find_template('show_artist_row.inc.php'); ?>
         </tr>
         <?php
-        } //end foreach ($artists as $artist)?>
+        } // end foreach ($artists as $artist)?>
         <?php if (!count($object_ids)) { ?>
         <tr class="<?php echo UI::flip_class(); ?>">
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No Artist found'); ?></span></td>
@@ -115,7 +115,7 @@ $thcount  = 8; ?>
             <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
             <?php
         } ?>
-            <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
+            <th class="cel_tags optional"><?php echo T_('Genres'); ?></th>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) { ?>
                     <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>

@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -54,7 +54,7 @@ $button_flip_state_id = 'button_flip_state_' . $libitem->id; ?>
     </select>
     <input type="button" onClick="NavigateTo('<?php echo $web_path; ?>/admin/catalog.php?action=' + this.form.catalog_action_menu.options[this.form.catalog_action_menu.selectedIndex].value + '&catalogs[]=<?php echo $libitem->id; ?>');" value="<?php echo T_('Go'); ?>">
     <?php if (AmpConfig::get('catalog_disable')) { ?>
-        <span id="<?php echo($button_flip_state_id); ?>">
+        <span id="<?php echo $button_flip_state_id; ?>">
             <?php echo Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $libitem->id, $icon, $icontext, 'flip_state_' . $libitem->id); ?>
         </span>
     <?php

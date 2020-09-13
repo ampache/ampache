@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -25,7 +25,8 @@ $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 if (empty($action) || $action == 'stream' || $action == 'download') {
     define('NO_SESSION', '1');
 }
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 Preference::init();
 
@@ -70,7 +71,7 @@ switch ($_REQUEST['action']) {
         }
 
         UI::show_header();
-        $share_id = Share::create_share($_REQUEST['type'], $_REQUEST['id'], $_REQUEST['allow_stream'], $_REQUEST['allow_download'], $_REQUEST['expire'], $_REQUEST['secret'], $_REQUEST['max_counter']);
+        $share_id = Share::create_share($_REQUEST['type'], (int) $_REQUEST['id'], make_bool($_REQUEST['allow_stream']), make_bool($_REQUEST['allow_download']), (int) $_REQUEST['expire'], $_REQUEST['secret'], (int) $_REQUEST['max_counter']);
 
         if (!$share_id) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_share.inc.php');
@@ -165,7 +166,7 @@ switch ($_REQUEST['action']) {
  * page if they aren't in the ACL
  */
 if (AmpConfig::get('access_control')) {
-    if (!Access::check_network('interface', '', '5')) {
+    if (!Access::check_network('interface', '', 5)) {
         debug_event('share', 'Access Denied:' . Core::get_server('REMOTE_ADDR') . ' is not in the Interface Access list', 3);
         UI::access_denied();
 

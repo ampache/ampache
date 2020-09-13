@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -95,27 +95,29 @@ class Daap_Api
             }
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
             $curl = curl_init($url);
-            curl_setopt_array($curl, array(
-                CURLOPT_HTTPHEADER => $reqheaders,
-                CURLOPT_HEADER => false,
-                CURLOPT_RETURNTRANSFER => false,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_WRITEFUNCTION => array(
-                    'Daap_Api',
-                    'output_body'
-                ),
-                CURLOPT_HEADERFUNCTION => array(
-                    'Daap_Api',
-                    'output_header'
-                ),
-                // Ignore invalid certificate
-                // Default trusted chain is crap anyway and currently no custom CA option
-                CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_SSL_VERIFYHOST => false,
-                CURLOPT_TIMEOUT => 0
-            ));
-            curl_exec($curl);
-            curl_close($curl);
+            if ($curl) {
+                curl_setopt_array($curl, array(
+                    CURLOPT_HTTPHEADER => $reqheaders,
+                    CURLOPT_HEADER => false,
+                    CURLOPT_RETURNTRANSFER => false,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_WRITEFUNCTION => array(
+                        'Daap_Api',
+                        'output_body'
+                    ),
+                    CURLOPT_HEADERFUNCTION => array(
+                        'Daap_Api',
+                        'output_header'
+                    ),
+                    // Ignore invalid certificate
+                    // Default trusted chain is crap anyway and currently no custom CA option
+                    CURLOPT_SSL_VERIFYPEER => false,
+                    CURLOPT_SSL_VERIFYHOST => false,
+                    CURLOPT_TIMEOUT => 0
+                ));
+                curl_exec($curl);
+                curl_close($curl);
+            }
         } else {
             // Stream media using http redirect if no curl support
             header("Location: " . $url);
@@ -125,7 +127,7 @@ class Daap_Api
     /**
      * @param $curl
      * @param $data
-     * @return int
+     * @return integer
      */
     public static function output_body($curl, $data)
     {
@@ -138,7 +140,7 @@ class Daap_Api
     /**
      * @param $curl
      * @param $header
-     * @return int
+     * @return integer
      */
     public static function output_header($curl, $header)
     {
@@ -163,12 +165,12 @@ class Daap_Api
         $output .= self::tlv('dmap.protocolversion', '0.2.0.0');
         $output .= self::tlv('dmap.itemname', 'Ampache');
         $output .= self::tlv('daap.protocolversion', '0.3.0.0');
-        $output .= self::tlv('daap.supportsextradata', 0);//daap.supportsextradata
+        $output .= self::tlv('daap.supportsextradata', 0); // daap.supportsextradata
         $output .= self::tlv('daap.supportsgroups', 0);
-        $output .= self::tlv('daap.aeMQ', 1);//unknown - used by iTunes
-        $output .= self::tlv('daap.aeTr', 1);//unknown - used by iTunes
-        $output .= self::tlv('daap.aeSL', 1);//unknown - used by iTunes
-        $output .= self::tlv('daap.aeSR', 1);//unknown - used by iTunes
+        $output .= self::tlv('daap.aeMQ', 1); // unknown - used by iTunes
+        $output .= self::tlv('daap.aeTr', 1); // unknown - used by iTunes
+        $output .= self::tlv('daap.aeSL', 1); // unknown - used by iTunes
+        $output .= self::tlv('daap.aeSR', 1); // unknown - used by iTunes
         $output .= self::tlv('dmap.supportsedit', 0);
 
         if (AmpConfig::get('daap_pass')) {
@@ -179,9 +181,9 @@ class Daap_Api
         $output .= self::tlv('dmap.timeoutinterval', 1800);
         $output .= self::tlv('dmap.supportsautologout', 1);
 
-        $output .= self::tlv('dmap.authenticationmethod', 2);//im not shre about this value "2"?
+        $output .= self::tlv('dmap.authenticationmethod', 2); // FIXME im not shre about this value "2"?
         $output .= self::tlv('dmap.supportsupdate', 1);
-        $output .= self::tlv('dmap.supportspersistentids', 1);//im not shuure if ampache supports it
+        $output .= self::tlv('dmap.supportspersistentids', 1); // FIXME im not sure if ampache supports it
         $output .= self::tlv('dmap.supportsextensions', 0);
         $output .= self::tlv('dmap.supportsbrowse', 0);
         $output .= self::tlv('dmap.supportsquery', 0);
@@ -351,7 +353,7 @@ class Daap_Api
 
     /**
      * databases
-     * @param $input
+     * @param array $input
      * @return boolean
      */
     public static function databases($input)
@@ -366,14 +368,14 @@ class Daap_Api
             $output .= self::tlv('dmap.specifiedtotalcount', 1);
             $output .= self::tlv('dmap.returnedcount', 1);
 
-            $r = self::tlv('dmap.itemid', 1);
-            $r .= self::tlv('dmap.persistentid', 1);
-            $r .= self::tlv('dmap.itemname', 'Ampache');
-            $counts = Catalog::count_medias();
-            $r .= self::tlv('dmap.itemcount', $counts['songs']);
-            $r .= self::tlv('dmap.containercount', count(Playlist::get_playlists()));
-            $r = self::tlv('dmap.listingitem', $r);
-            $output .= self::tlv('dmap.listing', $r);
+            $tlv = self::tlv('dmap.itemid', 1);
+            $tlv .= self::tlv('dmap.persistentid', 1);
+            $tlv .= self::tlv('dmap.itemname', 'Ampache');
+            $counts = Catalog::count_server();
+            $tlv .= self::tlv('dmap.itemcount', $counts['song']);
+            $tlv .= self::tlv('dmap.containercount', count(Playlist::get_playlists()));
+            $tlv = self::tlv('dmap.listingitem', $tlv);
+            $output .= self::tlv('dmap.listing', $tlv);
 
             $output = self::tlv('daap.serverdatabases', $output);
         } elseif (count($input) == 2) {
@@ -395,18 +397,18 @@ class Daap_Api
                 $output .= self::tlv('dmap.specifiedtotalcount', count($playlists) + count($searches) + 1);
                 $output .= self::tlv('dmap.returnedcount', count($playlists) + count($searches) + 1);
 
-                $l = self::base_library();
+                $library = self::base_library();
                 foreach ($playlists as $playlist_id) {
                     $playlist = new Playlist($playlist_id);
                     $playlist->format();
-                    $l .= self::tlv_playlist($playlist);
+                    $library .= self::tlv_playlist($playlist);
                 }
                 foreach ($searches as $search_id) {
                     $playlist = new Search($search_id, 'song');
                     $playlist->format();
-                    $l .= self::tlv_playlist($playlist);
+                    $library .= self::tlv_playlist($playlist);
                 }
-                $output .= self::tlv('dmap.listing', $l);
+                $output .= self::tlv('dmap.listing', $library);
 
                 $output = self::tlv('daap.databaseplaylists', $output);
             }
@@ -479,7 +481,6 @@ class Daap_Api
                 }
             }
         }
-
         self::apiOutput($output);
 
         return true;
@@ -495,80 +496,80 @@ class Daap_Api
         if (array_search('all', $meta) > - 1) {
             $meta = self::$metas;
         }
-        $lo = '';
+        $tlv_out = '';
         foreach ($songs as $song) {
             $song->format();
             $output = self::tlv('dmap.itemkind', 2);
             $output .= self::tlv('dmap.itemid', $song->id);
 
-            foreach ($meta as $m) {
-                switch ($m) {
+            foreach ($meta as $tag) {
+                switch ($tag) {
                     case 'dmap.itemname':
-                        $output .= self::tlv($m, $song->f_title);
+                        $output .= self::tlv($tag, $song->f_title);
                         break;
                     case 'dmap.containeritemid':
                     /* case 'dmap.persistentid': */
-                        $output .= self::tlv($m, $song->id);
+                        $output .= self::tlv($tag, $song->id);
                         break;
                     case 'daap.songalbum':
-                        $output .= self::tlv($m, $song->f_album);
+                        $output .= self::tlv($tag, $song->f_album);
                         break;
                     case 'daap.songartist':
-                        $output .= self::tlv($m, $song->f_artist);
+                        $output .= self::tlv($tag, $song->f_artist);
                         break;
                     case 'daap.songcomposer':
-                        $output .= self::tlv($m, $song->f_composer);
+                        $output .= self::tlv($tag, $song->f_composer);
                         break;
                     case 'daap.songbitrate':
-                        $output .= self::tlv($m, (int) ($song->bitrate / 1000));
+                        $output .= self::tlv($tag, (int) ($song->bitrate / 1000));
                         break;
                     case 'daap.songcomment':
-                        $output .= self::tlv($m, $song->comment);
+                        $output .= self::tlv($tag, $song->comment);
                         break;
                     case 'daap.songdateadded':
-                        $output .= self::tlv($m, $song->addition_time);
+                        $output .= self::tlv($tag, $song->addition_time);
                         break;
                     case 'daap.songdatemodified':
                         if ($song->update_time) {
-                            $output .= self::tlv($m, $song->update_time);
+                            $output .= self::tlv($tag, $song->update_time);
                         }
                         break;
                     case 'daap.songdiscnumber':
                         $album = new Album($song->album);
-                        $output .= self::tlv($m, $album->disk);
+                        $output .= self::tlv($tag, $album->disk);
                         break;
                     case 'daap.songformat':
-                        $output .= self::tlv($m, $song->type);
+                        $output .= self::tlv($tag, $song->type);
                         break;
                     case 'daap.songgenre':
-                        $output .= self::tlv($m, Tag::get_display($song->tags, false, 'song'));
+                        $output .= self::tlv($tag, Tag::get_display($song->tags, false, 'song'));
                         break;
                     case 'daap.songsamplerate':
-                        $output .= self::tlv($m, $song->rate);
+                        $output .= self::tlv($tag, $song->rate);
                         break;
                     case 'daap.songsize':
-                        $output .= self::tlv($m, $song->size);
+                        $output .= self::tlv($tag, $song->size);
                         break;
                     case 'daap.songtime':
-                        $output .= self::tlv($m, $song->time * 1000);
+                        $output .= self::tlv($tag, $song->time * 1000);
                         break;
                     case 'daap.songtracknumber':
-                        $output .= self::tlv($m, $song->track);
+                        $output .= self::tlv($tag, $song->track);
                         break;
                     case 'daap.songuserrating':
                         $rating       = new Rating($song->id, "song");
                         $rating_value = $rating->get_average_rating();
-                        $output .= self::tlv($m, $rating_value);
+                        $output .= self::tlv($tag, $rating_value);
                         break;
                     case 'daap.songyear':
-                        $output .= self::tlv($m, $song->year);
+                        $output .= self::tlv($tag, $song->year);
                         break;
                 }
             }
-            $lo .= self::tlv('dmap.listingitem', $output);
+            $tlv_out .= self::tlv('dmap.listingitem', $output);
         }
 
-        return $lo;
+        return $tlv_out;
     }
 
     /**
@@ -576,36 +577,36 @@ class Daap_Api
      */
     public static function base_library()
     {
-        $p = self::tlv('dmap.itemid', Daap_Api::BASE_LIBRARY);
-        $p .= self::tlv('dmap.persistentid', Daap_Api::BASE_LIBRARY);
-        $p .= self::tlv('dmap.itemname', 'Music');
-        $p .= self::tlv('daap.baseplaylist', 1);
-        $stats = Catalog::count_medias();
-        $p .= self::tlv('dmap.itemcount', $stats['songs']);
+        $library = self::tlv('dmap.itemid', Daap_Api::BASE_LIBRARY);
+        $library .= self::tlv('dmap.persistentid', Daap_Api::BASE_LIBRARY);
+        $library .= self::tlv('dmap.itemname', 'Music');
+        $library .= self::tlv('daap.baseplaylist', 1);
+        $counts = Catalog::count_server();
+        $library .= self::tlv('dmap.itemcount', $counts['song']);
 
-        return self::tlv('dmap.listingitem', $p);
+        return self::tlv('dmap.listingitem', $library);
     }
 
     /**
-     * @param $playlist
+     * @param Playlist|Search $playlist
      * @return string
      */
     public static function tlv_playlist($playlist)
     {
         $isSmart = false;
-        if (strtolower(get_class($playlist)) == 'search') {
+        if (get_class($playlist) == 'Search') {
             $isSmart = true;
         }
-        $id = (($isSmart) ? Daap_Api::AMPACHEID_SMARTPL : 0) + $playlist->id;
-        $p  = self::tlv('dmap.itemid', $id);
-        $p .= self::tlv('dmap.persistentid', $id);
-        $p .= self::tlv('dmap.itemname', $playlist->f_name);
-        $p .= self::tlv('dmap.itemcount', count($playlist->get_items()));
+        $pl_id  = (($isSmart) ? Daap_Api::AMPACHEID_SMARTPL : 0) + $playlist->id;
+        $plist  = self::tlv('dmap.itemid', $pl_id);
+        $plist .= self::tlv('dmap.persistentid', $pl_id);
+        $plist .= self::tlv('dmap.itemname', $playlist->f_name);
+        $plist .= self::tlv('dmap.itemcount', count($playlist->get_items()));
         if ($isSmart) {
-            $p .= self::tlv('com.apple.itunes.smart-playlist', 1);
+            $plist .= self::tlv('com.apple.itunes.smart-playlist', 1);
         }
 
-        return self::tlv('dmap.listingitem', $p);
+        return self::tlv('dmap.listingitem', $plist);
     }
 
     /**
@@ -711,9 +712,9 @@ class Daap_Api
      */
     private static function tlv_version($tag, $value)
     {
-        $v = explode('.', $value);
-        if (count($v) == 4) {
-            return $tag . "\x00\x00\x00\x04" . pack("C", $v[0]) . pack("C", $v[1]) . pack("C", $v[2]) . pack("C", $v[3]);
+        $values = explode('.', $value);
+        if (count($values) == 4) {
+            return $tag . "\x00\x00\x00\x04" . pack("C", $values[0]) . pack("C", $values[1]) . pack("C", $values[2]) . pack("C", $values[3]);
         } else {
             debug_event('daap_api.class', 'Malformed `' . $tag . '` version `' . $value . '`.', 3);
         }
@@ -852,7 +853,7 @@ class Daap_Api
 
     /**
      * @param $type
-     * @return int
+     * @return integer
      */
     private static function get_type_id($type)
     {

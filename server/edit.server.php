@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -27,7 +27,8 @@
 // Set that this is an ajax include
 define('AJAX_INCLUDE', '1');
 
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 $results = '';
 
@@ -65,7 +66,7 @@ if (Core::get_request('action') == 'show_edit_playlist') {
 
 // Make sure they got them rights
 if (!Access::check('interface', (int) $level) || AmpConfig::get('demo_mode')) {
-    echo xoutput_from_array(array('rfc3514' => '0x1'));
+    echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
 
     return false;
 }
@@ -76,17 +77,17 @@ switch ($_REQUEST['action']) {
         ob_start();
         require AmpConfig::get('prefix') . UI::find_template('show_edit_' . $type . '.inc.php');
         $results = ob_get_contents();
-    break;
+        break;
     case 'refresh_updated':
         require AmpConfig::get('prefix') . UI::find_template('show_' . $type . '.inc.php');
         $results = ob_get_contents();
-    break;
+        break;
     case 'show_edit_playlist':
         ob_start();
         require AmpConfig::get('prefix') . UI::find_template('show_playlists_dialog.inc.php');
         $results = ob_get_contents();
         ob_end_clean();
-    break;
+        break;
     case 'edit_object':
         // Scrub the data, walk recursive through array
         $entities = function (&$data) use (&$entities) {
@@ -144,7 +145,7 @@ switch ($_REQUEST['action']) {
 
         xoutput_headers();
         $results = array('id' => $new_id);
-        echo xoutput_from_array($results);
+        echo (string) xoutput_from_array($results);
 
         return false;
     default:

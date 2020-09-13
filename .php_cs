@@ -35,9 +35,11 @@ return PhpCsFixer\Config::create()
         'encoding' => true,
         'no_break_comment' => false,
         'method_argument_space' => false,
+        'line_ending' => true,
      ])
    ->setIndent("    ")
    ->setUsingCache(false)
    ->setFinder($finder)
+   ->setLineEnding("\n")
 ;
 

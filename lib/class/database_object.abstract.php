@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -45,19 +45,21 @@ abstract class database_object
      */
     public function get_info($object_id, $table_name = '')
     {
-        $table_name = $table_name ? Dba::escape($table_name) : Dba::escape(strtolower(get_class($this)));
+        $table     = $table_name ? Dba::escape($table_name) : Dba::escape(strtolower(get_class($this)));
+        $object_id = (int) $object_id;
 
         // Make sure we've got a real id
-        if (!is_numeric($object_id)) {
+        if ($object_id < 1) {
             return array();
         }
 
-        if (self::is_cached($table_name, $object_id)) {
-            return self::get_from_cache($table_name, $object_id);
+        if (self::is_cached($table, $object_id)) {
+            return self::get_from_cache($table, $object_id);
         }
 
-        $sql        = "SELECT * FROM `$table_name` WHERE `id`='$object_id'";
-        $db_results = Dba::read($sql);
+        $params     = array($object_id);
+        $sql        = "SELECT * FROM `$table` WHERE `id`= ?";
+        $db_results = Dba::read($sql, $params);
 
         if (!$db_results) {
             return array();
@@ -65,7 +67,7 @@ abstract class database_object
 
         $row = Dba::fetch_assoc($db_results);
 
-        self::add_to_cache($table_name, $object_id, $row);
+        self::add_to_cache($table, $object_id, $row);
 
         return $row;
     } // get_info
@@ -81,8 +83,8 @@ abstract class database_object
     /**
      * is_cached
      * this checks the cache to see if the specified object is there
-     * @param $index
-     * @param $object_id
+     * @param string $index
+     * @param string $object_id
      * @return boolean
      */
     public static function is_cached($index, $object_id)
@@ -98,8 +100,8 @@ abstract class database_object
     /**
      * get_from_cache
      * This attempts to retrieve the specified object from the cache we've got here
-     * @param integer $index
-     * @param integer $object_id
+     * @param string $index
+     * @param integer|string $object_id
      * @return array
      */
     public static function get_from_cache($index, $object_id)
@@ -117,8 +119,8 @@ abstract class database_object
     /**
      * add_to_cache
      * This adds the specified object to the specified index in the cache
-     * @param $index
-     * @param $object_id
+     * @param string $index
+     * @param integer|string $object_id
      * @param array $data
      * @return boolean
      */
@@ -129,7 +131,7 @@ abstract class database_object
         }
 
         $value = false;
-        if ($data !== null) {
+        if (!empty($data)) {
             $value = $data;
         }
 
@@ -143,8 +145,8 @@ abstract class database_object
      * remove_from_cache
      * This function clears something from the cache, there are a few places we need to do this
      * in order to have things display correctly
-     * @param $index
-     * @param $object_id
+     * @param string $index
+     * @param integer $object_id
      */
     public static function remove_from_cache($index, $object_id)
     {

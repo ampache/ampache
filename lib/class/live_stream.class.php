@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -83,7 +83,7 @@ class Live_Stream extends database_object implements media, library_item
     /**
      * Constructor
      * This takes a flagged.id and then pulls in the information for said flag entry
-     * @param $stream_id
+     * @param integer $stream_id
      */
     public function __construct($stream_id)
     {
@@ -104,7 +104,7 @@ class Live_Stream extends database_object implements media, library_item
      */
     public function format($details = true)
     {
-        unset($details); //dead code but called from other format calls
+        unset($details); // dead code but called from other format calls
         // Default link used on the rightbar
         $this->f_name         = scrub_out($this->name);
         $this->link           = AmpConfig::get('web_path') . '/radio.php?action=show&radio=' . scrub_out($this->id);
@@ -148,7 +148,7 @@ class Live_Stream extends database_object implements media, library_item
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return array
      */
     public function search_childrens($name)
@@ -256,7 +256,7 @@ class Live_Stream extends database_object implements media, library_item
         }
 
         $sql = "UPDATE `live_stream` SET `name` = ?,`site_url` = ?,`url` = ?, codec = ? WHERE `id` = ?";
-        Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $data['codec'], $this->id));
+        Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], strtolower((string) $data['codec']), $this->id));
 
         return $this->id;
     } // update
@@ -307,7 +307,7 @@ class Live_Stream extends database_object implements media, library_item
         $sql = "INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) " .
             "VALUES (?, ?, ?, ?, ?)";
 
-        return Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $catalog->id, $data['codec']));
+        return Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $catalog->id, strtolower((string) $data['codec'])));
     } // create
 
     /**
@@ -337,7 +337,7 @@ class Live_Stream extends database_object implements media, library_item
     /**
      * play_url
      * This is needed by the media interface
-     * @param $oid
+     * @param integer $object_id
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
@@ -345,9 +345,9 @@ class Live_Stream extends database_object implements media, library_item
      * @param string $force_http
      * @return string
      */
-    public static function play_url($oid, $additional_params = '', $player = null, $local = false, $sid = '', $force_http = '')
+    public static function play_url($object_id, $additional_params = '', $player = null, $local = false, $sid = '', $force_http = '')
     {
-        $radio = new Live_Stream($oid);
+        $radio = new Live_Stream($object_id);
 
         return $radio->url . $additional_params;
     } // play_url
@@ -411,24 +411,31 @@ class Live_Stream extends database_object implements media, library_item
     }
 
     /**
-     * @param $user
-     * @param $agent
-     * @param $location
-     * @return mixed|void
+     * @param integer $user
+     * @param string $agent
+     * @param array $location
+     * @param integer $date
+     * @return boolean
      */
-    public function set_played($user, $agent, $location)
+    public function set_played($user, $agent, $location, $date = null)
     {
         // Do nothing
+        unset($user, $agent, $location, $date);
+
+        return false;
     }
 
     /**
-     * @param $user
-     * @param $agent
-     * @return mixed|void
+     * @param integer $user
+     * @param string $agent
+     * @param integer $date
+     * @return boolean
      */
-    public function check_play_history($user, $agent)
+    public function check_play_history($user, $agent, $date)
     {
-        unset($user, $agent);
         // Do nothing
+        unset($user, $agent, $date);
+
+        return false;
     }
 } // end live_stream.class

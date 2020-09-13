@@ -5,50 +5,68 @@
 It's easy to use a program like github desktop to compare between branches.
 **Use Linux**
 
+* Export database from a fresh install (phpMyAdmin exports well.)
+  * Tables: Structure; **select all tables**
+  * Tables: Data; **only select** `access_list`, `license`, `preference`, `search`, `update_info` and `user_preference`
+  * Object creation options: Tick "Add DROP TABLE / VIEW / PROCEDURE / FUNCTION / EVENT / TRIGGER statement"
+  * Remove user 1 settings from `preference` and `user_preference` inserts.
 * Open Github Desktop and pull latest develop / master
 * Change to master branch
 * Go to Branch Menu -> Update from develop
 * Fix merge issues
   * lib/init.php (Set release version)
   * docs/CHANGELOG.md (Update for release)
-* Commit merge but do not push!
-* Undo commits and tag for new version (e.g. 4.1.0)
+  * add new ampache.sql
+* Commit merge for new version (e.g. 4.x.x) but **do not push!**
 * Browse changes to check for things you've missed in the changelog
-* Run composer install
+* Add pchart to composer
+  * composer require szymach/c-pchart "2.*"
+* ~~Run composer install~~ (adding pchart updates everything)
 * Remove broken symbolic links
 
 ```shell
   find . -xtype l -exec rm {} \;
 ```
 
-* Create a zip package named "ampache-*.*.*_all.zip and add the entire ampache directory tree. (excluding git/development specific files)
+* Create a zip package named "ampache-4.x.x_all.zip and add the entire ampache directory tree. (excluding git/development specific files)
 
 ```shell
   cd ampache
-  zip -r -q -u -9 --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml  --exclude=.tgitconfig --exclude=.travis.yml ../ampache-4.1.0_all.zip ./
+  zip -r -q -u -9 --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml  --exclude=.tgitconfig --exclude=.travis.yml ../ampache-4.x.x_all.zip ./
 ```
 
 * Then unpack the exact zip and create a server to test basic functionality
-  * FIXME This might be where unit testing would be helpful.
+
+```shell
+rm -rf /var/www/html && unzip -o ../ampache-4.x.x_all.zip -d /var/www/html/
+```
+
+* FIXME This might be where unit testing would be helpful.
 * Draft Release page online and save as draft using your changelog
-* When drafting a new release, set target to master branch.
+* When drafting a new release, set the tag to the version **4.x.x** and target to the **master** branch.
 * The "ampache-*.*.*_all.zip" drop-in package is then uploaded.
 * After setting version and title, save as draft
-* Commit your waiting update to master
+* Push your waiting update to master
 * Publish the new release
   * get the md5hash for the release page
 
 ```shell
-md5sum ../ampache-4.1.0_all.zip
+md5sum ../ampache-4.x.x_all.zip
 ```
+
+## Post release
+
+* Update develop from master **don't push**
+* Set the next version in init.php back to 'develop' and update the changelog
+* Commit and push "Begin Ampache develop"
 
 ## Additional requirements
 
-* Update ampache-docker README.md with the current version. (This will kick off a build with the new version)
-* Update config file in docker (ampache.cfg.php.dist) if it's changed as well
-* Update and make a release for python3-ampache if api has changed
-  * Use a test file (test.py?) for some basic API function.
-  * FIXME what should it test?
+* Update ampache-docker README.md with the current version. ~~(This will kick off a build with the new version)~~
+* Update config file in docker (ampache.cfg.php.dist)
+* Update and make a release for python3-ampache following the version with a build (4.x.x-1)
+  * run build_docs.py to update the example files
+* Create a new release on GitHub to automatically push to [PyPI](https://pypi.org/project/ampache/).
 
 ## Update ampache-docker images on docker hub
 
@@ -56,8 +74,10 @@ Update the official Ampache docker images [<https://hub.docker.com/r/ampache/amp
 
 * To bump ampache-docker images rebuild for arm and amd64 using buildx [<https://github.com/docker/buildx>]
 * After enabling experimental mode I installed the tools and buildx container.
+* Make sure the docker API is [accessible](https://success.docker.com/article/how-do-i-enable-the-remote-api-for-dockerd)
 
-This should only be needed once obviously
+This part should only be needed once.
+It creates a local builder that can build the other CPU architectures.
 
 ```bash
 aptitude install qemu qemu-user-static qemu-user binfmt-support
@@ -66,9 +86,13 @@ docker buildx use mybuilder
 docker buildx inspect --bootstrap
 ```
 
-Build master images and push to docker hub.
+Log in to your docker account
 
-latest
+```bash
+docker login -u USER -p PASSWORD
+```
+
+Build latest (master) images and push to docker hub.
 
 ```bash
 git clone -b master https://github.com/ampache/ampache-docker.git ampache-docker/
@@ -82,4 +106,12 @@ Build develop images and push to docker hub.
 git clone -b develop https://github.com/ampache/ampache-docker.git ampache-docker-develop/
 cd ampache-docker-develop
 docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/ampache:develop --push .
+```
+
+Build nosql images and push to docker hub.
+
+```bash
+git clone -b nosql https://github.com/ampache/ampache-docker.git ampache-docker-nosql/
+cd ampache-docker-nosql
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/ampache:nosql --push .
 ```

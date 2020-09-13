@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -128,8 +128,7 @@ class Podcast_Episode extends database_object implements media, library_item
         $this->f_author      = scrub_out($this->author);
         $this->f_artist_full = $this->f_author;
         $this->f_website     = scrub_out($this->website);
-        $time_format         = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
-        $this->f_pubdate     = get_datetime($time_format, (int) $this->pubdate);
+        $this->f_pubdate     = get_datetime((int) $this->pubdate);
         $this->f_state       = ucfirst($this->state);
 
         // Format the Time
@@ -199,7 +198,7 @@ class Podcast_Episode extends database_object implements media, library_item
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return array
      */
     public function search_childrens($name)
@@ -210,7 +209,7 @@ class Podcast_Episode extends database_object implements media, library_item
     }
 
     /**
-     * @param $filter_type
+     * @param string $filter_type
      * @return array|mixed
      */
     public function get_medias($filter_type = null)
@@ -256,21 +255,21 @@ class Podcast_Episode extends database_object implements media, library_item
      */
     public function display_art($thumb = 2, $force = false)
     {
-        $id   = null;
-        $type = null;
+        $episode_id = null;
+        $type       = null;
 
         if (Art::has_db($this->id, 'podcast_episode')) {
-            $id   = $this->id;
-            $type = 'podcast_episode';
+            $episode_id = $this->id;
+            $type       = 'podcast_episode';
         } else {
             if (Art::has_db($this->podcast, 'podcast') || $force) {
-                $id   = $this->podcast;
-                $type = 'podcast';
+                $episode_id = $this->podcast;
+                $type       = 'podcast';
             }
         }
 
-        if ($id !== null && $type !== null) {
-            Art::display($type, $id, $this->get_fullname(), $thumb, $this->link);
+        if ($episode_id !== null && $type !== null) {
+            Art::display($type, $episode_id, $this->get_fullname(), $thumb, $this->link);
         }
     }
 
@@ -307,13 +306,11 @@ class Podcast_Episode extends database_object implements media, library_item
      * @param integer $user
      * @param string $agent
      * @param array $location
+     * @param integer $date
      * @return boolean
      */
-    public function set_played($user, $agent, $location)
+    public function set_played($user, $agent, $location, $date = null)
     {
-        Stats::insert('podcast', $this->podcast, $user, $agent, $location);
-        Stats::insert('podcast_episode', $this->id, $user, $agent, $location);
-
         if ($this->played) {
             return true;
         }
@@ -325,14 +322,14 @@ class Podcast_Episode extends database_object implements media, library_item
     } // set_played
 
     /**
-     * @param $user
-     * @param $agent
-     * @return mixed|void
+     * @param integer $user
+     * @param string $agent
+     * @param integer $date
+     * @return boolean
      */
-    public function check_play_history($user, $agent)
+    public function check_play_history($user, $agent, $date)
     {
-        unset($user, $agent);
-        // Do nothing
+        return Stats::has_played_history($this, $user, $agent, $date);
     }
 
     /**
@@ -402,7 +399,7 @@ class Podcast_Episode extends database_object implements media, library_item
      * This function takes all the song information and correctly formats a
      * a stream URL taking into account the downsmapling mojo and everything
      * else, this is the true function
-     * @param integer $oid
+     * @param integer $object_id
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
@@ -410,13 +407,13 @@ class Podcast_Episode extends database_object implements media, library_item
      * @param boolean $original
      * @return string
      */
-    public static function play_url($oid, $additional_params = '', $player = '', $local = false, $uid = false, $original = false)
+    public static function play_url($object_id, $additional_params = '', $player = '', $local = false, $uid = false, $original = false)
     {
         if (!$uid) {
             $uid = Core::get_global('user')->id;
         }
 
-        return Song::generic_play_url('podcast_episode', $oid, $additional_params, $player, $local, $uid, $original);
+        return Song::generic_play_url('podcast_episode', $object_id, $additional_params, $player, $local, $uid, $original);
     }
 
     /**
@@ -482,7 +479,7 @@ class Podcast_Episode extends database_object implements media, library_item
                     $key   = vainfo::get_tag_type($vainfo->tags);
                     $infos = vainfo::clean_tag_info($vainfo->tags, $key, $file);
                     // No time information, get it from file
-                    if ($this->time <= 0) {
+                    if ($this->time < 1) {
                         $this->time = $infos['time'];
                     }
                     $this->size = $infos['size'];

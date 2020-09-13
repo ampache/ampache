@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-$link = AmpConfig::get('use_rss') ? ' ' . Ampache_RSS::get_display('recently_played') :  '';
+$link = AmpConfig::get('use_rss') ? ' ' . Ampache_RSS::get_display('recently_played', $user->id) :  '';
 UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
 <table class="tabledata">
     <thead>
@@ -48,7 +48,7 @@ foreach ($data as $row) {
 
     $has_allowed_agent = true;
     $has_allowed_time  = true;
-    $is_allowed        = Access::check('interface', '100') || Core::get_global('user')->id == $row_user->id;
+    $is_allowed        = Access::check('interface', 100) || Core::get_global('user')->id == $row_user->id;
     if (!$is_allowed) {
         $has_allowed_time  = Preference::get_by_user($row_user->id, 'allow_personal_info_time');
         $has_allowed_agent = Preference::get_by_user($row_user->id, 'allow_personal_info_agent');

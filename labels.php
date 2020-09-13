@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 UI::show_header();
 
@@ -32,12 +33,13 @@ switch ($_REQUEST['action']) {
         }
 
         $label_id = (string) scrub_in($_REQUEST['label_id']);
-        show_confirmation(T_('Are You Sure?'), T_('This Label will be deleted'),
+        show_confirmation(T_('Are You Sure?'),
+            T_('This Label will be deleted'),
             AmpConfig::get('web_path') . "/labels.php?action=confirm_delete&label_id=" . $label_id,
             1,
             'delete_label'
         );
-    break;
+        break;
     case 'confirm_delete':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -56,10 +58,10 @@ switch ($_REQUEST['action']) {
         } else {
             show_confirmation(T_("There Was a Problem"), T_("Unable to delete this Label."), AmpConfig::get('web_path'));
         }
-    break;
+        break;
     case 'add_label':
         // Must be at least a content manager or edit upload enabled
-        if (!Access::check('interface', '50') && !AmpConfig::get('upload_allow_edit')) {
+        if (!Access::check('interface', 50) && !AmpConfig::get('upload_allow_edit')) {
             UI::access_denied();
 
             return false;
@@ -85,7 +87,7 @@ switch ($_REQUEST['action']) {
         } else {
             show_confirmation(T_('No Problem'), T_('The Label has been added'), AmpConfig::get('web_path') . '/browse.php?action=label');
         }
-    break;
+        break;
     case 'show':
         $label_id = (int) filter_input(INPUT_GET, 'label', FILTER_SANITIZE_NUMBER_INT);
         if (!$label_id) {
@@ -103,16 +105,16 @@ switch ($_REQUEST['action']) {
 
             return false;
         }
-        // intentional fall through
+        // Intentional break fall-through
     case 'show_add_label':
-        if (Access::check('interface', '50') || AmpConfig::get('upload_allow_edit')) {
+        if (Access::check('interface', 50) || AmpConfig::get('upload_allow_edit')) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_label.inc.php');
         } else {
             echo T_('The Label cannot be found');
         }
-    break;
+        break;
 } // end switch
 
-/* Show the Footer */
+// Show the Footer
 UI::show_query_stats();
 UI::show_footer();

@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -31,11 +31,11 @@ use Gettext\Translator;
 function load_gettext()
 {
     $lang   = AmpConfig::get('lang');
-    $popath = AmpConfig::get('prefix') . '/locale/' . $lang . '/LC_MESSAGES/messages.po';
+    $mopath = AmpConfig::get('prefix') . '/locale/' . $lang . '/LC_MESSAGES/messages.mo';
 
     $gettext = new Translator();
-    if (file_exists($popath)) {
-        $translations = Gettext\Translations::fromPoFile($popath);
+    if (file_exists($mopath)) {
+        $translations = Gettext\Translations::fromMoFile($mopath);
         $gettext->loadTranslations($translations);
     }
     $gettext->register();
@@ -43,15 +43,11 @@ function load_gettext()
     return true;
 } // load_gettext
 
-/*
+/**
  * T_
  * Translate string
  * @param string $msgid
  * @return string
- */
-/**
- * @param $msgid
- * @return mixed
  */
 function T_($msgid)
 {

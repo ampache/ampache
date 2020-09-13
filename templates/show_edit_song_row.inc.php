@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -31,7 +31,7 @@ use Lib\Metadata\Model\Metadata;
                 <td><input type="text" name="title" value="<?php echo scrub_out($libitem->title); ?>" autofocus /></td>
             </tr>
             <?php
-                if (Access::check('interface', '75')) { ?>
+                if (Access::check('interface', 75)) { ?>
                 <tr>
                     <td class="edit_dialog_content_header"><?php echo T_('Artist') ?></td>
                     <td>
@@ -71,7 +71,7 @@ use Lib\Metadata\Model\Metadata;
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Composer') ?></td>
                 <td><input type="text" name="composer" value="<?php echo scrub_out($libitem->composer); ?>" /></td>
-          </tr>
+            </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Comment') ?></td>
                 <td><input type="text" name="comment" value="<?php echo scrub_out($libitem->comment); ?>" /></td>
@@ -85,10 +85,8 @@ use Lib\Metadata\Model\Metadata;
                 <td><input type="text" name="year" value="<?php echo scrub_out($libitem->year); ?>" /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Tags') ?></td>
-                <td>
-                    <input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" />
-                </td>
+                <td class="edit_dialog_content_header"><?php echo T_('Genres') ?></td>
+                <td><input type="text" name="edit_tags" id="edit_tags" value="<?php echo Tag::get_display($libitem->tags); ?>" /></td>
             </tr>
             <?php
                 if (AmpConfig::get('licensing')) { ?>
@@ -111,7 +109,7 @@ use Lib\Metadata\Model\Metadata;
                         <?php
                         $dismetas = $libitem->getDisabledMetadataFields();
                         foreach ($libitem->getMetadata() as $metadata) {
-                            /* @var $metadata Metadata */
+                            /* @var Metadata $metadata */
                             $field = $metadata->getField();
                             if ($field->isPublic() && !in_array($field->getName(), $dismetas)) {
                                 echo '<tr>'

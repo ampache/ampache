@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -32,11 +32,16 @@ $catalogs = Catalog::get_catalogs(); ?>
             <th><?php echo T_('Albums'); ?></th>
             <th><?php echo T_('Artists'); ?></th>
             <th><?php echo T_('Songs'); ?></th>
-            <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
+            <?php if (Video::get_item_count('Video')) { ?>
                 <th><?php echo T_('Videos'); ?></th>
             <?php
 } ?>
-            <th><?php echo T_('Tags'); ?></th>
+            <?php if (AmpConfig::get('podcast')) { ?>
+                <th><?php echo T_('Podcasts'); ?></th>
+                <th><?php echo T_('Podcast Episodes'); ?></th>
+            <?php
+    } ?>
+            <th><?php echo T_('Genres'); ?></th>
             <th><?php echo T_('Catalog Size'); ?></th>
             <th><?php echo T_('Catalog Time'); ?></th>
         </tr>
@@ -44,12 +49,17 @@ $catalogs = Catalog::get_catalogs(); ?>
     <tbody>
         <tr>
             <td><?php echo $stats['connected']; ?></td>
-            <td><?php echo $stats['users'] ?></td>
-            <td><?php echo $stats['albums']; ?></td>
-            <td><?php echo $stats['artists']; ?></td>
-            <td><?php echo $stats['songs']; ?></td>
-            <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
-                <td><?php echo $stats['videos']; ?></td>
+            <td><?php echo $stats['user'] ?></td>
+            <td><?php echo $stats['album']; ?></td>
+            <td><?php echo $stats['artist']; ?></td>
+            <td><?php echo $stats['song']; ?></td>
+            <?php if (Video::get_item_count('Video')) { ?>
+                <td><?php echo $stats['video']; ?></td>
+            <?php
+    } ?>
+            <?php if (AmpConfig::get('podcast')) { ?>
+                <td><?php echo $stats['podcast']; ?></td>
+                <td><?php echo $stats['podcast_episode']; ?></td>
             <?php
     } ?>
             <td><?php echo $stats['tags']; ?></td>
@@ -66,8 +76,7 @@ $catalogs = Catalog::get_catalogs(); ?>
       <col id="col_lastverify" />
       <col id="col_lastadd" />
       <col id="col_lastclean" />
-      <col id="col_songs" />
-      <col id="col_video" />
+      <col id="cel_items" />
       <col id="col_total" />
     </colgroup>
     <thead>
@@ -77,11 +86,7 @@ $catalogs = Catalog::get_catalogs(); ?>
             <th class="cel_lastverify"><?php echo T_('Last Verify'); ?></th>
             <th class="cel_lastadd"><?php echo T_('Last Add'); ?></th>
             <th class="cel_lastclean"><?php echo T_('Last Clean'); ?></th>
-            <th class="cel_songs"><?php echo T_('Songs'); ?></th>
-            <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
-            <th class="cel_video"><?php echo T_('Videos'); ?></th>
-            <?php
-    } ?>
+            <th class="cel_items"><?php echo T_('Item Count'); ?></th>
             <th class="cel_total"><?php echo T_('Catalog Size'); ?></th>
         </tr>
     </thead>
@@ -96,11 +101,7 @@ $catalogs = Catalog::get_catalogs(); ?>
         <td class="cel_lastverify"><?php echo scrub_out($catalog->f_update); ?></td>
         <td class="cel_lastadd"><?php echo scrub_out($catalog->f_add); ?></td>
         <td class="cel_lastclean"><?php echo scrub_out($catalog->f_clean); ?></td>
-        <td class="cel_songs"><?php echo scrub_out($stats['songs']); ?></td>
-            <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
-                <td class="cel_video"><?php echo scrub_out($stats['videos']); ?></td>
-            <?php
-        } ?>
+        <td class="cel_items"><?php echo scrub_out($stats['items']); ?></td>
         <td class="cel_total"><?php echo scrub_out($stats['formatted_size']); ?></td>
     </tr>
 <?php

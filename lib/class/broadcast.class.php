@@ -3,7 +3,7 @@ declare(strict_types=0);
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ declare(strict_types=0);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -88,14 +88,14 @@ class Broadcast extends database_object implements library_item
         }
 
         return true;
-    } //constructor
+    } // constructor
 
     /**
      * Update broadcast state.
      * @param boolean $started
      * @param string $key
      */
-    public function update_state($started, $key =  '')
+    public function update_state($started, $key = '')
     {
         $sql = "UPDATE `broadcast` SET `started` = ?, `key` = ?, `song` = '0', `listeners` = '0' WHERE `id` = ?";
         Dba::write($sql, array($started, $key, $this->id));
@@ -145,7 +145,7 @@ class Broadcast extends database_object implements library_item
      * @param string $description
      * @return integer
      */
-    public static function create($name, $description =  '')
+    public static function create($name, $description = '')
     {
         if (!empty($name)) {
             $sql    = "INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, '1')";
@@ -302,7 +302,7 @@ class Broadcast extends database_object implements library_item
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'broadcast') || $force) {
-            Art::display('broadcast', $this->id, $this->get_fullname(), $thumb, $this->link);
+            Art::display('broadcast', $this->id, $this->get_fullname(), $thumb);
         }
     }
 
@@ -428,15 +428,16 @@ class Broadcast extends database_object implements library_item
     /**
      * Get play url.
      *
-     * @param integer $oid
+     * @param integer $object_id
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
      * @return integer
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public static function play_url($oid, $additional_params = '', $player = null, $local = false)
+    public static function play_url($object_id, $additional_params = '', $player = null, $local = false)
     {
-        return $oid;
+        unset($additional_params, $player, $local);
+
+        return $object_id;
     }
 } // end broadcast.class

@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <?php UI::show_box_top(T_('Add User'), 'box box_add_user'); ?>
@@ -24,60 +24,41 @@
 <form name="add_user" enctype="multpart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/users.php?action=add_user"; ?>">
     <table class="tabledata">
         <tr>
-            <td>
-                <?php echo  T_('Username'); ?>: *
-            </td>
-            <td>
-                <input type="text" name="username" maxlength="128" value="<?php echo scrub_out(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)); ?>" />
+            <td><?php echo  T_('Username'); ?>: *</td>
+            <td><input type="text" name="username" maxlength="128" value="<?php echo scrub_out(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)); ?>" />
                 <?php AmpError::display('username'); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo  T_('Full Name'); ?>:</td>
-            <td>
-                <input type="text" name="fullname" value="<?php echo scrub_out(Core::get_post('fullname')); ?>" />
-                <?php AmpError::display('fullname'); ?>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <?php echo  T_('E-mail'); ?>: *
-            </td>
-            <td>
-                <input type="text" name="email" value="<?php echo scrub_out(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)); ?>" />
-                <?php AmpError::display('email'); ?>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <?php echo  T_('Website'); ?>:
-            </td>
-            <td>
-                <input type="text" name="website" value="<?php echo scrub_out(Core::get_post('website')); ?>" />
-                <?php AmpError::display('website'); ?>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <?php echo  T_('Password'); ?>: *
-            </td>
-            <td>
-                <input type="password" name="password_1" value="" />
+            <td><?php echo  T_('Password'); ?>: *</td>
+            <td><input type="password" name="password_1" value="" />
                 <?php AmpError::display('password'); ?>
             </td>
         </tr>
         <tr>
-            <td>
-                <?php echo  T_('Confirm Password'); ?>: *
-            </td>
-            <td>
-                <input type="password" name="password_2" value="" />
+            <td><?php echo  T_('Confirm Password'); ?>: *</td>
+            <td><input type="password" name="password_2" value="" /></td>
+        </tr>
+        <tr>
+            <td><?php echo  T_('Full Name'); ?>:</td>
+            <td><input type="text" name="fullname" value="<?php echo scrub_out(Core::get_post('fullname')); ?>" />
+                <?php AmpError::display('fullname'); ?>
             </td>
         </tr>
         <tr>
-            <td>
-                <?php echo  T_('User Access Level'); ?>:
+            <td><?php echo  T_('E-mail'); ?>: *</td>
+            <td><input type="text" name="email" value="<?php echo scrub_out(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)); ?>" />
+                <?php AmpError::display('email'); ?>
             </td>
+        </tr>
+        <tr>
+            <td><?php echo  T_('Website'); ?>:</td>
+            <td><input type="text" name="website" value="<?php echo scrub_out(Core::get_post('website')); ?>" />
+                <?php AmpError::display('website'); ?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo  T_('User Access Level'); ?>:</td>
                 <td>
                     <?php $var_name = "on_" . $client->access; ${$var_name} = 'selected="selected"'; ?>
                     <select name="access">
@@ -90,13 +71,9 @@
                 </td>
         </tr>
         <tr>
-            <td>
-                <?php echo T_('Avatar'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)
-            </td>
-            <td>
-                <input type="file" id="avatar" name="avatar" value="" />
-                <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
-            </td>
+            <td><?php echo T_('Avatar'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)</td>
+            <td><input type="file" id="avatar" name="avatar" value="" />
+                <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" /></td>
         </tr>
     </table>
     <div class="formValidation">

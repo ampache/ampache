@@ -66,7 +66,6 @@ var UberVizMain = (function() {
         events.emit("update");
     }
 
-
     function onDocumentDragOver(evt) {
         evt.stopPropagation();
         evt.preventDefault();

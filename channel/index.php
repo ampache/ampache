@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,24 +16,25 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
-/*
+/**
+ * This is the wrapper for opening music streams from this server.  This script
+ * will play the local version or redirect to the remote server if that be
+ * the case.  Also this will update local statistics for songs as well.
+ * This is also where it decides if you need to be downsampled.
+ */
 
- This is the wrapper for opening music streams from this server.  This script
-   will play the local version or redirect to the remote server if that be
-   the case.  Also this will update local statistics for songs as well.
-   This is also where it decides if you need to be downsampled.
-*/
 define('NO_SESSION', '1');
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 ob_end_clean();
 
 set_time_limit(0);
 
-$channel = new Channel(Core::get_request('channel'));
+$channel = new Channel((int) Core::get_request('channel'));
 if (!$channel->id) {
     debug_event('channel/index', 'Unknown channel.', 1);
 
@@ -49,7 +50,7 @@ if (!function_exists('curl_version')) {
 // Authenticate the user here
 if ($channel->is_private) {
     $is_auth = false;
-    if (isset($_SERVER['PHP_AUTH_USER'])) {
+    if (filter_has_var(INPUT_SERVER, 'PHP_AUTH_USER')) {
         $htusername = Core::get_server('PHP_AUTH_USER');
         $htpassword = Core::get_server('PHP_AUTH_PW');
 
@@ -63,9 +64,9 @@ if ($channel->is_private) {
             Preference::init();
 
             if (AmpConfig::get('access_control')) {
-                if (!Access::check_network('stream', Core::get_global('user')->id, '25') &&
-                    !Access::check_network('network', Core::get_global('user')->id, '25')) {
-                    debug_event('channel/index', "UI::access_denied: Streaming Access Denied: " . Core::get_server('REMOTE_ADDR') . " does not have stream level access", 2);
+                if (!Access::check_network('stream', Core::get_global('user')->id, 25) &&
+                    !Access::check_network('network', Core::get_global('user')->id, 25)) {
+                    debug_event('channel/index', "UI::access_denied: Streaming Access Denied: " . Core::get_user_ip() . " does not have stream level access", 2);
                     UI::access_denied();
 
                     return false;
@@ -94,17 +95,19 @@ foreach ($headers as $key => $value) {
 }
 
 $curl = curl_init($url);
-curl_setopt_array($curl, array(
-    CURLOPT_HTTPHEADER => $reqheaders,
-    CURLOPT_HEADER => false,
-    CURLOPT_RETURNTRANSFER => false,
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_HEADERFUNCTION => 'output_header',
-    CURLOPT_NOPROGRESS => false,
-    CURLOPT_PROGRESSFUNCTION => 'progress',
-));
-curl_exec($curl);
-curl_close($curl);
+if ($curl) {
+    curl_setopt_array($curl, array(
+        CURLOPT_HTTPHEADER => $reqheaders,
+        CURLOPT_HEADER => false,
+        CURLOPT_RETURNTRANSFER => false,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HEADERFUNCTION => 'output_header',
+        CURLOPT_NOPROGRESS => false,
+        CURLOPT_PROGRESSFUNCTION => 'progress',
+    ));
+    curl_exec($curl);
+    curl_close($curl);
+}
 
 /**
  *
@@ -125,7 +128,7 @@ function progress($totaldownload, $downloaded, $us, $ud)
  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  * @param $curl
  * @param $header
- * @return int
+ * @return integer
  */
 function output_header($curl, $header)
 {

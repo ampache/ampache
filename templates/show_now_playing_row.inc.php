@@ -2,7 +2,7 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
 <div class="np_group" id="np_group_1">
@@ -52,7 +52,7 @@
     <?php
         if (!empty($media->f_tags)) { ?>
             <div id="np_song_tags_<?php echo $media->id?>" class="np_cell cel_artist">
-                <label><?php echo T_('Tags'); ?></label>
+                <label><?php echo T_('Genres'); ?></label>
                 <?php echo $media->f_tags; ?>
             </div>
         <?php
@@ -97,7 +97,7 @@ $(document).ready(function(){
     } ?>
 
 <?php
-    if (Access::check('interface', '25')) { ?>
+    if (Access::check('interface', 25)) { ?>
         <div class="np_group" id="np_group_4">
     <?php
         if (AmpConfig::get('ratings')) { ?>
