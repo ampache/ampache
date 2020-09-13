@@ -15,7 +15,11 @@ const updateArt = (
 ) => {
     return axios
         .get(
-            `${process.env.ServerURL}/server/json.server.php?action=update_art&type=${type}&id=${ID}&overwrite=${overwrite}&auth=${authKey}&version=400001`
+            `${
+                process.env.ServerURL
+            }/server/json.server.php?action=update_art&type=${type}&id=${ID}&overwrite=${
+                overwrite ? 1 : 0
+            }&auth=${authKey}&version=400001`
         )
         .then((response) => {
             const JSONData = response.data;

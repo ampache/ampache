@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Artist, getArtist } from '~logic/Artist';
+import { Artist, getArtist, updateArtistInfo } from '~logic/Artist';
 import { User } from '~logic/User';
 import AmpacheError from '~logic/AmpacheError';
 import AlbumDisplay from '~components/AlbumDisplay/';
@@ -60,7 +60,8 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
             });
     };
 
-    const handleArtistArtUpdate = () => {
+    /*TODO: This is sort of a temp method to allow for easy updates, but in future the client should maybe check for missing data and handle it automatically*/
+    const handleArtistUpdate = () => {
         updateArtistArt(artist.id, true, props.user.authKey)
             .then(() => {
                 toast.success('Art Updated Successfully');
@@ -68,6 +69,15 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
             .catch((error) => {
                 toast.error(
                     `😞 Something went wrong updating artist art. ${error}`
+                );
+            });
+        updateArtistInfo(artist.id, props.user.authKey)
+            .then(() => {
+                toast.success('Info Updated Successfully');
+            })
+            .catch((error) => {
+                toast.error(
+                    `😞 Something went wrong updating artist info. ${error}`
                 );
             });
     };
@@ -88,7 +98,7 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
                         <img
                             src={artist.art}
                             alt={`Photo of ${artist.name}`}
-                            onClick={handleArtistArtUpdate}
+                            onClick={handleArtistUpdate}
                         />
                     </div>
                     <div className={style.details}>
