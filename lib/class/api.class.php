@@ -1485,7 +1485,7 @@ class Api
             return false;
         }
         $name = $input['name'];
-        $type = $input['type'];
+        $type = $input['type'] ?? 'private';
         $user = User::get_from_username(Session::username($input['auth']));
         if ($type != 'private') {
             $type = 'public';
