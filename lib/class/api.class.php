@@ -1481,11 +1481,11 @@ class Api
      */
     public static function playlist_create($input)
     {
-        if (!self::check_parameter($input, array('name', 'type'), 'playlist_create')) {
+        if (!self::check_parameter($input, array('name'), 'playlist_create')) {
             return false;
         }
         $name = $input['name'];
-        $type = $input['type'];
+        $type = (isset($input['type'])) ? $input['type'] : 'private';
         $user = User::get_from_username(Session::username($input['auth']));
         if ($type != 'private') {
             $type = 'public';
