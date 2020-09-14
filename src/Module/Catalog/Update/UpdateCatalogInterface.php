@@ -20,17 +20,23 @@
  *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\Catalog\Update;
 
-namespace Ampache\Module\Catalog;
+use Ahc\Cli\IO\Interactor;
 
-use Ampache\Module\Catalog\Update\UpdateCatalog;
-use Ampache\Module\Catalog\Update\UpdateCatalogInterface;
-use Ampache\Module\Catalog\Update\UpdateSingleCatalogFile;
-use Ampache\Module\Catalog\Update\UpdateSingleCatalogFileInterface;
-use function DI\autowire;
-
-return [
-    UpdateSingleCatalogFileInterface::class => autowire(UpdateSingleCatalogFile::class),
-    UpdateCatalogInterface::class => autowire(UpdateCatalog::class),
-];
+interface UpdateCatalogInterface
+{
+    public function update(
+        Interactor $interactor,
+        bool $deactivateMemoryLimit,
+        bool $addNew,
+        bool $addArt,
+        bool $importPlaylists,
+        bool $cleanup,
+        bool $verification,
+        bool $updateInfo,
+        bool $optimizeDatabase,
+        ?string $catalogName,
+        string $catalogType
+    ): void;
+}
