@@ -85,13 +85,19 @@ class JSON_Data
      * This generates a JSON Error message
      * nothing fancy here...
      *
-     * @param    string    $code    Error code
-     * @param    string    $string    Error message
-     * @return    string    return error message JSON
+     * @param string $code Error code
+     * @param string $string Error message
+     * @param array $return_data
+     * @return string return error message JSON
      */
-    public static function error($code, $string)
+    public static function error($code, $string, $return_data = array())
     {
-        return json_encode(array("error" => array("code" => $code, "message" => $string)), JSON_PRETTY_PRINT);
+        $message = array("error" => array("code" => $code, "message" => $string));
+        foreach ($return_data as $title => $data) {
+            $message[$title] = $data;
+        }
+
+        return json_encode($message, JSON_PRETTY_PRINT);
     } // error
 
     /**
@@ -100,12 +106,18 @@ class JSON_Data
      * This generates a standard JSON Success message
      * nothing fancy here...
      *
-     * @param    string    $string    success message
-     * @return    string    return success message JSON
+     * @param string $string success message
+     * @param array $return_data
+     * @return string return success message JSON
      */
-    public static function success($string)
+    public static function success($string, $return_data = array())
     {
-        return json_encode(array("success" => $string), JSON_PRETTY_PRINT);
+        $message = array("success" => $string);
+        foreach ($return_data as $title => $data) {
+            $message[$title] = $data;
+        }
+
+        return json_encode($message, JSON_PRETTY_PRINT);
     } // success
 
     /**
