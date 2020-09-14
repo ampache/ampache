@@ -297,8 +297,8 @@ class JSON_Data
             array_push($JSON, array(
                 "id" => (string) $artist->id,
                 "name" => $artist->f_full_name,
-                "albums" => (int) $albums,
-                "songs" => (int) $songs,
+                "albums" => $albums,
+                "songs" => $songs,
                 "genre" => self::genre_array($artist->tags),
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
