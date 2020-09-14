@@ -28,10 +28,9 @@ use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
 use Ampache\Model\Artist;
 use Ampache\Model\Catalog;
-use Ampache\Module\System\Core;
+use Ampache\Module\LastFm\LastFmQueryInterface;
 use Ampache\Module\System\Dba;
 use PDOStatement;
-use Requests;
 use SimpleXMLElement;
 use Ampache\Model\Song;
 
@@ -47,26 +46,9 @@ class Recommendation
      */
     public static function get_lastfm_results($method, $query)
     {
-        $lang     = (string)AmpConfig::get('lang');
-        $resp     = explode('_', $lang);
-        $api_key  = AmpConfig::get('lastfm_api_key');
-        $api_base = "http://ws.audioscrobbler.com/2.0/?method=";
-        $url      = $api_base . $method . '&api_key=' . $api_key . '&' . $query . '&lang=' . $resp[0];
-
-        return self::query_lastfm($url);
-    }
-
-    /**
-     * @param string $url
-     * @return SimpleXMLElement|false
-     */
-    public static function query_lastfm($url)
-    {
-        debug_event('recommendation.class', 'search url : ' . $url, 5);
-
-        $request = Requests::get($url, array(), Core::requests_options());
-
-        return simplexml_load_string((string)$request->body);
+        global $dic;
+        
+        return $dic->get(LastFmQueryInterface::class)->getLastFmResults($method, $query);
     }
 
     /**
@@ -78,10 +60,12 @@ class Recommendation
      */
     public static function album_search($artist, $album)
     {
+        global $dic;
+        
         $api_key = AmpConfig::get('lastfm_api_key');
         $url     = 'http://ws.audioscrobbler.com/2.0/?method=album.getInfo&artist=' . urlencode($artist) . '&album=' . urlencode($album) . '&api_key=' . $api_key;
 
-        return self::query_lastfm($url);
+        return $dic->get(LastFmQueryInterface::class)->queryLastFm($url);
     }
 
     /**

@@ -128,11 +128,15 @@ class Xml_Data
      *
      * @param string $code Error code
      * @param string $string Error message
-     * @return    string    return error message xml
+     * @param array $return_data
+     * @return string return error message xml
      */
-    public static function error($code, $string)
+    public static function error($code, $string, $return_data = array())
     {
         $xml_string = "\t<error code=\"$code\"><![CDATA[$string]]></error>";
+        foreach ($return_data as $title => $data) {
+            $xml_string .= "\n\t<$title><![CDATA[$data]]></$title>";
+        }
 
         return self::output_xml($xml_string);
     } // error
@@ -144,11 +148,15 @@ class Xml_Data
      * nothing fancy here...
      *
      * @param string $string success message
-     * @return    string    return success message xml
+     * @param array $return_data
+     * @return string return success message xml
      */
-    public static function success($string)
+    public static function success($string, $return_data = array())
     {
         $xml_string = "\t<success code=\"1\"><![CDATA[$string]]></success>";
+        foreach ($return_data as $title => $data) {
+            $xml_string .= "\n\t<$title><![CDATA[$data]]></$title>";
+        }
 
         return self::output_xml($xml_string);
     } // success
