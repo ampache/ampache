@@ -40,6 +40,7 @@ All API code that used 'Tag' now references 'Genre' instead
   * 'clear' (integer) 0|1 clear the current playlist on add //optional
 * API::playlist_edit added new parameter 'sort': (0,1) sort the playlist by 'Artist, Album, Song' //optional
 * Api::indexes added parameter 'include': (0,1) include song details with playlists (XML has this by default)
+* Api::users (id and username of the site users)
 
 ### Changed
 
