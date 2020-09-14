@@ -52,6 +52,7 @@ $app->add($dic->get(Cli\ArtCleanupCommand::class));
 $app->add($dic->get(Cli\RunWebsocketCommand::class));
 $app->add($dic->get(Cli\UpdateDbCommand::class));
 $app->add($dic->get(Cli\ConvertFileNamesCommand::class));
+$app->add($dic->get(Cli\UpdateCatalogFileCommand::class));
 
 $logo = <<<LOGO
     _                               _          
