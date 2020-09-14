@@ -101,25 +101,26 @@ class Api
      * @param string $message
      * @param string $error_code
      * @param string $format
+     * @param array $return_data
      */
-    public static function message($type, $message, $error_code = null, $format = 'xml')
+    public static function message($type, $message, $error_code = null, $format = 'xml', $return_data = array())
     {
         if ($type === 'error') {
             switch ($format) {
                 case 'json':
-                    echo Json_Data::error($error_code, $message);
+                    echo Json_Data::error($error_code, $message, $return_data);
                     break;
                 default:
-                    echo Xml_Data::error($error_code, $message);
+                    echo Xml_Data::error($error_code, $message, $return_data);
             }
         }
         if ($type === 'success') {
             switch ($format) {
                 case 'json':
-                    echo Json_Data::success($message);
+                    echo Json_Data::success($message, $return_data);
                     break;
                 default:
-                    echo Xml_Data::success($message);
+                    echo Xml_Data::success($message, $return_data);
             }
         }
     } // message
@@ -1526,11 +1527,11 @@ class Api
      */
     public static function playlist_create($input)
     {
-        if (!self::check_parameter($input, array('name', 'type'), 'playlist_create')) {
+        if (!self::check_parameter($input, array('name'), 'playlist_create')) {
             return false;
         }
         $name = $input['name'];
-        $type = $input['type'];
+        $type = (isset($input['type'])) ? $input['type'] : 'private';
         $user = User::get_from_username(Session::username($input['auth']));
         if ($type != 'private') {
             $type = 'public';
@@ -3790,9 +3791,10 @@ class Api
             'update_art', $input['api_format'])) {
             return false;
         }
-        $type      = (string)$input['type'];
-        $object    = (int)$input['id'];
-        $overwrite = (int)$input['overwrite'] == 0;
+        $type      = (string) $input['type'];
+        $object    = (int) $input['id'];
+        $overwrite = (int) $input['overwrite'] == 0;
+        $art_url   = AmpConfig::get('web_path') . '/image.php?object_id=' . $object . '&object_type=artist&auth=' . $input['auth'];
 
         // confirm the correct data
         if (!in_array($type, array('artist', 'album'))) {
@@ -3809,8 +3811,7 @@ class Api
         }
         // update your object
         if (Catalog::gather_art_item($type, $object, $overwrite, true)) {
-            self::message('success', 'Gathered new art for: ' . (string)$object . ' (' . $type . ')', null,
-                $input['api_format']);
+            self::message('success', 'Gathered new art for: ' . (string) $object . ' (' . $type . ')', null, $input['api_format'], array('art' => $art_url));
 
             return true;
         }

@@ -104,11 +104,17 @@ class Json_Data
      *
      * @param string $code Error code
      * @param string $string Error message
-     * @return    string    return error message JSON
+     * @param array $return_data
+     * @return string return error message JSON
      */
-    public static function error($code, $string)
+    public static function error($code, $string, $return_data = array())
     {
-        return json_encode(array("error" => array("code" => $code, "message" => $string)), JSON_PRETTY_PRINT);
+        $message = array("error" => array("code" => $code, "message" => $string));
+        foreach ($return_data as $title => $data) {
+            $message[$title] = $data;
+        }
+
+        return json_encode($message, JSON_PRETTY_PRINT);
     } // error
 
     /**
@@ -118,11 +124,17 @@ class Json_Data
      * nothing fancy here...
      *
      * @param string $string success message
-     * @return    string    return success message JSON
+     * @param array $return_data
+     * @return string return success message JSON
      */
-    public static function success($string)
+    public static function success($string, $return_data = array())
     {
-        return json_encode(array("success" => $string), JSON_PRETTY_PRINT);
+        $message = array("success" => $string);
+        foreach ($return_data as $title => $data) {
+            $message[$title] = $data;
+        }
+
+        return json_encode($message, JSON_PRETTY_PRINT);
     } // success
 
     /**
@@ -316,8 +328,8 @@ class Json_Data
             array_push($JSON, array(
                 "id" => (string)$artist->id,
                 "name" => $artist->f_full_name,
-                "albums" => (int) $albums,
-                "songs" => (int) $songs,
+                "albums" => $albums,
+                "songs" => $songs,
                 "genre" => self::genre_array($artist->tags),
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
