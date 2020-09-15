@@ -35,10 +35,10 @@ UI::show_header();
 // Switch on the actions
 switch ($_REQUEST['action']) {
     case 'manage':
-                $democratic = Democratic::get_current_playlist();
-                $democratic->set_parent();
-                $democratic->format();
-    // intentional fall through
+        $democratic = Democratic::get_current_playlist();
+        $democratic->set_parent();
+        $democratic->format();
+        // Intentional break fall-through
     case 'show_create':
         if (!Access::check('interface', 75)) {
             UI::access_denied();
@@ -79,7 +79,12 @@ switch ($_REQUEST['action']) {
             Democratic::create($_POST);
             $democratic = Democratic::get_current_playlist();
         } else {
-            $democratic->update($_POST);
+            if (!$democratic->update($_POST)) {
+                show_confirmation(T_("There Was a Problem"),
+                    T_("Cooldown out of range."),
+                    AmpConfig::get('web_path') . "/democratic.php?action=manage");
+                break;
+            }
         }
 
         // Now check for additional things we might have to do

@@ -497,7 +497,7 @@ if (AmpConfig::get('downsample_remote')) {
     }
 }
 
-debug_event('play/index', 'Playing file (' . $media->file . '}...', 5);
+debug_event('play/index', $action . ' file (' . $media->file . '}...', 5);
 debug_event('play/index', 'Media type {' . $media->type . '}', 5);
 
 $cpaction = $_REQUEST['custom_play_action'];
@@ -545,8 +545,6 @@ if (!$cpaction && !$original) {
                             if (!empty($subtitle)) {
                                 $transcode = true;
                                 debug_event('play/index', 'Transcoding because subtitle requested', 5);
-                            } else {
-                                debug_event('play/index', 'Decided not to transcode', 5);
                             }
                         }
                     }

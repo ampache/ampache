@@ -20,6 +20,8 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 ### Changed
 
 * get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
+* Renamed 'Tag' strings to 'Genre'
+* 'Sort Tracks by Artist, Album, Song' sorting done by 'Album_Artist, Album, Disk, Track Title'
 
 ### Fixed
 
@@ -27,7 +29,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 
 ### API develop
 
-Enhance... Enhance... Enhance...
+All API code that used 'Tag' now references 'Genre' instead
 
 ### Added
 
@@ -36,6 +38,30 @@ Enhance... Enhance... Enhance...
   * 'oid' (integer) object_id to add //optional
   * 'type' (string) Default: 'Song' ('Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream') //optional
   * 'clear' (integer) 0|1 clear the current playlist on add //optional
+* API::playlist_edit added new parameter 'sort': (0,1) sort the playlist by 'Artist, Album, Song' //optional
+* Api::indexes added parameter 'include': (0,1) include song details with playlists (XML has this by default)
+* Api::users (id and username of the site users)
+
+### Changed
+
+* Renamed functions (Backcompatible string replacement until 5.0.0):
+  * tags => genres
+  * tag => genre
+  * tag_artists => genre_artists
+  * tag_albums => genre_albums
+  * tag_songs => genre_songs
+* Don't allow duplicate podcast feeds
+* Extend democratic cooldown past 255 and show an error when out of range
+* Api::shares filter is optional
+
+### Deprecated
+
+* Api::indexes will stop including playlist track and id in xml by default in Ampache 5.0.0
+
+### Fixed
+
+* Api::podcast_edit wasn't able to edit a podcast...
+* Setting a limit of 'none' would slice away all the results
 
 ## Ampache 4.2.2-release
 

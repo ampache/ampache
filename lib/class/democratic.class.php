@@ -520,6 +520,11 @@ class Democratic extends Tmp_Playlist
         $default  = (int) Dba::escape($data['make_default']);
         $demo_id  = (int) Dba::escape($this->id);
 
+        // no negative ints, this also gives you over 2 million days...
+        if ($cool < 0 || $cool > 3000000000) {
+            return false;
+        }
+
         $sql = "UPDATE `democratic` SET `name` = ?, `base_playlist` = ?,`cooldown` = ?, `primary` = ?, `level` = ? WHERE `id` = ?";
         Dba::write($sql, array($name, $base, $cool, $default, $level, $demo_id));
 

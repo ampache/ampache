@@ -77,6 +77,7 @@ class AmpacheFacebook
      */
     public function external_share($url, $text)
     {
+        unset($text);
         $share = "https://www.facebook.com/sharer/sharer.php";
         $share .= "?u=" . rawurlencode($url);
 

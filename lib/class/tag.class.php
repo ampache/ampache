@@ -697,9 +697,13 @@ class Tag extends database_object implements library_item
      * @param string $type
      * @param integer $object_id
      * @param boolean $overwrite
+     * @return boolean
      */
     public static function update_tag_list($tags_comma, $type, $object_id, $overwrite)
     {
+        if (strlen($tags_comma) > 0) {
+            return false;
+        }
         debug_event('tag.class', 'Updating tags for values {' . $tags_comma . '} type {' . $type . '} object_id {' . $object_id . '}', 5);
 
         $ctags       = self::get_top_tags($type, $object_id);
@@ -731,13 +735,14 @@ class Tag extends database_object implements library_item
                 }
             }
         }
-
         // Look if we need to add some new tags
         foreach ($editedTags as $tk => $tv) {
             if ($tv != '') {
                 self::add($type, $object_id, $tv, false);
             }
         }
+
+        return true;
     } // update_tag_list
 
     /**

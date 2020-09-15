@@ -689,17 +689,19 @@ class Playlist extends playlist_object
     public function sort_tracks()
     {
         /* First get all of the songs in order of their tracks */
-        $sql = "SELECT A.`id`
-                FROM `playlist_data` AS A
-           LEFT JOIN `song` AS B ON A.object_id = B.id
-           LEFT JOIN `artist` AS C ON B.artist = C.id
-           LEFT JOIN `album` AS D ON B.album = D.id
-               WHERE A.`playlist` = ?
-            ORDER BY C.`name` ASC,
-                     B.`title` ASC,
-                     D.`year` ASC,
-                     D.`name` ASC,
-                     B.`track` ASC";
+        $sql = "SELECT LIST.`id`
+                FROM `playlist_data` AS LIST
+           LEFT JOIN `song` AS SONG ON LIST.object_id = SONG.id
+           LEFT JOIN `album` AS ALBUM ON SONG.album = ALBUM.id
+           LEFT JOIN `artist` AS ARTIST ON ALBUM.album_artist = ARTIST.id
+               WHERE LIST.`playlist` = ?
+            ORDER BY ARTIST.`name` ASC,
+                     ALBUM.`name` ASC,
+                     ALBUM.`year` ASC,
+                     ALBUM.`disk` ASC,
+                     SONG.`track` ASC,
+                     SONG.`title` ASC,
+                     SONG.`track` ASC";
         $db_results = Dba::query($sql, array($this->id));
 
         $count   = 1;
@@ -712,12 +714,19 @@ class Playlist extends playlist_object
             $results[]              = $new_data;
             $count++;
         } // end while results
+        if (!empty($results)) {
+            $sql = "INSERT INTO `playlist_data` (`id`, `track`) VALUES ";
+            foreach ($results as $data) {
+                $sql .= "(" . Dba::escape($data['id']) . ", " . Dba::escape($data['track']) . "), ";
+            } // foreach re-ordered results
 
-        foreach ($results as $data) {
-            $sql = "UPDATE `playlist_data` SET `track` = ? WHERE `id` = ?";
-            Dba::write($sql, array($data['track'], $data['id']));
-        } // foreach re-ordered results
+            //replace the last comma
+            $sql = substr_replace($sql ,"", -2);
+            $sql .= "ON DUPLICATE KEY UPDATE `track`=VALUES(`track`)";
 
+            // do this in one go
+            Dba::write($sql);
+        }
         $this->update_last_update();
 
         return true;
