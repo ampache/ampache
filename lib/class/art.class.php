@@ -75,6 +75,11 @@ class Art extends database_object
      */
     private static $enabled;
 
+    /*
+     * @const ART_SEARCH_LIMIT
+     */
+    private const ART_SEARCH_LIMIT = 5;
+
     /**
      * Constructor
      * Art constructor, takes the UID of the object and the
@@ -1104,7 +1109,7 @@ class Art extends database_object
             return array();
         }
         if ($limit == 0) {
-            $limit   = (is_null(AmpConfig::get('art_search_limit'))) ? 5 : AmpConfig::get('art_search_limit') ;
+            $limit   = (is_null(AmpConfig::get('art_search_limit'))) ? ART_SEARCH_LIMIT : AmpConfig::get('art_search_limit') ;
         }
         $config    = AmpConfig::get('art_order');
         $methods   = get_class_methods('Art');
@@ -1243,11 +1248,12 @@ class Art extends database_object
                 foreach ($filter as $item) {
                     switch (trim($item)) {
                         case 'artist':
-                            $query1 .= " artist:\"{$data['artist']}\"";
-                            break;
+                          $query1 .= " artist:\"{$data['artist']}\"";
+                        break;
                         case (preg_match('/year:.*/', $item) ? true :false):
-                            $query1 .= ' ' . $item;
-                            break;
+                           $query1 .= ' ' . $item;
+                        break;
+                        default:
                     }
                 }
                 $query = "album:" . "\"{$data['album']}\"" . $query1;
@@ -1276,13 +1282,14 @@ class Art extends database_object
                 $result  = $api->{$getType}($item_id);
                 foreach ($result->images as $image) {
                     $images[] = array(
-                        'url' => $image->url,
-                        'mime' => 'image/jpeg',
-                        'title' => 'Spotify'
-                    );
+                    'url' => $image->url,
+                    'mime' => 'image/jpeg',
+                    'title' => 'Spotify'
+                );
                 }
             }
         }
+
 
         return $images;
     } // gather_spotify
