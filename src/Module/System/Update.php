@@ -200,49 +200,50 @@ class Update
      * updates to the database. This will actually
      * echo out the list...
      */
-    public static function display_update()
+    public static function display_update(bool $cliMode = false): array
     {
+        $result          = [];
         $current_version = self::get_version();
         if (!is_array(self::$versions)) {
             self::$versions = self::populate_version();
         }
         $update_needed = false;
 
-        if (!defined('CLI')) {
+        if ($cliMode === false) {
             echo "<ul>\n";
         }
 
         foreach (self::$versions as $update) {
             if ($update['version'] > $current_version) {
                 $update_needed = true;
-                if (!defined('CLI')) {
-                    echo '<li><b>';
+
+                $updateInfo = T_('Version') . ': ' . self::format_version($update['version']);
+                if ($cliMode === false) {
+                    echo '<li><b>' . $updateInfo;
+                } else {
+                    $result[] = $updateInfo;
                 }
-                echo T_('Version') . ': ', self::format_version($update['version']);
-                if (defined('CLI')) {
-                    echo "\n", str_replace('<br />', "\n", $update['description']), "\n";
+
+                if ($cliMode === true) {
+                    $result[] = str_replace('<br />' , "\n", $update['description']);
                 } else {
                     echo '</b><br />', $update['description'], "<br /></li>\n";
                 }
-            } // if newer
-        } // foreach versions
+            }
+        }
 
-        if (!defined('CLI')) {
+        if ($cliMode === false) {
             echo "</ul>\n";
         }
 
-        if (!$update_needed) {
-            if (!defined('CLI')) {
-                echo '<p class="database-update">';
-            }
+        if (!$update_needed && $cliMode === false) {
+            echo '<p class="database-update">';
             echo T_('No Update Needed');
-            if (!defined('CLI')) {
-                echo ' [<a href="', AmpConfig::get('web_path'), '/">', T_('Return to main page'), '</a>]</p>';
-            } else {
-                echo "\n";
-            }
+            echo ' [<a href="', AmpConfig::get('web_path'), '/">', T_('Return to main page'), '</a>]</p>';
         }
-    } // display_update
+
+        return $result;
+    }
 
     /**
      * run_update

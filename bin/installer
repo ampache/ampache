@@ -23,39 +23,25 @@
 
 declare(strict_types=1);
 
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\Cli;
+use Ampache\Module\Cli\InstallerCommand;
 use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');
+define('OUTDATED_DATABASE_OK', 1);
 define('CLI', 1);
 
+require_once __DIR__ . '/../src/Config/init-tiny.php';
+require_once __DIR__ . '/../src/Config/install.php';
+
 /** @var ContainerInterface $dic */
-$dic = require __DIR__ . '/../src/Config/init.php';
+$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
 
 // Init App with name and version
 $app = new Ahc\Cli\Application(
     'Ampache CLI',
-    $dic->get(ConfigContainerInterface::class)->get('version')
+    'install'
 );
-$app->add($dic->get(Cli\BroadcastCommand::class));
-$app->add($dic->get(Cli\ComputeCacheCommand::class));
-$app->add($dic->get(Cli\CronProcessCommand::class));
-$app->add($dic->get(Cli\ArtSizeCalculationCommand::class));
-$app->add($dic->get(Cli\RunChannelCommand::class));
-$app->add($dic->get(Cli\PrintTagsCommand::class));
-$app->add($dic->get(Cli\SongCleanupCommand::class));
-$app->add($dic->get(Cli\SortFilesCommand::class));
-$app->add($dic->get(Cli\ExportPlaylistCommand::class));
-$app->add($dic->get(Cli\ExportAlbumArtCommand::class));
-$app->add($dic->get(Cli\ArtCleanupCommand::class));
-$app->add($dic->get(Cli\RunWebsocketCommand::class));
-$app->add($dic->get(Cli\UpdateDbCommand::class));
-$app->add($dic->get(Cli\ConvertFileNamesCommand::class));
-$app->add($dic->get(Cli\UpdateCatalogFileCommand::class));
-$app->add($dic->get(Cli\UpdateCatalogCommand::class));
-$app->add($dic->get(Cli\AdminAddUserCommand::class));
-$app->add($dic->get(Cli\AdminUpdateDatabaseCommand::class));
+$app->add($dic->get(InstallerCommand::class));
 
 $logo = <<<LOGO
     _                               _          
