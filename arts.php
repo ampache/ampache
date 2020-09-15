@@ -91,12 +91,10 @@ switch ($_REQUEST['action']) {
         else {
             show_confirmation(T_("There Was a Problem"), T_('Art could not be located at this time. This may be due to write access error, or the file was not received correctly'), $burl);
         }
-
         break;
     case 'show_art_dlg':
-
-         require_once AmpConfig::get('prefix') . UI::find_template('show_get_art.inc.php');
-    break;
+        require_once AmpConfig::get('prefix') . UI::find_template('show_get_art.inc.php');
+        break;
     case 'find_art':
         // Prevent the script from timing out
         set_time_limit(0);
@@ -131,14 +129,13 @@ switch ($_REQUEST['action']) {
             } // if image data
         } // if it's an upload
 
-
         // Attempt to find the art.
         $images = $art->gather($options, $limit);
 
         if (!empty($_REQUEST['cover'])) {
-            $path_info                = pathinfo($_REQUEST['cover']);
-            $cover_url[0]['url']      = scrub_in($_REQUEST['cover']);
-            $cover_url[0]['mime']     = 'image/' . $path_info['extension'];
+            $path_info            = pathinfo($_REQUEST['cover']);
+            $cover_url[0]['url']  = scrub_in($_REQUEST['cover']);
+            $cover_url[0]['mime'] = 'image/' . $path_info['extension'];
         }
         $images = array_merge($cover_url, $images);
 
@@ -154,11 +151,9 @@ switch ($_REQUEST['action']) {
             $_SESSION['form']['images'] = $images;
             require_once AmpConfig::get('prefix') . UI::find_template('show_arts.inc.php');
         }
-
         require_once AmpConfig::get('prefix') . UI::find_template('show_get_art.inc.php');
         break;
     case 'select_art':
-
         /* Check to see if we have the image url still */
         $image_id = $_REQUEST['image'];
 
