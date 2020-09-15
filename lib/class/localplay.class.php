@@ -344,12 +344,13 @@ class Localplay
      * status
      * This returns current information about the state of the player
      * There is an expected array format
+     * @return array|false
      */
     public function status()
     {
         $data = $this->_player->status();
 
-        if (!count($data)) {
+        if (empty($data)) {
             debug_event('localplay.class', 'Error Unable to get status, check ' . $this->type . ' controller', 1);
 
             return false;

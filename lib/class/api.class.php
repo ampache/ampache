@@ -73,25 +73,26 @@ class Api
      * @param string $message
      * @param string $error_code
      * @param string $format
+     * @param array $return_data
      */
-    public static function message($type, $message, $error_code = null, $format = 'xml')
+    public static function message($type, $message, $error_code = null, $format = 'xml', $return_data = array())
     {
         if ($type === 'error') {
             switch ($format) {
                 case 'json':
-                    echo JSON_Data::error($error_code, $message);
+                    echo JSON_Data::error($error_code, $message, $return_data);
                     break;
                 default:
-                    echo XML_Data::error($error_code, $message);
+                    echo XML_Data::error($error_code, $message, $return_data);
             }
         }
         if ($type === 'success') {
             switch ($format) {
                 case 'json':
-                    echo JSON_Data::success($message);
+                    echo JSON_Data::success($message, $return_data);
                     break;
                 default:
-                    echo XML_Data::success($message);
+                    echo XML_Data::success($message, $return_data);
             }
         }
     } // message
@@ -465,16 +466,20 @@ class Api
     /**
      * get_indexes
      * MINIMUM_API_VERSION=400001
+     * CHANGED_IN_API_VERSION=430000
      *
      * This takes a collection of inputs and returns ID + name for the object type
+     * Added 'include' to allow indexing all song tracks (enabled for xml by default)
      *
      * @param array $input
-     * type   = (string) 'song'|'album'|'artist'|'playlist'
-     * filter = (string) //optional
-     * add    = self::set_filter(date) //optional
-     * update = self::set_filter(date) //optional
-     * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * type    = (string) 'song'|'album'|'artist'|'playlist'
+     * filter  = (string) //optional
+     * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * add     = self::set_filter(date) //optional
+     * update  = self::set_filter(date) //optional
+     * include = (integer) 0,1 include songs if available for that object //optional
+     * offset  = (integer) //optional
+     * limit   = (integer) //optional
      * @return boolean
      */
     public static function get_indexes($input)
@@ -482,8 +487,9 @@ class Api
         if (!self::check_parameter($input, array('type'), 'get_indexes')) {
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
-        $type = (string) $input['type'];
+        $user    = User::get_from_username(Session::username($input['auth']));
+        $type    = (string) $input['type'];
+        $include = ((int) $input['include'] == 1 || ($input['api_format'] == 'xml' && !isset($input['include']))) ? true : false;
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist'))) {
             self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
@@ -511,12 +517,12 @@ class Api
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::indexes($objects, $type);
+                echo JSON_Data::indexes($objects, $type, $include);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::indexes($objects, $type);
+                echo XML_Data::indexes($objects, $type, true, $include);
         }
         Session::extend($input['auth']);
 
@@ -1056,10 +1062,10 @@ class Api
     } // license_songs
 
     /**
-     * tags
+     * genres
      * MINIMUM_API_VERSION=380001
      *
-     * This returns the tags (Genres) based on the specified filter
+     * This returns the genres (Tags) based on the specified filter
      *
      * @param array $input
      * filter = (string) Alpha-numeric search term //optional
@@ -1067,7 +1073,7 @@ class Api
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
-    public static function tags($input)
+    public static function genres($input)
     {
         self::$browse->reset_filters();
         self::$browse->set_type('tag');
@@ -1082,50 +1088,50 @@ class Api
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::tags($tags);
+                echo JSON_Data::genres($tags);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::tags($tags);
+                echo XML_Data::genres($tags);
         }
         Session::extend($input['auth']);
-    } // tags
+    } // genres
 
     /**
-     * tag
+     * genre
      * MINIMUM_API_VERSION=380001
      *
-     * This returns a single tag based on UID
+     * This returns a single genre based on UID
      *
      * @param array $input
-     * filter = (string) UID of Tag
+     * filter = (string) UID of Genre
      * @return boolean
      */
-    public static function tag($input)
+    public static function genre($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'tag')) {
+        if (!self::check_parameter($input, array('filter'), 'genre')) {
             return false;
         }
         $uid = scrub_in($input['filter']);
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::tags(array($uid));
+                echo JSON_Data::genres(array($uid));
             break;
             default:
-                echo XML_Data::tags(array($uid));
+                echo XML_Data::genres(array($uid));
         }
         Session::extend($input['auth']);
 
         return true;
-    } // tag
+    } // genre
 
     /**
-     * tag_artists
+     * genre_artists
      * MINIMUM_API_VERSION=380001
      *
-     * This returns the artists associated with the tag in question as defined by the UID
+     * This returns the artists associated with the genre in question as defined by the UID
      *
      * @param array $input
      * filter = (string) UID of Album
@@ -1133,9 +1139,9 @@ class Api
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function tag_artists($input)
+    public static function genre_artists($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'tag_artists')) {
+        if (!self::check_parameter($input, array('filter'), 'genre_artists')) {
             return false;
         }
         $artists = Tag::get_tag_objects('artist', $input['filter']);
@@ -1158,23 +1164,23 @@ class Api
         Session::extend($input['auth']);
 
         return true;
-    } // tag_artists
+    } // genre_artists
 
     /**
-     * tag_albums
+     * genre_albums
      * MINIMUM_API_VERSION=380001
      *
-     * This returns the albums associated with the tag in question
+     * This returns the albums associated with the genre in question
      *
      * @param array $input
-     * filter = (string) UID of Tag
+     * filter = (string) UID of Genre
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function tag_albums($input)
+    public static function genre_albums($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'tag_albums')) {
+        if (!self::check_parameter($input, array('filter'), 'genre_albums')) {
             return false;
         }
         $albums = Tag::get_tag_objects('album', $input['filter']);
@@ -1199,23 +1205,23 @@ class Api
         Session::extend($input['auth']);
 
         return true;
-    } // tag_albums
+    } // genre_albums
 
     /**
-     * tag_songs
+     * genre_songs
      * MINIMUM_API_VERSION=380001
      *
-     * returns the songs for this tag
+     * returns the songs for this genre
      *
      * @param array $input
-     * filter = (string) UID of Tag
+     * filter = (string) UID of Genre
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function tag_songs($input)
+    public static function genre_songs($input)
     {
-        if (!self::check_parameter($input, array('filter'), 'tag_songs')) {
+        if (!self::check_parameter($input, array('filter'), 'genre_songs')) {
             return false;
         }
         $songs = Tag::get_tag_objects('song', $input['filter']);
@@ -1241,7 +1247,7 @@ class Api
         Session::extend($input['auth']);
 
         return true;
-    } // tag_songs
+    } // genre_songs
 
     /**
      * songs
@@ -1476,11 +1482,11 @@ class Api
      */
     public static function playlist_create($input)
     {
-        if (!self::check_parameter($input, array('name', 'type'), 'playlist_create')) {
+        if (!self::check_parameter($input, array('name'), 'playlist_create')) {
             return false;
         }
         $name = $input['name'];
-        $type = $input['type'];
+        $type = (isset($input['type'])) ? $input['type'] : 'private';
         $user = User::get_from_username(Session::username($input['auth']));
         if ($type != 'private') {
             $type = 'public';
@@ -1513,6 +1519,7 @@ class Api
      * type   = (string) 'public', 'private' //optional
      * items  = (string) comma-separated song_id's (replace existing items with a new object_id) //optional
      * tracks = (string) comma-separated playlisttrack numbers matched to items in order //optional
+     * sort   = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
      * @return boolean
      */
     public static function playlist_edit($input)
@@ -1524,6 +1531,7 @@ class Api
         $type  = $input['type'];
         $items = explode(',', $input['items']);
         $order = explode(',', $input['tracks']);
+        $sort  = (int) $input['sort'];
         // calculate whether we are editing the track order too
         $playlist_edit = array();
         if (count($items) == count($order) && count($items) > 0) {
@@ -1557,6 +1565,10 @@ class Api
                     $change_made = true;
                 }
             }
+        }
+        if ($sort > 0) {
+            $playlist->sort_tracks();
+            $change_made = true;
         }
         Session::extend($input['auth']);
         // if you didn't make any changes; tell me
@@ -1879,7 +1891,7 @@ class Api
      * Get information about shared media this user is allowed to manage.
      *
      * @param array $input
-     * filter = (string) Alpha-numeric search term
+     * filter = (string) Alpha-numeric search term //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
@@ -1891,9 +1903,7 @@ class Api
 
             return false;
         }
-        if (!self::check_parameter($input, array('filter'), 'shares')) {
-            return false;
-        }
+
         self::$browse->reset_filters();
         self::$browse->set_type('share');
         self::$browse->set_sort('title', 'ASC');
@@ -1965,7 +1975,7 @@ class Api
      *
      * @param array $input
      * filter      = (string) object_id
-     * type        = (string) object_type
+     * type        = (string) object_type ('song', 'album', 'artist')
      * description = (string) description (will be filled for you if empty) //optional
      * expires     = (integer) days to keep active //optional
      * @return boolean
@@ -2061,10 +2071,10 @@ class Api
      *
      * @param array $input
      * filter      = (string) Alpha-numeric search term
-     * stream      = (boolean) 0,1 // optional
-     * download    = (boolean) 0,1 // optional
-     * expires     = (integer) number of whole days before expiry // optional
-     * description = (string) update description // optional
+     * stream      = (boolean) 0,1 //optional
+     * download    = (boolean) 0,1 //optional
+     * expires     = (integer) number of whole days before expiry //optional
+     * description = (string) update description //optional
      * @return boolean
      */
     public static function share_edit($input)
@@ -2308,7 +2318,7 @@ class Api
      *
      * @param array $input
      * filter  = (string) Alpha-numeric search term
-     * include = (string) 'episodes' (include episodes in the response) // optional
+     * include = (string) 'episodes' (include episodes in the response) //optional
      * offset  = (integer) //optional
      * limit   = (integer) //optional
      * @return boolean
@@ -2357,7 +2367,7 @@ class Api
      *
      * @param array $input
      * filter  = (integer) Podcast ID number
-     * include = (string) 'episodes' (include episodes in the response) // optional
+     * include = (string) 'episodes' (include episodes in the response) //optional
      * @return boolean
      */
     public static function podcast($input)
@@ -2372,7 +2382,7 @@ class Api
         }
         $object_id = (int) $input['filter'];
         $podcast   = new Podcast($object_id);
-        if ($podcast->id > 0) {
+        if ($podcast->id) {
             $episodes = $input['include'] == 'episodes';
 
             ob_end_clean();
@@ -2416,7 +2426,7 @@ class Api
             return false;
         }
         $data            = array();
-        $data['feed']    = $input['url'];
+        $data['feed']    = urldecode($input['url']);
         $data['catalog'] = $input['catalog'];
         $podcast         = Podcast::create($data, true);
         if ($podcast) {
@@ -2454,7 +2464,8 @@ class Api
 
             return false;
         }
-        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['api_format'])) {
+        $user = User::get_from_username(Session::username($input['auth']));
+        if (!self::check_access('interface', 75, $user->id, 'update_podcast', $input['api_format'])) {
             return false;
         }
         if (!self::check_parameter($input, array('filter'), 'podcast_delete')) {
@@ -2462,7 +2473,7 @@ class Api
         }
         $object_id = (int) $input['filter'];
         $podcast   = new Podcast($object_id);
-        if ($podcast->id > 0) {
+        if ($podcast->id) {
             if ($podcast->remove()) {
                 self::message('success', 'podcast ' . $object_id . ' deleted', null, $input['api_format']);
             } else {
@@ -2479,15 +2490,18 @@ class Api
     /**
      * podcast_edit
      * MINIMUM_API_VERSION=420000
+     * CHANGED_IN_API_VERSION=430000
      * Update the description and/or expiration date for an existing podcast.
      * Takes the podcast id to update with optional description and expires parameters.
      *
      * @param array $input
-     * filter      = (string) Alpha-numeric search term //optional
-     * stream      = (boolean) 0,1 // optional
-     * download    = (boolean) 0,1 // optional
-     * expires     = (integer) number of whole days before expiry // optional
-     * description = (string) update description // optional
+     * filter      = (string) Alpha-numeric search term
+     * feed        = (string) feed url (xml!) //optional
+     * title       = (string) title string //optional
+     * website     = (string) source website url //optional
+     * description = (string) //optional
+     * generator   = (string) //optional
+     * copyright   = (string) //optional
      * @return boolean
      */
     public static function podcast_edit($input)
@@ -2497,29 +2511,32 @@ class Api
 
             return false;
         }
-        if (!self::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, 'edit_podcast', $input['api_format'])) {
+        $user = User::get_from_username(Session::username($input['auth']));
+        if (!self::check_access('interface', 50, $user->id, 'edit_podcast', $input['api_format'])) {
             return false;
         }
         if (!self::check_parameter($input, array('filter'), 'podcast_edit')) {
             return false;
         }
         $podcast_id = $input['filter'];
-        if (in_array($podcast_id, Share::get_share_list())) {
-            $user          = User::get_from_username(Session::username($input['auth']));
-            $podcast       = new Share($podcast_id);
-            $description   = isset($input['description']) ? $input['description'] : $podcast->description;
-            $stream        = isset($input['stream']) ? $input['stream'] : $podcast->allow_stream;
-            $download      = isset($input['download']) ? $input['download'] : $podcast->allow_download;
-            $expires       = isset($input['expires']) ? Share::get_expiry($input['expires']) : $podcast->expire_days;
+        $podcast    = new Podcast($podcast_id);
+        if ($podcast->id) {
+            $feed           = filter_var($input['feed'], FILTER_VALIDATE_URL) ? $input['feed'] : $podcast->feed;
+            $title          = isset($input['title']) ? scrub_in($input['title']) : $podcast->title;
+            $website        = filter_var($input['website'], FILTER_VALIDATE_URL) ? scrub_in($input['website']) : $podcast->website;
+            $description    = isset($input['description']) ? scrub_in($input['description']) : $podcast->description;
+            $generator      = isset($input['generator']) ? scrub_in($input['generator']) : $podcast->generator;
+            $copyright      = isset($input['copyright']) ? scrub_in($input['copyright']) : $podcast->copyright;
 
             $data = array(
-                'max_counter' => $podcast->max_counter,
-                'expire' => $expires,
-                'allow_stream' => $stream,
-                'allow_download' => $download,
-                'description' => $description
+                'feed' => $feed,
+                'title' => $title,
+                'website' => $website,
+                'description' => $description,
+                'generator' => $generator,
+                'copyright' => $copyright
             );
-            if ($podcast->update($data, $user)) {
+            if ($podcast->update($data)) {
                 self::message('success', 'podcast ' . $podcast_id . ' updated', null, $input['api_format']);
             } else {
                 self::message('error', 'podcast ' . $podcast_id . ' was not updated', '401', $input['api_format']);
@@ -2655,6 +2672,30 @@ class Api
 
         return true;
     } // podcast_episode_delete
+
+    /**
+     * users
+     * MINIMUM_API_VERSION=430000
+     *
+     * Get ids and usernames for your site users
+     *
+     * @param array $input
+     * @return boolean
+     */
+    public static function users($input)
+    {
+        $users = User::get_valid_users();
+        switch ($input['api_format']) {
+            case 'json':
+                echo JSON_Data::users($users);
+            break;
+            default:
+                echo XML_Data::users($users);
+        }
+        Session::extend($input['auth']);
+
+        return true;
+    } // user
 
     /**
      * user
@@ -3696,6 +3737,7 @@ class Api
         $type      = (string) $input['type'];
         $object    = (int) $input['id'];
         $overwrite = (int) $input['overwrite'] == 0;
+        $art_url   = AmpConfig::get('web_path') . '/image.php?object_id=' . $object . '&object_type=artist&auth=' . $input['auth'];
 
         // confirm the correct data
         if (!in_array($type, array('artist', 'album'))) {
@@ -3711,7 +3753,7 @@ class Api
         }
         // update your object
         if (Catalog::gather_art_item($type, $object, $overwrite, true)) {
-            self::message('success', 'Gathered new art for: ' . (string) $object . ' (' . $type . ')', null, $input['api_format']);
+            self::message('success', 'Gathered new art for: ' . (string) $object . ' (' . $type . ')', null, $input['api_format'], array('art' => $art_url));
 
             return true;
         }
@@ -3962,10 +4004,11 @@ class Api
      * This is for controlling Localplay
      *
      * @param array $input
-     * command = (string) 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip'
+     * command = (string) 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip', 'status'
      * oid     = (integer) object_id //optional
      * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream' //optional
      * clear   = (integer) 0,1 Clear the current playlist before adding //optional
+     * @return bool
      */
     public static function localplay($input)
     {
@@ -3976,7 +4019,8 @@ class Api
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->connect();
 
-        $result_status = false;
+        $result = false;
+        $status = false;
         switch ($input['command']) {
             case 'add':
                 // for add commands get the object details
@@ -3994,46 +4038,51 @@ class Api
                 $playlist = new Stream_Playlist();
                 $playlist->add(array($media));
                 foreach ($playlist->urls as $streams) {
-                    $result_status = $localplay->add_url($streams);
+                    $result = $localplay->add_url($streams);
                 }
                 break;
             case 'next':
-                $result_status = $localplay->next();
+                $result = $localplay->next();
                 break;
             case 'prev':
-                $result_status = $localplay->prev();
+                $result = $localplay->prev();
                 break;
             case 'stop':
-                $result_status = $localplay->stop();
+                $result = $localplay->stop();
                 break;
             case 'play':
-                $result_status = $localplay->play();
+                $result = $localplay->play();
                 break;
             case 'pause':
-                $result_status = $localplay->pause();
+                $result = $localplay->pause();
                 break;
             case 'volume_up':
-                $result_status = $localplay->volume_up();
+                $result = $localplay->volume_up();
                 break;
             case 'volume_down':
-                $result_status = $localplay->volume_down();
+                $result = $localplay->volume_down();
                 break;
             case 'volume_mute':
-                $result_status = $localplay->volume_mute();
+                $result = $localplay->volume_mute();
                 break;
             case 'delete_all':
-                $result_status = $localplay->volume_down();
+                $result = $localplay->volume_down();
                 break;
             case 'skip':
-                $result_status = $localplay->volume_mute();
+                $result = $localplay->volume_mute();
+                break;
+            case 'status':
+                $status = $localplay->status();
                 break;
             default:
                 // They are doing it wrong
                 self::message('error', T_('Invalid request'), '405', $input['api_format']);
 
-                return;
+                return false;
         } // end switch on command
-        $output_array     = array('localplay' => array('command' => array($input['command'] => make_bool($result_status))));
+        $output_array = (!empty($status))
+            ? array('localplay' => array('command' => array($input['command'] => $status)))
+            : array('localplay' => array('command' => array($input['command'] => make_bool($result))));
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($output_array, JSON_PRETTY_PRINT);
@@ -4042,6 +4091,8 @@ class Api
                 echo XML_Data::keyed_array($output_array);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // localplay
 
     /**

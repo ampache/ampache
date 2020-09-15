@@ -1879,27 +1879,16 @@ class Query
             case 'song':
                 switch ($field) {
                     case 'title':
-                        $sql = "`song`.`title`";
-                        break;
                     case 'year':
-                        $sql = "`song`.`year`";
-                        break;
                     case 'time':
-                        $sql = "`song`.`time`";
-                        break;
                     case 'track':
-                        $sql = "`song`.`track`";
+                    case 'composer':
+                        $sql = "`song`.`$field`";
                         break;
                     case 'album':
-                        $sql = '`album`.`name`';
-                        $this->set_join('left', '`album`', '`album`.`id`', '`song`.`album`', 100);
-                        break;
                     case 'artist':
-                        $sql = '`artist`.`name`';
-                        $this->set_join('left', '`artist`', '`artist`.`id`', '`song`.`artist`', 100);
-                        break;
-                    case 'composer':
-                        $sql = "`song`.`composer`";
+                        $sql = "`$field`.`name`";
+                        $this->set_join('left', "`$field`", "`$field`.`id`", "`song`.`$field`", 100);
                         break;
                     default:
                         break;
@@ -1935,52 +1924,36 @@ class Query
             case 'artist':
                 switch ($field) {
                     case 'name':
-                        $sql = "`artist`.`name`";
-                        break;
                     case 'placeformed':
-                        $sql = "`artist`.`placeformed`";
-                        break;
                     case 'yearformed':
-                        $sql = "`artist`.`yearformed`";
+                        $sql = "`artist`.`$field`";
                         break;
                 } // end switch
                 break;
             case 'playlist':
                 switch ($field) {
                     case 'type':
-                        $sql = "`playlist`.`type`";
-                        break;
                     case 'name':
-                        $sql = "`playlist`.`name`";
-                        break;
                     case 'user':
-                        $sql = "`playlist`.`user`";
-                        break;
                     case 'last_update':
-                        $sql = "`playlist`.`last_update`";
+                        $sql = "`playlist`.`$field`";
                         break;
                 } // end switch
                 break;
             case 'smartplaylist':
                 switch ($field) {
                     case 'type':
-                        $sql = "`search`.`type`";
-                        break;
                     case 'name':
-                        $sql = "`search`.`name`";
-                        break;
                     case 'user':
-                        $sql = "`search`.`user`";
+                        $sql = "`search`.`$field`";
                         break;
                 } // end switch on $field
                 break;
             case 'live_stream':
                 switch ($field) {
                     case 'name':
-                        $sql = "`live_stream`.`name`";
-                        break;
                     case 'codec':
-                        $sql = "`live_stream`.`codec`";
+                        $sql = "`live_stream`.`$field`";
                         break;
                 } // end switch
                 break;
@@ -1997,16 +1970,10 @@ class Query
             case 'user':
                 switch ($field) {
                     case 'username':
-                        $sql = "`user`.`username`";
-                        break;
                     case 'fullname':
-                        $sql = "`user`.`fullname`";
-                        break;
                     case 'last_seen':
-                        $sql = "`user`.`last_seen`";
-                        break;
                     case 'create_date':
-                        $sql = "`user`.`create_date`";
+                        $sql = "`user`.`$field`";
                         break;
                 } // end switch
                 break;
@@ -2016,19 +1983,11 @@ class Query
             case 'wanted':
                 switch ($field) {
                     case 'name':
-                        $sql = "`wanted`.`name`";
-                        break;
                     case 'artist':
-                        $sql = "`wanted`.`artist`";
-                        break;
                     case 'year':
-                        $sql = "`wanted`.`year`";
-                        break;
                     case 'user':
-                        $sql = "`wanted`.`user`";
-                        break;
                     case 'accepted':
-                        $sql = "`wanted`.`accepted`";
+                        $sql = "`wanted`.`$field`";
                         break;
                 } // end switch on field
                 break;
@@ -2037,67 +1996,37 @@ class Query
                     case 'object':
                         $sql = "`share`.`object_type`, `share`.`object.id`";
                         break;
-                    case 'object_type':
-                        $sql = "`share`.`object_type`";
-                        break;
                     case 'user':
-                        $sql = "`share`.`user`";
-                        break;
+                    case 'object_type':
                     case 'creation_date':
-                        $sql = "`share`.`creation_date`";
-                        break;
                     case 'lastvisit_date':
-                        $sql = "`share`.`lastvisit_date`";
-                        break;
                     case 'counter':
-                        $sql = "`share`.`counter`";
-                        break;
                     case 'max_counter':
-                        $sql = "`share`.`max_counter`";
-                        break;
                     case 'allow_stream':
-                        $sql = "`share`.`allow_stream`";
-                        break;
                     case 'allow_download':
-                        $sql = "`share`.`allow_download`";
-                        break;
                     case 'expire':
-                        $sql = "`share`.`expire`";
+                        $sql = "`share`.`$field`";
                         break;
                 } // end switch on field
                 break;
             case 'channel':
                 switch ($field) {
                     case 'name':
-                        $sql = "`channel`.`name`";
-                        break;
                     case 'interface':
-                        $sql = "`channel`.`interface`";
-                        break;
                     case 'port':
-                        $sql = "`channel`.`port`";
-                        break;
                     case 'max_listeners':
-                        $sql = "`channel`.`max_listeners`";
-                        break;
                     case 'listeners':
-                        $sql = "`channel`.`listeners`";
+                        $sql = "`channel`.`$field`";
                         break;
                 } // end switch on field
                 break;
             case 'broadcast':
                 switch ($field) {
                     case 'name':
-                        $sql = "`broadcast`.`name`";
-                        break;
                     case 'user':
-                        $sql = "`broadcast`.`user`";
-                        break;
                     case 'started':
-                        $sql = "`broadcast`.`started`";
-                        break;
                     case 'listeners':
-                        $sql = "`broadcast`.`listeners`";
+                        $sql = "`broadcast`.`$field`";
                         break;
                 } // end switch on field
                 break;
@@ -2111,10 +2040,8 @@ class Query
             case 'tvshow':
                 switch ($field) {
                     case 'name':
-                        $sql = "`tvshow`.`name`";
-                        break;
                     case 'year':
-                        $sql = "`tvshow`.`year`";
+                        $sql = "`tvshow`.`$field`";
                         break;
                 }
                 break;
@@ -2174,42 +2101,28 @@ class Query
             case 'label':
                 switch ($field) {
                     case 'name':
-                        $sql = "`label`.`name`";
-                        break;
                     case 'category':
-                        $sql = "`label`.`category`";
-                        break;
                     case 'user':
-                        $sql = "`label`.`user`";
+                        $sql = "`label`.`$field`";
                         break;
                 }
                 break;
             case 'pvmsg':
                 switch ($field) {
                     case 'subject':
-                        $sql = "`user_pvmsg`.`subject`";
-                        break;
                     case 'to_user':
-                        $sql = "`user_pvmsg`.`to_user`";
-                        break;
                     case 'creation_date':
-                        $sql = "`user_pvmsg`.`creation_date`";
-                        break;
                     case 'is_read':
-                        $sql = "`user_pvmsg`.`is_read`";
+                        $sql = "`user_pvmsg`.`$field`";
                         break;
                 }
                 break;
             case 'follower':
                 switch ($field) {
                     case 'user':
-                        $sql = "`user_follower`.`user`";
-                        break;
                     case 'follow_user':
-                        $sql = "`user_follower`.`follow_user`";
-                        break;
                     case 'follow_date':
-                        $sql = "`user_follower`.`follow_date`";
+                        $sql = "`user_follower`.`$field`";
                         break;
                 }
                 break;
@@ -2223,19 +2136,11 @@ class Query
             case 'podcast_episode':
                 switch ($field) {
                     case 'title':
-                        $sql = "`podcast_episode`.`title`";
-                        break;
                     case 'category':
-                        $sql = "`podcast_episode`.`category`";
-                        break;
                     case 'author':
-                        $sql = "`podcast_episode`.`author`";
-                        break;
                     case 'time':
-                        $sql = "`podcast_episode`.`time`";
-                        break;
                     case 'pubDate':
-                        $sql = "`podcast_episode`.`pubDate`";
+                        $sql = "`podcast_episode`.`$field`";
                         break;
                 }
                 break;

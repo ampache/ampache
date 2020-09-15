@@ -46,7 +46,14 @@ label {
     flex-direction: row;
 }
 
-.box-top, .box-title, .box-bottom, .cel_username, .cel_tags, .similars, .cel_rating, .cel_userflag {
+.box-top,
+.box-title,
+.box-bottom,
+.cel_username,
+.cel_tags,
+.similars,
+.cel_rating,
+.cel_userflag {
     display: none;
 }
 
@@ -57,11 +64,13 @@ label {
     padding-left: 10px;
 }
 
-#np_group_3, .cel_song {
+#np_group_3,
+.cel_song {
     order: 1;
 }
 
-#np_group_2, .cel_artist {
+#np_group_2,
+.cel_artist {
     order: 2;
 }
 

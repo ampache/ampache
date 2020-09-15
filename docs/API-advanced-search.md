@@ -1,6 +1,11 @@
-# advanced_search Ampache develop
+---
+title: "Advanced Search"
+metaTitle: "Advanced Search"
+metaDescription: "API documentation"
+---
 
-Advanced search is the API method to access the search rules used in the WEB UI. It can be confusing to process how the rules are generated so this has been split into it's own page.
+Advanced search is the API method to access the search rules used in the WEB UI.
+It can be confusing to process how the rules are generated so this has been split into it's own page.
 
 ## Using advanced_search
 
@@ -139,4 +144,3 @@ To search a mixed type like metadata you must search using 4 rules.
 |random  | (integer) 0,1 (random order of results; default to 0)                   |
 |offset  | (integer)                                                               |
 |limit'  | (integer)                                                               |
-

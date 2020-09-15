@@ -940,10 +940,10 @@ class User extends database_object
         return true;
     } // update_access
 
-    /*!
-        @function update_last_seen
-        @discussion updates the last seen data for this user
-    */
+    /**
+     * update_last_seen
+     * updates the last seen data for this user
+     */
     public function update_last_seen()
     {
         $sql = "UPDATE user SET last_seen='" . time() . "' WHERE `id`='$this->id'";
