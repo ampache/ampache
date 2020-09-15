@@ -90,8 +90,7 @@ tfoot,
 thead,
 tr,
 th,
-td 
-{
+td {
     border: 0;
     outline: 0;
    vertical-align: baseline; 
