@@ -1088,7 +1088,7 @@ div.box.box_current_configuration {
 }
 
 table.disablegv thead {
-    display: none+
+    display: none;
 }
 
 table.disablegv tr {
