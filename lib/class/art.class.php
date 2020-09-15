@@ -1243,12 +1243,11 @@ class Art extends database_object
                 foreach ($filter as $item) {
                     switch (trim($item)) {
                         case 'artist':
-                          $query1 .= " artist:\"{$data['artist']}\"";
-                        break;
+                            $query1 .= " artist:\"{$data['artist']}\"";
+                            break;
                         case (preg_match('/year:.*/', $item) ? true :false):
-                           $query1 .= ' ' . $item;
-                        break;
-                        default:
+                            $query1 .= ' ' . $item;
+                            break;
                     }
                 }
                 $query = "album:" . "\"{$data['album']}\"" . $query1;
@@ -1277,14 +1276,13 @@ class Art extends database_object
                 $result  = $api->{$getType}($item_id);
                 foreach ($result->images as $image) {
                     $images[] = array(
-                    'url' => $image->url,
-                    'mime' => 'image/jpeg',
-                    'title' => 'Spotify'
-                );
+                        'url' => $image->url,
+                        'mime' => 'image/jpeg',
+                        'title' => 'Spotify'
+                    );
                 }
             }
         }
-
 
         return $images;
     } // gather_spotify
