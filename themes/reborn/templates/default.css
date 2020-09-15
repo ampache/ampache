@@ -93,7 +93,7 @@ th,
 td {
     border: 0;
     outline: 0;
-   vertical-align: baseline; 
+    vertical-align: baseline; 
     margin: 0;
     padding: 0;
 }
@@ -1056,8 +1056,8 @@ table.gatherart tfoot .th-bottom {
 
 th.center,
 td.center{
-vertical-align: middle;
-text-align: left;
+    vertical-align: middle;
+    text-align: left;
 }
 
 table.gatherart tr:hover,
@@ -1075,8 +1075,8 @@ table.gatherart .th-bottom:focus {
 }
 
 input:invalid { 
-   border: 4px solid red;
- }
+    border: 4px solid red;
+}
 
 .box_preferences h4 {
     font-size: 15px;
