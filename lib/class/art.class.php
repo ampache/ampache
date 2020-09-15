@@ -1089,7 +1089,7 @@ class Art extends database_object
      * @param integer $limit
      * @return array
      */
-    public function gather($options = array(), $limit = 0)
+    public function gather($options = array(),$limit = 0)
     {
         // Define vars
         $results = array();
@@ -1103,8 +1103,11 @@ class Art extends database_object
 
             return array();
         }
-        $config  = AmpConfig::get('art_order');
-        $methods = get_class_methods('Art');
+        if ($limit == 0) {
+            $limit   = (is_null(AmpConfig::get('art_search_limit'))) ? 5 : AmpConfig::get('art_search_limit') ;
+        }
+        $config    = AmpConfig::get('art_order');
+        $methods   = get_class_methods('Art');
 
         /* If it's not set */
         if (empty($config)) {
@@ -1139,10 +1142,8 @@ class Art extends database_object
                         case 'gather_google':
                         case 'gather_musicbrainz':
                         case 'gather_lastfm':
-                            $data = $this->{$method_name}($limit, $options);
-                            break;
                         case 'gather_spotify':
-                            $data = $this->{$method_name}($options);
+                            $data = $this->{$method_name}($limit, $options);
                             break;
                         default:
                             $data = $this->{$method_name}($limit);
@@ -1159,7 +1160,7 @@ class Art extends database_object
             if ($limit && count($results) >= $limit) {
                 debug_event('art.class', 'results:' . json_encode($results), 3);
 
-                return array_slice($results, 0, $limit);
+                return array_slice($results, 0, $limit + 1);
             }
         } // end foreach
 
@@ -1192,7 +1193,7 @@ class Art extends database_object
      * @param array $data
      * @return array
      */
-    public function gather_spotify($data = array())
+    public function gather_spotify($limit = 5, $data = array())
     {
         static $accessToken = null;
         $images             = array();
@@ -1214,23 +1215,50 @@ class Art extends database_object
                 debug_event('art.class', "gather_spotify: A problem exists with the client credentials", 5);
             }
         }
-        $api   = new SpotifyWebAPI();
-        $types = $this->type . 's';
+        $filter = array();
+        $query1 = '';
+        $api    = new SpotifyWebAPI();
+        $types  = $this->type . 's';
         $api->setAccessToken($accessToken);
         if ($this->type == 'artist') {
             debug_event('art.class', "gather_spotify artist: " . $data['artist'], 5);
-            $query   = $data['artist'];
+            $query   = $data['keyword'];
             $getType = 'getArtist';
         } elseif ($this->type == 'album') {
-            debug_event('art.class', "gather_spotify album: " . $data['album'], 5);
-            $query   = 'album:' . $data['album'] . ' artist:' . $data['artist'];
             $getType = 'getAlbum';
-        } else {
-            return $images;
+            debug_event('art.class', "gather_spotify album: " . $data['album'], 5);
+            // Check for manual search
+            if (key_exists('search_limit', $data)) {
+                $limit = $data['search_limit'];
+                if (key_exists('artist_filter', $data)) {
+                    $filter[]= 'artist';
+                }
+                if (key_exists('year_filter', $data)) {
+                    $filter[] = $data['year_filter'];
+                }
+            } elseif (!is_null(AmpConfig::get('spotify_art_filter')) || !empty(AmpConfig::get('spotify_art_filter'))) {
+                $filter = explode(',', AmpConfig::get('spotify_art_filter'));
+            }
+            if (!empty($filter)) {
+                foreach ($filter as $item) {
+                    switch (trim($item)) {
+                        case 'artist':
+                          $query1 .= " artist:\"{$data['artist']}\"";
+                        break;
+                        case (preg_match('/year:.*/', $item) ? true :false):
+                           $query1 .= ' ' . $item;
+                        break;
+                        default:
+                    }
+                }
+                $query = "album:" . "\"{$data['album']}\"" . $query1;
+            } else {
+                $query = "\"{$data['album']}\"";
+            }
         }
 
         try {
-            $response = $api->search($query, $this->type);
+            $response = $api->search($query, $this->type, ['limit' => $limit]);
         } catch (SpotifyWebAPIException $error) {
             if ($error->hasExpiredToken()) {
                 $accessToken = $session->getAccessToken();
@@ -1240,22 +1268,23 @@ class Art extends database_object
                 // Number of seconds to wait before sending another request
                 sleep($retryAfter);
             }
-            $response = $api->search($query, $this->type);
+            $response = $api->search($query, $this->type,['limit' => $limit]);
         } // end of catch
 
         if (count($response->{$types}->items)) {
             foreach ($response->{$types}->items as $item) {
                 $item_id = $item->id;
                 $result  = $api->{$getType}($item_id);
-                $image   = $result->images[0];
-                debug_event('art.class', "gather_spotify: found " . $image->url, 5);
-                $images[] = array(
+                foreach ($result->images as $image) {
+                    $images[] = array(
                     'url' => $image->url,
                     'mime' => 'image/jpeg',
                     'title' => 'Spotify'
                 );
+                }
             }
         }
+
 
         return $images;
     } // gather_spotify
@@ -2003,7 +2032,7 @@ class Art extends database_object
             $libitem = new $object_type($object_id);
             echo "<div class=\"item_art_actions\">";
             if (Core::get_global('user')->has_access(50) || (Core::get_global('user')->has_access(25) && Core::get_global('user')->id == $libitem->get_user_owner())) {
-                echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=find_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
+                echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
                 echo UI::get_icon('edit', T_('Edit/Find Art'));
                 echo "</a>";
 

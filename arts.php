@@ -36,7 +36,6 @@ $burl = '';
 if (filter_has_var(INPUT_GET, 'burl')) {
     $burl = base64_decode(Core::get_get('burl'));
 }
-$item = new $object_type($object_id);
 
 // If not a content manager user then kick em out
 if (!Access::check('interface', 50) && (!Access::check('interface', 25) || $item->get_user_owner() != Core::get_global('user')->id)) {
@@ -44,6 +43,21 @@ if (!Access::check('interface', 50) && (!Access::check('interface', 25) || $item
 
     return false;
 }
+$item = new $object_type($object_id);
+$item->format();
+$keywords = $item->get_keywords();
+$keyword  = '';
+$options  = array();
+foreach ($keywords as $key => $word) {
+    if (isset($_REQUEST['option_' . $key])) {
+        $word['value'] = $_REQUEST['option_' . $key];
+    }
+    $options[$key] = $word['value'];
+    if ($word['important'] && !empty($word['value'])) {
+        $keyword .= ' ' . $word['value'];
+    }
+}
+$options['keyword'] = trim($keyword);
 
 // Switch on the actions
 switch ($_REQUEST['action']) {
@@ -79,15 +93,27 @@ switch ($_REQUEST['action']) {
         }
 
         break;
+    case 'show_art_dlg':
+
+         require_once AmpConfig::get('prefix') . UI::find_template('show_get_art.inc.php');
+    break;
     case 'find_art':
         // Prevent the script from timing out
         set_time_limit(0);
 
-        $item->format();
         $art       = new Art($object_id, $object_type);
         $images    = array();
         $cover_url = array();
-
+        $limit     = 0;
+        if (isset($_REQUEST['artist_filter'])) {
+            $options['artist_filter'] =true;
+        }
+        if (isset($_REQUEST['search_limit'])) {
+            $options['search_limit'] = $limit = (int)$_REQUEST['search_limit'];
+        }
+        if (isset($_REQUEST['year_filter']) && !empty($_REQUEST['year_filter'])) {
+            $options['year_filter'] = 'year:' . $_REQUEST['year_filter'];
+        }
         // If we've got an upload ignore the rest and just insert it
         if (!empty($_FILES['file']['tmp_name'])) {
             $path_info      = pathinfo($_FILES['file']['name']);
@@ -105,22 +131,9 @@ switch ($_REQUEST['action']) {
             } // if image data
         } // if it's an upload
 
-        $keywords = $item->get_keywords();
-        $keyword  = '';
-        $options  = array();
-        foreach ($keywords as $key => $word) {
-            if (isset($_REQUEST['option_' . $key])) {
-                $word['value'] = $_REQUEST['option_' . $key];
-            }
-            $options[$key] = $word['value'];
-            if ($word['important'] && !empty($word['value'])) {
-                $keyword .= ' ' . $word['value'];
-            }
-        }
-        $options['keyword'] = trim($keyword);
 
         // Attempt to find the art.
-        $images = $art->gather($options);
+        $images = $art->gather($options, $limit);
 
         if (!empty($_REQUEST['cover'])) {
             $path_info                = pathinfo($_REQUEST['cover']);

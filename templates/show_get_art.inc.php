@@ -19,9 +19,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */ ?>
-<?php UI::show_box_top(T_('Customize Search'), 'box box_get_albumart'); ?>
+<?php
+      $art_type = ($object_type == 'album') ?'Cover Art' : 'Artist Art';
+      UI::show_box_top(T_("Customize {$art_type} Search"), 'box box_get_albumart'); ?>
 <form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=find_art&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>&artist_name=<?php echo urlencode(Core::get_request('artist_name'));?>&album_name=<?php echo urlencode(Core::get_request('album_name')); ?>&cover=<?php echo urlencode(Core::get_request('cover')); ?>" style="Display:inline;">
-    <table class="tabledata">
+    <table class="gatherart">
         <?php
         foreach ($keywords as $key => $word) {
             if ($key != 'keyword' && $word['label']) { ?>
@@ -29,7 +31,7 @@
                     <td>
                         <?php echo $word['label']; ?>&nbsp;
                     </td>
-                    <td><input type="text" id="option_<?php echo $key; ?>" name="option_<?php echo $key; ?>" value="<?php echo scrub_out(unhtmlentities($word['value'])); ?>" /></td>
+                    <td><input type="text" id="option_<?php echo $key . '"'; echo ($key == 'album') ? ' required' : ''; ?> name="option_<?php echo $key; ?>" value="<?php echo scrub_out(unhtmlentities($word['value'])); ?>" /></td>
                 </tr>
         <?php
             }
@@ -38,16 +40,55 @@
             <td>
                 <?php echo T_('Direct URL to Image'); ?>
             </td>
-            <td><input type="text" id="cover" name="cover" value="" /></td>
+            <td><input type="url" id="cover" name="cover" value="" /></td>
         </tr>
         <tr>
             <td>
                 <?php echo T_('Local Image'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)
             </td>
-            <td><input type="file" id="file" name="file" value="" /></td>
+            <td>
+               <input type="file" id="file" name="file" value="" />
+            </td>
         </tr>
-    </table>
-    <div class="formValidation">
+        <?php $art_order= AmpConfig::get('art_order');
+        if (in_array('spotify', $art_order)) {
+            if ($object_type == 'album') {?>
+      <tr>
+             <th class="center" rowspan="3" style>
+                <?php echo T_('Spotify Album Filters'); ?>
+             </th>
+             <td>
+                <label for="for artistFilter">Artist</label>
+                <input type="checkbox" id="artistFilter" name="artist_filter" value="artist">
+             </td>
+         </tr>
+        <tr>
+           <td>
+                <label style="padding-right:4px" for="yearFilter">Year: </label>
+                <input type="text" id="yearFilter" name="year_filter" size="5" maxlength="9" pattern="[0-9]{4}(-[0-9]{4})?">
+                <label>(ex: 2001 or 2001-2005)</label>
+           </td>
+          </tr>
+            <?php } ?>
+          <tr>
+             <?php if ($object_type == 'artist') { ?>
+               <td>
+                Spotify search Filter:
+                </td>
+                <?php }
+        } else { ?>
+            <td>
+              <?php $value = AmpConfig::get('art_search_limit'); ?>
+              <label for="searchLimit"> Art Search Limit: </label>
+            </td>
+            <?php } ?>
+            <td>
+               <input type="number" id="searchLimit"
+                name="search_limit" size="5" value="<?php echo $value; ?>">
+            </td>
+          </tr>
+        </table>
+     <div class="formValidation">
         <input type="hidden" name="action" value="find_art" />
         <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
         <input type="hidden" name="object_id" value="<?php echo $object_id; ?>" />
