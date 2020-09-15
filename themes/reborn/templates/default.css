@@ -186,7 +186,6 @@ input[type=file]
     height: 40px;
 }
 
-
 input[type=password],
 input[type=text],
 input[type=url],
@@ -1019,7 +1018,6 @@ table.tabledata .th-bottom:focus {
     background-image: none;
     background-repeat: no-repeat;
 }
-]]
 
 table.gatherart {
     width: 100%;
@@ -1077,7 +1075,7 @@ table.gatherart .th-bottom:focus {
     background-repeat: no-repeat;
 }
 
-input: invalid { 
+input:invalid { 
    border: 4px solid red;
  }
 
