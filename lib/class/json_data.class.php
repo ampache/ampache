@@ -931,11 +931,18 @@ class JSON_Data
      */
     public static function users($users)
     {
-        $JSON = [];
+        $JSON       = [];
+        $user_array = [];
         foreach ($users as $user_id) {
             $user = new User($user_id);
-            array_push($JSON, $user->username);
-        }
+            array_push($user_array, array(
+                "id" => (string) $user_id,
+                "username" => $user->username
+            ));
+        } // end foreach
+
+        // return a user object
+        array_push($JSON, array("user" => $user_array));
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
     } // users
