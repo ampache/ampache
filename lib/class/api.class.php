@@ -171,7 +171,7 @@ class Api
             }
             if (empty($input[$parameter])) {
                 debug_event('api.class', "'" . $parameter . "' required on " . $method . " function call.", 2);
-                self::message('error', T_('Missing mandatory parameter') . " '" . $parameter . "'", '401', $input['api_format']);
+                self::message('error', T_('Missing mandatory parameter') . " '" . $parameter . "'", '400', $input['api_format']);
 
                 return false;
             }
@@ -197,7 +197,7 @@ class Api
     {
         if (!Access::check($type, $level, $user_id)) {
             debug_event('api.class', $type . " '" . $level . "' required on " . $method . " function call.", 2);
-            self::message('error', 'User does not have access to this function', '400', $format);
+            self::message('error', 'User does not have access to this function', '412', $format);
 
             return false;
         }
@@ -472,7 +472,7 @@ class Api
      * Added 'include' to allow indexing all song tracks (enabled for xml by default)
      *
      * @param array $input
-     * type    = (string) 'song'|'album'|'artist'|'playlist'
+     * type    = (string) 'song', 'album', 'artist', 'playlist'
      * filter  = (string) //optional
      * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add     = self::set_filter(date) //optional
@@ -492,7 +492,7 @@ class Api
         $include = ((int) $input['include'] == 1 || ($input['api_format'] == 'xml' && !isset($input['include']))) ? true : false;
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist'))) {
-            self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
+            self::message('error', T_('Incorrect object type') . ' ' . $type, '400', $input['api_format']);
 
             return false;
         }
@@ -536,7 +536,7 @@ class Api
      * Return similar artist id's or similar song ids compared to the input filter
      *
      * @param array $input
-     * type   = (string) 'song'|'artist'
+     * type   = (string) 'song', 'artist'
      * filter = (integer) artist id or song id
      * offset = (integer) //optional
      * limit  = (integer) //optional
@@ -551,7 +551,7 @@ class Api
         $filter = (int) $input['filter'];
         // confirm the correct data
         if (!in_array($type, array('song', 'artist'))) {
-            self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
+            self::message('error', T_('Incorrect object type') . ' ' . $type, '400', $input['api_format']);
 
             return false;
         }
@@ -594,7 +594,7 @@ class Api
      * You can pass multiple rules as well as joins to create in depth search results
      *
      * Rules must be sent in groups of 3 using an int (starting from 1) to designate which rules are combined.
-     * Use operator ('and'|'or') to choose whether to join or separate each rule when searching.
+     * Use operator ('and', 'or') to choose whether to join or separate each rule when searching.
      *
      * Rule arrays must contain the following:
      *   * rule name (e.g. rule_1, rule_2)
@@ -606,7 +606,7 @@ class Api
      * http://ampache.org/api/api-json-methods
      *
      * @param array $input
-     * operator        = (string) 'and'|'or' (whether to match one rule or all)
+     * operator        = (string) 'and', 'or' (whether to match one rule or all)
      * rule_1          = (string)
      * rule_1_operator = (integer) 0,1|2|3|4|5|6
      * rule_1_input    = (mixed) The string, date, integer you are searching for
@@ -674,7 +674,7 @@ class Api
      * update  = self::set_filter(date) //optional
      * offset  = (integer) //optional
      * limit   = (integer) //optional
-     * include = (array) 'albums'|'songs' //optional
+     * include = (array) 'albums', 'songs' //optional
      */
     public static function artists($input)
     {
@@ -715,7 +715,7 @@ class Api
      *
      * @param array $input
      * filter  = (string) Alpha-numeric search term
-     * include = (array) 'albums'|'songs' //optional
+     * include = (array) 'albums', 'songs' //optional
      * @return boolean
      */
     public static function artist($input)
@@ -962,7 +962,7 @@ class Api
     public static function licenses($input)
     {
         if (!AmpConfig::get('licensing')) {
-            self::message('error', T_('Access Denied: licensing features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: licensing features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -1005,7 +1005,7 @@ class Api
     public static function license($input)
     {
         if (!AmpConfig::get('licensing')) {
-            self::message('error', T_('Access Denied: licensing features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: licensing features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -1039,7 +1039,7 @@ class Api
     public static function license_songs($input)
     {
         if (!AmpConfig::get('licensing')) {
-            self::message('error', T_('Access Denied: licensing features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: licensing features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -1394,7 +1394,7 @@ class Api
             $playlist = new Search((int) str_replace('smart_', '', $uid), 'song', $user);
         }
         if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
-            self::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
+            self::message('error', T_('Access denied to this playlist'), '412', $input['api_format']);
 
             return false;
         }
@@ -1439,7 +1439,7 @@ class Api
             $playlist = new Search((int) str_replace('smart_', '', $uid), 'song', $user);
         }
         if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
-            self::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
+            self::message('error', T_('Access denied to this playlist'), '412', $input['api_format']);
 
             return false;
         }
@@ -1477,7 +1477,7 @@ class Api
      *
      * @param array $input
      * name = (string) Alpha-numeric search term
-     * type = (string) 'public'|'private'
+     * type = (string) 'public', 'private'
      * @return boolean
      */
     public static function playlist_create($input)
@@ -1544,7 +1544,7 @@ class Api
 
         // don't continue if you didn't actually get a playlist or the access level
         if (!$playlist->id || (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
-            self::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
+            self::message('error', T_('Access denied to this playlist'), '412', $input['api_format']);
 
             return false;
         }
@@ -1573,7 +1573,7 @@ class Api
         Session::extend($input['auth']);
         // if you didn't make any changes; tell me
         if (!($name || $type) && !$change_made) {
-            self::message('error', T_('Nothing was changed'), '401', $input['api_format']);
+            self::message('error', T_('Nothing was changed'), '400', $input['api_format']);
 
             return false;
         }
@@ -1601,7 +1601,7 @@ class Api
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
-            self::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
+            self::message('error', T_('Access denied to this playlist'), '412', $input['api_format']);
         } else {
             $playlist->delete();
             self::message('success', 'playlist deleted', null, $input['api_format']);
@@ -1633,7 +1633,7 @@ class Api
         $playlist = new Playlist($input['filter']);
         $song     = $input['song'];
         if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
-            self::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
+            self::message('error', T_('Access denied to this playlist'), '412', $input['api_format']);
 
             return false;
         }
@@ -1675,7 +1675,7 @@ class Api
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
-            self::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
+            self::message('error', T_('Access denied to this playlist'), '412', $input['api_format']);
         } else {
             if ((int) $input['clear'] === 1) {
                 $playlist->delete_all();
@@ -1718,12 +1718,12 @@ class Api
      * 'unplayed' added in 400002 for searching unplayed tracks.
      *
      * @param array $input
-     * mode   = (string)  'recent'|'forgotten'|'unplayed'|'random' //optional, default = 'random'
+     * mode   = (string)  'recent', 'forgotten', 'unplayed', 'random' //optional, default = 'random'
      * filter = (string)  $filter                       //optional, LIKE matched to song title
      * album  = (integer) $album_id                     //optional
      * artist = (integer) $artist_id                    //optional
      * flag   = (integer) 0,1                           //optional, default = 0
-     * format = (string)  'song'|'index'|'id'           //optional, default = 'song'
+     * format = (string)  'song', 'index', 'id'           //optional, default = 'song'
      * offset = (integer)                               //optional
      * limit  = (integer)                               //optional
      */
@@ -1899,7 +1899,7 @@ class Api
     public static function shares($input)
     {
         if (!AmpConfig::get('share')) {
-            self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: sharing features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -1945,7 +1945,7 @@ class Api
     public static function share($input)
     {
         if (!AmpConfig::get('share')) {
-            self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: sharing features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -1983,7 +1983,7 @@ class Api
     public static function share_create($input)
     {
         if (!AmpConfig::get('share')) {
-            self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: sharing features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -1997,13 +1997,13 @@ class Api
         $expire_days = Share::get_expiry($input['expires']);
         // confirm the correct data
         if (!in_array($object_type, array('song', 'album', 'artist'))) {
-            self::message('error', T_('Wrong object type ' . $object_type), '401', $input['api_format']);
+            self::message('error', T_('Wrong object type ' . $object_type), '400', $input['api_format']);
 
             return false;
         }
         $share = array();
         if (!Core::is_library_item($object_type) || !$object_id) {
-            self::message('error', T_('Wrong library item type'), '401', $input['api_format']);
+            self::message('error', T_('Wrong library item type'), '400', $input['api_format']);
         } else {
             $item = new $object_type($object_id);
             if (!$item->id) {
@@ -2040,7 +2040,7 @@ class Api
     public static function share_delete($input)
     {
         if (!AmpConfig::get('share')) {
-            self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: sharing features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -2053,7 +2053,7 @@ class Api
             if (Share::delete_share($object_id, $user)) {
                 self::message('success', 'share ' . $object_id . ' deleted', null, $input['api_format']);
             } else {
-                self::message('error', 'share ' . $object_id . ' was not deleted', '401', $input['api_format']);
+                self::message('error', 'share ' . $object_id . ' was not deleted', '400', $input['api_format']);
             }
         } else {
             self::message('error', 'share ' . $object_id . ' was not found', '404', $input['api_format']);
@@ -2080,7 +2080,7 @@ class Api
     public static function share_edit($input)
     {
         if (!AmpConfig::get('share')) {
-            self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: sharing features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -2106,7 +2106,7 @@ class Api
             if ($share->update($data, $user)) {
                 self::message('success', 'share ' . $share_id . ' updated', null, $input['api_format']);
             } else {
-                self::message('error', 'share ' . $share_id . ' was not updated', '401', $input['api_format']);
+                self::message('error', 'share ' . $share_id . ' was not updated', '400', $input['api_format']);
             }
         } else {
             self::message('error', 'share ' . $share_id . ' was not found', '404', $input['api_format']);
@@ -2190,8 +2190,8 @@ class Api
      * but should be updated to follow the current input values
      *
      * @param array $input
-     * type     = (string)  'song'|'album'|'artist'
-     * filter   = (string)  'newest'|'highest'|'frequent'|'recent'|'forgotten'|'flagged'|'random'
+     * type     = (string)  'song', 'album', 'artist'
+     * filter   = (string)  'newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged', 'random'
      * user_id  = (integer) //optional
      * username = (string)  //optional
      * offset   = (integer) //optional
@@ -2326,7 +2326,7 @@ class Api
     public static function podcasts($input)
     {
         if (!AmpConfig::get('podcast')) {
-            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -2373,7 +2373,7 @@ class Api
     public static function podcast($input)
     {
         if (!AmpConfig::get('podcast')) {
-            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -2415,7 +2415,7 @@ class Api
     public static function podcast_create($input)
     {
         if (!AmpConfig::get('podcast')) {
-            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -2439,7 +2439,7 @@ class Api
                     echo XML_Data::podcasts(array($podcast));
             }
         } else {
-            self::message('error', T_('Failed: podcast was not created.'), '401', $input['api_format']);
+            self::message('error', T_('Failed: podcast was not created.'), '400', $input['api_format']);
         }
         Session::extend($input['auth']);
 
@@ -2460,7 +2460,7 @@ class Api
     public static function podcast_delete($input)
     {
         if (!AmpConfig::get('podcast')) {
-            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -2477,7 +2477,7 @@ class Api
             if ($podcast->remove()) {
                 self::message('success', 'podcast ' . $object_id . ' deleted', null, $input['api_format']);
             } else {
-                self::message('error', 'podcast ' . $object_id . ' was not deleted', '401', $input['api_format']);
+                self::message('error', 'podcast ' . $object_id . ' was not deleted', '400', $input['api_format']);
             }
         } else {
             self::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['api_format']);
@@ -2507,7 +2507,7 @@ class Api
     public static function podcast_edit($input)
     {
         if (!AmpConfig::get('podcast')) {
-            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -2539,7 +2539,7 @@ class Api
             if ($podcast->update($data)) {
                 self::message('success', 'podcast ' . $podcast_id . ' updated', null, $input['api_format']);
             } else {
-                self::message('error', 'podcast ' . $podcast_id . ' was not updated', '401', $input['api_format']);
+                self::message('error', 'podcast ' . $podcast_id . ' was not updated', '400', $input['api_format']);
             }
         } else {
             self::message('error', 'podcast ' . $podcast_id . ' was not found', '404', $input['api_format']);
@@ -2564,7 +2564,7 @@ class Api
     public static function podcast_episodes($input)
     {
         if (!AmpConfig::get('podcast')) {
-            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -2607,7 +2607,7 @@ class Api
     public static function podcast_episode($input)
     {
         if (!AmpConfig::get('podcast')) {
-            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -2647,7 +2647,7 @@ class Api
     public static function podcast_episode_delete($input)
     {
         if (!AmpConfig::get('podcast')) {
-            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -2663,7 +2663,7 @@ class Api
             if ($episode->remove()) {
                 self::message('success', 'podcast_episode ' . $object_id . ' deleted', null, $input['api_format']);
             } else {
-                self::message('error', 'podcast_episode ' . $object_id . ' was not deleted', '401', $input['api_format']);
+                self::message('error', 'podcast_episode ' . $object_id . ' was not deleted', '400', $input['api_format']);
             }
         } else {
             self::message('error', 'podcast_episode ' . $object_id . ' was not found', '404', $input['api_format']);
@@ -2677,7 +2677,7 @@ class Api
      * users
      * MINIMUM_API_VERSION=430000
      *
-     * Get ids and usernames for your site users
+     * Get ids and usernames for your site
      *
      * @param array $input
      * @return boolean
@@ -2914,7 +2914,7 @@ class Api
     public static function followers($input)
     {
         if (!AmpConfig::get('sociable')) {
-            self::message('error', T_('Access Denied: social features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: social features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -2927,7 +2927,7 @@ class Api
             if ($user !== null) {
                 $users    = $user->get_followers();
                 if (!count($users)) {
-                    self::message('error', 'User `' . $username . '` has no followers.', '400', $input['api_format']);
+                    self::message('error', 'User `' . $username . '` has no followers.', '404', $input['api_format']);
                 } else {
                     ob_end_clean();
                     switch ($input['api_format']) {
@@ -2940,7 +2940,7 @@ class Api
                 }
             } else {
                 debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
-                self::message('error', 'User `' . $username . '` cannot be found.', '400', $input['api_format']);
+                self::message('error', 'User `' . $username . '` cannot be found.', '404', $input['api_format']);
             }
         }
         Session::extend($input['auth']);
@@ -2963,7 +2963,7 @@ class Api
     public static function following($input)
     {
         if (!AmpConfig::get('sociable')) {
-            self::message('error', T_('Access Denied: social features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: social features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -2976,7 +2976,7 @@ class Api
             if ($user !== null) {
                 $users = $user->get_following();
                 if (!count($users)) {
-                    self::message('error', 'User `' . $username . '` does not follow anyone.', '400', $input['api_format']);
+                    self::message('error', 'User `' . $username . '` does not follow anyone.', '404', $input['api_format']);
                 } else {
                     debug_event('api.class', 'User is following:  ' . print_r($users), 1);
                     ob_end_clean();
@@ -2990,7 +2990,7 @@ class Api
                 }
             } else {
                 debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
-                self::message('error', 'User `' . $username . '` cannot be found.', '400', $input['api_format']);
+                self::message('error', 'User `' . $username . '` cannot be found.', '404', $input['api_format']);
             }
         }
         Session::extend($input['auth']);
@@ -3011,7 +3011,7 @@ class Api
     public static function toggle_follow($input)
     {
         if (!AmpConfig::get('sociable')) {
-            self::message('error', T_('Access Denied: social features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: social features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -3047,7 +3047,7 @@ class Api
     public static function last_shouts($input)
     {
         if (!AmpConfig::get('sociable')) {
-            self::message('error', T_('Access Denied: social features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: social features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -3085,7 +3085,7 @@ class Api
      * This rates a library item
      *
      * @param array $input
-     * type   = (string) 'song'|'album'|'artist' $type
+     * type   = (string) 'song', 'album', 'artist' $type
      * id     = (integer) $object_id
      * rating = (integer) 0,1|2|3|4|5 $rating
      * @return boolean|void
@@ -3093,7 +3093,7 @@ class Api
     public static function rate($input)
     {
         if (!AmpConfig::get('ratings')) {
-            self::message('error', T_('Access Denied: Rating features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: Rating features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -3107,18 +3107,18 @@ class Api
         $user      = User::get_from_username(Session::username($input['auth']));
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist'))) {
-            self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
+            self::message('error', T_('Incorrect object type') . ' ' . $type, '400', $input['api_format']);
 
             return false;
         }
         if (!in_array($rating, array('0', '1', '2', '3', '4', '5'))) {
-            self::message('error', T_('Ratings must be between [0-5]. ' . $rating . ' is invalid'), '401', $input['api_format']);
+            self::message('error', T_('Ratings must be between [0-5]. ' . $rating . ' is invalid'), '400', $input['api_format']);
 
             return false;
         }
 
         if (!Core::is_library_item($type) || !$object_id) {
-            self::message('error', T_('Wrong library item type'), '401', $input['api_format']);
+            self::message('error', T_('Wrong library item type'), '400', $input['api_format']);
         } else {
             $item = new $type($object_id);
             if (!$item->id) {
@@ -3144,7 +3144,7 @@ class Api
      * Setting flag to false (0) will remove the flag
      *
      * @param array $input
-     * type = (string) 'song'|'album'|'artist'|'playlist' $type
+     * type = (string) 'song', 'album', 'artist', 'playlist' $type
      * id   = (integer) $object_id
      * flag = (integer) 0,1 $flag
      * @return boolean
@@ -3152,7 +3152,7 @@ class Api
     public static function flag($input)
     {
         if (!AmpConfig::get('userflags')) {
-            self::message('error', T_('Access Denied: UserFlag features are not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: UserFlag features are not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -3170,13 +3170,13 @@ class Api
         }
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist'))) {
-            self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
+            self::message('error', T_('Incorrect object type') . ' ' . $type, '400', $input['api_format']);
 
             return false;
         }
 
         if (!Core::is_library_item($type) || !$object_id) {
-            self::message('error', T_('Wrong library item type'), '401', $input['api_format']);
+            self::message('error', T_('Wrong library item type'), '400', $input['api_format']);
         } else {
             $item = new $type($object_id);
             if (!$item->id) {
@@ -3302,7 +3302,7 @@ class Api
         // validate minimum required options
         debug_event('api.class', 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 4);
         if (!$song_name || !$album_name || !$artist_name) {
-            self::message('error', T_('Invalid input options'), '401', $input['api_format']);
+            self::message('error', T_('Invalid input options'), '400', $input['api_format']);
 
             return false;
         }
@@ -3316,7 +3316,7 @@ class Api
         $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, (string) $song_mbid, (string) $artist_mbid, (string) $album_mbid);
 
         if ($scrobble_id === '') {
-            self::message('error', T_('Failed to scrobble: No item found!'), '401', $input['api_format']);
+            self::message('error', T_('Failed to scrobble: No item found!'), '404', $input['api_format']);
         } else {
             $item = new Song((int) $scrobble_id);
             if (!$item->id) {
@@ -3410,7 +3410,7 @@ class Api
      * Added 'verify_catalog', 'gather_art'
      *
      * @param array $input
-     * task    = (string) 'add_to_catalog'|'clean_catalog'
+     * task    = (string) 'add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'
      * catalog = (integer) $catalog_id)
      * @return boolean
      */
@@ -3425,7 +3425,7 @@ class Api
         $task = (string) $input['task'];
         // confirm the correct data
         if (!in_array($task, array('add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'))) {
-            self::message('error', T_('Incorrect catalog task') . ' ' . $task, '401', $input['api_format']);
+            self::message('error', T_('Incorrect catalog task') . ' ' . $task, '400', $input['api_format']);
 
             return false;
         }
@@ -3472,7 +3472,7 @@ class Api
      *
      * @param array $input
      * file    = (string) urlencode(FULL path to local file)
-     * task    = (string) 'add'|'clean'|'verify'|'remove'
+     * task    = (string) 'add', 'clean', 'verify', 'remove'
      * catalog = (integer) $catalog_id)
      * @return boolean
      */
@@ -3480,7 +3480,7 @@ class Api
     {
         $task = (string) $input['task'];
         if (!AmpConfig::get('delete_from_disk') && $task == 'remove') {
-            self::message('error', T_('Access Denied: delete from disk is not enabled.'), '400', $input['api_format']);
+            self::message('error', T_('Access Denied: delete from disk is not enabled.'), '403', $input['api_format']);
 
             return false;
         }
@@ -3493,7 +3493,7 @@ class Api
         $file = (string) html_entity_decode($input['file']);
         // confirm the correct data
         if (!in_array($task, array('add', 'clean', 'verify', 'remove'))) {
-            self::message('error', T_('Incorrect file task') . ' ' . $task, '401', $input['api_format']);
+            self::message('error', T_('Incorrect file task') . ' ' . $task, '400', $input['api_format']);
 
             return false;
         }
@@ -3641,7 +3641,7 @@ class Api
      * updates a single album, artist, song from the tag data
      *
      * @param array $input
-     * type = (string) 'artist'|'album'|'song'
+     * type = (string) 'artist', 'album', 'song'
      * id   = (integer) $artist_id, $album_id, $song_id)
      * @return boolean
      */
@@ -3655,7 +3655,7 @@ class Api
 
         // confirm the correct data
         if (!in_array($type, array('artist', 'album', 'song'))) {
-            self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
+            self::message('error', T_('Incorrect object type') . ' ' . $type, '400', $input['api_format']);
 
             return false;
         }
@@ -3721,7 +3721,7 @@ class Api
      * Doesn't overwrite existing art by default.
      *
      * @param array $input
-     * type      = (string) 'artist'|'album'
+     * type      = (string) 'artist', 'album'
      * id        = (integer) $artist_id, $album_id)
      * overwrite = (integer) 0,1 //optional
      * @return boolean
@@ -3741,7 +3741,7 @@ class Api
 
         // confirm the correct data
         if (!in_array($type, array('artist', 'album'))) {
-            self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
+            self::message('error', T_('Incorrect object type') . ' ' . $type, '400', $input['api_format']);
 
             return true;
         }
@@ -3806,9 +3806,9 @@ class Api
      *
      * @param array $input
      * id      = (string) $song_id|$podcast_episode_id
-     * type    = (string) 'song'|'podcast'
+     * type    = (string) 'song', 'podcast'
      * bitrate = (integer) max bitrate for transcoding
-     * format  = (string) 'mp3'|'ogg', etc use 'raw' to skip transcoding
+     * format  = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding
      * offset  = (integer) time offset in seconds
      * length  = (integer) 0,1
      * @return boolean
@@ -3868,8 +3868,8 @@ class Api
      *
      * @param array $input
      * id     = (string) $song_id| $podcast_episode_id
-     * type   = (string) 'song'|'podcast'
-     * format = (string) 'mp3'|'ogg', etc //optional
+     * type   = (string) 'song', 'podcast'
+     * format = (string) 'mp3', 'ogg', etc //optional
      * @return boolean
      */
     public static function download($input)
@@ -3916,7 +3916,7 @@ class Api
      *
      * @param array $input
      * id   = (string) $object_id
-     * type = (string) 'song'|'artist'|'album'|'playlist'|'search'|'podcast')
+     * type = (string) 'song', 'artist', 'album', 'playlist', 'search', 'podcast')
      * @return boolean
      */
     public static function get_art($input)
@@ -3931,7 +3931,7 @@ class Api
 
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'search', 'podcast'))) {
-            self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
+            self::message('error', T_('Incorrect object type') . ' ' . $type, '400', $input['api_format']);
 
             return false;
         }
@@ -4076,7 +4076,7 @@ class Api
                 break;
             default:
                 // They are doing it wrong
-                self::message('error', T_('Invalid request'), '405', $input['api_format']);
+                self::message('error', T_('Invalid request'), '400', $input['api_format']);
 
                 return false;
         } // end switch on command
@@ -4102,8 +4102,8 @@ class Api
      * This is for controlling democratic play
      *
      * @param array $input
-     * oid    = (integer)
-     * method = (string)
+     * method = (string) 'vote', 'devote', 'playlist', 'play'
+     * oid    = (integer) //optional
      */
     public static function democratic($input)
     {
@@ -4116,7 +4116,7 @@ class Api
                 $type  = 'song';
                 $media = new Song($input['oid']);
                 if (!$media->id) {
-                    self::message('error', T_('Media object invalid or not specified'), '400', $input['api_format']);
+                    self::message('error', T_('Media object invalid or not specified'), '404', $input['api_format']);
                     break;
                 }
                 $democratic->add_vote(array(
@@ -4140,7 +4140,7 @@ class Api
                 $type  = 'song';
                 $media = new Song($input['oid']);
                 if (!$media->id) {
-                    self::message('error', T_('Media object invalid or not specified'), '400', $input['api_format']);
+                    self::message('error', T_('Media object invalid or not specified'), '404', $input['api_format']);
                 }
 
                 $uid = $democratic->get_uid_from_object_id($media->id, $type);
@@ -4181,7 +4181,7 @@ class Api
                 }
                 break;
             default:
-                self::message('error', T_('Invalid request'), '405', $input['api_format']);
+                self::message('error', T_('Invalid request'), '400', $input['api_format']);
                 break;
         } // switch on method
         Session::extend($input['auth']);

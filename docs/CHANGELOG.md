@@ -41,6 +41,9 @@ All API code that used 'Tag' now references 'Genre' instead
 * API::playlist_edit added new parameter 'sort': (0,1) sort the playlist by 'Artist, Album, Song' //optional
 * Api::indexes added parameter 'include': (0,1) include song details with playlists (XML has this by default)
 * Api::users (id and username of the site users)
+* New error codes
+  * 404 Not Found (The API could not find the requested object)
+  * 412 Failed Access Check (The user does note have access to this object, method, feature.)
 
 ### Changed
 
