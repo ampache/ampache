@@ -1,8 +1,19 @@
 ---
-title: "Ampache API 4.2.2"
-metaTitle: "Ampache API 4.2.2"
+title: "Ampache API"
+metaTitle: "Ampache API"
 metaDescription: "API documentation"
 ---
+
+The [Ampache API](http://ampache.org/api/) Provides methods for pulling out it's meta data in the form of
+simple XML (and JSON!) documents. This was originally created for use by [Amarok](http://ampache.org/api/http://amarok.kde.org/),
+but there is no reason it couldn't be used to create other front-ends to the Ampache data.
+
+Access to the API is controlled by the Internal [Access Control Lists](http://ampache.org/api/api-acls).
+Currently all requests are limited to a maximum of 5000 results for performance reasons. To get additional results
+pass offset as an additional parameter.
+
+If you have any questions or requests for this API please submit a [Feature Request](https://github.com/ampache/ampache/issues/new?assignees=&labels=&template=feature_request.md&title=%5BFeature+Request%5D).
+All dates in the API calls should be passed as [ISO 8601](http://en.wikipedia.org/wiki/ISO_8601) dates.
 
 **Compatible Versions:**
 
@@ -11,18 +22,49 @@ metaDescription: "API documentation"
 * 4.2.2-release
 * Ampache develop
 
-Ampache Provides an API for pulling out it's meta data in the form of XML and JSON documents. This was originally created for use 
-by [Amarok](http://amarok.kde.org/), but there is no reason it couldn't be used to create other front-ends to the Ampache data.
-Access to the API is controlled by the Internal [Access Control Lists](http://ampache.org/api/api-acls). The KEY defined in the
-ACL is the passphrase that must be used to establish an API session. Currently all requests are limited to a maximum of 5000 
-results for performance reasons. To get additional results pass offset as an additional parameter.
+**Archived Version Documentation**
 
-If you have any questions or requests for this API please submit a [Feature Request](https://github.com/ampache/ampache/issues/new?assignees=&labels=&template=feature_request.md&title=%5BFeature+Request%5D).
-All dates in the API calls should be passed as [ISO 8601](http://en.wikipedia.org/wiki/ISO_8601) dates.
+After each release, a documentation page will be created to allow pruning old features from the current version.
+Note that API 4.1 docs cover all previous versions.
+
+[API 4.2 Documentation](http://ampache.org/api/versions/api-4.2)
+
+[API 4.1 Documentation](http://ampache.org/api/versions/api-4.1)
+
+## Changes in Ampache Develop
+
+The next version of Ampache has a lot of breaking changes compared to the 4.x.x API, current changes are listed here and in the changelog.
+
+### Added
+
+* Api::localplay added new options to 'command' ('pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip')
+* Api::localplay added parameters:
+  * 'oid' (integer) object_id to add //optional
+  * 'type' (string) Default: 'Song' ('Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream') //optional
+  * 'clear' (integer) 0|1 clear the current playlist on add //optional
+* API::playlist_edit added new parameter 'sort': (0,1) sort the playlist by 'Artist, Album, Song' //optional
+* Api::indexes added parameter 'include': (0,1) include song details with playlists (XML has this by default)
+* Api::users (id and username of the site users)
+
+### Changed
+
+* All API code that used 'Tag' now references 'Genre' instead
+* Renamed functions (Backcompatible string replacement until 5.0.0):
+  * tags => genres
+  * tag => genre
+  * tag_artists => genre_artists
+  * tag_albums => genre_albums
+  * tag_songs => genre_songs
+* Don't allow duplicate podcast feeds
+* Api::shares filter is optional
+
+### Deprecated
+
+* Api::indexes will stop including playlist track and id in xml by default in Ampache 5.0.0
 
 ## Sending Handshake Request
 
-Multiple authentication methods are available, described in the following sections.
+Multiple authentication methods are available, described in the next sections.
 
 ### User / Password
 
@@ -36,8 +78,8 @@ The key that must be passed to Ampache is `SHA256(TIME+KEY)` where `KEY` is `SHA
 
 ```PHP
 $time = time();
-$key = hash('sha256', 'mypassword');
-$passphrase = hash('sha256', $time . $key);
+$key = hash('sha256','mypassword');
+$passphrase = hash('sha256',$time . $key);
 ```
 
 Once you've generated the encoded passphrase, you can call the following URL (localhost/ampache is the location of your Ampache installation)
@@ -48,8 +90,7 @@ http://localhost/ampache/server/xml.server.php?action=handshake&auth=PASSPHRASE&
 
 ### Api Key
 
-The key that must be passed to Ampache is the API Key generated for a specific user (none by default, only the administrator can generate one).
-Then call the following URL (localhost/ampache is the location of your Ampache installation):
+The key that must be passed to Ampache is the API Key generated for a specific user (none by default, only the administrator can generate one). Then call the following URL (localhost/ampache is the location of your Ampache installation):
 
 ```Text
 http://localhost/ampache/server/xml.server.php?action=handshake&auth=API_KEY&version=350001
@@ -135,43 +176,6 @@ For JSON
 
 All future interactions with the Ampache API must include the `AUTHENTICATION_TOKEN` as a `GET` variable named `auth`.
 
-## Errors
-
-Ampache's API errors are loosely based around the HTTP status codes.
-All errors are returned in the form of an XML/JSON Document however the string error message provided is translated into the language of the Ampache server in question. All services should only use the code value.
-
-## Example Error messages
-
-```xml
-<root>
-      <error code="501">Access Control Not Enabled</error>
-</root>
-```
-
-```JSON
-{
-    "error": {
-        "code": "404",
-        "message": "share 107 was not found"
-    }
-}
-```
-
-## Current Error Codes
-
-All error codes are accompanied by a string value for the error and derived from the [HTTP/1.1 Status Codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)
-
-* **501**
-  * This is a fatal error, the Ampache server you have requested does not currently have access control enabled. The API is disabled.
-* **400**
-  * Used when you have specified a valid method but something about the input is incorrect / invalid. See Error message for details, but do not re-attempt the exact same request.
-* **401**
-  * This is a temporary error, this means no valid session was passed or the handshake failed. This should be an indication for services to attempt another handshake
-* **403**
-  * This is a fatal error, the ACL on the Ampache server prevents access from the current source IP Address.
-* **405**
-  * This is a fatal error, the service requested a method that the API does not implement.
-
 ## Methods
 
 All methods must be passed as `action=METHODNAME`. All methods except the `handshake` can take an optional `offset=XXX` and `limit=XXX`. The limit determines the maximum number of results returned. The offset will tell Ampache where to start in the result set. For example if there are 100 total results and you set the offset to 50, and the limit to 50 Ampache will return results between 50 and 100. The default limit is 5000. The default offset is 0.
@@ -180,8 +184,8 @@ You can also pass it `limit=none` to overcome the `limit` limitation and return 
 
 For more in depth information regarding the different api servers you can view the following documentation pages.
 
-* [XML Documentation (4.2.2)](http://ampache.org/api/api-xml-methods)
-* [JSON Documentation (4.2.2)](http://ampache.org/api/api-json-methods)
+* [XML Documentation](http://ampache.org/api/api-xml-methods)
+* [JSON Documentation](http://ampache.org/api/api-json-methods)
 
 ### Non-Data Methods
 
@@ -243,6 +247,7 @@ For more in depth information regarding the different api servers you can view t
 * licenses
 * license
 * license_songs
+* users
 * user
 * user_create
 * user_update

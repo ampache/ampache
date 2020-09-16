@@ -250,6 +250,7 @@ class Podcast_Episode extends database_object implements media, library_item
     }
 
     /**
+     * display_art
      * @param integer $thumb
      * @param boolean $force
      */

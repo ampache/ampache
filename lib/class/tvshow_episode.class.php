@@ -239,9 +239,9 @@ class TVShow_Episode extends Video
     }
 
     /**
+     * display_art
      * @param integer $thumb
      * @param boolean $force
-     * @return mixed|void
      */
     public function display_art($thumb = 2, $force = false)
     {
