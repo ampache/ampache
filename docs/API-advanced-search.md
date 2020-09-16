@@ -136,11 +136,11 @@ To search a mixed type like metadata you must search using 4 rules.
 
 @param array $input
 
-|Input   | Description                                                             |
-|:------:| ----------------------------------------------------------------------- |
-|operator| (string) 'and', 'or' (whether to match one rule or all)                 |
-|rules   | (array) [rule, operator, input]                                         |
-|type    | (string) 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video'|
-|random  | (integer) 0,1 (random order of results; default to 0)                   |
-|offset  | (integer)                                                               |
-|limit'  | (integer)                                                               |
+|  Input   | Description                                                              |
+|:--------:|--------------------------------------------------------------------------|
+| operator | (string) 'and', 'or' (whether to match one rule or all)                  |
+|  rules   | (array) [rule, operator, input]                                          |
+|   type   | (string) 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video' |
+|  random  | (integer) 0,1 (random order of results; default to 0)                    |
+|  offset  | (integer)                                                                |
+|  limit'  | (integer)                                                                |
