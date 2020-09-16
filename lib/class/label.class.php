@@ -97,9 +97,9 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @param $thumb
+     * display_art
+     * @param integer $thumb
      * @param boolean $force
-     * @return mixed|void
      */
     public function display_art($thumb, $force = false)
     {
