@@ -22,6 +22,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
 * Renamed 'Tag' strings to 'Genre'
 * 'Sort Tracks by Artist, Album, Song' sorting done by 'Album_Artist, Album, Disk, Track Title'
+* Extend democratic cooldown past 255 and show an error when out of range
 
 ### Fixed
 
@@ -54,7 +55,6 @@ All API code that used 'Tag' now references 'Genre' instead
   * tag_albums => genre_albums
   * tag_songs => genre_songs
 * Don't allow duplicate podcast feeds
-* Extend democratic cooldown past 255 and show an error when out of range
 * Api::shares filter is optional
 
 ### Deprecated

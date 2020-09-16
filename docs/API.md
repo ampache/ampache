@@ -4,8 +4,16 @@ metaTitle: "Ampache API"
 metaDescription: "API documentation"
 ---
 
-Ampache Provides an API for pulling out it's meta data in the form of simple XML documents. This was originally created for use by [Amarok](http://ampache.org/api/http://amarok.kde.org/), but there is no reason it couldn't be used to create other front-ends to the Ampache data. Access to the API is controlled by the Internal [Access Control Lists](http://ampache.org/api/api-acls). The KEY defined in the ACL is the passphrase that must be used to establish an API session. Currently all requests are limited to a maximum of 5000 results for performance reasons. To get additional results pass offset as an additional parameter.
-If you have any questions or requests for this API please submit a [Feature Request](https://github.com/ampache/ampache/issues/new?assignees=&labels=&template=feature_request.md&title=%5BFeature+Request%5D). All dates in the API calls should be passed as [ISO 8601](http://en.wikipedia.org/wiki/ISO_8601) dates.
+The [Ampache API](http://ampache.org/api/) Provides methods for pulling out it's meta data in the form of
+simple XML (and JSON!) documents. This was originally created for use by [Amarok](http://ampache.org/api/http://amarok.kde.org/),
+but there is no reason it couldn't be used to create other front-ends to the Ampache data.
+
+Access to the API is controlled by the Internal [Access Control Lists](http://ampache.org/api/api-acls).
+Currently all requests are limited to a maximum of 5000 results for performance reasons. To get additional results
+pass offset as an additional parameter.
+
+If you have any questions or requests for this API please submit a [Feature Request](https://github.com/ampache/ampache/issues/new?assignees=&labels=&template=feature_request.md&title=%5BFeature+Request%5D).
+All dates in the API calls should be passed as [ISO 8601](http://en.wikipedia.org/wiki/ISO_8601) dates.
 
 **Compatible Versions:**
 
@@ -15,6 +23,9 @@ If you have any questions or requests for this API please submit a [Feature Requ
 * Ampache develop
 
 **Archived Version Documentation**
+
+After each release, a documentation page will be created to allow pruning old features from the current version.
+Note that API 4.1 docs cover all previous versions.
 
 [API 4.2 Documentation](http://ampache.org/api/versions/api-4.2)
 
@@ -45,7 +56,6 @@ The next version of Ampache has a lot of breaking changes compared to the 4.x.x 
   * tag_albums => genre_albums
   * tag_songs => genre_songs
 * Don't allow duplicate podcast feeds
-* Extend democratic cooldown past 255 and show an error when out of range
 * Api::shares filter is optional
 
 ### Deprecated
@@ -174,8 +184,8 @@ You can also pass it `limit=none` to overcome the `limit` limitation and return 
 
 For more in depth information regarding the different api servers you can view the following documentation pages.
 
-* [XML Documentation (4.2.1)](http://ampache.org/api/api-xml-methods)
-* [JSON Documentation (4.2.1)](http://ampache.org/api/api-json-methods)
+* [XML Documentation](http://ampache.org/api/api-xml-methods)
+* [JSON Documentation](http://ampache.org/api/api-json-methods)
 
 ### Non-Data Methods
 
@@ -237,6 +247,7 @@ For more in depth information regarding the different api servers you can view t
 * licenses
 * license
 * license_songs
+* users
 * user
 * user_create
 * user_update

@@ -244,9 +244,9 @@ This returns the songs of a specified album
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/album_songs.json)
 
-## tags
+## genres
 
-This returns the tags (Genres) based on the specified filter
+This returns the genres (Tags) based on the specified filter
 @param array $input
 
 | Input    | Type    | Description                                                                   | Optional |
@@ -256,57 +256,57 @@ This returns the tags (Genres) based on the specified filter
 | 'offset' | integer |                                                                               |      YES |
 | 'limit'  | integer |                                                                               |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/tags.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/genres.json)
 
-## tag
+## genre
 
-This returns a single tag based on UID
+This returns a single genre based on UID
 @param array $input
 
-| Input    | Type   | Description                  | Optional |
-|----------|--------|------------------------------|---------:|
-| 'filter' | string | UID of tag, returns tag JSON |       NO |
+| Input    | Type   | Description                      | Optional |
+|----------|--------|----------------------------------|---------:|
+| 'filter' | string | UID of genre, returns genre JSON |       NO |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/tag.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/genre.json)
 
-## tag_artists
+## genre_artists
 
-This returns the artists associated with the tag in question as defined by the UID
+This returns the artists associated with the genre in question as defined by the UID
+@param array $input
+
+| Input    | Type    | Description                       | Optional |
+|----------|---------|-----------------------------------|---------:|
+| 'filter' | string  | UID of genre, returns artist JSON |       NO |
+| 'offset' | integer |                                   |      YES |
+| 'limit'  | integer |                                   |      YES |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/genre_artists.json)
+
+## genre_albums
+
+This returns the albums associated with the genre in question
+@param array $input
+
+| Input    | Type    | Description                      | Optional |
+|----------|---------|----------------------------------|---------:|
+| 'filter' | string  | UID of genre, returns album JSON |       NO |
+| 'offset' | integer |                                  |      YES |
+| 'limit'  | integer |                                  |      YES |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/genre_albums.json)
+
+## genre_songs
+
+returns the songs for this genre
 @param array $input
 
 | Input    | Type    | Description                     | Optional |
 |----------|---------|---------------------------------|---------:|
-| 'filter' | string  | UID of tag, returns artist JSON |       NO |
+| 'filter' | string  | UID of genre, returns song JSON |       NO |
 | 'offset' | integer |                                 |      YES |
 | 'limit'  | integer |                                 |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/tag_artists.json)
-
-## tag_albums
-
-This returns the albums associated with the tag in question
-@param array $input
-
-| Input    | Type    | Description                    | Optional |
-|----------|---------|--------------------------------|---------:|
-| 'filter' | string  | UID of tag, returns album JSON |       NO |
-| 'offset' | integer |                                |      YES |
-| 'limit'  | integer |                                |      YES |
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/tag_albums.json)
-
-## tag_songs
-
-returns the songs for this tag
-@param array $input
-
-| Input    | Type    | Description                   | Optional |
-|----------|---------|-------------------------------|---------:|
-| 'filter' | string  | UID of tag, returns song JSON |       NO |
-| 'offset' | integer |                               |      YES |
-| 'limit'  | integer |                               |      YES |
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/tag_songs.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/genre_songs.json)
 
 ## songs
 

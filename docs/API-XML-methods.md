@@ -243,9 +243,9 @@ This returns the songs of a specified album
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/album_songs.xml)
 
-## tags
+## genres
 
-This returns the tags (Genres) based on the specified filter
+This returns the genres (Tags) based on the specified filter
 @param array $input
 
 | Input    | Type    | Description                                                                   | Optional |
@@ -255,57 +255,57 @@ This returns the tags (Genres) based on the specified filter
 | 'offset' | integer |                                                                               |      YES |
 | 'limit'  | integer |                                                                               |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/tags.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/genres.xml)
 
-## tag
+## genre
 
-This returns a single tag based on UID
+This returns a single genre based on UID
 @param array $input
 
-| Input    | Type   | Description                 | Optional |
-|----------|--------|-----------------------------|---------:|
-| 'filter' | string | UID of tag, returns tag XML |       NO |
+| Input    | Type   | Description                     | Optional |
+|----------|--------|---------------------------------|---------:|
+| 'filter' | string | UID of genre, returns genre XML |       NO |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/tag.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/genre.xml)
 
-## tag_artists
+## genre_artists
 
-This returns the artists associated with the tag in question as defined by the UID
+This returns the artists associated with the genre in question as defined by the UID
+@param array $input
+
+| Input    | Type    | Description                      | Optional |
+|----------|---------|----------------------------------|---------:|
+| 'filter' | string  | UID of genre, returns artist XML |       NO |
+| 'offset' | integer |                                  |      YES |
+| 'limit'  | integer |                                  |      YES |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/genre_artists.xml)
+
+## genre_albums
+
+This returns the albums associated with the genre in question
+@param array $input
+
+| Input    | Type    | Description                     | Optional |
+|----------|---------|---------------------------------|---------:|
+| 'filter' | string  | UID of genre, returns album XML |       NO |
+| 'offset' | integer |                                 |      YES |
+| 'limit'  | integer |                                 |      YES |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/genre_albums.xml)
+
+## genre_songs
+
+returns the songs for this genre
 @param array $input
 
 | Input    | Type    | Description                    | Optional |
 |----------|---------|--------------------------------|---------:|
-| 'filter' | string  | UID of tag, returns artist XML |       NO |
+| 'filter' | string  | UID of genre, returns song XML |       NO |
 | 'offset' | integer |                                |      YES |
 | 'limit'  | integer |                                |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/tag_artists.xml)
-
-## tag_albums
-
-This returns the albums associated with the tag in question
-@param array $input
-
-| Input    | Type    | Description                   | Optional |
-|----------|---------|-------------------------------|---------:|
-| 'filter' | string  | UID of tag, returns album XML |       NO |
-| 'offset' | integer |                               |      YES |
-| 'limit'  | integer |                               |      YES |
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/tag_albums.xml)
-
-## tag_songs
-
-returns the songs for this tag
-@param array $input
-
-| Input    | Type    | Description                  | Optional |
-|----------|---------|------------------------------|---------:|
-| 'filter' | string  | UID of tag, returns song XML |       NO |
-| 'offset' | integer |                              |      YES |
-| 'limit'  | integer |                              |      YES |
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/tag_songs.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/genre_songs.xml)
 
 ## songs
 
@@ -1165,7 +1165,7 @@ This is for controlling democratic play (Songs only)
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/democratic%20\(play\).xml)
 
-All XML Documents that have a ```<tag>``` element may have 0 or more tag elements associated with them. Each tag element has an attribute "count" that indicates the number of people who have specified this tag.
+All XML Documents that have a ```<genre>``` element may have 0 or more genre elements associated with them. Each genre element has an attribute "count" that indicates the number of people who have specified this genre.
 
 Artists XML Document. ID's are Ampache's unique Identifier for the artist.
 
@@ -1175,9 +1175,9 @@ Artists XML Document. ID's are Ampache's unique Identifier for the artist.
         <name>Metallica</name>
         <albums># of Albums</albums>
         <songs># of Songs</songs>
-        <tag id="2481" count="2">Rock & Roll</tag>
-        <tag id="2482" count="1">Rock</tag>
-        <tag id="2483" count="1">Roll</tag>
+        <genre id="2481" count="2">Rock & Roll</genre>
+        <genre id="2482" count="1">Rock</genre>
+        <genre id="2483" count="1">Roll</genre>
         <preciserating>3</preciserating>
         <rating>2.9</rating>
 </artist>
@@ -1185,9 +1185,9 @@ Artists XML Document. ID's are Ampache's unique Identifier for the artist.
         <name>AC/DC</name>
         <albums># of Albums</albums>
         <songs># of Songs</songs>
-        <tag id="2481" count="2">Rock & Roll</tag>
-        <tag id="2482" count="2">Rock</tag>
-        <tag id="2483" count="1">Roll</tag>
+        <genre id="2481" count="2">Rock & Roll</genre>
+        <genre id="2482" count="2">Rock</genre>
+        <genre id="2483" count="1">Roll</genre>
         <preciserating>3</preciserating>
         <rating>2.9</rating>
 </artist>
@@ -1204,9 +1204,9 @@ Album XML Document. ID's are Ampache's unique identifier for the album and artis
         <year>1984</year>
         <tracks>12</tracks>
         <disk>1</disk>
-        <tag id="2481" count="2">Rock & Roll</tag>
-        <tag id="2482" count="1">Rock</tag>
-        <tag id="2483" count="1">Roll</tag>
+        <genre id="2481" count="2">Rock & Roll</genre>
+        <genre id="2482" count="1">Rock</genre>
+        <genre id="2483" count="1">Roll</genre>
         <art>http://localhost/image.php?id=129348</art>
         <preciserating>3</preciserating>
         <rating>2.9</rating>
@@ -1222,9 +1222,9 @@ Single Song XML document, includes references to its parent objects.
         <title>Hells Bells</title>
         <artist id="129348">AC/DC</artist>
         <album id="2910">Back in Black</album>
-        <tag id="2481" count="3">Rock & Roll</tag>
-        <tag id="2482" count="1">Rock</tag>
-        <tag id="2483" count="1">Roll</tag>
+        <genre id="2481" count="3">Rock & Roll</genre>
+        <genre id="2482" count="1">Rock</genre>
+        <genre id="2483" count="1">Roll</genre>
         <track>4</track>
         <time>234</time>
         <url>http://localhost/play/index.php?oid=123908...</url>
@@ -1236,11 +1236,11 @@ Single Song XML document, includes references to its parent objects.
 </root>
 ```
 
-Tag XML Document, includes counts for it's child objects
+genre XML Document, includes counts for it's child objects
 
 ```XML
 <root>
-<tag id="2481">
+<genre id="2481">
         <name>Rock & Roll</name>
         <albums>84</albums>
         <artists>29</artists>
@@ -1248,7 +1248,7 @@ Tag XML Document, includes counts for it's child objects
         <video>13</video>
         <playlist>2</playlist>
         <stream>6</stream>
-</tag>
+</genre>
 </root>
 ```
 
@@ -1260,9 +1260,9 @@ Playlist XML Document, includes counts for it's child objects
         <name>The Good Stuff</name>
         <owner>Karl Vollmer</owner>
         <items>50</items>
-        <tag id="2481" count="2">Rock & Roll</tag>
-        <tag id="2482" count="2">Rock</tag>
-        <tag id="2483" count="1">Roll</tag>
+        <genre id="2481" count="2">Rock & Roll</genre>
+        <genre id="2482" count="2">Rock</genre>
+        <genre id="2483" count="1">Roll</genre>
         <type>Public</type>
 </playlist>
 </root>
@@ -1277,8 +1277,8 @@ Video XML Document -- Attention UIDs for video elements are non-unique against s
           <mime>video/avi</mime>
           <resolution>720x288</resolution>
           <size>Video Filesize in Bytes</size>
-          <tag id="12131" count="3">Futurama</tag>
-          <tag id="32411" count="1">Movie</tag>
+          <genre id="12131" count="3">Futurama</genre>
+          <genre id="32411" count="1">Movie</genre>
           <url>http://localhost/play/index.php?oid=123908...</url>
 </video>
 </root>
