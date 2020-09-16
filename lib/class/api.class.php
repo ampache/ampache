@@ -4127,7 +4127,7 @@ class Api
                 ));
 
                 // If everything was ok
-                $xml_array = array('action' => $input['action'], 'method' => $input['method'], 'result' => true);
+                $xml_array = array('method' => $input['method'], 'result' => true);
                 switch ($input['api_format']) {
                     case 'json':
                         echo json_encode($xml_array, JSON_PRETTY_PRINT);
@@ -4147,7 +4147,7 @@ class Api
                 $democratic->remove_vote($uid);
 
                 // Everything was ok
-                $xml_array = array('action' => $input['action'], 'method' => $input['method'], 'result' => true);
+                $xml_array = array('method' => $input['method'], 'result' => true);
                 switch ($input['api_format']) {
                     case 'json':
                         echo json_encode($xml_array, JSON_PRETTY_PRINT);
