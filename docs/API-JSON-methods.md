@@ -109,7 +109,7 @@ Perform an advanced search given passed rules. This works in a similar way to th
 You can pass multiple rules as well as joins to create in depth search results
 
 Rules must be sent in groups of 3 using an int (starting from 1) to designate which rules are combined.
-Use operator ('and'|'or') to choose whether to join or separate each rule when searching.
+Use operator ('and', 'or') to choose whether to join or separate each rule when searching.
 
 Refer to the [Advanced Search](http://ampache.org/api/api-advanced-search) page for details about creating searches.
 
@@ -155,12 +155,12 @@ This takes a collection of inputs and returns artist objects.
 | Input     | Type       | Description                                                                   | Optional |
 |-----------|------------|-------------------------------------------------------------------------------|---------:|
 | 'filter'  | string     | Value is Alpha Match for returned results, may be more than one letter/number |      YES |
-| 'exact'   | boolean    | if true filter is exact rather then fuzzy                                     |      YES |
+| 'exact'   | boolean    | (0, 1) if true filter is exact rather then fuzzy                              |      YES |
 | 'add'     | set_filter | ISO 8601 Date Format (2020-09-16) add date is newer then specified date       |      YES |
 | 'update'  | set_filter | ISO 8601 Date Format (2020-09-16) update itme is newer then specified date    |      YES |
-| 'offset'  |            |                                                                               |      YES |
-| 'limit'   |            |                                                                               |      YES |
-| 'include' | string     | `albums`, `songs` and will include JSON nested in the artist JSON             |       NO |
+| 'offset'  | integer    |                                                                               |      YES |
+| 'limit'   | integer    |                                                                               |      YES |
+| 'include' | string     | 'albums', 'songs' and will include JSON nested in the artist JSON             |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/artists.json)
 
@@ -172,7 +172,7 @@ This returns a single artist based on the UID of said artist
 | Input     | Type   | Description                                                                         | Optional |
 |-----------|--------|-------------------------------------------------------------------------------------|---------:|
 | 'filter'  | string | UID of Artist, returns artist JSON                                                  |       NO |
-| 'include' | string | `albums`, `songs` and will include the corresponding JSON nested in the artist JSON |       NO |
+| 'include' | string | 'albums', 'songs' and will include the corresponding JSON nested in the artist JSON |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/artist.json)
 
@@ -210,12 +210,12 @@ This returns albums based on the provided search filters
 | Input     | Type       | Description                                                                   | Optional |
 |-----------|------------|-------------------------------------------------------------------------------|---------:|
 | 'filter'  | string     | Value is Alpha Match for returned results, may be more than one letter/number |      YES |
-| 'exact'   | boolean    | if true filter is exact rather then fuzzy                                     |       NO |
+| 'exact'   | boolean    | (0, 1) if true filter is exact rather then fuzzy                              |       NO |
 | 'add'     | set_filter | ISO 8601 Date Format (2020-09-16) add date is newer then specified date       |      YES |
 | 'update'  | set_filter | ISO 8601 Date Format (2020-09-16) update itme is newer then specified date    |      YES |
-| 'offset'  |            |                                                                               |      YES |
-| 'limit'   |            |                                                                               |      YES |
-| 'include' | string     | `albums`, `songs` will include nested in the album JSON                       |      YES |
+| 'offset'  | integer    |                                                                               |      YES |
+| 'limit'   | integer    |                                                                               |      YES |
+| 'include' | string     | 'albums', 'songs' will include nested in the album JSON                       |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/albums.json)
 
@@ -224,10 +224,10 @@ This returns albums based on the provided search filters
 This returns a single album based on the UID provided
 @param array $input
 
-| Input     | Type   | Description                                                                                                                | Optional |
-|-----------|--------|----------------------------------------------------------------------------------------------------------------------------|---------:|
-| 'filter'  | string | UID of Album, returns album JSON                                                                                           |       NO |
-| 'include' | array  | Array specified using GET convention, can contain `songs` and will include the corresponding JSON nested in the album JSON |       NO |
+| Input     | Type   | Description                                                          | Optional |
+|-----------|--------|----------------------------------------------------------------------|---------:|
+| 'filter'  | string | UID of Album, returns album JSON                                     |       NO |
+| 'include' | string | 'songs' will include the corresponding JSON nested in the album JSON |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/album.json)
 
@@ -244,9 +244,9 @@ This returns the songs of a specified album
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/album_songs.json)
 
-## tags
+## genres
 
-This returns the tags (Genres) based on the specified filter
+This returns the genres (Tags) based on the specified filter
 @param array $input
 
 | Input    | Type    | Description                                                                   | Optional |
@@ -256,57 +256,57 @@ This returns the tags (Genres) based on the specified filter
 | 'offset' | integer |                                                                               |      YES |
 | 'limit'  | integer |                                                                               |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/tags.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/genres.json)
 
-## tag
+## genre
 
-This returns a single tag based on UID
+This returns a single genre based on UID
 @param array $input
 
-| Input    | Type   | Description                  | Optional |
-|----------|--------|------------------------------|---------:|
-| 'filter' | string | UID of tag, returns tag JSON |       NO |
+| Input    | Type   | Description                      | Optional |
+|----------|--------|----------------------------------|---------:|
+| 'filter' | string | UID of genre, returns genre JSON |       NO |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/tag.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/genre.json)
 
-## tag_artists
+## genre_artists
 
-This returns the artists associated with the tag in question as defined by the UID
+This returns the artists associated with the genre in question as defined by the UID
+@param array $input
+
+| Input    | Type    | Description                       | Optional |
+|----------|---------|-----------------------------------|---------:|
+| 'filter' | string  | UID of genre, returns artist JSON |       NO |
+| 'offset' | integer |                                   |      YES |
+| 'limit'  | integer |                                   |      YES |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/genre_artists.json)
+
+## genre_albums
+
+This returns the albums associated with the genre in question
+@param array $input
+
+| Input    | Type    | Description                      | Optional |
+|----------|---------|----------------------------------|---------:|
+| 'filter' | string  | UID of genre, returns album JSON |       NO |
+| 'offset' | integer |                                  |      YES |
+| 'limit'  | integer |                                  |      YES |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/genre_albums.json)
+
+## genre_songs
+
+returns the songs for this genre
 @param array $input
 
 | Input    | Type    | Description                     | Optional |
 |----------|---------|---------------------------------|---------:|
-| 'filter' | string  | UID of tag, returns artist JSON |       NO |
+| 'filter' | string  | UID of genre, returns song JSON |       NO |
 | 'offset' | integer |                                 |      YES |
 | 'limit'  | integer |                                 |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/tag_artists.json)
-
-## tag_albums
-
-This returns the albums associated with the tag in question
-@param array $input
-
-| Input    | Type    | Description                    | Optional |
-|----------|---------|--------------------------------|---------:|
-| 'filter' | string  | UID of tag, returns album JSON |       NO |
-| 'offset' | integer |                                |      YES |
-| 'limit'  | integer |                                |      YES |
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/tag_albums.json)
-
-## tag_songs
-
-returns the songs for this tag
-@param array $input
-
-| Input    | Type    | Description                   | Optional |
-|----------|---------|-------------------------------|---------:|
-| 'filter' | string  | UID of tag, returns song JSON |       NO |
-| 'offset' | integer |                               |      YES |
-| 'limit'  | integer |                               |      YES |
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/tag_songs.json)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/genre_songs.json)
 
 ## songs
 
@@ -316,9 +316,9 @@ Returns songs based on the specified filter
 | Input    | Type       | Description                                                                   | Optional |
 |----------|------------|-------------------------------------------------------------------------------|---------:|
 | 'filter' | string     | Value is Alpha Match for returned results, may be more than one letter/number |       NO |
+| 'exact'  | boolean    | (0, 1) if true filter is exact rather then fuzzy                              |       NO |
 | 'add'    | set_filter | ISO 8601 Date Format (2020-09-16) add date is newer then specified date       |      YES |
 | 'update' | set_filter | ISO 8601 Date Format (2020-09-16) update itme is newer then specified date    |      YES |
-| 'exact'  | boolean    | if true filter is exact rather then fuzzy                                     |       NO |
 | 'offset' | integer    |                                                                               |      YES |
 | 'limit'  | integer    |                                                                               |      YES |
 
@@ -343,7 +343,7 @@ This returns playlists based on the specified filter
 | Input    | Type       | Description                                                                   | Optional |
 |----------|------------|-------------------------------------------------------------------------------|---------:|
 | 'filter' | string     | Value is Alpha Match for returned results, may be more than one letter/number |      YES |
-| 'exact'  | boolean    | if true filter is exact rather then fuzzy                                     |      YES |
+| 'exact'  | boolean    | (0, 1) if true filter is exact rather then fuzzy                              |      YES |
 | 'add'    | set_filter | ISO 8601 Date Format (2020-09-16) add date is newer then specified date       |      YES |
 | 'update' | set_filter | ISO 8601 Date Format (2020-09-16) update itme is newer then specified date    |      YES |
 | 'offset' | integer    |                                                                               |      YES |
@@ -433,11 +433,11 @@ This remove a song from a playlist.
 Previous versions required 'track' instead of 'song'.
 @param array $input
 
-| Input    | Type   | Description                          | Optional |
-|----------|--------|--------------------------------------|---------:|
-| 'filter' | string | UID of Playlist                      |       NO |
-| 'song'   |        | UID of song to remove from playlist  |      YES |
-| 'track'  |        | Track number to remove from playlist |      YES |
+| Input    | Type    | Description                          | Optional |
+|----------|---------|--------------------------------------|---------:|
+| 'filter' | string  | UID of Playlist                      |       NO |
+| 'song'   | string  | UID of song to remove from playlist  |      YES |
+| 'track'  | integer | Track number to remove from playlist |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/playlist_remove_song.json)
 
@@ -617,9 +617,9 @@ Get information about podcasts
 | Input     | Type    | Description                                   | Optional |
 |-----------|---------|-----------------------------------------------|---------:|
 | 'filter'  | string  |                                               |       NO |
-| 'include' | string  | 'episodes' (include episodes in the response) |      YES |
 | 'offset'  | integer |                                               |      YES |
 | 'limit'   | integer |                                               |      YES |
+| 'include' | string  | 'episodes' (include episodes in the response) |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/podcasts.json)
 
@@ -730,7 +730,7 @@ Delete an existing podcast_episode.
 
 Get some items based on some simple search types and filters.
 This method has partial backwards compatibility with older api versions but should be updated to follow the current input values.
-(Changed in 400001 `filter` added)
+(Changed in 400001 'filter' added)
 @param array $input
 
 | Input      | Type    | Description                                                                 | Optional |
@@ -768,9 +768,9 @@ Get ids and usernames for your site
 This get an user public information
 @param array $input
 
-| Input      | Type | Description                         | Optional |
-|------------|------|-------------------------------------|---------:|
-| 'username' |      | Username of the user to get details |       NO |
+| Input      | Type   | Description                         | Optional |
+|------------|--------|-------------------------------------|---------:|
+| 'username' | string | Username of the user to get details |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/user.json)
 
@@ -829,7 +829,7 @@ This returns licenses based on the specified filter
 | Input    | Type       | Description                                                                   | Optional |
 |----------|------------|-------------------------------------------------------------------------------|---------:|
 | 'filter' | string     | Value is Alpha Match for returned results, may be more than one letter/number |      YES |
-| 'exact'  | boolean    | if true filter is exact rather then fuzzy                                     |      YES |
+| 'exact'  | boolean    | (0, 1) if true filter is exact rather then fuzzy                              |      YES |
 | 'add'    | set_filter | ISO 8601 Date Format (2020-09-16) add date is newer then specified date       |      YES |
 | 'update' | set_filter | ISO 8601 Date Format (2020-09-16) update itme is newer then specified date    |      YES |
 | 'offset' | integer    |                                                                               |      YES |

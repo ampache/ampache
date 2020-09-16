@@ -50,8 +50,7 @@ class XML_Data
      *
      * This takes an int and changes the offset
      *
-     * @param    integer    $offset    (description here...)
-     * @return    void
+     * @param integer $offset
      */
     public static function set_offset($offset)
     {
