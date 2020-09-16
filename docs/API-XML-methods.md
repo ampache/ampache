@@ -31,9 +31,9 @@ This is the function that handles verifying a new handshake Takes a timestamp, a
 This can be called without being authenticated, it is useful for determining if what the status of the server is, and what version it is running/compatible with
 @param array $input
 
-| Input  | Type   | Description                                    | Optional |
-|--------|--------|------------------------------------------------|---------:|
-| 'auth' | string | (Session ID) destroys the session if it exists |      YES |
+|Input |Type  |Description|Optional|
+|------|------|-----------|-------:|
+|'auth'|string|(Session ID) returns version information and extends the session if passed|YES      |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/ping.xml)
 
@@ -43,9 +43,9 @@ Destroy a session using the auth parameter.
 
 @param array $input
 
-| Input  | Type   | Description                                                                | Optional |
-|--------|--------|----------------------------------------------------------------------------|---------:|
-| 'auth' | string | (Session ID) returns version information and extends the session if passed |       NO |
+|Input |Type  |Description|Optional|
+|------|------|-----------|-------:|
+|'auth'|string|(Session ID) destroys the session if it exists|NO     |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/goodbye.xml)
 
