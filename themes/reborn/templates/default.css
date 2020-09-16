@@ -94,7 +94,6 @@ td {
     border: 0;
     outline: 0;
     vertical-align: baseline;
-    background: transparent;
     margin: 0;
     padding: 0;
 }
@@ -171,13 +170,25 @@ textarea {
 }
 
 input[type=password],
-input[type=text] {
+input[type=text],
+input[type=url],
+input[type=number]
+{
     line-height: normal;
     height: 23px;
 }
 
+input[type=file]
+{
+    padding: 4px 6px;
+    line-height: normal;
+    height: 40px;
+}
+
 input[type=password],
 input[type=text],
+input[type=url],
+input[type=number],
 textarea {
     padding: 4px 6px;
     background-repeat: repeat-x;
@@ -500,7 +511,7 @@ div#autoupdate > span {
 #loginPage #loginbox #remembermefield {
     vertical-align: middle;
     font-size: 16px;
-    padding: auto 0;
+    padding: inherit;
     float: left;
 }
 
@@ -1007,117 +1018,64 @@ table.tabledata .th-bottom:focus {
     background-repeat: no-repeat;
 }
 
-table.tabledata tbody .cel_play {
-    max-width: 60px;
-    min-width: 60px;
-    width: 40px !important;
-    text-align: right;
-}
-
-table.tabledata tbody .cel_play_content {
-    display: block;
-}
-
-table.tabledata tbody .cel_play_hover {
-    display: none;
-}
-
-table.tabledata tbody tr:hover .cel_play_hover,
-table.tabledata tbody tr:focus .cel_play_hover {
-    display: block;
-}
-
-table.tabledata tbody tr:hover .cel_play_content,
-table.tabledata tbody tr:focus .cel_play_content {
-    display: none;
-}
-
-table.tabledata tbody tr.unread {
-    font-weight: bold;
-}
-
-table.tabledata tbody .cel_add {
-    max-width: 60px;
-    min-width: 60px;
-    width: 60px !important;
-    text-align: right;
-}
-
-table.tabledata tbody .cel_item_add {
-    display: none;
-}
-
-table.tabledata tbody tr:hover .cel_item_add,
-table.tabledata tbody tr:focus .cel_item_add {
-    display: block;
-}
-
-table.tabledata tbody .cel_time {
-    min-width: 40px;
-    width: 40px !important;
-}
-
-table.tabledata tbody .cel_action {
-    width: 130px !important;
-    max-width: 130px;
-}
-
-table.tabledata tbody .cel_action_text {
-    max-width: 100% !important;
-}
-
-table.tabledata tbody td.cel_counter {
-    text-align: center;
-}
-
-table.tabledata tbody td.cel_rating {
-    width: 100px !important;
-    max-width: 100px;
-}
-
-table.tabledata tbody td.cel_userflag {
-    width: 40px !important;
-    max-width: 40px;
-}
-
-table.tabledata tbody .cel_tags {
-    width: 150px !important;
-    max-width: 150px;
-}
-
-table.tabledata tbody .cel_cover img {
-    vertical-align: middle;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    border-radius: 2px;
-    margin: 2px;
-    object-fit: cover;
-}
-
-table.tabledata tbody .cel_cover img:hover {
-    border: 2px solid;
-    margin: 0;
-}
-
-table.tabledata .cel_drag {
-    max-width: 16px;
-    width: 16px !important;
-}
-
-table.tabledata .cel_drag img:hover {
-    cursor: pointer;
-}
-
-table.tabledata .cel_agent {
-    text-align: right;
-}
-
-table.tabledata .cel_agent img:hover {
-    cursor: help;
-}
-
-#shoutbox-input {
+table.gatherart {
+    width: 100%;
+    /* table-layout: fixed; */
+    text-align: left;
+    border: 2px solid black;
     font-size: 14px;
+    margin-bottom: 20px;
+}
+
+table.gatherart td {
+    vertical-align: middle;
+    overflow: hidden;
+    padding: 3px 5px 3px 0;
+    word-wrap: break-word;
+    min-width: 50px;
+  /*  border: 2px solid black; */
+}
+
+table.gatherart thead .th-top,
+table.gatherart tfoot .th-bottom {
+    font-size: 12px;
+}
+
+table.gatherart thead .th-top {
+    border-bottom: 1px solid;
+}
+
+table.gatherart thead th.cel_rating {
+    padding-left: 7px;
+}
+
+table.gatherart tfoot .th-bottom {
+    border-top: 1px solid;
+    display: none;
+}
+
+th.center,
+td.center{
+    vertical-align: middle;
+    text-align: left;
+}
+
+table.gatherart tr:hover,
+table.gatherart tr:focus {
+    text-shadow: none;
+    background-repeat: repeat-x;
+}
+
+table.gatherart .th-top:hover,
+table.gatherart .th-bottom:hover,
+table.gatherart .th-top:focus,
+table.gatherart .th-bottom:focus {
+    background-image: none;
+    background-repeat: no-repeat;
+}
+
+input:invalid {
+    border: 4px solid red;
 }
 
 .box_preferences h4 {
@@ -1426,7 +1384,7 @@ span.fatalerror {
     background-image: -webkit-gradient(linear, 0, 0 100%, from(#6d6d6d), to(#4a4a4a));
     background-image: -webkit-linear-gradient(top, #6d6d6d, #4a4a4a);
     background-image: -o-linear-gradient(top, #6d6d6d, #4a4a4a);
-    background-image: linear-gradient(top, #6d6d6d, #4a4a4a);
+    background-image: linear-gradient(to top, #6d6d6d, #4a4a4a);
     border-bottom-color: #b3b3b3;
     -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset -1px 0 0 rgba(0, 0, 0, 0.2);
     -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset -1px 0 0 rgba(0, 0, 0, 0.2);
