@@ -304,9 +304,9 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
+     * display_art
      * @param integer $thumb
      * @param boolean $force
-     * @return mixed|void
      */
     public function display_art($thumb = 2, $force = false)
     {

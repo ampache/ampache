@@ -52,9 +52,9 @@ interface library_item extends playable_item
     public function get_description();
 
     /**
-     * @param $thumb
+     * display_art
+     * @param integer $thumb
      * @param boolean $force
-     * @return mixed
      */
     public function display_art($thumb = 2, $force = false);
 
