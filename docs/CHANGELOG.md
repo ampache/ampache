@@ -16,6 +16,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
   * rsstoken: Identify users by token when generating RSS feeds
 * Replace 'Admin' icon with padlock in sidebar when access check fails. (Hide this new icon with 'simple_user_mode')
 * Disable API/Subsonic password resets in 'simple_user_mode'
+* NEW plugin: 'Personal Favorites'. Show a shortcut to a favorite smartlist or playlist on the homepage
 
 ### Changed
 
