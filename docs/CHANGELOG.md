@@ -23,6 +23,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Renamed 'Tag' strings to 'Genre'
 * 'Sort Tracks by Artist, Album, Song' sorting done by 'Album_Artist, Album, Disk, Track Title'
 * Extend democratic cooldown past 255 and show an error when out of range
+* Sort smartlists by file when random is unticked
 
 ### Fixed
 
@@ -41,7 +42,9 @@ All API code that used 'Tag' now references 'Genre' instead
   * 'clear' (integer) 0|1 clear the current playlist on add //optional
 * API::playlist_edit added new parameter 'sort': (0,1) sort the playlist by 'Artist, Album, Song' //optional
 * Api::indexes added parameter 'include': (0,1) include song details with playlists (XML has this by default)
-* Api::users (id and username of the site users)
+* NEW API functions
+  * Api::users (id and username of the site users)
+  * Api::song_delete (Delete files when you are allowed to)
 * New error codes
   * 404 Not Found (The API could not find the requested object)
   * 412 Failed Access Check (The user does note have access to this object, method, feature.)

@@ -2747,7 +2747,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * @param $libitem
+     * @param Artist|Album|Song|Video|Podcast_Episode|Video $libitem
      * @param User|null $user_id
      * @return boolean
      */

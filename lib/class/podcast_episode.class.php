@@ -64,7 +64,7 @@ class Podcast_Episode extends database_object implements media, library_item
      * Constructor
      *
      * Podcast Episode class
-     * @param integer|null $podcastep_id
+     * @param integer $podcastep_id
      */
     public function __construct($podcastep_id = null)
     {

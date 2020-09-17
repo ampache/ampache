@@ -1328,6 +1328,44 @@ class Api
     } // song
 
     /**
+     * song_delete
+     *
+     * MINIMUM_API_VERSION=430000
+     *
+     * Delete an existing song.
+     *
+     * @param array $input
+     * filter = (string) UID of song to delete
+     * @return boolean
+     */
+    public static function song_delete($input)
+    {
+        if (!self::check_parameter($input, array('filter'), 'song_delete')) {
+            return false;
+        }
+        $object_id = (int) $input['filter'];
+        $song      = new Song($object_id);
+        $user      = Session::username($input['auth']);
+        if (!Catalog::can_remove($song, $user->id)) {
+            self::message('error', T_('Access Denied: Unable to delete song'), '412', $input['api_format']);
+
+            return false;
+        }
+        if ($song->id) {
+            if ($song->remove()) {
+                self::message('success', 'song ' . $object_id . ' deleted', null, $input['api_format']);
+            } else {
+                self::message('error', 'song ' . $object_id . ' was not deleted', '400', $input['api_format']);
+            }
+        } else {
+            self::message('error', 'song ' . $object_id . ' was not found', '404', $input['api_format']);
+        }
+        Session::extend($input['auth']);
+
+        return true;
+    } // song_delete
+
+    /**
      * playlists
      * MINIMUM_API_VERSION=380001
      *
@@ -2419,7 +2457,7 @@ class Api
 
             return false;
         }
-        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['api_format'])) {
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'podcast_create', $input['api_format'])) {
             return false;
         }
         if (!self::check_parameter($input, array('url', 'catalog'), 'podcast_create')) {
@@ -2465,7 +2503,7 @@ class Api
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
-        if (!self::check_access('interface', 75, $user->id, 'update_podcast', $input['api_format'])) {
+        if (!self::check_access('interface', 75, $user->id, 'podcast_delete', $input['api_format'])) {
             return false;
         }
         if (!self::check_parameter($input, array('filter'), 'podcast_delete')) {
@@ -2512,7 +2550,7 @@ class Api
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
-        if (!self::check_access('interface', 50, $user->id, 'edit_podcast', $input['api_format'])) {
+        if (!self::check_access('interface', 50, $user->id, 'podcast_edit', $input['api_format'])) {
             return false;
         }
         if (!self::check_parameter($input, array('filter'), 'podcast_edit')) {
@@ -2611,7 +2649,7 @@ class Api
 
             return false;
         }
-        if (!self::check_parameter($input, array('filter'), 'podcast')) {
+        if (!self::check_parameter($input, array('filter'), 'podcast_episode')) {
             return false;
         }
         $object_id = (int) $input['filter'];
@@ -2651,15 +2689,18 @@ class Api
 
             return false;
         }
-        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['api_format'])) {
-            return false;
-        }
         if (!self::check_parameter($input, array('filter'), 'podcast_episode_delete')) {
             return false;
         }
         $object_id = (int) $input['filter'];
         $episode   = new Podcast_Episode($object_id);
-        if ($episode->id > 0) {
+        $user      = Session::username($input['auth']);
+        if (!Catalog::can_remove($episode, $user->id)) {
+            self::message('error', T_('Access Denied: Unable to delete podcast_episode'), '412', $input['api_format']);
+
+            return false;
+        }
+        if ($episode->id) {
             if ($episode->remove()) {
                 self::message('success', 'podcast_episode ' . $object_id . ' deleted', null, $input['api_format']);
             } else {
