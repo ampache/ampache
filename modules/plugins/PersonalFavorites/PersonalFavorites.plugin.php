@@ -102,8 +102,7 @@ class AmpachePersonalFavorites
     {
         // display if you've enabled it
         if ($this->display) {
-            $list_array   = array();
-            $search_array = array();
+            $list_array = array();
             foreach (explode(',', $this->playlist) as $list_id) {
                 $playlist     = new Playlist((int) $list_id);
                 $list_array[] = array($playlist, 'playlist');
