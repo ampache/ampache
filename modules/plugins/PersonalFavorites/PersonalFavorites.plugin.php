@@ -26,7 +26,7 @@ class AmpachePersonalFavorites
     public $categories     = 'home';
     public $description    = 'Personal favorites on homepage';
     public $url            = '';
-    public $version        = '000001';
+    public $version        = '000002';
     public $min_ampache    = '370021';
     public $max_ampache    = '999999';
 
@@ -59,8 +59,8 @@ class AmpachePersonalFavorites
         }
 
         Preference::insert('personalfav_display', T_('Personal favorites on the homepage'), '0', 25, 'boolean', 'plugins', $this->name);
-        Preference::insert('personalfav_playlist', T_('Favorite Playlist ID'), '', 25, 'integer', 'plugins', $this->name);
-        Preference::insert('personalfav_smartlist', T_('Favorite Smartlist ID'), '', 25, 'integer', 'plugins', $this->name);
+        Preference::insert('personalfav_playlist', T_('Favorite Playlist IDs (comma separated)'), '', 25, 'integer', 'plugins', $this->name);
+        Preference::insert('personalfav_smartlist', T_('Favorite Smartlist IDs (comma separated)'), '', 25, 'integer', 'plugins', $this->name);
 
         return true;
     }
@@ -100,39 +100,42 @@ class AmpachePersonalFavorites
     public function display_home()
     {
         // display if you've enabled it
-        if ($this->display && ($this->playlist > 0 || $this->smartlist > 0)) {
-            $playlist  = new Playlist($this->playlist);
-            $smartlist = new Search($this->smartlist);
-            $lists     = array($playlist, $smartlist);
-            $count     = 0;
-            echo '<div class="home_plugin">';
-            UI::show_box_top(T_('Favorite Lists'));
-            echo '<table class="tabledata';
-            echo " disablegv";
-            echo '">';
-            foreach ($lists as $item) {
-                $item->format();
-                $this->user->format();
-
-                if ($item->id) {
-                    echo '<tr id="' . $item->type . '_' . $item->id . '" class="' . ((($count % 2) == 0) ? 'even' : 'odd') . ' libitem_menu">';
-                    /*echo '<td style="height: auto;">';
-                    echo '<div style="float: left; margin-right: 10px;">';
-                    $item->display_art(12, true);
-                    echo '</div>';
-                    echo '</td>'; */
-                    echo '<td>' . $item->f_link . '</td>';
-                    echo '<td class="optional">';
-                    echo '<div style="white-space: normal;">' . $item->description . '</div>';
-                    echo '</div>';
-                    echo '</td></tr>';
-
-                    $count++;
-                }
+        if ($this->display) {
+            $list_array = array();
+            foreach (explode(',', $this->playlist) as $list_ids) {
+                $playlist     = new Playlist((int) $list_ids);
+                $list_array[] = $playlist;
             }
-            echo '</table>';
-            UI::show_box_bottom();
-            echo '</div>';
+            foreach (explode(',', $this->smartlist) as $list_ids) {
+                $smartlist    = new Search((int) $list_ids);
+                $list_array[] = $smartlist;
+            }
+            if (!empty($list_array)) {
+                $count = 0;
+                echo '<div class="home_plugin">';
+                UI::show_box_top(T_('Favorite Lists'));
+                echo '<table class="tabledata';
+                echo " disablegv";
+                echo '">';
+                foreach ($list_array as $item) {
+                    $item->format();
+                    $this->user->format();
+
+                    if ($item->id) {
+                        echo '<tr id="' . $item->type . '_' . $item->id . '" class="' . ((($count % 2) == 0) ? 'even' : 'odd') . ' libitem_menu">';
+                        echo '<td>' . $item->f_link . '</td>';
+                        echo '<td class="optional">';
+                        echo '<div style="white-space: normal;">' . $item->description . '</div>';
+                        echo '</div>';
+                        echo '</td></tr>';
+
+                        $count++;
+                    }
+                }
+                echo '</table>';
+                UI::show_box_bottom();
+                echo '</div>';
+            }
         }
     }
 
@@ -149,8 +152,8 @@ class AmpachePersonalFavorites
 
         $this->user      = $user;
         $this->display   = ($data['personalfav_display'] == '1');
-        $this->playlist  = (int) $data['personalfav_playlist'];
-        $this->smartlist = (int) $data['personalfav_smartlist'];
+        $this->playlist  = $data['personalfav_playlist'];
+        $this->smartlist = $data['personalfav_smartlist'];
 
         return true;
     }
