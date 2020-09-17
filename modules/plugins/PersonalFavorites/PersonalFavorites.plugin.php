@@ -34,6 +34,7 @@ class AmpachePersonalFavorites
     private $display;
     private $playlist;
     private $smartlist;
+    private $user;
 
     /**
      * Constructor
@@ -101,43 +102,45 @@ class AmpachePersonalFavorites
     {
         // display if you've enabled it
         if ($this->display) {
-            $list_array = array();
+            $list_array   = array();
+            $search_array = array();
             foreach (explode(',', $this->playlist) as $list_id) {
                 $playlist     = new Playlist((int) $list_id);
-                $list_array[] = $playlist;
+                $list_array[] = array($playlist, 'playlist');
             }
             foreach (explode(',', $this->smartlist) as $list_id) {
                 $smartlist    = new Search((int) $list_id);
-                $list_array[] = $smartlist;
+                $list_array[] = array($smartlist, 'search');
             }
             if (!empty($list_array)) {
-                $count = 0;
                 echo '<div class="home_plugin">';
                 UI::show_box_top(T_('Favorite Lists'));
                 echo '<table class="tabledata';
                 echo " disablegv";
                 echo '">';
+                $count = 0;
                 foreach ($list_array as $item) {
-                    $item->format();
+                    $item[0]->format();
                     $this->user->format();
 
-                    if ($item->id) {
-                        echo '<tr id="' . $item->type . '_' . $item->id . '" class="' . ((($count % 2) == 0) ? 'even' : 'odd') . ' libitem_menu">';
-                        echo '<td>' . $item->f_link . '</td>';
+                    if ($item[0]->id) {
+                        echo '<tr id="playlist_' . $item[0]->id . '" class="' . ((($count % 2) == 0) ? 'even' : 'odd') . ' libitem_menu">';
+                        echo '<td>' . $item[0]->f_link . '</td>';
                         echo '<td style="height: auto;">';
-                        echo '<span style="margin-right: 10px;">';if (AmpConfig::get('directplay')) {
-                            echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $item->id, 'play', T_('Play'), 'play_playlist_' . $item->id);
+                        echo '<span style="margin-right: 10px;">';
+                        if (AmpConfig::get('directplay')) {
+                            echo Ajax::button('?page=stream&action=directplay&object_type=' . $item[1] . '&object_id=' . $item[0]->id, 'play', T_('Play'), 'play_playlist_' . $item[0]->id);
                             if (Stream_Playlist::check_autoplay_next()) {
-                                echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $item->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_playlist_' . $item->id);
+                                echo Ajax::button('?page=stream&action=directplay&object_type=' . $item[1] . '&object_id=' . $item[0]->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_playlist_' . $item[0]->id);
                             }
                             if (Stream_Playlist::check_autoplay_append()) {
-                                echo Ajax::button('?page=stream&action=directplay&object_type=playlist&object_id=' . $item->id . '&append=true', 'play_add', T_('Play last'), 'addplay_playlist_' . $item->id);
+                                echo Ajax::button('?page=stream&action=directplay&object_type=' . $item[1] . '&object_id=' . $item[0]->id . '&append=true', 'play_add', T_('Play last'), 'addplay_playlist_' . $item[0]->id);
                             }
                         }
-                        echo Ajax::button('?action=basket&type=' . $item->type . '&id=' . $item->id, 'add', T_('Add to temporary playlist'), 'play_full_' . $item->id);
+                        echo Ajax::button('?action=basket&type=' . $item[1] . '&id=' . $item[0]->id, 'add', T_('Add to temporary playlist'), 'play_full_' . $item[0]->id);
                         echo '</span></td>';
                         echo '<td class="optional">';
-                        echo '<div style="white-space: normal;">' . $item->description . '</div>';
+                        echo '<div style="white-space: normal;">' . $item[0]->description . '</div>';
                         echo '</div>';
                         echo '</td></tr>';
 
