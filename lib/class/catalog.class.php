@@ -2748,7 +2748,7 @@ abstract class Catalog extends database_object
 
     /**
      * @param Artist|Album|Song|Video|Podcast_Episode|Video $libitem
-     * @param User|null $user_id
+     * @param integer|null $user_id
      * @return boolean
      */
     public static function can_remove($libitem, $user_id = null)
