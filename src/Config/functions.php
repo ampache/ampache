@@ -756,6 +756,7 @@ function create_preference_input($name, $value)
         case 'libitem_contextmenu':
         case 'upload_catalog_pattern':
         case 'catalogfav_gridview':
+        case 'personalfav_display':
         case 'catalog_check_duplicate':
         case 'browse_filter':
         case 'sidebar_light':

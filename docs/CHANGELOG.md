@@ -16,6 +16,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
   * rsstoken: Identify users by token when generating RSS feeds
 * Replace 'Admin' icon with padlock in sidebar when access check fails. (Hide this new icon with 'simple_user_mode')
 * Disable API/Subsonic password resets in 'simple_user_mode'
+* NEW plugin: 'Personal Favorites'. Show a shortcut to a favorite smartlist or playlist on the homepage
 
 ### Changed
 
@@ -23,6 +24,8 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Renamed 'Tag' strings to 'Genre'
 * 'Sort Tracks by Artist, Album, Song' sorting done by 'Album_Artist, Album, Disk, Track Title'
 * Extend democratic cooldown past 255 and show an error when out of range
+* Sort smartlists by file when random is unticked
+* Don't block playlist information actions when you own the playlist
 
 ### Fixed
 
@@ -41,7 +44,10 @@ All API code that used 'Tag' now references 'Genre' instead
   * 'clear' (integer) 0|1 clear the current playlist on add //optional
 * API::playlist_edit added new parameter 'sort': (0,1) sort the playlist by 'Artist, Album, Song' //optional
 * Api::indexes added parameter 'include': (0,1) include song details with playlists (XML has this by default)
-* Api::users (id and username of the site users)
+* NEW API functions
+  * Api::users (id and username of the site users)
+  * Api::song_delete (Delete files when you are allowed to)
+  * Api::user_preferences (get your user preferences)
 * New error codes
   * 404 Not Found (The API could not find the requested object)
   * 412 Failed Access Check (The user does note have access to this object, method, feature.)

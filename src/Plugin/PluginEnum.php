@@ -64,5 +64,6 @@ final class PluginEnum
         'tvdb' => AmpacheTvdb::class,
         'twitter' => AmpacheTwitter::class,
         'yourls' => AmpacheYourls::class,
+        'personalfav_display' => '',
     ];
 }

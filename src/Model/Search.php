@@ -946,9 +946,7 @@ class Search extends playlist_object
             $sql .= ' HAVING ' . $sqltbl['having_sql'];
         }
 
-        if ($this->random > 0) {
-            $sql .= " ORDER BY RAND()";
-        }
+        $sql .= ($this->random > 0) ? " ORDER BY RAND()" : " ORDER BY `file`";
         if ($this->limit > 0) {
             $sql .= " LIMIT " . (string)($this->limit);
         }
