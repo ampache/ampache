@@ -124,6 +124,16 @@ class AmpachePersonalFavorites
                     if ($item->id) {
                         echo '<tr id="' . $item->type . '_' . $item->id . '" class="' . ((($count % 2) == 0) ? 'even' : 'odd') . ' libitem_menu">';
                         echo '<td>' . $item->f_link . '</td>';
+                        echo '<td style="height: auto;">';
+                        echo '<span style="margin-right: 10px;">';
+                        if (AmpConfig::get('directplay')) {
+                            echo Ajax::button('?page=stream&action=directplay&object_type=' . $item->type . '&object_id=' . $item->id, 'play', T_('Play'), 'play_' . $item->type . '_' . $item->id);
+                            if (Stream_Playlist::check_autoplay_append()) {
+                                echo Ajax::button('?page=stream&action=directplay&object_type=' . $item->type . '&object_id=' . $item->id . '&append=true', 'play_add', T_('Play last'), 'addplay_' . $item->type . '_' . $item->id);
+                            }
+                        }
+                        echo Ajax::button('?action=basket&type=' . $item->type . '&id=' . $item->id, 'add', T_('Add to temporary playlist'), 'play_full_' . $item->id);
+                        echo '</span></td>';
                         echo '<td class="optional">';
                         echo '<div style="white-space: normal;">' . $item->description . '</div>';
                         echo '</div>';
