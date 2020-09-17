@@ -25,6 +25,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * 'Sort Tracks by Artist, Album, Song' sorting done by 'Album_Artist, Album, Disk, Track Title'
 * Extend democratic cooldown past 255 and show an error when out of range
 * Sort smartlists by file when random is unticked
+* Don't block playlist information actions when you own the playlist
 
 ### Fixed
 
