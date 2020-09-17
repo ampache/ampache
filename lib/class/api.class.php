@@ -1345,7 +1345,7 @@ class Api
         }
         $object_id = (int) $input['filter'];
         $song      = new Song($object_id);
-        $user      = Session::username($input['auth']);
+        $user      = User::get_from_username(Session::username($input['auth']));
         if (!Catalog::can_remove($song, $user->id)) {
             self::message('error', T_('Access Denied: Unable to delete song'), '412', $input['api_format']);
 
@@ -2694,7 +2694,7 @@ class Api
         }
         $object_id = (int) $input['filter'];
         $episode   = new Podcast_Episode($object_id);
-        $user      = Session::username($input['auth']);
+        $user      = User::get_from_username(Session::username($input['auth']));
         if (!Catalog::can_remove($episode, $user->id)) {
             self::message('error', T_('Access Denied: Unable to delete podcast_episode'), '412', $input['api_format']);
 
