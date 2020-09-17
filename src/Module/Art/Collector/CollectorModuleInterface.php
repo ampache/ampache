@@ -20,15 +20,22 @@
  *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\Art\Collector;
 
-namespace Ampache\Module\Art;
+use Ampache\Model\Art;
 
-use Ampache\Module\Art\Collector\ArtCollector;
-use Ampache\Module\Art\Collector\ArtCollectorInterface;
-use function DI\autowire;
-
-return [
-    ArtCleanupInterface::class => autowire(ArtCleanup::class),
-    ArtCollectorInterface::class => autowire(ArtCollector::class),
-];
+interface CollectorModuleInterface
+{
+    /**
+     * @param Art $art
+     * @param integer $limit
+     * @param array $data
+     *
+     * @return array
+     */
+    public function collect(
+        Art $art,
+        int $limit = 5,
+        array $data = []
+    ): array;
+}

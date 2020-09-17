@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
+use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
@@ -1323,7 +1324,12 @@ abstract class Catalog extends database_object
             $results = array();
         } else {
             debug_event('catalog.class', 'Gathering art for ' . $type . '/' . $object_id . '...', 4);
-            $results = $art->gather($options);
+
+            global $dic;
+            $results = $dic->get(ArtCollectorInterface::class)->collect(
+                $art,
+                $options
+            );
         }
 
         foreach ($results as $result) {

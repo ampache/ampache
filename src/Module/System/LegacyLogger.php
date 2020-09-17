@@ -36,11 +36,13 @@ final class LegacyLogger implements LoggerInterface
     /**
      * This emulate the ampache log levels
      */
-    private const LOG_LEVEL_CRITICAL = 1;
-    private const LOG_LEVEL_ERROR    = 2;
-    private const LOG_LEVEL_WARNING  = 3;
-    private const LOG_LEVEL_NOTICE   = 4;
-    private const LOG_LEVEL_DEBUG    = 5;
+    public const LOG_LEVEL_CRITICAL = 1;
+    public const LOG_LEVEL_ERROR    = 2;
+    public const LOG_LEVEL_WARNING  = 3;
+    public const LOG_LEVEL_NOTICE   = 4;
+    public const LOG_LEVEL_DEBUG    = 5;
+
+    public const CONTEXT_TYPE = 'event_type';
 
     private const FALLBACK_USERNAME = 'ampache';
     private const LOG_NAME          = 'ampache';
@@ -53,7 +55,7 @@ final class LegacyLogger implements LoggerInterface
         $this->configContainer = $configContainer;
     }
 
-    public function emergency($message, array $context = [])
+    public function emergency($message, array $context = []): void
     {
         $this->log(
             static::LOG_LEVEL_CRITICAL,
@@ -62,7 +64,7 @@ final class LegacyLogger implements LoggerInterface
         );
     }
 
-    public function alert($message, array $context = [])
+    public function alert($message, array $context = []): void
     {
         $this->log(
             static::LOG_LEVEL_CRITICAL,
@@ -71,7 +73,7 @@ final class LegacyLogger implements LoggerInterface
         );
     }
 
-    public function critical($message, array $context = [])
+    public function critical($message, array $context = []): void
     {
         $this->log(
             static::LOG_LEVEL_CRITICAL,
@@ -80,7 +82,7 @@ final class LegacyLogger implements LoggerInterface
         );
     }
 
-    public function error($message, array $context = [])
+    public function error($message, array $context = []): void
     {
         $this->log(
             static::LOG_LEVEL_ERROR,
@@ -89,7 +91,7 @@ final class LegacyLogger implements LoggerInterface
         );
     }
 
-    public function warning($message, array $context = [])
+    public function warning($message, array $context = []): void
     {
         $this->log(
             static::LOG_LEVEL_WARNING,
@@ -98,7 +100,7 @@ final class LegacyLogger implements LoggerInterface
         );
     }
 
-    public function notice($message, array $context = [])
+    public function notice($message, array $context = []): void
     {
         $this->log(
             static::LOG_LEVEL_NOTICE,
@@ -107,7 +109,7 @@ final class LegacyLogger implements LoggerInterface
         );
     }
 
-    public function info($message, array $context = [])
+    public function info($message, array $context = []): void
     {
         $this->log(
             static::LOG_LEVEL_NOTICE,
@@ -116,7 +118,7 @@ final class LegacyLogger implements LoggerInterface
         );
     }
 
-    public function debug($message, array $context = [])
+    public function debug($message, array $context = []): void
     {
         $this->log(
             static::LOG_LEVEL_DEBUG,
@@ -125,10 +127,10 @@ final class LegacyLogger implements LoggerInterface
         );
     }
 
-    public function log($level, $message, array $context = [])
+    public function log($level, $message, array $context = []): void
     {
         if (!$this->configContainer->get('debug') || $level > $this->configContainer->get('debug_level')) {
-            return false;
+            return;
         }
 
         $username = $context['username'] ?? null;
@@ -145,7 +147,7 @@ final class LegacyLogger implements LoggerInterface
         /* Set it up here to make sure it's _always_ the same */
         $time       = time();
         $log_time   = date('c', $time);
-        $event_name = $context['event_type'] ?? '';
+        $event_name = $context[static::CONTEXT_TYPE] ?? '';
 
         $log_filename = $this->configContainer->get('log_filename');
         if (empty($log_filename)) {

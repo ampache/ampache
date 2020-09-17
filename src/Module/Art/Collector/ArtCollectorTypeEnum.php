@@ -20,15 +20,28 @@
  *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\Art\Collector;
 
-namespace Ampache\Module\Art;
+final class ArtCollectorTypeEnum
+{
+    public const GOOGLE      = 'google';
+    public const MUSICBRAINZ = 'musicbrainz';
+    public const LASTFM      = 'lastfm';
+    public const SPOTIFY     = 'spotify';
+    public const DB          = 'db';
+    public const FOLDER      = 'folder';
+    public const META_TAGS   = 'tags';
 
-use Ampache\Module\Art\Collector\ArtCollector;
-use Ampache\Module\Art\Collector\ArtCollectorInterface;
-use function DI\autowire;
-
-return [
-    ArtCleanupInterface::class => autowire(ArtCleanup::class),
-    ArtCollectorInterface::class => autowire(ArtCollector::class),
-];
+    /**
+     * @var CollectorModuleInterface[]
+     */
+    public const TYPE_CLASS_MAP = [
+        self::GOOGLE => GoogleCollectorModule::class,
+        self::MUSICBRAINZ => MusicbrainzCollectorModule::class,
+        self::LASTFM => LastFmCollectorModule::class,
+        self::SPOTIFY => SpotifyCollectorModule::class,
+        self::DB => DbCollectorModule::class,
+        self::FOLDER => FolderCollectorModule::class,
+        self::META_TAGS => MetaTagCollectorModule::class,
+    ];
+}

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -20,15 +21,27 @@
  *
  */
 
-declare(strict_types=1);
+declare(strict_types=0);
 
-namespace Ampache\Module\Art;
+namespace Ampache\Module\Art\Collector;
 
-use Ampache\Module\Art\Collector\ArtCollector;
-use Ampache\Module\Art\Collector\ArtCollectorInterface;
-use function DI\autowire;
+use Ampache\Model\Art;
 
-return [
-    ArtCleanupInterface::class => autowire(ArtCleanup::class),
-    ArtCollectorInterface::class => autowire(ArtCollector::class),
-];
+final class DbCollectorModule implements CollectorModuleInterface
+{
+
+    /**
+     * This function retrieves art that's already in the database
+     */
+    public function collect(
+        Art $art,
+        int $limit = 5,
+        array $data = []
+    ): array {
+        if ($art->has_db_info()) {
+            return ['db' => true];
+        }
+
+        return [];
+    }
+}

@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application;
 
+use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -34,6 +35,14 @@ use Ampache\Module\Util\Ui;
 
 final class ArtApplication implements ApplicationInterface
 {
+    private ArtCollectorInterface $artCollector;
+
+    public function __construct(
+        ArtCollectorInterface $artCollector
+    ) {
+        $this->artCollector = $artCollector;
+    }
+
     public function run(): void
     {
         require_once Ui::find_template('header.inc.php');
@@ -133,7 +142,7 @@ final class ArtApplication implements ApplicationInterface
                 $options['keyword'] = trim($keyword);
 
                 // Attempt to find the art.
-                $images = $art->gather($options);
+                $images = $this->artCollector->collect($art, $options);
 
                 if (!empty($_REQUEST['cover'])) {
                     $path_info                = pathinfo($_REQUEST['cover']);

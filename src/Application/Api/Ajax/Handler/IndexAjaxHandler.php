@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Model\Video;
+use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Artist\ArtistEventRetrieverInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -47,10 +48,14 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 {
     private ArtistEventRetrieverInterface $artistEventRetriever;
 
+    private ArtCollectorInterface $artCollector;
+
     public function __construct(
-        ArtistEventRetrieverInterface $artistEventRetriever
+        ArtistEventRetrieverInterface $artistEventRetriever,
+        ArtCollectorInterface $artCollector
     ) {
         $this->artistEventRetriever = $artistEventRetriever;
+        $this->artCollector         = $artCollector;
     }
     
     public function handle(): void

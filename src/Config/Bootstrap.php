@@ -29,12 +29,24 @@ declare(strict_types=1);
 namespace Ampache\Config;
 
 use DI\ContainerBuilder;
+use getID3;
+use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
+use MusicBrainz\MusicBrainz;
+use SpotifyWebAPI\SpotifyWebAPI;
+use function DI\autowire;
 use function DI\factory;
 
 $builder = new ContainerBuilder();
 $builder->addDefinitions([
     ConfigContainerInterface::class => factory(static function (): ConfigContainerInterface {
         return new ConfigContainer(AmpConfig::get_all());
+    }),
+    getID3::class => autowire(getID3::class),
+    MusicBrainz::class => factory(static function (): MusicBrainz {
+        return new MusicBrainz(new RequestsHttpAdapter());
+    }),
+    SpotifyWebAPI::class => factory(static function (): SpotifyWebAPI {
+        return new SpotifyWebAPI();
     }),
 ]);
 $builder->addDefinitions(
