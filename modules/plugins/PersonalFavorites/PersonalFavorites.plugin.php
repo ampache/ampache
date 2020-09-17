@@ -59,8 +59,8 @@ class AmpachePersonalFavorites
         }
 
         Preference::insert('personalfav_display', T_('Personal favorites on the homepage'), '0', 25, 'boolean', 'plugins', $this->name);
-        Preference::insert('personalfav_playlist', T_('Favorite Playlist IDs (comma separated)'), '', 25, 'integer', 'plugins', $this->name);
-        Preference::insert('personalfav_smartlist', T_('Favorite Smartlist IDs (comma separated)'), '', 25, 'integer', 'plugins', $this->name);
+        Preference::insert('personalfav_playlist', T_('Favorite Playlists (comma separated)'), '', 25, 'integer', 'plugins', $this->name);
+        Preference::insert('personalfav_smartlist', T_('Favorite Smartlists (comma separated)'), '', 25, 'integer', 'plugins', $this->name);
 
         return true;
     }
@@ -102,12 +102,12 @@ class AmpachePersonalFavorites
         // display if you've enabled it
         if ($this->display) {
             $list_array = array();
-            foreach (explode(',', $this->playlist) as $list_ids) {
-                $playlist     = new Playlist((int) $list_ids);
+            foreach (explode(',', $this->playlist) as $list_id) {
+                $playlist     = new Playlist((int) $list_id);
                 $list_array[] = $playlist;
             }
-            foreach (explode(',', $this->smartlist) as $list_ids) {
-                $smartlist    = new Search((int) $list_ids);
+            foreach (explode(',', $this->smartlist) as $list_id) {
+                $smartlist    = new Search((int) $list_id);
                 $list_array[] = $smartlist;
             }
             if (!empty($list_array)) {
