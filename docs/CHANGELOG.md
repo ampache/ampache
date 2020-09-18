@@ -48,6 +48,7 @@ All API code that used 'Tag' now references 'Genre' instead
   * Api::users (id and username of the site users)
   * Api::song_delete (Delete files when you are allowed to)
   * Api::user_preferences (get your user preferences)
+  * Api::system_update (Check Ampache for updates and run the update if there is one.)
 * New error codes
   * 404 Not Found (The API could not find the requested object)
   * 412 Failed Access Check (The user does note have access to this object, method, feature.)
