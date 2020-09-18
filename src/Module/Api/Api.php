@@ -51,6 +51,7 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Browse;
@@ -4329,4 +4330,43 @@ class Api
         } // switch on method
         Session::extend($input['auth']);
     } // democratic
+
+    /**
+     * system_update
+     * MINIMUM_API_VERSION=400001
+     *
+     * Check Ampache for updates and run the update if there is one.
+     *
+     * @param array $input
+     * @return boolean
+     */
+    public static function system_update($input)
+    {
+        $user = User::get_from_username(Session::username($input['auth']));
+        if (!self::check_access('interface', 100, $user->id)) {
+            return false;
+        }
+        if (AutoUpdate::is_update_available(true)) {
+            // run the update
+            AutoUpdate::update_files();
+            AutoUpdate::update_dependencies();
+            // check that the update completed or failed failed.
+            if (AutoUpdate::is_update_available(true)) {
+                self::message('error', 'update failed', '400', $input['api_format']);
+                Session::extend($input['auth']);
+
+                return false;
+            }
+            // there was an update and it was successful
+            self::message('success', 'update successful', null, $input['api_format']);
+            Session::extend($input['auth']);
+
+            return true;
+        }
+        //no update available but you are an admin so tell them
+        self::message('success', 'No update available', null, $input['api_format']);
+        Session::extend($input['auth']);
+
+        return true;
+    }
 }

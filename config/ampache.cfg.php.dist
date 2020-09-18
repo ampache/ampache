@@ -1137,8 +1137,8 @@ encode_ss_duration = "-t %DURATION%"
 ; Useful if you are having issues streaming the full track.
 ; You can set it for all streams or a specific player
 ; POSSIBLE VALUES: true webplayer api
-; DEFAULT: "false"
-;send_full_stream = "webplayer"
+; DEFAULT: "webplayer"
+send_full_stream = "webplayer"
 
 ;#########################################################
 ; Proxy Settings (optional)                              #
