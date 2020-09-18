@@ -31,6 +31,11 @@ namespace Ampache\Config;
 interface ConfigContainerInterface
 {
     /**
+     * Replaces the internal config container
+     */
+    public function updateConfig(array $configuration): ConfigContainerInterface;
+
+    /**
      * Compatibility accessor for direct access to the config array
      *
      * @deprecated Use a single method for each config key

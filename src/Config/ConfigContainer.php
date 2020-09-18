@@ -39,6 +39,13 @@ final class ConfigContainer implements ConfigContainerInterface
         $this->configuration = $configuration;
     }
 
+    public function updateConfig(array $configuration): ConfigContainerInterface
+    {
+        $this->configuration = $configuration;
+
+        return $this;
+    }
+
     public function get(string $configKey)
     {
         return $this->configuration[$configKey] ?? null;

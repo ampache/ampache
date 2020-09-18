@@ -42,6 +42,25 @@ class ConfigContainerTest extends MockeryTestCase
         );
     }
 
+    public function testUpdateConfigReplacesInternalConfigArray(): void
+    {
+        $key         = 'some-key';
+        $value       = 'some-value';
+        $config_data = [$key => $value];
+
+        $config = $this->createSubject();
+
+        static::assertSame(
+            $config,
+            $config->updateConfig($config_data)
+        );
+
+        static::assertSame(
+            $value,
+            $config->get($key)
+        );
+    }
+
     public function testGetReturnsNullIfKeyNotSet(): void
     {
         static::assertNull(

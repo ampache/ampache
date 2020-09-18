@@ -41,6 +41,9 @@ ob_start();
 
 require_once __DIR__ . '/init-tiny.php';
 
+/** @var ContainerInterface $dic */
+$dic = require __DIR__ . '/Bootstrap.php';
+
 Session::setup();
 
 // Set up for redirection on important error cases
@@ -128,9 +131,7 @@ Preference::set_defaults();
 $results = Preference::fix_preferences($results);
 
 AmpConfig::set_by_array($results, true);
-
-/** @var ContainerInterface $dic */
-$dic = require __DIR__ . '/Bootstrap.php';
+$dic->get(ConfigContainerInterface::class)->updateConfig($results);
 
 // Set a new Error Handler
 $old_error_handler = set_error_handler('ampache_error_handler');
