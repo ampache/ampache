@@ -30,6 +30,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 ### Fixed
 
 * Stop skips duplicating recent stat inserts
+* Escape filepaths when removing from database
 
 ### API develop
 
