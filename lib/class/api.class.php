@@ -4290,4 +4290,31 @@ class Api
 
         return true;
     } // system_update
+
+    /**
+     * system_preferences
+     * MINIMUM_API_VERSION=430000
+     *
+     * Get your system preferences
+     *
+     * @param array $input
+     * @return boolean
+     */
+    public static function system_preferences($input)
+    {
+        $user = User::get_from_username(Session::username($input['auth']));
+        if (!self::check_access('interface', 100, $user->id)) {
+            return false;
+        }
+        $preferences  = Preference::get_all(-1);
+        $output_array =  array('preferences' => $preferences);
+        switch ($input['api_format']) {
+            case 'json':
+                echo json_encode($output_array, JSON_PRETTY_PRINT);
+                break;
+            default:
+                echo XML_Data::keyed_array($output_array);
+        }
+        Session::extend($input['auth']);
+    } // system_preferences
 } // end api.class

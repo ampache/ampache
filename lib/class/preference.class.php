@@ -282,12 +282,8 @@ class Preference extends database_object
      */
     public static function get_all($user_id)
     {
-        $user_id = Dba::escape($user_id);
-
-        $user_limit = "";
-        if ($user_id != '-1') {
-            $user_limit = "AND `preference`.`catagory` != 'system'";
-        }
+        $user_id    = Dba::escape($user_id);
+        $user_limit = ($user_id != -1) ? "AND `preference`.`catagory` != 'system'" : "";
 
         $sql = "SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`," .
             " `preference`.`type`, `preference`.`catagory`, `preference`.`subcatagory`, `user_preference`.`value`" .

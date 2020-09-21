@@ -46,10 +46,11 @@ All API code that used 'Tag' now references 'Genre' instead
 * API::playlist_edit added new parameter 'sort': (0,1) sort the playlist by 'Artist, Album, Song' //optional
 * Api::indexes added parameter 'include': (0,1) include song details with playlists (XML has this by default)
 * NEW API functions
-  * Api::users (id and username of the site users)
+  * Api::users (ID and Username of the site users)
   * Api::song_delete (Delete files when you are allowed to)
-  * Api::user_preferences (get your user preferences)
+  * Api::user_preferences (Get your user preferences)
   * Api::system_update (Check Ampache for updates and run the update if there is one.)
+  * Api::system_preferences (Preferences for the system user)
 * New error codes
   * 404 Not Found (The API could not find the requested object)
   * 412 Failed Access Check (The user does note have access to this object, method, feature.)
