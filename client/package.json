@@ -13,13 +13,17 @@
         "react": "^16.13.1",
         "react-async-popup": "^0.0.6",
         "react-audio-player": "https://github.com/justinmc/react-audio-player",
+        "react-device-detect": "^1.13.1",
         "react-dom": "npm:@hot-loader/react-dom",
         "react-hotkeys-hook": "^2.1.3",
         "react-input-range": "^1.3.0",
         "react-loading": "^2.0.3",
+        "react-remove-scroll": "^2.4.0",
         "react-router-dom": "^5.2.0",
+        "react-spring": "^9.0.0-rc.3",
         "react-toastify": "^6.0.6",
-        "react-use-context-menu": "^0.1.4"
+        "react-use-context-menu": "^0.1.4",
+        "react-use-gesture": "^8.0.0-alpha.4"
     },
     "scripts": {
         "start": "parcel start index.html",

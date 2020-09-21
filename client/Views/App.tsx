@@ -19,6 +19,7 @@ interface AppViewStates {
 
 class AppView extends Component<AppViewProps, AppViewStates> {
     private readonly toggleQueueBarVisible: () => void;
+    private readonly setQueueBarVisibility: (visible: boolean) => void;
 
     constructor(props) {
         super(props);
@@ -26,6 +27,9 @@ class AppView extends Component<AppViewProps, AppViewStates> {
 
         this.toggleQueueBarVisible = () => {
             this.setState({ QueueBarVisible: !this.state.QueueBarVisible });
+        };
+        this.setQueueBarVisibility = (visible: boolean) => {
+            this.setState({ QueueBarVisible: visible });
         };
     }
 
@@ -55,7 +59,10 @@ class AppView extends Component<AppViewProps, AppViewStates> {
                 <div className='container'>
                     <Sidebar />
                     <div className='content'>{this.props.children}</div>
-                    <QueueBar visible={this.state.QueueBarVisible} />
+                    <QueueBar
+                        visible={this.state.QueueBarVisible}
+                        setQueueBarVisibility={this.setQueueBarVisibility}
+                    />
                 </div>
                 <MusicControl toggleQueueBar={this.toggleQueueBarVisible} />
             </>
