@@ -2799,7 +2799,7 @@ class Api
                 echo json_encode($output_array, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo XML_Data::keyed_array($output_array);
+                echo XML_Data::object_array($output_array['preferences'], 'preferences', 'pref');
         }
         Session::extend($input['auth']);
     } // user_preferences
@@ -4313,7 +4313,7 @@ class Api
                 echo json_encode($output_array, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo XML_Data::keyed_array($output_array);
+                echo XML_Data::object_array($output_array['preferences'], 'preferences', 'pref');
         }
         Session::extend($input['auth']);
     } // system_preferences

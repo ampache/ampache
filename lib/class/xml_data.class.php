@@ -323,6 +323,37 @@ class XML_Data
     } // keyed_array
 
     /**
+     * object_array
+     *
+     * This will build an xml document from an array of arrays, an id is required for the array data
+     * <root>
+     *   <$object_type>
+     *     <$item id="123">
+     *       <data></data>
+     *
+     * @param  array $array
+     * @param  string $object_type
+     * @param  string $item
+     * @return string return xml
+     */
+    public static function object_array($array, $object_type, $item)
+    {
+        $string = "<$object_type>\n";
+        // Foreach it
+        foreach ($array as $object) {
+            $string .= "\t<$item id=\"" . $object['id'] . "\">\n";
+            foreach ($object as $name => $value) {
+                $filter = (is_numeric($value)) ? $value : "<![CDATA[$value]]>";
+                $string .= ($name !== 'id') ? "\t\t<$name>$filter</$name>\n" : '';
+            }
+            $string .= "\t</$item>\n";
+        } // end foreach
+        $string .= "</$object_type>";
+
+        return self::output_xml($string);
+    } // object_array
+
+    /**
      * indexes
      *
      * This takes an array of artists and then returns a pretty xml document with the information
