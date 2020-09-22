@@ -81,7 +81,7 @@
             <?php } ?>
             <td>
                 <label style="padding-right:3px" for="searchLimit"><?php echo T_('Limit');?></label>&emsp;
-               <input type="number" id="searchLimit" name="search_limit" size="5" value="<?php echo AmpConfig::get('art_search_limit', 5); ?>">
+               <input type="number" id="searchLimit" name="search_limit" size="5" min="1" max="50" value="<?php echo AmpConfig::get('art_search_limit', 5); ?>">
             </td>
           </tr>
         </table>
