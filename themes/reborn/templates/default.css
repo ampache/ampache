@@ -967,6 +967,7 @@ span#sidebar-header-content::after {
     text-decoration: none;
 }
 
+table.gatherart,
 table.tabledata {
     width: 100%;
     text-align: left;
