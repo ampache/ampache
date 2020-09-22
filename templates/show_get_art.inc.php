@@ -58,33 +58,30 @@
                 <?php echo T_('Spotify Album Filters'); ?>
              </th>
              <td>
-                <label for="for artistFilter">Artist</label>
+                <label for="for artistFilter"><?php echo T_('Artist');?></label>&emsp;
                 <input type="checkbox" id="artistFilter" name="artist_filter" value="artist">
              </td>
          </tr>
         <tr>
            <td>
-                <label style="padding-right:4px" for="yearFilter">Year: </label>
-                <input type="text" id="yearFilter" name="year_filter" size="5" maxlength="9" pattern="[0-9]{4}(-[0-9]{4})?">
-                <label>(ex: 2001 or 2001-2005)</label>
+                <label style="padding-right:4px" for="yearFilter"><?php echo T_('Year');?> </label>&emsp;
+                <input type="text" id="yearFilter" name="year_filter" size="5" maxlength="9" pattern="[0-9]{4}(-[0-9]{4})?" title="">
+                <label><?php echo T_("(e.g. '2001', '2001-2005')");?></label>
            </td>
           </tr>
             <?php } ?>
           <tr>
              <?php if ($object_type == 'artist') { ?>
-               <td>
-                Spotify search Filter:
-                </td>
+               <td>Spotify search Filter:</td>
                 <?php }
         } else { ?>
             <td>
-              <?php $value = AmpConfig::get('art_search_limit'); ?>
-              <label for="searchLimit"> Art Search Limit: </label>
+              <label style="padding-right:3px" for="searchLimit"><?php echo T_('Limit');?></label>&emsp;
             </td>
             <?php } ?>
             <td>
-               <input type="number" id="searchLimit"
-                name="search_limit" size="5" value="<?php echo $value; ?>">
+                <label style="padding-right:3px" for="searchLimit"><?php echo T_('Limit');?></label>&emsp;
+               <input type="number" id="searchLimit" name="search_limit" size="5" value="<?php echo AmpConfig::get('art_search_limit', 5); ?>">
             </td>
           </tr>
         </table>
