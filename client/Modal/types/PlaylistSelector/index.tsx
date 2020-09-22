@@ -10,6 +10,8 @@ interface PlaylistSelectorProps {
     cancel?: () => Promise<unknown>;
 }
 
+import style from './index.styl'
+
 const PlaylistSelector = (props: PlaylistSelectorProps) => {
     const [playlists, setPlaylists] = useState<Playlist[]>(null);
 
@@ -29,27 +31,27 @@ const PlaylistSelector = (props: PlaylistSelectorProps) => {
 
     if (!playlists) {
         return (
-            <div className='playlistSelector'>
+            <div className={style.playlistSelector}>
                 <ReactLoading color='#FF9D00' type={'bubbles'} />
             </div>
         );
     }
 
     return (
-        <div className='playlistSelector'>
-            <ul className='playlists'>
+        <div className={style.playlistSelector}>
+            <ul className={style.playlists}>
                 {playlists.map((playlist) => {
                     return (
                         <li
                             key={playlist.id}
-                            className='playlist'
+                            className={style.playlist}
                             onClick={() => ok(playlist.id)}
                         >
                             {playlist.name}
                         </li>
                     );
                 })}
-                <li className='playlist newPlaylist'>
+                <li className={`${style.playlist} ${style.newPlaylist}`}>
                     Create New Playlist(TODO)
                 </li>
             </ul>

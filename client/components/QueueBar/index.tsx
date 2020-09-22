@@ -3,10 +3,10 @@ import { Song } from '~logic/Song';
 import { MusicContext } from '~Contexts/MusicContext';
 import QueueSong from './components/QueueSong';
 
-import style from './index.module.styl';
+import style from './index.styl';
 import { useDrag } from 'react-use-gesture';
 import { useSpring, animated } from 'react-spring';
-import {RemoveScroll} from 'react-remove-scroll';
+import { RemoveScroll } from 'react-remove-scroll';
 import {
     BrowserView,
     MobileView,
@@ -42,44 +42,46 @@ const QueueBar: React.FC<QueueBarProps> = (props) => {
         //     return; //We don't want to allow it to be pulled left
         // }
         // if (mx > 300) return; //Unnecessary work
-        set({ x: down ? mx : 0 });
+        set({ x: mx });
     });
 
     return (
-      <RemoveScroll enabled={props.visible && isMobile}>
-        <animated.div
-            {...bind()}
-            style={{ x, width }}
-            className={
-                props.visible
-                    ? `${style.sidebar} ${style.queueBar} ${style.visible}`
-                    : `${style.sidebar} ${style.queueBar}`
-            }
-        >
-            <div className={style.title}>Your Queue</div>
-            <ul className={style.songs}>
-                {musicContext.songQueue.length == 0 && (
-                    <div className={style.emptyQueue}>Nothing in the queue</div>
-                )}
-                {musicContext.songQueue.map((song: Song) => {
-                    return (
-                        <QueueSong
-                            key={song.id}
-                            song={song}
-                            currentlyPlaying={
-                                musicContext.currentPlayingSong?.id === song.id
-                            }
-                            onClick={() => {
-                                musicContext.startPlayingWithNewQueue(
-                                    song,
-                                    musicContext.songQueue
-                                );
-                            }}
-                        />
-                    );
-                })}
-            </ul>
-        </animated.div></RemoveScroll>
+            <animated.div
+                {...bind()}
+                style={{ x, width }}
+                className={
+                    props.visible
+                        ? `${style.queueBar} ${style.visible}`
+                        : `${style.queueBar}`
+                }
+            >
+                <div className={style.title}>Your Queue</div>
+                <ul className={style.songs}>
+                    {musicContext.songQueue.length == 0 && (
+                        <div className={style.emptyQueue}>
+                            Nothing in the queue
+                        </div>
+                    )}
+                    {musicContext.songQueue.map((song: Song) => {
+                        return (
+                            <QueueSong
+                                key={song.id}
+                                song={song}
+                                currentlyPlaying={
+                                    musicContext.currentPlayingSong?.id ===
+                                    song.id
+                                }
+                                onClick={() => {
+                                    musicContext.startPlayingWithNewQueue(
+                                        song,
+                                        musicContext.songQueue
+                                    );
+                                }}
+                            />
+                        );
+                    })}
+                </ul>
+            </animated.div>
     );
 };
 

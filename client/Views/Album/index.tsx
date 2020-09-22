@@ -9,6 +9,8 @@ import { toast } from 'react-toastify';
 import { playSongFromAlbum } from '~Helpers/playAlbumHelper';
 import { MusicContext } from '~Contexts/MusicContext';
 
+import style from "./index.styl"
+
 interface AlbumViewProps {
     user: User;
     match: {
@@ -39,23 +41,23 @@ const AlbumView: React.FC<AlbumViewProps> = (props: AlbumViewProps) => {
 
     if (error) {
         return (
-            <div className='albumPage'>
+            <div>
                 <span>Error: {error.message}</span>
             </div>
         );
     }
     if (!theAlbum) {
         return (
-            <div className='albumPage'>
+            <div>
                 <ReactLoading color='#FF9D00' type={'bubbles'} />
             </div>
         );
     }
     return (
-        <div className='albumPage'>
-            <div className='album'>
+        <div>
+            <div className={style.album}>
                 <div
-                    className='imageContainer'
+                    className={style.imageContainer}
                     onClick={() =>
                         playSongFromAlbum(
                             theAlbum.id,
@@ -67,17 +69,17 @@ const AlbumView: React.FC<AlbumViewProps> = (props: AlbumViewProps) => {
                 >
                     <img src={theAlbum.art} alt={'Album Cover'} />
                 </div>
-                <div className='details'>
-                    <div className='albumName'>{theAlbum.name}</div>
+                <div className={style.details}>
+                    <div className={style.albumName}>{theAlbum.name}</div>
                     <Link
                         to={`/artist/${theAlbum.artist.id}`}
-                        className='artistName'
+                        className={style.artistName}
                     >
                         {theAlbum.artist.name}
                     </Link>
                 </div>
             </div>
-            <div className='songs'>
+            <div className={style.songs}>
                 <SongList
                     songData={theAlbum.tracks}
                     authKey={props.user.authKey}

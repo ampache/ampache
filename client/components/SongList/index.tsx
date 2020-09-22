@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { MusicContext } from '~Contexts/MusicContext';
 import { flagSong, Song } from '~logic/Song';
-import SongRow from './SongRow';
+import SongRow from '~components/SongRow';
 import {
     addToPlaylist,
     getPlaylistSongs,
     removeFromPlaylistWithSongID
 } from '~logic/Playlist';
 import { AuthKey } from '~logic/Auth';
-import AmpacheError from '../logic/AmpacheError';
+import AmpacheError from '~logic/AmpacheError';
 import { getAlbumSongs } from '~logic/Album';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
@@ -16,6 +16,8 @@ import { Modal } from 'react-async-popup';
 import PlaylistSelector from '~Modal/types/PlaylistSelector';
 import { useHistory } from 'react-router-dom';
 import HistoryShell from '~Modal/HistoryShell';
+
+import style from './index.styl';
 
 interface SongListProps {
     showArtist?: boolean;
@@ -26,7 +28,7 @@ interface SongListProps {
     authKey?: AuthKey;
 }
 
-const SongList: React.FC<SongListProps> = (props) => {
+const Index: React.FC<SongListProps> = (props) => {
     const musicContext = useContext(MusicContext);
     const [songs, setSongs] = useState<Song[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
@@ -131,20 +133,20 @@ const SongList: React.FC<SongListProps> = (props) => {
 
     if (error) {
         return (
-            <div className='songList'>
+            <div>
                 <span>Error: {error.message}</span>
             </div>
         );
     }
     if (!songs) {
         return (
-            <div className='songList'>
+            <div>
                 <ReactLoading color='#FF9D00' type={'bubbles'} />
             </div>
         );
     }
     return (
-        <div className='songList'>
+        <div>
             <ul>
                 {songs.map((song: Song) => {
                     return (
@@ -172,6 +174,7 @@ const SongList: React.FC<SongListProps> = (props) => {
                             }
                             flagSong={handleFlagSong}
                             key={song.playlisttrack}
+                            className={style.songRow}
                         />
                     );
                 })}
@@ -180,4 +183,4 @@ const SongList: React.FC<SongListProps> = (props) => {
     );
 };
 
-export default SongList;
+export default Index;

@@ -8,6 +8,8 @@ import ReactLoading from 'react-loading';
 import MusicControl from '~components/MusicControl';
 import QueueBar from '~components/QueueBar/';
 
+import style from '~stylus/app.styl'
+
 interface AppViewProps {
     user: User;
 }
@@ -56,9 +58,9 @@ class AppView extends Component<AppViewProps, AppViewStates> {
         return (
             <>
                 <Header username={this.props.user.username} />
-                <div className='container'>
+                <div className={style.container}>
                     <Sidebar />
-                    <div className='content'>{this.props.children}</div>
+                    <div className={style.content}>{this.props.children}</div>
                     <QueueBar
                         visible={this.state.QueueBarVisible}
                         setQueueBarVisibility={this.setQueueBarVisibility}

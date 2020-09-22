@@ -1,12 +1,14 @@
 @import "~stylus/sizes.styl"
 
 .queueBar
+  width sidebarWidth
+  background-color #1a1a1a
+  font-size 18px
   user-select none
   z-index 100
   titleHeight = 44px
   position sticky
   top 0
-  background-color gray
   height "calc(100vh - %s - %s)" % (headerHeight musicPlayerHeight)
   @media all and (max-width: 600px)
     height "calc(100vh - %s)" % (musicPlayerHeight)
@@ -15,7 +17,7 @@
     right 0
   &.visible
     @media all and (max-width: 600px)
-      width 100% !important
+      //width 100% !important
       .title, .songs
         width 100%
   .title

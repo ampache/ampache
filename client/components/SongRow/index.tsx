@@ -14,9 +14,11 @@ interface SongRowProps {
     addToQueue: (next: boolean) => void;
     startPlaying: () => void;
     flagSong: (songID: number, favorite: boolean) => void;
+    className?: string;
 }
+import style from './index.styl';
 
-const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
+const Index: React.FC<SongRowProps> = (props: SongRowProps) => {
     const [
         bindMenu,
         bindMenuItems,
@@ -41,14 +43,16 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
         <>
             <li
                 className={
-                    props.isCurrentlyPlaying ? 'playing songRow' : 'songRow'
+                    props.isCurrentlyPlaying
+                        ? `${style.playing} ${style.songRow} ${props.className}`
+                        : `${style.songRow} ${props.className} `
                 }
                 {...bindTrigger}
                 onClick={props.startPlaying}
                 tabIndex={1}
             >
                 <span
-                    className='verticalMenu'
+                    className={style.verticalMenu}
                     onClick={(e) => {
                         showContextMenu(e);
                     }}
@@ -56,8 +60,8 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                 <span
                     className={
                         props.song.flag
-                            ? 'heartIconWrapper fav'
-                            : 'heartIconWrapper'
+                            ? `${style.heartIconWrapper} ${style.fav}`
+                            : style.heartIconWrapper
                     }
                     onClick={(e) => {
                         e.stopPropagation();
@@ -154,4 +158,4 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
     );
 };
 
-export default SongRow;
+export default Index;

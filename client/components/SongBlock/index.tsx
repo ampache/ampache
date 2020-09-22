@@ -11,7 +11,7 @@ interface SongBlockProps {
     className?: string;
 }
 
-const Index = (props: SongBlockProps) => {
+const SongBlock = (props: SongBlockProps) => {
     return (
         <div
             onClick={() => props.playSong(props.song)}
@@ -46,4 +46,4 @@ const Index = (props: SongBlockProps) => {
     );
 };
 
-export default Index;
+export default SongBlock;
