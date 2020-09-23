@@ -20,6 +20,7 @@
  *
  */ ?>
 <?php
+      $art_order= AmpConfig::get('art_order');
       $art_type = ($object_type == 'album') ?'Cover Art' : 'Artist Art';
       UI::show_box_top(T_("Customize {$art_type} Search"), 'box box_get_albumart'); ?>
 <form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=find_art&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>&artist_name=<?php echo urlencode(Core::get_request('artist_name'));?>&album_name=<?php echo urlencode(Core::get_request('album_name')); ?>&cover=<?php echo urlencode(Core::get_request('cover')); ?>" style="Display:inline;">
@@ -31,7 +32,26 @@
                     <td>
                         <?php echo $word['label']; ?>&nbsp;
                     </td>
-                    <td><input type="text" id="option_<?php echo $key . '"'; echo ($key == 'album') ? ' required' : ''; ?> name="option_<?php echo $key; ?>" value="<?php echo scrub_out(unhtmlentities($word['value'])); ?>" /></td>
+                    <td>
+                       <input type="text"
+                    id="option_<?php echo $key . '"'; ?>
+                    name="option_<?php echo $key; ?>"
+                    value="<?php echo scrub_out(unhtmlentities($word['value'])); ?>"
+                    <?php
+                         if ($key == 'album') {
+                             echo ' required';
+                         } elseif ($key == 'artist') {
+                             if ($object_type == 'artist') {
+                                 echo 'required';
+                             }
+                         } elseif ($key == 'mb_albumid' || $key == 'mb_artistid') {
+                             if (in_array('musicbrainz', $art_order)) {
+                                 echo  ' required pattern="^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$"';
+                             }
+                         }
+                         ?>
+                    />
+                  </td>
                 </tr>
         <?php
             }
@@ -50,7 +70,8 @@
                <input type="file" id="file" name="file" value="" />
             </td>
         </tr>
-        <?php $art_order= AmpConfig::get('art_order');
+       <?php
+        $limit = AmpConfig::get('art_search_limit');
         if (in_array('spotify', $art_order)) {
             if ($object_type == 'album') {?>
       <tr>
@@ -59,32 +80,42 @@
              </th>
              <td>
                 <label for="for artistFilter">Artist</label>
-                <input type="checkbox" id="artistFilter" name="artist_filter" value="artist">
+                <input type="checkbox" id="artistFilter"
+                    name="artist_filter" value="artist"
+                    onchange="validateArtist()">
              </td>
          </tr>
         <tr>
            <td>
-                <label style="padding-right:4px" for="yearFilter">Year: </label>
+                <label id="gatherYear" for="yearFilter">Year: </label>
                 <input type="text" id="yearFilter" name="year_filter" size="5" maxlength="9" pattern="[0-9]{4}(-[0-9]{4})?">
                 <label>(ex: 2001 or 2001-2005)</label>
            </td>
           </tr>
+          <tr>
+          <td>
+             <label  for="searchLimit"> Limit: </label>
+              <input type="number" id="searchLimit"
+                name="search_limit" min="1" max="50" value="<?php echo $limit; ?>">
+          </td>
+          </tr>
             <?php } ?>
           <tr>
              <?php if ($object_type == 'artist') { ?>
-               <td>
-                Spotify search Filter:
-                </td>
-                <?php }
+             <td>
+                Search Limit:
+             </td>
+             <td>
+                  <input type="number" id="searchLimit"
+                  name="search_limit" min="1" max="50" value="<?php echo $limit; ?>">
+              </td>
+
+          <?php }
         } else { ?>
             <td>
-              <?php $value = AmpConfig::get('art_search_limit'); ?>
-              <label for="searchLimit"> Art Search Limit: </label>
             </td>
             <?php } ?>
             <td>
-               <input type="number" id="searchLimit"
-                name="search_limit" size="5" value="<?php echo $value; ?>">
             </td>
           </tr>
         </table>
@@ -99,3 +130,16 @@
     </div>
 </form>
 <?php UI::show_box_bottom(); ?>
+<script>
+    function validateArtist()
+    {
+       var artist = document.getElementById('option_artist');
+
+       var checked = document.getElementById('artistFilter').checked;
+       if (checked == true) {
+         artist.setAttribute("required", "true");
+       } else {
+         artist.removeAttribute('required');
+       }
+    }
+</script>

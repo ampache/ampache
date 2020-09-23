@@ -57,7 +57,7 @@ textarea {
     background-image: -webkit-gradient(linear, 0, 0 100%, from(#eee), to(#fff));
     background-image: -webkit-linear-gradient(top, #eee, #fff);
     background-image: -o-linear-gradient(top, #eee, #fff);
-    background-image: linear-gradient(top, #eee, #fff);
+    background-image: linear-gradient(to top, #eee, #fff);
     border-color: #fff;
 }
 
@@ -67,8 +67,8 @@ input[type=submit] {
     background-image: -ms-linear-gradient(top, #ff9d00, #cc6200);
     background-image: -webkit-gradient(linear, 0, 0 100%, from(#ff9d00), to(#cc6200));
     background-image: -webkit-linear-gradient(top, #ff9d00, #cc6200);
-    background-image: -o-linear-gradient(top, #ff9d00, #cc6200);
-    background-image: linear-gradient(top, #ff9d00, #cc6200);
+    background-image: -o-linear-gradient(to top, #ff9d00, #cc6200);
+    background-image: linear-gradient(to top, #ff9d00, #cc6200);
     -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
@@ -288,7 +288,7 @@ input[type=submit]:focus:active {
     background-image: -webkit-gradient(linear, 0, 0 100%, from(#cc6200), to(#c24d00));
     background-image: -webkit-linear-gradient(top, #cc6200, #c24d00);
     background-image: -o-linear-gradient(top, #cc6200, #c24d00);
-    background-image: linear-gradient(top, #cc6200, #c24d00);
+    background-image: linear-gradient(to top, #cc6200, #c24d00);
 }
 
 #rightbar #rb_current_playlist li.odd {
@@ -380,7 +380,7 @@ table.tabledata tr:focus {
     background-image: -webkit-gradient(linear, 0, 0 100%, from(#cc6200), to(#c24d00));
     background-image: -webkit-linear-gradient(top, #cc6200, #c24d00);
     background-image: -o-linear-gradient(top, #cc6200, #c24d00);
-    background-image: linear-gradient(top, #cc6200, #c24d00);
+    background-image: linear-gradient(to top, #cc6200, #c24d00);
 }
 
 table.tabledata .th-top:hover,
@@ -463,7 +463,7 @@ span.fatalerror {
     background-image: -webkit-gradient(linear, 0, 0 100%, from(#cc6200), to(#c24d00));
     background-image: -webkit-linear-gradient(top, #cc6200, #c24d00);
     background-image: -o-linear-gradient(top, #cc6200, #c24d00);
-    background-image: linear-gradient(top, #cc6200, #c24d00);
+    background-image: linear-gradient(to top, #cc6200, #c24d00);
 }
 
 /* --------------------------
