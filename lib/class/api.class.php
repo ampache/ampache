@@ -228,13 +228,7 @@ class Api
         }
         $username = trim((string) $input['user']);
         $user_ip  = Core::get_user_ip();
-        if (isset($input['version'])) {
-            // If version is provided, use it
-            $version = $input['version'];
-        } else {
-            // Else, just use the latest version available
-            $version = self::$version;
-        }
+        $version  = (isset($input['version'])) ? $input['version'] : self::$version;
 
         // Log the attempt
         debug_event('api.class', "Handshake Attempt, IP:$user_ip User:$username Version:$version", 5);
@@ -1424,13 +1418,10 @@ class Api
         $user = User::get_from_username(Session::username($input['auth']));
         $uid  = scrub_in($input['filter']);
 
-        if (str_replace('smart_', '', $uid) === $uid) {
-            // Playlists
-            $playlist = new Playlist((int) $uid);
-        } else {
-            // Smartlists
-            $playlist = new Search((int) str_replace('smart_', '', $uid), 'song', $user);
-        }
+        $playlist = (str_replace('smart_', '', $uid) === $uid)
+            ? new Playlist((int) $uid)
+            : new Search((int) str_replace('smart_', '', $uid), 'song', $user);
+
         if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
             self::message('error', T_('Access denied to this playlist'), '412', $input['api_format']);
 
@@ -1469,13 +1460,11 @@ class Api
         $user = User::get_from_username(Session::username($input['auth']));
         $uid  = scrub_in($input['filter']);
         debug_event('api.class', 'User ' . $user->id . ' loading playlist: ' . $input['filter'], 5);
-        if (str_replace('smart_', '', $uid) === $uid) {
-            // Playlists
-            $playlist = new Playlist((int) $uid);
-        } else {
-            // Smartlists
-            $playlist = new Search((int) str_replace('smart_', '', $uid), 'song', $user);
-        }
+
+        $playlist = (str_replace('smart_', '', $uid) === $uid)
+            ? new Playlist((int) $uid)
+            : new Search((int) str_replace('smart_', '', $uid), 'song', $user);
+
         if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
             self::message('error', T_('Access denied to this playlist'), '412', $input['api_format']);
 
@@ -2283,12 +2272,10 @@ class Api
             case 'recent':
             case 'forgotten':
                 debug_event('api.class', 'stats ' . $input['filter'], 4);
-                $newest = $input['filter'] == 'recent';
-                if ($user->id) {
-                    $results = $user->get_recently_played($limit, $type, $newest);
-                } else {
-                    $results = Stats::get_recent($type, $limit, $offset, $newest);
-                }
+                $newest  = $input['filter'] == 'recent';
+                $results = ($user->id)
+                    ? $user->get_recently_played($limit, $type, $newest)
+                    : Stats::get_recent($type, $limit, $offset, $newest);
                 break;
             case 'flagged':
                 debug_event('api.class', 'stats flagged', 4);
@@ -3124,11 +3111,9 @@ class Api
             $limit = AmpConfig::get('popular_threshold', 10);
         }
         $username = $input['username'];
-        if (!empty($username)) {
-            $shouts = Shoutbox::get_top($limit, $username);
-        } else {
-            $shouts = Shoutbox::get_top($limit);
-        }
+        $shouts   = (!empty($username))
+            ? Shoutbox::get_top($limit, $username)
+            : Shoutbox::get_top($limit);
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -3295,11 +3280,9 @@ class Api
         }
 
         // validate client string or fall back to 'api'
-        if ($input['client']) {
-            $agent = $input['client'];
-        } else {
-            $agent = 'api';
-        }
+        $agent = ($input['client'])
+            ? $input['client']
+            : 'api';
 
         $item = new Song($object_id);
         if (!$item->id) {
@@ -3373,11 +3356,9 @@ class Api
         }
 
         // validate client string or fall back to 'api'
-        if ($input['client']) {
-            $agent = $input['client'];
-        } else {
-            $agent = 'api';
-        }
+        $agent = ($input['client'])
+            ? $input['client']
+            : 'api';
         $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, (string) $song_mbid, (string) $artist_mbid, (string) $album_mbid);
 
         if ($scrobble_id === '') {
