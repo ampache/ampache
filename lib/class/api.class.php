@@ -684,7 +684,7 @@ class Api
 
         $artists = self::$browse->get_objects();
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
+        $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -719,7 +719,7 @@ class Api
         }
         $uid     = array((int) scrub_in($input['filter']));
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
+        $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
         switch ($input['api_format']) {
             case 'json':
                 echo JSON_Data::artists($uid, $include, $user->id);
@@ -837,7 +837,7 @@ class Api
 
         $albums  = self::$browse->get_objects();
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
+        $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -872,7 +872,7 @@ class Api
         }
         $uid     = (int) scrub_in($input['filter']);
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
+        $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
         switch ($input['api_format']) {
             case 'json':
                 echo JSON_Data::albums(array($uid), $include, $user->id);
