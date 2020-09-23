@@ -10,11 +10,11 @@ interface ConfirmationModalParams {
 const HistoryShell = (props: ConfirmationModalParams) => {
     const { children, history, ok, cancel } = { ...props };
 
-    useEffect(() => {
+    useEffect(() => { //Allows the back button to close the modal
         const unblock = history.block(() => {
             cancel();
             return false;
-        });
+        }); //TODO: This causes the forward and back buttons to close the modal, not sure if desirable.
         return () => {
             unblock();
         };

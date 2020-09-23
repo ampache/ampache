@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import style from './index.module.styl';
 
-const Index: React.FC = () => {
+const Sidebar: React.FC = () => {
     return (
         <div className={style.sidebar}>
             <section>
@@ -50,4 +50,4 @@ const Index: React.FC = () => {
     );
 };
 
-export default Index;
+export default Sidebar;

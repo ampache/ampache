@@ -8,6 +8,8 @@ import ReactLoading from 'react-loading';
 import MusicControl from '~components/MusicControl';
 import QueueBar from '~components/QueueBar/';
 
+import style from '~stylus/app.styl'
+
 interface AppViewProps {
     user: User;
 }
@@ -19,6 +21,7 @@ interface AppViewStates {
 
 class AppView extends Component<AppViewProps, AppViewStates> {
     private readonly toggleQueueBarVisible: () => void;
+    private readonly setQueueBarVisibility: (visible: boolean) => void;
 
     constructor(props) {
         super(props);
@@ -26,6 +29,9 @@ class AppView extends Component<AppViewProps, AppViewStates> {
 
         this.toggleQueueBarVisible = () => {
             this.setState({ QueueBarVisible: !this.state.QueueBarVisible });
+        };
+        this.setQueueBarVisibility = (visible: boolean) => {
+            this.setState({ QueueBarVisible: visible });
         };
     }
 
@@ -52,10 +58,13 @@ class AppView extends Component<AppViewProps, AppViewStates> {
         return (
             <>
                 <Header username={this.props.user.username} />
-                <div className='container'>
+                <div className={style.container}>
                     <Sidebar />
-                    <div className='content'>{this.props.children}</div>
-                    <QueueBar visible={this.state.QueueBarVisible} />
+                    <div className={style.content}>{this.props.children}</div>
+                    <QueueBar
+                        visible={this.state.QueueBarVisible}
+                        setQueueBarVisibility={this.setQueueBarVisibility}
+                    />
                 </div>
                 <MusicControl toggleQueueBar={this.toggleQueueBarVisible} />
             </>

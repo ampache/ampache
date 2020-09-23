@@ -1,11 +1,12 @@
 @import "reset"
 @import "sizes"
-@import "color.styl" //TODO: Parcel throws error if .styl is missing, but only here... check back in future and create issue if not fixed
+@import "color.styl"
 
 html
   height 100%
   #root
     height 100%
+    overflow-x hidden
   body
     font-family 'Open Sans', Helvetica, Arial, sans-serif
     font-weight normal
@@ -13,18 +14,7 @@ html
     height 100%
     background-color bodyBackgroundColor
     color #e1e1e1
-    overscroll-behavior contain
-    .container
-      display flex
-      min-height "calc(100% - %s)" % headerHeight
-      position relative
-      & > .content
-        flex 1
-        position relative
-        &::after
-          content ''
-          display block
-          height musicPlayerHeight
+
 a
   text-decoration none
   cursor pointer
@@ -34,20 +24,16 @@ a
   &:hover
     color linkHoverColor/* !important*/
 
+:global
+  //Pages
+  @import "./pages/Playlists"
+  @import "./pages/Account"
 
-//Pages
-@import "./pages/Album"
-@import "./pages/Playlists"
-@import "./pages/Account"
-
-//Components
-@import './components/MusicControl'
-@import './components/SongList'
-@import './components/SongRow'
-@import './components/PlaylistRow'
-@import './components/PlaylistList'
-@import './components/ContextMenu'
-@import './components/PlaylistSelector'
-@import './components/InputModal'
-@import './components/Seekbar'
-@import './components/React-Async-Popup'
+  //Components
+  @import './components/MusicControl'
+  @import './components/PlaylistRow'
+  @import './components/PlaylistList'
+  @import './components/ContextMenu'
+  @import './components/InputModal'
+  @import './components/Seekbar'
+  @import './components/React-Async-Popup'

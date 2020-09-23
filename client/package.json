@@ -13,16 +13,20 @@
         "react": "^16.13.1",
         "react-async-popup": "^0.0.6",
         "react-audio-player": "https://github.com/justinmc/react-audio-player",
+        "react-device-detect": "^1.13.1",
         "react-dom": "npm:@hot-loader/react-dom",
         "react-hotkeys-hook": "^2.1.3",
         "react-input-range": "^1.3.0",
         "react-loading": "^2.0.3",
+        "react-remove-scroll": "^2.4.0",
         "react-router-dom": "^5.2.0",
+        "react-spring": "^9.0.0-rc.3",
         "react-toastify": "^6.0.6",
-        "react-use-context-menu": "^0.1.4"
+        "react-use-context-menu": "^0.1.4",
+        "react-use-gesture": "^7.0.16"
     },
     "scripts": {
-        "start": "parcel start index.html",
+        "start": "yarn run clean && parcel index.html",
         "clean": "rm -rf dist .parcel-cache",
         "build": "yarn clean && parcel build index.html",
         "prod": "yarn clean && parcel build index.html --no-source-maps",
@@ -38,7 +42,7 @@
         }
     },
     "browserslist": [
-        "defaults"
+        "last 4 version"
     ],
     "devDependencies": {
         "@babel/core": "^7.10.3",
@@ -48,20 +52,26 @@
         "@babel/preset-react": "^7.10.1",
         "@babel/preset-typescript": "^7.10.1",
         "@parcel/resolver-default": "^2.0.0-alpha.3",
+        "@parcel/transformer-css": "^2.0.0-alpha.3",
+        "@parcel/transformer-postcss": "^2.0.0-alpha.3",
+        "@parcel/transformer-raw": "^2.0.0-alpha.3",
+        "@parcel/transformer-stylus": "^2.0.0-alpha.3",
         "@types/node": "^14.0.14",
         "@types/react": "^16.9.41",
         "@types/react-dom": "^16.9.8",
         "@types/react-router-dom": "^5.1.5",
         "@typescript-eslint/eslint-plugin": "^3.4.0",
         "@typescript-eslint/parser": "^3.4.0",
-        "autoprefixer": "^9.8.4",
+        "autoprefixer": "^9.8.6",
         "eslint": "^7.3.1",
         "eslint-plugin-react": "^7.20.0",
         "eslint-plugin-react-hooks": "^4.0.4",
         "parcel": "next",
-        "postcss-modules": "^3.1.0",
+        "postcss": "^7.0.34",
+        "postcss-modules": "^3.2.2",
         "prettier": "2.0.5",
         "stylus": "^0.54.7",
+        "sugarss": "^3.0.0",
         "typescript": "^3.9.5"
     }
 }
