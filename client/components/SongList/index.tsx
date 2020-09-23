@@ -28,7 +28,7 @@ interface SongListProps {
     authKey?: AuthKey;
 }
 
-const Index: React.FC<SongListProps> = (props) => {
+const SongList: React.FC<SongListProps> = (props) => {
     const musicContext = useContext(MusicContext);
     const [songs, setSongs] = useState<Song[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
@@ -183,4 +183,4 @@ const Index: React.FC<SongListProps> = (props) => {
     );
 };
 
-export default Index;
+export default SongList;

@@ -18,7 +18,7 @@ interface SongRowProps {
 }
 import style from './index.styl';
 
-const Index: React.FC<SongRowProps> = (props: SongRowProps) => {
+const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
     const [
         bindMenu,
         bindMenuItems,
@@ -92,7 +92,7 @@ const Index: React.FC<SongRowProps> = (props: SongRowProps) => {
                     </div>
                 )}
 
-                <span className='time'>
+                <span className={style.time}>
                     {minutes}:{paddedSeconds}
                 </span>
             </li>
@@ -158,4 +158,4 @@ const Index: React.FC<SongRowProps> = (props: SongRowProps) => {
     );
 };
 
-export default Index;
+export default SongRow;

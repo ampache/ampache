@@ -7730,10 +7730,10 @@ react-use-context-menu@^0.1.4:
   resolved "https://registry.yarnpkg.com/react-use-context-menu/-/react-use-context-menu-0.1.4.tgz#e6d0e88a0c5fe08e58e9c9ab35a185a2459251a5"
   integrity sha512-3/IC2CTUErMrtcv1IU1Nt9NL2J4YHBiiSBV66wGdPsZzeFK4qhUwQmLg8hUk58Pi5oa8ts3+M3kVKl10HW4o4w==
 
-react-use-gesture@^8.0.0-alpha.6:
-  version "8.0.0-alpha.6"
-  resolved "https://registry.yarnpkg.com/react-use-gesture/-/react-use-gesture-8.0.0-alpha.6.tgz#07bc2b1ab97505a2d7f75b43bd719761f4b7495b"
-  integrity sha512-0qSbiOZPDZ1rBwWLF96TGGiHjTvC1pecytfvGRCV02kpdSy2Tidw2tAMokSUNQr681TYfsus8Bb7gtpvlmf93A==
+react-use-gesture@^7.0.16:
+  version "7.0.16"
+  resolved "https://registry.yarnpkg.com/react-use-gesture/-/react-use-gesture-7.0.16.tgz#501985261ef9c815a377b6ff9be6df5a85fbb54f"
+  integrity sha512-gwgX+E+WQG0T1uFVl3z8j3ZwH3QQGIgVl7VtQEC2m0IscSs668sSps4Ss3CFp3Vns8xx0j9TVK4aBXH6+YrpEg==
 
 react@^16.13.1:
   version "16.13.1"

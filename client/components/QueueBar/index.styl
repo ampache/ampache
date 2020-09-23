@@ -1,7 +1,8 @@
 @import "~stylus/sizes.styl"
 
 .queueBar
-  width sidebarWidth
+  max-width: queueBarWidth; //For desktop we only want the Queue Bar to get so big
+  transition .2s max-width //Max width transition so it only hits the mobile media query
   background-color #1a1a1a
   font-size 18px
   user-select none
@@ -17,9 +18,7 @@
     right 0
   &.visible
     @media all and (max-width: 600px)
-      //width 100% !important
-      .title, .songs
-        width 100%
+      max-width 100% //Full screen on mobile, 100% instead of unset for transition to work
   .title
     text-align center
     font-size 24px
@@ -28,9 +27,12 @@
     padding 10px 0
     white-space nowrap
     overflow hidden
+    transition opacity 0.1s
+    opacity 1
   .songs
     height: "calc(100% - %s)" % (titleHeight)
     overflow-y scroll
+    overflow-x hidden
     position sticky
     top 0
     display flex
@@ -38,3 +40,8 @@
     white-space nowrap
     .emptyQueue
       margin auto
+      transition opacity 0.1s
+      opacity 1
+  &:not(.visible)
+    .title, .emptyQueue
+      opacity 0

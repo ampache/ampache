@@ -12,7 +12,7 @@ interface AlbumDisplayProps {
     className?: string;
 }
 
-const Index: React.FC<AlbumDisplayProps> = (props: AlbumDisplayProps) => {
+const AlbumDisplay: React.FC<AlbumDisplayProps> = (props: AlbumDisplayProps) => {
     const [
         bindMenu,
         bindMenuItems,
@@ -72,4 +72,4 @@ const Index: React.FC<AlbumDisplayProps> = (props: AlbumDisplayProps) => {
     );
 };
 
-export default Index;
+export default AlbumDisplay;

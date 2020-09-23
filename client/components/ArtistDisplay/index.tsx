@@ -10,7 +10,7 @@ interface ArtistDisplayProps {
     className?: string;
 }
 
-const Index: React.FC<ArtistDisplayProps> = (props: ArtistDisplayProps) => {
+const ArtistDisplay: React.FC<ArtistDisplayProps> = (props: ArtistDisplayProps) => {
     return (
         <>
             <Link
@@ -31,4 +31,4 @@ const Index: React.FC<ArtistDisplayProps> = (props: ArtistDisplayProps) => {
     );
 };
 
-export default Index;
+export default ArtistDisplay;

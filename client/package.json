@@ -23,7 +23,7 @@
         "react-spring": "^9.0.0-rc.3",
         "react-toastify": "^6.0.6",
         "react-use-context-menu": "^0.1.4",
-        "react-use-gesture": "^8.0.0-alpha.6"
+        "react-use-gesture": "^7.0.16"
     },
     "scripts": {
         "start": "yarn run clean && parcel index.html",

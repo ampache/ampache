@@ -5,7 +5,7 @@ import QueueSong from './components/QueueSong';
 
 import style from './index.styl';
 import { useDrag } from 'react-use-gesture';
-import { useSpring, animated } from 'react-spring';
+import { useSpring, useTransition, animated } from 'react-spring';
 import { RemoveScroll } from 'react-remove-scroll';
 import {
     BrowserView,
@@ -30,19 +30,22 @@ const QueueBar: React.FC<QueueBarProps> = (props) => {
     set({ width: props.visible ? 300 : 0 });
 
     const bind = useDrag(({ down, movement: [mx, my] }) => {
-        console.log(down, mx);
 
+        console.log(mx)
         if (mx >= 150 && !down) {
             props.setQueueBarVisibility(false);
             set({ x: 0, width: 0 });
             return;
         }
 
-        // if (mx < 0) {
-        //     return; //We don't want to allow it to be pulled left
-        // }
-        // if (mx > 300) return; //Unnecessary work
-        set({ x: mx });
+        if (mx < 0) {
+            return; //We don't want to allow it to be pulled left
+        }
+        if (down) {
+            set({ x: mx });
+        } else {
+            set({ x: 0, width: 300 });
+        }
     });
 
     return (
@@ -52,7 +55,7 @@ const QueueBar: React.FC<QueueBarProps> = (props) => {
                 className={
                     props.visible
                         ? `${style.queueBar} ${style.visible}`
-                        : `${style.queueBar}`
+                        : `${style.queueBar} ${style.hidden}`
                 }
             >
                 <div className={style.title}>Your Queue</div>
