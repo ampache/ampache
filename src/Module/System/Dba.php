@@ -302,7 +302,7 @@ class Dba
     private static function _connect()
     {
         $username = AmpConfig::get('database_username');
-        $hostname = AmpConfig::get('database_hostname');
+        $hostname = AmpConfig::get('database_hostname', '');
         $password = AmpConfig::get('database_password');
         $port     = AmpConfig::get('database_port');
 

@@ -116,7 +116,7 @@ final class UpdateSingleCatalogFile implements UpdateSingleCatalogFileInterface
                     // get the new id after adding it
                     $file_id = Catalog::get_id_from_file($filePath, $type);
                 }
-                if ($searchArtMode == 1 && $file_id) {
+                if ($searchArtMode == 1 && $file_id && $verificationMode === false) {
                     // Look for media art after adding new files
                     Catalog::gather_art_item($type, $file_id, true);
                 }

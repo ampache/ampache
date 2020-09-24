@@ -1769,7 +1769,6 @@ abstract class Catalog extends database_object
         $artist           = self::check_length($results['artist']);
         $artist_mbid      = $results['mb_artistid'];
         $albumartist_mbid = $results['mb_albumartistid'];
-
         // info for the album table.
         $album      = self::check_length($results['album']);
         $album_mbid = $results['mb_albumid'];

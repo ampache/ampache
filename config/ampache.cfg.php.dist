@@ -772,7 +772,7 @@ debug_level = 5
 ; the specified directory exists and your HTTP server has
 ; write access.
 ; DEFAULT: none
-;log_path = "/var/log/ampache"
+log_path = "/var/log/ampache"
 
 ; Log filename pattern
 ; This defines where the log file name pattern

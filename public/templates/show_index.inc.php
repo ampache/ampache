@@ -28,8 +28,12 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-$user = Core::get_global('user');
+?>
+<div id="browse_header">
+<?php UI::show('show_browse_form.inc.php'); ?>
+</div> <!-- Close browse_header Div -->
 
+<?php $user = Core::get_global('user');
 if ($user) {
     foreach (Plugin::get_plugins('display_home') as $plugin_name) {
         $plugin = new Plugin($plugin_name);
@@ -38,9 +42,7 @@ if ($user) {
         }
     }
 } ?>
-<div id="browse_header">
-<?php Ui::show('show_browse_form.inc.php'); ?>
-</div> <!-- Close browse_header Div -->
+
 <?php if (AmpConfig::get('home_now_playing')) { ?>
 <div id="now_playing">
     <?php show_now_playing(); ?>

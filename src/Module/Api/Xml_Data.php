@@ -91,11 +91,7 @@ class Xml_Data
             return false;
         }
 
-        if (strtolower((string)$limit) == "none") {
-            self::$limit = null;
-        } else {
-            self::$limit = (int)($limit);
-        }
+        self::$limit = (strtolower((string) $limit) == "none") ? null : (int) $limit;
 
         return true;
     } // set_limit
@@ -344,6 +340,37 @@ class Xml_Data
     } // keyed_array
 
     /**
+     * object_array
+     *
+     * This will build an xml document from an array of arrays, an id is required for the array data
+     * <root>
+     *   <$object_type>
+     *     <$item id="123">
+     *       <data></data>
+     *
+     * @param  array $array
+     * @param  string $object_type
+     * @param  string $item
+     * @return string return xml
+     */
+    public static function object_array($array, $object_type, $item)
+    {
+        $string = "<$object_type>\n";
+        // Foreach it
+        foreach ($array as $object) {
+            $string .= "\t<$item id=\"" . $object['id'] . "\">\n";
+            foreach ($object as $name => $value) {
+                $filter = (is_numeric($value)) ? $value : "<![CDATA[$value]]>";
+                $string .= ($name !== 'id') ? "\t\t<$name>$filter</$name>\n" : '';
+            }
+            $string .= "\t</$item>\n";
+        } // end foreach
+        $string .= "</$object_type>";
+
+        return self::output_xml($string);
+    } // object_array
+
+    /**
      * indexes
      *
      * This takes an array of artists and then returns a pretty xml document with the information
@@ -507,16 +534,12 @@ class Xml_Data
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist&auth=' . scrub_out(Core::get_request('auth'));
 
             // Handle includes
-            if (in_array("albums", $include)) {
-                $albums = self::albums($artist->get_albums(), array(), $user_id, false);
-            } else {
-                $albums = ($artist->albums ?: 0);
-            }
-            if (in_array("songs", $include)) {
-                $songs = self::songs($artist->get_songs(), $user_id, false);
-            } else {
-                $songs = ($artist->songs ?: 0);
-            }
+            $albums = (in_array("albums", $include))
+                ? self::albums($artist->get_albums(), array(), $user_id, false)
+                : ($artist->albums ?: 0);
+            $songs = (in_array("songs", $include))
+                ? self::songs($artist->get_songs(), $user_id, false)
+                : ($artist->songs ?: 0);
 
             $string .= "<artist id=\"" . $artist->id . "\">\n" . "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n" . "\t<songs>" . $songs . "</songs>\n" . "\t<art><![CDATA[$art_url]]></art>\n" . "\t<flag>" . (!$flag->get_flag($user_id,
                     false) ? 0 : 1) . "</flag>\n" . "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" . "\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" . "\t<averagerating>" . (string)($rating->get_average_rating() ?: null) . "</averagerating>\n" . "\t<mbid><![CDATA[" . $artist->mbid . "]]></mbid>\n" . "\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n" . "\t<yearformed>" . $artist->yearformed . "</yearformed>\n" . "\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n" . "</artist>\n";
@@ -572,11 +595,9 @@ class Xml_Data
             }
 
             // Handle includes
-            if (in_array("songs", $include)) {
-                $songs = self::songs($album->get_songs(), $user_id, false);
-            } else {
-                $songs = $album->song_count;
-            }
+            $songs = (in_array("songs", $include))
+                ? self::songs($album->get_songs(), $user_id, false)
+                :$album->song_count;
 
             // count multiple disks
             if ($album->allow_group_disks) {
@@ -621,7 +642,7 @@ class Xml_Data
              * smartlist = 'smart_1'
              * playlist  = 1000000
              */
-            if (str_replace('smart_', '', (string)$playlist_id) === (string)$playlist_id) {
+            if (str_replace('smart_', '', (string) $playlist_id) === (string) $playlist_id) {
                 $playlist    = new Playlist($playlist_id);
                 $playlist_id = $playlist->id;
                 $playlist->format();
@@ -631,16 +652,12 @@ class Xml_Data
                 $playitem_total = $playlist->get_media_count('song');
                 $playlist_type  = $playlist->type;
             } else {
-                $playlist = new Search((int)str_replace('smart_', '', (string)$playlist_id));
+                $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id));
                 $playlist->format();
 
-                $playlist_name = Search::get_name_byid(str_replace('smart_', '', (string)$playlist_id));
-                if ($playlist->type !== 'public') {
-                    $playlist_user = $playlist->f_user;
-                } else {
-                    $playlist_user = $playlist->type;
-                }
-                $last_count     = ((int)$playlist->last_count > 0) ? $playlist->last_count : 5000;
+                $playlist_name  = Search::get_name_byid(str_replace('smart_', '', (string) $playlist_id));
+                $playlist_user  = ($playlist->type !== 'public') ? $playlist->f_user : $playlist->type;
+                $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
                 $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
                 $playlist_type  = $playlist->type;
             }
