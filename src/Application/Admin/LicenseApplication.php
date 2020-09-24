@@ -28,7 +28,7 @@ namespace Ampache\Application\Admin;
 use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Util\Browse;
+use Ampache\Model\Browse;
 use Ampache\Model\License;
 use Ampache\Module\Util\Ui;
 

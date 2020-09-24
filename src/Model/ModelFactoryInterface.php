@@ -20,16 +20,14 @@
  *
  */
 
-declare(strict_types=1);
+namespace Ampache\Model;
 
-namespace Ampache\Module\Util;
+interface ModelFactoryInterface
+{
+    public function createPlaylist(int $id): Playlist;
 
-use Ampache\Module\Util\FileSystem\FileNameConverter;
-use Ampache\Module\Util\FileSystem\FileNameConverterInterface;
-use function DI\autowire;
-
-return [
-    Horde_Browser::class => autowire(Horde_Browser::class),
-    FileNameConverterInterface::class => autowire(FileNameConverter::class),
-    RequestParserInterface::class => autowire(RequestParser::class),
-];
+    public function createBrowse(
+        ?int $browse_id = null,
+        bool $cached = true
+    ): Browse;
+}

@@ -20,16 +20,12 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Util;
 
-use Ampache\Module\Util\FileSystem\FileNameConverter;
-use Ampache\Module\Util\FileSystem\FileNameConverterInterface;
-use function DI\autowire;
-
-return [
-    Horde_Browser::class => autowire(Horde_Browser::class),
-    FileNameConverterInterface::class => autowire(FileNameConverter::class),
-    RequestParserInterface::class => autowire(RequestParser::class),
-];
+interface RequestParserInterface
+{
+    /**
+     * Return a $REQUEST variable instead of calling directly
+     */
+    public function getFromRequest(string $variable): string;
+}

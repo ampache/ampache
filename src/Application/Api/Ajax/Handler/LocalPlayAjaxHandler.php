@@ -27,7 +27,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Util\Browse;
+use Ampache\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Model\Preference;

@@ -20,6 +20,7 @@
  *
  */
 
+use Ampache\Application\Api\RefreshReorderedApplication;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
 use Ampache\Model\Catalog;
@@ -32,7 +33,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AmpacheRss;
 use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\Util\Browse;
+use Ampache\Model\Browse;
 use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path');
@@ -191,7 +192,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         } ?>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $album->id; ?>', 'reorder_songs_table_<?php echo $album->id; ?>', 'song_',
-                                            '<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=set_track_numbers', 'refresh_album_songs')">
+                                            '<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=set_track_numbers', '<?php echo RefreshReorderedApplication::ACTION_REFRESH_ALBUM_SONGS; ?>')">
                 <?php echo Ui::get_icon('save', $saveorder); ?>
                 &nbsp;&nbsp;<?php echo $saveorder; ?>
             </a>

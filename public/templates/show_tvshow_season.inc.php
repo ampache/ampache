@@ -28,7 +28,7 @@ use Ampache\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\Util\Browse;
+use Ampache\Model\Browse;
 use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path'); ?>

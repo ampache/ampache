@@ -23,7 +23,7 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Userflag;
 use Ampache\Model\Video;
-use Ampache\Module\Util\Browse;
+use Ampache\Model\Browse;
 
 $sql    = Userflag::get_latest_sql('album');
 $browse = new Browse();

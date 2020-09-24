@@ -21,7 +21,7 @@
  */
 
 use Ampache\Model\Share;
-use Ampache\Module\Util\Browse;
+use Ampache\Model\Browse;
 
 $object_ids = Share::get_share_list();
 $browse     = new Browse();

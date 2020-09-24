@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Browse;
+use Ampache\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Model\Playlist;
 

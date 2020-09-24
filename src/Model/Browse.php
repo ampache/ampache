@@ -22,18 +22,12 @@
 
 declare(strict_types=0);
 
-namespace Ampache\Module\Util;
+namespace Ampache\Model;
 
-use Ampache\Model\Album;
-use Ampache\Model\Query;
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Artist;
-use Ampache\Model\Catalog;
-use Ampache\Model\Playlist;
-use Ampache\Model\Song;
-use Ampache\Model\Tag;
-use Ampache\Model\Video;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Module\Util\UI;
 
 /**
  * Browse Class

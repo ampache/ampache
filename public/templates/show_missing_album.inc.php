@@ -22,7 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
-use Ampache\Module\Util\Browse;
+use Ampache\Model\Browse;
 use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path');

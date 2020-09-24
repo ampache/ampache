@@ -24,7 +24,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Model\Video;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Browse;
+use Ampache\Model\Browse;
 use Ampache\Module\Util\Ui;
 
 $thresh_value = AmpConfig::get('stats_threshold');

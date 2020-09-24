@@ -21,7 +21,7 @@
  */
 
 use Ampache\Model\Wanted;
-use Ampache\Module\Util\Browse;
+use Ampache\Model\Browse;
 
 $object_ids = Wanted::get_wanted_list();
 $browse     = new Browse();

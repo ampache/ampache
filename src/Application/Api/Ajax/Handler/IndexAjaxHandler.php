@@ -33,7 +33,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Model\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Artist;
-use Ampache\Module\Util\Browse;
+use Ampache\Model\Browse;
 use Ampache\Model\Catalog;
 use Ampache\Model\Channel;
 use Ampache\Module\System\Core;

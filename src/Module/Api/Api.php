@@ -54,7 +54,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
-use Ampache\Module\Util\Browse;
+use Ampache\Model\Browse;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -82,7 +82,7 @@ class Api
     public static $version = '430000';
 
     /**
-     * @var Browse $browse
+     * @var \Ampache\Model\Browse $browse
      */
     private static $browse = null;
 

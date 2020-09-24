@@ -22,14 +22,27 @@
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Util;
+namespace Ampache\Model;
 
-use Ampache\Module\Util\FileSystem\FileNameConverter;
-use Ampache\Module\Util\FileSystem\FileNameConverterInterface;
-use function DI\autowire;
+/**
+ * This class is used to intantiate model objects (like Playlist, Song, ...)
+ */
+final class ModelFactory implements ModelFactoryInterface
+{
 
-return [
-    Horde_Browser::class => autowire(Horde_Browser::class),
-    FileNameConverterInterface::class => autowire(FileNameConverter::class),
-    RequestParserInterface::class => autowire(RequestParser::class),
-];
+    public function createPlaylist(
+        int $id
+    ): Playlist {
+        return new Playlist($id);
+    }
+
+    public function createBrowse(
+        ?int $browse_id = null,
+        bool $cached = true
+    ): Browse {
+        return new Browse(
+            $browse_id,
+            $cached
+        );
+    }
+}

@@ -22,14 +22,22 @@
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Util;
+namespace Ampache;
 
-use Ampache\Module\Util\FileSystem\FileNameConverter;
-use Ampache\Module\Util\FileSystem\FileNameConverterInterface;
-use function DI\autowire;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Mockery\MockInterface;
+use PHPUnit\Framework\TestCase;
 
-return [
-    Horde_Browser::class => autowire(Horde_Browser::class),
-    FileNameConverterInterface::class => autowire(FileNameConverter::class),
-    RequestParserInterface::class => autowire(RequestParser::class),
-];
+abstract class MockeryTestCase extends TestCase
+{
+    use MockeryPHPUnitIntegration;
+
+    /**
+     * @param string|string[] $className
+     */
+    public function mock($className): MockInterface
+    {
+        return Mockery::mock($className);
+    }
+}
