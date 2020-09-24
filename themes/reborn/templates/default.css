@@ -966,6 +966,7 @@ span#sidebar-header-content::after {
     text-decoration: none;
 }
 
+table.gatherart,
 table.tabledata {
     width: 100%;
     text-align: left;
@@ -1019,7 +1020,6 @@ table.tabledata .th-bottom:focus {
 
 table.gatherart {
     width: 100%;
-    /* table-layout: fixed; */
     text-align: left;
     border: 2px solid black; 
     font-size: 14px;
@@ -1032,7 +1032,6 @@ table.gatherart td {
     padding: 3px 5px 3px 0;
     word-wrap: break-word;
     min-width: 50px;
-  /*  border: 2px solid black; */
 }
 
 table.gatherart thead .th-top,
