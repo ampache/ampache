@@ -282,15 +282,12 @@ class Preference extends database_object
      */
     public static function get_all($user_id)
     {
-        $user_id = Dba::escape($user_id);
+        $user_id    = Dba::escape($user_id);
+        $user_limit = ($user_id != -1) ? "AND `preference`.`catagory` != 'system'" : "";
 
-        $user_limit = "";
-        if ($user_id != '-1') {
-            $user_limit = "AND `preference`.`catagory` != 'system'";
-        }
-
-        $sql = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`subcatagory`, `user_preference`.`value` FROM `preference` " .
-            " INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` " .
+        $sql = "SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`," .
+            " `preference`.`type`, `preference`.`catagory`, `preference`.`subcatagory`, `user_preference`.`value`" .
+            " FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` " .
             " WHERE `user_preference`.`user`='$user_id' AND `preference`.`catagory` != 'internal' $user_limit " .
             " ORDER BY `preference`.`subcatagory`, `preference`.`description`";
 
@@ -298,7 +295,8 @@ class Preference extends database_object
         $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array('name' => $row['name'], 'level' => $row['level'], 'description' => $row['description'], 'value' => $row['value'], 'subcategory' => $row['subcatagory']);
+            $results[] = array('id' => $row['id'], 'name' => $row['name'], 'level' => $row['level'], 'description' => $row['description'],
+                'value' => $row['value'], 'type' => $row['type'], 'category' => $row['catagory'], 'subcategory' => $row['subcatagory']);
         }
 
         return $results;

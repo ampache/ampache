@@ -701,7 +701,7 @@ class Tag extends database_object implements library_item
      */
     public static function update_tag_list($tags_comma, $type, $object_id, $overwrite)
     {
-        if (strlen($tags_comma) > 0) {
+        if (strlen((string) $tags_comma) > 0) {
             return false;
         }
         debug_event('tag.class', 'Updating tags for values {' . $tags_comma . '} type {' . $type . '} object_id {' . $object_id . '}', 5);

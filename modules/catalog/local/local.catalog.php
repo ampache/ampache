@@ -750,7 +750,7 @@ class Catalog_local extends Catalog
             debug_event('local.catalog', 'File not found or empty: ' . $file, 5);
             /* HINT: filename (file path) */
             AmpError::add('general', sprintf(T_('File was not found or is 0 Bytes: %s'), $file));
-            $sql = "DELETE FROM `$media_type` WHERE `file` = '" . $file . "'";
+            $sql = "DELETE FROM `$media_type` WHERE `file` = '" . Dba::escape($file) . "'";
             Dba::write($sql);
         } // if error
         else {

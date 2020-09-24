@@ -70,11 +70,7 @@ class JSON_Data
             return false;
         }
 
-        if (strtolower($limit) == "none") {
-            self::$limit = null;
-        } else {
-            self::$limit = (int) ($limit);
-        }
+        self::$limit = (strtolower((string) $limit) == "none") ? null : (int) $limit;
 
         return true;
     } // set_limit
@@ -295,16 +291,12 @@ class JSON_Data
             $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist&auth=' . scrub_out(Core::get_request('auth'));
 
             // Handle includes
-            if (in_array("albums", $include)) {
-                $albums = self::albums($artist->get_albums(), array(), $user_id, false);
-            } else {
-                $albums = ($artist->albums ?: 0);
-            }
-            if (in_array("songs", $include)) {
-                $songs = self::songs($artist->get_songs(), $user_id, false);
-            } else {
-                $songs = ($artist->songs ?: 0);
-            }
+            $albums = (in_array("albums", $include))
+                ? self::albums($artist->get_albums(), array(), $user_id, false)
+                : ($artist->albums ?: 0);
+            $songs = (in_array("songs", $include))
+                ? self::songs($artist->get_songs(), $user_id, false)
+                : ($artist->songs ?: 0);
 
             array_push($JSON, array(
                 "id" => (string) $artist->id,
@@ -386,11 +378,9 @@ class JSON_Data
             }
 
             // Handle includes
-            if (in_array("songs", $include)) {
-                $songs = self::songs($album->get_songs(), $user_id, false);
-            } else {
-                $songs = $album->song_count;
-            }
+            $songs = (in_array("songs", $include))
+                ? self::songs($album->get_songs(), $user_id, false)
+                : $album->song_count;
 
             // count multiple disks
             if ($album->allow_group_disks) {
@@ -443,8 +433,8 @@ class JSON_Data
              * playlist  = 1000000
              */
             if (str_replace('smart_', '', (string) $playlist_id) === (string) $playlist_id) {
-                $playlist     = new Playlist($playlist_id);
-                $playlist_id  = $playlist->id;
+                $playlist    = new Playlist($playlist_id);
+                $playlist_id = $playlist->id;
                 $playlist->format();
 
                 $playlist_name  = $playlist->name;
@@ -452,15 +442,14 @@ class JSON_Data
                 $playitem_total = $playlist->get_media_count('song');
                 $playlist_type  = $playlist->type;
             } else {
-                $playlist     = new Search((int) str_replace('smart_', '', (string) $playlist_id));
+                $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id));
                 $playlist->format();
 
-                $playlist_name  = Search::get_name_byid(str_replace('smart_', '', (string) $playlist_id));
-                if ($playlist->type !== 'public') {
-                    $playlist_user  = $playlist->f_user;
-                } else {
-                    $playlist_user  = $playlist->type;
-                }
+                $playlist_name = Search::get_name_byid(str_replace('smart_', '', (string) $playlist_id));
+                $playlist_user = ($playlist->type !== 'public')
+                    ? $playlist->f_user
+                    : $playlist->type;
+
                 $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
                 $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
                 $playlist_type  = $playlist->type;

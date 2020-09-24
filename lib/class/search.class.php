@@ -941,9 +941,7 @@ class Search extends playlist_object
             $sql .= ' HAVING ' . $sqltbl['having_sql'];
         }
 
-        if ($this->random > 0) {
-            $sql .= " ORDER BY RAND()";
-        }
+        $sql .= ($this->random > 0) ? " ORDER BY RAND()" : " ORDER BY `file`";
         if ($this->limit > 0) {
             $sql .= " LIMIT " . (string) ($this->limit);
         }
@@ -1299,7 +1297,7 @@ class Search extends playlist_object
                                 "AND `favorite_album_$userid`.`user` = $userid " .
                                 "AND `favorite_album_$userid`.`object_type` = 'album'";
                     // flag once per user
-                    $table['favorite'] .= (!strpos($table['favorite'], "favorite_album_$userid")) ?
+                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_album_$userid")) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
                         "FROM `user_flag` WHERE `user` = $userid) AS `favorite_album_$userid` " .
                         "ON `album`.`id`=`favorite_album_$userid`.`object_id` " .
@@ -1330,7 +1328,7 @@ class Search extends playlist_object
                     $where[] = "`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input";
                 }
                 // rating once per user
-                $table['rating'] .= (!strpos($table['rating'], "rating_" . $my_type . "_" . $userid)) ?
+                $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $userid)) ?
                     "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` " .
                     "WHERE `user` = $userid AND `object_type`='$my_type') " .
                     "AS `rating_" . $my_type . "_" . $userid . "` " .
@@ -1341,7 +1339,7 @@ class Search extends playlist_object
                     $my_type      = 'album';
                     $operator_sql = ((int) $sql_match_operator == 0) ? 'IS NULL' : 'IS NOT NULL';
                     // played once per user
-                    $table['myplayed'] .= (!strpos($table['myplayed'], "myplayed_" . $my_type . "_" . $userid)) ?
+                    $table['myplayed'] .= (!strpos((string) $table['myplayed'], "myplayed_" . $my_type . "_" . $userid)) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
                         "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS " .
@@ -1352,7 +1350,7 @@ class Search extends playlist_object
                     break;
                 case 'last_play':
                     $my_type = 'album';
-                    $table['last_play'] .= (!strpos($table['last_play'], "last_play_" . $my_type . "_" . $userid)) ?
+                    $table['last_play'] .= (!strpos((string) $table['last_play'], "last_play_" . $my_type . "_" . $userid)) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
                         "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS `last_play_" . $my_type . "_" . $userid . "` " .
@@ -1374,7 +1372,7 @@ class Search extends playlist_object
                         $where[] = "`favorite_album_$other_userid`.`user` = $other_userid " .
                             " AND `favorite_album_$other_userid`.`object_type` = 'album'";
                         // flag once per user
-                        $table['favorite'] .= (!strpos($table['favorite'], "favorite_album_$other_userid")) ?
+                        $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_album_$other_userid")) ?
                             "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
                             "from `user_flag` WHERE `user` = $other_userid) AS `favorite_album_$other_userid` " .
                             "ON `song`.`album`=`favorite_album_$other_userid`.`object_id` " .
@@ -1386,7 +1384,7 @@ class Search extends playlist_object
                                    " AND `rating_album_$other_userid`.`user` = $other_userid " .
                                    " AND `rating_album_$other_userid`.`object_type` = 'album'";
                         // rating once per user
-                        $table['rating'] .= (!strpos($table['rating'], "rating_" . $my_type . "_" . $userid)) ?
+                        $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $userid)) ?
                             "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $userid . "` ON " .
                             "`rating_" . $my_type . "_" . $userid . "`.`object_type`='$my_type' AND " .
                             "`rating_" . $my_type . "_" . $userid . "`.`object_id`=`$my_type`.`$column` AND " .
@@ -1554,7 +1552,7 @@ class Search extends playlist_object
                                "AND `favorite_artist_$userid`.`user` = $userid " .
                                "AND `favorite_artist_$userid`.`object_type` = 'artist'";
                     // flag once per user
-                    $table['favorite'] .= (!strpos($table['favorite'], "favorite_artist_$userid")) ?
+                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_artist_$userid")) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
                         "FROM `user_flag` WHERE `user` = $userid) AS `favorite_artist_$userid` " .
                         "ON `artist`.`id`=`favorite_artist_$userid`.`object_id` " .
@@ -1596,7 +1594,7 @@ class Search extends playlist_object
                         $where[] = "`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input";
                     }
                     // rating once per user
-                    $table['rating'] .= (!strpos($table['rating'], "rating_" . $my_type . "_" . $userid)) ?
+                    $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $userid)) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` " .
                         "WHERE `user` = $userid AND `object_type`='$my_type') " .
                         "AS `rating_" . $my_type . "_" . $userid . "` " .
@@ -1607,7 +1605,7 @@ class Search extends playlist_object
                     $my_type      = 'artist';
                     $operator_sql = ((int) $sql_match_operator == 0) ? 'IS NULL' : 'IS NOT NULL';
                     // played once per user
-                    $table['myplayed'] .= (!strpos($table['myplayed'], "myplayed_" . $my_type . "_" . $userid)) ?
+                    $table['myplayed'] .= (!strpos((string) $table['myplayed'], "myplayed_" . $my_type . "_" . $userid)) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
                         "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS " .
@@ -1618,7 +1616,7 @@ class Search extends playlist_object
                     break;
                 case 'last_play':
                     $my_type = 'artist';
-                    $table['last_play'] .= (!strpos($table['last_play'], "last_play_" . $my_type . "_" . $userid)) ?
+                    $table['last_play'] .= (!strpos((string) $table['last_play'], "last_play_" . $my_type . "_" . $userid)) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
                         "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS `last_play_" . $my_type . "_" . $userid . "` " .
@@ -1637,7 +1635,7 @@ class Search extends playlist_object
                         $where[] = "`favorite_artist_$other_userid`.`user` = $other_userid " .
                             " AND `favorite_artist_$other_userid`.`object_type` = 'artist'";
                         // flag once per user
-                        $table['favorite'] .= (!strpos($table['favorite'], "favorite_artist_$other_userid")) ?
+                        $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_artist_$other_userid")) ?
                             "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
                             "FROM `user_flag` WHERE `user` = $other_userid) AS `favorite_artist_$other_userid` " .
                             "ON `song`.`artist`=`favorite_artist_$other_userid`.`object_id` " .
@@ -1649,7 +1647,7 @@ class Search extends playlist_object
                                    " AND `rating_artist_$other_userid`.`user` = $other_userid " .
                                    " AND `rating_artist_$other_userid`.`object_type` = 'artist'";
                         // rating once per user
-                        $table['rating'] .= (!strpos($table['rating'], "rating_" . $my_type . "_" . $userid)) ?
+                        $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $userid)) ?
                             "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $userid . "` ON " .
                             "`rating_" . $my_type . "_" . $userid . "`.`object_type`='$my_type' AND " .
                             "`rating_" . $my_type . "_" . $userid . "`.`object_id`=`$my_type`.`$column` AND " .
@@ -1891,7 +1889,7 @@ class Search extends playlist_object
                     break;
                 case 'last_play':
                     $my_type = 'song';
-                    $table['last_play'] .= (!strpos($table['last_play'], "last_play_" . $my_type . "_" . $userid)) ?
+                    $table['last_play'] .= (!strpos((string) $table['last_play'], "last_play_" . $my_type . "_" . $userid)) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` " .
                         "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
                         "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS `last_play_" . $my_type . "_" . $userid . "` " .
@@ -1929,7 +1927,7 @@ class Search extends playlist_object
                 $my_type      = ($looking == '') ? 'song' : $looking;
                 $operator_sql = ((int) $sql_match_operator == 0) ? 'IS NULL' : 'IS NOT NULL';
                 // played once per user
-                $table['myplayed'] .= (!strpos($table['myplayed'], "myplayed_" . $my_type . "_" . $userid)) ?
+                $table['myplayed'] .= (!strpos((string) $table['myplayed'], "myplayed_" . $my_type . "_" . $userid)) ?
                     "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` " .
                     "WHERE `object_count`.`object_type` = '$my_type' AND `object_count`.`count_type` = 'stream' " .
                     "AND `object_count`.`user`=$userid GROUP BY `object_id`, `object_type`, `user`) AS " .
@@ -1954,7 +1952,7 @@ class Search extends playlist_object
                                "AND `favorite_song_$userid`.`user` = $userid " .
                                "AND `favorite_song_$userid`.`object_type` = 'song'";
                     // flag once per user
-                    $table['favorite'] .= (!strpos($table['favorite'], "favorite_song_$userid")) ?
+                    $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_song_$userid")) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
                         "FROM `user_flag` WHERE `user` = $userid) AS `favorite_song_$userid` " .
                         "ON `song`.`id`=`favorite_song_$userid`.`object_id` " .
@@ -1986,7 +1984,7 @@ class Search extends playlist_object
                         $where[] = "`rating_" . $my_type . "_" . $userid . "`.`rating` $sql_match_operator $input";
                     }
                     // rating once per user
-                    $table['rating'] .= (!strpos($table['rating'], "rating_" . $my_type . "_" . $userid)) ?
+                    $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $userid)) ?
                         "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` " .
                         "WHERE `user` = $userid AND `object_type`='$my_type') " .
                         "AS `rating_" . $my_type . "_" . $userid . "` " .
@@ -2007,7 +2005,7 @@ class Search extends playlist_object
                         $where[] = "`favorite_" . $my_type . "_" . $other_userid . "`.`user` = $other_userid " .
                                    " AND `favorite_" . $my_type . "_" . $other_userid . "`.`object_type` = '$my_type'";
                         // flag once per user
-                        $table['favorite'] .= (!strpos($table['favorite'], "favorite_" . $my_type . "_" . $other_userid . "")) ?
+                        $table['favorite'] .= (!strpos((string) $table['favorite'], "favorite_" . $my_type . "_" . $other_userid . "")) ?
                             "LEFT JOIN (SELECT `object_id`, `object_type`, `user` " .
                             "from `user_flag` WHERE `user` = $other_userid) AS `favorite_" . $my_type . "_" . $other_userid . "` " .
                             "ON `song`.`$column`=`favorite_" . $my_type . "_" . $other_userid . "`.`object_id` " .
@@ -2019,7 +2017,7 @@ class Search extends playlist_object
                             " AND `rating_" . $my_type . "_" . $other_userid . "`.`user` = $other_userid " .
                             " AND `rating_" . $my_type . "_" . $other_userid . "`.`object_type` = '$my_type'";
                         // rating once per user
-                        $table['rating'] .= (!strpos($table['rating'], "rating_" . $my_type . "_" . $other_userid)) ?
+                        $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $other_userid)) ?
                             "LEFT JOIN `rating` AS `rating_" . $my_type . "_" . $other_userid . "` ON " .
                             "`rating_" . $my_type . "_" . $other_userid . "`.`object_type`='$my_type' AND " .
                             "`rating_" . $my_type . "_" . $other_userid . "`.`object_id`=`song`.`$column` AND " .
@@ -2044,7 +2042,7 @@ class Search extends playlist_object
                         foreach ($results as $item) {
                             $itemstring .= ' ' . $item['object_id'] . ',';
                         }
-                        $table['smart'] .= (!strpos($table['smart'], "smart_" . $input)) ?
+                        $table['smart'] .= (!strpos((string) $table['smart'], "smart_" . $input)) ?
                             "LEFT JOIN (SELECT `id` FROM `song` " .
                             "WHERE `id` $sql_match_operator IN (" . substr($itemstring, 0, -1) . ")) " .
                             "AS `smartlist_$input` ON `smartlist_$input`.`id` = `song`.`id`" : ' ';

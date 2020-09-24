@@ -784,7 +784,7 @@ debug_level = 5
 ; the specified directory exists and your HTTP server has
 ; write access.
 ; DEFAULT: none
-;log_path = "/var/log/ampache"
+log_path = "/var/log/ampache"
 
 ; Log filename pattern
 ; This defines where the log file name pattern
@@ -1149,8 +1149,8 @@ encode_ss_duration = "-t %DURATION%"
 ; Useful if you are having issues streaming the full track.
 ; You can set it for all streams or a specific player
 ; POSSIBLE VALUES: true webplayer api
-; DEFAULT: "false"
-;send_full_stream = "webplayer"
+; DEFAULT: "webplayer"
+send_full_stream = "webplayer"
 
 ;#########################################################
 ; Proxy Settings (optional)                              #

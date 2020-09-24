@@ -228,13 +228,7 @@ class Api
         }
         $username = trim((string) $input['user']);
         $user_ip  = Core::get_user_ip();
-        if (isset($input['version'])) {
-            // If version is provided, use it
-            $version = $input['version'];
-        } else {
-            // Else, just use the latest version available
-            $version = self::$version;
-        }
+        $version  = (isset($input['version'])) ? $input['version'] : self::$version;
 
         // Log the attempt
         debug_event('api.class', "Handshake Attempt, IP:$user_ip User:$username Version:$version", 5);
@@ -690,7 +684,7 @@ class Api
 
         $artists = self::$browse->get_objects();
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
+        $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -725,7 +719,7 @@ class Api
         }
         $uid     = array((int) scrub_in($input['filter']));
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
+        $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
         switch ($input['api_format']) {
             case 'json':
                 echo JSON_Data::artists($uid, $include, $user->id);
@@ -843,7 +837,7 @@ class Api
 
         $albums  = self::$browse->get_objects();
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
+        $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -878,7 +872,7 @@ class Api
         }
         $uid     = (int) scrub_in($input['filter']);
         $user    = User::get_from_username(Session::username($input['auth']));
-        $include = (is_array($input['include'])) ? $input['include'] : explode(',', $input['include']);
+        $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
         switch ($input['api_format']) {
             case 'json':
                 echo JSON_Data::albums(array($uid), $include, $user->id);
@@ -1328,6 +1322,44 @@ class Api
     } // song
 
     /**
+     * song_delete
+     *
+     * MINIMUM_API_VERSION=430000
+     *
+     * Delete an existing song.
+     *
+     * @param array $input
+     * filter = (string) UID of song to delete
+     * @return boolean
+     */
+    public static function song_delete($input)
+    {
+        if (!self::check_parameter($input, array('filter'), 'song_delete')) {
+            return false;
+        }
+        $object_id = (int) $input['filter'];
+        $song      = new Song($object_id);
+        $user      = User::get_from_username(Session::username($input['auth']));
+        if (!Catalog::can_remove($song, $user->id)) {
+            self::message('error', T_('Access Denied: Unable to delete song'), '412', $input['api_format']);
+
+            return false;
+        }
+        if ($song->id) {
+            if ($song->remove()) {
+                self::message('success', 'song ' . $object_id . ' deleted', null, $input['api_format']);
+            } else {
+                self::message('error', 'song ' . $object_id . ' was not deleted', '400', $input['api_format']);
+            }
+        } else {
+            self::message('error', 'song ' . $object_id . ' was not found', '404', $input['api_format']);
+        }
+        Session::extend($input['auth']);
+
+        return true;
+    } // song_delete
+
+    /**
      * playlists
      * MINIMUM_API_VERSION=380001
      *
@@ -1386,13 +1418,10 @@ class Api
         $user = User::get_from_username(Session::username($input['auth']));
         $uid  = scrub_in($input['filter']);
 
-        if (str_replace('smart_', '', $uid) === $uid) {
-            // Playlists
-            $playlist = new Playlist((int) $uid);
-        } else {
-            // Smartlists
-            $playlist = new Search((int) str_replace('smart_', '', $uid), 'song', $user);
-        }
+        $playlist = (str_replace('smart_', '', $uid) === $uid)
+            ? new Playlist((int) $uid)
+            : new Search((int) str_replace('smart_', '', $uid), 'song', $user);
+
         if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
             self::message('error', T_('Access denied to this playlist'), '412', $input['api_format']);
 
@@ -1431,13 +1460,11 @@ class Api
         $user = User::get_from_username(Session::username($input['auth']));
         $uid  = scrub_in($input['filter']);
         debug_event('api.class', 'User ' . $user->id . ' loading playlist: ' . $input['filter'], 5);
-        if (str_replace('smart_', '', $uid) === $uid) {
-            // Playlists
-            $playlist = new Playlist((int) $uid);
-        } else {
-            // Smartlists
-            $playlist = new Search((int) str_replace('smart_', '', $uid), 'song', $user);
-        }
+
+        $playlist = (str_replace('smart_', '', $uid) === $uid)
+            ? new Playlist((int) $uid)
+            : new Search((int) str_replace('smart_', '', $uid), 'song', $user);
+
         if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
             self::message('error', T_('Access denied to this playlist'), '412', $input['api_format']);
 
@@ -1529,8 +1556,8 @@ class Api
         }
         $name  = $input['name'];
         $type  = $input['type'];
-        $items = explode(',', $input['items']);
-        $order = explode(',', $input['tracks']);
+        $items = explode(',', (string) $input['items']);
+        $order = explode(',', (string) $input['tracks']);
         $sort  = (int) $input['sort'];
         // calculate whether we are editing the track order too
         $playlist_edit = array();
@@ -2245,12 +2272,10 @@ class Api
             case 'recent':
             case 'forgotten':
                 debug_event('api.class', 'stats ' . $input['filter'], 4);
-                $newest = $input['filter'] == 'recent';
-                if ($user->id) {
-                    $results = $user->get_recently_played($limit, $type, $newest);
-                } else {
-                    $results = Stats::get_recent($type, $limit, $offset, $newest);
-                }
+                $newest  = $input['filter'] == 'recent';
+                $results = ($user->id)
+                    ? $user->get_recently_played($limit, $type, $newest)
+                    : Stats::get_recent($type, $limit, $offset, $newest);
                 break;
             case 'flagged':
                 debug_event('api.class', 'stats flagged', 4);
@@ -2419,7 +2444,7 @@ class Api
 
             return false;
         }
-        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['api_format'])) {
+        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'podcast_create', $input['api_format'])) {
             return false;
         }
         if (!self::check_parameter($input, array('url', 'catalog'), 'podcast_create')) {
@@ -2465,7 +2490,7 @@ class Api
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
-        if (!self::check_access('interface', 75, $user->id, 'update_podcast', $input['api_format'])) {
+        if (!self::check_access('interface', 75, $user->id, 'podcast_delete', $input['api_format'])) {
             return false;
         }
         if (!self::check_parameter($input, array('filter'), 'podcast_delete')) {
@@ -2512,7 +2537,7 @@ class Api
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
-        if (!self::check_access('interface', 50, $user->id, 'edit_podcast', $input['api_format'])) {
+        if (!self::check_access('interface', 50, $user->id, 'podcast_edit', $input['api_format'])) {
             return false;
         }
         if (!self::check_parameter($input, array('filter'), 'podcast_edit')) {
@@ -2611,7 +2636,7 @@ class Api
 
             return false;
         }
-        if (!self::check_parameter($input, array('filter'), 'podcast')) {
+        if (!self::check_parameter($input, array('filter'), 'podcast_episode')) {
             return false;
         }
         $object_id = (int) $input['filter'];
@@ -2651,15 +2676,18 @@ class Api
 
             return false;
         }
-        if (!self::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['api_format'])) {
-            return false;
-        }
         if (!self::check_parameter($input, array('filter'), 'podcast_episode_delete')) {
             return false;
         }
         $object_id = (int) $input['filter'];
         $episode   = new Podcast_Episode($object_id);
-        if ($episode->id > 0) {
+        $user      = User::get_from_username(Session::username($input['auth']));
+        if (!Catalog::can_remove($episode, $user->id)) {
+            self::message('error', T_('Access Denied: Unable to delete podcast_episode'), '412', $input['api_format']);
+
+            return false;
+        }
+        if ($episode->id) {
             if ($episode->remove()) {
                 self::message('success', 'podcast_episode ' . $object_id . ' deleted', null, $input['api_format']);
             } else {
@@ -2704,7 +2732,7 @@ class Api
      * This get a user's public information
      *
      * @param array $input
-     * username = (string) $username)
+     * username = (string) $username
      * @return boolean
      */
     public static function user($input)
@@ -2738,6 +2766,30 @@ class Api
 
         return true;
     } // user
+
+    /**
+     * user_preferences
+     * MINIMUM_API_VERSION=430000
+     *
+     * Get your user preferences
+     *
+     * @param array $input
+     * @return boolean
+     */
+    public static function user_preferences($input)
+    {
+        $user         = User::get_from_username(Session::username($input['auth']));
+        $preferences  = Preference::get_all($user->id);
+        $output_array =  array('preferences' => $preferences);
+        switch ($input['api_format']) {
+            case 'json':
+                echo json_encode($output_array, JSON_PRETTY_PRINT);
+                break;
+            default:
+                echo XML_Data::object_array($output_array['preferences'], 'preferences', 'pref');
+        }
+        Session::extend($input['auth']);
+    } // user_preferences
 
     /**
      * user_create
@@ -3059,11 +3111,9 @@ class Api
             $limit = AmpConfig::get('popular_threshold', 10);
         }
         $username = $input['username'];
-        if (!empty($username)) {
-            $shouts = Shoutbox::get_top($limit, $username);
-        } else {
-            $shouts = Shoutbox::get_top($limit);
-        }
+        $shouts   = (!empty($username))
+            ? Shoutbox::get_top($limit, $username)
+            : Shoutbox::get_top($limit);
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -3230,11 +3280,9 @@ class Api
         }
 
         // validate client string or fall back to 'api'
-        if ($input['client']) {
-            $agent = $input['client'];
-        } else {
-            $agent = 'api';
-        }
+        $agent = ($input['client'])
+            ? $input['client']
+            : 'api';
 
         $item = new Song($object_id);
         if (!$item->id) {
@@ -3308,11 +3356,9 @@ class Api
         }
 
         // validate client string or fall back to 'api'
-        if ($input['client']) {
-            $agent = $input['client'];
-        } else {
-            $agent = 'api';
-        }
+        $agent = ($input['client'])
+            ? $input['client']
+            : 'api';
         $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, (string) $song_mbid, (string) $artist_mbid, (string) $album_mbid);
 
         if ($scrobble_id === '') {
@@ -4186,4 +4232,70 @@ class Api
         } // switch on method
         Session::extend($input['auth']);
     } // democratic
+
+    /**
+     * system_update
+     * MINIMUM_API_VERSION=400001
+     *
+     * Check Ampache for updates and run the update if there is one.
+     *
+     * @param array $input
+     * @return boolean
+     */
+    public static function system_update($input)
+    {
+        $user = User::get_from_username(Session::username($input['auth']));
+        if (!self::check_access('interface', 100, $user->id)) {
+            return false;
+        }
+        if (AutoUpdate::is_update_available(true)) {
+            // run the update
+            AutoUpdate::update_files();
+            AutoUpdate::update_dependencies();
+            // check that the update completed or failed failed.
+            if (AutoUpdate::is_update_available(true)) {
+                self::message('error', 'update failed', '400', $input['api_format']);
+                Session::extend($input['auth']);
+
+                return false;
+            }
+            // there was an update and it was successful
+            self::message('success', 'update successful', null, $input['api_format']);
+            Session::extend($input['auth']);
+
+            return true;
+        }
+        //no update available but you are an admin so tell them
+        self::message('success', 'No update available', null, $input['api_format']);
+        Session::extend($input['auth']);
+
+        return true;
+    } // system_update
+
+    /**
+     * system_preferences
+     * MINIMUM_API_VERSION=430000
+     *
+     * Get your system preferences
+     *
+     * @param array $input
+     * @return boolean
+     */
+    public static function system_preferences($input)
+    {
+        $user = User::get_from_username(Session::username($input['auth']));
+        if (!self::check_access('interface', 100, $user->id)) {
+            return false;
+        }
+        $preferences  = Preference::get_all(-1);
+        $output_array =  array('preferences' => $preferences);
+        switch ($input['api_format']) {
+            case 'json':
+                echo json_encode($output_array, JSON_PRETTY_PRINT);
+                break;
+            default:
+                echo XML_Data::object_array($output_array['preferences'], 'preferences', 'pref');
+        }
+        Session::extend($input['auth']);
+    } // system_preferences
 } // end api.class
