@@ -24,6 +24,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
 
 $tag_types = array(
@@ -31,7 +32,9 @@ $tag_types = array(
     'album' => T_('Album'),
     'song' => T_('Song'),
     'video' => T_('Video'),
-); ?>
+);
+global $dic;
+?>
 <?php Ajax::start_container('tag_filter'); ?>
 
 <form action="<?php echo AmpConfig::get('web_path'); ?>/browse.php?action=tag" method="POST">
@@ -64,7 +67,7 @@ $tag_types = array(
                     </a>
                 </li>
                 <li>
-                    <a class="tag_delete" href="<?php echo AmpConfig::get('ajax_url') ?>?page=tag&action=delete&tag_id=<?php echo $data['id']; ?>" onclick="return confirm('<?php echo T_('Do you really want to delete this Tag?'); ?>');"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+                    <a class="tag_delete" href="<?php echo $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri(); ?>?page=tag&action=delete&tag_id=<?php echo $data['id']; ?>" onclick="return confirm('<?php echo T_('Do you really want to delete this Tag?'); ?>');"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
                 </li>
             </ul>
         </div>

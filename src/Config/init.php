@@ -254,10 +254,6 @@ if (session_id()) {
     Core::get_global('user')->load_playlist();
 }
 
-// Add in some variables for ajax done here because we need the user
-AmpConfig::set('ajax_url', AmpConfig::get('web_path') . '/server/ajax.server.php', true);
-AmpConfig::set('ajax_server', AmpConfig::get('web_path') . '/server', true);
-
 // Set CHARSET
 header("Content-Type: text/html; charset=" . AmpConfig::get('site_charset'));
 

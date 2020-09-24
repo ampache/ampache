@@ -26,6 +26,7 @@ namespace Ampache\Model;
 
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\UI;
 
@@ -382,12 +383,15 @@ class Browse extends Query
      */
     public function show_next_link($argument = null)
     {
+        // FIXME Can be removed if Browse gets instantiated by the factory
+        global $dic;
+
         $limit       = $this->get_offset();
         $start       = $this->get_start();
         $total       = $this->get_total();
         $next_offset = $start + $limit;
         if ($next_offset <= $total) {
-            echo '<a class="jscroll-next" href="' . AmpConfig::get('ajax_url') . '?page=browse&action=page&browse_id=' . $this->id . '&start=' . $next_offset . '&xoutput=raw&xoutputnode=' . $this->get_content_div() . '&show_header=false' . $argument . '">' . T_('More') . '</a>';
+            echo '<a class="jscroll-next" href="' . $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri() . '?page=browse&action=page&browse_id=' . $this->id . '&start=' . $next_offset . '&xoutput=raw&xoutputnode=' . $this->get_content_div() . '&show_header=false' . $argument . '">' . T_('More') . '</a>';
         }
     }
 

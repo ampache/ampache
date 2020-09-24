@@ -1,9 +1,6 @@
 <?php
-
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,16 +20,11 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Config;
+namespace Ampache\Module\Util;
 
-/**
- * This class contains constants for all available configuration keys
- */
-final class ConfigurationKeyEnum
+interface AjaxUriRetrieverInterface
 {
-    public const SESSION_NAME   = 'session_name';
-    public const BACKEND_WEBDAV = 'webdav_backend';
-    public const RAW_WEB_PATH   = 'raw_web_path';
-    public const USE_AUTH       = 'use_auth';
-    public const WEB_PATH       = 'web_path';
+    public function getAjaxUri(): string;
+
+    public function getAjaxServerUri(): string;
 }

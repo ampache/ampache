@@ -61,4 +61,9 @@ interface ConfigContainerInterface
      * Returns the raw web path
      */
     public function getRawWebPath(): string;
+
+    /**
+     * Returns the web path
+     */
+    public function getWebPath(): string;
 }

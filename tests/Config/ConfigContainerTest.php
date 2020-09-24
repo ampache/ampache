@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -23,9 +21,11 @@ declare(strict_types=1);
  *
  */
 
+declare(strict_types=1);
+
 namespace Ampache\Config;
 
-use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Ampache\MockeryTestCase;
 
 class ConfigContainerTest extends MockeryTestCase
 {
@@ -133,6 +133,24 @@ class ConfigContainerTest extends MockeryTestCase
         static::assertSame(
             '',
             $this->createSubject()->getRawWebPath()
+        );
+    }
+
+    public function testGetWebPathReturnsPath(): void
+    {
+        $value = 'some-path';
+
+        static::assertSame(
+            $value,
+            $this->createSubject([ConfigurationKeyEnum::WEB_PATH => $value])->getWebPath()
+        );
+    }
+
+    public function testGetWebPathReturnsDefault(): void
+    {
+        static::assertSame(
+            '',
+            $this->createSubject([])->getWebPath()
         );
     }
 

@@ -27,6 +27,7 @@ namespace Ampache\Application\Api;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
+use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
@@ -37,6 +38,14 @@ use Ampache\Module\Util\Ui;
 
 final class EditApplication implements ApplicationInterface
 {
+    private AjaxUriRetrieverInterface $ajaxUriRetriever;
+
+    public function __construct(
+        AjaxUriRetrieverInterface $ajaxUriRetriever
+    ) {
+        $this->ajaxUriRetriever = $ajaxUriRetriever;
+    }
+
     public function run(): void
     {
         $results = '';

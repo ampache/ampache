@@ -31,7 +31,7 @@ namespace Ampache\Config;
  */
 final class ConfigContainer implements ConfigContainerInterface
 {
-    private $configuration;
+    private array $configuration;
 
     public function __construct(
         array $configuration
@@ -69,5 +69,10 @@ final class ConfigContainer implements ConfigContainerInterface
     public function getRawWebPath(): string
     {
         return $this->configuration[ConfigurationKeyEnum::RAW_WEB_PATH] ?? '';
+    }
+
+    public function getWebPath(): string
+    {
+        return $this->configuration[ConfigurationKeyEnum::WEB_PATH] ?? '';
     }
 }

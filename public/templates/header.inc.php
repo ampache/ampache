@@ -28,6 +28,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 
@@ -48,7 +49,12 @@ $t_playlists = T_('Playlists');
 $t_tagcloud  = T_('Genres');
 $t_favorites = T_('Favorites');
 $t_upload    = T_('Upload');
-$t_logout    = T_('Log out'); ?>
+$t_logout    = T_('Log out');
+
+global $dic;
+
+$ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
+?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl(AmpConfig::get('lang')) ? 'rtl' : 'ltr';?>">
     <head>
@@ -110,9 +116,9 @@ $t_logout    = T_('Log out'); ?>
             });
 
             // Using the following workaround to set global variable available from any javascript script.
-            var jsAjaxUrl = "<?php echo AmpConfig::get('ajax_url') ?>";
+            var jsAjaxUrl = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>";
             var jsWebPath = "<?php echo $web_path; ?>";
-            var jsAjaxServer = "<?php echo AmpConfig::get('ajax_server') ?>";
+            var jsAjaxServer = "<?php echo $ajaxUriRetriever->getAjaxServerUri(); ?>";
             var jsSaveTitle = "<?php echo T_('Save') ?>";
             var jsCancelTitle = "<?php echo T_('Cancel') ?>";
         </script>
