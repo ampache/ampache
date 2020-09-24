@@ -1,3 +1,7 @@
+<?php
+use Ampache\Config\AmpConfig;
+
+?>
 <h1><?php echo T_('Use of cookies by Ampache'); ?></h1>
 <br />
 <p>
@@ -73,4 +77,3 @@
         </tr>
     </tbody>
 </table>
-use Ampache\Config\AmpConfig;use Ampache\Config\AmpConfig;
