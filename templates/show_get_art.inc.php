@@ -94,7 +94,7 @@
           </tr>
           <tr>
           <td>
-             <label  for="searchLimit"> <?php echo T_('Limit'); ?>: </label>
+             <label id="gatherLimit" for="searchLimit"> <?php echo T_('Limit'); ?>: </label>
               <input type="number" id="searchLimit"
                 name="search_limit" required min="1" max="50" value="<?php echo $limit; ?>">
           </td>
