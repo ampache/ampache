@@ -29,7 +29,6 @@ namespace Ampache\Model;
  */
 final class ModelFactory implements ModelFactoryInterface
 {
-
     public function createPlaylist(
         int $id
     ): Playlist {
