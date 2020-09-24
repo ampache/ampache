@@ -33,4 +33,5 @@ return [
     FileNameConverterInterface::class => autowire(FileNameConverter::class),
     RequestParserInterface::class => autowire(RequestParser::class),
     AjaxUriRetrieverInterface::class => autowire(AjaxUriRetriever::class),
+    EnvironmentCheckerInterface::class => autowire(EnvironmentChecker::class),
 ];

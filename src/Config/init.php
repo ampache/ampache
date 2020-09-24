@@ -32,6 +32,8 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Module\System\Update;
+use Ampache\Module\Util\EnvironmentChecker;
+use Ampache\Module\Util\EnvironmentCheckerInterface;
 use Ampache\Module\Util\Ui;
 use Psr\Container\ContainerInterface;
 
@@ -66,9 +68,10 @@ if (!file_exists($configfile)) {
     }
 }
 
+$envChecker = $dic->get(EnvironmentCheckerInterface::class);
 // Verify that a few important but commonly disabled PHP functions exist and
 // that we're on a usable version
-if (!check_php() || !check_dependencies_folder() || !check_php_intl()) {
+if ($envChecker->check() === false) {
     $link = $path . '/test.php';
 }
 

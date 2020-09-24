@@ -24,8 +24,12 @@ use Ampache\Config\AmpConfig;
 use Ampache\Model\Preference;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\Util\Cron;
+use Ampache\Module\Util\EnvironmentCheckerInterface;
 use Ampache\Module\Util\Ui;
 
+global $dic;
+
+$envChecker = $dic->get(EnvironmentCheckerInterface::class);
 ?>
 <?php Ui::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>
     <div id="information_actions">
@@ -118,7 +122,7 @@ use Ampache\Module\Util\Ui;
             </tr>
             <tr class="<?php echo Ui::flip_class(); ?>">
                 <td><?php echo T_('PHP intl extension'); ?></td>
-                <td><?php echo print_bool(check_php_intl()); ?></td>
+                <td><?php echo print_bool($envChecker->check_php_intl()); ?></td>
             </tr>
             </tbody>
         </table>

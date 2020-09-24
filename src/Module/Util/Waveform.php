@@ -248,7 +248,10 @@ class Waveform
             return null;
         }
 
-        if (!check_php_gd()) {
+        // FIXME remove...
+        global $dic;
+
+        if (!$dic->get(EnvironmentCheckerInterface::class)->check_php_gd()) {
             debug_event('waveform.class', 'GD extension must be loaded', 1);
 
             return null;
