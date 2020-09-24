@@ -89,7 +89,7 @@ foreach ($methods as $method) {
 
     // If the method is the same as the action being called
     // Then let's call this function!
-    if (str_replace('tag', 'genre', $_GET['action']) == $method) {
+    if (str_replace('tag_', 'genre_', $_GET['action']) == $method) {
         $_GET['api_format'] = 'json';
         call_user_func(array('api', $method),$_GET);
         // We only allow a single function to be called, and we assume it's cleaned up!
