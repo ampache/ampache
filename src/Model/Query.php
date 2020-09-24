@@ -68,7 +68,166 @@ class Query
     /**
      * @var array $allowed_sorts
      */
-    private static $allowed_sorts;
+    private static $allowed_sorts = [
+        'song' => array(
+            'title',
+            'year',
+            'track',
+            'time',
+            'album',
+            'artist'
+        ),
+        'artist' => array(
+            'name',
+            'album',
+            'placeformed',
+            'yearformed'
+        ),
+        'tag' => array(
+            'tag',
+            'name'
+        ),
+        'album' => array(
+            'name',
+            'year',
+            'artist',
+            'album_artist',
+            'generic_artist'
+        ),
+        'playlist' => array(
+            'name',
+            'user',
+            'last_update'
+        ),
+        'smartplaylist' => array(
+            'name',
+            'user'
+        ),
+        'shoutbox' => array(
+            'date',
+            'user',
+            'sticky'
+        ),
+        'live_stream' => array(
+            'name',
+            'call_sign',
+            'frequency'
+        ),
+        'video' => array(
+            'title',
+            'resolution',
+            'length',
+            'codec'
+        ),
+        'user' => array(
+            'fullname',
+            'username',
+            'last_seen',
+            'create_date'
+        ),
+        'wanted' => array(
+            'user',
+            'accepted',
+            'artist',
+            'name',
+            'year'
+        ),
+        'share' => array(
+            'object',
+            'object_type',
+            'user',
+            'creation_date',
+            'lastvisit_date',
+            'counter',
+            'max_counter',
+            'allow_stream',
+            'allow_download',
+            'expire'
+        ),
+        'channel' => array(
+            'id',
+            'name',
+            'interface',
+            'port',
+            'max_listeners',
+            'listeners'
+        ),
+        'broadcast' => array(
+            'name',
+            'user',
+            'started',
+            'listeners'
+        ),
+        'license' => array(
+            'name'
+        ),
+        'tvshow' => array(
+            'name',
+            'year'
+        ),
+        'tvshow_season' => array(
+            'season',
+            'tvshow'
+        ),
+        'tvshow_episode' => array(
+            'title',
+            'resolution',
+            'length',
+            'codec',
+            'episode',
+            'season',
+            'tvshow'
+        ),
+        'movie' => array(
+            'title',
+            'resolution',
+            'length',
+            'codec',
+            'release_date'
+        ),
+        'clip' => array(
+            'title',
+            'artist',
+            'resolution',
+            'length',
+            'codec',
+            'release_date'
+        ),
+        'personal_video' => array(
+            'title',
+            'location',
+            'resolution',
+            'length',
+            'codec',
+            'release_date'
+        ),
+        'label' => array(
+            'name',
+            'category',
+            'user'
+        ),
+        'pvmsg' => array(
+            'subject',
+            'to_user',
+            'creation_date',
+            'is_read'
+        ),
+        'follower' => array(
+            'user',
+            'follow_user',
+            'follow_date'
+        ),
+        'podcast' => array(
+            'title'
+        ),
+        'podcast_episode' => array(
+            'title',
+            'category',
+            'author',
+            'time',
+            'pubDate'
+        )
+    ];
 
     /**
      * constructor
@@ -518,167 +677,6 @@ class Query
             if (Access::check('interface', 50)) {
                 array_push(self::$allowed_filters['playlist'], 'playlist_type');
             }
-
-            self::$allowed_sorts = array(
-                'song' => array(
-                    'title',
-                    'year',
-                    'track',
-                    'time',
-                    'album',
-                    'artist'
-                ),
-                'artist' => array(
-                    'name',
-                    'album',
-                    'placeformed',
-                    'yearformed'
-                ),
-                'tag' => array(
-                    'tag',
-                    'name'
-                ),
-                'album' => array(
-                    'name',
-                    'year',
-                    'artist',
-                    'album_artist',
-                    'generic_artist'
-                ),
-                'playlist' => array(
-                    'name',
-                    'user',
-                    'last_update'
-                ),
-                'smartplaylist' => array(
-                    'name',
-                    'user'
-                ),
-                'shoutbox' => array(
-                    'date',
-                    'user',
-                    'sticky'
-                ),
-                'live_stream' => array(
-                    'name',
-                    'call_sign',
-                    'frequency'
-                ),
-                'video' => array(
-                    'title',
-                    'resolution',
-                    'length',
-                    'codec'
-                ),
-                'user' => array(
-                    'fullname',
-                    'username',
-                    'last_seen',
-                    'create_date'
-                ),
-                'wanted' => array(
-                    'user',
-                    'accepted',
-                    'artist',
-                    'name',
-                    'year'
-                ),
-                'share' => array(
-                    'object',
-                    'object_type',
-                    'user',
-                    'creation_date',
-                    'lastvisit_date',
-                    'counter',
-                    'max_counter',
-                    'allow_stream',
-                    'allow_download',
-                    'expire'
-                ),
-                'channel' => array(
-                    'id',
-                    'name',
-                    'interface',
-                    'port',
-                    'max_listeners',
-                    'listeners'
-                ),
-                'broadcast' => array(
-                    'name',
-                    'user',
-                    'started',
-                    'listeners'
-                ),
-                'license' => array(
-                    'name'
-                ),
-                'tvshow' => array(
-                    'name',
-                    'year'
-                ),
-                'tvshow_season' => array(
-                    'season',
-                    'tvshow'
-                ),
-                'tvshow_episode' => array(
-                    'title',
-                    'resolution',
-                    'length',
-                    'codec',
-                    'episode',
-                    'season',
-                    'tvshow'
-                ),
-                'movie' => array(
-                    'title',
-                    'resolution',
-                    'length',
-                    'codec',
-                    'release_date'
-                ),
-                'clip' => array(
-                    'title',
-                    'artist',
-                    'resolution',
-                    'length',
-                    'codec',
-                    'release_date'
-                ),
-                'personal_video' => array(
-                    'title',
-                    'location',
-                    'resolution',
-                    'length',
-                    'codec',
-                    'release_date'
-                ),
-                'label' => array(
-                    'name',
-                    'category',
-                    'user'
-                ),
-                'pvmsg' => array(
-                    'subject',
-                    'to_user',
-                    'creation_date',
-                    'is_read'
-                ),
-                'follower' => array(
-                    'user',
-                    'follow_user',
-                    'follow_date'
-                ),
-                'podcast' => array(
-                    'title'
-                ),
-                'podcast_episode' => array(
-                    'title',
-                    'category',
-                    'author',
-                    'time',
-                    'pubDate'
-                )
-            );
         }
 
         return self::$allowed_filters[$type] ?? [];
