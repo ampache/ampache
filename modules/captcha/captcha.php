@@ -554,8 +554,8 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
             $s .= chr(rand(0, 255));
         }
         $s = base64_encode($s); // base64-set, but filter out unwanted chars
-      $s  = preg_replace("/[+\/=IG0ODQR]/i", "", $s); // strips hard to discern letters, depends on used font type
-      $s  = substr($s, 0, rand(CAPTCHA_MIN_CHARS, CAPTCHA_MAX_CHARS));
+      $s   = preg_replace("/[+\/=IG0ODQR]/i", "", $s); // strips hard to discern letters, depends on used font type
+      $s   = substr($s, 0, rand(CAPTCHA_MIN_CHARS, CAPTCHA_MAX_CHARS));
 
         return($s);
     }
@@ -632,10 +632,10 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
     public function create()
     {
         $img = imagecreatetruecolor($this->width, $this->height);
-      imagefilledrectangle($img, 0, 0, $this->width, $this->height, $this->inverse ? $this->bg ^ 0xFFFFFF : $this->bg);
-      if (function_exists("imageantialias")) {
-          imageantialias($img, true);
-      }
+        imagefilledrectangle($img, 0, 0, $this->width, $this->height, $this->inverse ? $this->bg ^ 0xFFFFFF : $this->bg);
+        if (function_exists("imageantialias")) {
+            imageantialias($img, true);
+        }
 
         return($img);
     }
@@ -671,10 +671,10 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
      */
     public function fog()
     {
-        $num = rand(10, 25);
+        $num     = rand(10, 25);
         $xaxis   = $this->width;
         $yaxis   = $this->height;
-        $s   = rand(0, 270);
+        $s       = rand(0, 270);
         for ($n=0; $n < $num; $n++) {
             imagesetthickness($this->img, rand(1, 2));
             imagearc($this->img,
@@ -717,7 +717,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
 
                 // if not out of bounds
                 if (($dist_x + $xaxis >= 0) && ($dist_y + $yaxis >= 0) && ($dist_x + $xaxis < $width) && ($dist_y + $yaxis < $height)) {
-                   // get source pixel(s), paint dest
+                    // get source pixel(s), paint dest
                     if ($single_pixel) {
                         // single source dot: one-to-one duplicate (unsmooth, hard edges)
                         imagesetpixel($dest, $xaxis, $yaxis, @imagecolorat($image, (int) $dist_x + $xaxis, (int) $dist_y + $yaxis));
@@ -936,7 +936,7 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
         imagefilledrectangle($this->img, 0, 0, $this->width, $this->height, $this->random_color(222, 255));
 
         // encolour bg
-        $wd  = 20;
+        $wd     = 20;
         $xaxis  = 0;
         while ($xaxis < $this->width) {
             imagefilledrectangle($this->img, $xaxis, 0, $xaxis += $wd, $this->height, $this->random_color(222, 255));
@@ -1012,7 +1012,7 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
             $yaxis    = rand($size + 3, $this->height - 3);
             $xaxis    = $w1 + $w2 * $p;
             $w1 += rand(-$this->width / 90, $this->width / 40); // FIXME: @bug last char could be +30 pixel outside of image
-            $font            = $this->font();
+            $font                     = $this->font();
             list($red, $green, $blue) = array(rand(30, 99), rand(30, 99), rand(30, 99));
             imagettftext($this->img, $size, $rotation, $xaxis + 1, $yaxis, $this->rgb($red * 2, $green * 2, $blue * 2), $font, $letter);
             imagettftext($this->img, $size, $rotation, $xaxis, $yaxis - 1, $this->rgb($red, $green, $blue), $font, $letter);
