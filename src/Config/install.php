@@ -330,7 +330,7 @@ function install_insert_db($db_user = null, $db_pass = null, $create_db = true, 
  */
 function install_create_config($download = false)
 {
-    $config_file = __DIR__ . '/../config/ampache.cfg.php';
+    $config_file = __DIR__ . '/../../config/ampache.cfg.php';
 
     /* Attempt to make DB connection */
     Dba::dbh();
