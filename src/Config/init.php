@@ -46,8 +46,6 @@ require_once __DIR__ . '/init-tiny.php';
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/Bootstrap.php';
 
-Session::setup();
-
 // Set up for redirection on important error cases
 $path = get_web_path();
 if (filter_has_var(INPUT_SERVER, 'HTTP_HOST')) {
@@ -81,6 +79,8 @@ if (!empty($link)) {
 
     return false;
 }
+
+Session::setup();
 
 $results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluff nothing more... **/

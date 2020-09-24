@@ -33,8 +33,6 @@ final class TestApplication implements ApplicationInterface
 {
     public function run(): void
     {
-        global $path;
-
         switch ($_REQUEST['action']) {
             case 'config':
                 // Check to see if the config file is working now, if so fall
@@ -49,14 +47,14 @@ final class TestApplication implements ApplicationInterface
                 // Load config from file
                 $results = array();
                 if (!file_exists($configfile)) {
-                    $link = $path . '/install.php';
+                    $link = __DIR__ . '/../../public/install.php';
                     header("Location: " . $link);
                 } else {
                     // Make sure the config file is set up and parsable
                     $results = @parse_ini_file($configfile);
 
                     if (empty($results)) {
-                        $link = $path . '/test.php?action=config';
+                        $link = __DIR__ . '/../../public/test.php?action=config';
                     }
                 }
                 /* Temp Fixes */

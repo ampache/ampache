@@ -404,12 +404,6 @@ class Session
 
     public static function setup(): void
     {
-        if (!function_exists('session_start')) {
-            header("Location:" . AmpConfig::get('web_path') . "/test.php");
-
-            return;
-        }
-
         session_set_save_handler(
             static function (): bool { return true; },
             static function (): bool { return true; },
