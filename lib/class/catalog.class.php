@@ -1861,7 +1861,7 @@ abstract class Catalog extends database_object
         $disk             = $results['disk'];
         // year is also included in album
         $album_mbid_group = $results['mb_albumid_group'];
-        $release_type     = $results['release_type'];
+        $release_type     = Catalog::check_length($results['release_type'], 32);
         $albumartist      = self::check_length($results['albumartist'] ?: $results['band']);
         $albumartist      = $albumartist ?: null;
         $original_year    = $results['original_year'];
