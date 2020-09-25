@@ -20,11 +20,11 @@
  *
  */ ?>
 <?php
-      $limit    = AmpConfig::get('art_search_limit', 5);
-      $art_order= AmpConfig::get('art_order');
-      $art_type = ($object_type == 'album') ?'Cover Art' : 'Artist Art';
+      $limit     = AmpConfig::get('art_search_limit', 5);
+      $art_order = AmpConfig::get('art_order');
+      $art_type  = ($object_type == 'album') ?'Cover Art' : 'Artist Art';
       UI::show_box_top(T_("Customize {$art_type} Search"), 'box box_get_albumart'); ?>
-<form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=find_art&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>&artist_name=<?php echo urlencode(Core::get_request('artist_name'));?>&album_name=<?php echo urlencode(Core::get_request('album_name')); ?>&cover=<?php echo urlencode(Core::get_request('cover')); ?>" style="Display:inline;">
+<form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=find_art&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>&artist_name=<?php echo urlencode(Core::get_request('artist_name')); ?>&album_name=<?php echo urlencode(Core::get_request('album_name')); ?>&cover=<?php echo urlencode(Core::get_request('cover')); ?>" style="Display:inline;">
     <table class="gatherart">
         <?php
         foreach ($keywords as $key => $word) {
@@ -79,7 +79,7 @@
                 <?php echo T_('Spotify Album Filters'); ?>
              </th>
              <td>
-                <label for="for artistFilter"><?php echo T_('Artist');?>:</label>
+                <label for="for artistFilter"><?php echo T_('Artist'); ?></label>
                 <input type="checkbox" id="artistFilter"
                     name="artist_filter" value="artist"
                      onchange="validateArtist()">
@@ -87,14 +87,14 @@
          </tr>
         <tr>
            <td>
-                <label id="gatherYear" for="yearFilter"><?php echo T_('Year'); ?>: </label>
+                <label id="gatherYear" for="yearFilter"><?php echo T_('Year'); ?> </label>
                 <input type="text" id="yearFilter" name="year_filter" size="5" maxlength="9" pattern="[0-9]{4}(-[0-9]{4})?">
-                <label>(ex: 2001 or 2001-2005)</label>
+                <label><?php echo T_("(e.g. '2001', '2001-2005')"); ?></label>
            </td>
           </tr>
           <tr>
           <td>
-             <label id="gatherLimit" for="searchLimit"> <?php echo T_('Limit'); ?>: </label>
+             <label id="gatherLimit" for="searchLimit"> <?php echo T_('Limit'); ?></label>
               <input type="number" id="searchLimit"
                 name="search_limit" required min="1" max="50" value="<?php echo $limit; ?>">
           </td>
@@ -103,7 +103,7 @@
           <tr>
              <?php if ($object_type == 'artist') { ?>
              <td>
-               <?php echo T_('Search Limit'); ?>:
+               <?php echo T_('Search Limit'); ?>
              </td>
              <td>
                   <input type="number" id="searchLimit"
