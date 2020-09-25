@@ -10,6 +10,10 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 
 ### Added
 
+* Configurable settings for "Gather Art".
+* Configurable art search limit.
+* User selectable artist and year filter for Spotify album searches
+* User selectable limit for art searches.
 * php-intl is now required for translation of date formats into your locale
 * Generate rsstokens for each user allowing unique feed URLs
 * Allow setting custom databse collation and charset without overwriting your changes
