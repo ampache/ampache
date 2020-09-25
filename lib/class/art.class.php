@@ -803,7 +803,7 @@ class Art extends database_object
         $source_size = array('height' => imagesy($source), 'width' => imagesx($source));
 
         // Create a new blank image of the correct size
-        $thumbnail = imagecreatetruecolor($size['width'], $size['height']);
+        $thumbnail = imagecreatetruecolor((int) $size['width'], (int) $size['height']);
 
         if (!imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $size['width'], $size['height'], $source_size['width'], $source_size['height'])) {
             debug_event('art.class', 'Unable to create resized image', 1);
