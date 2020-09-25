@@ -300,7 +300,7 @@ class Waveform
         // create original image width based on amount of detail
         // each waveform to be processed with be $height high, but will be condensed
         // and resized later (if specified)
-        $img = imagecreatetruecolor((int)($data_size / $detail), $height);
+        $img = imagecreatetruecolor((int) ($data_size / $detail), (int) $height);
         if ($img === false) {
             debug_event('waveform.class', 'Cannot create image.', 1);
 
@@ -372,7 +372,7 @@ class Waveform
         // want it resized?
         if ($width) {
             // resample the image to the proportions defined in the form
-            $rimg = imagecreatetruecolor($width, $height);
+            $rimg = imagecreatetruecolor((int) $width, (int) $height);
             if ($rimg !== false) {
                 // save alpha from original image
                 imagesavealpha($rimg, true);

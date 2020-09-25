@@ -94,7 +94,9 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
                 );
             }
         }
-        $types = $art->type . 's';
+        $filter = [];
+        $query1 = '';
+        $types  = $art->type . 's';
         $this->spotifyWebAPI->setAccessToken($accessToken);
         
         if ($art->type == 'artist') {
@@ -106,17 +108,44 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
             $getType = 'getArtist';
         } elseif ($art->type == 'album') {
             $this->logger->debug(
-                'gather_spotify album: ' . $data['album'],
+                sprintf('gather_spotify album: %s', $data['album']),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            $query   = 'album:' . $data['album'] . ' artist:' . $data['artist'];
-            $getType = 'getAlbum';
-        } else {
-            return $images;
+            // Check for manual search
+            if (key_exists('search_limit', $data)) {
+                $limit = $data['search_limit'];
+                if (key_exists('artist_filter', $data)) {
+                    $filter[]= 'artist';
+                }
+                if (key_exists('year_filter', $data)) {
+                    $filter[] = $data['year_filter'];
+                }
+            } elseif (
+                !is_null($this->configContainer->get('spotify_art_filter')) ||
+                !empty($this->configContainer->get('spotify_art_filter'))
+            ) {
+                $filter = explode(',', $this->configContainer->get('spotify_art_filter'));
+            }
+            if (!empty($filter)) {
+                foreach ($filter as $item) {
+                    switch (trim($item)) {
+                        case 'artist':
+                          $query1 .= " artist:\"{$data['artist']}\"";
+                        break;
+                        case (preg_match('/year:.*/', $item) ? true :false):
+                           $query1 .= ' ' . $item;
+                        break;
+                        default:
+                    }
+                }
+                $query = "album:" . "\"{$data['album']}\"" . $query1;
+            } else {
+                $query = "\"{$data['album']}\"";
+            }
         }
 
         try {
-            $response = $this->spotifyWebAPI->search($query, $art->type);
+            $response = $this->spotifyWebAPI->search($query, $art->type, ['limit' => $limit]);
         } catch (SpotifyWebAPIException $error) {
             if ($error->hasExpiredToken()) {
                 $accessToken = $session->getAccessToken();
@@ -126,25 +155,21 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
                 // Number of seconds to wait before sending another request
                 sleep($retryAfter);
             }
-            $response = $this->spotifyWebAPI->search($query, $art->type);
+            $response = $this->spotifyWebAPI->search($query, $art->type, ['limit' => $limit]);
         }
 
         if (count($response->{$types}->items)) {
             foreach ($response->{$types}->items as $item) {
                 $item_id = $item->id;
                 $result  = $this->spotifyWebAPI->{$getType}($item_id);
-                $image   = $result->images[0];
 
-                $this->logger->debug(
-                    'gather_spotify: found ' . $image->url,
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                );
-
-                $images[] = [
-                    'url' => $image->url,
-                    'mime' => 'image/jpeg',
-                    'title' => 'Spotify'
-                ];
+                foreach ($result->images as $image) {
+                    $images[] = [
+                        'url' => $image->url,
+                        'mime' => 'image/jpeg',
+                        'title' => 'Spotify'
+                    ];
+                }
             }
         }
 

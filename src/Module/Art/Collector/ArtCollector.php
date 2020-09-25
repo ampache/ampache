@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Art\Collector;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\Art;
 use Ampache\Model\Plugin;
@@ -36,6 +35,11 @@ use Psr\Log\LoggerInterface;
 
 final class ArtCollector implements ArtCollectorInterface
 {
+    /**
+     * @const ART_SEARCH_LIMIT
+     */
+    public const ART_SEARCH_LIMIT = 5;
+
     private ContainerInterface $dic;
 
     private LoggerInterface $logger;
@@ -95,6 +99,11 @@ final class ArtCollector implements ArtCollectorInterface
             'Searching using:' . json_encode($artOrder),
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
+
+        if ($limit == 0) {
+            $search_limit = $this->configContainer->get('art_search_limit');
+            $limit        = is_null($search_limit) ? static::ART_SEARCH_LIMIT : $search_limit;
+        }
 
         $plugin_names = Plugin::get_plugins('gather_arts');
         foreach ($artOrder as $method) {

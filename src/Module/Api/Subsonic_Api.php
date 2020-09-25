@@ -249,8 +249,7 @@ class Subsonic_Api
     ) {
         $conf = array('alwaysArray' => $alwaysArray);
         if ($outputtype == "json") {
-            $output = json_encode(self::xml2json($xml, $conf),
-                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+            $output = json_encode(self::xml2json($xml, $conf), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         } else {
             if ($outputtype == "jsonp") {
                 $output = $callback . '(' . json_encode(self::xml2json($xml, $conf), JSON_PRETTY_PRINT) . ')';

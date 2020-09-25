@@ -742,7 +742,7 @@ class Art extends database_object
         $source_size = array('height' => imagesy($source), 'width' => imagesx($source));
 
         // Create a new blank image of the correct size
-        $thumbnail = imagecreatetruecolor($size['width'], $size['height']);
+        $thumbnail = imagecreatetruecolor((int) $size['width'], (int) $size['height']);
 
         if (!imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $size['width'], $size['height'], $source_size['width'],
             $source_size['height'])) {
@@ -1030,95 +1030,6 @@ class Art extends database_object
     }
 
     /**
-     * gather
-     * This tries to get the art in question
-     * @param array $options
-     * @param integer $limit
-     * @return array
-     */
-    public function gather($options = array(), $limit = 0)
-    {
-        // Define vars
-        $results = array();
-        $type    = $this->type;
-        if (isset($options['type'])) {
-            $type = $options['type'];
-        }
-
-        if (count($options) == 0) {
-            debug_event('art.class', 'No options for art search, skipped.', 3);
-
-            return array();
-        }
-        $config  = AmpConfig::get('art_order');
-        $methods = get_class_methods(Art::class);
-
-        /* If it's not set */
-        if (empty($config)) {
-            // They don't want art!
-            debug_event('art.class', 'art_order is empty, skipping art gathering', 3);
-
-            return array();
-        } elseif (!is_array($config)) {
-            $config = array($config);
-        }
-
-        debug_event('art.class', 'Searching using:' . json_encode($config), 3);
-
-        $plugin_names = Plugin::get_plugins('gather_arts');
-        foreach ($config as $method) {
-            $method_name = "gather_" . $method;
-
-            $data = array();
-            if (in_array($method, $plugin_names)) {
-                $plugin            = new Plugin($method);
-                $installed_version = Plugin::get_plugin_version($plugin->_plugin->name);
-                if ($installed_version) {
-                    if ($plugin->load(Core::get_global('user'))) {
-                        $data = $plugin->_plugin->gather_arts($type, $options, $limit);
-                    }
-                }
-            } else {
-                if (in_array($method_name, $methods)) {
-                    debug_event('art.class', "Method used: $method_name", 4);
-                    // Some of these take options!
-                    switch ($method_name) {
-                        case 'gather_google':
-                        case 'gather_musicbrainz':
-                        case 'gather_lastfm':
-                            $data = $this->{$method_name}($limit, $options);
-                            break;
-                        case 'gather_spotify':
-                            $data = $this->{$method_name}($options);
-                            break;
-                        default:
-                            $data = $this->{$method_name}($limit);
-                            break;
-                    }
-                } else {
-                    debug_event('art.class', $method_name . " not defined", 1);
-                }
-            }
-
-            // Add the results we got to the current set
-            $results = array_merge($results, (array)$data);
-
-            if ($limit && count($results) >= $limit) {
-                debug_event('art.class', 'results:' . json_encode($results), 3);
-
-                return array_slice($results, 0, $limit);
-            }
-        } // end foreach
-
-        return $results;
-    } // gather
-
-    ///////////////////////////////////////////////////////////////////////
-    // Art Methods
-    ///////////////////////////////////////////////////////////////////////
-
-
-    /**
      * Gather metadata from plugin.
      * @param $plugin
      * @param string $type
@@ -1336,8 +1247,8 @@ class Art extends database_object
             $libitem    = new $class_name($object_id);
             echo "<div class=\"item_art_actions\">";
             if (Core::get_global('user')->has_access(50) || (Core::get_global('user')->has_access(25) && Core::get_global('user')->id == $libitem->get_user_owner())) {
-                echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=find_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
-                echo Ui::get_icon('edit', T_('Edit/Find Art'));
+                echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
+                echo UI::get_icon('edit', T_('Edit/Find Art'));
                 echo "</a>";
 
                 echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
