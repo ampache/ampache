@@ -25,7 +25,7 @@ interface RouterState {
 }
 
 export default class Root extends React.PureComponent<void, RouterState> {
-    private handleLogin: (
+    private readonly handleLogin: (
         username: string,
         password: string
     ) => Promise<void | AmpacheError | Error>;

@@ -9,6 +9,7 @@ import MusicControl from '~components/MusicControl';
 import QueueBar from '~components/QueueBar/';
 
 import style from '~stylus/app.styl'
+import NavigationBlock from "~Views/NavigationBlock";
 
 interface AppViewProps {
     user: User;
@@ -56,18 +57,20 @@ class AppView extends Component<AppViewProps, AppViewStates> {
         }
 
         return (
-            <>
+          <NavigationBlock enabled={this.state.QueueBarVisible} navigationAttempt={() => {this.setState({QueueBarVisible: false})}}>
                 <Header username={this.props.user.username} />
                 <div className={style.container}>
                     <Sidebar />
                     <div className={style.content}>{this.props.children}</div>
+
                     <QueueBar
                         visible={this.state.QueueBarVisible}
                         setQueueBarVisibility={this.setQueueBarVisibility}
                     />
+
                 </div>
                 <MusicControl toggleQueueBar={this.toggleQueueBarVisible} />
-            </>
+          </NavigationBlock>
         );
     }
 }

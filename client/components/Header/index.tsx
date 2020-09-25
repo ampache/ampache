@@ -6,7 +6,6 @@ import userIcon from '~images/icons/svg/user.svg';
 import style from './index.module.styl';
 
 interface HeaderProps {
-    history: any;
     username: string;
 }
 
