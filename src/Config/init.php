@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Config;
 
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 use Ampache\Model\Preference;
 use Ampache\Model\User;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
@@ -32,7 +31,6 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Module\System\Update;
-use Ampache\Module\Util\EnvironmentChecker;
 use Ampache\Module\Util\EnvironmentCheckerInterface;
 use Ampache\Module\Util\Ui;
 use Psr\Container\ContainerInterface;
@@ -41,15 +39,23 @@ use Psr\Container\ContainerInterface;
 // fixes some CSS issues
 ob_start();
 
-require_once __DIR__ . '/init-tiny.php';
-
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/Bootstrap.php';
+
+$configfile = __DIR__ . '/../../config/ampache.cfg.php';
+$envChecker = $dic->get(EnvironmentCheckerInterface::class);
+
+$envChecker->isSsl() ? $protocol = 'https' : $protocol = 'http';
 
 // Set up for redirection on important error cases
 $path = get_web_path();
 if (filter_has_var(INPUT_SERVER, 'HTTP_HOST')) {
-    $path = $http_type . Core::get_server('HTTP_HOST') . $path;
+    $path = sprintf(
+        '%s://%s%s',
+        $protocol,
+        Core::get_server('HTTP_HOST'),
+        $path
+    );
 }
 
 // Check to make sure the config file exists. If it doesn't then go ahead and
@@ -66,7 +72,6 @@ if (!file_exists($configfile)) {
     }
 }
 
-$envChecker = $dic->get(EnvironmentCheckerInterface::class);
 // Verify that a few important but commonly disabled PHP functions exist and
 // that we're on a usable version
 if ($envChecker->check() === false) {
@@ -82,13 +87,12 @@ if (!empty($link)) {
 
 Session::setup();
 
-$results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluff nothing more... **/
 $results['version']            = 'develop';
 $results['int_config_version'] = '46';
 
 if (!empty($results['force_ssl'])) {
-    $http_type = 'https://';
+    $protocol = 'https';
 }
 
 if (isset($ow_config) && is_array($ow_config)) {
@@ -103,13 +107,25 @@ if (!defined('CLI')) {
         $results['http_host'] = $_SERVER['SERVER_NAME'];
     }
     if (empty($results['local_web_path'])) {
-        $results['local_web_path'] = $http_type . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $results['raw_web_path'];
+        $results['local_web_path'] = sprintf(
+            '%s://%s:%d%s',
+            $protocol,
+            $_SERVER['SERVER_NAME'],
+            $_SERVER['SERVER_PORT'],
+            $results['raw_web_path']
+        );
     }
-    $results['http_port'] = (!empty($results['http_port'])) ? $results['http_port'] : $http_port;
+    $results['http_port'] = !empty($results['http_port']) ? $results['http_port'] : $envChecker->getHttpPort();
 
-    $results['web_path'] = $http_type . $results['http_host'] .
-        (($results['http_port'] != 80 && $results['http_port'] != 443) ? ':' . $results['http_port'] : '') .
-        $results['web_path'];
+    $port = $results['http_port'] != 80 && $results['http_port'] != 443 ? ':' . $results['http_port'] : '';
+
+    $results['web_path'] = sprintf(
+        '%s://%s%s%s',
+        $protocol,
+        $results['http_host'],
+        $port,
+        $results['web_path']
+    );
 
     $results['site_charset'] = $results['site_charset'] ?: 'UTF-8';
     $results['raw_web_path'] = $results['raw_web_path'] ?: '/';

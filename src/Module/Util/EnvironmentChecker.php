@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Module\System\Core;
 use PDO;
 
 /**
@@ -225,6 +226,38 @@ final class EnvironmentChecker implements EnvironmentCheckerInterface
     public function check_dependencies_folder(): bool
     {
         return file_exists(__DIR__ . '/../../../vendor');
+    }
+
+    public function isCli(): bool
+    {
+        return php_sapi_name() === 'cli';
+    }
+
+    public function isSsl(): bool
+    {
+        return (
+            (
+                filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_PROTO') &&
+                Core::get_server('HTTP_X_FORWARDED_PROTO') == 'https'
+            ) || (
+                filter_has_var(INPUT_SERVER, 'HTTPS') &&
+                Core::get_server('HTTPS') == 'on'
+            )
+        );
+    }
+
+    public function getHttpPort(): int
+    {
+        $port = 80;
+        if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_PORT')) {
+            $port = (int) $_SERVER['HTTP_X_FORWARDED_PORT'];
+        } else {
+            if (filter_has_var(INPUT_SERVER, 'SERVER_PORT')) {
+                $port = (int) $_SERVER['SERVER_PORT'];
+            }
+        }
+
+        return $port;
     }
 
     /**

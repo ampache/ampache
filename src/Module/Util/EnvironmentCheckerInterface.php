@@ -113,4 +113,10 @@ interface EnvironmentCheckerInterface
     public function check_php_gd(): bool;
 
     public function check_dependencies_folder(): bool;
+
+    public function isCli(): bool;
+
+    public function isSsl(): bool;
+
+    public function getHttpPort(): int;
 }

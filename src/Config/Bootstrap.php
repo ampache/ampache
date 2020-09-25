@@ -1,9 +1,6 @@
 <?php
-
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,50 +20,52 @@ declare(strict_types=1);
  *
  */
 
-/**
- * This file creates and initializes the central DI-Container
- */
+declare(strict_types=0);
+
 namespace Ampache\Config;
 
-use DI\ContainerBuilder;
-use getID3;
-use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
-use MusicBrainz\MusicBrainz;
-use SpotifyWebAPI\SpotifyWebAPI;
-use function DI\autowire;
-use function DI\factory;
+use Ampache\Module\Util\EnvironmentChecker;
+use Ampache\Module\Util\EnvironmentCheckerInterface;
+use Psr\Container\ContainerInterface;
+use RuntimeException;
 
-$builder = new ContainerBuilder();
-$builder->addDefinitions([
-    ConfigContainerInterface::class => factory(static function (): ConfigContainerInterface {
-        return new ConfigContainer(AmpConfig::get_all());
-    }),
-    getID3::class => autowire(getID3::class),
-    MusicBrainz::class => factory(static function (): MusicBrainz {
-        return new MusicBrainz(new RequestsHttpAdapter());
-    }),
-    SpotifyWebAPI::class => factory(static function (): SpotifyWebAPI {
-        return new SpotifyWebAPI();
-    }),
-]);
-$builder->addDefinitions(
-    require_once __DIR__ . '/../Application/service_definition.php',
-    require_once __DIR__ . '/../Module/Util/service_definition.php',
-    require_once __DIR__ . '/../Module/WebDav/service_definition.php',
-    require_once __DIR__ . '/../Module/Authentication/service_definition.php',
-    require_once __DIR__ . '/../Module/Cache/service_definition.php',
-    require_once __DIR__ . '/../Module/Channel/service_definition.php',
-    require_once __DIR__ . '/../Module/Song/service_definition.php',
-    require_once __DIR__ . '/../Module/Playlist/service_definition.php',
-    require_once __DIR__ . '/../Module/Album/service_definition.php',
-    require_once __DIR__ . '/../Module/Art/service_definition.php',
-    require_once __DIR__ . '/../Module/Broadcast/service_definition.php',
-    require_once __DIR__ . '/../Module/Database/service_definition.php',
-    require_once __DIR__ . '/../Module/Catalog/service_definition.php',
-    require_once __DIR__ . '/../Module/Artist/service_definition.php',
-    require_once __DIR__ . '/../Module/LastFm/service_definition.php',
-    require_once __DIR__ . '/../Module/System/service_definition.php',
-    require_once __DIR__ . '/../Model/service_definition.php',
-);
+// Register autoloaders
+$composer_autoload = __DIR__ . '/../../vendor/autoload.php';
 
-return $builder->build();
+if (file_exists($composer_autoload) === false) {
+    throw new RuntimeException('Composer autoload file not found - please run `composer install`');
+}
+
+require_once $composer_autoload;
+
+/** @var ContainerInterface $dic */
+$dic = require __DIR__ . '/DicBuilder.php';
+
+// Core includes we can't do with the autoloader
+require_once __DIR__ . '/functions.php';
+
+$envChecker = $dic->get(EnvironmentCheckerInterface::class);
+
+// Do a check for the minimum required php version because nothing will work without it
+if ($envChecker->check_php_version() === false) {
+    throw new RuntimeException(
+        sprintf('Ampache requires PHP version >= %s', EnvironmentChecker::PHP_VERSION)
+    );
+}
+
+//error_reporting(E_ERROR); // Only show fatal errors in production
+
+AmpConfig::set('load_time_begin', microtime(true));
+
+// We still allow scripts to run (it could be the purpose of the maintenance)
+if ($envChecker->isCli() === false) {
+    if (file_exists(__DIR__ . '/../../.maintenance')) {
+        require_once  __DIR__ . '/../../.maintenance';
+    }
+}
+
+// Merge GET then POST into REQUEST effectively stripping COOKIE without
+// depending on a PHP setting change for the effect
+$_REQUEST = array_merge($_GET, $_POST);
+
+return $dic;

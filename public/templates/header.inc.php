@@ -32,10 +32,6 @@ use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 
-if (INIT_LOADED != '1') {
-    return false;
-}
-
 $web_path          = AmpConfig::get('web_path');
 $htmllang          = str_replace("_", "-", AmpConfig::get('lang'));
 $location          = get_location();
