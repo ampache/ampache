@@ -54,7 +54,6 @@ final class Session implements SessionInterface
 
     public function auth(): bool
     {
-        trigger_error('moo');
         $useAuth          = $this->configContainer->isAuthenticationEnabled();
         $sessionName      = $this->configContainer->get('session_name');
         $isDemoMode       = $this->configContainer->get('demo_mode');
