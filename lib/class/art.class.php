@@ -75,10 +75,10 @@ class Art extends database_object
      */
     private static $enabled;
 
-    /*
+    /**
      * @const ART_SEARCH_LIMIT
      */
-    private const ART_SEARCH_LIMIT = 5;
+    public const ART_SEARCH_LIMIT = 5;
 
     /**
      * Constructor
@@ -1109,7 +1109,7 @@ class Art extends database_object
             return array();
         }
         if ($limit == 0) {
-            $limit   = (is_null(AmpConfig::get('art_search_limit'))) ? ART_SEARCH_LIMIT : AmpConfig::get('art_search_limit') ;
+            $limit   = (is_null(AmpConfig::get('art_search_limit'))) ? static::ART_SEARCH_LIMIT : AmpConfig::get('art_search_limit') ;
         }
         $config    = AmpConfig::get('art_order');
         $methods   = get_class_methods('Art');

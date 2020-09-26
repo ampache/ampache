@@ -20,7 +20,7 @@
  *
  */ ?>
 <?php
-      $limit     = AmpConfig::get('art_search_limit', 5);
+      $limit     = AmpConfig::get('art_search_limit', Art::ART_SEARCH_LIMIT);
       $art_order = AmpConfig::get('art_order');
       $art_type  = ($object_type == 'album') ?'Cover Art' : 'Artist Art';
       UI::show_box_top(T_("Customize {$art_type} Search"), 'box box_get_albumart'); ?>
