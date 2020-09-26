@@ -30,6 +30,6 @@ define('NO_SESSION', '1');
 $_SESSION['login'] = true;
 
 /** @var ContainerInterface $dic */
-$dic = require __DIR__ . '/../src/Config/init.php';
+$dic = require __DIR__ . '/../src/Config/Init.php';
 
 $dic->get(RegisterApplication::class)->run();

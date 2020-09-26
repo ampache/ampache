@@ -27,6 +27,6 @@ use Ampache\Application\Admin\UsersApplication;
 use Psr\Container\ContainerInterface;
 
 /** @var ContainerInterface $dic */
-$dic = require __DIR__ . '/../../src/Config/init.php';
+$dic = require __DIR__ . '/../../src/Config/Init.php';
 
 $dic->get(UsersApplication::class)->run();

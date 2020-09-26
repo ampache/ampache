@@ -21,7 +21,11 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\EnvironmentInterface;
 
+// TODO remove me
+global $dic;
+$environment = $dic->get(EnvironmentInterface::class);
 ?>
 <?php
 $t_search = T_('Search'); ?>
@@ -47,7 +51,7 @@ $t_search = T_('Search'); ?>
             <?php
     } ?>
         </select>
-        <?php if ($_SESSION['mobile']) {
+        <?php if ($environment->isMobile()) {
         echo "<input class=\"button\" type=\"submit\" value=\"" . $t_search . "\"style=\"display: none;\" id=\"searchBtn\" />";
     } else {
         echo "<input class=\"button\" type=\"submit\" value=\"" . $t_search . "\" id=\"searchBtn\" />";

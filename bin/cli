@@ -31,7 +31,7 @@ define('NO_SESSION', '1');
 define('CLI', 1);
 
 /** @var ContainerInterface $dic */
-$dic = require __DIR__ . '/../src/Config/init.php';
+$dic = require __DIR__ . '/../src/Config/Init.php';
 
 // Init App with name and version
 $app = new Ahc\Cli\Application(

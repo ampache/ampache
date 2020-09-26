@@ -30,7 +30,7 @@ use PDO;
 /**
  * This class checks the current environment if it's suitable to run ampache
  */
-final class EnvironmentChecker implements EnvironmentCheckerInterface
+final class Environment implements EnvironmentInterface
 {
     public const PHP_VERSION = 7.4;
 
@@ -246,6 +246,17 @@ final class EnvironmentChecker implements EnvironmentCheckerInterface
         );
     }
 
+    public function isMobile(): bool
+    {
+        $user_agent = (string) $_SERVER['HTTP_USER_AGENT'];
+
+        return strpos($user_agent, 'Mobile') && (
+            strpos($user_agent, 'Android') ||
+            strpos($user_agent, 'iPad') ||
+            strpos($user_agent, 'iPhone')
+        );
+    }
+
     public function getHttpPort(): int
     {
         $port = 80;
@@ -258,6 +269,30 @@ final class EnvironmentChecker implements EnvironmentCheckerInterface
         }
 
         return $port;
+    }
+
+    public function setUp(): void
+    {
+        // Set a new Error Handler
+        $old_error_handler = set_error_handler('ampache_error_handler');
+
+        // Check their PHP Vars to make sure we're cool here
+        $post_size = @ini_get('post_max_size');
+        if (substr($post_size, strlen((string) $post_size) - 1, strlen((string) $post_size)) != 'M') {
+            // Sane value time
+            ini_set('post_max_size', '8M');
+        }
+
+        // In case the local setting is 0
+        ini_set('session.gc_probability', '5');
+
+        if (!isset($results['memory_limit']) ||
+            (Ui::unformat_bytes($results['memory_limit']) < Ui::unformat_bytes('32M'))
+        ) {
+            $results['memory_limit'] = '32M';
+        }
+
+        set_memory_limit($results['memory_limit']);
     }
 
     /**

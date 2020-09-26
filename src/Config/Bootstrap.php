@@ -24,8 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Config;
 
-use Ampache\Module\Util\EnvironmentChecker;
-use Ampache\Module\Util\EnvironmentCheckerInterface;
+use Ampache\Module\Util\Environment;
+use Ampache\Module\Util\EnvironmentInterface;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 
@@ -44,12 +44,12 @@ $dic = require __DIR__ . '/DicBuilder.php';
 // Core includes we can't do with the autoloader
 require_once __DIR__ . '/functions.php';
 
-$envChecker = $dic->get(EnvironmentCheckerInterface::class);
+$environment = $dic->get(EnvironmentInterface::class);
 
 // Do a check for the minimum required php version because nothing will work without it
-if ($envChecker->check_php_version() === false) {
+if ($environment->check_php_version() === false) {
     throw new RuntimeException(
-        sprintf('Ampache requires PHP version >= %s', EnvironmentChecker::PHP_VERSION)
+        sprintf('Ampache requires PHP version >= %s', Environment::PHP_VERSION)
     );
 }
 
@@ -58,7 +58,7 @@ if ($envChecker->check_php_version() === false) {
 AmpConfig::set('load_time_begin', microtime(true));
 
 // We still allow scripts to run (it could be the purpose of the maintenance)
-if ($envChecker->isCli() === false) {
+if ($environment->isCli() === false) {
     if (file_exists(__DIR__ . '/../../.maintenance')) {
         require_once  __DIR__ . '/../../.maintenance';
     }

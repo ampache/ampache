@@ -22,7 +22,7 @@
 
 namespace Ampache\Module\Util;
 
-interface EnvironmentCheckerInterface
+interface EnvironmentInterface
 {
     public function check(): bool;
 
@@ -118,5 +118,12 @@ interface EnvironmentCheckerInterface
 
     public function isSsl(): bool;
 
+    /**
+     * Checks if the application is used by a mobile client (like smartphones)
+     */
+    public function isMobile(): bool;
+
     public function getHttpPort(): int;
+
+    public function setUp(): void;
 }

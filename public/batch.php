@@ -33,14 +33,14 @@ use Ampache\Module\Util\Ui;
 if (!defined('NO_SESSION')) {
     if (isset($_REQUEST['ssid'])) {
         define('NO_SESSION', 1);
-        require_once __DIR__ . '/../src/Config/init.php';
+        require_once __DIR__ . '/../src/Config/Init.php';
         if (!Session::exists('stream', $_REQUEST['ssid'])) {
             Ui::access_denied();
 
             return false;
         }
     } else {
-        require_once __DIR__ . '/../src/Config/init.php';
+        require_once __DIR__ . '/../src/Config/Init.php';
     }
 }
 

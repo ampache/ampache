@@ -29,4 +29,5 @@ use function DI\autowire;
 
 return [
     LoggerInterface::class => autowire(LegacyLogger::class),
+    SessionInterface::class => autowire(Session::class),
 ];

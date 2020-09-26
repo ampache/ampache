@@ -28,10 +28,20 @@ declare(strict_types=1);
  */
 namespace Ampache\Config;
 
+use Ampache\Config\Init\Exception\EnvironmentNotSuitableException;
+use Ampache\Config\Init\Init;
+use Ampache\Config\Init\InitializationHandlerConfig;
+use Ampache\Config\Init\InitializationHandlerDatabaseUpdate;
+use Ampache\Config\Init\InitializationHandlerEnvironment;
+use Ampache\Config\Init\InitializationHandlerGetText;
+use Ampache\Config\Init\InitializationHandlerAuth;
+use Ampache\Config\Init\InitializationHandlerGlobals;
+use Ampache\Module\Util\EnvironmentInterface;
 use DI\ContainerBuilder;
 use getID3;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use MusicBrainz\MusicBrainz;
+use Psr\Container\ContainerInterface;
 use SpotifyWebAPI\SpotifyWebAPI;
 use function DI\autowire;
 use function DI\factory;
@@ -47,6 +57,19 @@ $builder->addDefinitions([
     }),
     SpotifyWebAPI::class => factory(static function (): SpotifyWebAPI {
         return new SpotifyWebAPI();
+    }),
+    Init::class => factory(static function (ContainerInterface $c): Init {
+        return new Init(
+            $c->get(EnvironmentInterface::class),
+            [
+                $c->get(InitializationHandlerConfig::class),
+                $c->get(InitializationHandlerEnvironment::class),
+                $c->get(InitializationHandlerDatabaseUpdate::class),
+                $c->get(InitializationHandlerAuth::class),
+                $c->get(InitializationHandlerGetText::class),
+                $c->get(InitializationHandlerGlobals::class),
+            ]
+        );
     }),
 ]);
 $builder->addDefinitions(

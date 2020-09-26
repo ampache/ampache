@@ -29,19 +29,19 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\EnvironmentCheckerInterface;
+use Ampache\Module\Util\EnvironmentInterface;
 use Exception;
 use Ampache\Model\Preference;
 use Ampache\Module\Util\Ui;
 
 final class InstallationApplication implements ApplicationInterface
 {
-    private EnvironmentCheckerInterface $environmentChecker;
+    private EnvironmentInterface $environment;
 
     public function __construct(
-        EnvironmentCheckerInterface $environmentChecker
+        EnvironmentInterface $environment
     ) {
-        $this->environmentChecker = $environmentChecker;
+        $this->environment = $environment;
     }
 
     public function run(): void
@@ -138,7 +138,7 @@ final class InstallationApplication implements ApplicationInterface
         // Correct potential \ or / in the dirname
         $safe_dirname = get_web_path();
 
-        $this->environmentChecker->isSsl() ? $protocol = 'https' : $protocol = 'http';
+        $this->environment->isSsl() ? $protocol = 'https' : $protocol = 'http';
 
         $web_path = sprintf(
             '%s://%s%s%s',
