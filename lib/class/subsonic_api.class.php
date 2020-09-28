@@ -1184,39 +1184,30 @@ class Subsonic_Api
                 $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
             }
         }
-        if ($art == null) {
+        if (!$art->id) {
             $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
             self::apiOutput($input, $response);
 
             return;
         }
-
+        // we have the art so lets show it
         header("Access-Control-Allow-Origin: *");
-        if ($art->has_db_info()) {
-            if ($size && AmpConfig::get('resize_images')) {
-                $dim           = array();
-                $dim['width']  = $size;
-                $dim['height'] = $size;
-                $thumb         = $art->get_thumb($dim);
-                if (!empty($thumb)) {
-                    header('Content-type: ' . $thumb['thumb_mime']);
-                    header('Content-Length: ' . strlen((string) $thumb['thumb']));
-                    echo $thumb['thumb'];
+        if ($size && AmpConfig::get('resize_images')) {
+            $dim           = array();
+            $dim['width']  = $size;
+            $dim['height'] = $size;
+            $thumb         = $art->get_thumb($dim);
+            if (!empty($thumb)) {
+                header('Content-type: ' . $thumb['thumb_mime']);
+                header('Content-Length: ' . strlen((string) $thumb['thumb']));
+                echo $thumb['thumb'];
 
-                    return;
-                }
+                return;
             }
-            header('Content-type: ' . $art->raw_mime);
-            header('Content-Length: ' . strlen((string) $art->raw));
-            echo $art->raw;
-
-            return;
         }
-        // fall back to default art
-        $blankalbum = AmpConfig::get('web_path') . '/images/blankalbum.png';
-        header('Content-type: image/png');
-        header('Content-Length: ' . (string) fileze($blankalbum));
-        echo get_file_contents($blankalbum);
+        header('Content-type: ' . $art->raw_mime);
+        header('Content-Length: ' . strlen((string) $art->raw));
+        echo $art->raw;
     }
 
     /**
