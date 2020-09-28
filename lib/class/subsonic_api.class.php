@@ -1144,13 +1144,20 @@ class Subsonic_Api
         $sub_id = str_replace('al-', '', self::check_parameter($input, 'id', true));
         $sub_id = str_replace('pl-', '', $sub_id);
         $size   = $input['size'];
+        $type   = Subsonic_XML_Data::getAmpacheType($sub_id);
+        if ($type == "") {
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
+            self::apiOutput($input, $response);
+
+            return;
+        }
 
         $art = null;
-        if (Subsonic_XML_Data::isArtist($sub_id)) {
+        if ($type == 'artist') {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "artist");
-        } elseif (Subsonic_XML_Data::isAlbum($sub_id)) {
+        } elseif ($type == 'album') {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "album");
-        } elseif (Subsonic_XML_Data::isSong($sub_id)) {
+        } elseif (($type == 'song')) {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "song");
             if ($art != null && $art->id == null) {
                 // in most cases the song doesn't have a picture, but the album where it belongs to has
@@ -1158,26 +1165,26 @@ class Subsonic_Api
                 $song = new Song(Subsonic_XML_Data::getAmpacheId(Subsonic_XML_Data::getAmpacheId($sub_id)));
                 $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
             }
-        } elseif (Subsonic_XML_Data::isPodcast($sub_id)) {
+        } elseif (($type == 'podcast')) {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "podcast");
         } else {
             $listitems = array();
             // playlists and smartlists
-            if (Subsonic_XML_Data::isSmartPlaylist($sub_id)) {
+            if (($type == 'search')) {
                 $playlist  = new Search(Subsonic_XML_Data::getAmpacheId($sub_id));
                 $listitems = $playlist->get_items();
-            } elseif (Subsonic_XML_Data::isPlaylist($sub_id)) {
+            } elseif (($type == 'playlist')) {
                 $playlist  = new Playlist(Subsonic_XML_Data::getAmpacheId($sub_id));
                 $listitems = $playlist->get_items();
             }
-            $item      = (!empty($listitems)) ? $listitems[array_rand($listitems)] : array();
-            $art       = (!empty($item)) ? new Art($item['object_id'], $item['object_type']) : null;
+            $item = (!empty($listitems)) ? $listitems[array_rand($listitems)] : array();
+            $art  = (!empty($item)) ? new Art($item['object_id'], $item['object_type']) : null;
             if ($art != null && $art->id == null) {
                 $song = new Song($item['object_id']);
                 $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
             }
         }
-        if (!$art) {
+        if ($art == null) {
             $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
             self::apiOutput($input, $response);
 

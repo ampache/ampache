@@ -1094,7 +1094,7 @@ class Art extends database_object
      * @param integer $limit
      * @return array
      */
-    public function gather($options = array(),$limit = 0)
+    public function gather($options = array(), $limit = 0)
     {
         // Define vars
         $results = array();
@@ -1109,7 +1109,7 @@ class Art extends database_object
             return array();
         }
         if ($limit == 0) {
-            $limit   = (is_null(AmpConfig::get('art_search_limit'))) ? static::ART_SEARCH_LIMIT : AmpConfig::get('art_search_limit') ;
+            $limit   = (is_null(AmpConfig::get('art_search_limit'))) ? static::ART_SEARCH_LIMIT : AmpConfig::get('art_search_limit');
         }
         $config    = AmpConfig::get('art_order');
         $methods   = get_class_methods('Art');
