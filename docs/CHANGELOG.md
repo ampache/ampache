@@ -38,6 +38,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Escape filepaths when removing from database
 * Subsonic JSON was casting everything to int when it shouldn't be
 * Workaround sublime-music Subsonic version (fixed in v0.11.1+ clients)
+* SubSonic::getCoverArt was not causing an error when art is missing
 
 ### API develop
 

@@ -1177,10 +1177,15 @@ class Subsonic_Api
                 $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
             }
         }
+        if (!$art) {
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
+            self::apiOutput($input, $response);
+
+            return;
+        }
 
         header("Access-Control-Allow-Origin: *");
-        if ($art != null) {
-            $art->has_db_info();
+        if ($art->has_db_info()) {
             if ($size && AmpConfig::get('resize_images')) {
                 $dim           = array();
                 $dim['width']  = $size;
@@ -1194,11 +1199,17 @@ class Subsonic_Api
                     return;
                 }
             }
-
             header('Content-type: ' . $art->raw_mime);
             header('Content-Length: ' . strlen((string) $art->raw));
             echo $art->raw;
+
+            return;
         }
+        // fall back to default art
+        $blankalbum = AmpConfig::get('web_path') . '/images/blankalbum.png';
+        header('Content-type: image/png');
+        header('Content-Length: ' . (string) fileze($blankalbum));
+        echo get_file_contents($blankalbum);
     }
 
     /**
