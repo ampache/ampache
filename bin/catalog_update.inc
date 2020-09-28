@@ -189,13 +189,16 @@ while ($row = Dba::fetch_assoc($db_results)) {
         echo "----------------\n\n";
     }
 }
-    if ($optimizetables == 1) {
-        // Optimize Database Tables
-        echo "- " . T_('Optimizing database tables') . " - \n";
-        echo "\n";
-        Dba::optimize_tables();
-        echo "------------------\n\n";
-    }
+if ($catclean == 1 || $catverify == 1) {
+    Catalog::garbage_collection();
+}
+if ($optimizetables == 1) {
+    // Optimize Database Tables
+    echo "- " . T_('Optimizing database tables') . " - \n";
+    echo "\n";
+    Dba::optimize_tables();
+    echo "------------------\n\n";
+}
 
 ob_end_flush();
 echo "\n";
