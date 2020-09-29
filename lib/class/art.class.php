@@ -1220,10 +1220,12 @@ class Art extends database_object
                 debug_event('art.class', "gather_spotify: A problem exists with the client credentials", 5);
             }
         }
-        $filter = array();
-        $query1 = '';
-        $api    = new SpotifyWebAPI();
-        $types  = $this->type . 's';
+        $filter  = array();
+        $query   = '';
+        $query1  = '';
+        $getType = '';
+        $api     = new SpotifyWebAPI();
+        $types   = $this->type . 's';
         $api->setAccessToken($accessToken);
         if ($this->type == 'artist') {
             debug_event('art.class', "gather_spotify artist: " . $data['artist'], 5);
