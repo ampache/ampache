@@ -21,6 +21,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Replace 'Admin' icon with padlock in sidebar when access check fails. (Hide this new icon with 'simple_user_mode')
 * Disable API/Subsonic password resets in 'simple_user_mode'
 * NEW plugin: 'Personal Favorites'. Show a shortcut to a favorite smartlist or playlist on the homepage
+* Run garbage collection after catalog_update.inc 'clean' or 'verify'
 
 ### Changed
 
@@ -37,6 +38,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Escape filepaths when removing from database
 * Subsonic JSON was casting everything to int when it shouldn't be
 * Workaround sublime-music Subsonic version (fixed in v0.11.1+ clients)
+* SubSonic::getCoverArt was not causing an error when art is missing
 
 ### API develop
 
