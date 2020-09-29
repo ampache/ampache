@@ -197,38 +197,36 @@ class Subsonic_Api
      */
     public static function apiOutput($input, $xml, $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share'))
     {
-        $type     = $input['f'];
+        $format   = ($input['f']) ? strtolower((string) $input['f']) : 'xml';
         $callback = $input['callback'];
-        self::apiOutput2(strtolower((string) $type), $xml, $callback, $alwaysArray);
+        self::apiOutput2($format, $xml, $callback, $alwaysArray);
     }
 
     /**
      * apiOutput2
-     * @param string $outputtype
+     * @param string $format
      * @param SimpleXMLElement $xml
      * @param string $callback
      * @param array $alwaysArray
      */
-    public static function apiOutput2($outputtype, $xml, $callback = '', $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share'))
+    public static function apiOutput2($format, $xml, $callback = '', $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share'))
     {
         $conf = array('alwaysArray' => $alwaysArray);
-        if ($outputtype == "json") {
-            $output = json_encode(self::xml2json($xml, $conf), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-        } else {
-            if ($outputtype == "jsonp") {
-                $output = $callback . '(' . json_encode(self::xml2json($xml, $conf), JSON_PRETTY_PRINT) . ')';
-            } else {
-                $xmlstr = $xml->asXml();
-                // clean illegal XML characters.
-                $clean_xml = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);               // Format xml output
-                $dom       = new DOMDocument();
-                $dom->loadXML($clean_xml, LIBXML_PARSEHUGE);
-                $dom->formatOutput = true;
-                $output            = $dom->saveXML();
-            }
+        if ($format == "json") {
+            echo json_encode(self::xml2json($xml, $conf), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         }
-
-        echo $output;
+        if ($format == "jsonp") {
+            echo $callback . '(' . json_encode(self::xml2json($xml, $conf), JSON_PRETTY_PRINT) . ')';
+        }
+        if ($format == "xml") {
+            $xmlstr = $xml->asXml();
+            // clean illegal XML characters.
+            $clean_xml = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);
+            $dom       = new DOMDocument();
+            $dom->loadXML($clean_xml, LIBXML_PARSEHUGE);
+            $dom->formatOutput = true;
+            echo $dom->saveXML();
+        }
     }
 
     /**
