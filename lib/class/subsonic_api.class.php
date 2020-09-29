@@ -225,7 +225,12 @@ class Subsonic_Api
             $dom       = new DOMDocument();
             $dom->loadXML($clean_xml, LIBXML_PARSEHUGE);
             $dom->formatOutput = true;
-            echo $dom->saveXML();
+            $output            = $dom->saveXML();
+            // saving xml can fail
+            if (!$output) {
+                $output = "<subsonic-response status=\"failed\" version=\"1.13.0\"><error code=\"0\" message=\"Error creating response.\"/></subsonic-response>";
+            }
+            echo $output;
         }
     }
 
