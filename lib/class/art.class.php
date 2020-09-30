@@ -756,7 +756,7 @@ class Art extends database_object
     public function generate_thumb($image, $size, $mime)
     {
         $data = explode("/", (string) $mime);
-        $type = strtolower((string) $data['1']);
+        $type = ((string) $data['1'] !== '') ? strtolower((string) $data['1']) : 'jpg';
 
         if (!self::test_image($image)) {
             debug_event('art.class', 'Not trying to generate thumbnail, invalid data passed', 1);
@@ -771,7 +771,7 @@ class Art extends database_object
         }
 
         // Check and make sure we can resize what you've asked us to
-        if (($type == 'jpg' || $type == 'jpeg') && !(imagetypes() & IMG_JPG)) {
+        if (($type == 'jpg' || $type == 'jpeg' || $type == 'jpg?v=2') && !(imagetypes() & IMG_JPG)) {
             debug_event('art.class', 'PHP-GD Does not support JPGs - unable to resize', 1);
 
             return array();
@@ -821,6 +821,8 @@ class Art extends database_object
         switch ($type) {
             case 'jpg':
             case 'jpeg':
+            case 'jpg?v=2':
+            case '(null)':
                 imagejpeg($thumbnail, null, 75);
                 $mime_type = image_type_to_mime_type(IMAGETYPE_JPEG);
                 break;
