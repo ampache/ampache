@@ -44,7 +44,7 @@ class Core
      */
     public static function get_global($variable)
     {
-        return $GLOBALS[$variable];
+        return $GLOBALS[$variable] ?? '';
     }
 
     /**
