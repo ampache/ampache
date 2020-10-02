@@ -27,6 +27,6 @@ use Ampache\Application\WebPlayerEmbeddedApplication;
 use Psr\Container\ContainerInterface;
 
 /** @var ContainerInterface $dic */
-$dic = require __DIR__ . '/../src/Config/init.php';
+$dic = require __DIR__ . '/../src/Config/Init.php';
 
 $dic->get(WebPlayerEmbeddedApplication::class)->run();

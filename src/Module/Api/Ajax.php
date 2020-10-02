@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
 
 /**
@@ -94,7 +95,9 @@ class Ajax
      */
     public static function url($action)
     {
-        return AmpConfig::get('ajax_url') . $action;
+        global $dic;
+
+        return $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri() . $action;
     }
 
     /**

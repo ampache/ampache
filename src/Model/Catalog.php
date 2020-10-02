@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
+use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
@@ -1323,7 +1324,12 @@ abstract class Catalog extends database_object
             $results = array();
         } else {
             debug_event('catalog.class', 'Gathering art for ' . $type . '/' . $object_id . '...', 4);
-            $results = $art->gather($options);
+
+            global $dic;
+            $results = $dic->get(ArtCollectorInterface::class)->collect(
+                $art,
+                $options
+            );
         }
 
         foreach ($results as $result) {
@@ -1763,14 +1769,13 @@ abstract class Catalog extends database_object
         $artist           = self::check_length($results['artist']);
         $artist_mbid      = $results['mb_artistid'];
         $albumartist_mbid = $results['mb_albumartistid'];
-
         // info for the album table.
         $album      = self::check_length($results['album']);
         $album_mbid = $results['mb_albumid'];
         $disk       = $results['disk'];
         // year is also included in album
         $album_mbid_group = $results['mb_albumid_group'];
-        $release_type     = $results['release_type'];
+        $release_type     = Catalog::check_length($results['release_type'], 32);
         $albumartist      = self::check_length($results['albumartist'] ?: $results['band']);
         $albumartist      = $albumartist ?: null;
         $original_year    = $results['original_year'];
@@ -1781,12 +1786,31 @@ abstract class Catalog extends database_object
         $new_song->artist = Artist::check($artist, $artist_mbid);
         if ($albumartist) {
             $new_song->albumartist = Artist::check($albumartist, $albumartist_mbid);
+            if (!$new_song->albumartist) {
+                $new_song->albumartist = $song->albumartist;
+            }
+        }
+        if (!$new_song->artist) {
+            $new_song->artist = $song->artist;
         }
 
         // check whether this album exists
-        $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group,
-            $new_song->albumartist, $release_type, false, $original_year, $barcode, $catalog_number);
-
+        $new_song->album = Album::check(
+            $album,
+            $new_song->year,
+            $disk,
+            $album_mbid,
+            $album_mbid_group,
+            $new_song->albumartist,
+            $release_type,
+            false,
+            $original_year,
+            $barcode,
+            $catalog_number
+        );
+        if (!$new_song->album) {
+            $new_song->album = $song->album;
+        }
         // set `song`.`update_time` when artist or album details change
         $update_time = time();
         if (self::migrate('artist', $song->artist, $new_song->artist) || self::migrate('album', $song->album,

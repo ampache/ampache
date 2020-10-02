@@ -130,6 +130,9 @@ final class UpdateCatalog implements UpdateCatalogInterface
                 $interactor->info('------------------', true);
             }
         }
+        if ($cleanup === true || $verification === true) {
+            Catalog::garbage_collection();
+        }
         if ($optimizeDatabase === true) {
             // Optimize Database Tables
             $interactor->info(

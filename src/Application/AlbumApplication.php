@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application;
 
+use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Model\Album;
 use Ampache\Config\AmpConfig;
@@ -37,6 +38,14 @@ use Ampache\Model\Wanted;
 
 final class AlbumApplication implements ApplicationInterface
 {
+    private ArtCollectorInterface $artCollector;
+
+    public function __construct(
+        ArtCollectorInterface $artCollector
+    ) {
+        $this->artCollector = $artCollector;
+    }
+
     public function run(): void
     {
         require_once Ui::find_template('header.inc.php');

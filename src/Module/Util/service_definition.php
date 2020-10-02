@@ -31,4 +31,7 @@ use function DI\autowire;
 return [
     Horde_Browser::class => autowire(Horde_Browser::class),
     FileNameConverterInterface::class => autowire(FileNameConverter::class),
+    RequestParserInterface::class => autowire(RequestParser::class),
+    AjaxUriRetrieverInterface::class => autowire(AjaxUriRetriever::class),
+    EnvironmentInterface::class => autowire(Environment::class),
 ];

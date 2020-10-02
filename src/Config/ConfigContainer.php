@@ -31,12 +31,19 @@ namespace Ampache\Config;
  */
 final class ConfigContainer implements ConfigContainerInterface
 {
-    private $configuration;
+    private array $configuration;
 
     public function __construct(
         array $configuration
     ) {
         $this->configuration = $configuration;
+    }
+
+    public function updateConfig(array $configuration): ConfigContainerInterface
+    {
+        $this->configuration = $configuration;
+
+        return $this;
     }
 
     public function get(string $configKey)
@@ -62,5 +69,10 @@ final class ConfigContainer implements ConfigContainerInterface
     public function getRawWebPath(): string
     {
         return $this->configuration[ConfigurationKeyEnum::RAW_WEB_PATH] ?? '';
+    }
+
+    public function getWebPath(): string
+    {
+        return $this->configuration[ConfigurationKeyEnum::WEB_PATH] ?? '';
     }
 }

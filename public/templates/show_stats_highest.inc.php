@@ -23,7 +23,7 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Rating;
 use Ampache\Model\Video;
-use Ampache\Module\Util\Browse;
+use Ampache\Model\Browse;
 
 $sql    = Rating::get_highest_sql('song');
 $browse = new Browse();

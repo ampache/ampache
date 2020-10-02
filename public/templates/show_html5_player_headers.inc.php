@@ -3,7 +3,11 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Broadcast\Broadcast_Server;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
+
+global $dic;
+$ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
 
 if ($iframed || $is_share) { ?>
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path') . Ui::find_template('jplayer.midnight.black-iframed.css', true) ?>" type="text/css" />
@@ -25,8 +29,8 @@ if (!$iframed) {
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/ajax.js"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/tools.js"></script>
 <script>
-var jsAjaxServer = "<?php echo AmpConfig::get('ajax_server') ?>";
-var jsAjaxUrl = "<?php echo AmpConfig::get('ajax_url') ?>";
+var jsAjaxServer = "<?php echo $ajaxUriRetriever->getAjaxServerUri(); ?>";
+var jsAjaxUrl = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>";
 
 function update_action()
 {
@@ -255,7 +259,7 @@ function ShowEqualizer()
 function SavePlaylist()
 {
     if (jplaylist['playlist'].length > 0) {
-        var url = "<?php echo AmpConfig::get('ajax_url') ?>?page=playlist&action=append_item&item_type=" + jplaylist['playlist'][0]["media_type"] + "&item_id=";
+        var url = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>?page=playlist&action=append_item&item_type=" + jplaylist['playlist'][0]["media_type"] + "&item_id=";
         for (var i = 0; i < jplaylist['playlist'].length; i++) {
             url += "," + jplaylist['playlist'][i]["media_id"];
         }

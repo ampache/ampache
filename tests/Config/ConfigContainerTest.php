@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
  *
@@ -23,9 +21,11 @@ declare(strict_types=1);
  *
  */
 
+declare(strict_types=1);
+
 namespace Ampache\Config;
 
-use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Ampache\MockeryTestCase;
 
 class ConfigContainerTest extends MockeryTestCase
 {
@@ -39,6 +39,25 @@ class ConfigContainerTest extends MockeryTestCase
         static::assertSame(
             $value,
             $subject->get($key)
+        );
+    }
+
+    public function testUpdateConfigReplacesInternalConfigArray(): void
+    {
+        $key         = 'some-key';
+        $value       = 'some-value';
+        $config_data = [$key => $value];
+
+        $config = $this->createSubject();
+
+        static::assertSame(
+            $config,
+            $config->updateConfig($config_data)
+        );
+
+        static::assertSame(
+            $value,
+            $config->get($key)
         );
     }
 
@@ -114,6 +133,24 @@ class ConfigContainerTest extends MockeryTestCase
         static::assertSame(
             '',
             $this->createSubject()->getRawWebPath()
+        );
+    }
+
+    public function testGetWebPathReturnsPath(): void
+    {
+        $value = 'some-path';
+
+        static::assertSame(
+            $value,
+            $this->createSubject([ConfigurationKeyEnum::WEB_PATH => $value])->getWebPath()
+        );
+    }
+
+    public function testGetWebPathReturnsDefault(): void
+    {
+        static::assertSame(
+            '',
+            $this->createSubject([])->getWebPath()
         );
     }
 

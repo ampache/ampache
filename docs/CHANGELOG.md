@@ -10,6 +10,10 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 
 ### Added
 
+* Configurable settings for "Gather Art".
+* Configurable art search limit.
+* User selectable artist and year filter for Spotify album searches
+* User selectable limit for art searches.
 * php-intl is now required for translation of date formats into your locale
 * Generate rsstokens for each user allowing unique feed URLs
 * Allow setting custom databse collation and charset without overwriting your changes
@@ -17,6 +21,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Replace 'Admin' icon with padlock in sidebar when access check fails. (Hide this new icon with 'simple_user_mode')
 * Disable API/Subsonic password resets in 'simple_user_mode'
 * NEW plugin: 'Personal Favorites'. Show a shortcut to a favorite smartlist or playlist on the homepage
+* Run garbage collection after catalog_update.inc 'clean' or 'verify'
 
 ### Changed
 
@@ -30,6 +35,10 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 ### Fixed
 
 * Stop skips duplicating recent stat inserts
+* Escape filepaths when removing from database
+* Subsonic JSON was casting everything to int when it shouldn't be
+* Workaround sublime-music Subsonic version (fixed in v0.11.1+ clients)
+* SubSonic::getCoverArt was not causing an error when art is missing
 
 ### API develop
 
@@ -45,9 +54,11 @@ All API code that used 'Tag' now references 'Genre' instead
 * API::playlist_edit added new parameter 'sort': (0,1) sort the playlist by 'Artist, Album, Song' //optional
 * Api::indexes added parameter 'include': (0,1) include song details with playlists (XML has this by default)
 * NEW API functions
-  * Api::users (id and username of the site users)
+  * Api::users (ID and Username of the site users)
   * Api::song_delete (Delete files when you are allowed to)
-  * Api::user_preferences (get your user preferences)
+  * Api::user_preferences (Get your user preferences)
+  * Api::system_update (Check Ampache for updates and run the update if there is one.)
+  * Api::system_preferences (Preferences for the system user)
 * New error codes
   * 404 Not Found (The API could not find the requested object)
   * 412 Failed Access Check (The user does note have access to this object, method, feature.)

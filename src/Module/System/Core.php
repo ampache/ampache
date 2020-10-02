@@ -53,6 +53,8 @@ class Core
      *
      * @param string $variable
      * @return string
+     *
+     * @deprecated Use RequestParser
      */
     public static function get_request($variable)
     {

@@ -29,19 +29,28 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Util\EnvironmentInterface;
 use Exception;
 use Ampache\Model\Preference;
 use Ampache\Module\Util\Ui;
 
 final class InstallationApplication implements ApplicationInterface
 {
+    private EnvironmentInterface $environment;
+
+    public function __construct(
+        EnvironmentInterface $environment
+    ) {
+        $this->environment = $environment;
+    }
+
     public function run(): void
     {
         require_once __DIR__ . '/../../src/Config/install.php';
 
         set_error_handler('ampache_error_handler');
 
-        global $configfile;
+        $configfile = __DIR__ . '/../../config/ampache.cfg.php';
 
         // Redirect if installation is already complete.
         if (!install_check_status($configfile)) {
@@ -129,9 +138,14 @@ final class InstallationApplication implements ApplicationInterface
         // Correct potential \ or / in the dirname
         $safe_dirname = get_web_path();
 
-        global $http_type;
+        $this->environment->isSsl() ? $protocol = 'https' : $protocol = 'http';
 
-        $web_path = $http_type . Core::get_server('HTTP_HOST') . $safe_dirname;
+        $web_path = sprintf(
+            '%s://%s%s%s',
+            $protocol,
+            Core::get_server('HTTP_HOST'),
+            $safe_dirname
+        );
 
         unset($safe_dirname);
 

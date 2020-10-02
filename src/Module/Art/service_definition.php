@@ -24,8 +24,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Art;
 
+use Ampache\Module\Art\Collector\ArtCollector;
+use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use function DI\autowire;
 
 return [
     ArtCleanupInterface::class => autowire(ArtCleanup::class),
+    ArtCollectorInterface::class => autowire(ArtCollector::class),
 ];

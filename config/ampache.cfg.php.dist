@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 45
+config_version = 46
 
 ; Allow you to hard code a default git branch for Ampache
 ; If you set this value the inbuilt updater will use this branch for updates.
@@ -597,6 +597,18 @@ sociable = "true"
 ; DEFAULT: db,tags,folder,spotify,musicbrainz,lastfm,google
 art_order = "db,tags,folder,spotify,musicbrainz,lastfm,google"
 
+; Spotify Album art search filter
+;  Narrow the search. 
+;  POSSIBLE VALUES:  artist,(year:1991 or year:1991-2000)
+; POSSIBLE  VALUES: empty string("") or commented out for no filter
+; DEFAULT: none;
+;spotify_art_filter="artist"
+
+; Art search limit
+;  Limit the total images returned
+;  DEFAULT: 5
+;art_search_limit="15"
+
 ; Recommendations
 ; Set this to true to enable display of similar artists or albums
 ; while browsing. Requires Last.FM.
@@ -772,7 +784,7 @@ debug_level = 5
 ; the specified directory exists and your HTTP server has
 ; write access.
 ; DEFAULT: none
-;log_path = "/var/log/ampache"
+log_path = "/var/log/ampache"
 
 ; Log filename pattern
 ; This defines where the log file name pattern
@@ -1137,8 +1149,8 @@ encode_ss_duration = "-t %DURATION%"
 ; Useful if you are having issues streaming the full track.
 ; You can set it for all streams or a specific player
 ; POSSIBLE VALUES: true webplayer api
-; DEFAULT: "false"
-;send_full_stream = "webplayer"
+; DEFAULT: "webplayer"
+send_full_stream = "webplayer"
 
 ;#########################################################
 ; Proxy Settings (optional)                              #

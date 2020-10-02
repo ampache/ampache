@@ -5,7 +5,12 @@ use Ampache\Model\Broadcast;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\WebPlayer;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
+
+// TODO remove me
+global $dic;
+$environment = $dic->get(EnvironmentInterface::class);
 
 $autoplay = true;
 if ($is_share) {
@@ -451,7 +456,7 @@ if ($isVideo) { ?>
     } ?>
         </div>
       </div>
-<?php if (!$is_share && !$_SESSION['mobile']) { ?>
+<?php if (!$is_share && !$environment->isMobile()) { ?>
       <div class="player_actions">
 <?php if (AmpConfig::get('broadcast') && Access::check('interface', 25)) { ?>
         <div id="broadcast" class="broadcast action_button">

@@ -23,10 +23,8 @@ declare(strict_types=1);
  *
  */
 
-require_once __DIR__ . '/../src/Config/init-tiny.php';
-
 use Ampache\Application\TestApplication;
 
-$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+$dic = require_once __DIR__ . '/../src/Config/Bootstrap.php';
 
 $dic->get(TestApplication::class)->run();

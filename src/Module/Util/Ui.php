@@ -177,16 +177,14 @@ class Ui
      *
      * First initialized with an array of two class names. Subsequent calls
      * reverse the array then return the first element.
-     * @param array $classes
      * @return mixed
      */
-    public static function flip_class($classes = null)
+    public static function flip_class()
     {
-        if (is_array($classes)) {
-            self::$_classes = $classes;
-        } else {
-            self::$_classes = array_reverse(self::$_classes);
+        if (self::$_classes === null) {
+            self::$_classes = ['odd', 'even'];
         }
+        self::$_classes = array_reverse(self::$_classes);
 
         return self::$_classes[0];
     }

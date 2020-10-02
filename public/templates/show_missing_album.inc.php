@@ -22,7 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
-use Ampache\Module\Util\Browse;
+use Ampache\Model\Browse;
 use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path');
@@ -38,7 +38,7 @@ $art                      = new Art($walbum->mbid, 'album');
 $options['artist']        = $artist->name;
 $options['album_name']    = $walbum->name;
 $options['keyword']       = $artist->name . " " . $walbum->name;
-$images                   = $art->gather($options, '1');
+$images                   = $this->artCollector->collect($art, $options, 1);
 
 if (count($images) > 0 && !empty($images[0]['url'])) {
     $name = '[' . $artist->name . '] ' . scrub_out($walbum->name);

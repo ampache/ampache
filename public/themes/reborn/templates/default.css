@@ -93,8 +93,7 @@ th,
 td {
     border: 0;
     outline: 0;
-    vertical-align: baseline;
-    background: transparent;
+    vertical-align: baseline; 
     margin: 0;
     padding: 0;
 }
@@ -171,13 +170,25 @@ textarea {
 }
 
 input[type=password],
-input[type=text] {
+input[type=text],
+input[type=url],
+input[type=number]
+{
     line-height: normal;
     height: 23px;
 }
 
+input[type=file]
+{
+    padding: 4px 6px;
+    line-height: normal;
+    height: 40px;
+}
+
 input[type=password],
 input[type=text],
+input[type=url],
+input[type=number],
 textarea {
     padding: 4px 6px;
     background-repeat: repeat-x;
@@ -435,7 +446,6 @@ div#autoupdate > span {
 #registerbox div {
     font-size: 18px;
     line-height: 1.5em;
-    text-rendering: auto;
 }
 
 #loginbox .alert,
@@ -500,7 +510,7 @@ div#autoupdate > span {
 #loginPage #loginbox #remembermefield {
     vertical-align: middle;
     font-size: 16px;
-    padding: auto 0;
+    padding: 0;
     float: left;
 }
 
@@ -956,6 +966,7 @@ span#sidebar-header-content::after {
     text-decoration: none;
 }
 
+table.gatherart,
 table.tabledata {
     width: 100%;
     text-align: left;
@@ -1115,9 +1126,78 @@ table.tabledata .cel_agent {
 table.tabledata .cel_agent img:hover {
     cursor: help;
 }
+table.gatherart {
+    width: 100%;
+    text-align: left;
+    border: 2px solid black; 
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+table.gatherart td {
+    vertical-align: middle;
+    overflow: hidden;
+    padding: 3px 5px 3px 0;
+    word-wrap: break-word;
+    min-width: 50px;
+}
+
+table.gatherart thead .th-top,
+table.gatherart tfoot .th-bottom {
+    font-size: 12px;
+}
+
+table.gatherart thead .th-top {
+    border-bottom: 1px solid;
+}
+
+table.gatherart thead th.cel_rating {
+    padding-left: 7px;
+}
+
+table.gatherart tfoot .th-bottom {
+    border-top: 1px solid;
+    display: none;
+}
+
+th.center,
+td.center{
+    vertical-align: middle;
+    text-align: left;
+}
+
+table.gatherart tr:hover,
+table.gatherart tr:focus {
+    text-shadow: none;
+    background-repeat: repeat-x;
+}
+
+table.gatherart .th-top:hover,
+table.gatherart .th-bottom:hover,
+table.gatherart .th-top:focus,
+table.gatherart .th-bottom:focus {
+    background-image: none;
+    background-repeat: no-repeat;
+}
 
 #shoutbox-input {
     font-size: 14px;
+}
+
+#searchLimit{
+	width: 3em;
+}
+
+#gatherYear{
+	  padding-right: 8px;
+}
+
+#gatherLimit{
+  padding-right: 3px;
+}
+
+input:invalid { 
+    border: 4px solid red;
 }
 
 .box_preferences h4 {
@@ -1426,7 +1506,7 @@ span.fatalerror {
     background-image: -webkit-gradient(linear, 0, 0 100%, from(#6d6d6d), to(#4a4a4a));
     background-image: -webkit-linear-gradient(top, #6d6d6d, #4a4a4a);
     background-image: -o-linear-gradient(top, #6d6d6d, #4a4a4a);
-    background-image: linear-gradient(top, #6d6d6d, #4a4a4a);
+    background-image: linear-gradient(to top, #6d6d6d, #4a4a4a);
     border-bottom-color: #b3b3b3;
     -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset -1px 0 0 rgba(0, 0, 0, 0.2);
     -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset -1px 0 0 rgba(0, 0, 0, 0.2);

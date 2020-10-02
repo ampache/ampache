@@ -31,6 +31,6 @@ header('Connection: Close');
 set_time_limit(0);
 
 /** @var ContainerInterface $dic */
-$dic = require __DIR__ . '/../../src/Config/init.php';
+$dic = require __DIR__ . '/../../src/Config/Init.php';
 
 $dic->get(PlayStatusApplication::class)->run();

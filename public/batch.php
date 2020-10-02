@@ -25,7 +25,7 @@ use Ampache\Model\User;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
-use Ampache\Module\Util\Browse;
+use Ampache\Model\Browse;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
@@ -33,14 +33,14 @@ use Ampache\Module\Util\Ui;
 if (!defined('NO_SESSION')) {
     if (isset($_REQUEST['ssid'])) {
         define('NO_SESSION', 1);
-        require_once __DIR__ . '/../src/Config/init.php';
+        require_once __DIR__ . '/../src/Config/Init.php';
         if (!Session::exists('stream', $_REQUEST['ssid'])) {
             Ui::access_denied();
 
             return false;
         }
     } else {
-        require_once __DIR__ . '/../src/Config/init.php';
+        require_once __DIR__ . '/../src/Config/Init.php';
     }
 }
 

@@ -28,23 +28,16 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Exception;
 use getID3;
-use MusicBrainz\MusicBrainz;
-use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use PDOStatement;
 use Requests;
 use RuntimeException;
-use SpotifyWebAPI\SpotifyWebAPI;
-use SpotifyWebAPI\Session as SpotifySession;
-use SpotifyWebAPI\SpotifyWebAPIException;
 
 /**
  * This class handles the images / artwork in ampache
@@ -701,8 +694,8 @@ class Art extends database_object
      */
     public function generate_thumb($image, $size, $mime)
     {
-        $data = explode("/", (string)$mime);
-        $type = strtolower((string)$data['1']);
+        $data = explode("/", (string) $mime);
+        $type = ((string) $data['1'] !== '') ? strtolower((string) $data['1']) : 'jpg';
 
         if (!self::test_image($image)) {
             debug_event('art.class', 'Not trying to generate thumbnail, invalid data passed', 1);
@@ -717,7 +710,7 @@ class Art extends database_object
         }
 
         // Check and make sure we can resize what you've asked us to
-        if (($type == 'jpg' || $type == 'jpeg') && !(imagetypes() & IMG_JPG)) {
+        if (($type == 'jpg' || $type == 'jpeg' || $type == 'jpg?v=2') && !(imagetypes() & IMG_JPG)) {
             debug_event('art.class', 'PHP-GD Does not support JPGs - unable to resize', 1);
 
             return array();
@@ -749,7 +742,7 @@ class Art extends database_object
         $source_size = array('height' => imagesy($source), 'width' => imagesx($source));
 
         // Create a new blank image of the correct size
-        $thumbnail = imagecreatetruecolor($size['width'], $size['height']);
+        $thumbnail = imagecreatetruecolor((int) $size['width'], (int) $size['height']);
 
         if (!imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $size['width'], $size['height'], $source_size['width'],
             $source_size['height'])) {
@@ -768,6 +761,8 @@ class Art extends database_object
         switch ($type) {
             case 'jpg':
             case 'jpeg':
+            case 'jpg?v=2':
+            case '(null)':
                 imagejpeg($thumbnail, null, 75);
                 $mime_type = image_type_to_mime_type(IMAGETYPE_JPEG);
                 break;
@@ -1037,6 +1032,8 @@ class Art extends database_object
     }
 
     /**
+<<<<<<< HEAD:src/Model/Art.php
+=======
      * gather
      * This tries to get the art in question
      * @param array $options
@@ -1057,8 +1054,11 @@ class Art extends database_object
 
             return array();
         }
-        $config  = AmpConfig::get('art_order');
-        $methods = get_class_methods(Art::class);
+        if ($limit == 0) {
+            $limit   = (is_null(AmpConfig::get('art_search_limit'))) ? static::ART_SEARCH_LIMIT : AmpConfig::get('art_search_limit');
+        }
+        $config    = AmpConfig::get('art_order');
+        $methods   = get_class_methods('Art');
 
         /* If it's not set */
         if (empty($config)) {
@@ -1093,10 +1093,8 @@ class Art extends database_object
                         case 'gather_google':
                         case 'gather_musicbrainz':
                         case 'gather_lastfm':
-                            $data = $this->{$method_name}($limit, $options);
-                            break;
                         case 'gather_spotify':
-                            $data = $this->{$method_name}($options);
+                            $data = $this->{$method_name}($limit, $options);
                             break;
                         default:
                             $data = $this->{$method_name}($limit);
@@ -1108,12 +1106,12 @@ class Art extends database_object
             }
 
             // Add the results we got to the current set
-            $results = array_merge($results, (array)$data);
+            $results = array_merge($results, (array) $data);
 
             if ($limit && count($results) >= $limit) {
                 debug_event('art.class', 'results:' . json_encode($results), 3);
 
-                return array_slice($results, 0, $limit);
+                return array_slice($results, 0, $limit + 1);
             }
         } // end foreach
 
@@ -1146,12 +1144,12 @@ class Art extends database_object
      * @param array $data
      * @return array
      */
-    public function gather_spotify($data = array())
+    public function gather_spotify($limit = 5, $data = array())
     {
         static $accessToken = null;
         $images             = array();
         if (!AmpConfig::get('spotify_client_id') || !AmpConfig::get('spotify_client_secret')) {
-            debug_event('art.class', 'gather_spotify: Missing Spotify credentials, check your config', 5);
+            debug_event('art.class', 'gather_spotify: Missing Spotify credentials, check your config',5);
 
             return $images;
         }
@@ -1168,23 +1166,52 @@ class Art extends database_object
                 debug_event('art.class', "gather_spotify: A problem exists with the client credentials", 5);
             }
         }
-        $api   = new SpotifyWebAPI();
-        $types = $this->type . 's';
+        $filter  = array();
+        $query   = '';
+        $query1  = '';
+        $getType = '';
+        $api     = new SpotifyWebAPI();
+        $types   = $this->type . 's';
         $api->setAccessToken($accessToken);
         if ($this->type == 'artist') {
             debug_event('art.class', "gather_spotify artist: " . $data['artist'], 5);
-            $query   = $data['artist'];
+            $query   = $data['keyword'];
             $getType = 'getArtist';
         } elseif ($this->type == 'album') {
-            debug_event('art.class', "gather_spotify album: " . $data['album'], 5);
-            $query   = 'album:' . $data['album'] . ' artist:' . $data['artist'];
             $getType = 'getAlbum';
-        } else {
-            return $images;
+            debug_event('art.class', "gather_spotify album: " . $data['album'], 5);
+            // Check for manual search
+            if (key_exists('search_limit', $data)) {
+                $limit = $data['search_limit'];
+                if (key_exists('artist_filter', $data)) {
+                    $filter[]= 'artist';
+                }
+                if (key_exists('year_filter', $data)) {
+                    $filter[] = $data['year_filter'];
+                }
+            } elseif (!is_null(AmpConfig::get('spotify_art_filter')) || !empty(AmpConfig::get('spotify_art_filter'))) {
+                $filter = explode(',', AmpConfig::get('spotify_art_filter'));
+            }
+            if (!empty($filter)) {
+                foreach ($filter as $item) {
+                    switch (trim($item)) {
+                        case 'artist':
+                          $query1 .= " artist:\"{$data['artist']}\"";
+                        break;
+                        case (preg_match('/year:.*/', $item) ? true :false):
+                           $query1 .= ' ' . $item;
+                        break;
+                        default:
+                    }
+                }
+                $query = "album:" . "\"{$data['album']}\"" . $query1;
+            } else {
+                $query = "\"{$data['album']}\"";
+            }
         }
 
         try {
-            $response = $api->search($query, $this->type);
+            $response = $api->search($query, $this->type, ['limit' => $limit]);
         } catch (SpotifyWebAPIException $error) {
             if ($error->hasExpiredToken()) {
                 $accessToken = $session->getAccessToken();
@@ -1194,22 +1221,23 @@ class Art extends database_object
                 // Number of seconds to wait before sending another request
                 sleep($retryAfter);
             }
-            $response = $api->search($query, $this->type);
+            $response = $api->search($query, $this->type,['limit' => $limit]);
         } // end of catch
 
         if (count($response->{$types}->items)) {
             foreach ($response->{$types}->items as $item) {
                 $item_id = $item->id;
                 $result  = $api->{$getType}($item_id);
-                $image   = $result->images[0];
-                debug_event('art.class', "gather_spotify: found " . $image->url, 5);
-                $images[] = array(
+                foreach ($result->images as $image) {
+                    $images[] = array(
                     'url' => $image->url,
                     'mime' => 'image/jpeg',
                     'title' => 'Spotify'
                 );
+                }
             }
         }
+
 
         return $images;
     } // gather_spotify
@@ -1473,9 +1501,8 @@ class Art extends database_object
                 // Take an md5sum so we don't show duplicate files.
                 $index = md5($full_filename);
 
-                if (($file == $preferred_filename || pathinfo($file,
-                            PATHINFO_FILENAME) == $preferred_filename) || ($file == $artist_filename || pathinfo($file,
-                            PATHINFO_FILENAME) == $artist_filename)) {
+                if (($file == $preferred_filename || pathinfo($file, PATHINFO_FILENAME) == $preferred_filename) ||
+                    ($file == $artist_filename || pathinfo($file, PATHINFO_FILENAME) == $artist_filename)) {
                     // We found the preferred filename and so we're done.
                     debug_event('art.class', "gather_folder: Found preferred image file: $file", 5);
                     $preferred[$index] = array(
@@ -1580,7 +1607,7 @@ class Art extends database_object
      */
     protected function gather_media_tags($media)
     {
-        $mtype  = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
+        $mtype  = strtolower(get_class($media));
         $data   = array();
         $getID3 = new getID3();
         try {
@@ -1595,8 +1622,7 @@ class Art extends database_object
                 $mtype => $media->file,
                 'raw' => $image['data'],
                 'mime' => $image['mime'],
-                'title' => 'ID3'
-            );
+                'title' => 'ID3');
         }
 
         if (isset($id3['id3v2']['APIC'])) {
@@ -1606,19 +1632,17 @@ class Art extends database_object
                     $mtype => $media->file,
                     'raw' => $image['data'],
                     'mime' => $image['mime'],
-                    'title' => 'ID3'
-                );
+                    'title' => 'ID3');
             }
         }
 
         if (isset($id3['comments']['picture']['0'])) {
             $image  = $id3['comments']['picture']['0'];
             $data[] = array(
-                $mtype => $media->file,
-                'raw' => $image['data'],
-                'mime' => $image['image_mime'],
-                'title' => 'ID3'
-            );
+            $mtype => $media->file,
+            'raw' => $image['data'],
+            'mime' => $image['image_mime'],
+            'title' => 'ID3');
 
             return $data;
         }
@@ -1671,7 +1695,7 @@ class Art extends database_object
                         $results['extension'] = substr($test, 0, $pos);
                     }
                     if (preg_match('~[^png|^jpg|^jpeg|^jif|^bmp]~', $test)) {
-                        $results['extension'] = 'jpg';
+                        $results['extension']  = 'jpg';
                     }
 
                     $mime = 'image/';
@@ -1714,7 +1738,7 @@ class Art extends database_object
                     return array();
                 }
                 foreach ($xmldata->album->image as $albumart) {
-                    $coverart[] = (string)$albumart;
+                    $coverart[] = (string) $albumart;
                 }
             }
             // Albums only for last FM
@@ -1746,6 +1770,7 @@ class Art extends database_object
     } // gather_lastfm
 
     /**
+>>>>>>> upstream/develop:lib/class/art.class.php
      * Gather metadata from plugin.
      * @param $plugin
      * @param string $type
@@ -1963,8 +1988,8 @@ class Art extends database_object
             $libitem    = new $class_name($object_id);
             echo "<div class=\"item_art_actions\">";
             if (Core::get_global('user')->has_access(50) || (Core::get_global('user')->has_access(25) && Core::get_global('user')->id == $libitem->get_user_owner())) {
-                echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=find_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
-                echo Ui::get_icon('edit', T_('Edit/Find Art'));
+                echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
+                echo UI::get_icon('edit', T_('Edit/Find Art'));
                 echo "</a>";
 
                 echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";

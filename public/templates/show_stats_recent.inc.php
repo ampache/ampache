@@ -23,7 +23,7 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Video;
 use Ampache\Module\Statistics\Stats;
-use Ampache\Module\Util\Browse;
+use Ampache\Model\Browse;
 
 $sql    = Stats::get_recent_sql('album', $user_id);
 $browse = new Browse();

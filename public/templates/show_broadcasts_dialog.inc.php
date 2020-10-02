@@ -20,7 +20,6 @@
  *
  */
 
-use Ampache\Config\AmpConfig;
 use Ampache\Model\Broadcast;
 use Ampache\Module\System\Core;
 
@@ -33,13 +32,13 @@ use Ampache\Module\System\Core;
         $broadcast = new Broadcast((int) $broadcast_id);
         $broadcast->format(); ?>
     <li>
-        <a href="javascript:void(0);" id="rb_append_dbroadcast_<?php echo $broadcast->id; ?>" onclick="handleBroadcastAction('<?php echo AmpConfig::get('ajax_url') . '?page=player&action=broadcast&broadcast_id=' . $broadcast->id; ?>', 'rb_append_dbroadcast_<?php echo $broadcast->id; ?>');">
+        <a href="javascript:void(0);" id="rb_append_dbroadcast_<?php echo $broadcast->id; ?>" onclick="handleBroadcastAction('<?php echo $this->ajaxUriRetriever->getAjaxUri() . '?page=player&action=broadcast&broadcast_id=' . $broadcast->id; ?>', 'rb_append_dbroadcast_<?php echo $broadcast->id; ?>');">
             <?php echo $broadcast->f_name; ?>
         </a>
     </li>
 <?php
     } ?>
 </ul><br />
-<a href="javascript:void(0);" id="rb_append_dbroadcast_new" onclick="handleBroadcastAction('<?php echo AmpConfig::get('ajax_url') . '?page=player&action=broadcast'; ?>', 'rb_append_dbroadcast_new');">
+<a href="javascript:void(0);" id="rb_append_dbroadcast_new" onclick="handleBroadcastAction('<?php echo $this->ajaxUriRetriever->getAjaxUri() . '?page=player&action=broadcast'; ?>', 'rb_append_dbroadcast_new');">
     <?php echo T_('New broadcast'); ?>
 </a>

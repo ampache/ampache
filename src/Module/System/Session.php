@@ -24,7 +24,10 @@ declare(strict_types=0);
 
 namespace Ampache\Module\System;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\Query;
+use Ampache\Model\User;
+use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Config\AmpConfig;
@@ -33,12 +36,103 @@ use Ampache\Model\Song_Preview;
 use Ampache\Model\Tmp_Playlist;
 
 /**
- *
  * This class handles all of the session related stuff in Ampache
- *
  */
-class Session
+final class Session implements SessionInterface
 {
+    private ConfigContainerInterface $configContainer;
+
+    private AuthenticationManagerInterface $authenticationManager;
+
+    public function __construct(
+        ConfigContainerInterface $configContainer,
+        AuthenticationManagerInterface $authenticationManager
+    ) {
+        $this->configContainer       = $configContainer;
+        $this->authenticationManager = $authenticationManager;
+    }
+
+    public function auth(): bool
+    {
+        $useAuth          = $this->configContainer->isAuthenticationEnabled();
+        $sessionName      = $this->configContainer->get('session_name');
+        $isDemoMode       = $this->configContainer->get('demo_mode');
+        $defaultAuthLevel = $this->configContainer->get('default_auth_level');
+
+        // If we want a session
+        if (!defined('NO_SESSION') && $useAuth) {
+            // Verify their session
+            if (!static::exists('interface', $_COOKIE[$sessionName])) {
+                if (!static::auth_remember()) {
+                    $this->authenticationManager->logout($_COOKIE[$sessionName] ?? '');
+
+                    return false;
+                }
+            }
+
+            // This actually is starting the session
+            static::check();
+
+            // Create the new user
+            $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
+
+            // If the user ID doesn't exist deny them
+            if (!Core::get_global('user')->id && !$isDemoMode) {
+                $this->authenticationManager->logout(session_id());
+
+                return false;
+            }
+
+            // Load preferences and theme
+            Core::get_global('user')->update_last_seen();
+        } elseif (!$useAuth) {
+            $auth['success']      = 1;
+            $auth['username']     = '-1';
+            $auth['fullname']     = "Ampache User";
+            $auth['id']           = -1;
+            $auth['offset_limit'] = 50;
+            $auth['access']       = $defaultAuthLevel ? User::access_name_to_level($defaultAuthLevel) : '100';
+            if (!static::exists('interface', $_COOKIE[$sessionName])) {
+                static::create_cookie();
+                static::create($auth);
+                static::check();
+                $GLOBALS['user']           = new User('-1');
+                $GLOBALS['user']->username = $auth['username'];
+                $GLOBALS['user']->fullname = $auth['fullname'];
+                $GLOBALS['user']->access   = (int) ($auth['access']);
+            } else {
+                static::check();
+                if ($_SESSION['userdata']['username']) {
+                    $GLOBALS['user'] = User::get_from_username($_SESSION['userdata']['username']);
+                } else {
+                    $GLOBALS['user']           = new User('-1');
+                    $GLOBALS['user']->id       = -1;
+                    $GLOBALS['user']->username = $auth['username'];
+                    $GLOBALS['user']->fullname = $auth['fullname'];
+                    $GLOBALS['user']->access   = (int) ($auth['access']);
+                }
+                if (!Core::get_global('user')->id && !$isDemoMode) {
+                    $this->authenticationManager->logout(session_id());
+
+                    return false;
+                }
+                Core::get_global('user')->update_last_seen();
+            }
+        } else {
+            // If Auth, but no session is set
+            if (isset($_REQUEST['sid'])) {
+                session_name($sessionName);
+                session_id(scrub_in((string) $_REQUEST['sid']));
+                session_start();
+                $GLOBALS['user'] = new User($_SESSION['userdata']['uid']);
+            } else {
+                $GLOBALS['user'] = new User();
+            }
+        } // If NO_SESSION passed
+
+        return true;
+    }
+
     /**
      * write
      *
@@ -402,14 +496,8 @@ class Session
         return $location;
     }
 
-    public static function setup(): void
+    public function setup(): void
     {
-        if (!function_exists('session_start')) {
-            header("Location:" . AmpConfig::get('web_path') . "/test.php");
-
-            return;
-        }
-
         session_set_save_handler(
             static function (): bool { return true; },
             static function (): bool { return true; },

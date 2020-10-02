@@ -29,7 +29,7 @@ use Ampache\Module\Util\Ui;
 // Upload form from http://tutorialzine.com/2013/05/mini-ajax-file-upload-form/?>
 <?php
 Ui::show_box_top(T_('Upload'));
-$ajaxfs = AmpConfig::get('ajax_server') . '/fs.ajax.php';
+$ajaxfs = $this->ajaxUriRetriever->getAjaxServerUri() . '/fs.ajax.php';
 $artist = (int) (Core::get_request('artist'));
 $album  = (int) (Core::get_request('album')); ?>
 <div id="container" role="main">

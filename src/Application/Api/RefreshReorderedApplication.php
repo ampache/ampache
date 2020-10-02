@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=0);
-
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -23,38 +21,68 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
 namespace Ampache\Application\Api;
 
 use Ampache\Application\ApplicationInterface;
-use Ampache\Module\Util\Browse;
-use Ampache\Module\System\Core;
-use Ampache\Model\Playlist;
+use Ampache\Model\ModelFactoryInterface;
+use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\RequestParserInterface;
+use Psr\Log\LoggerInterface;
 
 final class RefreshReorderedApplication implements ApplicationInterface
 {
+    public const ACTION_REFRESH_PLAYLIST_MEDIAS = 'refresh_playlist_medias';
+    public const ACTION_REFRESH_ALBUM_SONGS     = 'refresh_album_songs';
+
+    private LoggerInterface $logger;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private RequestParserInterface $requestParser;
+
+    public function __construct(
+        LoggerInterface $logger,
+        ModelFactoryInterface $modelFactory,
+        RequestParserInterface $requestParser
+    ) {
+        $this->logger        = $logger;
+        $this->modelFactory  = $modelFactory;
+        $this->requestParser = $requestParser;
+    }
+
     public function run(): void
     {
-        debug_event('refresh_reordered.server', 'Called for action: {' . Core::get_request('action') . '}', 5);
+        $action    = $this->requestParser->getFromRequest('action');
+        $object_id = $this->requestParser->getFromRequest('id');
+
+        $this->logger->debug(
+            'Called for action: {' . $action . '}',
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
+
+        $browse = $this->modelFactory->createBrowse();
 
         // Switch on the actions
-        switch ($_REQUEST['action']) {
-            case 'refresh_playlist_medias':
-                $playlist = new Playlist((int) Core::get_request('id'));
+        switch ($action) {
+            case static::ACTION_REFRESH_PLAYLIST_MEDIAS:
+                $playlist = $this->modelFactory->createPlaylist((int) $object_id);
                 $playlist->format();
+
                 $object_ids = $playlist->get_items();
-                $browse     = new Browse();
+
                 $browse->set_type('playlist_media');
                 $browse->add_supplemental_object('playlist', $playlist->id);
                 $browse->set_static_content(true);
                 $browse->show_objects($object_ids);
                 $browse->store();
                 break;
-            case 'refresh_album_songs':
-                $browse = new Browse();
+            case static::ACTION_REFRESH_ALBUM_SONGS:
                 $browse->set_show_header(true);
                 $browse->set_type('song');
                 $browse->set_simple_browse(true);
-                $browse->set_filter('album', Core::get_request('id'));
+                $browse->set_filter('album', $object_id);
                 $browse->set_sort('track', 'ASC');
                 $browse->get_objects();
                 echo "<div id='browse_content_song' class='browse_content'>";
@@ -62,6 +90,6 @@ final class RefreshReorderedApplication implements ApplicationInterface
                 $browse->store();
                 echo "</div>";
                 break;
-        } // switch on the action
+        }
     }
 }

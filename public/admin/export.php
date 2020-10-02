@@ -27,6 +27,6 @@ use Ampache\Application\Admin\ExportApplication;
 use Psr\Container\ContainerInterface;
 
 /** @var ContainerInterface $dic */
-$dic = require __DIR__ . '/../../src/Config/init.php';
+$dic = require __DIR__ . '/../../src/Config/Init.php';
 
 $dic->get(ExportApplication::class)->run();

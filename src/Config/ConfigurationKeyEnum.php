@@ -34,4 +34,5 @@ final class ConfigurationKeyEnum
     public const BACKEND_WEBDAV = 'webdav_backend';
     public const RAW_WEB_PATH   = 'raw_web_path';
     public const USE_AUTH       = 'use_auth';
+    public const WEB_PATH       = 'web_path';
 }

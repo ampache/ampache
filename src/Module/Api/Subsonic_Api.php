@@ -224,49 +224,44 @@ class Subsonic_Api
      * @param SimpleXMLElement $xml
      * @param array $alwaysArray
      */
-    public static function apiOutput(
-        $input,
-        $xml,
-        $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share')
-    ) {
-        $type     = $input['f'];
+
+    public static function apiOutput($input, $xml, $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share'))
+    {
+        $format   = ($input['f']) ? strtolower((string) $input['f']) : 'xml';
         $callback = $input['callback'];
-        self::apiOutput2(strtolower((string)$type), $xml, $callback, $alwaysArray);
+        self::apiOutput2($format, $xml, $callback, $alwaysArray);
     }
 
     /**
      * apiOutput2
-     * @param string $outputtype
+     * @param string $format
      * @param SimpleXMLElement $xml
      * @param string $callback
      * @param array $alwaysArray
      */
-    public static function apiOutput2(
-        $outputtype,
-        $xml,
-        $callback = '',
-        $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share')
-    ) {
+    public static function apiOutput2($format, $xml, $callback = '', $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share'))
+    {
         $conf = array('alwaysArray' => $alwaysArray);
-        if ($outputtype == "json") {
-            $output = json_encode(self::xml2json($xml, $conf),
-                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
-        } else {
-            if ($outputtype == "jsonp") {
-                $output = $callback . '(' . json_encode(self::xml2json($xml, $conf), JSON_PRETTY_PRINT) . ')';
-            } else {
-                $xmlstr = $xml->asXml();
-                // clean illegal XML characters.
-                $clean_xml = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_',
-                    $xmlstr);               // Format xml output
-                $dom = new DOMDocument();
-                $dom->loadXML($clean_xml, LIBXML_PARSEHUGE);
-                $dom->formatOutput = true;
-                $output            = $dom->saveXML();
-            }
+        if ($format == "json") {
+            echo json_encode(self::xml2json($xml, $conf), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         }
-
-        echo $output;
+        if ($format == "jsonp") {
+            echo $callback . '(' . json_encode(self::xml2json($xml, $conf), JSON_PRETTY_PRINT) . ')';
+        }
+        if ($format == "xml") {
+            $xmlstr = $xml->asXml();
+            // clean illegal XML characters.
+            $clean_xml = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);
+            $dom       = new DOMDocument();
+            $dom->loadXML($clean_xml, LIBXML_PARSEHUGE);
+            $dom->formatOutput = true;
+            $output            = $dom->saveXML();
+            // saving xml can fail
+            if (!$output) {
+                $output = "<subsonic-response status=\"failed\" version=\"1.13.0\"><error code=\"0\" message=\"Error creating response.\"/></subsonic-response>";
+            }
+            echo $output;
+        }
     }
 
     /**
@@ -1206,30 +1201,38 @@ class Subsonic_Api
         $sub_id = str_replace('al-', '', self::check_parameter($input, 'id', true));
         $sub_id = str_replace('pl-', '', $sub_id);
         $size   = $input['size'];
+        $type   = Subsonic_XML_Data::getAmpacheType($sub_id);
+        if ($type == "") {
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
+            self::apiOutput($input, $response);
+
+            return;
+        }
 
         $art = null;
-        if (Subsonic_Xml_Data::isArtist($sub_id)) {
-            $art = new Art(Subsonic_Xml_Data::getAmpacheId($sub_id), "artist");
-        } elseif (Subsonic_Xml_Data::isAlbum($sub_id)) {
-            $art = new Art(Subsonic_Xml_Data::getAmpacheId($sub_id), "album");
-        } elseif (Subsonic_Xml_Data::isSong($sub_id)) {
-            $art = new Art(Subsonic_Xml_Data::getAmpacheId($sub_id), "song");
+
+        if ($type == 'artist') {
+            $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "artist");
+        } elseif ($type == 'album') {
+            $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "album");
+        } elseif (($type == 'song')) {
+            $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "song");
             if ($art != null && $art->id == null) {
                 // in most cases the song doesn't have a picture, but the album where it belongs to has
                 // if this is the case, we take the album art
                 $song = new Song(Subsonic_Xml_Data::getAmpacheId(Subsonic_Xml_Data::getAmpacheId($sub_id)));
                 $art  = new Art(Subsonic_Xml_Data::getAmpacheId($song->album), "album");
             }
-        } elseif (Subsonic_Xml_Data::isPodcast($sub_id)) {
-            $art = new Art(Subsonic_Xml_Data::getAmpacheId($sub_id), "podcast");
+        } elseif (($type == 'podcast')) {
+            $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "podcast");
         } else {
             $listitems = array();
             // playlists and smartlists
-            if (Subsonic_Xml_Data::isSmartPlaylist($sub_id)) {
-                $playlist  = new Search(Subsonic_Xml_Data::getAmpacheId($sub_id));
+            if (($type == 'search')) {
+                $playlist  = new Search(Subsonic_XML_Data::getAmpacheId($sub_id));
                 $listitems = $playlist->get_items();
-            } elseif (Subsonic_Xml_Data::isPlaylist($sub_id)) {
-                $playlist  = new Playlist(Subsonic_Xml_Data::getAmpacheId($sub_id));
+            } elseif (($type == 'playlist')) {
+                $playlist  = new Playlist(Subsonic_XML_Data::getAmpacheId($sub_id));
                 $listitems = $playlist->get_items();
             }
             $item = (!empty($listitems)) ? $listitems[array_rand($listitems)] : array();
@@ -1239,28 +1242,30 @@ class Subsonic_Api
                 $art  = new Art(Subsonic_Xml_Data::getAmpacheId($song->album), "album");
             }
         }
+        if (!$art->id) {
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
+            self::apiOutput($input, $response);
 
-        header("Access-Control-Allow-Origin: *");
-        if ($art != null) {
-            $art->has_db_info();
-            if ($size && AmpConfig::get('resize_images')) {
-                $dim           = array();
-                $dim['width']  = $size;
-                $dim['height'] = $size;
-                $thumb         = $art->get_thumb($dim);
-                if (!empty($thumb)) {
-                    header('Content-type: ' . $thumb['thumb_mime']);
-                    header('Content-Length: ' . strlen((string)$thumb['thumb']));
-                    echo $thumb['thumb'];
-
-                    return;
-                }
-            }
-
-            header('Content-type: ' . $art->raw_mime);
-            header('Content-Length: ' . strlen((string)$art->raw));
-            echo $art->raw;
+            return;
         }
+        // we have the art so lets show it
+        header("Access-Control-Allow-Origin: *");
+        if ($size && AmpConfig::get('resize_images')) {
+            $dim           = array();
+            $dim['width']  = $size;
+            $dim['height'] = $size;
+            $thumb         = $art->get_thumb($dim);
+            if (!empty($thumb)) {
+                header('Content-type: ' . $thumb['thumb_mime']);
+                header('Content-Length: ' . strlen((string) $thumb['thumb']));
+                echo $thumb['thumb'];
+
+                return;
+            }
+        }
+        header('Content-type: ' . $art->raw_mime);
+        header('Content-Length: ' . strlen((string) $art->raw));
+        echo $art->raw;
     }
 
     /**
@@ -1965,7 +1970,7 @@ class Subsonic_Api
                 User::save_mediaplay($user, $media);
             }
             // Submission is false and not a repeat. let repeats go though to saveplayqueue
-            if (($submission !== 'true' || $submission !== '1') && $media->id && ($previous['object_id'] != $media->id)) {
+            if (($submission !== 'true' || $submission !== '1') && $media->id && ($previous['object_id'] != $media->id) && (($time - $previous['time']) > 5)) {
                 $media->set_played($user->id, $client, array(), $time);
             }
         }
@@ -2426,15 +2431,16 @@ class Subsonic_Api
         $position = (int)$input['position'];
         $username = (string)$input['u'];
         $user_id  = User::get_from_username($username)->id;
-        $media    = Subsonic_Xml_Data::getAmpacheObject($current);
+        $media    = Subsonic_XML_Data::getAmpacheObject($current);
+        $time     = time();
         if ($position < 1 && $media->id) {
             $previous = Stats::get_last_play($user_id, (string)$input['c']);
             $type     = Subsonic_Xml_Data::getAmpacheType($current);
             Stream::garbage_collection();
             Stream::insert_now_playing((int)$media->id, (int)$user_id, (int)$media->time, $username, $type);
             // repeated plays aren't called by scrobble so make sure we call this too
-            if ($previous['object_id'] == $media->id) {
-                $media->set_played((int)$user_id, (string)$input['c'], array(), time());
+            if ($previous['object_id'] == $media->id && ($time - $previous['time']) > 5) {
+                $media->set_played((int)$user_id, (string)$input['c'], array(), $time);
             }
         }
         // continue to fail saving the queue

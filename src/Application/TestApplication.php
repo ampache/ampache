@@ -33,14 +33,12 @@ final class TestApplication implements ApplicationInterface
 {
     public function run(): void
     {
-        global $path;
+        // Check to see if the config file is working now, if so fall
+        // through to the default, else show the appropriate template
+        $configfile = __DIR__ . '/../../config/ampache.cfg.php';
 
         switch ($_REQUEST['action']) {
             case 'config':
-                // Check to see if the config file is working now, if so fall
-                // through to the default, else show the appropriate template
-                $configfile = __DIR__ . '/../../config/ampache.cfg.php';
-
                 if (!count(parse_ini_file($configfile))) {
                     require_once __DIR__ . '/../../public/templates/show_test_config.inc.php';
                     break;
@@ -49,14 +47,14 @@ final class TestApplication implements ApplicationInterface
                 // Load config from file
                 $results = array();
                 if (!file_exists($configfile)) {
-                    $link = $path . '/install.php';
+                    $link = '/install.php';
                     header("Location: " . $link);
                 } else {
                     // Make sure the config file is set up and parsable
                     $results = @parse_ini_file($configfile);
 
                     if (empty($results)) {
-                        $link = $path . '/test.php?action=config';
+                        $link = __DIR__ . '/../../public/test.php?action=config';
                     }
                 }
                 /* Temp Fixes */

@@ -24,7 +24,7 @@ use Ampache\Model\Art;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\Browse;
+use Ampache\Model\Browse;
 
 if (!Core::is_session_started()) {
     session_start();

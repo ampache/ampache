@@ -416,7 +416,7 @@ class Song extends database_object implements Media, library_item
             64) : null;
         $language              = isset($results['language']) ? Catalog::check_length($results['language'], 128) : null;
         $channels              = $results['channels'] ?: 0;
-        $release_type          = isset($results['release_type']) ? $results['release_type'] : null;
+        $release_type          = isset($results['release_type']) ? Catalog::check_length($results['release_type'], 32) : null;
         $replaygain_track_gain = isset($results['replaygain_track_gain']) ? $results['replaygain_track_gain'] : null;
         $replaygain_track_peak = isset($results['replaygain_track_peak']) ? $results['replaygain_track_peak'] : null;
         $replaygain_album_gain = isset($results['replaygain_album_gain']) ? $results['replaygain_album_gain'] : null;

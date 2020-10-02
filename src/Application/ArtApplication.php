@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application;
 
+use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -34,6 +35,14 @@ use Ampache\Module\Util\Ui;
 
 final class ArtApplication implements ApplicationInterface
 {
+    private ArtCollectorInterface $artCollector;
+
+    public function __construct(
+        ArtCollectorInterface $artCollector
+    ) {
+        $this->artCollector = $artCollector;
+    }
+
     public function run(): void
     {
         require_once Ui::find_template('header.inc.php');
@@ -49,8 +58,6 @@ final class ArtApplication implements ApplicationInterface
         if (filter_has_var(INPUT_GET, 'burl')) {
             $burl = base64_decode(Core::get_get('burl'));
         }
-        $class_name = ObjectTypeToClassNameMapper::map($object_type);
-        $item       = new $class_name($object_id);
 
         // If not a content manager user then kick em out
         if (!Access::check('interface', 50) && (!Access::check('interface', 25) || $item->get_user_owner() != Core::get_global('user')->id)) {
@@ -58,6 +65,23 @@ final class ArtApplication implements ApplicationInterface
 
             return;
         }
+
+        $class_name = ObjectTypeToClassNameMapper::map($object_type);
+        $item       = new $class_name($object_id);
+        $item->format();
+        $keywords = $item->get_keywords();
+        $keyword  = '';
+        $options  = array();
+        foreach ($keywords as $key => $word) {
+            if (isset($_REQUEST['option_' . $key])) {
+                $word['value'] = $_REQUEST['option_' . $key];
+            }
+            $options[$key] = $word['value'];
+            if ($word['important'] && !empty($word['value'])) {
+                $keyword .= ' ' . $word['value'];
+            }
+        }
+        $options['keyword'] = trim($keyword);
 
         // Switch on the actions
         switch ($_REQUEST['action']) {
@@ -93,6 +117,9 @@ final class ArtApplication implements ApplicationInterface
                 }
 
                 break;
+            case 'show_art_dlg':
+                require_once UI::find_template('show_get_art.inc.php');
+                break;
             case 'find_art':
                 // Prevent the script from timing out
                 set_time_limit(0);
@@ -100,6 +127,17 @@ final class ArtApplication implements ApplicationInterface
                 $item->format();
                 $art       = new Art($object_id, $object_type);
                 $cover_url = array();
+
+                $limit     = 0;
+                if (isset($_REQUEST['artist_filter'])) {
+                    $options['artist_filter'] =true;
+                }
+                if (isset($_REQUEST['search_limit'])) {
+                    $options['search_limit'] = $limit = (int)$_REQUEST['search_limit'];
+                }
+                if (isset($_REQUEST['year_filter']) && !empty($_REQUEST['year_filter'])) {
+                    $options['year_filter'] = 'year:' . $_REQUEST['year_filter'];
+                }
 
                 // If we've got an upload ignore the rest and just insert it
                 if (!empty($_FILES['file']['tmp_name'])) {
@@ -118,27 +156,13 @@ final class ArtApplication implements ApplicationInterface
                     } // if image data
                 } // if it's an upload
 
-                $keywords = $item->get_keywords();
-                $keyword  = '';
-                $options  = array();
-                foreach ($keywords as $key => $word) {
-                    if (isset($_REQUEST['option_' . $key])) {
-                        $word['value'] = $_REQUEST['option_' . $key];
-                    }
-                    $options[$key] = $word['value'];
-                    if ($word['important'] && !empty($word['value'])) {
-                        $keyword .= ' ' . $word['value'];
-                    }
-                }
-                $options['keyword'] = trim($keyword);
-
                 // Attempt to find the art.
-                $images = $art->gather($options);
+                $images = $this->artCollector->collect($art, $options, $limit);
 
                 if (!empty($_REQUEST['cover'])) {
-                    $path_info                = pathinfo($_REQUEST['cover']);
-                    $cover_url[0]['url']      = scrub_in($_REQUEST['cover']);
-                    $cover_url[0]['mime']     = 'image/' . $path_info['extension'];
+                    $path_info            = pathinfo($_REQUEST['cover']);
+                    $cover_url[0]['url']  = scrub_in($_REQUEST['cover']);
+                    $cover_url[0]['mime'] = 'image/' . $path_info['extension'];
                 }
                 $images = array_merge($cover_url, $images);
 

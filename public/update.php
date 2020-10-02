@@ -26,8 +26,6 @@ declare(strict_types=1);
 use Ampache\Application\UpdateApplication;
 use Psr\Container\ContainerInterface;
 
-session_start();
-
 if (!isset($_REQUEST['type']) || (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) !== 'sources') {
     // We need this stuff
     define('NO_SESSION', 1);
@@ -35,6 +33,6 @@ if (!isset($_REQUEST['type']) || (string) filter_input(INPUT_GET, 'type', FILTER
 }
 
 /** @var ContainerInterface $dic */
-$dic = require __DIR__ . '/../src/Config/init.php';
+$dic = require __DIR__ . '/../src/Config/Init.php';
 
 $dic->get(UpdateApplication::class)->run();

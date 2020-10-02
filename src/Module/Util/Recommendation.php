@@ -52,23 +52,6 @@ class Recommendation
     }
 
     /**
-     * album_search
-     *
-     * @param $artist
-     * @param $album
-     * @return SimpleXMLElement|false
-     */
-    public static function album_search($artist, $album)
-    {
-        global $dic;
-        
-        $api_key = AmpConfig::get('lastfm_api_key');
-        $url     = 'http://ws.audioscrobbler.com/2.0/?method=album.getInfo&artist=' . urlencode($artist) . '&album=' . urlencode($album) . '&api_key=' . $api_key;
-
-        return $dic->get(LastFmQueryInterface::class)->queryLastFm($url);
-    }
-
-    /**
      * garbage_collection
      *
      * This cleans out old recommendations cache

@@ -25,8 +25,6 @@ declare(strict_types=1);
 
 use Ampache\Application\InstallationApplication;
 
-require_once __DIR__ . '/../src/Config/init-tiny.php';
-
-$dic = require __DIR__ . '/../src/Config/Bootstrap.php';
+$dic = require_once __DIR__ . '/../src/Config/Bootstrap.php';
 
 $dic->get(InstallationApplication::class)->run();

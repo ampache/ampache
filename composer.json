@@ -76,6 +76,7 @@
         "php-tmdb/api": "2.*",
         "phpmailer/phpmailer": "6.1.*",
         "pklauzinski/jscroll": "2.*",
+	"psr/log": "^1",
         "rmccue/requests": "1.7.*",
         "rsd/seafile-php-sdk": "^1",
         "sabre/dav": "3.*.*",
