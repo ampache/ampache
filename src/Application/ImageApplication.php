@@ -121,7 +121,7 @@ final class ImageApplication implements ApplicationInterface
             $item     = new $class_name(filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT));
             $filename = $item->name ?: $item->title;
 
-            $art = new Art($item->id, 'album', $kind);
+            $art = new Art($item->id,  $type,  $kind);
             $art->has_db_info();
             $etag = $art->id;
 
