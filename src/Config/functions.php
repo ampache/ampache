@@ -65,27 +65,6 @@ function set_memory_limit($new_limit)
 } // set_memory_limit
 
 /**
- * generate_password
- * This generates a random password of the specified length
- * or will use a random length between 14-20
- *
- * @param integer $length (optional)
- * @return string
- */
-function generate_password($length = null)
-{
-    // set a random password length so it's not as easy to guess
-    if ($length === null) {
-        $length = rand(14, 20);
-    }
-    $strong   = true;
-    $string   = openssl_random_pseudo_bytes((int) ceil($length * 0.67), $strong);
-    $encode   = str_replace('=', '', base64_encode($string));
-
-    return strtr($encode, '+/', '^*');
-} // generate_password
-
-/**
  * scrub_in
  * Run on inputs, stuff that might get stuck in our db
  * @param string|array $input

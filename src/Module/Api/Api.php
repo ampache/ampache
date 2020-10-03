@@ -55,6 +55,8 @@ use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Model\Browse;
+use Ampache\Module\User\PasswordGenerator;
+use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -2082,8 +2084,21 @@ class Api
 
                 return false;
             }
-            $share[] = Share::create_share($object_type, $object_id, true, $download, $expire_days,
-                generate_password(8), 0, $description);
+
+            // @todo remove after refactoring
+            global $dic;
+            $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
+
+            $share[] = Share::create_share(
+                $object_type,
+                $object_id,
+                true,
+                $download,
+                $expire_days,
+                $passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH),
+                0,
+                $description
+            );
         }
         ob_end_clean();
         switch ($input['api_format']) {

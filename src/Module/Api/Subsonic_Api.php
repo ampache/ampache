@@ -32,6 +32,8 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\User\PasswordGenerator;
+use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Config\AmpConfig;
@@ -1574,10 +1576,23 @@ class Subsonic_Api
             debug_event('subsonic_api.class', 'createShare: sharing ' . $object_type . ' ' . $object_id, 4);
 
             if (!empty($object_type)) {
+
+                // @todo remove after refactoring
+                global $dic;
+                $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
+
                 $response = Subsonic_Xml_Data::createSuccessResponse('createshare');
                 $shares   = array();
-                $shares[] = Share::create_share($object_type, $object_id, true, Access::check_function('download'),
-                    $expire_days, generate_password(8), 0, $description);
+                $shares[] = Share::create_share(
+                    $object_type,
+                    $object_id,
+                    true,
+                    Access::check_function('download'),
+                    $expire_days,
+                    $passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH),
+                    0,
+                    $description
+                );
                 Subsonic_Xml_Data::addShares($response, $shares);
             } else {
                 $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'createshare');

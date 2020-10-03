@@ -50,6 +50,7 @@ $builder->addDefinitions(
     require_once __DIR__ . '/../Module/LastFm/service_definition.php',
     require_once __DIR__ . '/../Module/System/service_definition.php',
     require_once __DIR__ . '/../Model/service_definition.php',
+    require_once __DIR__ . '/../Module/User/service_definition.php',
 );
 
 return $builder->build();

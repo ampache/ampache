@@ -27,12 +27,24 @@ namespace Ampache\Application;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\User;
 
 final class LostPasswordApplication implements ApplicationInterface
 {
+    /**
+     * @var PasswordGeneratorInterface
+     */
+    private PasswordGeneratorInterface $passwordGenerator;
+
+    public function __construct(
+        PasswordGeneratorInterface $passwordGenerator
+    ) {
+        $this->passwordGenerator = $passwordGenerator;
+    }
+
     public function run(): void
     {
         /* Check Perms */
@@ -82,7 +94,7 @@ final class LostPasswordApplication implements ApplicationInterface
             return false;
         }
         if ($client->email == $email && Mailer::is_mail_enabled()) {
-            $newpassword = generate_password();
+            $newpassword = $this->passwordGenerator->generate();
             $client->update_password($newpassword);
 
             $mailer = new Mailer();

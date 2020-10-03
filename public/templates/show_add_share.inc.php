@@ -24,6 +24,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
+use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\Util\Ui;
 
 ?>
@@ -38,7 +39,7 @@ use Ampache\Module\Util\Ui;
 </tr>
 <tr>
     <td><?php echo T_('Secret'); ?></td>
-    <td><input type="text" name="secret" value="<?php echo scrub_out($_REQUEST['secret'] ?: generate_password(8)); ?>" />
+    <td><input type="text" name="secret" value="<?php echo scrub_out($_REQUEST['secret'] ?: $this->passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH)); ?>" />
         <?php AmpError::display('secret'); ?>
     </td>
 </tr>

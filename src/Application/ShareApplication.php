@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Application;
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\User\PasswordGenerator;
+use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
@@ -36,6 +38,14 @@ use Ampache\Module\Util\Ui;
 
 final class ShareApplication implements ApplicationInterface
 {
+    private PasswordGeneratorInterface $passwordGenerator;
+
+    public function __construct(
+        PasswordGeneratorInterface $passwordGenerator
+    ) {
+        $this->passwordGenerator = $passwordGenerator;
+    }
+
     public function run(): void
     {
         Preference::init();
@@ -162,7 +172,7 @@ final class ShareApplication implements ApplicationInterface
                 $type           = Core::get_request('type');
                 $share_id       = Core::get_request('id');
                 $allow_download = (($type == 'song' && Access::check_function('download')) || Access::check_function('batch_download'));
-                $secret         = generate_password(8);
+                $secret         = $this->passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH);
 
                 $share_id = Share::create_share($type, $share_id, true, $allow_download, AmpConfig::get('share_expire'), $secret, 0);
                 $share    = new Share($share_id);
