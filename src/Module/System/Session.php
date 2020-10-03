@@ -208,6 +208,18 @@ final class Session implements SessionInterface
     }
 
     /**
+     * read
+     *
+     * This takes a key and returns the data from the database.
+     * @param $key
+     * @return string
+     */
+    public static function read($key)
+    {
+        return self::_read($key, 'value');
+    }
+
+    /**
      * _read
      *
      * This returns the specified column from the session row.
