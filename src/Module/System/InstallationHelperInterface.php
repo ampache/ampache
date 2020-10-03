@@ -112,4 +112,20 @@ interface InstallationHelperInterface
      * @param array $backends
      */
     public function install_config_backends(array $backends);
+
+    /**
+     * Write new configuration into the current configuration file by keeping old values.
+     * @param $current_file_path
+     * @throws \Exception
+     */
+    public function write_config(string $current_file_path): void;
+
+    /**
+     * This takes an array of results and re-generates the config file
+     * this is used by the installer and by the admin/system page
+     * @param array $current
+     * @return string
+     * @throws \Exception
+     */
+    public function generate_config(array $current): string;
 }

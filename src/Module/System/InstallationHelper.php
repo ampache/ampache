@@ -350,7 +350,7 @@ final class InstallationHelper implements InstallationHelperInterface
             return false;
         }
 
-        $final = generate_config($params);
+        $final = $this->generate_config($params);
 
         // Make sure the directory is writable OR the empty config file is
         if (!$download) {
@@ -611,5 +611,77 @@ final class InstallationHelper implements InstallationHelperInterface
         foreach ($dbconfig as $preference => $value) {
             Preference::update($preference, -1, $value, true, true);
         }
+    }
+
+    /**
+     * Write new configuration into the current configuration file by keeping old values.
+     * @param $current_file_path
+     * @throws \Exception
+     */
+    public function write_config(string $current_file_path): void
+    {
+        $new_data = $this->generate_config(parse_ini_file($current_file_path));
+
+        // Start writing into the current config file
+        $handle = fopen($current_file_path, 'w+');
+        fwrite($handle, $new_data, strlen((string) $new_data));
+        fclose($handle);
+    }
+
+    /**
+     * This takes an array of results and re-generates the config file
+     * this is used by the installer and by the admin/system page
+     * @param array $current
+     * @return string
+     * @throws \Exception
+     */
+    public function generate_config(array $current): string
+    {
+        // Start building the new config file
+        $distfile = __DIR__ . '/../../config/ampache.cfg.php.dist';
+        $handle   = fopen($distfile, 'r');
+        $dist     = fread($handle, filesize($distfile));
+        fclose($handle);
+
+        $data = explode("\n", (string) $dist);
+
+        $final = "";
+        foreach ($data as $line) {
+            if (preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/", $line, $matches)
+                || preg_match("/^;?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $line, $matches)
+                || preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/", $line, $matches)) {
+                $key   = $matches[1];
+                $value = $matches[2];
+
+                // Put in the current value
+                if ($key == 'config_version') {
+                    $line = $key . ' = ' . $this->escape_ini($value);
+                } elseif ($key == 'secret_key' && !isset($current[$key])) {
+                    $secret_key = Core::gen_secure_token(31);
+                    if ($secret_key !== false) {
+                        $line = $key . ' = "' . $this->escape_ini($secret_key) . '"';
+                    }
+                    // Else, unable to generate a cryptographically secure token, use the default one
+                } elseif (isset($current[$key])) {
+                    $line = $key . ' = "' . $this->escape_ini((string) $current[$key]) . '"';
+                    unset($current[$key]);
+                }
+            }
+
+            $final .= $line . "\n";
+        }
+
+        return $final;
+    }
+
+    /**
+     * Escape a value used for inserting into an ini file.
+     * Won't quote ', like addslashes does.
+     * @param string|string[] $str
+     * @return string|string[]
+     */
+    private function escape_ini($str)
+    {
+        return str_replace('"', '\"', $str);
     }
 }

@@ -20,16 +20,13 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\System;
 
-use Psr\Log\LoggerInterface;
-use function DI\autowire;
-
-return [
-    LoggerInterface::class => autowire(LegacyLogger::class),
-    SessionInterface::class => autowire(Session::class),
-    InstallationHelperInterface::class => autowire(InstallationHelper::class),
-    PreferencesFromRequestUpdaterInterface::class => autowire(PreferencesFromRequestUpdater::class),
-];
+interface PreferencesFromRequestUpdaterInterface
+{
+    /**
+     * grabs the current keys that should be added and then runs
+     * through $_REQUEST looking for those values and updates them for this user
+     */
+    public function update(int $user_id = 0): void;
+}

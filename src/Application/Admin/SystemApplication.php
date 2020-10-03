@@ -33,7 +33,7 @@ use Ampache\Model\Artist;
 use Ampache\Module\Database\DatabaseCharsetUpdaterInterface;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
+use Ampache\Module\System\InstallationHelperInterface;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Model\Song;
 use Ampache\Module\Util\Ui;
@@ -43,13 +43,17 @@ final class SystemApplication implements ApplicationInterface
     private Horde_Browser $browser;
 
     private DatabaseCharsetUpdaterInterface $databaseCharsetUpdater;
+    
+    private InstallationHelperInterface $installationHelper;
 
     public function __construct(
         Horde_Browser $browser,
-        DatabaseCharsetUpdaterInterface $databaseCharsetUpdater
+        DatabaseCharsetUpdaterInterface $databaseCharsetUpdater,
+        InstallationHelperInterface $installationHelper
     ) {
         $this->browser                = $browser;
         $this->databaseCharsetUpdater = $databaseCharsetUpdater;
+        $this->installationHelper     = $installationHelper;
     }
 
     public function run(): void
@@ -70,13 +74,13 @@ final class SystemApplication implements ApplicationInterface
             case 'generate_config':
                 ob_end_clean();
                 $current = parse_ini_file(__DIR__ . '/../../../config/ampache.cfg.php');
-                $final   = generate_config($current);
+                $final   = $this->installationHelper->generate_config($current);
                 $this->browser->downloadHeaders('ampache.cfg.php', 'text/plain', false, filesize(__DIR__ . '/../../../config/ampache.cfg.php.dist'));
                 echo $final;
 
                 return;
             case 'write_config':
-                write_config(__DIR__ . '/../../../config/ampache.cfg.php');
+                $this->installationHelper->write_config(__DIR__ . '/../../../config/ampache.cfg.php');
                 header('Location: ' . AmpConfig::get('web_path') . '/index.php');
 
                 return ;

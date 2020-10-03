@@ -187,7 +187,7 @@ class Stream
 
         debug_event('stream.class', 'Final transcode bitrate is ' . $bit_rate, 4);
 
-        $song_file = scrub_arg($media->file);
+        $song_file = self::scrub_arg($media->file);
 
         // Finalise the command line
         $command = $transcode_settings['command'];
@@ -236,6 +236,20 @@ class Stream
     }
 
     /**
+     * This function behaves like escapeshellarg, but isn't broken
+     * @param $arg
+     * @return string
+     */
+    private static function scrub_arg($arg)
+    {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            return '"' . str_replace(array('"', '%'), array('', ''), $arg) . '"';
+        } else {
+            return "'" . str_replace("'", "'\\''", $arg) . "'";
+        }
+    }
+
+    /**
      * get_image_preview
      * @param Video $media
      * @return string
@@ -249,7 +263,7 @@ class Stream
         if (AmpConfig::get('transcode_cmd') && AmpConfig::get('transcode_input') && AmpConfig::get('encode_get_image')) {
             $command    = AmpConfig::get('transcode_cmd') . ' ' . AmpConfig::get('transcode_input') . ' ' . AmpConfig::get('encode_get_image');
             $string_map = array(
-                '%FILE%' => scrub_arg($media->file),
+                '%FILE%' => self::scrub_arg($media->file),
                 '%TIME%' => $frame
             );
             foreach ($string_map as $search => $replace) {

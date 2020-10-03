@@ -113,22 +113,6 @@ function unhtmlentities($string)
 } // unhtmlentities
 
 /**
- * scrub_arg
- *
- * This function behaves like escapeshellarg, but isn't broken
- * @param $arg
- * @return string
- */
-function scrub_arg($arg)
-{
-    if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-        return '"' . str_replace(array('"', '%'), array('', ''), $arg) . '"';
-    } else {
-        return "'" . str_replace("'", "'\\''", $arg) . "'";
-    }
-}
-
-/**
  * make_bool
  * This takes a value and returns what we consider to be the correct boolean
  * value. We need a special function because PHP considers "false" to be true.
@@ -382,84 +366,6 @@ function translate_pattern_code($code)
     return false;
 } // translate_pattern_code
 
-/**
- * generate_config
- *
- * This takes an array of results and re-generates the config file
- * this is used by the installer and by the admin/system page
- * @param $current
- * @return string
- * @throws Exception
- */
-function generate_config($current)
-{
-    // Start building the new config file
-    $distfile = __DIR__ . '/../../config/ampache.cfg.php.dist';
-    $handle   = fopen($distfile, 'r');
-    $dist     = fread($handle, filesize($distfile));
-    fclose($handle);
-
-    $data = explode("\n", (string) $dist);
-
-    $final = "";
-    foreach ($data as $line) {
-        if (preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/", $line, $matches)
-            || preg_match("/^;?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $line, $matches)
-            || preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/", $line, $matches)) {
-            $key   = $matches[1];
-            $value = $matches[2];
-
-            // Put in the current value
-            if ($key == 'config_version') {
-                $line = $key . ' = ' . escape_ini($value);
-            } elseif ($key == 'secret_key' && !isset($current[$key])) {
-                $secret_key = Core::gen_secure_token(31);
-                if ($secret_key !== false) {
-                    $line = $key . ' = "' . escape_ini($secret_key) . '"';
-                }
-                // Else, unable to generate a cryptographically secure token, use the default one
-            } elseif (isset($current[$key])) {
-                $line = $key . ' = "' . escape_ini((string) $current[$key]) . '"';
-                unset($current[$key]);
-            }
-        }
-
-        $final .= $line . "\n";
-    }
-
-    return $final;
-}
-
-/**
- * write_config
- *
- * Write new configuration into the current configuration file by keeping old values.
- * @param $current_file_path
- * @throws Exception
- */
-function write_config($current_file_path)
-{
-    $new_data = generate_config(parse_ini_file($current_file_path));
-
-    // Start writing into the current config file
-    $handle = fopen($current_file_path, 'w+');
-    fwrite($handle, $new_data, strlen((string) $new_data));
-    fclose($handle);
-}
-
-/**
- * escape_ini
- *
- * Escape a value used for inserting into an ini file.
- * Won't quote ', like addslashes does.
- * @param string $str
- * @return string|string[]
- */
-function escape_ini($str)
-{
-    return str_replace('"', '\"', $str);
-}
-
 // Declare apache_request_headers and getallheaders if it don't exists (PHP <= 5.3 + FastCGI)
 if (!function_exists('apache_request_headers')) {
     /**
@@ -608,43 +514,6 @@ function update_preferences($user_id = 0)
     // Now that we've done that we need to invalidate the cached preverences
     Preference::clear_from_session();
 } // update_preferences
-
-/**
- * update_preference
- * This function updates a single preference and is called by the update_preferences function
- * @param integer $user_id
- * @param string $name
- * @param integer $pref_id
- * @param string $value
- * @return boolean
- */
-function update_preference($user_id, $name, $pref_id, $value)
-{
-    $apply_check = "check_" . $name;
-    $level_check = "level_" . $name;
-
-    // First see if they are an administrator and we are applying this to everything
-    if (Core::get_global('user')->has_access(100) && make_bool($_REQUEST[$apply_check])) {
-        Preference::update_all($pref_id, $value);
-
-        return true;
-    }
-
-    // Check and see if they are an admin and the level def is set
-    if (Core::get_global('user')->has_access(100) && make_bool($_REQUEST[$level_check])) {
-        Preference::update_level($pref_id, $_REQUEST[$level_check]);
-    }
-
-    // Else make sure that the current users has the right to do this
-    if (Preference::has_access($name)) {
-        $sql = "UPDATE `user_preference` SET `value` = ? WHERE `preference` = ? AND `user` = ?";
-        Dba::write($sql, array($value, $pref_id, $user_id));
-
-        return true;
-    }
-
-    return false;
-} // update_preference
 
 /**
  * create_preference_input

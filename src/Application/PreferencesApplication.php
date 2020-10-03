@@ -31,11 +31,20 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Model\Plugin;
 use Ampache\Model\Preference;
+use Ampache\Module\System\PreferencesFromRequestUpdaterInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\User;
 
 final class PreferencesApplication implements ApplicationInterface
 {
+    private PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater;
+
+    public function __construct(
+        PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater
+    ) {
+        $this->preferencesFromRequestUpdater = $preferencesFromRequestUpdater;
+    }
+
     public function run(): void
     {
         $title             = "";
@@ -72,7 +81,7 @@ final class PreferencesApplication implements ApplicationInterface
                 }
 
                 /* Update and reset preferences */
-                update_preferences($user_id);
+                $this->preferencesFromRequestUpdater->update((int) $user_id);
                 Preference::init();
 
                 // Reset gettext so that it's clear whether the preference took
@@ -101,7 +110,7 @@ final class PreferencesApplication implements ApplicationInterface
                     return;
                 }
 
-                update_preferences((int) Core::get_post('user_id'));
+                $this->preferencesFromRequestUpdater->update((int) Core::get_post('user_id'));
 
                 header("Location: " . AmpConfig::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . scrub_out(Core::get_post('user_id')));
                 break;
