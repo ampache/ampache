@@ -32,7 +32,6 @@ define('CLI', 1);
 
 /** @var ContainerInterface $dic */
 $dir = require_once __DIR__ . '/../src/Config/Bootstrap.php';
-require_once __DIR__ . '/../src/Config/install.php';
 
 // Init App with name and version
 $app = new Ahc\Cli\Application(

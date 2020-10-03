@@ -28,13 +28,17 @@ use Ahc\Cli\Input\Command;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\AmpError;
+use Ampache\Module\System\InstallationHelperInterface;
 
 final class InstallerCommand extends Command
 {
     private ConfigContainerInterface $configContainer;
 
+    private InstallationHelperInterface $installationHelper;
+
     public function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        InstallationHelperInterface $installationHelper
     ) {
         parent::__construct('install', 'Installs the database');
 
@@ -51,6 +55,7 @@ final class InstallerCommand extends Command
             ->option('-w|--webpath', 'The ampache webpath', 'strval')
             ->option('-f|--force', 'Force the installation (ignore existing config file)', 'boolval', false)
             ->usage('<bold>  install</end> <comment> ## Displays database update information</end><eol/>');
+        $this->installationHelper = $installationHelper;
     }
 
     public function execute(): void
@@ -77,7 +82,7 @@ final class InstallerCommand extends Command
         }
 
         // Now let's make sure it's not already installed
-        if (!install_check_status($configfile)) {
+        if (!$this->installationHelper->install_check_status($configfile)) {
             $interactor->error(
                 T_('Existing Ampache installation found'),
                 true
@@ -102,7 +107,7 @@ final class InstallerCommand extends Command
         ), true);
 
         // Install the database
-        if (!install_insert_db($new_db_user, $new_db_pass, true, $force, true)) {
+        if (!$this->installationHelper->install_insert_db($new_db_user, $new_db_pass, true, $force, true)) {
             $interactor->error(
                 T_('Database creation failed'),
                 true
@@ -122,7 +127,7 @@ final class InstallerCommand extends Command
 
         // Write the config file
         /** @noinspection PhpUnhandledExceptionInspection */
-        if (!install_create_config()) {
+        if (!$this->installationHelper->install_create_config()) {
             $interactor->error(
                 T_('Config file creation failed'),
                 true

@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\System\InstallationHelperInterface;
 use Ampache\Module\Util\EnvironmentInterface;
 use Exception;
 use Ampache\Model\Preference;
@@ -37,23 +38,25 @@ use Ampache\Module\Util\Ui;
 final class InstallationApplication implements ApplicationInterface
 {
     private EnvironmentInterface $environment;
+    
+    private InstallationHelperInterface $installationHelper;
 
     public function __construct(
-        EnvironmentInterface $environment
+        EnvironmentInterface $environment,
+        InstallationHelperInterface $installationHelper
     ) {
-        $this->environment = $environment;
+        $this->environment        = $environment;
+        $this->installationHelper = $installationHelper;
     }
 
     public function run(): void
     {
-        require_once __DIR__ . '/../../src/Config/install.php';
-
         set_error_handler('ampache_error_handler');
 
         $configfile = __DIR__ . '/../../config/ampache.cfg.php';
 
         // Redirect if installation is already complete.
-        if (!install_check_status($configfile)) {
+        if (!$this->installationHelper->install_check_status($configfile)) {
             $redirect_url = 'login.php';
             require_once Ui::find_template('error_page.inc.php');
 
@@ -90,20 +93,20 @@ final class InstallationApplication implements ApplicationInterface
 
         if (isset($_REQUEST['transcode_template'])) {
             $mode = $_REQUEST['transcode_template'];
-            install_config_transcode_mode($mode);
+            $this->installationHelper->install_config_transcode_mode($mode);
         }
 
         if (isset($_REQUEST['usecase'])) {
             $case = $_REQUEST['usecase'];
             if (Dba::check_database()) {
-                install_config_use_case($case);
+                $this->installationHelper->install_config_use_case($case);
             }
         }
 
         if (isset($_REQUEST['backends'])) {
             $backends = $_REQUEST['backends'];
             if (Dba::check_database()) {
-                install_config_backends($backends);
+                $this->installationHelper->install_config_backends($backends);
             }
         }
 
@@ -166,7 +169,7 @@ final class InstallationApplication implements ApplicationInterface
                 }
 
                 if (!$skip_admin) {
-                    if (!install_insert_db($new_user, $new_pass, $_REQUEST['create_db'], $_REQUEST['overwrite_db'], $_REQUEST['create_tables'])) {
+                    if (!$this->installationHelper->install_insert_db($new_user, $new_pass, $_REQUEST['create_db'], $_REQUEST['overwrite_db'], $_REQUEST['create_tables'])) {
                         require_once __DIR__ . '/../../public/templates/show_install.inc.php';
                         break;
                     }
@@ -192,16 +195,16 @@ final class InstallationApplication implements ApplicationInterface
 
                     $created_config = true;
                     if ($write_htaccess_channel || $download_htaccess_channel || $all) {
-                        $created_config = $created_config && install_rewrite_rules($htaccess_channel_file, Core::get_post('web_path'), $download_htaccess_channel);
+                        $created_config = $created_config && $this->installationHelper->install_rewrite_rules($htaccess_channel_file, Core::get_post('web_path'), $download_htaccess_channel);
                     }
                     if ($write_htaccess_rest || $download_htaccess_rest || $all) {
-                        $created_config = $created_config && install_rewrite_rules($htaccess_rest_file, Core::get_post('web_path'), $download_htaccess_rest);
+                        $created_config = $created_config && $this->installationHelper->install_rewrite_rules($htaccess_rest_file, Core::get_post('web_path'), $download_htaccess_rest);
                     }
                     if ($write_htaccess_play || $download_htaccess_play || $all) {
-                        $created_config = $created_config && install_rewrite_rules($htaccess_play_file, Core::get_post('web_path'), $download_htaccess_play);
+                        $created_config = $created_config && $this->installationHelper->install_rewrite_rules($htaccess_play_file, Core::get_post('web_path'), $download_htaccess_play);
                     }
                     if ($write || $download || $all) {
-                        $created_config = $created_config && install_create_config($download);
+                        $created_config = $created_config && $this->installationHelper->install_create_config($download);
                     }
                 }
             // No break on purpose
@@ -219,7 +222,7 @@ final class InstallationApplication implements ApplicationInterface
                 }
 
                 // Don't try to add administrator user on existing database
-                if (install_check_status($configfile)) {
+                if ($this->installationHelper->install_check_status($configfile)) {
                     require_once Ui::find_template('show_install_account.inc.php');
                 } else {
                     header("Location: " . $web_path . '/login.php');
@@ -231,7 +234,7 @@ final class InstallationApplication implements ApplicationInterface
 
                 $password2 = $_REQUEST['local_pass2'];
 
-                if (!install_create_account($username, $password, $password2)) {
+                if (!$this->installationHelper->install_create_account($username, $password, $password2)) {
                     require_once Ui::find_template('show_install_account.inc.php');
                     break;
                 }

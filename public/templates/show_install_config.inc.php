@@ -142,7 +142,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
         <select class="form-control" id="transcode_template" name="transcode_template">
         <option value=""><?php echo T_('None'); ?></option>
         <?php
-            $modes = install_get_transcode_modes();
+            $modes = $this->installationHelper->install_get_transcode_modes();
             foreach ($modes as $mode) { ?>
             <option value="<?php echo $mode; ?>" <?php if (Core::get_request('transcode_template') == $mode) {
                 echo 'selected';
@@ -202,7 +202,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
             echo "in";
         } ?>">
             <div class="panel-body">
-                <?php if (install_check_server_apache()) { ?>
+                <?php if ($this->installationHelper->install_check_server_apache()) { ?>
                     <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
                     <div class="col-sm-4 control-label">
                         <?php echo T_('channel/.htaccess action'); ?>
@@ -218,7 +218,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
                     <div class="col-sm-4 control-label"><?php echo T_('channel/.htaccess exists?'); ?></div>
                     <div class="col-sm-8"><?php echo debug_result(is_readable($htaccess_channel_file)); ?></div>
                     <div class="col-sm-4 control-label"><?php echo T_('channel/.htaccess configured?'); ?></div>
-                    <div class="col-sm-8"><?php echo debug_result(install_check_rewrite_rules($htaccess_channel_file, $web_path_guess)); ?></div>
+                    <div class="col-sm-8"><?php echo debug_result($this->installationHelper->install_check_rewrite_rules($htaccess_channel_file, $web_path_guess)); ?></div>
 
                     <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
                     <div class="col-sm-4 control-label">
@@ -235,7 +235,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
                     <div class="col-sm-4 control-label"><?php echo T_('rest/.htaccess exists?'); ?></div>
                     <div class="col-sm-8"><?php echo debug_result(is_readable($htaccess_rest_file)); ?></div>
                     <div class="col-sm-4 control-label"><?php echo T_('rest/.htaccess configured?'); ?></div>
-                    <div class="col-sm-8"><?php echo debug_result(install_check_rewrite_rules($htaccess_rest_file, $web_path_guess)); ?></div>
+                    <div class="col-sm-8"><?php echo debug_result($this->installationHelper->install_check_rewrite_rules($htaccess_rest_file, $web_path_guess)); ?></div>
 
                     <div class="col-sm-4">&nbsp;</div><div class="col-sm-8">&nbsp;</div>
                     <div class="col-sm-4 control-label">
@@ -252,7 +252,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
                     <div class="col-sm-4 control-label"><?php echo T_('play/.htaccess exists?'); ?></div>
                     <div class="col-sm-8"><?php echo debug_result(is_readable($htaccess_play_file)); ?></div>
                     <div class="col-sm-4 control-label"><?php echo T_('play/.htaccess configured?'); ?></div>
-                    <div class="col-sm-8"><?php echo debug_result(install_check_rewrite_rules($htaccess_play_file, $web_path_guess)); ?></div>
+                    <div class="col-sm-8"><?php echo debug_result($this->installationHelper->install_check_rewrite_rules($htaccess_play_file, $web_path_guess)); ?></div>
                 <?php
         } ?>
 
