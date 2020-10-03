@@ -66,4 +66,9 @@ interface ConfigContainerInterface
      * Returns the web path
      */
     public function getWebPath(): string;
+
+    /**
+     * Return a list of types which are zip-able
+     */
+    public function getTypesAllowedForZip(): array;
 }

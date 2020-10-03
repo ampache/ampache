@@ -21,6 +21,7 @@
  */
 
 use Ampache\Model\Album;
+use Ampache\Model\Song;
 use Ampache\Model\User;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
@@ -29,18 +30,19 @@ use Ampache\Model\Browse;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\ZipHandlerInterface;
 
 if (!defined('NO_SESSION')) {
     if (isset($_REQUEST['ssid'])) {
         define('NO_SESSION', 1);
-        require_once __DIR__ . '/../src/Config/Init.php';
+        $dic = require_once __DIR__ . '/../src/Config/Init.php';
         if (!Session::exists('stream', $_REQUEST['ssid'])) {
             Ui::access_denied();
 
             return false;
         }
     } else {
-        require_once __DIR__ . '/../src/Config/Init.php';
+        $dic = require_once __DIR__ . '/../src/Config/Init.php';
     }
 }
 
@@ -51,6 +53,53 @@ if (!defined('NO_SESSION') && !Access::check_function('batch_download')) {
 
     return false;
 }
+
+/**
+ * get_media_files
+ *
+ * Takes an array of media ids and returns an array of the actual filenames
+ *
+ * @param array $media_ids Media IDs.
+ * @return array
+ */
+function get_media_files($media_ids)
+{
+    $media_files = array();
+    $total_size  = 0;
+    foreach ($media_ids as $element) {
+        if (is_array($element)) {
+            if (isset($element['object_type'])) {
+                $type    = $element['object_type'];
+                $mediaid = $element['object_id'];
+            } else {
+                $type      = array_shift($element);
+                $mediaid   = array_shift($element);
+            }
+            $class_name = ObjectTypeToClassNameMapper::map($type);
+            $media      = new $class_name($mediaid);
+        } else {
+            $media = new Song($element);
+        }
+        if ($media->enabled) {
+            $media->format();
+            $total_size .= sprintf("%.2f", ($media->size / 1048576));
+            $dirname = '';
+            $parent  = $media->get_parent();
+            if ($parent != null) {
+                $class_name = ObjectTypeToClassNameMapper::map($parent['object_type']);
+                $pobj       = new $class_name($parent['object_id']);
+                $pobj->format();
+                $dirname = $pobj->get_fullname();
+            }
+            if (!array_key_exists($dirname, $media_files)) {
+                $media_files[$dirname] = array();
+            }
+            array_push($media_files[$dirname], Core::conv_lc_file($media->file));
+        }
+    }
+
+    return array($media_files, $total_size);
+} // get_media_files
 
 /* Drop the normal Time limit constraints, this can take a while */
 set_time_limit(0);
@@ -64,7 +113,9 @@ if ($object_type == 'browse') {
     $object_type = Core::get_request('type');
 }
 
-if (!check_can_zip($object_type)) {
+$zipHandler = $dic->get(ZipHandlerInterface::class);
+
+if (!$zipHandler->isZipable($object_type)) {
     debug_event('batch', 'Object type `' . $object_type . '` is not allowed to be zipped.', 2);
     Ui::access_denied();
 
@@ -135,7 +186,7 @@ session_write_close();
 $song_files = get_media_files($media_ids);
 if (is_array($song_files['0'])) {
     set_memory_limit($song_files['1'] + 32);
-    send_zip($name, $song_files['0']);
+    $zipHandler->zip($name, $song_files['0']);
 }
 
 return false;

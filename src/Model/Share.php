@@ -32,6 +32,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\ZipHandlerInterface;
 use Exception;
 use PDOStatement;
 
@@ -539,7 +540,10 @@ class Share extends database_object
             if ($object_type == "song" || $object_type == "video") {
                 $dllink = AmpConfig::get('web_path') . "/play/index.php?action=download&type=" . $object_type . "&oid=" . $object_id . "&uid=-1";
             } else {
-                if (Access::check_function('batch_download') && check_can_zip($object_type)) {
+                // @todo remove after refactoring
+                global $dic;
+                $zipHandler = $dic->get(ZipHandlerInterface::class);
+                if (Access::check_function('batch_download') && $zipHandler->isZipable($object_type)) {
                     $dllink = AmpConfig::get('web_path') . "/batch.php?action=" . $object_type . "&id=" . $object_id;
                 }
             }

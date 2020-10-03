@@ -37,6 +37,7 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
 use Ampache\Model\Browse;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\ZipHandlerInterface;
 
 ?>
 <?php
@@ -80,7 +81,11 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
         </li>
     <?php
     } ?>
-    <?php if (Access::check_function('batch_download') && check_can_zip('playlist')) { ?>
+    <?php
+    // @todo remove after refactoring
+    global $dic;
+    $zipHandler = $dic->get(ZipHandlerInterface::class);
+    if (Access::check_function('batch_download') && $zipHandler->isZipable('playlist')) { ?>
         <li>
             <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>">
                 <?php echo Ui::get_icon('batch_download', T_('Batch Download')); ?>

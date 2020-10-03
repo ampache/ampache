@@ -33,6 +33,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Model\Browse;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\ZipHandlerInterface;
 
 $web_path = AmpConfig::get('web_path');
 
@@ -51,7 +52,12 @@ if ($directplay_limit > 0) {
     if ($show_direct_play) {
         $show_direct_play = $show_playlist_add;
     }
-} ?>
+}
+
+// @todo remove after refactoring
+global $dic;
+$zipHandler = $dic->get(ZipHandlerInterface::class);
+?>
 <?php Ui::show_box_top($title, 'info-box'); ?>
 <div class="item_right_info">
     <div class="external_links">
@@ -116,7 +122,7 @@ if ($directplay_limit > 0) {
             </li>
             <?php
         } ?>
-        <?php if (Access::check_function('batch_download') && check_can_zip('album')) { ?>
+        <?php if (Access::check_function('batch_download') && $zipHandler->isZipable('album')) { ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo Ui::get_icon('batch_download', T_('Download')); ?></a>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo T_('Download'); ?></a>
@@ -168,7 +174,7 @@ if ($directplay_limit > 0) {
             } ?>
         <?php
         } ?>
-        <?php if (Access::check_function('batch_download') && check_can_zip('album')) { ?>
+        <?php if (Access::check_function('batch_download') && $zipHandler->isZipable('album')) { ?>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $c_album->get_http_album_query_ids('id'); ?>"><?php echo Ui::get_icon('batch_download', T_('Download')); ?></a>
         <?php
         } ?>

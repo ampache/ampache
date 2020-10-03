@@ -20,19 +20,21 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Util;
 
-use Ampache\Module\Util\FileSystem\FileNameConverter;
-use Ampache\Module\Util\FileSystem\FileNameConverterInterface;
-use function DI\autowire;
+interface ZipHandlerInterface
+{
+    /**
+     * Check that an object type is allowed to be zipped.
+     */
+    public function isZipable(string $object_type): bool;
 
-return [
-    Horde_Browser::class => autowire(Horde_Browser::class),
-    FileNameConverterInterface::class => autowire(FileNameConverter::class),
-    RequestParserInterface::class => autowire(RequestParser::class),
-    AjaxUriRetrieverInterface::class => autowire(AjaxUriRetriever::class),
-    EnvironmentInterface::class => autowire(Environment::class),
-    ZipHandlerInterface::class => autowire(ZipHandler::class),
-];
+    /**
+     * takes array of full paths to medias
+     * zips them and sends them
+     *
+     * @param string $name name of the zip file to be created
+     * @param array $media_files array of full paths to medias to zip create w/ call to get_media_files
+     */
+    public function zip(string $name, array $media_files): void;
+}

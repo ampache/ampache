@@ -25,6 +25,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\ZipHandlerInterface;
 
 ?>
 <td class="cel_play">
@@ -54,7 +55,10 @@ use Ampache\Module\Util\Ui;
 <td class="cel_owner"><?php echo scrub_out($libitem->f_user); ?></td>
 <td class="cel_action">
         <?php
-            if (Access::check_function('batch_download') && check_can_zip('search')) { ?>
+            // @todo remove after refactoring
+            global $dic;
+            $zipHandler = $dic->get(ZipHandlerInterface::class);
+            if (Access::check_function('batch_download') && $zipHandler->isZipable('search')) { ?>
                 <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $libitem->id; ?>">
                     <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
                 </a>

@@ -154,6 +154,27 @@ class ConfigContainerTest extends MockeryTestCase
         );
     }
 
+    public function testGetTypesAllowedForZipReturnsEmptyArrayIfNotSet(): void
+    {
+        static::assertSame(
+            [],
+            $this->createSubject([])->getTypesAllowedForZip()
+        );
+    }
+
+    public function testGetTypesAllowedForZipReturnsValues(): void
+    {
+        $type1 = ' some-type';
+        $type2 = 'some-other-type ';
+
+        static::assertSame(
+            [trim($type1), trim($type2)],
+            $this->createSubject([
+                ConfigurationKeyEnum::ALLOWED_ZIP_TYPES => $type1 . ',' . $type2
+            ])->getTypesAllowedForZip()
+        );
+    }
+
     private function createSubject(array $configuration = []): ConfigContainerInterface
     {
         return new ConfigContainer($configuration);

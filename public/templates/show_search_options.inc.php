@@ -24,6 +24,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\ZipHandlerInterface;
 
 ?>
 <?php Ui::show_box_top(T_('Options'), 'info-box'); ?>
@@ -33,7 +34,11 @@ use Ampache\Module\Util\Ui;
     <?php echo Ajax::button('?action=basket&type=browse_set&browse_id=' . $browse->id, 'add', T_('Add Search Results'), 'add_search_results'); ?>
     <?php echo T_('Add Search Results'); ?>
 </li>
-    <?php if (Access::check_function('batch_download') && check_can_zip((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES))) { ?>
+    <?php
+    // @todo remove after refactoring
+    global $dic;
+    $zipHandler = $dic->get(ZipHandlerInterface::class);
+    if (Access::check_function('batch_download') && $zipHandler->isZipable((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES))) { ?>
 <li>
     <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=browse&amp;type=<?php echo scrub_out((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)); ?>&amp;browse_id=<?php echo $browse->id; ?>"><?php echo Ui::get_icon('batch_download', T_('Batch Download')); ?></a>
     <?php echo T_('Batch Download'); ?>

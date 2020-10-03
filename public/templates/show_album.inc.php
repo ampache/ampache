@@ -35,6 +35,7 @@ use Ampache\Module\Util\AmpacheRss;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Model\Browse;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\ZipHandlerInterface;
 
 $web_path = AmpConfig::get('web_path');
 
@@ -224,23 +225,27 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </li>
         <?php
     } ?>
-        <?php if (Access::check_function('batch_download') && check_can_zip('album')) {
-        $download   = T_('Download'); ?>
+        <?php
+        // @todo remove after refactoring
+        global $dic;
+        $zipHandler = $dic->get(ZipHandlerInterface::class);
+        if (Access::check_function('batch_download') && $zipHandler->isZipable('album')) {
+            $download   = T_('Download'); ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo Ui::get_icon('batch_download', $download); ?></a>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $album->get_http_album_query_ids('id'); ?>"><?php echo $download; ?></a>
         </li>
         <?php
-    } ?>
+        } ?>
         <?php if (Catalog::can_remove($album)) {
-        $delete = T_('Delete'); ?>
+            $delete = T_('Delete'); ?>
         <li>
             <a id="<?php echo 'delete_album_' . $album->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=delete&album_id=<?php echo $album->id; ?>">
                 <?php echo Ui::get_icon('delete', $delete); ?> <?php echo $delete; ?>
             </a>
         </li>
         <?php
-    } ?>
+        } ?>
     </ul>
 </div>
 <?php Ui::show_box_bottom(); ?>

@@ -32,6 +32,7 @@ use Ampache\Module\Util\AmpacheRss;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Model\Browse;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\ZipHandlerInterface;
 
 $web_path          = AmpConfig::get('web_path');
 $show_direct_play  = AmpConfig::get('directplay');
@@ -172,14 +173,18 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     } ?>
         <?php
     } ?>
-        <?php if (Access::check_function('batch_download') && check_can_zip('artist')) {
-        $download = T_('Download'); ?>
+        <?php
+        // @todo remove after refactoring
+        global $dic;
+        $zipHandler = $dic->get(ZipHandlerInterface::class);
+        if (Access::check_function('batch_download') && $zipHandler->isZipable('artist')) {
+            $download = T_('Download'); ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo Ui::get_icon('batch_download', $download); ?></a>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>"><?php echo $download; ?></a>
         </li>
         <?php
-    } ?>
+        } ?>
         <?php if (($owner_id > 0 && $owner_id == $GLOBALS['user']->id) || Access::check('interface', 50)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <li>

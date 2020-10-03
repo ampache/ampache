@@ -28,6 +28,7 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\ZipHandlerInterface;
 
 ?>
 <script>
@@ -66,7 +67,11 @@ use Ampache\Module\Util\Ui;
         </li>
     <?php
 } ?>
-<?php if (Access::check_function('batch_download') && check_can_zip('tmp_playlist')) { ?>
+<?php
+// @todo remove after refactoring
+global $dic;
+$zipHandler = $dic->get(ZipHandlerInterface::class);
+if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_playlist')) { ?>
     <li>
         <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo Core::get_global('user')->playlist->id; ?>">
             <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>

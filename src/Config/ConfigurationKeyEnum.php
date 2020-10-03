@@ -30,9 +30,10 @@ namespace Ampache\Config;
  */
 final class ConfigurationKeyEnum
 {
-    public const SESSION_NAME   = 'session_name';
-    public const BACKEND_WEBDAV = 'webdav_backend';
-    public const RAW_WEB_PATH   = 'raw_web_path';
-    public const USE_AUTH       = 'use_auth';
-    public const WEB_PATH       = 'web_path';
+    public const SESSION_NAME      = 'session_name';
+    public const BACKEND_WEBDAV    = 'webdav_backend';
+    public const RAW_WEB_PATH      = 'raw_web_path';
+    public const USE_AUTH          = 'use_auth';
+    public const WEB_PATH          = 'web_path';
+    public const ALLOWED_ZIP_TYPES = 'allow_zip_types';
 }

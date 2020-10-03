@@ -25,6 +25,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Model\Browse;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\ZipHandlerInterface;
 
 ?>
 <?php
@@ -35,7 +36,11 @@ ob_end_clean();
 Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title . '</div>', 'box box_smartplaylist'); ?>
 <div id="information_actions">
     <ul>
-        <?php if (Access::check_function('batch_download') && check_can_zip('search')) { ?>
+        <?php
+        // @todo remove after refactoring
+        global $dic;
+        $zipHandler = $dic->get(ZipHandlerInterface::class);
+        if (Access::check_function('batch_download') && $zipHandler->isZipable('search')) { ?>
         <li>
             <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>"><?php echo Ui::get_icon('batch_download', T_('Batch Download')); ?></a>
             <?php echo T_('Batch Download'); ?>
