@@ -167,4 +167,5 @@ return [
     StreamAjaxHandler::class => autowire(StreamAjaxHandler::class),
     TagAjaxHandler::class => autowire(TagAjaxHandler::class),
     UserAjaxHandler::class => autowire(UserAjaxHandler::class),
+    BatchApplication::class => autowire(BatchApplication::class),
 ];
