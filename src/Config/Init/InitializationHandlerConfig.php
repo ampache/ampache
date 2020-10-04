@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Ampache\Config\Init;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\Init\Exception\ConfigFileNotFoundException;
 use Ampache\Config\Init\Exception\ConfigFileNotParsableException;
 use Ampache\Model\Preference;
@@ -40,14 +39,10 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
 
     private EnvironmentInterface $environment;
 
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        EnvironmentInterface $environment,
-        ConfigContainerInterface $configContainer
+        EnvironmentInterface $environment
     ) {
-        $this->environment     = $environment;
-        $this->configContainer = $configContainer;
+        $this->environment = $environment;
     }
 
     public function init(): void
@@ -128,6 +123,5 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
         $results = Preference::fix_preferences($results);
 
         AmpConfig::set_by_array($results, true);
-        $this->configContainer->updateConfig($results);
     }
 }

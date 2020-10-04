@@ -127,6 +127,10 @@ class AmpConfig
         foreach ($array as $name => $value) {
             self::set($name, $value, $clobber);
         }
+
+        // @todo refactor
+        global $dic;
+        $dic->get(ConfigContainerInterface::class)->updateConfig($array);
     }
 
     /**
