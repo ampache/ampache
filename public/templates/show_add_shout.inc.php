@@ -27,7 +27,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
-$object_type = ObjectTypeToClassNameMapper::reverseMap($object); ?>
+$object_type = ObjectTypeToClassNameMapper::reverseMap(get_class($object)); ?>
 <div>
 <?php if (Access::check('interface', 25)) { ?>
 <div style="float: right">
