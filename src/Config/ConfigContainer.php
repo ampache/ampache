@@ -41,7 +41,10 @@ final class ConfigContainer implements ConfigContainerInterface
 
     public function updateConfig(array $configuration): ConfigContainerInterface
     {
-        $this->configuration = $configuration;
+        $this->configuration = array_merge(
+            $this->configuration,
+            $configuration
+        );
 
         return $this;
     }

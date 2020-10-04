@@ -42,13 +42,21 @@ class ConfigContainerTest extends MockeryTestCase
         );
     }
 
-    public function testUpdateConfigReplacesInternalConfigArray(): void
+    public function testUpdateConfigMergesInternalConfigArray(): void
     {
-        $key         = 'some-key';
-        $value       = 'some-value';
-        $config_data = [$key => $value];
+        $existing_key   = 'some-existing-key';
+        $existing_value = 'some-exsiting-value';
+        $key            = 'some-key';
+        $old_value      = 'some-old-value';
+        $value          = 'some-value';
+        $config_data    = [$key => $value];
 
-        $config = $this->createSubject();
+        $config = $this->createSubject([$existing_key => $existing_value, $key => $old_value]);
+
+        static::assertSame(
+            $old_value,
+            $config->get($key)
+        );
 
         static::assertSame(
             $config,
@@ -58,6 +66,10 @@ class ConfigContainerTest extends MockeryTestCase
         static::assertSame(
             $value,
             $config->get($key)
+        );
+        static::assertSame(
+            $existing_value,
+            $config->get($existing_key)
         );
     }
 
