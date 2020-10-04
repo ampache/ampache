@@ -66,33 +66,6 @@ switch ($_REQUEST['action']) {
         $object_type = 'tvshow_season';
         require_once AmpConfig::get('prefix') . UI::find_template('show_tvshow.inc.php');
         break;
-    case 'match':
-    case 'Match':
-        $match = (string) scrub_in($_REQUEST['match']);
-        if ($match == "Browse") {
-            $chr = "";
-        } else {
-            $chr = $match;
-        }
-        /* Enclose this in the purty box! */
-        require AmpConfig::get('prefix') . UI::find_template('show_box_top.inc.php');
-        show_alphabet_list('tvshows', 'tvshows.php', $match);
-        show_alphabet_form($chr, T_('Show TV Shows starting with'), "tvshows.php?action=match");
-        require AmpConfig::get('prefix') . UI::find_template('show_box_bottom.inc.php');
-
-        if ($match === "Browse") {
-            show_tvshows();
-        } elseif ($match === "Show_all") {
-            $offset_limit = 999999;
-            show_tvshows();
-        } else {
-            if ($chr == '') {
-                show_tvshows('A');
-            } else {
-                show_tvshows($chr);
-            }
-        }
-        break;
 } // end switch
 
 // Show the Footer
