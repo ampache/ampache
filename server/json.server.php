@@ -24,6 +24,7 @@
  * This is accessed remotly to allow outside scripts access to ampache information
  * as such it needs to verify the session id that is passed
  */
+
 define('NO_SESSION', '1');
 define('OUTDATED_DATABASE_OK', 1);
 $a_root = realpath(__DIR__ . "/../");
@@ -75,27 +76,16 @@ if ($_REQUEST['action'] != 'handshake' && $_REQUEST['action'] != 'ping') {
 // Make sure beautiful url is disabled as it is not supported by most Ampache clients
 AmpConfig::set('stream_beautiful_url', false, true);
 
-// Get the list of possible methods for the Ampache API
-$methods = get_class_methods('api');
+$method = $_GET['action'];
 
-// Define list of internal functions that should be skipped
-$internal_functions = array('set_filter');
-
-// Recurse through them and see if we're calling one of them
-foreach ($methods as $method) {
-    if (in_array($method, $internal_functions)) {
-        continue;
-    }
-
-    // If the method is the same as the action being called
-    // Then let's call this function!
-    if (str_replace('tag_', 'genre_', $_GET['action']) == $method) {
-        $_GET['api_format'] = 'json';
-        call_user_func(array('api', $method),$_GET);
-        // We only allow a single function to be called, and we assume it's cleaned up!
-        exit;
-    }
-} // end foreach methods in API
+// Retrieve the api method handler from the list of known methods
+$handler = Api::METHOD_LIST[$method] ?? null;
+if ($method !== null) {
+    $_GET['api_format'] = 'json';
+    call_user_func([$handler, $method], $_GET);
+    // We only allow a single function to be called, and we assume it's cleaned up!
+    exit;
+}
 
 // If we manage to get here, we still need to hand out a JSON document
 ob_end_clean();
