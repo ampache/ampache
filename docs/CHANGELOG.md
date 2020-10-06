@@ -1,5 +1,29 @@
 # CHANGELOG
 
+## Ampache 4.2.3-release
+
+### Added
+
+* Subsonic: Generate errors for objects missing art
+
+### Changed
+
+* Don't mark short songs as skipped
+* Subsonic: Stop converting strings to ints in JSON responses
+
+### Fixed
+
+* User registrations
+* Workaround null values for new columns in search table
+* Check release_type length before inserting into the database
+* Ensure Album Artist is set correctly on songs
+* Subsonic: Fix callbacks for similarSongs2 and artistInfo2
+* Subsonic: getCoverArt fixes
+
+### API 4.2.3
+
+**NO CHANGE**
+
 ## Ampache 4.2.2-release
 
 **DATABASE CHANGES** You can now force a default collation and charset on your database.

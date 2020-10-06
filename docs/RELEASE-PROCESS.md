@@ -15,6 +15,7 @@ It's easy to use a program like github desktop to compare between branches.
 * Go to Branch Menu -> Update from develop
 * Fix merge issues
   * lib/init.php (Set release version)
+  * lib/class/api.class.php (Set release version)
   * docs/CHANGELOG.md (Update for release)
   * add new ampache.sql
 * Commit merge for new version (e.g. 4.x.x) but **do not push!**
