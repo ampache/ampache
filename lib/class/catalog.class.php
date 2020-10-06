@@ -1856,14 +1856,13 @@ abstract class Catalog extends database_object
         $artist           = self::check_length($results['artist']);
         $artist_mbid      = $results['mb_artistid'];
         $albumartist_mbid = $results['mb_albumartistid'];
-
         // info for the album table.
         $album            = self::check_length($results['album']);
         $album_mbid       = $results['mb_albumid'];
         $disk             = $results['disk'];
         // year is also included in album
         $album_mbid_group = $results['mb_albumid_group'];
-        $release_type     = $results['release_type'];
+        $release_type     = Catalog::check_length($results['release_type'], 32);
         $albumartist      = self::check_length($results['albumartist'] ?: $results['band']);
         $albumartist      = $albumartist ?: null;
         $original_year    = $results['original_year'];
@@ -1874,12 +1873,20 @@ abstract class Catalog extends database_object
         $new_song->artist = Artist::check($artist, $artist_mbid);
         if ($albumartist) {
             $new_song->albumartist = Artist::check($albumartist, $albumartist_mbid);
+            if (!$new_song->albumartist) {
+                $new_song->albumartist = $song->albumartist;
+            }
+        }
+        if (!$new_song->artist) {
+            $new_song->artist = $song->artist;
         }
 
         // check whether this album exists
         $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group,
                                         $new_song->albumartist, $release_type, false, $original_year, $barcode, $catalog_number);
-
+        if (!$new_song->album) {
+            $new_song->album = $song->album;
+        }
         // set `song`.`update_time` when artist or album details change
         $update_time = time();
         if (self::migrate('artist', $song->artist, $new_song->artist) ||
@@ -2749,8 +2756,8 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * @param $libitem
-     * @param User|null $user_id
+     * @param Artist|Album|Song|Video|Podcast_Episode|Video $libitem
+     * @param integer|null $user_id
      * @return boolean
      */
     public static function can_remove($libitem, $user_id = null)
@@ -2785,7 +2792,7 @@ abstract class Catalog extends database_object
         switch ($action) {
             case 'add_to_all_catalogs':
                 $catalogs = self::get_catalogs();
-                // intentional fall through
+                // Intentional break fall-through
             case 'add_to_catalog':
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {
@@ -2802,7 +2809,7 @@ abstract class Catalog extends database_object
                 break;
             case 'update_all_catalogs':
                 $catalogs = self::get_catalogs();
-                // intentional fall through
+                // Intentional break fall-through
             case 'update_catalog':
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {
@@ -2831,7 +2838,7 @@ abstract class Catalog extends database_object
                 break;
             case 'clean_all_catalogs':
                 $catalogs = self::get_catalogs();
-                // intentional fall through
+                // Intentional break fall-through
             case 'clean_catalog':
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {

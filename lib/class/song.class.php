@@ -390,7 +390,7 @@ class Song extends database_object implements media, library_item
         $catalog_number        = isset($results['catalog_number']) ? Catalog::check_length($results['catalog_number'], 64) : null;
         $language              = isset($results['language']) ? Catalog::check_length($results['language'], 128) : null;
         $channels              = $results['channels'] ?: 0;
-        $release_type          = isset($results['release_type']) ? $results['release_type'] : null;
+        $release_type          = isset($results['release_type']) ? Catalog::check_length($results['release_type'], 32) : null;
         $replaygain_track_gain = isset($results['replaygain_track_gain']) ? $results['replaygain_track_gain'] : null;
         $replaygain_track_peak = isset($results['replaygain_track_peak']) ? $results['replaygain_track_peak'] : null;
         $replaygain_album_gain = isset($results['replaygain_album_gain']) ? $results['replaygain_album_gain'] : null;
@@ -874,7 +874,7 @@ class Song extends database_object implements media, library_item
                        "LEFT JOIN (SELECT MIN(`id`) AS `dupe_id1`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " .
                        "' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " .
                        "' ', `album`.`name`))) AS `Counting` FROM `album` GROUP BY `album_artist`, " .
-                       "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''),  ' ', `album`.`name`)), `disk` " .
+                       "LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)), `disk` " .
                        "HAVING `Counting` > 1) AS `dupe_search` ON song.album = `dupe_search`.`dupe_id1` " .
                        "LEFT JOIN (SELECT MAX(`id`) AS `dupe_id2`, LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " .
                        "' ', `album`.`name`)) AS `fullname`, COUNT(LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), " .
@@ -1169,26 +1169,26 @@ class Song extends database_object implements media, library_item
                     $new_artist_id = Artist::check($value);
                     $this->artist  = $new_artist_id;
                     self::update_artist($new_artist_id, $this->id, $old_artist_id);
-                break;
+                    break;
                 case 'album_name':
                     // Create new album name and id
                     $old_album_id = $this->album;
                     $new_album_id = Album::check($value);
                     $this->album  = $new_album_id;
                     self::update_album($new_album_id, $this->id, $old_album_id);
-                break;
+                    break;
                 case 'artist':
                     // Change artist the song is assigned to
                     $old_artist_id = $this->artist;
                     $new_artist_id = $value;
                     self::update_artist($new_artist_id, $this->id, $old_artist_id);
-                break;
+                    break;
                 case 'album':
                     // Change album the song is assigned to
                     $old_album_id = $this->album;
                     $new_album_id = $value;
                     self::update_album($new_album_id, $this->id, $old_album_id);
-                break;
+                    break;
                 case 'year':
                 case 'title':
                 case 'track':
@@ -1204,18 +1204,18 @@ class Song extends database_object implements media, library_item
                         self::$function($value, $this->id);
                         $this->$key = $value;
                     }
-                break;
+                    break;
                 case 'edit_tags':
                     Tag::update_tag_list($value, 'song', $this->id, true);
                     $this->tags = Tag::get_top_tags('song', $this->id);
-                break;
+                    break;
                 case 'metadata':
                     if (self::isCustomMetadataEnabled()) {
                         $this->updateMetadata($value);
                     }
-                break;
+                    break;
                 default:
-                break;
+                    break;
             } // end whitelist
         } // end foreach
 
@@ -1633,6 +1633,9 @@ class Song extends database_object implements media, library_item
             $this->tags   = Tag::get_top_tags('song', $this->id);
             $this->f_tags = Tag::get_display($this->tags, true, 'song');
         }
+        // force the album artist.
+        $album             = new Album($this->album);
+        $this->albumartist = (!empty($this->albumartist)) ? $this->albumartist : $album->album_artist;
 
         // Format the album name
         $this->f_album_full = $this->get_album_name();
