@@ -1158,9 +1158,9 @@ class Subsonic_Api
         $art = null;
         if ($type == 'artist') {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "artist");
-        } elseif ($type == 'album') {
+        } if ($type == 'album') {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "album");
-        } elseif (($type == 'song')) {
+        } if (($type == 'song')) {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "song");
             if ($art != null && $art->id == null) {
                 // in most cases the song doesn't have a picture, but the album where it belongs to has
@@ -1168,9 +1168,9 @@ class Subsonic_Api
                 $song = new Song(Subsonic_XML_Data::getAmpacheId(Subsonic_XML_Data::getAmpacheId($sub_id)));
                 $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
             }
-        } elseif (($type == 'podcast')) {
+        } if (($type == 'podcast')) {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "podcast");
-        } else {
+        } if ($type == 'search' || $type == 'playlist'){
             $listitems = array();
             // playlists and smartlists
             if (($type == 'search')) {
@@ -1187,7 +1187,7 @@ class Subsonic_Api
                 $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
             }
         }
-        if (!$art->id) {
+        if ($art || $art->get() == '') {
             $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
             self::apiOutput($input, $response);
 
@@ -1208,9 +1208,10 @@ class Subsonic_Api
                 return;
             }
         }
+		$image = $art->get(true);
         header('Content-type: ' . $art->raw_mime);
-        header('Content-Length: ' . strlen((string) $art->raw));
-        echo $art->raw;
+        header('Content-Length: ' . strlen((string) $image));
+        echo $image;
     }
 
     /**
