@@ -1405,11 +1405,11 @@ class Subsonic_Xml_Data
      * @param $info
      * @param $similars
      */
-    public static function addArtistInfo($xml, $info, $similars)
+    public static function addArtistInfo($xml, $info, $similars, $child)
     {
         $artist = new Artist($info['id']);
 
-        $xartist = $xml->addChild('artistInfo');
+        $xartist = $xml->addChild($child);
         $xartist->addChild('biography', htmlspecialchars(trim((string)$info['summary'])));
         $xartist->addChild('musicBrainzId', $artist->mbid);
         //$xartist->addChild('lastFmUrl', "");
@@ -1429,9 +1429,9 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param array $similar_songs
      */
-    public static function addSimilarSongs($xml, $similar_songs)
+    public static function addSimilarSongs($xml, $similar_songs, $child)
     {
-        $xsimilar = $xml->addChild('similarSongs');
+        $xsimilar = $xml->addChild($child);
         foreach ($similar_songs as $similar_song) {
             $song = new Song($similar_song['id']);
             $song->format();

@@ -1215,9 +1215,11 @@ class Subsonic_Api
 
         if ($type == 'artist') {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "artist");
-        } elseif ($type == 'album') {
+        }
+        if ($type == 'album') {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "album");
-        } elseif (($type == 'song')) {
+        }
+        if (($type == 'song')) {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "song");
             if ($art != null && $art->id == null) {
                 // in most cases the song doesn't have a picture, but the album where it belongs to has
@@ -1225,9 +1227,11 @@ class Subsonic_Api
                 $song = new Song(Subsonic_Xml_Data::getAmpacheId(Subsonic_Xml_Data::getAmpacheId($sub_id)));
                 $art  = new Art(Subsonic_Xml_Data::getAmpacheId($song->album), "album");
             }
-        } elseif (($type == 'podcast')) {
+        }
+        if (($type == 'podcast')) {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "podcast");
-        } else {
+        }
+        if ($type == 'search' || $type == 'playlist') {
             $listitems = array();
             // playlists and smartlists
             if (($type == 'search')) {
@@ -1244,7 +1248,7 @@ class Subsonic_Api
                 $art  = new Art(Subsonic_Xml_Data::getAmpacheId($song->album), "album");
             }
         }
-        if (!$art->id) {
+        if (!$art || $art->get() == '') {
             $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, "Media not found.", 'getcoverart');
             self::apiOutput($input, $response);
 
@@ -1265,9 +1269,10 @@ class Subsonic_Api
                 return;
             }
         }
+        $image = $art->get(true);
         header('Content-type: ' . $art->raw_mime);
-        header('Content-Length: ' . strlen((string) $art->raw));
-        echo $art->raw;
+        header('Content-Length: ' . strlen((string) $image));
+        echo $image;
     }
 
     /**
@@ -2043,7 +2048,7 @@ class Subsonic_Api
      * Takes artist id in parameter with optional similar artist count and if not present similar artist should be returned.
      * @param array $input
      */
-    public static function getartistinfo($input)
+    public static function getartistinfo($input, $child = "artistInfo")
     {
         $id                = self::check_parameter($input, 'id');
         $count             = $input['count'] ?: 20;
@@ -2054,7 +2059,7 @@ class Subsonic_Api
             $info      = Recommendation::get_artist_info($artist_id);
             $similars  = Recommendation::get_artists_like($artist_id, $count, !$includeNotPresent);
             $response  = Subsonic_Xml_Data::createSuccessResponse('getartistinfo');
-            Subsonic_Xml_Data::addArtistInfo($response, $info, $similars);
+            Subsonic_Xml_Data::addArtistInfo($response, $info, $similars, $child);
         } else {
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'getartistinfo');
         }
@@ -2069,7 +2074,7 @@ class Subsonic_Api
      */
     public static function getartistinfo2($input)
     {
-        self::getartistinfo($input);
+        self::getartistinfo($input, 'artistInfo2');
     }
 
     /**
@@ -2078,7 +2083,7 @@ class Subsonic_Api
      * Takes song/album/artist id in parameter with optional similar songs count.
      * @param array $input
      */
-    public static function getsimilarsongs($input)
+    public static function getsimilarsongs($input, $child = "similarSongs")
     {
         if (!AmpConfig::get('show_similar')) {
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND,
@@ -2121,7 +2126,7 @@ class Subsonic_Api
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'getsimilarsongs');
         } else {
             $response = Subsonic_Xml_Data::createSuccessResponse('getsimilarsongs');
-            Subsonic_Xml_Data::addSimilarSongs($response, $songs);
+            Subsonic_Xml_Data::addSimilarSongs($response, $songs, $child);
         }
 
         self::apiOutput($input, $response);
@@ -2134,7 +2139,7 @@ class Subsonic_Api
      */
     public static function getsimilarsongs2($input)
     {
-        self::getsimilarsongs($input);
+        self::getsimilarsongs($input, "similarSongs2");
     }
 
     /**
