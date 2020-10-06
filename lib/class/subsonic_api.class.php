@@ -1159,10 +1159,10 @@ class Subsonic_Api
         if ($type == 'artist') {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "artist");
         }
-		if ($type == 'album') {
+        if ($type == 'album') {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "album");
         }
-		if (($type == 'song')) {
+        if (($type == 'song')) {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "song");
             if ($art != null && $art->id == null) {
                 // in most cases the song doesn't have a picture, but the album where it belongs to has
@@ -1171,10 +1171,10 @@ class Subsonic_Api
                 $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
             }
         }
-		if (($type == 'podcast')) {
+        if (($type == 'podcast')) {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "podcast");
         }
-		if ($type == 'search' || $type == 'playlist'){
+        if ($type == 'search' || $type == 'playlist'){
             $listitems = array();
             // playlists and smartlists
             if (($type == 'search')) {
@@ -1212,7 +1212,7 @@ class Subsonic_Api
                 return;
             }
         }
-		$image = $art->get(true);
+        $image = $art->get(true);
         header('Content-type: ' . $art->raw_mime);
         header('Content-Length: ' . strlen((string) $image));
         echo $image;
