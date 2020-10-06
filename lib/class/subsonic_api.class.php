@@ -1174,7 +1174,7 @@ class Subsonic_Api
         if (($type == 'podcast')) {
             $art = new Art(Subsonic_XML_Data::getAmpacheId($sub_id), "podcast");
         }
-        if ($type == 'search' || $type == 'playlist'){
+        if ($type == 'search' || $type == 'playlist') {
             $listitems = array();
             // playlists and smartlists
             if (($type == 'search')) {
