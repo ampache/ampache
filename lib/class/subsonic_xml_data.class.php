@@ -145,10 +145,10 @@ class Subsonic_XML_Data
         // Remove all al-, ar-, ... prefixs
         $tpos = strpos((string) $object_id, "-");
         if ($tpos !== false) {
-            $object_id = (int) (substr((string) $object_id, $tpos + 1));
+            $object_id = substr((string) $object_id, $tpos + 1);
         }
 
-        return $object_id;
+        return (int) $object_id;
     }
 
     /**
@@ -1159,7 +1159,6 @@ class Subsonic_XML_Data
             if (AmpConfig::get('userflags')) {
                 $starred = new Userflag($object_id, $objectType);
                 if ($res = $starred->get_flag(null, true)) {
-                    $format = AmpConfig::get('custom_datetime') ? preg_replace("/[^dmY\s]/", "", (string) AmpConfig::get('custom_datetime')) : 'd-m-Y';
                     $xml->addAttribute('starred', date("Y-m-d\TH:i:s\Z", (int) $res[1]));
                 }
             }
@@ -1385,11 +1384,11 @@ class Subsonic_XML_Data
      * @param $info
      * @param $similars
      */
-    public static function addArtistInfo($xml, $info, $similars)
+    public static function addArtistInfo($xml, $info, $similars, $child)
     {
         $artist = new Artist($info['id']);
 
-        $xartist = $xml->addChild('artistInfo');
+        $xartist = $xml->addChild($child);
         $xartist->addChild('biography', htmlspecialchars(trim((string) $info['summary'])));
         $xartist->addChild('musicBrainzId', $artist->mbid);
         //$xartist->addChild('lastFmUrl', "");
@@ -1409,9 +1408,9 @@ class Subsonic_XML_Data
      * @param SimpleXMLElement $xml
      * @param array $similar_songs
      */
-    public static function addSimilarSongs($xml, $similar_songs)
+    public static function addSimilarSongs($xml, $similar_songs, $child)
     {
-        $xsimilar = $xml->addChild('similarSongs');
+        $xsimilar = $xml->addChild($child);
         foreach ($similar_songs as $similar_song) {
             $song = new Song($similar_song['id']);
             $song->format();
