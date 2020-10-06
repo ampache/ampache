@@ -34,11 +34,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 
 ### Fixed
 
-* Stop skips duplicating recent stat inserts
 * Escape filepaths when removing from database
-* Subsonic JSON was casting everything to int when it shouldn't be
-* Workaround sublime-music Subsonic version (fixed in v0.11.1+ clients)
-* SubSonic::getCoverArt was not causing an error when art is missing
 
 ### API develop
 
@@ -83,6 +79,30 @@ All API code that used 'Tag' now references 'Genre' instead
 * Api::podcast_edit wasn't able to edit a podcast...
 * Setting a limit of 'none' would slice away all the results
 * Api::democratic was using action from localplay in the return responses
+
+## Ampache 4.2.3-release
+
+### Added
+
+* Subsonic: Generate errors for objects missing art
+
+### Changed
+
+* Don't mark short songs as skipped
+* Subsonic: Stop converting strings to ints in JSON responses
+
+### Fixed
+
+* User registrations
+* Workaround null values for new columns in search table
+* Check release_type length before inserting into the database
+* Ensure Album Artist is set correctly on songs
+* Subsonic: Fix callbacks for similarSongs2 and artistInfo2
+* Subsonic: getCoverArt fixes
+
+### API 4.2.3
+
+**NO CHANGE**
 
 ## Ampache 4.2.2-release
 
