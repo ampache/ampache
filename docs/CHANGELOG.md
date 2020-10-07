@@ -69,6 +69,7 @@ All API code that used 'Tag' now references 'Genre' instead
   * tag_songs => genre_songs
 * Don't allow duplicate podcast feeds
 * Api::shares filter is optional
+* Make filter optional in genre_artists, genre_albums, genre_songs (Used as a general catch all method like genres)
 
 ### Deprecated
 
