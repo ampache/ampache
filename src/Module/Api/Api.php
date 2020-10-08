@@ -26,7 +26,6 @@ namespace Ampache\Module\Api;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Model\Browse;
-use Lib\ApiMethods;
 
 /**
  * API Class
@@ -100,6 +99,7 @@ class Api
         'users' => Method\UsersMethod::class,
         'user' => Method\UserMethod::class,
         'user_preferences' => Method\UserPreferencesMethod::class,
+        'user_preference' => Method\UserPreferenceMethod::class,
         'user_create' => Method\UserCreateMethod::class,
         'user_update' => Method\UserUpdateMethod::class,
         'user_delete' => Method\UserDeleteMethod::class,
@@ -128,6 +128,7 @@ class Api
         'democratic' => Method\DemocraticMethod::class,
         'system_update' => Method\SystemUpdateMethod::class,
         'system_preferences' => Method\SystemPreferencesMethod::class,
+        'system_preference' => Method\SystemPreferenceMethod::class,
     ];
 
     /**

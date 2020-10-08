@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Model\Tag;
 use Ampache\Model\User;
-use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
@@ -41,16 +40,13 @@ final class GenreArtistsMethod
      * This returns the artists associated with the genre in question as defined by the UID
      *
      * @param array $input
-     * filter = (string) UID of Album
+     * filter = (string) UID of Album //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
     public static function genre_artists($input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'genre_artists')) {
-            return false;
-        }
         $artists = Tag::get_tag_objects('artist', $input['filter']);
         if (!empty($artists)) {
             $user = User::get_from_username(Session::username($input['auth']));

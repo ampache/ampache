@@ -41,16 +41,13 @@ final class GenreSongsMethod
      * returns the songs for this genre
      *
      * @param array $input
-     * filter = (string) UID of Genre
+     * filter = (string) UID of Genre //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
     public static function genre_songs($input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'genre_songs')) {
-            return false;
-        }
         $songs = Tag::get_tag_objects('song', $input['filter']);
         $user  = User::get_from_username(Session::username($input['auth']));
 

@@ -275,7 +275,7 @@ This returns the artists associated with the genre in question as defined by the
 
 | Input    | Type    | Description                      | Optional |
 |----------|---------|----------------------------------|---------:|
-| 'filter' | string  | UID of genre, returns artist XML |       NO |
+| 'filter' | string  | UID of genre, returns artist XML |      YES |
 | 'offset' | integer |                                  |      YES |
 | 'limit'  | integer |                                  |      YES |
 
@@ -288,7 +288,7 @@ This returns the albums associated with the genre in question
 
 | Input    | Type    | Description                     | Optional |
 |----------|---------|---------------------------------|---------:|
-| 'filter' | string  | UID of genre, returns album XML |       NO |
+| 'filter' | string  | UID of genre, returns album XML |      YES |
 | 'offset' | integer |                                 |      YES |
 | 'limit'  | integer |                                 |      YES |
 
@@ -301,7 +301,7 @@ returns the songs for this genre
 
 | Input    | Type    | Description                    | Optional |
 |----------|---------|--------------------------------|---------:|
-| 'filter' | string  | UID of genre, returns song XML |       NO |
+| 'filter' | string  | UID of genre, returns song XML |      YES |
 | 'offset' | integer |                                |      YES |
 | 'limit'  | integer |                                |      YES |
 

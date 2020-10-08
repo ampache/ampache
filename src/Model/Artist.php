@@ -476,7 +476,11 @@ class Artist extends database_object implements library_item
 
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
-            $sql .= " AND `artist`.`id` NOT IN" . " (SELECT `object_id` FROM `rating`" . " WHERE `rating`.`object_type` = 'artist'" . " AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
+            $sql .= " AND `artist`.`id` NOT IN" .
+                    " (SELECT `object_id` FROM `rating`" .
+                    " WHERE `rating`.`object_type` = 'artist'" .
+                    " AND `rating`.`rating` <=" . $rating_filter .
+                    " AND `rating`.`user` = " . $user_id . ") ";
         }
 
         $sql .= "ORDER BY RAND() LIMIT " . (string)$count;

@@ -41,16 +41,13 @@ final class TagAlbumsMethod
      * This returns the albums associated with the genre in question
      *
      * @param array $input
-     * filter = (string) UID of Genre
+     * filter = (string) UID of Genre //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
      */
     public static function tag_albums($input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'tag_albums')) {
-            return false;
-        }
         $albums = Tag::get_tag_objects('album', $input['filter']);
         if (!empty($albums)) {
             $user = User::get_from_username(Session::username($input['auth']));
