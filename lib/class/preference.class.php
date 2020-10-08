@@ -43,7 +43,7 @@ class Preference extends database_object
      * Return a preference for specific user identifier
      * @param integer $user_id
      * @param string $pref_name
-     * @return integer
+     * @return integer|string
      */
     public static function get_by_user($user_id, $pref_name)
     {
@@ -66,7 +66,7 @@ class Preference extends database_object
 
         parent::add_to_cache('get_by_user', $user_id, $data);
 
-        return (int) $data['value'];
+        return $data['value'];
     } // get_by_user
 
 
