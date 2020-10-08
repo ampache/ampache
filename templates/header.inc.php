@@ -105,7 +105,14 @@ $t_logout    = T_('Log out'); ?>
             var jsSaveTitle = "<?php echo T_('Save') ?>";
             var jsCancelTitle = "<?php echo T_('Cancel') ?>";
         </script>
- 
+
+        <?php
+        if (AmpConfig::get('ajax_load')) {
+            $iframed = true; ?>
+        <script src="<?php echo $web_path; ?>/lib/javascript/dynamicpage.js"></script>
+        <?php require_once AmpConfig::get('prefix') . UI::find_template('show_html5_player_headers.inc.php'); ?>
+        <?php
+        }  ?>
         <script>
             function NavigateTo(url)
             {
@@ -117,7 +124,6 @@ $t_logout    = T_('Log out'); ?>
                 return btoa(window.location.href);
             }
         </script>
- 
         <script>
             $.widget( "custom.catcomplete", $.ui.autocomplete, {
                 _renderItem: function( ul, item ) {
