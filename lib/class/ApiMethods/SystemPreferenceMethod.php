@@ -53,7 +53,7 @@ final class SystemPreferenceMethod
             return false;
         }
         $pref_name  = (string) $input['filter'];
-        $preference = Preference::get($pref_name,-1);
+        $preference = Preference::get($pref_name, -1);
         if (empty($preference)) {
             Api::message('error', 'not found: ' . $pref_name, '404', $input['api_format']);
 

@@ -40,13 +40,13 @@ final class UserPreferenceMethod
      *
      * @param array $input
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
-	 * action = (integer) $artist_id, $album_id, $song_id)
+     * action = (integer) $artist_id, $album_id, $song_id)
      * @return boolean
      */
     public static function user_preference($input)
     {
         $user       = User::get_from_username(Session::username($input['auth']));
-		$pref_name  = (string) $input['filter'];
+        $pref_name  = (string) $input['filter'];
         $preference = Preference::get($pref_name, $user->id);
         if (empty($preference)) {
             Api::message('error', 'not found: ' . $pref_name, '404', $input['api_format']);
