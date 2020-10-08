@@ -96,6 +96,7 @@ class Api
         'users' => ApiMethods\UsersMethod::class,
         'user' => ApiMethods\UserMethod::class,
         'user_preferences' => ApiMethods\UserPreferencesMethod::class,
+        'user_preference' => ApiMethods\UserPreferenceMethod::class,
         'user_create' => ApiMethods\UserCreateMethod::class,
         'user_update' => ApiMethods\UserUpdateMethod::class,
         'user_delete' => ApiMethods\UserDeleteMethod::class,
@@ -124,6 +125,7 @@ class Api
         'democratic' => ApiMethods\DemocraticMethod::class,
         'system_update' => ApiMethods\SystemUpdateMethod::class,
         'system_preferences' => ApiMethods\SystemPreferencesMethod::class,
+        'system_preference' => ApiMethods\SystemPreferenceMethod::class,
     ];
 
     /**
