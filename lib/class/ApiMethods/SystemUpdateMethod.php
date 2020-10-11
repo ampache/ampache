@@ -26,6 +26,7 @@ namespace Lib\ApiMethods;
 
 use Api;
 use AutoUpdate;
+use User;
 
 final class SystemUpdateMethod
 {
@@ -40,14 +41,14 @@ final class SystemUpdateMethod
      */
     public static function system_update($input)
     {
-        $user = \User::get_from_username(\Session::username($input['auth']));
+        $user = User::get_from_username(\Session::username($input['auth']));
         if (!Api::check_access('interface', 100, $user->id)) {
             return false;
         }
         if (AutoUpdate::is_update_available(true)) {
             // run the update
-            AutoUpdate::update_files();
-            AutoUpdate::update_dependencies();
+            AutoUpdate::update_files(true);
+            AutoUpdate::update_dependencies(true);
             // check that the update completed or failed failed.
             if (AutoUpdate::is_update_available(true)) {
                 Api::message('error', 'update failed', '400', $input['api_format']);
