@@ -40,7 +40,6 @@ final class SystemPreferenceMethod
      *
      * @param array $input
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
-     * action = (integer) $artist_id, $album_id, $song_id)
      * @return boolean
      */
     public static function system_preference($input)
