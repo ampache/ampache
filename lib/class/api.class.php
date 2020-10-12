@@ -277,8 +277,8 @@ class Api
             }
             if (empty($input[$parameter])) {
                 debug_event('api.class', "'" . $parameter . "' required on " . $method . " function call.", 2);
-                /* HINT: missing parameter name (object_type, username, etc) */
-                self::error(printf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                self::error(sprintf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);
 
                 return false;
             }
