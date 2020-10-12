@@ -79,11 +79,11 @@ final class ShareEditMethod
                 Api::message('share ' . $share_id . ' updated', $input['api_format']);
             } else {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(printf(T_('Bad Request: %s'), $share_id), '4710', self::ACTION, 'system', $input['api_format']);
+                Api::error(sprintf(T_('Bad Request: %s'), $share_id), '4710', self::ACTION, 'system', $input['api_format']);
             }
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(printf(T_('Not Found: %s'), $share_id), '4704', self::ACTION, 'share', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $share_id), '4704', self::ACTION, 'share', $input['api_format']);
         }
         Session::extend($input['auth']);
 

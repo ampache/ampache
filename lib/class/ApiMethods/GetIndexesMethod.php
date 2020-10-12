@@ -65,7 +65,7 @@ final class GetIndexesMethod
         $include = (int) $input['include'] == 1 || ($input['api_format'] == 'xml' && !isset($input['include']));
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist'))) {
-            Api::error(printf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }

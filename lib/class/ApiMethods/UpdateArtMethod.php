@@ -62,14 +62,14 @@ final class UpdateArtMethod
 
         // confirm the correct data
         if (!in_array($type, array('artist', 'album'))) {
-            Api::error(printf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return true;
         }
         $item = new $type($object);
         if (!$item->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(printf(T_('Not Found: %s'), $object), '4704', self::ACTION, 'id', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $object), '4704', self::ACTION, 'id', $input['api_format']);
 
             return true;
         }
@@ -80,7 +80,7 @@ final class UpdateArtMethod
             return true;
         }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(printf(T_('Bad Request: %s'), $object), '4710', self::ACTION, 'system', $input['api_format']);
+        Api::error(sprintf(T_('Bad Request: %s'), $object), '4710', self::ACTION, 'system', $input['api_format']);
         Session::extend($input['auth']);
 
         return true;

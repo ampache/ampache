@@ -60,7 +60,7 @@ final class GetArtMethod
 
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'search', 'podcast'))) {
-            Api::error(printf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }

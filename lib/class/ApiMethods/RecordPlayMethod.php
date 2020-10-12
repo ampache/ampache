@@ -60,7 +60,7 @@ final class RecordPlayMethod
         // validate supplied user
         if ($valid === false) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(printf(T_('Not Found: %s'), $user_id), '4704', self::ACTION, 'user', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $user_id), '4704', self::ACTION, 'user', $input['api_format']);
 
             return false;
         }
@@ -73,7 +73,7 @@ final class RecordPlayMethod
         $item = new Song($object_id);
         if (!$item->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(printf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
 
             return false;
         }

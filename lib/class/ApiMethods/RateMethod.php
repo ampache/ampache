@@ -64,24 +64,24 @@ final class RateMethod
         $user      = User::get_from_username(Session::username($input['auth']));
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist'))) {
-            Api::error(printf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
         if (!in_array($rating, array('0', '1', '2', '3', '4', '5'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(printf(T_('Bad Request: %s'), $rating), '4710', self::ACTION, 'rating', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $rating), '4710', self::ACTION, 'rating', $input['api_format']);
 
             return false;
         }
 
         if (!Core::is_library_item($type) || !$object_id) {
-            Api::error(printf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
         } else {
             $item = new $type($object_id);
             if (!$item->id) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(printf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
+                Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
 
                 return false;
             }

@@ -78,7 +78,7 @@ final class FollowingMethod
             } else {
                 debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(printf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'system', $input['api_format']);
+                Api::error(sprintf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'system', $input['api_format']);
             }
         }
         Session::extend($input['auth']);

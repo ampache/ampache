@@ -63,7 +63,7 @@ final class UserDeleteMethod
             return true;
         }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(printf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
+        Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
         Session::extend($input['auth']);
 
         return false;

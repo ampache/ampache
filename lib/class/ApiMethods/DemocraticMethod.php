@@ -59,7 +59,7 @@ final class DemocraticMethod
                 $media  = new Song($object);
                 if (!$media->id) {
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    Api::error(printf(T_('Not Found: %s'), $object), '4704', self::ACTION, 'type', $input['api_format']);
+                    Api::error(sprintf(T_('Not Found: %s'), $object), '4704', self::ACTION, 'type', $input['api_format']);
                     break;
                 }
                 $democratic->add_vote(array(
@@ -85,7 +85,7 @@ final class DemocraticMethod
                 $media  = new Song($object);
                 if (!$media->id) {
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    Api::error(printf(T_('Not Found: %s'), $object), '4704', self::ACTION, 'type', $input['api_format']);
+                    Api::error(sprintf(T_('Not Found: %s'), $object), '4704', self::ACTION, 'type', $input['api_format']);
                 }
 
                 $uid = $democratic->get_uid_from_object_id($media->id, $type);

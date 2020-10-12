@@ -57,7 +57,7 @@ final class UpdateArtistInfoMethod
         $item   = new Artist($object);
         if (!$item->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(printf(T_('Not Found: %s'), $object), '4704', self::ACTION, 'id', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $object), '4704', self::ACTION, 'id', $input['api_format']);
 
             return false;
         }
@@ -68,7 +68,7 @@ final class UpdateArtistInfoMethod
             return true;
         }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(printf(T_('Bad Request: %s'), $object), '4710', self::ACTION, 'system', $input['api_format']);
+        Api::error(sprintf(T_('Bad Request: %s'), $object), '4710', self::ACTION, 'system', $input['api_format']);
         Session::extend($input['auth']);
 
         return true;

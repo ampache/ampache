@@ -73,7 +73,7 @@ final class ScrobbleMethod
         // validate supplied user
         if ($valid === false) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(printf(T_('Not Found: %s'), $user_id), '4704', self::ACTION, 'empty', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $user_id), '4704', self::ACTION, 'empty', $input['api_format']);
 
             return false;
         }

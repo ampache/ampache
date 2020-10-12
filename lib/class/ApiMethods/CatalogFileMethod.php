@@ -69,13 +69,13 @@ final class CatalogFileMethod
         // confirm the correct data
         if (!in_array($task, array('add', 'clean', 'verify', 'remove'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(printf(T_('Bad Request: %s'), $task), '4710', self::ACTION, 'task', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $task), '4710', self::ACTION, 'task', $input['api_format']);
 
             return false;
         }
         if (!file_exists($file) && $task !== 'clean') {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(printf(T_('Not Found: %s'), $file), '4704', self::ACTION, 'file', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $file), '4704', self::ACTION, 'file', $input['api_format']);
 
             return false;
         }
@@ -83,7 +83,7 @@ final class CatalogFileMethod
         $catalog    = Catalog::create_from_id($catalog_id);
         if ($catalog->id < 1) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(printf(T_('Not Found: %s'), $catalog_id), '4704', self::ACTION, 'catalog', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $catalog_id), '4704', self::ACTION, 'catalog', $input['api_format']);
 
             return false;
         }

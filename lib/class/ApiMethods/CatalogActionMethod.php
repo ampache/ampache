@@ -58,7 +58,7 @@ final class CatalogActionMethod
         // confirm the correct data
         if (!in_array($task, array('add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(printf(T_('Bad Request: %s'), $task), '4710', self::ACTION, 'task', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $task), '4710', self::ACTION, 'task', $input['api_format']);
 
             return false;
         }
