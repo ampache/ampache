@@ -32,6 +32,8 @@ use XML_Data;
 
 final class TagsMethod
 {
+    private const ACTION = 'tags';
+
     /**
      * tags
      * MINIMUM_API_VERSION=380001
@@ -39,33 +41,10 @@ final class TagsMethod
      * This returns the genres (Tags) based on the specified filter
      *
      * @param array $input
-     * filter = (string) Alpha-numeric search term //optional
-     * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * offset = (integer) //optional
-     * limit  = (integer) //optional
      */
     public static function tags($input)
     {
-        Api::$browse->reset_filters();
-        Api::$browse->set_type('tag');
-        Api::$browse->set_sort('name', 'ASC');
-
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter']);
-        $tags = Api::$browse->get_objects();
-
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::genres($tags);
-                break;
-            default:
-                XML_Data::set_offset($input['offset']);
-                XML_Data::set_limit($input['limit']);
-                echo XML_Data::genres($tags);
-        }
+        Api::error(T_('Depreciated'), '4706', self::ACTION, 'removed', $input['api_format']);
         Session::extend($input['auth']);
     }
 }

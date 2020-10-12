@@ -194,13 +194,13 @@ class Api
      */
     public static function error($message, $error_code, $method, $error_type, $format = 'xml')
     {
-            switch ($format) {
-                case 'json':
-                    echo JSON_Data::error($error_code, $message, $method, $error_type);
-                    break;
-                default:
-                    echo XML_Data::error($error_code, $message, $method, $error_type);
-            }
+        switch ($format) {
+            case 'json':
+                echo JSON_Data::error($error_code, $message, $method, $error_type);
+                break;
+            default:
+                echo XML_Data::error($error_code, $message, $method, $error_type);
+        }
     } // error
 
     /**

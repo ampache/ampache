@@ -34,6 +34,8 @@ use XML_Data;
 
 final class TagAlbumsMethod
 {
+    private const ACTION = 'tag_albums';
+
     /**
      * tag_albums
      * MINIMUM_API_VERSION=380001
@@ -41,34 +43,10 @@ final class TagAlbumsMethod
      * This returns the albums associated with the genre in question
      *
      * @param array $input
-     * filter = (string) UID of Genre //optional
-     * offset = (integer) //optional
-     * limit  = (integer) //optional
-     * @return boolean
      */
     public static function tag_albums($input)
     {
-        $albums = Tag::get_tag_objects('album', $input['filter']);
-        if (!empty($albums)) {
-            $user = User::get_from_username(Session::username($input['auth']));
-            XML_Data::set_offset($input['offset']);
-            XML_Data::set_limit($input['limit']);
-
-            ob_end_clean();
-            switch ($input['api_format']) {
-                case 'json':
-                    JSON_Data::set_offset($input['offset']);
-                    JSON_Data::set_limit($input['limit']);
-                    echo JSON_Data::albums($albums, array(), $user->id);
-                    break;
-                default:
-                    XML_Data::set_offset($input['offset']);
-                    XML_Data::set_limit($input['limit']);
-                    echo XML_Data::albums($albums, array(), $user->id);
-            }
-        }
+        Api::error(T_('Depreciated'), '4706', self::ACTION, 'removed', $input['api_format']);
         Session::extend($input['auth']);
-
-        return true;
     }
 }

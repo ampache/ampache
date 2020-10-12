@@ -44,7 +44,6 @@ final class TagMethod
      */
     public static function tag($input)
     {
-
         Api::error(T_('Depreciated'), '4706', self::ACTION, 'removed', $input['api_format']);
         Session::extend($input['auth']);
     }

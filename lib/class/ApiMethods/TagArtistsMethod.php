@@ -34,6 +34,8 @@ use XML_Data;
 
 final class TagArtistsMethod
 {
+    private const ACTION = 'tag_artists';
+
     /**
      * tag_artists
      * MINIMUM_API_VERSION=380001
@@ -41,32 +43,10 @@ final class TagArtistsMethod
      * This returns the artists associated with the genre in question as defined by the UID
      *
      * @param array $input
-     * filter = (string) UID of Album //optional
-     * offset = (integer) //optional
-     * limit  = (integer) //optional
-     * @return boolean
      */
     public static function tag_artists($input)
     {
-        $artists = Tag::get_tag_objects('artist', $input['filter']);
-        if (!empty($artists)) {
-            $user = User::get_from_username(Session::username($input['auth']));
-
-            ob_end_clean();
-            switch ($input['api_format']) {
-                case 'json':
-                    JSON_Data::set_offset($input['offset']);
-                    JSON_Data::set_limit($input['limit']);
-                    echo JSON_Data::artists($artists, array(), $user->id);
-                    break;
-                default:
-                    XML_Data::set_offset($input['offset']);
-                    XML_Data::set_limit($input['limit']);
-                    echo XML_Data::artists($artists, array(), $user->id);
-            }
-        }
+        Api::error(T_('Depreciated'), '4706', self::ACTION, 'removed', $input['api_format']);
         Session::extend($input['auth']);
-
-        return true;
     }
 }
