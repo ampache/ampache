@@ -1405,14 +1405,11 @@ class Search extends playlist_object
                         $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
                     }
                     break;
-                case 'has image':
                 case 'has_image':
                     $where[]            = ($sql_match_operator == '1') ? "`has_image`.`object_id` IS NOT NULL" : "`has_image`.`object_id` IS NULL";
                     $table['has_image'] = "LEFT JOIN (SELECT `object_id` from `image` WHERE `object_type` = 'album') as `has_image` ON `album`.`id` = `has_image`.`object_id`";
                     break;
-                case 'image height':
                 case 'image_height':
-                case 'image width':
                 case 'image_width':
                     $looking       = strpos($rule[0], "image_") ? str_replace('image_', '', $rule[0]) : str_replace('image ', '', $rule[0]);
                     $where[]       = "`image`.`$looking` $sql_match_operator '$input'";
@@ -1558,14 +1555,11 @@ class Search extends playlist_object
                         "ON `artist`.`id`=`favorite_artist_$userid`.`object_id` " .
                         "AND `favorite_artist_$userid`.`object_type` = 'artist' " : ' ';
                     break;
-                case 'has image':
                 case 'has_image':
                     $where[]            = ($sql_match_operator == '1') ? "`has_image`.`object_id` IS NOT NULL" : "`has_image`.`object_id` IS NULL";
                     $table['has_image'] = "LEFT JOIN (SELECT `object_id` from `image` WHERE `object_type` = 'artist') as `has_image` ON `artist`.`id` = `has_image`.`object_id`";
                     break;
-                case 'image height':
                 case 'image_height':
-                case 'image width':
                 case 'image_width':
                     $looking       = strpos($rule[0], "image_") ? str_replace('image_', '', $rule[0]) : str_replace('image ', '', $rule[0]);
                     $where[]       = "`image`.`$looking` $sql_match_operator '$input'";
@@ -2222,7 +2216,6 @@ class Search extends playlist_object
             $sql_match_operator = $operator['sql'];
 
             switch ($rule[0]) {
-                case 'filename':
                 case 'file':
                     $where[] = "`video`.`file` $sql_match_operator '$input'";
                     break;
