@@ -24,7 +24,6 @@
  * This is accessed remotly to allow outside scripts access to ampache information
  * as such it needs to verify the session id that is passed
  */
-
 define('NO_SESSION', '1');
 define('OUTDATED_DATABASE_OK', 1);
 $a_root = realpath(__DIR__ . "/../");
@@ -81,7 +80,7 @@ $method = $_GET['action'];
 
 // Retrieve the api method handler from the list of known methods
 $handler = Api::METHOD_LIST[$method] ?? null;
-if ($method !== null) {
+if ($handler !== null) {
     $_GET['api_format'] = 'json';
     call_user_func([$handler, $method], $_GET);
     // We only allow a single function to be called, and we assume it's cleaned up!

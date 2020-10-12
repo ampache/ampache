@@ -86,7 +86,7 @@ $method = $_GET['action'];
 
 // Retrieve the api method handler from the list of known methods
 $handler = Api::METHOD_LIST[$method] ?? null;
-if ($method !== null) {
+if ($handler !== null) {
     $_GET['api_format'] = 'xml';
     call_user_func([$handler, $method], $_GET);
     // We only allow a single function to be called, and we assume it's cleaned up!
