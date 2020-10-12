@@ -367,7 +367,7 @@ class XML_Data
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . count($objects) . "</total_count>\n";
+        $string = "";
 
         // 'artist'|'album'|'song'|'playlist'|'share'|'podcast'
         foreach ($objects as $object_id) {
@@ -456,7 +456,7 @@ class XML_Data
         if ((count($licenses) > self::$limit || self::$offset > 0) && self::$limit) {
             $licenses = array_splice($licenses, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . count($licenses) . "</total_count>\n";
+        $string = "";
 
         foreach ($licenses as $license_id) {
             $license = new license($license_id);
@@ -483,7 +483,7 @@ class XML_Data
         if ((count($tags) > self::$limit || self::$offset > 0) && self::$limit) {
             $tags = array_splice($tags, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . count($tags) . "</total_count>\n";
+        $string = "";
 
         foreach ($tags as $tag_id) {
             $tag    = new Tag($tag_id);
@@ -519,7 +519,7 @@ class XML_Data
         if ((count($artists) > self::$limit || self::$offset > 0) && self::$limit) {
             $artists = array_splice($artists, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . count($artists) . "</total_count>\n";
+        $string = "";
 
         Rating::build_cache('artist', $artists);
 
@@ -582,7 +582,7 @@ class XML_Data
         if ((count($albums) > self::$limit || self::$offset > 0) && self::$limit) {
             $albums = array_splice($albums, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . count($albums) . "</total_count>\n";
+        $string = "";
 
         Rating::build_cache('album', $albums);
 
@@ -648,7 +648,7 @@ class XML_Data
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . count($playlists) . "</total_count>\n";
+        $string = "";
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
@@ -701,7 +701,7 @@ class XML_Data
         if ((count($shares) > self::$limit || self::$offset > 0) && self::$limit) {
             $shares = array_splice($shares, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . count($shares) . "</total_count>\n";
+        $string = "";
 
         foreach ($shares as $share_id) {
             $share = new Share($share_id);
@@ -740,7 +740,7 @@ class XML_Data
         if ((count($catalogs) > self::$limit || self::$offset > 0) && self::$limit) {
             $catalogs = array_splice($catalogs, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . count($catalogs) . "</total_count>\n";
+        $string = "";
 
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
@@ -776,7 +776,7 @@ class XML_Data
         if ((count($podcasts) > self::$limit || self::$offset > 0) && self::$limit) {
             $podcasts = array_splice($podcasts, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . count($podcasts) . "</total_count>\n";
+        $string = "";
 
         foreach ($podcasts as $podcast_id) {
             $podcast = new Podcast($podcast_id);
@@ -818,7 +818,7 @@ class XML_Data
         if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && self::$limit) {
             $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
         }
-        $string = ($full_xml) ? "<total_count>" . count($podcast_episodes) . "</total_count>\n" : '';
+        $string = "";
 
         foreach ($podcast_episodes as $episode_id) {
             $episode = new Podcast_Episode($episode_id);
@@ -857,7 +857,7 @@ class XML_Data
         if ((count($songs) > self::$limit || self::$offset > 0) && self::$limit) {
             $songs = array_slice($songs, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . count($songs) . "</total_count>\n";
+        $string = "";
 
         Song::build_cache($songs);
         Stream::set_session(Core::get_request('auth'));
@@ -955,7 +955,7 @@ class XML_Data
         if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
         }
-        $string = '<total_count>' . count($videos) . "</total_count>\n";
+        $string = "";
 
         foreach ($videos as $video_id) {
             $video = new Video($video_id);
