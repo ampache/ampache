@@ -27,12 +27,15 @@ namespace Lib\ApiMethods;
 
 use Api;
 use JSON_Data;
+use Playlist;
 use Session;
 use User;
 use XML_Data;
 
 final class PlaylistCreateMethod
 {
+    private const ACTION = 'playlist_create';
+
     /**
      * playlist_create
      * MINIMUM_API_VERSION=380001
@@ -46,7 +49,7 @@ final class PlaylistCreateMethod
      */
     public static function playlist_create($input)
     {
-        if (!Api::check_parameter($input, array('name'), 'playlist_create')) {
+        if (!Api::check_parameter($input, array('name'), self::ACTION)) {
             return false;
         }
         $name = $input['name'];
@@ -56,7 +59,7 @@ final class PlaylistCreateMethod
             $type = 'public';
         }
 
-        $uid = \Playlist::create($name, $type, $user->id);
+        $uid = Playlist::create($name, $type, $user->id);
         switch ($input['api_format']) {
             case 'json':
                 echo JSON_Data::playlists(array($uid));

@@ -33,6 +33,8 @@ use XML_Data;
 
 final class PodcastsMethod
 {
+    private const ACTION = 'podcasts';
+
     /**
      * podcasts
      * MINIMUM_API_VERSION=420000
@@ -49,7 +51,7 @@ final class PodcastsMethod
     public static function podcasts($input)
     {
         if (!AmpConfig::get('podcast')) {
-            Api::message('error', T_('Access Denied: podcast features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

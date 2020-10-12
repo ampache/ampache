@@ -25,9 +25,14 @@ declare(strict_types=0);
 namespace Lib\ApiMethods;
 
 use Api;
+use Session;
+use Song;
+use User;
 
 final class RecordPlayMethod
 {
+    private const ACTION = 'record_play';
+
     /**
      * record_play
      * MINIMUM_API_VERSION=400001
@@ -43,18 +48,19 @@ final class RecordPlayMethod
      */
     public static function record_play($input)
     {
-        if (!Api::check_parameter($input, array('id', 'user'), 'record_play')) {
+        if (!Api::check_parameter($input, array('id', 'user'), self::ACTION)) {
             return false;
         }
         ob_end_clean();
         $object_id = $input['id'];
         $user_id   = (int) $input['user'];
-        $user      = new \User($user_id);
-        $valid     = in_array($user->id, \User::get_valid_users());
+        $user      = new User($user_id);
+        $valid     = in_array($user->id, User::get_valid_users());
 
         // validate supplied user
         if ($valid === false) {
-            Api::message('error', T_('User_id not found'), '404', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(printf(T_('Not Found: %s'), $user_id), '4704', self::ACTION, 'user', $input['api_format']);
 
             return false;
         }
@@ -64,9 +70,10 @@ final class RecordPlayMethod
             ? $input['client']
             : 'api';
 
-        $item = new \Song($object_id);
+        $item = new Song($object_id);
         if (!$item->id) {
-            Api::message('error', T_('Library item not found'), '404', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(printf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
 
             return false;
         }
@@ -76,10 +83,10 @@ final class RecordPlayMethod
         $item->set_played($user_id, $agent, array(), time());
 
         // scrobble plugins
-        \User::save_mediaplay($user, $item);
+        User::save_mediaplay($user, $item);
 
-        Api::message('success', 'successfully recorded play: ' . $item->id, null, $input['api_format']);
-        \Session::extend($input['auth']);
+        Api::message('successfully recorded play: ' . $item->id, $input['api_format']);
+        Session::extend($input['auth']);
 
         return true;
     }

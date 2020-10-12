@@ -34,6 +34,8 @@ use XML_Data;
 
 final class UrlToSongMethod
 {
+    private const ACTION = 'url_to_song';
+
     /**
      * url_to_song
      * MINIMUM_API_VERSION=380001
@@ -46,7 +48,7 @@ final class UrlToSongMethod
      */
     public static function url_to_song($input)
     {
-        if (!Api::check_parameter($input, array('url'), 'url_to_song')) {
+        if (!Api::check_parameter($input, array('url'), self::ACTION)) {
             return false;
         }
         // Don't scrub, the function needs her raw and juicy

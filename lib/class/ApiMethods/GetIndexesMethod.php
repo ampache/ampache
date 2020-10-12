@@ -34,6 +34,8 @@ use XML_Data;
 
 final class GetIndexesMethod
 {
+    private const ACTION = 'get_indexes';
+
     /**
      * get_indexes
      * MINIMUM_API_VERSION=400001
@@ -55,15 +57,15 @@ final class GetIndexesMethod
      */
     public static function get_indexes($input)
     {
-        if (!Api::check_parameter($input, array('type'), 'get_indexes')) {
+        if (!Api::check_parameter($input, array('type'), self::ACTION)) {
             return false;
         }
         $user    = User::get_from_username(Session::username($input['auth']));
         $type    = (string) $input['type'];
-        $include = ((int) $input['include'] == 1 || ($input['api_format'] == 'xml' && !isset($input['include']))) ? true : false;
+        $include = (int) $input['include'] == 1 || ($input['api_format'] == 'xml' && !isset($input['include']));
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist'))) {
-            Api::message('error', T_('Incorrect object type') . ' ' . $type, '400', $input['api_format']);
+            Api::error(printf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }

@@ -31,9 +31,12 @@ use Api;
 use Mailer;
 use Preference;
 use Session;
+use User;
 
 final class UserUpdateMethod
 {
+    private const ACTION = 'user_update';
+
     /**
      * user_update
      * MINIMUM_API_VERSION=400001
@@ -55,10 +58,10 @@ final class UserUpdateMethod
      */
     public static function user_update($input)
     {
-        if (!Api::check_access('interface', 100, \User::get_from_username(Session::username($input['auth']))->id, 'user_update', $input['api_format'])) {
+        if (!Api::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (!Api::check_parameter($input, array('username'), 'user_update')) {
+        if (!Api::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
         $username   = $input['username'];
@@ -72,11 +75,12 @@ final class UserUpdateMethod
         $maxbitrate = $input['maxbitrate'];
 
         // identify the user to modify
-        $user    = \User::get_from_username($username);
+        $user    = User::get_from_username($username);
         $user_id = $user->id;
 
         if ($password && Access::check('interface', 100, $user_id)) {
-            Api::message('error', 'Do not update passwords for admin users! ' . $username, '400', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(printf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -108,11 +112,12 @@ final class UserUpdateMethod
             if ((int) $maxbitrate > 0) {
                 Preference::update('transcode_bitrate', $user_id, $maxbitrate);
             }
-            Api::message('success', 'successfully updated: ' . $username, null, $input['api_format']);
+            Api::message('successfully updated: ' . $username, $input['api_format']);
 
             return true;
         }
-        Api::message('error', 'failed to update: ' . $username, '400', $input['api_format']);
+        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+        Api::error(printf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
         Session::extend($input['auth']);
 
         return false;

@@ -33,6 +33,8 @@ use XML_Data;
 
 final class SongMethod
 {
+    private const ACTION = 'song';
+
     /**
      * song
      * MINIMUM_API_VERSION=380001
@@ -45,7 +47,7 @@ final class SongMethod
      */
     public static function song($input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'song')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $song_id = scrub_in($input['filter']);

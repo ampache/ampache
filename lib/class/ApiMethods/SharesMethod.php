@@ -33,6 +33,8 @@ use XML_Data;
 
 final class SharesMethod
 {
+    private const ACTION = 'shares';
+
     /**
      * shares
      * MINIMUM_API_VERSION=420000
@@ -48,7 +50,7 @@ final class SharesMethod
     public static function shares($input)
     {
         if (!AmpConfig::get('share')) {
-            Api::message('error', T_('Access Denied: sharing features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

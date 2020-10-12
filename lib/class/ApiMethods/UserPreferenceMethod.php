@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Lib\ApiMethods;
 
+use Api;
 use Preference;
 use Session;
 use User;
@@ -32,6 +33,8 @@ use XML_Data;
 
 final class UserPreferenceMethod
 {
+    private const ACTION = 'user_preference';
+
     /**
      * user_preference
      * MINIMUM_API_VERSION=430000
@@ -48,7 +51,8 @@ final class UserPreferenceMethod
         $pref_name  = (string) $input['filter'];
         $preference = Preference::get($pref_name, $user->id);
         if (empty($preference)) {
-            Api::message('error', 'not found: ' . $pref_name, '404', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(printf(T_('Not Found: %s'), $pref_name), '4704', self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }

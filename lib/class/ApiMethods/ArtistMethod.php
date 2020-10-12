@@ -33,6 +33,8 @@ use XML_Data;
 
 final class ArtistMethod
 {
+    private const ACTION = 'artist';
+
     /**
      * artist
      * MINIMUM_API_VERSION=380001
@@ -46,7 +48,7 @@ final class ArtistMethod
      */
     public static function artist($input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'artist')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $uid     = array((int) scrub_in($input['filter']));

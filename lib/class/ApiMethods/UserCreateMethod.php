@@ -27,9 +27,12 @@ namespace Lib\ApiMethods;
 
 use Api;
 use Session;
+use User;
 
 final class UserCreateMethod
 {
+    private const ACTION = 'user_create';
+
     /**
      * user_create
      * MINIMUM_API_VERSION=400001
@@ -47,10 +50,10 @@ final class UserCreateMethod
      */
     public static function user_create($input)
     {
-        if (!Api::check_access('interface', 100, \User::get_from_username(Session::username($input['auth']))->id, 'user_create', $input['api_format'])) {
+        if (!Api::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (!Api::check_parameter($input, array('username', 'password', 'email'), 'user_create')) {
+        if (!Api::check_parameter($input, array('username', 'password', 'email'), self::ACTION)) {
             return false;
         }
         $username = $input['username'];
@@ -59,14 +62,15 @@ final class UserCreateMethod
         $password = $input['password'];
         $disable  = (bool) $input['disable'];
         $access   = 25;
-        $user_id  = \User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
+        $user_id  = User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
 
         if ($user_id > 0) {
-            Api::message('success', 'successfully created: ' . $username, null, $input['api_format']);
+            Api::message('successfully created: ' . $username, $input['api_format']);
 
             return true;
         }
-        Api::message('error', 'failed to create: ' . $username, '400', $input['api_format']);
+        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+        Api::error(printf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
         Session::extend($input['auth']);
 
         return false;

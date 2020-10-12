@@ -34,6 +34,8 @@ use XML_Data;
 
 final class SearchSongsMethod
 {
+    private const ACTION = 'search_songs';
+
     /**
      * search_songs
      * MINIMUM_API_VERSION=380001
@@ -48,7 +50,7 @@ final class SearchSongsMethod
      */
     public static function search_songs($input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'search_songs')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $array                    = array();

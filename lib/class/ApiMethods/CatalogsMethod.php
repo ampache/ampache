@@ -24,11 +24,15 @@ declare(strict_types=0);
 
 namespace Lib\ApiMethods;
 
+use Catalog;
 use JSON_Data;
+use Session;
 use XML_Data;
 
 final class CatalogsMethod
 {
+    private const ACTION = 'catalogs';
+
     /**
      * catalogs
      * MINIMUM_API_VERSION=420000
@@ -44,7 +48,7 @@ final class CatalogsMethod
     {
         // filter for specific catalog types
         $filter   = (in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
-        $catalogs = \Catalog::get_catalogs($filter);
+        $catalogs = Catalog::get_catalogs($filter);
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -58,6 +62,6 @@ final class CatalogsMethod
                 XML_Data::set_limit($input['limit']);
                 echo XML_Data::catalogs($catalogs);
         }
-        \Session::extend($input['auth']);
+        Session::extend($input['auth']);
     }
 }

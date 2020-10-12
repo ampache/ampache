@@ -25,9 +25,14 @@ declare(strict_types=0);
 namespace Lib\ApiMethods;
 
 use Api;
+use Catalog;
+use Session;
+use User;
 
 final class CatalogActionMethod
 {
+    private const ACTION = 'catalog_action';
+
     /**
      * catalog_action
      * MINIMUM_API_VERSION=400001
@@ -43,20 +48,21 @@ final class CatalogActionMethod
      */
     public static function catalog_action($input)
     {
-        if (!Api::check_parameter($input, array('catalog', 'task'), 'catalog_action')) {
+        if (!Api::check_parameter($input, array('catalog', 'task'), self::ACTION)) {
             return false;
         }
-        if (!Api::check_access('interface', 75, \User::get_from_username(\Session::username($input['auth']))->id, 'catalog_action', $input['api_format'])) {
+        if (!Api::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         $task = (string) $input['task'];
         // confirm the correct data
         if (!in_array($task, array('add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'))) {
-            Api::message('error', T_('Incorrect catalog task') . ' ' . $task, '400', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(printf(T_('Bad Request: %s'), $task), '4710', self::ACTION, 'task', $input['api_format']);
 
             return false;
         }
-        $catalog = \Catalog::create_from_id((int) $input['catalog']);
+        $catalog = Catalog::create_from_id((int) $input['catalog']);
 
         if ($catalog) {
             define('API', true);
@@ -64,7 +70,7 @@ final class CatalogActionMethod
             switch ($task) {
                 case 'clean_catalog':
                     $catalog->clean_catalog_proc();
-                    \Catalog::clean_empty_albums();
+                    Catalog::clean_empty_albums();
                     break;
                 case 'verify_catalog':
                     $catalog->verify_catalog_proc();
@@ -80,11 +86,11 @@ final class CatalogActionMethod
                     $catalog->add_to_catalog($options);
                     break;
             }
-            Api::message('success', 'successfully started: ' . $task, null, $input['api_format']);
+            Api::message('successfully started: ' . $task, $input['api_format']);
         } else {
-            Api::message('error', T_('The requested item was not found'), '404', $input['api_format']);
+            Api::error(T_('Not Found'), '4704', self::ACTION, 'catalog', $input['api_format']);
         }
-        \Session::extend($input['auth']);
+        Session::extend($input['auth']);
 
         return true;
     }

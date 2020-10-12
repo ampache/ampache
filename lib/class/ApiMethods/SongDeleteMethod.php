@@ -28,10 +28,13 @@ namespace Lib\ApiMethods;
 use Api;
 use Catalog;
 use Session;
+use Song;
 use User;
 
 final class SongDeleteMethod
 {
+    private const ACTION = 'song_delete';
+
     /**
      * song_delete
      *
@@ -45,25 +48,27 @@ final class SongDeleteMethod
      */
     public static function song_delete($input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'song_delete')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
-        $song      = new \Song($object_id);
+        $song      = new Song($object_id);
         $user      = User::get_from_username(Session::username($input['auth']));
         if (!Catalog::can_remove($song, $user->id)) {
-            Api::message('error', T_('Access Denied: Unable to delete song'), '412', $input['api_format']);
+            Api::error(T_('Require: 75'), '4742', self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
         if ($song->id) {
             if ($song->remove()) {
-                Api::message('success', 'song ' . $object_id . ' deleted', null, $input['api_format']);
+                Api::message('song ' . $object_id . ' deleted', $input['api_format']);
             } else {
-                Api::message('error', 'song ' . $object_id . ' was not deleted', '400', $input['api_format']);
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                Api::error(printf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
             }
         } else {
-            Api::message('error', 'song ' . $object_id . ' was not found', '404', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(printf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'song', $input['api_format']);
         }
         Session::extend($input['auth']);
 

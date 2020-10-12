@@ -27,10 +27,14 @@ namespace Lib\ApiMethods;
 use AmpConfig;
 use Api;
 use JSON_Data;
+use Session;
+use User;
 use XML_Data;
 
 final class FollowingMethod
 {
+    private const ACTION = 'following';
+
     /**
      * following
      * MINIMUM_API_VERSION=380001
@@ -46,20 +50,20 @@ final class FollowingMethod
     public static function following($input)
     {
         if (!AmpConfig::get('sociable')) {
-            Api::message('error', T_('Access Denied: social features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_parameter($input, array('username'), 'following')) {
+        if (!Api::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
         $username = $input['username'];
         if (!empty($username)) {
-            $user = \User::get_from_username($username);
+            $user = User::get_from_username($username);
             if ($user !== null) {
                 $users = $user->get_following();
                 if (!count($users)) {
-                    Api::message('error', 'User `' . $username . '` does not follow anyone.', '404', $input['api_format']);
+                    Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
                 } else {
                     debug_event('api.class', 'User is following:  ' . print_r($users), 1);
                     ob_end_clean();
@@ -73,10 +77,11 @@ final class FollowingMethod
                 }
             } else {
                 debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
-                Api::message('error', 'User `' . $username . '` cannot be found.', '404', $input['api_format']);
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                Api::error(printf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'system', $input['api_format']);
             }
         }
-        \Session::extend($input['auth']);
+        Session::extend($input['auth']);
 
         return true;
     }

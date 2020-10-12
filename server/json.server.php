@@ -43,18 +43,19 @@ header("Content-type: application/json; charset=" . AmpConfig::get('site_charset
 if (!AmpConfig::get('access_control')) {
     ob_end_clean();
     debug_event('Access Control', 'Error Attempted to use JSON API with Access Control turned off', 3);
-    echo JSON_Data::error('501', T_('Access Control not Enabled'));
-    exit;
+    echo JSON_Data::error('4700', T_('Access Denied'), Core::get_request('action'), 'system');
+
+    return false;
 }
 
 /**
- * Verify the existance of the Session they passed in we do allow them to
+ * Verify the existence of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
  */
 if (!Session::exists('api', $_REQUEST['auth']) && $_REQUEST['action'] != 'handshake' && $_REQUEST['action'] != 'ping') {
     debug_event('Access Denied', 'Invalid Session attempt to API [' . $_REQUEST['action'] . ']', 3);
     ob_end_clean();
-    echo JSON_Data::error('401', T_('Session Expired'));
+    echo JSON_Data::error('4701', T_('Session Expired'), Core::get_request('action'), 'account');
     exit();
 }
 
@@ -64,7 +65,7 @@ $username = ($_REQUEST['action'] == 'handshake') ? $_REQUEST['user'] : Session::
 if (!Access::check_network('init-api', $username, 5)) {
     debug_event('Access Denied', 'Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', 3);
     ob_end_clean();
-    echo JSON_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
+    echo JSON_Data::error('4742', T_('Unauthorized access attempt to API - ACL Error'), Core::get_request('action'), 'account');
     exit();
 }
 
@@ -89,4 +90,4 @@ if ($method !== null) {
 
 // If we manage to get here, we still need to hand out a JSON document
 ob_end_clean();
-echo JSON_Data::error('405', T_('Invalid Request'));
+echo JSON_Data::error('4705', T_('Invalid Request'), (string) $method, 'system');

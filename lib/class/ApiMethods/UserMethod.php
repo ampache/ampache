@@ -29,10 +29,13 @@ use Access;
 use Api;
 use JSON_Data;
 use Session;
+use User;
 use XML_Data;
 
 final class UserMethod
 {
+    private const ACTION = 'user';
+
     /**
      * user
      * MINIMUM_API_VERSION=380001
@@ -45,14 +48,14 @@ final class UserMethod
      */
     public static function user($input)
     {
-        if (!Api::check_parameter($input, array('username'), 'user')) {
+        if (!Api::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
         $username = $input['username'];
         if (!empty($username)) {
-            $user = \User::get_from_username($username);
+            $user = User::get_from_username($username);
             if ($user !== null) {
-                $apiuser  = \User::get_from_username(Session::username($input['auth']));
+                $apiuser  = User::get_from_username(Session::username($input['auth']));
                 $fullinfo = false;
                 // get full info when you're an admin or searching for yourself
                 if (($user->id == $apiuser->id) || (Access::check('interface', 100, $apiuser->id))) {

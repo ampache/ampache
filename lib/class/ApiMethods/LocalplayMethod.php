@@ -26,10 +26,15 @@ namespace Lib\ApiMethods;
 
 use AmpConfig;
 use Api;
+use Localplay;
+use Session;
+use Stream_Playlist;
 use XML_Data;
 
 final class LocalplayMethod
 {
+    private const ACTION = 'localplay';
+
     /**
      * localplay
      * MINIMUM_API_VERSION=380001
@@ -46,11 +51,11 @@ final class LocalplayMethod
      */
     public static function localplay($input)
     {
-        if (!Api::check_parameter($input, array('command'), 'localplay')) {
+        if (!Api::check_parameter($input, array('command'), self::ACTION)) {
             return false;
         }
         // Load their Localplay instance
-        $localplay = new \Localplay(AmpConfig::get('localplay_controller'));
+        $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->connect();
 
         $result = false;
@@ -69,13 +74,14 @@ final class LocalplayMethod
                     'object_type' => $type,
                     'object_id' => $oid,
                 );
-                $playlist = new \Stream_Playlist();
+                $playlist = new Stream_Playlist();
                 $playlist->add(array($media));
                 foreach ($playlist->urls as $streams) {
                     $result = $localplay->add_url($streams);
                 }
                 break;
             case 'next':
+            case 'skip':
                 $result = $localplay->next();
                 break;
             case 'prev':
@@ -100,17 +106,14 @@ final class LocalplayMethod
                 $result = $localplay->volume_mute();
                 break;
             case 'delete_all':
-                $result = $localplay->volume_down();
-                break;
-            case 'skip':
-                $result = $localplay->volume_mute();
+                $result = $localplay->delete_all();
                 break;
             case 'status':
                 $status = $localplay->status();
                 break;
             default:
                 // They are doing it wrong
-                Api::message('error', T_('Invalid request'), '400', $input['api_format']);
+                Api::error(T_('Bad Request'), '4710', self::ACTION, 'command', $input['api_format']);
 
                 return false;
         } // end switch on command
@@ -124,7 +127,7 @@ final class LocalplayMethod
             default:
                 echo XML_Data::keyed_array($output_array);
         }
-        \Session::extend($input['auth']);
+        Session::extend($input['auth']);
 
         return true;
     }

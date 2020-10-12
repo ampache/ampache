@@ -83,15 +83,13 @@ class JSON_Data
      *
      * @param string $code Error code
      * @param string $string Error message
-     * @param array $return_data
+     * @param string $action Error method
+     * @param string $type Error type
      * @return string return error message JSON
      */
-    public static function error($code, $string, $return_data = array())
+    public static function error($code, $string, $action, $type)
     {
-        $message = array("error" => array("code" => $code, "message" => $string));
-        foreach ($return_data as $title => $data) {
-            $message[$title] = $data;
-        }
+        $message = array("error" => array("errorCode" => $code, "errorAction" => $action, "errorType" => $type, "errorMessage" => $string));
 
         return json_encode($message, JSON_PRETTY_PRINT);
     } // error
@@ -184,7 +182,8 @@ class JSON_Data
             case 'podcast':
                 return self::podcasts($objects);
             default:
-                return self::error('401', T_('Wrong object type ' . $type));
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                return self::error('4710', printf(T_('Bad Request: %s'), $type), 'indexes', 'type');
         }
     } // indexes
 

@@ -26,10 +26,13 @@ namespace Lib\ApiMethods;
 
 use Api;
 use JSON_Data;
+use Session;
 use XML_Data;
 
 final class CatalogMethod
 {
+    private const ACTION = 'catalog';
+
     /**
      * catalog
      * MINIMUM_API_VERSION=420000
@@ -42,7 +45,7 @@ final class CatalogMethod
      */
     public static function catalog($input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'catalog')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $catalog = array((int) $input['filter']);
@@ -55,7 +58,7 @@ final class CatalogMethod
             default:
                 echo XML_Data::catalogs($catalog);
         }
-        \Session::extend($input['auth']);
+        Session::extend($input['auth']);
 
         return true;
     }

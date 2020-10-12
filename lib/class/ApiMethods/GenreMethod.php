@@ -32,6 +32,8 @@ use XML_Data;
 
 final class GenreMethod
 {
+    private const ACTION = 'genre';
+
     /**
      * genre
      * MINIMUM_API_VERSION=380001
@@ -44,7 +46,7 @@ final class GenreMethod
      */
     public static function genre($input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'genre')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $uid = scrub_in($input['filter']);

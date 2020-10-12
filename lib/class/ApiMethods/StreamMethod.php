@@ -25,9 +25,14 @@ declare(strict_types=0);
 namespace Lib\ApiMethods;
 
 use Api;
+use Session;
+use Song;
+use User;
 
 final class StreamMethod
 {
+    private const ACTION = 'stream';
+
     /**
      * stream
      * MINIMUM_API_VERSION=400001
@@ -46,12 +51,12 @@ final class StreamMethod
      */
     public static function stream($input)
     {
-        if (!Api::check_parameter($input, array('id', 'type'), 'stream')) {
+        if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
             return false;
         }
         $fileid  = $input['id'];
         $type    = $input['type'];
-        $user_id = \User::get_from_username(\Session::username($input['auth']))->id;
+        $user_id = User::get_from_username(Session::username($input['auth']))->id;
 
         $maxBitRate    = $input['bitrate'];
         $format        = $input['format']; // mp3, flv or raw
@@ -75,18 +80,19 @@ final class StreamMethod
 
         $url = '';
         if ($type == 'song') {
-            $url = \Song::generic_play_url('song', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
+            $url = Song::generic_play_url('song', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
         }
         if ($type == 'podcast') {
-            $url = \Song::generic_play_url('podcast_episode', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
+            $url = Song::generic_play_url('podcast_episode', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
         }
         if (!empty($url)) {
             header('Location: ' . str_replace(':443/play', '/play', $url));
 
             return true;
         }
-        Api::message('error', 'failed to create: ' . $url, '400', $input['api_format']);
-        \Session::extend($input['auth']);
+        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+        Api::error(printf(T_('Bad Request: %s'), $url), '4710', self::ACTION, 'system', $input['api_format']);
+        Session::extend($input['auth']);
 
         return true;
     }

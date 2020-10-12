@@ -27,11 +27,14 @@ namespace Lib\ApiMethods;
 
 use Access;
 use Api;
+use Playlist;
 use Session;
 use User;
 
 final class PlaylistEditMethod
 {
+    private const ACTION = 'playlist_edit';
+
     /**
      * playlist_edit
      * MINIMUM_API_VERSION=400001
@@ -51,7 +54,7 @@ final class PlaylistEditMethod
      */
     public static function playlist_edit($input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'playlist_edit')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $name  = $input['name'];
@@ -67,11 +70,11 @@ final class PlaylistEditMethod
 
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
-        $playlist = new \Playlist($input['filter']);
+        $playlist = new Playlist($input['filter']);
 
         // don't continue if you didn't actually get a playlist or the access level
         if (!$playlist->id || (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
-            Api::message('error', T_('Access denied to this playlist'), '412', $input['api_format']);
+            Api::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
@@ -100,11 +103,11 @@ final class PlaylistEditMethod
         Session::extend($input['auth']);
         // if you didn't make any changes; tell me
         if (!($name || $type) && !$change_made) {
-            Api::message('error', T_('Nothing was changed'), '400', $input['api_format']);
+            Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);
 
             return false;
         }
-        Api::message('success', 'playlist changes saved', null, $input['api_format']);
+        Api::message('playlist changes saved', $input['api_format']);
 
         return true;
     }

@@ -38,6 +38,8 @@ use XML_Data;
 
 final class HandshakeMethod
 {
+    private const ACTION = 'handshake';
+
     /**
      * handshake
      * MINIMUM_API_VERSION=380001
@@ -97,7 +99,7 @@ final class HandshakeMethod
                     ($timestamp > (time() + 1800))) {
                     debug_event('api.class', 'Login failed, timestamp is out of range ' . $timestamp . '/' . time(), 1);
                     AmpError::add('api', T_('Login failed, timestamp is out of range'));
-                    Api::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '401', $input['api_format']);
+                    Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '4701', self::ACTION, 'account', $input['api_format']);
 
                     return false;
                 }
@@ -110,7 +112,7 @@ final class HandshakeMethod
                 if (!$realpwd) {
                     debug_event('api.class', 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Incorrect username or password'));
-                    Api::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '401', $input['api_format']);
+                    Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '4701', self::ACTION, 'account', $input['api_format']);
 
                     return false;
                 }
@@ -190,7 +192,7 @@ final class HandshakeMethod
         } // end while
 
         debug_event('api.class', 'Login Failed, unable to match passphrase', 1);
-        Api::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), '401', $input['api_format']);
+        Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), '4701', self::ACTION, 'account', $input['api_format']);
 
         return false;
     }

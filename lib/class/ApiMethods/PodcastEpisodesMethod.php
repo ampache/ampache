@@ -28,12 +28,15 @@ namespace Lib\ApiMethods;
 use AmpConfig;
 use Api;
 use JSON_Data;
+use Podcast;
 use Session;
 use User;
 use XML_Data;
 
 final class PodcastEpisodesMethod
 {
+    private const ACTION = 'podcast_episodes';
+
     /**
      * podcast_episodes
      * MINIMUM_API_VERSION=420000
@@ -49,17 +52,17 @@ final class PodcastEpisodesMethod
     public static function podcast_episodes($input)
     {
         if (!AmpConfig::get('podcast')) {
-            Api::message('error', T_('Access Denied: podcast features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_parameter($input, array('filter'), 'podcast_episodes')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
         $uid  = (int) scrub_in($input['filter']);
         debug_event('api.class', 'User ' . $user->id . ' loading podcast: ' . $input['filter'], 5);
-        $podcast = new \Podcast($uid);
+        $podcast = new Podcast($uid);
         $items   = $podcast->get_episodes();
 
         ob_end_clean();

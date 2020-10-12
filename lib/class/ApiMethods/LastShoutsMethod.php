@@ -27,10 +27,14 @@ namespace Lib\ApiMethods;
 use AmpConfig;
 use Api;
 use JSON_Data;
+use Session;
+use Shoutbox;
 use XML_Data;
 
 final class LastShoutsMethod
 {
+    private const ACTION = 'last_shouts';
+
     /**
      * last_shouts
      * MINIMUM_API_VERSION=380001
@@ -45,11 +49,11 @@ final class LastShoutsMethod
     public static function last_shouts($input)
     {
         if (!AmpConfig::get('sociable')) {
-            Api::message('error', T_('Access Denied: social features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_parameter($input, array('username'), 'last_shouts')) {
+        if (!Api::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
         $limit = (int) ($input['limit']);
@@ -58,8 +62,8 @@ final class LastShoutsMethod
         }
         $username = $input['username'];
         $shouts   = (!empty($username))
-            ? \Shoutbox::get_top($limit, $username)
-            : \Shoutbox::get_top($limit);
+            ? Shoutbox::get_top($limit, $username)
+            : Shoutbox::get_top($limit);
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -69,7 +73,7 @@ final class LastShoutsMethod
             default:
                 echo XML_Data::shouts($shouts);
         }
-        \Session::extend($input['auth']);
+        Session::extend($input['auth']);
 
         return true;
     }

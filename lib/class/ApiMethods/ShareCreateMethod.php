@@ -31,10 +31,13 @@ use Api;
 use Core;
 use JSON_Data;
 use Session;
+use Share;
 use XML_Data;
 
 final class ShareCreateMethod
 {
+    private const ACTION = 'share_create';
+
     /**
      * share_create
      * MINIMUM_API_VERSION=420000
@@ -51,35 +54,37 @@ final class ShareCreateMethod
     public static function share_create($input)
     {
         if (!AmpConfig::get('share')) {
-            Api::message('error', T_('Access Denied: sharing features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_parameter($input, array('type', 'filter'), 'share_create')) {
+        if (!Api::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;
         }
         $description = $input['description'];
         $object_id   = $input['filter'];
         $object_type = $input['type'];
         $download    = Access::check_function('download');
-        $expire_days = \Share::get_expiry($input['expires']);
+        $expire_days = Share::get_expiry($input['expires']);
         // confirm the correct data
         if (!in_array($object_type, array('song', 'album', 'artist'))) {
-            Api::message('error', T_('Wrong object type ' . $object_type), '400', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(T_('Bad Request'), '4710', self::ACTION, $object_type, $input['api_format']);
 
             return false;
         }
         $share = array();
         if (!Core::is_library_item($object_type) || !$object_id) {
-            Api::message('error', T_('Wrong library item type'), '400', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(T_('Bad Request'), '4710', self::ACTION, $object_type, $input['api_format']);
         } else {
             $item = new $object_type($object_id);
             if (!$item->id) {
-                Api::message('error', T_('Library item not found'), '404', $input['api_format']);
+                Api::error(T_('Not Found'), '4704', self::ACTION, 'filter', $input['api_format']);
 
                 return false;
             }
-            $share[] = \Share::create_share($object_type, $object_id, true, $download, $expire_days, generate_password(8), 0, $description);
+            $share[] = Share::create_share($object_type, $object_id, true, $download, $expire_days, generate_password(8), 0, $description);
         }
         ob_end_clean();
         switch ($input['api_format']) {

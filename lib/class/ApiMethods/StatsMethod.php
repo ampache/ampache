@@ -25,15 +25,23 @@ declare(strict_types=0);
 
 namespace Lib\ApiMethods;
 
+use Album;
 use AmpConfig;
 use Api;
+use Artist;
 use JSON_Data;
+use Random;
+use Rating;
 use Session;
+use Stats;
 use User;
+use Userflag;
 use XML_Data;
 
 final class StatsMethod
 {
+    private const ACTION = 'stats';
+
     /**
      * stats
      * MINIMUM_API_VERSION=380001
@@ -54,7 +62,7 @@ final class StatsMethod
      */
     public static function stats($input)
     {
-        if (!Api::check_parameter($input, array('type', 'filter'), 'stats')) {
+        if (!Api::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;
         }
         // set a default user
@@ -85,16 +93,16 @@ final class StatsMethod
         switch ($input['filter']) {
             case 'newest':
                 debug_event('api.class', 'stats newest', 5);
-                $results = \Stats::get_newest($type, $limit, $offset);
+                $results = Stats::get_newest($type, $limit, $offset);
                 break;
             case 'highest':
                 debug_event('api.class', 'stats highest', 4);
-                $results = \Rating::get_highest($type, $limit, $offset);
+                $results = Rating::get_highest($type, $limit, $offset);
                 break;
             case 'frequent':
                 debug_event('api.class', 'stats frequent', 4);
                 $threshold = AmpConfig::get('stats_threshold');
-                $results   = \Stats::get_top($type, $limit, $threshold, $offset);
+                $results   = Stats::get_top($type, $limit, $threshold, $offset);
                 break;
             case 'recent':
             case 'forgotten':
@@ -102,24 +110,24 @@ final class StatsMethod
                 $newest  = $input['filter'] == 'recent';
                 $results = ($user->id)
                     ? $user->get_recently_played($limit, $type, $newest)
-                    : \Stats::get_recent($type, $limit, $offset, $newest);
+                    : Stats::get_recent($type, $limit, $offset, $newest);
                 break;
             case 'flagged':
                 debug_event('api.class', 'stats flagged', 4);
-                $results = \Userflag::get_latest($type, $user_id, $limit, $offset);
+                $results = Userflag::get_latest($type, $user_id, $limit, $offset);
                 break;
             case 'random':
             default:
                 debug_event('api.class', 'stats random ' . $type, 4);
                 switch ($type) {
                     case 'song':
-                        $results = \Random::get_default($limit, $user_id);
+                        $results = Random::get_default($limit, $user_id);
                         break;
                     case 'artist':
-                        $results = \Artist::get_random($limit, false, $user_id);
+                        $results = Artist::get_random($limit, false, $user_id);
                         break;
                     case 'album':
-                        $results = \Album::get_random($limit, false, $user_id);
+                        $results = Album::get_random($limit, false, $user_id);
                 }
         }
 
@@ -157,7 +165,7 @@ final class StatsMethod
 
             return true;
         }
-        Api::message('error', 'No Results', '404', $input['api_format']);
+        Api::error(T_('No Results'), '4704', self::ACTION,'empty',$input['api_format']);
 
         return false;
     }

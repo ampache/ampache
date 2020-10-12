@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Lib\ApiMethods;
 
+use Album;
 use AmpConfig;
 use Api;
 use JSON_Data;
@@ -33,6 +34,8 @@ use XML_Data;
 
 class AlbumSongsMethod
 {
+    private const ACTION = 'album_songs';
+
     /**
      * album_songs
      * MINIMUM_API_VERSION=380001
@@ -47,10 +50,10 @@ class AlbumSongsMethod
      */
     public static function album_songs($input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'album_songs')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $album = new \Album($input['filter']);
+        $album = new Album($input['filter']);
         $songs = array();
         $user  = User::get_from_username(Session::username($input['auth']));
 
@@ -60,7 +63,7 @@ class AlbumSongsMethod
         if (AmpConfig::get('album_group')) {
             $disc_ids = $album->get_group_disks_ids();
             foreach ($disc_ids as $discid) {
-                $disc     = new \Album($discid);
+                $disc     = new Album($discid);
                 $allsongs = $disc->get_songs();
                 foreach ($allsongs as $songid) {
                     $songs[] = $songid;

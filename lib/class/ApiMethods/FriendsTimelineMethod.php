@@ -26,10 +26,15 @@ namespace Lib\ApiMethods;
 
 use AmpConfig;
 use JSON_Data;
+use Session;
+use User;
+use Useractivity;
 use XML_Data;
 
 final class FriendsTimelineMethod
 {
+    private const ACTION = 'friends_timeline';
+
     /**
      * friends_timeline
      * MINIMUM_API_VERSION=380001
@@ -45,10 +50,10 @@ final class FriendsTimelineMethod
         if (AmpConfig::get('sociable')) {
             $limit = (int) ($input['limit']);
             $since = (int) ($input['since']);
-            $user  = \User::get_from_username(\Session::username($input['auth']))->id;
+            $user  = User::get_from_username(Session::username($input['auth']))->id;
 
             if ($user > 0) {
-                $activities = \Useractivity::get_friends_activities($user, $limit, $since);
+                $activities = Useractivity::get_friends_activities($user, $limit, $since);
                 ob_end_clean();
                 switch ($input['api_format']) {
                     case 'json':
@@ -61,6 +66,6 @@ final class FriendsTimelineMethod
         } else {
             debug_event('api.class', 'Sociable feature is not enabled.', 3);
         }
-        \Session::extend($input['auth']);
+        Session::extend($input['auth']);
     }
 }

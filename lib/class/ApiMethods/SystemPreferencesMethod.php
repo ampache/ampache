@@ -25,10 +25,15 @@ declare(strict_types=0);
 namespace Lib\ApiMethods;
 
 use Api;
+use Preference;
+use Session;
+use User;
 use XML_Data;
 
 final class SystemPreferencesMethod
 {
+    private const ACTION = 'system_preferences';
+
     /**
      * system_preferences
      * MINIMUM_API_VERSION=430000
@@ -40,11 +45,11 @@ final class SystemPreferencesMethod
      */
     public static function system_preferences($input)
     {
-        $user = \User::get_from_username(\Session::username($input['auth']));
-        if (!Api::check_access('interface', 100, $user->id)) {
+        $user = User::get_from_username(Session::username($input['auth']));
+        if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $preferences  = \Preference::get_all(-1);
+        $preferences  = Preference::get_all(-1);
         $output_array = array('preferences' => $preferences);
         switch ($input['api_format']) {
             case 'json':
@@ -53,6 +58,8 @@ final class SystemPreferencesMethod
             default:
                 echo XML_Data::object_array($output_array['preferences'], 'preferences', 'pref');
         }
-        \Session::extend($input['auth']);
+        Session::extend($input['auth']);
+
+        return true;
     }
 }

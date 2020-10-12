@@ -25,9 +25,13 @@ declare(strict_types=0);
 namespace Lib\ApiMethods;
 
 use Api;
+use Catalog;
+use Session;
 
 final class UpdateFromTagsMethod
 {
+    private const ACTION = 'update_from_tags';
+
     /**
      * update_from_tags
      * MINIMUM_API_VERSION=400001
@@ -41,7 +45,7 @@ final class UpdateFromTagsMethod
      */
     public static function update_from_tags($input)
     {
-        if (!Api::check_parameter($input, array('type', 'id'), 'update_from_tags')) {
+        if (!Api::check_parameter($input, array('type', 'id'), self::ACTION)) {
             return false;
         }
         $type   = (string) $input['type'];
@@ -49,21 +53,22 @@ final class UpdateFromTagsMethod
 
         // confirm the correct data
         if (!in_array($type, array('artist', 'album', 'song'))) {
-            Api::message('error', T_('Incorrect object type') . ' ' . $type, '400', $input['api_format']);
+            Api::error(printf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
         $item = new $type($object);
         if (!$item->id) {
-            Api::message('error', T_('The requested item was not found'), '404', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(printf(T_('Not Found: %s'), $object), '4704', self::ACTION, 'id', $input['api_format']);
 
             return false;
         }
         // update your object
-        \Catalog::update_single_item($type, $object, true);
+        Catalog::update_single_item($type, $object, true);
 
-        Api::message('success', 'Updated tags for: ' . (string) $object . ' (' . $type . ')', null, $input['api_format']);
-        \Session::extend($input['auth']);
+        Api::message('Updated tags for: ' . (string) $object . ' (' . $type . ')', $input['api_format']);
+        Session::extend($input['auth']);
 
         return true;
     }

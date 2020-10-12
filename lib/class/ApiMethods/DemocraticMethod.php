@@ -25,11 +25,17 @@ declare(strict_types=0);
 namespace Lib\ApiMethods;
 
 use Api;
+use Democratic;
 use JSON_Data;
+use Session;
+use Song;
+use User;
 use XML_Data;
 
 final class DemocraticMethod
 {
+    private const ACTION = 'democratic';
+
     /**
      * democratic
      * MINIMUM_API_VERSION=380001
@@ -43,15 +49,17 @@ final class DemocraticMethod
     public static function democratic($input)
     {
         // Load up democratic information
-        $democratic = \Democratic::get_current_playlist();
+        $democratic = Democratic::get_current_playlist();
         $democratic->set_parent();
 
         switch ($input['method']) {
             case 'vote':
-                $type  = 'song';
-                $media = new \Song($input['oid']);
+                $type   = 'song';
+                $object = (int) $input['oid'];
+                $media  = new Song($object);
                 if (!$media->id) {
-                    Api::message('error', T_('Media object invalid or not specified'), '404', $input['api_format']);
+                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                    Api::error(printf(T_('Not Found: %s'), $object), '4704', self::ACTION, 'type', $input['api_format']);
                     break;
                 }
                 $democratic->add_vote(array(
@@ -72,10 +80,12 @@ final class DemocraticMethod
                 }
                 break;
             case 'devote':
-                $type  = 'song';
-                $media = new \Song($input['oid']);
+                $type   = 'song';
+                $object = (int) $input['oid'];
+                $media  = new Song($object);
                 if (!$media->id) {
-                    Api::message('error', T_('Media object invalid or not specified'), '404', $input['api_format']);
+                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                    Api::error(printf(T_('Not Found: %s'), $object), '4704', self::ACTION, 'type', $input['api_format']);
                 }
 
                 $uid = $democratic->get_uid_from_object_id($media->id, $type);
@@ -93,9 +103,9 @@ final class DemocraticMethod
                 break;
             case 'playlist':
                 $objects = $democratic->get_items();
-                $user    = \User::get_from_username(\Session::username($input['auth']));
-                \Song::build_cache($democratic->object_ids);
-                \Democratic::build_vote_cache($democratic->vote_ids);
+                $user    = User::get_from_username(Session::username($input['auth']));
+                Song::build_cache($democratic->object_ids);
+                Democratic::build_vote_cache($democratic->vote_ids);
                 switch ($input['api_format']) {
                     case 'json':
                         echo JSON_Data::democratic($objects, $user->id);
@@ -116,9 +126,9 @@ final class DemocraticMethod
                 }
                 break;
             default:
-                Api::message('error', T_('Invalid request'), '400', $input['api_format']);
+                Api::error(T_('Invalid request'), '4710', self::ACTION, 'method', $input['api_format']);
                 break;
         }
-        \Session::extend($input['auth']);
+        Session::extend($input['auth']);
     }
 }

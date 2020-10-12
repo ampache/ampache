@@ -25,9 +25,15 @@ declare(strict_types=0);
 namespace Lib\ApiMethods;
 
 use Api;
+use Artist;
+use Recommendation;
+use Session;
+use User;
 
 final class UpdateArtistInfoMethod
 {
+    private const ACTION = 'update_artist_info';
+
     /**
      * update_artist_info
      * MINIMUM_API_VERSION=400001
@@ -41,28 +47,29 @@ final class UpdateArtistInfoMethod
      */
     public static function update_artist_info($input)
     {
-        if (!Api::check_parameter($input, array('id'), 'update_artist_info')) {
+        if (!Api::check_parameter($input, array('id'), self::ACTION)) {
             return false;
         }
-        if (!Api::check_access('interface', 75, \User::get_from_username(\Session::username($input['auth']))->id, 'update_artist_info', $input['api_format'])) {
+        if (!Api::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         $object = (int) $input['id'];
-        $item   = new \Artist($object);
+        $item   = new Artist($object);
         if (!$item->id) {
-            Api::message('error', T_('The requested item was not found'), '404', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(printf(T_('Not Found: %s'), $object), '4704', self::ACTION, 'id', $input['api_format']);
 
             return false;
         }
-        // update your object
-        // need at least catalog_manager access to the db
-        if (!empty(\Recommendation::get_artist_info($object) || !empty(\Recommendation::get_artists_like($object)))) {
-            Api::message('success', 'Updated artist info: ' . (string) $object, null, $input['api_format']);
+        // update your object, you need at least catalog_manager access to the db
+        if (!empty(Recommendation::get_artist_info($object) || !empty(Recommendation::get_artists_like($object)))) {
+            Api::message('Updated artist info: ' . (string) $object, $input['api_format']);
 
             return true;
         }
-        Api::message('error', T_('Failed to update_artist_info or recommendations for ' . (string) $object), '400', $input['api_format']);
-        \Session::extend($input['auth']);
+        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+        Api::error(printf(T_('Bad Request: %s'), $object), '4710', self::ACTION, 'system', $input['api_format']);
+        Session::extend($input['auth']);
 
         return true;
     }

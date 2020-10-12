@@ -33,6 +33,8 @@ use XML_Data;
 
 final class LicensesMethod
 {
+    private const ACTION = 'licenses';
+
     /**
      * licenses
      * MINIMUM_API_VERSION=420000
@@ -49,7 +51,7 @@ final class LicensesMethod
     public static function licenses($input)
     {
         if (!AmpConfig::get('licensing')) {
-            Api::message('error', T_('Access Denied: licensing features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: licensing'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

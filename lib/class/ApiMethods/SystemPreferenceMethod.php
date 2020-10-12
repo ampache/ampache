@@ -32,6 +32,8 @@ use XML_Data;
 
 final class SystemPreferenceMethod
 {
+    private const ACTION = 'system_preference';
+
     /**
      * system_preference
      * MINIMUM_API_VERSION=430000
@@ -44,17 +46,18 @@ final class SystemPreferenceMethod
      */
     public static function system_preference($input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'system_preference')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
-        if (!Api::check_access('interface', 100, $user->id)) {
+        if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         $pref_name  = (string) $input['filter'];
         $preference = Preference::get($pref_name, -1);
         if (empty($preference)) {
-            Api::message('error', 'not found: ' . $pref_name, '404', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(printf(T_('Not Found: %s'), $pref_name), '4704', self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }

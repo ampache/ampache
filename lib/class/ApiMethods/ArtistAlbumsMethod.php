@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Lib\ApiMethods;
 
 use Api;
+use Artist;
 use JSON_Data;
 use Session;
 use User;
@@ -33,6 +34,8 @@ use XML_Data;
 
 final class ArtistAlbumsMethod
 {
+    private const ACTION = 'artist_albums';
+
     /**
      * artist_albums
      * MINIMUM_API_VERSION=380001
@@ -47,10 +50,10 @@ final class ArtistAlbumsMethod
      */
     public static function artist_albums($input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'artist_albums')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $artist = new \Artist($input['filter']);
+        $artist = new Artist($input['filter']);
         $albums = $artist->get_albums();
         $user   = User::get_from_username(Session::username($input['auth']));
 

@@ -136,7 +136,7 @@ class Api
     /**
      *  @var string $version
      */
-    public static $version = '430000';
+    public static $version = '5.0.0';
 
     /**
      *  @var Browse $browse
@@ -166,33 +166,42 @@ class Api
     /**
      * message
      * call the correct error / success message depending on format
+     * @param string $message
+     * @param string $format
+     * @param array $return_data
+     */
+    public static function message($message, $format = 'xml', $return_data = array())
+    {
+        switch ($format) {
+            case 'json':
+                echo JSON_Data::success($message, $return_data);
+                break;
+            default:
+                echo XML_Data::success($message, $return_data);
+        }
+    } // message
+
+    /**
+     * error
+     * call the correct error / success message depending on format
      * @param string $type
      * @param string $message
+     * @param string $method
+     * @param string $error_type
      * @param string $error_code
      * @param string $format
      * @param array $return_data
      */
-    public static function message($type, $message, $error_code = null, $format = 'xml', $return_data = array())
+    public static function error($message, $error_code, $method, $error_type, $format = 'xml')
     {
-        if ($type === 'error') {
             switch ($format) {
                 case 'json':
-                    echo JSON_Data::error($error_code, $message, $return_data);
+                    echo JSON_Data::error($error_code, $message, $method, $error_type);
                     break;
                 default:
-                    echo XML_Data::error($error_code, $message, $return_data);
+                    echo XML_Data::error($error_code, $message, $method, $error_type);
             }
-        }
-        if ($type === 'success') {
-            switch ($format) {
-                case 'json':
-                    echo JSON_Data::success($message, $return_data);
-                    break;
-                default:
-                    echo XML_Data::success($message, $return_data);
-            }
-        }
-    } // message
+    } // error
 
     /**
      * set_filter
@@ -260,7 +269,7 @@ class Api
      * @param string $method
      * @return boolean
      */
-    public static function check_parameter($input, $parameters, $method = '')
+    public static function check_parameter($input, $parameters, $method)
     {
         foreach ($parameters as $parameter) {
             if ($input[$parameter] === 0 || $input[$parameter] === '0') {
@@ -268,7 +277,8 @@ class Api
             }
             if (empty($input[$parameter])) {
                 debug_event('api.class', "'" . $parameter . "' required on " . $method . " function call.", 2);
-                self::message('error', T_('Missing mandatory parameter') . " '" . $parameter . "'", '400', $input['api_format']);
+                /* HINT: missing parameter name (object_type, username, etc) */
+                self::error(printf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);
 
                 return false;
             }
@@ -290,11 +300,12 @@ class Api
      * @param string $format
      * @return boolean
      */
-    public static function check_access($type, $level, $user_id, $method = '', $format = 'xml')
+    public static function check_access($type, $level, $user_id, $method, $format = 'xml')
     {
         if (!Access::check($type, $level, $user_id)) {
             debug_event('api.class', $type . " '" . $level . "' required on " . $method . " function call.", 2);
-            self::message('error', 'User does not have access to this function', '412', $format);
+            /* HINT: Access level, eg 75, 100 */
+            self::error(printf(T_('Require: %s'), $level), '4742', $method, 'account', $format);
 
             return false;
         }

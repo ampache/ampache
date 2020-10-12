@@ -28,10 +28,13 @@ namespace Lib\ApiMethods;
 use AmpConfig;
 use Api;
 use Session;
+use Share;
 use User;
 
 final class ShareDeleteMethod
 {
+    private const ACTION = 'share_delete';
+
     /**
      * share_delete
      *
@@ -46,23 +49,25 @@ final class ShareDeleteMethod
     public static function share_delete($input)
     {
         if (!AmpConfig::get('share')) {
-            Api::message('error', T_('Access Denied: sharing features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_parameter($input, array('filter'), 'share_delete')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = $input['filter'];
-        if (in_array($object_id, \Share::get_share_list())) {
-            if (\Share::delete_share($object_id, $user)) {
-                Api::message('success', 'share ' . $object_id . ' deleted', null, $input['api_format']);
+        if (in_array($object_id, Share::get_share_list())) {
+            if (Share::delete_share($object_id, $user)) {
+                Api::message('share ' . $object_id . ' deleted', $input['api_format']);
             } else {
-                Api::message('error', 'share ' . $object_id . ' was not deleted', '400', $input['api_format']);
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                Api::error(printf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
             }
         } else {
-            Api::message('error', 'share ' . $object_id . ' was not found', '404', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(printf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'share', $input['api_format']);
         }
         Session::extend($input['auth']);
 

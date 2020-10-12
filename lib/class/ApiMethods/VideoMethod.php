@@ -33,6 +33,8 @@ use XML_Data;
 
 final class VideoMethod
 {
+    private const ACTION = 'video';
+
     /**
      * video
      * This returns a single video
@@ -43,7 +45,7 @@ final class VideoMethod
      */
     public static function video($input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'video')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $video_id = scrub_in($input['filter']);

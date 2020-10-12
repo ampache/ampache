@@ -28,11 +28,14 @@ namespace Lib\ApiMethods;
 use AmpConfig;
 use Api;
 use JSON_Data;
+use Podcast_Episode;
 use Session;
 use XML_Data;
 
 final class PodcastEpisodeMethod
 {
+    private const ACTION = 'podcast_episode';
+
     /**
      * podcast_episode
      * MINIMUM_API_VERSION=420000
@@ -46,15 +49,15 @@ final class PodcastEpisodeMethod
     public static function podcast_episode($input)
     {
         if (!AmpConfig::get('podcast')) {
-            Api::message('error', T_('Access Denied: podcast features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_parameter($input, array('filter'), 'podcast_episode')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
-        $episode   = new \Podcast_Episode($object_id);
+        $episode   = new Podcast_Episode($object_id);
         if ($episode->id > 0) {
             ob_end_clean();
             switch ($input['api_format']) {
@@ -65,7 +68,8 @@ final class PodcastEpisodeMethod
                     echo XML_Data::podcast_episodes(array($object_id));
             }
         } else {
-            Api::message('error', 'podcast_episode ' . $object_id . ' was not found', '404', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(printf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
         }
         Session::extend($input['auth']);
 

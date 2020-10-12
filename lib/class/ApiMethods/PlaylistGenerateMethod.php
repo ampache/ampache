@@ -25,7 +25,9 @@ declare(strict_types=0);
 
 namespace Lib\ApiMethods;
 
+use Album;
 use AmpConfig;
+use Artist;
 use JSON_Data;
 use Search;
 use Session;
@@ -34,6 +36,8 @@ use XML_Data;
 
 final class PlaylistGenerateMethod
 {
+    private const ACTION = 'playlist_generate';
+
     /**
      * playlist_generate
      * MINIMUM_API_VERSION=400001
@@ -106,7 +110,7 @@ final class PlaylistGenerateMethod
             $array['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }
-        $album = new \Album((int) $input['album']);
+        $album = new Album((int) $input['album']);
         if ((array_key_exists('album', $input)) && ($album->id == $input['album'])) {
             // set rule
             $array['rule_' . $rule_count]               = 'album';
@@ -114,7 +118,7 @@ final class PlaylistGenerateMethod
             $array['rule_' . $rule_count . '_operator'] = 4;
             $rule_count++;
         }
-        $artist = new \Artist((int) $input['artist']);
+        $artist = new Artist((int) $input['artist']);
         if ((array_key_exists('artist', $input)) && ($artist->id == $input['artist'])) {
             // set rule
             $array['rule_' . $rule_count]               = 'artist';

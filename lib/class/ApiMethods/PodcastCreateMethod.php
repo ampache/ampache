@@ -21,17 +21,22 @@
  *
  */
 
+declare(strict_types=0);
+
 namespace Lib\ApiMethods;
 
 use AmpConfig;
 use Api;
 use JSON_Data;
+use Podcast;
 use Session;
 use User;
 use XML_Data;
 
 final class PodcastCreateMethod
 {
+    private const ACTION = 'podcast_create';
+
     /**
      * podcast_create
      * MINIMUM_API_VERSION=420000
@@ -46,20 +51,20 @@ final class PodcastCreateMethod
     public static function podcast_create($input)
     {
         if (!AmpConfig::get('podcast')) {
-            Api::message('error', T_('Access Denied: podcast features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'podcast_create', $input['api_format'])) {
+        if (!Api::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (!Api::check_parameter($input, array('url', 'catalog'), 'podcast_create')) {
+        if (!Api::check_parameter($input, array('url', 'catalog'), self::ACTION)) {
             return false;
         }
         $data            = array();
         $data['feed']    = urldecode($input['url']);
         $data['catalog'] = $input['catalog'];
-        $podcast         = \Podcast::create($data, true);
+        $podcast         = Podcast::create($data, true);
         if ($podcast) {
             ob_end_clean();
             switch ($input['api_format']) {
@@ -70,7 +75,7 @@ final class PodcastCreateMethod
                     echo XML_Data::podcasts(array($podcast));
             }
         } else {
-            Api::message('error', T_('Failed: podcast was not created.'), '400', $input['api_format']);
+            Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);
         }
         Session::extend($input['auth']);
 

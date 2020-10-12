@@ -33,6 +33,8 @@ use XML_Data;
 
 final class GetSimilarMethod
 {
+    private const ACTION = 'get_similar';
+
     /**
      * get_similar
      * MINIMUM_API_VERSION=420000
@@ -48,14 +50,14 @@ final class GetSimilarMethod
      */
     public static function get_similar($input)
     {
-        if (!Api::check_parameter($input, array('type', 'filter'), 'get_similar')) {
+        if (!Api::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;
         }
         $type   = (string) $input['type'];
         $filter = (int) $input['filter'];
         // confirm the correct data
         if (!in_array($type, array('song', 'artist'))) {
-            Api::message('error', T_('Incorrect object type') . ' ' . $type, '400', $input['api_format']);
+            Api::error(printf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }

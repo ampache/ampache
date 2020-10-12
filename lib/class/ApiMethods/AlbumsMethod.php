@@ -33,6 +33,8 @@ use XML_Data;
 
 final class AlbumsMethod
 {
+    private const ACTION = 'albums';
+
     /**
      * albums
      * MINIMUM_API_VERSION=380001

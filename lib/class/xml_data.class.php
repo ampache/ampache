@@ -103,15 +103,17 @@ class XML_Data
      *
      * @param string $code Error code
      * @param string $string Error message
-     * @param array $return_data
+     * @param string $action
+     * @param string $type
      * @return string return error message xml
      */
-    public static function error($code, $string, $return_data = array())
+    public static function error($code, $string, $action, $type)
     {
-        $xml_string = "\t<error code=\"$code\"><![CDATA[$string]]></error>";
-        foreach ($return_data as $title => $data) {
-            $xml_string .= "\n\t<$title><![CDATA[$data]]></$title>";
-        }
+        $xml_string = "\t<error errorCode=\"$code\">" .
+            "\n\t\t<errorAction><![CDATA[$action]]></errorAction>" .
+            "\n\t\t<errorType><![CDATA[$type]]></errorType>" .
+            "\n\t\t<errorMessage><![CDATA[$string]]></errorMessage>" .
+            "\n\t</error>";
 
         return self::output_xml($xml_string);
     } // error

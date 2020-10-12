@@ -28,9 +28,12 @@ namespace Lib\ApiMethods;
 use Access;
 use Api;
 use Session;
+use User;
 
 final class UserDeleteMethod
 {
+    private const ACTION = 'user_delete';
+
     /**
      * user_delete
      * MINIMUM_API_VERSION=400001
@@ -44,22 +47,23 @@ final class UserDeleteMethod
      */
     public static function user_delete($input)
     {
-        if (!Api::check_access('interface', 100, \User::get_from_username(Session::username($input['auth']))->id, 'user_delete', $input['api_format'])) {
+        if (!Api::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (!Api::check_parameter($input, array('username'), 'user_delete')) {
+        if (!Api::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
         $username = $input['username'];
-        $user     = \User::get_from_username($username);
+        $user     = User::get_from_username($username);
         // don't delete yourself or admins
         if ($user->id && Session::username($input['auth']) != $username && !Access::check('interface', 100, $user->id)) {
             $user->delete();
-            Api::message('success', 'successfully deleted: ' . $username, null, $input['api_format']);
+            Api::message('successfully deleted: ' . $username, $input['api_format']);
 
             return true;
         }
-        Api::message('error', 'failed to delete: ' . $username, '400', $input['api_format']);
+        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+        Api::error(printf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
         Session::extend($input['auth']);
 
         return false;
