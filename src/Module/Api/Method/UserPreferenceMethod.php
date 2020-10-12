@@ -37,11 +37,10 @@ final class UserPreferenceMethod
      * user_preference
      * MINIMUM_API_VERSION=430000
      *
-     * Get your user preference
+     * Get your user preference by name
      *
      * @param array $input
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
-     * action = (integer) $artist_id, $album_id, $song_id)
      * @return boolean
      */
     public static function user_preference($input)

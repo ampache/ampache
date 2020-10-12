@@ -1100,6 +1100,42 @@ Sync and download new podcast episodes
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/update_podcast.json)
 
+## user_preferences
+
+Get your user preferences
+@param array $input
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/user_preferences.json)
+
+## user_preference
+
+Get your user preference by name
+@param array $input
+
+| Input    | Type   | Description                                       | Optional |
+|----------|--------|---------------------------------------------------|---------:|
+| 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') |       NO |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/user_preference.json)
+
+## system_preferences
+
+Get your server preferences
+@param array $input
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/system_preferences.json)
+
+## system_preference
+
+Get your server preference by name
+@param array $input
+
+| Input    | Type   | Description                                       | Optional |
+|----------|--------|---------------------------------------------------|---------:|
+| 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') |       NO |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/system_preference.json)
+
 ## Binary Data Methods
 
 ## stream

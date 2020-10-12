@@ -48,8 +48,8 @@ final class SystemUpdateMethod
         }
         if (AutoUpdate::is_update_available(true)) {
             // run the update
-            AutoUpdate::update_files();
-            AutoUpdate::update_dependencies();
+            AutoUpdate::update_files(true);
+            AutoUpdate::update_dependencies(true);
             // check that the update completed or failed failed.
             if (AutoUpdate::is_update_available(true)) {
                 Api::message('error', 'update failed', '400', $input['api_format']);
