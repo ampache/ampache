@@ -75,7 +75,7 @@ final class FollowersMethod
                     }
                 }
             } else {
-                debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
+                debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api::error(sprintf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'empty', $input['api_format']);
             }
