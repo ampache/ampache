@@ -43,7 +43,7 @@ final class PingMethod
      * @param array $input
      * auth = (string) //optional
      */
-    public static function ping($input)
+    public static function ping(array $input)
     {
         $xmldata = array('server' => AmpConfig::get('version'), 'version' => Api::$version, 'compatible' => '350001');
 

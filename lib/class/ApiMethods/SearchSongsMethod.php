@@ -48,7 +48,7 @@ final class SearchSongsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function search_songs($input)
+    public static function search_songs(array $input)
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

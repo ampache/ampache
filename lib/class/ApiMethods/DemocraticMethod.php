@@ -46,7 +46,7 @@ final class DemocraticMethod
      * method = (string) 'vote', 'devote', 'playlist', 'play'
      * oid    = (integer) //optional
      */
-    public static function democratic($input)
+    public static function democratic(array $input)
     {
         // Load up democratic information
         $democratic = Democratic::get_current_playlist();

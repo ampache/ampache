@@ -48,7 +48,7 @@ final class PodcastCreateMethod
      * catalog = (string) podcast catalog
      * @return boolean
      */
-    public static function podcast_create($input)
+    public static function podcast_create(array $input)
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);

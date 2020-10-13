@@ -52,7 +52,7 @@ final class PlaylistRemoveSongMethod
      * clear  = (integer) 0,1 Clear the whole playlist //optional, default = 0
      * @return boolean
      */
-    public static function playlist_remove_song($input)
+    public static function playlist_remove_song(array $input)
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

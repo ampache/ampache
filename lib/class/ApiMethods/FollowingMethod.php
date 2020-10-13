@@ -47,7 +47,7 @@ final class FollowingMethod
      * username = (string) $username
      * @return boolean
      */
-    public static function following($input)
+    public static function following(array $input)
     {
         if (!AmpConfig::get('sociable')) {
             Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);

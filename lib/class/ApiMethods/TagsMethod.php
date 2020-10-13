@@ -42,7 +42,7 @@ final class TagsMethod
      *
      * @param array $input
      */
-    public static function tags($input)
+    public static function tags(array $input)
     {
         Api::error(T_('Depreciated'), '4706', self::ACTION, 'removed', $input['api_format']);
         Session::extend($input['auth']);

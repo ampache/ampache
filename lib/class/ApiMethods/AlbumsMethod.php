@@ -50,7 +50,7 @@ final class AlbumsMethod
      * limit   = (integer) //optional
      * include = (array) 'songs' //optional
      */
-    public static function albums($input)
+    public static function albums(array $input)
     {
         Api::$browse->reset_filters();
         Api::$browse->set_type('album');

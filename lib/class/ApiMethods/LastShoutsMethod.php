@@ -46,7 +46,7 @@ final class LastShoutsMethod
      * limit = (integer) $limit //optional
      * @return boolean
      */
-    public static function last_shouts($input)
+    public static function last_shouts(array $input)
     {
         if (!AmpConfig::get('sociable')) {
             Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);

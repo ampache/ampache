@@ -51,7 +51,7 @@ final class CatalogFileMethod
      * catalog = (integer) $catalog_id)
      * @return boolean
      */
-    public static function catalog_file($input)
+    public static function catalog_file(array $input)
     {
         $task = (string) $input['task'];
         if (!AmpConfig::get('delete_from_disk') && $task == 'remove') {

@@ -46,7 +46,7 @@ class GenreArtistsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function genre_artists($input)
+    public static function genre_artists(array $input)
     {
         $artists = Tag::get_tag_objects('artist', $input['filter']);
         if (!empty($artists)) {

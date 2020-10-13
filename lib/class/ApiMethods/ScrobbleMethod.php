@@ -52,7 +52,7 @@ final class ScrobbleMethod
      * client     = (string)  $agent //optional
      * @return boolean
      */
-    public static function scrobble($input)
+    public static function scrobble(array $input)
     {
         if (!Api::check_parameter($input, array('song', 'artist', 'album'), self::ACTION)) {
             return false;

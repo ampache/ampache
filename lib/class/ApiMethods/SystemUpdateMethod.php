@@ -42,7 +42,7 @@ final class SystemUpdateMethod
      * @param array $input
      * @return boolean
      */
-    public static function system_update($input)
+    public static function system_update(array $input)
     {
         $user = User::get_from_username(Session::username($input['auth']));
         if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {

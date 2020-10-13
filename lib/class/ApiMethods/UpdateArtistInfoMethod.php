@@ -45,7 +45,7 @@ final class UpdateArtistInfoMethod
      * id   = (integer) $artist_id)
      * @return boolean
      */
-    public static function update_artist_info($input)
+    public static function update_artist_info(array $input)
     {
         if (!Api::check_parameter($input, array('id'), self::ACTION)) {
             return false;

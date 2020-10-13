@@ -48,7 +48,7 @@ final class GetArtMethod
      * type = (string) 'song', 'artist', 'album', 'playlist', 'search', 'podcast')
      * @return boolean
      */
-    public static function get_art($input)
+    public static function get_art(array $input)
     {
         if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
             return false;

@@ -43,7 +43,7 @@ final class VideoMethod
      * filter = (string) UID of video
      * @return boolean
      */
-    public static function video($input)
+    public static function video(array $input)
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

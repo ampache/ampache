@@ -45,7 +45,7 @@ final class UserDeleteMethod
      * username = (string) $username)
      * @return boolean
      */
-    public static function user_delete($input)
+    public static function user_delete(array $input)
     {
         if (!Api::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;

@@ -50,7 +50,7 @@ final class PlaylistSongsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function playlist_songs($input)
+    public static function playlist_songs(array $input)
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

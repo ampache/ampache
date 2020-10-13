@@ -46,7 +46,7 @@ final class SongDeleteMethod
      * filter = (string) UID of song to delete
      * @return boolean
      */
-    public static function song_delete($input)
+    public static function song_delete(array $input)
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

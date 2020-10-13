@@ -47,7 +47,7 @@ final class SharesMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function shares($input)
+    public static function shares(array $input)
     {
         if (!AmpConfig::get('share')) {
             Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);

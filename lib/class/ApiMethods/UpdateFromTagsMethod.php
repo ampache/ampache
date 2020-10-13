@@ -43,7 +43,7 @@ final class UpdateFromTagsMethod
      * id   = (integer) $artist_id, $album_id, $song_id)
      * @return boolean
      */
-    public static function update_from_tags($input)
+    public static function update_from_tags(array $input)
     {
         if (!Api::check_parameter($input, array('type', 'id'), self::ACTION)) {
             return false;

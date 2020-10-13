@@ -42,7 +42,7 @@ final class TagSongsMethod
      *
      * @param array $input
      */
-    public static function tag_songs($input)
+    public static function tag_songs(array $input)
     {
         Api::error(T_('Depreciated'), '4706', self::ACTION, 'removed', $input['api_format']);
         Session::extend($input['auth']);

@@ -48,7 +48,7 @@ final class GetSimilarMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function get_similar($input)
+    public static function get_similar(array $input)
     {
         if (!Api::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;

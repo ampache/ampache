@@ -48,7 +48,7 @@ final class ArtistSongsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function artist_songs($input)
+    public static function artist_songs(array $input)
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

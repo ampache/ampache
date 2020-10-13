@@ -46,7 +46,7 @@ final class CatalogActionMethod
      * catalog = (integer) $catalog_id)
      * @return boolean
      */
-    public static function catalog_action($input)
+    public static function catalog_action(array $input)
     {
         if (!Api::check_parameter($input, array('catalog', 'task'), self::ACTION)) {
             return false;

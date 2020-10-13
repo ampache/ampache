@@ -43,7 +43,7 @@ final class CatalogMethod
      * filter = (integer) Catalog ID number
      * @return boolean
      */
-    public static function catalog($input)
+    public static function catalog(array $input)
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

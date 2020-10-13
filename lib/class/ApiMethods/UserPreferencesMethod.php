@@ -27,6 +27,7 @@ namespace Lib\ApiMethods;
 
 use Preference;
 use Session;
+use User;
 use XML_Data;
 
 final class UserPreferencesMethod
@@ -38,11 +39,10 @@ final class UserPreferencesMethod
      * Get your user preferences
      *
      * @param array $input
-     * @return boolean
      */
-    public static function user_preferences($input)
+    public static function user_preferences(array $input)
     {
-        $user         = \User::get_from_username(Session::username($input['auth']));
+        $user         = User::get_from_username(Session::username($input['auth']));
         $preferences  = Preference::get_all($user->id);
         $output_array =  array('preferences' => $preferences);
         switch ($input['api_format']) {

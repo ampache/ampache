@@ -46,7 +46,7 @@ final class RecordPlayMethod
      * client = (string) $agent //optional
      * @return boolean
      */
-    public static function record_play($input)
+    public static function record_play(array $input)
     {
         if (!Api::check_parameter($input, array('id', 'user'), self::ACTION)) {
             return false;

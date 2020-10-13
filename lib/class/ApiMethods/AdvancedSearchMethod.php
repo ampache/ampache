@@ -63,7 +63,7 @@ final class AdvancedSearchMethod
      * offset          = (integer)
      * limit           = (integer))
      */
-    public static function advanced_search($input)
+    public static function advanced_search(array $input)
     {
         ob_end_clean();
 

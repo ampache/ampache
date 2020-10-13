@@ -43,7 +43,7 @@ final class GoodbyeMethod
      * auth = (string))
      * @return boolean
      */
-    public static function goodbye($input)
+    public static function goodbye(array $input)
     {
         if (!Api::check_parameter($input, array('auth'), self::ACTION)) {
             return false;

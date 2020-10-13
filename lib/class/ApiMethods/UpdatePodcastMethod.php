@@ -43,7 +43,7 @@ final class UpdatePodcastMethod
      * filter = (string) UID of podcast
      * @return boolean
      */
-    public static function update_podcast($input)
+    public static function update_podcast(array $input)
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

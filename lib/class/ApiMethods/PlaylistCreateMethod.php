@@ -47,7 +47,7 @@ final class PlaylistCreateMethod
      * type = (string) 'public', 'private'
      * @return boolean
      */
-    public static function playlist_create($input)
+    public static function playlist_create(array $input)
     {
         if (!Api::check_parameter($input, array('name'), self::ACTION)) {
             return false;

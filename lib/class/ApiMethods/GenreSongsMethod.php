@@ -46,7 +46,7 @@ final class GenreSongsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function genre_songs($input)
+    public static function genre_songs(array $input)
     {
         $songs = Tag::get_tag_objects('song', $input['filter']);
         $user  = User::get_from_username(Session::username($input['auth']));

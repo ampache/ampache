@@ -45,7 +45,7 @@ final class FriendsTimelineMethod
      * limit = (integer) //optional
      * since = (integer) UNIXTIME() //optional
      */
-    public static function friends_timeline($input)
+    public static function friends_timeline(array $input)
     {
         if (AmpConfig::get('sociable')) {
             $limit = (int) ($input['limit']);

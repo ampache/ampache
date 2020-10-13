@@ -44,7 +44,7 @@ final class SystemPreferenceMethod
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * @return boolean
      */
-    public static function system_preference($input)
+    public static function system_preference(array $input)
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

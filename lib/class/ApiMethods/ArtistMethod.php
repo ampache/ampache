@@ -46,7 +46,7 @@ final class ArtistMethod
      * include = (array) 'albums', 'songs' //optional
      * @return boolean
      */
-    public static function artist($input)
+    public static function artist(array $input)
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

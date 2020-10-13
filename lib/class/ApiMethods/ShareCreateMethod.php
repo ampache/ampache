@@ -51,7 +51,7 @@ final class ShareCreateMethod
      * expires     = (integer) days to keep active //optional
      * @return boolean
      */
-    public static function share_create($input)
+    public static function share_create(array $input)
     {
         if (!AmpConfig::get('share')) {
             Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);

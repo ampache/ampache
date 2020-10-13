@@ -49,7 +49,7 @@ final class SongsMethod
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
-    public static function songs($input)
+    public static function songs(array $input)
     {
         Api::$browse->reset_filters();
         Api::$browse->set_type('song');

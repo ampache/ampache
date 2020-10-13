@@ -48,7 +48,7 @@ final class PodcastsMethod
      * limit   = (integer) //optional
      * @return boolean
      */
-    public static function podcasts($input)
+    public static function podcasts(array $input)
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);

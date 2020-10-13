@@ -45,7 +45,7 @@ final class PlaylistDeleteMethod
      * filter = (string) UID of playlist
      * @return boolean
      */
-    public static function playlist_delete($input)
+    public static function playlist_delete(array $input)
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

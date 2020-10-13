@@ -49,7 +49,7 @@ final class TimelineMethod
      * since    = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function timeline($input)
+    public static function timeline(array $input)
     {
         if (AmpConfig::get('sociable')) {
             if (!Api::check_parameter($input, array('username'), self::ACTION)) {

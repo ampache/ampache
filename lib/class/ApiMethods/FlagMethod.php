@@ -49,7 +49,7 @@ final class FlagMethod
      * flag = (integer) 0,1 $flag
      * @return boolean
      */
-    public static function flag($input)
+    public static function flag(array $input)
     {
         if (!AmpConfig::get('userflags')) {
             Api::error(T_('Enable: userflags'), '4703', self::ACTION, 'system', $input['api_format']);

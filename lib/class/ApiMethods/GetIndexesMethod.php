@@ -55,7 +55,7 @@ final class GetIndexesMethod
      * limit   = (integer) //optional
      * @return boolean
      */
-    public static function get_indexes($input)
+    public static function get_indexes(array $input)
     {
         if (!Api::check_parameter($input, array('type'), self::ACTION)) {
             return false;

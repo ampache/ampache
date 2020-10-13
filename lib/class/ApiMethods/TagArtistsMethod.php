@@ -42,7 +42,7 @@ final class TagArtistsMethod
      *
      * @param array $input
      */
-    public static function tag_artists($input)
+    public static function tag_artists(array $input)
     {
         Api::error(T_('Depreciated'), '4706', self::ACTION, 'removed', $input['api_format']);
         Session::extend($input['auth']);

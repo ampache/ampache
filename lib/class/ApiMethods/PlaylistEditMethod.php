@@ -52,7 +52,7 @@ final class PlaylistEditMethod
      * sort   = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
      * @return boolean
      */
-    public static function playlist_edit($input)
+    public static function playlist_edit(array $input)
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

@@ -48,7 +48,7 @@ final class LicensesMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function licenses($input)
+    public static function licenses(array $input)
     {
         if (!AmpConfig::get('licensing')) {
             Api::error(T_('Enable: licensing'), '4703', self::ACTION, 'system', $input['api_format']);

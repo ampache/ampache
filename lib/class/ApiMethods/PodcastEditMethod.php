@@ -52,7 +52,7 @@ final class PodcastEditMethod
      * copyright   = (string) //optional
      * @return boolean
      */
-    public static function podcast_edit($input)
+    public static function podcast_edit(array $input)
     {
         if (!AmpConfig::get('podcast')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);

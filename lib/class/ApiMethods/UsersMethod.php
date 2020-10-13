@@ -41,7 +41,7 @@ final class UsersMethod
      * @param array $input
      * @return boolean
      */
-    public static function users($input)
+    public static function users(array $input)
     {
         $users = User::get_valid_users();
         switch ($input['api_format']) {

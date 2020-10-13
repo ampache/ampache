@@ -60,7 +60,7 @@ final class StatsMethod
      * limit    = (integer) //optional
      * @return boolean
      */
-    public static function stats($input)
+    public static function stats(array $input)
     {
         if (!Api::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;

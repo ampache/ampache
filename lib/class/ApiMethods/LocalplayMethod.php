@@ -49,7 +49,7 @@ final class LocalplayMethod
      * clear   = (integer) 0,1 Clear the current playlist before adding //optional
      * @return bool
      */
-    public static function localplay($input)
+    public static function localplay(array $input)
     {
         if (!Api::check_parameter($input, array('command'), self::ACTION)) {
             return false;

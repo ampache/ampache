@@ -48,7 +48,7 @@ final class PlaylistAddSongMethod
      * check  = (integer) 0,1 Check for duplicates //optional, default = 0
      * @return boolean
      */
-    public static function playlist_add_song($input)
+    public static function playlist_add_song(array $input)
     {
         if (!Api::check_parameter($input, array('filter', 'song'), self::ACTION)) {
             return false;

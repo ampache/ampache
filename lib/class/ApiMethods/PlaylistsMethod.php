@@ -48,7 +48,7 @@ final class PlaylistsMethod
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
-    public static function playlists($input)
+    public static function playlists(array $input)
     {
         $user   = User::get_from_username(Session::username($input['auth']));
         $method = $input['exact'] ? false : true;

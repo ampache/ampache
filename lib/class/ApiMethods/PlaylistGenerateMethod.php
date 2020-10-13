@@ -58,7 +58,7 @@ final class PlaylistGenerateMethod
      * offset = (integer)                               //optional
      * limit  = (integer)                               //optional
      */
-    public static function playlist_generate($input)
+    public static function playlist_generate(array $input)
     {
         // parameter defaults
         $mode   = (!in_array($input['mode'], array('forgotten', 'recent', 'unplayed', 'random'), true)) ? 'random' : $input['mode'];

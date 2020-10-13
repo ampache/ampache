@@ -45,7 +45,7 @@ final class UserPreferenceMethod
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * @return boolean
      */
-    public static function user_preference($input)
+    public static function user_preference(array $input)
     {
         $user       = User::get_from_username(Session::username($input['auth']));
         $pref_name  = (string) $input['filter'];

@@ -48,7 +48,7 @@ final class ArtistAlbumsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function artist_albums($input)
+    public static function artist_albums(array $input)
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

@@ -49,7 +49,7 @@ final class StreamMethod
      * length  = (integer) 0,1
      * @return boolean
      */
-    public static function stream($input)
+    public static function stream(array $input)
     {
         if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
             return false;

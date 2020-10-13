@@ -45,7 +45,7 @@ final class SongMethod
      * filter = (string) UID of song
      * @return boolean
      */
-    public static function song($input)
+    public static function song(array $input)
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

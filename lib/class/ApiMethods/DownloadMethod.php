@@ -45,7 +45,7 @@ final class DownloadMethod
      * format = (string) 'mp3', 'ogg', etc //optional
      * @return boolean
      */
-    public static function download($input)
+    public static function download(array $input)
     {
         if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
             return false;

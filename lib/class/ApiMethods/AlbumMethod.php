@@ -46,7 +46,7 @@ final class AlbumMethod
      * include = (array) 'songs' //optional
      * @return boolean
      */
-    public static function album($input)
+    public static function album(array $input)
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

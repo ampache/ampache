@@ -44,7 +44,7 @@ final class GenreMethod
      * filter = (string) UID of Genre
      * @return boolean
      */
-    public static function genre($input)
+    public static function genre(array $input)
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

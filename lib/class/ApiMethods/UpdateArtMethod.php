@@ -47,7 +47,7 @@ final class UpdateArtMethod
      * overwrite = (integer) 0,1 //optional
      * @return boolean
      */
-    public static function update_art($input)
+    public static function update_art(array $input)
     {
         if (!Api::check_parameter($input, array('type', 'id'), self::ACTION)) {
             return false;

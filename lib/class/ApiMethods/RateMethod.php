@@ -47,7 +47,7 @@ final class RateMethod
      * rating = (integer) 0,1|2|3|4|5 $rating
      * @return boolean|void
      */
-    public static function rate($input)
+    public static function rate(array $input)
     {
         if (!AmpConfig::get('ratings')) {
             Api::error(T_('Enable: ratings'), '4703', self::ACTION, 'system', $input['api_format']);

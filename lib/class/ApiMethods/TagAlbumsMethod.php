@@ -42,7 +42,7 @@ final class TagAlbumsMethod
      *
      * @param array $input
      */
-    public static function tag_albums($input)
+    public static function tag_albums(array $input)
     {
         Api::error(T_('Depreciated'), '4706', self::ACTION, 'removed', $input['api_format']);
         Session::extend($input['auth']);

@@ -48,7 +48,7 @@ final class UserCreateMethod
      * disable  = (integer) 0,1 //optional, default = 0
      * @return boolean
      */
-    public static function user_create($input)
+    public static function user_create(array $input)
     {
         if (!Api::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;

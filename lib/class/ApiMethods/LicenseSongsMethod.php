@@ -47,7 +47,7 @@ final class LicenseSongsMethod
      * filter = (string) UID of license
      * @return boolean
      */
-    public static function license_songs($input)
+    public static function license_songs(array $input)
     {
         if (!AmpConfig::get('licensing')) {
             Api::error(T_('Enable: licensing'), '4703', self::ACTION, 'system', $input['api_format']);

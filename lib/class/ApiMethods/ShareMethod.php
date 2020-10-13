@@ -45,7 +45,7 @@ final class ShareMethod
      * filter = (integer) Share ID number
      * @return boolean
      */
-    public static function share($input)
+    public static function share(array $input)
     {
         if (!AmpConfig::get('share')) {
             Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);

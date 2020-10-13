@@ -46,7 +46,7 @@ final class GenreAlbumsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function genre_albums($input)
+    public static function genre_albums(array $input)
     {
         $albums = Tag::get_tag_objects('album', $input['filter']);
         if (!empty($albums)) {

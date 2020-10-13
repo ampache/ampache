@@ -56,7 +56,7 @@ final class UserUpdateMethod
      * maxbitrate = (integer) $maxbitrate //optional
      * @return boolean
      */
-    public static function user_update($input)
+    public static function user_update(array $input)
     {
         if (!Api::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;

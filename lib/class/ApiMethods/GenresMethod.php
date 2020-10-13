@@ -44,7 +44,7 @@ final class GenresMethod
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
-    public static function genres($input)
+    public static function genres(array $input)
     {
         Api::$browse->reset_filters();
         Api::$browse->set_type('tag');

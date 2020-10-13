@@ -43,7 +43,7 @@ final class VideosMethod
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
-    public static function videos($input)
+    public static function videos(array $input)
     {
         Api::$browse->reset_filters();
         Api::$browse->set_type('video');

@@ -54,7 +54,7 @@ final class HandshakeMethod
      * version   = (string) $version //optional
      * @return boolean
      */
-    public static function handshake($input)
+    public static function handshake(array $input)
     {
         $timestamp  = preg_replace('/[^0-9]/', '', $input['timestamp']);
         $passphrase = $input['auth'];

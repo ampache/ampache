@@ -46,7 +46,7 @@ final class UserMethod
      * username = (string) $username
      * @return boolean
      */
-    public static function user($input)
+    public static function user(array $input)
     {
         if (!Api::check_parameter($input, array('username'), self::ACTION)) {
             return false;
