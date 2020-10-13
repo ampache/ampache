@@ -70,7 +70,7 @@ final class UserMethod
                         echo XML_Data::user($user, $fullinfo);
                 }
             } else {
-                debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
+                debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
             }
         }
         Session::extend($input['auth']);

@@ -65,7 +65,7 @@ final class FollowingMethod
                 if (!count($users)) {
                     Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
                 } else {
-                    debug_event('api.class', 'User is following:  ' . print_r($users), 1);
+                    debug_event(self::class, 'User is following:  ' . print_r($users), 1);
                     ob_end_clean();
                     switch ($input['api_format']) {
                         case 'json':
@@ -76,7 +76,7 @@ final class FollowingMethod
                     }
                 }
             } else {
-                debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
+                debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api::error(sprintf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'system', $input['api_format']);
             }

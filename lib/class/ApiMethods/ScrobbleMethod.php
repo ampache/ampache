@@ -79,7 +79,7 @@ final class ScrobbleMethod
         }
 
         // validate minimum required options
-        debug_event('api.class', 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 4);
+        debug_event(self::class, 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 4);
         if (!$song_name || !$album_name || !$artist_name) {
             Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);
 
@@ -101,7 +101,7 @@ final class ScrobbleMethod
 
                 return false;
             }
-            debug_event('api.class', 'scrobble: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
+            debug_event(self::class, 'scrobble: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
             // internal scrobbling (user_activity and object_count tables)
             $item->set_played($user_id, $agent, array(), $date);

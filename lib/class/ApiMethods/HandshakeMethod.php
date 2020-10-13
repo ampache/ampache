@@ -66,11 +66,11 @@ final class HandshakeMethod
         $version  = (isset($input['version'])) ? $input['version'] : Api::$version;
 
         // Log the attempt
-        debug_event('api.class', "Handshake Attempt, IP:$user_ip User:$username Version:$version", 5);
+        debug_event(self::class, "Handshake Attempt, IP:$user_ip User:$username Version:$version", 5);
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
         if ((int) ($version) < Api::$auth_version && $version !== '5.0.0') {
-            debug_event('api.class', 'Login Failed: Version too old', 1);
+            debug_event(self::class, 'Login Failed: Version too old', 1);
             AmpError::add('api', T_('Login failed, API version is too old'));
 
             return false;
@@ -89,7 +89,7 @@ final class HandshakeMethod
         }
 
         // Log this attempt
-        debug_event('api.class', "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
+        debug_event(self::class, "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
 
         if ($user_id > 0 && Access::check_network('api', $user_id, 5)) {
             // Authentication with user/password, we still need to check the password
@@ -97,7 +97,7 @@ final class HandshakeMethod
                 // If the timestamp isn't within 30 minutes sucks to be them
                 if (($timestamp < (time() - 1800)) ||
                     ($timestamp > (time() + 1800))) {
-                    debug_event('api.class', 'Login failed, timestamp is out of range ' . $timestamp . '/' . time(), 1);
+                    debug_event(self::class, 'Login failed, timestamp is out of range ' . $timestamp . '/' . time(), 1);
                     AmpError::add('api', T_('Login failed, timestamp is out of range'));
                     Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '4701', self::ACTION, 'account', $input['api_format']);
 
@@ -110,7 +110,7 @@ final class HandshakeMethod
                 $realpwd = $client->get_password();
 
                 if (!$realpwd) {
-                    debug_event('api.class', 'Unable to find user with userid of ' . $user_id, 1);
+                    debug_event(self::class, 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Incorrect username or password'));
                     Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '4701', self::ACTION, 'account', $input['api_format']);
 
@@ -155,7 +155,7 @@ final class HandshakeMethod
                     $token = $data['apikey'];
                 }
 
-                debug_event('api.class', 'Login Success, passphrase matched', 1);
+                debug_event(self::class, 'Login Success, passphrase matched', 1);
 
                 // We need to also get the 'last update' of the
                 // catalog information in an RFC 2822 Format
@@ -191,7 +191,7 @@ final class HandshakeMethod
             } // match
         } // end while
 
-        debug_event('api.class', 'Login Failed, unable to match passphrase', 1);
+        debug_event(self::class, 'Login Failed, unable to match passphrase', 1);
         Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), '4701', self::ACTION, 'account', $input['api_format']);
 
         return false;

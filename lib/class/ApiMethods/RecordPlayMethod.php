@@ -77,7 +77,7 @@ final class RecordPlayMethod
 
             return false;
         }
-        debug_event('api.class', 'record_play: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
+        debug_event(self::class, 'record_play: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
         // internal scrobbling (user_activity and object_count tables)
         $item->set_played($user_id, $agent, array(), time());

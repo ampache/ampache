@@ -57,7 +57,7 @@ final class PlaylistSongsMethod
         }
         $user = User::get_from_username(Session::username($input['auth']));
         $uid  = scrub_in($input['filter']);
-        debug_event('api.class', 'User ' . $user->id . ' loading playlist: ' . $input['filter'], 5);
+        debug_event(self::class, 'User ' . $user->id . ' loading playlist: ' . $input['filter'], 5);
 
         $playlist = (str_replace('smart_', '', $uid) === $uid)
             ? new Playlist((int) $uid)

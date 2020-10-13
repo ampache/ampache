@@ -54,7 +54,7 @@ final class GoodbyeMethod
             $sql .= " AND `type` = 'api'";
             Dba::write($sql, array($input['auth']));
 
-            debug_event('api.class', 'Goodbye Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
+            debug_event(self::class, 'Goodbye Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
             ob_end_clean();
             Api::message('goodbye: ' . $input['auth'], $input['api_format']);
 

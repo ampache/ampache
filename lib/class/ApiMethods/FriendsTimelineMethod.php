@@ -64,7 +64,7 @@ final class FriendsTimelineMethod
                 }
             }
         } else {
-            debug_event('api.class', 'Sociable feature is not enabled.', 3);
+            debug_event(self::class, 'Sociable feature is not enabled.', 3);
         }
         Session::extend($input['auth']);
     }
