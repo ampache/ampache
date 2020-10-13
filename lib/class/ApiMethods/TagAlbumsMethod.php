@@ -28,8 +28,6 @@ namespace Lib\ApiMethods;
 use Api;
 use JSON_Data;
 use Session;
-use Tag;
-use User;
 use XML_Data;
 
 final class TagAlbumsMethod
