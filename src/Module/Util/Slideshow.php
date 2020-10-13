@@ -24,40 +24,45 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Plugin;
 use Ampache\Module\System\Core;
 use Ampache\Model\Song;
 
-class Slideshow
+final class Slideshow implements SlideshowInterface
 {
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->modelFactory = $modelFactory;
+    }
+
     /**
      * @return array
      */
-    public static function get_current_slideshow()
+    public function getCurrentSlideshow(): array
     {
-        $songs  = Song::get_recently_played((int)Core::get_global('user')->id);
-        $images = array();
-        if (count($songs) > 0) {
-            $last_song = new Song($songs[0]['object_id']);
+        $songs  = Song::get_recently_played((int) Core::get_global('user')->id);
+        $images = [];
+        if ($songs !== []) {
+            $last_song = $this->modelFactory->createSong((int) $songs[0]['object_id']);
             $last_song->format();
-            $images = self::get_images($last_song->f_artist);
+            $images = $this->getImages($last_song);
         }
 
         return $images;
     }
 
-    /**
-     * @param string $artist_name
-     * @return array
-     */
-    protected static function get_images($artist_name)
+    private function getImages(Song $song): array
     {
-        $images = array();
+        $images = [];
 
         foreach (Plugin::get_plugins('get_photos') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
             if ($plugin->load(Core::get_global('user'))) {
-                $images += $plugin->_plugin->get_photos($artist_name);
+                $images += $plugin->_plugin->get_photos($song->f_artist);
             }
         }
 

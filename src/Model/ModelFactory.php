@@ -44,4 +44,14 @@ final class ModelFactory implements ModelFactoryInterface
             $cached
         );
     }
+    
+    public function createSong(
+        ?int $songId = null,
+        string $limitThreshold = ''
+    ): Song {
+        return new Song(
+            $songId,
+            $limitThreshold
+        );
+    }
 }

@@ -30,4 +30,9 @@ interface ModelFactoryInterface
         ?int $browse_id = null,
         bool $cached = true
     ): Browse;
+
+    public function createSong(
+        ?int $songId = null,
+        string $limitThreshold = ''
+    ): Song;
 }

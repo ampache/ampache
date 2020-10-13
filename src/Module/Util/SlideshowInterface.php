@@ -2,7 +2,7 @@
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,20 +20,9 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Util;
 
-use Ampache\Module\Util\FileSystem\FileNameConverter;
-use Ampache\Module\Util\FileSystem\FileNameConverterInterface;
-use function DI\autowire;
-
-return [
-    Horde_Browser::class => autowire(Horde_Browser::class),
-    FileNameConverterInterface::class => autowire(FileNameConverter::class),
-    RequestParserInterface::class => autowire(RequestParser::class),
-    AjaxUriRetrieverInterface::class => autowire(AjaxUriRetriever::class),
-    EnvironmentInterface::class => autowire(Environment::class),
-    ZipHandlerInterface::class => autowire(ZipHandler::class),
-    SlideshowInterface::class => autowire(Slideshow::class),
-];
+interface SlideshowInterface
+{
+    public function getCurrentSlideshow(): array;
+}

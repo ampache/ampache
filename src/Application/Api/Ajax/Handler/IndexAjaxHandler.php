@@ -41,6 +41,7 @@ use Ampache\Model\Label;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Slideshow;
 use Ampache\Model\Song;
+use Ampache\Module\Util\SlideshowInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\Wanted;
 
@@ -50,12 +51,16 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
     private ArtCollectorInterface $artCollector;
 
+    private SlideshowInterface $slideshow;
+
     public function __construct(
         ArtistEventRetrieverInterface $artistEventRetriever,
-        ArtCollectorInterface $artCollector
+        ArtCollectorInterface $artCollector,
+        SlideshowInterface $slideshow
     ) {
         $this->artistEventRetriever = $artistEventRetriever;
         $this->artCollector         = $artCollector;
+        $this->slideshow            = $slideshow;
     }
     
     public function handle(): void
@@ -308,7 +313,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'slideshow':
                 ob_start();
-                $images = Slideshow::get_current_slideshow();
+                $images = $this->slideshow->getCurrentSlideshow();
                 if (count($images) > 0) {
                     $fsname = 'fslider_' . time();
                     echo "<div id='" . $fsname . "'>";
