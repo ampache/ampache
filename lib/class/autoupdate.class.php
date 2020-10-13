@@ -283,8 +283,9 @@ class AutoUpdate
 
     /**
      * Update local git repository.
+     * @param bool $api
      */
-    public static function update_files()
+    public static function update_files($api = false)
     {
         $cmd        = 'git pull https://github.com/ampache/ampache.git';
         $git_branch = self::is_force_git_branch();
@@ -293,26 +294,35 @@ class AutoUpdate
         } elseif (self::is_develop()) {
             $cmd = 'git pull https://github.com/ampache/ampache.git develop';
         }
-        echo T_('Updating Ampache sources with `' . $cmd . '` ...') . '<br />';
+        if (!$api) {
+            echo T_('Updating Ampache sources with `' . $cmd . '` ...') . '<br />';
+        }
         ob_flush();
         chdir(AmpConfig::get('prefix'));
         exec($cmd);
-        echo T_('Done') . '<br />';
+        if (!$api) {
+            echo T_('Done') . '<br />';
+        }
         ob_flush();
         self::get_latest_version(true);
     }
 
     /**
      * Update project dependencies.
+     * @param bool $api
      */
-    public static function update_dependencies()
+    public static function update_dependencies($api = false)
     {
         $cmd = 'composer install --prefer-source --no-interaction';
-        echo T_('Updating dependencies with `' . $cmd . '` ...') . '<br />';
+        if (!$api) {
+            echo T_('Updating dependencies with `' . $cmd . '` ...') . '<br />';
+        }
         ob_flush();
         chdir(AmpConfig::get('prefix'));
         exec($cmd);
-        echo T_('Done') . '<br />';
+        if (!$api) {
+            echo T_('Done') . '<br />';
+        }
         ob_flush();
     }
 } // end autoupdate.class

@@ -53,8 +53,10 @@ All API code that used 'Tag' now references 'Genre' instead
   * Api::users (ID and Username of the site users)
   * Api::song_delete (Delete files when you are allowed to)
   * Api::user_preferences (Get your user preferences)
+  * Api::user_preference (Get your preference by name)
   * Api::system_update (Check Ampache for updates and run the update if there is one.)
   * Api::system_preferences (Preferences for the system user)
+  * Api::system_preference (Get a system preference by name)
 * New error codes
   * 404 Not Found (The API could not find the requested object)
   * 412 Failed Access Check (The user does note have access to this object, method, feature.)
@@ -69,6 +71,7 @@ All API code that used 'Tag' now references 'Genre' instead
   * tag_songs => genre_songs
 * Don't allow duplicate podcast feeds
 * Api::shares filter is optional
+* Make filter optional in genre_artists, genre_albums, genre_songs (Used as a general catch all method like genres)
 
 ### Deprecated
 

@@ -25,48 +25,40 @@ declare(strict_types=0);
 
 namespace Lib\ApiMethods;
 
-use Api;
-use JSON_Data;
+use Preference;
 use Session;
-use Tag;
 use User;
 use XML_Data;
 
-final class GenreSongsMethod
+final class UserPreferenceMethod
 {
     /**
-     * genre_songs
-     * MINIMUM_API_VERSION=380001
+     * user_preference
+     * MINIMUM_API_VERSION=430000
      *
-     * returns the songs for this genre
+     * Get your user preference by name
      *
      * @param array $input
-     * filter = (string) UID of Genre //optional
-     * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * @return boolean
      */
-    public static function genre_songs($input)
+    public static function user_preference($input)
     {
-        $songs = Tag::get_tag_objects('song', $input['filter']);
-        $user  = User::get_from_username(Session::username($input['auth']));
+        $user       = User::get_from_username(Session::username($input['auth']));
+        $pref_name  = (string) $input['filter'];
+        $preference = Preference::get($pref_name, $user->id);
+        if (empty($preference)) {
+            Api::message('error', 'not found: ' . $pref_name, '404', $input['api_format']);
 
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
-
-        ob_end_clean();
-        if (!empty($songs)) {
-            switch ($input['api_format']) {
-                case 'json':
-                    JSON_Data::set_offset($input['offset']);
-                    JSON_Data::set_limit($input['limit']);
-                    echo JSON_Data::songs($songs, $user->id);
-                    break;
-                default:
-                    XML_Data::set_offset($input['offset']);
-                    XML_Data::set_limit($input['limit']);
-                    echo XML_Data::songs($songs, $user->id);
-            }
+            return false;
+        }
+        $output_array =  array('preferences' => $preference);
+        switch ($input['api_format']) {
+            case 'json':
+                echo json_encode($output_array, JSON_PRETTY_PRINT);
+                break;
+            default:
+                XML_Data::object_array($output_array['preferences'], 'preferences', 'pref');
         }
         Session::extend($input['auth']);
 
