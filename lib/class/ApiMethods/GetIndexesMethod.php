@@ -39,7 +39,7 @@ final class GetIndexesMethod
     /**
      * get_indexes
      * MINIMUM_API_VERSION=400001
-     * CHANGED_IN_API_VERSION=430000
+     * CHANGED_IN_API_VERSION=5.0.0
      *
      * This takes a collection of inputs and returns ID + name for the object type
      * Added 'include' to allow indexing all song tracks (enabled for xml by default)
@@ -62,7 +62,7 @@ final class GetIndexesMethod
         }
         $user    = User::get_from_username(Session::username($input['auth']));
         $type    = (string) $input['type'];
-        $include = (int) $input['include'] == 1 || ($input['api_format'] == 'xml' && !isset($input['include']));
+        $include = (int) $input['include'] == 1;
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);

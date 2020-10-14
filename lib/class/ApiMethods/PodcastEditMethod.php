@@ -38,7 +38,7 @@ final class PodcastEditMethod
     /**
      * podcast_edit
      * MINIMUM_API_VERSION=420000
-     * CHANGED_IN_API_VERSION=430000
+     * CHANGED_IN_API_VERSION=5.0.0
      * Update the description and/or expiration date for an existing podcast.
      * Takes the podcast id to update with optional description and expires parameters.
      *

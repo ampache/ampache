@@ -36,7 +36,7 @@ final class SystemPreferencesMethod
 
     /**
      * system_preferences
-     * MINIMUM_API_VERSION=430000
+     * MINIMUM_API_VERSION=5.0.0
      *
      * Get your system preferences
      *

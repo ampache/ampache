@@ -34,7 +34,7 @@ final class UserPreferencesMethod
 {
     /**
      * user_preferences
-     * MINIMUM_API_VERSION=430000
+     * MINIMUM_API_VERSION=5.0.0
      *
      * Get your user preferences
      *
@@ -42,7 +42,10 @@ final class UserPreferencesMethod
      */
     public static function user_preferences(array $input)
     {
-        $user         = User::get_from_username(Session::username($input['auth']));
+        $user = User::get_from_username(Session::username($input['auth']));
+        // fix preferences that are missing for user
+        User::fix_preferences($user->id);
+
         $preferences  = Preference::get_all($user->id);
         $output_array =  array('preferences' => $preferences);
         switch ($input['api_format']) {

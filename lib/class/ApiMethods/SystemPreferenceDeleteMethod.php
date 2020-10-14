@@ -30,12 +30,12 @@ use Session;
 use User;
 use XML_Data;
 
-final class SystemPreferenceMethod
+final class SystemPreferenceDeleteMethod
 {
-    private const ACTION = 'system_preference';
+    private const ACTION = 'system_preference_delete';
 
     /**
-     * system_preference
+     * system_preference_delete
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get your system preferences by name
@@ -44,7 +44,7 @@ final class SystemPreferenceMethod
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * @return boolean
      */
-    public static function system_preference(array $input)
+    public static function system_preference_delete($input)
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
@@ -54,21 +54,14 @@ final class SystemPreferenceMethod
             return false;
         }
         $pref_name  = (string) $input['filter'];
-        $preference = Preference::get($pref_name, -1);
+        $preference = Preference::get($pref_name,-1);
         if (empty($preference)) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $pref_name), '4704', self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
-        $output_array = array('preferences' => $preference);
-        switch ($input['api_format']) {
-            case 'json':
-                echo json_encode($output_array, JSON_PRETTY_PRINT);
-                break;
-            default:
-                echo XML_Data::object_array($output_array['preferences'], 'preferences', 'pref');
-        }
+        Preference::delete($pref_name);
+        Api::message("Deleted: $pref_name", $input['api_format']);
         Session::extend($input['auth']);
 
         return true;

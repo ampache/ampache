@@ -1,0 +1,108 @@
+<?php
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright 2001 - 2020 Ampache.org
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+declare(strict_types=0);
+
+namespace Lib\ApiMethods;
+
+use Api;
+use Preference;
+use Session;
+use User;
+use XML_Data;
+
+final class SystemPreferenceAddMethod
+{
+    private const ACTION = 'system_preference_add';
+
+    /**
+     * system_preference_add
+     * MINIMUM_API_VERSION=5.0.0
+     *
+     * Get your system preferences by name
+     *
+     * @param array $input
+     * This inserts a new preference into the preference table
+     *
+     * name        = (string) preference name
+     * type        = (string) 'boolean', 'integer', 'string', 'special'
+     * default     = (string|integer) default value
+     * category    = (string) 'interface', 'internal', 'options', 'playlist', 'plugins', 'streaming', 'system'
+     * description = (string) description of preference //optional
+     * subcategory = (string) $subcategory //optional
+     * level       = (integer) access level required to change the value (default 100) //optional
+     * @return bool
+     */
+    public static function system_preference_add($input)
+    {
+        $user = User::get_from_username(Session::username($input['auth']));
+        if (!Api::check_parameter($input, array('name', 'type', 'default', 'category'), self::ACTION)) {
+            return false;
+        }
+        if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
+            return false;
+        }
+        $pref_name = (string) $input['name'];
+        $pref_list = Preference::get($pref_name, -1);
+        // if you found the preference or it's a system preference; don't add it.
+        if (!empty($pref_list) || in_array($pref_name, Preference::SYSTEM_LIST)) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Bad Request: %s'), $pref_name), '4710', self::ACTION, 'name', $input['api_format']);
+
+            return false;
+        }
+        $type = (string) $input['type'];
+        if (!in_array($type, array('boolean', 'integer', 'string', 'special'))) {
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
+
+            return false;
+        }
+        $level       = (isset($input['level'])) ? (int) $input['level'] : 100;
+        $default     = ($type == 'boolean' || $type == 'integer') ? (int) $input['default'] : (string) $input['default'];
+        $category    = (string) $input['category'];
+        $description = (string) $input['description'];
+        $subcategory = (string) $input['subcategory'];
+
+        // insert and return the new preference
+        Preference::insert($pref_name, $description, $default, $level, $type, $category, $subcategory);
+        $preference = Preference::get($pref_name, -1);
+        if (empty($preference)) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $pref_name), '4704', self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+        $output_array = array('preferences' => $preference);
+        switch ($input['api_format']) {
+            case 'json':
+                echo json_encode($output_array, JSON_PRETTY_PRINT);
+                break;
+            default:
+                echo XML_Data::object_array($output_array['preferences'], 'preferences', 'pref');
+        }
+        // fix preferences that are missing for user
+        User::fix_preferences($user->id);
+        Session::extend($input['auth']);
+
+        return true;
+    }
+}

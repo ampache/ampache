@@ -126,6 +126,8 @@ class Api
         'system_update' => ApiMethods\SystemUpdateMethod::class,
         'system_preferences' => ApiMethods\SystemPreferencesMethod::class,
         'system_preference' => ApiMethods\SystemPreferenceMethod::class,
+        'system_preference_add' => ApiMethods\SystemPreferenceAddMethod::class,
+        'system_preference_delete' => ApiMethods\SystemPreferenceDeleteMethod::class,
     ];
 
     /**

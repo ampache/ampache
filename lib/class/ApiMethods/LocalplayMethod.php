@@ -38,7 +38,7 @@ final class LocalplayMethod
     /**
      * localplay
      * MINIMUM_API_VERSION=380001
-     * CHANGED_IN_API_VERSION=430000
+     * CHANGED_IN_API_VERSION=5.0.0
      *
      * This is for controlling Localplay
      *

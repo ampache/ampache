@@ -34,7 +34,7 @@ final class UsersMethod
 {
     /**
      * users
-     * MINIMUM_API_VERSION=430000
+     * MINIMUM_API_VERSION=5.0.0
      *
      * Get ids and usernames for your site
      *
