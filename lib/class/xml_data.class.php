@@ -423,7 +423,7 @@ class XML_Data
                     $playlist->format();
 
                     $playlist_name  = Search::get_name_byid(str_replace('smart_', '', (string) $object_id));
-                    $playlist_user = ($playlist->type !== 'public')
+                    $playlist_user  = ($playlist->type !== 'public')
                         ? $playlist->f_user
                         : $playlist->type;
                     $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
@@ -435,7 +435,6 @@ class XML_Data
                     "\t<items><![CDATA[" . $playitem_total . "]]></items>\n" .
                     "\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n" .
                     "\t<type><![CDATA[" . $playlist->type . "]]></type>\n";
-                    ;
                 $playlist_track = 0;
                 foreach ($songs as $song_id) {
                     if ($song_id['object_type'] == 'song') {
