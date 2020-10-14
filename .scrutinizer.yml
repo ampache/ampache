@@ -1,10 +1,13 @@
+build:
+    environment:
+        php:
+            version: "7.4"
 filter:
     excluded_paths:
         - 'public/lib/components/*'
         - 'vendor/*'
         - 'modules/*'
     paths: {  }
-
 tools:
     php_mess_detector:
         enabled: true
