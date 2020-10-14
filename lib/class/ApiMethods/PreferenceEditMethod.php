@@ -36,7 +36,7 @@ final class PreferenceEditMethod
     private const ACTION = 'preference_edit';
 
     /**
-     * user_preference_edit
+     * preference_edit
      * MINIMUM_API_VERSION=5.0.0
      *
      * Edit a preference value and apply to all users if allowed
