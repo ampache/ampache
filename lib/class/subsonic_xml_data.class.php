@@ -1381,8 +1381,9 @@ class Subsonic_XML_Data
     /**
      * addArtistInfo
      * @param SimpleXMLElement $xml
-     * @param $info
-     * @param $similars
+     * @param array $info
+     * @param array $similars
+     * @param string $child
      */
     public static function addArtistInfo($xml, $info, $similars, $child)
     {
@@ -1407,6 +1408,7 @@ class Subsonic_XML_Data
      * addSimilarSongs
      * @param SimpleXMLElement $xml
      * @param array $similar_songs
+     * @param string $child
      */
     public static function addSimilarSongs($xml, $similar_songs, $child)
     {

@@ -152,6 +152,7 @@ class Stats
      * @param integer $object_id
      * @param integer $user
      * @param string $agent
+     * @param integer $time
      * @return boolean
      */
     public static function is_already_inserted($type, $object_id, $user, $agent, $time)
@@ -248,6 +249,7 @@ class Stats
      * optional user_id because when streaming we don't have $GLOBALS()
      * @param string $user_id
      * @param string $agent
+     * @param integer $date
      * @return array
      */
     public static function get_last_play($user_id = '', $agent = '', $date = 0)

@@ -357,9 +357,10 @@ class XML_Data
      * This takes an array of artists and then returns a pretty xml document with the information
      * we want
      *
-     * @param    array    $objects     (description here...)
-     * @param    string   $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'
-     * @param    bool     $full_xml    whether to return a full XML document or just the node.
+     * @param array $objects (description here...)
+     * @param string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'
+     * @param boolean $full_xml whether to return a full XML document or just the node.
+     * @param boolean $songs
      * @return   string   return xml
      */
     public static function indexes($objects, $object_type, $full_xml = true, $songs = false)

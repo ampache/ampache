@@ -1965,6 +1965,7 @@ class Subsonic_Api
      * Returns artist info with biography, image URLs and similar artists, using data from last.fm.
      * Takes artist id in parameter with optional similar artist count and if not present similar artist should be returned.
      * @param array $input
+     * @param string $child
      */
     public static function getartistinfo($input, $child = "artistInfo")
     {
@@ -2000,6 +2001,7 @@ class Subsonic_Api
      * Returns a random collection of songs from the given artist and similar artists, using data from last.fm. Typically used for artist radio features.
      * Takes song/album/artist id in parameter with optional similar songs count.
      * @param array $input
+     * @param string $child
      */
     public static function getsimilarsongs($input, $child = "similarSongs")
     {
