@@ -121,7 +121,7 @@ class Channel extends database_object implements media, library_item
      */
     public function get_genre()
     {
-        $tags  = Tag::get_object_tags('channel', $this->id);
+        $tags  = Genre::get_object_tags('channel', $this->id);
         $genre = "";
         if ($tags) {
             foreach ($tags as $tag) {
@@ -201,7 +201,7 @@ class Channel extends database_object implements media, library_item
     public function update(array $data)
     {
         if (isset($data['edit_tags'])) {
-            Tag::update_tag_list($data['edit_tags'], 'channel', $this->id, true);
+            Genre::update_tag_list($data['edit_tags'], 'channel', $this->id, true);
         }
 
         $sql = "UPDATE `channel` SET `name` = ?, `description` = ?, `url` = ?, `interface` = ?, `port` = ?, `fixed_endpoint` = ?, `admin_password` = ?, `is_private` = ?, `max_listeners` = ?, `random` = ?, `loop` = ?, `stream_type` = ?, `bitrate` = ?, `object_id` = ? " .
@@ -254,8 +254,8 @@ class Channel extends database_object implements media, library_item
     public function format($details = true)
     {
         if ($details) {
-            $this->tags   = Tag::get_top_tags('channel', $this->id);
-            $this->f_tags = Tag::get_display($this->tags, true, 'channel');
+            $this->tags   = Genre::get_top_tags('channel', $this->id);
+            $this->f_tags = Genre::get_display($this->tags, true, 'channel');
         }
     }
 

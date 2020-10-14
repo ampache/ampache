@@ -296,8 +296,8 @@ class Video extends database_object implements media, library_item
 
         if ($details) {
             // Get the top tags
-            $this->tags   = Tag::get_top_tags('video', $this->id);
-            $this->f_tags = Tag::get_display($this->tags, true, 'video');
+            $this->tags   = Genre::get_top_tags('video', $this->id);
+            $this->f_tags = Genre::get_display($this->tags, true, 'video');
         }
 
         $this->f_length = floor($this->time / 60) . ' ' . T_('minutes');
@@ -597,7 +597,7 @@ class Video extends database_object implements media, library_item
             foreach ($tags as $tag) {
                 $tag = trim((string) $tag);
                 if (!empty($tag)) {
-                    Tag::add('video', $vid, $tag, false);
+                    Genre::add('video', $vid, $tag, false);
                 }
             }
         }
@@ -661,7 +661,7 @@ class Video extends database_object implements media, library_item
         Dba::write($sql, array($title, $release_date, $this->id));
 
         if (isset($data['edit_tags'])) {
-            Tag::update_tag_list($data['edit_tags'], 'video', $this->id, true);
+            Genre::update_tag_list($data['edit_tags'], 'video', $this->id, true);
         }
 
         $this->title        = $title;

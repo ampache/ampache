@@ -751,8 +751,8 @@ class Album extends database_object implements library_item
                 $this->f_album_artist_link = "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $this->album_artist . "\" title=\"" . scrub_out($this->album_artist_name) . "\">" . $this->f_album_artist_name . "</a>";
             }
 
-            $this->tags   = Tag::get_top_tags('album', $this->id);
-            $this->f_tags = Tag::get_display($this->tags, true, 'album');
+            $this->tags   = Genre::get_top_tags('album', $this->id);
+            $this->f_tags = Genre::get_display($this->tags, true, 'album');
         }
 
         /* Truncate the string if it's to long */
@@ -1040,7 +1040,7 @@ class Album extends database_object implements library_item
             Recommendation::migrate('album', $this->id, $album_id);
             Share::migrate('album', $this->id, $album_id);
             Shoutbox::migrate('album', $this->id, $album_id);
-            Tag::migrate('album', $this->id, $album_id);
+            Genre::migrate('album', $this->id, $album_id);
             Userflag::migrate('album', $this->id, $album_id);
             Rating::migrate('album', $this->id, $album_id);
             Art::migrate('album', $this->id, $album_id);
@@ -1125,12 +1125,12 @@ class Album extends database_object implements library_item
         }
 
         // When current_id not empty we force to overwrite current object
-        Tag::update_tag_list($tags_comma, 'album', $current_id, $force_update ? true : $override_childs);
+        Genre::update_tag_list($tags_comma, 'album', $current_id, $force_update ? true : $override_childs);
 
         if ($override_childs || $add_to_childs) {
             $songs = $this->get_songs();
             foreach ($songs as $song_id) {
-                Tag::update_tag_list($tags_comma, 'song', $song_id, $override_childs);
+                Genre::update_tag_list($tags_comma, 'song', $song_id, $override_childs);
             }
         }
     }

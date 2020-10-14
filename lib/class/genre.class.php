@@ -22,12 +22,12 @@ declare(strict_types=0);
  */
 
 /**
- * Tag Class
+ * Genre Class
  *
- * This class handles all of the tag relation operations
+ * This class handles all of the genre relation operations
  *
  */
-class Tag extends database_object implements library_item
+class Genre extends database_object implements library_item
 {
     public $id;
     public $name;
@@ -61,13 +61,13 @@ class Tag extends database_object implements library_item
      * construct_from_name
      * This attempts to construct the tag from a name, rather then the ID
      * @param string $name
-     * @return Tag
+     * @return Genre
      */
     public static function construct_from_name($name)
     {
         $tag_id = self::tag_exists($name);
 
-        return new Tag($tag_id);
+        return new Genre($tag_id);
     } // construct_from_name
 
     /**
@@ -340,7 +340,7 @@ class Tag extends database_object implements library_item
         }
 
         // If tag merged to another one, add reference to the merge destination
-        $parent = new Tag($tag_id);
+        $parent = new Genre($tag_id);
         $merges = $parent->get_merged_tags();
         if (!$parent->is_hidden) {
             $merges[] = array('id' => $parent->id, 'name' => $parent->name);
@@ -716,7 +716,7 @@ class Tag extends database_object implements library_item
 
         foreach ($ctags as $ctid => $ctv) {
             if ($ctv['id'] != '') {
-                $ctag  = new Tag($ctv['id']);
+                $ctag  = new Genre($ctv['id']);
                 $found = false;
 
                 foreach ($editedTags as $tk => $tv) {
