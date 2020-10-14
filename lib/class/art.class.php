@@ -401,6 +401,7 @@ class Art extends database_object
         if (AmpConfig::get('write_id3_art')) {
             if ($this->type == 'album') {
                 $album = new Album($this->uid);
+
                 debug_event('art.class', 'Inserting image Album ' . $album->name . ' on songs.', 5);
                 $songs = $album->get_songs();
                 foreach ($songs as $song_id) {
@@ -418,8 +419,13 @@ class Art extends database_object
                             $ndata['APIC']['data'] = $source;
                             $ndata['APIC']['mime'] = $mime;
                             $ndata                 = array_merge($ndata, $song->get_metadata());
-                            $id3->write_id3($ndata);
-                            Catalog::update_media_from_tags($song);
+                            try {
+                                $id3->write_id3($ndata);
+                                Catalog::update_media_from_tags($song);
+                            } catch (Exception $error) {
+                                debug_event('art.class', 'Error ' . $error->getMessage(), 1);
+
+                            }
                         }
                     }
                 }

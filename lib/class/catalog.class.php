@@ -1759,7 +1759,6 @@ abstract class Catalog extends database_object
      * @param string $sort_pattern
      * @param string $rename_pattern
      * @return array
-     * @throws Exception
      */
     public static function update_media_from_tags($media, $gather_types = array('music'), $sort_pattern = '', $rename_pattern = '')
     {
@@ -2070,7 +2069,6 @@ abstract class Catalog extends database_object
      * @param string $sort_pattern
      * @param string $rename_pattern
      * @return array
-     * @throws Exception
      */
     public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
     {
@@ -2081,7 +2079,13 @@ abstract class Catalog extends database_object
         }
 
         $vainfo = new vainfo($media->file, $gather_types, '', '', '', $sort_pattern, $rename_pattern);
-        $vainfo->get_info();
+        try {
+            $vainfo->get_info();
+        } catch (Exception $error) {
+            debug_event('catalog.class', 'Error ' . $error->getMessage(), 1);
+
+            return array();
+        }
 
         $key = vainfo::get_tag_type($vainfo->tags);
 
