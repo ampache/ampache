@@ -38,12 +38,12 @@ final class PreferenceAddMethod
      * preference_add
      * MINIMUM_API_VERSION=5.0.0
      *
-     * Get your system preferences by name
+     * Add a new preference to your server
      *
      * @param array $input
      * This inserts a new preference into the preference table
      *
-     * name        = (string) preference name
+     * filter      = (string) preference name
      * type        = (string) 'boolean', 'integer', 'string', 'special'
      * default     = (string|integer) default value
      * category    = (string) 'interface', 'internal', 'options', 'playlist', 'plugins', 'streaming', 'system'
@@ -55,18 +55,18 @@ final class PreferenceAddMethod
     public static function preference_add($input)
     {
         $user = User::get_from_username(Session::username($input['auth']));
-        if (!Api::check_parameter($input, array('name', 'type', 'default', 'category'), self::ACTION)) {
+        if (!Api::check_parameter($input, array('filter', 'type', 'default', 'category'), self::ACTION)) {
             return false;
         }
         if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $pref_name = (string) $input['name'];
+        $pref_name = (string) $input['filter'];
         $pref_list = Preference::get($pref_name, -1);
         // if you found the preference or it's a system preference; don't add it.
         if (!empty($pref_list) || in_array($pref_name, Preference::SYSTEM_LIST)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $pref_name), '4710', self::ACTION, 'name', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $pref_name), '4710', self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
@@ -76,9 +76,14 @@ final class PreferenceAddMethod
 
             return false;
         }
+        $category = (string) $input['category'];
+        if (!in_array($category, array('interface', 'internal', 'options', 'playlist', 'plugins', 'streaming', 'system'))) {
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'category', $input['api_format']);
+
+            return false;
+        }
         $level       = (isset($input['level'])) ? (int) $input['level'] : 100;
         $default     = ($type == 'boolean' || $type == 'integer') ? (int) $input['default'] : (string) $input['default'];
-        $category    = (string) $input['category'];
         $description = (string) $input['description'];
         $subcategory = (string) $input['subcategory'];
 

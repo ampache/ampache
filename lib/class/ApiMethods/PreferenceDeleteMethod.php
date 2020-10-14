@@ -38,7 +38,7 @@ final class PreferenceDeleteMethod
      * preference_delete
      * MINIMUM_API_VERSION=5.0.0
      *
-     * Get your system preferences by name
+     * Delete a non-system preference by name
      *
      * @param array $input
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')

@@ -60,6 +60,15 @@ This takes a url and returns the song object in question
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/url_to_song.xml)
 
+## system_update
+
+* **NEW** in develop
+
+Check Ampache for updates and run the update if there is one.
+@param array $input
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/system_update.xml)
+
 ## Data Methods
 
 ## get_indexes
@@ -333,6 +342,19 @@ returns a single song
 | 'filter' | string | UID of Song, returns song XML |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/song.xml)
+
+## song_delete
+
+* **NEW** in Develop
+
+Delete an existing song. (if you are allowed to)
+@param array $input
+
+| Input    | Type   | Description           | Optional |
+|----------|--------|-----------------------|---------:|
+| 'filter' | string | UID of song to delete |       NO |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/song_delete.xml)
 
 ## playlists
 
@@ -818,6 +840,28 @@ Delete an existing user.
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/user_delete.xml)
 
+## user_preferences
+
+* **NEW** in develop
+
+Get your user preferences
+@param array $input
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/user_preferences.xml)
+
+## user_preference
+
+* **NEW** in develop
+
+Get your user preference by name
+@param array $input
+
+| Input    | Type   | Description                                       | Optional |
+|----------|--------|---------------------------------------------------|---------:|
+| 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') |       NO |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/user_preferences.xml)
+
 ## licenses
 
 * **NEW** in 4.2.0
@@ -1103,12 +1147,16 @@ Sync and download new podcast episodes
 
 ## user_preferences
 
+* **NEW** in develop
+
 Get your user preferences
 @param array $input
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/user_preferences.xml)
 
 ## user_preference
+
+* **NEW** in develop
 
 Get your user preference by name
 @param array $input
@@ -1121,12 +1169,16 @@ Get your user preference by name
 
 ## system_preferences
 
+* **NEW** in develop
+
 Get your server preferences
 @param array $input
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/system_preferences.xml)
 
 ## system_preference
+
+* **NEW** in develop
 
 Get your server preference by name
 @param array $input
@@ -1135,7 +1187,55 @@ Get your server preference by name
 |----------|--------|---------------------------------------------------|---------:|
 | 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') |       NO |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/system_preference.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/system_preferences.xml)
+
+## preference_add
+
+* **NEW** in develop
+
+Add a new preference to your server
+@param array $input
+
+| Input         | Type    | Description                                                                      | Optional |
+|---------------|---------|----------------------------------------------------------------------------------|---------:|
+| 'filter'      | string  | Preference name e.g ('notify_email', 'ajax_load')                                |       NO |
+| 'type'        | string  | 'boolean', 'integer', 'string', 'special'                                        |       NO |
+| 'default'     | mixed   | string or integer default value                                                  |       NO |
+| 'category'    | string  | 'interface', 'internal', 'options', 'playlist', 'plugins', 'streaming', 'system' |       NO |
+| 'description' | string  |                                                                                  |      YES |
+| 'subcategory' | string  |                                                                                  |      YES |
+| 'level'       | integer | access level required to change the value (default 100)                          |      YES |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/preference_add.xml)
+
+## preference_edit
+
+* **NEW** in develop
+
+Edit a preference value and apply to all users if allowed
+@param array $input
+     * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
+     * value  = (string|integer) Preference value
+     * all    = (boolean) apply to all users //optional
+
+| Input    | Type   | Description                                       | Optional |
+|----------|--------|---------------------------------------------------|---------:|
+| 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') |       NO |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/preference_edit.xml)
+
+## preference_delete
+
+* **NEW** in develop
+
+Delete a non-system preference by name
+@param array $input
+
+| Input    | Type   | Description                                       | Optional |
+|----------|--------|---------------------------------------------------|---------:|
+| 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') |       NO |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/preference_delete.xml)
 
 ## Binary Data Methods
 
