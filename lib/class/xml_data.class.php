@@ -360,10 +360,10 @@ class XML_Data
      * @param array $objects (description here...)
      * @param string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'
      * @param boolean $full_xml whether to return a full XML document or just the node.
-     * @param boolean $songs
+     * @param boolean $add_songs
      * @return   string   return xml
      */
-    public static function indexes($objects, $object_type, $full_xml = true, $songs = false)
+    public static function indexes($objects, $object_type, $full_xml = true, $add_songs = false)
     {
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
@@ -416,28 +416,34 @@ class XML_Data
                     $playlist->format();
 
                     $playlist_name  = $playlist->name;
+                    $playlist_user  = $playlist->f_user;
                     $playitem_total = $playlist->get_media_count('song');
                 } else {
                     $playlist = new Search((int) str_replace('smart_', '', (string) $object_id));
                     $playlist->format();
 
                     $playlist_name  = Search::get_name_byid(str_replace('smart_', '', (string) $object_id));
-                    $playitem_total = ($playlist->limit == 0) ? 5000 : $playlist->limit;
+                    $playlist_user = ($playlist->type !== 'public')
+                        ? $playlist->f_user
+                        : $playlist->type;
+                    $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
+                    $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
                 }
-                // don't allow unlimited smartlists or empty playlists into xml
-                if ($songs && (int) $playitem_total > 0) {
-                    $songs = $playlist->get_items();
-                    $string .= "<$object_type id=\"" . $object_id . "\">\n" .
-                            "\t<name><![CDATA[" . $playlist_name . "]]></name>\n";
-                    $playlist_track = 0;
-                    foreach ($songs as $song_id) {
-                        if ($song_id['object_type'] == 'song') {
-                            $playlist_track++;
-                            $string .= "\t\t<playlisttrack id=\"" . $song_id['object_id'] . "\">" . $playlist_track . "</playlisttrack>\n";
-                        }
+                $songs = ($add_songs) ? $playlist->get_items() : array();
+                $string .= "<$object_type id=\"" . $object_id . "\">\n" .
+                    "\t<name><![CDATA[" . $playlist_name . "]]></name>\n" .
+                    "\t<items><![CDATA[" . $playitem_total . "]]></items>\n" .
+                    "\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n" .
+                    "\t<type><![CDATA[" . $playlist->type . "]]></type>\n";
+                    ;
+                $playlist_track = 0;
+                foreach ($songs as $song_id) {
+                    if ($song_id['object_type'] == 'song') {
+                        $playlist_track++;
+                        $string .= "\t\t<playlisttrack id=\"" . $song_id['object_id'] . "\">" . $playlist_track . "</playlisttrack>\n";
                     }
-                    $string .= "</$object_type>\n";
                 }
+                $string .= "</$object_type>\n";
             }
         } // end foreach objects
 
