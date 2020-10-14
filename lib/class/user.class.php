@@ -508,7 +508,7 @@ class User extends database_object
                 $items[]      = $data;
             } elseif (($type == 'genre' || $type == 'tag')) {
                 // If it's a genre
-                $data    = new Tag($row['object_id']);
+                $data    = new Genre($row['object_id']);
                 $items[] = $data;
             }
         } // end foreach

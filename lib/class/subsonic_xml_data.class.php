@@ -778,7 +778,7 @@ class Subsonic_XML_Data
         if ($songData['year'] > 0) {
             $xsong->addAttribute('year', (string) $songData['year']);
         }
-        $tags = Tag::get_object_tags('song', (string) $songData['id']);
+        $tags = Genre::get_object_tags('song', (string) $songData['id']);
         if (count($tags) > 0) {
             $xsong->addAttribute('genre', (string) $tags[0]['name']);
         }
@@ -919,7 +919,7 @@ class Subsonic_XML_Data
         $xgenres = $xml->addChild('genres');
 
         foreach ($tags as $tag) {
-            $otag   = new Tag($tag['id']);
+            $otag   = new Genre($tag['id']);
             $xgenre = $xgenres->addChild('genre', htmlspecialchars($otag->name));
             $counts = $otag->count('', 0);
             $xgenre->addAttribute('songCount', (string) $counts['song']);
@@ -960,7 +960,7 @@ class Subsonic_XML_Data
         if ($video->year > 0) {
             $xvideo->addAttribute('year', (string) $video->year);
         }
-        $tags = Tag::get_object_tags('video', (int) $video->id);
+        $tags = Genre::get_object_tags('video', (int) $video->id);
         if (count($tags) > 0) {
             $xvideo->addAttribute('genre', (string) $tags[0]['name']);
         }

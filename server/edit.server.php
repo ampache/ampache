@@ -124,7 +124,7 @@ switch ($_REQUEST['action']) {
                 unset($_POST['album_artist_name']);
             }
             if (filter_has_var(INPUT_POST, 'edit_tags')) {
-                $_POST['edit_tags'] = Tag::clean_to_existing($_POST['edit_tags']);
+                $_POST['edit_tags'] = Genre::clean_to_existing($_POST['edit_tags']);
             }
             if (filter_has_var(INPUT_POST, 'edit_labels')) {
                 $_POST['edit_labels'] = Label::clean_to_existing($_POST['edit_labels']);

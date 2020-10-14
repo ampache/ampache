@@ -1112,7 +1112,7 @@ class Upnp_Api
             'upnp:albumArtURI' => $art_url,
             'upnp:artist' => self::_replaceSpecialSymbols($song->f_artist),
             'upnp:album' => self::_replaceSpecialSymbols($song->f_album),
-            'upnp:genre' => Tag::get_display($song->tags, false, 'song'),
+            'upnp:genre' => Genre::get_display($song->tags, false, 'song'),
             //'dc:date'                   => date("c", (int) $song->addition_time),
             'upnp:originalTrackNumber' => $song->track,
 
@@ -1207,7 +1207,7 @@ class Upnp_Api
             'dc:title' => self::_replaceSpecialSymbols($video->f_title),
             'upnp:class' => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
             'upnp:albumArtURI' => $art_url,
-            'upnp:genre' => Tag::get_display($video->tags, false, 'video'),
+            'upnp:genre' => Genre::get_display($video->tags, false, 'video'),
 
             'res' => Video::play_url($video->id, '', 'api'),
             'protocolInfo' => $arrFileType['mime'],

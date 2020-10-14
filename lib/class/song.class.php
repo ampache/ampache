@@ -453,16 +453,16 @@ class Song extends database_object implements media, library_item
         // Allow scripts to populate new tags when injecting user uploads
         if (!defined('NO_SESSION')) {
             if ($user_upload && !Access::check('interface', 50, $user_upload)) {
-                $tags = Tag::clean_to_existing($tags);
+                $tags = Genre::clean_to_existing($tags);
             }
         }
         if (is_array($tags)) {
             foreach ($tags as $tag) {
                 $tag = trim((string) $tag);
                 if (!empty($tag)) {
-                    Tag::add('song', $song_id, $tag, false);
-                    Tag::add('album', $album_id, $tag, false);
-                    Tag::add('artist', $artist_id, $tag, false);
+                    Genre::add('song', $song_id, $tag, false);
+                    Genre::add('album', $album_id, $tag, false);
+                    Genre::add('artist', $artist_id, $tag, false);
                 }
             }
         }
@@ -546,8 +546,8 @@ class Song extends database_object implements media, library_item
 
         Artist::build_cache($artists);
         Album::build_cache($albums);
-        Tag::build_cache($tags);
-        Tag::build_map_cache('song', $song_ids);
+        Genre::build_cache($tags);
+        Genre::build_map_cache('song', $song_ids);
         Art::build_cache($albums);
 
         // If we're rating this then cache them as well
@@ -1209,8 +1209,8 @@ class Song extends database_object implements media, library_item
                     }
                     break;
                 case 'edit_tags':
-                    Tag::update_tag_list($value, 'song', $this->id, true);
-                    $this->tags = Tag::get_top_tags('song', $this->id);
+                    Genre::update_tag_list($value, 'song', $this->id, true);
+                    $this->tags = Genre::get_top_tags('song', $this->id);
                     break;
                 case 'metadata':
                     if (self::isCustomMetadataEnabled()) {
@@ -1488,7 +1488,7 @@ class Song extends database_object implements media, library_item
         Recommendation::migrate('artist', $old_artist, $new_artist);
         Share::migrate('artist', $old_artist, $new_artist);
         Shoutbox::migrate('artist', $old_artist, $new_artist);
-        Tag::migrate('artist', $old_artist, $new_artist);
+        Genre::migrate('artist', $old_artist, $new_artist);
         Userflag::migrate('artist', $old_artist, $new_artist);
         Rating::migrate('artist', $old_artist, $new_artist);
         Art::migrate('artist', $old_artist, $new_artist);
@@ -1511,7 +1511,7 @@ class Song extends database_object implements media, library_item
         Recommendation::migrate('album', $old_album, $new_album);
         Share::migrate('album', $old_album, $new_album);
         Shoutbox::migrate('album', $old_album, $new_album);
-        Tag::migrate('album', $old_album, $new_album);
+        Genre::migrate('album', $old_album, $new_album);
         Userflag::migrate('album', $old_album, $new_album);
         Rating::migrate('album', $old_album, $new_album);
         Art::migrate('album', $old_album, $new_album);
@@ -1633,8 +1633,8 @@ class Song extends database_object implements media, library_item
             $this->fill_ext_info();
 
             // Get the top tags
-            $this->tags   = Tag::get_top_tags('song', $this->id);
-            $this->f_tags = Tag::get_display($this->tags, true, 'song');
+            $this->tags   = Genre::get_top_tags('song', $this->id);
+            $this->f_tags = Genre::get_display($this->tags, true, 'song');
         }
         // force the album artist.
         $album             = new Album($this->album);

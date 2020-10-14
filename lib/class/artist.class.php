@@ -588,8 +588,8 @@ class Artist extends database_object implements library_item
 
             $this->f_time = ltrim((string) $hours . ':' . $min . ':' . $sec, '0:');
 
-            $this->tags   = Tag::get_top_tags('artist', $this->id);
-            $this->f_tags = Tag::get_display($this->tags, true, 'artist');
+            $this->tags   = Genre::get_top_tags('artist', $this->id);
+            $this->f_tags = Genre::get_display($this->tags, true, 'artist');
 
             if (AmpConfig::get('label')) {
                 $this->labels   = Label::get_labels($this->id);
@@ -918,7 +918,7 @@ class Artist extends database_object implements library_item
                 Recommendation::migrate('artist', $this->id, $artist_id);
                 Share::migrate('artist', $this->id, $artist_id);
                 Shoutbox::migrate('artist', $this->id, $artist_id);
-                Tag::migrate('artist', $this->id, $artist_id);
+                Genre::migrate('artist', $this->id, $artist_id);
                 Userflag::migrate('artist', $this->id, $artist_id);
                 Rating::migrate('artist', $this->id, $artist_id);
                 Art::migrate('artist', $this->id, $artist_id);
@@ -995,7 +995,7 @@ class Artist extends database_object implements library_item
             $current_id = $this->id;
         }
 
-        Tag::update_tag_list($tags_comma, 'artist', $current_id, $force_update ? true : $override_childs);
+        Genre::update_tag_list($tags_comma, 'artist', $current_id, $force_update ? true : $override_childs);
 
         if ($override_childs || $add_to_childs) {
             $albums = $this->get_albums();
