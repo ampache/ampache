@@ -55,7 +55,7 @@ final class PreferenceEditMethod
         $user = User::get_from_username(Session::username($input['auth']));
         $all  = (int) $input['all'] == 1;
         // don't apply to all when you aren't an admin
-        if ($all&& !Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
+        if ($all && !Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         // fix preferences that are missing for user
