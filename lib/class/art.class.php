@@ -425,6 +425,7 @@ class Art extends database_object
                             } catch (Exception $error) {
                                 debug_event('art.class', 'Error ' . $error->getMessage(), 1);
 
+                                return false;
                             }
                         }
                     }
