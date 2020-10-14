@@ -369,6 +369,7 @@ class Art extends database_object
      * @param string $source
      * @param string $mime
      * @return boolean
+     * @throws Exception
      */
     public function insert($source, $mime = '')
     {

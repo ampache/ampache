@@ -318,6 +318,7 @@ class Catalog_dropbox extends Catalog
      * @param $dropbox
      * @param $path
      * @return boolean
+     * @throws Exception
      */
     public function add_file($dropbox, $path)
     {

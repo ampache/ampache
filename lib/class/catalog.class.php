@@ -1674,6 +1674,7 @@ abstract class Catalog extends database_object
      * @param integer $object_id
      * @param boolean $api
      * @return integer
+     * @throws Exception
      */
     public static function update_single_item($type, $object_id, $api = false)
     {
