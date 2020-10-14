@@ -57,8 +57,9 @@ All API code that used 'Tag' now references 'Genre' instead
   * Api::system_update (Check Ampache for updates and run the update if there is one.)
   * Api::system_preferences (Preferences for the system user)
   * Api::system_preference (Get a system preference by name)
-  * Api::system_preference_add (Add a new preference to Ampache)
-  * Api::system_preference_delete (Delete a preference by name)
+  * Api::preference_add (Add a new preference to Ampache)
+  * Api::preference_edit (Edit a preference value by name; optionally apply to all users)
+  * Api::preference_delete (Delete a preference by name)
 
 ### Changed
 

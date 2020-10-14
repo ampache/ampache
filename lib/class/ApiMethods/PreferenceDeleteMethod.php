@@ -30,12 +30,12 @@ use Session;
 use User;
 use XML_Data;
 
-final class SystemPreferenceDeleteMethod
+final class PreferenceDeleteMethod
 {
-    private const ACTION = 'system_preference_delete';
+    private const ACTION = 'preference_delete';
 
     /**
-     * system_preference_delete
+     * preference_delete
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get your system preferences by name
@@ -44,7 +44,7 @@ final class SystemPreferenceDeleteMethod
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * @return boolean
      */
-    public static function system_preference_delete($input)
+    public static function preference_delete($input)
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;

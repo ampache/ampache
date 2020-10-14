@@ -30,12 +30,12 @@ use Session;
 use User;
 use XML_Data;
 
-final class SystemPreferenceAddMethod
+final class PreferenceAddMethod
 {
-    private const ACTION = 'system_preference_add';
+    private const ACTION = 'preference_add';
 
     /**
-     * system_preference_add
+     * preference_add
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get your system preferences by name
@@ -52,7 +52,7 @@ final class SystemPreferenceAddMethod
      * level       = (integer) access level required to change the value (default 100) //optional
      * @return bool
      */
-    public static function system_preference_add($input)
+    public static function preference_add($input)
     {
         $user = User::get_from_username(Session::username($input['auth']));
         if (!Api::check_parameter($input, array('name', 'type', 'default', 'category'), self::ACTION)) {
