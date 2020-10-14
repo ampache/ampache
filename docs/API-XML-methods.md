@@ -1189,7 +1189,7 @@ Get your server preference by name
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/system_preferences.xml)
 
-## preference_add
+## preference_create
 
 * **NEW** in develop
 
@@ -1206,7 +1206,7 @@ Add a new preference to your server
 | 'subcategory' | string  |                                                                                  |      YES |
 | 'level'       | integer | access level required to change the value (default 100)                          |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/preference_add.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/preference_create.xml)
 
 ## preference_edit
 

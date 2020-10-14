@@ -30,12 +30,12 @@ use Session;
 use User;
 use XML_Data;
 
-final class PreferenceAddMethod
+final class PreferenceCreateMethod
 {
-    private const ACTION = 'preference_add';
+    private const ACTION = 'preference_create';
 
     /**
-     * preference_add
+     * preference_create
      * MINIMUM_API_VERSION=5.0.0
      *
      * Add a new preference to your server
@@ -52,7 +52,7 @@ final class PreferenceAddMethod
      * level       = (integer) access level required to change the value (default 100) //optional
      * @return bool
      */
-    public static function preference_add($input)
+    public static function preference_create($input)
     {
         $user = User::get_from_username(Session::username($input['auth']));
         if (!Api::check_parameter($input, array('filter', 'type', 'default', 'category'), self::ACTION)) {
