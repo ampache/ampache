@@ -778,7 +778,7 @@ class Subsonic_XML_Data
         if ($songData['year'] > 0) {
             $xsong->addAttribute('year', (string) $songData['year']);
         }
-        $tags = Genre::get_object_tags('song', (string) $songData['id']);
+        $tags = Genre::get_object_tags('song', (int) $songData['id']);
         if (count($tags) > 0) {
             $xsong->addAttribute('genre', (string) $tags[0]['name']);
         }
