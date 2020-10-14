@@ -36,8 +36,6 @@ use XML_Data;
 
 final class PlaylistGenerateMethod
 {
-    private const ACTION = 'playlist_generate';
-
     /**
      * playlist_generate
      * MINIMUM_API_VERSION=400001

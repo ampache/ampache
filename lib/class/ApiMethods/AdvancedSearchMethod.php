@@ -33,8 +33,6 @@ use XML_Data;
 
 final class AdvancedSearchMethod
 {
-    private const ACTION = 'advanced_search';
-
     /**
      * advanced_search
      * MINIMUM_API_VERSION=380001

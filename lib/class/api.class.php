@@ -187,13 +187,11 @@ class Api
     /**
      * error
      * call the correct error / success message depending on format
-     * @param string $type
      * @param string $message
+     * @param string $error_code
      * @param string $method
      * @param string $error_type
-     * @param string $error_code
      * @param string $format
-     * @param array $return_data
      */
     public static function error($message, $error_code, $method, $error_type, $format = 'xml')
     {

@@ -31,8 +31,6 @@ use XML_Data;
 
 final class CatalogsMethod
 {
-    private const ACTION = 'catalogs';
-
     /**
      * catalogs
      * MINIMUM_API_VERSION=420000

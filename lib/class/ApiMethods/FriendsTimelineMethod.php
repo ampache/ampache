@@ -33,8 +33,6 @@ use XML_Data;
 
 final class FriendsTimelineMethod
 {
-    private const ACTION = 'friends_timeline';
-
     /**
      * friends_timeline
      * MINIMUM_API_VERSION=380001
