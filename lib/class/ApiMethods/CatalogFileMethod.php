@@ -27,7 +27,6 @@ namespace Lib\ApiMethods;
 use AmpConfig;
 use Api;
 use Catalog;
-use Exception;
 use Podcast_Episode;
 use Session;
 use Song;
@@ -55,7 +54,6 @@ final class CatalogFileMethod
      * task    = (string) 'add', 'clean', 'verify', 'remove'
      * catalog = (integer) $catalog_id)
      * @return boolean
-     * @throws Exception
      */
     public static function catalog_file(array $input)
     {

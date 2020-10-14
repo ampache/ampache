@@ -237,7 +237,6 @@ class Catalog_local extends Catalog
      * @param array $options
      * @param integer $counter
      * @return boolean
-     * @throws Exception
      */
     public function add_files($path, $options, $counter = 0)
     {
@@ -587,7 +586,6 @@ class Catalog_local extends Catalog
      * @param $chunk
      * @param $chunk_size
      * @return integer
-     * @throws Exception
      */
     private function _verify_chunk($media_type, $chunk, $chunk_size)
     {
