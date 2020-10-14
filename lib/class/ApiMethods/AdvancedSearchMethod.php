@@ -31,6 +31,10 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class AdvancedSearchMethod
+ * @package Lib\ApiMethods
+ */
 final class AdvancedSearchMethod
 {
     /**

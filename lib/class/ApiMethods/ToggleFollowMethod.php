@@ -29,6 +29,10 @@ use Api;
 use Session;
 use User;
 
+/**
+ * Class ToggleFollowMethod
+ * @package Lib\ApiMethods
+ */
 final class ToggleFollowMethod
 {
     private const ACTION = 'toggle_follow';

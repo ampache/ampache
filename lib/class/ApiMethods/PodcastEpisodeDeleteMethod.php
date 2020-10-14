@@ -32,6 +32,10 @@ use Podcast_Episode;
 use Session;
 use User;
 
+/**
+ * Class PodcastEpisodeDeleteMethod
+ * @package Lib\ApiMethods
+ */
 final class PodcastEpisodeDeleteMethod
 {
     private const ACTION = 'podcast_episode_delete';

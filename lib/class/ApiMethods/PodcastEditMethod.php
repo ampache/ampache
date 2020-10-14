@@ -31,6 +31,10 @@ use Podcast;
 use Session;
 use User;
 
+/**
+ * Class PodcastEditMethod
+ * @package Lib\ApiMethods
+ */
 final class PodcastEditMethod
 {
     private const ACTION = 'podcast_edit';

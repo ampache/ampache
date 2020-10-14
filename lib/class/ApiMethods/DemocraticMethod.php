@@ -32,6 +32,10 @@ use Song;
 use User;
 use XML_Data;
 
+/**
+ * Class DemocraticMethod
+ * @package Lib\ApiMethods
+ */
 final class DemocraticMethod
 {
     private const ACTION = 'democratic';

@@ -32,6 +32,10 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class UserMethod
+ * @package Lib\ApiMethods
+ */
 final class UserMethod
 {
     private const ACTION = 'user';

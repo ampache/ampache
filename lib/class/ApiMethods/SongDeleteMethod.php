@@ -31,6 +31,10 @@ use Session;
 use Song;
 use User;
 
+/**
+ * Class SongDeleteMethod
+ * @package Lib\ApiMethods
+ */
 final class SongDeleteMethod
 {
     private const ACTION = 'song_delete';

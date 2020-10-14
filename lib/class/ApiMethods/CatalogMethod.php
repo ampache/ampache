@@ -29,6 +29,10 @@ use JSON_Data;
 use Session;
 use XML_Data;
 
+/**
+ * Class CatalogMethod
+ * @package Lib\ApiMethods
+ */
 final class CatalogMethod
 {
     private const ACTION = 'catalog';

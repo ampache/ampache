@@ -31,6 +31,10 @@ use JSON_Data;
 use Session;
 use XML_Data;
 
+/**
+ * Class SharesMethod
+ * @package Lib\ApiMethods
+ */
 final class SharesMethod
 {
     private const ACTION = 'shares';

@@ -32,6 +32,10 @@ use Playlist;
 use Session;
 use User;
 
+/**
+ * Class PlaylistAddSongMethod
+ * @package Lib\ApiMethods
+ */
 final class PlaylistAddSongMethod
 {
     private const ACTION = 'playlist_add_song';

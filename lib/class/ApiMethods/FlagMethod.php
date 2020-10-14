@@ -31,6 +31,10 @@ use Session;
 use User;
 use Userflag;
 
+/**
+ * Class FlagMethod
+ * @package Lib\ApiMethods
+ */
 final class FlagMethod
 {
     private const ACTION = 'flag';

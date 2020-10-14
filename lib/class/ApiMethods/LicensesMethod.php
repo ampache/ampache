@@ -31,6 +31,10 @@ use JSON_Data;
 use Session;
 use XML_Data;
 
+/**
+ * Class LicensesMethod
+ * @package Lib\ApiMethods
+ */
 final class LicensesMethod
 {
     private const ACTION = 'licenses';

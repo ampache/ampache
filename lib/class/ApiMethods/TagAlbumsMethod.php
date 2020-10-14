@@ -30,6 +30,10 @@ use JSON_Data;
 use Session;
 use XML_Data;
 
+/**
+ * Class TagAlbumsMethod
+ * @package Lib\ApiMethods
+ */
 final class TagAlbumsMethod
 {
     private const ACTION = 'tag_albums';

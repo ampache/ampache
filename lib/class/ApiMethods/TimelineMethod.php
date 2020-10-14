@@ -33,6 +33,10 @@ use User;
 use Useractivity;
 use XML_Data;
 
+/**
+ * Class TimelineMethod
+ * @package Lib\ApiMethods
+ */
 final class TimelineMethod
 {
     private const ACTION = 'timeline';

@@ -33,6 +33,10 @@ use Session;
 use Song;
 use User;
 
+/**
+ * Class GetArtMethod
+ * @package Lib\ApiMethods
+ */
 final class GetArtMethod
 {
     private const ACTION = 'get_art';

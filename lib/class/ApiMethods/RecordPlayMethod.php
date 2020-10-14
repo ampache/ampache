@@ -29,6 +29,10 @@ use Session;
 use Song;
 use User;
 
+/**
+ * Class RecordPlayMethod
+ * @package Lib\ApiMethods
+ */
 final class RecordPlayMethod
 {
     private const ACTION = 'record_play';

@@ -33,6 +33,10 @@ use Preference;
 use Session;
 use User;
 
+/**
+ * Class UserUpdateMethod
+ * @package Lib\ApiMethods
+ */
 final class UserUpdateMethod
 {
     private const ACTION = 'user_update';

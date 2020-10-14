@@ -28,6 +28,10 @@ use Api;
 use Catalog;
 use Session;
 
+/**
+ * Class UpdateFromTagsMethod
+ * @package Lib\ApiMethods
+ */
 final class UpdateFromTagsMethod
 {
     private const ACTION = 'update_from_tags';

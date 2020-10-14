@@ -31,6 +31,10 @@ use Playlist;
 use Session;
 use User;
 
+/**
+ * Class PlaylistEditMethod
+ * @package Lib\ApiMethods
+ */
 final class PlaylistEditMethod
 {
     private const ACTION = 'playlist_edit';

@@ -34,6 +34,10 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class PlaylistGenerateMethod
+ * @package Lib\ApiMethods
+ */
 final class PlaylistGenerateMethod
 {
     /**

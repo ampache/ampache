@@ -29,6 +29,10 @@ use Api;
 use Session;
 use User;
 
+/**
+ * Class UserCreateMethod
+ * @package Lib\ApiMethods
+ */
 final class UserCreateMethod
 {
     private const ACTION = 'user_create';

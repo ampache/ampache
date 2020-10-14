@@ -30,6 +30,10 @@ use JSON_Data;
 use Session;
 use XML_Data;
 
+/**
+ * Class GenresMethod
+ * @package Lib\ApiMethods
+ */
 final class GenresMethod
 {
     /**

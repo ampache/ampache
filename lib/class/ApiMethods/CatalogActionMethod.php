@@ -29,6 +29,10 @@ use Catalog;
 use Session;
 use User;
 
+/**
+ * Class CatalogActionMethod
+ * @package Lib\ApiMethods
+ */
 final class CatalogActionMethod
 {
     private const ACTION = 'catalog_action';

@@ -33,6 +33,10 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class PodcastCreateMethod
+ * @package Lib\ApiMethods
+ */
 final class PodcastCreateMethod
 {
     private const ACTION = 'podcast_create';

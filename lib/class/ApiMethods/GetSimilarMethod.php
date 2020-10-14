@@ -31,6 +31,10 @@ use Recommendation;
 use Session;
 use XML_Data;
 
+/**
+ * Class GetSimilarMethod
+ * @package Lib\ApiMethods
+ */
 final class GetSimilarMethod
 {
     private const ACTION = 'get_similar';

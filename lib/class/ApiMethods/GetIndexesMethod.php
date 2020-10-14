@@ -32,6 +32,10 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class GetIndexesMethod
+ * @package Lib\ApiMethods
+ */
 final class GetIndexesMethod
 {
     private const ACTION = 'get_indexes';

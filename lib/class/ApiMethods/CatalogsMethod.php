@@ -29,6 +29,10 @@ use JSON_Data;
 use Session;
 use XML_Data;
 
+/**
+ * Class CatalogsMethod
+ * @package Lib\ApiMethods
+ */
 final class CatalogsMethod
 {
     /**

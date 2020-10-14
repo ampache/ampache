@@ -31,6 +31,10 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class FollowingMethod
+ * @package Lib\ApiMethods
+ */
 final class FollowingMethod
 {
     private const ACTION = 'following';

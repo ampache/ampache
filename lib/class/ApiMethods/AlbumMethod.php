@@ -31,6 +31,10 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class AlbumMethod
+ * @package Lib\ApiMethods
+ */
 final class AlbumMethod
 {
     private const ACTION = 'album';

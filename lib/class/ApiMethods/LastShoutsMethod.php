@@ -31,6 +31,10 @@ use Session;
 use Shoutbox;
 use XML_Data;
 
+/**
+ * Class LastShoutsMethod
+ * @package Lib\ApiMethods
+ */
 final class LastShoutsMethod
 {
     private const ACTION = 'last_shouts';

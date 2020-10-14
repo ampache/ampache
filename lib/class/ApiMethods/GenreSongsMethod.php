@@ -32,6 +32,10 @@ use Tag;
 use User;
 use XML_Data;
 
+/**
+ * Class GenreSongsMethod
+ * @package Lib\ApiMethods
+ */
 final class GenreSongsMethod
 {
     /**

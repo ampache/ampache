@@ -31,6 +31,10 @@ use User;
 use Useractivity;
 use XML_Data;
 
+/**
+ * Class FriendsTimelineMethod
+ * @package Lib\ApiMethods
+ */
 final class FriendsTimelineMethod
 {
     /**

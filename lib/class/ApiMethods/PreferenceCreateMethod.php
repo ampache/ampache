@@ -30,6 +30,10 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class PreferenceCreateMethod
+ * @package Lib\ApiMethods
+ */
 final class PreferenceCreateMethod
 {
     private const ACTION = 'preference_create';

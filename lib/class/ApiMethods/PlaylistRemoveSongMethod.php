@@ -31,6 +31,10 @@ use Playlist;
 use Session;
 use User;
 
+/**
+ * Class PlaylistRemoveSongMethod
+ * @package Lib\ApiMethods
+ */
 final class PlaylistRemoveSongMethod
 {
     private const ACTION = 'playlist_remove_song';

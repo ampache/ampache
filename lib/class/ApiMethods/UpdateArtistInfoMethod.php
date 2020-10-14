@@ -30,6 +30,10 @@ use Recommendation;
 use Session;
 use User;
 
+/**
+ * Class UpdateArtistInfoMethod
+ * @package Lib\ApiMethods
+ */
 final class UpdateArtistInfoMethod
 {
     private const ACTION = 'update_artist_info';

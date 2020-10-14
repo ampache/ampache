@@ -31,6 +31,10 @@ use Session;
 use Share;
 use User;
 
+/**
+ * Class ShareDeleteMethod
+ * @package Lib\ApiMethods
+ */
 final class ShareDeleteMethod
 {
     private const ACTION = 'share_delete';

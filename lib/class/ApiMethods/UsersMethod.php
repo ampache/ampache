@@ -30,6 +30,10 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class UsersMethod
+ * @package Lib\ApiMethods
+ */
 final class UsersMethod
 {
     /**

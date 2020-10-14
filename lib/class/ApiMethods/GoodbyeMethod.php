@@ -29,6 +29,10 @@ use Core;
 use Dba;
 use Session;
 
+/**
+ * Class GoodbyeMethod
+ * @package Lib\ApiMethods
+ */
 final class GoodbyeMethod
 {
     private const ACTION = 'goodbye';

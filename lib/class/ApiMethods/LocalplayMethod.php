@@ -31,6 +31,10 @@ use Session;
 use Stream_Playlist;
 use XML_Data;
 
+/**
+ * Class LocalplayMethod
+ * @package Lib\ApiMethods
+ */
 final class LocalplayMethod
 {
     private const ACTION = 'localplay';

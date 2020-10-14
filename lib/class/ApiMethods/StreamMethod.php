@@ -29,6 +29,10 @@ use Session;
 use Song;
 use User;
 
+/**
+ * Class StreamMethod
+ * @package Lib\ApiMethods
+ */
 final class StreamMethod
 {
     private const ACTION = 'stream';

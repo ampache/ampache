@@ -32,6 +32,10 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class PlaylistCreateMethod
+ * @package Lib\ApiMethods
+ */
 final class PlaylistCreateMethod
 {
     private const ACTION = 'playlist_create';

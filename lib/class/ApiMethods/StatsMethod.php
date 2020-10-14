@@ -38,6 +38,10 @@ use User;
 use Userflag;
 use XML_Data;
 
+/**
+ * Class StatsMethod
+ * @package Lib\ApiMethods
+ */
 final class StatsMethod
 {
     private const ACTION = 'stats';

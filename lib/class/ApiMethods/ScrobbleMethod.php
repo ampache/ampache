@@ -30,6 +30,10 @@ use Session;
 use Song;
 use User;
 
+/**
+ * Class ScrobbleMethod
+ * @package Lib\ApiMethods
+ */
 final class ScrobbleMethod
 {
     private const ACTION = 'scrobble';

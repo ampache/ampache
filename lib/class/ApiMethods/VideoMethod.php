@@ -31,6 +31,10 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class VideoMethod
+ * @package Lib\ApiMethods
+ */
 final class VideoMethod
 {
     private const ACTION = 'video';

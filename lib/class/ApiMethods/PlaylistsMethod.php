@@ -32,6 +32,10 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class PlaylistsMethod
+ * @package Lib\ApiMethods
+ */
 final class PlaylistsMethod
 {
     /**

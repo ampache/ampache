@@ -29,6 +29,10 @@ use Podcast;
 use Session;
 use User;
 
+/**
+ * Class UpdatePodcastMethod
+ * @package Lib\ApiMethods
+ */
 final class UpdatePodcastMethod
 {
     private const ACTION = 'update_podcast';

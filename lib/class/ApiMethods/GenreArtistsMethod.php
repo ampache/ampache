@@ -32,6 +32,10 @@ use Tag;
 use User;
 use XML_Data;
 
+/**
+ * Class GenreArtistsMethod
+ * @package Lib\ApiMethods
+ */
 class GenreArtistsMethod
 {
     /**

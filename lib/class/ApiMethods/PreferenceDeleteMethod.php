@@ -30,6 +30,10 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class PreferenceDeleteMethod
+ * @package Lib\ApiMethods
+ */
 final class PreferenceDeleteMethod
 {
     private const ACTION = 'preference_delete';

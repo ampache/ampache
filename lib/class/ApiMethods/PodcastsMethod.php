@@ -31,6 +31,10 @@ use JSON_Data;
 use Session;
 use XML_Data;
 
+/**
+ * Class PodcastsMethod
+ * @package Lib\ApiMethods
+ */
 final class PodcastsMethod
 {
     private const ACTION = 'podcasts';

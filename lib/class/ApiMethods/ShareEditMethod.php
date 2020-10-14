@@ -31,6 +31,10 @@ use Session;
 use Share;
 use User;
 
+/**
+ * Class ShareEditMethod
+ * @package Lib\ApiMethods
+ */
 final class ShareEditMethod
 {
     private const ACTION = 'share_edit';

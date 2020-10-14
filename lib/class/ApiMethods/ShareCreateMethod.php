@@ -34,6 +34,10 @@ use Session;
 use Share;
 use XML_Data;
 
+/**
+ * Class ShareCreateMethod
+ * @package Lib\ApiMethods
+ */
 final class ShareCreateMethod
 {
     private const ACTION = 'share_create';

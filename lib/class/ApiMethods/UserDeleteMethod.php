@@ -30,6 +30,10 @@ use Api;
 use Session;
 use User;
 
+/**
+ * Class UserDeleteMethod
+ * @package Lib\ApiMethods
+ */
 final class UserDeleteMethod
 {
     private const ACTION = 'user_delete';

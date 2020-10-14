@@ -31,6 +31,10 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class SongMethod
+ * @package Lib\ApiMethods
+ */
 final class SongMethod
 {
     private const ACTION = 'song';

@@ -36,6 +36,10 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class HandshakeMethod
+ * @package Lib\ApiMethods
+ */
 final class HandshakeMethod
 {
     private const ACTION = 'handshake';

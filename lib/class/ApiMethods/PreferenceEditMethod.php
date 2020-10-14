@@ -31,6 +31,10 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class PreferenceEditMethod
+ * @package Lib\ApiMethods
+ */
 final class PreferenceEditMethod
 {
     private const ACTION = 'preference_edit';

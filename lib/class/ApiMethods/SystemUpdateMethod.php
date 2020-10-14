@@ -29,6 +29,10 @@ use AutoUpdate;
 use Session;
 use User;
 
+/**
+ * Class SystemUpdateMethod
+ * @package Lib\ApiMethods
+ */
 final class SystemUpdateMethod
 {
     private const ACTION = 'system_update';

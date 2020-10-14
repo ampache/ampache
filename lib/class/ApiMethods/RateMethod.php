@@ -31,6 +31,10 @@ use Rating;
 use Session;
 use User;
 
+/**
+ * Class RateMethod
+ * @package Lib\ApiMethods
+ */
 final class RateMethod
 {
     private const ACTION = 'rate';

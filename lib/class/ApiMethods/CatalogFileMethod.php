@@ -33,6 +33,10 @@ use Song;
 use User;
 use Video;
 
+/**
+ * Class CatalogFileMethod
+ * @package Lib\ApiMethods
+ */
 final class CatalogFileMethod
 {
     private const ACTION = 'catalog_file';

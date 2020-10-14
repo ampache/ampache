@@ -30,6 +30,10 @@ use Core;
 use Session;
 use XML_Data;
 
+/**
+ * Class PingMethod
+ * @package Lib\ApiMethods
+ */
 final class PingMethod
 {
 

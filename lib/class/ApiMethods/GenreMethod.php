@@ -30,6 +30,10 @@ use JSON_Data;
 use Session;
 use XML_Data;
 
+/**
+ * Class GenreMethod
+ * @package Lib\ApiMethods
+ */
 final class GenreMethod
 {
     private const ACTION = 'genre';

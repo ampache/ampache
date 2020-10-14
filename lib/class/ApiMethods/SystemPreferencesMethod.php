@@ -30,6 +30,10 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class SystemPreferencesMethod
+ * @package Lib\ApiMethods
+ */
 final class SystemPreferencesMethod
 {
     private const ACTION = 'system_preferences';

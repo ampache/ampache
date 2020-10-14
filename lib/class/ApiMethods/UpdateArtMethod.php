@@ -30,6 +30,10 @@ use Catalog;
 use Session;
 use User;
 
+/**
+ * Class UpdateArtMethod
+ * @package Lib\ApiMethods
+ */
 final class UpdateArtMethod
 {
     private const ACTION = 'update_art';

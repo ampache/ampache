@@ -32,6 +32,10 @@ use Stream_URL;
 use User;
 use XML_Data;
 
+/**
+ * Class UrlToSongMethod
+ * @package Lib\ApiMethods
+ */
 final class UrlToSongMethod
 {
     private const ACTION = 'url_to_song';

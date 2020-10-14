@@ -29,6 +29,10 @@ use Session;
 use Song;
 use User;
 
+/**
+ * Class DownloadMethod
+ * @package Lib\ApiMethods
+ */
 final class DownloadMethod
 {
     private const ACTION = 'download';

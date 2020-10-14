@@ -31,6 +31,10 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class VideosMethod
+ * @package Lib\ApiMethods
+ */
 final class VideosMethod
 {
     /**
