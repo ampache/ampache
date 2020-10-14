@@ -94,7 +94,7 @@ class TVShow_Episode extends Video
                 $tag = trim((string) $tag);
                 if (!empty($tag)) {
                     Genre::add('tvshow_season', (int) $tvshow_season, $tag, false);
-                    Genre::add('tvshow', $tvshow, $tag, false);
+                    Genre::add('tvshow', (int) $tvshow, $tag, false);
                 }
             }
         }
