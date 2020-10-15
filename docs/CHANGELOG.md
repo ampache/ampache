@@ -92,6 +92,7 @@ All API code that used 'Tag' now references 'Genre' instead
 * Api::podcast_edit wasn't able to edit a podcast...
 * Api::democratic was using action from localplay in the return responses
 * Setting a limit of 'none' would slice away all the results
+* get_indexes for XML didn't include podcast indexes
 
 ## Ampache 4.2.3-release
 
