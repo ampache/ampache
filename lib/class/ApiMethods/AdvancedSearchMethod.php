@@ -38,6 +38,8 @@ use XML_Data;
  */
 final class AdvancedSearchMethod
 {
+    private const ACTION = 'advanced_search';
+
     /**
      * advanced_search
      * MINIMUM_API_VERSION=380001
@@ -66,6 +68,7 @@ final class AdvancedSearchMethod
      * random          = (boolean)  0, 1 (random order of results; default to 0) //optional
      * offset          = (integer) //optional
      * limit           = (integer) //optional
+     * @return bool
      */
     public static function advanced_search(array $input)
     {
@@ -114,5 +117,7 @@ final class AdvancedSearchMethod
                 }
         }
         Session::extend($input['auth']);
+
+        return true;
     }
 }
