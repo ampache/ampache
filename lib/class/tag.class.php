@@ -22,9 +22,9 @@ declare(strict_types=0);
  */
 
 /**
- * Genre Class
+ * Tag Class
  *
- * This class handles all of the genre relation operations
+ * This class handles all of the genre related operations
  *
  */
 class Tag extends database_object implements library_item
@@ -61,7 +61,7 @@ class Tag extends database_object implements library_item
      * construct_from_name
      * This attempts to construct the tag from a name, rather then the ID
      * @param string $name
-     * @return Genre
+     * @return Tag
      */
     public static function construct_from_name($name)
     {
