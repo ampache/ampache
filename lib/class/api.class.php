@@ -306,7 +306,7 @@ class Api
         if (!Access::check($type, $level, $user_id)) {
             debug_event('api.class', $type . " '" . $level . "' required on " . $method . " function call.", 2);
             /* HINT: Access level, eg 75, 100 */
-            self::error(printf(T_('Require: %s'), $level), '4742', $method, 'account', $format);
+            self::error(sprintf(T_('Require: %s'), $level), '4742', $method, 'account', $format);
 
             return false;
         }
