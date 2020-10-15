@@ -81,6 +81,7 @@ All API code that used 'Tag' now references 'Genre' instead
   * 4706 Depreciated Method
   * 4710 Bad Request
   * 4742 Failed Access Check
+* get_indexes: 'playlist' now requires include=1 for xml calls if you want the tracks
 
 ### Deprecated
 
