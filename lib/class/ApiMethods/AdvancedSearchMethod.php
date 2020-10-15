@@ -61,12 +61,16 @@ final class AdvancedSearchMethod
      * rule_1          = (string)
      * rule_1_operator = (integer) 0,1|2|3|4|5|6
      * rule_1_input    = (mixed) The string, date, integer you are searching for
-     * type            = (string) 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video' (song by default)
-     * offset          = (integer)
-     * limit           = (integer))
+     * type            = (string) 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video' (song by default) //optional
+     * random          = (boolean)  0, 1 (random order of results; default to 0) //optional
+     * offset          = (integer) //optional
+     * limit           = (integer) //optional
      */
     public static function advanced_search(array $input)
     {
+        if (!Api::check_parameter($input, array('rule_1', 'rule_1_operator', 'rule_1_input'), self::ACTION)) {
+            return false;
+        }
         ob_end_clean();
 
         $user    = User::get_from_username(Session::username($input['auth']));

@@ -55,7 +55,7 @@ final class UserMethod
         if (!Api::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
-        $username = $input['username'];
+        $username = (string) $input['username'];
         if (!empty($username)) {
             $user  = User::get_from_username($username);
             $valid = in_array($user->id, User::get_valid_users());
