@@ -31,6 +31,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Extend democratic cooldown past 255 and show an error when out of range
 * Sort smartlists by file when random is unticked
 * Don't block playlist information actions when you own the playlist
+* Searching 'original_year' will now fall back to 'year' if no release year is present
 
 ### Fixed
 
