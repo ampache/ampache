@@ -28,7 +28,6 @@ use Api;
 use Preference;
 use Session;
 use User;
-use XML_Data;
 
 /**
  * Class PreferenceDeleteMethod
