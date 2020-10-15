@@ -57,8 +57,9 @@ final class UserMethod
         }
         $username = $input['username'];
         if (!empty($username)) {
-            $user = User::get_from_username($username);
-            if ($user !== null) {
+            $user  = User::get_from_username($username);
+            $valid = in_array($user->id, User::get_valid_users());
+            if ($valid) {
                 $apiuser  = User::get_from_username(Session::username($input['auth']));
                 $fullinfo = false;
                 // get full info when you're an admin or searching for yourself
@@ -75,6 +76,8 @@ final class UserMethod
                 }
             } else {
                 debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                Api::error(sprintf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'user', $input['api_format']);
             }
         }
         Session::extend($input['auth']);
