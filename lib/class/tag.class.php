@@ -27,7 +27,7 @@ declare(strict_types=0);
  * This class handles all of the genre relation operations
  *
  */
-class Genre extends database_object implements library_item
+class Tag extends database_object implements library_item
 {
     public $id;
     public $name;
