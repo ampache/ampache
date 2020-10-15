@@ -251,15 +251,19 @@ class User extends database_object
     /**
      * get_valid_users
      * This returns all valid users in database.
+     * @param bool $include_disabled
+     * @return array
      */
-    public static function get_valid_users()
+    public static function get_valid_users($include_disabled = false)
     {
         $users = array();
+        $sql   = ($include_disabled)
+            ? "SELECT `id` FROM `user` WHERE `disabled` = '0'"
+            : "SELECT `id` FROM `user`";
 
-        $sql        = "SELECT `id` FROM `user` WHERE `disabled` = '0'";
         $db_results = Dba::read($sql);
         while ($results = Dba::fetch_assoc($db_results)) {
-            $users[] = $results['id'];
+            $users[] = (int) $results['id'];
         }
 
         return $users;

@@ -58,7 +58,7 @@ final class UserMethod
         $username = (string) $input['username'];
         if (!empty($username)) {
             $user  = User::get_from_username($username);
-            $valid = in_array($user->id, User::get_valid_users());
+            $valid = in_array($user->id, User::get_valid_users(true));
             if ($valid) {
                 $apiuser  = User::get_from_username(Session::username($input['auth']));
                 $fullinfo = false;
