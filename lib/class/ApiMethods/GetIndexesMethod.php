@@ -49,7 +49,7 @@ final class GetIndexesMethod
      * Added 'include' to allow indexing all song tracks (enabled for xml by default)
      *
      * @param array $input
-     * type    = (string) 'song', 'album', 'artist', 'playlist'
+     * type    = (string) 'song', 'album', 'artist', 'playlist', 'podcast'
      * filter  = (string) //optional
      * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add     = self::set_filter(date) //optional

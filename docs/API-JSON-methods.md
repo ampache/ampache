@@ -77,14 +77,15 @@ This takes a collection of inputs and returns ID + name for the object type
 @param array $input
 @return boolean
 
-| Input    | Type       | Description                                                                | Optional |
-|----------|------------|----------------------------------------------------------------------------|---------:|
-| 'type'   | string     | 'song', 'album', 'artist', 'playlist'                                      |       NO |
-| 'filter' | string     |                                                                            |      YES |
-| 'add'    | set_filter | ISO 8601 Date Format (2020-09-16) add date is newer then specified date    |      YES |
-| 'update' | set_filter | ISO 8601 Date Format (2020-09-16) update itme is newer then specified date |      YES |
-| 'offset' | integer    |                                                                            |      YES |
-| 'limit'  | integer    |                                                                            |      YES |
+| Input     | Type       | Description                                                                | Optional |
+|-----------|------------|----------------------------------------------------------------------------|---------:|
+| 'type'    | string     | 'song', 'album', 'artist', 'playlist', 'podcast'                           |       NO |
+| 'filter'  | string     |                                                                            |      YES |
+| 'add'     | set_filter | ISO 8601 Date Format (2020-09-16) add date is newer then specified date    |      YES |
+| 'update'  | set_filter | ISO 8601 Date Format (2020-09-16) update itme is newer then specified date |      YES |
+| 'include' | boolean    | 0,1 include songs in a playlist or episodes in a podcast if available      |      YES |
+| 'offset'  | integer    |                                                                            |      YES |
+| 'limit'   | integer    |                                                                            |      YES |
 
 SONGS
 
