@@ -27,7 +27,7 @@ namespace Lib\ApiMethods;
 
 use JSON_Data;
 use Session;
-use Genre;
+use Tag;
 use User;
 use XML_Data;
 
@@ -51,7 +51,7 @@ class GenreArtistsMethod
      */
     public static function genre_artists(array $input)
     {
-        $artists = Genre::get_tag_objects('artist', $input['filter']);
+        $artists = Tag::get_tag_objects('artist', $input['filter']);
         if (!empty($artists)) {
             $user = User::get_from_username(Session::username($input['auth']));
 

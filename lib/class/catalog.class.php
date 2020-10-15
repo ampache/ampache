@@ -1733,11 +1733,11 @@ abstract class Catalog extends database_object
         switch ($type) {
             case 'album':
                 $tags = self::getSongTags('album', $libitem->id);
-                Genre::update_tag_list(implode(',', $tags), 'album', $libitem->id, false);
+                Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, false);
                 break;
             case 'artist':
                 $tags = self::getSongTags('artist', $libitem->id);
-                Genre::update_tag_list(implode(',', $tags), 'artist', $libitem->id, false);
+                Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, false);
                 break;
         } // end switch type
 
@@ -1845,7 +1845,7 @@ abstract class Catalog extends database_object
 
         // genre is used in the tag and tag_map tables
         $new_song->tags = $results['genre'];
-        $tags           = Genre::get_object_tags('song', $song->id);
+        $tags           = Tag::get_object_tags('song', $song->id);
         if ($tags) {
             foreach ($tags as $tag) {
                 $song->tags[] = $tag['name'];
@@ -1955,7 +1955,7 @@ abstract class Catalog extends database_object
             Song::update_song($song->id, $new_song);
 
             if ($song->tags != $new_song->tags) {
-                Genre::update_tag_list(implode(',', $new_song->tags), 'song', $song->id, true);
+                Tag::update_tag_list(implode(',', $new_song->tags), 'song', $song->id, true);
                 self::updateAlbumTags($song);
                 self::updateArtistTags($song);
             }
@@ -2006,7 +2006,7 @@ abstract class Catalog extends database_object
         $new_video->display_y     = $results['display_y'];
         $new_video->frame_rate    = $results['frame_rate'];
         $new_video->video_bitrate = $results['video_bitrate'];
-        $tags                     = Genre::get_object_tags('video', $video->id);
+        $tags                     = Tag::get_object_tags('video', $video->id);
         if ($tags) {
             foreach ($tags as $tag) {
                 $video->tags[]     = $tag['name'];
@@ -2021,7 +2021,7 @@ abstract class Catalog extends database_object
             Video::update_video($video->id, $new_video);
 
             if ($video->tags != $new_video->tags) {
-                Genre::update_tag_list(implode(',', $new_video->tags), 'video', $video->id, true);
+                Tag::update_tag_list(implode(',', $new_video->tags), 'video', $video->id, true);
             }
         } else {
             debug_event('catalog.class', $video->file . " : no differences found", 5);
@@ -2236,7 +2236,7 @@ abstract class Catalog extends database_object
         Playlist::garbage_collection();
         Tmp_Playlist::garbage_collection();
         Shoutbox::garbage_collection();
-        Genre::garbage_collection();
+        Tag::garbage_collection();
 
         // TODO: use InnoDB with foreign keys and on delete cascade to get rid of garbage collection
         Metadata::garbage_collection();
@@ -2724,7 +2724,7 @@ abstract class Catalog extends database_object
     protected static function updateAlbumTags(Song $song)
     {
         $tags = self::getSongTags('album', $song->album);
-        Genre::update_tag_list(implode(',', $tags), 'album', $song->album, true);
+        Tag::update_tag_list(implode(',', $tags), 'album', $song->album, true);
     }
 
     /**
@@ -2734,7 +2734,7 @@ abstract class Catalog extends database_object
     protected static function updateArtistTags(Song $song)
     {
         $tags = self::getSongTags('artist', $song->artist);
-        Genre::update_tag_list(implode(',', $tags), 'artist', $song->artist, true);
+        Tag::update_tag_list(implode(',', $tags), 'artist', $song->artist, true);
     }
 
     /**
@@ -2919,7 +2919,7 @@ abstract class Catalog extends database_object
             Recommendation::migrate($object_type, $old_object_id, $new_object_id);
             Share::migrate($object_type, $old_object_id, $new_object_id);
             Shoutbox::migrate($object_type, $old_object_id, $new_object_id);
-            Genre::migrate($object_type, $old_object_id, $new_object_id);
+            Tag::migrate($object_type, $old_object_id, $new_object_id);
             Userflag::migrate($object_type, $old_object_id, $new_object_id);
             Rating::migrate($object_type, $old_object_id, $new_object_id);
             Art::migrate($object_type, $old_object_id, $new_object_id);

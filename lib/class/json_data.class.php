@@ -234,7 +234,7 @@ class JSON_Data
         $TAGS = [];
 
         foreach ($tags as $tag_id) {
-            $tag    = new Genre($tag_id);
+            $tag    = new Tag($tag_id);
             $counts = $tag->count();
             array_push($TAGS, array(
                 "id" => (string) $tag_id,

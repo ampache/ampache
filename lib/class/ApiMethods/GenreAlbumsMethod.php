@@ -27,7 +27,7 @@ namespace Lib\ApiMethods;
 
 use JSON_Data;
 use Session;
-use Genre;
+use Tag;
 use User;
 use XML_Data;
 
@@ -51,7 +51,7 @@ final class GenreAlbumsMethod
      */
     public static function genre_albums(array $input)
     {
-        $albums = Genre::get_tag_objects('album', $input['filter']);
+        $albums = Tag::get_tag_objects('album', $input['filter']);
         if (!empty($albums)) {
             $user = User::get_from_username(Session::username($input['auth']));
             XML_Data::set_offset($input['offset']);

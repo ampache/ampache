@@ -166,7 +166,7 @@ class Broadcast extends database_object implements library_item
     public function update(array $data)
     {
         if (isset($data['edit_tags'])) {
-            Genre::update_tag_list($data['edit_tags'], 'broadcast', $this->id, true);
+            Tag::update_tag_list($data['edit_tags'], 'broadcast', $this->id, true);
         }
 
         $sql = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? " .
@@ -185,8 +185,8 @@ class Broadcast extends database_object implements library_item
         $this->f_name = $this->name;
         $this->f_link = '<a href="' . AmpConfig::get('web_path') . '/broadcast.php?id=' . $this->id . '">' . scrub_out($this->f_name) . '</a>';
         if ($details) {
-            $this->tags   = Genre::get_top_tags('broadcast', $this->id);
-            $this->f_tags = Genre::get_display($this->tags, true, 'broadcast');
+            $this->tags   = Tag::get_top_tags('broadcast', $this->id);
+            $this->f_tags = Tag::get_display($this->tags, true, 'broadcast');
         }
     }
 

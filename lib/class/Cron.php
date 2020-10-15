@@ -34,7 +34,7 @@ use Playlist;
 use Podcast;
 use Rating;
 use Song;
-use Genre;
+use Tag;
 use User;
 use Userflag;
 use Video;
@@ -168,17 +168,17 @@ final class Cron
             } // end foreach $catalogs
 
             // artist tags
-            $artist_tags = Genre::get_tag_ids('artist');
-            Genre::build_cache($artist_tags);
-            Genre::build_map_cache('artist', $artist_tags);
+            $artist_tags = Tag::get_tag_ids('artist');
+            Tag::build_cache($artist_tags);
+            Tag::build_map_cache('artist', $artist_tags);
             // album tags
-            $album_tags  = Genre::get_tag_ids('album');
-            Genre::build_cache($album_tags);
-            Genre::build_map_cache('album', $album_tags);
+            $album_tags  = Tag::get_tag_ids('album');
+            Tag::build_cache($album_tags);
+            Tag::build_map_cache('album', $album_tags);
             // song tags
-            $song_tags   = Genre::get_tag_ids('song');
-            Genre::build_cache($song_tags);
-            Genre::build_map_cache('song', $song_tags);
+            $song_tags   = Tag::get_tag_ids('song');
+            Tag::build_cache($song_tags);
+            Tag::build_map_cache('song', $song_tags);
 
             debug_event('cron', 'Completed filling memory cache', 5);
         }

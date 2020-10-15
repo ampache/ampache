@@ -182,8 +182,8 @@ class TVShow extends database_object implements library_item
 
         if ($details) {
             $this->_get_extra_info();
-            $this->tags   = Genre::get_top_tags('tvshow', $this->id);
-            $this->f_tags = Genre::get_display($this->tags, true, 'tvshow');
+            $this->tags   = Tag::get_top_tags('tvshow', $this->id);
+            $this->f_tags = Tag::get_display($this->tags, true, 'tvshow');
         }
 
         return true;
@@ -396,7 +396,7 @@ class TVShow extends database_object implements library_item
                 Recommendation::migrate('tvshow', $this->id, (int) $tvshow_id);
                 Share::migrate('tvshow', $this->id, (int) $tvshow_id);
                 Shoutbox::migrate('tvshow', $this->id, (int) $tvshow_id);
-                Genre::migrate('tvshow', $this->id, (int) $tvshow_id);
+                Tag::migrate('tvshow', $this->id, (int) $tvshow_id);
                 Userflag::migrate('tvshow', $this->id, (int) $tvshow_id);
                 Rating::migrate('tvshow', $this->id, (int) $tvshow_id);
                 Art::migrate('tvshow', $this->id, (int) $tvshow_id);
@@ -451,12 +451,12 @@ class TVShow extends database_object implements library_item
             $current_id = $this->id;
         }
 
-        Genre::update_tag_list($tags_comma, 'tvshow', $current_id, $force_update ? true : $override_childs);
+        Tag::update_tag_list($tags_comma, 'tvshow', $current_id, $force_update ? true : $override_childs);
 
         if ($override_childs || $add_to_childs) {
             $episodes = $this->get_episodes();
             foreach ($episodes as $ep_id) {
-                Genre::update_tag_list($tags_comma, 'episode', $ep_id, $override_childs);
+                Tag::update_tag_list($tags_comma, 'episode', $ep_id, $override_childs);
             }
         }
     }

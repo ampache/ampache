@@ -262,7 +262,7 @@ class Browse extends Query
                 $box_req   = AmpConfig::get('prefix') . UI::find_template('show_manage_shoutbox.inc.php');
                 break;
             case 'tag':
-                Genre::build_cache($object_ids);
+                Tag::build_cache($object_ids);
                 $box_title = T_('Genres');
                 $box_req   = AmpConfig::get('prefix') . UI::find_template('show_tagcloud.inc.php');
                 break;

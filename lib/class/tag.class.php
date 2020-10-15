@@ -67,7 +67,7 @@ class Genre extends database_object implements library_item
     {
         $tag_id = self::tag_exists($name);
 
-        return new Genre($tag_id);
+        return new Tag($tag_id);
     } // construct_from_name
 
     /**
@@ -340,7 +340,7 @@ class Genre extends database_object implements library_item
         }
 
         // If tag merged to another one, add reference to the merge destination
-        $parent = new Genre($tag_id);
+        $parent = new Tag($tag_id);
         $merges = $parent->get_merged_tags();
         if (!$parent->is_hidden) {
             $merges[] = array('id' => $parent->id, 'name' => $parent->name);
@@ -716,7 +716,7 @@ class Genre extends database_object implements library_item
 
         foreach ($ctags as $ctid => $ctv) {
             if ($ctv['id'] != '') {
-                $ctag  = new Genre($ctv['id']);
+                $ctag  = new Tag($ctv['id']);
                 $found = false;
 
                 foreach ($editedTags as $tk => $tv) {

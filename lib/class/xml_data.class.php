@@ -492,7 +492,7 @@ class XML_Data
         $string = "";
 
         foreach ($tags as $tag_id) {
-            $tag    = new Genre($tag_id);
+            $tag    = new Tag($tag_id);
             $counts = $tag->count();
             $string .= "<genre id=\"$tag_id\">\n" .
                     "\t<name><![CDATA[$tag->name]]></name>\n" .
@@ -880,7 +880,7 @@ class XML_Data
             }
 
             $song->format();
-            $tag_string = self::genre_string(Genre::get_top_tags('song', $song_id));
+            $tag_string = self::genre_string(Tag::get_top_tags('song', $song_id));
             $rating     = new Rating($song_id, 'song');
             $flag       = new Userflag($song_id, 'song');
             $art_url    = Art::url($song->album, 'album', Core::get_request('auth'));
@@ -1002,7 +1002,7 @@ class XML_Data
             $song->format();
 
             // FIXME: This is duplicate code and so wrong, functions need to be improved
-            $tag           = new Genre($song->tags['0']);
+            $tag           = new Tag($song->tags['0']);
             $song->genre   = $tag->id;
             $song->f_genre = $tag->name;
 

@@ -483,7 +483,7 @@ class Subsonic_Api
     public static function getgenres($input)
     {
         $response = Subsonic_XML_Data::createSuccessResponse('getgenres');
-        Subsonic_XML_Data::addGenres($response, Genre::get_tags('song'));
+        Subsonic_XML_Data::addGenres($response, Tag::get_tags('song'));
         self::apiOutput($input, $response);
     }
 
@@ -624,9 +624,9 @@ class Subsonic_Api
             case "byGenre":
                 $genre = self::check_parameter($input, 'genre');
 
-                $tag_id = Genre::tag_exists($genre);
+                $tag_id = Tag::tag_exists($genre);
                 if ($tag_id > 0) {
-                    $albums = Genre::get_tag_objects('album', $tag_id, $size, $offset);
+                    $albums = Tag::get_tag_objects('album', $tag_id, $size, $offset);
                 }
                 break;
             default:
@@ -776,9 +776,9 @@ class Subsonic_Api
         $count  = $input['count'];
         $offset = $input['offset'];
 
-        $tag = Genre::construct_from_name($genre);
+        $tag = Tag::construct_from_name($genre);
         if ($tag->id) {
-            $songs = Genre::get_tag_objects("song", $tag->id, $count, $offset);
+            $songs = Tag::get_tag_objects("song", $tag->id, $count, $offset);
         } else {
             $songs = array();
         }

@@ -542,7 +542,7 @@ class Daap_Api
                         $output .= self::tlv($tag, $song->type);
                         break;
                     case 'daap.songgenre':
-                        $output .= self::tlv($tag, Genre::get_display($song->tags, false, 'song'));
+                        $output .= self::tlv($tag, Tag::get_display($song->tags, false, 'song'));
                         break;
                     case 'daap.songsamplerate':
                         $output .= self::tlv($tag, $song->rate);

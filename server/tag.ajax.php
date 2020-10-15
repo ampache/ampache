@@ -35,7 +35,7 @@ switch ($_REQUEST['action']) {
     case 'show_add_tag':
         break;
     case 'get_tag_map':
-        $tags            = Genre::get_display(Genre::get_tags());
+        $tags            = Tag::get_display(Tag::get_tags());
         $results['tags'] = $tags;
         break;
     case 'get_labels':
@@ -43,13 +43,13 @@ switch ($_REQUEST['action']) {
         $results['labels'] = $labels;
         break;
     case 'add_tag':
-        if (!Genre::can_edit_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), false)) {
+        if (!Tag::can_edit_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), false)) {
             debug_event('tag.ajax', Core::get_global('user')->username . ' attempted to add unauthorized tag map', 1);
 
             return false;
         }
         debug_event('tag.ajax', 'Adding new tag...', 5);
-        Genre::add_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), (int) $_GET['tag_id'], false);
+        Tag::add_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), (int) $_GET['tag_id'], false);
         break;
     case 'add_tag_by_name':
         if (!Access::check('interface', 75)) {
@@ -58,7 +58,7 @@ switch ($_REQUEST['action']) {
             return false;
         }
         debug_event('tag.ajax', 'Adding new tag by name...', 5);
-        Genre::add(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $_GET['tag_name'], false);
+        Tag::add(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), $_GET['tag_name'], false);
         break;
     case 'delete':
         if (!Access::check('interface', 75)) {
@@ -67,19 +67,19 @@ switch ($_REQUEST['action']) {
             return false;
         }
         debug_event('tag.ajax', 'Deleting tag...', 5);
-        $tag = new Genre($_GET['tag_id']);
+        $tag = new Tag($_GET['tag_id']);
         $tag->delete();
         header('Location: ' . AmpConfig::get('web_path') . '/browse.php?action=tag');
 
         return false;
     case 'remove_tag_map':
-        if (!Genre::can_edit_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), false)) {
+        if (!Tag::can_edit_tag_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), false)) {
             debug_event('tag.ajax', Core::get_global('user')->username . ' attempted to delete unauthorized tag map', 1);
 
             return false;
         }
         debug_event('tag.ajax', 'Removing tag map...', 5);
-        $tag = new Genre($_GET['tag_id']);
+        $tag = new Tag($_GET['tag_id']);
         $tag->remove_map(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES), filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT), false);
         break;
     case 'browse_type':

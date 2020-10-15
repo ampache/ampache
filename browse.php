@@ -90,10 +90,10 @@ switch ($_REQUEST['action']) {
         // This one's a doozy
         $browse_type = isset($_REQUEST['type']) ? $_REQUEST['type'] : 'artist';
         $browse->set_simple_browse(false);
-        $browse->save_objects(Genre::get_tags($browse_type, 0, 'name')); // Should add a pager?
+        $browse->save_objects(Tag::get_tags($browse_type, 0, 'name')); // Should add a pager?
         $object_ids = $browse->get_saved();
         $keys       = array_keys($object_ids);
-        Genre::build_cache($keys);
+        Tag::build_cache($keys);
         UI::show_box_top(T_('Genres'), 'box box_tag_cloud');
         $browse2 = new Browse();
         $browse2->set_type($browse_type);
