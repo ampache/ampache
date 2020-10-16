@@ -1106,14 +1106,13 @@ class XML_Data
      */
     public static function users($users)
     {
-        $string = "<users>\n";
+        $string = "";
         foreach ($users as $user_id) {
             $user = new User($user_id);
             $string .= "<user id=\"" . (string) $user->id . "\">\n" .
                       "\t<username><![CDATA[" . $user->username . "]]></username>\n" .
                       "</user>\n";
         }
-        $string .= "</users>\n";
 
         return self::output_xml($string);
     } // users

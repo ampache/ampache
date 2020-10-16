@@ -48,6 +48,11 @@ final class UsersMethod
     public static function users(array $input)
     {
         $users = User::get_valid_users();
+        if (empty($users)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
         switch ($input['api_format']) {
             case 'json':
                 echo JSON_Data::users($users);
