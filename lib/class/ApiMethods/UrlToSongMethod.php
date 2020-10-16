@@ -57,6 +57,11 @@ final class UrlToSongMethod
         }
         // Don't scrub, the function needs her raw and juicy
         $data = Stream_URL::parse($input['url']);
+        if (empty($data['id'])) {
+            Api::error(T_('Bad Request'), '4710', self::ACTION, 'url', $input['api_format']);
+
+            return false;
+        }
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         switch ($input['api_format']) {
