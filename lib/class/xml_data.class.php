@@ -1175,7 +1175,7 @@ class XML_Data
      */
     public static function timeline($activities)
     {
-        $string = "<timeline>\n";
+        $string = "";
         foreach ($activities as $activity_id) {
             $activity = new Useractivity($activity_id);
             $user     = new User($activity->user);
@@ -1191,7 +1191,6 @@ class XML_Data
             }
             $string .= "\t</activity>\n";
         }
-        $string .= "</timeline>";
 
         return self::_header() . $string . self::_footer();
     } // timeline
