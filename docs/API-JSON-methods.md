@@ -15,14 +15,35 @@ Remember that Binary data methods will not return JSON; just the file/data you h
 This is the function that handles verifying a new handshake Takes a timestamp, auth key, and username.
 
 @param array $input
-@return boolean
 
-| Input       | Type    | Description                                                                                     | Optional |
-|-------------|---------|-------------------------------------------------------------------------------------------------|---------:|
-| 'auth'      | string  | $passphrase (Timestamp . Password SHA hash) OR (API Key)                                        |       NO |
-| 'user'      | string  | $username (Required if login/password authentication)                                           |      YES |
-| 'timestamp' | integer | UNIXTIME() (Timestamp used in seed of password hash. Required if login/password authentication) |      YES |
-| 'version'   | string  | $version (API Version that the application understands)                                         |      YES |
+@return array
+
+```JSON
+{
+    "auth"
+    "api"
+    "session_expire"
+    "update"
+    "add"
+    "clean"
+    "songs"
+    "albums"
+    "artists"
+    "playlists"
+    "videos"
+    "catalogs"
+}
+```
+
+@throws ```"error"```
+
+| Input       | Type    | Description                                              | Optional |
+|-------------|---------|----------------------------------------------------------|---------:|
+| 'auth'      | string  | $passphrase (Timestamp . Password SHA hash) OR (API Key) |       NO |
+| 'user'      | string  | $username (Required if login/password authentication)    |      YES |
+| 'timestamp' | integer | UNIXTIME() The timestamp used in seed of password hash   |      YES |
+|             |         | (Required if login/password authentication)              |          |
+| 'version'   | string  | $version (API Version that the application understands)  |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/handshake.json)
 
@@ -30,6 +51,27 @@ This is the function that handles verifying a new handshake Takes a timestamp, a
 
 This can be called without being authenticated, it is useful for determining if what the status of the server is, and what version it is running/compatible with
 @param array $input
+
+@return array
+
+```JSON
+{
+    "session_expire"
+    "server"
+    "version"
+    "compatible"
+}
+```
+
+@throws
+
+```JSON
+{
+    "server"
+    "version"
+    "compatible"
+}
+```
 
 | Input  | Type   | Description                                                                | Optional |
 |--------|--------|----------------------------------------------------------------------------|---------:|
@@ -43,6 +85,18 @@ Destroy a session using the auth parameter.
 
 @param array $input
 
+@return object
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 | Input  | Type   | Description                                    | Optional |
 |--------|--------|------------------------------------------------|---------:|
 | 'auth' | string | (Session ID) destroys the session if it exists |       NO |
@@ -53,6 +107,18 @@ Destroy a session using the auth parameter.
 
 This takes a url and returns the song object in question
 @param array $input
+
+@return object
+
+```JSON
+"song": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input | Type   | Description                                                    | Optional |
 |-------|--------|----------------------------------------------------------------|---------:|
@@ -67,6 +133,18 @@ This takes a url and returns the song object in question
 Check Ampache for updates and run the update if there is one.
 @param array $input
 
+@return object
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/system_update.json)
 
 ## Data Methods
@@ -75,17 +153,31 @@ Check Ampache for updates and run the update if there is one.
 
 This takes a collection of inputs and returns ID + name for the object type
 @param array $input
-@return boolean
 
-| Input     | Type       | Description                                                                | Optional |
-|-----------|------------|----------------------------------------------------------------------------|---------:|
-| 'type'    | string     | 'song', 'album', 'artist', 'playlist', 'podcast'                           |       NO |
-| 'filter'  | string     |                                                                            |      YES |
-| 'add'     | set_filter | ISO 8601 Date Format (2020-09-16) add date is newer then specified date    |      YES |
-| 'update'  | set_filter | ISO 8601 Date Format (2020-09-16) update itme is newer then specified date |      YES |
-| 'include' | boolean    | 0,1 include songs in a playlist or episodes in a podcast if available      |      YES |
-| 'offset'  | integer    |                                                                            |      YES |
-| 'limit'   | integer    |                                                                            |      YES |
+@return object
+
+```JSON
+"song": {}|"album": {}|"artist": {}|"playlist": {}|"podcast": {}
+
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
+| Input     | Type       | Description                                                      | Optional |
+|-----------|------------|------------------------------------------------------------------|---------:|
+| 'type'    | string     | 'song', 'album', 'artist', 'playlist', 'podcast'                 |       NO |
+| 'filter'  | string     |                                                                  |      YES |
+| 'add'     | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
+|           |            | Find objects with an 'add' date newer than the specified date    |          |
+| 'update'  | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
+|           |            | Find objects with an 'update' time newer than the specified date |          |
+| 'include' | boolean    | 0,1 include songs in a playlist or episodes in a podcast         |      YES |
+| 'offset'  | integer    |                                                                  |      YES |
+| 'limit'   | integer    |                                                                  |      YES |
 
 SONGS
 
@@ -105,14 +197,6 @@ PLAYLIST
 
 ### advanced_search
 
-#### Changes to text searches
-
-* 'is not' has been added shifting values down the list.
-  0=contains, 1=does not contain, 2=starts with, 3=ends with
-  4=is, 5=is not, 6=sounds like, 7=does not sound like
-* rule_1['name'] is depreciated. Instead of rule_1['name'] use rule_1['title'] (I have put a temp workaround into the search rules to alleviate this change for any existing apps)
-* Metadata Search is combined with text and numeric. Meaning that changes to text lists push the numeric fields down.
-
 #### Using advanced_search
 
 Perform an advanced search given passed rules. This works in a similar way to the web/UI search pages.
@@ -125,14 +209,28 @@ Refer to the [Advanced Search](http://ampache.org/api/api-advanced-search) page 
 
 @param array $input
 
-| Input    | Type    | Description                                                                           | Optional |
-|----------|---------|---------------------------------------------------------------------------------------|---------:|
-| operator | string  | 'and','or' (whether to match one rule or all)                                         |       NO |
-| rules    | array   | [[rule_1,rule_1_operator,rule_1_input], [rule_2,rule_2_operator,rule_2_input], [etc]] |       NO |
-| type     | string  | 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video'                       |       NO |
-| random   | boolean | 0, 1 (random order of results; default to 0)                                          |      YES |
-| offset   | integer |                                                                                       |      YES |
-| limit'   | integer |                                                                                       |      YES |
+@return object
+
+```JSON
+"song": {}|"album": {}|"artist": {}|"playlist": {}|"label": {}|"user": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
+| Input    | Type    | Description                                   | Optional |
+|----------|---------|--------------- -------------------------------|---------:|
+| operator | string  | 'and','or' (whether to match one rule or all) |       NO |
+| rule_*   | array   | [rule_1,rule_1_operator,rule_1_input],        |       NO |
+| rule_*   | array   | [rule_2,rule_2_operator,rule_2_input], [etc]] |      YES |
+| type     | string  | 'song', 'album', 'artist', 'playlist',        |       NO |
+|          |         | 'label', 'user', 'video'                      |          |
+| random   | boolean | 0, 1 (random order of results; default to 0)  |      YES |
+| offset   | integer |                                               |      YES |
+| limit'   | integer |                                               |      YES |
 
 **NOTE** the rules part can be confusing but essentially you can include as many 'arrays' of rules as you want.
 Just add 1 to the rule value to create a new group of rules.
@@ -162,15 +260,29 @@ This takes a collection of inputs and returns artist objects.
 
 @param array $input
 
-| Input     | Type       | Description                                                                   | Optional |
-|-----------|------------|-------------------------------------------------------------------------------|---------:|
-| 'filter'  | string     | Value is Alpha Match for returned results, may be more than one letter/number |      YES |
-| 'exact'   | boolean    | (0, 1) if true filter is exact rather then fuzzy                              |      YES |
-| 'add'     | set_filter | ISO 8601 Date Format (2020-09-16) add date is newer then specified date       |      YES |
-| 'update'  | set_filter | ISO 8601 Date Format (2020-09-16) update itme is newer then specified date    |      YES |
-| 'offset'  | integer    |                                                                               |      YES |
-| 'limit'   | integer    |                                                                               |      YES |
-| 'include' | string     | 'albums', 'songs' and will include JSON nested in the artist JSON             |      YES |
+@return object
+
+```JSON
+"artist": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
+| Input     | Type       | Description                                                       | Optional |
+|-----------|------------|-------------------------------------------------------------------|---------:|
+| 'filter'  | string     | Filter results to match this string                               |      YES |
+| 'exact'   | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE)          |      YES |
+| 'add'     | set_filter | ISO 8601 Date Format (2020-09-16)                                 |      YES |
+|           |            | Find objects with an 'add' date newer than the specified date     |          |
+| 'update'  | set_filter | ISO 8601 Date Format (2020-09-16)                                 |      YES |
+|           |            | Find objects with an 'update' time newer than the specified date  |          |
+| 'offset'  | integer    |                                                                   |      YES |
+| 'limit'   | integer    |                                                                   |      YES |
+| 'include' | string     | 'albums', 'songs' and will include JSON nested in the artist JSON |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/artists.json)
 
@@ -178,6 +290,18 @@ This takes a collection of inputs and returns artist objects.
 
 This returns a single artist based on the UID of said artist
 @param array $input
+
+@return object
+
+```JSON
+"artist": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input     | Type   | Description                                                                         | Optional |
 |-----------|--------|-------------------------------------------------------------------------------------|---------:|
@@ -190,6 +314,18 @@ This returns a single artist based on the UID of said artist
 
 This returns the albums of an artist
 @param array $input
+
+@return object
+
+```JSON
+"album": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type    | Description                       | Optional |
 |----------|---------|-----------------------------------|---------:|
@@ -204,6 +340,18 @@ This returns the albums of an artist
 This returns the songs of the specified artist
 @param array $input
 
+@return object
+
+```JSON
+"song": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 | Input    | Type    | Description                      | Optional |
 |----------|---------|----------------------------------|---------:|
 | 'filter' | string  | UID of Artist, returns Song JSON |       NO |
@@ -217,15 +365,29 @@ This returns the songs of the specified artist
 This returns albums based on the provided search filters
 @param array $input
 
-| Input     | Type       | Description                                                                   | Optional |
-|-----------|------------|-------------------------------------------------------------------------------|---------:|
-| 'filter'  | string     | Value is Alpha Match for returned results, may be more than one letter/number |      YES |
-| 'exact'   | boolean    | (0, 1) if true filter is exact rather then fuzzy                              |       NO |
-| 'add'     | set_filter | ISO 8601 Date Format (2020-09-16) add date is newer then specified date       |      YES |
-| 'update'  | set_filter | ISO 8601 Date Format (2020-09-16) update itme is newer then specified date    |      YES |
-| 'offset'  | integer    |                                                                               |      YES |
-| 'limit'   | integer    |                                                                               |      YES |
-| 'include' | string     | 'albums', 'songs' will include nested in the album JSON                       |      YES |
+@return object
+
+```JSON
+"album": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
+| Input     | Type       | Description                                                      | Optional |
+|-----------|------------|------------------------------------------------------------------|---------:|
+| 'filter'  | string     | Filter results to match this string                              |      YES |
+| 'exact'   | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE)         |       NO |
+| 'add'     | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
+|           |            | Find objects with an 'add' date newer than the specified date    |          |
+| 'update'  | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
+|           |            | Find objects with an 'update' time newer than the specified date |          |
+| 'offset'  | integer    |                                                                  |      YES |
+| 'limit'   | integer    |                                                                  |      YES |
+| 'include' | string     | 'albums', 'songs' will include nested in the album JSON          |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/albums.json)
 
@@ -233,6 +395,18 @@ This returns albums based on the provided search filters
 
 This returns a single album based on the UID provided
 @param array $input
+
+@return object
+
+```JSON
+"album": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input     | Type   | Description                                                          | Optional |
 |-----------|--------|----------------------------------------------------------------------|---------:|
@@ -245,6 +419,18 @@ This returns a single album based on the UID provided
 
 This returns the songs of a specified album
 @param array $input
+
+@return object
+
+```JSON
+"song": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type    | Description                     | Optional |
 |----------|---------|---------------------------------|---------:|
@@ -259,12 +445,24 @@ This returns the songs of a specified album
 This returns the genres (Tags) based on the specified filter
 @param array $input
 
-| Input    | Type    | Description                                                                   | Optional |
-|----------|---------|-------------------------------------------------------------------------------|---------:|
-| 'filter' | string  | Value is Alpha Match for returned results, may be more than one letter/number |      YES |
-| 'exact'  | boolean | if true filter is exact rather then fuzzy                                     |      YES |
-| 'offset' | integer |                                                                               |      YES |
-| 'limit'  | integer |                                                                               |      YES |
+@return object
+
+```JSON
+"genre": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
+| Input    | Type    | Description                                              | Optional |
+|----------|---------|----------------------------------------------------------|---------:|
+| 'filter' | string  | Filter results to match this string                      |      YES |
+| 'exact'  | boolean | 0,1 if true filter is exact (=) rather than fuzzy (LIKE) |      YES |
+| 'offset' | integer |                                                          |      YES |
+| 'limit'  | integer |                                                          |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/genres.json)
 
@@ -272,6 +470,18 @@ This returns the genres (Tags) based on the specified filter
 
 This returns a single genre based on UID
 @param array $input
+
+@return object
+
+```JSON
+"genre": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type   | Description                      | Optional |
 |----------|--------|----------------------------------|---------:|
@@ -283,6 +493,18 @@ This returns a single genre based on UID
 
 This returns the artists associated with the genre in question as defined by the UID
 @param array $input
+
+@return object
+
+```JSON
+"artist": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type    | Description                       | Optional |
 |----------|---------|-----------------------------------|---------:|
@@ -297,6 +519,18 @@ This returns the artists associated with the genre in question as defined by the
 This returns the albums associated with the genre in question
 @param array $input
 
+@return object
+
+```JSON
+"album": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 | Input    | Type    | Description                      | Optional |
 |----------|---------|----------------------------------|---------:|
 | 'filter' | string  | UID of genre, returns album JSON |      YES |
@@ -309,6 +543,18 @@ This returns the albums associated with the genre in question
 
 returns the songs for this genre
 @param array $input
+
+@return object
+
+```JSON
+"song": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type    | Description                     | Optional |
 |----------|---------|---------------------------------|---------:|
@@ -323,14 +569,28 @@ returns the songs for this genre
 Returns songs based on the specified filter
 @param array $input
 
-| Input    | Type       | Description                                                                   | Optional |
-|----------|------------|-------------------------------------------------------------------------------|---------:|
-| 'filter' | string     | Value is Alpha Match for returned results, may be more than one letter/number |       NO |
-| 'exact'  | boolean    | (0, 1) if true filter is exact rather then fuzzy                              |       NO |
-| 'add'    | set_filter | ISO 8601 Date Format (2020-09-16) add date is newer then specified date       |      YES |
-| 'update' | set_filter | ISO 8601 Date Format (2020-09-16) update itme is newer then specified date    |      YES |
-| 'offset' | integer    |                                                                               |      YES |
-| 'limit'  | integer    |                                                                               |      YES |
+@return object
+
+```JSON
+"song": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
+| Input    | Type       | Description                                                      | Optional |
+|----------|------------|------------------------------------------------------------------|---------:|
+| 'filter' | string     | Filter results to match this string                              |       NO |
+| 'exact'  | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE)         |       NO |
+| 'add'    | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
+|          |            | Find objects with an 'add' date newer than the specified date    |          |
+| 'update' | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
+|          |            | Find objects with an 'update' time newer than the specified date |          |
+| 'offset' | integer    |                                                                  |      YES |
+| 'limit'  | integer    |                                                                  |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/songs.json)
 
@@ -338,6 +598,18 @@ Returns songs based on the specified filter
 
 returns a single song
 @param array $input
+
+@return object
+
+```JSON
+"song": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type   | Description                    | Optional |
 |----------|--------|--------------------------------|---------:|
@@ -352,6 +624,18 @@ returns a single song
 Delete an existing song. (if you are allowed to)
 @param array $input
 
+@return object
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 | Input    | Type   | Description           | Optional |
 |----------|--------|-----------------------|---------:|
 | 'filter' | string | UID of song to delete |       NO |
@@ -363,14 +647,28 @@ Delete an existing song. (if you are allowed to)
 This returns playlists based on the specified filter
 @param array $input
 
-| Input    | Type       | Description                                                                   | Optional |
-|----------|------------|-------------------------------------------------------------------------------|---------:|
-| 'filter' | string     | Value is Alpha Match for returned results, may be more than one letter/number |      YES |
-| 'exact'  | boolean    | (0, 1) if true filter is exact rather then fuzzy                              |      YES |
-| 'add'    | set_filter | ISO 8601 Date Format (2020-09-16) add date is newer then specified date       |      YES |
-| 'update' | set_filter | ISO 8601 Date Format (2020-09-16) update itme is newer then specified date    |      YES |
-| 'offset' | integer    |                                                                               |      YES |
-| 'limit'  | integer    |                                                                               |      YES |
+@return object
+
+```JSON
+"playlist": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
+| Input    | Type       | Description                                                      | Optional |
+|----------|------------|------------------------------------------------------------------|---------:|
+| 'filter' | string     | Filter results to match this string                              |      YES |
+| 'exact'  | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE)         |      YES |
+| 'add'    | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
+|          |            | Find objects with an 'add' date newer than the specified date    |          |
+| 'update' | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
+|          |            | Find objects with an 'update' time newer than the specified date |          |
+| 'offset' | integer    |                                                                  |      YES |
+| 'limit'  | integer    |                                                                  |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/playlists.json)
 
@@ -378,6 +676,18 @@ This returns playlists based on the specified filter
 
 This returns a single playlist
 @param array $input
+
+@return object
+
+```JSON
+"playlist": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type   | Description                            | Optional |
 |----------|--------|----------------------------------------|---------:|
@@ -389,6 +699,18 @@ This returns a single playlist
 
 This returns the songs for a playlist
 @param array $input
+
+@return object
+
+```JSON
+"song": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type    | Description                        | Optional |
 |----------|---------|------------------------------------|---------:|
@@ -403,6 +725,18 @@ This returns the songs for a playlist
 This create a new playlist and return it
 @param array $input
 
+@return object
+
+```JSON
+"playlist": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 | Input  | Type   | Description                       | Optional |
 |--------|--------|-----------------------------------|---------:|
 | 'name' | string | Playlist name                     |       NO |
@@ -415,6 +749,18 @@ This create a new playlist and return it
 This modifies name and type of a playlist
 Previously name and type were mandatory while filter wasn't. this has been reversed.
 @param array $input
+
+@return object
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type   | Description                                                             | Optional |
 |----------|--------|-------------------------------------------------------------------------|---------:|
@@ -431,6 +777,18 @@ Previously name and type were mandatory while filter wasn't. this has been rever
 This deletes a playlist
 @param array $input
 
+@return object
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 | Input    | Type   | Description     | Optional |
 |----------|--------|-----------------|---------:|
 | 'filter' | string | UID of Playlist |       NO |
@@ -441,6 +799,18 @@ This deletes a playlist
 
 This adds a song to a playlist. setting check=1 will not add duplicates to the playlist
 @param array $input
+
+@return object
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type    | Description                                               | Optional |
 |----------|---------|-----------------------------------------------------------|---------:|
@@ -455,6 +825,18 @@ This adds a song to a playlist. setting check=1 will not add duplicates to the p
 This remove a song from a playlist.
 Previous versions required 'track' instead of 'song'.
 @param array $input
+
+@return object
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type    | Description                          | Optional |
 |----------|---------|--------------------------------------|---------:|
@@ -472,6 +854,17 @@ Get a list of song JSON, indexes or id's based on some simple search criteria
 'unplayed' added in 400002 for searching unplayed tracks
 
 @param array $input
+@return object
+
+```JSON
+"song": {}|"index": {}|"id": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type    | Description                                                      | Optional |
 |----------|---------|------------------------------------------------------------------|---------:|
@@ -503,9 +896,21 @@ ID
 This searches the shares and returns... shares
 @param array $input
 
+@return object
+
+```JSON
+"share": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 | Input    | Type    | Description                                   | Optional |
 |----------|---------|-----------------------------------------------|---------:|
-| 'filter' | string  | Value is Alpha Match for Share Title          |      YES |
+| 'filter' | string  | Filter results to match this string           |      YES |
 | 'exact'  | boolean | 0, 1 boolean to match the exact filter string |      YES |
 | 'offset' | integer |                                               |      YES |
 | 'limit'  | integer |                                               |      YES |
@@ -518,6 +923,18 @@ This searches the shares and returns... shares
 
 Return shares by UID
 @param array $input
+
+@return object
+
+```JSON
+"share": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type   | Description                     | Optional |
 |----------|--------|---------------------------------|---------:|
@@ -533,6 +950,18 @@ Create a public url that can be used by anyone to stream media.
 Takes the file id with optional description and expires parameters.
 
 @param array $input
+
+@return object
+
+```JSON
+"share": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input         | Type    | Description                                   | Optional |
 |---------------|---------|-----------------------------------------------|---------:|
@@ -552,6 +981,18 @@ Takes the share id to update with optional description and expires parameters.
 
 @param array $input
 
+@return object
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 | Input         | Type    | Description                  | Optional |
 |---------------|---------|------------------------------|---------:|
 | 'filter'      | string  | Alpha-numeric search term    |       NO |
@@ -570,6 +1011,18 @@ Delete an existing share.
 
 @param array $input
 
+@return object
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 | Input    | Type   | Description            | Optional |
 |----------|--------|------------------------|---------:|
 | 'filter' | string | UID of Share to delete |       NO |
@@ -582,6 +1035,19 @@ Delete an existing share.
 
 Return similar artist id's or similar song ids compared to the input filter
 @param array $input
+
+@return object
+
+```JSON
+"song": {}|"artist": {}
+
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type    | Description          | Optional |
 |----------|---------|----------------------|---------:|
@@ -597,11 +1063,23 @@ Return similar artist id's or similar song ids compared to the input filter
 This searches the songs and returns... songs
 @param array $input
 
-| Input    | Type    | Description                                                                                | Optional |
-|----------|---------|--------------------------------------------------------------------------------------------|---------:|
-| 'filter' | string  | Value is Alpha Match for Song Title, Artist Name, Album Name, Genre Name returns song JSON |       NO |
-| 'offset' | integer |                                                                                            |      YES |
-| 'limit'  | integer |                                                                                            |      YES |
+@return object
+
+```JSON
+"song": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
+| Input    | Type    | Description                         | Optional |
+|----------|---------|-------------------------------------|---------:|
+| 'filter' | string  | Filter results to match this string |       NO |
+| 'offset' | integer |                                     |      YES |
+| 'limit'  | integer |                                     |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/search_songs.json)
 
@@ -610,12 +1088,24 @@ This searches the songs and returns... songs
 This returns video objects!
 @param array $input
 
-| Input    | Type    | Description                                                                   | Optional |
-|----------|---------|-------------------------------------------------------------------------------|---------:|
-| 'filter' | string  | Value is Alpha Match for returned results, may be more than one letter/number |       NO |
-| 'exact'  | boolean | if true filter is exact rather then fuzzy                                     |      YES |
-| 'offset' | integer |                                                                               |      YES |
-| 'limit'  | integer |                                                                               |      YES |
+@return object
+
+```JSON
+"video": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
+| Input    | Type    | Description                                              | Optional |
+|----------|---------|----------------------------------------------------------|---------:|
+| 'filter' | string  | Filter results to match this string                      |       NO |
+| 'exact'  | boolean | 0,1 if true filter is exact (=) rather than fuzzy (LIKE) |      YES |
+| 'offset' | integer |                                                          |      YES |
+| 'limit'  | integer |                                                          |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/videos.json)
 
@@ -623,6 +1113,18 @@ This returns video objects!
 
 This returns a single video
 @param array $input
+
+@return object
+
+```JSON
+"video": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type   | Description                      | Optional |
 |----------|--------|----------------------------------|---------:|
@@ -636,6 +1138,18 @@ This returns a single video
 
 Get information about podcasts
 @param array $input
+
+@return object
+
+```JSON
+"podcast": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input     | Type    | Description                                   | Optional |
 |-----------|---------|-----------------------------------------------|---------:|
@@ -653,6 +1167,18 @@ Get information about podcasts
 Get the podcast from it's id.
 @param array $input
 
+@return object
+
+```JSON
+"podcast": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 | Input     | Type   | Description                                   | Optional |
 |-----------|--------|-----------------------------------------------|---------:|
 | 'filter'  | string |                                               |       NO |
@@ -668,6 +1194,18 @@ Create a podcast that can be used by anyone to stream media.
 Takes the url and catalog parameters.
 @param array $input
 
+@return object
+
+```JSON
+"podcast": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 | Input     | Type   | Description         | Optional |
 |-----------|--------|---------------------|---------:|
 | 'url'     | string | rss url for podcast |       NO |
@@ -682,6 +1220,18 @@ Takes the url and catalog parameters.
 Update the description and/or expiration date for an existing podcast.
 Takes the podcast id to update with optional description and expires parameters.
 @param array $input
+
+@return object
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input         | Type   | Description               | Optional |
 |---------------|--------|---------------------------|---------:|
@@ -702,6 +1252,18 @@ Takes the podcast id to update with optional description and expires parameters.
 Delete an existing podcast.
 @param array $input
 
+@return object
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 | Input    | Type   | Description              | Optional |
 |----------|--------|--------------------------|---------:|
 | 'filter' | string | UID of podcast to delete |       NO |
@@ -714,6 +1276,18 @@ Delete an existing podcast.
 
 This returns the episodes for a podcast
 @param array $input
+
+@return object
+
+```JSON
+"podcast_episode": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type    | Description    | Optional |
 |----------|---------|----------------|---------:|
@@ -730,6 +1304,18 @@ This returns the episodes for a podcast
 Get the podcast_episode from it's id.
 @param array $input
 
+@return object
+
+```JSON
+"podcast_episode": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 | Input    | Type   | Description               | Optional |
 |----------|--------|---------------------------|---------:|
 | 'filter' | string | podcast_episode ID number |       NO |
@@ -742,6 +1328,18 @@ Get the podcast_episode from it's id.
 
 Delete an existing podcast_episode.
 @param array $input
+
+@return object
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type   | Description                      | Optional |
 |----------|--------|----------------------------------|---------:|
@@ -756,14 +1354,27 @@ This method has partial backwards compatibility with older api versions but shou
 (Changed in 400001 'filter' added)
 @param array $input
 
-| Input      | Type    | Description                                                                 | Optional |
-|------------|---------|-----------------------------------------------------------------------------|---------:|
-| 'type'     | string  | 'song', 'album', 'artist'                                                   |       NO |
-| 'filter'   | string  | 'newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged', 'random' |       NO |
-| 'user_id'  | integer |                                                                             |      YES |
-| 'username' | string  |                                                                             |      YES |
-| 'offset'   | integer |                                                                             |      YES |
-| 'limit'    | integer |                                                                             |      YES |
+@return object
+
+```JSON
+"song": {}|"album": {}|"artist": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
+| Input      | Type    | Description                                | Optional |
+|------------|---------|--------------------------------------------|---------:|
+| 'type'     | string  | 'song', 'album', 'artist'                  |       NO |
+| 'filter'   | string  | 'newest', 'highest', 'frequent', 'recent', |       NO |
+|            |         | 'forgotten', 'flagged', 'random'           |          |
+| 'user_id'  | integer |                                            |      YES |
+| 'username' | string  |                                            |      YES |
+| 'offset'   | integer |                                            |      YES |
+| 'limit'    | integer |                                            |      YES |
 
 SONG
 
@@ -784,12 +1395,36 @@ ALBUM
 Get ids and usernames for your site
 @param array $input
 
+@return object
+
+```JSON
+"user": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/users.json)
 
 ### user
 
 This get an user public information
 @param array $input
+
+@return object
+
+```JSON
+"user": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input      | Type   | Description                         | Optional |
 |------------|--------|-------------------------------------|---------:|
@@ -801,6 +1436,18 @@ This get an user public information
 
 Create a new user. (Requires the username, password and email.)
 @param array $input
+
+@return object
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input      | Type    | Description                | Optional |
 |------------|---------|----------------------------|---------:|
@@ -816,6 +1463,18 @@ Create a new user. (Requires the username, password and email.)
 
 Update an existing user.
 @param array $input
+
+@return object
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input        | Type    | Description                | Optional |
 |--------------|---------|----------------------------|---------:|
@@ -836,6 +1495,18 @@ Update an existing user.
 Delete an existing user.
 @param array $input
 
+@return object
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 | Input      | Type   | Description | Optional |
 |------------|--------|-------------|---------:|
 | 'username' | string |             |       NO |
@@ -849,14 +1520,26 @@ Delete an existing user.
 This returns licenses based on the specified filter
 @param array $input
 
-| Input    | Type       | Description                                                                   | Optional |
-|----------|------------|-------------------------------------------------------------------------------|---------:|
-| 'filter' | string     | Value is Alpha Match for returned results, may be more than one letter/number |      YES |
-| 'exact'  | boolean    | (0, 1) if true filter is exact rather then fuzzy                              |      YES |
-| 'add'    | set_filter | ISO 8601 Date Format (2020-09-16) add date is newer then specified date       |      YES |
-| 'update' | set_filter | ISO 8601 Date Format (2020-09-16) update itme is newer then specified date    |      YES |
-| 'offset' | integer    |                                                                               |      YES |
-| 'limit'  | integer    |                                                                               |      YES |
+```JSON
+"license": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
+| Input    | Type       | Description                                                      | Optional |
+|----------|------------|------------------------------------------------------------------|---------:|
+| 'filter' | string     | Filter results to match this string                              |      YES |
+| 'exact'  | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE)         |      YES |
+| 'add'    | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
+|          |            | Find objects with an 'add' date newer than the specified date    |          |
+| 'update' | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
+|          |            | Find objects with an 'update' time newer than the specified date |          |
+| 'offset' | integer    |                                                                  |      YES |
+| 'limit'  | integer    |                                                                  |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/licenses.json)
 
@@ -867,6 +1550,16 @@ This returns licenses based on the specified filter
 This returns a single license
 @param array $input
 
+```JSON
+"license": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 | Input    | Type   | Description                          | Optional |
 |----------|--------|--------------------------------------|---------:|
 | 'filter' | string | UID of license, returns license JSON |       NO |
@@ -876,6 +1569,16 @@ This returns a single license
 ### license_songs
 
 * **NEW** in 4.2.0
+
+```JSON
+"song": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 This returns the songs for a license
 @param array $input
@@ -893,6 +1596,16 @@ This returns the songs for a license
 This get an user followers
 @param array $input
 
+```JSON
+"user": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 | Input      | Type   | Description                                | Optional |
 |------------|--------|--------------------------------------------|---------:|
 | 'username' | string | Username of the user to get followers list |       NO |
@@ -903,6 +1616,16 @@ This get an user followers
 
 This get the user list followed by an user
 @param array $input
+
+```JSON
+"user": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input      | Type   | Description                                | Optional |
 |------------|--------|--------------------------------------------|---------:|
@@ -915,6 +1638,16 @@ This get the user list followed by an user
 This follow/unfollow an user
 @param array $input
 
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 | Input      | Type   | Description                             | Optional |
 |------------|--------|-----------------------------------------|---------:|
 | 'username' | string | Username of the user to follow/unfollow |       NO |
@@ -922,6 +1655,16 @@ This follow/unfollow an user
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/toggle_follow.json)
 
 ### last_shouts
+
+```JSON
+"shout": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 This get the latest posted shouts
 @param array $input
@@ -937,6 +1680,16 @@ This get the latest posted shouts
 
 This rates a library item
 @param array $input
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type    | Description                                   | Optional |
 |----------|---------|-----------------------------------------------|---------:|
@@ -954,6 +1707,16 @@ This flags a library item as a favorite
 * Setting flag to false (0) will remove the flag
 @param array $input
 
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 | Input  | Type    | Description                        | Optional |
 |--------|---------|------------------------------------|---------:|
 | 'type' | string  | 'song', 'album', 'artist', 'video' |       NO |
@@ -967,6 +1730,16 @@ This flags a library item as a favorite
 Take a song_id and update the object_count and user_activity table with a play. This allows other sources to record play history to ampache
 @param array $input
 
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 | Input    | Type    | Description | Optional |
 |----------|---------|-------------|---------:|
 | 'id'     | integer | $object_id  |       NO |
@@ -979,6 +1752,16 @@ Take a song_id and update the object_count and user_activity table with a play. 
 
 Search for a song using text info and then record a play if found. This allows other sources to record play history to ampache
 @param array $input
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input        | Type    | Description  | Optional |
 |--------------|---------|--------------|---------:|
@@ -1000,9 +1783,20 @@ Search for a song using text info and then record a play if found. This allows o
 This searches the catalogs and returns... catalogs
 @param array $input
 
-| Input    | Type   | Description                                                      | Optional |
-|----------|--------|------------------------------------------------------------------|---------:|
-| 'filter' | string | Catalog type music, clip, tvshow, movie, personal_video, podcast |      YES |
+```JSON
+"catalog": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
+| Input    | Type   | Description                        | Optional |
+|----------|--------|------------------------------------|---------:|
+| 'filter' | string | Catalog type: music, clip, tvshow, |      YES |
+|          |        | movie, personal_video, podcast     |          |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/catalogs.json)
 
@@ -1012,6 +1806,16 @@ This searches the catalogs and returns... catalogs
 
 Return catalog by UID
 @param array $input
+
+```JSON
+"catalog": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type   | Description    | Optional |
 |----------|--------|----------------|---------:|
@@ -1023,6 +1827,16 @@ Return catalog by UID
 
 Kick off a catalog update or clean for the selected catalog
 @param array $input
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input     | Type    | Description                       | Optional |
 |-----------|---------|-----------------------------------|---------:|
@@ -1041,6 +1855,16 @@ Make sure you remember to urlencode those file names!
 
 @param array $input
 
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 | Input     | Type    | Description                     | Optional |
 |-----------|---------|---------------------------------|---------:|
 | 'file'    | string  | FULL path to local file         |       NO |
@@ -1053,6 +1877,16 @@ Make sure you remember to urlencode those file names!
 
 This get an user timeline
 @param array $input
+
+```JSON
+"activity": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input      | Type    | Description                                       | Optional |
 |------------|---------|---------------------------------------------------|---------:|
@@ -1067,6 +1901,16 @@ This get an user timeline
 This get current user friends timeline
 @param array $input
 
+```JSON
+"activity": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 | Input   | Type    | Description | Optional |
 |---------|---------|-------------|---------:|
 | 'limit' | integer |             |      YES |
@@ -1078,6 +1922,16 @@ This get current user friends timeline
 
 Update a single album, artist, song from the tag data
 @param array $input
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input  | Type    | Description                     | Optional |
 |--------|---------|---------------------------------|---------:|
@@ -1091,6 +1945,16 @@ Update a single album, artist, song from the tag data
 Update artist information and fetch similar artists from last.fm
 Make sure lastfm_API_key is set in your configuration file
 @param array $input
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input | Type    | Description | Optional |
 |-------|---------|-------------|---------:|
@@ -1110,6 +1974,16 @@ Doesn't overwrite existing art by default.
 | 'type'      | string  | 'song', 'podcast' |       NO |
 | 'overwrite' | boolean | 0, 1              |      YES |
 
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/update_art.json)
 
 ### update_podcast
@@ -1123,12 +1997,32 @@ Sync and download new podcast episodes
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/update_podcast.json)
 
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 ### user_preferences
 
 * **NEW** in develop
 
 Get your user preferences
 @param array $input
+
+```JSON
+"preference": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/user_preferences.json)
 
@@ -1138,6 +2032,16 @@ Get your user preferences
 
 Get your user preference by name
 @param array $input
+
+```JSON
+"preference": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type   | Description                                       | Optional |
 |----------|--------|---------------------------------------------------|---------:|
@@ -1152,6 +2056,16 @@ Get your user preference by name
 Get your server preferences
 @param array $input
 
+```JSON
+"preference": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/system_preferences.json)
 
 ### system_preference
@@ -1160,6 +2074,16 @@ Get your server preferences
 
 Get your server preference by name
 @param array $input
+
+```JSON
+"preference": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type   | Description                                       | Optional |
 |----------|--------|---------------------------------------------------|---------:|
@@ -1174,15 +2098,26 @@ Get your server preference by name
 Add a new preference to your server
 @param array $input
 
-| Input         | Type    | Description                                                                      | Optional |
-|---------------|---------|----------------------------------------------------------------------------------|---------:|
-| 'filter'      | string  | Preference name e.g ('notify_email', 'ajax_load')                                |       NO |
-| 'type'        | string  | 'boolean', 'integer', 'string', 'special'                                        |       NO |
-| 'default'     | mixed   | string or integer default value                                                  |       NO |
-| 'category'    | string  | 'interface', 'internal', 'options', 'playlist', 'plugins', 'streaming', 'system' |       NO |
-| 'description' | string  |                                                                                  |      YES |
-| 'subcategory' | string  |                                                                                  |      YES |
-| 'level'       | integer | access level required to change the value (default 100)                          |      YES |
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
+| Input         | Type    | Description                                             | Optional |
+|---------------|---------|---------------------------------------------------------|---------:|
+| 'filter'      | string  | Preference name e.g ('notify_email', 'ajax_load')       |       NO |
+| 'type'        | string  | 'boolean', 'integer', 'string', 'special'               |       NO |
+| 'default'     | mixed   | string or integer default value                         |       NO |
+| 'category'    | string  | 'interface', 'internal', 'options', 'playlist',         |       NO |
+|               |         | 'plugins', 'streaming', 'system'                        |          |
+| 'description' | string  |                                                         |      YES |
+| 'subcategory' | string  |                                                         |      YES |
+| 'level'       | integer | access level required to change the value (default 100) |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/preference_create.json)
 
@@ -1192,13 +2127,22 @@ Add a new preference to your server
 
 Edit a preference value and apply to all users if allowed
 @param array $input
-     * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
-     * value  = (string|integer) Preference value
-     * all    = (boolean) apply to all users //optional
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type   | Description                                       | Optional |
 |----------|--------|---------------------------------------------------|---------:|
 | 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') |       NO |
+| 'value'  | mixed   | (string|integer) Preference value                 |       NO |
+| 'all'    | boolean | 0, 1 apply to all users                           |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/preference_edit.json)
 
@@ -1208,6 +2152,16 @@ Edit a preference value and apply to all users if allowed
 
 Delete a non-system preference by name
 @param array $input
+
+```JSON
+"success": {}
+```
+
+@throws
+
+```JSON
+"error": {}
+```
 
 | Input    | Type   | Description                                       | Optional |
 |----------|--------|---------------------------------------------------|---------:|
@@ -1253,6 +2207,27 @@ Get an art image.
 
 This is for controlling localplay
 @param array $input
+
+@return object
+
+```JSON
+"localplay": { "command": {} }
+```
+
+@throws
+
+```JSON
+"error": {}
+```
+
+| Input     | Type    | Description                                                  | Optional |
+|-----------|---------|--------------------------------------------------------------|---------:|
+| 'command' | string  | 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', |       NO |
+|           |         | 'volume_down', 'volume_mute', 'delete_all', 'skip', 'status' |          |
+| 'oid'     | integer | object_id                                                    |      YES |
+| 'type'    | string  | 'Song', 'Video', 'Podcast_Episode', 'Channel',               |      YES |
+|           |         | 'Broadcast', 'Democratic', 'Live_Stream'                     |          |
+| 'clear'   | boolean | 0,1 Clear the current playlist before adding                 |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/localplay.json)
 
