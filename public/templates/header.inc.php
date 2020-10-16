@@ -124,8 +124,28 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
             $iframed = true; ?>
         <script src="<?php echo $web_path; ?>/lib/javascript/dynamicpage.js"></script>
         <?php require_once UI::find_template('show_html5_player_headers.inc.php'); ?>
+        <script>
+            function NavigateTo(url)
+            {
+                window.location.hash = url.substring(jsWebPath.length + 1);
+            }
+
+            function getCurrentPage()
+            {
+                if (window.location.hash.length > 0) {
+                    var wpage = window.location.hash.substring(1);
+                    if (wpage !== 'prettyPhoto') {
+                        return btoa(wpage);
+                    } else {
+                        return "";
+                    }
+                }
+
+                return btoa(window.location.href.substring(jsWebPath.length + 1));
+            }
+        </script>
         <?php
-        }  ?>
+        } else { ?>
         <script>
             function NavigateTo(url)
             {
@@ -137,6 +157,8 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                 return btoa(window.location.href);
             }
         </script>
+        <?php
+        } ?>
         <script>
             $.widget( "custom.catcomplete", $.ui.autocomplete, {
                 _renderItem: function( ul, item ) {
