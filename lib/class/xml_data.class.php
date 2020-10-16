@@ -360,10 +360,10 @@ class XML_Data
      * @param array $objects (description here...)
      * @param string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'
      * @param boolean $full_xml whether to return a full XML document or just the node.
-     * @param boolean $add_songs include episodes from podcasts or tracks in a playlist
+     * @param boolean $include include episodes from podcasts or tracks in a playlist
      * @return   string   return xml
      */
-    public static function indexes($objects, $object_type, $full_xml = true, $add_songs = false)
+    public static function indexes($objects, $object_type, $full_xml = true, $include = false)
     {
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
@@ -430,7 +430,7 @@ class XML_Data
                         $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
                         $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
                     }
-                    $songs = ($add_songs) ? $playlist->get_items() : array();
+                    $songs = ($include) ? $playlist->get_items() : array();
                     $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                         "\t<name><![CDATA[" . $playlist_name . "]]></name>\n" .
                         "\t<items><![CDATA[" . $playitem_total . "]]></items>\n" .
@@ -459,7 +459,7 @@ class XML_Data
                         "\t<build_date><![CDATA[" . $podcast->f_lastbuilddate . "]]></build_date>\n" .
                         "\t<sync_date><![CDATA[" . $podcast->f_lastsync . "]]></sync_date>\n" .
                         "\t<public_url><![CDATA[" . $podcast->link . "]]></public_url>\n";
-                    if ($add_songs) {
+                    if ($include) {
                         $items = $podcast->get_episodes();
                         if (count($items) > 0) {
                             $string .= self::podcast_episodes($items, false);
