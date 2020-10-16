@@ -66,6 +66,11 @@ final class ArtistsMethod
 
 
         $artists = Api::$browse->get_objects();
+        if (empty($artists)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
         $user    = User::get_from_username(Session::username($input['auth']));
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
 
