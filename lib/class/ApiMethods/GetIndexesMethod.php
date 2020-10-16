@@ -68,7 +68,7 @@ final class GetIndexesMethod
         $type    = (string) $input['type'];
         $include = (int) $input['include'] == 1;
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist', 'playlist'))) {
+        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'podcast'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
