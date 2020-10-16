@@ -80,13 +80,13 @@ final class PreferenceEditMethod
             return false;
         }
         $preference   = Preference::get($pref_name, $user->id);
-        $output_array =  array('preferences' => $preference);
+        $output_array =  array('preference' => $preference);
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($output_array, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo XML_Data::object_array($output_array['preferences'], 'preferences', 'pref');
+                echo XML_Data::object_array($output_array['preference'], null, 'preference');
         }
         Session::extend($input['auth']);
 

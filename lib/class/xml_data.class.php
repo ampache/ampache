@@ -325,7 +325,7 @@ class XML_Data
      *
      * This will build an xml document from an array of arrays, an id is required for the array data
      * <root>
-     *   <$object_type>
+     *   <$object_type> //optional
      *     <$item id="123">
      *       <data></data>
      *
@@ -334,9 +334,9 @@ class XML_Data
      * @param  string $item
      * @return string return xml
      */
-    public static function object_array($array, $object_type, $item)
+    public static function object_array($array, $object_type = '', $item)
     {
-        $string = "<$object_type>\n";
+        $string = ($object_type == '') ? '' : "<$object_type>\n";
         // Foreach it
         foreach ($array as $object) {
             $string .= "\t<$item id=\"" . $object['id'] . "\">\n";
@@ -346,7 +346,7 @@ class XML_Data
             }
             $string .= "\t</$item>\n";
         } // end foreach
-        $string .= "</$object_type>";
+        $string .= ($object_type == '') ? '' : "</$object_type>";
 
         return self::output_xml($string);
     } // object_array

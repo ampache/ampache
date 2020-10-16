@@ -54,13 +54,13 @@ final class SystemPreferencesMethod
             return false;
         }
         $preferences  = Preference::get_all(-1);
-        $output_array = array('preferences' => $preferences);
+        $output_array = array('preference' => $preferences);
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($output_array, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo XML_Data::object_array($output_array['preferences'], 'preferences', 'pref');
+                echo XML_Data::object_array($output_array['preference'], null, 'preference');
         }
         Session::extend($input['auth']);
 
