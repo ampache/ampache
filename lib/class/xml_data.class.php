@@ -1127,7 +1127,7 @@ class XML_Data
      */
     public static function shouts($shouts)
     {
-        $string = "<shouts>\n";
+        $string = "";
         foreach ($shouts as $shout_id) {
             $shout = new Shoutbox($shout_id);
             $shout->format();
@@ -1142,7 +1142,6 @@ class XML_Data
             }
             $string .= "\t</shout>\n";
         }
-        $string .= "</shouts>\n";
 
         return self::output_xml($string);
     } // shouts
