@@ -28,7 +28,7 @@
     <table class="gatherart">
         <?php
         foreach ($keywords as $key => $word) {
-            if ($key != 'keyword' && $word['label']) { ?>
+            if (($key != 'mb_albumid_group' && $key != 'mb_artistid') && ($key != 'keyword' && $word['label'])) { ?>
                 <tr>
                     <td>
                         <?php echo $word['label']; ?>&nbsp;
@@ -45,12 +45,8 @@
                              if ($object_type == 'artist') {
                                  echo 'required';
                              }
-                         } elseif ($key == 'mb_albumid' || $key == 'mb_artistid') {
-                             if (in_array('musicbrainz', $art_order)) {
-                                 echo  ' required pattern="^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$"';
-                             }
                          }
-                         ?>
+                     ?>
                     />
                   </td>
                 </tr>
@@ -124,7 +120,13 @@
         <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
         <input type="hidden" name="object_id" value="<?php echo $object_id; ?>" />
         <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
-        <input type="button" value="<?php echo T_('Cancel'); ?>" onClick="NavigateTo('<?php echo $burl; ?>');" />
+        <?php if (AmpConfig::get('ajax_load')) {
+            $cancelurl = ((string) AmpConfig::get('web_path') == '') ? $burl : (AmpConfig::get('web_path') . '/' . $burl);
+        } else {
+            $cancelurl = (string) $burl;
+        }
+         ?>
+        <input type="button" value="<?php echo T_('Cancel'); ?>" onClick="NavigateTo('<?php echo $cancelurl; ?>');" />
         <input type="submit" value="<?php echo T_('Get Art'); ?>" />
     </div>
 </form>
