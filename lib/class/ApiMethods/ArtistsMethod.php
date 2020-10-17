@@ -37,6 +37,8 @@ use XML_Data;
  */
 final class ArtistsMethod
 {
+    const ACTION = 'artists';
+
     /**
      * artists
      * MINIMUM_API_VERSION=380001
@@ -52,6 +54,7 @@ final class ArtistsMethod
      * offset  = (integer) //optional
      * limit   = (integer) //optional
      * include = (array) 'albums', 'songs' //optional
+     * @return boolean
      */
     public static function artists(array $input)
     {
@@ -87,5 +90,7 @@ final class ArtistsMethod
                 echo XML_Data::artists($artists, $include, $user->id);
         }
         Session::extend($input['auth']);
+
+        return true;
     }
 }

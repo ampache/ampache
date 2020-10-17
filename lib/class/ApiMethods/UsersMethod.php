@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Lib\ApiMethods;
 
+use Api;
 use JSON_Data;
 use Session;
 use User;
@@ -36,6 +37,8 @@ use XML_Data;
  */
 final class UsersMethod
 {
+    const ACTION = 'users';
+
     /**
      * users
      * MINIMUM_API_VERSION=5.0.0

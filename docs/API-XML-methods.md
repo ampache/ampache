@@ -2320,14 +2320,6 @@ Get your user preferences
 </root>
 ```
 
-@throws
-
-```XML
-<root>
-    <error>
-</root>
-```
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/user_preferences.xml)
 
 ### user_preference

@@ -27,6 +27,7 @@ namespace Lib\ApiMethods;
 
 use Album;
 use AmpConfig;
+use Api;
 use Artist;
 use JSON_Data;
 use Search;
@@ -40,6 +41,8 @@ use XML_Data;
  */
 final class PlaylistGenerateMethod
 {
+    const ACTION = 'playlist_generate';
+
     /**
      * playlist_generate
      * MINIMUM_API_VERSION=400001
@@ -56,9 +59,10 @@ final class PlaylistGenerateMethod
      * album  = (integer) $album_id                     //optional
      * artist = (integer) $artist_id                    //optional
      * flag   = (integer) 0,1                           //optional, default = 0
-     * format = (string)  'song', 'index', 'id'           //optional, default = 'song'
+     * format = (string)  'song', 'index', 'id'         //optional, default = 'song'
      * offset = (integer)                               //optional
      * limit  = (integer)                               //optional
+     * @return boolean
      */
     public static function playlist_generate(array $input)
     {
@@ -129,8 +133,15 @@ final class PlaylistGenerateMethod
         }
 
         ob_end_clean();
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
+        switch ($input['api_format']) {
+            case 'json':
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
+                break;
+            default:
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+        }
 
         // get db data
         $song_ids = Search::run($array, $user);
@@ -139,6 +150,11 @@ final class PlaylistGenerateMethod
         //slice the array if there is a limit
         if ((int) $input['limit'] > 0) {
             $song_ids = array_slice($song_ids, 0, (int) $input['limit']);
+        }
+        if (empty($song_ids)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
         }
 
         // output formatted XML
@@ -172,5 +188,7 @@ final class PlaylistGenerateMethod
                 }
         }
         Session::extend($input['auth']);
+
+        return true;
     }
 }

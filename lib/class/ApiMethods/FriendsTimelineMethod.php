@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Lib\ApiMethods;
 
 use AmpConfig;
+use Api;
 use JSON_Data;
 use Session;
 use User;
@@ -37,6 +38,8 @@ use XML_Data;
  */
 final class FriendsTimelineMethod
 {
+    const ACTION = 'friends_timeline';
+
     /**
      * friends_timeline
      * MINIMUM_API_VERSION=380001
@@ -46,6 +49,7 @@ final class FriendsTimelineMethod
      * @param array $input
      * limit = (integer) //optional
      * since = (integer) UNIXTIME() //optional
+     * @return boolean
      */
     public static function friends_timeline(array $input)
     {

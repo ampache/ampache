@@ -51,7 +51,7 @@ final class LocalplayMethod
      * oid     = (integer) object_id //optional
      * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream' //optional
      * clear   = (integer) 0,1 Clear the current playlist before adding //optional
-     * @return bool
+     * @return boolean
      */
     public static function localplay(array $input)
     {

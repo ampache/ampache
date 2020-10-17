@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Lib\ApiMethods;
 
+use Api;
 use Catalog;
 use JSON_Data;
 use Session;
@@ -35,6 +36,8 @@ use XML_Data;
  */
 final class CatalogsMethod
 {
+    const ACTION = 'catalogs';
+
     /**
      * catalogs
      * MINIMUM_API_VERSION=420000
@@ -45,6 +48,7 @@ final class CatalogsMethod
      * filter = (string) set $filter_type //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * @return boolean
      */
     public static function catalogs(array $input)
     {

@@ -54,7 +54,7 @@ final class PreferenceCreateMethod
      * description = (string) description of preference //optional
      * subcategory = (string) $subcategory //optional
      * level       = (integer) access level required to change the value (default 100) //optional
-     * @return bool
+     * @return boolean
      */
     public static function preference_create($input)
     {

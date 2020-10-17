@@ -68,7 +68,7 @@ final class AdvancedSearchMethod
      * random          = (boolean)  0, 1 (random order of results; default to 0) //optional
      * offset          = (integer) //optional
      * limit           = (integer) //optional
-     * @return bool
+     * @return boolean
      */
     public static function advanced_search(array $input)
     {

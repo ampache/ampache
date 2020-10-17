@@ -37,6 +37,8 @@ use XML_Data;
  */
 final class SongsMethod
 {
+    const ACTION = 'songs';
+
     /**
      * songs
      * MINIMUM_API_VERSION=380001
@@ -52,6 +54,7 @@ final class SongsMethod
      * update = self::set_filter(date) //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * @return boolean
      */
     public static function songs(array $input)
     {
@@ -87,5 +90,7 @@ final class SongsMethod
                 echo XML_Data::songs($songs, $user->id);
         }
         Session::extend($input['auth']);
+
+        return true;
     }
 }

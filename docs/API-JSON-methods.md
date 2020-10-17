@@ -2022,12 +2022,6 @@ Get your user preferences
 "preference": {}
 ```
 
-@throws object
-
-```JSON
-"error": {}
-```
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/user_preferences.json)
 
 ### user_preference

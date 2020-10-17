@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Lib\ApiMethods;
 
 use Access;
+use Api;
 use JSON_Data;
 use Playlist;
 use Session;
@@ -38,6 +39,8 @@ use XML_Data;
  */
 final class PlaylistsMethod
 {
+    const ACTION = 'playlists';
+
     /**
      * playlists
      * MINIMUM_API_VERSION=380001
@@ -51,6 +54,7 @@ final class PlaylistsMethod
      * update = self::set_filter(date) //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * @return boolean
      */
     public static function playlists(array $input)
     {
@@ -82,5 +86,7 @@ final class PlaylistsMethod
                 echo XML_Data::playlists($playlist_ids);
         }
         Session::extend($input['auth']);
+
+        return true;
     }
 }

@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Lib\ApiMethods;
 
+use Api;
 use JSON_Data;
 use Session;
 use Tag;
@@ -37,6 +38,8 @@ use XML_Data;
  */
 final class GenreSongsMethod
 {
+    const ACTION = 'genre_songs';
+
     /**
      * genre_songs
      * MINIMUM_API_VERSION=380001

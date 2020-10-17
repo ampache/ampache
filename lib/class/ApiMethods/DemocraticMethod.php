@@ -49,6 +49,7 @@ final class DemocraticMethod
      * @param array $input
      * method = (string) 'vote', 'devote', 'playlist', 'play'
      * oid    = (integer) //optional
+     * @return boolean
      */
     public static function democratic(array $input)
     {

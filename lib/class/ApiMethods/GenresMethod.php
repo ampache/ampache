@@ -36,6 +36,8 @@ use XML_Data;
  */
 final class GenresMethod
 {
+    const ACTION = 'genres';
+
     /**
      * genres
      * MINIMUM_API_VERSION=380001
@@ -47,6 +49,7 @@ final class GenresMethod
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * @return boolean
      */
     public static function genres(array $input)
     {
