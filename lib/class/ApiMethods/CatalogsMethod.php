@@ -51,6 +51,11 @@ final class CatalogsMethod
         // filter for specific catalog types
         $filter   = (in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
         $catalogs = Catalog::get_catalogs($filter);
+        if (empty($catalogs)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -65,5 +70,7 @@ final class CatalogsMethod
                 echo XML_Data::catalogs($catalogs);
         }
         Session::extend($input['auth']);
+
+        return true;
     }
 }

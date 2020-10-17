@@ -57,6 +57,11 @@ final class GenresMethod
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter']);
         $tags = Api::$browse->get_objects();
+        if (empty($tags)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -71,5 +76,7 @@ final class GenresMethod
                 echo XML_Data::genres($tags);
         }
         Session::extend($input['auth']);
+
+        return true;
     }
 }

@@ -52,6 +52,9 @@ final class DemocraticMethod
      */
     public static function democratic(array $input)
     {
+        if (!Api::check_parameter($input, array('method'), self::ACTION)) {
+            return false;
+        }
         // Load up democratic information
         $democratic = Democratic::get_current_playlist();
         $democratic->set_parent();
@@ -134,5 +137,7 @@ final class DemocraticMethod
                 break;
         }
         Session::extend($input['auth']);
+
+        return true;
     }
 }

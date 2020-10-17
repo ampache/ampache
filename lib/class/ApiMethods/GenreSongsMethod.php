@@ -52,24 +52,24 @@ final class GenreSongsMethod
     public static function genre_songs(array $input)
     {
         $songs = Tag::get_tag_objects('song', $input['filter']);
-        $user  = User::get_from_username(Session::username($input['auth']));
+        if (empty($songs)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
 
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
+            return false;
+        }
 
+        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
-        if (!empty($songs)) {
-            switch ($input['api_format']) {
-                case 'json':
-                    JSON_Data::set_offset($input['offset']);
-                    JSON_Data::set_limit($input['limit']);
-                    echo JSON_Data::songs($songs, $user->id);
-                    break;
-                default:
-                    XML_Data::set_offset($input['offset']);
-                    XML_Data::set_limit($input['limit']);
-                    echo XML_Data::songs($songs, $user->id);
-            }
+        switch ($input['api_format']) {
+            case 'json':
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
+                echo JSON_Data::songs($songs, $user->id);
+                break;
+            default:
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+                echo XML_Data::songs($songs, $user->id);
         }
         Session::extend($input['auth']);
 
