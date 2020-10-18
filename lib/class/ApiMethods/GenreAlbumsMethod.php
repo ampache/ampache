@@ -55,7 +55,7 @@ final class GenreAlbumsMethod
     public static function genre_albums(array $input)
     {
         $albums = Tag::get_tag_objects('album', $input['filter']);
-        if (empty($artists)) {
+        if (empty($albums)) {
             Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
 
             return false;
