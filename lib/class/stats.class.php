@@ -111,35 +111,37 @@ class Stats
             return false;
         }
         $type = self::validate_type($input_type);
-        if (!self::is_already_inserted($type, $object_id, $user, $agent, $date)) {
-            $latitude  = null;
-            $longitude = null;
-            $geoname   = null;
-            if (isset($location['latitude'])) {
-                $latitude = $location['latitude'];
-            }
-            if (isset($location['longitude'])) {
-                $longitude = $location['longitude'];
-            }
-            if (isset($location['name'])) {
-                $geoname = $location['name'];
-            }
-            // allow setting date for scrobbles
-            if (!is_numeric($date)) {
-                $date = time();
-            }
+        if (self::is_already_inserted($type, $object_id, $user, $agent, $date)) {
+            return false;
+        }
 
-            $sql = "INSERT INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) " .
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $db_results = Dba::write($sql, array($type, $object_id, $count_type, $date, $user, $agent, $latitude, $longitude, $geoname));
+        $latitude  = null;
+        $longitude = null;
+        $geoname   = null;
+        if (isset($location['latitude'])) {
+            $latitude = $location['latitude'];
+        }
+        if (isset($location['longitude'])) {
+            $longitude = $location['longitude'];
+        }
+        if (isset($location['name'])) {
+            $geoname = $location['name'];
+        }
+        // allow setting date for scrobbles
+        if (!is_numeric($date)) {
+            $date = time();
+        }
 
-            if (in_array($type, array('song', 'video')) && $count_type === 'stream' && $user > 0) {
-                Useractivity::post_activity($user, 'play', $type, $object_id, $date);
-            }
+        $sql = "INSERT INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) " .
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $db_results = Dba::write($sql, array($type, $object_id, $count_type, $date, $user, $agent, $latitude, $longitude, $geoname));
 
-            if (!$db_results) {
-                debug_event('stats.class', 'Unable to insert statistics for ' . $user . ':' . $object_id, 3);
-            }
+        if (in_array($type, array('song', 'video')) && $count_type === 'stream' && $user > 0) {
+            Useractivity::post_activity($user, 'play', $type, $object_id, $date);
+        }
+
+        if (!$db_results) {
+            debug_event('stats.class', 'Unable to insert statistics for ' . $user . ':' . $object_id, 3);
         }
 
         return true;
