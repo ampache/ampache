@@ -766,13 +766,13 @@ Previously name and type were mandatory while filter wasn't. this has been rever
 "error": {}
 ```
 
-| Input    | Type   | Description                                                             | Optional |
-|----------|--------|-------------------------------------------------------------------------|---------:|
-| 'filter' | string | UID of Playlist                                                         |       NO |
-| 'name'   | string | Playlist name                                                           |      YES |
-| 'type'   | string | Playlist type 'public', 'private'                                       |      YES |
-| 'items'  | string | comma-separated song_id's (replace existing items with a new object_id) |      YES |
-| 'tracks' | string | comma-separated playlisttrack numbers matched to items in order         |      YES |
+| Input    | Type   | Description                                                       | Optional |
+|----------|--------|-------------------------------------------------------------------|---------:|
+| 'filter' | string | UID of Playlist                                                   |       NO |
+| 'name'   | string | Playlist name                                                     |      YES |
+| 'type'   | string | Playlist type 'public', 'private'                                 |      YES |
+| 'items'  | string | comma-separated song_id's (replaces existing items with a new id) |      YES |
+| 'tracks' | string | comma-separated playlisttrack numbers matched to 'items' in order |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/playlist_edit.json)
 

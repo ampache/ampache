@@ -748,7 +748,7 @@ abstract class Catalog extends database_object
         // tables with media items to count, song-related tables and the rest
         $media_tables = array('song', 'video', 'podcast_episode');
         $song_tables  = array('artist', 'album');
-        $list_tables  = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog');
+        $list_tables  = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label');
 
         $results = array();
         $items   = '0';
@@ -764,6 +764,8 @@ abstract class Catalog extends database_object
             $items += $data[0];
             $time += $data[1];
             $size += $data[2];
+            // write the total_counts as well
+            Dba::write("REPLACE INTO `update_info` SET `key`= '" . $table . "', `value`=" . $data[0]);
         }
         // return the totals for all media tables
         $results['items'] = $items;
@@ -776,6 +778,8 @@ abstract class Catalog extends database_object
             $data       = Dba::fetch_row($db_results);
             // save the object count
             $results[$table] = $data[0];
+            // write the total_counts as well
+            Dba::write("REPLACE INTO `update_info` SET `key`= '" . $table . "', `value`=" . $data[0]);
         }
 
         foreach ($list_tables as $table) {
@@ -784,6 +788,8 @@ abstract class Catalog extends database_object
             $data       = Dba::fetch_row($db_results);
             // save the object count
             $results[$table] = $data[0];
+            // write the total_counts as well
+            Dba::write("REPLACE INTO `update_info` SET `key`= '" . $table . "', `value`=" . $data[0]);
         }
 
         return $results;
