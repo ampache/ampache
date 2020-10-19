@@ -985,7 +985,7 @@ class XML_Data
         if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
         }
-        $string = '<total_count>' . count($videos) . "</total_count>\n";
+        $string = "<total_count>" . count($videos) . "</total_count>\n";
 
         foreach ($videos as $video_id) {
             $video = new Video($video_id);
