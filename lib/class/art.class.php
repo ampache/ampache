@@ -1617,7 +1617,7 @@ class Art extends database_object
 
         if ($this->type == "video") {
             $data = $this->gather_video_tags();
-        } elseif ($this->type == 'album') {
+        } elseif ($this->type == 'album' || $this->type == 'artist') {
             $data = $this->gather_song_tags($limit);
         } else {
             $data = array();
@@ -1645,10 +1645,15 @@ class Art extends database_object
     public function gather_song_tags($limit = 5)
     {
         // We need the filenames
-        $album = new Album($this->uid);
+        if ($this->type == 'album') {
+            $album = new Album($this->uid);
+            $songs = $album->get_songs();
+        } else {
+            $artist = new Artist($this->uid);
+            $songs  = $artist->get_songs();
+        }
 
         // grab the songs and define our results
-        $songs = $album->get_songs();
         $data  = array();
 
         // Foreach songs in this album
@@ -1690,25 +1695,17 @@ class Art extends database_object
         }
 
         if (isset($id3['id3v2']['APIC'])) {
-            // Foreach in case they have more then one
+            // Foreach in case they have more than one
             foreach ($id3['id3v2']['APIC'] as $image) {
-                $data[] = array(
-                    $mtype => $media->file,
-                    'raw' => $image['data'],
-                    'mime' => $image['mime'],
-                    'title' => 'ID3');
+                $this_picturetypeid = ($this->type == 'artist') ? 8 : 3;
+                if ($image['picturetypeid'] == $this_picturetypeid) {
+                    $data[] = array(
+                        $mtype => $media->file,
+                        'raw' => $image['data'],
+                        'mime' => $image['mime'],
+                        'title' => 'ID3');
+                }
             }
-        }
-
-        if (isset($id3['comments']['picture']['0'])) {
-            $image  = $id3['comments']['picture']['0'];
-            $data[] = array(
-            $mtype => $media->file,
-            'raw' => $image['data'],
-            'mime' => $image['image_mime'],
-            'title' => 'ID3');
-
-            return $data;
         }
 
         return $data;
