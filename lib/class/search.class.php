@@ -576,8 +576,8 @@ class Search extends playlist_object
         $this->type_date('added', T_('Added'));
         $this->type_date('updated', T_('Updated'));
 
-        $this->type_numeric('recent_added', T_('Recently added'));
-        $this->type_numeric('recent_updated', T_('Recently updated'));
+        $this->type_numeric('recent_added', T_('Recently added'), 'recent_added');
+        $this->type_numeric('recent_updated', T_('Recently updated'), 'recent_updated');
 
         $catalogs = array();
         foreach (Catalog::get_catalogs() as $catid) {
