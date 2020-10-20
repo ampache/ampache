@@ -521,6 +521,22 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get_count
+     *
+     * return the counts from update info to speed up responses
+     * @param string $table
+     * @return integer
+     */
+    public static function get_count(string $table)
+    {
+        $sql        = "SELECT * FROM `update_info` WHERE `key` = ?";
+        $db_results = Dba::read($sql, array($table));
+        $results    = Dba::fetch_assoc($db_results);
+
+        return (int) $results['value'];
+    } // get_count
+
+    /**
      * update_enabled
      * sets the enabled flag
      * @param string $new_enabled
@@ -748,7 +764,7 @@ abstract class Catalog extends database_object
         // tables with media items to count, song-related tables and the rest
         $media_tables = array('song', 'video', 'podcast_episode');
         $song_tables  = array('artist', 'album');
-        $list_tables  = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label');
+        $list_tables  = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share');
 
         $results = array();
         $items   = '0';

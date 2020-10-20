@@ -160,29 +160,8 @@ final class HandshakeMethod
                 }
 
                 debug_event(self::class, 'Login Success, passphrase matched', 1);
+                $outarray = Api::server_details($token);
 
-                // We need to also get the 'last update' of the
-                // catalog information in an RFC 2822 Format
-                $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';
-                $db_results = Dba::read($sql);
-                $row        = Dba::fetch_assoc($db_results);
-
-                // Now we need to quickly get the totals
-                $counts = Catalog::count_server(true);
-
-                // send the totals
-                $outarray = array('auth' => $token,
-                    'api' => Api::$version,
-                    'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
-                    'update' => date("c", (int) $row['update']),
-                    'add' => date("c", (int) $row['add']),
-                    'clean' => date("c", (int) $row['clean']),
-                    'songs' => (int) $counts['song'],
-                    'albums' => (int) $counts['album'],
-                    'artists' => (int) $counts['artist'],
-                    'playlists' => ((int) $counts['playlist'] + (int) $counts['search']),
-                    'videos' => (int) $counts['video'],
-                    'catalogs' => (int) $counts['catalog']);
                 switch ($input['api_format']) {
                     case 'json':
                         echo json_encode($outarray, JSON_PRETTY_PRINT);
