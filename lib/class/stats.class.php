@@ -161,7 +161,7 @@ class Stats
         $agent = Dba::escape($agent);
         $sql   = "SELECT `object_id`, `date`, `count_type` FROM `object_count` " .
                 "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND " .
-                "`object_count`.`count_type` = 'stream' " .
+                "`object_count`.`count_type` = 'stream' AND " .
                 "(`object_count`.`date` >= ($time - 5) AND `object_count`.`date` <= ($time + 5)) ";
         if ($agent !== '') {
             $sql .= "AND `object_count`.`agent` = '$agent' ";
