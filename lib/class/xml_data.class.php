@@ -468,7 +468,7 @@ class XML_Data
                     $string .= "\t</podcast>\n";
                     break;
                 case 'podcast_episode':
-                    $string .= self::podcast_episodes($items, false);
+                    $string .= self::podcast_episodes($objects, false);
                     break;
             }
         } // end foreach objects
