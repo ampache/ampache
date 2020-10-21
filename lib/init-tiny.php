@@ -23,10 +23,10 @@
 // Minimal init for use in install
 $a_root = realpath(__DIR__ . "/../");
 
-// Do a check for PHP5.4 because nothing will work without it
+// Do a check for PHP because nothing will work without the correct version
 if (version_compare(phpversion(), '7.1.0', '<')) {
-    echo T_("Ampache requires PHP version >= 7.1");
-    throw new RuntimeException(T_("Ampache requires PHP version >= 7.1"));
+    echo "PHP version " . phpversion() . " < 7.1";
+    throw new RuntimeException("PHP version " . phpversion() . " < 7.1");
 }
 
 error_reporting(E_ERROR); // Only show fatal errors in production
