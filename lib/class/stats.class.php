@@ -136,7 +136,7 @@ class Stats
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, array($type, $object_id, $count_type, $date, $user, $agent, $latitude, $longitude, $geoname));
 
-        if (in_array($type, array('song', 'video')) && $count_type === 'stream' && $user > 0) {
+        if (in_array($type, array('song', 'video')) && $count_type === 'stream' && $user > 0 && $agent !== 'debug') {
             Useractivity::post_activity($user, 'play', $type, $object_id, $date);
         }
 
