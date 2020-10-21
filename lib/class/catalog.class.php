@@ -529,8 +529,14 @@ abstract class Catalog extends database_object
      */
     public static function get_count(string $table)
     {
-        $sql        = "SELECT * FROM `update_info` WHERE `key` = ?";
-        $db_results = Dba::read($sql, array($table));
+        if ($table == 'playlist' || $table == 'search') {
+            $sql        = "SELECT 'playlist' AS `key`, SUM(value) AS `value` FROM `update_info`" .
+                "WHERE `key` IN ('playlist', 'search')";
+            $db_results = Dba::read($sql);
+        } else {
+            $sql        = "SELECT * FROM `update_info` WHERE `key` = ?";
+            $db_results = Dba::read($sql, array($table));
+        }
         $results    = Dba::fetch_assoc($db_results);
 
         return (int) $results['value'];
