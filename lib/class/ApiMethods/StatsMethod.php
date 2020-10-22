@@ -134,43 +134,40 @@ final class StatsMethod
                         $results = Album::get_random($limit, false, $user_id);
                 }
         }
+        if (empty($results)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
 
-        if (!empty($results)) {
-            ob_end_clean();
-            debug_event(self::class, 'stats found results searching for ' . $type, 5);
-            if ($type === 'song') {
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo JSON_Data::songs($results, $user->id);
-                        break;
-                    default:
-                        echo XML_Data::songs($results, $user->id);
-                }
-            }
-            if ($type === 'artist') {
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo JSON_Data::artists($results, array(), $user->id);
-                        break;
-                    default:
-                        echo XML_Data::artists($results, array(), $user->id);
-                }
-            }
-            if ($type === 'album') {
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo JSON_Data::albums($results, array(), $user->id);
-                        break;
-                    default:
-                        echo XML_Data::albums($results, array(), $user->id);
-                }
-            }
-            Session::extend($input['auth']);
-
-            return true;
+            return false;
         }
-        Api::error(T_('No Results'), '4704', self::ACTION,'empty',$input['api_format']);
-
-        return false;
+        ob_end_clean();
+        debug_event(self::class, 'stats found results searching for ' . $type, 5);
+        if ($type === 'song') {
+            switch ($input['api_format']) {
+                case 'json':
+                    echo JSON_Data::songs($results, $user->id);
+                    break;
+                default:
+                    echo XML_Data::songs($results, $user->id);
+            }
+        }
+        if ($type === 'artist') {
+            switch ($input['api_format']) {
+                case 'json':
+                    echo JSON_Data::artists($results, array(), $user->id);
+                    break;
+                default:
+                    echo XML_Data::artists($results, array(), $user->id);
+            }
+        }
+        if ($type === 'album') {
+            switch ($input['api_format']) {
+                case 'json':
+                    echo JSON_Data::albums($results, array(), $user->id);
+                    break;
+                default:
+                    echo XML_Data::albums($results, array(), $user->id);
+            }
+        }
+        Session::extend($input['auth']);
     }
 }

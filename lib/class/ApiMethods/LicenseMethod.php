@@ -28,6 +28,7 @@ namespace Lib\ApiMethods;
 use AmpConfig;
 use Api;
 use JSON_Data;
+use License;
 use Session;
 use XML_Data;
 
@@ -59,14 +60,20 @@ final class LicenseMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $uid = array((int) scrub_in($input['filter']));
+        $oid     = (int) scrub_in($input['filter']);
+        $license = new License($oid);
+        if (!$license->id) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::licenses($uid);
+                echo JSON_Data::licenses(array($oid));
                 break;
             default:
-                echo XML_Data::licenses($uid);
+                echo XML_Data::licenses(array($oid));
         }
         Session::extend($input['auth']);
 
