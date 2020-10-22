@@ -119,10 +119,9 @@ class JSON_Data
      *
      * This returns the formatted 'genre' array for a JSON document
      * @param array $tags
-     * @param boolean $simple
      * @return array
      */
-    private static function genre_array($tags, $simple = false)
+    private static function genre_array($tags)
     {
         $JSON = array();
 
@@ -138,16 +137,10 @@ class JSON_Data
             }
 
             foreach ($atags as $id => $data) {
-                if ($simple) {
-                    array_push($JSON, array(
-                        "name" => $data['name']
-                    ));
-                } else {
-                    array_push($JSON, array(
-                        "id" => (string) $id,
-                        "name" => $data['name']
-                    ));
-                }
+                array_push($JSON, array(
+                    "id" => (string) $id,
+                    "name" => $data['name']
+                ));
             }
         }
 
@@ -454,7 +447,7 @@ class JSON_Data
                 $trackcount     = 1;
                 $playlisttracks = $playlist->get_items();
                 foreach ($playlisttracks as $objects) {
-                    array_push($items,array("id" => (string) $objects['object_id'], "playlisttrack" => $trackcount));
+                    array_push($items, array("id" => (string) $objects['object_id'], "playlisttrack" => $trackcount));
                     $trackcount++;
                 }
             } else {
@@ -941,8 +934,8 @@ class JSON_Data
             $shout = new Shoutbox($shout_id);
             $shout->format();
             $user       = new User($shout->user);
-            $user_array = [];
-            array_push($user_array, array(
+            $user_array = ["user"];
+            array_push($user_array["user"], array(
                 "id" => (string) $user->id,
                 "username" => $user->username
             ));
@@ -973,8 +966,8 @@ class JSON_Data
         foreach ($activities as $activity_id) {
             $activity   = new Useractivity($activity_id);
             $user       = new User($activity->user);
-            $user_array = [];
-            array_push($user_array, array(
+            $user_array = ["user"];
+            array_push($user_array["user"], array(
                 "id" => (string) $user->id,
                 "username" => $user->username
             ));
