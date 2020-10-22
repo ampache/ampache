@@ -1262,7 +1262,7 @@ class Art extends database_object
                         case 'artist':
                           $query1 .= " artist:\"{$data['artist']}\"";
                         break;
-                        case (preg_match('/year:.*/', $item) ? true :false):
+                        case preg_match('/year:.*/', $item):
                            $query1 .= ' ' . $item;
                         break;
                         default:

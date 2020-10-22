@@ -330,11 +330,11 @@ class XML_Data
      *       <data></data>
      *
      * @param  array $array
-     * @param  string $object_type
      * @param  string $item
+     * @param  string $object_type
      * @return string return xml
      */
-    public static function object_array($array, $object_type = '', $item)
+    public static function object_array($array, $item, $object_type = '')
     {
         $string = ($object_type == '') ? '' : "<$object_type>\n";
         // Foreach it

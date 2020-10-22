@@ -864,8 +864,12 @@ class User extends database_object
      */
     public function generate_rsstoken()
     {
-        $rsstoken = bin2hex(random_bytes(32));
-        $this->update_rsstoken($rsstoken);
+        try {
+            $rsstoken = bin2hex(random_bytes(32));
+            $this->update_rsstoken($rsstoken);
+        } catch (Exception $error) {
+            debug_event('user.class', 'Could not generate random_bytes: ' . $error, 3);
+        }
     }
 
     /**
