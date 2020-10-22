@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Lib\ApiMethods;
 
 use Api;
+use Catalog;
 use JSON_Data;
 use Session;
 use XML_Data;
@@ -52,15 +53,20 @@ final class CatalogMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $catalog = array((int) $input['filter']);
+        $catalog = Catalog::create_from_id((int) $input['filter']);
+        if (!$catalog->id) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::catalogs($catalog);
+                echo JSON_Data::catalogs(array($catalog->id));
                 break;
             default:
-                echo XML_Data::catalogs($catalog);
+                echo XML_Data::catalogs(array($catalog->id));
         }
         Session::extend($input['auth']);
 

@@ -60,20 +60,21 @@ final class LabelMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $oid     = (int) scrub_in($input['filter']);
-        $label   = new Label($oid);
+        $uid   = (int) scrub_in($input['filter']);
+        $label = new Label($uid);
         if (!$label->id) {
             Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
 
             return false;
         }
+
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::labels(array($oid));
+                echo JSON_Data::labels(array($uid));
                 break;
             default:
-                echo XML_Data::labels(array($oid));
+                echo XML_Data::labels(array($uid));
         }
         Session::extend($input['auth']);
 

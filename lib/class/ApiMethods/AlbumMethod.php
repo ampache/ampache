@@ -55,7 +55,14 @@ final class AlbumMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $uid     = (int) scrub_in($input['filter']);
+        $uid   = (int) scrub_in($input['filter']);
+        $album = new Album($uid);
+        if (!$album->id) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
+
         $user    = User::get_from_username(Session::username($input['auth']));
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
         switch ($input['api_format']) {

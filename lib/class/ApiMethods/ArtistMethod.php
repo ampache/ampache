@@ -58,6 +58,13 @@ final class ArtistMethod
         $uid     = array((int) scrub_in($input['filter']));
         $user    = User::get_from_username(Session::username($input['auth']));
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
+        $artist  = new Artist((int) $uid);
+        if (!$artist->id) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
+
         switch ($input['api_format']) {
             case 'json':
                 echo JSON_Data::artists($uid, $include, $user->id);

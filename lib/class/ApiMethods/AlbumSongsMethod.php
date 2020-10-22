@@ -57,12 +57,16 @@ class AlbumSongsMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $album = new Album($input['filter']);
+        $album = new Album((int) $input['filter']);
         $songs = array();
         $user  = User::get_from_username(Session::username($input['auth']));
+        if (!$album->id) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
 
         ob_end_clean();
-
         // songs for all disks
         if (AmpConfig::get('album_group')) {
             $disc_ids = $album->get_group_disks_ids();

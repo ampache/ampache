@@ -60,20 +60,21 @@ final class LicenseMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $oid     = (int) scrub_in($input['filter']);
-        $license = new License($oid);
+        $uid     = (int) scrub_in($input['filter']);
+        $license = new License($uid);
         if (!$license->id) {
             Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
 
             return false;
         }
+
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::licenses(array($oid));
+                echo JSON_Data::licenses(array($uid));
                 break;
             default:
-                echo XML_Data::licenses(array($oid));
+                echo XML_Data::licenses(array($uid));
         }
         Session::extend($input['auth']);
 
