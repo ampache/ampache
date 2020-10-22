@@ -521,15 +521,15 @@ class XML_Data
             $label->format();
 
             $string .= "<license id=\"$label_id\">\n" .
-                "\t<name><![CDATA[$labels->f_name]]></name>\n" .
-                "\t<artists><![CDATA[$labels->artists]]></artists>\n" .
-                "\t<summary><![CDATA[$labels->summary]]></summary>\n" .
-                "\t<external_link><![CDATA[$labels->link]]></external_link>\n" .
-                "\t<address><![CDATA[$labels->address]]></address>\n" .
-                "\t<category><![CDATA[$labels->category]]></category>\n" .
-                "\t<email><![CDATA[$labels->email]]></email>\n" .
-                "\t<website><![CDATA[$labels->website]]></website>\n" .
-                "\t<user><![CDATA[$labels->user]]></user>\n" .
+                "\t<name><![CDATA[$label->f_name]]></name>\n" .
+                "\t<artists><![CDATA[$label->artists]]></artists>\n" .
+                "\t<summary><![CDATA[$label->summary]]></summary>\n" .
+                "\t<external_link><![CDATA[$label->link]]></external_link>\n" .
+                "\t<address><![CDATA[$label->address]]></address>\n" .
+                "\t<category><![CDATA[$label->category]]></category>\n" .
+                "\t<email><![CDATA[$label->email]]></email>\n" .
+                "\t<website><![CDATA[$label->website]]></website>\n" .
+                "\t<user><![CDATA[$label->user]]></user>\n" .
                 "</license>\n";
         } // end foreach
 
