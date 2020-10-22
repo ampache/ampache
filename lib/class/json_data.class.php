@@ -215,7 +215,7 @@ class JSON_Data
             ));
         } // end foreach
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode(array("license" => $JSON), JSON_PRETTY_PRINT);
     } // licenses
 
     /**
@@ -318,7 +318,7 @@ class JSON_Data
         } // end foreach artists
 
         if ($encode) {
-            return json_encode($JSON, JSON_PRETTY_PRINT);
+            return json_encode(array("artist" => $JSON), JSON_PRETTY_PRINT);
         }
 
         return $JSON;
@@ -403,7 +403,7 @@ class JSON_Data
         } // end foreach
 
         if ($encode) {
-            return json_encode($JSON, JSON_PRETTY_PRINT);
+            return json_encode(array("album" => $JSON), JSON_PRETTY_PRINT);
         }
 
         return $JSON;
@@ -775,7 +775,7 @@ class JSON_Data
         } // end foreach
 
         if ($encode) {
-            return json_encode($JSON, JSON_PRETTY_PRINT);
+            return json_encode(array("song" => $JSON), JSON_PRETTY_PRINT);
         }
 
         return $JSON;
@@ -811,7 +811,7 @@ class JSON_Data
             ));
         } // end foreach
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode(array("video" => $JSON), JSON_PRETTY_PRINT);
     } // videos
 
     /**
@@ -860,7 +860,7 @@ class JSON_Data
             ));
         } // end foreach
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode(array("song" => $JSON), JSON_PRETTY_PRINT);
     } // democratic
 
     /**
@@ -908,7 +908,7 @@ class JSON_Data
             $JSON['user']['fullname'] = $user->fullname;
         }
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode(array("user" => $JSON), JSON_PRETTY_PRINT);
     } // user
 
     /**
@@ -966,7 +966,7 @@ class JSON_Data
             array_push($JSON, $ourArray);
         }
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode(array("shout" => $JSON), JSON_PRETTY_PRINT);
     } // shouts
 
     /**
