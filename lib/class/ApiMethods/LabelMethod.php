@@ -61,7 +61,7 @@ final class LabelMethod
             return false;
         }
         $oid     = (int) scrub_in($input['filter']);
-        $label = new Label($oid);
+        $label   = new Label($oid);
         if (!$label->id) {
             Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
 

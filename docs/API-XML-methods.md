@@ -1665,6 +1665,20 @@ This returns a single license
 This returns the songs for a license
 @param array $input
 
+@return
+
+```XML
+<root>
+    <song>
+</root>
+```
+
+@throws
+
+```XML
+<root><error></root>
+```
+
 | Input    | Type    | Description                      | Optional |
 |----------|---------|----------------------------------|---------:|
 | 'filter' | string  | UID of license, returns song XML |       NO |
@@ -1672,6 +1686,92 @@ This returns the songs for a license
 | 'limit'  | integer |                                  |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/license_songs.xml)
+
+### labels
+
+* **NEW** in 5.0.0
+
+This returns labels based on the specified filter
+@param array $input
+
+@return
+
+```XML
+<root>
+    <label>
+</root>
+```
+
+@throws
+
+```XML
+<root><error></root>
+```
+
+| Input    | Type       | Description                                              | Optional |
+|----------|------------|----------------------------------------------------------|---------:|
+| 'filter' | string     | Filter results to match this string                      |      YES |
+| 'exact'  | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE) |      YES |
+| 'offset' | integer    |                                                          |      YES |
+| 'limit'  | integer    |                                                          |      YES |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/labels.xml)
+
+### label
+
+* **NEW** in 5.0.0
+
+This returns a single label
+@param array $input
+
+@return
+
+```XML
+<root>
+    <label>
+</root>
+```
+
+@throws
+
+```XML
+<root><error></root>
+```
+
+| Input    | Type   | Description                     | Optional |
+|----------|--------|---------------------------------|---------:|
+| 'filter' | string | UID of label, returns label XML |       NO |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/label.xml)
+
+### label_artists
+
+* **NEW** in 5.0.0
+
+This returns the artists for a label
+@param array $input
+
+@return
+
+```XML
+<root>
+    <artist>
+</root>
+```
+
+@throws
+
+```XML
+<root><error></root>
+```
+
+| Input    | Type    | Description                      | Optional |
+|----------|---------|----------------------------------|---------:|
+| 'filter' | string  | UID of label, returns artist XML |       NO |
+| 'offset' | integer |                                  |      YES |
+| 'limit'  | integer |                                  |      YES |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/label_artists.xml)
 
 ### followers
 
