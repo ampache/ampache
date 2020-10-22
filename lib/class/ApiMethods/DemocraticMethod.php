@@ -97,8 +97,8 @@ final class DemocraticMethod
                     break;
                 }
 
-                $uid = $democratic->get_uid_from_object_id($media->id, $type);
-                $democratic->remove_vote($uid);
+                $object_id = $democratic->get_uid_from_object_id($media->id, $type);
+                $democratic->remove_vote($object_id);
 
                 // Everything was ok
                 $xml_array = array('method' => $input['method'], 'result' => true);

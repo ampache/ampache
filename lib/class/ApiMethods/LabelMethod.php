@@ -60,11 +60,11 @@ final class LabelMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $uid   = (int) scrub_in($input['filter']);
-        $label = new Label($uid);
+        $object_id = (int) $input['filter'];
+        $label     = new Label($object_id);
         if (!$label->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $uid), '4704', self::ACTION, 'filter', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
@@ -72,10 +72,10 @@ final class LabelMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::labels(array($uid));
+                echo JSON_Data::labels(array($object_id));
                 break;
             default:
-                echo XML_Data::labels(array($uid));
+                echo XML_Data::labels(array($object_id));
         }
         Session::extend($input['auth']);
 

@@ -55,12 +55,12 @@ final class SongMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $uid  = scrub_in($input['filter']);
-        $user = User::get_from_username(Session::username($input['auth']));
-        $song = new Song($uid);
+        $object_id = (int) $input['filter'];
+        $user      = User::get_from_username(Session::username($input['auth']));
+        $song      = new Song($object_id);
         if (!$song->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $uid), '4704', self::ACTION, 'filter', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
@@ -68,10 +68,10 @@ final class SongMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::songs(array((int) $uid), $user->id);
+                echo JSON_Data::songs(array((int) $object_id), $user->id);
                 break;
             default:
-                echo XML_Data::songs(array((int) $uid), $user->id);
+                echo XML_Data::songs(array((int) $object_id), $user->id);
         }
         Session::extend($input['auth']);
 

@@ -46,7 +46,7 @@ final class UpdateArtistInfoMethod
      * Make sure lastfm_api_key is set in your configuration file
      *
      * @param array $input
-     * id   = (integer) $artist_id)
+     * id = (integer) $artist_id)
      * @return boolean
      */
     public static function update_artist_info(array $input)
@@ -57,22 +57,22 @@ final class UpdateArtistInfoMethod
         if (!Api::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $uid  = (int) $input['id'];
-        $item = new Artist($uid);
+        $object_id = (int) $input['id'];
+        $item      = new Artist($object_id);
         if (!$item->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $uid), '4704', self::ACTION, 'id', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
 
             return false;
         }
         // update your object, you need at least catalog_manager access to the db
-        if (!empty(Recommendation::get_artist_info($uid) || !empty(Recommendation::get_artists_like($uid)))) {
-            Api::message('Updated artist info: ' . (string) $uid, $input['api_format']);
+        if (!empty(Recommendation::get_artist_info($object_id) || !empty(Recommendation::get_artists_like($object_id)))) {
+            Api::message('Updated artist info: ' . (string) $object_id, $input['api_format']);
 
             return true;
         }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(sprintf(T_('Bad Request: %s'), $uid), '4710', self::ACTION, 'system', $input['api_format']);
+        Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
         Session::extend($input['auth']);
 
         return true;

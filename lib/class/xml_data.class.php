@@ -189,9 +189,7 @@ class XML_Data
             }
 
             foreach ($atags as $tag => $data) {
-                $string .= "\t<genre id=\"" . $tag . "\" " .
-                        "count=\"" . $data['count'] . "\" " .
-                        "><![CDATA[" . $data['name'] . "]]></genre>\n";
+                $string .= "\t<genre id=\"" . $tag . "\"><![CDATA[" . $data['name'] . "]]></genre>\n";
             }
         }
 

@@ -63,8 +63,8 @@ final class RateMethod
         }
         ob_end_clean();
         $type      = (string) $input['type'];
-        $object_id = $input['id'];
-        $rating    = $input['rating'];
+        $object_id = (int) $input['id'];
+        $rating    = (string) $input['rating'];
         $user      = User::get_from_username(Session::username($input['auth']));
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist'))) {

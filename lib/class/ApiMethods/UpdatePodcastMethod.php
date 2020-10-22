@@ -55,7 +55,7 @@ final class UpdatePodcastMethod
         if (!Api::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $object_id = (int) scrub_in($input['filter']);
+        $object_id = (int) $input['filter'];
         $podcast   = new Podcast($object_id);
         if ($podcast->id > 0) {
             if ($podcast->sync_episodes(true)) {

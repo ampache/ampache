@@ -55,11 +55,11 @@ final class SongDeleteMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $uid  = (int) $input['filter'];
-        $song = new Song($uid);
+        $object_id = (int) $input['filter'];
+        $song      = new Song($object_id);
         if (!$song->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $uid), '4704', self::ACTION, 'filter', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
@@ -70,10 +70,10 @@ final class SongDeleteMethod
             return false;
         }
         if ($song->remove()) {
-            Api::message('song ' . $uid . ' deleted', $input['api_format']);
+            Api::message('song ' . $object_id . ' deleted', $input['api_format']);
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $uid), '4710', self::ACTION, 'system', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
         }
         Session::extend($input['auth']);
 

@@ -67,29 +67,29 @@ final class ShareCreateMethod
         }
         $description = $input['description'];
         $object_id   = $input['filter'];
-        $object_type = $input['type'];
+        $type        = $input['type'];
         $download    = Access::check_function('download');
         $expire_days = Share::get_expiry($input['expires']);
         // confirm the correct data
-        if (!in_array($object_type, array('song', 'album', 'artist'))) {
+        if (!in_array($type, array('song', 'album', 'artist'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(T_('Bad Request'), '4710', self::ACTION, $object_type, $input['api_format']);
+            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
 
             return false;
         }
         $share = array();
-        if (!Core::is_library_item($object_type) || !$object_id) {
+        if (!Core::is_library_item($type) || !$object_id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(T_('Bad Request'), '4710', self::ACTION, $object_type, $input['api_format']);
+            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
         } else {
-            $item = new $object_type($object_id);
+            $item = new $type($object_id);
             if (!$item->id) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
 
                 return false;
             }
-            $share[] = Share::create_share($object_type, $object_id, true, $download, $expire_days, generate_password(8), 0, $description);
+            $share[] = Share::create_share($type, $object_id, true, $download, $expire_days, generate_password(8), 0, $description);
         }
         ob_end_clean();
         switch ($input['api_format']) {

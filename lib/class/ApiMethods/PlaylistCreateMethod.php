@@ -63,13 +63,13 @@ final class PlaylistCreateMethod
             $type = 'public';
         }
 
-        $uid = Playlist::create($name, $type, $user->id);
+        $object_id = Playlist::create($name, $type, $user->id);
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::playlists(array($uid));
+                echo JSON_Data::playlists(array($object_id));
                 break;
             default:
-                echo XML_Data::playlists(array($uid));
+                echo XML_Data::playlists(array($object_id));
         }
         Session::extend($input['auth']);
 

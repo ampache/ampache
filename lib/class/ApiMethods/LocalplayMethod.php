@@ -67,16 +67,16 @@ final class LocalplayMethod
         switch ($input['command']) {
             case 'add':
                 // for add commands get the object details
-                $uid   = (int) $input['oid'];
-                $type  = $input['type'] ? (string) $input['type'] : 'Song';
-                $clear = (int) $input['clear'];
+                $object_id   = (int) $input['oid'];
+                $type        = $input['type'] ? (string) $input['type'] : 'Song';
+                $clear       = (int) $input['clear'];
                 // clear before the add
                 if ($clear == 1) {
                     $localplay->delete_all();
                 }
                 $media = array(
                     'object_type' => $type,
-                    'object_id' => $uid,
+                    'object_id' => $object_id,
                 );
                 $playlist = new Stream_Playlist();
                 $playlist->add(array($media));

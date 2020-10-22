@@ -82,7 +82,7 @@ final class AdvancedSearchMethod
 
         $type = 'song';
         if (isset($input['type'])) {
-            $type = $input['type'];
+            $type = (string) $input['type'];
         }
 
         switch ($input['api_format']) {

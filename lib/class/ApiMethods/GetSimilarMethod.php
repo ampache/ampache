@@ -57,8 +57,8 @@ final class GetSimilarMethod
         if (!Api::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;
         }
-        $type   = (string) $input['type'];
-        $filter = (int) $input['filter'];
+        $type      = (string) $input['type'];
+        $object_id = (int) $input['filter'];
         // confirm the correct data
         if (!in_array($type, array('song', 'artist'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
@@ -70,10 +70,10 @@ final class GetSimilarMethod
         $similar = array();
         switch ($type) {
             case 'artist':
-                $similar = Recommendation::get_artists_like($filter);
+                $similar = Recommendation::get_artists_like($object_id);
                 break;
             case 'song':
-                $similar = Recommendation::get_songs_like($filter);
+                $similar = Recommendation::get_songs_like($object_id);
         }
         foreach ($similar as $child) {
             $objects[] = $child['id'];

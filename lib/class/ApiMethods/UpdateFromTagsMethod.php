@@ -52,16 +52,16 @@ final class UpdateFromTagsMethod
         if (!Api::check_parameter($input, array('type', 'id'), self::ACTION)) {
             return false;
         }
-        $object_type   = (string) $input['type'];
-        $object_id     = (int) $input['id'];
+        $type      = (string) $input['type'];
+        $object_id = (int) $input['id'];
 
         // confirm the correct data
-        if (!in_array($object_type, array('artist', 'album', 'song'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $object_type), '4710', self::ACTION, 'type', $input['api_format']);
+        if (!in_array($type, array('artist', 'album', 'song'))) {
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
-        $item = new $object_type($object_id);
+        $item = new $type($object_id);
         if (!$item->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
@@ -69,9 +69,9 @@ final class UpdateFromTagsMethod
             return false;
         }
         // update your object
-        Catalog::update_single_item($object_type, $object_id, true);
+        Catalog::update_single_item($type, $object_id, true);
 
-        Api::message('Updated tags for: ' . (string) $object_id . ' (' . $object_type . ')', $input['api_format']);
+        Api::message('Updated tags for: ' . (string) $object_id . ' (' . $type . ')', $input['api_format']);
         Session::extend($input['auth']);
 
         return true;

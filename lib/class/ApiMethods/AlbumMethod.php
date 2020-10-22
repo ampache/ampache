@@ -56,11 +56,11 @@ final class AlbumMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $uid   = (int) scrub_in($input['filter']);
-        $album = new Album($uid);
+        $object_id = (int) $input['filter'];
+        $album     = new Album($object_id);
         if (!$album->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $uid), '4704', self::ACTION, 'filter', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
@@ -69,10 +69,10 @@ final class AlbumMethod
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::albums(array($uid), $include, $user->id);
+                echo JSON_Data::albums(array($object_id), $include, $user->id);
                 break;
             default:
-                echo XML_Data::albums(array($uid), $include, $user->id);
+                echo XML_Data::albums(array($object_id), $include, $user->id);
         }
         Session::extend($input['auth']);
 

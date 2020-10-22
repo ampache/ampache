@@ -60,9 +60,9 @@ final class UpdateArtMethod
             return false;
         }
         $type      = (string) $input['type'];
-        $object    = (int) $input['id'];
+        $object_id = (int) $input['id'];
         $overwrite = (int) $input['overwrite'] == 0;
-        $art_url   = AmpConfig::get('web_path') . '/image.php?object_id=' . $object . '&object_type=artist&auth=' . $input['auth'];
+        $art_url   = AmpConfig::get('web_path') . '/image.php?object_id=' . $object_id . '&object_type=artist&auth=' . $input['auth'];
 
         // confirm the correct data
         if (!in_array($type, array('artist', 'album'))) {
@@ -70,21 +70,21 @@ final class UpdateArtMethod
 
             return true;
         }
-        $item = new $type($object);
+        $item = new $type($object_id);
         if (!$item->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object), '4704', self::ACTION, 'id', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
 
             return false;
         }
         // update your object
-        if (Catalog::gather_art_item($type, $object, $overwrite, true)) {
-            Api::message('Gathered new art for: ' . (string) $object . ' (' . $type . ')', $input['api_format'], array('art' => $art_url));
+        if (Catalog::gather_art_item($type, $object_id, $overwrite, true)) {
+            Api::message('Gathered new art for: ' . (string) $object_id . ' (' . $type . ')', $input['api_format'], array('art' => $art_url));
 
             return true;
         }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(sprintf(T_('Bad Request: %s'), $object), '4710', self::ACTION, 'system', $input['api_format']);
+        Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
         Session::extend($input['auth']);
 
         return true;

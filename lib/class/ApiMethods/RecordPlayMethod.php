@@ -56,7 +56,7 @@ final class RecordPlayMethod
             return false;
         }
         ob_end_clean();
-        $object_id = $input['id'];
+        $object_id = (int) $input['id'];
         $user_id   = (int) $input['user'];
         $user      = new User($user_id);
         $valid     = in_array($user->id, User::get_valid_users());

@@ -81,7 +81,7 @@ final class StatsMethod
             $user    = new User($user_id);
         }
         // moved type to filter and allowed multiple type selection
-        $type   = $input['type'];
+        $type   = (string) $input['type'];
         $offset = (int) $input['offset'];
         $limit  = (int) $input['limit'];
         // original method only searched albums and had poor method inputs
