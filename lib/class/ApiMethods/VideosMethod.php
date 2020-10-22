@@ -48,6 +48,7 @@ final class VideosMethod
      * exact  = (integer) 0,1, Whether to match the exact term or not //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * @return bool
      */
     public static function videos(array $input)
     {
@@ -78,5 +79,7 @@ final class VideosMethod
                 echo XML_Data::videos($video_ids, $user->id);
         }
         Session::extend($input['auth']);
+
+        return true;
     }
 }

@@ -26,12 +26,9 @@ declare(strict_types=0);
 namespace Lib\ApiMethods;
 
 use Access;
-use AmpConfig;
 use AmpError;
 use Api;
-use Catalog;
 use Core;
-use Dba;
 use Session;
 use User;
 use XML_Data;

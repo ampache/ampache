@@ -169,5 +169,7 @@ final class StatsMethod
             }
         }
         Session::extend($input['auth']);
+
+        return true;
     }
 }
