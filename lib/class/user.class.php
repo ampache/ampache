@@ -258,8 +258,8 @@ class User extends database_object
     {
         $users = array();
         $sql   = ($include_disabled)
-            ? "SELECT `id` FROM `user` WHERE `disabled` = '0'"
-            : "SELECT `id` FROM `user`";
+            ? "SELECT `id` FROM `user`"
+            : "SELECT `id` FROM `user` WHERE `disabled` = '0'";
 
         $db_results = Dba::read($sql);
         while ($results = Dba::fetch_assoc($db_results)) {
