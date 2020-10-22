@@ -229,7 +229,7 @@ class JSON_Data
 
         foreach ($labels as $label_id) {
             $label = new Label($label_id);
-            $label->format;
+            $label->format();
             array_push($JSON, array(
                 "id" => (string) $label_id,
                 "name" => $label->f_name,

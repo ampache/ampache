@@ -37,6 +37,8 @@ use XML_Data;
  */
 final class VideosMethod
 {
+    private const ACTION = 'videos';
+
     /**
      * videos
      * This returns video objects!

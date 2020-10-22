@@ -520,7 +520,7 @@ class XML_Data
 
         foreach ($labels as $label_id) {
             $label = new Label($label_id);
-            $label->format;
+            $label->format();
 
             $string .= "<license id=\"$label_id\">\n" .
                 "\t<name><![CDATA[$labels->f_name]]></name>\n" .
