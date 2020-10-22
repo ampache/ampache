@@ -896,10 +896,9 @@ class JSON_Data
      */
     public static function user(User $user, $fullinfo)
     {
-        $JSON = array();
         $user->format();
         if ($fullinfo) {
-            $JSON['user'] = array(
+            $JSON = array(
                 "id" => (string) $user->id,
                 "username" => $user->username,
                 "auth" => $user->apikey,
@@ -915,7 +914,7 @@ class JSON_Data
                 "city" => $user->city
             );
         } else {
-            $JSON['user'] = array(
+            $JSON = array(
                 "id" => (string) $user->id,
                 "username" => $user->username,
                 "create_date" => $user->create_date,
@@ -927,7 +926,7 @@ class JSON_Data
         }
 
         if ($user->fullname_public) {
-            $JSON['user']['fullname'] = $user->fullname;
+            $JSON['fullname'] = $user->fullname;
         }
 
         return json_encode(array("user" => $JSON), JSON_PRETTY_PRINT);
