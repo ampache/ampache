@@ -96,6 +96,18 @@ final class AdvancedSearchMethod
                     case 'album':
                         echo JSON_Data::albums($results, array(), $user->id);
                         break;
+                    case 'playlist':
+                        echo JSON_Data::playlists($results);
+                        break;
+                    case 'label':
+                        echo JSON_Data::labels($results);
+                        break;
+                    case 'user':
+                        echo JSON_Data::users($results);
+                        break;
+                    case 'video':
+                        echo JSON_Data::videos($results, $user->id);
+                        break;
                     default:
                         echo JSON_Data::songs($results, $user->id);
                         break;
@@ -110,6 +122,18 @@ final class AdvancedSearchMethod
                         break;
                     case 'album':
                         echo XML_Data::albums($results, array(), $user->id);
+                        break;
+                    case 'playlist':
+                        echo XML_Data::playlists($results);
+                        break;
+                    case 'label':
+                        echo XML_Data::labels($results);
+                        break;
+                    case 'user':
+                        echo XML_Data::users($results);
+                        break;
+                    case 'video':
+                        echo XML_Data::videos($results, $user->id);
                         break;
                     default:
                         echo XML_Data::songs($results, $user->id);

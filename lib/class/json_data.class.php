@@ -212,6 +212,42 @@ class JSON_Data
     } // licenses
 
     /**
+     * labels
+     *
+     * This returns labels to the user, in a pretty JSON document with the information
+     *
+     * @param  integer[] $labels
+     * @return string return JSON
+     */
+    public static function labels($labels)
+    {
+        if ((count($labels) > self::$limit || self::$offset > 0) && self::$limit) {
+            $labels = array_splice($labels, self::$offset, self::$limit);
+        }
+
+        $JSON = [];
+
+        foreach ($labels as $label_id) {
+            $label = new Label($label_id);
+            $label->format;
+            array_push($JSON, array(
+                "id" => (string) $label_id,
+                "name" => $label->f_name,
+                "artists" => $label->artists,
+                "summary" => $label->summary,
+                "external_link" => $label->link,
+                "address" => $label->address,
+                "category" => $label->category,
+                "email" => $label->email,
+                "website" => $label->website,
+                "user" => $label->user,
+            ));
+        } // end foreach
+
+        return json_encode(array("label" => $JSON), JSON_PRETTY_PRINT);
+    } // labels
+
+    /**
      * genres
      *
      * This returns genres to the user, in a pretty JSON document with the information
