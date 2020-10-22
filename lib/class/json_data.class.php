@@ -478,7 +478,7 @@ class JSON_Data
             );
         } // end foreach
 
-        return json_encode($allPlaylists, JSON_PRETTY_PRINT);
+        return json_encode(array("playlist" => $allPlaylists), JSON_PRETTY_PRINT);
     } // playlists
 
     /**
