@@ -63,7 +63,8 @@ final class LabelMethod
         $uid   = (int) scrub_in($input['filter']);
         $label = new Label($uid);
         if (!$label->id) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $uid), '4704', self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }

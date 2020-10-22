@@ -56,28 +56,30 @@ final class UserMethod
             return false;
         }
         $username = (string) $input['username'];
-        if (!empty($username)) {
-            $user  = User::get_from_username($username);
-            $valid = in_array($user->id, User::get_valid_users(true));
-            if ($valid) {
-                $apiuser  = User::get_from_username(Session::username($input['auth']));
-                $fullinfo = false;
-                // get full info when you're an admin or searching for yourself
-                if (($user->id == $apiuser->id) || (Access::check('interface', 100, $apiuser->id))) {
-                    $fullinfo = true;
-                }
-                ob_end_clean();
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo JSON_Data::user($user, $fullinfo);
-                        break;
-                    default:
-                        echo XML_Data::user($user, $fullinfo);
-                }
-            } else {
-                debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'user', $input['api_format']);
+        if (empty($username)) {
+            debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'username', $input['api_format']);
+
+            return false;
+        }
+
+        $user  = User::get_from_username($username);
+        $valid = in_array($user->id, User::get_valid_users(true));
+        if ($valid) {
+            $apiuser  = User::get_from_username(Session::username($input['auth']));
+            $fullinfo = false;
+            // get full info when you're an admin or searching for yourself
+            if (($user->id == $apiuser->id) || (Access::check('interface', 100, $apiuser->id))) {
+                $fullinfo = true;
+            }
+            ob_end_clean();
+            switch ($input['api_format']) {
+                case 'json':
+                    echo JSON_Data::user($user, $fullinfo);
+                    break;
+                default:
+                    echo XML_Data::user($user, $fullinfo);
             }
         }
         Session::extend($input['auth']);

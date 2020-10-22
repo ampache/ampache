@@ -66,16 +66,18 @@ final class PodcastDeleteMethod
         }
         $object_id = (int) $input['filter'];
         $podcast   = new Podcast($object_id);
-        if ($podcast->id) {
-            if ($podcast->remove()) {
-                Api::message('podcast ' . $object_id . ' deleted', $input['api_format']);
-            } else {
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'filter', $input['api_format']);
-            }
-        } else {
+        if (!$podcast->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
+
+        if ($podcast->remove()) {
+            Api::message('podcast ' . $object_id . ' deleted', $input['api_format']);
+        } else {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'filter', $input['api_format']);
         }
         Session::extend($input['auth']);
 

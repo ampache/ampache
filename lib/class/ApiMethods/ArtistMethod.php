@@ -55,22 +55,23 @@ final class ArtistMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $uid     = array((int) scrub_in($input['filter']));
-        $user    = User::get_from_username(Session::username($input['auth']));
-        $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
-        $artist  = new Artist((int) $uid);
+        $uid    = (int) scrub_in($input['filter']);
+        $artist = new Artist((int) $uid);
         if (!$artist->id) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $uid), '4704', self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
 
+        $user    = User::get_from_username(Session::username($input['auth']));
+        $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::artists($uid, $include, $user->id);
+                echo JSON_Data::artists(array($uid), $include, $user->id);
                 break;
             default:
-                echo XML_Data::artists($uid, $include, $user->id);
+                echo XML_Data::artists(array($uid), $include, $user->id);
         }
         Session::extend($input['auth']);
 

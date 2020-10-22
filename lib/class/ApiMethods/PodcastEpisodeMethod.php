@@ -62,18 +62,20 @@ final class PodcastEpisodeMethod
         }
         $object_id = (int) $input['filter'];
         $episode   = new Podcast_Episode($object_id);
-        if ($episode->id > 0) {
-            ob_end_clean();
-            switch ($input['api_format']) {
-                case 'json':
-                    echo JSON_Data::podcast_episodes(array($object_id));
-                    break;
-                default:
-                    echo XML_Data::podcast_episodes(array($object_id));
-            }
-        } else {
+        if (!$episode->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
+
+        ob_end_clean();
+        switch ($input['api_format']) {
+            case 'json':
+                echo JSON_Data::podcast_episodes(array($object_id));
+                break;
+            default:
+                echo XML_Data::podcast_episodes(array($object_id));
         }
         Session::extend($input['auth']);
 

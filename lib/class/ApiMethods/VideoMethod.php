@@ -52,15 +52,22 @@ final class VideoMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $video_id = scrub_in($input['filter']);
-        $user     = User::get_from_username(Session::username($input['auth']));
+        $uid   = (int) scrub_in($input['filter']);
+        $video = new Video($uid);
+        if (!$video->id) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $uid), '4704', self::ACTION, 'song', $input['api_format']);
 
+            return false;
+        }
+
+        $user = User::get_from_username(Session::username($input['auth']));
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::videos(array($video_id), $user->id);
+                echo JSON_Data::videos(array($uid), $user->id);
                 break;
             default:
-                echo XML_Data::videos(array($video_id), $user->id);
+                echo XML_Data::videos(array($uid), $user->id);
         }
         Session::extend($input['auth']);
 

@@ -84,7 +84,8 @@ final class ShareCreateMethod
         } else {
             $item = new $object_type($object_id);
             if (!$item->id) {
-                Api::error(T_('Not Found'), '4704', self::ACTION, 'filter', $input['api_format']);
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
 
                 return false;
             }

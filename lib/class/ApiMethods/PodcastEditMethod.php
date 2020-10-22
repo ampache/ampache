@@ -72,31 +72,32 @@ final class PodcastEditMethod
         }
         $podcast_id = $input['filter'];
         $podcast    = new Podcast($podcast_id);
-        if ($podcast->id) {
-            $feed           = filter_var($input['feed'], FILTER_VALIDATE_URL) ? $input['feed'] : $podcast->feed;
-            $title          = isset($input['title']) ? scrub_in($input['title']) : $podcast->title;
-            $website        = filter_var($input['website'], FILTER_VALIDATE_URL) ? scrub_in($input['website']) : $podcast->website;
-            $description    = isset($input['description']) ? scrub_in($input['description']) : $podcast->description;
-            $generator      = isset($input['generator']) ? scrub_in($input['generator']) : $podcast->generator;
-            $copyright      = isset($input['copyright']) ? scrub_in($input['copyright']) : $podcast->copyright;
-
-            $data = array(
-                'feed' => $feed,
-                'title' => $title,
-                'website' => $website,
-                'description' => $description,
-                'generator' => $generator,
-                'copyright' => $copyright
-            );
-            if ($podcast->update($data)) {
-                Api::message('podcast ' . $podcast_id . ' updated', $input['api_format']);
-            } else {
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Bad Request: %s'), $podcast_id), '4710', self::ACTION, 'system', $input['api_format']);
-            }
-        } else {
+        if (!$podcast->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $podcast_id), '4704', self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
+
+        $feed           = filter_var($input['feed'], FILTER_VALIDATE_URL) ? $input['feed'] : $podcast->feed;
+        $title          = isset($input['title']) ? scrub_in($input['title']) : $podcast->title;
+        $website        = filter_var($input['website'], FILTER_VALIDATE_URL) ? scrub_in($input['website']) : $podcast->website;
+        $description    = isset($input['description']) ? scrub_in($input['description']) : $podcast->description;
+        $generator      = isset($input['generator']) ? scrub_in($input['generator']) : $podcast->generator;
+        $copyright      = isset($input['copyright']) ? scrub_in($input['copyright']) : $podcast->copyright;
+        $data           = array(
+            'feed' => $feed,
+            'title' => $title,
+            'website' => $website,
+            'description' => $description,
+            'generator' => $generator,
+            'copyright' => $copyright
+        );
+        if ($podcast->update($data)) {
+            Api::message('podcast ' . $podcast_id . ' updated', $input['api_format']);
+        } else {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Bad Request: %s'), $podcast_id), '4710', self::ACTION, 'system', $input['api_format']);
         }
         Session::extend($input['auth']);
 

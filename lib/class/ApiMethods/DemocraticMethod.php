@@ -62,12 +62,12 @@ final class DemocraticMethod
 
         switch ($input['method']) {
             case 'vote':
-                $type   = 'song';
-                $object = (int) $input['oid'];
-                $media  = new Song($object);
+                $type      = 'song';
+                $object_id = (int) $input['oid'];
+                $media     = new Song($object_id);
                 if (!$media->id) {
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    Api::error(sprintf(T_('Not Found: %s'), $object), '4704', self::ACTION, 'type', $input['api_format']);
+                    Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'oid', $input['api_format']);
                     break;
                 }
                 $democratic->add_vote(array(
@@ -88,12 +88,13 @@ final class DemocraticMethod
                 }
                 break;
             case 'devote':
-                $type   = 'song';
-                $object = (int) $input['oid'];
-                $media  = new Song($object);
+                $type      = 'song';
+                $object_id = (int) $input['oid'];
+                $media     = new Song($object_id);
                 if (!$media->id) {
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    Api::error(sprintf(T_('Not Found: %s'), $object), '4704', self::ACTION, 'type', $input['api_format']);
+                    Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'oid', $input['api_format']);
+                    break;
                 }
 
                 $uid = $democratic->get_uid_from_object_id($media->id, $type);

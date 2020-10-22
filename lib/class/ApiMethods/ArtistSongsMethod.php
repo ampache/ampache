@@ -57,7 +57,15 @@ final class ArtistSongsMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $artist = new Artist($input['filter']);
+        $uid    = (int) $input['filter'];
+        $artist = new Artist($uid);
+        if (!$artist->id) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $uid), '4704', self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
+
         $songs  = $artist->get_songs();
         $user   = User::get_from_username(Session::username($input['auth']));
         if (empty($songs)) {

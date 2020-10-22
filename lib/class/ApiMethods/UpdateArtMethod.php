@@ -75,7 +75,7 @@ final class UpdateArtMethod
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $object), '4704', self::ACTION, 'id', $input['api_format']);
 
-            return true;
+            return false;
         }
         // update your object
         if (Catalog::gather_art_item($type, $object, $overwrite, true)) {

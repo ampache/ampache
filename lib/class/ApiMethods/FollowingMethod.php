@@ -62,27 +62,27 @@ final class FollowingMethod
             return false;
         }
         $username = $input['username'];
-        if (!empty($username)) {
-            $user = User::get_from_username($username);
-            if ($user !== null) {
-                $users = $user->get_following();
-                if (!count($users)) {
-                    Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
-                } else {
-                    debug_event(self::class, 'User is following:  ' . print_r($users), 1);
-                    ob_end_clean();
-                    switch ($input['api_format']) {
-                        case 'json':
-                            echo JSON_Data::users($users);
-                            break;
-                        default:
-                            echo XML_Data::users($users);
-                    }
-                }
-            } else {
-                debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'system', $input['api_format']);
+        $user     = User::get_from_username($username);
+        if (!$user->id) {
+            debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'username', $input['api_format']);
+
+            return false;
+        }
+
+        $users = $user->get_following();
+        if (!count($users)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+        } else {
+            debug_event(self::class, 'User is following:  ' . print_r($users), 1);
+            ob_end_clean();
+            switch ($input['api_format']) {
+                case 'json':
+                    echo JSON_Data::users($users);
+                    break;
+                default:
+                    echo XML_Data::users($users);
             }
         }
         Session::extend($input['auth']);

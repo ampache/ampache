@@ -101,7 +101,8 @@ final class ScrobbleMethod
         } else {
             $item = new Song((int) $scrobble_id);
             if (!$item->id) {
-                Api::error(T_('Not Found'), '4704', self::ACTION, 'song', $input['api_format']);
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                Api::error(sprintf(T_('Not Found: %s'), $scrobble_id), '4704', self::ACTION, 'song', $input['api_format']);
 
                 return false;
             }

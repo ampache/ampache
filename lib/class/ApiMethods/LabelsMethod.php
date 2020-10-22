@@ -67,6 +67,11 @@ final class LabelsMethod
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter']);
         $labels = Api::$browse->get_objects();
+        if (empty($labels)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {

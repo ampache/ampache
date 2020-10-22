@@ -63,22 +63,24 @@ final class PodcastEpisodeDeleteMethod
         }
         $object_id = (int) $input['filter'];
         $episode   = new Podcast_Episode($object_id);
-        $user      = User::get_from_username(Session::username($input['auth']));
+        if (!$episode->id) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
+        $user = User::get_from_username(Session::username($input['auth']));
         if (!Catalog::can_remove($episode, $user->id)) {
             Api::error(T_('Require: 75'), '4742', self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
-        if ($episode->id) {
-            if ($episode->remove()) {
-                Api::message('podcast_episode ' . $object_id . ' deleted', $input['api_format']);
-            } else {
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
-            }
+
+        if ($episode->remove()) {
+            Api::message('podcast_episode ' . $object_id . ' deleted', $input['api_format']);
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
         }
         Session::extend($input['auth']);
 

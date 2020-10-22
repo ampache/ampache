@@ -78,6 +78,11 @@ final class GetSimilarMethod
         foreach ($similar as $child) {
             $objects[] = $child['id'];
         }
+        if (empty($objects)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {
