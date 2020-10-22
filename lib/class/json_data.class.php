@@ -525,7 +525,7 @@ class JSON_Data
                 "description" => $share_description]);
         } // end foreach
 
-        return json_encode($allShares, JSON_PRETTY_PRINT);
+        return json_encode(array("share" => $allShares), JSON_PRETTY_PRINT);
     } // shares
 
     /**
@@ -571,7 +571,7 @@ class JSON_Data
                 "sort_pattern" => $catalog_sort_pattern]);
         } // end foreach
 
-        return json_encode($allCatalogs, JSON_PRETTY_PRINT);
+        return json_encode(array("catalog" => $allCatalogs), JSON_PRETTY_PRINT);
     } // catalogs
 
     /**
@@ -624,7 +624,7 @@ class JSON_Data
                 "podcast_episode" => $podcast_episodes]);
         } // end foreach
 
-        return json_encode($allPodcasts, JSON_PRETTY_PRINT);
+        return json_encode(array("podcast" => $allPodcasts), JSON_PRETTY_PRINT);
     } // podcasts
 
     /**
@@ -664,7 +664,7 @@ class JSON_Data
             return $allEpisodes;
         }
 
-        return json_encode($allEpisodes, JSON_PRETTY_PRINT);
+        return json_encode(array("podcast_episode" => $allEpisodes), JSON_PRETTY_PRINT);
     } // podcast_episodes
 
     /**
@@ -914,20 +914,16 @@ class JSON_Data
      */
     public static function users($users)
     {
-        $JSON       = [];
-        $user_array = [];
+        $JSON = [];
         foreach ($users as $user_id) {
             $user = new User($user_id);
-            array_push($user_array, array(
+            array_push($JSON, array(
                 "id" => (string) $user_id,
                 "username" => $user->username
             ));
         } // end foreach
 
-        // return a user object
-        array_push($JSON, array("user" => $user_array));
-
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode(array("user" => $JSON), JSON_PRETTY_PRINT);
     } // users
 
     /**
@@ -994,6 +990,6 @@ class JSON_Data
             array_push($JSON['timeline'], $ourArray);
         }
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode(array("activity" => $JSON), JSON_PRETTY_PRINT);
     } // timeline
 } // end json_data.class
