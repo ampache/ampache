@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Lib\ApiMethods;
 
+use Album;
 use Api;
 use JSON_Data;
 use Session;

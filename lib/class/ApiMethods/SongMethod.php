@@ -28,6 +28,7 @@ namespace Lib\ApiMethods;
 use Api;
 use JSON_Data;
 use Session;
+use Song;
 use User;
 use XML_Data;
 

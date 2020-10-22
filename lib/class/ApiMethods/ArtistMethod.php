@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Lib\ApiMethods;
 
 use Api;
+use Artist;
 use JSON_Data;
 use Session;
 use User;

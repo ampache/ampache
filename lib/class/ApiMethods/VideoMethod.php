@@ -29,6 +29,7 @@ use Api;
 use JSON_Data;
 use Session;
 use User;
+use Video;
 use XML_Data;
 
 /**
