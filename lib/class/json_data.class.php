@@ -961,8 +961,7 @@ class JSON_Data
      */
     public static function timeline($activities)
     {
-        $JSON             = array();
-        $JSON['timeline'] = []; // To match the XML style, IMO kinda uselesss
+        $JSON = array();
         foreach ($activities as $activity_id) {
             $activity   = new Useractivity($activity_id);
             $user       = new User($activity->user);
@@ -980,7 +979,7 @@ class JSON_Data
                 "user" => $user_array
             );
 
-            array_push($JSON['timeline'], $ourArray);
+            array_push($JSON, $ourArray);
         }
 
         return json_encode(array("activity" => $JSON), JSON_PRETTY_PRINT);
