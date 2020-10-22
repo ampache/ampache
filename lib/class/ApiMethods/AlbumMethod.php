@@ -47,7 +47,7 @@ final class AlbumMethod
      *
      * @param array $input
      * filter  = (string) UID of Album
-     * include = (array) 'songs' //optional
+     * include = (array|string) 'songs' //optional
      * @return boolean
      */
     public static function album(array $input)

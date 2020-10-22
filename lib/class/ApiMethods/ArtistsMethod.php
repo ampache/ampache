@@ -53,7 +53,7 @@ final class ArtistsMethod
      * update  = self::set_filter(date) //optional
      * offset  = (integer) //optional
      * limit   = (integer) //optional
-     * include = (array) 'albums', 'songs' //optional
+     * include = (array|string) 'albums', 'songs' //optional
      * @return boolean
      */
     public static function artists(array $input)

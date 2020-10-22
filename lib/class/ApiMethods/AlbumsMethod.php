@@ -52,7 +52,7 @@ final class AlbumsMethod
      * update  = self::set_filter(date) //optional
      * offset  = (integer) //optional
      * limit   = (integer) //optional
-     * include = (array) 'songs' //optional
+     * include = (array|string) 'songs' //optional
      * @return boolean
      */
     public static function albums(array $input)

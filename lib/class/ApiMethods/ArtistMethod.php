@@ -47,7 +47,7 @@ final class ArtistMethod
      *
      * @param array $input
      * filter  = (string) Alpha-numeric search term
-     * include = (array) 'albums', 'songs' //optional
+     * include = (array|string) 'albums', 'songs' //optional
      * @return boolean
      */
     public static function artist(array $input)
