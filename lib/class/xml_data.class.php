@@ -512,7 +512,7 @@ class XML_Data
     public static function labels($labels)
     {
         if ((count($labels) > self::$limit || self::$offset > 0) && self::$limit) {
-            $labels = array_splice($licenses, self::$offset, self::$limit);
+            $labels = array_splice($labels, self::$offset, self::$limit);
         }
         $string = "<total_count>" . Catalog::get_count('license') . "</total_count>\n";
 
