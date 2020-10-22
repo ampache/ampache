@@ -216,7 +216,7 @@ Refer to the [Advanced Search](http://ampache.org/api/api-advanced-search) page 
 @return object
 
 ```JSON
-"song": {}|"album": {}|"artist": {}|"playlist": {}|"label": {}|"user": {}
+"song": {}|"album": {}|"artist": {}|"playlist": {}|"label": {}|"user": {}|"video": {}
 ```
 
 @throws object
@@ -2022,6 +2022,12 @@ Get your user preferences
 "preference": {}
 ```
 
+@throws object
+
+```JSON
+"error": {}
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/user_preferences.json)
 
 ### user_preference
@@ -2235,6 +2241,18 @@ This is for controlling localplay
 
 This is for controlling democratic play (Songs only)
 @param array $input
+
+@return object
+
+```JSON
+"song": {}
+```
+
+@throws object
+
+```JSON
+"error": {}
+```
 
 * ACTION
   * method

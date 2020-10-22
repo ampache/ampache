@@ -38,9 +38,7 @@ This is the function that handles verifying a new handshake Takes a timestamp, a
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input       | Type    | Description                                              | Optional |
@@ -103,9 +101,7 @@ Destroy a session using the auth parameter.
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input  | Type   | Description                                    | Optional |
@@ -130,9 +126,7 @@ This takes a url and returns the song object in question
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input | Type   | Description                                                   | Optional |
@@ -184,9 +178,7 @@ This takes a collection of inputs and returns ID + name for the object type
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input     | Type       | Description                                                      | Optional |
@@ -239,16 +231,14 @@ Refer to the [Advanced Search](http://ampache.org/api/api-advanced-search) page 
 
 ```XML
 <root>
-    <song>|<album>|<artist>|<playlist>|<label>|<user>
+    <song>|<album>|<artist>|<playlist>|<label>|<user>|<video>
 </root>
 ```
 
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type    | Description                                   | Optional |
@@ -301,9 +291,7 @@ This takes a collection of inputs and returns artist objects.
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input     | Type       | Description                                                      | Optional |
@@ -336,9 +324,7 @@ This returns a single artist based on the UID of said artist
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input     | Type   | Description                                              | Optional |
@@ -364,9 +350,7 @@ This returns the albums of an artist
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type    | Description                      | Optional |
@@ -393,9 +377,7 @@ This returns the songs of the specified artist
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type    | Description                     | Optional |
@@ -422,9 +404,7 @@ This returns albums based on the provided search filters
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input     | Type       | Description                                                      | Optional |
@@ -457,9 +437,7 @@ This returns a single album based on the UID provided
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input     | Type   | Description                                | Optional |
@@ -485,9 +463,7 @@ This returns the songs of a specified album
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type    | Description                    | Optional |
@@ -514,9 +490,7 @@ This returns the genres (Tags) based on the specified filter
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type    | Description                                              | Optional |
@@ -546,9 +520,7 @@ Each genre element has an attribute "count" that indicates the number of people 
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type   | Description                     | Optional |
@@ -573,9 +545,7 @@ This returns the artists associated with the genre in question as defined by the
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type    | Description                      | Optional |
@@ -602,9 +572,7 @@ This returns the albums associated with the genre in question
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type    | Description                     | Optional |
@@ -631,9 +599,7 @@ returns the songs for this genre
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type    | Description                    | Optional |
@@ -660,9 +626,7 @@ Returns songs based on the specified filter
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type       | Description                                                      | Optional |
@@ -694,9 +658,7 @@ returns a single song
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type   | Description                   | Optional |
@@ -723,9 +685,7 @@ Delete an existing song. (if you are allowed to)
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type   | Description           | Optional |
@@ -750,9 +710,7 @@ This returns playlists based on the specified filter
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type       | Description                                                      | Optional |
@@ -784,9 +742,7 @@ This returns a single playlist
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type   | Description                           | Optional |
@@ -811,9 +767,7 @@ This returns the songs for a playlist
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type    | Description                       | Optional |
@@ -840,9 +794,7 @@ This create a new playlist and return it
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input  | Type   | Description                       | Optional |
@@ -869,9 +821,7 @@ Previously name and type were mandatory while filter wasn't. this has been rever
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type   | Description                                                       | Optional |
@@ -900,9 +850,7 @@ This deletes a playlist
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type   | Description     | Optional |
@@ -927,9 +875,7 @@ This adds a song to a playlist. setting check=1 will not add duplicates to the p
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type    | Description                                               | Optional |
@@ -957,9 +903,7 @@ Previous versions required 'track' instead of 'song'.
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type    | Description                          | Optional |
@@ -990,9 +934,7 @@ Get a list of song XML, indexes or id's based on some simple search criteria
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type    | Description                                                      | Optional |
@@ -1036,9 +978,7 @@ This searches the shares and returns... shares
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type    | Description                                   | Optional |
@@ -1068,9 +1008,7 @@ Return shares by UID
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type   | Description                    | Optional |
@@ -1099,9 +1037,7 @@ Takes the file id with optional description and expires parameters.
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input         | Type    | Description                                   | Optional |
@@ -1133,9 +1069,7 @@ Takes the share id to update with optional description and expires parameters.
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input         | Type    | Description                        | Optional |
@@ -1167,9 +1101,7 @@ Delete an existing share.
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type   | Description            | Optional |
@@ -1196,9 +1128,7 @@ Return similar artist id's or similar song ids compared to the input filter
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type    | Description          | Optional |
@@ -1226,9 +1156,7 @@ This searches the songs and returns... songs
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type    | Description                         | Optional |
@@ -1255,9 +1183,7 @@ This returns video objects!
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type    | Description                                              | Optional |
@@ -1285,9 +1211,7 @@ This returns a single video
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type   | Description                     | Optional |
@@ -1314,9 +1238,7 @@ This method has partial backwards compatibility with older api versions but shou
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input      | Type    | Description                                | Optional |
@@ -1359,9 +1281,7 @@ Get information about podcasts
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input     | Type    | Description                                   | Optional |
@@ -1391,9 +1311,7 @@ Get the podcast from it's id.
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input     | Type   | Description                                   | Optional |
@@ -1422,9 +1340,7 @@ Takes the url and catalog parameters.
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input     | Type   | Description         | Optional |
@@ -1453,9 +1369,7 @@ Takes the podcast id to update with optional description and expires parameters.
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input         | Type   | Description               | Optional |
@@ -1488,9 +1402,7 @@ Delete an existing podcast.
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type   | Description              | Optional |
@@ -1532,9 +1444,7 @@ Get the podcast_episode from it's id.
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type   | Description               | Optional |
@@ -1561,9 +1471,7 @@ Delete an existing podcast_episode.
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type   | Description                      | Optional |
@@ -1590,9 +1498,7 @@ Get ids and usernames for your site
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/users.xml)
@@ -1613,9 +1519,7 @@ This get an user public information
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input      | Type   | Description                             | Optional |
@@ -1640,9 +1544,7 @@ Create a new user. (Requires the username, password and email.)
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input      | Type    | Description                | Optional |
@@ -1690,9 +1592,7 @@ Delete an existing user.
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input      | Type   | Description | Optional |
@@ -1719,9 +1619,7 @@ This returns licenses based on the specified filter
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type       | Description                                              | Optional |
@@ -1751,9 +1649,7 @@ This returns a single license
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type   | Description                         | Optional |
@@ -1793,9 +1689,7 @@ This get an user followers
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input      | Type   | Description                                        | Optional |
@@ -1820,9 +1714,7 @@ This get the user list followed by an user
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input      | Type   | Description                                         | Optional |
@@ -1847,9 +1739,7 @@ This follow/unfollow an user
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input      | Type   | Description                             | Optional |
@@ -1874,9 +1764,7 @@ This get the latest posted shouts
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input      | Type    | Description                                       | Optional |
@@ -1902,9 +1790,7 @@ This rates a library item
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type    | Description                                   | Optional |
@@ -1934,9 +1820,7 @@ This flags a library item as a favorite
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input  | Type    | Description                        | Optional |
@@ -1963,9 +1847,7 @@ Take a song_id and update the object_count and user_activity table with a play. 
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type    | Description | Optional |
@@ -1992,9 +1874,7 @@ Search for a song using text info and then record a play if found. This allows o
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input        | Type    | Description  | Optional |
@@ -2028,9 +1908,7 @@ This searches the catalogs and returns... catalogs
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type   | Description                        | Optional |
@@ -2058,9 +1936,7 @@ Return catalog by UID
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type   | Description    | Optional |
@@ -2085,9 +1961,7 @@ Kick off a catalog update or clean for the selected catalog
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input     | Type    | Description                       | Optional |
@@ -2120,9 +1994,7 @@ Make sure you remember to urlencode those file names!
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input     | Type    | Description                      | Optional |
@@ -2149,9 +2021,7 @@ This get an user timeline
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input      | Type    | Description                                       | Optional |
@@ -2178,9 +2048,7 @@ This get current user friends timeline
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input   | Type    | Description | Optional |
@@ -2206,9 +2074,7 @@ Update a single album, artist, song from the tag data
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input  | Type    | Description                     | Optional |
@@ -2235,9 +2101,7 @@ Make sure lastfm_API_key is set in your configuration file
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input | Type    | Description | Optional |
@@ -2264,9 +2128,7 @@ Doesn't overwrite existing art by default.
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input       | Type    | Description       | Optional |
@@ -2293,9 +2155,7 @@ Sync and download new podcast episodes
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input | Type    | Description | Optional |
@@ -2341,9 +2201,7 @@ Get your user preference by name
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type   | Description                                       | Optional |
@@ -2371,9 +2229,7 @@ Get your server preferences
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/system_preferences.xml)
@@ -2397,9 +2253,7 @@ Get your server preference by name
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type   | Description                                       | Optional |
@@ -2467,9 +2321,7 @@ Streams a given media file. Takes the file id in parameter with optional max bit
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 | Input     | Type    | Description                 | Optional |
 |-----------|---------|-----------------------------|---------:|
@@ -2489,9 +2341,7 @@ Downloads a given media file. set format=raw to download the full file
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input    | Type    | Description              | Optional |
@@ -2509,9 +2359,7 @@ Get an art image.
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 ## Control Methods
@@ -2533,9 +2381,7 @@ This is for controlling localplay
 @throws
 
 ```XML
-<root>
-    <error>
-</root>
+<root><error></root>
 ```
 
 | Input     | Type    | Description                                                  | Optional |
