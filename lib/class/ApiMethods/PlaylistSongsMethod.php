@@ -74,6 +74,11 @@ final class PlaylistSongsMethod
         }
 
         $items = $playlist->get_items();
+        if (empty($items)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
         $songs = array();
         foreach ($items as $object) {
             if ($object['object_type'] == 'song') {
