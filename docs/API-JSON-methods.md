@@ -1157,7 +1157,7 @@ Get information about podcasts
 
 | Input     | Type    | Description                                   | Optional |
 |-----------|---------|-----------------------------------------------|---------:|
-| 'filter'  | string  |                                               |       NO |
+| 'filter'  | string  |                                               |      YES |
 | 'offset'  | integer |                                               |      YES |
 | 'limit'   | integer |                                               |      YES |
 | 'include' | string  | 'episodes' (include episodes in the response) |      YES |
