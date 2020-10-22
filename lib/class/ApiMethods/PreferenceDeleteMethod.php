@@ -1,5 +1,4 @@
 <?php
-
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -26,43 +25,46 @@ declare(strict_types=0);
 namespace Lib\ApiMethods;
 
 use Api;
-use JSON_Data;
+use Preference;
 use Session;
 use User;
-use XML_Data;
 
 /**
- * Class UsersMethod
+ * Class PreferenceDeleteMethod
  * @package Lib\ApiMethods
  */
-final class UsersMethod
+final class PreferenceDeleteMethod
 {
-    const ACTION = 'users';
+    private const ACTION = 'preference_delete';
 
     /**
-     * users
+     * preference_delete
      * MINIMUM_API_VERSION=5.0.0
      *
-     * Get ids and usernames for your site
+     * Delete a non-system preference by name
      *
      * @param array $input
+     * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * @return boolean
      */
-    public static function users(array $input)
+    public static function preference_delete($input)
     {
-        $users = User::get_valid_users();
-        if (empty($users)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+            return false;
+        }
+        $user = User::get_from_username(Session::username($input['auth']));
+        if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
+            return false;
+        }
+        $pref_name  = (string) $input['filter'];
+        $preference = Preference::get($pref_name,-1);
+        if (empty($preference)) {
+            Api::error(sprintf(T_('Not Found: %s'), $pref_name), '4704', self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
-        switch ($input['api_format']) {
-            case 'json':
-                echo JSON_Data::users($users);
-                break;
-            default:
-                echo XML_Data::users($users);
-        }
+        Preference::delete($pref_name);
+        Api::message("Deleted: $pref_name", $input['api_format']);
         Session::extend($input['auth']);
 
         return true;

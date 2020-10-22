@@ -28,11 +28,18 @@ namespace Lib\ApiMethods;
 use Access;
 use AmpConfig;
 use Api;
+use Playlist;
 use Session;
 use User;
 
+/**
+ * Class PlaylistAddSongMethod
+ * @package Lib\ApiMethods
+ */
 final class PlaylistAddSongMethod
 {
+    private const ACTION = 'playlist_add_song';
+
     /**
      * playlist_add_song
      * MINIMUM_API_VERSION=380001
@@ -45,27 +52,28 @@ final class PlaylistAddSongMethod
      * check  = (integer) 0,1 Check for duplicates //optional, default = 0
      * @return boolean
      */
-    public static function playlist_add_song($input)
+    public static function playlist_add_song(array $input)
     {
-        if (!Api::check_parameter($input, array('filter', 'song'), 'playlist_add_song')) {
+        if (!Api::check_parameter($input, array('filter', 'song'), self::ACTION)) {
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
-        $playlist = new \Playlist($input['filter']);
+        $playlist = new Playlist($input['filter']);
         $song     = $input['song'];
         if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
-            Api::message('error', T_('Access denied to this playlist'), '412', $input['api_format']);
+            Api::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
         if ((AmpConfig::get('unique_playlist') || (int) $input['check'] == 1) && in_array($song, $playlist->get_songs())) {
-            Api::message('error', T_("Can't add a duplicate item when check is enabled"), '400', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Bad Request: %s'), $song), '4710', self::ACTION, 'duplicate', $input['api_format']);
 
             return false;
         }
         $playlist->add_songs(array($song), true);
-        Api::message('success', 'song added to playlist', null, $input['api_format']);
+        Api::message('song added to playlist', $input['api_format']);
         Session::extend($input['auth']);
 
         return true;

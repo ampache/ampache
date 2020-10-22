@@ -66,6 +66,7 @@ class WebDAV_Catalog extends DAV\Collection
      * getChild
      * @param string $name
      * @return WebDAV_File|WebDAV_Directory
+     * @throws DAV\Exception\NotFound
      */
     public function getChild($name)
     {

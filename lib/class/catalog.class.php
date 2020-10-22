@@ -521,6 +521,28 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get_count
+     *
+     * return the counts from update info to speed up responses
+     * @param string $table
+     * @return integer
+     */
+    public static function get_count(string $table)
+    {
+        if ($table == 'playlist' || $table == 'search') {
+            $sql        = "SELECT 'playlist' AS `key`, SUM(value) AS `value` FROM `update_info`" .
+                "WHERE `key` IN ('playlist', 'search')";
+            $db_results = Dba::read($sql);
+        } else {
+            $sql        = "SELECT * FROM `update_info` WHERE `key` = ?";
+            $db_results = Dba::read($sql, array($table));
+        }
+        $results    = Dba::fetch_assoc($db_results);
+
+        return (int) $results['value'];
+    } // get_count
+
+    /**
      * update_enabled
      * sets the enabled flag
      * @param string $new_enabled
@@ -748,7 +770,7 @@ abstract class Catalog extends database_object
         // tables with media items to count, song-related tables and the rest
         $media_tables = array('song', 'video', 'podcast_episode');
         $song_tables  = array('artist', 'album');
-        $list_tables  = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog');
+        $list_tables  = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license');
 
         $results = array();
         $items   = '0';
@@ -764,6 +786,8 @@ abstract class Catalog extends database_object
             $items += $data[0];
             $time += $data[1];
             $size += $data[2];
+            // write the total_counts as well
+            Dba::write("REPLACE INTO `update_info` SET `key`= '" . $table . "', `value`=" . $data[0]);
         }
         // return the totals for all media tables
         $results['items'] = $items;
@@ -776,6 +800,8 @@ abstract class Catalog extends database_object
             $data       = Dba::fetch_row($db_results);
             // save the object count
             $results[$table] = $data[0];
+            // write the total_counts as well
+            Dba::write("REPLACE INTO `update_info` SET `key`= '" . $table . "', `value`=" . $data[0]);
         }
 
         foreach ($list_tables as $table) {
@@ -784,6 +810,8 @@ abstract class Catalog extends database_object
             $data       = Dba::fetch_row($db_results);
             // save the object count
             $results[$table] = $data[0];
+            // write the total_counts as well
+            Dba::write("REPLACE INTO `update_info` SET `key`= '" . $table . "', `value`=" . $data[0]);
         }
 
         return $results;
@@ -2069,7 +2097,6 @@ abstract class Catalog extends database_object
      * @param string $sort_pattern
      * @param string $rename_pattern
      * @return array
-     * @throws Exception
      */
     public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
     {
@@ -2080,7 +2107,13 @@ abstract class Catalog extends database_object
         }
 
         $vainfo = new vainfo($media->file, $gather_types, '', '', '', $sort_pattern, $rename_pattern);
-        $vainfo->get_info();
+        try {
+            $vainfo->get_info();
+        } catch (Exception $error) {
+            debug_event('catalog.class', 'Error ' . $error->getMessage(), 1);
+
+            return array();
+        }
 
         $key = vainfo::get_tag_type($vainfo->tags);
 
@@ -2754,7 +2787,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * @param Artist|Album|Song|Video|Podcast_Episode|Video $libitem
+     * @param Artist|Album|Song|Video|Podcast_Episode $libitem
      * @param integer|null $user_id
      * @return boolean
      */

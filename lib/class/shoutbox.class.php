@@ -133,7 +133,7 @@ class Shoutbox
     } // get_top
 
     /**
-     * @param $time
+     * @param integer $time
      * @return array
      */
     public static function get_shouts_since($time)

@@ -32,26 +32,36 @@ use User;
 use XML_Data;
 
 /**
- * Class UserPreferenceMethod
+ * Class PreferenceEditMethod
  * @package Lib\ApiMethods
  */
-final class UserPreferenceMethod
+final class PreferenceEditMethod
 {
-    private const ACTION = 'user_preference';
+    private const ACTION = 'preference_edit';
 
     /**
-     * user_preference
+     * preference_edit
      * MINIMUM_API_VERSION=5.0.0
      *
-     * Get your user preference by name
+     * Edit a preference value and apply to all users if allowed
      *
      * @param array $input
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
+     * value  = (string|integer) Preference value
+     * all    = (boolean) apply to all users //optional
      * @return boolean
      */
-    public static function user_preference(array $input)
+    public static function preference_edit(array $input)
     {
+        if (!Api::check_parameter($input, array('filter', 'value'), self::ACTION)) {
+            return false;
+        }
         $user = User::get_from_username(Session::username($input['auth']));
+        $all  = (int) $input['all'] == 1;
+        // don't apply to all when you aren't an admin
+        if ($all && !Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
+            return false;
+        }
         // fix preferences that are missing for user
         User::fix_preferences($user->id);
 
@@ -63,6 +73,13 @@ final class UserPreferenceMethod
 
             return false;
         }
+        $value = $input['value'];
+        if (!Preference::update($pref_name, $value, $all)) {
+            Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+        $preference   = Preference::get($pref_name, $user->id);
         $output_array =  array('preference' => $preference);
         switch ($input['api_format']) {
             case 'json':

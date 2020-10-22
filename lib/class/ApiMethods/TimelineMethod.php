@@ -27,10 +27,20 @@ namespace Lib\ApiMethods;
 use AmpConfig;
 use Api;
 use JSON_Data;
+use Preference;
+use Session;
+use User;
+use Useractivity;
 use XML_Data;
 
+/**
+ * Class TimelineMethod
+ * @package Lib\ApiMethods
+ */
 final class TimelineMethod
 {
+    private const ACTION = 'timeline';
+
     /**
      * timeline
      * MINIMUM_API_VERSION=380001
@@ -43,10 +53,10 @@ final class TimelineMethod
      * since    = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function timeline($input)
+    public static function timeline(array $input)
     {
         if (AmpConfig::get('sociable')) {
-            if (!Api::check_parameter($input, array('username'), 'timeline')) {
+            if (!Api::check_parameter($input, array('username'), self::ACTION)) {
                 return false;
             }
             $username = $input['username'];
@@ -54,10 +64,10 @@ final class TimelineMethod
             $since    = (int) ($input['since']);
 
             if (!empty($username)) {
-                $user = \User::get_from_username($username);
+                $user = User::get_from_username($username);
                 if ($user !== null) {
-                    if (\Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
-                        $activities = \Useractivity::get_activities($user->id, $limit, $since);
+                    if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
+                        $activities = Useractivity::get_activities($user->id, $limit, $since);
                         ob_end_clean();
                         switch ($input['api_format']) {
                             case 'json':
@@ -70,9 +80,9 @@ final class TimelineMethod
                 }
             }
         } else {
-            debug_event('api.class', 'Sociable feature is not enabled.', 3);
+            debug_event(self::class, 'Sociable feature is not enabled.', 3);
         }
-        \Session::extend($input['auth']);
+        Session::extend($input['auth']);
 
         return true;
     }

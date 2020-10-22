@@ -26,10 +26,17 @@ namespace Lib\ApiMethods;
 
 use Api;
 use AutoUpdate;
+use Session;
 use User;
 
+/**
+ * Class SystemUpdateMethod
+ * @package Lib\ApiMethods
+ */
 final class SystemUpdateMethod
 {
+    private const ACTION = 'system_update';
+
     /**
      * system_update
      * MINIMUM_API_VERSION=400001
@@ -39,10 +46,10 @@ final class SystemUpdateMethod
      * @param array $input
      * @return boolean
      */
-    public static function system_update($input)
+    public static function system_update(array $input)
     {
-        $user = User::get_from_username(\Session::username($input['auth']));
-        if (!Api::check_access('interface', 100, $user->id)) {
+        $user = User::get_from_username(Session::username($input['auth']));
+        if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         if (AutoUpdate::is_update_available(true)) {
@@ -51,20 +58,20 @@ final class SystemUpdateMethod
             AutoUpdate::update_dependencies(true);
             // check that the update completed or failed failed.
             if (AutoUpdate::is_update_available(true)) {
-                Api::message('error', 'update failed', '400', $input['api_format']);
-                \Session::extend($input['auth']);
+                Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
+                Session::extend($input['auth']);
 
                 return false;
             }
             // there was an update and it was successful
-            Api::message('success', 'update successful', null, $input['api_format']);
-            \Session::extend($input['auth']);
+            Api::message('update successful', $input['api_format']);
+            Session::extend($input['auth']);
 
             return true;
         }
         //no update available but you are an admin so tell them
-        Api::message('success', 'No update available', null, $input['api_format']);
-        \Session::extend($input['auth']);
+        Api::message('No update available', $input['api_format']);
+        Session::extend($input['auth']);
 
         return true;
     }

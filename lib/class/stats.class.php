@@ -136,7 +136,7 @@ class Stats
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, array($type, $object_id, $count_type, $date, $user, $agent, $latitude, $longitude, $geoname));
 
-        if (in_array($type, array('song', 'video')) && $count_type === 'stream' && $user > 0) {
+        if (in_array($type, array('song', 'video')) && $count_type === 'stream' && $user > 0 && $agent !== 'debug') {
             Useractivity::post_activity($user, 'play', $type, $object_id, $date);
         }
 
@@ -154,6 +154,7 @@ class Stats
      * @param integer $object_id
      * @param integer $user
      * @param string $agent
+     * @param integer $time
      * @return boolean
      */
     public static function is_already_inserted($type, $object_id, $user, $agent, $time)
@@ -251,6 +252,7 @@ class Stats
      * optional user_id because when streaming we don't have $GLOBALS()
      * @param string $user_id
      * @param string $agent
+     * @param integer $date
      * @return array
      */
     public static function get_last_play($user_id = '', $agent = '', $date = 0)

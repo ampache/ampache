@@ -31,8 +31,14 @@ use JSON_Data;
 use Session;
 use XML_Data;
 
+/**
+ * Class LicensesMethod
+ * @package Lib\ApiMethods
+ */
 final class LicensesMethod
 {
+    private const ACTION = 'licenses';
+
     /**
      * licenses
      * MINIMUM_API_VERSION=420000
@@ -46,10 +52,10 @@ final class LicensesMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function licenses($input)
+    public static function licenses(array $input)
     {
         if (!AmpConfig::get('licensing')) {
-            Api::message('error', T_('Access Denied: licensing features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: licensing'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -61,6 +67,12 @@ final class LicensesMethod
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter']);
         $licenses = Api::$browse->get_objects();
+        if (empty($licenses)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
+
 
         ob_end_clean();
         switch ($input['api_format']) {

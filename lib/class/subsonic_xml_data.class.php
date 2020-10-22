@@ -778,7 +778,7 @@ class Subsonic_XML_Data
         if ($songData['year'] > 0) {
             $xsong->addAttribute('year', (string) $songData['year']);
         }
-        $tags = Tag::get_object_tags('song', (string) $songData['id']);
+        $tags = Tag::get_object_tags('song', (int) $songData['id']);
         if (count($tags) > 0) {
             $xsong->addAttribute('genre', (string) $tags[0]['name']);
         }
@@ -1381,8 +1381,9 @@ class Subsonic_XML_Data
     /**
      * addArtistInfo
      * @param SimpleXMLElement $xml
-     * @param $info
-     * @param $similars
+     * @param array $info
+     * @param array $similars
+     * @param string $child
      */
     public static function addArtistInfo($xml, $info, $similars, $child)
     {
@@ -1407,6 +1408,7 @@ class Subsonic_XML_Data
      * addSimilarSongs
      * @param SimpleXMLElement $xml
      * @param array $similar_songs
+     * @param string $child
      */
     public static function addSimilarSongs($xml, $similar_songs, $child)
     {
