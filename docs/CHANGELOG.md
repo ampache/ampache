@@ -61,6 +61,9 @@ All API code that used 'Tag' now references 'Genre' instead
   * Api::preference_create (Add a new preference to Ampache)
   * Api::preference_edit (Edit a preference value by name; optionally apply to all users)
   * Api::preference_delete (Delete a preference by name)
+  * Api::labels (list your record labels)
+  * Api::label (get a label by id)
+  * Api::label_artists (get all artists attached to that label)
 
 ### Changed
 
