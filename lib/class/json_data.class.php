@@ -934,8 +934,8 @@ class JSON_Data
             $shout = new Shoutbox($shout_id);
             $shout->format();
             $user       = new User($shout->user);
-            $user_array = ["user"];
-            array_push($user_array["user"], array(
+            $user_array = [];
+            array_push($user_array[], array(
                 "id" => (string) $user->id,
                 "username" => $user->username
             ));
@@ -965,8 +965,8 @@ class JSON_Data
         foreach ($activities as $activity_id) {
             $activity   = new Useractivity($activity_id);
             $user       = new User($activity->user);
-            $user_array = ["user"];
-            array_push($user_array["user"], array(
+            $user_array = [];
+            array_push($user_array[], array(
                 "id" => (string) $user->id,
                 "username" => $user->username
             ));
