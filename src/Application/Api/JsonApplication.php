@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=0);
-
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -23,6 +21,8 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
 namespace Ampache\Application\Api;
 
 use Ampache\Module\Api\Api;
@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Application\ApplicationInterface;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Json_Data;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Model\User;
 
@@ -50,19 +51,21 @@ final class JsonApplication implements ApplicationInterface
         if (!AmpConfig::get('access_control')) {
             ob_end_clean();
             debug_event('Access Control', 'Error Attempted to use JSON API with Access Control turned off', 3);
-            echo Json_Data::error('501', T_('Access Control not Enabled'));
-            exit;
+            echo JSON_Data::error('4700', T_('Access Denied'), Core::get_request('action'), 'system');
+
+            return;
         }
 
         /**
-         * Verify the existance of the Session they passed in we do allow them to
+         * Verify the existence of the Session they passed in we do allow them to
          * login via this interface so we do have an exception for action=login
          */
         if (!Session::exists('api', $_REQUEST['auth']) && $_REQUEST['action'] != 'handshake' && $_REQUEST['action'] != 'ping') {
             debug_event('Access Denied', 'Invalid Session attempt to API [' . $_REQUEST['action'] . ']', 3);
             ob_end_clean();
-            echo Json_Data::error('401', T_('Session Expired'));
-            exit();
+            echo JSON_Data::error('4701', T_('Session Expired'), Core::get_request('action'), 'account');
+
+            return;
         }
 
         // If the session exists then let's try to pull some data from it to see if we're still allowed to do this
@@ -71,8 +74,9 @@ final class JsonApplication implements ApplicationInterface
         if (!Access::check_network('init-api', $username, 5)) {
             debug_event('Access Denied', 'Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', 3);
             ob_end_clean();
-            echo Json_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
-            exit();
+            echo JSON_Data::error('4742', T_('Unauthorized access attempt to API - ACL Error'), Core::get_request('action'), 'account');
+
+            return;
         }
 
         if ($_REQUEST['action'] != 'handshake' && $_REQUEST['action'] != 'ping') {
@@ -87,15 +91,15 @@ final class JsonApplication implements ApplicationInterface
 
         // Retrieve the api method handler from the list of known methods
         $handler = Api::METHOD_LIST[$method] ?? null;
-        if ($method !== null) {
+        if ($handler !== null) {
             $_GET['api_format'] = 'json';
             call_user_func([$handler, $method], $_GET);
             // We only allow a single function to be called, and we assume it's cleaned up!
-            exit;
+            return;
         }
 
         // If we manage to get here, we still need to hand out a JSON document
         ob_end_clean();
-        echo Json_Data::error('405', T_('Invalid Request'));
+        echo JSON_Data::error('4705', T_('Invalid Request'), (string) $method, 'system');
     }
 }

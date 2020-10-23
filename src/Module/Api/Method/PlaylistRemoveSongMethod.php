@@ -31,8 +31,14 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Session;
 
+/**
+ * Class PlaylistRemoveSongMethod
+ * @package Lib\ApiMethods
+ */
 final class PlaylistRemoveSongMethod
 {
+    private const ACTION = 'playlist_remove_song';
+
     /**
      * playlist_remove_song
      * MINIMUM_API_VERSION=380001
@@ -50,40 +56,40 @@ final class PlaylistRemoveSongMethod
      * clear  = (integer) 0,1 Clear the whole playlist //optional, default = 0
      * @return boolean
      */
-    public static function playlist_remove_song($input)
+    public static function playlist_remove_song(array $input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'playlist_remove_song')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
-            Api::message('error', T_('Access denied to this playlist'), '412', $input['api_format']);
+            Api::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
         } else {
             if ((int) $input['clear'] === 1) {
                 $playlist->delete_all();
-                Api::message('success', 'all songs removed from playlist', null, $input['api_format']);
+                Api::message('all songs removed from playlist', $input['api_format']);
             } elseif ($input['song']) {
                 $track = (int) scrub_in($input['song']);
                 if (!$playlist->has_item($track)) {
-                    Api::message('error', T_('Song not found in playlist'), '404', $input['api_format']);
+                    Api::error(T_('Not Found'), '4704', self::ACTION, 'song', $input['api_format']);
 
                     return false;
                 }
                 $playlist->delete_song($track);
                 $playlist->regenerate_track_numbers();
-                Api::message('success', 'song removed from playlist', null, $input['api_format']);
+                Api::message('song removed from playlist', $input['api_format']);
             } elseif ($input['track']) {
                 $track = (int) scrub_in($input['track']);
                 if (!$playlist->has_item(null, $track)) {
-                    Api::message('error', T_('Track ID not found in playlist'), '404', $input['api_format']);
+                    Api::error(T_('Not Found'), '4704', self::ACTION, 'track', $input['api_format']);
 
                     return false;
                 }
                 $playlist->delete_track_number($track);
                 $playlist->regenerate_track_numbers();
-                Api::message('success', 'song removed from playlist', null, $input['api_format']);
+                Api::message('song removed from playlist', $input['api_format']);
             }
         }
         Session::extend($input['auth']);

@@ -31,8 +31,14 @@ use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Recommendation;
 
+/**
+ * Class GetSimilarMethod
+ * @package Lib\ApiMethods
+ */
 final class GetSimilarMethod
 {
+    private const ACTION = 'get_similar';
+
     /**
      * get_similar
      * MINIMUM_API_VERSION=420000
@@ -46,16 +52,16 @@ final class GetSimilarMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function get_similar($input)
+    public static function get_similar(array $input)
     {
-        if (!Api::check_parameter($input, array('type', 'filter'), 'get_similar')) {
+        if (!Api::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;
         }
-        $type   = (string) $input['type'];
-        $filter = (int) $input['filter'];
+        $type      = (string) $input['type'];
+        $object_id = (int) $input['filter'];
         // confirm the correct data
         if (!in_array($type, array('song', 'artist'))) {
-            Api::message('error', T_('Incorrect object type') . ' ' . $type, '400', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -64,13 +70,18 @@ final class GetSimilarMethod
         $similar = array();
         switch ($type) {
             case 'artist':
-                $similar = Recommendation::get_artists_like($filter);
+                $similar = Recommendation::get_artists_like($object_id);
                 break;
             case 'song':
-                $similar = Recommendation::get_songs_like($filter);
+                $similar = Recommendation::get_songs_like($object_id);
         }
         foreach ($similar as $child) {
             $objects[] = $child['id'];
+        }
+        if (empty($objects)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
         }
 
         ob_end_clean();

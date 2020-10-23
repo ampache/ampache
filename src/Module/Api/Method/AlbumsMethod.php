@@ -31,8 +31,14 @@ use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class AlbumsMethod
+ * @package Lib\ApiMethods
+ */
 final class AlbumsMethod
 {
+    const ACTION = 'albums';
+
     /**
      * albums
      * MINIMUM_API_VERSION=380001
@@ -46,9 +52,10 @@ final class AlbumsMethod
      * update  = self::set_filter(date) //optional
      * offset  = (integer) //optional
      * limit   = (integer) //optional
-     * include = (array) 'songs' //optional
+     * include = (array|string) 'songs' //optional
+     * @return boolean
      */
-    public static function albums($input)
+    public static function albums(array $input)
     {
         Api::$browse->reset_filters();
         Api::$browse->set_type('album');
@@ -59,6 +66,11 @@ final class AlbumsMethod
         Api::set_filter('update', $input['update']);
 
         $albums  = Api::$browse->get_objects();
+        if (empty($albums)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
         $user    = User::get_from_username(Session::username($input['auth']));
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
 
@@ -75,5 +87,7 @@ final class AlbumsMethod
                 echo XML_Data::albums($albums, $include, $user->id);
         }
         Session::extend($input['auth']);
+
+        return true;
     }
 }

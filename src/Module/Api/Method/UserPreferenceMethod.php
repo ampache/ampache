@@ -31,11 +31,17 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class UserPreferenceMethod
+ * @package Lib\ApiMethods
+ */
 final class UserPreferenceMethod
 {
+    private const ACTION = 'user_preference';
+
     /**
      * user_preference
-     * MINIMUM_API_VERSION=430000
+     * MINIMUM_API_VERSION=5.0.0
      *
      * Get your user preference by name
      *
@@ -43,23 +49,27 @@ final class UserPreferenceMethod
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * @return boolean
      */
-    public static function user_preference($input)
+    public static function user_preference(array $input)
     {
-        $user       = User::get_from_username(Session::username($input['auth']));
+        $user = User::get_from_username(Session::username($input['auth']));
+        // fix preferences that are missing for user
+        User::fix_preferences($user->id);
+
         $pref_name  = (string) $input['filter'];
         $preference = Preference::get($pref_name, $user->id);
         if (empty($preference)) {
-            Api::message('error', 'not found: ' . $pref_name, '404', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $pref_name), '4704', self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
-        $output_array =  array('preferences' => $preference);
+        $output_array =  array('preference' => $preference);
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($output_array, JSON_PRETTY_PRINT);
                 break;
             default:
-                XML_Data::object_array($output_array['preferences'], 'preferences', 'pref');
+                echo XML_Data::object_array($output_array['preference'], 'preference');
         }
         Session::extend($input['auth']);
 

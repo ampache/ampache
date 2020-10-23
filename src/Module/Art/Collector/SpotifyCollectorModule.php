@@ -148,6 +148,8 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
             $response = $this->spotifyWebAPI->search($query, $art->type, ['limit' => $limit]);
         } catch (SpotifyWebAPIException $error) {
             if ($error->hasExpiredToken()) {
+                $session = new SpotifySession($clientId, $clientSecret);
+                $session->requestCredentialsToken();
                 $accessToken = $session->getAccessToken();
             } elseif ($error->getCode() == 429) {
                 $lastResponse = $this->spotifyWebAPI->getRequest()->getLastResponse();

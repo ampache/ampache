@@ -30,32 +30,41 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class SystemPreferencesMethod
+ * @package Lib\ApiMethods
+ */
 final class SystemPreferencesMethod
 {
+    private const ACTION = 'system_preferences';
+
     /**
      * system_preferences
-     * MINIMUM_API_VERSION=430000
+     * MINIMUM_API_VERSION=5.0.0
      *
      * Get your system preferences
      *
      * @param array $input
      * @return boolean
      */
-    public static function system_preferences($input)
+    public static function system_preferences(array $input)
     {
         $user = User::get_from_username(Session::username($input['auth']));
-        if (!Api::check_access('interface', 100, $user->id)) {
+
+        if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         $preferences  = Preference::get_all(-1);
-        $output_array = array('preferences' => $preferences);
+        $output_array = array('preference' => $preferences);
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($output_array, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo XML_Data::object_array($output_array['preferences'], 'preferences', 'pref');
+                echo XML_Data::object_array($output_array['preference'], 'preference');
         }
         Session::extend($input['auth']);
+
+        return true;
     }
 }

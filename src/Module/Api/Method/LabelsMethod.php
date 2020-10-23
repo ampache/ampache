@@ -3,21 +3,21 @@
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- *  LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public Label, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * it under the terms of the GNU Affero General Public Label as published by
+ * the Free Software Foundation, either version 3 of the Label, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
+ * GNU Affero General Public Label for more details.
  *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public Label
+ * along with this program.  If not, see <https://www.gnu.org/labels/>.
  *
  */
 
@@ -25,58 +25,65 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\User;
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
 /**
- * Class VideosMethod
+ * Class LabelsMethod
  * @package Lib\ApiMethods
  */
-final class VideosMethod
+final class LabelsMethod
 {
-    private const ACTION = 'videos';
+    private const ACTION = 'labels';
 
     /**
-     * videos
-     * This returns video objects!
+     * labels
+     * MINIMUM_API_VERSION=420000
+     *
+     * This returns the labels  based on the specified filter
      *
      * @param array $input
      * filter = (string) Alpha-numeric search term //optional
-     * exact  = (integer) 0,1, Whether to match the exact term or not //optional
+     * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return bool
+     * @return boolean
      */
-    public static function videos(array $input)
+    public static function labels(array $input)
     {
+        if (!AmpConfig::get('label')) {
+            Api::error(T_('Enable: label'), '4703', self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+
         Api::$browse->reset_filters();
-        Api::$browse->set_type('video');
-        Api::$browse->set_sort('title', 'ASC');
+        Api::$browse->set_type('label');
+        Api::$browse->set_sort('name', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter']);
-
-        $video_ids = Api::$browse->get_objects();
-        $user      = User::get_from_username(Session::username($input['auth']));
-        if (empty($video_ids)) {
+        $labels = Api::$browse->get_objects();
+        if (empty($labels)) {
             Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
 
             return false;
         }
 
+        ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::videos($video_ids, $user->id);
+                echo JSON_Data::labels($labels);
                 break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::videos($video_ids, $user->id);
+                echo XML_Data::labels($labels);
         }
         Session::extend($input['auth']);
 

@@ -26,13 +26,20 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Catalog;
 use Ampache\Model\Podcast;
 use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Session;
 
+/**
+ * Class PodcastDeleteMethod
+ * @package Lib\ApiMethods
+ */
 final class PodcastDeleteMethod
 {
+    private const ACTION = 'podcast_delete';
+
     /**
      * podcast_delete
      *
@@ -44,31 +51,37 @@ final class PodcastDeleteMethod
      * filter = (string) UID of podcast to delete
      * @return boolean
      */
-    public static function podcast_delete($input)
+    public static function podcast_delete(array $input)
     {
         if (!AmpConfig::get('podcast')) {
-            Api::message('error', T_('Access Denied: podcast features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
-        if (!Api::check_access('interface', 75, $user->id, 'podcast_delete', $input['api_format'])) {
+        if (!Api::check_access('interface', 75, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (!Api::check_parameter($input, array('filter'), 'podcast_delete')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
         $podcast   = new Podcast($object_id);
-        if ($podcast->id) {
-            if ($podcast->remove()) {
-                Api::message('success', 'podcast ' . $object_id . ' deleted', null, $input['api_format']);
-            } else {
-                Api::message('error', 'podcast ' . $object_id . ' was not deleted', '400', $input['api_format']);
-            }
-        } else {
-            Api::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['api_format']);
+
+        if (!$podcast->id) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+
+            return false;
         }
+
+        if ($podcast->remove()) {
+            Api::message('podcast ' . $object_id . ' deleted', $input['api_format']);
+        } else {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'filter', $input['api_format']);
+        }
+        Catalog::count_table('podcast');
         Session::extend($input['auth']);
 
         return true;

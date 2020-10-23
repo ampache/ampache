@@ -27,12 +27,19 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\User;
 use Ampache\Model\Useractivity;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class FriendsTimelineMethod
+ * @package Lib\ApiMethods
+ */
 final class FriendsTimelineMethod
 {
+    const ACTION = 'friends_timeline';
+
     /**
      * friends_timeline
      * MINIMUM_API_VERSION=380001
@@ -42,28 +49,35 @@ final class FriendsTimelineMethod
      * @param array $input
      * limit = (integer) //optional
      * since = (integer) UNIXTIME() //optional
+     * @return boolean
      */
-    public static function friends_timeline($input)
+    public static function friends_timeline(array $input)
     {
-        if (AmpConfig::get('sociable')) {
-            $limit = (int) ($input['limit']);
-            $since = (int) ($input['since']);
-            $user  = User::get_from_username(Session::username($input['auth']))->id;
+        if (!AmpConfig::get('sociable')) {
+            Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
 
-            if ($user > 0) {
-                $activities = Useractivity::get_friends_activities($user, $limit, $since);
-                ob_end_clean();
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo JSON_Data::timeline($activities);
-                        break;
-                    default:
-                        echo XML_Data::timeline($activities);
-                }
-            }
-        } else {
-            debug_event('api.class', 'Sociable feature is not enabled.', 3);
+            return false;
+        }
+        $limit = (int) ($input['limit']);
+        $since = (int) ($input['since']);
+        $user  = User::get_from_username(Session::username($input['auth']))->id;
+
+        $activities = Useractivity::get_friends_activities($user, $limit, $since);
+        if (empty($activities)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
+        ob_end_clean();
+        switch ($input['api_format']) {
+            case 'json':
+                echo JSON_Data::timeline($activities);
+                break;
+            default:
+                echo XML_Data::timeline($activities);
         }
         Session::extend($input['auth']);
+
+        return true;
     }
 }

@@ -25,19 +25,22 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
 use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 
+/**
+ * Class HandshakeMethod
+ * @package Lib\ApiMethods
+ */
 final class HandshakeMethod
 {
+    private const ACTION = 'handshake';
+
     /**
      * handshake
      * MINIMUM_API_VERSION=380001
@@ -52,7 +55,7 @@ final class HandshakeMethod
      * version   = (string) $version //optional
      * @return boolean
      */
-    public static function handshake($input)
+    public static function handshake(array $input)
     {
         $timestamp  = preg_replace('/[^0-9]/', '', $input['timestamp']);
         $passphrase = $input['auth'];
@@ -64,11 +67,11 @@ final class HandshakeMethod
         $version  = (isset($input['version'])) ? $input['version'] : Api::$version;
 
         // Log the attempt
-        debug_event('api.class', "Handshake Attempt, IP:$user_ip User:$username Version:$version", 5);
+        debug_event(self::class, "Handshake Attempt, IP:$user_ip User:$username Version:$version", 5);
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
-        if ((int) ($version) < Api::$auth_version) {
-            debug_event('api.class', 'Login Failed: Version too old', 1);
+        if ((int) ($version) < Api::$auth_version && $version !== '5.0.0') {
+            debug_event(self::class, 'Login Failed: Version too old', 1);
             AmpError::add('api', T_('Login failed, API version is too old'));
 
             return false;
@@ -87,7 +90,7 @@ final class HandshakeMethod
         }
 
         // Log this attempt
-        debug_event('api.class', "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
+        debug_event(self::class, "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
 
         if ($user_id > 0 && Access::check_network('api', $user_id, 5)) {
             // Authentication with user/password, we still need to check the password
@@ -95,9 +98,9 @@ final class HandshakeMethod
                 // If the timestamp isn't within 30 minutes sucks to be them
                 if (($timestamp < (time() - 1800)) ||
                     ($timestamp > (time() + 1800))) {
-                    debug_event('api.class', 'Login failed, timestamp is out of range ' . $timestamp . '/' . time(), 1);
+                    debug_event(self::class, 'Login failed, timestamp is out of range ' . $timestamp . '/' . time(), 1);
                     AmpError::add('api', T_('Login failed, timestamp is out of range'));
-                    Api::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '401', $input['api_format']);
+                    Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '4701', self::ACTION, 'account', $input['api_format']);
 
                     return false;
                 }
@@ -108,9 +111,9 @@ final class HandshakeMethod
                 $realpwd = $client->get_password();
 
                 if (!$realpwd) {
-                    debug_event('api.class', 'Unable to find user with userid of ' . $user_id, 1);
+                    debug_event(self::class, 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Incorrect username or password'));
-                    Api::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '401', $input['api_format']);
+                    Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '4701', self::ACTION, 'account', $input['api_format']);
 
                     return false;
                 }
@@ -144,7 +147,6 @@ final class HandshakeMethod
                     $data['geo_name'] = $input['geo_name'];
                 }
                 //Session might not exist or has expired
-                //
                 if (!Session::read($data['apikey'])) {
                     Session::destroy($data['apikey']);
                     $token = Session::create($data);
@@ -153,30 +155,9 @@ final class HandshakeMethod
                     $token = $data['apikey'];
                 }
 
-                debug_event('api.class', 'Login Success, passphrase matched', 1);
+                debug_event(self::class, 'Login Success, passphrase matched', 1);
+                $outarray = Api::server_details($token);
 
-                // We need to also get the 'last update' of the
-                // catalog information in an RFC 2822 Format
-                $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';
-                $db_results = Dba::read($sql);
-                $row        = Dba::fetch_assoc($db_results);
-
-                // Now we need to quickly get the totals
-                $counts = Catalog::count_server(true);
-
-                // send the totals
-                $outarray = array('auth' => $token,
-                    'api' => Api::$version,
-                    'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
-                    'update' => date("c", (int) $row['update']),
-                    'add' => date("c", (int) $row['add']),
-                    'clean' => date("c", (int) $row['clean']),
-                    'songs' => (int) $counts['song'],
-                    'albums' => (int) $counts['album'],
-                    'artists' => (int) $counts['artist'],
-                    'playlists' => ((int) $counts['playlist'] + (int) $counts['search']),
-                    'videos' => (int) $counts['video'],
-                    'catalogs' => (int) $counts['catalog']);
                 switch ($input['api_format']) {
                     case 'json':
                         echo json_encode($outarray, JSON_PRETTY_PRINT);
@@ -189,8 +170,8 @@ final class HandshakeMethod
             } // match
         } // end while
 
-        debug_event('api.class', 'Login Failed, unable to match passphrase', 1);
-        Api::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), '401', $input['api_format']);
+        debug_event(self::class, 'Login Failed, unable to match passphrase', 1);
+        Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), '4701', self::ACTION, 'account', $input['api_format']);
 
         return false;
     }

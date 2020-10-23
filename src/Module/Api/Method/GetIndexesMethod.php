@@ -32,18 +32,24 @@ use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class GetIndexesMethod
+ * @package Lib\ApiMethods
+ */
 final class GetIndexesMethod
 {
+    private const ACTION = 'get_indexes';
+
     /**
      * get_indexes
      * MINIMUM_API_VERSION=400001
-     * CHANGED_IN_API_VERSION=430000
+     * CHANGED_IN_API_VERSION=5.0.0
      *
      * This takes a collection of inputs and returns ID + name for the object type
      * Added 'include' to allow indexing all song tracks (enabled for xml by default)
      *
      * @param array $input
-     * type    = (string) 'song', 'album', 'artist', 'playlist'
+     * type    = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode'
      * filter  = (string) //optional
      * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add     = self::set_filter(date) //optional
@@ -53,17 +59,17 @@ final class GetIndexesMethod
      * limit   = (integer) //optional
      * @return boolean
      */
-    public static function get_indexes($input)
+    public static function get_indexes(array $input)
     {
-        if (!Api::check_parameter($input, array('type'), 'get_indexes')) {
+        if (!Api::check_parameter($input, array('type'), self::ACTION)) {
             return false;
         }
         $user    = User::get_from_username(Session::username($input['auth']));
         $type    = (string) $input['type'];
-        $include = ((int) $input['include'] == 1 || ($input['api_format'] == 'xml' && !isset($input['include']))) ? true : false;
+        $include = (int) $input['include'] == 1;
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist', 'playlist'))) {
-            Api::message('error', T_('Incorrect object type') . ' ' . $type, '400', $input['api_format']);
+        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode'))) {
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }

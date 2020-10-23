@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Model\Album;
+use Ampache\Model\Label;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
@@ -100,15 +101,13 @@ class Json_Data
      *
      * @param string $code Error code
      * @param string $string Error message
-     * @param array $return_data
+     * @param string $action Error method
+     * @param string $type Error type
      * @return string return error message JSON
      */
-    public static function error($code, $string, $return_data = array())
+    public static function error($code, $string, $action, $type)
     {
-        $message = array("error" => array("code" => $code, "message" => $string));
-        foreach ($return_data as $title => $data) {
-            $message[$title] = $data;
-        }
+        $message = array("error" => array("errorCode" => $code, "errorAction" => $action, "errorType" => $type, "errorMessage" => $string));
 
         return json_encode($message, JSON_PRETTY_PRINT);
     } // error
@@ -138,10 +137,9 @@ class Json_Data
      *
      * This returns the formatted 'genre' array for a JSON document
      * @param array $tags
-     * @param boolean $simple
      * @return array
      */
-    private static function genre_array($tags, $simple = false)
+    private static function genre_array($tags)
     {
         $JSON = array();
 
@@ -159,16 +157,10 @@ class Json_Data
             }
 
             foreach ($atags as $id => $data) {
-                if ($simple) {
-                    array_push($JSON, array(
-                        "name" => $data['name']
-                    ));
-                } else {
-                    array_push($JSON, array(
-                        "id" => (string)$id,
-                        "name" => $data['name']
-                    ));
-                }
+                array_push($JSON, array(
+                    "id" => (string) $id,
+                    "name" => $data['name']
+                ));
             }
         }
 
@@ -202,8 +194,11 @@ class Json_Data
                 return self::shares($objects);
             case 'podcast':
                 return self::podcasts($objects);
+            case 'podcast_episode':
+                return self::podcast_episodes($objects);
             default:
-                return self::error('401', T_('Wrong object type ' . $type));
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                return self::error('4710', printf(T_('Bad Request: %s'), $type), 'indexes', 'type');
         }
     } // indexes
 
@@ -233,8 +228,44 @@ class Json_Data
             ));
         } // end foreach
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode(array("license" => $JSON), JSON_PRETTY_PRINT);
     } // licenses
+
+    /**
+     * labels
+     *
+     * This returns labels to the user, in a pretty JSON document with the information
+     *
+     * @param  integer[] $labels
+     * @return string return JSON
+     */
+    public static function labels($labels)
+    {
+        if ((count($labels) > self::$limit || self::$offset > 0) && self::$limit) {
+            $labels = array_splice($labels, self::$offset, self::$limit);
+        }
+
+        $JSON = [];
+
+        foreach ($labels as $label_id) {
+            $label = new Label($label_id);
+            $label->format();
+            array_push($JSON, array(
+                "id" => (string) $label_id,
+                "name" => $label->f_name,
+                "artists" => $label->artists,
+                "summary" => $label->summary,
+                "external_link" => $label->link,
+                "address" => $label->address,
+                "category" => $label->category,
+                "email" => $label->email,
+                "website" => $label->website,
+                "user" => $label->user,
+            ));
+        } // end foreach
+
+        return json_encode(array("label" => $JSON), JSON_PRETTY_PRINT);
+    } // labels
 
     /**
      * genres
@@ -251,13 +282,11 @@ class Json_Data
         }
 
         $JSON = [];
-        $TAGS = [];
-
         foreach ($tags as $tag_id) {
             $tag    = new Tag($tag_id);
             $counts = $tag->count();
-            array_push($TAGS, array(
-                "id" => (string)$tag_id,
+            array_push($JSON, array(
+                "id" => (string) $tag_id,
                 "name" => $tag->name,
                 "albums" => (int)$counts['album'],
                 "artists" => (int)$counts['artist'],
@@ -268,12 +297,7 @@ class Json_Data
             ));
         } // end foreach
 
-        // return a tag object
-        array_push($JSON, array(
-            "genre" => $TAGS
-        ));
-
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode(array("genre" => $JSON), JSON_PRETTY_PRINT);
     } // genres
 
     /**
@@ -336,7 +360,7 @@ class Json_Data
         } // end foreach artists
 
         if ($encode) {
-            return json_encode($JSON, JSON_PRETTY_PRINT);
+            return json_encode(array("artist" => $JSON), JSON_PRETTY_PRINT);
         }
 
         return $JSON;
@@ -421,7 +445,7 @@ class Json_Data
         } // end foreach
 
         if ($encode) {
-            return json_encode($JSON, JSON_PRETTY_PRINT);
+            return json_encode(array("album" => $JSON), JSON_PRETTY_PRINT);
         }
 
         return $JSON;
@@ -479,7 +503,7 @@ class Json_Data
                 $trackcount     = 1;
                 $playlisttracks = $playlist->get_items();
                 foreach ($playlisttracks as $objects) {
-                    array_push($items,array("id" => (string) $objects['object_id'], "playlisttrack" => $trackcount));
+                    array_push($items, array("id" => (string) $objects['object_id'], "playlisttrack" => $trackcount));
                     $trackcount++;
                 }
             } else {
@@ -496,7 +520,7 @@ class Json_Data
             );
         } // end foreach
 
-        return json_encode($allPlaylists, JSON_PRETTY_PRINT);
+        return json_encode(array("playlist" => $allPlaylists), JSON_PRETTY_PRINT);
     } // playlists
 
     /**
@@ -551,7 +575,7 @@ class Json_Data
             ]);
         } // end foreach
 
-        return json_encode($allShares, JSON_PRETTY_PRINT);
+        return json_encode(array("share" => $allShares), JSON_PRETTY_PRINT);
     } // shares
 
     /**
@@ -598,7 +622,7 @@ class Json_Data
             ]);
         } // end foreach
 
-        return json_encode($allCatalogs, JSON_PRETTY_PRINT);
+        return json_encode(array("catalog" => $allCatalogs), JSON_PRETTY_PRINT);
     } // catalogs
 
     /**
@@ -652,7 +676,7 @@ class Json_Data
             ]);
         } // end foreach
 
-        return json_encode($allPodcasts, JSON_PRETTY_PRINT);
+        return json_encode(array("podcast" => $allPodcasts), JSON_PRETTY_PRINT);
     } // podcasts
 
     /**
@@ -693,7 +717,7 @@ class Json_Data
             return $allEpisodes;
         }
 
-        return json_encode($allEpisodes, JSON_PRETTY_PRINT);
+        return json_encode(array("podcast_episode" => $allEpisodes), JSON_PRETTY_PRINT);
     } // podcast_episodes
 
     /**
@@ -799,7 +823,7 @@ class Json_Data
         } // end foreach
 
         if ($encode) {
-            return json_encode($JSON, JSON_PRETTY_PRINT);
+            return json_encode(array("song" => $JSON), JSON_PRETTY_PRINT);
         }
 
         return $JSON;
@@ -835,7 +859,7 @@ class Json_Data
             ));
         } // end foreach
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode(array("video" => $JSON), JSON_PRETTY_PRINT);
     } // videos
 
     /**
@@ -885,7 +909,7 @@ class Json_Data
             ));
         } // end foreach
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode(array("song" => $JSON), JSON_PRETTY_PRINT);
     } // democratic
 
     /**
@@ -899,11 +923,10 @@ class Json_Data
      */
     public static function user(User $user, $fullinfo)
     {
-        $JSON = array();
         $user->format();
         if ($fullinfo) {
-            $JSON['user'] = array(
-                "id" => (string)$user->id,
+            $JSON = array(
+                "id" => (string) $user->id,
                 "username" => $user->username,
                 "auth" => $user->apikey,
                 "email" => $user->email,
@@ -918,8 +941,8 @@ class Json_Data
                 "city" => $user->city
             );
         } else {
-            $JSON['user'] = array(
-                "id" => (string)$user->id,
+            $JSON = array(
+                "id" => (string) $user->id,
                 "username" => $user->username,
                 "create_date" => $user->create_date,
                 "last_seen" => $user->last_seen,
@@ -930,10 +953,10 @@ class Json_Data
         }
 
         if ($user->fullname_public) {
-            $JSON['user']['fullname'] = $user->fullname;
+            $JSON['fullname'] = $user->fullname;
         }
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode(array("user" => $JSON), JSON_PRETTY_PRINT);
     } // user
 
     /**
@@ -946,20 +969,16 @@ class Json_Data
      */
     public static function users($users)
     {
-        $JSON       = [];
-        $user_array = [];
+        $JSON = [];
         foreach ($users as $user_id) {
             $user = new User($user_id);
-            array_push($user_array, array(
-                "id" => (string)$user_id,
+            array_push($JSON, array(
+                "id" => (string) $user_id,
                 "username" => $user->username
             ));
         } // end foreach
 
-        // return a user object
-        array_push($JSON, array("user" => $user_array));
-
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode(array("user" => $JSON), JSON_PRETTY_PRINT);
     } // users
 
     /**
@@ -978,8 +997,8 @@ class Json_Data
             $shout->format();
             $user       = new User($shout->user);
             $user_array = [];
-            array_push($user_array, array(
-                "id" => (string)$user->id,
+            array_push($user_array[], array(
+                "id" => (string) $user->id,
                 "username" => $user->username
             ));
             $ourArray = array(
@@ -991,7 +1010,7 @@ class Json_Data
             array_push($JSON, $ourArray);
         }
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode(array("shout" => $JSON), JSON_PRETTY_PRINT);
     } // shouts
 
     /**
@@ -1004,14 +1023,13 @@ class Json_Data
      */
     public static function timeline($activities)
     {
-        $JSON             = array();
-        $JSON['timeline'] = []; // To match the XML style, IMO kinda uselesss
+        $JSON = array();
         foreach ($activities as $activity_id) {
             $activity   = new Useractivity($activity_id);
             $user       = new User($activity->user);
             $user_array = [];
-            array_push($user_array, array(
-                "id" => (string)$user->id,
+            array_push($user_array[], array(
+                "id" => (string) $user->id,
                 "username" => $user->username
             ));
             $ourArray = array(
@@ -1023,9 +1041,9 @@ class Json_Data
                 "user" => $user_array
             );
 
-            array_push($JSON['timeline'], $ourArray);
+            array_push($JSON, $ourArray);
         }
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode(array("activity" => $JSON), JSON_PRETTY_PRINT);
     } // timeline
 }

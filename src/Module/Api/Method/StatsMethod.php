@@ -38,8 +38,14 @@ use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Session;
 
+/**
+ * Class StatsMethod
+ * @package Lib\ApiMethods
+ */
 final class StatsMethod
 {
+    private const ACTION = 'stats';
+
     /**
      * stats
      * MINIMUM_API_VERSION=380001
@@ -58,9 +64,9 @@ final class StatsMethod
      * limit    = (integer) //optional
      * @return boolean
      */
-    public static function stats($input)
+    public static function stats(array $input)
     {
-        if (!Api::check_parameter($input, array('type', 'filter'), 'stats')) {
+        if (!Api::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;
         }
         // set a default user
@@ -75,7 +81,7 @@ final class StatsMethod
             $user    = new User($user_id);
         }
         // moved type to filter and allowed multiple type selection
-        $type   = $input['type'];
+        $type   = (string) $input['type'];
         $offset = (int) $input['offset'];
         $limit  = (int) $input['limit'];
         // original method only searched albums and had poor method inputs
@@ -90,33 +96,33 @@ final class StatsMethod
         $results = array();
         switch ($input['filter']) {
             case 'newest':
-                debug_event('api.class', 'stats newest', 5);
+                debug_event(self::class, 'stats newest', 5);
                 $results = Stats::get_newest($type, $limit, $offset);
                 break;
             case 'highest':
-                debug_event('api.class', 'stats highest', 4);
+                debug_event(self::class, 'stats highest', 4);
                 $results = Rating::get_highest($type, $limit, $offset);
                 break;
             case 'frequent':
-                debug_event('api.class', 'stats frequent', 4);
+                debug_event(self::class, 'stats frequent', 4);
                 $threshold = AmpConfig::get('stats_threshold');
                 $results   = Stats::get_top($type, $limit, $threshold, $offset);
                 break;
             case 'recent':
             case 'forgotten':
-                debug_event('api.class', 'stats ' . $input['filter'], 4);
+                debug_event(self::class, 'stats ' . $input['filter'], 4);
                 $newest  = $input['filter'] == 'recent';
                 $results = ($user->id)
                     ? $user->get_recently_played($limit, $type, $newest)
                     : Stats::get_recent($type, $limit, $offset, $newest);
                 break;
             case 'flagged':
-                debug_event('api.class', 'stats flagged', 4);
+                debug_event(self::class, 'stats flagged', 4);
                 $results = Userflag::get_latest($type, $user_id, $limit, $offset);
                 break;
             case 'random':
             default:
-                debug_event('api.class', 'stats random ' . $type, 4);
+                debug_event(self::class, 'stats random ' . $type, 4);
                 switch ($type) {
                     case 'song':
                         $results = Random::get_default($limit, $user_id);
@@ -128,43 +134,42 @@ final class StatsMethod
                         $results = Album::get_random($limit, false, $user_id);
                 }
         }
+        if (empty($results)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
 
-        if (!empty($results)) {
-            ob_end_clean();
-            debug_event('api.class', 'stats found results searching for ' . $type, 5);
-            if ($type === 'song') {
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo JSON_Data::songs($results, $user->id);
-                        break;
-                    default:
-                        echo XML_Data::songs($results, $user->id);
-                }
-            }
-            if ($type === 'artist') {
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo JSON_Data::artists($results, array(), $user->id);
-                        break;
-                    default:
-                        echo XML_Data::artists($results, array(), $user->id);
-                }
-            }
-            if ($type === 'album') {
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo JSON_Data::albums($results, array(), $user->id);
-                        break;
-                    default:
-                        echo XML_Data::albums($results, array(), $user->id);
-                }
-            }
-            Session::extend($input['auth']);
-
-            return true;
+            return false;
         }
-        Api::message('error', 'No Results', '404', $input['api_format']);
+        ob_end_clean();
+        debug_event(self::class, 'stats found results searching for ' . $type, 5);
+        if ($type === 'song') {
+            switch ($input['api_format']) {
+                case 'json':
+                    echo JSON_Data::songs($results, $user->id);
+                    break;
+                default:
+                    echo XML_Data::songs($results, $user->id);
+            }
+        }
+        if ($type === 'artist') {
+            switch ($input['api_format']) {
+                case 'json':
+                    echo JSON_Data::artists($results, array(), $user->id);
+                    break;
+                default:
+                    echo XML_Data::artists($results, array(), $user->id);
+            }
+        }
+        if ($type === 'album') {
+            switch ($input['api_format']) {
+                case 'json':
+                    echo JSON_Data::albums($results, array(), $user->id);
+                    break;
+                default:
+                    echo XML_Data::albums($results, array(), $user->id);
+            }
+        }
+        Session::extend($input['auth']);
 
-        return false;
+        return true;
     }
 }

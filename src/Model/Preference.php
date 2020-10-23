@@ -37,6 +37,100 @@ class Preference extends database_object
     protected const DB_TABLENAME = 'preference';
 
     /**
+     * This array contains System preferences that can (should) not be edited or deleted from the api
+     */
+    public const SYSTEM_LIST = array(
+        'ajax_load',
+        'album_group',
+        'album_release_type',
+        'album_release_type_sort',
+        'album_sort',
+        'allow_democratic_playback',
+        'allow_localplay_playback',
+        'allow_personal_info_agent',
+        'allow_personal_info_now',
+        'allow_personal_info_recent',
+        'allow_personal_info_time',
+        'allow_stream_playback',
+        'allow_upload',
+        'allow_video',
+        'autoupdate',
+        'autoupdate_lastcheck',
+        'autoupdate_lastversion',
+        'autoupdate_lastversion_new',
+        'broadcast_by_default',
+        'browser_notify',
+        'browser_notify_timeout',
+        'concerts_limit_future',
+        'concerts_limit_past',
+        'custom_favicon',
+        'custom_login_logo',
+        'custom_logo',
+        'custom_text_footer',
+        'daap_backend',
+        'daap_pass',
+        'demo_clear_sessions',
+        'direct_play_limit',
+        'disabled_custom_metadata_fields',
+        'disabled_custom_metadata_fields_input',
+        'download',
+        'force_http_play',
+        'geolocation',
+        'home_moment_albums',
+        'home_moment_videos',
+        'home_now_playing',
+        'home_recently_played',
+        'httpq_active',
+        'lang',
+        'lastfm_challenge',
+        'lastfm_grant_link',
+        'localplay_controller',
+        'localplay_level',
+        'lock_songs',
+        'mpd_active',
+        'notify_email',
+        'now_playing_per_user',
+        'offset_limit',
+        'play_type',
+        'playlist_method',
+        'playlist_type',
+        'podcast_keep',
+        'podcast_new_download',
+        'popular_threshold',
+        'rate_limit',
+        'share',
+        'share_expire',
+        'show_donate',
+        'show_lyrics',
+        'show_played_times',
+        'site_title',
+        'slideshow_time',
+        'song_page_title',
+        'stats_threshold',
+        'stream_beautiful_url',
+        'subsonic_backend',
+        'theme_color',
+        'theme_name',
+        'topmenu',
+        'transcode',
+        'transcode_bitrate',
+        'ui_fixed',
+        'upload_allow_edit',
+        'upload_allow_remove',
+        'upload_catalog',
+        'upload_script',
+        'upload_subdir',
+        'upload_user_artist',
+        'upnp_backend',
+        'webdav_backend',
+        'webplayer_aurora',
+        'webplayer_confirmclose',
+        'webplayer_flash',
+        'webplayer_html5',
+        'webplayer_pausetabs'
+    );
+
+    /**
      * __constructor
      * This does nothing... amazing isn't it!
      */
@@ -365,9 +459,9 @@ class Preference extends database_object
         if ($subcategory !== null) {
             $subcategory = strtolower((string)$subcategory);
         }
-        $sql        = "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) " . "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql,
-            array($name, $description, $default, (int)($level), $type, $category, $subcategory));
+        $sql = "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) " .
+            "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $db_results = Dba::write($sql, array($name, $description, $default, (int) $level, $type, $category, $subcategory));
 
         if (!$db_results) {
             return false;
@@ -393,7 +487,7 @@ class Preference extends database_object
     /**
      * delete
      * This deletes the specified preference, a name or a ID can be passed
-     * @param $preference
+     * @param string|integer $preference
      */
     public static function delete($preference)
     {

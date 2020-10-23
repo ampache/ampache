@@ -31,8 +31,14 @@ use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class LastShoutsMethod
+ * @package Lib\ApiMethods
+ */
 final class LastShoutsMethod
 {
+    private const ACTION = 'last_shouts';
+
     /**
      * last_shouts
      * MINIMUM_API_VERSION=380001
@@ -44,14 +50,14 @@ final class LastShoutsMethod
      * limit = (integer) $limit //optional
      * @return boolean
      */
-    public static function last_shouts($input)
+    public static function last_shouts(array $input)
     {
         if (!AmpConfig::get('sociable')) {
-            Api::message('error', T_('Access Denied: social features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_parameter($input, array('username'), 'last_shouts')) {
+        if (!Api::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
         $limit = (int) ($input['limit']);

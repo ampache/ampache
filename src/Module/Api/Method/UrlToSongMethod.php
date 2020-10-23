@@ -32,8 +32,14 @@ use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Session;
 
+/**
+ * Class UrlToSongMethod
+ * @package Lib\ApiMethods
+ */
 final class UrlToSongMethod
 {
+    private const ACTION = 'url_to_song';
+
     /**
      * url_to_song
      * MINIMUM_API_VERSION=380001
@@ -44,13 +50,18 @@ final class UrlToSongMethod
      * url = (string) $url
      * @return boolean
      */
-    public static function url_to_song($input)
+    public static function url_to_song(array $input)
     {
-        if (!Api::check_parameter($input, array('url'), 'url_to_song')) {
+        if (!Api::check_parameter($input, array('url'), self::ACTION)) {
             return false;
         }
         // Don't scrub, the function needs her raw and juicy
         $data = Stream_URL::parse($input['url']);
+        if (empty($data['id'])) {
+            Api::error(T_('Bad Request'), '4710', self::ACTION, 'url', $input['api_format']);
+
+            return false;
+        }
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         switch ($input['api_format']) {

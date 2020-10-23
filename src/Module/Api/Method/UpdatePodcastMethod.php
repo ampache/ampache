@@ -29,8 +29,14 @@ use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Session;
 
+/**
+ * Class UpdatePodcastMethod
+ * @package Lib\ApiMethods
+ */
 final class UpdatePodcastMethod
 {
+    private const ACTION = 'update_podcast';
+
     /**
      * update_podcast
      * MINIMUM_API_VERSION=420000
@@ -41,25 +47,27 @@ final class UpdatePodcastMethod
      * filter = (string) UID of podcast
      * @return boolean
      */
-    public static function update_podcast($input)
+    public static function update_podcast(array $input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'update_podcast')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        if (!Api::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, 'update_podcast', $input['api_format'])) {
+
+        if (!Api::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $object_id = (int) scrub_in($input['filter']);
+        $object_id = (int) $input['filter'];
         $podcast   = new Podcast($object_id);
         if ($podcast->id > 0) {
             if ($podcast->sync_episodes(true)) {
-                Api::message('success', 'Synced episodes for podcast: ' . (string) $object_id, null, $input['api_format']);
+                Api::message('Synced episodes for podcast: ' . (string) $object_id, $input['api_format']);
                 Session::extend($input['auth']);
             } else {
-                Api::message('error', T_('Failed to sync episodes for podcast: ' . (string) $object_id), '400', $input['api_format']);
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'podcast', $input['api_format']);
             }
         } else {
-            Api::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
         }
         Session::extend($input['auth']);
 

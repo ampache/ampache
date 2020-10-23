@@ -30,8 +30,14 @@ use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Session;
 
+/**
+ * Class UpdateArtMethod
+ * @package Lib\ApiMethods
+ */
 final class UpdateArtMethod
 {
+    private const ACTION = 'update_art';
+
     /**
      * update_art
      * MINIMUM_API_VERSION=400001
@@ -45,38 +51,42 @@ final class UpdateArtMethod
      * overwrite = (integer) 0,1 //optional
      * @return boolean
      */
-    public static function update_art($input)
+    public static function update_art(array $input)
     {
-        if (!Api::check_parameter($input, array('type', 'id'), 'update_art')) {
+        if (!Api::check_parameter($input, array('type', 'id'), self::ACTION)) {
             return false;
         }
-        if (!Api::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, 'update_art', $input['api_format'])) {
+
+        if (!Api::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         $type      = (string) $input['type'];
-        $object    = (int) $input['id'];
+        $object_id = (int) $input['id'];
         $overwrite = (int) $input['overwrite'] == 0;
-        $art_url   = AmpConfig::get('web_path') . '/image.php?object_id=' . $object . '&object_type=artist&auth=' . $input['auth'];
+        $art_url   = AmpConfig::get('web_path') . '/image.php?object_id=' . $object_id . '&object_type=artist&auth=' . $input['auth'];
 
         // confirm the correct data
         if (!in_array($type, array('artist', 'album'))) {
-            Api::message('error', T_('Incorrect object type') . ' ' . $type, '400', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return true;
         }
-        $item = new $type($object);
+        $item = new $type($object_id);
         if (!$item->id) {
-            Api::message('error', T_('The requested item was not found'), '404', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
 
-            return true;
+            return false;
         }
         // update your object
-        if (Catalog::gather_art_item($type, $object, $overwrite, true)) {
-            Api::message('success', 'Gathered new art for: ' . (string) $object . ' (' . $type . ')', null, $input['api_format'], array('art' => $art_url));
+
+        if (Catalog::gather_art_item($type, $object_id, $overwrite, true)) {
+            Api::message('Gathered new art for: ' . (string) $object_id . ' (' . $type . ')', $input['api_format'], array('art' => $art_url));
 
             return true;
         }
-        Api::message('error', T_('Failed to update_art for ' . (string) $object), '400', $input['api_format']);
+        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+        Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
         Session::extend($input['auth']);
 
         return true;

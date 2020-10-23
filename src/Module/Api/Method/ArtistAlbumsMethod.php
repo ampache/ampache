@@ -32,8 +32,14 @@ use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class ArtistAlbumsMethod
+ * @package Lib\ApiMethods
+ */
 final class ArtistAlbumsMethod
 {
+    private const ACTION = 'artist_albums';
+
     /**
      * artist_albums
      * MINIMUM_API_VERSION=380001
@@ -46,14 +52,26 @@ final class ArtistAlbumsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function artist_albums($input)
+    public static function artist_albums(array $input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'artist_albums')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $artist = new Artist($input['filter']);
+        $object_id = (int) $input['filter'];
+        $artist    = new Artist($object_id);
+        if (!$artist->id) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
         $albums = $artist->get_albums();
         $user   = User::get_from_username(Session::username($input['auth']));
+        if (empty($albums)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {

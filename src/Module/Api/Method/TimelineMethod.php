@@ -33,8 +33,14 @@ use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class TimelineMethod
+ * @package Lib\ApiMethods
+ */
 final class TimelineMethod
 {
+    private const ACTION = 'timeline';
+
     /**
      * timeline
      * MINIMUM_API_VERSION=380001
@@ -47,10 +53,10 @@ final class TimelineMethod
      * since    = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function timeline($input)
+    public static function timeline(array $input)
     {
         if (AmpConfig::get('sociable')) {
-            if (!Api::check_parameter($input, array('username'), 'timeline')) {
+            if (!Api::check_parameter($input, array('username'), self::ACTION)) {
                 return false;
             }
             $username = $input['username'];
@@ -74,7 +80,7 @@ final class TimelineMethod
                 }
             }
         } else {
-            debug_event('api.class', 'Sociable feature is not enabled.', 3);
+            debug_event(self::class, 'Sociable feature is not enabled.', 3);
         }
         Session::extend($input['auth']);
 

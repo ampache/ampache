@@ -32,8 +32,14 @@ use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class ArtistSongsMethod
+ * @package Lib\ApiMethods
+ */
 final class ArtistSongsMethod
 {
+    private const ACTION = 'artist_songs';
+
     /**
      * artist_songs
      * MINIMUM_API_VERSION=380001
@@ -46,28 +52,38 @@ final class ArtistSongsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function artist_songs($input)
+    public static function artist_songs(array $input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'artist_songs')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $artist = new Artist($input['filter']);
+        $object_id = (int) $input['filter'];
+        $artist    = new Artist($object_id);
+        if (!$artist->id) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
         $songs  = $artist->get_songs();
         $user   = User::get_from_username(Session::username($input['auth']));
+        if (empty($songs)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
 
-        if (!empty($songs)) {
-            ob_end_clean();
-            switch ($input['api_format']) {
-                case 'json':
-                    JSON_Data::set_offset($input['offset']);
-                    JSON_Data::set_limit($input['limit']);
-                    echo JSON_Data::songs($songs, $user->id);
-                    break;
-                default:
-                    XML_Data::set_offset($input['offset']);
-                    XML_Data::set_limit($input['limit']);
-                    echo XML_Data::songs($songs, $user->id);
-            }
+            return false;
+        }
+
+        ob_end_clean();
+        switch ($input['api_format']) {
+            case 'json':
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
+                echo JSON_Data::songs($songs, $user->id);
+                break;
+            default:
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+                echo XML_Data::songs($songs, $user->id);
         }
         Session::extend($input['auth']);
 

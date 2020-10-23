@@ -31,12 +31,18 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Session;
 
+/**
+ * Class LocalplayMethod
+ * @package Lib\ApiMethods
+ */
 final class LocalplayMethod
 {
+    private const ACTION = 'localplay';
+
     /**
      * localplay
      * MINIMUM_API_VERSION=380001
-     * CHANGED_IN_API_VERSION=430000
+     * CHANGED_IN_API_VERSION=5.0.0
      *
      * This is for controlling Localplay
      *
@@ -45,15 +51,16 @@ final class LocalplayMethod
      * oid     = (integer) object_id //optional
      * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream' //optional
      * clear   = (integer) 0,1 Clear the current playlist before adding //optional
-     * @return bool
+     * @return boolean
      */
-    public static function localplay($input)
+    public static function localplay(array $input)
     {
-        if (!Api::check_parameter($input, array('command'), 'localplay')) {
+        if (!Api::check_parameter($input, array('command'), self::ACTION)) {
             return false;
         }
         // Load their Localplay instance
-        $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
+
+        $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->connect();
 
         $result = false;
@@ -61,16 +68,16 @@ final class LocalplayMethod
         switch ($input['command']) {
             case 'add':
                 // for add commands get the object details
-                $oid   = (int) $input['oid'];
-                $type  = $input['type'] ? (string) $input['type'] : 'Song';
-                $clear = (int) $input['clear'];
+                $object_id   = (int) $input['oid'];
+                $type        = $input['type'] ? (string) $input['type'] : 'Song';
+                $clear       = (int) $input['clear'];
                 // clear before the add
                 if ($clear == 1) {
                     $localplay->delete_all();
                 }
                 $media = array(
                     'object_type' => $type,
-                    'object_id' => $oid,
+                    'object_id' => $object_id,
                 );
                 $playlist = new Stream_Playlist();
                 $playlist->add(array($media));
@@ -79,6 +86,7 @@ final class LocalplayMethod
                 }
                 break;
             case 'next':
+            case 'skip':
                 $result = $localplay->next();
                 break;
             case 'prev':
@@ -103,17 +111,14 @@ final class LocalplayMethod
                 $result = $localplay->volume_mute();
                 break;
             case 'delete_all':
-                $result = $localplay->volume_down();
-                break;
-            case 'skip':
-                $result = $localplay->volume_mute();
+                $result = $localplay->delete_all();
                 break;
             case 'status':
                 $status = $localplay->status();
                 break;
             default:
                 // They are doing it wrong
-                Api::message('error', T_('Invalid request'), '400', $input['api_format']);
+                Api::error(T_('Bad Request'), '4710', self::ACTION, 'command', $input['api_format']);
 
                 return false;
         } // end switch on command

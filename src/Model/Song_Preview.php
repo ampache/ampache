@@ -340,11 +340,10 @@ class Song_Preview extends database_object implements Media, playable_item
     } // play_url
 
     /**
-     * @return null
+     * stream
      */
     public function stream()
     {
-        $data = null;
         foreach (Plugin::get_plugins('stream_song_preview') as $plugin_name) {
             $plugin = new Plugin($plugin_name);
             if ($plugin->load(Core::get_global('user'))) {
@@ -353,8 +352,6 @@ class Song_Preview extends database_object implements Media, playable_item
                 }
             }
         }
-
-        return $data;
     }
 
     /**

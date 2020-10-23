@@ -32,8 +32,14 @@ use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
-final class AlbumSongsMethod
+/**
+ * Class AlbumSongsMethod
+ * @package Lib\ApiMethods
+ */
+class AlbumSongsMethod
 {
+    private const ACTION = 'album_songs';
+
     /**
      * album_songs
      * MINIMUM_API_VERSION=380001
@@ -46,18 +52,24 @@ final class AlbumSongsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function album_songs($input)
+    public static function album_songs(array $input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'album_songs')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $album = new Album($input['filter']);
-        $songs = array();
-        $user  = User::get_from_username(Session::username($input['auth']));
+        $object_id = (int) $input['filter'];
+        $album     = new Album($object_id);
+        if (!$album->id) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
 
         ob_end_clean();
-
         // songs for all disks
+        $songs = array();
+        $user  = User::get_from_username(Session::username($input['auth']));
         if (AmpConfig::get('album_group')) {
             $disc_ids = $album->get_group_disks_ids();
             foreach ($disc_ids as $discid) {
@@ -71,18 +83,21 @@ final class AlbumSongsMethod
             // songs for just this disk
             $songs = $album->get_songs();
         }
-        if (!empty($songs)) {
-            switch ($input['api_format']) {
-                case 'json':
-                    JSON_Data::set_offset($input['offset']);
-                    JSON_Data::set_limit($input['limit']);
-                    echo JSON_Data::songs($songs, $user->id);
-                    break;
-                default:
-                    XML_Data::set_offset($input['offset']);
-                    XML_Data::set_limit($input['limit']);
-                    echo XML_Data::songs($songs, $user->id);
-            }
+        if (empty($songs)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
+        switch ($input['api_format']) {
+            case 'json':
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
+                echo JSON_Data::songs($songs, $user->id);
+                break;
+            default:
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+                echo XML_Data::songs($songs, $user->id);
         }
         Session::extend($input['auth']);
 

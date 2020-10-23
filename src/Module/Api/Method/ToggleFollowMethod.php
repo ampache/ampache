@@ -29,8 +29,14 @@ use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Session;
 
+/**
+ * Class ToggleFollowMethod
+ * @package Lib\ApiMethods
+ */
 final class ToggleFollowMethod
 {
+    private const ACTION = 'toggle_follow';
+
     /**
      * toggle_follow
      * MINIMUM_API_VERSION=380001
@@ -41,14 +47,14 @@ final class ToggleFollowMethod
      * username = (string) $username
      * @return boolean
      */
-    public static function toggle_follow($input)
+    public static function toggle_follow(array $input)
     {
         if (!AmpConfig::get('sociable')) {
-            Api::message('error', T_('Access Denied: social features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_parameter($input, array('username'), 'toggle_follow')) {
+        if (!Api::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
         $username = $input['username'];
@@ -57,7 +63,7 @@ final class ToggleFollowMethod
             if ($user !== null) {
                 User::get_from_username(Session::username($input['auth']))->toggle_follow($user->id);
                 ob_end_clean();
-                Api::message('success', 'follow toggled for: ' . $user->id, null, $input['api_format']);
+                Api::message('follow toggled for: ' . $user->id, $input['api_format']);
             }
         }
         Session::extend($input['auth']);

@@ -30,8 +30,14 @@ use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Session;
 
+/**
+ * Class ScrobbleMethod
+ * @package Lib\ApiMethods
+ */
 final class ScrobbleMethod
 {
+    private const ACTION = 'scrobble';
+
     /**
      * scrobble
      * MINIMUM_API_VERSION=400001
@@ -50,9 +56,9 @@ final class ScrobbleMethod
      * client     = (string)  $agent //optional
      * @return boolean
      */
-    public static function scrobble($input)
+    public static function scrobble(array $input)
     {
-        if (!Api::check_parameter($input, array('song', 'artist', 'album'), 'scrobble')) {
+        if (!Api::check_parameter($input, array('song', 'artist', 'album'), self::ACTION)) {
             return false;
         }
         ob_end_clean();
@@ -70,15 +76,16 @@ final class ScrobbleMethod
 
         // validate supplied user
         if ($valid === false) {
-            Api::message('error', T_('User_id not found'), '404', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $user_id), '4704', self::ACTION, 'empty', $input['api_format']);
 
             return false;
         }
 
         // validate minimum required options
-        debug_event('api.class', 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 4);
+        debug_event(self::class, 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 4);
         if (!$song_name || !$album_name || !$artist_name) {
-            Api::message('error', T_('Invalid input options'), '400', $input['api_format']);
+            Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);
 
             return false;
         }
@@ -90,15 +97,16 @@ final class ScrobbleMethod
         $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, (string) $song_mbid, (string) $artist_mbid, (string) $album_mbid);
 
         if ($scrobble_id === '') {
-            Api::message('error', T_('Failed to scrobble: No item found!'), '404', $input['api_format']);
+            Api::error(T_('Not Found'), '4704', self::ACTION, 'song', $input['api_format']);
         } else {
             $item = new Song((int) $scrobble_id);
             if (!$item->id) {
-                Api::message('error', T_('Library item not found'), '404', $input['api_format']);
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                Api::error(sprintf(T_('Not Found: %s'), $scrobble_id), '4704', self::ACTION, 'song', $input['api_format']);
 
                 return false;
             }
-            debug_event('api.class', 'scrobble: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
+            debug_event(self::class, 'scrobble: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
             // internal scrobbling (user_activity and object_count tables)
             $item->set_played($user_id, $agent, array(), $date);
@@ -106,7 +114,7 @@ final class ScrobbleMethod
             // scrobble plugins
             User::save_mediaplay($user, $item);
 
-            Api::message('success', 'successfully scrobbled: ' . $scrobble_id, null, $input['api_format']);
+            Api::message('successfully scrobbled: ' . $scrobble_id, $input['api_format']);
         }
         Session::extend($input['auth']);
 

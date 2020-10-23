@@ -1,4 +1,5 @@
 <?php
+
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -31,41 +32,55 @@ use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
 /**
- * Class SystemPreferenceMethod
+ * Class PreferenceEditMethod
  * @package Lib\ApiMethods
  */
-final class SystemPreferenceMethod
+final class PreferenceEditMethod
 {
-    private const ACTION = 'system_preference';
+    private const ACTION = 'preference_edit';
 
     /**
-     * system_preference
+     * preference_edit
      * MINIMUM_API_VERSION=5.0.0
      *
-     * Get your system preferences by name
+     * Edit a preference value and apply to all users if allowed
      *
      * @param array $input
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
+     * value  = (string|integer) Preference value
+     * all    = (boolean) apply to all users //optional
      * @return boolean
      */
-    public static function system_preference(array $input)
+    public static function preference_edit(array $input)
     {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, array('filter', 'value'), self::ACTION)) {
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
-        if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
+        $all  = (int) $input['all'] == 1;
+        // don't apply to all when you aren't an admin
+        if ($all && !Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
+        // fix preferences that are missing for user
+        User::fix_preferences($user->id);
+
         $pref_name  = (string) $input['filter'];
-        $preference = Preference::get($pref_name, -1);
+        $preference = Preference::get($pref_name, $user->id);
         if (empty($preference)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $pref_name), '4704', self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
-        $output_array = array('preference' => $preference);
+        $value = $input['value'];
+        if (!Preference::update($pref_name, $value, $all)) {
+            Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+        $preference   = Preference::get($pref_name, $user->id);
+        $output_array =  array('preference' => $preference);
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($output_array, JSON_PRETTY_PRINT);

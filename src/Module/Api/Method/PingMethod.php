@@ -30,6 +30,10 @@ use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 
+/**
+ * Class PingMethod
+ * @package Lib\ApiMethods
+ */
 final class PingMethod
 {
 
@@ -43,17 +47,17 @@ final class PingMethod
      * @param array $input
      * auth = (string) //optional
      */
-    public static function ping($input)
+    public static function ping(array $input)
     {
         $xmldata = array('server' => AmpConfig::get('version'), 'version' => Api::$version, 'compatible' => '350001');
 
         // Check and see if we should extend the api sessions (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
             Session::extend($input['auth']);
-            $xmldata = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length') - 60)), $xmldata);
+            $xmldata = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length') - 60)), $xmldata, Api::server_details($input['auth']));
         }
 
-        debug_event('api.class', 'Ping Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
+        debug_event(self::class, 'Ping Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
 
         ob_end_clean();
         switch ($input['api_format']) {

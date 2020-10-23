@@ -385,6 +385,7 @@ class Label extends database_object implements library_item
     }
 
     /**
+     * garbage_collection
      * @return mixed|void
      */
     public static function garbage_collection()
@@ -393,7 +394,8 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @return array
+     * get_artists
+     * @return integer[]
      */
     public function get_artists()
     {
@@ -401,7 +403,7 @@ class Label extends database_object implements library_item
         $db_results = Dba::read($sql, array($this->id));
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['artist'];
+            $results[] = (int) $row['artist'];
         }
 
         return $results;

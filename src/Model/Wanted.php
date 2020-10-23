@@ -121,6 +121,7 @@ class Wanted extends database_object
      * @param Artist|null $artist
      * @param string $mbid
      * @return array
+     * @throws \MusicBrainz\Exception
      */
     public static function get_missing_albums($artist, $mbid = '')
     {
@@ -249,6 +250,7 @@ class Wanted extends database_object
      * search_missing_artists
      * @param string $name
      * @return array
+     * @throws \MusicBrainz\Exception
      */
     public static function search_missing_artists($name)
     {
@@ -319,6 +321,7 @@ class Wanted extends database_object
     /**
      * Delete a wanted release by mbid.
      * @param string $mbid
+     * @throws \MusicBrainz\Exception
      */
     public static function delete_wanted_release($mbid)
     {

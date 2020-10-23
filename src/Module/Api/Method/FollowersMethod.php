@@ -31,8 +31,13 @@ use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class FollowersMethod
+ * @package Lib\ApiMethods
+ */
 final class FollowersMethod
 {
+    private const ACTION = 'followers';
 
     /**
      * followers
@@ -46,36 +51,38 @@ final class FollowersMethod
      * username = (string) $username
      * @return boolean
      */
-    public static function followers($input)
+    public static function followers(array $input)
     {
         if (!AmpConfig::get('sociable')) {
-            Api::message('error', T_('Access Denied: social features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_parameter($input, array('username'), 'followers')) {
+        if (!Api::check_parameter($input, array('username'), self::ACTION)) {
             return false;
         }
         $username = $input['username'];
-        if (!empty($username)) {
-            $user = User::get_from_username($username);
-            if ($user !== null) {
-                $users    = $user->get_followers();
-                if (!count($users)) {
-                    Api::message('error', 'User `' . $username . '` has no followers.', '404', $input['api_format']);
-                } else {
-                    ob_end_clean();
-                    switch ($input['api_format']) {
-                        case 'json':
-                            echo JSON_Data::users($users);
-                            break;
-                        default:
-                            echo XML_Data::users($users);
-                    }
-                }
-            } else {
-                debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
-                Api::message('error', 'User `' . $username . '` cannot be found.', '404', $input['api_format']);
+
+        $user     = User::get_from_username($username);
+        if (!$user->id) {
+            debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'username', $input['api_format']);
+
+            return false;
+        }
+
+        $users = $user->get_followers();
+        if (!count($users)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+        } else {
+            ob_end_clean();
+            switch ($input['api_format']) {
+                case 'json':
+                    echo JSON_Data::users($users);
+                    break;
+                default:
+                    echo XML_Data::users($users);
             }
         }
         Session::extend($input['auth']);

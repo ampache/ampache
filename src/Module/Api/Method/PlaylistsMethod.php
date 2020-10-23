@@ -27,13 +27,20 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Model\Playlist;
 use Ampache\Model\User;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Session;
 
+/**
+ * Class PlaylistsMethod
+ * @package Lib\ApiMethods
+ */
 final class PlaylistsMethod
 {
+    const ACTION = 'playlists';
+
     /**
      * playlists
      * MINIMUM_API_VERSION=380001
@@ -47,8 +54,9 @@ final class PlaylistsMethod
      * update = self::set_filter(date) //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * @return boolean
      */
-    public static function playlists($input)
+    public static function playlists(array $input)
     {
         $user   = User::get_from_username(Session::username($input['auth']));
         $method = $input['exact'] ? false : true;
@@ -59,6 +67,11 @@ final class PlaylistsMethod
         $playlist_ids = Playlist::get_playlists($public, $userid, (string) $input['filter'], $method);
         // merge with the smartlists
         $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($public, $userid, (string) $input['filter'], $method));
+        if (empty($playlist_ids)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -73,5 +86,7 @@ final class PlaylistsMethod
                 echo XML_Data::playlists($playlist_ids);
         }
         Session::extend($input['auth']);
+
+        return true;
     }
 }

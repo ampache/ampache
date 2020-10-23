@@ -28,12 +28,17 @@ use Ampache\Config\AmpConfig;
 use Ampache\Model\Rating;
 use Ampache\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
+/**
+ * Class RateMethod
+ * @package Lib\ApiMethods
+ */
 final class RateMethod
 {
+    private const ACTION = 'rate';
+
     /**
      * rate
      * MINIMUM_API_VERSION=380001
@@ -46,45 +51,48 @@ final class RateMethod
      * rating = (integer) 0,1|2|3|4|5 $rating
      * @return boolean|void
      */
-    public static function rate($input)
+    public static function rate(array $input)
     {
         if (!AmpConfig::get('ratings')) {
-            Api::message('error', T_('Access Denied: Rating features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: ratings'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_parameter($input, array('type', 'id', 'rating'), 'rate')) {
+        if (!Api::check_parameter($input, array('type', 'id', 'rating'), self::ACTION)) {
             return false;
         }
         ob_end_clean();
         $type      = (string) $input['type'];
-        $object_id = $input['id'];
-        $rating    = $input['rating'];
+
+        $object_id = (int) $input['id'];
+        $rating    = (string) $input['rating'];
         $user      = User::get_from_username(Session::username($input['auth']));
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist'))) {
-            Api::message('error', T_('Incorrect object type') . ' ' . $type, '400', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
         if (!in_array($rating, array('0', '1', '2', '3', '4', '5'))) {
-            Api::message('error', T_('Ratings must be between [0-5]. ' . $rating . ' is invalid'), '400', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Bad Request: %s'), $rating), '4710', self::ACTION, 'rating', $input['api_format']);
 
             return false;
         }
 
         if (!ObjectTypeToClassNameMapper::map($type) || !$object_id) {
-            Api::message('error', T_('Wrong library item type'), '400', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
         } else {
             $item = new $type($object_id);
             if (!$item->id) {
-                Api::message('error', T_('Library item not found'), '404', $input['api_format']);
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
 
                 return false;
             }
             $rate = new Rating($object_id, $type);
             $rate->set_rating($rating, $user->id);
-            Api::message('success', 'rating set to ' . $rating . ' for ' . $object_id, null, $input['api_format']);
+            Api::message('rating set to ' . $rating . ' for ' . $object_id, $input['api_format']);
         }
         Session::extend($input['auth']);
 

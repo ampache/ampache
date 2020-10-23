@@ -29,8 +29,14 @@ use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Session;
 
+/**
+ * Class DownloadMethod
+ * @package Lib\ApiMethods
+ */
 final class DownloadMethod
 {
+    private const ACTION = 'download';
+
     /**
      * download
      * MINIMUM_API_VERSION=400001
@@ -43,16 +49,16 @@ final class DownloadMethod
      * format = (string) 'mp3', 'ogg', etc //optional
      * @return boolean
      */
-    public static function download($input)
+    public static function download(array $input)
     {
-        if (!Api::check_parameter($input, array('id', 'type'), 'download')) {
+        if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
             return false;
         }
-        $fileid   = $input['id'];
-        $type     = $input['type'];
-        $format   = $input['format'];
-        $original = $format && $format != 'raw';
-        $user_id  = User::get_from_username(Session::username($input['auth']))->id;
+        $object_id = (int) $input['id'];
+        $type      = (string) $input['type'];
+        $format    = $input['format'];
+        $original  = $format && $format != 'raw';
+        $user_id   = User::get_from_username(Session::username($input['auth']))->id;
 
         $url    = '';
         $params = '&action=download' . '&client=api' . '&cache=1';
@@ -63,17 +69,19 @@ final class DownloadMethod
             $params .= '&format=' . $format;
         }
         if ($type == 'song') {
-            $url = Song::generic_play_url('song', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
+            $url = Song::generic_play_url('song', $object_id, $params, 'api', function_exists('curl_version'), $user_id, $original);
         }
         if ($type == 'podcast') {
-            $url = Song::generic_play_url('podcast_episode', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
+            $url = Song::generic_play_url('podcast_episode', $object_id, $params, 'api', function_exists('curl_version'), $user_id, $original);
         }
         if (!empty($url)) {
             header('Location: ' . str_replace(':443/play', '/play', $url));
 
             return true;
         }
-        Api::message('error', 'failed to create: ' . $url, '400', $input['api_format']);
+
+        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+        Api::error(sprintf(T_('Bad Request: %s'), $url), '4710', self::ACTION, 'system', $input['api_format']);
         Session::extend($input['auth']);
 
         return true;

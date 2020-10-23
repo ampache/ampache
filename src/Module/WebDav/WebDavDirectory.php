@@ -49,6 +49,7 @@ class WebDavDirectory extends DAV\Collection
     /**
      * getChildren
      * @return array
+     * @throws DAV\Exception\NotFound
      */
     public function getChildren()
     {

@@ -25,12 +25,19 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Model\Catalog;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class CatalogsMethod
+ * @package Lib\ApiMethods
+ */
 final class CatalogsMethod
 {
+    const ACTION = 'catalogs';
+
     /**
      * catalogs
      * MINIMUM_API_VERSION=420000
@@ -41,12 +48,19 @@ final class CatalogsMethod
      * filter = (string) set $filter_type //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * @return boolean
      */
-    public static function catalogs($input)
+    public static function catalogs(array $input)
     {
         // filter for specific catalog types
         $filter   = (in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
         $catalogs = Catalog::get_catalogs($filter);
+
+        if (empty($catalogs)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -61,5 +75,7 @@ final class CatalogsMethod
                 echo XML_Data::catalogs($catalogs);
         }
         Session::extend($input['auth']);
+
+        return true;
     }
 }

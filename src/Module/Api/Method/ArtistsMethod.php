@@ -31,8 +31,14 @@ use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class ArtistsMethod
+ * @package Lib\ApiMethods
+ */
 final class ArtistsMethod
 {
+    const ACTION = 'artists';
+
     /**
      * artists
      * MINIMUM_API_VERSION=380001
@@ -47,9 +53,10 @@ final class ArtistsMethod
      * update  = self::set_filter(date) //optional
      * offset  = (integer) //optional
      * limit   = (integer) //optional
-     * include = (array) 'albums', 'songs' //optional
+     * include = (array|string) 'albums', 'songs' //optional
+     * @return boolean
      */
-    public static function artists($input)
+    public static function artists(array $input)
     {
         Api::$browse->reset_filters();
         Api::$browse->set_type('artist');
@@ -62,6 +69,11 @@ final class ArtistsMethod
 
 
         $artists = Api::$browse->get_objects();
+        if (empty($artists)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
         $user    = User::get_from_username(Session::username($input['auth']));
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
 
@@ -78,5 +90,7 @@ final class ArtistsMethod
                 echo XML_Data::artists($artists, $include, $user->id);
         }
         Session::extend($input['auth']);
+
+        return true;
     }
 }

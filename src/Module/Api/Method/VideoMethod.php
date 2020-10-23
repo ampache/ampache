@@ -26,13 +26,20 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Model\User;
+use Ampache\Model\Video;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class VideoMethod
+ * @package Lib\ApiMethods
+ */
 final class VideoMethod
 {
+    private const ACTION = 'video';
+
     /**
      * video
      * This returns a single video
@@ -41,20 +48,27 @@ final class VideoMethod
      * filter = (string) UID of video
      * @return boolean
      */
-    public static function video($input)
+    public static function video(array $input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'video')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $video_id = scrub_in($input['filter']);
-        $user     = User::get_from_username(Session::username($input['auth']));
+        $object_id = (int) $input['filter'];
+        $video     = new Video($object_id);
+        if (!$video->id) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'song', $input['api_format']);
 
+            return false;
+        }
+
+        $user = User::get_from_username(Session::username($input['auth']));
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::videos(array($video_id), $user->id);
+                echo JSON_Data::videos(array($object_id), $user->id);
                 break;
             default:
-                echo XML_Data::videos(array($video_id), $user->id);
+                echo XML_Data::videos(array($object_id), $user->id);
         }
         Session::extend($input['auth']);
 

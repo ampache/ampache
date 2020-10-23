@@ -25,14 +25,21 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Model\Artist;
 use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class ArtistMethod
+ * @package Lib\ApiMethods
+ */
 final class ArtistMethod
 {
+    private const ACTION = 'artist';
+
     /**
      * artist
      * MINIMUM_API_VERSION=380001
@@ -41,23 +48,31 @@ final class ArtistMethod
      *
      * @param array $input
      * filter  = (string) Alpha-numeric search term
-     * include = (array) 'albums', 'songs' //optional
+     * include = (array|string) 'albums', 'songs' //optional
      * @return boolean
      */
-    public static function artist($input)
+    public static function artist(array $input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'artist')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $uid     = array((int) scrub_in($input['filter']));
+        $object_id = (int) $input['filter'];
+        $artist    = new Artist((int) $object_id);
+        if (!$artist->id) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
+
         $user    = User::get_from_username(Session::username($input['auth']));
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::artists($uid, $include, $user->id);
+                echo JSON_Data::artists(array($object_id), $include, $user->id);
                 break;
             default:
-                echo XML_Data::artists($uid, $include, $user->id);
+                echo XML_Data::artists(array($object_id), $include, $user->id);
         }
         Session::extend($input['auth']);
 

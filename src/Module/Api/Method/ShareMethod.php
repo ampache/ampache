@@ -31,8 +31,14 @@ use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class ShareMethod
+ * @package Lib\ApiMethods
+ */
 final class ShareMethod
 {
+    private const ACTION = 'share';
+
     /**
      * share
      * MINIMUM_API_VERSION=420000
@@ -43,14 +49,14 @@ final class ShareMethod
      * filter = (integer) Share ID number
      * @return boolean
      */
-    public static function share($input)
+    public static function share(array $input)
     {
         if (!AmpConfig::get('share')) {
-            Api::message('error', T_('Access Denied: sharing features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_parameter($input, array('filter'), 'share')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $share = array((int) $input['filter']);

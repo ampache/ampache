@@ -26,19 +26,25 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Catalog;
 use Ampache\Model\Share;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
+/**
+ * Class ShareCreateMethod
+ * @package Lib\ApiMethods
+ */
 final class ShareCreateMethod
 {
+    private const ACTION = 'share_create';
+
     /**
      * share_create
      * MINIMUM_API_VERSION=420000
@@ -52,34 +58,37 @@ final class ShareCreateMethod
      * expires     = (integer) days to keep active //optional
      * @return boolean
      */
-    public static function share_create($input)
+    public static function share_create(array $input)
     {
         if (!AmpConfig::get('share')) {
-            Api::message('error', T_('Access Denied: sharing features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_parameter($input, array('type', 'filter'), 'share_create')) {
+        if (!Api::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;
         }
         $description = $input['description'];
         $object_id   = $input['filter'];
-        $object_type = $input['type'];
+        $type        = $input['type'];
         $download    = Access::check_function('download');
         $expire_days = Share::get_expiry($input['expires']);
         // confirm the correct data
-        if (!in_array($object_type, array('song', 'album', 'artist'))) {
-            Api::message('error', T_('Wrong object type ' . $object_type), '400', $input['api_format']);
+        if (!in_array($type, array('song', 'album', 'artist'))) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
 
             return false;
         }
         $share = array();
-        if (!ObjectTypeToClassNameMapper::map($object_type) || !$object_id) {
-            Api::message('error', T_('Wrong library item type'), '400', $input['api_format']);
+        if (!ObjectTypeToClassNameMapper::map($type) || !$object_id) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
         } else {
-            $item = new $object_type($object_id);
+            $item = new $type($object_id);
             if (!$item->id) {
-                Api::message('error', T_('Library item not found'), '404', $input['api_format']);
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
 
                 return false;
             }
@@ -87,7 +96,7 @@ final class ShareCreateMethod
             global $dic;
             $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
             $share[]           = Share::create_share(
-                $object_type,
+                $type,
                 $object_id,
                 true,
                 $download,
@@ -97,6 +106,12 @@ final class ShareCreateMethod
                 $description
             );
         }
+        if (empty($share)) {
+            Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
@@ -105,6 +120,7 @@ final class ShareCreateMethod
             default:
                 echo XML_Data::shares($share);
         }
+        Catalog::count_table('share');
         Session::extend($input['auth']);
 
         return true;

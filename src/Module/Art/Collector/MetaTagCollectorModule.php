@@ -27,6 +27,7 @@ namespace Ampache\Module\Art\Collector;
 
 use Ampache\Model\Album;
 use Ampache\Model\Art;
+use Ampache\Model\Artist;
 use Ampache\Model\Song;
 use Ampache\Model\Video;
 use Ampache\Module\System\LegacyLogger;
@@ -70,8 +71,8 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
 
         if ($art->type == "video") {
             $data = $this->gatherVideoTags($art);
-        } elseif ($art->type == 'album') {
-            $data = $this->gatherSonTags($art, $limit);
+        } elseif ($art->type == 'album' || $art->type == 'artist') {
+            $data = $this->gatherSongTags($art, $limit);
         } else {
             $data = [];
         }
@@ -94,14 +95,18 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      * @param integer $limit
      * @return array
      */
-    private function gatherSonTags(Art $art, int $limit = 5): array
+    private function gatherSongTags(Art $art, int $limit = 5): array
     {
         // We need the filenames
-        $album = new Album($art->uid);
+        if ($art->type == 'album') {
+            $album = new Album($art->uid);
+            $songs = $album->get_songs();
+        } else {
+            $artist = new Artist($art->uid);
+            $songs  = $artist->get_songs();
+        }
 
-        // grab the songs and define our results
-        $songs = $album->get_songs();
-        $data  = array();
+        $data  = [];
 
         // Foreach songs in this album
         foreach ($songs as $song_id) {
@@ -145,27 +150,18 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         }
 
         if (isset($id3['id3v2']['APIC'])) {
-            // Foreach in case they have more then one
+            // Foreach in case they have more than one
             foreach ($id3['id3v2']['APIC'] as $image) {
-                $data[] = array(
-                    $mtype => $media->file,
-                    'raw' => $image['data'],
-                    'mime' => $image['mime'],
-                    'title' => 'ID3'
-                );
+                $this_picturetypeid = ($media->type == 'artist') ? 8 : 3;
+                if ($image['picturetypeid'] == $this_picturetypeid) {
+                    $data[] = [
+                        $mtype => $media->file,
+                        'raw' => $image['data'],
+                        'mime' => $image['mime'],
+                        'title' => 'ID3'
+                    ];
+                }
             }
-        }
-
-        if (isset($id3['comments']['picture']['0'])) {
-            $image  = $id3['comments']['picture']['0'];
-            $data[] = array(
-                $mtype => $media->file,
-                'raw' => $image['data'],
-                'mime' => $image['image_mime'],
-                'title' => 'ID3'
-            );
-
-            return $data;
         }
 
         return $data;

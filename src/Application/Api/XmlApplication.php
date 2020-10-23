@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=0);
-
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -22,6 +20,8 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+declare(strict_types=0);
 
 namespace Ampache\Application\Api;
 
@@ -51,19 +51,19 @@ final class XmlApplication implements ApplicationInterface
         if (!AmpConfig::get('access_control')) {
             ob_end_clean();
             debug_event('xml.server', 'Error Attempted to use XML API with Access Control turned off', 3);
-            echo Xml_Data::error('501', T_('Access Control not enabled'));
+            echo XML_Data::error('4700', T_('Access Denied'), Core::get_request('action'), 'system');
 
             return;
         }
 
         /**
-         * Verify the existance of the Session they passed in we do allow them to
+         * Verify the existence of the Session they passed in we do allow them to
          * login via this interface so we do have an exception for action=login
          */
         if (!Session::exists('api', Core::get_request('auth')) && Core::get_request('action') != 'handshake' && Core::get_request('action') != 'ping') {
             debug_event('Access Denied', 'Invalid Session attempt to API [' . Core::get_request('action') . ']', 3);
             ob_end_clean();
-            echo Xml_Data::error('401', T_('Session Expired'));
+            echo XML_Data::error('4701', T_('Session Expired'), Core::get_request('action'), 'account');
 
             return;
         }
@@ -74,7 +74,7 @@ final class XmlApplication implements ApplicationInterface
         if (!Access::check_network('init-api', $username, 5)) {
             debug_event('Access Denied', 'Unauthorized access attempt to API [' . Core::get_server('REMOTE_ADDR') . ']', 3);
             ob_end_clean();
-            echo Xml_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
+            echo XML_Data::error('4742', T_('Unauthorized access attempt to API - ACL Error'), Core::get_request('action'), 'account');
 
             return;
         }
@@ -95,7 +95,7 @@ final class XmlApplication implements ApplicationInterface
 
         // Retrieve the api method handler from the list of known methods
         $handler = Api::METHOD_LIST[$method] ?? null;
-        if ($method !== null) {
+        if ($handler !== null) {
             $_GET['api_format'] = 'xml';
             call_user_func([$handler, $method], $_GET);
             // We only allow a single function to be called, and we assume it's cleaned up!
@@ -104,6 +104,6 @@ final class XmlApplication implements ApplicationInterface
 
         // If we manage to get here, we still need to hand out an XML document
         ob_end_clean();
-        echo Xml_Data::error('405', T_('Invalid Request'));
+        echo XML_Data::error('4705', T_('Invalid Request'), (string) $method, 'system');
     }
 }

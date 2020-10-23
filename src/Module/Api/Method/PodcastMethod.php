@@ -32,8 +32,14 @@ use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class PodcastMethod
+ * @package Lib\ApiMethods
+ */
 final class PodcastMethod
 {
+    private const ACTION = 'podcast';
+
     /**
      * podcast
      * MINIMUM_API_VERSION=420000
@@ -45,31 +51,34 @@ final class PodcastMethod
      * include = (string) 'episodes' (include episodes in the response) //optional
      * @return boolean
      */
-    public static function podcast($input)
+    public static function podcast(array $input)
     {
         if (!AmpConfig::get('podcast')) {
-            Api::message('error', T_('Access Denied: podcast features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_parameter($input, array('filter'), 'podcast')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
         $podcast   = new Podcast($object_id);
-        if ($podcast->id) {
-            $episodes = $input['include'] == 'episodes';
 
-            ob_end_clean();
-            switch ($input['api_format']) {
-                case 'json':
-                    echo JSON_Data::podcasts(array($object_id), $episodes);
-                    break;
-                default:
-                    echo XML_Data::podcasts(array($object_id), $episodes);
-            }
-        } else {
-            Api::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['api_format']);
+        if (!$podcast->id) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
+
+        ob_end_clean();
+        $episodes = $input['include'] == 'episodes';
+        switch ($input['api_format']) {
+            case 'json':
+                echo JSON_Data::podcasts(array($object_id), $episodes);
+                break;
+            default:
+                echo XML_Data::podcasts(array($object_id), $episodes);
         }
         Session::extend($input['auth']);
 

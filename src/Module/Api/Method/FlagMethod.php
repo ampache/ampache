@@ -28,12 +28,17 @@ use Ampache\Config\AmpConfig;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
 use Ampache\Module\Api\Api;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
+/**
+ * Class FlagMethod
+ * @package Lib\ApiMethods
+ */
 final class FlagMethod
 {
+    private const ACTION = 'flag';
+
     /**
      * flag
      * MINIMUM_API_VERSION=400001
@@ -48,19 +53,19 @@ final class FlagMethod
      * flag = (integer) 0,1 $flag
      * @return boolean
      */
-    public static function flag($input)
+    public static function flag(array $input)
     {
         if (!AmpConfig::get('userflags')) {
-            Api::message('error', T_('Access Denied: UserFlag features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: userflags'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_parameter($input, array('type', 'id', 'flag'), 'flag')) {
+        if (!Api::check_parameter($input, array('type', 'id', 'flag'), self::ACTION)) {
             return false;
         }
         ob_end_clean();
-        $type      = $input['type'];
-        $object_id = $input['id'];
+        $type      = (string) $input['type'];
+        $object_id = (int) $input['id'];
         $flag      = (bool) $input['flag'];
         $user      = User::get_from_username(Session::username($input['auth']));
         $user_id   = null;
@@ -69,29 +74,29 @@ final class FlagMethod
         }
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist'))) {
-            Api::message('error', T_('Incorrect object type') . ' ' . $type, '400', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
 
-        
         if (!ObjectTypeToClassNameMapper::map($type) || !$object_id) {
-            Api::message('error', T_('Wrong library item type'), '400', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
         } else {
             $item = new $type($object_id);
             if (!$item->id) {
-                Api::message('error', T_('Library item not found'), '404', $input['api_format']);
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
 
                 return false;
             }
             $userflag = new Userflag($object_id, $type);
             if ($userflag->set_flag($flag, $user_id)) {
                 $message = ($flag) ? 'flag ADDED to ' : 'flag REMOVED from ';
-                Api::message('success', $message . $object_id, null, $input['api_format']);
+                Api::message($message . $object_id, $input['api_format']);
 
                 return true;
             }
-            Api::message('error', 'flag failed ' . $object_id, '400', $input['api_format']);
+            Api::error('flag failed ' . $object_id, '4710', self::ACTION, 'system', $input['api_format']);
         }
         Session::extend($input['auth']);
 

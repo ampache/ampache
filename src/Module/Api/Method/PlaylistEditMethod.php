@@ -31,8 +31,14 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Session;
 
+/**
+ * Class PlaylistEditMethod
+ * @package Lib\ApiMethods
+ */
 final class PlaylistEditMethod
 {
+    private const ACTION = 'playlist_edit';
+
     /**
      * playlist_edit
      * MINIMUM_API_VERSION=400001
@@ -50,9 +56,9 @@ final class PlaylistEditMethod
      * sort   = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
      * @return boolean
      */
-    public static function playlist_edit($input)
+    public static function playlist_edit(array $input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'playlist_edit')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $name  = $input['name'];
@@ -72,7 +78,7 @@ final class PlaylistEditMethod
 
         // don't continue if you didn't actually get a playlist or the access level
         if (!$playlist->id || (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
-            Api::message('error', T_('Access denied to this playlist'), '412', $input['api_format']);
+            Api::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
@@ -101,11 +107,11 @@ final class PlaylistEditMethod
         Session::extend($input['auth']);
         // if you didn't make any changes; tell me
         if (!($name || $type) && !$change_made) {
-            Api::message('error', T_('Nothing was changed'), '400', $input['api_format']);
+            Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);
 
             return false;
         }
-        Api::message('success', 'playlist changes saved', null, $input['api_format']);
+        Api::message('playlist changes saved', $input['api_format']);
 
         return true;
     }

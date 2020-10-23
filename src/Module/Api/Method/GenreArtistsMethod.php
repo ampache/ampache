@@ -27,12 +27,19 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Model\Tag;
 use Ampache\Model\User;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class GenreArtistsMethod
+ * @package Lib\ApiMethods
+ */
 final class GenreArtistsMethod
 {
+    const ACTION = 'genre_artists';
+
     /**
      * genre_artists
      * MINIMUM_API_VERSION=380001
@@ -45,25 +52,29 @@ final class GenreArtistsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function genre_artists($input)
+    public static function genre_artists(array $input)
     {
         $artists = Tag::get_tag_objects('artist', $input['filter']);
-        if (!empty($artists)) {
-            $user = User::get_from_username(Session::username($input['auth']));
+        if (empty($artists)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
 
-            ob_end_clean();
-            switch ($input['api_format']) {
-                case 'json':
-                    JSON_Data::set_offset($input['offset']);
-                    JSON_Data::set_limit($input['limit']);
-                    echo JSON_Data::artists($artists, array(), $user->id);
-                    break;
-                default:
-                    XML_Data::set_offset($input['offset']);
-                    XML_Data::set_limit($input['limit']);
-                    echo XML_Data::artists($artists, array(), $user->id);
-            }
+            return false;
         }
+
+        $user = User::get_from_username(Session::username($input['auth']));
+        ob_end_clean();
+        switch ($input['api_format']) {
+            case 'json':
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
+                echo JSON_Data::artists($artists, array(), $user->id);
+                break;
+            default:
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+                echo XML_Data::artists($artists, array(), $user->id);
+        }
+
         Session::extend($input['auth']);
 
         return true;

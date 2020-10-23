@@ -33,8 +33,14 @@ use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class LicenseSongsMethod
+ * @package Lib\ApiMethods
+ */
 final class LicenseSongsMethod
 {
+    private const ACTION = 'license_songs';
+
     /**
      * license_songs
      * MINIMUM_API_VERSION=420000
@@ -45,18 +51,23 @@ final class LicenseSongsMethod
      * filter = (string) UID of license
      * @return boolean
      */
-    public static function license_songs($input)
+    public static function license_songs(array $input)
     {
         if (!AmpConfig::get('licensing')) {
-            Api::message('error', T_('Access Denied: licensing features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: licensing'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_parameter($input, array('filter'), 'license_songs')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $user     = User::get_from_username(Session::username($input['auth']));
         $song_ids = License::get_license_songs((int) scrub_in($input['filter']));
+        if (empty($song_ids)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':

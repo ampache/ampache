@@ -30,12 +30,19 @@ use Ampache\Model\Album;
 use Ampache\Model\Artist;
 use Ampache\Model\Search;
 use Ampache\Model\User;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class PlaylistGenerateMethod
+ * @package Lib\ApiMethods
+ */
 final class PlaylistGenerateMethod
 {
+    const ACTION = 'playlist_generate';
+
     /**
      * playlist_generate
      * MINIMUM_API_VERSION=400001
@@ -52,11 +59,12 @@ final class PlaylistGenerateMethod
      * album  = (integer) $album_id                     //optional
      * artist = (integer) $artist_id                    //optional
      * flag   = (integer) 0,1                           //optional, default = 0
-     * format = (string)  'song', 'index', 'id'           //optional, default = 'song'
+     * format = (string)  'song', 'index', 'id'         //optional, default = 'song'
      * offset = (integer)                               //optional
      * limit  = (integer)                               //optional
+     * @return boolean
      */
-    public static function playlist_generate($input)
+    public static function playlist_generate(array $input)
     {
         // parameter defaults
         $mode   = (!in_array($input['mode'], array('forgotten', 'recent', 'unplayed', 'random'), true)) ? 'random' : $input['mode'];
@@ -69,7 +77,7 @@ final class PlaylistGenerateMethod
 
         $array['type'] = 'song';
         if (in_array($mode, array('forgotten', 'recent'), true)) {
-            debug_event('api.class', 'playlist_generate ' . $mode, 5);
+            debug_event(self::class, 'playlist_generate ' . $mode, 5);
             // played songs
             $array['rule_' . $rule_count]               = 'myplayed';
             $array['rule_' . $rule_count . '_operator'] = 0;
@@ -81,13 +89,13 @@ final class PlaylistGenerateMethod
             $array['rule_' . $rule_count . '_operator'] = ($mode == 'recent') ? 0 : 1;
             $rule_count++;
         } elseif ($mode == 'unplayed') {
-            debug_event('api.class', 'playlist_generate unplayed', 5);
+            debug_event(self::class, 'playlist_generate unplayed', 5);
             // unplayed songs
             $array['rule_' . $rule_count]               = 'myplayed';
             $array['rule_' . $rule_count . '_operator'] = 1;
             $rule_count++;
         } else {
-            debug_event('api.class', 'playlist_generate random', 5);
+            debug_event(self::class, 'playlist_generate random', 5);
             // random / anywhere
             $array['rule_' . $rule_count]               = 'anywhere';
             $array['rule_' . $rule_count . '_input']    = '%';
@@ -96,7 +104,7 @@ final class PlaylistGenerateMethod
         }
         // additional rules
         if ((int) $input['flag'] == 1) {
-            debug_event('api.class', 'playlist_generate flagged', 5);
+            debug_event(self::class, 'playlist_generate flagged', 5);
             $array['rule_' . $rule_count]               = 'favorite';
             $array['rule_' . $rule_count . '_input']    = '%';
             $array['rule_' . $rule_count . '_operator'] = 0;
@@ -125,8 +133,15 @@ final class PlaylistGenerateMethod
         }
 
         ob_end_clean();
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
+        switch ($input['api_format']) {
+            case 'json':
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
+                break;
+            default:
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+        }
 
         // get db data
         $song_ids = Search::run($array, $user);
@@ -135,6 +150,11 @@ final class PlaylistGenerateMethod
         //slice the array if there is a limit
         if ((int) $input['limit'] > 0) {
             $song_ids = array_slice($song_ids, 0, (int) $input['limit']);
+        }
+        if (empty($song_ids)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
         }
 
         // output formatted XML
@@ -168,5 +188,7 @@ final class PlaylistGenerateMethod
                 }
         }
         Session::extend($input['auth']);
+
+        return true;
     }
 }

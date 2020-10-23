@@ -33,8 +33,14 @@ use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Session;
 
+/**
+ * Class GetArtMethod
+ * @package Lib\ApiMethods
+ */
 final class GetArtMethod
 {
+    private const ACTION = 'get_art';
+
     /**
      * get_art
      * MINIMUM_API_VERSION=400001
@@ -46,19 +52,19 @@ final class GetArtMethod
      * type = (string) 'song', 'artist', 'album', 'playlist', 'search', 'podcast')
      * @return boolean
      */
-    public static function get_art($input)
+    public static function get_art(array $input)
     {
-        if (!Api::check_parameter($input, array('id', 'type'), 'get_art')) {
+        if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['id'];
-        $type      = $input['type'];
+        $type      = (string) $input['type'];
         $size      = $input['size'];
         $user      = User::get_from_username(Session::username($input['auth']));
 
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'search', 'podcast'))) {
-            Api::message('error', T_('Incorrect object type') . ' ' . $type, '400', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }

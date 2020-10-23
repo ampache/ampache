@@ -28,7 +28,6 @@ use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Model\Plugin;
 use Ampache\Model\Preference;
 use Ampache\Model\Rating;
-use Ampache\Model\Song;
 use Ampache\Model\TVShow_Season;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Xml_Data;
@@ -38,7 +37,6 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Gettext\Translator;
 use Psr\Log\LoggerInterface;
@@ -429,8 +427,8 @@ function get_web_path()
 /**
  * get_datetime
  * @param integer $time
- * @param string $dateformat
- * @param string $timeformat
+ * @param string $date_format
+ * @param string $time_format
  * @param string $overwrite
  * @return string
  */

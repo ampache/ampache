@@ -25,15 +25,17 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\Tag;
-use Ampache\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class TagSongsMethod
+ * @package Lib\ApiMethods
+ */
 final class TagSongsMethod
 {
+    private const ACTION = 'tag_songs';
+
     /**
      * tag_songs
      * MINIMUM_API_VERSION=380001
@@ -41,35 +43,10 @@ final class TagSongsMethod
      * returns the songs for this genre
      *
      * @param array $input
-     * filter = (string) UID of Genre //optional
-     * offset = (integer) //optional
-     * limit  = (integer) //optional
-     * @return boolean
      */
-    public static function tag_songs($input)
+    public static function tag_songs(array $input)
     {
-        $songs = Tag::get_tag_objects('song', $input['filter']);
-        $user  = User::get_from_username(Session::username($input['auth']));
-
-        XML_Data::set_offset($input['offset']);
-        XML_Data::set_limit($input['limit']);
-
-        ob_end_clean();
-        if (!empty($songs)) {
-            switch ($input['api_format']) {
-                case 'json':
-                    JSON_Data::set_offset($input['offset']);
-                    JSON_Data::set_limit($input['limit']);
-                    echo JSON_Data::songs($songs, $user->id);
-                    break;
-                default:
-                    XML_Data::set_offset($input['offset']);
-                    XML_Data::set_limit($input['limit']);
-                    echo XML_Data::songs($songs, $user->id);
-            }
-        }
+        Api::error(T_('Depreciated'), '4706', self::ACTION, 'removed', $input['api_format']);
         Session::extend($input['auth']);
-
-        return true;
     }
 }

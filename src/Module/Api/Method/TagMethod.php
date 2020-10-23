@@ -26,12 +26,16 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class TagMethod
+ * @package Lib\ApiMethods
+ */
 final class TagMethod
 {
+    private const ACTION = 'tag';
+
     /**
      * tag
      * MINIMUM_API_VERSION=380001
@@ -39,25 +43,10 @@ final class TagMethod
      * This returns a single genre based on UID
      *
      * @param array $input
-     * filter = (string) UID of Genre
-     * @return boolean
      */
-    public static function tag($input)
+    public static function tag(array $input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'tag')) {
-            return false;
-        }
-        $uid = scrub_in($input['filter']);
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo JSON_Data::genres(array($uid));
-                break;
-            default:
-                echo XML_Data::genres(array($uid));
-        }
+        Api::error(T_('Depreciated'), '4706', self::ACTION, 'removed', $input['api_format']);
         Session::extend($input['auth']);
-
-        return true;
     }
 }

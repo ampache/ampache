@@ -29,8 +29,14 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 
+/**
+ * Class GoodbyeMethod
+ * @package Lib\ApiMethods
+ */
 final class GoodbyeMethod
 {
+    private const ACTION = 'goodbye';
+
     /**
      * goodbye
      * MINIMUM_API_VERSION=400001
@@ -41,9 +47,9 @@ final class GoodbyeMethod
      * auth = (string))
      * @return boolean
      */
-    public static function goodbye($input)
+    public static function goodbye(array $input)
     {
-        if (!Api::check_parameter($input, array('auth'), 'goodbye')) {
+        if (!Api::check_parameter($input, array('auth'), self::ACTION)) {
             return false;
         }
         // Check and see if we should destroy the api session (done if valid session is passed)
@@ -52,14 +58,15 @@ final class GoodbyeMethod
             $sql .= " AND `type` = 'api'";
             Dba::write($sql, array($input['auth']));
 
-            debug_event('api.class', 'Goodbye Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
+            debug_event(self::class, 'Goodbye Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
             ob_end_clean();
-            Api::message('success', 'goodbye: ' . $input['auth'], null, $input['api_format']);
+            Api::message('goodbye: ' . $input['auth'], $input['api_format']);
 
             return true;
         }
         ob_end_clean();
-        Api::message('error', 'failed to end session: ' . $input['auth'], '400', $input['api_format']);
+        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+        Api::error(sprintf(T_('Bad Request: %s'), $input['auth']), '4710', self::ACTION, 'account', $input['api_format']);
 
         return false;
     }

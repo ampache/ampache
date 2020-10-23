@@ -26,13 +26,20 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\License;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class LicenseMethod
+ * @package Lib\ApiMethods
+ */
 final class LicenseMethod
 {
+    private const ACTION = 'license';
+
     /**
      * license
      * MINIMUM_API_VERSION=420000
@@ -43,24 +50,32 @@ final class LicenseMethod
      * filter = (string) UID of license
      * @return boolean
      */
-    public static function license($input)
+    public static function license(array $input)
     {
         if (!AmpConfig::get('licensing')) {
-            Api::message('error', T_('Access Denied: licensing features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: licensing'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_parameter($input, array('filter'), 'license')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $uid = array((int) scrub_in($input['filter']));
+        $object_id = (int) $input['filter'];
+        $license   = new License($object_id);
+        if (!$license->id) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
+
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::licenses($uid);
+                echo JSON_Data::licenses(array($object_id));
                 break;
             default:
-                echo XML_Data::licenses($uid);
+                echo XML_Data::licenses(array($object_id));
         }
         Session::extend($input['auth']);
 

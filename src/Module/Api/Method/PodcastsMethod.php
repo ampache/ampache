@@ -31,8 +31,14 @@ use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
+/**
+ * Class PodcastsMethod
+ * @package Lib\ApiMethods
+ */
 final class PodcastsMethod
 {
+    private const ACTION = 'podcasts';
+
     /**
      * podcasts
      * MINIMUM_API_VERSION=420000
@@ -46,10 +52,10 @@ final class PodcastsMethod
      * limit   = (integer) //optional
      * @return boolean
      */
-    public static function podcasts($input)
+    public static function podcasts(array $input)
     {
         if (!AmpConfig::get('podcast')) {
-            Api::message('error', T_('Access Denied: podcast features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -63,6 +69,11 @@ final class PodcastsMethod
         Api::set_filter('update', $input['update']);
 
         $podcasts = Api::$browse->get_objects();
+        if (empty($podcasts)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
         $episodes = $input['include'] == 'episodes';
 
         ob_end_clean();
