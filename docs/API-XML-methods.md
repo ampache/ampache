@@ -1689,7 +1689,7 @@ This returns the songs for a license
 
 ### labels
 
-* **NEW** in 5.0.0
+* **NEW** in develop
 
 This returns labels based on the specified filter
 @param array $input
@@ -1719,7 +1719,7 @@ This returns labels based on the specified filter
 
 ### label
 
-* **NEW** in 5.0.0
+* **NEW** in develop
 
 This returns a single label
 @param array $input
@@ -1746,7 +1746,7 @@ This returns a single label
 
 ### label_artists
 
-* **NEW** in 5.0.0
+* **NEW** in develop
 
 This returns the artists for a label
 @param array $input

@@ -1832,7 +1832,7 @@ abstract class Catalog extends database_object
         $invalid_exts = array('wav', 'shn');
         $extension    = strtolower(pathinfo($media->file, PATHINFO_EXTENSION));
         $results      = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
-        if (in_array($extension, $invalid_exts)) {
+        if ($media->id && !in_array($extension, $invalid_exts)) {
             debug_event('catalog.class', 'update_media_from_tags: ' . $extension . ' extension: Updating from file name', 2);
             $patres  = vainfo::parse_pattern($media->file, $catalog->sort_pattern, $catalog->rename_pattern);
             $results = array_merge($results, $patres);
@@ -1973,17 +1973,17 @@ abstract class Catalog extends database_object
         }
 
         // Duplicate arts if required
-        if ($song->artist != $new_song->artist) {
+        if (($song->artist && $new_song->artist) && $song->artist != $new_song->artist) {
             if (!Art::has_db($new_song->artist, 'artist')) {
                 Art::duplicate('artist', $song->artist, $new_song->artist);
             }
         }
-        if ($song->albumartist != $new_song->albumartist) {
+        if (($song->albumartist && $new_song->albumartist) && $song->albumartist != $new_song->albumartist) {
             if (!Art::has_db($new_song->albumartist, 'artist')) {
                 Art::duplicate('artist', $song->albumartist, $new_song->albumartist);
             }
         }
-        if ($song->album != $new_song->album) {
+        if (($song->album && $new_song->album) && $song->album != $new_song->album) {
             if (!Art::has_db($new_song->album, 'album')) {
                 Art::duplicate('album', $song->album, $new_song->album);
             }
