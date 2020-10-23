@@ -1828,12 +1828,13 @@ abstract class Catalog extends database_object
         $name     = (get_class($media) == 'Song') ? 'song' : 'video';
         $function = 'update_' . $name . '_from_tags';
 
-        // check for files without tags and try to update from their file name instead
-        $invalid_exts = array('wav', 'shn');
+        // try and get the tags from your file
         $extension    = strtolower(pathinfo($media->file, PATHINFO_EXTENSION));
         $results      = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
-        if ($media->id && in_array($extension, $invalid_exts)) {
-            debug_event('catalog.class', 'update_media_from_tags: ' . $extension . ' extension: Updating from file name', 2);
+        // for files without tags try to update from their file name instead
+        if ($media->id && in_array($extension, array('wav', 'shn'))) {
+            debug_event('catalog.class', 'update_media_from_tags: ' . $extension . ' extension: parse_pattern', 2);
+            // match against your catalog 'Filename Pattern' and 'Folder Pattern'
             $patres  = vainfo::parse_pattern($media->file, $catalog->sort_pattern, $catalog->rename_pattern);
             $results = array_merge($results, $patres);
 
