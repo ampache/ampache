@@ -60,6 +60,7 @@
 <td class="cel_last_update"><?php echo $libitem->f_last_update ?></td>
 <td class="cel_type"><?php echo $libitem->f_type; ?></td>
 <td class="cel_medias"><?php echo $libitem->get_media_count(); ?></td>
+<td class="cel_duration"><?php echo gmdate("H:i:s",$libitem->get_total_duration()); ?></td>
 <td class="cel_owner"><?php echo scrub_out($libitem->f_user); ?></td>
 <?php
     if (User::is_registered()) {
