@@ -209,14 +209,10 @@ class Stats
             $threshold = 0;
         }
 
-        if (AmpConfig::get('cron_cache') && !defined('NO_CRON_CACHE')) {
-            $sql = "SELECT `count` AS `object_cnt` FROM `cache_object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ? AND `threshold` = " . $threshold;
-        } else {
-            $sql = "SELECT COUNT(*) AS `object_cnt` FROM `object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ?";
-            if ($threshold > 0) {
-                $date = time() - (86400 * (int) $threshold);
-                $sql .= "AND `date` >= '" . $date . "'";
-            }
+        $sql = "SELECT COUNT(*) AS `object_cnt` FROM `object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ?";
+        if ($threshold > 0) {
+            $date = time() - (86400 * (int) $threshold);
+            $sql .= "AND `date` >= '" . $date . "'";
         }
 
         $db_results = Dba::read($sql, array($object_type, $object_id, $count_type));
