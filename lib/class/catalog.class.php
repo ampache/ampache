@@ -1832,7 +1832,7 @@ abstract class Catalog extends database_object
         $invalid_exts = array('wav', 'shn');
         $extension    = strtolower(pathinfo($media->file, PATHINFO_EXTENSION));
         $results      = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
-        if ($media->id && !in_array($extension, $invalid_exts)) {
+        if ($media->id && in_array($extension, $invalid_exts)) {
             debug_event('catalog.class', 'update_media_from_tags: ' . $extension . ' extension: Updating from file name', 2);
             $patres  = vainfo::parse_pattern($media->file, $catalog->sort_pattern, $catalog->rename_pattern);
             $results = array_merge($results, $patres);
