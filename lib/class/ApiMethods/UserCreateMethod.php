@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Lib\ApiMethods;
 
 use Api;
+use Catalog;
 use Session;
 use User;
 
@@ -70,6 +71,7 @@ final class UserCreateMethod
 
         if ($user_id > 0) {
             Api::message('successfully created: ' . $username, $input['api_format']);
+            Catalog::count_table('user');
 
             return true;
         }

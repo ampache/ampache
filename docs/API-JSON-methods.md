@@ -384,7 +384,7 @@ This returns albums based on the provided search filters
 | Input     | Type       | Description                                                      | Optional |
 |-----------|------------|------------------------------------------------------------------|---------:|
 | 'filter'  | string     | Filter results to match this string                              |      YES |
-| 'exact'   | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE)         |       NO |
+| 'exact'   | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE)         |      YES |
 | 'add'     | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
 |           |            | Find objects with an 'add' date newer than the specified date    |          |
 | 'update'  | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
@@ -587,8 +587,8 @@ Returns songs based on the specified filter
 
 | Input    | Type       | Description                                                      | Optional |
 |----------|------------|------------------------------------------------------------------|---------:|
-| 'filter' | string     | Filter results to match this string                              |       NO |
-| 'exact'  | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE)         |       NO |
+| 'filter' | string     | Filter results to match this string                              |      YES |
+| 'exact'  | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE)         |      YES |
 | 'add'    | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
 |          |            | Find objects with an 'add' date newer than the specified date    |          |
 | 'update' | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
@@ -1106,7 +1106,7 @@ This returns video objects!
 
 | Input    | Type    | Description                                              | Optional |
 |----------|---------|----------------------------------------------------------|---------:|
-| 'filter' | string  | Filter results to match this string                      |       NO |
+| 'filter' | string  | Filter results to match this string                      |      YES |
 | 'exact'  | boolean | 0,1 if true filter is exact (=) rather than fuzzy (LIKE) |      YES |
 | 'offset' | integer |                                                          |      YES |
 | 'limit'  | integer |                                                          |      YES |
@@ -1751,10 +1751,10 @@ This follow/unfollow an user
 This get the latest posted shouts
 @param array $input
 
-| Input      | Type    | Description          | Optional |
-|------------|---------|----------------------|---------:|
-| 'username' | string  | Username of the user |      YES |
-| 'limit'    | integer |                      |      YES |
+| Input      | Type    | Description                         | Optional |
+|------------|---------|-------------------------------------|---------:|
+| 'username' | string  | Get latest shouts for this username |      YES |
+| 'limit'    | integer |                                     |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/last_shouts.json)
 

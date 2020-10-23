@@ -27,6 +27,7 @@ namespace Lib\ApiMethods;
 
 use Access;
 use Api;
+use Catalog;
 use Playlist;
 use Session;
 use User;
@@ -62,6 +63,7 @@ final class PlaylistDeleteMethod
         } else {
             $playlist->delete();
             Api::message('playlist deleted', $input['api_format']);
+            Catalog::count_table('playlist');
         }
         Session::extend($input['auth']);
 

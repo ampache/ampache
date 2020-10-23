@@ -27,6 +27,7 @@ namespace Lib\ApiMethods;
 
 use AmpConfig;
 use Api;
+use Catalog;
 use JSON_Data;
 use Podcast;
 use Session;
@@ -69,18 +70,20 @@ final class PodcastCreateMethod
         $data['feed']    = urldecode($input['url']);
         $data['catalog'] = $input['catalog'];
         $podcast         = Podcast::create($data, true);
-        if ($podcast) {
-            ob_end_clean();
-            switch ($input['api_format']) {
-                case 'json':
-                    echo JSON_Data::podcasts(array($podcast));
-                    break;
-                default:
-                    echo XML_Data::podcasts(array($podcast));
-            }
-        } else {
-            Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);
+        if (!$podcast) {
+            Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
+
+            return false;
         }
+        ob_end_clean();
+        switch ($input['api_format']) {
+            case 'json':
+                echo JSON_Data::podcasts(array($podcast));
+                break;
+            default:
+                echo XML_Data::podcasts(array($podcast));
+        }
+        Catalog::count_table('podcast');
         Session::extend($input['auth']);
 
         return true;

@@ -27,6 +27,7 @@ namespace Lib\ApiMethods;
 
 use Access;
 use Api;
+use Catalog;
 use Session;
 use User;
 
@@ -63,6 +64,7 @@ final class UserDeleteMethod
         if ($user->id && Session::username($input['auth']) != $username && !Access::check('interface', 100, $user->id)) {
             $user->delete();
             Api::message('successfully deleted: ' . $username, $input['api_format']);
+            Catalog::count_table('user');
 
             return true;
         }

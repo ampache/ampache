@@ -27,6 +27,7 @@ namespace Lib\ApiMethods;
 
 use AmpConfig;
 use Api;
+use Catalog;
 use Podcast;
 use Session;
 use User;
@@ -79,6 +80,7 @@ final class PodcastDeleteMethod
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'filter', $input['api_format']);
         }
+        Catalog::count_table('podcast');
         Session::extend($input['auth']);
 
         return true;

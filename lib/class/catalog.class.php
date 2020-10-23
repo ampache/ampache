@@ -543,6 +543,18 @@ abstract class Catalog extends database_object
     } // get_count
 
     /**
+     * set_count
+     *
+     * write the total_counts to update_info
+     * @param string $table
+     * @param string $value
+     */
+    public static function set_count(string $table, string $value)
+    {
+        Dba::write("REPLACE INTO `update_info` SET `key`= '" . $table . "', `value`=" . $value);
+    } // set_count
+
+    /**
      * update_enabled
      * sets the enabled flag
      * @param string $new_enabled
@@ -787,7 +799,7 @@ abstract class Catalog extends database_object
             $time += $data[1];
             $size += $data[2];
             // write the total_counts as well
-            Dba::write("REPLACE INTO `update_info` SET `key`= '" . $table . "', `value`=" . $data[0]);
+            Catalog::set_count($table, $data[0]);
         }
         // return the totals for all media tables
         $results['items'] = $items;
@@ -801,21 +813,35 @@ abstract class Catalog extends database_object
             // save the object count
             $results[$table] = $data[0];
             // write the total_counts as well
-            Dba::write("REPLACE INTO `update_info` SET `key`= '" . $table . "', `value`=" . $data[0]);
+            Catalog::set_count($table, $data[0]);
         }
 
         foreach ($list_tables as $table) {
-            $sql        = "SELECT COUNT(`id`) FROM `$table`";
-            $db_results = Dba::read($sql);
-            $data       = Dba::fetch_row($db_results);
+            $data = self::count_table($table);
             // save the object count
             $results[$table] = $data[0];
-            // write the total_counts as well
-            Dba::write("REPLACE INTO `update_info` SET `key`= '" . $table . "', `value`=" . $data[0]);
         }
 
         return $results;
-    }
+    } // count_server
+
+    /**
+     * count_table
+     *
+     * Update a specific table count when adding/removing from the server
+     * @param string $table
+     * @return array
+     */
+    public static function count_table($table)
+    {
+        $sql        = "SELECT COUNT(`id`) FROM `$table`";
+        $db_results = Dba::read($sql);
+        $data       = Dba::fetch_row($db_results);
+
+        Catalog::set_count($table, $data[0]);
+
+        return $data;
+    } // count_table
 
     /**
      * count_catalog
@@ -845,9 +871,10 @@ abstract class Catalog extends database_object
         }
 
         return $results;
-    }
+    } // count_catalog
 
     /**
+     * get_uploads_sql
      *
      * @param string $type
      * @param integer|null $user_id
@@ -874,7 +901,7 @@ abstract class Catalog extends database_object
         }
 
         return $sql;
-    }
+    } // get_uploads_sql
 
     /**
      * get_album_ids

@@ -27,6 +27,7 @@ namespace Lib\ApiMethods;
 
 use AmpConfig;
 use Api;
+use Catalog;
 use Session;
 use Share;
 use User;
@@ -65,6 +66,7 @@ final class ShareDeleteMethod
         if (in_array($object_id, Share::get_share_list())) {
             if (Share::delete_share($object_id, $user)) {
                 Api::message('share ' . $object_id . ' deleted', $input['api_format']);
+                Catalog::count_table('share');
             } else {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);

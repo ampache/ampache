@@ -28,6 +28,7 @@ namespace Lib\ApiMethods;
 use Access;
 use AmpConfig;
 use Api;
+use Catalog;
 use Core;
 use JSON_Data;
 use Session;
@@ -91,6 +92,12 @@ final class ShareCreateMethod
             }
             $share[] = Share::create_share($type, $object_id, true, $download, $expire_days, generate_password(8), 0, $description);
         }
+        if (empty($share)) {
+            Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
@@ -99,6 +106,7 @@ final class ShareCreateMethod
             default:
                 echo XML_Data::shares($share);
         }
+        Catalog::count_table('share');
         Session::extend($input['auth']);
 
         return true;

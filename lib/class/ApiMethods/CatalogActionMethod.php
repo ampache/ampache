@@ -66,8 +66,8 @@ final class CatalogActionMethod
 
             return false;
         }
-        $catalog = Catalog::create_from_id((int) $input['catalog']);
 
+        $catalog = Catalog::create_from_id((int) $input['catalog']);
         if ($catalog) {
             define('API', true);
             unset($SSE_OUTPUT);
@@ -91,6 +91,7 @@ final class CatalogActionMethod
                     break;
             }
             Api::message('successfully started: ' . $task, $input['api_format']);
+            Catalog::count_server();
         } else {
             Api::error(T_('Not Found'), '4704', self::ACTION, 'catalog', $input['api_format']);
         }

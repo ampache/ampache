@@ -75,6 +75,7 @@ final class SongDeleteMethod
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
         }
+        Catalog::count_table('song');
         Session::extend($input['auth']);
 
         return true;
