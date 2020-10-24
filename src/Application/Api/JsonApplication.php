@@ -21,85 +21,46 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Application\Api;
 
-use Ampache\Module\Api\Api;
-use Ampache\Module\Authorization\Access;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\ApiHandlerInterface;
+use Ampache\Module\Api\Output\ApiOutputFactoryInterface;
 use Ampache\Application\ApplicationInterface;
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\Session;
-use Ampache\Model\User;
 
 final class JsonApplication implements ApplicationInterface
 {
+    private ApiOutputFactoryInterface $apiOutputFactory;
+
+    private ApiHandlerInterface $apiHandler;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        ApiOutputFactoryInterface $apiOutputFactory,
+        ApiHandlerInterface $apiHandler,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->apiOutputFactory = $apiOutputFactory;
+        $this->apiHandler       = $apiHandler;
+        $this->configContainer  = $configContainer;
+    }
+
     public function run(): void
     {
-        // If it's not a handshake then we can allow it to take up lots of time
-        if ($_REQUEST['action'] != 'handshake') {
-            set_time_limit(0);
-        }
-
         /* Set the correct headers */
-        header("Content-type: application/json; charset=" . AmpConfig::get('site_charset'));
-        // header("Content-Disposition: attachment; filename=information.json");
+        header(sprintf('Content-type: application/json; charset=%s', $this->configContainer->get('site_charset')));
 
-        // If we don't even have access control on then we can't use this!
-        if (!AmpConfig::get('access_control')) {
-            ob_end_clean();
-            debug_event('Access Control', 'Error Attempted to use JSON API with Access Control turned off', 3);
-            echo JSON_Data::error('4700', T_('Access Denied'), Core::get_request('action'), 'system');
+        $_GET['api_format'] = 'json';
 
-            return;
+        $result = $this->apiHandler->handle(
+            $this->apiOutputFactory->createXmlOutput()
+        );
+
+        if ($result !== null) {
+            echo $result;
         }
-
-        /**
-         * Verify the existence of the Session they passed in we do allow them to
-         * login via this interface so we do have an exception for action=login
-         */
-        if (!Session::exists('api', $_REQUEST['auth']) && $_REQUEST['action'] != 'handshake' && $_REQUEST['action'] != 'ping') {
-            debug_event('Access Denied', 'Invalid Session attempt to API [' . $_REQUEST['action'] . ']', 3);
-            ob_end_clean();
-            echo JSON_Data::error('4701', T_('Session Expired'), Core::get_request('action'), 'account');
-
-            return;
-        }
-
-        // If the session exists then let's try to pull some data from it to see if we're still allowed to do this
-        $username = ($_REQUEST['action'] == 'handshake') ? $_REQUEST['user'] : Session::username($_REQUEST['auth']);
-
-        if (!Access::check_network('init-api', $username, 5)) {
-            debug_event('Access Denied', 'Unauthorized access attempt to API [' . $_SERVER['REMOTE_ADDR'] . ']', 3);
-            ob_end_clean();
-            echo JSON_Data::error('4742', T_('Unauthorized access attempt to API - ACL Error'), Core::get_request('action'), 'account');
-
-            return;
-        }
-
-        if ($_REQUEST['action'] != 'handshake' && $_REQUEST['action'] != 'ping') {
-            Session::extend($_REQUEST['auth']);
-            $GLOBALS['user'] = User::get_from_username($username);
-        }
-
-        // Make sure beautiful url is disabled as it is not supported by most Ampache clients
-        AmpConfig::set('stream_beautiful_url', false, true);
-
-        $method = $_GET['action'];
-
-        // Retrieve the api method handler from the list of known methods
-        $handler = Api::METHOD_LIST[$method] ?? null;
-        if ($handler !== null) {
-            $_GET['api_format'] = 'json';
-            call_user_func([$handler, $method], $_GET);
-            // We only allow a single function to be called, and we assume it's cleaned up!
-            return;
-        }
-
-        // If we manage to get here, we still need to hand out a JSON document
-        ob_end_clean();
-        echo JSON_Data::error('4705', T_('Invalid Request'), (string) $method, 'system');
     }
 }

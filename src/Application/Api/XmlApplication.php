@@ -21,89 +21,47 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Application\Api;
 
-use Ampache\Module\Api\Api;
-use Ampache\Module\Authorization\Access;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\ApiHandlerInterface;
+use Ampache\Module\Api\Output\ApiOutputFactoryInterface;
 use Ampache\Application\ApplicationInterface;
-use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\Session;
-use Ampache\Model\User;
-use Ampache\Module\Api\Xml_Data;
 
 final class XmlApplication implements ApplicationInterface
 {
+    private ApiOutputFactoryInterface $apiOutputFactory;
+
+    private ApiHandlerInterface $apiHandler;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        ApiOutputFactoryInterface $apiOutputFactory,
+        ApiHandlerInterface $apiHandler,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->apiOutputFactory = $apiOutputFactory;
+        $this->apiHandler       = $apiHandler;
+        $this->configContainer  = $configContainer;
+    }
+
     public function run(): void
     {
-        // If it's not a handshake then we can allow it to take up lots of time
-        if (Core::get_request('action') != 'handshake') {
-            set_time_limit(0);
-        }
-
         /* Set the correct headers */
-        header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset'));
-        header("Content-Disposition: attachment; filename=information.xml");
+        header(sprintf('Content-type: text/xml; charset=%s', $this->configContainer->get('site_charset')));
+        header('Content-Disposition: attachment; filename=information.xml');
 
-        // If we don't even have access control on then we can't use this!
-        if (!AmpConfig::get('access_control')) {
-            ob_end_clean();
-            debug_event('xml.server', 'Error Attempted to use XML API with Access Control turned off', 3);
-            echo XML_Data::error('4700', T_('Access Denied'), Core::get_request('action'), 'system');
+        $_GET['api_format'] = 'xml';
 
-            return;
+        $result = $this->apiHandler->handle(
+            $this->apiOutputFactory->createXmlOutput()
+        );
+
+        if ($result !== null) {
+            echo $result;
         }
-
-        /**
-         * Verify the existence of the Session they passed in we do allow them to
-         * login via this interface so we do have an exception for action=login
-         */
-        if (!Session::exists('api', Core::get_request('auth')) && Core::get_request('action') != 'handshake' && Core::get_request('action') != 'ping') {
-            debug_event('Access Denied', 'Invalid Session attempt to API [' . Core::get_request('action') . ']', 3);
-            ob_end_clean();
-            echo XML_Data::error('4701', T_('Session Expired'), Core::get_request('action'), 'account');
-
-            return;
-        }
-
-        // If the session exists then let's try to pull some data from it to see if we're still allowed to do this
-        $username = ($_REQUEST['action'] == 'handshake') ? $_REQUEST['user'] : Session::username($_REQUEST['auth']);
-
-        if (!Access::check_network('init-api', $username, 5)) {
-            debug_event('Access Denied', 'Unauthorized access attempt to API [' . Core::get_server('REMOTE_ADDR') . ']', 3);
-            ob_end_clean();
-            echo XML_Data::error('4742', T_('Unauthorized access attempt to API - ACL Error'), Core::get_request('action'), 'account');
-
-            return;
-        }
-
-        if ((Core::get_request('action') != 'handshake') && (Core::get_request('action') != 'ping')) {
-            if (isset($_REQUEST['user'])) {
-                $GLOBALS['user'] = User::get_from_username(Core::get_request('user'));
-            } else {
-                debug_event('xml.server', 'API session [' . Core::get_request('auth') . ']', 3);
-                $GLOBALS['user'] = User::get_from_username(Session::username(Core::get_request('auth')));
-            }
-        }
-
-        // Make sure beautiful url is disabled as it is not supported by most Ampache clients
-        AmpConfig::set('stream_beautiful_url', false, true);
-
-        $method = $_GET['action'];
-
-        // Retrieve the api method handler from the list of known methods
-        $handler = Api::METHOD_LIST[$method] ?? null;
-        if ($handler !== null) {
-            $_GET['api_format'] = 'xml';
-            call_user_func([$handler, $method], $_GET);
-            // We only allow a single function to be called, and we assume it's cleaned up!
-            return;
-        }
-
-        // If we manage to get here, we still need to hand out an XML document
-        ob_end_clean();
-        echo XML_Data::error('4705', T_('Invalid Request'), (string) $method, 'system');
     }
 }
