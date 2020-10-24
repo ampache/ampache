@@ -214,10 +214,14 @@ class Api
      * @param integer|string|boolean|null $value
      * @return boolean
      */
-    public static function set_filter($filter, $value)
+    public static function set_filter($filter, $value, ?Browse $browse = null)
     {
         if (!strlen((string)$value)) {
             return false;
+        }
+
+        if ($browse === null) {
+            $browse = self::getBrowse();
         }
 
         switch ($filter) {
@@ -225,30 +229,30 @@ class Api
                 // Check for a range, if no range default to gt
                 if (strpos($value, '/')) {
                     $elements = explode('/', $value);
-                    self::getBrowse()->set_filter('add_lt', strtotime($elements['1']));
-                    self::getBrowse()->set_filter('add_gt', strtotime($elements['0']));
+                    $browse->set_filter('add_lt', strtotime($elements['1']));
+                    $browse->set_filter('add_gt', strtotime($elements['0']));
                 } else {
-                    self::getBrowse()->set_filter('add_gt', strtotime($value));
+                    $browse->set_filter('add_gt', strtotime($value));
                 }
                 break;
             case 'update':
                 // Check for a range, if no range default to gt
                 if (strpos($value, '/')) {
                     $elements = explode('/', $value);
-                    self::getBrowse()->set_filter('update_lt', strtotime($elements['1']));
-                    self::getBrowse()->set_filter('update_gt', strtotime($elements['0']));
+                    $browse->set_filter('update_lt', strtotime($elements['1']));
+                    $browse->set_filter('update_gt', strtotime($elements['0']));
                 } else {
-                    self::getBrowse()->set_filter('update_gt', strtotime($value));
+                    $browse->set_filter('update_gt', strtotime($value));
                 }
                 break;
             case 'alpha_match':
-                self::getBrowse()->set_filter('alpha_match', $value);
+                $browse->set_filter('alpha_match', $value);
                 break;
             case 'exact_match':
-                self::getBrowse()->set_filter('exact_match', $value);
+                $browse->set_filter('exact_match', $value);
                 break;
             case 'enabled':
-                self::getBrowse()->set_filter('enabled', $value);
+                $browse->set_filter('enabled', $value);
                 break;
             default:
                 break;

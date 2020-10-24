@@ -164,6 +164,8 @@ final class ApiHandler implements ApiHandlerInterface
         }
 
         try {
+            $input = $_GET;
+
             /**
              * This condition allows the `new` approach and the legacy one to co-exist.
              * After implementing the MethodInterface in all api methods, the condition will be removed
@@ -171,12 +173,23 @@ final class ApiHandler implements ApiHandlerInterface
              * @todo cleanup
              */
             if ($this->dic->has($handlerClassName) && $this->dic->get($handlerClassName) instanceof MethodInterface) {
+                $gatekeeper = new Gatekeeper($input);
+
                 /** @var MethodInterface $handler */
                 $handler = $this->dic->get($handlerClassName);
 
-                return $handler->handle($response, $_GET);
+                $response = $handler->handle(
+                    $gatekeeper,
+                    $response,
+                    $output,
+                    $input
+                );
+
+                $gatekeeper->extendSession();
+
+                return $response;
             } else {
-                call_user_func([$handlerClassName, $action], $_GET);
+                call_user_func([$handlerClassName, $action], $input);
 
                 return null;
             }

@@ -29,7 +29,7 @@ use Ampache\Module\Api\Json_Data;
 final class JsonOutput implements ApiOutputInterface
 {
     /**
-     * At the moment, this method just acts a proxy
+     * At the moment, this method just acts as a proxy
      */
     public function error(int $code, string $message, string $action, string $type): string
     {
@@ -39,5 +39,31 @@ final class JsonOutput implements ApiOutputInterface
             $action,
             $type
         );
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param integer[] $albums
+     * @param array $include
+     * @param integer|null $user_id
+     * @param bool $encode
+     * @param int $limit
+     * @param int $offset
+     *
+     * @return array|string
+     */
+    public function albums(
+        array $albums,
+        array $include = [],
+        ?int $user_id = null,
+        bool $encode = true,
+        int $limit = 0,
+        int $offset = 0
+    ) {
+        Json_Data::set_offset($offset);
+        Json_Data::set_limit($limit);
+
+        return Json_Data::albums($albums, $include, $user_id, $encode);
     }
 }

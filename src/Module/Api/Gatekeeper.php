@@ -1,4 +1,5 @@
 <?php
+
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -20,36 +21,35 @@
  *
  */
 
-namespace Ampache\Module\Api\Output;
+declare(strict_types=0);
 
-interface ApiOutputInterface
+namespace Ampache\Module\Api;
+
+use Ampache\Model\User;
+use Ampache\Module\System\Session;
+
+/**
+ * Provides methods to access authentication related data
+ *
+ * There is only XUL.
+ */
+final class Gatekeeper implements GatekeeperInterface
 {
-    /**
-     * This generates an error message
-     */
-    public function error(
-        int $code,
-        string $message,
-        string $action,
-        string $type
-    ): string;
+    private array $input;
 
-    /**
-     * @param integer[] $albums
-     * @param array $include
-     * @param integer|null $user_id
-     * @param bool $encode
-     * @param int $limit
-     * @param int $offset
-     *
-     * @return array|string
-     */
-    public function albums(
-        array $albums,
-        array $include = [],
-        ?int $user_id = null,
-        bool $encode = true,
-        int $limit = 0,
-        int $offset = 0
-    );
+    public function __construct(
+        array $input
+    ) {
+        $this->input = $input;
+    }
+
+    public function getUser(): User
+    {
+        return User::get_from_username(Session::username($this->input['auth']));
+    }
+
+    public function extendSession(): void
+    {
+        Session::extend($this->input['auth']);
+    }
 }

@@ -20,36 +20,13 @@
  *
  */
 
-namespace Ampache\Module\Api\Output;
+namespace Ampache\Module\Api;
 
-interface ApiOutputInterface
+use Ampache\Model\User;
+
+interface GatekeeperInterface
 {
-    /**
-     * This generates an error message
-     */
-    public function error(
-        int $code,
-        string $message,
-        string $action,
-        string $type
-    ): string;
+    public function getUser(): User;
 
-    /**
-     * @param integer[] $albums
-     * @param array $include
-     * @param integer|null $user_id
-     * @param bool $encode
-     * @param int $limit
-     * @param int $offset
-     *
-     * @return array|string
-     */
-    public function albums(
-        array $albums,
-        array $include = [],
-        ?int $user_id = null,
-        bool $encode = true,
-        int $limit = 0,
-        int $offset = 0
-    );
+    public function extendSession(): void;
 }

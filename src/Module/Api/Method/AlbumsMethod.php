@@ -25,12 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\User;
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
+use Ampache\Module\Api\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
@@ -44,10 +43,14 @@ final class AlbumsMethod implements MethodInterface
 
     private StreamFactoryInterface $streamFactory;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
-        StreamFactoryInterface $streamFactory
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->streamFactory = $streamFactory;
+        $this->modelFactory  = $modelFactory;
     }
 
     /**
@@ -55,7 +58,9 @@ final class AlbumsMethod implements MethodInterface
      *
      * This returns albums based on the provided search filters
      *
+     * @param GatekeeperInterface $gatekeeper
      * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter  = (string) Alpha-numeric search term //optional
      * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
@@ -69,40 +74,39 @@ final class AlbumsMethod implements MethodInterface
      *
      * @throws ResultEmptyException
      */
-    public function handle(ResponseInterface $response, array $input): ResponseInterface
-    {
-        $browse = Api::getBrowse();
-
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $browse = $this->modelFactory->createBrowse(null, false);
         $browse->reset_filters();
         $browse->set_type('album');
         $browse->set_sort('name', 'ASC');
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter']);
-        Api::set_filter('add', $input['add']);
-        Api::set_filter('update', $input['update']);
+        Api::set_filter($method, $input['filter'] ?? '');
+        Api::set_filter('add', $input['add'] ?? '');
+        Api::set_filter('update', $input['update'] ?? '');
 
         $albums  = $browse->get_objects();
-        if (empty($albums)) {
+        if ($albums === []) {
             throw new ResultEmptyException(
                 T_('No Results')
             );
         }
-        $user    = User::get_from_username(Session::username($input['auth']));
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
 
         ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                $result = Json_Data::albums($albums, $include, $user->id);
-                break;
-            default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-                $result = Xml_Data::albums($albums, $include, $user->id);
-        }
-        Session::extend($input['auth']);
+
+        $result = $output->albums(
+            $albums,
+            $include,
+            $gatekeeper->getUser()->id,
+            true,
+            (int) $input['limit'],
+            (int) $input['offset']
+        );
 
         return $response->withBody(
             $this->streamFactory->createStream(
