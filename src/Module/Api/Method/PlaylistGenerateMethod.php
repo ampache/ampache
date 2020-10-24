@@ -135,12 +135,12 @@ final class PlaylistGenerateMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
                 break;
             default:
-                XML_Data::set_offset($input['offset']);
-                XML_Data::set_limit($input['limit']);
+                Xml_Data::set_offset($input['offset']);
+                Xml_Data::set_limit($input['limit']);
         }
 
         // get db data
@@ -165,26 +165,26 @@ final class PlaylistGenerateMethod
                         echo json_encode($song_ids, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo XML_Data::keyed_array($song_ids, false, 'id');
+                        echo Xml_Data::keyed_array($song_ids, false, 'id');
                 }
                 break;
             case 'index':
                 switch ($input['api_format']) {
                     case 'json':
-                        echo JSON_Data::indexes($song_ids, 'song');
+                        echo Json_Data::indexes($song_ids, 'song');
                         break;
                     default:
-                        echo XML_Data::indexes($song_ids, 'song');
+                        echo Xml_Data::indexes($song_ids, 'song');
                 }
                 break;
             case 'song':
             default:
                 switch ($input['api_format']) {
                     case 'json':
-                        echo JSON_Data::songs($song_ids, $user->id);
+                        echo Json_Data::songs($song_ids, $user->id);
                         break;
                     default:
-                        echo XML_Data::songs($song_ids, $user->id);
+                        echo Xml_Data::songs($song_ids, $user->id);
                 }
         }
         Session::extend($input['auth']);

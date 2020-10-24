@@ -66,10 +66,10 @@ final class UrlToSongMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::songs(array($data['id']), $user->id);
+                echo Json_Data::songs(array($data['id']), $user->id);
                 break;
             default:
-                echo XML_Data::songs(array($data['id']), $user->id);
+                echo Xml_Data::songs(array($data['id']), $user->id);
         }
 
         return true;

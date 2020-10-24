@@ -72,10 +72,10 @@ final class LabelMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::labels(array($object_id));
+                echo Json_Data::labels(array($object_id));
                 break;
             default:
-                echo XML_Data::labels(array($object_id));
+                echo Xml_Data::labels(array($object_id));
         }
         Session::extend($input['auth']);
 

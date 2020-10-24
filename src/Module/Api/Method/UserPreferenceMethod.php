@@ -69,7 +69,7 @@ final class UserPreferenceMethod
                 echo json_encode($output_array, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo XML_Data::object_array($output_array['preference'], 'preference');
+                echo Xml_Data::object_array($output_array['preference'], 'preference');
         }
         Session::extend($input['auth']);
 

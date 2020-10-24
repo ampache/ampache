@@ -72,10 +72,10 @@ final class LastShoutsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::shouts($shouts);
+                echo Json_Data::shouts($shouts);
                 break;
             default:
-                echo XML_Data::shouts($shouts);
+                echo Xml_Data::shouts($shouts);
         }
         Session::extend($input['auth']);
 

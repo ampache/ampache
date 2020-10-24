@@ -84,7 +84,7 @@ final class DemocraticMethod
                         echo json_encode($xml_array, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo XML_Data::keyed_array($xml_array);
+                        echo Xml_Data::keyed_array($xml_array);
                 }
                 break;
             case 'devote':
@@ -107,7 +107,7 @@ final class DemocraticMethod
                         echo json_encode($xml_array, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo XML_Data::keyed_array($xml_array);
+                        echo Xml_Data::keyed_array($xml_array);
                 }
                 break;
             case 'playlist':
@@ -117,10 +117,10 @@ final class DemocraticMethod
                 Democratic::build_vote_cache($democratic->vote_ids);
                 switch ($input['api_format']) {
                     case 'json':
-                        echo JSON_Data::democratic($objects, $user->id);
+                        echo Json_Data::democratic($objects, $user->id);
                         break;
                     default:
-                        echo XML_Data::democratic($objects, $user->id);
+                        echo Xml_Data::democratic($objects, $user->id);
                 }
                 break;
             case 'play':
@@ -131,7 +131,7 @@ final class DemocraticMethod
                         echo json_encode($xml_array, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo XML_Data::keyed_array($xml_array);
+                        echo Xml_Data::keyed_array($xml_array);
                 }
                 break;
             default:

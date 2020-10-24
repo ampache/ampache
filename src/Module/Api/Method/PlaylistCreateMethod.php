@@ -72,10 +72,10 @@ final class PlaylistCreateMethod
         }
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::playlists(array($object_id));
+                echo Json_Data::playlists(array($object_id));
                 break;
             default:
-                echo XML_Data::playlists(array($object_id));
+                echo Xml_Data::playlists(array($object_id));
         }
         Catalog::count_table('playlist');
         Session::extend($input['auth']);

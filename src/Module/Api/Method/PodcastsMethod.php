@@ -59,16 +59,17 @@ final class PodcastsMethod
 
             return false;
         }
-        Api::$browse->reset_filters();
-        Api::$browse->set_type('podcast');
-        Api::$browse->set_sort('title', 'ASC');
+        $browse = Api::getBrowse();
+        $browse->reset_filters();
+        $browse->set_type('podcast');
+        $browse->set_sort('title', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter']);
         Api::set_filter('add', $input['add']);
         Api::set_filter('update', $input['update']);
 
-        $podcasts = Api::$browse->get_objects();
+        $podcasts = $browse->get_objects();
         if (empty($podcasts)) {
             Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
 
@@ -79,14 +80,14 @@ final class PodcastsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::podcasts($podcasts, $episodes);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::podcasts($podcasts, $episodes);
                 break;
             default:
-                XML_Data::set_offset($input['offset']);
-                XML_Data::set_limit($input['limit']);
-                echo XML_Data::podcasts($podcasts, $episodes);
+                Xml_Data::set_offset($input['offset']);
+                Xml_Data::set_limit($input['limit']);
+                echo Xml_Data::podcasts($podcasts, $episodes);
         }
         Session::extend($input['auth']);
 

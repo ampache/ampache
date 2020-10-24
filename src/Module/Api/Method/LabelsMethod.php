@@ -60,13 +60,14 @@ final class LabelsMethod
             return false;
         }
 
-        Api::$browse->reset_filters();
-        Api::$browse->set_type('label');
-        Api::$browse->set_sort('name', 'ASC');
+        $browse = Api::getBrowse();
+        $browse->reset_filters();
+        $browse->set_type('label');
+        $browse->set_sort('name', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter']);
-        $labels = Api::$browse->get_objects();
+        $labels = $browse->get_objects();
         if (empty($labels)) {
             Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
 
@@ -76,14 +77,14 @@ final class LabelsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::labels($labels);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::labels($labels);
                 break;
             default:
-                XML_Data::set_offset($input['offset']);
-                XML_Data::set_limit($input['limit']);
-                echo XML_Data::labels($labels);
+                Xml_Data::set_offset($input['offset']);
+                Xml_Data::set_limit($input['limit']);
+                echo Xml_Data::labels($labels);
         }
         Session::extend($input['auth']);
 

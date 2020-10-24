@@ -115,10 +115,10 @@ final class ShareCreateMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::shares($share);
+                echo Json_Data::shares($share);
                 break;
             default:
-                echo XML_Data::shares($share);
+                echo Xml_Data::shares($share);
         }
         Catalog::count_table('share');
         Session::extend($input['auth']);

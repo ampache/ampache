@@ -155,7 +155,7 @@ class Api
      */
     public static $browse = null;
 
-    private static function getBrowse(): Browse
+    public static function getBrowse(): Browse
     {
         if (self::$browse === null) {
             self::$browse = new Browse(null, false);
@@ -175,10 +175,10 @@ class Api
     {
         switch ($format) {
             case 'json':
-                echo JSON_Data::success($message, $return_data);
+                echo Json_Data::success($message, $return_data);
                 break;
             default:
-                echo XML_Data::success($message, $return_data);
+                echo Xml_Data::success($message, $return_data);
         }
     } // message
 
@@ -195,10 +195,10 @@ class Api
     {
         switch ($format) {
             case 'json':
-                echo JSON_Data::error($error_code, $message, $method, $error_type);
+                echo Json_Data::error($error_code, $message, $method, $error_type);
                 break;
             default:
-                echo XML_Data::error($error_code, $message, $method, $error_type);
+                echo Xml_Data::error($error_code, $message, $method, $error_type);
         }
     } // error
 

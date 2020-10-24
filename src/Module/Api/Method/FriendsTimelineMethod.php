@@ -71,10 +71,10 @@ final class FriendsTimelineMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::timeline($activities);
+                echo Json_Data::timeline($activities);
                 break;
             default:
-                echo XML_Data::timeline($activities);
+                echo Xml_Data::timeline($activities);
         }
         Session::extend($input['auth']);
 

@@ -39,7 +39,7 @@ use Ampache\Module\System\Session;
  */
 final class HandshakeMethod
 {
-    private const ACTION = 'handshake';
+    public const ACTION = 'handshake';
 
     /**
      * handshake
@@ -163,7 +163,7 @@ final class HandshakeMethod
                         echo json_encode($outarray, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo XML_Data::keyed_array($outarray);
+                        echo Xml_Data::keyed_array($outarray);
                 }
 
                 return true;

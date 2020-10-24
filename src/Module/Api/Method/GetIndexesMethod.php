@@ -73,9 +73,10 @@ final class GetIndexesMethod
 
             return false;
         }
-        Api::$browse->reset_filters();
-        Api::$browse->set_type($type);
-        Api::$browse->set_sort('name', 'ASC');
+        $browse = Api::getBrowse();
+        $browse->reset_filters();
+        $browse->set_type($type);
+        $browse->set_sort('name', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter']);
@@ -83,23 +84,23 @@ final class GetIndexesMethod
         Api::set_filter('update', $input['update']);
 
         if ($type == 'playlist') {
-            Api::$browse->set_filter('playlist_type', $user->id);
-            $objects = array_merge(Api::$browse->get_objects(), Playlist::get_smartlists(true, $user->id));
+            $browse->set_filter('playlist_type', $user->id);
+            $objects = array_merge($browse->get_objects(), Playlist::get_smartlists(true, $user->id));
         } else {
-            $objects = Api::$browse->get_objects();
+            $objects = $browse->get_objects();
         }
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::indexes($objects, $type, $include);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::indexes($objects, $type, $include);
                 break;
             default:
-                XML_Data::set_offset($input['offset']);
-                XML_Data::set_limit($input['limit']);
-                echo XML_Data::indexes($objects, $type, true, $include);
+                Xml_Data::set_offset($input['offset']);
+                Xml_Data::set_limit($input['limit']);
+                echo Xml_Data::indexes($objects, $type, true, $include);
         }
         Session::extend($input['auth']);
 

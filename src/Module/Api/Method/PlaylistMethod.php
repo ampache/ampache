@@ -71,10 +71,10 @@ final class PlaylistMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::playlists(array($object_id));
+                echo Json_Data::playlists(array($object_id));
                 break;
             default:
-                echo XML_Data::playlists(array($object_id));
+                echo Xml_Data::playlists(array($object_id));
         }
         Session::extend($input['auth']);
 

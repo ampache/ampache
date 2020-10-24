@@ -69,10 +69,10 @@ final class AlbumMethod
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::albums(array($object_id), $include, $user->id);
+                echo Json_Data::albums(array($object_id), $include, $user->id);
                 break;
             default:
-                echo XML_Data::albums(array($object_id), $include, $user->id);
+                echo Xml_Data::albums(array($object_id), $include, $user->id);
         }
         Session::extend($input['auth']);
 

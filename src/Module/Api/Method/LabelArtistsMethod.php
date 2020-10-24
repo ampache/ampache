@@ -74,10 +74,10 @@ final class LabelArtistsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::artists($artists, $include, $user->id);
+                echo Json_Data::artists($artists, $include, $user->id);
                 break;
             default:
-                echo XML_Data::artists($artists, $include, $user->id);
+                echo Xml_Data::artists($artists, $include, $user->id);
         }
         Session::extend($input['auth']);
 

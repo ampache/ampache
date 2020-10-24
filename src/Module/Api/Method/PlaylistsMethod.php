@@ -76,14 +76,14 @@ final class PlaylistsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::playlists($playlist_ids);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::playlists($playlist_ids);
                 break;
             default:
-                XML_Data::set_offset($input['offset']);
-                XML_Data::set_limit($input['limit']);
-                echo XML_Data::playlists($playlist_ids);
+                Xml_Data::set_offset($input['offset']);
+                Xml_Data::set_limit($input['limit']);
+                echo Xml_Data::playlists($playlist_ids);
         }
         Session::extend($input['auth']);
 

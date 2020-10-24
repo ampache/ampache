@@ -130,7 +130,7 @@ final class LocalplayMethod
                 echo json_encode($output_array, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo XML_Data::keyed_array($output_array);
+                echo Xml_Data::keyed_array($output_array);
         }
         Session::extend($input['auth']);
 

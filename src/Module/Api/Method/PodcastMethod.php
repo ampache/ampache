@@ -75,10 +75,10 @@ final class PodcastMethod
         $episodes = $input['include'] == 'episodes';
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::podcasts(array($object_id), $episodes);
+                echo Json_Data::podcasts(array($object_id), $episodes);
                 break;
             default:
-                echo XML_Data::podcasts(array($object_id), $episodes);
+                echo Xml_Data::podcasts(array($object_id), $episodes);
         }
         Session::extend($input['auth']);
 

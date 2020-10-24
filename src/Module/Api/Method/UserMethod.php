@@ -82,10 +82,10 @@ final class UserMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::user($user, $fullinfo);
+                echo Json_Data::user($user, $fullinfo);
                 break;
             default:
-                echo XML_Data::user($user, $fullinfo);
+                echo Xml_Data::user($user, $fullinfo);
         }
         Session::extend($input['auth']);
 

@@ -58,9 +58,10 @@ final class SongsMethod
      */
     public static function songs(array $input)
     {
-        Api::$browse->reset_filters();
-        Api::$browse->set_type('song');
-        Api::$browse->set_sort('title', 'ASC');
+        $browse = Api::getBrowse();
+        $browse->reset_filters();
+        $browse->set_type('song');
+        $browse->set_sort('title', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter']);
@@ -69,7 +70,7 @@ final class SongsMethod
         // Filter out disabled songs
         Api::set_filter('enabled', '1');
 
-        $songs = Api::$browse->get_objects();
+        $songs = $browse->get_objects();
         if (empty($songs)) {
             Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
 
@@ -80,14 +81,14 @@ final class SongsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::songs($songs, $user->id);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::songs($songs, $user->id);
                 break;
             default:
-                XML_Data::set_offset($input['offset']);
-                XML_Data::set_limit($input['limit']);
-                echo XML_Data::songs($songs, $user->id);
+                Xml_Data::set_offset($input['offset']);
+                Xml_Data::set_limit($input['limit']);
+                echo Xml_Data::songs($songs, $user->id);
         }
         Session::extend($input['auth']);
 

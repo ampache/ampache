@@ -58,9 +58,10 @@ final class ArtistsMethod
      */
     public static function artists(array $input)
     {
-        Api::$browse->reset_filters();
-        Api::$browse->set_type('artist');
-        Api::$browse->set_sort('name', 'ASC');
+        $browse = Api::getBrowse();
+        $browse->reset_filters();
+        $browse->set_type('artist');
+        $browse->set_sort('name', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter']);
@@ -68,7 +69,7 @@ final class ArtistsMethod
         Api::set_filter('update', $input['update']);
 
 
-        $artists = Api::$browse->get_objects();
+        $artists = $browse->get_objects();
         if (empty($artists)) {
             Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
 
@@ -80,14 +81,14 @@ final class ArtistsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::artists($artists, $include, $user->id);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::artists($artists, $include, $user->id);
                 break;
             default:
-                XML_Data::set_offset($input['offset']);
-                XML_Data::set_limit($input['limit']);
-                echo XML_Data::artists($artists, $include, $user->id);
+                Xml_Data::set_offset($input['offset']);
+                Xml_Data::set_limit($input['limit']);
+                echo Xml_Data::artists($artists, $include, $user->id);
         }
         Session::extend($input['auth']);
 

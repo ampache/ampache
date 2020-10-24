@@ -66,10 +66,10 @@ final class GenreMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::genres(array($object_id));
+                echo Json_Data::genres(array($object_id));
                 break;
             default:
-                echo XML_Data::genres(array($object_id));
+                echo Xml_Data::genres(array($object_id));
         }
         Session::extend($input['auth']);
 

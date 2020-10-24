@@ -68,10 +68,10 @@ final class SongMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::songs(array((int) $object_id), $user->id);
+                echo Json_Data::songs(array((int) $object_id), $user->id);
                 break;
             default:
-                echo XML_Data::songs(array((int) $object_id), $user->id);
+                echo Xml_Data::songs(array((int) $object_id), $user->id);
         }
         Session::extend($input['auth']);
 

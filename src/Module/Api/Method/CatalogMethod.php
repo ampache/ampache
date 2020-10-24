@@ -65,10 +65,10 @@ final class CatalogMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::catalogs(array($catalog->id));
+                echo Json_Data::catalogs(array($catalog->id));
                 break;
             default:
-                echo XML_Data::catalogs(array($catalog->id));
+                echo Xml_Data::catalogs(array($catalog->id));
         }
         Session::extend($input['auth']);
 

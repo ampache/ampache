@@ -52,14 +52,15 @@ final class VideosMethod
      */
     public static function videos(array $input)
     {
-        Api::$browse->reset_filters();
-        Api::$browse->set_type('video');
-        Api::$browse->set_sort('title', 'ASC');
+        $browse = Api::getBrowse();
+        $browse->reset_filters();
+        $browse->set_type('video');
+        $browse->set_sort('title', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter']);
 
-        $video_ids = Api::$browse->get_objects();
+        $video_ids = $browse->get_objects();
         $user      = User::get_from_username(Session::username($input['auth']));
         if (empty($video_ids)) {
             Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
@@ -69,14 +70,14 @@ final class VideosMethod
 
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::videos($video_ids, $user->id);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
+                echo Json_Data::videos($video_ids, $user->id);
                 break;
             default:
-                XML_Data::set_offset($input['offset']);
-                XML_Data::set_limit($input['limit']);
-                echo XML_Data::videos($video_ids, $user->id);
+                Xml_Data::set_offset($input['offset']);
+                Xml_Data::set_limit($input['limit']);
+                echo Xml_Data::videos($video_ids, $user->id);
         }
         Session::extend($input['auth']);
 

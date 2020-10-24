@@ -87,56 +87,56 @@ final class AdvancedSearchMethod
 
         switch ($input['api_format']) {
             case 'json':
-                JSON_Data::set_offset($input['offset']);
-                JSON_Data::set_limit($input['limit']);
+                Json_Data::set_offset($input['offset']);
+                Json_Data::set_limit($input['limit']);
                 switch ($type) {
                     case 'artist':
-                        echo JSON_Data::artists($results, array(), $user->id);
+                        echo Json_Data::artists($results, array(), $user->id);
                         break;
                     case 'album':
-                        echo JSON_Data::albums($results, array(), $user->id);
+                        echo Json_Data::albums($results, array(), $user->id);
                         break;
                     case 'playlist':
-                        echo JSON_Data::playlists($results);
+                        echo Json_Data::playlists($results);
                         break;
                     case 'label':
-                        echo JSON_Data::labels($results);
+                        echo Json_Data::labels($results);
                         break;
                     case 'user':
-                        echo JSON_Data::users($results);
+                        echo Json_Data::users($results);
                         break;
                     case 'video':
-                        echo JSON_Data::videos($results, $user->id);
+                        echo Json_Data::videos($results, $user->id);
                         break;
                     default:
-                        echo JSON_Data::songs($results, $user->id);
+                        echo Json_Data::songs($results, $user->id);
                         break;
                 }
                 break;
             default:
-                XML_Data::set_offset($input['offset']);
-                XML_Data::set_limit($input['limit']);
+                Xml_Data::set_offset($input['offset']);
+                Xml_Data::set_limit($input['limit']);
                 switch ($type) {
                     case 'artist':
-                        echo XML_Data::artists($results, array(), $user->id);
+                        echo Xml_Data::artists($results, array(), $user->id);
                         break;
                     case 'album':
-                        echo XML_Data::albums($results, array(), $user->id);
+                        echo Xml_Data::albums($results, array(), $user->id);
                         break;
                     case 'playlist':
-                        echo XML_Data::playlists($results);
+                        echo Xml_Data::playlists($results);
                         break;
                     case 'label':
-                        echo XML_Data::labels($results);
+                        echo Xml_Data::labels($results);
                         break;
                     case 'user':
-                        echo XML_Data::users($results);
+                        echo Xml_Data::users($results);
                         break;
                     case 'video':
-                        echo XML_Data::videos($results, $user->id);
+                        echo Xml_Data::videos($results, $user->id);
                         break;
                     default:
-                        echo XML_Data::songs($results, $user->id);
+                        echo Xml_Data::songs($results, $user->id);
                         break;
                 }
         }

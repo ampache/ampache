@@ -144,28 +144,28 @@ final class StatsMethod
         if ($type === 'song') {
             switch ($input['api_format']) {
                 case 'json':
-                    echo JSON_Data::songs($results, $user->id);
+                    echo Json_Data::songs($results, $user->id);
                     break;
                 default:
-                    echo XML_Data::songs($results, $user->id);
+                    echo Xml_Data::songs($results, $user->id);
             }
         }
         if ($type === 'artist') {
             switch ($input['api_format']) {
                 case 'json':
-                    echo JSON_Data::artists($results, array(), $user->id);
+                    echo Json_Data::artists($results, array(), $user->id);
                     break;
                 default:
-                    echo XML_Data::artists($results, array(), $user->id);
+                    echo Xml_Data::artists($results, array(), $user->id);
             }
         }
         if ($type === 'album') {
             switch ($input['api_format']) {
                 case 'json':
-                    echo JSON_Data::albums($results, array(), $user->id);
+                    echo Json_Data::albums($results, array(), $user->id);
                     break;
                 default:
-                    echo XML_Data::albums($results, array(), $user->id);
+                    echo Xml_Data::albums($results, array(), $user->id);
             }
         }
         Session::extend($input['auth']);

@@ -36,6 +36,7 @@ use Ampache\Module\System\Session;
  */
 final class PingMethod
 {
+    public const ACTION = 'ping';
 
     /**
      * ping
@@ -65,7 +66,7 @@ final class PingMethod
                 echo json_encode($xmldata, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo XML_Data::keyed_array($xmldata);
+                echo Xml_Data::keyed_array($xmldata);
         }
     } // ping
 }
