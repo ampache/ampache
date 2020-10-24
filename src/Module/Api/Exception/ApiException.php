@@ -22,22 +22,10 @@
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Api\Output;
+namespace Ampache\Module\Api\Exception;
 
-use Ampache\Module\Api\Json_Data;
+use Exception;
 
-final class JsonOutput implements ApiOutputInterface
+abstract class ApiException extends Exception
 {
-    /**
-     * At the moment, this method just acts a proxy
-     */
-    public function error(int $code, string $message, string $action, string $type): string
-    {
-        return Json_Data::error(
-            $code,
-            $message,
-            $action,
-            $type
-        );
-    }
 }

@@ -26,12 +26,16 @@ namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\User;
+use Ampache\Module\Api\Exception\ApiException;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Method\Exception\ApiMethodException;
 use Ampache\Module\Api\Method\HandshakeMethod;
 use Ampache\Module\Api\Method\PingMethod;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
+use Throwable;
 
 final class ApiHandler implements ApiHandlerInterface
 {
@@ -120,7 +124,24 @@ final class ApiHandler implements ApiHandlerInterface
             );
         }
 
-        call_user_func([$handler, $action], $_GET);
+        try {
+            call_user_func([$handler, $action], $_GET);
+        } catch (ApiMethodException $e) {
+            return $output->error(
+                $e->getCode(),
+                $e->getMessage(),
+                $action,
+                $e->getType()
+            );
+        } catch (ApiException | Throwable $e) {
+            // @todo log errors
+            return $output->error(
+                ErrorCodeEnum::GENERIC_ERROR,
+                'Generic error',
+                $action,
+                'system'
+            );
+        }
 
         return null;
     }

@@ -56,7 +56,7 @@ final class JsonApplication implements ApplicationInterface
         $_GET['api_format'] = 'json';
 
         $result = $this->apiHandler->handle(
-            $this->apiOutputFactory->createXmlOutput()
+            $this->apiOutputFactory->createJsonOutput()
         );
 
         if ($result !== null) {

@@ -99,7 +99,7 @@ class Json_Data
      * This generates a JSON Error message
      * nothing fancy here...
      *
-     * @param string $code Error code
+     * @param int $code Error code
      * @param string $string Error message
      * @param string $action Error method
      * @param string $type Error type
@@ -107,7 +107,7 @@ class Json_Data
      */
     public static function error($code, $string, $action, $type)
     {
-        $message = array("error" => array("errorCode" => $code, "errorAction" => $action, "errorType" => $type, "errorMessage" => $string));
+        $message = array("error" => array("errorCode" => (string) $code, "errorAction" => $action, "errorType" => $type, "errorMessage" => $string));
 
         return json_encode($message, JSON_PRETTY_PRINT);
     } // error

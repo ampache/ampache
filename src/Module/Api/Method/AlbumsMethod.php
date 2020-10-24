@@ -28,6 +28,7 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 
@@ -54,6 +55,8 @@ final class AlbumsMethod
      * limit   = (integer) //optional
      * include = (array|string) 'songs' //optional
      * @return boolean
+     *
+     * @throws ResultEmptyException
      */
     public static function albums(array $input)
     {
@@ -69,9 +72,9 @@ final class AlbumsMethod
 
         $albums  = $browse->get_objects();
         if (empty($albums)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException(
+                T_('No Results')
+            );
         }
         $user    = User::get_from_username(Session::username($input['auth']));
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);

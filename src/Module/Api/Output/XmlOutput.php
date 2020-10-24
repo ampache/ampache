@@ -31,7 +31,7 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts a proxy
      */
-    public function error(string $code, string $message, string $action, string $type): string
+    public function error(int $code, string $message, string $action, string $type): string
     {
         return XML_Data::error(
             $code,

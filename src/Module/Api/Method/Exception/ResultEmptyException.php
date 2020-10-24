@@ -22,22 +22,13 @@
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Api\Output;
+namespace Ampache\Module\Api\Method\Exception;
 
-use Ampache\Module\Api\Json_Data;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 
-final class JsonOutput implements ApiOutputInterface
+final class ResultEmptyException extends ApiMethodException
 {
-    /**
-     * At the moment, this method just acts a proxy
-     */
-    public function error(int $code, string $message, string $action, string $type): string
-    {
-        return Json_Data::error(
-            $code,
-            $message,
-            $action,
-            $type
-        );
-    }
+    protected $code = ErrorCodeEnum::NOT_FOUND;
+
+    protected string $type = 'empty';
 }

@@ -20,24 +20,17 @@
  *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\Api\Exception;
 
-namespace Ampache\Module\Api\Output;
-
-use Ampache\Module\Api\Json_Data;
-
-final class JsonOutput implements ApiOutputInterface
+final class ErrorCodeEnum
 {
-    /**
-     * At the moment, this method just acts a proxy
-     */
-    public function error(int $code, string $message, string $action, string $type): string
-    {
-        return Json_Data::error(
-            $code,
-            $message,
-            $action,
-            $type
-        );
-    }
+    public const ACCESS_CONTROL_NOT_ENABLED = 4700;
+    public const INVALID_HANDSHAKE          = 4701;
+    public const GENERIC_ERROR              = 4702;
+    public const ACCESS_DENIED              = 4703;
+    public const NOT_FOUND                  = 4704;
+    public const MISSING                    = 4705;
+    public const DEPRECATED                 = 4706;
+    public const BAD_REQUEST                = 4710;
+    public const FAILED_ACCESS_CHECK        = 4742;
 }

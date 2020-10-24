@@ -122,7 +122,7 @@ class Xml_Data
      * This generates a standard XML Error message
      * nothing fancy here...
      *
-     * @param string $code Error code
+     * @param int $code Error code
      * @param string $string Error message
      * @param string $action
      * @param string $type

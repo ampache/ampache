@@ -28,7 +28,7 @@ interface ApiOutputInterface
      * This generates an error message
      */
     public function error(
-        string $code,
+        int $code,
         string $message,
         string $action,
         string $type
