@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\User;
 use Ampache\Module\Api\Exception\ApiException;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
@@ -49,16 +50,20 @@ final class ApiHandler implements ApiHandlerInterface
 
     private LoggerInterface $logger;
 
+    private ConfigContainerInterface $configContainer;
+
     private ContainerInterface $dic;
 
     public function __construct(
         StreamFactoryInterface $streamFactory,
         LoggerInterface $logger,
+        ConfigContainerInterface $configContainer,
         ContainerInterface $dic
     ) {
-        $this->streamFactory = $streamFactory;
-        $this->logger        = $logger;
-        $this->dic           = $dic;
+        $this->streamFactory   = $streamFactory;
+        $this->logger          = $logger;
+        $this->configContainer = $configContainer;
+        $this->dic             = $dic;
     }
 
     public function handle(
@@ -73,9 +78,13 @@ final class ApiHandler implements ApiHandlerInterface
         }
 
         // If we don't even have access control on then we can't use this!
-        if (!AmpConfig::get('access_control')) {
+        if (!$this->configContainer->get('access_control')) {
             ob_end_clean();
-            debug_event('api', 'Error Attempted to use the API with Access Control turned off', 3);
+
+            $this->logger->warning(
+                'Error Attempted to use the API with Access Control turned off',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
 
             return $response->withBody(
                 $this->streamFactory->createStream(
@@ -98,7 +107,11 @@ final class ApiHandler implements ApiHandlerInterface
             $action !== HandshakeMethod::ACTION &&
             $action != PingMethod::ACTION
         ) {
-            debug_event('Access Denied', 'Invalid Session attempt to API [' . $action . ']', 3);
+            $this->logger->warning(
+                sprintf('Invalid Session attempt to API [%s]', $action),
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+
             ob_end_clean();
 
             return $response->withBody(
@@ -117,7 +130,10 @@ final class ApiHandler implements ApiHandlerInterface
         $username = ($action == HandshakeMethod::ACTION) ? $_REQUEST['user'] : Session::username($_REQUEST['auth']);
 
         if (!Access::check_network('init-api', $username, 5)) {
-            debug_event('Access Denied', 'Unauthorized access attempt to API [' . Core::get_server('REMOTE_ADDR') . ']', 3);
+            $this->logger->warning(
+                sprintf('Unauthorized access attempt to API [%s]', Core::get_server('REMOTE_ADDR')),
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
             ob_end_clean();
 
             return $response->withBody(
@@ -138,7 +154,10 @@ final class ApiHandler implements ApiHandlerInterface
             if (isset($_REQUEST['user'])) {
                 $GLOBALS['user'] = User::get_from_username(Core::get_request('user'));
             } else {
-                debug_event('api', 'API session [' . Core::get_request('auth') . ']', 3);
+                $this->logger->info(
+                    sprintf('API session [%s]', Core::get_request('auth')),
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
                 $GLOBALS['user'] = User::get_from_username(Session::username(Core::get_request('auth')));
             }
         }
