@@ -64,8 +64,8 @@ final class PlaylistSongsMethod
         debug_event(self::class, 'User ' . $user->id . ' loading playlist: ' . $input['filter'], 5);
 
         $playlist = (str_replace('smart_', '', $object_id) === $object_id)
-            ? new Playlist((int) $object_id)
-            : new Search((int) str_replace('smart_', '', $object_id), 'song', $user);
+            ? new Search((int) str_replace('smart_', '', $object_id), 'song', $user)
+            : new Playlist((int) $object_id);
 
         if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
             Api::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
