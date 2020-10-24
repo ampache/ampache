@@ -29,6 +29,8 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\ApiHandlerInterface;
 use Ampache\Module\Api\Output\ApiOutputFactoryInterface;
 use Ampache\Application\ApplicationInterface;
+use Narrowspark\HttpEmitter\AbstractSapiEmitter;
+use Psr\Http\Message\ResponseFactoryInterface;
 
 final class JsonApplication implements ApplicationInterface
 {
@@ -38,29 +40,42 @@ final class JsonApplication implements ApplicationInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private ResponseFactoryInterface $responseFactory;
+
+    private AbstractSapiEmitter $sapiEmitter;
+
     public function __construct(
         ApiOutputFactoryInterface $apiOutputFactory,
         ApiHandlerInterface $apiHandler,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        ResponseFactoryInterface $responseFactory,
+        AbstractSapiEmitter $sapiEmitter
     ) {
         $this->apiOutputFactory = $apiOutputFactory;
         $this->apiHandler       = $apiHandler;
         $this->configContainer  = $configContainer;
+        $this->responseFactory  = $responseFactory;
+        $this->sapiEmitter      = $sapiEmitter;
     }
 
     public function run(): void
     {
+        $response = $this->responseFactory->createResponse();
+
+        // @todo add headers to reponse after all api methods have been modernized
         /* Set the correct headers */
         header(sprintf('Content-type: application/json; charset=%s', $this->configContainer->get('site_charset')));
 
         $_GET['api_format'] = 'json';
 
-        $result = $this->apiHandler->handle(
+        $response = $this->apiHandler->handle(
+            $response,
             $this->apiOutputFactory->createJsonOutput()
         );
 
-        if ($result !== null) {
-            echo $result;
+        // @todo remove condition after all api methods have been modernized
+        if ($response !== null) {
+            $this->sapiEmitter->emit($response);
         }
     }
 }

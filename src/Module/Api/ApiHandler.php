@@ -30,18 +30,41 @@ use Ampache\Module\Api\Exception\ApiException;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\ApiMethodException;
 use Ampache\Module\Api\Method\HandshakeMethod;
+use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Method\PingMethod;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 final class ApiHandler implements ApiHandlerInterface
 {
+    private StreamFactoryInterface $streamFactory;
+
+    private LoggerInterface $logger;
+
+    private ContainerInterface $dic;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        LoggerInterface $logger,
+        ContainerInterface $dic
+    ) {
+        $this->streamFactory = $streamFactory;
+        $this->logger        = $logger;
+        $this->dic           = $dic;
+    }
+
     public function handle(
+        ResponseInterface $response,
         ApiOutputInterface $output
-    ): ?string {
+    ): ?ResponseInterface {
         $action = (string) Core::get_request('action');
 
         // If it's not a handshake then we can allow it to take up lots of time
@@ -52,13 +75,17 @@ final class ApiHandler implements ApiHandlerInterface
         // If we don't even have access control on then we can't use this!
         if (!AmpConfig::get('access_control')) {
             ob_end_clean();
-            debug_event('xml.server', 'Error Attempted to use XML API with Access Control turned off', 3);
+            debug_event('api', 'Error Attempted to use the API with Access Control turned off', 3);
 
-            return $output->error(
-                '4700',
-                T_('Access Denied'),
-                Core::get_request('action'),
-                'system'
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
+                        T_('Access Denied'),
+                        Core::get_request('action'),
+                        'system'
+                    )
+                )
             );
         }
 
@@ -74,11 +101,15 @@ final class ApiHandler implements ApiHandlerInterface
             debug_event('Access Denied', 'Invalid Session attempt to API [' . $action . ']', 3);
             ob_end_clean();
 
-            return $output->error(
-                '4701',
-                T_('Session Expired'),
-                $action,
-                'account'
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        ErrorCodeEnum::INVALID_HANDSHAKE,
+                        T_('Session Expired'),
+                        $action,
+                        'account'
+                    )
+                )
             );
         }
 
@@ -89,11 +120,15 @@ final class ApiHandler implements ApiHandlerInterface
             debug_event('Access Denied', 'Unauthorized access attempt to API [' . Core::get_server('REMOTE_ADDR') . ']', 3);
             ob_end_clean();
 
-            return $output->error(
-                '4742',
-                T_('Unauthorized access attempt to API - ACL Error'),
-                $action,
-                'account'
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        ErrorCodeEnum::FAILED_ACCESS_CHECK,
+                        T_('Unauthorized access attempt to API - ACL Error'),
+                        $action,
+                        'account'
+                    )
+                )
             );
         }
 
@@ -103,7 +138,7 @@ final class ApiHandler implements ApiHandlerInterface
             if (isset($_REQUEST['user'])) {
                 $GLOBALS['user'] = User::get_from_username(Core::get_request('user'));
             } else {
-                debug_event('xml.server', 'API session [' . Core::get_request('auth') . ']', 3);
+                debug_event('api', 'API session [' . Core::get_request('auth') . ']', 3);
                 $GLOBALS['user'] = User::get_from_username(Session::username(Core::get_request('auth')));
             }
         }
@@ -112,37 +147,69 @@ final class ApiHandler implements ApiHandlerInterface
         AmpConfig::set('stream_beautiful_url', false, true);
 
         // Retrieve the api method handler from the list of known methods
-        $handler = Api::METHOD_LIST[$action] ?? null;
-        if ($handler === null) {
+        $handlerClassName = Api::METHOD_LIST[$action] ?? null;
+        if ($handlerClassName === null) {
             ob_end_clean();
 
-            return $output->error(
-                '4705',
-                T_('Invalid Request'),
-                $action,
-                'system'
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        ErrorCodeEnum::MISSING,
+                        T_('Invalid Request'),
+                        $action,
+                        'system'
+                    )
+                )
             );
         }
 
         try {
-            call_user_func([$handler, $action], $_GET);
+            /**
+             * This condition allows the `new` approach and the legacy one to co-exist.
+             * After implementing the MethodInterface in all api methods, the condition will be removed
+             *
+             * @todo cleanup
+             */
+            if ($this->dic->has($handlerClassName) && $this->dic->get($handlerClassName) instanceof MethodInterface) {
+                /** @var MethodInterface $handler */
+                $handler = $this->dic->get($handlerClassName);
+
+                return $handler->handle($response, $_GET);
+            } else {
+                call_user_func([$handlerClassName, $action], $_GET);
+
+                return null;
+            }
         } catch (ApiMethodException $e) {
-            return $output->error(
-                $e->getCode(),
-                $e->getMessage(),
-                $action,
-                $e->getType()
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        $e->getCode(),
+                        $e->getMessage(),
+                        $action,
+                        $e->getType()
+                    )
+                )
             );
         } catch (ApiException | Throwable $e) {
-            // @todo log errors
-            return $output->error(
-                ErrorCodeEnum::GENERIC_ERROR,
-                'Generic error',
-                $action,
-                'system'
+            $this->logger->error(
+                $e->getMessage(),
+                [
+                    LegacyLogger::CONTEXT_TYPE => __CLASS__,
+                    'method' => $action
+                ]
+            );
+
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        ErrorCodeEnum::GENERIC_ERROR,
+                        'Generic error',
+                        $action,
+                        'system'
+                    )
+                )
             );
         }
-
-        return null;
     }
 }

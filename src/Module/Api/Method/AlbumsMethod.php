@@ -31,21 +31,31 @@ use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
  * Class AlbumsMethod
  * @package Lib\ApiMethods
  */
-final class AlbumsMethod
+final class AlbumsMethod implements MethodInterface
 {
-    const ACTION = 'albums';
+    public const ACTION = 'albums';
+
+    private StreamFactoryInterface $streamFactory;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory
+    ) {
+        $this->streamFactory = $streamFactory;
+    }
 
     /**
-     * albums
      * MINIMUM_API_VERSION=380001
      *
      * This returns albums based on the provided search filters
      *
+     * @param ResponseInterface $response
      * @param array $input
      * filter  = (string) Alpha-numeric search term //optional
      * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
@@ -54,11 +64,12 @@ final class AlbumsMethod
      * offset  = (integer) //optional
      * limit   = (integer) //optional
      * include = (array|string) 'songs' //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
      *
      * @throws ResultEmptyException
      */
-    public static function albums(array $input)
+    public function handle(ResponseInterface $response, array $input): ResponseInterface
     {
         $browse = Api::getBrowse();
 
@@ -84,15 +95,19 @@ final class AlbumsMethod
             case 'json':
                 Json_Data::set_offset($input['offset']);
                 Json_Data::set_limit($input['limit']);
-                echo Json_Data::albums($albums, $include, $user->id);
+                $result = Json_Data::albums($albums, $include, $user->id);
                 break;
             default:
                 Xml_Data::set_offset($input['offset']);
                 Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::albums($albums, $include, $user->id);
+                $result = Xml_Data::albums($albums, $include, $user->id);
         }
         Session::extend($input['auth']);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $result
+            )
+        );
     }
 }

@@ -31,4 +31,5 @@ use function DI\autowire;
 return [
     ApiOutputFactoryInterface::class => autowire(ApiOutputFactory::class),
     ApiHandlerInterface::class => autowire(ApiHandler::class),
+    Method\AlbumsMethod::class => autowire(),
 ];

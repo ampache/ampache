@@ -20,15 +20,20 @@
  *
  */
 
-namespace Ampache\Module\Api;
+namespace Ampache\Module\Api\Method;
 
-use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Api\Exception\ApiException;
+use Ampache\Module\Api\Method\Exception\ApiMethodException;
 use Psr\Http\Message\ResponseInterface;
 
-interface ApiHandlerInterface
+interface MethodInterface
 {
+    /**
+     * @throws ApiMethodException
+     * @throws ApiException
+     */
     public function handle(
         ResponseInterface $response,
-        ApiOutputInterface $output
-    ): ?ResponseInterface;
+        array $input
+    ): ResponseInterface;
 }

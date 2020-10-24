@@ -35,7 +35,12 @@ use Ampache\Module\Util\EnvironmentInterface;
 use getID3;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use MusicBrainz\MusicBrainz;
+use Narrowspark\HttpEmitter\AbstractSapiEmitter;
+use Narrowspark\HttpEmitter\SapiEmitter;
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use SpotifyWebAPI\SpotifyWebAPI;
 use function DI\autowire;
 use function DI\factory;
@@ -67,4 +72,7 @@ return [
             ]
         );
     }),
+    ResponseFactoryInterface::class => autowire(Psr17Factory::class),
+    StreamFactoryInterface::class => autowire(Psr17Factory::class),
+    AbstractSapiEmitter::class => autowire(SapiEmitter::class),
 ];
