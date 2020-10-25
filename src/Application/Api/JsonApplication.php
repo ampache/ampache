@@ -30,6 +30,7 @@ use Ampache\Module\Api\ApiHandlerInterface;
 use Ampache\Module\Api\Output\ApiOutputFactoryInterface;
 use Ampache\Application\ApplicationInterface;
 use Narrowspark\HttpEmitter\AbstractSapiEmitter;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 
 final class JsonApplication implements ApplicationInterface
@@ -44,18 +45,22 @@ final class JsonApplication implements ApplicationInterface
 
     private AbstractSapiEmitter $sapiEmitter;
 
+    private ServerRequestCreatorInterface $serverRequestCreator;
+
     public function __construct(
         ApiOutputFactoryInterface $apiOutputFactory,
         ApiHandlerInterface $apiHandler,
         ConfigContainerInterface $configContainer,
         ResponseFactoryInterface $responseFactory,
-        AbstractSapiEmitter $sapiEmitter
+        AbstractSapiEmitter $sapiEmitter,
+        ServerRequestCreatorInterface $serverRequestCreator
     ) {
-        $this->apiOutputFactory = $apiOutputFactory;
-        $this->apiHandler       = $apiHandler;
-        $this->configContainer  = $configContainer;
-        $this->responseFactory  = $responseFactory;
-        $this->sapiEmitter      = $sapiEmitter;
+        $this->apiOutputFactory     = $apiOutputFactory;
+        $this->apiHandler           = $apiHandler;
+        $this->configContainer      = $configContainer;
+        $this->responseFactory      = $responseFactory;
+        $this->sapiEmitter          = $sapiEmitter;
+        $this->serverRequestCreator = $serverRequestCreator;
     }
 
     public function run(): void
@@ -66,9 +71,16 @@ final class JsonApplication implements ApplicationInterface
         /* Set the correct headers */
         header(sprintf('Content-type: application/json; charset=%s', $this->configContainer->get('site_charset')));
 
-        $_GET['api_format'] = 'json';
+        $request = $this->serverRequestCreator->fromGlobals();
+        $request = $request->withQueryParams(
+            array_merge(
+                ['api_format' => 'json'],
+                $request->getQueryParams()
+            )
+        );
 
         $response = $this->apiHandler->handle(
+            $request,
             $response,
             $this->apiOutputFactory->createJsonOutput()
         );

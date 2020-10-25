@@ -23,7 +23,7 @@
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Exception\ApiException;
-use Ampache\Module\Api\GatekeeperInterface;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\ApiMethodException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Psr\Http\Message\ResponseInterface;

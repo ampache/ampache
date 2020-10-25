@@ -23,14 +23,7 @@
 namespace Ampache\Module\Api\Method\Exception;
 
 use Ampache\Module\Api\Exception\ApiException;
-use Throwable;
 
 abstract class ApiMethodException extends ApiException
 {
-    protected string $type = '';
-
-    public function getType(): string
-    {
-        return $this->type;
-    }
 }

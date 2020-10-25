@@ -38,11 +38,18 @@ use MusicBrainz\MusicBrainz;
 use Narrowspark\HttpEmitter\AbstractSapiEmitter;
 use Narrowspark\HttpEmitter\SapiEmitter;
 use Nyholm\Psr7\Factory\Psr17Factory;
+use Nyholm\Psr7Server\ServerRequestCreator;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ServerRequestFactoryInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\UploadedFileFactoryInterface;
+use Psr\Http\Message\UriFactoryInterface;
 use SpotifyWebAPI\SpotifyWebAPI;
 use function DI\autowire;
+use function DI\create;
 use function DI\factory;
 
 /**
@@ -72,7 +79,12 @@ return [
             ]
         );
     }),
+    Psr17Factory::class => autowire(),
     ResponseFactoryInterface::class => autowire(Psr17Factory::class),
     StreamFactoryInterface::class => autowire(Psr17Factory::class),
+    UriFactoryInterface::class => autowire(Psr17Factory::class),
+    UploadedFileFactoryInterface::class => autowire(Psr17Factory::class),
     AbstractSapiEmitter::class => autowire(SapiEmitter::class),
+    ServerRequestCreatorInterface::class => autowire(ServerRequestCreator::class),
+    ServerRequestFactoryInterface::class => autowire(Psr17Factory::class),
 ];

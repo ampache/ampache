@@ -26,10 +26,9 @@ namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Model\User;
+use Ampache\Module\Api\Authentication\Gatekeeper;
 use Ampache\Module\Api\Exception\ApiException;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Method\Exception\ApiMethodException;
 use Ampache\Module\Api\Method\HandshakeMethod;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Method\PingMethod;
@@ -37,9 +36,9 @@ use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Module\System\Session;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -67,9 +66,15 @@ final class ApiHandler implements ApiHandlerInterface
     }
 
     public function handle(
+        ServerRequestInterface $request,
         ResponseInterface $response,
         ApiOutputInterface $output
     ): ?ResponseInterface {
+        $gatekeeper = new Gatekeeper(
+            $request,
+            $this->logger
+        );
+
         $action = (string) Core::get_request('action');
 
         // If it's not a handshake then we can allow it to take up lots of time
@@ -91,7 +96,7 @@ final class ApiHandler implements ApiHandlerInterface
                     $output->error(
                         ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
                         T_('Access Denied'),
-                        Core::get_request('action'),
+                        $action,
                         'system'
                     )
                 )
@@ -103,7 +108,7 @@ final class ApiHandler implements ApiHandlerInterface
          * login via this interface so we do have an exception for action=login
          */
         if (
-            !Session::exists('api', Core::get_request('auth')) &&
+            $gatekeeper->sessionExists() === false &&
             $action !== HandshakeMethod::ACTION &&
             $action != PingMethod::ACTION
         ) {
@@ -127,7 +132,7 @@ final class ApiHandler implements ApiHandlerInterface
         }
 
         // If the session exists then let's try to pull some data from it to see if we're still allowed to do this
-        $username = ($action == HandshakeMethod::ACTION) ? $_REQUEST['user'] : Session::username($_REQUEST['auth']);
+        $username = ($action == HandshakeMethod::ACTION) ? $_REQUEST['user'] : $gatekeeper->getUserName();
 
         if (!Access::check_network('init-api', $username, 5)) {
             $this->logger->warning(
@@ -151,15 +156,10 @@ final class ApiHandler implements ApiHandlerInterface
         if (
             $action != HandshakeMethod::ACTION && $action != PingMethod::ACTION
         ) {
-            if (isset($_REQUEST['user'])) {
-                $GLOBALS['user'] = User::get_from_username(Core::get_request('user'));
-            } else {
-                $this->logger->info(
-                    sprintf('API session [%s]', Core::get_request('auth')),
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                );
-                $GLOBALS['user'] = User::get_from_username(Session::username(Core::get_request('auth')));
-            }
+            /**
+             * @todo get rid of implicit user registration and pass the user explicitely
+             */
+            $GLOBALS['user'] = $gatekeeper->getUser();
         }
 
         // Make sure beautiful url is disabled as it is not supported by most Ampache clients
@@ -182,9 +182,11 @@ final class ApiHandler implements ApiHandlerInterface
             );
         }
 
-        try {
-            $input = $_GET;
+        $input = $request->getQueryParams();
+        // Ensure the auth param is set
+        $input['auth'] = $gatekeeper->getAuth();
 
+        try {
             /**
              * This condition allows the `new` approach and the legacy one to co-exist.
              * After implementing the MethodInterface in all api methods, the condition will be removed
@@ -192,8 +194,6 @@ final class ApiHandler implements ApiHandlerInterface
              * @todo cleanup
              */
             if ($this->dic->has($handlerClassName) && $this->dic->get($handlerClassName) instanceof MethodInterface) {
-                $gatekeeper = new Gatekeeper($input);
-
                 /** @var MethodInterface $handler */
                 $handler = $this->dic->get($handlerClassName);
 
@@ -208,11 +208,14 @@ final class ApiHandler implements ApiHandlerInterface
 
                 return $response;
             } else {
-                call_user_func([$handlerClassName, $action], $input);
+                call_user_func(
+                    [$handlerClassName, $action],
+                    $input
+                );
 
                 return null;
             }
-        } catch (ApiMethodException $e) {
+        } catch (ApiException $e) {
             return $response->withBody(
                 $this->streamFactory->createStream(
                     $output->error(
@@ -223,7 +226,7 @@ final class ApiHandler implements ApiHandlerInterface
                     )
                 )
             );
-        } catch (ApiException | Throwable $e) {
+        } catch (Throwable $e) {
             $this->logger->error(
                 $e->getMessage(),
                 [

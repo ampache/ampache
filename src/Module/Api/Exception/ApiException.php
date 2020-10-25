@@ -28,4 +28,10 @@ use Exception;
 
 abstract class ApiException extends Exception
 {
+    protected string $type = '';
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
 }

@@ -24,10 +24,12 @@ namespace Ampache\Module\Api;
 
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 interface ApiHandlerInterface
 {
     public function handle(
+        ServerRequestInterface $request,
         ResponseInterface $response,
         ApiOutputInterface $output
     ): ?ResponseInterface;

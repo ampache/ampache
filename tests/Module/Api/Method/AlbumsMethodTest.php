@@ -29,7 +29,7 @@ use Ampache\Model\Album;
 use Ampache\Model\Browse;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\User;
-use Ampache\Module\Api\GatekeeperInterface;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Mockery\MockInterface;

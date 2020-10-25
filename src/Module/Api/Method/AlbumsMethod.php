@@ -27,7 +27,7 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\GatekeeperInterface;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Psr\Http\Message\ResponseInterface;
