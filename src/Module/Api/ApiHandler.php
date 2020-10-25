@@ -213,6 +213,8 @@ final class ApiHandler implements ApiHandlerInterface
                     $input
                 );
 
+                $gatekeeper->extendSession();
+
                 return null;
             }
         } catch (ApiException $e) {
