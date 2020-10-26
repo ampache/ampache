@@ -58,16 +58,23 @@ final class PlaylistMethod
             return false;
         }
         $user      = User::get_from_username(Session::username($input['auth']));
-        $object_id = (int) $input['filter'];
+        $object_id = $input['filter'];
 
-        $playlist = (str_replace('smart_', '', $object_id) === $object_id)
-            ? new Playlist((int) $object_id)
-            : new Search((int) str_replace('smart_', '', $object_id), 'song', $user);
+        $playlist = ((int) $object_id === 0)
+            ? new Search((int) str_replace('smart_', '', $object_id), 'song', $user)
+            : new Playlist((int) $object_id);
+        if (!$playlist->id) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
         if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
             Api::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
+
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
