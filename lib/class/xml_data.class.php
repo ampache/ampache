@@ -410,14 +410,7 @@ class XML_Data
                             "</$object_type>\n";
                     break;
                 case 'playlist':
-                    if (str_replace('smart_', '', (string) $object_id) === (string) $object_id) {
-                        $playlist = new Playlist($object_id);
-                        $playlist->format();
-
-                        $playlist_name  = $playlist->name;
-                        $playlist_user  = $playlist->f_user;
-                        $playitem_total = $playlist->get_media_count('song');
-                    } else {
+                    if ((int) $object_id === 0) {
                         $playlist = new Search((int) str_replace('smart_', '', (string) $object_id));
                         $playlist->format();
 
@@ -427,6 +420,13 @@ class XML_Data
                             : $playlist->type;
                         $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
                         $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
+                    } else {
+                        $playlist = new Playlist($object_id);
+                        $playlist->format();
+
+                        $playlist_name  = $playlist->name;
+                        $playlist_user  = $playlist->f_user;
+                        $playitem_total = $playlist->get_media_count('song');
                     }
                     $songs = ($include) ? $playlist->get_items() : array();
                     $string .= "<$object_type id=\"" . $object_id . "\">\n" .
@@ -723,16 +723,7 @@ class XML_Data
              * smartlist = 'smart_1'
              * playlist  = 1000000
              */
-            if (str_replace('smart_', '', (string) $playlist_id) === (string) $playlist_id) {
-                $playlist    = new Playlist($playlist_id);
-                $playlist_id = $playlist->id;
-                $playlist->format();
-
-                $playlist_name  = $playlist->name;
-                $playlist_user  = $playlist->f_user;
-                $playitem_total = $playlist->get_media_count('song');
-                $playlist_type  = $playlist->type;
-            } else {
+            if ((int) $playlist_id === 0) {
                 $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id));
                 $playlist->format();
 
@@ -740,6 +731,15 @@ class XML_Data
                 $playlist_user  = ($playlist->type !== 'public') ? $playlist->f_user : $playlist->type;
                 $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
                 $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
+                $playlist_type  = $playlist->type;
+            } else {
+                $playlist    = new Playlist($playlist_id);
+                $playlist_id = $playlist->id;
+                $playlist->format();
+
+                $playlist_name  = $playlist->name;
+                $playlist_user  = $playlist->f_user;
+                $playitem_total = $playlist->get_media_count('song');
                 $playlist_type  = $playlist->type;
             }
             // Build this element
