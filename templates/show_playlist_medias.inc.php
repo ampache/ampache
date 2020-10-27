@@ -20,10 +20,11 @@
  *
  */
 
-$web_path = AmpConfig::get('web_path'); ?>
+$web_path = AmpConfig::get('web_path');
+$playlist_duration =  $playlist->get_total_duration()?>
 <?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-    echo '<span class="item-count">' . '| ' . T_('Duration') . ': ' . gmdate("H:i:s",$playlist->get_total_duration()) . '</span>';
+    echo '<span class="item-duration">' . '| ' . T_('Duration') . ': ' . gmdate("H:i:s", $playlist_duration) . '</span>';
 } ?>
 <form method="post" id="reorder_playlist_<?php echo $playlist->id; ?>">
     <table id="reorder_playlist_table" class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="media">
@@ -99,5 +100,5 @@ $web_path = AmpConfig::get('web_path'); ?>
 <?php show_table_render($argument); ?>
 <?php if ($browse->is_show_header()) {
         require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
-        echo '<span class="item-count">' . '| ' . T_('Duration') . ': ' . gmdate("H:i:s",$playlist->get_total_duration()) . '</span>';
+        echo '<span class="item-duration">' . '| ' . T_('Duration') . ': ' . gmdate("H:i:s",$playlist_duration) . '</span>';
     } ?>
