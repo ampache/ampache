@@ -852,7 +852,20 @@ class Xml_Data
         foreach ($podcast_episodes as $episode_id) {
             $episode = new Podcast_Episode($episode_id);
             $episode->format();
-            $string .= "\t<podcast_episode id=\"$episode_id\">\n" . "\t\t<name><![CDATA[" . $episode->f_title . "]]></name>\n" . "\t\t<description><![CDATA[" . $episode->f_description . "]]></description>\n" . "\t\t<category><![CDATA[" . $episode->f_category . "]]></category>\n" . "\t\t<author><![CDATA[" . $episode->f_author . "]]></author>\n" . "\t\t<author_full><![CDATA[" . $episode->f_artist_full . "]]></author_full>\n" . "\t\t<website><![CDATA[" . $episode->f_website . "]]></website>\n" . "\t\t<pubdate><![CDATA[" . $episode->f_pubdate . "]]></pubdate>\n" . "\t\t<state><![CDATA[" . $episode->f_state . "]]></state>\n" . "\t\t<filelength><![CDATA[" . $episode->f_time_h . "]]></filelength>\n" . "\t\t<filesize><![CDATA[" . $episode->f_size . "]]></filesize>\n" . "\t\t<filename><![CDATA[" . $episode->f_file . "]]></filename>\n" . "\t\t<url><![CDATA[" . $episode->link . "]]></url>\n";
+            $string .= "\t<podcast_episode id=\"$episode_id\">\n" .
+                "\t\t<name><![CDATA[" . $episode->f_title . "]]></name>\n" .
+                "\t\t<description><![CDATA[" . $episode->f_description . "]]></description>\n" .
+                "\t\t<category><![CDATA[" . $episode->f_category . "]]></category>\n" .
+                "\t\t<author><![CDATA[" . $episode->f_author . "]]></author>\n" .
+                "\t\t<author_full><![CDATA[" . $episode->f_artist_full . "]]></author_full>\n" .
+                "\t\t<website><![CDATA[" . $episode->f_website . "]]></website>\n" .
+                "\t\t<pubdate><![CDATA[" . $episode->f_pubdate . "]]></pubdate>\n" .
+                "\t\t<state><![CDATA[" . $episode->f_state . "]]></state>\n" .
+                "\t\t<filelength><![CDATA[" . $episode->f_time_h . "]]></filelength>\n" .
+                "\t\t<filesize><![CDATA[" . $episode->f_size . "]]></filesize>\n" .
+                "\t\t<filename><![CDATA[" . $episode->f_file . "]]></filename>\n" .
+                "\t\t<url><![CDATA[" . $episode->link . "]]></url>\n" .
+                "\t\t<played>" . $episode->played . "</played>\n";
             $string .= "\t</podcast_episode>\n";
         } // end foreach
 
