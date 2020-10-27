@@ -901,7 +901,7 @@ class XML_Data
                 "\t\t<filelength><![CDATA[" . $episode->f_time_h . "]]></filelength>\n" .
                 "\t\t<filesize><![CDATA[" . $episode->f_size . "]]></filesize>\n" .
                 "\t\t<filename><![CDATA[" . $episode->f_file . "]]></filename>\n" .
-                "\t\t<url><![CDATA[" . $episode->link . "]]></url>\n".
+                "\t\t<url><![CDATA[" . $episode->link . "]]></url>\n" .
                 "\t\t<played>" . $episode->played . "</played>\n";
             $string .= "\t</podcast_episode>\n";
         } // end foreach
