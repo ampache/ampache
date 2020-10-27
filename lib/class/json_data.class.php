@@ -687,7 +687,8 @@ class JSON_Data
                 "filelength" => $episode->f_time_h,
                 "filesize" => $episode->f_size,
                 "filename" => $episode->f_file,
-                "url" => $episode->link]);
+                "url" => $episode->link,
+                "played" => $episode->played]);
         }
         if ($simple) {
             return $allEpisodes;
