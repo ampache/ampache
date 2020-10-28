@@ -870,7 +870,7 @@ class Album extends database_object implements library_item
     public static function get_time($album_id)
     {
         $params     = array($album_id);
-        $sql        = "SUM(`song`.`time`) AS `time` from `song` WHERE `song.`album` = ?";
+        $sql        = "SELECT SUM(`song`.`time`) AS `time` from `song` WHERE `song`.`album` = ?";
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
 

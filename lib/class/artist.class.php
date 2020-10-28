@@ -497,7 +497,7 @@ class Artist extends database_object implements library_item
     public static function get_time($artist_id)
     {
         $params     = array($artist_id);
-        $sql        = "SUM(`song`.`time`) AS `time` from `song` WHERE `song.`artist` = ?";
+        $sql        = "SELECT SUM(`song`.`time`) AS `time` from `song` WHERE `song`.`artist` = ?";
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
 
