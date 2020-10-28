@@ -293,7 +293,7 @@ class Stats
     public static function get_time($object_id, $object_type)
     {
         $sql = "SELECT `time` FROM `$object_type` " .
-               "WHERE `object_id` = ?";
+               "WHERE `id` = ?";
         $db_results = Dba::read($sql, array($object_id));
 
         return (int) Dba::fetch_assoc($db_results['time']);
