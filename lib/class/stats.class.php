@@ -278,9 +278,8 @@ class Stats
         }
         $sql .= "ORDER BY `object_count`.`date` DESC LIMIT 1";
         $db_results = Dba::read($sql, $sqlres);
-        $results    = Dba::fetch_assoc($db_results);
 
-        return (int) $results['time'];
+        return Dba::fetch_assoc($db_results);
     } // get_last_play
 
     /**
@@ -296,8 +295,9 @@ class Stats
         $sql = "SELECT `time` FROM `$object_type` " .
                "WHERE `id` = ?";
         $db_results = Dba::read($sql, array($object_id));
+        $results    = Dba::fetch_assoc($db_results);
 
-        return (int) Dba::fetch_assoc($db_results['time']);
+        return (int) $results['time'];
     } // get_time
 
     /**
