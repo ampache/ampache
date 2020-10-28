@@ -220,6 +220,9 @@ class Update
                          "* Add time to artist and album<br/ >";
         $version[]     = array('version' => '400014', 'description' => $update_string);
 
+        $update_string = "* Extend artist time. smallint was too small<br/ > ";
+        $version[]     = array('version' => '400015', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1261,6 +1264,22 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql    = "ALTER TABLE `artist` ADD COLUMN `time` smallint(5) unsigned NOT NULL DEFAULT '0'";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+    //
+
+    /**
+     * update_400015
+     *
+     * Extend artist time. smallint was too small
+     */
+    public static function update_400015()
+    {
+        $retval = true;
+
+        $sql    = "ALTER TABLE `artist` MODIFY COLUMN `time` int(11) unsigned DEFAULT NULL NULL;";
         $retval &= Dba::write($sql);
 
         return $retval;
