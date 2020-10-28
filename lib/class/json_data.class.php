@@ -334,6 +334,7 @@ class JSON_Data
                 "averagerating" => ($rating->get_average_rating() ?: null),
                 "mbid" => $artist->mbid,
                 "summary" => $artist->summary,
+                "time" => $artist->time,
                 "yearformed" => $artist->yearformed,
                 "placeformed" => $artist->placeformed
             ));
@@ -410,6 +411,7 @@ class JSON_Data
                 $disk = (count($album->album_suite) <= 1) ? $album->disk : count($album->album_suite);
             }
 
+            $theArray['time']          = (int) $album->total_duration;
             $theArray['year']          = (int) $album->year;
             $theArray['tracks']        = $songs;
             $theArray['disk']          = (int) $disk;

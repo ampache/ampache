@@ -620,6 +620,7 @@ class XML_Data
                     "\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
                     "\t<mbid><![CDATA[" . $artist->mbid . "]]></mbid>\n" .
                     "\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n" .
+                    "\t<time><![CDATA[" . $artist->time . "]]></time>\n" .
                     "\t<yearformed>" . $artist->yearformed . "</yearformed>\n" .
                     "\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n" .
                     "</artist>\n";
@@ -685,7 +686,8 @@ class XML_Data
                 $disk = (count($album->album_suite) <= 1) ? $album->disk : count($album->album_suite);
             }
 
-            $string .= "\t<year>" . $album->year . "</year>\n" .
+            $string .= "\t<time>" . $album->total_duration . "</time>\n" .
+                    "\t<year>" . $album->year . "</year>\n" .
                     "\t<tracks>" . $songs . "</tracks>\n" .
                     "\t<disk>" . $disk . "</disk>\n" .
                     self::genre_string($album->tags) .
