@@ -204,7 +204,7 @@ class Update
         $version[]     = array('version' => '400010', 'description' => $update_string);
 
         $update_string = "**IMPORTANT UPDATE NOTES**<br /><br />" .
-                         "To allow negatives the maximum value of `song`.`track` has been reduced.  " .
+                         "To allow negatives the maximum value of `song`.`track` has been reduced. " .
                          "This shouldn't affect anyone due to the large size allowed.<br /><br />" .
                          "* Allow negative track numbers for albums. (-32,767 -> 32,767)<br />" .
                          "* Truncate database tracks to 0 when greater than 32,767<br />";
@@ -216,6 +216,9 @@ class Update
         $update_string = "* Extend Democratic cooldown beyond 255.<br/ >";
         $version[]     = array('version' => '400013', 'description' => $update_string);
 
+        $update_string = "* Add last_duration to playlist<br/ > " .
+                         "* Add time to artist and album<br/ >";
+        $version[]     = array('version' => '400014', 'description' => $update_string);
 
         return $version;
     }
@@ -1236,6 +1239,28 @@ class Update
     {
         $retval = true;
         $sql    = "ALTER TABLE `democratic` MODIFY COLUMN `cooldown` int(11) unsigned DEFAULT NULL NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400014
+     *
+     * Add last_duration to playlist
+     * Add time to artist and album
+     */
+    public static function update_400014()
+    {
+        $retval = true;
+
+        $sql    = "ALTER TABLE `playlist` ADD COLUMN `last_duration` int(11) unsigned NOT NULL DEFAULT '0'";
+        $retval &= Dba::write($sql);
+
+        $sql    = "ALTER TABLE `album` ADD COLUMN `time` smallint(5) unsigned NOT NULL DEFAULT '0'";
+        $retval &= Dba::write($sql);
+
+        $sql    = "ALTER TABLE `artist` ADD COLUMN `time` smallint(5) unsigned NOT NULL DEFAULT '0'";
         $retval &= Dba::write($sql);
 
         return $retval;
