@@ -112,6 +112,8 @@ class Bookmark extends database_object
     }
 
     /**
+     * get_bookmarks_ids
+     *
      * @param User|null $user
      * @return array
      */
@@ -142,6 +144,24 @@ class Bookmark extends database_object
         $ids       = self::get_bookmarks_ids($user);
         foreach ($ids as $bookmarkid) {
             $bookmarks[] = new Bookmark($bookmarkid);
+        }
+
+        return $bookmarks;
+    }
+
+    /**
+     * get_bookmark
+     * @param array $data
+     * @return integer[]
+     */
+    public static function get_bookmark($data)
+    {
+        $bookmarks  = array();
+        $comment    = scrub_in($data['comment']);
+        $sql        = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `object_type` = ? AND `object_id` = ? AND `comment` = ?";
+        $db_results = Dba::read($sql, array($data['user'], $data['object_type'], $data['object_id'], $comment));
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $bookmarks[] = (int) $results['id'];
         }
 
         return $bookmarks;
@@ -185,6 +205,21 @@ class Bookmark extends database_object
         $sql = "DELETE FROM `bookmark` WHERE `id` = ?";
 
         return Dba::write($sql, array($this->id));
+    }
+
+    /**
+     * delete
+     *
+     * Delete the bookmark when you're done
+     *
+     * @param array $data
+     * @return PDOStatement|boolean
+     */
+    public static function delete(array $data)
+    {
+        $sql = "DELETE FROM `bookmark` WHERE `user` = ? AND `comment` = ? AND `object_type` = ? AND `object_id` = ?";
+
+        return Dba::write($sql, array($data['user'], $data['comment'], $data['object_type'], $data['object_id']));
     }
 
     public function format()

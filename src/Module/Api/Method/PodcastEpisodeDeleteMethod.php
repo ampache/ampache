@@ -42,7 +42,6 @@ final class PodcastEpisodeDeleteMethod
 
     /**
      * podcast_episode_delete
-     *
      * MINIMUM_API_VERSION=420000
      *
      * Delete an existing podcast_episode.

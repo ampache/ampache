@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=0);
-
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -23,6 +21,8 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Util\InterfaceImplementationChecker;
@@ -32,8 +32,6 @@ use Ampache\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Model\Playlist;
 use Ampache\Model\Rating;
-use Ampache\Model\Song;
-use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
@@ -163,14 +161,6 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 }
                 $results['action_buttons'] = ob_get_contents();
                 ob_end_clean();
-                $object_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
-                $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-                $user        = Core::get_global('user');
-                $previous    = Stats::get_last_play($user->id);
-                $song        = new Song($object_id);
-                if ($object_type == 'song' && $previous['object_id'] == $object_id && !stats::is_already_inserted($object_type, $object_id, $user->id, '', time())) {
-                    User::save_mediaplay($user, $song);
-                }
                 break;
             default:
                 $results['rfc3514'] = '0x1';

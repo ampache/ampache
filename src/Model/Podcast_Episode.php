@@ -330,12 +330,14 @@ class Podcast_Episode extends database_object implements Media, library_item
      */
     public function set_played($user, $agent, $location, $date = null)
     {
-        if ($this->played) {
-            return true;
+        // ignore duplicates or skip the last track
+        if ($this->check_play_history($user, $agent, $date)) {
+            Stats::insert('podcast_episode', $this->id, $user, $agent, $location, 'stream', $date);
         }
 
-        /* If it hasn't been played, set it! */
-        self::update_played(true, $this->id);
+        if (!$this->played) {
+            self::update_played(true, $this->id);
+        }
 
         return true;
     } // set_played

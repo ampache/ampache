@@ -22,6 +22,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Disable API/Subsonic password resets in 'simple_user_mode'
 * NEW plugin: 'Personal Favorites'. Show a shortcut to a favorite smartlist or playlist on the homepage
 * Run garbage collection after catalog_update.inc 'clean' or 'verify'
+* Add time and duration to albums, artists instead of calculating from songs each time
 
 ### Changed
 
@@ -49,7 +50,8 @@ All API code that used 'Tag' now references 'Genre' instead
   * 'type' (string) Default: 'Song' ('Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream') //optional
   * 'clear' (integer) 0|1 clear the current playlist on add //optional
 * API::playlist_edit added new parameter 'sort': (0,1) sort the playlist by 'Artist, Album, Song' //optional
-* Api::indexes added parameter 'include': (0,1) include song details with playlists (XML has this by default)
+* Api::indexes added parameter 'include': (0,1) include song details with playlists
+* Add time to artist and album objects. (total time of all songs in seconds)
 * NEW API functions
   * Api::users (ID and Username of the site users)
   * Api::song_delete (Delete files when you are allowed to)
@@ -64,6 +66,10 @@ All API code that used 'Tag' now references 'Genre' instead
   * Api::labels (list your record labels)
   * Api::label (get a label by id)
   * Api::label_artists (get all artists attached to that label)
+  * Api::get_bookmark (See if you've previously played the file)
+  * Api::bookmarks (List all bookmarks created by your account)
+  * Api::bookmark_create (Create a bookmark to allow revisting later)
+  * Api::bookmark_delete (Delete a bookmark by object id, type, user and client name)
 
 ### Changed
 

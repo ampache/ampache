@@ -1698,10 +1698,12 @@ abstract class Catalog extends database_object
             case 'album':
                 $tags = self::getSongTags('album', $libitem->id);
                 Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, false);
+                $libitem->update_time();
                 break;
             case 'artist':
                 $tags = self::getSongTags('artist', $libitem->id);
                 Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, false);
+                $libitem->update_time();
                 break;
         } // end switch type
 

@@ -182,7 +182,7 @@ class Update
         $update_string = "* Add a last_duration to search table to speed up access requests<br />";
         $version[]     = array('version' => '400010', 'description' => $update_string);
 
-        $update_string = "**IMPORTANT UPDATE NOTES**<br /><br />" . "To allow negatives the maximum value of `song`.`track` has been reduced.  " . "This shouldn't affect anyone due to the large size allowed.<br /><br />" . "* Allow negative track numbers for albums. (-32,767 -> 32,767)<br />" . "* Truncate database tracks to 0 when greater than 32,767<br />";
+        $update_string = "**IMPORTANT UPDATE NOTES**<br /><br />" . "To allow negatives the maximum value of `song`.`track` has been reduced. " . "This shouldn't affect anyone due to the large size allowed.<br /><br />" . "* Allow negative track numbers for albums. (-32,767 -> 32,767)<br />" . "* Truncate database tracks to 0 when greater than 32,767<br />";
         $version[]     = array('version' => '400011', 'description' => $update_string);
 
         $update_string = "* Add a rss token to allow the use of RSS unauthenticated feeds<br/ >";
@@ -190,6 +190,12 @@ class Update
 
         $update_string = "* Extend Democratic cooldown beyond 255.<br/ >";
         $version[]     = array('version' => '400013', 'description' => $update_string);
+
+        $update_string = "* Add last_duration to playlist<br/ > * Add time to artist and album<br/ >";
+        $version[]     = array('version' => '400014', 'description' => $update_string);
+
+        $update_string = "* Extend artist time. smallint was too small<br/ > ";
+        $version[]     = array('version' => '400015', 'description' => $update_string);
 
         return $version;
     }
@@ -977,6 +983,44 @@ class Update
     {
         $retval = true;
         $sql    = "ALTER TABLE `democratic` MODIFY COLUMN `cooldown` int(11) unsigned DEFAULT NULL NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400014
+     *
+     * Add last_duration to playlist
+     * Add time to artist and album
+     */
+    public static function update_400014()
+    {
+        $retval = true;
+
+        $sql    = "ALTER TABLE `playlist` ADD COLUMN `last_duration` int(11) unsigned NOT NULL DEFAULT '0'";
+        $retval &= Dba::write($sql);
+
+        $sql    = "ALTER TABLE `album` ADD COLUMN `time` smallint(5) unsigned NOT NULL DEFAULT '0'";
+        $retval &= Dba::write($sql);
+
+        $sql    = "ALTER TABLE `artist` ADD COLUMN `time` smallint(5) unsigned NOT NULL DEFAULT '0'";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+    //
+
+    /**
+     * update_400015
+     *
+     * Extend artist time. smallint was too small
+     */
+    public static function update_400015()
+    {
+        $retval = true;
+
+        $sql    = "ALTER TABLE `artist` MODIFY COLUMN `time` int(11) unsigned DEFAULT NULL NULL;";
         $retval &= Dba::write($sql);
 
         return $retval;

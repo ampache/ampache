@@ -591,12 +591,11 @@ class Subsonic_Xml_Data
 
         $album->format();
         $xalbum->addAttribute('coverArt', 'al-' . self::getAlbumId($album->id));
-        $xalbum->addAttribute('songCount', (string)$album->song_count);
-        // FIXME total_duration on Album doesn't exist
-        $xalbum->addAttribute('duration', (string)$album->total_duration);
-        $xalbum->addAttribute('artistId', (string)self::getArtistId($album->artist_id));
-        $xalbum->addAttribute('parent', (string)self::getArtistId($album->artist_id));
-        $xalbum->addAttribute('artist', (string)self::checkName($album->f_album_artist_name));
+        $xalbum->addAttribute('songCount', (string) $album->song_count);
+        $xalbum->addAttribute('duration', (string) $album->total_duration);
+        $xalbum->addAttribute('artistId', (string) self::getArtistId($album->artist_id));
+        $xalbum->addAttribute('parent', (string) self::getArtistId($album->artist_id));
+        $xalbum->addAttribute('artist', (string) self::checkName($album->f_album_artist_name));
         if ($album->year > 0) {
             $xalbum->addAttribute('year', (string)$album->year);
         }

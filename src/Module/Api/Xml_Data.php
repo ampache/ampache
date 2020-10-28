@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Model\Album;
+use Ampache\Model\Bookmark;
 use Ampache\Model\Label;
 use Ampache\Model\library_item;
 use Ampache\Model\License;
@@ -626,8 +627,22 @@ class Xml_Data
                 ? self::songs($artist->get_songs(), $user_id, false)
                 : ($artist->songs ?: 0);
 
-            $string .= "<artist id=\"" . $artist->id . "\">\n" . "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n" . "\t<songs>" . $songs . "</songs>\n" . "\t<art><![CDATA[$art_url]]></art>\n" . "\t<flag>" . (!$flag->get_flag($user_id,
-                    false) ? 0 : 1) . "</flag>\n" . "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" . "\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" . "\t<averagerating>" . (string)($rating->get_average_rating() ?: null) . "</averagerating>\n" . "\t<mbid><![CDATA[" . $artist->mbid . "]]></mbid>\n" . "\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n" . "\t<yearformed>" . $artist->yearformed . "</yearformed>\n" . "\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n" . "</artist>\n";
+            $string .= "<artist id=\"" . $artist->id . "\">\n" .
+                    "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n" .
+                    $tag_string .
+                    "\t<albums>" . $albums . "</albums>\n" .
+                    "\t<songs>" . $songs . "</songs>\n" .
+                    "\t<art><![CDATA[$art_url]]></art>\n" .
+                    "\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n" .
+                    "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
+                    "\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" .
+                    "\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
+                    "\t<mbid><![CDATA[" . $artist->mbid . "]]></mbid>\n" .
+                    "\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n" .
+                    "\t<time><![CDATA[" . $artist->time . "]]></time>\n" .
+                    "\t<yearformed>" . $artist->yearformed . "</yearformed>\n" .
+                    "\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n" .
+                    "</artist>\n";
         } // end foreach artists
 
         return self::output_xml($string, $full_xml);
@@ -689,7 +704,8 @@ class Xml_Data
                 $disk = (count($album->album_suite) <= 1) ? $album->disk : count($album->album_suite);
             }
 
-            $string .= "\t<year>" . $album->year . "</year>\n" .
+            $string .= "\t<time>" . $album->total_duration . "</time>\n" .
+                    "\t<year>" . $album->year . "</year>\n" .
                     "\t<tracks>" . $songs . "</tracks>\n" .
                     "\t<disk>" . $disk . "</disk>\n" .
                     self::genre_string($album->tags) .
@@ -776,6 +792,34 @@ class Xml_Data
 
         return self::output_xml($string);
     } // shares
+
+    /**
+     * bookmarks
+     *
+     * This returns bookmarks to the user, in a pretty xml document with the information
+     *
+     * @param    array    $bookmarks    (description here...)
+     * @return    string    return xml
+     */
+    public static function bookmarks($bookmarks)
+    {
+        $string = "";
+        foreach ($bookmarks as $bookmark_id) {
+            $bookmark = new Bookmark($bookmark_id);
+            $bookmark->format();
+            $string .= "<bookmark id=\"$bookmark_id\">\n" .
+                "\t<user><![CDATA[" . $bookmark->f_user . "]]></user>\n" .
+                "\t<object_type><![CDATA[" . $bookmark->object_type . "]]></object_type>\n" .
+                "\t<object_id>" . $bookmark->object_id . "</object_id>\n" .
+                "\t<position>" . $bookmark->position . "</position>\n" .
+                "\t<client><![CDATA[" . $bookmark->comment . "]]></client>\n" .
+                "\t<creation_date>" . $bookmark->creation_date . "</creation_date>\n" .
+                "\t<update_date><![CDATA[" . $bookmark->update_date . "]]></update_date>\n" .
+                "</bookmark>\n";
+        } // end foreach
+
+        return self::output_xml($string);
+    } // bookmarks
 
     /**
      * catalogs
