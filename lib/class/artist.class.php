@@ -179,6 +179,10 @@ class Artist extends database_object implements library_item
             $this->$key = $value;
         } // foreach info
 
+        if ($this->time == 0) {
+            $this->time = $this->update_time();
+        }
+
         return true;
     } // constructor
 
