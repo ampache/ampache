@@ -278,8 +278,9 @@ class Stats
         }
         $sql .= "ORDER BY `object_count`.`date` DESC LIMIT 1";
         $db_results = Dba::read($sql, $sqlres);
+        $results    = Dba::fetch_assoc($db_results);
 
-        return Dba::fetch_assoc($db_results);
+        return (int) $results['time'];
     } // get_last_play
 
     /**
