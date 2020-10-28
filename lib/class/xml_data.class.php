@@ -796,6 +796,34 @@ class XML_Data
     } // shares
 
     /**
+     * bookmarks
+     *
+     * This returns bookmarks to the user, in a pretty xml document with the information
+     *
+     * @param    array    $bookmarks    (description here...)
+     * @return    string    return xml
+     */
+    public static function bookmarks($bookmarks)
+    {
+        $string = "";
+        foreach ($bookmarks as $bookmark_id) {
+            $bookmark = new Bookmark($bookmark_id);
+            $bookmark->format();
+            $string .= "<bookmark id=\"$bookmark_id\">\n" .
+                "\t<user><![CDATA[" . $bookmark->f_user . "]]></user>\n" .
+                "\t<object_type><![CDATA[" . $bookmark->object_type . "]]></object_type>\n" .
+                "\t<object_id>" . $bookmark->object_id . "</object_id>\n" .
+                "\t<position>" . $bookmark->position . "</position>\n" .
+                "\t<client><![CDATA[" . $bookmark->comment . "]]></client>\n" .
+                "\t<creation_date>" . $bookmark->creation_date . "</creation_date>\n" .
+                "\t<update_date><![CDATA[" . $bookmark->update_date . "]]></update_date>\n" .
+                "</bookmark>\n";
+        } // end foreach
+
+        return self::output_xml($string);
+    } // bookmarks
+
+    /**
      * catalogs
      *
      * This returns catalogs to the user, in a pretty xml document with the information

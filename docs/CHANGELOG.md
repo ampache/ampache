@@ -66,6 +66,10 @@ All API code that used 'Tag' now references 'Genre' instead
   * Api::labels (list your record labels)
   * Api::label (get a label by id)
   * Api::label_artists (get all artists attached to that label)
+  * Api::get_bookmark (See if you've previously played the file)
+  * Api::bookmarks (List all bookmarks created by your account)
+  * Api::bookmark_create (Create a bookmark to allow revisting later)
+  * Api::bookmark_delete (Delete a bookmark by object id, type, user and client name)
 
 ### Changed
 

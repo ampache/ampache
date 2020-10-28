@@ -41,7 +41,6 @@ final class SongDeleteMethod
 
     /**
      * song_delete
-     *
      * MINIMUM_API_VERSION=5.0.0
      *
      * Delete an existing song.

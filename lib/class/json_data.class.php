@@ -560,6 +560,46 @@ class JSON_Data
     } // shares
 
     /**
+     * bookmarks
+     *
+     * This returns bookmarks to the user, in a pretty json document with the information
+     *
+     * @param array $bookmarks (description here...)
+     * @return string return JSON
+     */
+    public static function bookmarks($bookmarks)
+    {
+        if ((count($bookmarks) > self::$limit || self::$offset > 0) && self::$limit) {
+            $bookmarks = array_splice($bookmarks, self::$offset, self::$limit);
+        }
+
+        $allBookmarks = [];
+        foreach ($bookmarks as $bookmark_id) {
+            $bookmark = new Bookmark($bookmark_id);
+            $bookmark->format();
+            $bookmark_user          = $bookmark->f_user;
+            $bookmark_object_type   = $bookmark->object_type;
+            $bookmark_object_id     = $bookmark->object_id;
+            $bookmark_position      = $bookmark->position;
+            $bookmark_comment       = $bookmark->comment;
+            $bookmark_creation_date = $bookmark->creation_date;
+            $bookmark_update_date   = $bookmark->update_date;
+            // Build this element
+            array_push($allBookmarks, [
+                "id" => (string) $bookmark_id,
+                "owner" => $bookmark_user,
+                "object_type" => $bookmark_object_type,
+                "object_id" => $bookmark_object_id,
+                "position" => $bookmark_position,
+                "client" => $bookmark_comment,
+                "creation_date" => $bookmark_creation_date,
+                "update_date" => $bookmark_update_date]);
+        } // end foreach
+
+        return json_encode(array("bookmark" => $allBookmarks), JSON_PRETTY_PRINT);
+    } // bookmarks
+
+    /**
      * catalogs
      *
      * This returns catalogs to the user, in a pretty json document with the information

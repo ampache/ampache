@@ -2249,8 +2249,9 @@ class Subsonic_Api
      */
     public static function getbookmarks($input)
     {
+        $user_id   = User::get_from_username($input['u'])->id;
         $response  = Subsonic_XML_Data::createSuccessResponse('getbookmarks');
-        $bookmarks = Bookmark::get_bookmarks();
+        $bookmarks = Bookmark::get_bookmarks($user_id);
         Subsonic_XML_Data::addBookmarks($response, $bookmarks);
         self::apiOutput($input, $response);
     }
