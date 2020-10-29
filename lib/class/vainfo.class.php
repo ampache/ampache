@@ -277,7 +277,7 @@ class vainfo
 
         $tagwriter->filename          = $this->filename;
         $tagwriter->tagformats        = array($format);
-        $tagwriter->overwrite_tags    = true;
+        $tagwriter->overwrite_tags    = AmpConfig::get('overwrite_tags', false);
         $tagwriter->tag_encoding      = $TaggingFormat;
         $tagwriter->remove_other_tags = true;
         $tagwriter->tag_data          = $tag_data;

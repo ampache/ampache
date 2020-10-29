@@ -1250,7 +1250,7 @@ class Song extends database_object implements media, library_item
     public function write_id3($data = null, $changed = null)
     {
         $ndata = array();
-        if (AmpConfig::get('write_id3')) {
+        if (AmpConfig::get('write_id3', false)) {
             $catalog = Catalog::create_from_id($this->catalog);
             if ($catalog->get_type() == 'local') {
                 debug_event('song.class', 'Writing id3 metadata to file ' . $this->file, 5);

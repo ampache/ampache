@@ -27,6 +27,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 
 ### Changed
 
+* config version 47
 * get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
 * Renamed 'Tag' strings to 'Genre'
 * 'Sort Tracks by Artist, Album, Song' sorting done by 'Album_Artist, Album, Disk, Track Title'

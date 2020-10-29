@@ -2892,9 +2892,9 @@ abstract class Catalog extends database_object
             case 'update_all_file_tags':
                 $catalogs = self::get_catalogs();
             case 'update_file_tags':
-                $write_id3 = AmpConfig::get('write_id3');
+                $write_id3 = AmpConfig::get('write_id3', false);
                 AmpConfig::set('write_id3', 'true', true);
-                $write_id3_art = AmpConfig::get('write_id3_art');
+                $write_id3_art = AmpConfig::get('write_id3_art', false);
                 AmpConfig::set('write_id3_art', 'true', true);
                 foreach ($catalogs as $catalog_id) {
                     $catalog = self::create_from_id($catalog_id);

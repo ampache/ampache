@@ -401,7 +401,7 @@ class Art extends database_object
         $this->reset();
 
         $current_picturetypeid = ($this->type == 'album') ? 3 : 8;
-        if (AmpConfig::get('write_id3_art')) {
+        if (AmpConfig::get('write_id3_art', false)) {
             $type        = ucfirst($this->type);
             $object_type = new $type($this->uid);
             debug_event('art.class', 'Inserting image Album ' . $album->name . ' on songs.', 5);
