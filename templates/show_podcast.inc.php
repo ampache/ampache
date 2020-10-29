@@ -84,7 +84,7 @@ UI::show_box_top($podcast->f_title, 'info-box'); ?>
         <?php
         } ?>
         <li>
-        <?php echo " <a href=\"" . $podcast->website . "\" target=\"_blank\">" . UI::get_icon('link', T_('Website')) . T_('Website') . "</a>"; ?>
+        <?php echo " <a href=\"" . $podcast->website . "\" target=\"_blank\">" . UI::get_icon('link', T_('Website')) . "</a>"; ?>
         <?php echo " <a href=\"" . $podcast->website . "\" target=\"_blank\">" . T_('Website') . "</a>"; ?>
         </li>
         <li>
