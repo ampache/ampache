@@ -39,15 +39,15 @@ $thcount  = 7; ?>
             <th class="cel_state optional"><?php echo T_('State'); ?></th>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) {
-    ++$thcount; ?>
+                ++$thcount; ?>
                     <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
                 <?php
-} ?>
+            } ?>
                 <?php if (AmpConfig::get('userflags')) {
-        ++$thcount; ?>
+                ++$thcount; ?>
                     <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
                 <?php
-    } ?>
+            } ?>
             <?php
 } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>

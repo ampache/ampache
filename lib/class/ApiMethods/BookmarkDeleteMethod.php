@@ -58,7 +58,6 @@ final class BookmarkDeleteMethod
         $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = $input['filter'];
         $type      = $input['type'];
-        $position  = $input['position'];
         $comment   = $input['client'];
         // confirm the correct data
         if (!in_array($type, array('song', 'video', 'podcast_episode'))) {
@@ -85,8 +84,7 @@ final class BookmarkDeleteMethod
             'user' => $user->id,
             'object_id' => $object_id,
             'object_type' => $type,
-            'comment' => $comment,
-            'position' => $position
+            'comment' => $comment
         );
 
         $bookmark = Bookmark::delete($object);
