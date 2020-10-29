@@ -33,6 +33,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Sort smartlists by file when random is unticked
 * Don't block playlist information actions when you own the playlist
 * Searching 'original_year' will now fall back to 'year' if no release year is present
+* Add date parameter to Api::record_play
 
 ### Fixed
 
