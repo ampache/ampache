@@ -41,10 +41,10 @@ final class BookmarksMethod
     private const ACTION = 'bookmarks';
 
     /**
-     * Bookmarks
+     * bookmarks
      * MINIMUM_API_VERSION=5.0.0
      *
-     * Get information about Bookmarked media this user is allowed to manage.
+     * Get information about bookmarked media this user is allowed to manage.
      *
      * @param array $input
      * @return boolean
