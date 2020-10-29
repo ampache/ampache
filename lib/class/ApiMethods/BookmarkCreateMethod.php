@@ -51,6 +51,7 @@ final class BookmarkCreateMethod
      * filter   = (string) object_id
      * type     = (string) object_type ('song', 'video', 'podcast_episode')
      * position = (integer) current track time in seconds
+     * client   = (string) Agent string Default: 'AmpacheAPI' // optional
      * @return boolean
      */
     public static function bookmark_create(array $input)
@@ -62,7 +63,7 @@ final class BookmarkCreateMethod
         $object_id = $input['filter'];
         $type      = $input['type'];
         $position  = $input['position'];
-        $comment   = $input['client'];
+        $comment   = (isset($input['client'])) ? $input['client'] : 'AmpacheAPI';;
         // confirm the correct data
         if (!in_array($type, array('song', 'video', 'podcast_episode'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
