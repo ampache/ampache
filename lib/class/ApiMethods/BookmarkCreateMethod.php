@@ -63,7 +63,7 @@ final class BookmarkCreateMethod
         $object_id = $input['filter'];
         $type      = $input['type'];
         $position  = $input['position'];
-        $comment   = (isset($input['client'])) ? $input['client'] : 'AmpacheAPI';;
+        $comment   = (isset($input['client'])) ? $input['client'] : 'AmpacheAPI';
         // confirm the correct data
         if (!in_array($type, array('song', 'video', 'podcast_episode'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
