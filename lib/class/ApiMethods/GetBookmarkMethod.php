@@ -49,7 +49,7 @@ final class GetBookmarkMethod
      *
      * @param array $input
      * filter = (string) object_id to find
-     * type   = (string) object_type  ('song', 'video', 'podcast_episode')
+     * type   = (string) object_type ('song', 'video', 'podcast_episode')
      * @return boolean
      */
     public static function get_bookmark(array $input)

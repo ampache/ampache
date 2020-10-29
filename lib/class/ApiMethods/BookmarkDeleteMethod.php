@@ -48,6 +48,7 @@ final class BookmarkDeleteMethod
      * @param array $input
      * filter = (string) object_id to delete
      * type   = (string) object_type  ('song', 'video', 'podcast_episode')
+     * client = (string) Agent string Default: 'AmpacheAPI' // optional
      * @return boolean
      */
     public static function bookmark_delete(array $input)
@@ -58,7 +59,7 @@ final class BookmarkDeleteMethod
         $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = $input['filter'];
         $type      = $input['type'];
-        $comment   = $input['client'];
+        $comment   = (isset($input['client'])) ? (string) $input['client'] : 'AmpacheAPI';
         // confirm the correct data
         if (!in_array($type, array('song', 'video', 'podcast_episode'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -86,6 +87,13 @@ final class BookmarkDeleteMethod
             'object_type' => $type,
             'comment' => $comment
         );
+
+        $find = Bookmark::get_bookmark($object);
+        if (!$find) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
 
         $bookmark = Bookmark::delete($object);
         if (!$bookmark) {

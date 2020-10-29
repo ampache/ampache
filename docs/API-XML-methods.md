@@ -2446,6 +2446,7 @@ Create a placeholder for the current media that you can return to later.
 | 'filter'   | string  | object_id to find                                 |       NO |
 | 'type'     | string  | object_type  ('song', 'video', 'podcast_episode') |       NO |
 | 'position' | integer | current track time in seconds                     |       NO |
+| 'client'   | string  | Agent string. (Default: 'AmpacheAPI')             |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/bookmark_create.xml)
 
@@ -2460,6 +2461,7 @@ Delete an existing bookmark. (if it exists)
 |----------|--------|---------------------------------------------------|---------:|
 | 'filter' | string | object_id to delete                               |       NO |
 | 'type'   | string | object_type  ('song', 'video', 'podcast_episode') |       NO |
+| 'client' | string | Agent string. (Default: 'AmpacheAPI')             |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/bookmark_delete)
 
