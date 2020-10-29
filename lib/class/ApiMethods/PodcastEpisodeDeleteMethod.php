@@ -28,14 +28,20 @@ namespace Lib\ApiMethods;
 use AmpConfig;
 use Api;
 use Catalog;
+use Podcast_Episode;
 use Session;
 use User;
 
+/**
+ * Class PodcastEpisodeDeleteMethod
+ * @package Lib\ApiMethods
+ */
 final class PodcastEpisodeDeleteMethod
 {
+    private const ACTION = 'podcast_episode_delete';
+
     /**
      * podcast_episode_delete
-     *
      * MINIMUM_API_VERSION=420000
      *
      * Delete an existing podcast_episode.
@@ -44,33 +50,38 @@ final class PodcastEpisodeDeleteMethod
      * filter = (string) UID of podcast_episode to delete
      * @return boolean
      */
-    public static function podcast_episode_delete($input)
+    public static function podcast_episode_delete(array $input)
     {
         if (!AmpConfig::get('podcast')) {
-            Api::message('error', T_('Access Denied: podcast features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_parameter($input, array('filter'), 'podcast_episode_delete')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
-        $episode   = new \Podcast_Episode($object_id);
-        $user      = User::get_from_username(Session::username($input['auth']));
-        if (!Catalog::can_remove($episode, $user->id)) {
-            Api::message('error', T_('Access Denied: Unable to delete podcast_episode'), '412', $input['api_format']);
+        $episode   = new Podcast_Episode($object_id);
+        if (!$episode->id) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
-        if ($episode->id) {
-            if ($episode->remove()) {
-                Api::message('success', 'podcast_episode ' . $object_id . ' deleted', null, $input['api_format']);
-            } else {
-                Api::message('error', 'podcast_episode ' . $object_id . ' was not deleted', '400', $input['api_format']);
-            }
-        } else {
-            Api::message('error', 'podcast_episode ' . $object_id . ' was not found', '404', $input['api_format']);
+        $user = User::get_from_username(Session::username($input['auth']));
+        if (!Catalog::can_remove($episode, $user->id)) {
+            Api::error(T_('Require: 75'), '4742', self::ACTION, 'account', $input['api_format']);
+
+            return false;
         }
+
+        if ($episode->remove()) {
+            Api::message('podcast_episode ' . $object_id . ' deleted', $input['api_format']);
+        } else {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
+        }
+        Catalog::count_table('podcast_episode');
         Session::extend($input['auth']);
 
         return true;

@@ -26,9 +26,21 @@ namespace Lib\ApiMethods;
 
 use AmpConfig;
 use Api;
+use Art;
+use Playlist;
+use Search;
+use Session;
+use Song;
+use User;
 
+/**
+ * Class GetArtMethod
+ * @package Lib\ApiMethods
+ */
 final class GetArtMethod
 {
+    private const ACTION = 'get_art';
+
     /**
      * get_art
      * MINIMUM_API_VERSION=400001
@@ -40,55 +52,55 @@ final class GetArtMethod
      * type = (string) 'song', 'artist', 'album', 'playlist', 'search', 'podcast')
      * @return boolean
      */
-    public static function get_art($input)
+    public static function get_art(array $input)
     {
-        if (!Api::check_parameter($input, array('id', 'type'), 'get_art')) {
+        if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['id'];
-        $type      = $input['type'];
+        $type      = (string) $input['type'];
         $size      = $input['size'];
-        $user      = \User::get_from_username(\Session::username($input['auth']));
+        $user      = User::get_from_username(Session::username($input['auth']));
 
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'search', 'podcast'))) {
-            Api::message('error', T_('Incorrect object type') . ' ' . $type, '400', $input['api_format']);
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
 
         $art = null;
         if ($type == 'artist') {
-            $art = new \Art($object_id, 'artist');
+            $art = new Art($object_id, 'artist');
         } elseif ($type == 'album') {
-            $art = new \Art($object_id, 'album');
+            $art = new Art($object_id, 'album');
         } elseif ($type == 'song') {
-            $art = new \Art($object_id, 'song');
+            $art = new Art($object_id, 'song');
             if ($art != null && $art->id == null) {
                 // in most cases the song doesn't have a picture, but the album where it belongs to has
                 // if this is the case, we take the album art
-                $song = new \Song($object_id);
-                $art  = new \Art($song->album, 'album');
+                $song = new Song($object_id);
+                $art  = new Art($song->album, 'album');
             }
         } elseif ($type == 'podcast') {
-            $art = new \Art($object_id, 'podcast');
+            $art = new Art($object_id, 'podcast');
         } elseif ($type == 'search') {
-            $smartlist = new \Search($object_id, 'song', $user);
+            $smartlist = new Search($object_id, 'song', $user);
             $listitems = $smartlist->get_items();
             $item      = $listitems[array_rand($listitems)];
-            $art       = new \Art($item['object_id'], $item['object_type']);
+            $art       = new Art($item['object_id'], $item['object_type']);
             if ($art != null && $art->id == null) {
-                $song = new \Song($item['object_id']);
-                $art  = new \Art($song->album, 'album');
+                $song = new Song($item['object_id']);
+                $art  = new Art($song->album, 'album');
             }
         } elseif ($type == 'playlist') {
-            $playlist  = new \Playlist($object_id);
+            $playlist  = new Playlist($object_id);
             $listitems = $playlist->get_items();
             $item      = $listitems[array_rand($listitems)];
-            $art       = new \Art($item['object_id'], $item['object_type']);
+            $art       = new Art($item['object_id'], $item['object_type']);
             if ($art != null && $art->id == null) {
-                $song = new \Song($item['object_id']);
-                $art  = new \Art($song->album, 'album');
+                $song = new Song($item['object_id']);
+                $art  = new Art($song->album, 'album');
             }
         }
 
@@ -112,7 +124,7 @@ final class GetArtMethod
             header('Content-Length: ' . strlen((string) $art->raw));
             echo $art->raw;
         }
-        \Session::extend($input['auth']);
+        Session::extend($input['auth']);
 
         return true;
     }

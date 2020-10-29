@@ -28,12 +28,19 @@ namespace Lib\ApiMethods;
 use Access;
 use Api;
 use JSON_Data;
+use Playlist;
+use Search;
 use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class PlaylistMethod
+ * @package Lib\ApiMethods
+ */
 final class PlaylistMethod
 {
+    private const ACTION = 'playlist';
 
     /**
      * playlist
@@ -45,29 +52,36 @@ final class PlaylistMethod
      * filter = (string) UID of playlist
      * @return boolean
      */
-    public static function playlist($input)
+    public static function playlist(array $input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'playlist')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
-        $uid  = scrub_in($input['filter']);
+        $user      = User::get_from_username(Session::username($input['auth']));
+        $object_id = $input['filter'];
 
-        $playlist = (str_replace('smart_', '', $uid) === $uid)
-            ? new \Playlist((int) $uid)
-            : new \Search((int) str_replace('smart_', '', $uid), 'song', $user);
+        $playlist = ((int) $object_id === 0)
+            ? new Search((int) str_replace('smart_', '', $object_id), 'song', $user)
+            : new Playlist((int) $object_id);
+        if (!$playlist->id) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
         if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
-            Api::message('error', T_('Access denied to this playlist'), '412', $input['api_format']);
+            Api::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
+
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::playlists(array($uid));
+                echo JSON_Data::playlists(array($object_id));
                 break;
             default:
-                echo XML_Data::playlists(array($uid));
+                echo XML_Data::playlists(array($object_id));
         }
         Session::extend($input['auth']);
 

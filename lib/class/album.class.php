@@ -88,6 +88,15 @@ class Album extends database_object implements library_item
     public $barcode;
 
     /**
+     *  @var integer $time
+     */
+    public $time;
+
+    /**
+     *  @var integer $total_duration
+     */
+    public $total_duration;
+    /**
      *  @var integer $original_year
      */
     public $original_year;
@@ -250,10 +259,16 @@ class Album extends database_object implements library_item
         // Little bit of formatting here
         $this->full_name = trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name']));
 
+        if ($this->time == 0) {
+            $this->time = $this->update_time();
+        }
+        $this->total_duration = $this->time;
+
         // Looking for other albums with same mbid, ordering by disk ascending
         if (AmpConfig::get('album_group')) {
             $this->allow_group_disks = true;
             $this->album_suite       = $this->get_album_suite();
+            $this->total_duration    = $this->get_total_duration($this->album_suite);
         }
 
         return true;
@@ -352,7 +367,6 @@ class Album extends database_object implements library_item
         $sql = "SELECT " .
                 "COUNT(DISTINCT(`song`.`artist`)) AS `artist_count`, " .
                 "COUNT(`song`.`id`) AS `song_count`, " .
-                "SUM(`song`.`time`) AS `total_duration`, " .
                 "`song`.`catalog` AS `catalog_id` ";
 
         $suite_array = $this->album_suite;
@@ -786,6 +800,10 @@ class Album extends database_object implements library_item
             $year              = $this->year;
             $this->f_year_link = "<a href=\"$web_path/search.php?type=album&action=search&limit=0rule_1=year&rule_1_operator=2&rule_1_input=" . $year . "\">" . $year . "</a>";
         }
+
+        if ($this->time == 0) {
+            $this->time = $this->update_time();
+        }
     } // format
 
     /**
@@ -840,6 +858,40 @@ class Album extends database_object implements library_item
     public function get_childrens()
     {
         return $this->get_medias();
+    }
+
+    /**
+     * get_time
+     *
+     * Get time for an album disk.
+     * @param array $album_id
+     * @return integer
+     */
+    public static function get_time($album_id)
+    {
+        $params     = array($album_id);
+        $sql        = "SELECT SUM(`song`.`time`) AS `time` from `song` WHERE `song`.`album` = ?";
+        $db_results = Dba::read($sql, $params);
+        $results    = Dba::fetch_assoc($db_results);
+
+        return (int) $results['time'];
+    }
+
+    /**
+     * get_total_duration
+     *
+     * Get time for a whole album
+     * @param array $album_ids
+     * @return integer
+     */
+    public function get_total_duration($album_ids)
+    {
+        $total_duration = 0;
+        foreach ($album_ids as $object_id) {
+            $total_duration = self::get_time($object_id) + $total_duration;
+        }
+
+        return $total_duration;
     }
 
     /**
@@ -992,6 +1044,23 @@ class Album extends database_object implements library_item
 
         return $results;
     } // get_random_songs
+
+    /**
+     * update_time
+     *
+     * Get time for an album disk and set it.
+     * @return integer
+     */
+    public function update_time()
+    {
+        $time = self::get_time($this->id);
+        if ($time !== $this->time) {
+            $sql = "UPDATE `album` SET `time`=$time WHERE `id`=" . $this->id;
+            Dba::write($sql);
+        }
+
+        return $time;
+    }
 
     /**
      * update

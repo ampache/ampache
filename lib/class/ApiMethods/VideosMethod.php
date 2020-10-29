@@ -31,8 +31,14 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class VideosMethod
+ * @package Lib\ApiMethods
+ */
 final class VideosMethod
 {
+    private const ACTION = 'videos';
+
     /**
      * videos
      * This returns video objects!
@@ -42,8 +48,9 @@ final class VideosMethod
      * exact  = (integer) 0,1, Whether to match the exact term or not //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * @return bool
      */
-    public static function videos($input)
+    public static function videos(array $input)
     {
         Api::$browse->reset_filters();
         Api::$browse->set_type('video');
@@ -54,6 +61,11 @@ final class VideosMethod
 
         $video_ids = Api::$browse->get_objects();
         $user      = User::get_from_username(Session::username($input['auth']));
+        if (empty($video_ids)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
 
         switch ($input['api_format']) {
             case 'json':
@@ -67,5 +79,7 @@ final class VideosMethod
                 echo XML_Data::videos($video_ids, $user->id);
         }
         Session::extend($input['auth']);
+
+        return true;
     }
 }

@@ -31,8 +31,14 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class SongsMethod
+ * @package Lib\ApiMethods
+ */
 final class SongsMethod
 {
+    const ACTION = 'songs';
+
     /**
      * songs
      * MINIMUM_API_VERSION=380001
@@ -48,8 +54,9 @@ final class SongsMethod
      * update = self::set_filter(date) //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * @return boolean
      */
-    public static function songs($input)
+    public static function songs(array $input)
     {
         Api::$browse->reset_filters();
         Api::$browse->set_type('song');
@@ -63,6 +70,11 @@ final class SongsMethod
         Api::set_filter('enabled', '1');
 
         $songs = Api::$browse->get_objects();
+        if (empty($songs)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
         $user  = User::get_from_username(Session::username($input['auth']));
 
         ob_end_clean();
@@ -78,5 +90,7 @@ final class SongsMethod
                 echo XML_Data::songs($songs, $user->id);
         }
         Session::extend($input['auth']);
+
+        return true;
     }
 }

@@ -32,8 +32,14 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class SearchSongsMethod
+ * @package Lib\ApiMethods
+ */
 final class SearchSongsMethod
 {
+    private const ACTION = 'search_songs';
+
     /**
      * search_songs
      * MINIMUM_API_VERSION=380001
@@ -46,9 +52,9 @@ final class SearchSongsMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function search_songs($input)
+    public static function search_songs(array $input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'search_songs')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $array                    = array();

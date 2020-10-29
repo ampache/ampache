@@ -28,10 +28,17 @@ namespace Lib\ApiMethods;
 use AmpConfig;
 use Api;
 use Session;
+use Share;
 use User;
 
+/**
+ * Class ShareEditMethod
+ * @package Lib\ApiMethods
+ */
 final class ShareEditMethod
 {
+    private const ACTION = 'share_edit';
+
     /**
      * share_edit
      * MINIMUM_API_VERSION=420000
@@ -46,23 +53,23 @@ final class ShareEditMethod
      * description = (string) update description //optional
      * @return boolean
      */
-    public static function share_edit($input)
+    public static function share_edit(array $input)
     {
         if (!AmpConfig::get('share')) {
-            Api::message('error', T_('Access Denied: sharing features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_parameter($input, array('filter'), 'share_edit')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $share_id = $input['filter'];
-        if (in_array($share_id, \Share::get_share_list())) {
-            $share       = new \Share($share_id);
+        if (in_array($share_id, Share::get_share_list())) {
+            $share       = new Share($share_id);
             $description = isset($input['description']) ? $input['description'] : $share->description;
             $stream      = isset($input['stream']) ? $input['stream'] : $share->allow_stream;
             $download    = isset($input['download']) ? $input['download'] : $share->allow_download;
-            $expires     = isset($input['expires']) ? \Share::get_expiry($input['expires']) : $share->expire_days;
+            $expires     = isset($input['expires']) ? Share::get_expiry($input['expires']) : $share->expire_days;
             $user        = User::get_from_username(Session::username($input['auth']));
 
             $data = array(
@@ -73,12 +80,14 @@ final class ShareEditMethod
                 'description' => $description
             );
             if ($share->update($data, $user)) {
-                Api::message('success', 'share ' . $share_id . ' updated', null, $input['api_format']);
+                Api::message('share ' . $share_id . ' updated', $input['api_format']);
             } else {
-                Api::message('error', 'share ' . $share_id . ' was not updated', '400', $input['api_format']);
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                Api::error(sprintf(T_('Bad Request: %s'), $share_id), '4710', self::ACTION, 'system', $input['api_format']);
             }
         } else {
-            Api::message('error', 'share ' . $share_id . ' was not found', '404', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $share_id), '4704', self::ACTION, 'filter', $input['api_format']);
         }
         Session::extend($input['auth']);
 

@@ -31,8 +31,14 @@ use JSON_Data;
 use Session;
 use XML_Data;
 
+/**
+ * Class SharesMethod
+ * @package Lib\ApiMethods
+ */
 final class SharesMethod
 {
+    private const ACTION = 'shares';
+
     /**
      * shares
      * MINIMUM_API_VERSION=420000
@@ -45,10 +51,10 @@ final class SharesMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function shares($input)
+    public static function shares(array $input)
     {
         if (!AmpConfig::get('share')) {
-            Api::message('error', T_('Access Denied: sharing features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

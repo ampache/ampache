@@ -1020,9 +1020,10 @@ class Song extends database_object implements media, library_item
             return false;
         }
         // insert stats for each object type
-        Stats::insert('album', $this->album, $user, $agent, $location, 'stream', $date);
-        Stats::insert('artist', $this->artist, $user, $agent, $location, 'stream', $date);
-        Stats::insert('song', $this->id, $user, $agent, $location, 'stream', $date);
+        if (Stats::insert('song', $this->id, $user, $agent, $location, 'stream', $date)) {
+            Stats::insert('album', $this->album, $user, $agent, $location, 'stream', $date);
+            Stats::insert('artist', $this->artist, $user, $agent, $location, 'stream', $date);
+        }
         // If it hasn't been played, set it
         if (!$this->played) {
             self::update_played(true, $this->id);

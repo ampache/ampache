@@ -32,6 +32,7 @@ class Playlist extends playlist_object
     public $genre;
     public $date;
     public $last_update;
+    public $last_duration;
 
     public $link;
     public $f_link;
@@ -53,6 +54,9 @@ class Playlist extends playlist_object
 
         foreach ($info as $key => $value) {
             $this->$key = $value;
+        }
+        if ($this->last_duration == 0) {
+            $this->set_last($this->get_total_duration(), 'last_duration');
         }
     } // Playlist
 
@@ -408,6 +412,7 @@ class Playlist extends playlist_object
         if ($this->_update_item('last_update', $last_update, 50)) {
             $this->last_update = $last_update;
         }
+        $this->set_last($this->get_total_duration(), 'last_duration');
     } // update_last_update
 
     /**
@@ -549,6 +554,21 @@ class Playlist extends playlist_object
     {
         $this->items = $this->get_items();
     } // set_items
+
+    /**
+     * set_last
+     *
+     * @param integer $count
+     * @param string $column
+     */
+    private function set_last($count, $column)
+    {
+        if (in_array($column, array('last_count', 'last_duration'))) {
+            $search_id = Dba::escape($this->id);
+            $sql       = "UPDATE `playlist` SET `" . Dba::escape($column) . "` = " . $count . " WHERE `id` = ?";
+            Dba::write($sql, array($search_id));
+        }
+    }
 
     /**
      * delete_all

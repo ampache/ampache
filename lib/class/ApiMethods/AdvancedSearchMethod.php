@@ -25,14 +25,21 @@ declare(strict_types=0);
 
 namespace Lib\ApiMethods;
 
+use Api;
 use JSON_Data;
 use Search;
 use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class AdvancedSearchMethod
+ * @package Lib\ApiMethods
+ */
 final class AdvancedSearchMethod
 {
+    private const ACTION = 'advanced_search';
+
     /**
      * advanced_search
      * MINIMUM_API_VERSION=380001
@@ -57,12 +64,17 @@ final class AdvancedSearchMethod
      * rule_1          = (string)
      * rule_1_operator = (integer) 0,1|2|3|4|5|6
      * rule_1_input    = (mixed) The string, date, integer you are searching for
-     * type            = (string) 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video' (song by default)
-     * offset          = (integer)
-     * limit           = (integer))
+     * type            = (string) 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video' (song by default) //optional
+     * random          = (boolean)  0, 1 (random order of results; default to 0) //optional
+     * offset          = (integer) //optional
+     * limit           = (integer) //optional
+     * @return boolean
      */
-    public static function advanced_search($input)
+    public static function advanced_search(array $input)
     {
+        if (!Api::check_parameter($input, array('rule_1', 'rule_1_operator', 'rule_1_input'), self::ACTION)) {
+            return false;
+        }
         ob_end_clean();
 
         $user    = User::get_from_username(Session::username($input['auth']));
@@ -70,7 +82,7 @@ final class AdvancedSearchMethod
 
         $type = 'song';
         if (isset($input['type'])) {
-            $type = $input['type'];
+            $type = (string) $input['type'];
         }
 
         switch ($input['api_format']) {
@@ -83,6 +95,18 @@ final class AdvancedSearchMethod
                         break;
                     case 'album':
                         echo JSON_Data::albums($results, array(), $user->id);
+                        break;
+                    case 'playlist':
+                        echo JSON_Data::playlists($results);
+                        break;
+                    case 'label':
+                        echo JSON_Data::labels($results);
+                        break;
+                    case 'user':
+                        echo JSON_Data::users($results);
+                        break;
+                    case 'video':
+                        echo JSON_Data::videos($results, $user->id);
                         break;
                     default:
                         echo JSON_Data::songs($results, $user->id);
@@ -99,11 +123,25 @@ final class AdvancedSearchMethod
                     case 'album':
                         echo XML_Data::albums($results, array(), $user->id);
                         break;
+                    case 'playlist':
+                        echo XML_Data::playlists($results);
+                        break;
+                    case 'label':
+                        echo XML_Data::labels($results);
+                        break;
+                    case 'user':
+                        echo XML_Data::users($results);
+                        break;
+                    case 'video':
+                        echo XML_Data::videos($results, $user->id);
+                        break;
                     default:
                         echo XML_Data::songs($results, $user->id);
                         break;
                 }
         }
         Session::extend($input['auth']);
+
+        return true;
     }
 }

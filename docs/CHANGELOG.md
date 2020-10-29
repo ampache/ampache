@@ -22,6 +22,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Disable API/Subsonic password resets in 'simple_user_mode'
 * NEW plugin: 'Personal Favorites'. Show a shortcut to a favorite smartlist or playlist on the homepage
 * Run garbage collection after catalog_update.inc 'clean' or 'verify'
+* Add time and duration to albums, artists instead of calculating from songs each time
 
 ### Changed
 
@@ -31,6 +32,8 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Extend democratic cooldown past 255 and show an error when out of range
 * Sort smartlists by file when random is unticked
 * Don't block playlist information actions when you own the playlist
+* Searching 'original_year' will now fall back to 'year' if no release year is present
+* Add date parameter to Api::record_play
 
 ### Fixed
 
@@ -48,7 +51,8 @@ All API code that used 'Tag' now references 'Genre' instead
   * 'type' (string) Default: 'Song' ('Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream') //optional
   * 'clear' (integer) 0|1 clear the current playlist on add //optional
 * API::playlist_edit added new parameter 'sort': (0,1) sort the playlist by 'Artist, Album, Song' //optional
-* Api::indexes added parameter 'include': (0,1) include song details with playlists (XML has this by default)
+* Api::indexes added parameter 'include': (0,1) include song details with playlists
+* Add time to artist and album objects. (total time of all songs in seconds)
 * NEW API functions
   * Api::users (ID and Username of the site users)
   * Api::song_delete (Delete files when you are allowed to)
@@ -57,31 +61,48 @@ All API code that used 'Tag' now references 'Genre' instead
   * Api::system_update (Check Ampache for updates and run the update if there is one.)
   * Api::system_preferences (Preferences for the system user)
   * Api::system_preference (Get a system preference by name)
-* New error codes
-  * 404 Not Found (The API could not find the requested object)
-  * 412 Failed Access Check (The user does note have access to this object, method, feature.)
+  * Api::preference_create (Add a new preference to Ampache)
+  * Api::preference_edit (Edit a preference value by name; optionally apply to all users)
+  * Api::preference_delete (Delete a preference by name)
+  * Api::labels (list your record labels)
+  * Api::label (get a label by id)
+  * Api::label_artists (get all artists attached to that label)
+  * Api::get_bookmark (See if you've previously played the file)
+  * Api::bookmarks (List all bookmarks created by your account)
+  * Api::bookmark_create (Create a bookmark to allow revisting later)
+  * Api::bookmark_delete (Delete a bookmark by object id, type, user and client name)
 
 ### Changed
 
-* Renamed functions (Backcompatible string replacement until 5.0.0):
+* Renamed functions:
   * tags => genres
   * tag => genre
   * tag_artists => genre_artists
   * tag_albums => genre_albums
   * tag_songs => genre_songs
 * Don't allow duplicate podcast feeds
-* Api::shares filter is optional
-* Make filter optional in genre_artists, genre_albums, genre_songs (Used as a general catch all method like genres)
+* Make filter optional in shares, genre_artists, genre_albums, genre_songs (Used as a general catch all method like genres)
+* Error Codes and response structure has changed
+  * 4700 Access Control not Enabled
+  * 4701 Received Invalid Handshake
+  * 4703 Access Denied
+  * 4704 Not Found
+  * 4705 Missing Method
+  * 4706 Depreciated Method
+  * 4710 Bad Request
+  * 4742 Failed Access Check
+* get_indexes: 'playlist' now requires include=1 for xml calls if you want the tracks
 
 ### Deprecated
 
-* Api::indexes will stop including playlist track and id in xml by default in Ampache 5.0.0
+* Api::get_indexes; stop including playlist track and id in xml by default
 
 ### Fixed
 
 * Api::podcast_edit wasn't able to edit a podcast...
-* Setting a limit of 'none' would slice away all the results
 * Api::democratic was using action from localplay in the return responses
+* Setting a limit of 'none' would slice away all the results
+* get_indexes for XML didn't include podcast indexes
 
 ## Ampache 4.2.3-release
 

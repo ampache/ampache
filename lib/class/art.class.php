@@ -401,6 +401,7 @@ class Art extends database_object
         if (AmpConfig::get('write_id3_art')) {
             if ($this->type == 'album') {
                 $album = new Album($this->uid);
+
                 debug_event('art.class', 'Inserting image Album ' . $album->name . ' on songs.', 5);
                 $songs = $album->get_songs();
                 foreach ($songs as $song_id) {
@@ -418,8 +419,14 @@ class Art extends database_object
                             $ndata['APIC']['data'] = $source;
                             $ndata['APIC']['mime'] = $mime;
                             $ndata                 = array_merge($ndata, $song->get_metadata());
-                            $id3->write_id3($ndata);
-                            Catalog::update_media_from_tags($song);
+                            try {
+                                $id3->write_id3($ndata);
+                                Catalog::update_media_from_tags($song);
+                            } catch (Exception $error) {
+                                debug_event('art.class', 'Error ' . $error->getMessage(), 1);
+
+                                return false;
+                            }
                         }
                     }
                 }
@@ -1073,6 +1080,7 @@ class Art extends database_object
      */
     public static function duplicate($object_type, $old_object_id, $new_object_id)
     {
+        debug_event('art.class', 'duplicate... type:' . $object_type . ' old_id:' . $old_object_id . ' new_id:' . $new_object_id, 5);
         if (AmpConfig::get('album_art_store_disk')) {
             $sql        = "SELECT `size`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
             $db_results = Dba::read($sql, array($object_type, $old_object_id));
@@ -1197,6 +1205,7 @@ class Art extends database_object
     /**
      * gather_spotify
      * This function gathers art from the spotify catalog
+     * @param integer $limit
      * @param array $data
      * @return array
      */
@@ -1254,7 +1263,7 @@ class Art extends database_object
                         case 'artist':
                           $query1 .= " artist:\"{$data['artist']}\"";
                         break;
-                        case (preg_match('/year:.*/', $item) ? true :false):
+                        case preg_match('/year:.*/', $item):
                            $query1 .= ' ' . $item;
                         break;
                         default:
@@ -1270,6 +1279,8 @@ class Art extends database_object
             $response = $api->search($query, $this->type, ['limit' => $limit]);
         } catch (SpotifyWebAPIException $error) {
             if ($error->hasExpiredToken()) {
+                $session = new SpotifySession($clientId, $clientSecret);
+                $session->requestCredentialsToken();
                 $accessToken = $session->getAccessToken();
             } elseif ($error->getCode() == 429) {
                 $lastResponse = $api->getRequest()->getLastResponse();

@@ -28,10 +28,17 @@ namespace Lib\ApiMethods;
 use Api;
 use JSON_Data;
 use Session;
+use Tag;
 use XML_Data;
 
+/**
+ * Class GenreMethod
+ * @package Lib\ApiMethods
+ */
 final class GenreMethod
 {
+    private const ACTION = 'genre';
+
     /**
      * genre
      * MINIMUM_API_VERSION=380001
@@ -42,19 +49,27 @@ final class GenreMethod
      * filter = (string) UID of Genre
      * @return boolean
      */
-    public static function genre($input)
+    public static function genre(array $input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'genre')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $uid = scrub_in($input['filter']);
+        $object_id = (int) $input['filter'];
+        $tag       = new Tag($object_id);
+        if (!$tag->id) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
+
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::genres(array($uid));
+                echo JSON_Data::genres(array($object_id));
                 break;
             default:
-                echo XML_Data::genres(array($uid));
+                echo XML_Data::genres(array($object_id));
         }
         Session::extend($input['auth']);
 

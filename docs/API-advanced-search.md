@@ -99,7 +99,7 @@ Send the correct input based on the type of search.
 | integer      |
 | boolean      |
 
-**NOTE** To search metadata you need to add a 4th rule "rule_X_subtype"
+**NOTE** To search metadata you need to add a 4th rule "rule_*_subtype"
 Operators for metadata are using the text/tag types **AND** numeric types in a single list as they can be ints/strings/dates.
 Currently there is not a simple way to identify what metadata types you have saved. New methods will be created for this.
 
@@ -136,11 +136,13 @@ To search a mixed type like metadata you must search using 4 rules.
 
 @param array $input
 
-|  Input   | Description                                                              |
-|:--------:|--------------------------------------------------------------------------|
-| operator | (string) 'and', 'or' (whether to match one rule or all)                  |
-|  rules   | (array) [rule, operator, input]                                          |
-|   type   | (string) 'song', 'album', 'artist', 'playlist', 'label', 'user', 'video' |
-|  random  | (integer) 0,1 (random order of results; default to 0)                    |
-|  offset  | (integer)                                                                |
-|  limit'  | (integer)                                                                |
+| Input    | Type    | Description                                   | Optional |
+|----------|---------|--------------- -------------------------------|---------:|
+| operator | string  | 'and','or' (whether to match one rule or all) |       NO |
+| rule_*   | array   | [rule_1,rule_1_operator,rule_1_input],        |       NO |
+| rule_*   | array   | [rule_2,rule_2_operator,rule_2_input], [etc]] |      YES |
+| type     | string  | 'song', 'album', 'artist', 'playlist',        |       NO |
+|          |         | 'label', 'user', 'video'                      |          |
+| random   | boolean | 0, 1 (random order of results; default to 0)  |      YES |
+| offset   | integer |                                               |      YES |
+| limit'   | integer |                                               |      YES |

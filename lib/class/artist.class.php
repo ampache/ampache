@@ -179,6 +179,10 @@ class Artist extends database_object implements library_item
             $this->$key = $value;
         } // foreach info
 
+        if ($this->time == 0) {
+            $this->time = $this->update_time();
+        }
+
         return true;
     } // constructor
 
@@ -488,6 +492,23 @@ class Artist extends database_object implements library_item
     }
 
     /**
+     * get_time
+     *
+     * Get time for an artist's songs.
+     * @param array $artist_id
+     * @return integer
+     */
+    public static function get_time($artist_id)
+    {
+        $params     = array($artist_id);
+        $sql        = "SELECT SUM(`song`.`time`) AS `time` from `song` WHERE `song`.`artist` = ?";
+        $db_results = Dba::read($sql, $params);
+        $results    = Dba::fetch_assoc($db_results);
+
+        return (int) $results['time'];
+    }
+
+    /**
      * _get_extra info
      * This returns the extra information for the artist, this means totals etc
      * @param integer $catalog
@@ -597,6 +618,9 @@ class Artist extends database_object implements library_item
             }
 
             $this->object_cnt = $extra_info['object_cnt'];
+        }
+        if ($this->time == 0) {
+            $this->time = $this->update_time();
         }
 
         return true;
@@ -1046,6 +1070,23 @@ class Artist extends database_object implements library_item
     {
         $sql = "UPDATE `artist` SET `last_update` = ? WHERE `id` = ?";
         Dba::write($sql, array(time(), $object_id));
+    }
+
+    /**
+     * update_time
+     *
+     * Get time for an artist and set it.
+     * @return integer
+     */
+    public function update_time()
+    {
+        $time = self::get_time($this->id);
+        if ($time !== $this->time) {
+            $sql = "UPDATE `artist` SET `time`=$time WHERE `id`=" . $this->id;
+            Dba::write($sql);
+        }
+
+        return $time;
     }
 
     /**

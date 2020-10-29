@@ -28,12 +28,19 @@ namespace Lib\ApiMethods;
 use AmpConfig;
 use Api;
 use JSON_Data;
+use Podcast;
 use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class PodcastEpisodesMethod
+ * @package Lib\ApiMethods
+ */
 final class PodcastEpisodesMethod
 {
+    private const ACTION = 'podcast_episodes';
+
     /**
      * podcast_episodes
      * MINIMUM_API_VERSION=420000
@@ -46,23 +53,34 @@ final class PodcastEpisodesMethod
      * limit  = (integer) //optional
      * @return boolean
      */
-    public static function podcast_episodes($input)
+    public static function podcast_episodes(array $input)
     {
         if (!AmpConfig::get('podcast')) {
-            Api::message('error', T_('Access Denied: podcast features are not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_parameter($input, array('filter'), 'podcast_episodes')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
-        $uid  = (int) scrub_in($input['filter']);
-        debug_event('api.class', 'User ' . $user->id . ' loading podcast: ' . $input['filter'], 5);
-        $podcast = new \Podcast($uid);
-        $items   = $podcast->get_episodes();
+        $object_id = (int) $input['filter'];
+        $podcast   = new Podcast($object_id);
+        if (!$podcast->id) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
+        $items = $podcast->get_episodes();
+        if (empty($items)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
 
         ob_end_clean();
+        $user = User::get_from_username(Session::username($input['auth']));
+        debug_event(self::class, 'User ' . $user->id . ' loading podcast: ' . $input['filter'], 5);
         switch ($input['api_format']) {
             case 'json':
                 JSON_Data::set_offset($input['offset']);

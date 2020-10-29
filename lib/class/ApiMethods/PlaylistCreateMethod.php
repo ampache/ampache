@@ -26,13 +26,21 @@ declare(strict_types=0);
 namespace Lib\ApiMethods;
 
 use Api;
+use Catalog;
 use JSON_Data;
+use Playlist;
 use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class PlaylistCreateMethod
+ * @package Lib\ApiMethods
+ */
 final class PlaylistCreateMethod
 {
+    private const ACTION = 'playlist_create';
+
     /**
      * playlist_create
      * MINIMUM_API_VERSION=380001
@@ -44,9 +52,9 @@ final class PlaylistCreateMethod
      * type = (string) 'public', 'private'
      * @return boolean
      */
-    public static function playlist_create($input)
+    public static function playlist_create(array $input)
     {
-        if (!Api::check_parameter($input, array('name'), 'playlist_create')) {
+        if (!Api::check_parameter($input, array('name'), self::ACTION)) {
             return false;
         }
         $name = $input['name'];
@@ -56,14 +64,20 @@ final class PlaylistCreateMethod
             $type = 'public';
         }
 
-        $uid = \Playlist::create($name, $type, $user->id);
+        $object_id = Playlist::create($name, $type, $user->id);
+        if (!$object_id) {
+            Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);
+
+            return false;
+        }
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::playlists(array($uid));
+                echo JSON_Data::playlists(array($object_id));
                 break;
             default:
-                echo XML_Data::playlists(array($uid));
+                echo XML_Data::playlists(array($object_id));
         }
+        Catalog::count_table('playlist');
         Session::extend($input['auth']);
 
         return true;

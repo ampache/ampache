@@ -24,7 +24,7 @@ declare(strict_types=0);
 /**
  * Tag Class
  *
- * This class handles all of the tag relation operations
+ * This class handles all of the genre related operations
  *
  */
 class Tag extends database_object implements library_item

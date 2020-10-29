@@ -26,9 +26,21 @@ namespace Lib\ApiMethods;
 
 use AmpConfig;
 use Api;
+use Catalog;
+use Podcast_Episode;
+use Session;
+use Song;
+use User;
+use Video;
 
+/**
+ * Class CatalogFileMethod
+ * @package Lib\ApiMethods
+ */
 final class CatalogFileMethod
 {
+    private const ACTION = 'catalog_file';
+
     /**
      * catalog_file
      * MINIMUM_API_VERSION=420000
@@ -43,55 +55,58 @@ final class CatalogFileMethod
      * catalog = (integer) $catalog_id)
      * @return boolean
      */
-    public static function catalog_file($input)
+    public static function catalog_file(array $input)
     {
         $task = (string) $input['task'];
         if (!AmpConfig::get('delete_from_disk') && $task == 'remove') {
-            Api::message('error', T_('Access Denied: delete from disk is not enabled.'), '403', $input['api_format']);
+            Api::error(T_('Enable: delete_from_disk'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api::check_access('interface', 50, \User::get_from_username(\Session::username($input['auth']))->id, 'catalog_file', $input['api_format'])) {
+        if (!Api::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (!Api::check_parameter($input, array('catalog', 'file', 'task'), 'catalog_action')) {
+        if (!Api::check_parameter($input, array('catalog', 'file', 'task'), self::ACTION)) {
             return false;
         }
         $file = (string) html_entity_decode($input['file']);
         // confirm the correct data
         if (!in_array($task, array('add', 'clean', 'verify', 'remove'))) {
-            Api::message('error', T_('Incorrect file task') . ' ' . $task, '400', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Bad Request: %s'), $task), '4710', self::ACTION, 'task', $input['api_format']);
 
             return false;
         }
         if (!file_exists($file) && $task !== 'clean') {
-            Api::message('error', T_('File not found') . ' ' . $file, '404', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $file), '4704', self::ACTION, 'file', $input['api_format']);
 
             return false;
         }
         $catalog_id = (int) $input['catalog'];
-        $catalog    = \Catalog::create_from_id($catalog_id);
+        $catalog    = Catalog::create_from_id($catalog_id);
         if ($catalog->id < 1) {
-            Api::message('error', T_('Catalog not found') . ' ' . $catalog_id, '404', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $catalog_id), '4704', self::ACTION, 'catalog', $input['api_format']);
 
             return false;
         }
         switch ($catalog->gather_types) {
             case 'podcast':
                 $type  = 'podcast_episode';
-                $media = new \Podcast_Episode(\Catalog::get_id_from_file($file, $type));
+                $media = new Podcast_Episode(Catalog::get_id_from_file($file, $type));
                 break;
             case 'clip':
             case 'tvshow':
             case 'movie':
             case 'personal_video':
                 $type  = 'video';
-                $media = new \Video(\Catalog::get_id_from_file($file, $type));
+                $media = new Video(Catalog::get_id_from_file($file, $type));
                 break;
             case 'music':
             default:
                 $type  = 'song';
-                $media = new \Song(\Catalog::get_id_from_file($file, $type));
+                $media = new Song(Catalog::get_id_from_file($file, $type));
                 break;
         }
 
@@ -103,7 +118,7 @@ final class CatalogFileMethod
                     $catalog->clean_file($file, $type);
                     break;
                 case 'verify':
-                    \Catalog::update_media_from_tags($media, array($type));
+                    Catalog::update_media_from_tags($media, array($type));
                     break;
                 case 'add':
                     $catalog->add_file($file);
@@ -112,11 +127,11 @@ final class CatalogFileMethod
                     $media->remove();
                     break;
             }
-            Api::message('success', 'successfully started: ' . $task . ' for ' . $file, null, $input['api_format']);
+            Api::message('successfully started: ' . $task . ' for ' . $file, $input['api_format']);
         } else {
-            Api::message('error', T_('The requested catalog was not found'), '404', $input['api_format']);
+            Api::error(T_('Not Found'), '4704', self::ACTION, 'catalog', $input['api_format']);
         }
-        \Session::extend($input['auth']);
+        Session::extend($input['auth']);
 
         return true;
     }

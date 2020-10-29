@@ -410,7 +410,7 @@ class Catalog_Seafile extends Catalog
                 if ($metadata !== null) {
                     debug_event('seafile_catalog', 'Verify updating song', 5, 'ampache-catalog');
                     $song = new Song($row['id']);
-                    $info = self::update_song_from_tags($metadata, $song);
+                    $info = ($song->id) ? self::update_song_from_tags($metadata, $song) : array();
                     if ($info['change']) {
                         UI::update_text('', sprintf(T_('Updated song: %s'), $row['title']));
                         $results['updated']++;

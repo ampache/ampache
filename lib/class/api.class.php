@@ -42,6 +42,7 @@ class Api
         'goodbye' => ApiMethods\GoodbyeMethod::class,
         'url_to_song' => ApiMethods\UrlToSongMethod::class,
         'get_indexes' => ApiMethods\GetIndexesMethod::class,
+        'get_bookmark' => ApiMethods\GetBookmarkMethod::class,
         'get_similar' => ApiMethods\GetSimilarMethod::class,
         'advanced_search' => ApiMethods\AdvancedSearchMethod::class,
         'artists' => ApiMethods\ArtistsMethod::class,
@@ -64,6 +65,9 @@ class Api
         'genre_artists' => ApiMethods\GenreArtistsMethod::class,
         'genre_albums' => ApiMethods\GenreAlbumsMethod::class,
         'genre_songs' => ApiMethods\GenreSongsMethod::class,
+        'labels' => ApiMethods\LabelsMethod::class,
+        'label' => ApiMethods\LabelMethod::class,
+        'label_artists' => ApiMethods\LabelArtistsMethod::class,
         'songs' => ApiMethods\SongsMethod::class,
         'song' => ApiMethods\SongMethod::class,
         'song_delete' => ApiMethods\SongDeleteMethod::class,
@@ -82,6 +86,9 @@ class Api
         'share_create' => ApiMethods\ShareCreateMethod::class,
         'share_delete' => ApiMethods\ShareDeleteMethod::class,
         'share_edit' => ApiMethods\ShareEditMethod::class,
+        'bookmarks' => ApiMethods\BookmarksMethod::class,
+        'bookmark_create' => ApiMethods\BookmarkCreateMethod::class,
+        'bookmark_delete' => ApiMethods\BookmarkDeleteMethod::class,
         'videos' => ApiMethods\VideosMethod::class,
         'video' => ApiMethods\VideoMethod::class,
         'stats' => ApiMethods\StatsMethod::class,
@@ -126,6 +133,9 @@ class Api
         'system_update' => ApiMethods\SystemUpdateMethod::class,
         'system_preferences' => ApiMethods\SystemPreferencesMethod::class,
         'system_preference' => ApiMethods\SystemPreferenceMethod::class,
+        'preference_create' => ApiMethods\PreferenceCreateMethod::class,
+        'preference_edit' => ApiMethods\PreferenceEditMethod::class,
+        'preference_delete' => ApiMethods\PreferenceDeleteMethod::class,
     ];
 
     /**
@@ -136,7 +146,7 @@ class Api
     /**
      *  @var string $version
      */
-    public static $version = '430000';
+    public static $version = '5.0.0';
 
     /**
      *  @var Browse $browse
@@ -166,33 +176,40 @@ class Api
     /**
      * message
      * call the correct error / success message depending on format
-     * @param string $type
      * @param string $message
-     * @param string $error_code
      * @param string $format
      * @param array $return_data
      */
-    public static function message($type, $message, $error_code = null, $format = 'xml', $return_data = array())
+    public static function message($message, $format = 'xml', $return_data = array())
     {
-        if ($type === 'error') {
-            switch ($format) {
-                case 'json':
-                    echo JSON_Data::error($error_code, $message, $return_data);
-                    break;
-                default:
-                    echo XML_Data::error($error_code, $message, $return_data);
-            }
-        }
-        if ($type === 'success') {
-            switch ($format) {
-                case 'json':
-                    echo JSON_Data::success($message, $return_data);
-                    break;
-                default:
-                    echo XML_Data::success($message, $return_data);
-            }
+        switch ($format) {
+            case 'json':
+                echo JSON_Data::success($message, $return_data);
+                break;
+            default:
+                echo XML_Data::success($message, $return_data);
         }
     } // message
+
+    /**
+     * error
+     * call the correct error / success message depending on format
+     * @param string $message
+     * @param string $error_code
+     * @param string $method
+     * @param string $error_type
+     * @param string $format
+     */
+    public static function error($message, $error_code, $method, $error_type, $format = 'xml')
+    {
+        switch ($format) {
+            case 'json':
+                echo JSON_Data::error($error_code, $message, $method, $error_type);
+                break;
+            default:
+                echo XML_Data::error($error_code, $message, $method, $error_type);
+        }
+    } // error
 
     /**
      * set_filter
@@ -260,7 +277,7 @@ class Api
      * @param string $method
      * @return boolean
      */
-    public static function check_parameter($input, $parameters, $method = '')
+    public static function check_parameter($input, $parameters, $method)
     {
         foreach ($parameters as $parameter) {
             if ($input[$parameter] === 0 || $input[$parameter] === '0') {
@@ -268,7 +285,8 @@ class Api
             }
             if (empty($input[$parameter])) {
                 debug_event('api.class', "'" . $parameter . "' required on " . $method . " function call.", 2);
-                self::message('error', T_('Missing mandatory parameter') . " '" . $parameter . "'", '400', $input['api_format']);
+                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+                self::error(sprintf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);
 
                 return false;
             }
@@ -290,15 +308,71 @@ class Api
      * @param string $format
      * @return boolean
      */
-    public static function check_access($type, $level, $user_id, $method = '', $format = 'xml')
+    public static function check_access($type, $level, $user_id, $method, $format = 'xml')
     {
         if (!Access::check($type, $level, $user_id)) {
             debug_event('api.class', $type . " '" . $level . "' required on " . $method . " function call.", 2);
-            self::message('error', 'User does not have access to this function', '412', $format);
+            /* HINT: Access level, eg 75, 100 */
+            self::error(sprintf(T_('Require: %s'), $level), '4742', $method, 'account', $format);
 
             return false;
         }
 
         return true;
+    } // check_access
+
+    /**
+     * server_details
+     *
+     * get the server counts for pings and handshakes
+     *
+     * @param string $token
+     * @return array
+     */
+    public static function server_details($token)
+    {
+        // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
+        $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';
+        $db_results = Dba::read($sql);
+        $details    = Dba::fetch_assoc($db_results);
+
+        // Now we need to quickly get the totals
+        $counts = Catalog::count_server(true);
+
+        // send the totals
+        $outarray = array('auth' => $token,
+            'api' => Api::$version,
+            'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
+            'update' => date("c", (int) $details['update']),
+            'add' => date("c", (int) $details['add']),
+            'clean' => date("c", (int) $details['clean']),
+            'songs' => (int) $counts['song'],
+            'albums' => (int) $counts['album'],
+            'artists' => (int) $counts['artist'],
+            'genres' => (int) $counts['tag'],
+            'playlists' => ((int) $counts['playlist'] + (int) $counts['search']),
+            'users' => ((int) $counts['user'] + (int) $counts['user']),
+            'catalogs' => (int) $counts['catalog']);
+        if (AmpConfig::get('allow_video') && $counts['video']) {
+            $outarray['videos'] = (int) $counts['video'];
+        }
+        if (AmpConfig::get('podcast') && $counts['podcast']) {
+            $outarray['podcasts']         = (int) $counts['podcast'];
+            $outarray['podcast_episodes'] = (int) $counts['podcast_episode'];
+        }
+        if (AmpConfig::get('share') && $counts['share']) {
+            $outarray['shares'] = (int) $counts['share'];
+        }
+        if (AmpConfig::get('licensing') && $counts['license']) {
+            $outarray['licenses'] = (int) $counts['license'];
+        }
+        if (AmpConfig::get('live_stream') && $counts['live_stream']) {
+            $outarray['live_streams'] = (int) $counts['live_stream'];
+        }
+        if (AmpConfig::get('label') && $counts['label']) {
+            $outarray['labels'] = (int) $counts['label'];
+        }
+
+        return $outarray;
     } // check_access
 }

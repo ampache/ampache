@@ -26,10 +26,18 @@ declare(strict_types=0);
 namespace Lib\ApiMethods;
 
 use Api;
+use Catalog;
 use Session;
+use User;
 
+/**
+ * Class UserCreateMethod
+ * @package Lib\ApiMethods
+ */
 final class UserCreateMethod
 {
+    private const ACTION = 'user_create';
+
     /**
      * user_create
      * MINIMUM_API_VERSION=400001
@@ -45,12 +53,12 @@ final class UserCreateMethod
      * disable  = (integer) 0,1 //optional, default = 0
      * @return boolean
      */
-    public static function user_create($input)
+    public static function user_create(array $input)
     {
-        if (!Api::check_access('interface', 100, \User::get_from_username(Session::username($input['auth']))->id, 'user_create', $input['api_format'])) {
+        if (!Api::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (!Api::check_parameter($input, array('username', 'password', 'email'), 'user_create')) {
+        if (!Api::check_parameter($input, array('username', 'password', 'email'), self::ACTION)) {
             return false;
         }
         $username = $input['username'];
@@ -59,14 +67,16 @@ final class UserCreateMethod
         $password = $input['password'];
         $disable  = (bool) $input['disable'];
         $access   = 25;
-        $user_id  = \User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
+        $user_id  = User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
 
         if ($user_id > 0) {
-            Api::message('success', 'successfully created: ' . $username, null, $input['api_format']);
+            Api::message('successfully created: ' . $username, $input['api_format']);
+            Catalog::count_table('user');
 
             return true;
         }
-        Api::message('error', 'failed to create: ' . $username, '400', $input['api_format']);
+        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+        Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
         Session::extend($input['auth']);
 
         return false;

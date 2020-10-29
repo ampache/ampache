@@ -30,8 +30,14 @@ use JSON_Data;
 use Session;
 use XML_Data;
 
+/**
+ * Class GenresMethod
+ * @package Lib\ApiMethods
+ */
 final class GenresMethod
 {
+    const ACTION = 'genres';
+
     /**
      * genres
      * MINIMUM_API_VERSION=380001
@@ -43,8 +49,9 @@ final class GenresMethod
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * @return boolean
      */
-    public static function genres($input)
+    public static function genres(array $input)
     {
         Api::$browse->reset_filters();
         Api::$browse->set_type('tag');
@@ -53,6 +60,11 @@ final class GenresMethod
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter']);
         $tags = Api::$browse->get_objects();
+        if (empty($tags)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -67,5 +79,7 @@ final class GenresMethod
                 echo XML_Data::genres($tags);
         }
         Session::extend($input['auth']);
+
+        return true;
     }
 }

@@ -25,11 +25,19 @@ declare(strict_types=0);
 namespace Lib\ApiMethods;
 
 use Api;
+use Catalog;
 use JSON_Data;
+use Session;
 use XML_Data;
 
+/**
+ * Class CatalogMethod
+ * @package Lib\ApiMethods
+ */
 final class CatalogMethod
 {
+    private const ACTION = 'catalog';
+
     /**
      * catalog
      * MINIMUM_API_VERSION=420000
@@ -40,22 +48,29 @@ final class CatalogMethod
      * filter = (integer) Catalog ID number
      * @return boolean
      */
-    public static function catalog($input)
+    public static function catalog(array $input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'catalog')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $catalog = array((int) $input['filter']);
+        $object_id = (int) $input['filter'];
+        $catalog   = Catalog::create_from_id($object_id);
+        if (!$catalog->id) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::catalogs($catalog);
+                echo JSON_Data::catalogs(array($catalog->id));
                 break;
             default:
-                echo XML_Data::catalogs($catalog);
+                echo XML_Data::catalogs(array($catalog->id));
         }
-        \Session::extend($input['auth']);
+        Session::extend($input['auth']);
 
         return true;
     }

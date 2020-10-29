@@ -27,11 +27,19 @@ namespace Lib\ApiMethods;
 
 use Access;
 use Api;
+use Catalog;
+use Playlist;
 use Session;
 use User;
 
+/**
+ * Class PlaylistDeleteMethod
+ * @package Lib\ApiMethods
+ */
 final class PlaylistDeleteMethod
 {
+    private const ACTION = 'playlist_delete';
+
     /**
      * playlist_delete
      * MINIMUM_API_VERSION=380001
@@ -42,19 +50,20 @@ final class PlaylistDeleteMethod
      * filter = (string) UID of playlist
      * @return boolean
      */
-    public static function playlist_delete($input)
+    public static function playlist_delete(array $input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'playlist_delete')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
-        $playlist = new \Playlist($input['filter']);
+        $playlist = new Playlist($input['filter']);
         if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
-            Api::message('error', T_('Access denied to this playlist'), '412', $input['api_format']);
+            Api::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
         } else {
             $playlist->delete();
-            Api::message('success', 'playlist deleted', null, $input['api_format']);
+            Api::message('playlist deleted', $input['api_format']);
+            Catalog::count_table('playlist');
         }
         Session::extend($input['auth']);
 

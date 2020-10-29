@@ -25,9 +25,18 @@ declare(strict_types=0);
 namespace Lib\ApiMethods;
 
 use Api;
+use Session;
+use Song;
+use User;
 
+/**
+ * Class RecordPlayMethod
+ * @package Lib\ApiMethods
+ */
 final class RecordPlayMethod
 {
+    private const ACTION = 'record_play';
+
     /**
      * record_play
      * MINIMUM_API_VERSION=400001
@@ -39,22 +48,25 @@ final class RecordPlayMethod
      * id     = (integer) $object_id
      * user   = (integer) $user_id
      * client = (string) $agent //optional
+     * date   = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function record_play($input)
+    public static function record_play(array $input)
     {
-        if (!Api::check_parameter($input, array('id', 'user'), 'record_play')) {
+        if (!Api::check_parameter($input, array('id', 'user'), self::ACTION)) {
             return false;
         }
         ob_end_clean();
-        $object_id = $input['id'];
+        $object_id = (int) $input['id'];
         $user_id   = (int) $input['user'];
-        $user      = new \User($user_id);
-        $valid     = in_array($user->id, \User::get_valid_users());
+        $user      = new User($user_id);
+        $valid     = in_array($user->id, User::get_valid_users());
+        $date      = (is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
 
         // validate supplied user
         if ($valid === false) {
-            Api::message('error', T_('User_id not found'), '404', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $user_id), '4704', self::ACTION, 'user', $input['api_format']);
 
             return false;
         }
@@ -64,22 +76,23 @@ final class RecordPlayMethod
             ? $input['client']
             : 'api';
 
-        $item = new \Song($object_id);
+        $item = new Song($object_id);
         if (!$item->id) {
-            Api::message('error', T_('Library item not found'), '404', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
 
             return false;
         }
-        debug_event('api.class', 'record_play: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
+        debug_event(self::class, 'record_play: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
         // internal scrobbling (user_activity and object_count tables)
-        $item->set_played($user_id, $agent, array(), time());
+        $item->set_played($user_id, $agent, array(), $date);
 
         // scrobble plugins
-        \User::save_mediaplay($user, $item);
+        User::save_mediaplay($user, $item);
 
-        Api::message('success', 'successfully recorded play: ' . $item->id, null, $input['api_format']);
-        \Session::extend($input['auth']);
+        Api::message('successfully recorded play: ' . $item->id, $input['api_format']);
+        Session::extend($input['auth']);
 
         return true;
     }

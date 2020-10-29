@@ -17,9 +17,6 @@ All dates in the API calls should be passed as [ISO 8601](http://en.wikipedia.or
 
 **Compatible Versions:**
 
-* 4.2.0-release
-* 4.2.1-release
-* 4.2.2-release
 * Ampache develop
 
 **Archived Version Documentation**
@@ -35,6 +32,8 @@ Note that API 4.1 docs cover all previous versions.
 
 The next version of Ampache has a lot of breaking changes compared to the 4.x.x API, current changes are listed here and in the changelog.
 
+All API code that used 'Tag' now references 'Genre' instead
+
 ### Added
 
 * Api::localplay added new options to 'command' ('pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip')
@@ -44,23 +43,52 @@ The next version of Ampache has a lot of breaking changes compared to the 4.x.x 
   * 'clear' (integer) 0|1 clear the current playlist on add //optional
 * API::playlist_edit added new parameter 'sort': (0,1) sort the playlist by 'Artist, Album, Song' //optional
 * Api::indexes added parameter 'include': (0,1) include song details with playlists (XML has this by default)
-* Api::users (id and username of the site users)
+* NEW API functions
+  * Api::users (ID and Username of the site users)
+  * Api::song_delete (Delete files when you are allowed to)
+  * Api::user_preferences (Get your user preferences)
+  * Api::user_preference (Get your preference by name)
+  * Api::system_update (Check Ampache for updates and run the update if there is one.)
+  * Api::system_preferences (Preferences for the system user)
+  * Api::system_preference (Get a system preference by name)
+  * Api::preference_create (Add a new preference to Ampache)
+  * Api::preference_edit (Edit a preference value by name; optionally apply to all users)
+  * Api::preference_delete (Delete a preference by name)
+  * Api::labels (list your record labels)
+  * Api::label (get a label by id)
+  * Api::label_artists (get all artists attached to that label)
 
 ### Changed
 
-* All API code that used 'Tag' now references 'Genre' instead
-* Renamed functions (Backcompatible string replacement until 5.0.0):
+* Renamed functions:
   * tags => genres
   * tag => genre
   * tag_artists => genre_artists
   * tag_albums => genre_albums
   * tag_songs => genre_songs
 * Don't allow duplicate podcast feeds
-* Api::shares filter is optional
+* Make filter optional in shares, genre_artists, genre_albums, genre_songs (Used as a general catch all method like genres)
+* Error Codes and response structure has changed
+  * 4700 Access Control not Enabled
+  * 4701 Received Invalid Handshake
+  * 4703 Access Denied
+  * 4704 Not Found
+  * 4705 Missing Method
+  * 4706 Depreciated Method
+  * 4710 Bad Request
+  * 4742 Failed Access Check
+* get_indexes: 'playlist' now requires include=1 for xml calls if you want the tracks
 
 ### Deprecated
 
-* Api::indexes will stop including playlist track and id in xml by default in Ampache 5.0.0
+* Api::get_indexes; stop including playlist track and id in xml by default
+
+### Fixed
+
+* Api::podcast_edit wasn't able to edit a podcast...
+* Api::democratic was using action from localplay in the return responses
+* Setting a limit of 'none' would slice away all the results
+* get_indexes for XML didn't include podcast indexes
 
 ## Sending Handshake Request
 
@@ -195,6 +223,7 @@ For more in depth information regarding the different api servers you can view t
 * url_to_song
 * check_parameter
 * message
+* system_update **(develop only)**
 
 ### Data Methods
 
@@ -211,8 +240,14 @@ For more in depth information regarding the different api servers you can view t
 * tag_artists
 * tag_albums
 * tag_songs
+* genres **(develop only)**
+* genre **(develop only)**
+* genre_artists **(develop only)**
+* genre_albums **(develop only)**
+* genre_songs **(develop only)**
 * songs
 * song
+* song_delete
 * [advanced_search](http://ampache.org/api/api-advanced-search)
 * stats
 * playlists
@@ -225,6 +260,7 @@ For more in depth information regarding the different api servers you can view t
 * playlist_remove_song
 * playlist_generate
 * search_songs
+* song_delete **(develop only)**
 * videos
 * video
 * shares
@@ -247,11 +283,16 @@ For more in depth information regarding the different api servers you can view t
 * licenses
 * license
 * license_songs
-* users
+* labels **(develop only)**
+* label **(develop only)**
+* label_artists **(develop only)**
+* users **(develop only)**
 * user
 * user_create
 * user_update
 * user_delete
+* user_preferences **(develop only)**
+* user_preference **(develop only)**
 * stream
 * download
 * get_art
@@ -270,6 +311,15 @@ For more in depth information regarding the different api servers you can view t
 * update_artist_info
 * update_art
 * update_podcast
+* system_preferences **(develop only)**
+* system_preference **(develop only)**
+* preference_create **(develop only)**
+* preference_edit **(develop only)**
+* preference_delete **(develop only)**
+* bookmarks **(develop only)**
+* get_bookmark **(develop only)**
+* bookmark_create **(develop only)**
+* bookmark_delete **(develop only)**
 
 ### Control Methods
 

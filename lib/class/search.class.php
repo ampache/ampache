@@ -576,8 +576,8 @@ class Search extends playlist_object
         $this->type_date('added', T_('Added'));
         $this->type_date('updated', T_('Updated'));
 
-        $this->type_numeric('recent_added', T_('Recently added'));
-        $this->type_numeric('recent_updated', T_('Recently updated'));
+        $this->type_numeric('recent_added', T_('Recently added'), 'recent_added');
+        $this->type_numeric('recent_updated', T_('Recently updated'), 'recent_updated');
 
         $catalogs = array();
         foreach (Catalog::get_catalogs() as $catid) {
@@ -971,7 +971,7 @@ class Search extends playlist_object
     {
         if (in_array($column, array('last_count', 'last_duration'))) {
             $search_id = Dba::escape($this->id);
-            $sql       = "Update `search` SET `" . Dba::escape($column) . "` = " . $count . " WHERE `id` = ?";
+            $sql       = "UPDATE `search` SET `" . Dba::escape($column) . "` = " . $count . " WHERE `id` = ?";
             Dba::write($sql, array($search_id));
         }
     }
@@ -1276,8 +1276,11 @@ class Search extends playlist_object
                                "' ', `album`.`name`)) $sql_match_operator '$input')";
                     break;
                 case 'year':
-                case 'original_year':
                     $where[] = "`album`.`" . $rule[0] . "` $sql_match_operator '$input'";
+                    break;
+                case 'original_year':
+                    $where[] = "`album`.`original_year` $sql_match_operator '$input' OR " .
+                        "(`album`.`original_year` IS NULL AND `album`.`year` $sql_match_operator '$input')";
                     break;
                 case 'time':
                     $input          = $input * 60;
@@ -1405,14 +1408,11 @@ class Search extends playlist_object
                         $join['tag'][$key] = "find_in_set('$input', cast(`realtag_$key`.`name` as char)) $sql_match_operator 0";
                     }
                     break;
-                case 'has image':
                 case 'has_image':
                     $where[]            = ($sql_match_operator == '1') ? "`has_image`.`object_id` IS NOT NULL" : "`has_image`.`object_id` IS NULL";
                     $table['has_image'] = "LEFT JOIN (SELECT `object_id` from `image` WHERE `object_type` = 'album') as `has_image` ON `album`.`id` = `has_image`.`object_id`";
                     break;
-                case 'image height':
                 case 'image_height':
-                case 'image width':
                 case 'image_width':
                     $looking       = strpos($rule[0], "image_") ? str_replace('image_', '', $rule[0]) : str_replace('image ', '', $rule[0]);
                     $where[]       = "`image`.`$looking` $sql_match_operator '$input'";
@@ -1558,14 +1558,11 @@ class Search extends playlist_object
                         "ON `artist`.`id`=`favorite_artist_$userid`.`object_id` " .
                         "AND `favorite_artist_$userid`.`object_type` = 'artist' " : ' ';
                     break;
-                case 'has image':
                 case 'has_image':
                     $where[]            = ($sql_match_operator == '1') ? "`has_image`.`object_id` IS NOT NULL" : "`has_image`.`object_id` IS NULL";
                     $table['has_image'] = "LEFT JOIN (SELECT `object_id` from `image` WHERE `object_type` = 'artist') as `has_image` ON `artist`.`id` = `has_image`.`object_id`";
                     break;
-                case 'image height':
                 case 'image_height':
-                case 'image width':
                 case 'image_width':
                     $looking       = strpos($rule[0], "image_") ? str_replace('image_', '', $rule[0]) : str_replace('image ', '', $rule[0]);
                     $where[]       = "`image`.`$looking` $sql_match_operator '$input'";
@@ -2222,7 +2219,6 @@ class Search extends playlist_object
             $sql_match_operator = $operator['sql'];
 
             switch ($rule[0]) {
-                case 'filename':
                 case 'file':
                     $where[] = "`video`.`file` $sql_match_operator '$input'";
                     break;
@@ -2462,13 +2458,13 @@ class Search extends playlist_object
         if ($fromYear) {
             $search['rule_' . $count . '_input']    = $fromYear;
             $search['rule_' . $count . '_operator'] = 0;
-            $search['rule_' . $count . '']          = "year";
+            $search['rule_' . $count . '']          = "original_year";
             ++$count;
         }
         if ($toYear) {
             $search['rule_' . $count . '_input']    = $toYear;
             $search['rule_' . $count . '_operator'] = 1;
-            $search['rule_' . $count . '']          = "year";
+            $search['rule_' . $count . '']          = "original_year";
             ++$count;
         }
 

@@ -25,25 +25,37 @@ declare(strict_types=0);
 
 namespace Lib\ApiMethods;
 
+use Api;
 use JSON_Data;
 use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class UsersMethod
+ * @package Lib\ApiMethods
+ */
 final class UsersMethod
 {
+    const ACTION = 'users';
+
     /**
      * users
-     * MINIMUM_API_VERSION=430000
+     * MINIMUM_API_VERSION=5.0.0
      *
      * Get ids and usernames for your site
      *
      * @param array $input
      * @return boolean
      */
-    public static function users($input)
+    public static function users(array $input)
     {
         $users = User::get_valid_users();
+        if (empty($users)) {
+            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+
+            return false;
+        }
         switch ($input['api_format']) {
             case 'json':
                 echo JSON_Data::users($users);

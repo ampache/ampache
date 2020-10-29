@@ -527,7 +527,7 @@ class Catalog_dropbox extends Catalog
                     $results = vainfo::clean_tag_info($vainfo->tags, $key, $outfile);
                     // Must compare to original path, not temporary location.
                     $results['file'] = $path;
-                    $info            = self::update_song_from_tags($results, $song);
+                    $info            = ($song->id) ? self::update_song_from_tags($results, $song) : array();
                     if ($info['change']) {
                         UI::update_text('', sprintf(T_('Updated song "%s"'), $row['title']));
                         $updated['updated']++;

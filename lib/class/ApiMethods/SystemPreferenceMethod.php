@@ -30,11 +30,17 @@ use Session;
 use User;
 use XML_Data;
 
+/**
+ * Class SystemPreferenceMethod
+ * @package Lib\ApiMethods
+ */
 final class SystemPreferenceMethod
 {
+    private const ACTION = 'system_preference';
+
     /**
      * system_preference
-     * MINIMUM_API_VERSION=430000
+     * MINIMUM_API_VERSION=5.0.0
      *
      * Get your system preferences by name
      *
@@ -42,29 +48,30 @@ final class SystemPreferenceMethod
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
      * @return boolean
      */
-    public static function system_preference($input)
+    public static function system_preference(array $input)
     {
-        if (!Api::check_parameter($input, array('filter'), 'system_preference')) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
         $user = User::get_from_username(Session::username($input['auth']));
-        if (!Api::check_access('interface', 100, $user->id)) {
+        if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         $pref_name  = (string) $input['filter'];
         $preference = Preference::get($pref_name, -1);
         if (empty($preference)) {
-            Api::message('error', 'not found: ' . $pref_name, '404', $input['api_format']);
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Not Found: %s'), $pref_name), '4704', self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
-        $output_array = array('preferences' => $preference);
+        $output_array = array('preference' => $preference);
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($output_array, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo XML_Data::object_array($output_array['preferences'], 'preferences', 'pref');
+                echo XML_Data::object_array($output_array['preference'], 'preference');
         }
         Session::extend($input['auth']);
 
