@@ -58,7 +58,6 @@ final class GetBookmarkMethod
             return false;
         }
         $user      = User::get_from_username(Session::username($input['auth']));
-        $comment   = $input['client'];
         $object_id = (int) $input['filter'];
         $type      = $input['type'];
         // confirm the correct data
@@ -86,8 +85,7 @@ final class GetBookmarkMethod
         $object = array(
             'user' => $user->id,
             'object_id' => $object_id,
-            'object_type' => $type,
-            'comment' => $comment
+            'object_type' => $type
         );
         $bookmark = Bookmark::get_bookmark($object);
         if (!$bookmark) {
