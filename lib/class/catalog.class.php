@@ -2889,6 +2889,27 @@ abstract class Catalog extends database_object
                     }
                 }
                 break;
+            case 'update_all_file_tags':
+                $catalogs = self::get_catalogs();
+            case 'update_file_tags':
+                $write_id3 = AmpConfig::get('write_id3');
+                AmpConfig::set('write_id3', 'true', true);
+                $write_id3_art = AmpConfig::get('write_id3_art');
+                AmpConfig::set('write_id3_art', 'true', true);
+                foreach ($catalogs as $catalog_id) {
+                    $catalog = self::create_from_id($catalog_id);
+                    if ($catalog !== null) {
+                        $song_ids = $catalog->get_song_ids();
+                        foreach ($song_ids as $song_id) {
+                            $song = new Song($song_id);
+                            $song->format();
+                            $song->write_id3();
+                        }
+                    }
+                }
+                AmpConfig::set('write_id3', $write_id3, true);
+                AmpConfig::set('write_id3', $write_id3_art, true);
+
         }
 
         // Remove any orphaned artists/albums/etc.
