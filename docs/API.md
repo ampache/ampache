@@ -316,6 +316,10 @@ For more in depth information regarding the different api servers you can view t
 * preference_create **(develop only)**
 * preference_edit **(develop only)**
 * preference_delete **(develop only)**
+* bookmarks **(develop only)**
+* get_bookmark **(develop only)**
+* bookmark_create **(develop only)**
+* bookmark_delete **(develop only)**
 
 ### Control Methods
 

@@ -41,10 +41,10 @@ final class BookmarksMethod
     private const ACTION = 'bookmarks';
 
     /**
-     * Bookmarks
+     * bookmarks
      * MINIMUM_API_VERSION=5.0.0
      *
-     * Get information about Bookmarked media this user is allowed to manage.
+     * Get information about bookmarked media this user is allowed to manage.
      *
      * @param array $input
      * @return boolean
@@ -52,7 +52,7 @@ final class BookmarksMethod
     public static function bookmarks(array $input)
     {
         $user      = User::get_from_username(Session::username($input['auth']));
-        $bookmarks = Bookmark::get_bookmarks_ids($user->id);
+        $bookmarks = Bookmark::get_bookmarks_ids($user);
         if (empty($bookmarks)) {
             Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
 

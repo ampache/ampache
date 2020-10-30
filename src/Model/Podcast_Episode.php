@@ -167,6 +167,9 @@ class Podcast_Episode extends database_object implements Media, library_item
             $this->f_podcast_link = $podcast->f_link;
             $this->f_file         = $this->f_podcast . ' - ' . $this->f_file;
         }
+        if (AmpConfig::get('show_played_times')) {
+            $this->object_cnt = Stats::get_object_count('podcast_episode', $this->id);
+        }
 
         return true;
     }
