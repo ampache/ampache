@@ -223,6 +223,9 @@ class Update
         $update_string = "* Extend artist time. smallint was too small<br/ > ";
         $version[]     = array('version' => '400015', 'description' => $update_string);
 
+        $update_string = "* Extend album and make artist even bigger. This should cover everyone.<br/ > ";
+        $version[]     = array('version' => '400016', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1278,6 +1281,24 @@ class Update
     public static function update_400015()
     {
         $retval = true;
+
+        $sql    = "ALTER TABLE `artist` MODIFY COLUMN `time` int(11) unsigned DEFAULT NULL NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400016
+     *
+     * Extend album and make artist even bigger. This should cover everyone.
+     */
+    public static function update_400016()
+    {
+        $retval = true;
+
+        $sql    = "ALTER TABLE `album` MODIFY COLUMN `time` bigint(20) unsigned DEFAULT NULL NULL;";
+        $retval &= Dba::write($sql);
 
         $sql    = "ALTER TABLE `artist` MODIFY COLUMN `time` int(11) unsigned DEFAULT NULL NULL;";
         $retval &= Dba::write($sql);
