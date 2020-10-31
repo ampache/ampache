@@ -26,6 +26,9 @@
             <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=gather_media_art"><?php echo T_('Gather All Art'); ?></a>
         </li>
         <li>
+            <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=update__all_file_tags"><?php echo T_('Update All File Tags'); ?></a>
+        </li>
+        <li>
             <a class="option-list" href="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php?action=show_disabled"><?php echo T_('Show Disabled Songs'); ?></a>
         </li>
         <li>
