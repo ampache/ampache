@@ -9,14 +9,16 @@ Look here for the code to change your 'custom_datetime' string [(<http://usergui
 This means Ampache now **requires** php-intl module/dll to be enabled.
 
 ### Added
-
+* Write metadata to mp3, flac and ogg files. Requires metaflac and vorbiscomment installed on Linux.
+* Write images to mp3 and flac files. Also requires metaflac on linux.
+* File tags can be updated from catalog management page.
 * Configurable settings for "Gather Art".
 * Configurable art search limit.
 * User selectable artist and year filter for Spotify album searches
 * User selectable limit for art searches.
 * php-intl is now required for translation of date formats into your locale
 * Generate rsstokens for each user allowing unique feed URLs
-* Allow setting custom databse collation and charset without overwriting your changes
+* Allow setting custom database collation and charset without overwriting your changes
   * rsstoken: Identify users by token when generating RSS feeds
 * Replace 'Admin' icon with padlock in sidebar when access check fails. (Hide this new icon with 'simple_user_mode')
 * Disable API/Subsonic password resets in 'simple_user_mode'
@@ -26,6 +28,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 
 ### Changed
 
+* config version 47
 * get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
 * Renamed 'Tag' strings to 'Genre'
 * 'Sort Tracks by Artist, Album, Song' sorting done by 'Album_Artist, Album, Disk, Track Title'
