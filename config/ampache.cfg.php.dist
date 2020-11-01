@@ -25,7 +25,7 @@ config_version = 47
 ; DEFAULT: none
 ;http_host = "localhost"
 
-; The public htftp port of your server.
+; The public http port of your server.
 ; If not set, retrieved automatically from client request.
 ; DEFAULT: none
 ;http_port = 80
