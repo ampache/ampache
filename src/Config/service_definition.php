@@ -32,7 +32,7 @@ use Ampache\Config\Init\InitializationHandlerEnvironment;
 use Ampache\Config\Init\InitializationHandlerGetText;
 use Ampache\Config\Init\InitializationHandlerGlobals;
 use Ampache\Module\Util\EnvironmentInterface;
-use getID3;
+use JamesHeinrich\GetID3\GetID3;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use MusicBrainz\MusicBrainz;
 use Narrowspark\HttpEmitter\AbstractSapiEmitter;
@@ -43,13 +43,11 @@ use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestFactoryInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Message\UriFactoryInterface;
 use SpotifyWebAPI\SpotifyWebAPI;
 use function DI\autowire;
-use function DI\create;
 use function DI\factory;
 
 /**
@@ -59,7 +57,7 @@ return [
     ConfigContainerInterface::class => factory(static function (): ConfigContainerInterface {
         return new ConfigContainer(AmpConfig::get_all());
     }),
-    getID3::class => autowire(getID3::class),
+    GetID3::class => autowire(GetID3::class),
     MusicBrainz::class => factory(static function (): MusicBrainz {
         return new MusicBrainz(new RequestsHttpAdapter());
     }),

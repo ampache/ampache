@@ -34,10 +34,10 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\System\Core;
 use Exception;
-use getID3;
 use PDOStatement;
 use Requests;
 use RuntimeException;
+use JamesHeinrich\GetID3\GetID3;
 
 /**
  * This class handles the images / artwork in ampache
@@ -342,6 +342,7 @@ class Art extends database_object
      * @param string $mime
      * @return boolean
      */
+
     public function insert($source, $mime = '')
     {
         // Disabled in demo mode cause people suck and upload porn
@@ -371,40 +372,52 @@ class Art extends database_object
         // Blow it away!
         $this->reset();
 
-        if (AmpConfig::get('write_id3_art')) {
-            if ($this->type == 'album') {
-                $album = new Album($this->uid);
-
-                debug_event('art.class', 'Inserting image Album ' . $album->name . ' on songs.', 5);
-                $songs = $album->get_songs();
-                foreach ($songs as $song_id) {
-                    $song = new Song($song_id);
-                    $song->format();
-                    $id3  = new VaInfo($song->file);
-                    $data = $id3->read_id3();
-                    if (isset($data['tags']['id3v2'])) {
-                        $image_from_tag = '';
-                        if (isset($data['id3v2']['APIC'][0]['data'])) {
-                            $image_from_tag = $data['id3v2']['APIC'][0]['data'];
-                        }
-                        if ($image_from_tag != $source) {
-                            $ndata                 = array();
-                            $ndata['APIC']['data'] = $source;
-                            $ndata['APIC']['mime'] = $mime;
-                            $ndata                 = array_merge($ndata, $song->get_metadata());
-                            try {
-                                $id3->write_id3($ndata);
-                                Catalog::update_media_from_tags($song);
-                            } catch (Exception $error) {
-                                debug_event('art.class', 'Error ' . $error->getMessage(), 1);
-
-                                return false;
+        $current_picturetypeid = ($this->type == 'album') ? 3 : 8;
+        if (AmpConfig::get('write_id3_art', false)) {
+            $type        = ucfirst($this->type);
+            $object_type = new $type($this->uid);
+            debug_event('art.class', 'Inserting image Album ' . $album->name . ' on songs.', 5);
+            $songs = $object_type->get_songs();
+            foreach ($songs as $song_id) {
+                $song   = new Song($song_id);
+                $song->format();
+                $description = ($this->type == 'artist') ? $song->f_artist_full : $object_type->full_name;
+                $id3         = new VaInfo($song->file);
+                $ndata       = array();
+                $data        = $id3->read_id3();
+                if (isset($data['id3v2']['APIC'])) {
+                    $apics = $data['id3v2']['APIC'];
+                    switch (count($apics)) {
+                         case 1:
+                            $ndata['attached_picture'][0]['data']          = $apics[0]['data'];
+                            $ndata['attached_picture'][0]['mime']          = $apics[0]['mime'];
+                            $ndata['attached_picture'][0]['picturetypeid'] = $apics[0]['picturetypeid'];
+                            $ndata['attached_picture'][0]['description']   = $apics[0]['description'];
+                            if ($apics[0]['picturetypeid'] != $current_picturetypeid) {
+                                $ndata['attached_picture'][1]['data']          = $source;
+                                $ndata['attached_picture'][1]['mime']          = $mime;
+                                $ndata['attached_picture'][1]['picturetypeid'] =  $current_picturetypeid;
+                                $ndata['attached_picture'][1]['description']   = $description;
+                            } else {
+                                debug_event('art.class', "only 1 image of type '" . $this->type . "' is permitted", 1);
                             }
-                        }
-                    }
+                            break;
+                          case 2:
+                            $ndata['attached_picture'] = $this->replace_apic($apics, $mime,$description, $source, $current_picturetypeid);
+                            break;
+                       }
+                } else {
+                    $ndata['attached_picture'][0]['description']   = $description;
+                    $ndata['attached_picture'][0]['data']          = $source;
+                    $ndata['attached_picture'][0]['mime']          = $mime;
+                    $ndata['attached_picture'][0]['picturetypeid'] = $current_picturetypeid;
                 }
-            }
-        }
+                unset($data['id3v2']['APIC']);
+                $ndata   = array_merge($ndata, $id3->prepare_id3_frames($data['tags']['id3v2']));
+                $id3->write_id3($ndata);
+                //            Catalog::update_media_from_tags($song);
+            } // foreach song
+        } // write_id3
 
         if (AmpConfig::get('album_art_store_disk')) {
             self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind);
@@ -417,6 +430,59 @@ class Art extends database_object
 
         return true;
     } // insert
+
+    /**
+     * replace_apic
+     * @param array $apics
+     * @param string $mime, description, $source
+     * @param integer $picturetypeid
+     */
+    private function replace_apic($apics, $mime, $description, $source, $picturetypeid)
+    {
+        if ($apics[0]['picturetypeid'] == $picturetypeid) {
+            $ndata[0]['description']   = $description;
+            $ndata[0]['data']          = $source;
+            $ndata[0]['mime']          = $mime;
+            $ndata[0]['picturetypeid'] = $picturetypeid;
+
+            $ndata[1]['description']   = $apics[1]['description'];
+            $ndata[1]['data']          = $apics[1]['data'];
+            $ndata[1]['mime']          = $apics[1]['mime'];
+            $ndata[1]['picturetypeid'] = $apics[1]['picturetypeid'];
+        } else {
+            $ndata[0]['description']   = $apics[0]['description'];
+            $ndata[0]['data']          = $apics[0]['data'];
+            $ndata[0]['mime']          = $apics[0]['mime'];
+            $ndata[0]['picturetypeid'] = $apics[0]['picturetypeid'];
+
+            $ndata[1]['description']   = $description;
+            $ndata[1]['data']          = $source;
+            $ndata[1]['mime']          = $mime;
+            $ndata[1]['picturetypeid'] = $picturetypeid;
+        }
+
+        return $ndata;
+    }
+
+    /*
+     * Prepares images to be written to file tag.
+     * @param array $pics
+     * @return array
+     */
+    public static function prepare_pics($pics)
+    {
+        $i = 0;
+        foreach ($pics as $pic) {
+            $ndata['attached_picture'][$i]['description']   = $pic['description'];
+            $ndata['attached_picture'][$i]['data']          = $pic['data'];
+            $ndata['attached_picture'][$i]['picturetypeid'] = $pic['picturetypeid'];
+            $ndata['attached_picture'][$i]['mime']          = $pic['mime'];
+
+            $i++;
+        }
+
+        return $ndata;
+    }
 
     /**
      * check_dimensions
@@ -863,7 +929,7 @@ class Art extends database_object
         // Check to see if it is embedded in id3 of a song
         if (isset($data['song'])) {
             // If we find a good one, stop looking
-            $getID3 = new getID3();
+            $getID3 = new GetID3();
             $id3    = $getID3->analyze($data['song']);
 
             if ($id3['format_name'] == "WMA") {

@@ -29,10 +29,9 @@ use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
 use Exception;
-use getID3;
-use getid3_lib;
-use getid3_writetags;
 use Ampache\Model\User;
+use JamesHeinrich\GetID3\WriteTags;
+use JamesHeinrich\GetID3\GetID3;
 
 /**
  * This class takes the information pulled from getID3 and returns it in a
@@ -107,8 +106,8 @@ class VaInfo
         $enabled_sources = (array)$this->get_metadata_order();
 
         if (in_array('getID3', $enabled_sources) && $this->islocal) {
-            // Initialize getID3 engine
-            $this->_getID3 = new getID3();
+            // Initialize GetID3 engine
+            $this->_getID3 = new GetID3();
 
             $this->_getID3->option_md5_data        = false;
             $this->_getID3->option_md5_data_source = false;
@@ -272,49 +271,70 @@ class VaInfo
      * @param $data
      * @throws Exception
      */
-    public function write_id3($data)
+    public function write_id3($tag_data)
     {
-        // Get the Raw file information
-        $this->read_id3();
-        if (isset($this->_raw['tags']['id3v2'])) {
-            getid3_lib::IncludeDependency(GETID3_INCLUDEPATH . 'write.php', __FILE__, true);
-            $tagWriter           = new getid3_writetags();
-            $tagWriter->filename = $this->filename;
-            //'id3v2.4' doesn't saves the year;
-            $tagWriter->tagformats        = array('id3v1', 'id3v2.3');
-            $tagWriter->overwrite_tags    = true;
-            $tagWriter->remove_other_tags = true;
-            $tagWriter->tag_encoding      = 'UTF-8';
-            $TagData                      = $this->_raw['tags']['id3v2'];
+        $TaggingFormat = 'UTF-8';
+        $tagwriter     = new WriteTags;
+        $extension     = pathinfo($this->filename, PATHINFO_EXTENSION);
+        if ($extension == 'mp3') {
+            $format = 'id3v2.3';
+        } elseif ($extension == 'flac') {
+            $format = 'metaflac';
+        } elseif ($extension = 'oga') {
+            $format = 'vorbiscomment';
+        } else {
+            debug_event('Writing Tags:', "Files with '" . $extension . "' extensions are currently ignored.", 5);
 
-            // Foreach what we've got
-            foreach ($data as $key => $value) {
-                if ($key != 'APIC') {
-                    $TagData[$key][0] = $value;
-                }
+            return;
+        }
+
+        $tagwriter->filename          = $this->filename;
+        $tagwriter->tagformats        = array($format);
+        $tagwriter->overwrite_tags    = AmpConfig::get('overwrite_tags', false);
+        $tagwriter->tag_encoding      = $TaggingFormat;
+        $tagwriter->remove_other_tags = true;
+        $tagwriter->tag_data          = $tag_data;
+        if ($tagwriter->WriteTags()) {
+            if (!empty($tagwriter->warnings)) {
+                debug_event('Writing Image:', $tagwriter->warnings, 5);
             }
-
-            if (isset($data['APIC'])) {
-                $TagData['attached_picture'][0]['data']          = $data['APIC']['data'];
-                $TagData['attached_picture'][0]['picturetypeid'] = '3';
-                $TagData['attached_picture'][0]['description']   = 'Cover';
-                $TagData['attached_picture'][0]['mime']          = $data['APIC']['mime'];
-            }
-
-            $tagWriter->tag_data = $TagData;
-
-            if ($tagWriter->WriteTags()) {
-                if (!empty($tagWriter->warnings)) {
-                    debug_event('vainfo.class', 'FWarnings ' . implode("\n", $tagWriter->warnings), 5);
-                }
-            } else {
-                debug_event('vainfo.class', 'Failed to write tags! ' . implode("\n", $tagWriter->errors), 3);
-            }
+        }
+        if (!empty($tagwriter->errors)) {
+            debug_event('Writing Image:', $tagwriter->errors, 1);
         }
     } // write_id3
 
+
+    /*
+     * prepare_id3_frames
+     * Prepares id3 frames for writing tag to file
+     * @param array $frames
+     * @return array
+     */
+    public function prepare_id3_frames($frames)
+    {
+        $ndata = array();
+
+        foreach ($frames as $key => $data) {
+            switch ($key) {
+                    case 'text':
+                       foreach ($data as $tkey => $data) {
+                           $ndata['text'][] = array('data' => $data, 'description' => $tkey, 'encodingid' => 0);
+                       }
+                       break;
+                    default:
+                       $ndata[$key][] = $data[0];
+                        break;
+
+                }
+        }
+
+        return $ndata;
+    } // prepare_id3_frames
+
     /**
      * read_id3
+
      * This function runs the various steps to gathering the metadata
      * @return array
      */

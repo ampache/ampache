@@ -1103,59 +1103,36 @@ class Album extends database_object implements library_item
         $barcode        = isset($data['barcode']) ? $data['barcode'] : $this->barcode;
         $catalog_number = isset($data['catalog_number']) ? $data['catalog_number'] : $this->catalog_number;
 
-        $current_id = $this->id;
-
-        $updated = false;
-        $songs   = array();
-
         if (!empty($data['album_artist_name'])) {
             // Need to create new artist according the name
             $album_artist = Artist::check($data['album_artist_name']);
+            self::update_field('album_artist', $album_artist, $this->id);
+        }
+        if (!empty($year) && $year != $this->year) {
+            self::update_field('year', $year, $album_id);
+        }
+        if (!empty($mbid_group) && $mbid_group != $this->mbid_group) {
+            self::update_field('mbid_group', $mbid_group, $this->id);
+        }
+        if (!empty($release_type) && $release_type != $this->release_type) {
+            self::update_field('release_type', $release_type, $this->id);
+        }
+        if (!empty($original_year) && $original_year != $this->original_year) {
+            self::update_field('original_year', $original_year, $this->id);
+        }
+        if (!empty($barcode) && $barcode != $this->barcode) {
+            self::update_field('barcode', $barcode, $this->id);
+        }
+        if (!empty($catalog_number) && $catalog_number != $this->catalog_number) {
+            self::update_field('catalog_number', $catalog_number, $this->id);
+        }
+        if (!empty($disk) && $disk != $this->disk) {
+            $album_id = self::check($name, $disk);
+            if ($album_id == $this->id) {
+                self::update_field('catalog_number', $catalog_number, $this->id);
+            }
         }
 
-        $album_id = self::check($name, $year, $disk, $mbid, $mbid_group, $album_artist, $release_type);
-        if ($album_id != $this->id) {
-            debug_event('album.class', "Updating $this->id to new id and migrating stats {" . $album_id . '}.', 4);
-            $songs = $this->get_songs();
-            foreach ($songs as $song_id) {
-                Song::update_album($album_id, $song_id, $this->id);
-                Song::update_year($year, $song_id);
-                Song::write_id3_for_song($song_id);
-            }
-            $current_id = $album_id;
-            $updated    = true;
-            Stats::migrate('album', $this->id, $album_id);
-            Useractivity::migrate('album', $this->id, $album_id);
-            Recommendation::migrate('album', $this->id, $album_id);
-            Share::migrate('album', $this->id, $album_id);
-            Shoutbox::migrate('album', $this->id, $album_id);
-            Tag::migrate('album', $this->id, $album_id);
-            Userflag::migrate('album', $this->id, $album_id);
-            Rating::migrate('album', $this->id, $album_id);
-            Art::migrate('album', $this->id, $album_id);
-            if (!AmpConfig::get('cron_cache')) {
-                self::garbage_collection();
-            }
-        } else {
-            if (!empty($year) && $year != $this->year) {
-                self::update_field('year', $year, $album_id);
-            }
-            if (!empty($mbid_group) && $mbid_group != $this->mbid_group) {
-                self::update_field('mbid_group', $mbid_group, $album_id);
-            }
-            if (!empty($release_type) && $release_type != $this->release_type) {
-                self::update_field('release_type', $release_type, $album_id);
-            }
-            if (!empty($original_year) && $original_year != $this->original_year) {
-                self::update_field('original_year', $original_year, $album_id);
-            }
-            if (!empty($barcode) && $barcode != $this->barcode) {
-                self::update_field('barcode', $barcode, $album_id);
-            }
-            if (!empty($catalog_number) && $catalog_number != $this->catalog_number) {
-                self::update_field('catalog_number', $catalog_number, $album_id);
-            }
-        }
         $this->year           = $year;
         $this->mbid_group     = $mbid_group;
         $this->release_type   = $release_type;
@@ -1166,18 +1143,6 @@ class Album extends database_object implements library_item
         $this->original_year  = $original_year;
         $this->barcode        = $barcode;
         $this->catalog_number = $catalog_number;
-
-        if ($updated && !empty($songs)) {
-            foreach ($songs as $song_id) {
-                Song::update_utime($song_id);
-            } // foreach song of album
-            if (!AmpConfig::get('cron_cache')) {
-                Stats::garbage_collection();
-                Rating::garbage_collection();
-                Userflag::garbage_collection();
-                Useractivity::garbage_collection();
-            }
-        } // if updated
 
         $override_childs = false;
         if ($data['overwrite_childs'] == 'checked') {
@@ -1193,7 +1158,7 @@ class Album extends database_object implements library_item
             $this->update_tags($data['edit_tags'], $override_childs, $add_to_childs, $current_id, true);
         }
 
-        return $current_id;
+        return $this->id;
     }
     // update
 

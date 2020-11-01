@@ -59,7 +59,7 @@
         "evenement/evenement": "2.*",
         "gettext/gettext": "4.*.*",
         "happyworm/jplayer": "2.*",
-        "james-heinrich/getid3": "dev-master",
+        "james-heinrich/getid3": "2.0.x-dev",
         "jeromeetienne/jquery-qrcode": "dev-master",
         "jwilsson/spotify-web-api-php": "^3.5",
         "krixon/xbmc-php-rpc": "dev-master",
@@ -125,6 +125,10 @@
                 }
             }
         },
+            {
+                 "type": "composer",
+                "url": "https:\/\/www.phpclasses.org\/"
+            },
         {
             "type": "package",
             "package": {
@@ -366,7 +370,7 @@
             "public/lib/components/{$name}/": ["type:component"]
         }
     },
-    "autoload": {
+   "autoload": {
         "psr-4": {
             "Ampache\\": "src/"
         }
@@ -381,7 +385,10 @@
         "tests": "./vendor/bin/phpunit tests",
         "codestyle": "resources/scripts/tests/codestyle.sh",
         "syntax": "resources/scripts/tests/syntax.sh",
-        "fix-cs": "vendor/bin/php-cs-fixer fix -v ."
+        "fix-cs": "vendor/bin/php-cs-fixer fix -v .",
+	"post-autoload-dump": [
+	    "@php resources/scripts/composer/check_tag_tools.php"
+	]
     },
     "suggest": {
         "szymach/c-pchart": "Enable graphical statistics",
