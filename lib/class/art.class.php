@@ -1375,7 +1375,6 @@ class Art extends database_object
             }
         }
 
-
         return $images;
     } // gather_spotify
 

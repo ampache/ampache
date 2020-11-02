@@ -73,7 +73,6 @@ final class LicensesMethod
             return false;
         }
 
-
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':

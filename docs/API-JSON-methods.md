@@ -36,7 +36,7 @@ This is the function that handles verifying a new handshake Takes a timestamp, a
 ```
 
 @throws object
-       
+
 ```JSON
 "error": {}
 ```

@@ -2424,7 +2424,6 @@ class Song extends database_object implements media, library_item
         return $meta;
     }
 
-
     /**
      * getId
      * @return integer
