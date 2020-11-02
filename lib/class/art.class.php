@@ -501,7 +501,8 @@ class Art extends database_object
      */
     public static function prepare_pics($pics)
     {
-        $i = 0;
+        $ndata = array();
+        $i     = 0;
         foreach ($pics as $pic) {
             $ndata['attached_picture'][$i]['description']   = $pic['description'];
             $ndata['attached_picture'][$i]['data']          = $pic['data'];
