@@ -283,11 +283,13 @@ class vainfo
         $tagwriter->tag_data          = $tag_data;
         if ($tagwriter->WriteTags() && !empty($tagwriter->warnings)) {
             foreach ($tagwriter->warnings as $message) {
-                debug_event('Writing Image:', $message, 5);
+                debug_event('vainfo.class', 'Warning Writing Image: ' . $message, 5);
             }
         }
         if (!empty($tagwriter->errors)) {
-            debug_event('Writing Image:', $tagwriter->errors, 1);
+            foreach ($tagwriter->$tagwriter->errors as $message) {
+                debug_event('vainfo.class', 'Error Writing Image: ' . $message, 1);
+            }
         }
     } // write_id3
 
