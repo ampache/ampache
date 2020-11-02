@@ -1081,7 +1081,7 @@ class Artist extends database_object implements library_item
     public function update_time()
     {
         $time = self::get_time($this->id);
-        if ($time !== $this->time) {
+        if ($time !== $this->time && $this->id) {
             $sql = "UPDATE `artist` SET `time`=$time WHERE `id`=" . $this->id;
             Dba::write($sql);
         }
