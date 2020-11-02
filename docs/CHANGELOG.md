@@ -1,5 +1,28 @@
 # CHANGELOG
 
+## Ampache 4.2.4-release
+
+### Added
+
+* Random tickbox added to search pages
+* Song, Album and Artist MusicBrainz ID added to search
+* Fall back to year when using original year in search
+
+### Fixed
+
+* User was being created but you were told it isn't
+* The search pages remember your limit correctly
+* PHP exception when < 7.1
+* Correct "Recently Added", "Recently Updated" searches
+* Check that song can be inserted before inserting the remaining rows
+* Logic in stat recording when skips occur
+* Don't query for null tag ids
+* Subsonic: getCoverArt fixes
+
+### API 4.2.4
+
+**NO CHANGE**
+
 ## Ampache 4.2.3-release
 
 ### Added

@@ -113,6 +113,11 @@ class Album extends database_object implements library_item
     public $artist_name;
 
     /**
+     *  @var integer $total_duration
+     */
+    public $total_duration;
+
+    /**
      *  @var integer $artist_id
      */
     public $artist_id;
