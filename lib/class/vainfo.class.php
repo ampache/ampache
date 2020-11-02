@@ -312,7 +312,7 @@ class vainfo
                    }
                    break;
                 default:
-                   $ndata[$key][] = $data[0];
+                   $ndata[$key][] = $key[0];
                     break;
             }
         }
