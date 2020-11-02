@@ -225,6 +225,10 @@ class Song extends database_object implements media, library_item
      */
     public $f_track;
     /**
+     * @var string $disk
+     */
+    public $disk;
+    /**
      * @var string $f_bitrate
      */
     public $f_bitrate;
@@ -481,6 +485,9 @@ class Song extends database_object implements media, library_item
      */
     public static function garbage_collection()
     {
+        // clean up missing catalogs
+        Dba::write("DELETE FROM `song` WHERE `song`.`catalog` NOT IN (SELECT `id` FROM `catalog`)");
+        // delete the rest
         Dba::write('DELETE FROM `song_data` USING `song_data` LEFT JOIN `song` ON `song`.`id` = `song_data`.`song_id` WHERE `song`.`id` IS NULL');
     }
 
@@ -582,7 +589,7 @@ class Song extends database_object implements media, library_item
         $sql = 'SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `album`.`album_artist` AS `albumartist`, `song`.`year`, `song`.`artist`, ' .
             '`song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, ' .
             '`song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`mbid`, `song`.`addition_time`, `song`.`license`, ' .
-            '`song`.`composer`, `song`.`user_upload`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` ' .
+            '`song`.`composer`, `song`.`user_upload`, `album`.`disk`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` ' .
             'FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` ' .
             'LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` ' .
             'WHERE `song`.`id` = ?';
@@ -1017,9 +1024,10 @@ class Song extends database_object implements media, library_item
             return false;
         }
         // insert stats for each object type
-        Stats::insert('album', $this->album, $user, $agent, $location, 'stream', $date);
-        Stats::insert('artist', $this->artist, $user, $agent, $location, 'stream', $date);
-        Stats::insert('song', $this->id, $user, $agent, $location, 'stream', $date);
+        if (Stats::insert('song', $this->id, $user, $agent, $location, 'stream', $date)) {
+            Stats::insert('album', $this->album, $user, $agent, $location, 'stream', $date);
+            Stats::insert('artist', $this->artist, $user, $agent, $location, 'stream', $date);
+        }
         // If it hasn't been played, set it
         if (!$this->played) {
             self::update_played(true, $this->id);
