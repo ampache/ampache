@@ -282,7 +282,7 @@ class vainfo
         $tagwriter->remove_other_tags = true;
         $tagwriter->tag_data          = $tag_data;
         if ($tagwriter->WriteTags() && !empty($tagwriter->warnings)) {
-            foreach ($tagwriter->warnings AS $message) {
+            foreach ($tagwriter->warnings as $message) {
                 debug_event('Writing Image:', $message, 5);
             }
         }
