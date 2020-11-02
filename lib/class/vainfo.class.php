@@ -304,10 +304,10 @@ class vainfo
     {
         $ndata = array();
 
-        foreach ($frames as $key => $data) {
+        foreach ($frames as $key => $text) {
             switch ($key) {
                 case 'text':
-                   foreach ($data as $tkey => $data) {
+                   foreach ($text as $tkey => $data) {
                        $ndata['text'][] = array('data' => $data, 'description' => $tkey, 'encodingid' => 0);
                    }
                    break;
