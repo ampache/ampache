@@ -1250,7 +1250,6 @@ class Song extends database_object implements media, library_item
      */
     public function write_id3($data = null, $changed = null)
     {
-        $ndata = array();
         if (AmpConfig::get('write_id3', false)) {
             $catalog = Catalog::create_from_id($this->catalog);
             if ($catalog->get_type() == 'local') {
@@ -1270,8 +1269,8 @@ class Song extends database_object implements media, library_item
                     $meta  = $this->get_vorbis_metadata();
                 }
                 $ndata = $id3->prepare_id3_frames($tdata);
-                //       $song = new Song($this->id);
-                //        $song->format();
+                // $song = new Song($this->id);
+                // $song->format();
                 if (isset($changed)) {
                     foreach ($changed as $key => $value) {
                         switch ($value) {
@@ -1329,7 +1328,7 @@ class Song extends database_object implements media, library_item
                     }
                 }
                 $id3->write_id3($ndata);
-//                Catalog::update_media_from_tags($this);
+                // Catalog::update_media_from_tags($this);
             }
         }
     }

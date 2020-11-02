@@ -402,14 +402,14 @@ class Art extends database_object
 
         $current_picturetypeid = ($this->type == 'album') ? 3 : 8;
         if (AmpConfig::get('write_id3_art', false)) {
-            $type        = ucfirst($this->type);
-            $object_type = new $type($this->uid);
-            debug_event('art.class', 'Inserting image Album ' . $album->name . ' on songs.', 5);
-            $songs = $object_type->get_songs();
+            $type   = ucfirst($this->type);
+            $object = new $type($this->uid);
+            debug_event('art.class', 'Inserting ' . $type . ' image' . $object->name . ' for song files.', 5);
+            $songs = $object->get_songs();
             foreach ($songs as $song_id) {
                 $song   = new Song($song_id);
                 $song->format();
-                $description = ($this->type == 'artist') ? $song->f_artist_full : $object_type->full_name;
+                $description = ($this->type == 'artist') ? $song->f_artist_full : $object->full_name;
                 $id3         = new VaInfo($song->file);
                 $ndata       = array();
                 $data        = $id3->read_id3();
@@ -464,9 +464,11 @@ class Art extends database_object
      * @param array $apics
      * @param string $mime, description, $source
      * @param integer $picturetypeid
+     * @return array
      */
     private function replace_apic($apics, $mime, $description, $source, $picturetypeid)
     {
+        $ndata = array();
         if ($apics[0]['picturetypeid'] == $picturetypeid) {
             $ndata[0]['description']   = $description;
             $ndata[0]['data']          = $source;

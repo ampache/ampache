@@ -2972,7 +2972,6 @@ abstract class Catalog extends database_object
                 }
                 AmpConfig::set('write_id3', $write_id3, true);
                 AmpConfig::set('write_id3', $write_id3_art, true);
-
         }
 
         // Remove any orphaned artists/albums/etc.

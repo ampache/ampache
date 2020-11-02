@@ -281,9 +281,9 @@ class vainfo
         $tagwriter->tag_encoding      = $TaggingFormat;
         $tagwriter->remove_other_tags = true;
         $tagwriter->tag_data          = $tag_data;
-        if ($tagwriter->WriteTags()) {
-            if (!empty($tagwriter->warnings)) {
-                debug_event('Writing Image:', $tagwriter->warnings, 5);
+        if ($tagwriter->WriteTags() && !empty($tagwriter->warnings)) {
+            foreach ($tagwriter->warnings AS $message) {
+                debug_event('Writing Image:', $message, 5);
             }
         }
         if (!empty($tagwriter->errors)) {
@@ -304,16 +304,15 @@ class vainfo
 
         foreach ($frames as $key => $data) {
             switch ($key) {
-                    case 'text':
-                       foreach ($data as $tkey => $data) {
-                           $ndata['text'][] = array('data' => $data, 'description' => $tkey, 'encodingid' => 0);
-                       }
-                       break;
-                    default:
-                       $ndata[$key][] = $data[0];
-                        break;
-
-                }
+                case 'text':
+                   foreach ($data as $tkey => $data) {
+                       $ndata['text'][] = array('data' => $data, 'description' => $tkey, 'encodingid' => 0);
+                   }
+                   break;
+                default:
+                   $ndata[$key][] = $data[0];
+                    break;
+            }
         }
 
         return $ndata;
