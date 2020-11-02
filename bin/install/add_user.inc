@@ -27,9 +27,10 @@ if(php_sapi_name() != 'cli') {
 define('NO_SESSION', 1);
 define('CLI', 1);
 
-$path = dirname(__FILE__);
+$path   = dirname(__FILE__);
 $prefix = realpath($path . '/../../');
-require_once $prefix . '/lib/init.php';
+$a_root = realpath(__DIR__ . "/../../");
+require_once $a_root . '/lib/init.php';
 
 $options = getopt('e:l:n:p:u:w:');
 if (empty($options) || !isset($options['u'])) {
@@ -45,21 +46,19 @@ if (empty($options) || !isset($options['u'])) {
 
 $username = $options['u'];
 $password = isset($options['p']) ? $options['p'] : mt_rand();
-$access = isset($options['l']) ? $options['l'] : AmpConfig::get('auto_user');
-$access = (isset($access)) ? (int) $access : 5;
-$access = is_numeric($access) ? $access : User::access_name_to_level($access);
-$email = isset($options['e']) ? $options['e'] : '';
-$website = isset($options['w']) ? $options['w'] : '';
-$name = isset($options['n']) ? $options['n'] : '';
-
-if ((int) User::create($username, $name, $email, $website, $password, $access) < 1) {
-    /* HINT: %1 Access Level (Administrator/User/etc), %2 Username, %3 password */
-    printf(T_('Created %1$s user %2$s with password %3$s'), User::access_level_to_name((string) $access), $username, $password);
-    echo "\n";
-}
-else {
+$access   = isset($options['l']) ? $options['l'] : AmpConfig::get('auto_user');
+$access   = (isset($access)) ? $access : 5;
+$access   = is_numeric($access) ? (int) $access : User::access_name_to_level($access);
+$email    = isset($options['e']) ? $options['e'] : '';
+$website  = isset($options['w']) ? $options['w'] : '';
+$name     = isset($options['n']) ? $options['n'] : '';
+$user_id  = User::create($username, $name, $email, $website, $password, $access);
+if ($user_id < 1) {
     echo T_('User creation failed'), "\n";
     exit(1);
 }
+/* HINT: %1 Access Level (Administrator/User/etc), %2 Username, %3 password */
+printf(T_('Created %1$s user %2$s with password %3$s'), User::access_level_to_name((string) $access), $username, $password);
+echo "\n";
 
 User::fix_preferences('-1');

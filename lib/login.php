@@ -32,7 +32,7 @@ Preference::init();
  * page if they aren't in the ACL
  */
 if (AmpConfig::get('access_control')) {
-    if (!Access::check_network('interface', '', '5')) {
+    if (!Access::check_network('interface', '', 5)) {
         debug_event('login.class', 'UI::access_denied:' . (string) filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) . ' is not in the Interface Access list', 3);
         UI::access_denied();
 
@@ -112,15 +112,16 @@ if (!empty($username) && isset($auth)) {
         }
     } elseif (AmpConfig::get('auto_create') && $auth['success'] && ! $user->username) {
         // This is run if we want to autocreate users who don't exist (useful for non-mysql auth)
-        $access     = User::access_name_to_level(AmpConfig::get('auto_user', 'guest'));
-        $fullname   = array_key_exists('name', $auth) ? $auth['name']    : '';
-        $email      = array_key_exists('email', $auth) ? $auth['email']   : '';
-        $website    = array_key_exists('website', $auth) ? $auth['website'] : '';
-        $state      = array_key_exists('state', $auth) ? $auth['state']   : '';
-        $city       = array_key_exists('city', $auth) ? $auth['city']    : '';
+        $access   = User::access_name_to_level(AmpConfig::get('auto_user', 'guest'));
+        $fullname = array_key_exists('name', $auth) ? $auth['name']    : '';
+        $email    = array_key_exists('email', $auth) ? $auth['email']   : '';
+        $website  = array_key_exists('website', $auth) ? $auth['website'] : '';
+        $state    = array_key_exists('state', $auth) ? $auth['state']   : '';
+        $city     = array_key_exists('city', $auth) ? $auth['city']    : '';
 
         // Attempt to create the user
-        if (User::create($username, $name, $email, $website, hash('sha256', mt_rand()), $access, $state, $city) > 0) {
+        $user_id = User::create($username, $fullname, $email, $website, hash('sha256', mt_rand()), $access, $state, $city);
+        if ($user_id > 0) {
             $user = User::get_from_username($username);
 
             if (array_key_exists('avatar', $auth)) {
