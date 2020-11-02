@@ -1341,7 +1341,8 @@ table.disablegv td.cel_rating {
 tr#search_item_count td,
 tr#search_length td,
 tr#search_size_limit td,
-tr#search_max_results td {
+tr#search_max_results td,
+tr#random_results td {
     width: 150px;
     overflow: hidden;
     display: inline-block;

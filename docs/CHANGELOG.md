@@ -25,6 +25,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * NEW plugin: 'Personal Favorites'. Show a shortcut to a favorite smartlist or playlist on the homepage
 * Run garbage collection after catalog_update.inc 'clean' or 'verify'
 * Add time and duration to albums, artists instead of calculating from songs each time
+* Add Random to the search pages to allow sorting by id or RAND()
 
 ### Changed
 
@@ -41,6 +42,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 ### Fixed
 
 * Escape filepaths when removing from database
+* Search form not remembering limits
 
 ### API develop
 
