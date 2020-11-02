@@ -864,7 +864,7 @@ class Album extends database_object implements library_item
      * get_time
      *
      * Get time for an album disk.
-     * @param array $album_id
+     * @param integer $album_id
      * @return integer
      */
     public static function get_time($album_id)
@@ -1054,7 +1054,7 @@ class Album extends database_object implements library_item
     public function update_time()
     {
         $time = self::get_time($this->id);
-        if ($time !== $this->time) {
+        if ($time !== $this->time && $this->id) {
             $sql = "UPDATE `album` SET `time`=$time WHERE `id`=" . $this->id;
             Dba::write($sql);
         }
@@ -1089,7 +1089,7 @@ class Album extends database_object implements library_item
             self::update_field('album_artist', $album_artist, $this->id);
         }
         if (!empty($year) && $year != $this->year) {
-            self::update_field('year', $year, $album_id);
+            self::update_field('year', $year, $this->id);
         }
         if (!empty($mbid_group) && $mbid_group != $this->mbid_group) {
             self::update_field('mbid_group', $mbid_group, $this->id);
@@ -1135,7 +1135,7 @@ class Album extends database_object implements library_item
         }
 
         if (isset($data['edit_tags'])) {
-            $this->update_tags($data['edit_tags'], $override_childs, $add_to_childs, $current_id, true);
+            $this->update_tags($data['edit_tags'], $override_childs, $add_to_childs, true);
         }
 
         return $this->id;
@@ -1149,17 +1149,12 @@ class Album extends database_object implements library_item
      * @param string $tags_comma
      * @param boolean $override_childs
      * @param boolean $add_to_childs
-     * @param integer|null $current_id
      * @param boolean $force_update
      */
-    public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
+    public function update_tags($tags_comma, $override_childs, $add_to_childs, $force_update = false)
     {
-        if ($current_id === null) {
-            $current_id = $this->id;
-        }
-
         // When current_id not empty we force to overwrite current object
-        Tag::update_tag_list($tags_comma, 'album', $current_id, $force_update ? true : $override_childs);
+        Tag::update_tag_list($tags_comma, 'album', $this->id, $force_update ? true : $override_childs);
 
         if ($override_childs || $add_to_childs) {
             $songs = $this->get_songs();
