@@ -1103,7 +1103,7 @@ class Album extends database_object implements library_item
         }
 
         if (isset($data['edit_tags'])) {
-            $this->update_tags($data['edit_tags'], $override_childs, $add_to_childs, $current_id, true);
+            $this->update_tags($data['edit_tags'], $override_childs, $add_to_childs, true);
         }
 
         return $current_id;
@@ -1120,14 +1120,10 @@ class Album extends database_object implements library_item
      * @param integer|null $current_id
      * @param boolean $force_update
      */
-    public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
+    public function update_tags($tags_comma, $override_childs, $add_to_childs, $force_update = false)
     {
-        if ($current_id === null) {
-            $current_id = $this->id;
-        }
-
         // When current_id not empty we force to overwrite current object
-        Tag::update_tag_list($tags_comma, 'album', $current_id, $force_update ? true : $override_childs);
+        Tag::update_tag_list($tags_comma, 'album', $this->id, $force_update ? true : $override_childs);
 
         if ($override_childs || $add_to_childs) {
             $songs = $this->get_songs();
