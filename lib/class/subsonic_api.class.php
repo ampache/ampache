@@ -1640,7 +1640,7 @@ class Subsonic_Api
                 $access = 75;
             }
             $password = self::decrypt_password($password);
-            $user_id  = (int) User::create($username, $username, $email, null, $password, $access);
+            $user_id  = User::create($username, $username, $email, null, $password, $access);
             if ($user_id > 0) {
                 if ($downloadRole) {
                     Preference::update('download', $user_id, 1);
