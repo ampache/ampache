@@ -1015,11 +1015,7 @@ class Artist extends database_object implements library_item
      */
     public function update_tags($tags_comma, $override_childs, $add_to_childs, $force_update = false)
     {
-        if ($current_id === null) {
-            $current_id = $this->id;
-        }
-
-        Tag::update_tag_list($tags_comma, 'artist', $current_id, $force_update ? true : $override_childs);
+        Tag::update_tag_list($tags_comma, 'artist', $this->id, $force_update ? true : $override_childs);
 
         if ($override_childs || $add_to_childs) {
             $albums = $this->get_albums();
