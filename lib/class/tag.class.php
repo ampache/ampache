@@ -24,7 +24,7 @@ declare(strict_types=0);
 /**
  * Tag Class
  *
- * This class handles all of the tag relation operations
+ * This class handles all of the tag related operations
  *
  */
 class Tag extends database_object implements library_item
@@ -540,7 +540,8 @@ class Tag extends database_object implements library_item
         if (!Core::is_library_item($type)) {
             return array();
         }
-
+        $tag_sql   = ((int) $tag_id == 0) ? "" : "`tag_map`.`tag_id` = ? AND";
+        $sql_param = ($tag_sql == "") ? array($type) : array($tag_id, $type);
         $limit_sql = "";
         if ($count) {
             $limit_sql = " LIMIT ";
@@ -551,12 +552,12 @@ class Tag extends database_object implements library_item
         }
 
         $sql = "SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` " .
-            "WHERE `tag_map`.`tag_id` = ? AND `tag_map`.`object_type` = ? ";
+            "WHERE $tag_sql `tag_map`.`object_type` = ? ";
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
             $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
         }
         $sql .= $limit_sql;
-        $db_results = Dba::read($sql, array($tag_id, $type));
+        $db_results = Dba::read($sql, $sql_param);
 
         $results = array();
 
