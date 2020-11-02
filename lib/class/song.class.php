@@ -1264,8 +1264,10 @@ class Song extends database_object implements media, library_item
                 $result = $id3->read_id3();
                 if ($result['fileformat'] == 'mp3') {
                     $tdata = $result['tags']['id3v2'];
+                    $meta  = $this->get_metadata();
                 } else {
                     $tdata = $result['tags']['vorbiscomment'];
+                    $meta  = $this->get_vorbis_metadata();
                 }
                 $ndata = $id3->prepare_id3_frames($tdata);
                 //       $song = new Song($this->id);
@@ -1301,8 +1303,8 @@ class Song extends database_object implements media, library_item
                     }
                     $ndata = array_merge($pics, $ndata);
                 } else {
-                    $meta = $this->get_metadata();
-                    foreach ($ndata as $key => $value) {
+                    // Fill in existing tag frames
+                    foreach ($meta as $key => $value) {
                         if ($key != 'text' && $key != 'totaltracks') {
                             $ndata[$key][0] = $meta[$key] ?:'';
                         }
@@ -2371,29 +2373,17 @@ class Song extends database_object implements media, library_item
     {
         $meta = array();
 
-        $meta['file']                  = $this->file;
-        $meta['bitrate']               = $this->bitrate;    //    $meta['mode']                  = $this->mode;
-        $meta['year']                  = $meta['date']           = $this->year;
-        $meta['size']                  = $this->size;
+        $meta['year']                  = $this->year;
         $meta['time']                  = $this->time;
-        $meta['mime']                  = $this->mime;
         $meta['title']                 = $this->title;
         $meta['comment']               = $this->comment;
         $meta['album']                 = $this->f_album_full;
         $meta['artist']                = $this->f_artist_full;
-        $meta['band']                  = $meta['albumartist']                  = $this->f_albumartist_full;
+        $meta['band']                  = $this->f_albumartist_full;
         $meta['composer']              = $this->composer;
         $meta['publisher']             = $this->f_publisher;
-        $meta['mb_trackid']            = $this->mbid;
-        $meta['mb_albumid']            = $this->album_mbid;
-        $meta['mb_artistid']           = $this->artist_mbid;
-        $meta['mb_albumartistid']      = $this->albumartist_mbid;
-        $meta['track_number']          = $meta['tracknumber'] = $meta['track']  = $this->f_track;
-        $meta['part_of_a_set']         = $meta['discnumber']  = $this->disk;
-        $meta['replaygain_track_gain'] = $this->replaygain_track_gain;
-        $meta['replaygain_track_peak'] = $this->replaygain_track_peak;
-        $meta['replaygain_album_gain'] = $this->replaygain_album_gain;
-        $meta['replaygain_album_peak'] = $this->replaygain_album_peak;
+        $meta['track_number']          = $this->f_track;
+        $meta['part_of_a_set']         = $this->disk;
         $meta['genre']                 = array();
         if (!empty($this->tags)) {
             foreach ($this->tags as $tag) {
@@ -2406,6 +2396,35 @@ class Song extends database_object implements media, library_item
 
         return $meta;
     }
+
+    public function get_vorbis_metadata()
+    {
+        $meta = array();
+
+        $meta['date']                  = $this->year;
+        $meta['time']                  = $this->time;
+        $meta['title']                 = $this->title;
+        $meta['comment']               = $this->comment;
+        $meta['album']                 = $this->f_album_full;
+        $meta['artist']                = $this->f_artist_full;
+        $meta['albumartist']           = $this->f_albumartist_full;
+        $meta['composer']              = $this->composer;
+        $meta['publisher']             = $this->f_publisher;
+        $meta['track']                 = $this->f_track;
+        $meta['discnumber']            = $this->disk;
+        $meta['genre']                 = array();
+        if (!empty($this->tags)) {
+            foreach ($this->tags as $tag) {
+                if (!in_array($tag['name'], $meta['genre'])) {
+                    $meta['genre'][] = $tag['name'];
+                }
+            }
+        }
+        $meta['genre'] = implode(',', $meta['genre']);
+
+        return $meta;
+    }
+
 
     /**
      * getId
