@@ -495,7 +495,7 @@ class Artist extends database_object implements library_item
      * get_time
      *
      * Get time for an artist's songs.
-     * @param array $artist_id
+     * @param integer $artist_id
      * @return integer
      */
     public static function get_time($artist_id)
@@ -1076,7 +1076,7 @@ class Artist extends database_object implements library_item
      */
     public function update_time()
     {
-        $time = self::get_time($this->id);
+        $time = self::get_time((int) $this->id);
         if ($time !== $this->time && $this->id) {
             $sql = "UPDATE `artist` SET `time`=$time WHERE `id`=" . $this->id;
             Dba::write($sql);

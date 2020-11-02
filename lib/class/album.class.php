@@ -888,7 +888,7 @@ class Album extends database_object implements library_item
     {
         $total_duration = 0;
         foreach ($album_ids as $object_id) {
-            $total_duration = self::get_time($object_id) + $total_duration;
+            $total_duration = self::get_time((int) $object_id) + $total_duration;
         }
 
         return $total_duration;
@@ -1053,7 +1053,7 @@ class Album extends database_object implements library_item
      */
     public function update_time()
     {
-        $time = self::get_time($this->id);
+        $time = self::get_time((int) $this->id);
         if ($time !== $this->time && $this->id) {
             $sql = "UPDATE `album` SET `time`=$time WHERE `id`=" . $this->id;
             Dba::write($sql);
