@@ -1353,9 +1353,8 @@ Delete an existing podcast_episode.
 
 ### stats
 
-Get some items based on some simple search types and filters.
-This method has partial backwards compatibility with older api versions but should be updated to follow the current input values.
-(Changed in 400001 'filter' added)
+Get some items based on some simple search types and filters. (Random by default)
+This method HAD partial backwards compatibility with older api versions but it has now been removed
 @param array $input
 
 @return object
@@ -1373,7 +1372,7 @@ This method has partial backwards compatibility with older api versions but shou
 | Input      | Type    | Description                                | Optional |
 |------------|---------|--------------------------------------------|---------:|
 | 'type'     | string  | 'song', 'album', 'artist'                  |       NO |
-| 'filter'   | string  | 'newest', 'highest', 'frequent', 'recent', |       NO |
+| 'filter'   | string  | 'newest', 'highest', 'frequent', 'recent', |      YES |
 |            |         | 'forgotten', 'flagged', 'random'           |          |
 | 'user_id'  | integer |                                            |      YES |
 | 'username' | string  |                                            |      YES |

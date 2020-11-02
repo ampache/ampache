@@ -49,15 +49,14 @@ final class StatsMethod
     /**
      * stats
      * MINIMUM_API_VERSION=380001
-     * CHANGED_IN_API_VERSION=400001
+     * CHANGED_IN_API_VERSION=5.0.0
      *
-     * Get some items based on some simple search types and filters
-     * This method has partial backwards compatibility with older api versions
-     * but should be updated to follow the current input values
+     * Get some items based on some simple search types and filters. (Random by default)
+     * This method HAD partial backwards compatibility with older api versions but it has now been removed
      *
      * @param array $input
      * type     = (string)  'song', 'album', 'artist'
-     * filter   = (string)  'newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged', 'random'
+     * filter   = (string)  'newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged', 'random' (Default: random) //optional
      * user_id  = (integer) //optional
      * username = (string)  //optional
      * offset   = (integer) //optional
@@ -66,9 +65,16 @@ final class StatsMethod
      */
     public static function stats(array $input)
     {
-        if (!Api::check_parameter($input, array('type', 'filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, array('type'), self::ACTION)) {
             return false;
         }
+        $type   = (string) $input['type'];
+        $offset = (int) $input['offset'];
+        $limit  = (int) $input['limit'];
+        if ($limit < 1) {
+            $limit = AmpConfig::get('popular_threshold', 10);
+        }
+
         // set a default user
         $user    = User::get_from_username(Session::username($input['auth']));
         $user_id = $user->id;
@@ -79,18 +85,6 @@ final class StatsMethod
         } elseif ($input['user_id']) {
             $user_id = (int) $input['user_id'];
             $user    = new User($user_id);
-        }
-        // moved type to filter and allowed multiple type selection
-        $type   = (string) $input['type'];
-        $offset = (int) $input['offset'];
-        $limit  = (int) $input['limit'];
-        // original method only searched albums and had poor method inputs
-        if (in_array($type, array('newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged'))) {
-            $type            = 'album';
-            $input['filter'] = $type;
-        }
-        if ($limit < 1) {
-            $limit = AmpConfig::get('popular_threshold', 10);
         }
 
         $results = array();
