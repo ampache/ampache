@@ -1640,7 +1640,7 @@ class Subsonic_Api
                 $access = 75;
             }
             $password = self::decrypt_password($password);
-            $user_id  = (int) User::create($username, $username, $email, null, $password, $access);
+            $user_id  = User::create($username, $username, $email, null, $password, $access);
             if ($user_id > 0) {
                 if ($downloadRole) {
                     Preference::update('download', $user_id, 1);
@@ -1885,10 +1885,9 @@ class Subsonic_Api
     public static function scrobble($input)
     {
         $object_ids = self::check_parameter($input, 'id');
-        $submission = $input['submission'];
+        $submission = ($input['submission'] === 'true' || $input['submission'] === '1');
         $user       = User::get_from_username($input['u']);
         $client     = (string) $input['c'];
-        $time       = isset($input['time']) ? (int) $input['time'] / 1000 : time();
 
         if (!is_array($object_ids)) {
             $rid        = array();
@@ -1897,18 +1896,19 @@ class Subsonic_Api
         }
 
         foreach ($object_ids as $subsonic_id) {
-            $previous = Stats::get_last_play($user->id, $client);
+            $time     = isset($input['time']) ? (int) $input['time'] / 1000 : time();
+            $previous = Stats::get_last_play($user->id, $client, $time);
             $media    = Subsonic_XML_Data::getAmpacheObject($subsonic_id);
             $media->format();
 
             // submission is true: go to scrobble plugins (Plugin::get_plugins('save_mediaplay'))
-            if (($submission === 'true' || $submission === '1') && get_class($media) == 'Song') {
+            if ($submission && get_class($media) == 'Song' && ($previous['object_id'] != $media->id) && (($time - $previous['time']) > 5)) {
                 // stream has finished
                 debug_event('subsonic_api.class', $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
                 User::save_mediaplay($user, $media);
             }
             // Submission is false and not a repeat. let repeats go though to saveplayqueue
-            if (($submission !== 'true' || $submission !== '1') && $media->id && ($previous['object_id'] != $media->id) && (($time - $previous['time']) > 5)) {
+            if ((!$submission) && $media->id && ($previous['object_id'] != $media->id) && (($time - $previous['time']) > 5)) {
                 $media->set_played($user->id, $client, array(), $time);
             }
         }
@@ -1965,6 +1965,7 @@ class Subsonic_Api
      * Returns artist info with biography, image URLs and similar artists, using data from last.fm.
      * Takes artist id in parameter with optional similar artist count and if not present similar artist should be returned.
      * @param array $input
+     * @param string $child
      */
     public static function getartistinfo($input, $child = "artistInfo")
     {
@@ -2000,6 +2001,7 @@ class Subsonic_Api
      * Returns a random collection of songs from the given artist and similar artists, using data from last.fm. Typically used for artist radio features.
      * Takes song/album/artist id in parameter with optional similar songs count.
      * @param array $input
+     * @param string $child
      */
     public static function getsimilarsongs($input, $child = "similarSongs")
     {
@@ -2247,8 +2249,9 @@ class Subsonic_Api
      */
     public static function getbookmarks($input)
     {
+        $user_id   = User::get_from_username($input['u'])->id;
         $response  = Subsonic_XML_Data::createSuccessResponse('getbookmarks');
-        $bookmarks = Bookmark::get_bookmarks();
+        $bookmarks = Bookmark::get_bookmarks($user_id);
         Subsonic_XML_Data::addBookmarks($response, $bookmarks);
         self::apiOutput($input, $response);
     }
@@ -2361,10 +2364,10 @@ class Subsonic_Api
             $previous = Stats::get_last_play($user_id, (string) $input['c']);
             $type     = Subsonic_XML_Data::getAmpacheType($current);
             Stream::garbage_collection();
-            Stream::insert_now_playing((int)$media->id, (int)$user_id, (int)$media->time, $username, $type);
+            Stream::insert_now_playing((int) $media->id, (int) $user_id, (int) $media->time, $username, $type);
             // repeated plays aren't called by scrobble so make sure we call this too
             if ($previous['object_id'] == $media->id && ($time - $previous['time']) > 5) {
-                $media->set_played((int)$user_id, (string)$input['c'], array(), $time);
+                $media->set_played((int) $user_id, (string) $input['c'], array(), $time);
             }
         }
         // continue to fail saving the queue
