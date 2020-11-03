@@ -494,7 +494,7 @@ class Art extends database_object
         return $ndata;
     }
 
-    /*
+    /**
      * Prepares images to be written to file tag.
      * @param array $pics
      * @return array

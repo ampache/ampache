@@ -2396,6 +2396,10 @@ class Song extends database_object implements media, library_item
         return $meta;
     }
 
+    /**
+     * get_vorbis_metadata
+     * @return array
+     */
     public function get_vorbis_metadata()
     {
         $meta = array();

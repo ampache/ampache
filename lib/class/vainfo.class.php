@@ -32,6 +32,9 @@ use JamesHeinrich\GetID3\WriteTags;
 use JamesHeinrich\GetID3\GetID3;
 use JamesHeinrich\GetID3\Utils;
 
+/**
+ * Class vainfo
+ */
 class vainfo
 {
     public $encoding       = '';
@@ -294,7 +297,7 @@ class vainfo
     } // write_id3
 
 
-    /*
+    /**
      * prepare_id3_frames
      * Prepares id3 frames for writing tag to file
      * @param array $frames

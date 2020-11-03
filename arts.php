@@ -37,14 +37,14 @@ if (filter_has_var(INPUT_GET, 'burl')) {
     $burl = base64_decode(Core::get_get('burl'));
 }
 
+$item = new $object_type($object_id);
+$item->format();
 // If not a content manager user then kick em out
 if (!Access::check('interface', 50) && (!Access::check('interface', 25) || $item->get_user_owner() != Core::get_global('user')->id)) {
     UI::access_denied();
 
     return false;
 }
-$item = new $object_type($object_id);
-$item->format();
 $keywords = $item->get_keywords();
 $keyword  = '';
 $options  = array();
