@@ -248,7 +248,12 @@ class Subsonic_Api
             'namespaceSeparator' => ' :', // you may want this to be something other than a colon
             'attributePrefix' => '', // to distinguish between attributes and nodes with the same name
             'alwaysArray' => array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share'), // array of xml tag names which should always become arrays
-            'alwaysNumeric' => array('duration'), // array of xml tag names which should always become integers
+            'alwaysDouble' => array('AverageRating'),
+            'alwaysInteger' => array('albumCount', 'audioTrackId', 'bitRate', 'bookmarkPosition', 'code',
+                                     'count', 'current', 'currentIndex', 'discNumber', 'duration', 'folder',
+                                     'lastModified', 'maxBitRate', 'minutesAgo', 'offset', 'originalHeight',
+                                     'originalWidth', 'playCount', 'playerId', 'position', 'size', 'songCount',
+                                     'time', 'totalHits', 'track', 'UserRating', 'visitCount', 'year'), // array of xml tag names which should always become integers
             'autoArray' => true, // only create arrays for tags which appear more than once
             'textContent' => 'value', // key used for the text content of elements
             'autoText' => true, // skip textContent key if node has no attributes or child nodes
@@ -274,7 +279,13 @@ class Subsonic_Api
                 if ($options['boolean'] && ($strattr == "true" || $strattr == "false")) {
                     $vattr = ($strattr == "true");
                 } else {
-                    $vattr = (in_array($attributeName, $options['alwaysNumeric'])) ? (int) $strattr : $strattr;
+                    $vattr = $strattr;
+                    if (in_array($attributeName, $options['alwaysInteger'])) {
+                        $vattr = (int) $strattr;
+                    }
+                    if (in_array($attributeName, $options['alwaysDouble'])) {
+                        $vattr = (double) $strattr;
+                    }
                 }
                 $attributesArray[$attributeKey] = $vattr;
             }
