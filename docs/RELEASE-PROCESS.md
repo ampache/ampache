@@ -8,8 +8,10 @@ It's easy to use a program like github desktop to compare between branches.
 * Export database from a fresh install (phpMyAdmin exports well.)
   * Tables: Structure; **select all tables**
   * Tables: Data; **only select** `access_list`, `license`, `preference`, `search`, `update_info` and `user_preference`
-  * Object creation options: Tick "Add DROP TABLE / VIEW / PROCEDURE / FUNCTION / EVENT / TRIGGER statement"
-  * Remove user 1 settings from `preference` and `user_preference` inserts.
+  * Object creation options:
+    * Tick "Add DROP TABLE / VIEW / PROCEDURE / FUNCTION / EVENT / TRIGGER statement"
+    * Tick "IF NOT EXISTS (less efficient as indexes will be generated during table creation)"
+  * Save and then remove user 1 settings from `preference` and `user_preference` inserts.
 * Open Github Desktop and pull latest develop / master
 * Change to master branch
 * Go to Branch Menu -> Update from develop

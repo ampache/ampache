@@ -3764,12 +3764,12 @@
             "version": "v5.2.43",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tightenco/collect.git",
+                "url": "https://github.com/tighten/collect.git",
                 "reference": "6add72fba3816232c71a3338081ed8cbef41974d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tightenco/collect/zipball/6add72fba3816232c71a3338081ed8cbef41974d",
+                "url": "https://api.github.com/repos/tighten/collect/zipball/6add72fba3816232c71a3338081ed8cbef41974d",
                 "reference": "6add72fba3816232c71a3338081ed8cbef41974d",
                 "shasum": ""
             },
@@ -3969,5 +3969,6 @@
         "ext-xmlwriter": "1.0",
         "ext-xmlreader": "1.0",
         "lib-libxml": "2.7.0"
-    }
+    },
+    "plugin-api-version": "1.1.0"
 }

@@ -4,8 +4,10 @@
 
 ### Added
 
-* Random tickbox added to search pages
-* Song, Album and Artist MusicBrainz ID added to search
+* "Random" tickbox added to search pages
+
+### Changed
+
 * Fall back to year when using original year in search
 
 ### Fixed
@@ -17,7 +19,6 @@
 * Check that song can be inserted before inserting the remaining rows
 * Logic in stat recording when skips occur
 * Don't query for null tag ids
-* Subsonic: getCoverArt fixes
 
 ### API 4.2.4
 
