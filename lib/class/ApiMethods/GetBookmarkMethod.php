@@ -88,8 +88,8 @@ final class GetBookmarkMethod
             'object_type' => $type
         );
         $bookmark = Bookmark::get_bookmark($object);
-        if (!$bookmark) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+        if (empty($bookmark)) {
+            Api::empty('bookmark', $input['api_format']);
 
             return false;
         }

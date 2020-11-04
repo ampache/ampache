@@ -84,10 +84,12 @@ class AlbumSongsMethod
             $songs = $album->get_songs();
         }
         if (empty($songs)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+            Api::empty('song', $input['api_format']);
 
             return false;
         }
+
+        ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
                 JSON_Data::set_offset($input['offset']);

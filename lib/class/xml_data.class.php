@@ -62,8 +62,8 @@ class XML_Data
      *
      * This sets the limit for any ampache transactions
      *
-     * @param    integer    $limit    (description here...)
-     * @return    boolean
+     * @param  integer    $limit    (description here...)
+     * @return boolean
      */
     public static function set_limit($limit)
     {
@@ -81,8 +81,8 @@ class XML_Data
      *
      * This sets the type of XML_Data we are working on
      *
-     * @param    string    $type    XML_Data type
-     * @return    boolean
+     * @param  string    $type    XML_Data type
+     * @return boolean
      */
     public static function set_type($type)
     {
@@ -101,10 +101,10 @@ class XML_Data
      * This generates a standard XML Error message
      * nothing fancy here...
      *
-     * @param string $code Error code
-     * @param string $string Error message
-     * @param string $action
-     * @param string $type
+     * @param  string $code Error code
+     * @param  string $string Error message
+     * @param  string $action
+     * @param  string $type
      * @return string return error message xml
      */
     public static function error($code, $string, $action, $type)
@@ -124,8 +124,8 @@ class XML_Data
      * This generates a standard XML Success message
      * nothing fancy here...
      *
-     * @param string $string success message
-     * @param array $return_data
+     * @param  string $string success message
+     * @param  array $return_data
      * @return string return success message xml
      */
     public static function success($string, $return_data = array())
@@ -139,11 +139,24 @@ class XML_Data
     } // success
 
     /**
+     * empty
+     *
+     * This generates an empty root element
+     */
+    public static function empty()
+    {
+        $xml = self::_header();
+        $xml .= self::_footer();
+
+        return $xml;
+    } // empty
+
+    /**
      * header
      *
      * This returns the header
      *
-     * @param string $title
+     * @param  string $title
      * @return string return xml
      * @see _header()
      */
@@ -157,8 +170,8 @@ class XML_Data
      *
      * This returns the footer
      *
-     * @see    _footer()
-     * @return    string    return xml
+     * @return string    return xml
+     * @see _footer()
      */
     public static function footer()
     {
@@ -169,8 +182,7 @@ class XML_Data
      * genre_string
      *
      * This returns the formatted 'genre' string for an xml document
-     * @input array $tags
-     * @param $tags
+     * @param  array $tags
      * @return string
      */
     private static function genre_string($tags)
@@ -200,9 +212,9 @@ class XML_Data
      * output_xml_from_array
      * This takes a one dimensional array and creates a XML document from it. For
      * use primarily by the ajax mojo.
-     * @param $array
-     * @param boolean $callback
-     * @param string $type
+     * @param  array $array
+     * @param  boolean $callback
+     * @param  string $type
      * @return string
      */
     public static function output_xml_from_array($array, $callback = false, $type = '')
@@ -355,11 +367,11 @@ class XML_Data
      * This takes an array of artists and then returns a pretty xml document with the information
      * we want
      *
-     * @param array $objects (description here...)
-     * @param string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'
-     * @param boolean $full_xml whether to return a full XML document or just the node.
-     * @param boolean $include include episodes from podcasts or tracks in a playlist
-     * @return   string   return xml
+     * @param  array $objects (description here...)
+     * @param  string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'
+     * @param  boolean $full_xml whether to return a full XML document or just the node.
+     * @param  boolean $include include episodes from podcasts or tracks in a playlist
+     * @return string   return xml
      */
     public static function indexes($objects, $object_type, $full_xml = true, $include = false)
     {
@@ -541,8 +553,8 @@ class XML_Data
      *
      * This returns genres to the user, in a pretty xml document with the information
      *
-     * @param    array    $tags    (description here...)
-     * @return    string    return xml
+     * @param  array    $tags    (description here...)
+     * @return string    return xml
      */
     public static function genres($tags)
     {
@@ -574,11 +586,11 @@ class XML_Data
      * This takes an array of artists and then returns a pretty xml document with the information
      * we want
      *
-     * @param integer[] $artists (description here...)
-     * @param array $include Array of other items to include.
-     * @param integer $user_id
-     * @param boolean $full_xml whether to return a full XML document or just the node.
-     * @return    string    return xml
+     * @param  integer[] $artists (description here...)
+     * @param  array $include Array of other items to include.
+     * @param  integer $user_id
+     * @param  boolean $full_xml whether to return a full XML document or just the node.
+     * @return string    return xml
      */
     public static function artists($artists, $include = [], $user_id = null, $full_xml = true)
     {
@@ -634,11 +646,11 @@ class XML_Data
      *
      * This echos out a standard albums XML document, it pays attention to the limit
      *
-     * @param integer[] $albums (description here...)
-     * @param array $include Array of other items to include.
-     * @param integer $user_id
-     * @param boolean $full_xml whether to return a full XML document or just the node.
-     * @return    string    return xml
+     * @param  integer[] $albums (description here...)
+     * @param  array $include Array of other items to include.
+     * @param  integer $user_id
+     * @param  boolean $full_xml whether to return a full XML document or just the node.
+     * @return string    return xml
      */
     public static function albums($albums, $include = [], $user_id = null, $full_xml = true)
     {
@@ -708,8 +720,8 @@ class XML_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
-     * @param    array    $playlists    (description here...)
-     * @return    string    return xml
+     * @param  array    $playlists    (description here...)
+     * @return string    return xml
      */
     public static function playlists($playlists)
     {
@@ -761,8 +773,8 @@ class XML_Data
      *
      * This returns shares to the user, in a pretty xml document with the information
      *
-     * @param    array    $shares    (description here...)
-     * @return    string    return xml
+     * @param  array    $shares    (description here...)
+     * @return string    return xml
      */
     public static function shares($shares)
     {
@@ -800,8 +812,8 @@ class XML_Data
      *
      * This returns bookmarks to the user, in a pretty xml document with the information
      *
-     * @param    array    $bookmarks    (description here...)
-     * @return    string    return xml
+     * @param  array    $bookmarks    (description here...)
+     * @return string    return xml
      */
     public static function bookmarks($bookmarks)
     {
@@ -944,9 +956,9 @@ class XML_Data
      *
      * This returns an xml document from an array of song ids.
      * (Spiffy isn't it!)
-     * @param integer[] $songs
-     * @param integer $user_id
-     * @param boolean $full_xml
+     * @param  integer[] $songs
+     * @param  integer $user_id
+     * @param  boolean $full_xml
      * @return string return xml
      */
     public static function songs($songs, $user_id = null, $full_xml = true)
@@ -1043,9 +1055,9 @@ class XML_Data
      *
      * This builds the xml document for displaying video objects
      *
-     * @param array $videos (description here...)
-     * @param integer $user_id
-     * @return   string   return xml
+     * @param  array $videos (description here...)
+     * @param  integer $user_id
+     * @return string   return xml
      */
     public static function videos($videos, $user_id = null)
     {
@@ -1079,9 +1091,9 @@ class XML_Data
      * This handles creating an xml document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param integer[] $object_ids Object IDs
-     * @param integer $user_id
-     * @return   string     return xml
+     * @param  integer[] $object_ids Object IDs
+     * @param  integer $user_id
+     * @return string     return xml
      */
     public static function democratic($object_ids = array(), $user_id = null)
     {
@@ -1168,8 +1180,8 @@ class XML_Data
      *
      * This handles creating an xml document for an user list
      *
-     * @param    integer[]    $users    User identifier list
-     * @return    string    return xml
+     * @param  integer[]    $users    User identifier list
+     * @return string    return xml
      */
     public static function users($users)
     {
@@ -1189,8 +1201,8 @@ class XML_Data
      *
      * This handles creating an xml document for a shout list
      *
-     * @param    integer[]    $shouts    Shout identifier list
-     * @return    string    return xml
+     * @param  integer[]    $shouts    Shout identifier list
+     * @return string    return xml
      */
     public static function shouts($shouts)
     {
@@ -1214,8 +1226,8 @@ class XML_Data
     } // shouts
 
     /**
-     * @param string $string
-     * @param boolean $full_xml
+     * @param  string $string
+     * @param  boolean $full_xml
      * @return string
      */
     public static function output_xml($string, $full_xml = true)
@@ -1237,8 +1249,8 @@ class XML_Data
      *
      * This handles creating an xml document for an activity list
      *
-     * @param    integer[]    $activities    Activity identifier list
-     * @return    string    return xml
+     * @param  integer[]    $activities    Activity identifier list
+     * @return string    return xml
      */
     public static function timeline($activities)
     {
@@ -1267,10 +1279,10 @@ class XML_Data
      *
      * (description here...)
      *
-     * @param    array    $data    (description here...)
-     * @param    string    $title    RSS feed title
-     * @param    string    $date    publish date
-     * @return    string    RSS feed xml
+     * @param  array    $data    (description here...)
+     * @param  string    $title    RSS feed title
+     * @param  string    $date    publish date
+     * @return string    RSS feed xml
      */
     public static function rss_feed($data, $title, $date = null)
     {
@@ -1294,7 +1306,7 @@ class XML_Data
      * this returns a standard header, there are a few types
      * so we allow them to pass a type if they want to
      *
-     * @param string $title
+     * @param  string $title
      * @return string Header xml tag.
      */
     private static function _header($title = null)
@@ -1312,17 +1324,6 @@ class XML_Data
             case 'itunes':
                 $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" .
                         "<!-- XML Generated by Ampache v." . AmpConfig::get('version') . " -->\n";
-                        //"<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\"\n" .
-                        //"\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n" .
-                        //"<plist version=\"1.0\">\n" .
-                        //"<dict>\n" .
-                        //"       <key>Major Version</key><integer>1</integer>\n" .
-                        //"       <key>Minor Version</key><integer>1</integer>\n" .
-                        //"       <key>Application Version</key><string>7.0.2</string>\n" .
-                        //"       <key>Features</key><integer>1</integer>\n" .
-                        //"       <key>Show Content Ratings</key><true/>\n" .
-                        //"       <key>Tracks</key>\n" .
-                        //"       <dict>\n";
                 break;
             case 'rss':
                 $header = "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n " .
@@ -1342,7 +1343,7 @@ class XML_Data
      *
      * this returns the footer for this document, these are pretty boring
      *
-     * @return    string    Footer xml tag.
+     * @return string    Footer xml tag.
      */
     private static function _footer()
     {
@@ -1369,8 +1370,8 @@ class XML_Data
 
     /**
      * podcast
-     * @param library_item $libitem
-     * @param integer $user_id
+     * @param  library_item $libitem
+     * @param  integer $user_id
      * @return string|false
      */
     public static function podcast(library_item $libitem, $user_id = null)

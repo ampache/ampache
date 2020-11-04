@@ -74,6 +74,13 @@ final class StatsMethod
         if ($limit < 1) {
             $limit = AmpConfig::get('popular_threshold', 10);
         }
+        // confirm the correct data
+        if (!in_array($type, array('song', 'album', 'artist'))) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
+
+            return false;
+        }
 
         // set a default user
         $user    = User::get_from_username(Session::username($input['auth']));
@@ -129,12 +136,12 @@ final class StatsMethod
                 }
         }
         if (empty($results)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+            Api::empty($type, $input['api_format']);
 
             return false;
         }
+
         ob_end_clean();
-        debug_event(self::class, 'stats found results searching for ' . $type, 5);
         if ($type === 'song') {
             switch ($input['api_format']) {
                 case 'json':

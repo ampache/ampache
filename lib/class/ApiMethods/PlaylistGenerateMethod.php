@@ -67,8 +67,14 @@ final class PlaylistGenerateMethod
     public static function playlist_generate(array $input)
     {
         // parameter defaults
-        $mode   = (!in_array($input['mode'], array('forgotten', 'recent', 'unplayed', 'random'), true)) ? 'random' : $input['mode'];
-        $format = (!in_array($input['format'], array('song', 'index', 'id'), true)) ? 'song' : $input['format'];
+        $mode   = (in_array($input['mode'], array('forgotten', 'recent', 'unplayed', 'random'), true)) ? $input['mode'] : 'random';
+        $format = (in_array($input['format'], array('song', 'index', 'id'), true)) ? $input['format'] : 'song';
+        // confirm the correct data
+        if (!in_array($format, array('song', 'index', 'id'))) {
+            Api::error(sprintf(T_('Bad Request: %s'), $format), '4710', self::ACTION, 'type', $input['api_format']);
+
+            return false;
+        }
         $user   = User::get_from_username(Session::username($input['auth']));
         $array  = array();
 
@@ -152,12 +158,13 @@ final class PlaylistGenerateMethod
             $song_ids = array_slice($song_ids, 0, (int) $input['limit']);
         }
         if (empty($song_ids)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+            Api::empty($format, $input['api_format']);
 
             return false;
         }
 
         // output formatted XML
+        ob_end_clean();
         switch ($format) {
             case 'id':
                 switch ($input['api_format']) {

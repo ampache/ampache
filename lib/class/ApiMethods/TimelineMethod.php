@@ -55,32 +55,33 @@ final class TimelineMethod
      */
     public static function timeline(array $input)
     {
-        if (AmpConfig::get('sociable')) {
-            if (!Api::check_parameter($input, array('username'), self::ACTION)) {
-                return false;
-            }
-            $username = $input['username'];
-            $limit    = (int) ($input['limit']);
-            $since    = (int) ($input['since']);
+        if (!AmpConfig::get('sociable')) {
+            Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
 
-            if (!empty($username)) {
-                $user = User::get_from_username($username);
-                if ($user !== null) {
-                    if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
-                        $activities = Useractivity::get_activities($user->id, $limit, $since);
-                        ob_end_clean();
-                        switch ($input['api_format']) {
-                            case 'json':
-                                echo JSON_Data::timeline($activities);
-                                break;
-                            default:
-                                echo XML_Data::timeline($activities);
-                        }
+            return false;
+        }
+        if (!Api::check_parameter($input, array('username'), self::ACTION)) {
+            return false;
+        }
+        $username = $input['username'];
+        $limit    = (int) ($input['limit']);
+        $since    = (int) ($input['since']);
+
+        if (!empty($username)) {
+            $user = User::get_from_username($username);
+            if ($user !== null) {
+                if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
+                    $activities = Useractivity::get_activities($user->id, $limit, $since);
+                    ob_end_clean();
+                    switch ($input['api_format']) {
+                        case 'json':
+                            echo JSON_Data::timeline($activities);
+                            break;
+                        default:
+                            echo XML_Data::timeline($activities);
                     }
                 }
             }
-        } else {
-            debug_event(self::class, 'Sociable feature is not enabled.', 3);
         }
         Session::extend($input['auth']);
 
