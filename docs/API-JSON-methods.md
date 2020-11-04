@@ -2287,8 +2287,26 @@ Create a placeholder for the current media that you can return to later.
 | 'type'     | string  | object_type  ('song', 'video', 'podcast_episode') |       NO |
 | 'position' | integer | current track time in seconds                     |       NO |
 | 'client'   | string  | Agent string. (Default: 'AmpacheAPI')             |      YES |
+| 'date'     | integer | update time (Default: UNIXTIME())                 |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/bookmark_create.json)
+
+### bookmark_edit
+
+* **NEW** in develop
+
+Edit a placeholder for the current media that you can return to later.
+@param array $input
+
+| Input      | Type    | Description                                       | Optional |
+|------------|---------|---------------------------------------------------|---------:|
+| 'filter'   | string  | object_id to find                                 |       NO |
+| 'type'     | string  | object_type  ('song', 'video', 'podcast_episode') |       NO |
+| 'position' | integer | current track time in seconds                     |       NO |
+| 'client'   | string  | Agent string. (Default: 'AmpacheAPI')             |      YES |
+| 'date'     | integer | update time (Default: UNIXTIME())                 |      YES |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/bookmark_edit.json)
 
 ### bookmark_delete
 

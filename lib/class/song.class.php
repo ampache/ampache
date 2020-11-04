@@ -1178,7 +1178,7 @@ class Song extends database_object implements media, library_item
                     $new_artist_id = Artist::check($value);
                     $this->artist  = $new_artist_id;
                     self::update_artist($new_artist_id, $this->id, $old_artist_id);
-                    $changed[] = (string)$key;
+                    $changed[] = (string) $key;
                     break;
                 case 'album_name':
                     // Create new album name and id
@@ -1186,7 +1186,7 @@ class Song extends database_object implements media, library_item
                     $new_album_id = Album::check($value);
                     $this->album  = $new_album_id;
                     self::update_album($new_album_id, $this->id, $old_album_id);
-                    $changed[] = (string)$key;
+                    $changed[] = (string) $key;
                     break;
                 case 'artist':
                     // Change artist the song is assigned to
@@ -1194,7 +1194,7 @@ class Song extends database_object implements media, library_item
                         $old_artist_id = $this->artist;
                         $new_artist_id = $value;
                         self::update_artist($new_artist_id, $this->id, $old_artist_id);
-                        $changed[] = (string)$key;
+                        $changed[] = (string) $key;
                     }
                     break;
                 case 'album':
@@ -1203,7 +1203,7 @@ class Song extends database_object implements media, library_item
                         $old_album_id = $this->$key;
                         $new_album_id = $value;
                         self::update_album($new_album_id, $this->id, $old_album_id);
-                        $changed[] = (string)$key;
+                        $changed[] = (string) $key;
                     }
                     break;
                 case 'year':
@@ -1220,13 +1220,13 @@ class Song extends database_object implements media, library_item
                         $function = 'update_' . $key;
                         self::$function($value, $this->id);
                         $this->$key = $value;
-                        $changed[]  = (string)$key;
+                        $changed[]  = (string) $key;
                     }
                     break;
                 case 'edit_tags':
                     Tag::update_tag_list($value, 'song', $this->id, true);
                     $this->tags = Tag::get_top_tags('song', $this->id);
-                    $changed[]  = (string)$key;
+                    $changed[]  = (string) $key;
                     break;
                 case 'metadata':
                     if (self::isCustomMetadataEnabled()) {

@@ -34,18 +34,18 @@ use User;
 use XML_Data;
 
 /**
- * Class BookmarkCreateMethod
+ * Class BookmarkEditMethod
  * @package Lib\ApiMethods
  */
-final class BookmarkCreateMethod
+final class BookmarkEditMethod
 {
-    private const ACTION = 'bookmark_create';
+    private const ACTION = 'bookmark_edit';
 
     /**
-     * bookmark_create
+     * bookmark_edit
      * MINIMUM_API_VERSION=5.0.0
      *
-     * Create a placeholder for the current media that you can return to later.
+     * Edit a placeholder for the current media that you can return to later.
      *
      * @param array $input
      * filter   = (string) object_id
@@ -55,7 +55,7 @@ final class BookmarkCreateMethod
      * date     = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function bookmark_create(array $input)
+    public static function bookmark_edit(array $input)
     {
         if (!Api::check_parameter($input, array('filter', 'position'), self::ACTION)) {
             return false;
@@ -96,14 +96,15 @@ final class BookmarkCreateMethod
             'update_date' => $time
         );
 
-        // create it then retrieve it
-        Bookmark::create($object);
+        // check for the bookmark first
         $bookmark = Bookmark::get_bookmark($object);
         if (!$bookmark) {
             Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
 
             return false;
         }
+        // edit it
+        Bookmark::edit($object);
 
         ob_end_clean();
         switch ($input['api_format']) {

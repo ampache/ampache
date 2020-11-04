@@ -75,6 +75,7 @@ All API code that used 'Tag' now references 'Genre' instead
   * Api::get_bookmark (See if you've previously played the file)
   * Api::bookmarks (List all bookmarks created by your account)
   * Api::bookmark_create (Create a bookmark to allow revisting later)
+  * Api::bookmark_edit (Edit a bookmark)
   * Api::bookmark_delete (Delete a bookmark by object id, type, user and client name)
 
 ### Changed

@@ -107,7 +107,7 @@ switch ($_REQUEST['action']) {
             $options['artist_filter'] =true;
         }
         if (isset($_REQUEST['search_limit'])) {
-            $options['search_limit'] = $limit = (int)$_REQUEST['search_limit'];
+            $options['search_limit'] = $limit = (int) $_REQUEST['search_limit'];
         }
         if (isset($_REQUEST['year_filter']) && !empty($_REQUEST['year_filter'])) {
             $options['year_filter'] = 'year:' . $_REQUEST['year_filter'];
