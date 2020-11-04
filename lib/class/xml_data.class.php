@@ -145,10 +145,7 @@ class XML_Data
      */
     public static function empty()
     {
-        $xml = self::_header();
-        $xml .= self::_footer();
-
-        return $xml;
+        return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n<root>\n</root>\n";
     } // empty
 
     /**
