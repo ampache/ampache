@@ -49,6 +49,7 @@ class Search extends playlist_object
     public $search_user;
     
     private $stars;
+    private $order_by;
 
     /**
      * constructor
@@ -89,24 +90,31 @@ class Search extends playlist_object
         switch ($searchtype) {
             case 'song':
                 $this->song_types();
+                $this->order_by = 'file';
                 break;
             case 'album':
                 $this->album_types();
+                $this->order_by = 'name';
                 break;
             case 'video':
                 $this->video_types();
+                $this->order_by = 'file';
                 break;
             case 'artist':
                 $this->artist_types();
+                $this->order_by = 'name';
                 break;
             case 'playlist':
                 $this->playlist_types();
+                $this->order_by = 'name';
                 break;
             case 'label':
                 $this->label_types();
+                $this->order_by = 'name';
                 break;
             case 'user':
                 $this->user_types();
+                $this->order_by = 'username';
                 break;
         } // end switch on searchtype
     } // end constructor
@@ -874,9 +882,7 @@ class Search extends playlist_object
                 $sql .= ' HAVING ' . $search_info['having_sql'];
             }
         }
-        if ($random > 0) {
-            $sql .= " ORDER BY RAND()";
-        }
+        $sql .= ($random > 0) ? " ORDER BY RAND()" : " ORDER BY " . $search->order_by;
         $sql .= ' ' . $limit_sql;
         $sql = trim((string) $sql);
 
@@ -941,7 +947,7 @@ class Search extends playlist_object
             $sql .= ' HAVING ' . $sqltbl['having_sql'];
         }
 
-        $sql .= ($this->random > 0) ? " ORDER BY RAND()" : " ORDER BY `file`";
+        $sql .= ($this->random > 0) ? " ORDER BY RAND()" : " ORDER BY " . $this->order_by;
         if ($this->limit > 0) {
             $sql .= " LIMIT " . (string) ($this->limit);
         }
