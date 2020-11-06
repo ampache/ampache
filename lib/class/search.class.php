@@ -90,31 +90,31 @@ class Search extends playlist_object
         switch ($searchtype) {
             case 'song':
                 $this->song_types();
-                $this->order_by = 'file';
+                $this->order_by = '`song`.`file`';
                 break;
             case 'album':
                 $this->album_types();
-                $this->order_by = 'name';
+                $this->order_by = '`album`.`name`';
                 break;
             case 'video':
                 $this->video_types();
-                $this->order_by = 'file';
+                $this->order_by = '`video`.`file`';
                 break;
             case 'artist':
                 $this->artist_types();
-                $this->order_by = 'name';
+                $this->order_by = '`artist`.`name`';
                 break;
             case 'playlist':
                 $this->playlist_types();
-                $this->order_by = 'name';
+                $this->order_by = '`playlist`.`name`';
                 break;
             case 'label':
                 $this->label_types();
-                $this->order_by = 'name';
+                $this->order_by = '`label`.`name`';
                 break;
             case 'user':
                 $this->user_types();
-                $this->order_by = 'username';
+                $this->order_by = '`user`.`username`';
                 break;
         } // end switch on searchtype
     } // end constructor
