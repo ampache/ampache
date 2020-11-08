@@ -237,6 +237,10 @@ input[type=submit]:focus:active {
     transition: background-position 0.1s linear;
 }
 
+label {
+    cursor: pointer;
+}
+
 .box-title {
     font-size: 18px;
     margin-bottom: 10px;
@@ -257,7 +261,6 @@ div#autoupdate > span {
     width: 100%;
     position: relative;
     z-index: 1;
-    padding-bottom: 40px;
 }
 
 #ajax-loading {
@@ -380,6 +383,12 @@ div#autoupdate > span {
 /* --------------------------
    Login / Registration
    -------------------------- */
+#loginPage {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+}
+
 #loginPage #maincontainer,
 #registerPage #maincontainer {
     -webkit-border-radius: 2px;
@@ -389,8 +398,11 @@ div#autoupdate > span {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     display: block;
-    min-width: 250px;
-    margin: 0 auto 0 auto;
+    margin: 0 auto;
+}
+
+#loginPage #maincontainer {
+    margin: auto;
 }
 
 #loginPage #header,
@@ -429,7 +441,6 @@ div#autoupdate > span {
 #registerbox {
     margin: auto;
     max-width: 350px;
-    min-width: 250px;
 }
 
 #loginbox h2 {
@@ -543,8 +554,7 @@ div#autoupdate > span {
 
 #loginPage #footer,
 #registerPage #footer {
-    max-width: 1280px;
-    margin: 15px auto;
+    margin: 15px;
     padding: 0 5px;
 }
 
