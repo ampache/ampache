@@ -21,7 +21,7 @@
  */
 
 $web_path = AmpConfig::get('web_path');
-$playlist_duration =  $playlist->get_total_duration()?>
+$playlist_duration = $playlist === NULL ? $search->get_total_duration($object_ids) : $playlist->get_total_duration();?>
 <?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
     echo '<span class="item-duration">' . '| ' . T_('Duration') . ': ' . gmdate("H:i:s", $playlist_duration) . '</span>';
