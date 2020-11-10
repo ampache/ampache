@@ -149,8 +149,6 @@
 }
 
 .playlistdialogstyle.ui-widget-content a {
-    background-color: #222;
-    color: #eee;
     text-decoration: none;
     text-align: left;
     padding: 0.4em;
@@ -170,8 +168,6 @@
 }
 
 .playlistdialogstyle.ui-dialog .ui-dialog-content {
-    background-color: #222;
-    color: #999;
     border: 0;
 }
 
