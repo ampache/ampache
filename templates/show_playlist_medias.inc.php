@@ -21,7 +21,7 @@
  */
 
 $web_path = AmpConfig::get('web_path');
-$playlist_duration_s = $playlist === NULL ? $search->get_total_duration($object_ids) : $playlist->get_total_duration();
+$playlist_duration_s = $playlist === NULL ? $search->last_duration : $playlist->last_duration;
 $playlist_duration = floor($playlist_duration_s / 3600) . gmdate(":i:s", $playlist_duration_s % 3600)
 ?>
 <?php if ($browse->is_show_header()) {
