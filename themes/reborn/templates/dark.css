@@ -94,14 +94,20 @@ input[type=submit]:focus:active {
     color: #fff;
 }
 
-.editdialogstyle.ui-dialog .ui-dialog-titlebar {
-    color: #fff;
-}
-
-.playlistdialogstyle.ui-dialog .ui-dialog-content {
+.playlistdialogstyle.ui-dialog .ui-dialog-content,
+.editdialogstyle.ui-dialog.ui-widget-content a,
+.broadcastsdialogstyle.ui-widget-content a,
+.sharedialogstyle.ui-widget-content a {
     background-color: #222;
     color: #999;
-    border: 0;
+}
+
+.editdialogstyle.ui-dialog .ui-dialog-titlebar,
+.editdialogstyle.ui-dialog.ui-widget-content a:hover,
+.playlistdialogstyle.ui-widget-content a:hover,
+.broadcastsdialogstyle.ui-widget-content a:hover,
+.sharedialogstyle.ui-widget-content a:hover {
+    color: #fff;
 }
 
 /* --------------------------

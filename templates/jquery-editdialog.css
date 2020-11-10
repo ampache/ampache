@@ -155,7 +155,6 @@
 }
 
 .playlistdialogstyle.ui-widget-content a:hover {
-    color: #ff9d00;
     cursor: pointer;
 }
 
@@ -205,15 +204,12 @@
 }
 
 .broadcastsdialogstyle.ui-widget-content a {
-    background-color: #222;
-    color: #eee;
     text-decoration: none;
     text-align: left;
     padding: 0.4em;
 }
 
 .broadcastsdialogstyle.ui-widget-content a:hover {
-    color: #ff9d00;
     cursor: pointer;
 }
 
@@ -265,15 +261,12 @@
 }
 
 .sharedialogstyle.ui-widget-content a {
-    background-color: #222;
-    color: #eee;
     text-decoration: none;
     text-align: left;
     padding: 0.4em;
 }
 
 .sharedialogstyle.ui-widget-content a:hover {
-    color: #ff9d00;
     cursor: pointer;
 }
 
