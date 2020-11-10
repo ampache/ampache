@@ -21,7 +21,7 @@
  */
 
 $web_path = AmpConfig::get('web_path');
-$seconds  = (isset($search) ? $search->last_duration : $playlist->last_duration;
+$seconds  = (isset($search)) ? $search->last_duration : $playlist->last_duration;
 $duration = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600)
 ?>
 <?php if ($browse->is_show_header()) {
