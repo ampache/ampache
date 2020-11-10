@@ -49,7 +49,6 @@
 }
 
 .editdialogstyle.ui-dialog .ui-dialog-buttonset button {
-    background: none;
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
     position: relative;
