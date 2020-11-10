@@ -595,6 +595,20 @@ div.jp-playlist li {
     border-bottom: 1px solid #bfbfbf;
 }
 
+.jp-type-playlist .jp-playlist a {
+    color: #000;
+}
+
+.jp-type-playlist .jp-playlist a:hover,
+.jp-type-playlist .jp-playlist a:active,
+.jp-type-playlist .jp-playlist a:focus {
+    color: #1990db;
+}
+
+.jp-type-playlist .jp-playlist a.jp-playlist-current {
+    color: #1990db;
+}
+
 /* ------------------------
    Other
    ------------------------ */
