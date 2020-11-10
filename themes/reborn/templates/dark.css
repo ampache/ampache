@@ -98,6 +98,12 @@ input[type=submit]:focus:active {
     color: #fff;
 }
 
+.playlistdialogstyle.ui-dialog .ui-dialog-content {
+    background-color: #222;
+    color: #999;
+    border: 0;
+}
+
 /* --------------------------
    Main
    -------------------------- */
