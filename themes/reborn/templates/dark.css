@@ -62,7 +62,8 @@ textarea {
 }
 
 input[type=button],
-input[type=submit] {
+input[type=submit],
+.editdialogstyle.ui-dialog .ui-dialog-buttonset button {
     background-image: -moz-linear-gradient(top, #ff9d00, #cc6200);
     background-image: -ms-linear-gradient(top, #ff9d00, #cc6200);
     background-image: -webkit-gradient(linear, 0, 0 100%, from(#ff9d00), to(#cc6200));
@@ -78,7 +79,8 @@ input[type=submit] {
 input[type=button]:hover,
 input[type=button]:focus,
 input[type=submit]:hover,
-input[type=submit]:focus {
+input[type=submit]:focus,
+.editdialogstyle.ui-dialog .ui-dialog-buttonset button:hover {
     background-color: #cc6200;
 }
 
