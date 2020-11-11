@@ -75,16 +75,23 @@ final class AdvancedSearchMethod
         if (!Api::check_parameter($input, array('rule_1', 'rule_1_operator', 'rule_1_input'), self::ACTION)) {
             return false;
         }
-        ob_end_clean();
 
         $user    = User::get_from_username(Session::username($input['auth']));
         $results = Search::run($input, $user);
+        $type    = (isset($input['type'])) ? (string) $input['type'] : 'song';
+        // confirm the correct data
+        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'label', 'user', 'video'))) {
+            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
-        $type = 'song';
-        if (isset($input['type'])) {
-            $type = (string) $input['type'];
+            return false;
+        }
+        if (empty($results)) {
+            Api::empty($type, $input['api_format']);
+
+            return false;
         }
 
+        ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
                 Json_Data::set_offset($input['offset']);

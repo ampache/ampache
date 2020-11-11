@@ -92,8 +92,8 @@ final class BookmarkDeleteMethod
         );
 
         $find = Bookmark::get_bookmark($object);
-        if (!$find) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+        if (empty($find)) {
+            Api::empty('bookmark', $input['api_format']);
 
             return false;
         }

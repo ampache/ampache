@@ -169,16 +169,16 @@ final class RegisterApplication implements ApplicationInterface
                         break;
                 } // auto-user level
 
-                $new_user = User::create($username, $fullname, $email, (string) $website, $pass1, $access, (string) $state, (string) $city, AmpConfig::get('admin_enable_required'));
+                $user_id = User::create($username, $fullname, $email, (string) $website, $pass1, $access, (string) $state, (string) $city, AmpConfig::get('admin_enable_required'));
 
-                if ($new_user <= 0) {
+                if ($user_id <= 0) {
                     AmpError::add('duplicate_user', T_("Failed to create user"));
                     require_once Ui::find_template('show_user_registration.inc.php');
                     break;
                 }
 
                 if (!AmpConfig::get('user_no_email_confirm')) {
-                    $client     = new User($new_user);
+                    $client     = new User($user_id);
                     $validation = md5(uniqid((string) rand(), true));
                     $client->update_validation($validation);
 

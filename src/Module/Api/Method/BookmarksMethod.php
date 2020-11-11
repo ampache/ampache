@@ -54,7 +54,7 @@ final class BookmarksMethod
         $user      = User::get_from_username(Session::username($input['auth']));
         $bookmarks = Bookmark::get_bookmarks_ids($user);
         if (empty($bookmarks)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+            Api::empty('bookmark', $input['api_format']);
 
             return false;
         }

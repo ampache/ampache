@@ -130,7 +130,6 @@ foreach ($data as $row) {
             </a>
         </td>
         <td class="cel_lastplayed"><?php echo $time_string; ?></td>
-        </td>
     </tr>
 <?php
     ++$nb;

@@ -68,7 +68,7 @@ final class PlaylistsMethod
         // merge with the smartlists
         $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($public, $userid, (string) $input['filter'], $method));
         if (empty($playlist_ids)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+            Api::empty('playlist', $input['api_format']);
 
             return false;
         }

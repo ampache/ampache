@@ -59,6 +59,9 @@ final class ArtApplication implements ApplicationInterface
             $burl = base64_decode(Core::get_get('burl'));
         }
 
+        $class_name = ObjectTypeToClassNameMapper::map($object_type);
+        $item       = new $class_name($object_id);
+
         // If not a content manager user then kick em out
         if (!Access::check('interface', 50) && (!Access::check('interface', 25) || $item->get_user_owner() != Core::get_global('user')->id)) {
             Ui::access_denied();
@@ -66,8 +69,6 @@ final class ArtApplication implements ApplicationInterface
             return;
         }
 
-        $class_name = ObjectTypeToClassNameMapper::map($object_type);
-        $item       = new $class_name($object_id);
         $item->format();
         $keywords = $item->get_keywords();
         $keyword  = '';

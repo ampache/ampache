@@ -2866,6 +2866,7 @@ abstract class Catalog extends database_object
                 break;
             case 'update_all_file_tags':
                 $catalogs = self::get_catalogs();
+                // Intentional break fall-through
             case 'update_file_tags':
                 $write_id3 = AmpConfig::get('write_id3', false);
                 AmpConfig::set('write_id3', 'true', true);
@@ -2884,7 +2885,6 @@ abstract class Catalog extends database_object
                 }
                 AmpConfig::set('write_id3', $write_id3, true);
                 AmpConfig::set('write_id3', $write_id3_art, true);
-
         }
 
         // Remove any orphaned artists/albums/etc.

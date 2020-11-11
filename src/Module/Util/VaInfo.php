@@ -33,10 +33,6 @@ use Ampache\Model\User;
 use JamesHeinrich\GetID3\WriteTags;
 use JamesHeinrich\GetID3\GetID3;
 
-/**
- * This class takes the information pulled from getID3 and returns it in a
- * Ampache-friendly way.
- */
 class VaInfo
 {
     public $encoding       = '';
@@ -294,18 +290,20 @@ class VaInfo
         $tagwriter->tag_encoding      = $TaggingFormat;
         $tagwriter->remove_other_tags = true;
         $tagwriter->tag_data          = $tag_data;
-        if ($tagwriter->WriteTags()) {
-            if (!empty($tagwriter->warnings)) {
-                debug_event('Writing Image:', $tagwriter->warnings, 5);
+        if ($tagwriter->WriteTags() && !empty($tagwriter->warnings)) {
+            foreach ($tagwriter->warnings as $message) {
+                debug_event('vainfo.class', 'Warning Writing Image: ' . $message, 5);
             }
         }
         if (!empty($tagwriter->errors)) {
-            debug_event('Writing Image:', $tagwriter->errors, 1);
+            foreach ($tagwriter->$tagwriter->errors as $message) {
+                debug_event('vainfo.class', 'Error Writing Image: ' . $message, 1);
+            }
         }
     } // write_id3
 
 
-    /*
+    /**
      * prepare_id3_frames
      * Prepares id3 frames for writing tag to file
      * @param array $frames
@@ -315,18 +313,17 @@ class VaInfo
     {
         $ndata = array();
 
-        foreach ($frames as $key => $data) {
+        foreach ($frames as $key => $text) {
             switch ($key) {
-                    case 'text':
-                       foreach ($data as $tkey => $data) {
-                           $ndata['text'][] = array('data' => $data, 'description' => $tkey, 'encodingid' => 0);
-                       }
-                       break;
-                    default:
-                       $ndata[$key][] = $data[0];
-                        break;
-
-                }
+                case 'text':
+                   foreach ($text as $tkey => $data) {
+                       $ndata['text'][] = array('data' => $data, 'description' => $tkey, 'encodingid' => 0);
+                   }
+                   break;
+                default:
+                   $ndata[$key][] = $key[0];
+                    break;
+            }
         }
 
         return $ndata;

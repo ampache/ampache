@@ -72,13 +72,13 @@ final class SongsMethod
 
         $songs = $browse->get_objects();
         if (empty($songs)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+            Api::empty('song', $input['api_format']);
 
             return false;
         }
-        $user  = User::get_from_username(Session::username($input['auth']));
 
         ob_end_clean();
+        $user = User::get_from_username(Session::username($input['auth']));
         switch ($input['api_format']) {
             case 'json':
                 Json_Data::set_offset($input['offset']);

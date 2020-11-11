@@ -30,37 +30,42 @@ use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**
- * Class GetBookmarkMethod
+ * Class BookmarkEditMethod
  * @package Lib\ApiMethods
  */
-final class GetBookmarkMethod
+final class BookmarkEditMethod
 {
-    private const ACTION = 'get_bookmark';
+    private const ACTION = 'bookmark_edit';
 
     /**
-     * get_bookmark
+     * bookmark_edit
      * MINIMUM_API_VERSION=5.0.0
      *
-     * Get the bookmark from it's object_id and object_type.
+     * Edit a placeholder for the current media that you can return to later.
      *
      * @param array $input
-     * filter = (string) object_id to find
-     * type   = (string) object_type ('song', 'video', 'podcast_episode')
+     * filter   = (string) object_id
+     * type     = (string) object_type ('song', 'video', 'podcast_episode')
+     * position = (integer) current track time in seconds
+     * client   = (string) Agent string Default: 'AmpacheAPI' // optional
+     * date     = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function get_bookmark(array $input)
+    public static function bookmark_edit(array $input)
     {
-        if (!Api::check_parameter($input, array('filter', 'type'), self::ACTION)) {
+        if (!Api::check_parameter($input, array('filter', 'position'), self::ACTION)) {
             return false;
         }
         $user      = User::get_from_username(Session::username($input['auth']));
-        $object_id = (int) $input['filter'];
+        $object_id = $input['filter'];
         $type      = $input['type'];
+        $position  = $input['position'];
+        $comment   = (isset($input['client'])) ? $input['client'] : 'AmpacheAPI';
+        $time      = (isset($input['date'])) ? (int) $input['date'] : time();
         // confirm the correct data
         if (!in_array($type, array('song', 'video', 'podcast_episode'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -68,7 +73,6 @@ final class GetBookmarkMethod
 
             return false;
         }
-
         $className = ObjectTypeToClassNameMapper::map($type);
 
         if ($className === $type || !$object_id) {
@@ -85,26 +89,32 @@ final class GetBookmarkMethod
 
             return false;
         }
-
         $object = array(
             'user' => $user->id,
             'object_id' => $object_id,
-            'object_type' => $type
+            'object_type' => $type,
+            'comment' => $comment,
+            'position' => $position,
+            'update_date' => $time
         );
+
+        // check for the bookmark first
         $bookmark = Bookmark::get_bookmark($object);
         if (empty($bookmark)) {
             Api::empty('bookmark', $input['api_format']);
 
             return false;
         }
+        // edit it
+        Bookmark::edit($object);
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::bookmarks($bookmark);
+                echo JSON_Data::bookmarks($bookmark);
                 break;
             default:
-                echo Xml_Data::bookmarks($bookmark);
+                echo XML_Data::bookmarks($bookmark);
         }
         Session::extend($input['auth']);
 

@@ -68,7 +68,7 @@ final class ArtistSongsMethod
         $songs  = $artist->get_songs();
         $user   = User::get_from_username(Session::username($input['auth']));
         if (empty($songs)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+            Api::empty('song', $input['api_format']);
 
             return false;
         }

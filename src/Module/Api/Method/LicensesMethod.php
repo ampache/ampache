@@ -69,11 +69,10 @@ final class LicensesMethod
         Api::set_filter($method, $input['filter']);
         $licenses = $browse->get_objects();
         if (empty($licenses)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+            Api::empty('license', $input['api_format']);
 
             return false;
         }
-
 
         ob_end_clean();
         switch ($input['api_format']) {

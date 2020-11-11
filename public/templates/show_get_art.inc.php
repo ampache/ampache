@@ -29,8 +29,8 @@ use Ampache\Module\Util\Ui;
 <?php
       $limit     = AmpConfig::get('art_search_limit', ArtCollector::ART_SEARCH_LIMIT);
       $art_order = AmpConfig::get('art_order', array());
-      $art_type  = ($object_type == 'album') ? 'Cover Art' : 'Artist Art';
-      UI::show_box_top(T_("Customize {$art_type} Search"), 'box box_get_albumart'); ?>
+      $art_type  = ($object_type == 'album') ? T_('Cover Art Search') : T_('Artist Art Search');
+      UI::show_box_top($art_type, 'box box_get_albumart'); ?>
 <form enctype="multipart/form-data" name="coverart" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=find_art&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>&artist_name=<?php echo urlencode(Core::get_request('artist_name')); ?>&album_name=<?php echo urlencode(Core::get_request('album_name')); ?>&cover=<?php echo urlencode(Core::get_request('cover')); ?>" style="Display:inline;">
     <table class="gatherart">
         <?php

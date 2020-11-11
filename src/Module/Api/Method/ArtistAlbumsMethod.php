@@ -68,7 +68,7 @@ final class ArtistAlbumsMethod
         $albums = $artist->get_albums();
         $user   = User::get_from_username(Session::username($input['auth']));
         if (empty($albums)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+            Api::empty('album', $input['api_format']);
 
             return false;
         }

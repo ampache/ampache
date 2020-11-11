@@ -185,7 +185,7 @@ class Mailer
                 $mail->IsSMTP();
                 $mail->Host = $mailhost;
                 $mail->Port = $mailport;
-                if ($mailauth === true) {
+                if ($mailauth) {
                     $mail->SMTPAuth = true;
                     $mail->Username = $mailuser;
                     $mail->Password = $mailpass;

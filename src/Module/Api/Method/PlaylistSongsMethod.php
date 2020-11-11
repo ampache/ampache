@@ -81,7 +81,7 @@ final class PlaylistSongsMethod
 
         $items = $playlist->get_items();
         if (empty($items)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+            Api::empty('song', $input['api_format']);
 
             return false;
         }

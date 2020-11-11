@@ -56,13 +56,13 @@ final class GenreArtistsMethod
     {
         $artists = Tag::get_tag_objects('artist', $input['filter']);
         if (empty($artists)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+            Api::empty('artist', $input['api_format']);
 
             return false;
         }
 
-        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
+        $user = User::get_from_username(Session::username($input['auth']));
         switch ($input['api_format']) {
             case 'json':
                 Json_Data::set_offset($input['offset']);

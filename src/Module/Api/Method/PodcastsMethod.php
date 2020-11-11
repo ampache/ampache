@@ -71,13 +71,13 @@ final class PodcastsMethod
 
         $podcasts = $browse->get_objects();
         if (empty($podcasts)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+            Api::empty('podcast', $input['api_format']);
 
             return false;
         }
-        $episodes = $input['include'] == 'episodes';
 
         ob_end_clean();
+        $episodes = $input['include'] == 'episodes';
         switch ($input['api_format']) {
             case 'json':
                 Json_Data::set_offset($input['offset']);

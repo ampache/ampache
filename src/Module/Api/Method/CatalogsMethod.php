@@ -57,7 +57,7 @@ final class CatalogsMethod
         $catalogs = Catalog::get_catalogs($filter);
 
         if (empty($catalogs)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+            Api::empty('catalog', $input['api_format']);
 
             return false;
         }
