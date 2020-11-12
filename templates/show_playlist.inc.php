@@ -124,6 +124,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     $browse->set_type('playlist_media');
     $browse->add_supplemental_object('playlist', $playlist->id);
     $browse->set_static_content(true);
+    $browse->duration = Search::get_total_duration($object_ids);
     $browse->show_objects($object_ids, true);
     $browse->store(); ?>
 </div>

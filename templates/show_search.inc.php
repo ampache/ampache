@@ -65,6 +65,7 @@ UI::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
     $browse->set_type('playlist_media');
     $browse->add_supplemental_object('search', $playlist->id);
     $browse->set_static_content(false);
+    $browse->duration = Search::get_total_duration($object_ids);
     $browse->show_objects($object_ids);
     $browse->store(); ?>
 </div>
