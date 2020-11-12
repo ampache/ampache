@@ -248,6 +248,12 @@ class Subsonic_Api
             'namespaceSeparator' => ' :', // you may want this to be something other than a colon
             'attributePrefix' => '', // to distinguish between attributes and nodes with the same name
             'alwaysArray' => array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share'), // array of xml tag names which should always become arrays
+            'alwaysDouble' => array('AverageRating'),
+            'alwaysInteger' => array('albumCount', 'audioTrackId', 'bitRate', 'bookmarkPosition', 'code',
+                                     'count', 'current', 'currentIndex', 'discNumber', 'duration', 'folder',
+                                     'lastModified', 'maxBitRate', 'minutesAgo', 'offset', 'originalHeight',
+                                     'originalWidth', 'playCount', 'playerId', 'position', 'size', 'songCount',
+                                     'time', 'totalHits', 'track', 'UserRating', 'visitCount', 'year'), // array of xml tag names which should always become integers
             'autoArray' => true, // only create arrays for tags which appear more than once
             'textContent' => 'value', // key used for the text content of elements
             'autoText' => true, // skip textContent key if node has no attributes or child nodes
@@ -274,6 +280,12 @@ class Subsonic_Api
                     $vattr = ($strattr == "true");
                 } else {
                     $vattr = $strattr;
+                    if (in_array($attributeName, $options['alwaysInteger'])) {
+                        $vattr = (int) $strattr;
+                    }
+                    if (in_array($attributeName, $options['alwaysDouble'])) {
+                        $vattr = (double) $strattr;
+                    }
                 }
                 $attributesArray[$attributeKey] = $vattr;
             }
@@ -1640,7 +1652,7 @@ class Subsonic_Api
                 $access = 75;
             }
             $password = self::decrypt_password($password);
-            $user_id  = (int) User::create($username, $username, $email, null, $password, $access);
+            $user_id  = User::create($username, $username, $email, null, $password, $access);
             if ($user_id > 0) {
                 if ($downloadRole) {
                     Preference::update('download', $user_id, 1);
@@ -2249,8 +2261,9 @@ class Subsonic_Api
      */
     public static function getbookmarks($input)
     {
+        $user_id   = User::get_from_username($input['u'])->id;
         $response  = Subsonic_XML_Data::createSuccessResponse('getbookmarks');
-        $bookmarks = Bookmark::get_bookmarks();
+        $bookmarks = Bookmark::get_bookmarks($user_id);
         Subsonic_XML_Data::addBookmarks($response, $bookmarks);
         self::apiOutput($input, $response);
     }

@@ -25,52 +25,71 @@ declare(strict_types=0);
 
 namespace Lib\ApiMethods;
 
-use Access;
 use Api;
+use Bookmark;
+use Core;
 use JSON_Data;
-use Playlist;
-use Search;
 use Session;
 use User;
 use XML_Data;
 
 /**
- * Class PlaylistMethod
+ * Class GetBookmarkMethod
  * @package Lib\ApiMethods
  */
-final class PlaylistMethod
+final class GetBookmarkMethod
 {
-    private const ACTION = 'playlist';
+    private const ACTION = 'get_bookmark';
 
     /**
-     * playlist
-     * MINIMUM_API_VERSION=380001
+     * get_bookmark
+     * MINIMUM_API_VERSION=5.0.0
      *
-     * This returns a single playlist
+     * Get the bookmark from it's object_id and object_type.
      *
      * @param array $input
-     * filter = (string) UID of playlist
+     * filter = (string) object_id to find
+     * type   = (string) object_type ('song', 'video', 'podcast_episode')
      * @return boolean
      */
-    public static function playlist(array $input)
+    public static function get_bookmark(array $input)
     {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, array('filter', 'type'), self::ACTION)) {
             return false;
         }
         $user      = User::get_from_username(Session::username($input['auth']));
-        $object_id = $input['filter'];
+        $object_id = (int) $input['filter'];
+        $type      = $input['type'];
+        // confirm the correct data
+        if (!in_array($type, array('song', 'video', 'podcast_episode'))) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
 
-        $playlist = ((int) $object_id === 0)
-            ? new Search((int) str_replace('smart_', '', $object_id), 'song', $user)
-            : new Playlist((int) $object_id);
-        if (!$playlist->id) {
+            return false;
+        }
+        if (!Core::is_library_item($type) || !$object_id) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
+
+            return false;
+        }
+
+        $item = new $type($object_id);
+        if (!$item->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
-        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
-            Api::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
+
+        $object = array(
+            'user' => $user->id,
+            'object_id' => $object_id,
+            'object_type' => $type
+        );
+        $bookmark = Bookmark::get_bookmark($object);
+        if (empty($bookmark)) {
+            Api::empty('bookmark', $input['api_format']);
 
             return false;
         }
@@ -78,10 +97,10 @@ final class PlaylistMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::playlists(array($object_id));
+                echo JSON_Data::bookmarks($bookmark);
                 break;
             default:
-                echo XML_Data::playlists(array($object_id));
+                echo XML_Data::bookmarks($bookmark);
         }
         Session::extend($input['auth']);
 

@@ -48,6 +48,7 @@ final class RecordPlayMethod
      * id     = (integer) $object_id
      * user   = (integer) $user_id
      * client = (string) $agent //optional
+     * date   = (integer) UNIXTIME() //optional
      * @return boolean
      */
     public static function record_play(array $input)
@@ -60,6 +61,7 @@ final class RecordPlayMethod
         $user_id   = (int) $input['user'];
         $user      = new User($user_id);
         $valid     = in_array($user->id, User::get_valid_users());
+        $date      = (is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
 
         // validate supplied user
         if ($valid === false) {
@@ -84,7 +86,7 @@ final class RecordPlayMethod
         debug_event(self::class, 'record_play: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
         // internal scrobbling (user_activity and object_count tables)
-        $item->set_played($user_id, $agent, array(), time());
+        $item->set_played($user_id, $agent, array(), $date);
 
         // scrobble plugins
         User::save_mediaplay($user, $item);

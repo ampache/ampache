@@ -9,23 +9,28 @@ Look here for the code to change your 'custom_datetime' string [(<http://usergui
 This means Ampache now **requires** php-intl module/dll to be enabled.
 
 ### Added
-
+* Write metadata to mp3, flac and ogg files. Requires metaflac and vorbiscomment installed on Linux.
+* Write images to mp3 and flac files. Also requires metaflac on linux.
+* File tags can be updated from catalog management page.
 * Configurable settings for "Gather Art".
 * Configurable art search limit.
 * User selectable artist and year filter for Spotify album searches
 * User selectable limit for art searches.
 * php-intl is now required for translation of date formats into your locale
 * Generate rsstokens for each user allowing unique feed URLs
-* Allow setting custom databse collation and charset without overwriting your changes
+* Allow setting custom database collation and charset without overwriting your changes
   * rsstoken: Identify users by token when generating RSS feeds
 * Replace 'Admin' icon with padlock in sidebar when access check fails. (Hide this new icon with 'simple_user_mode')
 * Disable API/Subsonic password resets in 'simple_user_mode'
 * NEW plugin: 'Personal Favorites'. Show a shortcut to a favorite smartlist or playlist on the homepage
 * Run garbage collection after catalog_update.inc 'clean' or 'verify'
-* Added duration when browsing playlists and smartlists
+* Add duration to the table headers when browsing playlists and smartlists
+* Add time and duration to albums, artists instead of calculating from songs each time
+* Add Random to the search pages to allow sorting by id or RAND()
 
 ### Changed
 
+* config version 47
 * get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
 * Renamed 'Tag' strings to 'Genre'
 * 'Sort Tracks by Artist, Album, Song' sorting done by 'Album_Artist, Album, Disk, Track Title'
@@ -33,10 +38,12 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Sort smartlists by file when random is unticked
 * Don't block playlist information actions when you own the playlist
 * Searching 'original_year' will now fall back to 'year' if no release year is present
+* Add date parameter to Api::record_play
 
 ### Fixed
 
 * Escape filepaths when removing from database
+* Search form not remembering limits
 
 ### API develop
 
@@ -50,7 +57,8 @@ All API code that used 'Tag' now references 'Genre' instead
   * 'type' (string) Default: 'Song' ('Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream') //optional
   * 'clear' (integer) 0|1 clear the current playlist on add //optional
 * API::playlist_edit added new parameter 'sort': (0,1) sort the playlist by 'Artist, Album, Song' //optional
-* Api::indexes added parameter 'include': (0,1) include song details with playlists (XML has this by default)
+* Api::indexes added parameter 'include': (0,1) include song details with playlists
+* Add time to artist and album objects. (total time of all songs in seconds)
 * NEW API functions
   * Api::users (ID and Username of the site users)
   * Api::song_delete (Delete files when you are allowed to)
@@ -65,6 +73,11 @@ All API code that used 'Tag' now references 'Genre' instead
   * Api::labels (list your record labels)
   * Api::label (get a label by id)
   * Api::label_artists (get all artists attached to that label)
+  * Api::get_bookmark (See if you've previously played the file)
+  * Api::bookmarks (List all bookmarks created by your account)
+  * Api::bookmark_create (Create a bookmark to allow revisting later)
+  * Api::bookmark_edit (Edit a bookmark)
+  * Api::bookmark_delete (Delete a bookmark by object id, type, user and client name)
 
 ### Changed
 
@@ -86,6 +99,7 @@ All API code that used 'Tag' now references 'Genre' instead
   * 4710 Bad Request
   * 4742 Failed Access Check
 * get_indexes: 'playlist' now requires include=1 for xml calls if you want the tracks
+* stats: Removed back compat from older versions. Only 'type' is mandatory
 
 ### Deprecated
 

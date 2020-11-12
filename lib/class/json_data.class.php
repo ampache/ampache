@@ -49,7 +49,7 @@ class JSON_Data
      *
      * This takes an int and changes the offset
      *
-     * @param    integer    $offset    (description here...)
+     * @param integer    $offset    (description here...)
      */
     public static function set_offset($offset)
     {
@@ -61,8 +61,8 @@ class JSON_Data
      *
      * This sets the limit for any ampache transactions
      *
-     * @param    integer    $limit    (description here...)
-     * @return    boolean
+     * @param  integer    $limit    (description here...)
+     * @return boolean
      */
     public static function set_limit($limit)
     {
@@ -81,10 +81,10 @@ class JSON_Data
      * This generates a JSON Error message
      * nothing fancy here...
      *
-     * @param string $code Error code
-     * @param string $string Error message
-     * @param string $action Error method
-     * @param string $type Error type
+     * @param  string $code Error code
+     * @param  string $string Error message
+     * @param  string $action Error method
+     * @param  string $type Error type
      * @return string return error message JSON
      */
     public static function error($code, $string, $action, $type)
@@ -100,8 +100,8 @@ class JSON_Data
      * This generates a standard JSON Success message
      * nothing fancy here...
      *
-     * @param string $string success message
-     * @param array $return_data
+     * @param  string $string success message
+     * @param  array $return_data
      * @return string return success message JSON
      */
     public static function success($string, $return_data = array())
@@ -115,10 +115,24 @@ class JSON_Data
     } // success
 
     /**
+     * empty
+     *
+     * This generates a JSON empty object
+     * nothing fancy here...
+     *
+     * @param  string $type object type
+     * @return string return empty JSON message
+     */
+    public static function empty($type)
+    {
+        return json_encode(array($type => array()), JSON_PRETTY_PRINT);
+    } // empty
+
+    /**
      * genre_array
      *
      * This returns the formatted 'genre' array for a JSON document
-     * @param array $tags
+     * @param  array $tags
      * @return array
      */
     private static function genre_array($tags)
@@ -152,10 +166,10 @@ class JSON_Data
      *
      * This returns tags to the user, in a pretty JSON document with the information
      *
-     * @param array $objects (description here...)
-     * @param string $type (description here...)
-     * @param bool $include (add the extra songs details if a playlist)
-     * @return string return JSON
+     * @param  array $objects (description here...)
+     * @param  string $type (description here...)
+     * @param  bool $include (add the extra songs details if a playlist)
+     * @return string JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"
      */
     public static function indexes($objects, $type, $include = false)
     {
@@ -188,7 +202,7 @@ class JSON_Data
      * This returns licenses to the user, in a pretty JSON document with the information
      *
      * @param  integer[] $licenses
-     * @return string return JSON
+     * @return string JSON Object "license"
      */
     public static function licenses($licenses)
     {
@@ -217,7 +231,7 @@ class JSON_Data
      * This returns labels to the user, in a pretty JSON document with the information
      *
      * @param  integer[] $labels
-     * @return string return JSON
+     * @return string JSON Object "label"
      */
     public static function labels($labels)
     {
@@ -252,8 +266,8 @@ class JSON_Data
      *
      * This returns genres to the user, in a pretty JSON document with the information
      *
-     * @param    array    $tags    (description here...)
-     * @return string return JSON
+     * @param  array    $tags    (description here...)
+     * @return string  JSON Object "genre"
      */
     public static function genres($tags)
     {
@@ -286,11 +300,11 @@ class JSON_Data
      * This takes an array of artists and then returns a pretty JSON document with the information
      * we want
      *
-     * @param integer[] $artists (description here...)
-     * @param array $include
-     * @param integer|null $user_id
-     * @param bool $encode
-     * @return array|string return JSON
+     * @param  integer[] $artists (description here...)
+     * @param  array $include
+     * @param  integer|null $user_id
+     * @param  bool $encode
+     * @return array|string JSON Object "artist"
      */
     public static function artists($artists, $include = [], $user_id = null, $encode = true)
     {
@@ -334,6 +348,7 @@ class JSON_Data
                 "averagerating" => ($rating->get_average_rating() ?: null),
                 "mbid" => $artist->mbid,
                 "summary" => $artist->summary,
+                "time" => $artist->time,
                 "yearformed" => $artist->yearformed,
                 "placeformed" => $artist->placeformed
             ));
@@ -351,11 +366,11 @@ class JSON_Data
      *
      * This echos out a standard albums JSON document, it pays attention to the limit
      *
-     * @param integer[] $albums (description here...)
-     * @param array $include
-     * @param integer|null $user_id
-     * @param bool $encode
-     * @return array|string
+     * @param  integer[] $albums (description here...)
+     * @param  array $include
+     * @param  integer|null $user_id
+     * @param  bool $encode
+     * @return array|string JSON Object "album"
      */
     public static function albums($albums, $include = [], $user_id = null, $encode = true)
     {
@@ -410,6 +425,7 @@ class JSON_Data
                 $disk = (count($album->album_suite) <= 1) ? $album->disk : count($album->album_suite);
             }
 
+            $theArray['time']          = (int) $album->total_duration;
             $theArray['year']          = (int) $album->year;
             $theArray['tracks']        = $songs;
             $theArray['disk']          = (int) $disk;
@@ -434,11 +450,11 @@ class JSON_Data
     /**
      * playlists
      *
-     * This takes an array of playlist ids and then returns a nice pretty XML document
+     * This takes an array of playlist ids and then returns a nice pretty JSON document
      *
-     * @param array $playlists (description here...)
-     * @param bool $songs
-     * @return string return JSON
+     * @param  array $playlists (description here...)
+     * @param  bool $songs
+     * @return string JSON Object "playlist"
      */
     public static function playlists($playlists, $songs = false)
     {
@@ -455,16 +471,7 @@ class JSON_Data
              * smartlist = 'smart_1'
              * playlist  = 1000000
              */
-            if (str_replace('smart_', '', (string) $playlist_id) === (string) $playlist_id) {
-                $playlist    = new Playlist($playlist_id);
-                $playlist_id = $playlist->id;
-                $playlist->format();
-
-                $playlist_name  = $playlist->name;
-                $playlist_user  = $playlist->f_user;
-                $playitem_total = $playlist->get_media_count('song');
-                $playlist_type  = $playlist->type;
-            } else {
+            if ((int) $playlist_id === 0) {
                 $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id));
                 $playlist->format();
 
@@ -475,6 +482,15 @@ class JSON_Data
 
                 $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
                 $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
+                $playlist_type  = $playlist->type;
+            } else {
+                $playlist    = new Playlist($playlist_id);
+                $playlist_id = $playlist->id;
+                $playlist->format();
+
+                $playlist_name  = $playlist->name;
+                $playlist_user  = $playlist->f_user;
+                $playitem_total = $playlist->get_media_count('song');
                 $playlist_type  = $playlist->type;
             }
 
@@ -508,8 +524,8 @@ class JSON_Data
      *
      * This returns shares to the user, in a pretty json document with the information
      *
-     * @param array $shares (description here...)
-     * @return string return JSON
+     * @param  array $shares (description here...)
+     * @return string JSON Object "share"
      */
     public static function shares($shares)
     {
@@ -558,12 +574,52 @@ class JSON_Data
     } // shares
 
     /**
+     * bookmarks
+     *
+     * This returns bookmarks to the user, in a pretty json document with the information
+     *
+     * @param  array $bookmarks (description here...)
+     * @return string JSON Object "bookmark"
+     */
+    public static function bookmarks($bookmarks)
+    {
+        if ((count($bookmarks) > self::$limit || self::$offset > 0) && self::$limit) {
+            $bookmarks = array_splice($bookmarks, self::$offset, self::$limit);
+        }
+
+        $allBookmarks = [];
+        foreach ($bookmarks as $bookmark_id) {
+            $bookmark = new Bookmark($bookmark_id);
+            $bookmark->format();
+            $bookmark_user          = $bookmark->f_user;
+            $bookmark_object_type   = $bookmark->object_type;
+            $bookmark_object_id     = $bookmark->object_id;
+            $bookmark_position      = $bookmark->position;
+            $bookmark_comment       = $bookmark->comment;
+            $bookmark_creation_date = $bookmark->creation_date;
+            $bookmark_update_date   = $bookmark->update_date;
+            // Build this element
+            array_push($allBookmarks, [
+                "id" => (string) $bookmark_id,
+                "owner" => $bookmark_user,
+                "object_type" => $bookmark_object_type,
+                "object_id" => $bookmark_object_id,
+                "position" => $bookmark_position,
+                "client" => $bookmark_comment,
+                "creation_date" => $bookmark_creation_date,
+                "update_date" => $bookmark_update_date]);
+        } // end foreach
+
+        return json_encode(array("bookmark" => $allBookmarks), JSON_PRETTY_PRINT);
+    } // bookmarks
+
+    /**
      * catalogs
      *
      * This returns catalogs to the user, in a pretty json document with the information
      *
-     * @param integer[] $catalogs group of catalog id's
-     * @return string return JSON
+     * @param  integer[] $catalogs group of catalog id's
+     * @return string JSON Object "catalog"
      */
     public static function catalogs($catalogs)
     {
@@ -608,9 +664,9 @@ class JSON_Data
      *
      * This returns podcasts to the user, in a pretty json document with the information
      *
-     * @param array $podcasts (description here...)
-     * @param boolean $episodes include the episodes of the podcast
-     * @return string return JSON
+     * @param  array $podcasts (description here...)
+     * @param  boolean $episodes include the episodes of the podcast
+     * @return string JSON Object "podcast"
      */
     public static function podcasts($podcasts, $episodes = false)
     {
@@ -663,7 +719,7 @@ class JSON_Data
      *
      * @param  array   $podcast_episodes    (description here...)
      * @param  boolean $simple just return the data as an array for pretty somewhere else
-     * @return array|string return JSON
+     * @return array|string JSON Object "podcast_episode"
      */
     public static function podcast_episodes($podcast_episodes, $simple = false)
     {
@@ -687,7 +743,8 @@ class JSON_Data
                 "filelength" => $episode->f_time_h,
                 "filesize" => $episode->f_size,
                 "filename" => $episode->f_file,
-                "url" => $episode->link]);
+                "url" => $episode->link,
+                "played" => $episode->played]);
         }
         if ($simple) {
             return $allEpisodes;
@@ -701,10 +758,10 @@ class JSON_Data
      *
      * This returns an array of songs populated from an array of song ids.
      * (Spiffy isn't it!)
-     * @param integer[] $songs
-     * @param integer|null $user_id
-     * @param bool $encode
-     * @return array|string
+     * @param  integer[] $songs
+     * @param  integer|null $user_id
+     * @param  bool $encode
+     * @return array|string JSON Object "song"
      */
     public static function songs($songs, $user_id = null, $encode = true)
     {
@@ -808,9 +865,9 @@ class JSON_Data
      *
      * This builds the JSON document for displaying video objects
      *
-     * @param    array    $videos    (description here...)
-     * @param integer $user_id
-     * @return string return JSON
+     * @param  array    $videos    (description here...)
+     * @param  integer $user_id
+     * @return string JSON Object "video"
      */
     public static function videos($videos, $user_id)
     {
@@ -842,9 +899,9 @@ class JSON_Data
      * This handles creating an JSON document for democratic items, this can be a little complicated
      * due to the votes and all of that
      *
-     * @param integer[] $object_ids Object IDs
-     * @param integer|null $user_id
-     * @return string    return JSON
+     * @param  integer[] $object_ids Object IDs
+     * @param  integer|null $user_id
+     * @return string JSON Object "song"
      */
     public static function democratic($object_ids = array(), $user_id = null)
     {
@@ -892,7 +949,7 @@ class JSON_Data
      *
      * @param  User    $user    User
      * @param  boolean $fullinfo
-     * @return string  return JSON
+     * @return string JSON Object "user"
      */
     public static function user(User $user, $fullinfo)
     {
@@ -937,8 +994,8 @@ class JSON_Data
      *
      * This handles creating an JSON document for an user list
      *
-     * @param    integer[]    $users    User identifier list
-     * @return string return JSON
+     * @param  integer[]    $users    User identifier list
+     * @return string JSON Object "user"
      */
     public static function users($users)
     {
@@ -959,8 +1016,8 @@ class JSON_Data
      *
      * This handles creating an JSON document for a shout list
      *
-     * @param    integer[]    $shouts    Shout identifier list
-     * @return string return JSON
+     * @param  integer[]    $shouts    Shout identifier list
+     * @return string JSON Object "shout"
      */
     public static function shouts($shouts)
     {
@@ -991,8 +1048,8 @@ class JSON_Data
      *
      * This handles creating an JSON document for an activity list
      *
-     * @param    integer[]    $activities    Activity identifier list
-     * @return string return JSON
+     * @param  integer[]    $activities    Activity identifier list
+     * @return string JSON Object "activity"
      */
     public static function timeline($activities)
     {

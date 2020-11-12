@@ -72,17 +72,19 @@ final class FollowersMethod
         }
 
         $users = $user->get_followers();
-        if (!count($users)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
-        } else {
-            ob_end_clean();
-            switch ($input['api_format']) {
-                case 'json':
-                    echo JSON_Data::users($users);
-                    break;
-                default:
-                    echo XML_Data::users($users);
-            }
+        if (empty($users)) {
+            Api::empty('user', $input['api_format']);
+
+            return false;
+        }
+
+        ob_end_clean();
+        switch ($input['api_format']) {
+            case 'json':
+                echo JSON_Data::users($users);
+                break;
+            default:
+                echo XML_Data::users($users);
         }
         Session::extend($input['auth']);
 

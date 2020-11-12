@@ -62,11 +62,12 @@ final class VideosMethod
         $video_ids = Api::$browse->get_objects();
         $user      = User::get_from_username(Session::username($input['auth']));
         if (empty($video_ids)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+            Api::empty('video', $input['api_format']);
 
             return false;
         }
 
+        ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
                 JSON_Data::set_offset($input['offset']);

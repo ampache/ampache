@@ -42,6 +42,7 @@ class Api
         'goodbye' => ApiMethods\GoodbyeMethod::class,
         'url_to_song' => ApiMethods\UrlToSongMethod::class,
         'get_indexes' => ApiMethods\GetIndexesMethod::class,
+        'get_bookmark' => ApiMethods\GetBookmarkMethod::class,
         'get_similar' => ApiMethods\GetSimilarMethod::class,
         'advanced_search' => ApiMethods\AdvancedSearchMethod::class,
         'artists' => ApiMethods\ArtistsMethod::class,
@@ -85,6 +86,10 @@ class Api
         'share_create' => ApiMethods\ShareCreateMethod::class,
         'share_delete' => ApiMethods\ShareDeleteMethod::class,
         'share_edit' => ApiMethods\ShareEditMethod::class,
+        'bookmarks' => ApiMethods\BookmarksMethod::class,
+        'bookmark_create' => ApiMethods\BookmarkCreateMethod::class,
+        'bookmark_edit' => ApiMethods\BookmarkEditMethod::class,
+        'bookmark_delete' => ApiMethods\BookmarkDeleteMethod::class,
         'videos' => ApiMethods\VideosMethod::class,
         'video' => ApiMethods\VideoMethod::class,
         'stats' => ApiMethods\StatsMethod::class,
@@ -171,7 +176,7 @@ class Api
 
     /**
      * message
-     * call the correct error / success message depending on format
+     * call the correct success message depending on format
      * @param string $message
      * @param string $format
      * @param array $return_data
@@ -189,7 +194,7 @@ class Api
 
     /**
      * error
-     * call the correct error / success message depending on format
+     * call the correct error message depending on format
      * @param string $message
      * @param string $error_code
      * @param string $method
@@ -206,6 +211,23 @@ class Api
                 echo XML_Data::error($error_code, $message, $method, $error_type);
         }
     } // error
+
+    /**
+     * empty
+     * call the correct empty message depending on format
+     * @param string $empty_type
+     * @param string $format
+     */
+    public static function empty($empty_type, $format = 'xml')
+    {
+        switch ($format) {
+            case 'json':
+                echo JSON_Data::empty($empty_type);
+                break;
+            default:
+                echo XML_Data::empty();
+        }
+    } // empty
 
     /**
      * set_filter

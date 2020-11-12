@@ -73,14 +73,12 @@ final class PodcastEpisodesMethod
         }
         $items = $podcast->get_episodes();
         if (empty($items)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+            Api::empty('podcast_episode', $input['api_format']);
 
             return false;
         }
 
         ob_end_clean();
-        $user = User::get_from_username(Session::username($input['auth']));
-        debug_event(self::class, 'User ' . $user->id . ' loading podcast: ' . $input['filter'], 5);
         switch ($input['api_format']) {
             case 'json':
                 JSON_Data::set_offset($input['offset']);

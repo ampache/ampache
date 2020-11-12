@@ -66,23 +66,29 @@ UI::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
         <td>
                 <select name="limit">
                         <option value="0"><?php echo T_('Unlimited'); ?></option>
-                        <option value="25" <?php if ((int) filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT) == 25) {
+                        <option value="25" <?php if ((int) $_REQUEST['limit'] == 25) {
             echo "selected=\"selected\"";
         }?>>25</option>
-                        <option value="50" <?php if ((int) filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT) == 50) {
+                        <option value="50" <?php if ((int) $_REQUEST['limit'] == 50) {
             echo "selected=\"selected\"";
         }?>>50</option>
-                        <option value="100" <?php if ((int) filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT) == 100) {
+                        <option value="100" <?php if ((int) $_REQUEST['limit'] == 100) {
             echo "selected=\"selected\"";
         }?>>100</option>
-                        <option value="250" <?php if ((int) filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT) == 250) {
+                        <option value="250" <?php if ((int) $_REQUEST['limit'] == 250) {
             echo "selected=\"selected\"";
         }?>>250</option>
-                        <option value="500" <?php if ((int) filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT) == 500) {
+                        <option value="500" <?php if ((int) $_REQUEST['limit'] == 500) {
             echo "selected=\"selected\"";
         }?>>500</option>
                 </select>
         </td>
+    </tr>
+    <tr id="random_results">
+        <td><?php echo T_('Random'); ?></td>
+        <td><input type="checkbox" name="random" value="1" <?php if ((int) $_REQUEST['random'] == 1) {
+            echo "checked";
+        } ?> /></td>
     </tr>
 </table>
 

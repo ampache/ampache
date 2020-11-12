@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=0);
+
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -21,38 +23,38 @@
  *
  */
 
-declare(strict_types=0);
-
 namespace Lib\ApiMethods;
 
 use Api;
+use Bookmark;
 use JSON_Data;
 use Session;
 use User;
 use XML_Data;
 
 /**
- * Class UsersMethod
+ * Class BookmarksMethod
  * @package Lib\ApiMethods
  */
-final class UsersMethod
+final class BookmarksMethod
 {
-    const ACTION = 'users';
+    private const ACTION = 'bookmarks';
 
     /**
-     * users
+     * bookmarks
      * MINIMUM_API_VERSION=5.0.0
      *
-     * Get ids and usernames for your site
+     * Get information about bookmarked media this user is allowed to manage.
      *
      * @param array $input
      * @return boolean
      */
-    public static function users(array $input)
+    public static function bookmarks(array $input)
     {
-        $users = User::get_valid_users();
-        if (empty($users)) {
-            Api::empty('user', $input['api_format']);
+        $user      = User::get_from_username(Session::username($input['auth']));
+        $bookmarks = Bookmark::get_bookmarks_ids($user);
+        if (empty($bookmarks)) {
+            Api::empty('bookmark', $input['api_format']);
 
             return false;
         }
@@ -60,10 +62,10 @@ final class UsersMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::users($users);
+                echo JSON_Data::bookmarks($bookmarks);
                 break;
             default:
-                echo XML_Data::users($users);
+                echo XML_Data::bookmarks($bookmarks);
         }
         Session::extend($input['auth']);
 

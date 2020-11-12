@@ -84,6 +84,10 @@ UI::show_box_top($podcast->f_title, 'info-box'); ?>
         <?php
         } ?>
         <li>
+        <?php echo " <a href=\"" . $podcast->website . "\" target=\"_blank\">" . UI::get_icon('link', T_('Website')) . "</a>"; ?>
+        <?php echo " <a href=\"" . $podcast->website . "\" target=\"_blank\">" . T_('Website') . "</a>"; ?>
+        </li>
+        <li>
             <a id="<?php echo 'edit_podcast_' . $podcast->id ?>" onclick="showEditDialog('podcast_row', '<?php echo $podcast->id ?>', '<?php echo 'edit_podcast_' . $podcast->id ?>', '<?php echo T_('Podcast Edit') ?>', '')">
                 <?php echo UI::get_icon('edit', T_('Edit')); ?>
             </a>

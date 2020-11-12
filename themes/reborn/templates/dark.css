@@ -62,7 +62,8 @@ textarea {
 }
 
 input[type=button],
-input[type=submit] {
+input[type=submit],
+.editdialogstyle.ui-dialog .ui-dialog-buttonset button {
     background-image: -moz-linear-gradient(top, #ff9d00, #cc6200);
     background-image: -ms-linear-gradient(top, #ff9d00, #cc6200);
     background-image: -webkit-gradient(linear, 0, 0 100%, from(#ff9d00), to(#cc6200));
@@ -78,7 +79,8 @@ input[type=submit] {
 input[type=button]:hover,
 input[type=button]:focus,
 input[type=submit]:hover,
-input[type=submit]:focus {
+input[type=submit]:focus,
+.editdialogstyle.ui-dialog .ui-dialog-buttonset button:hover {
     background-color: #cc6200;
 }
 
@@ -94,7 +96,19 @@ input[type=submit]:focus:active {
     color: #fff;
 }
 
-.editdialogstyle.ui-dialog .ui-dialog-titlebar {
+.playlistdialogstyle.ui-dialog .ui-dialog-content,
+.editdialogstyle.ui-dialog.ui-widget-content a,
+.broadcastsdialogstyle.ui-widget-content a,
+.sharedialogstyle.ui-widget-content a {
+    background-color: #222;
+    color: #999;
+}
+
+.editdialogstyle.ui-dialog .ui-dialog-titlebar,
+.editdialogstyle.ui-dialog.ui-widget-content a:hover,
+.playlistdialogstyle.ui-widget-content a:hover,
+.broadcastsdialogstyle.ui-widget-content a:hover,
+.sharedialogstyle.ui-widget-content a:hover {
     color: #fff;
 }
 
@@ -576,6 +590,19 @@ div.jp-playlist li {
     border-bottom: 1px solid #121212;
 }
 
+.jp-type-playlist .jp-playlist a {
+    color: #fff;
+}
+
+.jp-type-playlist .jp-playlist a:hover,
+.jp-type-playlist .jp-playlist a:active,
+.jp-type-playlist .jp-playlist a:focus {
+    color: #ff9d00;
+}
+
+.jp-type-playlist .jp-playlist a.jp-playlist-current {
+    color: #ff9d00;
+}
 /* --------------------------
    Other
    -------------------------- */

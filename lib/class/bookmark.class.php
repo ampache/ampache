@@ -106,6 +106,8 @@ class Bookmark extends database_object
     }
 
     /**
+     * get_bookmarks_ids
+     *
      * @param User|null $user
      * @return array
      */
@@ -142,6 +144,24 @@ class Bookmark extends database_object
     }
 
     /**
+     * get_bookmark
+     * @param array $data
+     * @return integer[]
+     */
+    public static function get_bookmark($data)
+    {
+        $bookmarks   = array();
+        $comment_sql = isset($data['comment']) ? "AND `comment` = '" . scrub_in($data['comment']) . "'" : "";
+        $sql         = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `object_type` = ? AND `object_id` = ? " . $comment_sql;
+        $db_results  = Dba::read($sql, array($data['user'], $data['object_type'], $data['object_id']));
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $bookmarks[] = (int) $results['id'];
+        }
+
+        return $bookmarks;
+    }
+
+    /**
      * create
      * @param array $data
      * @return PDOStatement|boolean
@@ -151,10 +171,28 @@ class Bookmark extends database_object
         $user     = $data['user'] ?: Core::get_global('user')->id;
         $position = $data['position'] ?: 0;
         $comment  = scrub_in($data['comment']);
+        $updated  = $data['update_date'] ? (int) $data['update_date'] : time();
 
         $sql = "INSERT INTO `bookmark` (`user`, `position`, `comment`, `object_type`, `object_id`, `creation_date`, `update_date`) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        return Dba::write($sql, array($user, $position, $comment, $data['object_type'], $data['object_id'], time(), time()));
+        return Dba::write($sql, array($user, $position, $comment, $data['object_type'], $data['object_id'], time(), $updated));
+    }
+
+    /**
+     * edit
+     * @param array $data
+     * @return PDOStatement|boolean
+     */
+    public static function edit($data)
+    {
+        $user     = $data['user'] ?: Core::get_global('user')->id;
+        $position = $data['position'] ?: 0;
+        $comment  = scrub_in($data['comment']);
+        $updated  = $data['update_date'] ? (int) $data['update_date'] : time();
+        $sql      = "UPDATE `bookmark` SET `position` = ?, `update_date` = ? " .
+               "WHERE `user` = ? AND `comment` = ? AND `object_type` = ? AND `object_id` = ?";
+
+        return Dba::write($sql, array($position, $updated, $user, $comment,  $data['object_type'], $data['object_id']));
     }
 
     /**
@@ -178,6 +216,21 @@ class Bookmark extends database_object
         $sql = "DELETE FROM `bookmark` WHERE `id` = ?";
 
         return Dba::write($sql, array($this->id));
+    }
+
+    /**
+     * delete
+     *
+     * Delete the bookmark when you're done
+     *
+     * @param array $data
+     * @return PDOStatement|boolean
+     */
+    public static function delete(array $data)
+    {
+        $sql = "DELETE FROM `bookmark` WHERE `user` = ? AND `comment` = ? AND `object_type` = ? AND `object_id` = ?";
+
+        return Dba::write($sql, array($data['user'], $data['comment'], $data['object_type'], $data['object_id']));
     }
 
     public function format()

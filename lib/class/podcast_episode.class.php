@@ -153,6 +153,9 @@ class Podcast_Episode extends database_object implements media, library_item
             $this->f_podcast_link = $podcast->f_link;
             $this->f_file         = $this->f_podcast . ' - ' . $this->f_file;
         }
+        if (AmpConfig::get('show_played_times')) {
+            $this->object_cnt = Stats::get_object_count('podcast_episode', $this->id);
+        }
 
         return true;
     }
@@ -312,12 +315,14 @@ class Podcast_Episode extends database_object implements media, library_item
      */
     public function set_played($user, $agent, $location, $date = null)
     {
-        if ($this->played) {
-            return true;
+        // ignore duplicates or skip the last track
+        if ($this->check_play_history($user, $agent, $date)) {
+            Stats::insert('podcast_episode', $this->id, $user, $agent, $location, 'stream', $date);
         }
 
-        /* If it hasn't been played, set it! */
-        self::update_played(true, $this->id);
+        if (!$this->played) {
+            self::update_played(true, $this->id);
+        }
 
         return true;
     } // set_played

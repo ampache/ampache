@@ -1222,9 +1222,8 @@ This returns a single video
 
 ### stats
 
-Get some items based on some simple search types and filters.
-This method has partial backwards compatibility with older api versions but should be updated to follow the current input values.
-(Changed in 400001 'filter' added)
+Get some items based on some simple search types and filters. (Random by default)
+This method HAD partial backwards compatibility with older api versions but it has now been removed
 @param array $input
 
 @return
@@ -1244,7 +1243,7 @@ This method has partial backwards compatibility with older api versions but shou
 | Input      | Type    | Description                                | Optional |
 |------------|---------|--------------------------------------------|---------:|
 | 'type'     | string  | 'song', 'album', 'artist'                  |       NO |
-| 'filter'   | string  | 'newest', 'highest', 'frequent', 'recent', |       NO |
+| 'filter'   | string  | 'newest', 'highest', 'frequent', 'recent', |      YES |
 |            |         | 'forgotten', 'flagged', 'random'           |          |
 | 'user_id'  | integer |                                            |      YES |
 | 'username' | string  |                                            |      YES |
@@ -1955,6 +1954,7 @@ Take a song_id and update the object_count and user_activity table with a play. 
 | 'id'     | integer | $object_id  |       NO |
 | 'user'   | integer | $user_id    |       NO |
 | 'client' | string  | $agent      |      YES |
+| 'date'   | integer | UNIXTIME()  |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/record_play.xml)
 
@@ -2409,6 +2409,78 @@ Delete a non-system preference by name
 | 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/preference_delete.xml)
+
+### bookmarks
+
+* **NEW** in develop
+
+Get information about bookmarked media this user is allowed to manage.
+@param array $input
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/bookmarks.xml)
+
+### get_bookmark
+
+* **NEW** in develop
+
+Get the bookmark from it's object_id and object_type.
+@param array $input
+
+| Input    | Type   | Description                                       | Optional |
+|----------|--------|---------------------------------------------------|---------:|
+| 'filter' | string | object_id to find                                 |       NO |
+| 'type'   | string | object_type  ('song', 'video', 'podcast_episode') |       NO |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/get_bookmark.xml)
+
+### bookmark_create
+
+* **NEW** in develop
+
+Create a placeholder for the current media that you can return to later.
+@param array $input
+
+| Input      | Type    | Description                                       | Optional |
+|------------|---------|---------------------------------------------------|---------:|
+| 'filter'   | string  | object_id to find                                 |       NO |
+| 'type'     | string  | object_type  ('song', 'video', 'podcast_episode') |       NO |
+| 'position' | integer | current track time in seconds                     |       NO |
+| 'client'   | string  | Agent string. (Default: 'AmpacheAPI')             |      YES |
+| 'date'     | integer | update time (Default: UNIXTIME())                 |      YES |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/bookmark_create.xml)
+
+### bookmark_edit
+
+* **NEW** in develop
+
+Edit a placeholder for the current media that you can return to later.
+@param array $input
+
+| Input      | Type    | Description                                       | Optional |
+|------------|---------|---------------------------------------------------|---------:|
+| 'filter'   | string  | object_id to find                                 |       NO |
+| 'type'     | string  | object_type  ('song', 'video', 'podcast_episode') |       NO |
+| 'position' | integer | current track time in seconds                     |       NO |
+| 'client'   | string  | Agent string. (Default: 'AmpacheAPI')             |      YES |
+| 'date'     | integer | update time (Default: UNIXTIME())                 |      YES |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/bookmark_edit.xml)
+
+### bookmark_delete
+
+* **NEW** in develop
+
+Delete an existing bookmark. (if it exists)
+@param array $input
+
+| Input    | Type   | Description                                       | Optional |
+|----------|--------|---------------------------------------------------|---------:|
+| 'filter' | string | object_id to delete                               |       NO |
+| 'type'   | string | object_type  ('song', 'video', 'podcast_episode') |       NO |
+| 'client' | string | Agent string. (Default: 'AmpacheAPI')             |      YES |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/bookmark_delete)
 
 ## Binary Data Methods
 

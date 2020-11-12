@@ -675,10 +675,6 @@ a.jp-volume-max:hover {
     text-decoration: none;
 }
 
-.jp-type-playlist .jp-playlist a:hover {
-    color: #fff;
-}
-
 .jp-type-playlist .jp-playlist a.jp-playlist-current {
     font-weight: bold;
 }
