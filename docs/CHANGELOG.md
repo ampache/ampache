@@ -22,6 +22,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Disable API/Subsonic password resets in 'simple_user_mode'
 * NEW plugin: 'Personal Favorites'. Show a shortcut to a favorite smartlist or playlist on the homepage
 * Run garbage collection after catalog_update.inc 'clean' or 'verify'
+* Added duration when browsing playlists and smartlists
 
 ### Changed
 
