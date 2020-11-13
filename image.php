@@ -50,7 +50,7 @@ if (!AmpConfig::get('resize_images')) {
 
 // FIXME: Legacy stuff - should be removed after a version or so
 if (!filter_has_var(INPUT_GET, 'object_type')) {
-    $_GET['object_type'] = 'album';
+    $_GET['object_type'] = 'song';
 }
 
 $type = Core::get_get('object_type');

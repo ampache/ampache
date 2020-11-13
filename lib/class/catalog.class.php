@@ -1406,14 +1406,22 @@ abstract class Catalog extends database_object
         // Prevent the script from timing out
         set_time_limit(0);
 
+        $gather_song_art = AmpConfig::get('gather_song_art') ?: false;
+
         $search_count = 0;
         $searches     = array();
         if ($songs == null) {
             $searches['album']  = $this->get_album_ids('art');
             $searches['artist'] = $this->get_artist_ids('art');
+            if ($gather_song_art) {
+                $searches['song'] = $this->get_songs();
+            }
         } else {
             $searches['album']  = array();
             $searches['artist'] = array();
+            if ($gather_song_art) {
+                $searches['song'] = array();
+            }
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->id) {
@@ -1422,6 +1430,11 @@ abstract class Catalog extends database_object
                     }
                     if (!in_array($song->artist, $searches['artist'])) {
                         $searches['artist'][] = $song->artist;
+                    }
+                    if ($gather_song_art) {
+                        if (!in_array($song->id, $searches['song'])) {
+                            $searches['song'][] = $song->id;
+                        }
                     }
                 }
             }

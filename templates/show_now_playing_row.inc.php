@@ -63,10 +63,19 @@
 <div class="np_group" id="np_group_3">
   <div id="album_<?php echo $media->album ?>" class="np_cell cel_albumart libitem_menu">
       <?php
-      $album = new Album($media->album);
-        if ($album->id) {
-            $album->format();
-            $album->display_art(1);
+      $show_song_art = AmpConfig::get('show_song_art') ?: false;
+        if ($show_song_art) {
+            $song = new Song($media->id);
+            if ($song->id) {
+                $song->format();
+                $song->display_art(1);
+            }
+        } else {
+            $album = new Album($media->album);
+            if ($album->id) {
+                $album->format();
+                $album->display_art(1);
+            }
         } ?>
   </div>
 </div>

@@ -851,10 +851,15 @@ class XML_Data
             }
 
             $song->format();
-            $tag_string = self::tags_string(Tag::get_top_tags('song', $song_id));
-            $rating     = new Rating($song_id, 'song');
-            $flag       = new Userflag($song_id, 'song');
-            $art_url    = Art::url($song->album, 'album', Core::get_request('auth'));
+            $tag_string    = self::tags_string(Tag::get_top_tags('song', $song_id));
+            $rating        = new Rating($song_id, 'song');
+            $flag          = new Userflag($song_id, 'song');
+            $show_song_art = AmpConfig::get('show_song_art') ?: false;            
+            if ($show_song_art) {
+                $art_url = Art::url($song->id, 'song', Core::get_request['auth']);
+            } else {
+                $art_url = Art::url($song->album, 'album', Core::get_request('auth'));
+            }
             $playlist_track++;
 
             $string .= "<song id=\"" . $song->id . "\">\n" .
