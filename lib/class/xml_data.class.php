@@ -186,7 +186,7 @@ class XML_Data
     {
         $string = '';
 
-        if (is_array($tags)) {
+        if (!empty($tags)) {
             $atags = array();
             foreach ($tags as $tag_id => $data) {
                 if (array_key_exists($data['id'], $atags)) {
