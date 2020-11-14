@@ -948,8 +948,17 @@ class Art extends database_object
      * @param string $type
      * @return string
      */
-    public static function get_from_source($data, $type = 'album')
+    public static function get_from_source($data, $type)
     {
+        if (!isset($type)) {
+            $show_song_art = AmpConfig::get('show_song_art') ?: false;
+            if ($show_song_art) {
+                $type = 'song';
+            } else {
+                $type = 'album';
+            }
+        }
+
         // Already have the data, this often comes from id3tags
         if (isset($data['raw'])) {
             return $data['raw'];
@@ -1687,10 +1696,14 @@ class Art extends database_object
             $limit = 5;
         }
 
+        $gather_song_art = AmpConfig::get('gather_song_art') ?: false;
+
         if ($this->type == "video") {
             $data = $this->gather_video_tags();
         } elseif ($this->type == 'album' || $this->type == 'artist') {
             $data = $this->gather_song_tags($limit);
+        } elseif (($this->type == 'song') && ($gather_song_art)) {
+            $data = $this->gather_song_tags_single($limit);
         } else {
             $data = array();
         }
@@ -1736,6 +1749,28 @@ class Art extends database_object
             if ($limit && count($data) >= $limit) {
                 return array_slice($data, 0, $limit);
             }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Gather tags from single song instead of full album
+     * (taken from function gather_song_tags with some changes)
+     * @param int $limit
+     * @return array
+     */
+    public function gather_song_tags_single($limit = 5)
+    {
+        // get song object directly from id, not by loop through album
+        $song = new Song($this->uid);
+
+        $data = array();
+
+        $data = array_merge($data, $this->gather_media_tags($song));
+
+        if ($limit && count($data) >= $limit) {
+            return array_slice($data, 0, $limit);
         }
 
         return $data;

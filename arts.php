@@ -160,7 +160,12 @@ switch ($_REQUEST['action']) {
         // Prevent the script from timing out
         set_time_limit(0);
 
-        $image      = Art::get_from_source($_SESSION['form']['images'][$image_id], 'album');
+        $show_song_art = AmpConfig::get('show_song_art') ?: false;
+        if ($show_song_art) {
+            $image = Art::get_from_source($_SESSION['form']['images'][$image_id], 'song');
+        } else {
+            $image = Art::get_from_source($_SESSION['form']['images'][$image_id], 'album');
+        }
         $dimensions = Core::image_dimensions($image);
         $mime       = $_SESSION['form']['images'][$image_id]['mime'];
         if (!Art::check_dimensions($dimensions)) {
