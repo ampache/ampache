@@ -637,6 +637,7 @@ div.jp-playlist li {
 }
 
 span.item-count,
+span.item-duration,
 span.query-count {
     color: #999;
 }

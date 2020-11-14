@@ -1898,7 +1898,8 @@ input.list-header-navmenu-input {
     text-align: center;
 }
 
-span.item-count {
+span.item-count,
+span.item-duration {
     font-size: 11px;
 }
 

@@ -47,6 +47,11 @@ class Browse extends Query
     public $show_header;
 
     /**
+     * @var integer $duration
+     */
+    public $duration;
+
+    /**
      * Constructor.
      *
      * @param integer|null $browse_id
