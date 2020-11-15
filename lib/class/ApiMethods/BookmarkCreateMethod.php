@@ -52,6 +52,7 @@ final class BookmarkCreateMethod
      * type     = (string) object_type ('song', 'video', 'podcast_episode')
      * position = (integer) current track time in seconds
      * client   = (string) Agent string Default: 'AmpacheAPI' // optional
+     * date     = (integer) UNIXTIME() //optional
      * @return boolean
      */
     public static function bookmark_create(array $input)
@@ -64,6 +65,7 @@ final class BookmarkCreateMethod
         $type      = $input['type'];
         $position  = $input['position'];
         $comment   = (isset($input['client'])) ? $input['client'] : 'AmpacheAPI';
+        $time      = (isset($input['date'])) ? (int) $input['date'] : time();
         // confirm the correct data
         if (!in_array($type, array('song', 'video', 'podcast_episode'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -90,14 +92,15 @@ final class BookmarkCreateMethod
             'object_id' => $object_id,
             'object_type' => $type,
             'comment' => $comment,
-            'position' => $position
+            'position' => $position,
+            'update_date' => $time
         );
 
         // create it then retrieve it
         Bookmark::create($object);
         $bookmark = Bookmark::get_bookmark($object);
-        if (!$bookmark) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+        if (empty($bookmark)) {
+            Api::empty('bookmark', $input['api_format']);
 
             return false;
         }

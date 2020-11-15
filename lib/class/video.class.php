@@ -574,21 +574,21 @@ class Video extends database_object implements media, library_item
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
-        $bitrate        = (int) ($data['bitrate']);
+        $bitrate        = (int) $data['bitrate'];
         $mode           = $data['mode'];
-        $rezx           = (int) ($data['resolution_x']);
-        $rezy           = (int) ($data['resolution_y']);
-        $release_date   = (int) ($data['release_date']);
+        $rezx           = (int) $data['resolution_x'];
+        $rezy           = (int) $data['resolution_y'];
+        $release_date   = (int) $data['release_date'];
         // No release date, then release date = production year
         if (!$release_date && $data['year']) {
             $release_date = strtotime(strval($data['year']) . '-01-01');
         }
         $tags           = $data['genre'];
-        $channels       = (int) ($data['channels']);
-        $disx           = (int) ($data['display_x']);
-        $disy           = (int) ($data['display_y']);
-        $frame_rate     = floatval($data['frame_rate']);
-        $video_bitrate  = (int) ($data['video_bitrate']);
+        $channels       = (int) $data['channels'];
+        $disx           = (int) $data['display_x'];
+        $disy           = (int) $data['display_y'];
+        $frame_rate     = (float) $data['frame_rate'];
+        $video_bitrate  = (int) Catalog::check_int($data['video_bitrate'], 4294967294, 0);
 
         $sql = "INSERT INTO `video` (`file`, `catalog`, `title`, `video_codec`, `audio_codec`, `resolution_x`, `resolution_y`, `size`, `time`, `mime`, `release_date`, `addition_time`, `bitrate`, `mode`, `channels`, `display_x`, `display_y`, `frame_rate`, `video_bitrate`) " .
             " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";

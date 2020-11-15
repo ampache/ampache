@@ -284,7 +284,7 @@ function sort_move_file($song, $fullname, $test_mode)
 
         debug_event('sort_files', 'Copied ' . $old_art . ' to ' . $folder_art, 4);
         if (copy($old_art, $folder_art) === false) {
-            throw new \RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
+            throw new RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
         }
 
         /* HINT: filename (File path) */

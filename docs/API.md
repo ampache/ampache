@@ -319,6 +319,7 @@ For more in depth information regarding the different api servers you can view t
 * bookmarks **(develop only)**
 * get_bookmark **(develop only)**
 * bookmark_create **(develop only)**
+* bookmark_edit **(develop only)**
 * bookmark_delete **(develop only)**
 
 ### Control Methods

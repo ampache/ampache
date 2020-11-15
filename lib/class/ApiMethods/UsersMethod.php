@@ -52,10 +52,12 @@ final class UsersMethod
     {
         $users = User::get_valid_users();
         if (empty($users)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+            Api::empty('user', $input['api_format']);
 
             return false;
         }
+
+        ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
                 echo JSON_Data::users($users);

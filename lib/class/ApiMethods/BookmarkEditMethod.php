@@ -27,39 +27,45 @@ namespace Lib\ApiMethods;
 
 use Api;
 use Core;
+use JSON_Data;
 use Session;
-use bookmark;
+use Bookmark;
 use User;
+use XML_Data;
 
 /**
- * Class BookmarkDeleteMethod
+ * Class BookmarkEditMethod
  * @package Lib\ApiMethods
  */
-final class BookmarkDeleteMethod
+final class BookmarkEditMethod
 {
-    private const ACTION = 'bookmark_delete';
+    private const ACTION = 'bookmark_edit';
 
     /**
-     * bookmark_delete
+     * bookmark_edit
      * MINIMUM_API_VERSION=5.0.0
      *
-     * Delete an existing bookmark. (if it exists)
+     * Edit a placeholder for the current media that you can return to later.
      *
      * @param array $input
-     * filter = (string) object_id to delete
-     * type   = (string) object_type  ('song', 'video', 'podcast_episode')
-     * client = (string) Agent string Default: 'AmpacheAPI' // optional
+     * filter   = (string) object_id
+     * type     = (string) object_type ('song', 'video', 'podcast_episode')
+     * position = (integer) current track time in seconds
+     * client   = (string) Agent string Default: 'AmpacheAPI' // optional
+     * date     = (integer) UNIXTIME() //optional
      * @return boolean
      */
-    public static function bookmark_delete(array $input)
+    public static function bookmark_edit(array $input)
     {
-        if (!Api::check_parameter($input, array('filter','type'), self::ACTION)) {
+        if (!Api::check_parameter($input, array('filter', 'position'), self::ACTION)) {
             return false;
         }
         $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = $input['filter'];
         $type      = $input['type'];
-        $comment   = (isset($input['client'])) ? (string) $input['client'] : 'AmpacheAPI';
+        $position  = $input['position'];
+        $comment   = (isset($input['client'])) ? $input['client'] : 'AmpacheAPI';
+        $time      = (isset($input['date'])) ? (int) $input['date'] : time();
         // confirm the correct data
         if (!in_array($type, array('song', 'video', 'podcast_episode'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -85,26 +91,31 @@ final class BookmarkDeleteMethod
             'user' => $user->id,
             'object_id' => $object_id,
             'object_type' => $type,
-            'comment' => $comment
+            'comment' => $comment,
+            'position' => $position,
+            'update_date' => $time
         );
 
-        $find = Bookmark::get_bookmark($object);
-        if (empty($find)) {
+        // check for the bookmark first
+        $bookmark = Bookmark::get_bookmark($object);
+        if (empty($bookmark)) {
             Api::empty('bookmark', $input['api_format']);
 
             return false;
         }
+        // edit it
+        Bookmark::edit($object);
 
-        $bookmark = Bookmark::delete($object);
-        if (!$bookmark) {
-            Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
-
-            return false;
+        ob_end_clean();
+        switch ($input['api_format']) {
+            case 'json':
+                echo JSON_Data::bookmarks($bookmark);
+                break;
+            default:
+                echo XML_Data::bookmarks($bookmark);
         }
-
-        Api::message('Deleted Bookmark: ' . $object_id, $input['api_format']);
         Session::extend($input['auth']);
 
         return true;
-    } // bookmark_delete
+    }
 }

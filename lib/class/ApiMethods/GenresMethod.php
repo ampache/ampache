@@ -61,7 +61,7 @@ final class GenresMethod
         Api::set_filter($method, $input['filter']);
         $tags = Api::$browse->get_objects();
         if (empty($tags)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+            Api::empty('genre', $input['api_format']);
 
             return false;
         }

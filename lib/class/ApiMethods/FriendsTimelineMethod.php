@@ -64,10 +64,11 @@ final class FriendsTimelineMethod
 
         $activities = Useractivity::get_friends_activities($user, $limit, $since);
         if (empty($activities)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+            Api::empty('activity', $input['api_format']);
 
             return false;
         }
+
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':

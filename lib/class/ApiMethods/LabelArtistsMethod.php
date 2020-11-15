@@ -67,10 +67,11 @@ final class LabelArtistsMethod
         $label   = new Label((int) scrub_in($input['filter']));
         $artists = $label->get_artists();
         if (empty($artists)) {
-            Api::error(T_('No Results'), '4704', self::ACTION, 'empty', $input['api_format']);
+            Api::empty('artist', $input['api_format']);
 
             return false;
         }
+
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':

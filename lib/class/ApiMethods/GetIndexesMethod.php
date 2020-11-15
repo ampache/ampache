@@ -88,6 +88,11 @@ final class GetIndexesMethod
         } else {
             $objects = Api::$browse->get_objects();
         }
+        if (empty($objects)) {
+            Api::empty($type, $input['api_format']);
+
+            return false;
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {

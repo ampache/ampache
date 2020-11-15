@@ -226,6 +226,12 @@ class Update
         $update_string = "* Extend album and make artist even bigger. This should cover everyone.<br/ > ";
         $version[]     = array('version' => '400016', 'description' => $update_string);
 
+        $update_string = ""; // REMOVED update
+        $version[]     = array('version' => '400017', 'description' => $update_string);
+
+        $update_string = "* Extend video bitrate to unsigned. There's no reason for a negative bitrate.<br/ > ";
+        $version[]     = array('version' => '400018', 'description' => $update_string);
+
         return $version;
     }
 
@@ -1301,6 +1307,33 @@ class Update
         $retval &= Dba::write($sql);
 
         $sql    = "ALTER TABLE `artist` MODIFY COLUMN `time` int(11) unsigned DEFAULT NULL NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400017
+     *
+     * Removed.
+     */
+    public static function update_400017()
+    {
+        return true;
+    }
+
+    /**
+     * update_400018
+     *
+     * Extend video bitrate to unsigned. There's no reason for a negative bitrate.
+     */
+    public static function update_400018()
+    {
+        $retval = true;
+        $sql    = "UPDATE `video` SET `video_bitrate` = 0 WHERE `video_bitrate` < 0;";
+        $retval &= Dba::write($sql);
+
+        $sql    = "ALTER TABLE `video` MODIFY COLUMN `video_bitrate` int(11) unsigned DEFAULT NULL NULL;";
         $retval &= Dba::write($sql);
 
         return $retval;

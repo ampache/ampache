@@ -49,6 +49,7 @@ class Search extends playlist_object
     public $search_user;
     
     private $stars;
+    private $order_by;
 
     /**
      * constructor
@@ -89,24 +90,31 @@ class Search extends playlist_object
         switch ($searchtype) {
             case 'song':
                 $this->song_types();
+                $this->order_by = '`song`.`file`';
                 break;
             case 'album':
                 $this->album_types();
+                $this->order_by = '`album`.`name`';
                 break;
             case 'video':
                 $this->video_types();
+                $this->order_by = '`video`.`file`';
                 break;
             case 'artist':
                 $this->artist_types();
+                $this->order_by = '`artist`.`name`';
                 break;
             case 'playlist':
                 $this->playlist_types();
+                $this->order_by = '`playlist`.`name`';
                 break;
             case 'label':
                 $this->label_types();
+                $this->order_by = '`label`.`name`';
                 break;
             case 'user':
                 $this->user_types();
+                $this->order_by = '`user`.`username`';
                 break;
         } // end switch on searchtype
     } // end constructor
@@ -874,9 +882,7 @@ class Search extends playlist_object
                 $sql .= ' HAVING ' . $search_info['having_sql'];
             }
         }
-        if ($random > 0) {
-            $sql .= " ORDER BY RAND()";
-        }
+        $sql .= ($random > 0) ? " ORDER BY RAND()" : " ORDER BY " . $search->order_by;
         $sql .= ' ' . $limit_sql;
         $sql = trim((string) $sql);
 
@@ -941,7 +947,7 @@ class Search extends playlist_object
             $sql .= ' HAVING ' . $sqltbl['having_sql'];
         }
 
-        $sql .= ($this->random > 0) ? " ORDER BY RAND()" : " ORDER BY `file`";
+        $sql .= ($this->random > 0) ? " ORDER BY RAND()" : " ORDER BY " . $this->order_by;
         if ($this->limit > 0) {
             $sql .= " LIMIT " . (string) ($this->limit);
         }
@@ -1704,7 +1710,7 @@ class Search extends playlist_object
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
-            'base' => 'SELECT DISTINCT(`artist`.`id`) FROM `artist`',
+            'base' => 'SELECT DISTINCT(`artist`.`id`), `artist`.`name` FROM `artist`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
@@ -2178,7 +2184,7 @@ class Search extends playlist_object
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
-            'base' => 'SELECT DISTINCT(`song`.`id`) FROM `song`',
+            'base' => 'SELECT DISTINCT(`song`.`id`), `song`.`file` FROM `song`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
@@ -2245,7 +2251,7 @@ class Search extends playlist_object
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
-            'base' => 'SELECT DISTINCT(`video`.`id`) FROM `video`',
+            'base' => 'SELECT DISTINCT(`video`.`id`), `video`.`file` FROM `video`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
@@ -2325,7 +2331,7 @@ class Search extends playlist_object
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
-            'base' => 'SELECT DISTINCT(`playlist`.`id`) FROM `playlist`',
+            'base' => 'SELECT DISTINCT(`playlist`.`id`), `playlist`.`name` FROM `playlist`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
@@ -2378,7 +2384,7 @@ class Search extends playlist_object
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         return array(
-            'base' => 'SELECT DISTINCT(`label`.`id`) FROM `label`',
+            'base' => 'SELECT DISTINCT(`label`.`id`), `label`.`name` FROM `label`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
@@ -2427,7 +2433,7 @@ class Search extends playlist_object
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         return array(
-            'base' => 'SELECT DISTINCT(`user`.`id`) FROM `user`',
+            'base' => 'SELECT DISTINCT(`user`.`id`), `user`.`username` FROM `user`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,

@@ -36,7 +36,7 @@ This is the function that handles verifying a new handshake Takes a timestamp, a
 ```
 
 @throws object
-       
+
 ```JSON
 "error": {}
 ```
@@ -1353,9 +1353,8 @@ Delete an existing podcast_episode.
 
 ### stats
 
-Get some items based on some simple search types and filters.
-This method has partial backwards compatibility with older api versions but should be updated to follow the current input values.
-(Changed in 400001 'filter' added)
+Get some items based on some simple search types and filters. (Random by default)
+This method HAD partial backwards compatibility with older api versions but it has now been removed
 @param array $input
 
 @return object
@@ -1373,7 +1372,7 @@ This method has partial backwards compatibility with older api versions but shou
 | Input      | Type    | Description                                | Optional |
 |------------|---------|--------------------------------------------|---------:|
 | 'type'     | string  | 'song', 'album', 'artist'                  |       NO |
-| 'filter'   | string  | 'newest', 'highest', 'frequent', 'recent', |       NO |
+| 'filter'   | string  | 'newest', 'highest', 'frequent', 'recent', |      YES |
 |            |         | 'forgotten', 'flagged', 'random'           |          |
 | 'user_id'  | integer |                                            |      YES |
 | 'username' | string  |                                            |      YES |
@@ -2288,8 +2287,26 @@ Create a placeholder for the current media that you can return to later.
 | 'type'     | string  | object_type  ('song', 'video', 'podcast_episode') |       NO |
 | 'position' | integer | current track time in seconds                     |       NO |
 | 'client'   | string  | Agent string. (Default: 'AmpacheAPI')             |      YES |
+| 'date'     | integer | update time (Default: UNIXTIME())                 |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/bookmark_create.json)
+
+### bookmark_edit
+
+* **NEW** in develop
+
+Edit a placeholder for the current media that you can return to later.
+@param array $input
+
+| Input      | Type    | Description                                       | Optional |
+|------------|---------|---------------------------------------------------|---------:|
+| 'filter'   | string  | object_id to find                                 |       NO |
+| 'type'     | string  | object_type  ('song', 'video', 'podcast_episode') |       NO |
+| 'position' | integer | current track time in seconds                     |       NO |
+| 'client'   | string  | Agent string. (Default: 'AmpacheAPI')             |      YES |
+| 'date'     | integer | update time (Default: UNIXTIME())                 |      YES |
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/bookmark_edit.json)
 
 ### bookmark_delete
 

@@ -2063,7 +2063,7 @@ abstract class Catalog extends database_object
         $new_video->display_x     = $results['display_x'];
         $new_video->display_y     = $results['display_y'];
         $new_video->frame_rate    = $results['frame_rate'];
-        $new_video->video_bitrate = $results['video_bitrate'];
+        $new_video->video_bitrate = (int) Catalog::check_int($results['video_bitrate'], 4294967294, 0);
         $tags                     = Tag::get_object_tags('video', $video->id);
         if ($tags) {
             foreach ($tags as $tag) {
@@ -2431,6 +2431,27 @@ abstract class Catalog extends database_object
         }
 
         return $retval;
+    }
+
+    /**
+     * check_int
+     * Check to make sure a number fits into the database
+     *
+     * @param integer $track
+     * @param integer $max
+     * @param integer $min
+     * @return integer
+     */
+    public static function check_int($track, $max, $min)
+    {
+        if ($track > $max) {
+            return $max;
+        }
+        if ($track < $min) {
+            return $min;
+        }
+
+        return $track;
     }
 
     /**
@@ -2954,6 +2975,7 @@ abstract class Catalog extends database_object
                 break;
             case 'update_all_file_tags':
                 $catalogs = self::get_catalogs();
+                // Intentional break fall-through
             case 'update_file_tags':
                 $write_id3 = AmpConfig::get('write_id3', false);
                 AmpConfig::set('write_id3', 'true', true);
@@ -2972,7 +2994,6 @@ abstract class Catalog extends database_object
                 }
                 AmpConfig::set('write_id3', $write_id3, true);
                 AmpConfig::set('write_id3', $write_id3_art, true);
-
         }
 
         // Remove any orphaned artists/albums/etc.

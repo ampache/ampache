@@ -24,7 +24,9 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Disable API/Subsonic password resets in 'simple_user_mode'
 * NEW plugin: 'Personal Favorites'. Show a shortcut to a favorite smartlist or playlist on the homepage
 * Run garbage collection after catalog_update.inc 'clean' or 'verify'
+* Add duration to the table headers when browsing playlists and smartlists
 * Add time and duration to albums, artists instead of calculating from songs each time
+* Add Random to the search pages to allow sorting by id or RAND()
 
 ### Changed
 
@@ -41,6 +43,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 ### Fixed
 
 * Escape filepaths when removing from database
+* Search form not remembering limits
 
 ### API develop
 
@@ -73,6 +76,7 @@ All API code that used 'Tag' now references 'Genre' instead
   * Api::get_bookmark (See if you've previously played the file)
   * Api::bookmarks (List all bookmarks created by your account)
   * Api::bookmark_create (Create a bookmark to allow revisting later)
+  * Api::bookmark_edit (Edit a bookmark)
   * Api::bookmark_delete (Delete a bookmark by object id, type, user and client name)
 
 ### Changed
@@ -95,6 +99,7 @@ All API code that used 'Tag' now references 'Genre' instead
   * 4710 Bad Request
   * 4742 Failed Access Check
 * get_indexes: 'playlist' now requires include=1 for xml calls if you want the tracks
+* stats: Removed back compat from older versions. Only 'type' is mandatory
 
 ### Deprecated
 
