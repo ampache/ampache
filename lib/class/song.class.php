@@ -1063,9 +1063,9 @@ class Song extends database_object implements media, library_item
     public static function compare_song_information(Song $song, Song $new_song)
     {
         // Remove some stuff we don't care about as this function only needs to check song information.
-        unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type);
+        unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type, $song->disk);
         $string_array = array('title', 'comment', 'lyrics', 'composer', 'tags', 'artist', 'album', 'time');
-        $skip_array   = array('id', 'tag_id', 'mime', 'mbid', 'waveform', 'object_cnt', 'skip_cnt', 'albumartist', 'disk', 'artist_mbid', 'album_mbid', 'albumartist_mbid', 'mb_albumid_group', 'disabledMetadataFields');
+        $skip_array   = array('id', 'tag_id', 'mime', 'mbid', 'waveform', 'object_cnt', 'skip_cnt', 'albumartist', 'artist_mbid', 'album_mbid', 'albumartist_mbid', 'mb_albumid_group', 'disabledMetadataFields');
 
         return self::compare_media_information($song, $new_song, $string_array, $skip_array);
     } // compare_song_information
