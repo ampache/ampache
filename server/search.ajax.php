@@ -125,7 +125,7 @@ switch ($_REQUEST['action']) {
                     'value' => $song->f_title_full,
                     'rels' => $song->f_artist_full,
                     'image' => Art::url($art_object, 'song', null, 10),
-               );
+                );
             }
         }
 
