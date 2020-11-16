@@ -113,33 +113,19 @@ switch ($_REQUEST['action']) {
                 $searchreq['rule_1_operator'] = '0';
                 $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
-            $show_song_art = AmpConfig::get('show_song_art') ?: false;
-            if ($show_song_art) {
-                foreach ($sres as $id) {
-                    $song = new Song($id);
-                    $song->format(false);
-                    $results[] = array(
-                        'type' => T_('Songs'),
-                        'link' => $song->link,
-                        'label' => $song->f_title_full,
-                        'value' => $song->f_title_full,
-                        'rels' => $song->f_artist_full,
-                        'image' => Art::url($song->id, 'song', null, 10),
-                   );
-                }
-            } else {
-                foreach ($sres as $songid) {
-                    $song = new Song($songid);
-                    $song->format(false);
-                    $results[] = array(
-                        'type' => T_('Songs'),
-                        'link' => $song->link,
-                        'label' => $song->f_title_full,
-                        'value' => $song->f_title_full,
-                        'rels' => $song->f_artist_full,
-                        'image' => Art::url($song->album, 'album', null, 10),
-                    );
-                }
+            $show_song_art = AmpConfig::get('show_song_art', false);
+            foreach ($sres as $id) {
+                $song = new Song($id);
+                $song->format(false);
+                $art_uid   = ($show_song_art) ? $song->id : $song->album;
+                $results[] = array(
+                    'type' => T_('Songs'),
+                    'link' => $song->link,
+                    'label' => $song->f_title_full,
+                    'value' => $song->f_title_full,
+                    'rels' => $song->f_artist_full,
+                    'image' => Art::url($art_uid, 'song', null, 10),
+               );
             }
         }
 

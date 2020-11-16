@@ -1180,12 +1180,10 @@ class Subsonic_Api
                 // in most cases the song doesn't have a picture, but the album where it belongs to has
                 // if this is the case, we take the album art
                 $song          = new Song(Subsonic_XML_Data::getAmpacheId(Subsonic_XML_Data::getAmpacheId($sub_id)));
-                $show_song_art = AmpConfig::get('show_song_art') ?: false;
-                if ($show_song_art) {
-                    $art = new Art(Subsonic_XML_Data::getAmpacheId($song->id), "song");
-                } else {
-                    $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
-                }
+                $show_song_art = AmpConfig::get('show_song_art', false);
+                $art_object    = ($show_song_art) ? $song->id : $song->album;
+                $art_type      = ($show_song_art) ? 'song' : 'album';
+                $art           = new Art(Subsonic_XML_Data::getAmpacheId($art_object), $art_type);
             }
         }
         if (($type == 'podcast')) {

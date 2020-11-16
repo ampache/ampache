@@ -1460,7 +1460,7 @@ abstract class Catalog extends database_object
         // Prevent the script from timing out
         set_time_limit(0);
 
-        $gather_song_art = AmpConfig::get('gather_song_art') ?: false;
+        $gather_song_art = AmpConfig::get('gather_song_art', false);
 
         $search_count = 0;
         $searches     = array();

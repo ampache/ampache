@@ -203,12 +203,8 @@ class Stream_Playlist
                     $url['title']     = $object->title;
                     $url['author']    = $object->f_artist_full;
                     $url['info_url']  = $object->f_link;
-                    $show_song_art    = AmpConfig::get('show_song_art') ?: false;
-                    if ($show_song_art) {
-                        $url['image_url'] = Art::url($object->id, 'song', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
-                    } else {
-                        $url['image_url'] = Art::url($object->album, 'album', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
-                    }
+                    $art_type         = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
+                    $url['image_url'] = Art::url($object->id, $art_type, $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['album']     = $object->f_album_full;
                     $url['track_num'] = $object->f_track;
                     break;

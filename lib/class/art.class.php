@@ -951,12 +951,7 @@ class Art extends database_object
     public static function get_from_source($data, $type)
     {
         if (!isset($type)) {
-            $show_song_art = AmpConfig::get('show_song_art') ?: false;
-            if ($show_song_art) {
-                $type = 'song';
-            } else {
-                $type = 'album';
-            }
+            $type = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
         }
 
         // Already have the data, this often comes from id3tags
@@ -1696,13 +1691,11 @@ class Art extends database_object
             $limit = 5;
         }
 
-        $gather_song_art = AmpConfig::get('gather_song_art') ?: false;
-
         if ($this->type == "video") {
             $data = $this->gather_video_tags();
         } elseif ($this->type == 'album' || $this->type == 'artist') {
             $data = $this->gather_song_tags($limit);
-        } elseif (($this->type == 'song') && ($gather_song_art)) {
+        } elseif (($this->type == 'song') && (AmpConfig::get('gather_song_art', false))) {
             $data = $this->gather_song_tags_single($limit);
         } else {
             $data = array();

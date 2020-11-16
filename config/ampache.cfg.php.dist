@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 47
+config_version = 48
 
 ; Allow you to hard code a default git branch for Ampache
 ; If you set this value the inbuilt updater will use this branch for updates.
@@ -613,14 +613,14 @@ art_order = "db,tags,folder,spotify,musicbrainz,lastfm,google"
 ; this should remain false to avoid multiple entries of the same image.
 ; You need to set show_song_art to true if you want to make the song images visible.
 ; DEFAULT = false
-gather_song_art = "false"
+;gather_song_art = "false"
 
 ; Show song art
 ; Show song art instead of album art in web UI and Subsonic API.
 ; This will only work when gather_song_art is set to true AND when
 ; there is song art in the database.
 ; DEFAULT: false
-show_song_art = "false"
+;show_song_art = "false"
 
 ; Spotify Album art search filter
 ;  Narrow the search.
@@ -1274,3 +1274,4 @@ send_full_stream = "webplayer"
 ; For file name parsing. Any unnecessary abbreviations in file names can be removed during parsing
 ; by adding them to the list below so that they will be removed during the parsing process.
 common_abbr = "divx,xvid,dvdrip,hdtv,lol,axxo,repack,xor,pdtv,real,vtv,caph,2hd,proper,fqm,uncut,topaz,tvt,notv,fpn,fov,orenji,0tv,omicron,dsr,ws,sys,crimson,wat,hiqt,internal,brrip,boheme,vost,vostfr,fastsub,addiction,x264,LOL,720p,1080p,YIFY,evolve,fihtv,first,bokutox,bluray,tvboom,info"
+
