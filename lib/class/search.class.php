@@ -488,7 +488,7 @@ class Search extends playlist_object
         $this->type_text('anywhere', T_('Any searchable text'));
         $this->type_text('title', T_('Title'));
         $this->type_text('album', T_('Album'));
-        $this->type_text('artist', T_('Artist'));
+        $this->type_text('artist', T_('Song Artist'));
         $this->type_text('composer', T_('Composer'));
 
         $this->type_numeric('year', T_('Year'));
