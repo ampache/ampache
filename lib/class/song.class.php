@@ -132,7 +132,7 @@ class Song extends database_object implements media, library_item
      */
     public $user_upload;
     /**
-     * @var integer|null $license
+     * @var array|null $license
      */
     public $license;
     /**
@@ -294,6 +294,11 @@ class Song extends database_object implements media, library_item
      * @var string $f_composer
      */
     public $f_composer;
+    /**
+      * @var string $url_file
+      */
+    public $url_file;
+
     /**
      * @var string $f_license
      */
@@ -588,8 +593,8 @@ class Song extends database_object implements media, library_item
 
         $sql = 'SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `album`.`album_artist` AS `albumartist`, `song`.`year`, `song`.`artist`, ' .
             '`song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, ' .
-            '`song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`mbid`, `song`.`addition_time`, `song`.`license`, ' .
-            '`song`.`composer`, `song`.`user_upload`, `album`.`disk`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` ' .
+            '`song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`mbid`, `song`.`addition_time`, `song`.`license`, `song`.`url_source`, `song`.`url_publisher`, `song`.`url_file`, ' .
+            '`song`.`url_artist`, `song`.`composer`, `song`.`user_upload`, `album`.`disk`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` ' .
             'FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` ' .
             'LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` ' .
             'WHERE `song`.`id` = ?';
@@ -1178,7 +1183,7 @@ class Song extends database_object implements media, library_item
                     $new_artist_id = Artist::check($value);
                     $this->artist  = $new_artist_id;
                     self::update_artist($new_artist_id, $this->id, $old_artist_id);
-                    $changed[] = (string) $key;
+                    $changed[] = (string)$key;
                     break;
                 case 'album_name':
                     // Create new album name and id
@@ -1186,7 +1191,7 @@ class Song extends database_object implements media, library_item
                     $new_album_id = Album::check($value);
                     $this->album  = $new_album_id;
                     self::update_album($new_album_id, $this->id, $old_album_id);
-                    $changed[] = (string) $key;
+                    $changed[] = (string)$key;
                     break;
                 case 'artist':
                     // Change artist the song is assigned to
@@ -1194,7 +1199,7 @@ class Song extends database_object implements media, library_item
                         $old_artist_id = $this->artist;
                         $new_artist_id = $value;
                         self::update_artist($new_artist_id, $this->id, $old_artist_id);
-                        $changed[] = (string) $key;
+                        $changed[] = (string)$key;
                     }
                     break;
                 case 'album':
@@ -1203,7 +1208,7 @@ class Song extends database_object implements media, library_item
                         $old_album_id = $this->$key;
                         $new_album_id = $value;
                         self::update_album($new_album_id, $this->id, $old_album_id);
-                        $changed[] = (string) $key;
+                        $changed[] = (string)$key;
                     }
                     break;
                 case 'year':
@@ -1220,13 +1225,13 @@ class Song extends database_object implements media, library_item
                         $function = 'update_' . $key;
                         self::$function($value, $this->id);
                         $this->$key = $value;
-                        $changed[]  = (string) $key;
+                        $changed[]  = (string)$key;
                     }
                     break;
                 case 'edit_tags':
                     Tag::update_tag_list($value, 'song', $this->id, true);
                     $this->tags = Tag::get_top_tags('song', $this->id);
-                    $changed[]  = (string) $key;
+                    $changed[]  = (string)$key;
                     break;
                 case 'metadata':
                     if (self::isCustomMetadataEnabled()) {
@@ -1250,6 +1255,7 @@ class Song extends database_object implements media, library_item
      */
     public function write_id3($data = null, $changed = null)
     {
+        $ndata = array();
         if (AmpConfig::get('write_id3', false)) {
             $catalog = Catalog::create_from_id($this->catalog);
             if ($catalog->get_type() == 'local') {
@@ -1269,8 +1275,8 @@ class Song extends database_object implements media, library_item
                     $meta  = $this->get_vorbis_metadata();
                 }
                 $ndata = $id3->prepare_id3_frames($tdata);
-                // $song = new Song($this->id);
-                // $song->format();
+                //       $song = new Song($this->id);
+                //        $song->format();
                 if (isset($changed)) {
                     foreach ($changed as $key => $value) {
                         switch ($value) {
@@ -1328,7 +1334,7 @@ class Song extends database_object implements media, library_item
                     }
                 }
                 $id3->write_id3($ndata);
-                // Catalog::update_media_from_tags($this);
+//                Catalog::update_media_from_tags($this);
             }
         }
     }
@@ -1549,7 +1555,7 @@ class Song extends database_object implements media, library_item
      */
     public static function update_license($new_license, $song_id)
     {
-        self::_update_item('license', $new_license, $song_id, 50, true);
+        return self::_update_item('license', $new_license, $song_id, 25, true);
     } // update_license
 
     /**
@@ -1662,16 +1668,16 @@ class Song extends database_object implements media, library_item
         }
 
         /* Can't update to blank */
-        if (!strlen(trim((string) $value)) && $field != 'comment') {
+        if (!strlen(trim((string) $value)) && $field != 'comment' && $field != 'license') {
             return false;
         }
+        $sql     = "UPDATE song SET " . $field . " = '" . $value . "' WHERE id =" . $song_id . ";";
+        //  $sql = "UPDATE `song` SET `$field` = ? WHERE `id` = ?";
 
-        $sql = "UPDATE `song` SET `$field` = ? WHERE `id` = ?";
-
-        return Dba::write($sql, array($value, $song_id));
+        return Dba::write($sql /*, array($value, $song_id) */);
     } // _update_item
 
-    /**
+    /**p
      * _update_ext_item
      * This updates a song record that is housed in the song_ext_info table
      * These are items that aren't used normally, and often large/informational only
@@ -1799,6 +1805,9 @@ class Song extends database_object implements media, library_item
         $keywords['title'] = array('important' => true,
             'label' => T_('Title'),
             'value' => $this->f_title);
+        $keywords['url_file'] = array('important' => true,
+            'label' => T_('Official Audio Web Page'),
+            'value' => $this->url_file);
 
         return $keywords;
     }
@@ -2396,10 +2405,6 @@ class Song extends database_object implements media, library_item
         return $meta;
     }
 
-    /**
-     * get_vorbis_metadata
-     * @return array
-     */
     public function get_vorbis_metadata()
     {
         $meta = array();
@@ -2427,6 +2432,7 @@ class Song extends database_object implements media, library_item
 
         return $meta;
     }
+
 
     /**
      * getId
