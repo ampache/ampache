@@ -1757,9 +1757,7 @@ class Art extends database_object
     {
         // get song object directly from id, not by loop through album
         $song = new Song($this->uid);
-
         $data = array();
-
         $data = array_merge($data, $this->gather_media_tags($song));
 
         if ($limit && count($data) >= $limit) {

@@ -1449,8 +1449,9 @@ abstract class Catalog extends database_object
     public function gather_art($songs = null, $videos = null)
     {
         // Make sure they've actually got methods
-        $art_order    = AmpConfig::get('art_order');
-        $db_art_first = ($art_order[0] == 'db');
+        $art_order       = AmpConfig::get('art_order');
+        $gather_song_art = AmpConfig::get('gather_song_art', false);
+        $db_art_first    = ($art_order[0] == 'db');
         if (!count($art_order)) {
             debug_event('catalog.class', 'art_order not set, self::gather_art aborting', 3);
 
@@ -1459,8 +1460,6 @@ abstract class Catalog extends database_object
 
         // Prevent the script from timing out
         set_time_limit(0);
-
-        $gather_song_art = AmpConfig::get('gather_song_art', false);
 
         $search_count = 0;
         $searches     = array();

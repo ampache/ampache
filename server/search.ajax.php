@@ -117,14 +117,14 @@ switch ($_REQUEST['action']) {
             foreach ($sres as $id) {
                 $song = new Song($id);
                 $song->format(false);
-                $art_uid   = ($show_song_art) ? $song->id : $song->album;
-                $results[] = array(
+                $art_object = ($show_song_art) ? $song->id : $song->album;
+                $results[]  = array(
                     'type' => T_('Songs'),
                     'link' => $song->link,
                     'label' => $song->f_title_full,
                     'value' => $song->f_title_full,
                     'rels' => $song->f_artist_full,
-                    'image' => Art::url($art_uid, 'song', null, 10),
+                    'image' => Art::url($art_object, 'song', null, 10),
                );
             }
         }
