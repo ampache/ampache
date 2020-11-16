@@ -668,7 +668,7 @@ class Search extends playlist_object
     private function album_types()
     {
         $this->type_text('title', T_('Title'));
-        $this->type_text('artist', T_('Artist'));
+        $this->type_text('artist', T_('Album Artist'));
 
         $this->type_numeric('year', T_('Year'));
         $this->type_numeric('original_year', T_('Original Year'));
