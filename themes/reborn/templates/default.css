@@ -155,10 +155,10 @@ h3 {
 }
 
 hr {
-  border-top: 1px solid;
-  border-bottom: 1px solid;
-  border-right: 0;
-  border-left: 0;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    border-right: 0;
+    border-left: 0;
 }
 
 input,
@@ -1203,7 +1203,7 @@ table.gatherart .th-bottom:focus {
 }
 
 #gatherLimit{
-  padding-right: 3px;
+    padding-right: 3px;
 }
 
 input:invalid { 

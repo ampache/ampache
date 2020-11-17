@@ -43,7 +43,7 @@ a:hover {
 }
 
 hr {
-  border-top-color: #eee;
+    border-top-color: #eee;
 }
 
 input[type=password],
@@ -420,7 +420,7 @@ table.tabledata tbody .cel_cover img:hover {
 }
 
 input:invalid {
-   border: 4px solid red;;
+    border: 4px solid red;;
 }
 
 /* ------------------------
@@ -658,11 +658,11 @@ a.option-list:hover {
 }
 
 #tabs li a {
-  color: #1990db;
+    color: #1990db;
 }
 
 #tabs li a:hover {
-  color: #52aae4;
+    color: #52aae4;
 }
 
 #tabs li.tab_active a {
