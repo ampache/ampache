@@ -38,7 +38,7 @@ if ($server_allow && $controller && $access_check) { ?>
         Ajax::end_container();
         echo "</li>";
     } ?>
-  <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Localplay'); ?>"><?php echo T_('Localplay'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'localplay', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_localplay')) ? $_COOKIE['sb_localplay'] : 'expanded')); ?></h4>
+  <li><h4 class="header"><span class="sidebar-header-title"><?php echo T_('Localplay'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'localplay', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_localplay')) ? $_COOKIE['sb_localplay'] : 'expanded')); ?></h4>
     <ul class="sb3" id="sb_localplay_info">
 <?php if (Access::check('localplay', 75)) { ?>
     <li id="sb_localplay_info_add_instance"><a href="<?php echo $web_path; ?>/localplay.php?action=show_add_instance"><?php echo T_('Add Instance'); ?></a></li>
@@ -50,7 +50,7 @@ if ($server_allow && $controller && $access_check) { ?>
   </li>
 <?php
     } ?>
-  <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Active Instance'); ?>"><?php echo T_('Active Instance'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'active_instance', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_active_instance')) ? $_COOKIE['sb_active_instance'] : 'expanded')); ?></h4>
+  <li><h4 class="header"><span class="sidebar-header-title"><?php echo T_('Active Instance'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'active_instance', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_active_instance')) ? $_COOKIE['sb_active_instance'] : 'expanded')); ?></h4>
     <ul class="sb3" id="sb_localplay_instances">
     <li id="sb_localplay_instances_none"<?php echo $class; ?>><?php echo Ajax::text('?page=localplay&action=set_instance&instance=0', T_('None'), 'localplay_instance_none'); ?></li>
     <?php
@@ -69,7 +69,7 @@ if ($server_allow && $controller && $access_check) { ?>
   </li>
 <?php
 } else { ?>
-  <li><h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Localplay Disabled'); ?>"><?php echo T_('Localplay Disabled'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'localplay_disabled', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_localplay_disabled')) ? $_COOKIE['sb_localplay_disabled'] : 'expanded')); ?></h4></li>
+  <li><h4 class="header"><span class="sidebar-header-title"><?php echo T_('Localplay Disabled'); ?></span><?php echo UI::get_icon('all', T_('Expand/Collapse'), 'localplay_disabled', 'header-img ' . ((filter_has_var(INPUT_COOKIE, 'sb_localplay_disabled')) ? $_COOKIE['sb_localplay_disabled'] : 'expanded')); ?></h4></li>
   <?php if (!$server_allow) { ?>
     <li><?php echo T_('Allow Localplay Set to False'); ?></li>
   <?php
