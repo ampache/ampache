@@ -51,10 +51,10 @@ final class ArtistsMethod
      * exact        = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add          = self::set_filter(date) //optional
      * update       = self::set_filter(date) //optional
-     * offset       = (integer) //optional
-     * limit        = (integer) //optional
      * include      = (array|string) 'albums', 'songs' //optional
      * album_artist = (integer) 0,1, if true filter for album artists only //optional
+     * offset       = (integer) //optional
+     * limit        = (integer) //optional
      * @return boolean
      */
     public static function artists(array $input)
