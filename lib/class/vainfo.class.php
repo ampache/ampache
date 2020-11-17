@@ -287,7 +287,7 @@ class vainfo
             }
         }
         if (!empty($tagWriter->errors)) {
-            foreach ($tagWriter->$tagwriter->errors as $message) {
+            foreach ($tagWriter->errors as $message) {
                 debug_event('vainfo.class', 'Error Writing Image: ' . $message, 1);
             }
         }
@@ -303,7 +303,6 @@ class vainfo
     public function prepare_id3_frames($frames)
     {
         $ndata = array();
-
         foreach ($frames as $key => $text) {
             switch ($key) {
                 case 'text':

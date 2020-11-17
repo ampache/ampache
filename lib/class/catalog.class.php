@@ -1887,7 +1887,7 @@ abstract class Catalog extends database_object
                         array("\r\n", "\r", "\n"),
                         '<br />',
                         strip_tags($results['lyrics']));
-        $new_song->license = isset($results['license']) ? License::lookup($results['license']) : null;
+        $new_song->license = isset($results['license']) ? License::lookup((string) $results['license']) : null;
         $new_song->label   = isset($results['publisher']) ? Catalog::check_length($results['publisher'], 128) : null;
         if ($song->label && AmpConfig::get('label')) {
             // create the label if missing
