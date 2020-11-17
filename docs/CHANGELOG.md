@@ -26,6 +26,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Run garbage collection after catalog_update.inc 'clean' or 'verify'
 * Add duration to the table headers when browsing playlists and smartlists
 * Add time and duration to albums, artists instead of calculating from songs each time
+* Allow browsing by album_artist instead of artist
 
 ### Changed
 
@@ -37,6 +38,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Sort smartlists by file when random is unticked
 * Don't block playlist information actions when you own the playlist
 * Add date parameter to Api::record_play
+* Changed sidebar back to browse for artist/album
 
 ### Removed
 
