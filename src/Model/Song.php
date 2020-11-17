@@ -381,35 +381,34 @@ class Song extends database_object implements Media, library_item
      */
     public static function insert(array $results)
     {
-        $catalog          = $results['catalog'];
-        $file             = $results['file'];
-        $title            = Catalog::check_length(Catalog::check_title($results['title'], $file));
-        $artist           = Catalog::check_length($results['artist']);
-        $album            = Catalog::check_length($results['album']);
-        $albumartist      = Catalog::check_length($results['albumartist'] ?: $results['band']);
-        $albumartist      = $albumartist ?: null;
-        $bitrate          = $results['bitrate'] ?: 0;
-        $rate             = $results['rate'] ?: 0;
-        $mode             = $results['mode'];
-        $size             = $results['size'] ?: 0;
-        $time             = $results['time'] ?: 0;
-        $track            = Catalog::check_track((string)$results['track']);
-        $track_mbid       = $results['mb_trackid'] ?: $results['mbid'];
-        $track_mbid       = $track_mbid ?: null;
-        $album_mbid       = $results['mb_albumid'];
-        $album_mbid_group = $results['mb_albumid_group'];
-        $artist_mbid      = $results['mb_artistid'];
-        $albumartist_mbid = $results['mb_albumartistid'];
-        $disk             = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
-        $year             = Catalog::normalize_year($results['year'] ?: 0);
-        $comment          = $results['comment'];
-        $tags             = $results['genre']; // multiple genre support makes this an array
-        $lyrics           = $results['lyrics'];
-        $user_upload      = isset($results['user_upload']) ? $results['user_upload'] : null;
-        $license          = isset($results['license']) ? License::lookup($results['license']) : null;
-        $composer         = isset($results['composer']) ? Catalog::check_length($results['composer']) : null;
-        $label            = isset($results['publisher']) ? Catalog::get_unique_string(Catalog::check_length($results['publisher'],
-            128)) : null;
+        $catalog               = $results['catalog'];
+        $file                  = $results['file'];
+        $title                 = Catalog::check_length(Catalog::check_title($results['title'], $file));
+        $artist                = Catalog::check_length($results['artist']);
+        $album                 = Catalog::check_length($results['album']);
+        $albumartist           = Catalog::check_length($results['albumartist'] ?: $results['band']);
+        $albumartist           = $albumartist ?: null;
+        $bitrate               = $results['bitrate'] ?: 0;
+        $rate                  = $results['rate'] ?: 0;
+        $mode                  = $results['mode'];
+        $size                  = $results['size'] ?: 0;
+        $time                  = $results['time'] ?: 0;
+        $track                 = Catalog::check_track((string) $results['track']);
+        $track_mbid            = $results['mb_trackid'] ?: $results['mbid'];
+        $track_mbid            = $track_mbid ?: null;
+        $album_mbid            = $results['mb_albumid'];
+        $album_mbid_group      = $results['mb_albumid_group'];
+        $artist_mbid           = $results['mb_artistid'];
+        $albumartist_mbid      = $results['mb_albumartistid'];
+        $disk                  = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
+        $year                  = Catalog::normalize_year($results['year'] ?: 0);
+        $comment               = $results['comment'];
+        $tags                  = $results['genre']; // multiple genre support makes this an array
+        $lyrics                = $results['lyrics'];
+        $user_upload           = isset($results['user_upload']) ? $results['user_upload'] : null;
+        $license               = isset($results['license']) ? License::lookup((string) $results['license']) : null;
+        $composer              = isset($results['composer']) ? Catalog::check_length($results['composer']) : null;
+        $label                 = isset($results['publisher']) ? Catalog::get_unique_string(Catalog::check_length($results['publisher'], 128)) : null;
         if ($label && AmpConfig::get('label')) {
             // create the label if missing
             foreach (array_map('trim', explode(';', $label)) as $label_name) {
@@ -1089,7 +1088,7 @@ class Song extends database_object implements Media, library_item
     public static function compare_song_information(Song $song, Song $new_song)
     {
         // Remove some stuff we don't care about as this function only needs to check song information.
-        unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type);
+        unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type, $song->disk);
         $string_array = array('title', 'comment', 'lyrics', 'composer', 'tags', 'artist', 'album', 'time');
         $skip_array   = array(
             'id',
@@ -1166,7 +1165,7 @@ class Song extends database_object implements Media, library_item
                     $array['element'][$key] = 'OLD: ' . $mediaData . ' --> ' . $newMediaData;
                 }
             } // in array of stringies
-            else {
+            elseif ($newMediaData !== null) {
                 if ($media->$key != $new_media->$key) {
                     $array['change']        = true;
                     $array['element'][$key] = 'OLD:' . $mediaData . ' --> ' . $newMediaData;
@@ -2180,22 +2179,29 @@ class Song extends database_object implements Media, library_item
      */
     public static function get_recently_played($user_id = 0)
     {
+        $personal_info_time  = Preference::id_from_name('allow_personal_info_time');
+        $personal_info_agent = Preference::id_from_name('allow_personal_info_agent');
+
         $results = array();
         $limit   = AmpConfig::get('popular_threshold', 10);
-        $sql     = "SELECT `object_id`, `user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name` " . "FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream' ";
+        $sql     = "SELECT `object_id`, `object_count`.`user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent` " .
+                   "FROM `object_count`" .
+                   "RIGHT JOIN `user_preference` AS `pref_time` ON `pref_time`.`preference`='$personal_info_time' AND `pref_time`.`user` = `object_count`.`user`" .
+                   "RIGHT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`preference`='$personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user`" .
+                   "WHERE `object_type` = 'song' AND `count_type` = 'stream' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND " . Catalog::get_enable_filter('song', '`object_id`') . " ";
         }
         if ($user_id > 0) {
             // If user is not empty, we're looking directly to user personal info (admin view)
-            $sql .= "AND `user`='$user_id' ";
+            $sql .= "AND `object_count`.`user`='$user_id' ";
         } else {
             if (!Access::check('interface', 100)) {
-                // If user identifier is empty, we need to retrieve only users which have allowed view of personnal info
-                $personal_info_id = Preference::id_from_name('allow_personal_info_recent');
-                $current_user     = (int)Core::get_global('user')->id;
+                // If user identifier is empty, we need to retrieve only users which have allowed view of personal info
+                $personal_info_id    = Preference::id_from_name('allow_personal_info_recent');
+                $current_user        = (int) Core::get_global('user')->id;
                 if ($personal_info_id && $current_user > 0) {
-                    $sql .= "AND `user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user') ";
+                    $sql .= "AND `object_count`.`user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user') ";
                 }
             }
         }

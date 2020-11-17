@@ -142,6 +142,8 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
             } else {
                 $query = "\"{$data['album']}\"";
             }
+        } else {
+            return $images;
         }
 
         try {

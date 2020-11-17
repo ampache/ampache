@@ -52,7 +52,6 @@ final class BrowseApplication implements ApplicationInterface
             case 'tag':
             case 'file':
             case 'album':
-            case 'artist':
             case 'playlist':
             case 'smartplaylist':
             case 'Live_Stream':
@@ -73,11 +72,15 @@ final class BrowseApplication implements ApplicationInterface
                 $browse->set_type(Core::get_request('action'));
                 $browse->set_simple_browse(true);
                 break;
+            case 'album_artist':
+                $browse->set_type('artist');
+                $browse->set_simple_browse(true);
+                break;
         } // end switch
 
         Ui::show_header();
 
-        if (in_array($_REQUEST['action'], array('song', 'album', 'artist', 'label', 'channel', 'broadcast', 'live_stream', 'podcast', 'video'))) {
+        if (in_array($_REQUEST['action'], array('song', 'album', 'album_artist', 'label', 'channel', 'broadcast', 'live_stream', 'podcast', 'video'))) {
             Ui::show('show_browse_form.inc.php');
         }
 
@@ -118,6 +121,16 @@ final class BrowseApplication implements ApplicationInterface
                 if (AmpConfig::get('catalog_disable')) {
                     $browse->set_filter('catalog_enabled', '1');
                 }
+                $browse->set_sort('name', 'ASC');
+                $browse->update_browse_from_session();
+                $browse->show_objects();
+                break;
+            case 'album_artist':
+                $browse->set_filter('catalog', $_SESSION['catalog']);
+                if (AmpConfig::get('catalog_disable')) {
+                    $browse->set_filter('catalog_enabled', '1');
+                }
+                $browse->set_filter('album_artist', true);
                 $browse->set_sort('name', 'ASC');
                 $browse->update_browse_from_session();
                 $browse->show_objects();

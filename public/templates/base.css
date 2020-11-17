@@ -220,6 +220,7 @@ a.tag_size4 { text-decoration: none; }
     display: inline-block;
     vertical-align: middle;
     height: 32px;
+    color: #222;
 }
 
 #topmenu_container {

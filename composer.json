@@ -59,7 +59,7 @@
         "evenement/evenement": "2.*",
         "gettext/gettext": "4.*.*",
         "happyworm/jplayer": "2.*",
-        "james-heinrich/getid3": "2.0.x-dev",
+        "james-heinrich/getid3": "dev-master",
         "jeromeetienne/jquery-qrcode": "dev-master",
         "jwilsson/spotify-web-api-php": "^3.5",
         "krixon/xbmc-php-rpc": "dev-master",

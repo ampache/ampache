@@ -423,8 +423,8 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                     </a>
                 </div>
                 <div class="topmenu_item">
-                    <a href="<?php echo $web_path ?>/browse.php?action=artist">
-                        <?php echo Ui::get_image('topmenu-artist', $t_artists); ?>
+                    <a href="<?php echo $web_path ?>/browse.php?action=album_artist">
+                        <?php echo UI::get_image('topmenu-artist', $t_artists); ?>
                         <span><?php echo $t_artists ?></span>
                     </a>
                 </div>

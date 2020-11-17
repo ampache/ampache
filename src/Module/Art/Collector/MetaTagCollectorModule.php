@@ -33,18 +33,18 @@ use Ampache\Model\Video;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Exception;
-use JamesHeinrich\GetID3\GetID3;
+use getID3;
 use Psr\Log\LoggerInterface;
 
 final class MetaTagCollectorModule implements CollectorModuleInterface
 {
     private LoggerInterface $logger;
 
-    private GetID3 $getID3;
+    private getID3 $getID3;
 
     public function __construct(
         LoggerInterface $logger,
-        GetID3 $getID3
+        getID3 $getID3
     ) {
         $this->logger = $logger;
         $this->getID3 = $getID3;

@@ -17,6 +17,7 @@ tools:
                 - 'vendor/*'
                 - 'modules/*'
                 - 'public/themes/*'
+                - '.github.*'
             paths: {  }
     php_code_sniffer:
         enabled: false

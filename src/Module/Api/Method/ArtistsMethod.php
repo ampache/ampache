@@ -47,13 +47,14 @@ final class ArtistsMethod
      * artist objects. This function is deprecated!
      *
      * @param array $input
-     * filter  = (string) Alpha-numeric search term //optional
-     * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add     = self::set_filter(date) //optional
-     * update  = self::set_filter(date) //optional
-     * offset  = (integer) //optional
-     * limit   = (integer) //optional
-     * include = (array|string) 'albums', 'songs' //optional
+     * filter       = (string) Alpha-numeric search term //optional
+     * exact        = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * add          = self::set_filter(date) //optional
+     * update       = self::set_filter(date) //optional
+     * offset       = (integer) //optional
+     * limit        = (integer) //optional
+     * include      = (array|string) 'albums', 'songs' //optional
+     * album_artist = (integer) 0,1, if true filter for album artists only //optional
      * @return boolean
      */
     public static function artists(array $input)
@@ -63,11 +64,14 @@ final class ArtistsMethod
         $browse->set_type('artist');
         $browse->set_sort('name', 'ASC');
 
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter']);
         Api::set_filter('add', $input['add']);
         Api::set_filter('update', $input['update']);
-
+        // set the album_artist filter (if enabled)
+        if (($input['album_artist'])) {
+            Api::set_filter('album_artist', true);
+        }
 
         $artists = $browse->get_objects();
         if (empty($artists)) {

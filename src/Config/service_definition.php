@@ -32,7 +32,7 @@ use Ampache\Config\Init\InitializationHandlerEnvironment;
 use Ampache\Config\Init\InitializationHandlerGetText;
 use Ampache\Config\Init\InitializationHandlerGlobals;
 use Ampache\Module\Util\EnvironmentInterface;
-use JamesHeinrich\GetID3\GetID3;
+use getID3;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use MusicBrainz\MusicBrainz;
 use Narrowspark\HttpEmitter\AbstractSapiEmitter;
@@ -57,7 +57,7 @@ return [
     ConfigContainerInterface::class => factory(static function (): ConfigContainerInterface {
         return new ConfigContainer(AmpConfig::get_all());
     }),
-    GetID3::class => autowire(GetID3::class),
+    getID3::class => autowire(getID3::class),
     MusicBrainz::class => factory(static function (): MusicBrainz {
         return new MusicBrainz(new RequestsHttpAdapter());
     }),

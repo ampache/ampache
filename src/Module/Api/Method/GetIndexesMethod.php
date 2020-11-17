@@ -49,7 +49,7 @@ final class GetIndexesMethod
      * Added 'include' to allow indexing all song tracks (enabled for xml by default)
      *
      * @param array $input
-     * type    = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode'
+     * type    = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode'
      * filter  = (string) //optional
      * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add     = self::set_filter(date) //optional
@@ -65,10 +65,10 @@ final class GetIndexesMethod
             return false;
         }
         $user    = User::get_from_username(Session::username($input['auth']));
-        $type    = (string) $input['type'];
+        $type    = ((string) $input['type'] == 'album_artist') ? 'artist' : (string) $input['type'];
         $include = (int) $input['include'] == 1;
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode'))) {
+        if (!in_array($type, array('song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
@@ -82,6 +82,10 @@ final class GetIndexesMethod
         Api::set_filter($method, $input['filter']);
         Api::set_filter('add', $input['add']);
         Api::set_filter('update', $input['update']);
+        // set the album_artist filter (if enabled)
+        if ((string) $input['type'] == 'album_artist') {
+            Api::set_filter('album_artist', true);
+        }
 
         if ($type == 'playlist') {
             $browse->set_filter('playlist_type', $user->id);

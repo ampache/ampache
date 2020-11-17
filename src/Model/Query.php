@@ -326,6 +326,7 @@ class Query
                 }
                 break;
             case 'artist':
+            case 'album_artist':
             case 'catalog':
             case 'album':
                 $this->_state['filter'][$key] = $value;
@@ -1444,75 +1445,13 @@ class Query
                         $this->set_join('left', '`catalog`', '`catalog`.`id`', '`song`.`catalog`', 100);
                         $filter_sql = " `catalog`.`enabled` = '1' AND ";
                         break;
+                    case 'album_artist':
+                        $this->set_join('left', '`album`', '`album`.`album_artist`', '`artist`.`id`', 100);
+                        $filter_sql = " `album`.`album_artist` IS NOT NULL AND ";
+                        break;
                     default:
                         break;
                 }
-                break;
-            case 'artist':
-                switch ($filter) {
-                    case 'tag':
-                        $this->set_join('left', '`tag_map`', '`tag_map`.`object_id`', '`artist`.`id`', 100);
-                        $filter_sql = " `tag_map`.`object_type`='" . $this->get_type() . "' AND (";
-
-                        foreach ($value as $tag_id) {
-                            $filter_sql .= "  `tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND";
-                        }
-                        $filter_sql = rtrim((string)$filter_sql, 'AND') . ') AND ';
-                        break;
-                    case 'catalog':
-                        if ($value != 0) {
-                            $this->set_join('left', '`song`', '`artist`.`id`', '`song`.`artist`', 100);
-                            $this->set_join('left', '`catalog`', '`song`.`catalog`', '`catalog`.`id`', 100);
-                            $filter_sql = "  (`catalog`.`id` = '$value') AND ";
-                        }
-                        break;
-                    case 'exact_match':
-                        $filter_sql = " `artist`.`name` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'alpha_match':
-                        $filter_sql = " `artist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'regex_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `artist`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'regex_not_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `artist`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'starts_with':
-                        $this->set_join('left', '`song`', '`artist`.`id`', '`song`.`artist`', 100);
-                        $filter_sql = " `artist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
-                        if ($this->catalog != 0) {
-                            $filter_sql .= "`song`.`catalog` = '" . $this->catalog . "' AND ";
-                        }
-                        break;
-                    case 'add_lt':
-                        $this->set_join('left', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
-                        $filter_sql = " `song`.`addition_time` <= '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'add_gt':
-                        $this->set_join('left', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
-                        $filter_sql = " `song`.`addition_time` >= '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'update_lt':
-                        $this->set_join('left', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
-                        $filter_sql = " `song`.`update_time` <= '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'update_gt':
-                        $this->set_join('left', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
-                        $filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'catalog_enabled':
-                        $this->set_join('left', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
-                        $this->set_join('left', '`catalog`', '`catalog`.`id`', '`song`.`catalog`', 100);
-                        $filter_sql = " `catalog`.`enabled` = '1' AND ";
-                        break;
-                    default:
-                        break;
-                } // end filter
                 break;
             case 'live_stream':
                 switch ($filter) {

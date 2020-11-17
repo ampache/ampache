@@ -1798,9 +1798,13 @@ abstract class Catalog extends database_object
         $new_song->mime     = $results['mime'];
 
         // info for the song_data table. used in Song::update_song
-        $new_song->comment = $results['comment'];
-        $new_song->lyrics  = str_replace(array("\r\n", "\r", "\n"), '<br />', strip_tags($results['lyrics']));
-        $new_song->license = isset($results['license']) ? License::lookup($results['license']) : null;
+        $new_song->comment     = $results['comment'];
+        $new_song->lyrics      = str_replace(
+            ["\r\n", "\r", "\n"],
+            '<br />',
+            strip_tags($results['lyrics'])
+        );
+        $new_song->license = isset($results['license']) ? License::lookup((string) $results['license']) : null;
         $new_song->label   = isset($results['publisher']) ? Catalog::check_length($results['publisher'], 128) : null;
         if ($song->label && AmpConfig::get('label')) {
             // create the label if missing

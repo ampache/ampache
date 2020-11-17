@@ -382,7 +382,7 @@ class Art extends database_object
                 $song   = new Song($song_id);
                 $song->format();
                 $description = ($this->type == 'artist') ? $song->f_artist_full : $object->full_name;
-                $id3         = new VaInfo($song->file);
+                $id3         = new vainfo($song->file);
                 $ndata       = array();
                 $data        = $id3->read_id3();
                 if (isset($data['id3v2']['APIC'])) {
@@ -932,7 +932,7 @@ class Art extends database_object
         // Check to see if it is embedded in id3 of a song
         if (isset($data['song'])) {
             // If we find a good one, stop looking
-            $getID3 = new GetID3();
+            $getID3 = new getID3();
             $id3    = $getID3->analyze($data['song']);
 
             if ($id3['format_name'] == "WMA") {
