@@ -35,7 +35,7 @@
         echo T_('Albums');
     } ?></td>
         <td><?php if ($filter_str !== 'artist' && $filter_str !== 'album_artist') {
-        ?><a href="<?php echo AmpConfig::get('web_path'); ?>/browse.php?action=<?php echo $filter_str; ?>"><?php echo T_('Artists'); ?></a><?php
+        ?><a href="<?php echo AmpConfig::get('web_path'); ?>/browse.php?action=album_artist"><?php echo T_('Artists'); ?></a><?php
     } else {
         echo T_('Artists');
     } ?></td>
