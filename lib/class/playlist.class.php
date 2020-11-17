@@ -563,10 +563,9 @@ class Playlist extends playlist_object
      */
     private function set_last($count, $column)
     {
-        if (in_array($column, array('last_count', 'last_duration'))) {
-            $search_id = Dba::escape($this->id);
-            $sql       = "UPDATE `playlist` SET `" . Dba::escape($column) . "` = " . $count . " WHERE `id` = ?";
-            Dba::write($sql, array($search_id));
+        if (in_array($column, array('last_count', 'last_duration')) && $count >= 0) {
+            $sql = "UPDATE `playlist` SET `" . Dba::escape($column) . "` = " . $count . " WHERE `id` = " . Dba::escape($this->id);
+            Dba::write($sql);
         }
     }
 

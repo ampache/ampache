@@ -2117,7 +2117,7 @@ class Song extends database_object implements media, library_item
         }
         if ($user_id > 0) {
             // If user is not empty, we're looking directly to user personal info (admin view)
-            $sql .= "AND `user`='$user_id' ";
+            $sql .= "AND `object_count`.`user`='$user_id' ";
         } else {
             if (!Access::check('interface', 100)) {
                 // If user identifier is empty, we need to retrieve only users which have allowed view of personal info
