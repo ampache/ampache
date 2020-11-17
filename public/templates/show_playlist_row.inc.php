@@ -77,11 +77,11 @@ use Ampache\Module\Util\ZipHandlerInterface;
 <?php
     if (User::is_registered()) {
         if (AmpConfig::get('ratings')) { ?>
-    <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_playlist"><?php Rating::show($libitem->id, 'playlist'); ?></td>
+    <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_playlist"><?php echo Rating::show($libitem->id, 'playlist'); ?></td>
     <?php
         }
         if (AmpConfig::get('userflags')) { ?>
-    <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_playlist"><?php Userflag::show($libitem->id, 'playlist'); ?></td>
+    <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_playlist"><?php echo Userflag::show($libitem->id, 'playlist'); ?></td>
     <?php
         }
     } ?>
@@ -98,7 +98,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
     }
     if (Access::check('interface', 25)) {
         if (AmpConfig::get('share')) {
-            Share::display_ui('playlist', $libitem->id, false);
+            echo Share::display_ui('playlist', $libitem->id, false);
         }
     }
     if ($libitem->has_access()) { ?>

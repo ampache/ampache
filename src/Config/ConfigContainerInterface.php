@@ -71,4 +71,19 @@ interface ConfigContainerInterface
      * Return a list of types which are zip-able
      */
     public function getTypesAllowedForZip(): array;
+    
+    /**
+     * Check if a certain feature is enabled
+     */
+    public function isFeatureEnabled(string $feature): bool;
+
+    /**
+     * Returns the path to the files of the selected theme
+     */
+    public function getThemePath(): string;
+
+    /**
+     * @return Returns the debug mode state
+     */
+    public function isDebugMode(): bool;
 }

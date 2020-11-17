@@ -20,9 +20,11 @@
  *
  */
 
-use Ampache\Application\BatchApplication;
+use Ampache\Module\Application\ApplicationRunner;
+use Ampache\Module\Application\Batch\DefaultAction;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 
 if (isset($_REQUEST['ssid'])) {
     define('NO_SESSION', 1);
@@ -35,4 +37,10 @@ if (isset($_REQUEST['ssid'])) {
 } else {
     $dic = require_once __DIR__ . '/../src/Config/Init.php';
 }
-$dic->get(BatchApplication::class)->run();
+$dic->get(ApplicationRunner::class)->run(
+    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+    [
+        DefaultAction::REQUEST_KEY => DefaultAction::class,
+    ],
+    DefaultAction::REQUEST_KEY
+);

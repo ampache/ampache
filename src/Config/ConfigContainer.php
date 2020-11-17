@@ -92,4 +92,21 @@ final class ConfigContainer implements ConfigContainerInterface
             explode(',', $typeList)
         );
     }
+
+    public function isFeatureEnabled(string $feature): bool
+    {
+        $value = $this->configuration[$feature] ?? false;
+
+        return $value === 'true' || $value === true || $value === 1 || $value === '1';
+    }
+
+    public function getThemePath(): string
+    {
+        return $this->configuration[ConfigurationKeyEnum::THEME_PATH] ?? '';
+    }
+
+    public function isDebugMode(): bool
+    {
+        return $this->isFeatureEnabled(ConfigurationKeyEnum::DEBUG_MODE);
+    }
 }

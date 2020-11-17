@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,7 +21,12 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Application\Api\RefreshReorderedApplication;
+declare(strict_types=1);
+
+use Ampache\Module\Api\RefreshReordered\RefreshAlbumSongsAction;
+use Ampache\Module\Api\RefreshReordered\RefreshPlaylistMediasAction;
+use Ampache\Module\Application\ApplicationRunner;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 define('AJAX_INCLUDE', '1');
@@ -31,4 +34,11 @@ define('AJAX_INCLUDE', '1');
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../../src/Config/Init.php';
 
-$dic->get(RefreshReorderedApplication::class)->run();
+$dic->get(ApplicationRunner::class)->run(
+    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+    [
+        RefreshAlbumSongsAction::REQUEST_KEY => RefreshAlbumSongsAction::class,
+        RefreshPlaylistMediasAction::REQUEST_KEY => RefreshPlaylistMediasAction::class,
+    ],
+    RefreshAlbumSongsAction::REQUEST_KEY
+);

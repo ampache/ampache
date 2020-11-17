@@ -518,12 +518,19 @@ class Share extends database_object
      */
     public static function display_ui($object_type, $object_id, $show_text = true)
     {
-        echo "<a onclick=\"showShareDialog(event, '" . $object_type . "', " . $object_id . ");\">" . Ui::get_icon('share',
-                T_('Share'));
+        $result = sprintf(
+            '<a onclick="showShareDialog(event, \'%s\', %d);">%s',
+            $object_type,
+            $object_id,
+            Ui::get_icon('share', T_('Share'))
+        );
+        
         if ($show_text) {
-            echo " &nbsp;" . T_('Share');
+            $result .= sprintf('&nbsp;%s', T_('Share'));
         }
-        echo "</a>";
+        $result .= '</a>';
+        
+        return $result;
     }
 
     /**

@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,10 +21,46 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Application\Admin\ModulesApplication;
+declare(strict_types=1);
+
+use Ampache\Module\Application\Admin\Modules\ConfirmUninstallCatalogType;
+use Ampache\Module\Application\Admin\Modules\ConfirmUninstallLocalplayAction;
+use Ampache\Module\Application\Admin\Modules\ConfirmUninstallPluginAction;
+use Ampache\Module\Application\Admin\Modules\InstallCatalogTypeAction;
+use Ampache\Module\Application\Admin\Modules\InstallLocalplayAction;
+use Ampache\Module\Application\Admin\Modules\InstallPluginAction;
+use Ampache\Module\Application\Admin\Modules\ShowAction;
+use Ampache\Module\Application\Admin\Modules\ShowCatalogTypesAction;
+use Ampache\Module\Application\Admin\Modules\ShowLocalplayAction;
+use Ampache\Module\Application\Admin\Modules\ShowPluginsAction;
+use Ampache\Module\Application\Admin\Modules\UninstallCatalogTypeAction;
+use Ampache\Module\Application\Admin\Modules\UninstallLocalplayAction;
+use Ampache\Module\Application\Admin\Modules\UninstallPluginAction;
+use Ampache\Module\Application\Admin\Modules\UpgradePluginAction;
+use Ampache\Module\Application\ApplicationRunner;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../../src/Config/Init.php';
 
-$dic->get(ModulesApplication::class)->run();
+$dic->get(ApplicationRunner::class)->run(
+    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+    [
+        InstallLocalplayAction::REQUEST_KEY => InstallLocalplayAction::class,
+        ShowAction::REQUEST_KEY => ShowAction::class,
+        InstallCatalogTypeAction::REQUEST_KEY => InstallCatalogTypeAction::class,
+        ConfirmUninstallLocalplayAction::REQUEST_KEY => ConfirmUninstallLocalplayAction::class,
+        ConfirmUninstallCatalogType::REQUEST_KEY => ConfirmUninstallCatalogType::class,
+        UninstallLocalplayAction::REQUEST_KEY => UninstallLocalplayAction::class,
+        UninstallCatalogTypeAction::REQUEST_KEY => UninstallCatalogTypeAction::class,
+        InstallPluginAction::REQUEST_KEY => InstallPluginAction::class,
+        ConfirmUninstallPluginAction::REQUEST_KEY => ConfirmUninstallPluginAction::class,
+        UninstallPluginAction::REQUEST_KEY => UninstallPluginAction::class,
+        UpgradePluginAction::REQUEST_KEY => UpgradePluginAction::class,
+        ShowPluginsAction::REQUEST_KEY => ShowPluginsAction::class,
+        ShowLocalplayAction::REQUEST_KEY => ShowLocalplayAction::class,
+        ShowCatalogTypesAction::REQUEST_KEY => ShowCatalogTypesAction::class,
+    ],
+    ShowAction::REQUEST_KEY
+);

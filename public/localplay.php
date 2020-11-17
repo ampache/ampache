@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,10 +21,30 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Application\LocalPlayApplication;
+declare(strict_types=1);
+
+use Ampache\Module\Application\ApplicationRunner;
+use Ampache\Module\Application\LocalPlay\AddInstanceAction;
+use Ampache\Module\Application\LocalPlay\EditInstanceAction;
+use Ampache\Module\Application\LocalPlay\ShowAddInstanceAction;
+use Ampache\Module\Application\LocalPlay\ShowInstancesAction;
+use Ampache\Module\Application\LocalPlay\ShowPlaylistAction;
+use Ampache\Module\Application\LocalPlay\UpdateInstanceAction;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../src/Config/Init.php';
 
-$dic->get(LocalPlayApplication::class)->run();
+$dic->get(ApplicationRunner::class)->run(
+    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+    [
+        ShowAddInstanceAction::REQUEST_KEY => ShowAddInstanceAction::class,
+        ShowPlaylistAction::REQUEST_KEY => ShowPlaylistAction::class,
+        AddInstanceAction::REQUEST_KEY => AddInstanceAction::class,
+        UpdateInstanceAction::REQUEST_KEY => UpdateInstanceAction::class,
+        EditInstanceAction::REQUEST_KEY => EditInstanceAction::class,
+        ShowInstancesAction::REQUEST_KEY => ShowInstancesAction::class,
+    ],
+    ShowPlaylistAction::REQUEST_KEY
+);

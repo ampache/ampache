@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,12 +21,24 @@ declare(strict_types=1);
  *
  */
 
+declare(strict_types=1);
+
 define('NO_SESSION', '1');
 
-use Ampache\Application\LostPasswordApplication;
+use Ampache\Module\Application\ApplicationRunner;
+use Ampache\Module\Application\LostPassword\SendAction;
+use Ampache\Module\Application\LostPassword\ShowAction;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../src/Config/Init.php';
 
-$dic->get(LostPasswordApplication::class)->run();
+$dic->get(ApplicationRunner::class)->run(
+    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+    [
+        ShowAction::REQUEST_KEY => ShowAction::class,
+        SendAction::REQUEST_KEY => SendAction::class,
+    ],
+    ShowAction::REQUEST_KEY
+);

@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
-/**
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,10 +21,26 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Application\SongApplication;
+declare(strict_types=1);
+
+use Ampache\Module\Application\ApplicationRunner;
+use Ampache\Module\Application\Song\ConfirmDeleteAction;
+use Ampache\Module\Application\Song\DeleteAction;
+use Ampache\Module\Application\Song\ShowLyricsAction;
+use Ampache\Module\Application\Song\ShowSongAction;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../src/Config/Init.php';
 
-$dic->get(SongApplication::class)->run();
+$dic->get(ApplicationRunner::class)->run(
+    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+    [
+        DeleteAction::REQUEST_KEY => DeleteAction::class,
+        ConfirmDeleteAction::REQUEST_KEY => ConfirmDeleteAction::class,
+        ShowLyricsAction::REQUEST_KEY => ShowLyricsAction::class,
+        ShowSongAction::REQUEST_KEY => ShowSongAction::class,
+    ],
+    ShowSongAction::REQUEST_KEY
+);

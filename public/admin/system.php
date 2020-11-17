@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=0);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,10 +21,30 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Application\Admin\SystemApplication;
+declare(strict_types=1);
+
+use Ampache\Module\Application\Admin\System\ClearCacheAction;
+use Ampache\Module\Application\Admin\System\GenerateConfigAction;
+use Ampache\Module\Application\Admin\System\ResetDbCharsetAction;
+use Ampache\Module\Application\Admin\System\ShowAction;
+use Ampache\Module\Application\Admin\System\ShowDebugAction;
+use Ampache\Module\Application\Admin\System\WriteConfigAction;
+use Ampache\Module\Application\ApplicationRunner;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../../src/Config/Init.php';
 
-$dic->get(SystemApplication::class)->run();
+$dic->get(ApplicationRunner::class)->run(
+    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+    [
+        GenerateConfigAction::REQUEST_KEY => GenerateConfigAction::class,
+        WriteConfigAction::REQUEST_KEY => WriteConfigAction::class,
+        ResetDbCharsetAction::REQUEST_KEY => ResetDbCharsetAction::class,
+        ShowDebugAction::REQUEST_KEY => ShowDebugAction::class,
+        ClearCacheAction::REQUEST_KEY => ClearCacheAction::class,
+        ShowAction::REQUEST_KEY => ShowAction::class,
+    ],
+    ShowAction::REQUEST_KEY
+);

@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,7 +21,13 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Application\RegisterApplication;
+declare(strict_types=1);
+
+use Ampache\Module\Application\ApplicationRunner;
+use Ampache\Module\Application\Register\AddUserAction;
+use Ampache\Module\Application\Register\ShowAddUserAction;
+use Ampache\Module\Application\Register\ValidateAction;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');
@@ -32,4 +36,12 @@ $_SESSION['login'] = true;
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../src/Config/Init.php';
 
-$dic->get(RegisterApplication::class)->run();
+$dic->get(ApplicationRunner::class)->run(
+    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+    [
+        ValidateAction::REQUEST_KEY => ValidateAction::class,
+        ShowAddUserAction::REQUEST_KEY => ShowAddUserAction::class,
+        AddUserAction::REQUEST_KEY => AddUserAction::class,
+    ],
+    ShowAddUserAction::REQUEST_KEY
+);

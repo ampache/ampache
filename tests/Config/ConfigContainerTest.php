@@ -187,6 +187,54 @@ class ConfigContainerTest extends MockeryTestCase
         );
     }
 
+    /**
+     * @dataProvider featureEnabledDataProvider
+     */
+    public function testIsFeatureEnabledReturnsExpectedState(
+        $value,
+        bool $state
+    ): void {
+        $key = 'some-key';
+
+        static::assertSame(
+            $state,
+            $this->createSubject([
+                $key => $value
+            ])->isFeatureEnabled($key)
+        );
+    }
+
+    public function featureEnabledDataProvider(): array
+    {
+        return [
+            [true, true],
+            ['true', true],
+            [1, true],
+            ['1', true],
+            ['0', false],
+            ['', false],
+            ['false', false],
+            [0, false],
+        ];
+    }
+
+    public function testGetThemePathReturnsValue(): void
+    {
+        $value = 'some-path';
+
+        static::assertSame(
+            $value,
+            $this->createSubject([ConfigurationKeyEnum::THEME_PATH => $value])->getThemePath()
+        );
+    }
+
+    public function testIsDebugModeReturnsValus(): void
+    {
+        $this->assertFalse(
+            $this->createSubject([])->isDebugMode()
+        );
+    }
+
     private function createSubject(array $configuration = []): ConfigContainerInterface
     {
         return new ConfigContainer($configuration);

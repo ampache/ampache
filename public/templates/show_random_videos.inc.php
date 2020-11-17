@@ -22,6 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
+use Ampache\Model\Rating;
 use Ampache\Model\Video;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -65,7 +66,7 @@ if ($videos) {
         <?php
         if (AmpConfig::get('ratings') && Access::check('interface', 25)) {
             echo "<div id=\"rating_" . $video->id . "_video\">";
-            show_rating($video->id, 'video');
+            echo Rating::show($video->id, 'video');
             echo "</div>";
         } ?>
     </div>

@@ -23,10 +23,10 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Application\Api\SseApplication;
+use Ampache\Module\Api\SseApiApplication;
 use Psr\Container\ContainerInterface;
 
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../../src/Config/Init.php';
 
-$dic->get(SseApplication::class)->run();
+$dic->get(SseApiApplication::class)->run();

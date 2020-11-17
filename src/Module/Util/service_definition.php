@@ -36,4 +36,6 @@ return [
     EnvironmentInterface::class => autowire(Environment::class),
     ZipHandlerInterface::class => autowire(ZipHandler::class),
     SlideshowInterface::class => autowire(Slideshow::class),
+    UiInterface::class => autowire(Ui::class),
+    Mailer::class => autowire(),
 ];

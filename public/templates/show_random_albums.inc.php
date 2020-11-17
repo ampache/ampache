@@ -23,6 +23,7 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Album;
 use Ampache\Model\Art;
+use Ampache\Model\Rating;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
@@ -71,7 +72,7 @@ if ($albums) {
         <?php
         if (AmpConfig::get('ratings') && Access::check('interface', 25)) {
             echo "<div id=\"rating_" . $album->id . "_album\">";
-            show_rating($album->id, 'album');
+            echo Rating::show($album->id, 'album');
             echo "</div>";
         } ?>
     </div>

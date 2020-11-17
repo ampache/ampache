@@ -71,11 +71,11 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
 <td class="cel_time"><?php echo $libitem->f_time ?></td>
 <?php if (User::is_registered()) {
         if (AmpConfig::get('ratings')) { ?>
-    <td class="cel_rating" id="rating_<?php echo $libitem->id ?>_<?php echo $object_type ?>"><?php Rating::show($libitem->id, $object_type) ?></td>
+    <td class="cel_rating" id="rating_<?php echo $libitem->id ?>_<?php echo $object_type ?>"><?php echo Rating::show($libitem->id, $object_type) ?></td>
     <?php
         }
         if (AmpConfig::get('userflags')) { ?>
-    <td class="cel_userflag" id="userflag_<?php echo $libitem->id ?>_<?php echo $object_type ?>"><?php Userflag::show($libitem->id, $object_type) ?></td>
+    <td class="cel_userflag" id="userflag_<?php echo $libitem->id ?>_<?php echo $object_type ?>"><?php echo Userflag::show($libitem->id, $object_type) ?></td>
     <?php
         }
     } ?>
@@ -88,7 +88,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
     }
     if (Access::check('interface', 25)) {
         if (AmpConfig::get('share')) {
-            Share::display_ui($object_type, $libitem->id, false);
+            echo Share::display_ui($object_type, $libitem->id, false);
         }
     }
     if ($playlist) {

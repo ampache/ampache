@@ -54,4 +54,100 @@ final class ModelFactory implements ModelFactoryInterface
             $limitThreshold
         );
     }
+    
+    public function createRating(
+        int $objectId,
+        string $typeId
+    ): Rating {
+        return new Rating(
+            $objectId,
+            $typeId
+        );
+    }
+    
+    public function createUser(
+        ?int $userId = null
+    ): User {
+        return new User($userId);
+    }
+    
+    public function createAlbum(
+        ?int $albumId = null
+    ): Album {
+        return new Album($albumId);
+    }
+    
+    public function createArtist(
+        ?int $artistId = null
+    ): Artist {
+        return new Artist($artistId);
+    }
+    
+    public function createWanted(
+        ?int $wantedId = null
+    ): Wanted {
+        return new Wanted($wantedId);
+    }
+    
+    public function createArt(
+        ?int $artId = null,
+        string $type = 'album',
+        string $kind = 'default'
+    ): Art {
+        return new Art($artId, $type, $kind);
+    }
+
+    public function createBroadcast(
+        int $broadcastId
+    ): Broadcast {
+        return new Broadcast($broadcastId);
+    }
+
+    public function createLiveStream(
+        int $liveStreamId
+    ): Live_Stream {
+        return new Live_Stream($liveStreamId);
+    }
+    
+    public function createChannel(
+        int $channelId
+    ): Channel {
+        return new Channel($channelId);
+    }
+
+    public function createPodcast(
+        int $podcastId
+    ): Podcast {
+        return new Podcast($podcastId);
+    }
+
+    public function createPodcastEpisode(
+        int $podcastEpisodeId
+    ): Podcast_Episode {
+        return new Podcast_Episode($podcastEpisodeId);
+    }
+
+    public function createPrivateMsg(
+        int $privateMessageId
+    ): PrivateMsg {
+        return new PrivateMsg($privateMessageId);
+    }
+
+    public function createTvShow(
+        int $tvShowId
+    ): TvShow {
+        return new TvShow($tvShowId);
+    }
+
+    public function createDemocratic(
+        int $democraticId
+    ): Democratic {
+        return new Democratic($democraticId);
+    }
+
+    public function createTmpPlaylist(
+        int $tmpPlaylistId
+    ): Tmp_Playlist {
+        return new Tmp_Playlist($tmpPlaylistId);
+    }
 }

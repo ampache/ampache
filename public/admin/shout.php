@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,10 +21,26 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Application\Admin\ShoutApplication;
+declare(strict_types=1);
+
+use Ampache\Module\Application\Admin\Shout\DeleteAction;
+use Ampache\Module\Application\Admin\Shout\EditShoutAction;
+use Ampache\Module\Application\Admin\Shout\ShowAction;
+use Ampache\Module\Application\Admin\Shout\ShowEditAction;
+use Ampache\Module\Application\ApplicationRunner;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../../src/Config/Init.php';
 
-$dic->get(ShoutApplication::class)->run();
+$dic->get(ApplicationRunner::class)->run(
+    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+    [
+        ShowAction::REQUEST_KEY => ShowAction::class,
+        DeleteAction::REQUEST_KEY => DeleteAction::class,
+        ShowEditAction::REQUEST_KEY => ShowEditAction::class,
+        EditShoutAction::REQUEST_KEY => EditShoutAction::class,
+    ],
+    ShowAction::REQUEST_KEY
+);

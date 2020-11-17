@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=0);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,6 +21,8 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
 /**
  * This is the wrapper for opening music streams from this server.  This script
  * will play the local version or redirect to the remote server if that be
@@ -30,7 +30,9 @@ declare(strict_types=0);
  * This is also where it decides if you need to be downsampled.
  */
 
-use Ampache\Application\Playback\ChannelApplication;
+use Ampache\Module\Application\ApplicationRunner;
+use Ampache\Module\Application\Playback\ChannelAction;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');
@@ -38,4 +40,10 @@ define('NO_SESSION', '1');
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../../src/Config/Init.php';
 
-$dic->get(ChannelApplication::class)->run();
+$dic->get(ApplicationRunner::class)->run(
+    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+    [
+        ChannelAction::REQUEST_KEY => ChannelAction::class,
+    ],
+    ChannelAction::REQUEST_KEY
+);

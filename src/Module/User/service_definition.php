@@ -28,4 +28,5 @@ use function DI\autowire;
 
 return [
     PasswordGeneratorInterface::class => autowire(PasswordGenerator::class),
+    NewPasswordSenderInterface::class => autowire(NewPasswordSender::class),
 ];

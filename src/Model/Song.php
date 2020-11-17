@@ -316,6 +316,12 @@ class Song extends database_object implements Media, library_item
      */
     public $f_license;
 
+    /** @var int */
+    public $skip_cnt;
+
+    /** @var int */
+    public $object_cnt;
+
     /* Setting Variables */
     /**
      * @var boolean $_fake
@@ -2416,18 +2422,6 @@ class Song extends database_object implements Media, library_item
         }
 
         return $transcoder;
-    }
-
-    /**
-     * Show custom play actions.
-     */
-    public function show_custom_play_actions()
-    {
-        $actions = Song::get_custom_play_actions();
-        foreach ($actions as $action) {
-            echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $this->id . '&custom_play_action=' . $action['index'],
-                $action['icon'], T_($action['title']), $action['icon'] . '_song_' . $this->id);
-        }
     }
 
     /**

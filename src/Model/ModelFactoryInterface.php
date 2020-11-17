@@ -20,6 +20,8 @@
  *
  */
 
+declare(strict_types=0);
+
 namespace Ampache\Model;
 
 interface ModelFactoryInterface
@@ -35,4 +37,67 @@ interface ModelFactoryInterface
         ?int $songId = null,
         string $limitThreshold = ''
     ): Song;
+
+    public function createRating(
+        int $objectId,
+        string $typeId
+    ): Rating;
+
+    public function createUser(
+        ?int $userId = null
+    ): User;
+
+    public function createAlbum(
+        ?int $albumId = null
+    ): Album;
+
+    public function createArtist(
+        ?int $artistId = null
+    ): Artist;
+    
+    public function createWanted(
+        ?int $wantedId = null
+    ): Wanted;
+
+    public function createArt(
+        ?int $artId = null,
+        string $type = 'album',
+        string $kind = 'default'
+    ): Art;
+
+    public function createBroadcast(
+        int $broadcastId
+    ): Broadcast;
+
+    public function createLiveStream(
+        int $liveStreamId
+    ): Live_Stream;
+
+    public function createChannel(
+        int $channelId
+    ): Channel;
+
+    public function createPodcast(
+        int $podcastId
+    ): Podcast;
+
+    public function createPodcastEpisode(
+        int $podcastEpisodeId
+    ): Podcast_Episode;
+
+    public function createPrivateMsg(
+        int $privateMessageId
+    ): PrivateMsg;
+
+    public function createTvShow(
+        int $tvShowId
+    ): TvShow;
+
+    public function createDemocratic(
+        int $democraticId
+    ): Democratic;
+
+    public function createTmpPlaylist(
+        int $tmpPlaylistId
+    ): Tmp_Playlist;
 }

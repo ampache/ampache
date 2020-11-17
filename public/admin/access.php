@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,10 +21,38 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Application\Admin\AccessApplication;
+declare(strict_types=1);
+
+use Ampache\Module\Application\Admin\Access\AddHostAction;
+use Ampache\Module\Application\Admin\Access\DeleteRecordAction;
+use Ampache\Module\Application\Admin\Access\ShowAction;
+use Ampache\Module\Application\Admin\Access\ShowAddAdvancedAction;
+use Ampache\Module\Application\Admin\Access\ShowAddCurrentAction;
+use Ampache\Module\Application\Admin\Access\ShowAddLocalAction;
+use Ampache\Module\Application\Admin\Access\ShowAddRpcAction;
+use Ampache\Module\Application\Admin\Access\ShowDeleteRecordAction;
+use Ampache\Module\Application\Admin\Access\ShowEditRecordAction;
+use Ampache\Module\Application\Admin\Access\UpdateRecordAction;
+use Ampache\Module\Application\ApplicationRunner;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../../src/Config/Init.php';
 
-$dic->get(AccessApplication::class)->run();
+$dic->get(ApplicationRunner::class)->run(
+    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+    [
+        DeleteRecordAction::REQUEST_KEY => DeleteRecordAction::class,
+        ShowDeleteRecordAction::REQUEST_KEY => ShowDeleteRecordAction::class,
+        AddHostAction::REQUEST_KEY => AddHostAction::class,
+        ShowAction::REQUEST_KEY => ShowAction::class,
+        ShowEditRecordAction::REQUEST_KEY => ShowEditRecordAction::class,
+        UpdateRecordAction::REQUEST_KEY => UpdateRecordAction::class,
+        ShowAddCurrentAction::REQUEST_KEY => ShowAddCurrentAction::class,
+        ShowAddRpcAction::REQUEST_KEY => ShowAddRpcAction::class,
+        ShowAddLocalAction::REQUEST_KEY => ShowAddLocalAction::class,
+        ShowAddAdvancedAction::REQUEST_KEY => ShowAddAdvancedAction::class,
+    ],
+    ShowAction::REQUEST_KEY
+);

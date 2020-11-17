@@ -40,6 +40,8 @@ use Narrowspark\HttpEmitter\SapiEmitter;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
+use PhpTal\PHPTAL;
+use PhpTal\PhpTalInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestFactoryInterface;
@@ -85,4 +87,6 @@ return [
     AbstractSapiEmitter::class => autowire(SapiEmitter::class),
     ServerRequestCreatorInterface::class => autowire(ServerRequestCreator::class),
     ServerRequestFactoryInterface::class => autowire(Psr17Factory::class),
+    PhpTalInterface::class => autowire(PHPTAL::class),
+    SapiEmitter::class => autowire(SapiEmitter::class),
 ];

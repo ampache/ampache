@@ -21,5 +21,8 @@
 		<include>
 			<directory suffix=".php">src</directory>
 		</include>
+		<exclude>
+			<directory suffix="service_definition.php">src</directory>
+		</exclude>
 	</coverage>
 </phpunit>

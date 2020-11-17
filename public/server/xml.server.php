@@ -25,7 +25,7 @@
  * as such it needs to verify the session id that is passed
  */
 
-use Ampache\Application\Api\XmlApplication;
+use Ampache\Module\Api\XmlApiApplication;
 use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');
@@ -34,4 +34,4 @@ define('OUTDATED_DATABASE_OK', 1);
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../../src/Config/Init.php';
 
-$dic->get(XmlApplication::class)->run();
+$dic->get(XmlApiApplication::class)->run();

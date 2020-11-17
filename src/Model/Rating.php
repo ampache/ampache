@@ -24,9 +24,9 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
+use Ampache\Module\Api\Ajax;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\Ui;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Exception;
@@ -389,19 +389,62 @@ class Rating extends database_object
      * @param integer $object_id
      * @param string $type
      * @param boolean $global_rating
-     * @return boolean
      */
-    public static function show($object_id, $type, $global_rating = false)
+    public static function show($object_id, $type, $global_rating = false): string
     {
         // If ratings aren't enabled don't do anything
         if (!AmpConfig::get('ratings')) {
-            return false;
+            return '';
         }
+
         $rating = new Rating($object_id, $type);
 
-        require Ui::find_template('show_object_rating.inc.php');
+        $base_url = '?action=set_rating&rating_type=' . $rating->type . '&object_id=' . $rating->id;
+        $rate     = ($rating->get_user_rating() ?: 0);
+        
+        $globalStarRatingCss = '';
+        if ($global_rating) {
+            $rate                = $rating->get_average_rating();
+            $globalStarRatingCss = ' global-star-rating';
+        }
 
-        return true;
+        // decide width of rating (5 stars -> 20% per star)
+        $width = $rate * 20;
+        if ($width < 0) {
+            $width = 0;
+        }
+
+        $ratings = '';
+
+        for ($count = 1; $count < 6; $count++) {
+            $ratings .= sprintf(
+                '<li>%s</li>',
+                Ajax::text($base_url . '&rating=' . $count, '', 'rating' . $count . '_' . $rating->id . '_' . $rating->type, '', 'star' . $count)
+            );
+        }
+
+        if ($rate < 1) {
+            $ratedText = T_('not rated yet');
+        } else {
+            /* HINT: object rating */
+            $ratedText = sprintf(T_('%s of 5'), $rate);
+        }
+
+        return sprintf(
+            '<div class="star-rating dynamic-star-rating%s">
+                <ul>
+                    <li class="current-rating" style="width: %d%%">%s: %s</li>
+                    %s
+                </ul>
+                %s
+            </div>',
+            $globalStarRatingCss,
+            $width,
+            T_('Current rating'),
+            $ratedText,
+            $ratings,
+            Ajax::text($base_url . '&rating=-1', '', 'rating0_' . $rating->id . '_' . $rating->type, '', 'star0')
+        );
     } // show
 
     /**

@@ -28,7 +28,7 @@ declare(strict_types=1);
  * as such it needs to verify the session id that is passed
  */
 
-use Ampache\Application\Api\JsonApplication;
+use Ampache\Module\Api\JsonApiApplication;
 use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');
@@ -37,4 +37,4 @@ define('OUTDATED_DATABASE_OK', 1);
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../../src/Config/Init.php';
 
-$dic->get(JsonApplication::class)->run();
+$dic->get(JsonApiApplication::class)->run();

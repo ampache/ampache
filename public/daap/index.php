@@ -23,7 +23,7 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Application\Api\DaapApplication;
+use Ampache\Module\Api\DaapApiApplication;
 use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');
@@ -31,4 +31,4 @@ define('NO_SESSION', '1');
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../../src/Config/Init.php';
 
-$dic->get(DaapApplication::class)->run();
+$dic->get(DaapApiApplication::class)->run();

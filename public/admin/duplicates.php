@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=0);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,10 +21,22 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Application\Admin\DuplicatesApplication;
+declare(strict_types=1);
+
+use Ampache\Module\Application\Admin\Duplicates\FindDuplicatesAction;
+use Ampache\Module\Application\Admin\Duplicates\ShowAction;
+use Ampache\Module\Application\ApplicationRunner;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../../src/Config/Init.php';
 
-$dic->get(DuplicatesApplication::class)->run();
+$dic->get(ApplicationRunner::class)->run(
+    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+    [
+        ShowAction::REQUEST_KEY => ShowAction::class,
+        FindDuplicatesAction::REQUEST_KEY => FindDuplicatesAction::class,
+    ],
+    ShowAction::REQUEST_KEY
+);

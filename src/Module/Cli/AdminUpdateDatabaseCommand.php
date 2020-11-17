@@ -59,12 +59,13 @@ final class AdminUpdateDatabaseCommand extends Command
             );
         }
 
-        $result = Update::display_update(true);
+        $result = Update::display_update();
         if ($result === []) {
             $interactor->info(T_('No update needed'), true);
         } else {
             foreach ($result as $updateInfo) {
-                $interactor->info($updateInfo, true);
+                $interactor->info($updateInfo['version'], true);
+                $interactor->info($updateInfo['description'], true);
             }
         }
     }

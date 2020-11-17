@@ -456,7 +456,7 @@ class Wanted extends database_object
             $this->year = date("Y", strtotime($group->{'first-release-date'}));
 
             // Load from database if already cached
-            $this->songs = Song_preview::get_song_previews($this->mbid);
+            $this->songs = Song_Preview::get_song_previews($this->mbid);
             if (count($group->releases) > 0) {
                 $this->release_mbid = $group->releases[0]->id;
                 if ($track_details && count($this->songs) == 0) {
@@ -497,7 +497,7 @@ class Wanted extends database_object
                             }
 
                             if ($song != null) {
-                                $this->songs[] = new Song_preview(Song_preview::insert($song));
+                                $this->songs[] = new Song_Preview(Song_Preview::insert($song));
                             }
                         }
                     }

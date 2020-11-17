@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,16 +21,47 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Application\ShareApplication;
+declare(strict_types=1);
+
+use Ampache\Module\Application\ApplicationRunner;
+use Ampache\Module\Application\Share\CleanAction;
+use Ampache\Module\Application\Share\ConsumeAction;
+use Ampache\Module\Application\Share\CreateAction;
+use Ampache\Module\Application\Share\DeleteAction;
+use Ampache\Module\Application\Share\ExternalShareAction;
+use Ampache\Module\Application\Share\ShowCreateAction;
+use Ampache\Module\Application\Share\ShowDeleteAction;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
 if (empty($action) || $action == 'stream' || $action == 'download') {
     define('NO_SESSION', '1');
+
+    /** @var ContainerInterface $dic */
+    $dic = require __DIR__ . '/../src/Config/Init.php';
+
+    $dic->get(ApplicationRunner::class)->run(
+        $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+        [
+        ],
+        ConsumeAction::REQUEST_KEY
+    );
+} else {
+    /** @var ContainerInterface $dic */
+    $dic = require __DIR__ . '/../src/Config/Init.php';
+
+    $dic->get(ApplicationRunner::class)->run(
+        $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+        [
+            ShowCreateAction::REQUEST_KEY => ShowCreateAction::class,
+            CreateAction::REQUEST_KEY => CreateAction::class,
+            ShowDeleteAction::REQUEST_KEY => ShowDeleteAction::class,
+            DeleteAction::REQUEST_KEY => DeleteAction::class,
+            CleanAction::REQUEST_KEY => CleanAction::class,
+            ExternalShareAction::REQUEST_KEY => ExternalShareAction::class,
+        ],
+        ''
+    );
 }
-
-/** @var ContainerInterface $dic */
-$dic = require __DIR__ . '/../src/Config/Init.php';
-
-$dic->get(ShareApplication::class)->run();

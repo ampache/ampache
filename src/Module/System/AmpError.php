@@ -120,9 +120,18 @@ class AmpError
     {
         // Be smart about this, if no error don't print
         if (isset(AmpError::$errors[$name])) {
-            echo '<p class="alert alert-danger">' . T_(AmpError::$errors[$name]) . '</p>';
+            return self::getErrorsFormatted($name);
         }
     } // display
+    
+    public static function getErrorsFormatted(string $name): string
+    {
+        if (isset(AmpError::$errors[$name])) {
+            return '<p class="alert alert-danger">' . T_(AmpError::$errors[$name]) . '</p>';
+        }
+        
+        return '';
+    }
 
     /**
      * This loads the errors from the session back into Ampache

@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,10 +21,36 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Application\StreamApplication;
+declare(strict_types=1);
+
+use Ampache\Module\Application\ApplicationRunner;
+use Ampache\Module\Application\Stream\AlbumRandomAction;
+use Ampache\Module\Application\Stream\ArtistRandomAction;
+use Ampache\Module\Application\Stream\BasketAction;
+use Ampache\Module\Application\Stream\DemocraticAction;
+use Ampache\Module\Application\Stream\DownloadAction;
+use Ampache\Module\Application\Stream\PlayFavoriteAction;
+use Ampache\Module\Application\Stream\PlayItemAction;
+use Ampache\Module\Application\Stream\PlaylistRandomAction;
+use Ampache\Module\Application\Stream\TmpPlaylistAction;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../src/Config/Init.php';
 
-$dic->get(StreamApplication::class)->run();
+$dic->get(ApplicationRunner::class)->run(
+    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+    [
+        DownloadAction::REQUEST_KEY => DownloadAction::class,
+        DemocraticAction::REQUEST_KEY => DemocraticAction::class,
+        PlaylistRandomAction::REQUEST_KEY => PlaylistRandomAction::class,
+        AlbumRandomAction::REQUEST_KEY => AlbumRandomAction::class,
+        ArtistRandomAction::REQUEST_KEY => ArtistRandomAction::class,
+        PlayItemAction::REQUEST_KEY => PlayItemAction::class,
+        PlayFavoriteAction::REQUEST_KEY => PlayFavoriteAction::class,
+        TmpPlaylistAction::REQUEST_KEY => TmpPlaylistAction::class,
+        BasketAction::REQUEST_KEY => BasketAction::class,
+    ],
+    PlayFavoriteAction::REQUEST_KEY
+);

@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,10 +21,52 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Application\Admin\UsersApplication;
+declare(strict_types=1);
+
+use Ampache\Module\Application\Admin\User\AddUserAction;
+use Ampache\Module\Application\Admin\User\ConfirmDeleteAction;
+use Ampache\Module\Application\Admin\User\DeleteAction;
+use Ampache\Module\Application\Admin\User\DeleteAvatarAction;
+use Ampache\Module\Application\Admin\User\DisableAction;
+use Ampache\Module\Application\Admin\User\EnableAction;
+use Ampache\Module\Application\Admin\User\GenerateApikeyAction;
+use Ampache\Module\Application\Admin\User\GenerateRsstokenAction;
+use Ampache\Module\Application\Admin\User\ShowAction;
+use Ampache\Module\Application\Admin\User\ShowAddUserAction;
+use Ampache\Module\Application\Admin\User\ShowDeleteAvatarAction;
+use Ampache\Module\Application\Admin\User\ShowEditAction;
+use Ampache\Module\Application\Admin\User\ShowGenerateApikeyAction;
+use Ampache\Module\Application\Admin\User\ShowGenerateRsstokenAction;
+use Ampache\Module\Application\Admin\User\ShowIpHistoryAction;
+use Ampache\Module\Application\Admin\User\ShowPreferencesAction;
+use Ampache\Module\Application\Admin\User\UpdateUserAction;
+use Ampache\Module\Application\ApplicationRunner;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../../src/Config/Init.php';
 
-$dic->get(UsersApplication::class)->run();
+$dic->get(ApplicationRunner::class)->run(
+    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+    [
+        ShowAction::REQUEST_KEY => ShowAction::class,
+        ShowPreferencesAction::REQUEST_KEY => ShowPreferencesAction::class,
+        ShowAddUserAction::REQUEST_KEY => ShowAddUserAction::class,
+        ShowIpHistoryAction::REQUEST_KEY => ShowIpHistoryAction::class,
+        GenerateRsstokenAction::REQUEST_KEY => GenerateRsstokenAction::class,
+        ShowGenerateRsstokenAction::REQUEST_KEY => ShowGenerateRsstokenAction::class,
+        GenerateApikeyAction::REQUEST_KEY => GenerateApikeyAction::class,
+        ShowGenerateApikeyAction::REQUEST_KEY => ShowGenerateApikeyAction::class,
+        DeleteAvatarAction::REQUEST_KEY => DeleteAvatarAction::class,
+        ShowDeleteAvatarAction::REQUEST_KEY => ShowDeleteAvatarAction::class,
+        DeleteAction::REQUEST_KEY => DeleteAction::class,
+        ConfirmDeleteAction::REQUEST_KEY => ConfirmDeleteAction::class,
+        ShowEditAction::REQUEST_KEY => ShowEditAction::class,
+        DisableAction::REQUEST_KEY => DisableAction::class,
+        EnableAction::REQUEST_KEY => EnableAction::class,
+        AddUserAction::REQUEST_KEY => AddUserAction::class,
+        UpdateUserAction::REQUEST_KEY => UpdateUserAction::class,
+    ],
+    ShowAction::REQUEST_KEY
+);

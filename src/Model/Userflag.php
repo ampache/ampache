@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
+use Ampache\Module\Api\Ajax;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
@@ -368,19 +369,39 @@ class Userflag extends database_object
      * enabled.
      * @param integer $object_id
      * @param string $type
-     * @return boolean
      */
-    public static function show($object_id, $type)
+    public static function show($object_id, $type): string
     {
         // If user flags aren't enabled don't do anything
         if (!AmpConfig::get('userflags')) {
-            return false;
+            return '';
         }
 
         $userflag = new Userflag($object_id, $type);
-        require Ui::find_template('show_object_userflag.inc.php');
 
-        return true;
+        $base_url = sprintf(
+            '?action=set_userflag&userflag_type=%s&object_id=%d',
+            $userflag->type,
+            $userflag->id
+        );
+
+        if ($userflag->get_flag()) {
+            $text = Ajax::text(
+                $base_url . '&userflag=0',
+                '',
+                'userflag_i_' . $userflag->id . '_' . $userflag->type, '',
+                'userflag_true'
+            );
+        } else {
+            $text = Ajax::text(
+                $base_url . '&userflag=1',
+                '',
+                'userflag_i_' . $userflag->id . '_' . $userflag->type, '',
+                'userflag_false'
+            );
+        }
+
+        return sprintf('<div class="userflag">%s</div>', $text);
     } // show
 
     /**

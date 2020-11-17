@@ -73,13 +73,13 @@ $media->format(); ?>
         <div class="np_cell cel_rating">
             <label><?php echo T_('Rating'); ?></label>
             <div id="rating_<?php echo $media->id; ?>_video">
-                <?php Rating::show($media->id, 'video'); ?>
+                <?php echo Rating::show($media->id, 'video'); ?>
             </div>
         </div>
         <div class="np_cell cel_userflag">
             <label><?php echo T_('Fav.'); ?></label>
             <div id="userflag_<?php echo $media->id; ?>_video">
-                <?php Userflag::show($media->id, 'video'); ?>
+                <?php echo Userflag::show($media->id, 'video'); ?>
             </div>
         </div>
     <?php

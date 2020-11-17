@@ -20,7 +20,6 @@
  *
  */
 
-use Ampache\Application\Api\RefreshReorderedApplication;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Album;
 use Ampache\Model\Art;
@@ -28,6 +27,7 @@ use Ampache\Model\Rating;
 use Ampache\Model\Share;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
+use Ampache\Module\Api\RefreshReordered\RefreshAlbumSongsAction;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
@@ -76,13 +76,13 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
     <div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
-            <?php Rating::show($album->id, 'album'); ?>
+            <?php echo Rating::show($album->id, 'album'); ?>
     </div>
     <?php
         } ?>
     <?php if (AmpConfig::get('userflags')) { ?>
     <div style="display:table-cell;" id="userflag_<?php echo $album->id; ?>_album">
-            <?php Userflag::show($album->id, 'album'); ?>
+            <?php echo Userflag::show($album->id, 'album'); ?>
     </div>
     <?php
         } ?>
@@ -169,7 +169,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
             <?php
             } ?>
             <?php if (AmpConfig::get('share')) { ?>
-                <?php Share::display_ui('album', $c_album->id, false); ?>
+                <?php echo Share::display_ui('album', $c_album->id, false); ?>
             <?php
             } ?>
         <?php
@@ -180,7 +180,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
         } ?>
         <?php if (Access::check('interface', 50)) { ?>
             <a onclick="submitNewItemsOrder('<?php echo $c_album->id ?>', 'reorder_songs_table_<?php echo $c_album->id ?>', 'song_',
-                                            '<?php echo AmpConfig::get('web_path') ?>/albums.php?action=set_track_numbers', '<?php echo RefreshReorderedApplication::ACTION_REFRESH_ALBUM_SONGS; ?>')">
+                                            '<?php echo AmpConfig::get('web_path') ?>/albums.php?action=set_track_numbers', '<?php echo RefreshAlbumSongsAction::REQUEST_KEY; ?>')">
                 <?php echo Ui::get_icon('save', T_('Save Track Order')); ?>
             </a>
             <a href="javascript:NavigateTo('<?php echo $web_path ?>/albums.php?action=update_from_tags&amp;album_id=<?php echo $c_album->id ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?') ?>');">

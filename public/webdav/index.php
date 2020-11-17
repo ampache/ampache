@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,7 +21,9 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Application\Api\WebDavApplication;
+declare(strict_types=1);
+
+use Ampache\Module\WebDav\WebDavApplication;
 use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');

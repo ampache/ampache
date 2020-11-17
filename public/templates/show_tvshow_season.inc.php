@@ -23,6 +23,7 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
 use Ampache\Model\Catalog;
+use Ampache\Model\Rating;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
 use Ampache\Module\Authorization\Access;
@@ -45,13 +46,13 @@ Ui::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box'); 
     <?php
     if (AmpConfig::get('ratings')) { ?>
     <div id="rating_<?php echo (int) ($season->id); ?>_tvshow_season" style="display:inline;">
-        <?php show_rating($season->id, 'tvshow_season'); ?>
+        <?php echo Rating::show($season->id, 'tvshow_season'); ?>
     </div>
     <?php
     } ?>
     <?php if (AmpConfig::get('userflags')) { ?>
     <div style="display:table-cell;" id="userflag_<?php echo $season->id; ?>_tvshow_season">
-            <?php Userflag::show($season->id, 'tvshow_season'); ?>
+            <?php echo Userflag::show($season->id, 'tvshow_season'); ?>
     </div>
     <?php
     } ?>

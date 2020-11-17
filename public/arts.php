@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,10 +21,28 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Application\ArtApplication;
+declare(strict_types=1);
+
+use Ampache\Module\Application\ApplicationRunner;
+use Ampache\Module\Application\Art\ClearArtAction;
+use Ampache\Module\Application\Art\FindArtAction;
+use Ampache\Module\Application\Art\SelectArtAction;
+use Ampache\Module\Application\Art\ShowArtDlgAction;
+use Ampache\Module\Application\Art\UploadArtAction;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../src/Config/Init.php';
 
-$dic->get(ArtApplication::class)->run();
+$dic->get(ApplicationRunner::class)->run(
+    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+    [
+        ClearArtAction::REQUEST_KEY => ClearArtAction::class,
+        ShowArtDlgAction::REQUEST_KEY => ShowArtDlgAction::class,
+        FindArtAction::REQUEST_KEY => FindArtAction::class,
+        UploadArtAction::REQUEST_KEY => UploadArtAction::class,
+        SelectArtAction::REQUEST_KEY => SelectArtAction::class,
+    ],
+    ShowArtDlgAction::REQUEST_KEY
+);

@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,10 +21,28 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Application\SmartPlaylistApplication;
+declare(strict_types=1);
+
+use Ampache\Module\Application\ApplicationRunner;
+use Ampache\Module\Application\SmartPlaylist\CreatePlaylistAction;
+use Ampache\Module\Application\SmartPlaylist\DeletePlaylistAction;
+use Ampache\Module\Application\SmartPlaylist\ShowAction;
+use Ampache\Module\Application\SmartPlaylist\ShowPlaylistAction;
+use Ampache\Module\Application\SmartPlaylist\UpdatePlaylistAction;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../src/Config/Init.php';
 
-$dic->get(SmartPlaylistApplication::class)->run();
+$dic->get(ApplicationRunner::class)->run(
+    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+    [
+        ShowAction::REQUEST_KEY => ShowAction::class,
+        UpdatePlaylistAction::REQUEST_KEY => UpdatePlaylistAction::class,
+        ShowPlaylistAction::REQUEST_KEY => ShowPlaylistAction::class,
+        DeletePlaylistAction::REQUEST_KEY => DeletePlaylistAction::class,
+        CreatePlaylistAction::REQUEST_KEY => CreatePlaylistAction::class,
+    ],
+    ShowAction::REQUEST_KEY
+);

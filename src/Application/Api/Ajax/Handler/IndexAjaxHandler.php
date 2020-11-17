@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=0);
-
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -23,6 +21,8 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Model\Video;
@@ -39,7 +39,6 @@ use Ampache\Model\Channel;
 use Ampache\Module\System\Core;
 use Ampache\Model\Label;
 use Ampache\Module\Util\Recommendation;
-use Ampache\Module\Util\Slideshow;
 use Ampache\Model\Song;
 use Ampache\Module\Util\SlideshowInterface;
 use Ampache\Module\Util\Ui;

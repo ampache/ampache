@@ -26,11 +26,12 @@
  * It changes depending on where it is
  */
 
-use Ampache\Application\Api\RefreshReorderedApplication;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Rating;
+use Ampache\Model\Search;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
+use Ampache\Module\Api\RefreshReordered\RefreshPlaylistMediasAction;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
@@ -49,13 +50,13 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
 <?php if (User::is_registered()) { ?>
     <?php if (AmpConfig::get('ratings')) { ?>
     <div style="display:table-cell;" id="rating_<?php echo $playlist->id; ?>_playlist">
-            <?php Rating::show($playlist->id, 'playlist'); ?>
+            <?php echo Rating::show($playlist->id, 'playlist'); ?>
     </div>
     <?php
     } ?>
     <?php if (AmpConfig::get('userflags')) { ?>
     <div style="display:table-cell;" id="userflag_<?php echo $playlist->id; ?>_playlist">
-            <?php Userflag::show($playlist->id, 'playlist'); ?>
+            <?php echo Userflag::show($playlist->id, 'playlist'); ?>
     </div>
     <?php
     } ?>
@@ -66,7 +67,7 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     <?php if (Core::get_global('user')->has_access('50') || $playlist->user == Core::get_global('user')->id) { ?>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $playlist->id; ?>', 'reorder_playlist_table', 'track_',
-                                            '<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id; ?>', '<?php echo RefreshReorderedApplication::ACTION_REFRESH_PLAYLIST_MEDIAS ?>')">
+                                            '<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id; ?>', '<?php echo RefreshPlaylistMediasAction::REQUEST_KEY ?>')">
                 <?php echo Ui::get_icon('save', T_('Save Track Order')); ?>
                 &nbsp;&nbsp;<?php echo T_('Save Track Order'); ?>
             </a>

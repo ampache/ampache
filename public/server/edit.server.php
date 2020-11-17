@@ -1,6 +1,7 @@
 <?php
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -20,12 +21,19 @@
  *
  */
 
+declare(strict_types=1);
+
 /**
  *  Because this is accessed via Ajax we are going to allow the session_id
  * as part of the get request
  */
 
-use Ampache\Application\Api\EditApplication;
+use Ampache\Module\Api\Edit\EditObjectAction;
+use Ampache\Module\Api\Edit\RefreshUpdatedAction;
+use Ampache\Module\Api\Edit\ShowEditObjectAction;
+use Ampache\Module\Api\Edit\ShowEditPlaylistAction;
+use Ampache\Module\Application\ApplicationRunner;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 // Set that this is an ajax include
@@ -34,4 +42,13 @@ define('AJAX_INCLUDE', '1');
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../../src/Config/Init.php';
 
-$dic->get(EditApplication::class)->run();
+$dic->get(ApplicationRunner::class)->run(
+    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+    [
+        EditObjectAction::REQUEST_KEY => EditObjectAction::class,
+        RefreshUpdatedAction::REQUEST_KEY => RefreshUpdatedAction::class,
+        ShowEditObjectAction::REQUEST_KEY => ShowEditObjectAction::class,
+        ShowEditPlaylistAction::REQUEST_KEY => ShowEditPlaylistAction::class,
+    ],
+    ShowEditObjectAction::REQUEST_KEY
+);

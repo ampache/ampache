@@ -29,7 +29,16 @@ use Ampache\Module\Api\Output\ApiOutputFactoryInterface;
 use function DI\autowire;
 
 return [
+    XmlApiApplication::class => autowire(),
+    JsonApiApplication::class => autowire(),
+    SubsonicApiApplication::class => autowire(),
+    DaapApiApplication::class => autowire(),
+    SseApiApplication::class => autowire(),
     ApiOutputFactoryInterface::class => autowire(ApiOutputFactory::class),
     ApiHandlerInterface::class => autowire(ApiHandler::class),
     Method\AlbumsMethod::class => autowire(),
+    Edit\EditObjectAction::class => autowire(),
+    Edit\RefreshUpdatedAction::class => autowire(),
+    Edit\ShowEditObjectAction::class => autowire(),
+    Edit\ShowEditPlaylistAction::class => autowire(),
 ];

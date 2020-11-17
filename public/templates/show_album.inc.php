@@ -20,7 +20,6 @@
  *
  */
 
-use Ampache\Application\Api\RefreshReorderedApplication;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
 use Ampache\Model\Catalog;
@@ -28,6 +27,7 @@ use Ampache\Model\Rating;
 use Ampache\Model\Share;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
+use Ampache\Module\Api\RefreshReordered\RefreshAlbumSongsAction;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
@@ -77,7 +77,7 @@ if ($directplay_limit > 0) {
     <?php if (AmpConfig::get('ratings')) {
             $rating = new Rating($album->id, 'album'); ?>
     <div style="display:table-cell;" id="rating_<?php echo $album->id; ?>_album">
-            <?php Rating::show($album->id, 'album');
+            <?php echo Rating::show($album->id, 'album');
             $average = $rating->get_average_rating();
             if ($average > 0) {
                 /* HINT: Average rating. e.g. (average 3.7) */
@@ -88,7 +88,7 @@ if ($directplay_limit > 0) {
         } ?>
     <?php if (AmpConfig::get('userflags')) { ?>
     <div style="display:table-cell;" id="userflag_<?php echo $album->id; ?>_album">
-            <?php Userflag::show($album->id, 'album'); ?>
+            <?php echo Userflag::show($album->id, 'album'); ?>
     </div>
     <?php
         } ?>
@@ -176,7 +176,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     <?php if (Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('share')) { ?>
             <li>
-                <?php Share::display_ui('album', $album->id); ?>
+                <?php echo Share::display_ui('album', $album->id); ?>
             </li>
             <?php
         } ?>
@@ -193,7 +193,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         } ?>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $album->id; ?>', 'reorder_songs_table_<?php echo $album->id; ?>', 'song_',
-                                            '<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=set_track_numbers', '<?php echo RefreshReorderedApplication::ACTION_REFRESH_ALBUM_SONGS; ?>')">
+                                            '<?php echo AmpConfig::get('web_path'); ?>/albums.php?action=set_track_numbers', '<?php echo RefreshAlbumSongsAction::REQUEST_KEY; ?>')">
                 <?php echo Ui::get_icon('save', $saveorder); ?>
                 &nbsp;&nbsp;<?php echo $saveorder; ?>
             </a>

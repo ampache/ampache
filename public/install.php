@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -23,8 +21,18 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Application\InstallationApplication;
+declare(strict_types=1);
+
+use Ampache\Module\Application\ApplicationRunner;
+use Ampache\Module\Application\Installation\DefaultAction;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 
 $dic = require_once __DIR__ . '/../src/Config/Bootstrap.php';
 
-$dic->get(InstallationApplication::class)->run();
+$dic->get(ApplicationRunner::class)->run(
+    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+    [
+        DefaultAction::REQUEST_KEY => DefaultAction::class,
+    ],
+    DefaultAction::REQUEST_KEY
+);

@@ -32,7 +32,7 @@ use Ampache\Module\System\Dba;
 /**
  * A collection of methods related to the user interface
  */
-class Ui
+class Ui implements UiInterface
 {
     private static $_classes;
     private static $_ticker;
@@ -465,6 +465,8 @@ class Ui
      * show_header
      *
      * For now this just shows the header template
+     *
+     * @deprecated use non-static version
      */
     public static function show_header()
     {
@@ -491,11 +493,23 @@ class Ui
     {
         require_once self::find_template($template);
     }
+    
+    public function showFooter(): void
+    {
+        static::show_footer();
+    }
+    
+    public function showHeader(): void
+    {
+        static::show_header();
+    }
 
     /**
      * show_footer
      *
      * Shows the footer template and possibly profiling info.
+     *
+     * @deprecated use non-static version
      */
     public static function show_footer()
     {
@@ -516,6 +530,16 @@ class Ui
             Dba::show_profile();
         }
     }
+    
+    public function showBoxTop(string $title = '', string $class = ''): void
+    {
+        static::show_box_top($title, $class);
+    }
+    
+    public function showBoxBottom(): void
+    {
+        static::show_box_bottom();
+    }
 
     /**
      * show_box_top
@@ -523,6 +547,8 @@ class Ui
      * This shows the top of the box.
      * @param string $title
      * @param string $class
+     *
+     * @deprecated Use non-static version
      */
     public static function show_box_top($title = '', $class = '')
     {
@@ -533,6 +559,8 @@ class Ui
      * show_box_bottom
      *
      * This shows the bottom of the box
+     *
+     * @deprecated Use non-static version
      */
     public static function show_box_bottom()
     {
@@ -543,10 +571,20 @@ class Ui
      * show_query_stats
      *
      * This shows the bottom of the box
+     *
+     * @deprecated use non-static version
      */
     public static function show_query_stats()
     {
         require self::find_template('show_query_stats.inc.php');
+    }
+
+    /**
+     * This shows the query stats
+     */
+    public function showQueryStats(): void
+    {
+        static::show_query_stats();
     }
 
     public static function show_custom_style()

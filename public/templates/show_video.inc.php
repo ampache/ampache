@@ -72,7 +72,7 @@ $subtitles = $video->get_subtitles();
         <?php $rowparity = Ui::flip_class(); ?>
         <dt class="<?php echo $rowparity; ?>"><?php echo T_('Rating'); ?></dt>
         <dd class="<?php echo $rowparity; ?>">
-            <div id="rating_<?php echo $video->id; ?>_video"><?php Rating::show($video->id, 'video'); ?>
+            <div id="rating_<?php echo $video->id; ?>_video"><?php echo Rating::show($video->id, 'video'); ?>
             </div>
         </dd>
     <?php
@@ -82,7 +82,7 @@ $subtitles = $video->get_subtitles();
         <?php $rowparity = Ui::flip_class(); ?>
         <dt class="<?php echo $rowparity; ?>"><?php echo T_('Fav.'); ?></dt>
         <dd class="<?php echo $rowparity; ?>">
-            <div id="userflag_<?php echo $video->id; ?>_video"><?php Userflag::show($video->id, 'video'); ?>
+            <div id="userflag_<?php echo $video->id; ?>_video"><?php echo Userflag::show($video->id, 'video'); ?>
             </div>
         </dd>
     <?php
@@ -110,7 +110,7 @@ $subtitles = $video->get_subtitles();
     } ?>
     <?php if (Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('share')) { ?>
-                <?php Share::display_ui('video', $video->id, false); ?>
+                <?php echo Share::display_ui('video', $video->id, false); ?>
             <?php
         } ?>
         <?php

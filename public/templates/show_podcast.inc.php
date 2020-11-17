@@ -22,6 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
+use Ampache\Model\Rating;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
 use Ampache\Module\Authorization\Access;
@@ -50,13 +51,13 @@ Ui::show_box_top($podcast->f_title, 'info-box'); ?>
     <?php
     if (AmpConfig::get('ratings')) { ?>
     <div id="rating_<?php echo (int) ($podcast->id); ?>_podcast" style="display:inline;">
-        <?php show_rating($podcast->id, 'podcast'); ?>
+        <?php echo Rating::show($podcast->id, 'podcast'); ?>
     </div>
     <?php
     } ?>
     <?php if (AmpConfig::get('userflags')) { ?>
     <div style="display:table-cell;" id="userflag_<?php echo $podcast->id; ?>_podcast">
-            <?php Userflag::show($podcast->id, 'podcast'); ?>
+            <?php echo Userflag::show($podcast->id, 'podcast'); ?>
     </div>
     <?php
     } ?>

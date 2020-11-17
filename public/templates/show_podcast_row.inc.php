@@ -55,13 +55,13 @@ use Ampache\Module\Util\Ui;
     if (User::is_registered()) {
         if (AmpConfig::get('ratings')) { ?>
     <td class="cel_rating" id="rating_<?php echo $libitem->id; ?>_podcast">
-        <?php Rating::show($libitem->id, 'podcast'); ?>
+        <?php echo Rating::show($libitem->id, 'podcast'); ?>
     </td>
     <?php
         }
         if (AmpConfig::get('userflags')) { ?>
     <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_podcast">
-        <?php Userflag::show($libitem->id, 'podcast'); ?>
+        <?php echo Userflag::show($libitem->id, 'podcast'); ?>
     </td>
     <?php
         }

@@ -23,7 +23,7 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Application\Api\SubsonicApplication;
+use Ampache\Module\Api\SubsonicApiApplication;
 use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');
@@ -32,4 +32,4 @@ define('OUTDATED_DATABASE_OK', 1);
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../../src/Config/Init.php';
 
-$dic->get(SubsonicApplication::class)->run();
+$dic->get(SubsonicApiApplication::class)->run();

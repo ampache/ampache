@@ -28,4 +28,5 @@ use function DI\autowire;
 
 return [
     WebDavFactoryInterface::class => autowire(WebDavFactory::class),
+    WebDavApplication::class => autowire(),
 ];
