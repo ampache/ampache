@@ -68,8 +68,8 @@ $t_search    = T_('Search'); ?>
             <li id="sb_home_browse_music_podcast"><a href="<?php echo $web_path ?>/browse.php?action=podcast"><?php echo T_('Podcasts') ?></a></li>
             <?php
         } ?>
-            <?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25)) { ?>
-            <li id="sb_home_browse_music_upload"><a href="<?php echo $web_path ?>/upload.php"><?php echo T_('Upload') ?></a></li>
+            <?php if (AmpConfig::get('allow_upload')) { ?>
+            <li id="sb_home_info_upload"><a href="<?php echo $web_path ?>/stats.php?action=upload"><?php echo T_('Uploads') ?></a></li>
             <?php
         } ?>
         </ul>
