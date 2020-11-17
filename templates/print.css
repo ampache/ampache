@@ -274,7 +274,6 @@ bdo[DIR="rtl"] {
 }
 
 @media print {
-
     h1 {
         page-break-before: always;
     }
@@ -300,7 +299,7 @@ bdo[DIR="rtl"] {
 }
 
 .alphabet {
-display: none;
+    display: none;
 }
 
 li {

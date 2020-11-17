@@ -420,7 +420,7 @@ table.tabledata tbody .cel_cover img:hover {
     border-color: #ff9d00;
 }
 
-input:invalid { 
+input:invalid {
     border: 4px solid red;
 }
 
@@ -604,6 +604,7 @@ div.jp-playlist li {
 .jp-type-playlist .jp-playlist a.jp-playlist-current {
     color: #ff9d00;
 }
+
 /* --------------------------
    Other
    -------------------------- */
@@ -614,7 +615,7 @@ div.jp-playlist li {
 }
 
 .followbtn {
-   background-color: #363f4a;
+    background-color: #363f4a;
 }
 
 .missing_album {
