@@ -29,7 +29,7 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
             <th class="cel_song"><?php echo T_('Song'); ?></th>
             <th class="cel_add"></th>
             <th class="cel_album"><?php echo T_('Album'); ?></th>
-            <th class="cel_artist"><?php echo T_('Artist'); ?></th>
+            <th class="cel_artist"><?php echo T_('Song Artist'); ?></th>
             <th class="cel_year"><?php echo T_('Year'); ?></th>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
             <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
@@ -46,15 +46,9 @@ foreach ($data as $row) {
     $agent       = '';
     $time_string = '-';
 
-    $has_allowed_agent = true;
-    $has_allowed_time  = true;
-    $is_allowed        = Access::check('interface', 100) || Core::get_global('user')->id == $row_user->id;
-    if (!$is_allowed) {
-        $has_allowed_time  = Preference::get_by_user($row_user->id, 'allow_personal_info_time');
-        $has_allowed_agent = Preference::get_by_user($row_user->id, 'allow_personal_info_agent');
-    }
-
-    if ($is_allowed || $has_allowed_time) {
+    $has_allowed_time = (bool) $row['user_time'];
+    $is_allowed       = Access::check('interface', 100) || Core::get_global('user')->id == $row_id || $has_allowed_time;
+    if ($is_allowed) {
         $interval = (int) (time() - $row['date']);
 
         if ($interval < 60) {
@@ -157,3 +151,4 @@ $(document).ready(function () {
 });
 </script>
 <?php UI::show_box_bottom(); ?>
+

@@ -2102,10 +2102,16 @@ class Song extends database_object implements media, library_item
      */
     public static function get_recently_played($user_id = 0)
     {
+        $personal_info_time  = Preference::id_from_name('allow_personal_info_time');
+        $personal_info_agent = Preference::id_from_name('allow_personal_info_agent');
+
         $results = array();
         $limit   = AmpConfig::get('popular_threshold', 10);
-        $sql     = "SELECT `object_id`, `user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name` " .
-                   "FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream' ";
+        $sql     = "SELECT `object_id`, `object_count`.`user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent` " .
+                   "FROM `object_count`" .
+                   "RIGHT JOIN `user_preference` AS `pref_time` ON `pref_time`.`preference`='$personal_info_time' AND `pref_time`.`user` = `object_count`.`user`" .
+                   "RIGHT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`preference`='$personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user`" .
+                   "WHERE `object_type` = 'song' AND `count_type` = 'stream' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND " . Catalog::get_enable_filter('song', '`object_id`') . " ";
         }
@@ -2114,11 +2120,11 @@ class Song extends database_object implements media, library_item
             $sql .= "AND `user`='$user_id' ";
         } else {
             if (!Access::check('interface', 100)) {
-                // If user identifier is empty, we need to retrieve only users which have allowed view of personnal info
-                $personal_info_id = Preference::id_from_name('allow_personal_info_recent');
-                $current_user     = (int) Core::get_global('user')->id;
+                // If user identifier is empty, we need to retrieve only users which have allowed view of personal info
+                $personal_info_id    = Preference::id_from_name('allow_personal_info_recent');
+                $current_user        = (int) Core::get_global('user')->id;
                 if ($personal_info_id && $current_user > 0) {
-                    $sql .= "AND `user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user') ";
+                    $sql .= "AND `object_count`.`user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user') ";
                 }
             }
         }
