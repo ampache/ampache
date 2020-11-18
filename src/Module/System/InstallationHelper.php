@@ -638,7 +638,7 @@ final class InstallationHelper implements InstallationHelperInterface
     public function generate_config(array $current): string
     {
         // Start building the new config file
-        $distfile = __DIR__ . '/../../config/ampache.cfg.php.dist';
+        $distfile = __DIR__ . '/../../../config/ampache.cfg.php.dist';
         $handle   = fopen($distfile, 'r');
         $dist     = fread($handle, filesize($distfile));
         fclose($handle);
