@@ -71,12 +71,7 @@ final class WriteConfigAction implements ApplicationActionInterface
             return null;
         }
 
-        $this->ui->showHeader();
-
         $this->installationHelper->write_config(__DIR__ . '/../../../../../config/ampache.cfg.php');
-
-        $this->ui->showQueryStats();
-        $this->ui->showFooter();
 
         return $this->responseFactory->createResponse(StatusCode::FOUND)
             ->withHeader(
