@@ -59,7 +59,7 @@ final class PlaylistsMethod
     public static function playlists(array $input)
     {
         $user   = User::get_from_username(Session::username($input['auth']));
-        $method = $input['exact'] ? false : true;
+        $method = ($input['exact']) ? false : true;
         $userid = (!Access::check('interface', 100, $user->id)) ? $user->id : -1;
         $public = !Access::check('interface', 100, $user->id);
 
