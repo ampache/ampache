@@ -489,6 +489,7 @@ class Search extends playlist_object
         $this->type_text('title', T_('Title'));
         $this->type_text('album', T_('Album'));
         $this->type_text('artist', T_('Song Artist'));
+        $this->type_text('album_artist', T_('Album Artist'));
         $this->type_text('composer', T_('Composer'));
 
         $this->type_numeric('year', T_('Year'));
@@ -1861,6 +1862,13 @@ class Search extends playlist_object
                                        " OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), " .
                                        "' ', `artist`.`name`)) $sql_match_operator '$input')";
                     $table['artist'] = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
+                    break;
+                case 'album_artist':
+                    $where[]         = "(`album_artist`.`name` $sql_match_operator '$input' " .
+                        " OR LTRIM(CONCAT(COALESCE(`album_artist`.`prefix`, ''), " .
+                        "' ', `album_artist`.`name`)) $sql_match_operator '$input')";
+                    $table['album']  = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
+                    $table['album_artist'] = "LEFT JOIN `artist` AS `album_artist` ON `album`.`album_artist`=`song`.`artist`";
                     break;
                 case 'composer':
                     $where[] = "`song`.`composer` $sql_match_operator '$input'";
