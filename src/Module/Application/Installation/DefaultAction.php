@@ -58,7 +58,7 @@ final class DefaultAction implements ApplicationActionInterface
     {
         set_error_handler('ampache_error_handler');
 
-        $configfile = __DIR__ . '/../../config/ampache.cfg.php';
+        $configfile = __DIR__ . '/../../../../config/ampache.cfg.php';
 
         // Redirect if installation is already complete.
         if (!$this->installationHelper->install_check_status($configfile)) {
@@ -70,9 +70,9 @@ final class DefaultAction implements ApplicationActionInterface
 
         define('INSTALL', 1);
 
-        $htaccess_play_file    = __DIR__ . '/../../public/play/.htaccess';
-        $htaccess_rest_file    = __DIR__ . '/../../public/rest/.htaccess';
-        $htaccess_channel_file = __DIR__ . '/../../public/channel/.htaccess';
+        $htaccess_play_file    = __DIR__ . '/../../../../public/play/.htaccess';
+        $htaccess_rest_file    = __DIR__ . '/../../../../public/rest/.htaccess';
+        $htaccess_channel_file = __DIR__ . '/../../../../public/channel/.htaccess';
 
         // Clean up incoming variables
         $web_path   = scrub_in($_REQUEST['web_path']);
