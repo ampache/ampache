@@ -25,6 +25,7 @@ namespace Ampache\Module\Application\Stream;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\ModelFactoryInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -47,7 +48,7 @@ final class PlaylistRandomAction extends AbstractStreamAction
         $this->configContainer = $configContainer;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if ($this->preCheck() === false) {
             return null;

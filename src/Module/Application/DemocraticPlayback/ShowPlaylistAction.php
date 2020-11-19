@@ -30,6 +30,7 @@ use Ampache\Model\Democratic;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -55,7 +56,7 @@ final class ShowPlaylistAction implements ApplicationActionInterface
         $this->modelFactory    = $modelFactory;
     }
     
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         /* Make sure they have access to this */
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_DEMOCRATIC_PLAYBACK) === false) {

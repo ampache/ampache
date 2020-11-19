@@ -28,6 +28,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Preference;
 use Ampache\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\AmpError;
@@ -65,7 +66,7 @@ final class DefaultAction implements ApplicationActionInterface
         $this->logger                = $logger;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         // Avoid form login if still connected
         if ($this->configContainer->get('use_auth') && !filter_has_var(INPUT_GET, 'force_display')) {

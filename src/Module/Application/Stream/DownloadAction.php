@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Stream;
 
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -31,7 +32,7 @@ final class DownloadAction extends AbstractStreamAction
 {
     public const REQUEST_KEY = 'download';
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if ($this->preCheck() === false) {
             return null;

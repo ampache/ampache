@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Register;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
@@ -51,9 +52,12 @@ final class ShowAddUserAction implements ApplicationActionInterface
     }
 
     /**
+     * @param ServerRequestInterface $request
+     * @param GuiGatekeeperInterface $gatekeeper
+     * @return ResponseInterface|null
      * @todo drop copy/paste code from register action after fixing the captcha problam
      */
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         /* Check Perms */
         if (

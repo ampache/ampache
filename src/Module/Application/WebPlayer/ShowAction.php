@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\WebPlayer;
 
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -33,7 +34,7 @@ final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
     
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         require_once Ui::find_template('show_web_player.inc.php');
         

@@ -31,6 +31,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Plugin;
 use Ampache\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
@@ -71,7 +72,7 @@ final class ExternalShareAction implements ApplicationActionInterface
         $this->responseFactory   = $responseFactory;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE)) {
             $this->logger->warning(

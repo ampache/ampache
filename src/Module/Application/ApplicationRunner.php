@@ -25,6 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application;
 
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Authorization\GatekeeperFactoryInterface;
+use Ampache\Module\Authorization\GuiGatekeeper;
 use Ampache\Module\System\LegacyLogger;
 use Narrowspark\HttpEmitter\SapiEmitter;
 use Psr\Container\ContainerExceptionInterface;
@@ -38,12 +41,16 @@ final class ApplicationRunner
 
     private LoggerInterface $logger;
 
+    private GatekeeperFactoryInterface $gatekeeperFactory;
+
     public function __construct(
         ContainerInterface $dic,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        GatekeeperFactoryInterface $gatekeeperFactory
     ) {
-        $this->dic    = $dic;
-        $this->logger = $logger;
+        $this->dic               = $dic;
+        $this->logger            = $logger;
+        $this->gatekeeperFactory = $gatekeeperFactory;
     }
 
     /**
@@ -77,7 +84,10 @@ final class ApplicationRunner
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
 
-        $response = $handler->run($request);
+        $response = $handler->run(
+            $request,
+            $this->gatekeeperFactory->createGuiGatekeeper()
+        );
 
         if ($response !== null) {
             $this->dic->get(SapiEmitter::class)->emit($response);

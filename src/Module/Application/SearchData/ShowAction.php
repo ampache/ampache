@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\SearchData;
 
 use Ampache\Model\Search;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -49,7 +50,7 @@ final class ShowAction implements ApplicationActionInterface
         $this->streamFactory   = $streamFactory;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $search = new Search(null, Core::get_request('type'));
 

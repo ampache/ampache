@@ -42,4 +42,9 @@ interface UiInterface
     public function showBoxTop(string $title = '', string $class = ''): void;
 
     public function showBoxBottom(): void;
+
+    /**
+     * Displays the default error page
+     */
+    public function accessDenied(): void;
 }

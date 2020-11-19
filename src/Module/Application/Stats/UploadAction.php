@@ -29,6 +29,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Catalog;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -54,7 +55,7 @@ final class UploadAction implements ApplicationActionInterface
         $this->configContainer = $configContainer;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
 

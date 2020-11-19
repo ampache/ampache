@@ -25,6 +25,7 @@ namespace Ampache\Module\Application\Installation;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Preference;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -54,7 +55,7 @@ final class DefaultAction implements ApplicationActionInterface
         $this->environment        = $environment;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         set_error_handler('ampache_error_handler');
 

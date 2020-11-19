@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Admin\System;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\InstallationHelperInterface;
 use Ampache\Module\Util\Horde_Browser;
@@ -54,7 +55,7 @@ final class GenerateConfigAction implements ApplicationActionInterface
         $this->installationHelper = $installationHelper;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
             !Access::check('interface', 100) ||

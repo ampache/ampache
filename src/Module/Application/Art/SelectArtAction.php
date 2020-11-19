@@ -24,6 +24,7 @@ namespace Ampache\Module\Application\Art;
 
 use Ampache\Model\Art;
 use Ampache\Model\ModelFactoryInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
@@ -52,7 +53,7 @@ final class SelectArtAction extends AbstractArtAction
         $this->ui              = $ui;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         /* Check to see if we have the image url still */
         $image_id = $_REQUEST['image'];

@@ -28,6 +28,7 @@ use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -63,7 +64,8 @@ final class ShowSongAction implements ApplicationActionInterface
     }
 
     public function run(
-        ServerRequestInterface $request
+        ServerRequestInterface $request,
+        GuiGatekeeperInterface $gatekeeper
     ): ?ResponseInterface {
         $this->ui->showHeader();
         

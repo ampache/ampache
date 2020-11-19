@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -56,7 +57,7 @@ final class CleanAction implements ApplicationActionInterface
         $this->logger          = $logger;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE)) {
             $this->logger->warning(

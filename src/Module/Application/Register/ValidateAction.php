@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Register;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\Mailer;
@@ -51,7 +52,7 @@ final class ValidateAction implements ApplicationActionInterface
         $this->logger          = $logger;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         /* Check Perms */
         if (

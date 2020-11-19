@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\LostPassword;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\NewPasswordSenderInterface;
 use Ampache\Module\Util\Mailer;
@@ -49,7 +50,7 @@ final class SendAction implements ApplicationActionInterface
         $this->configContainer   = $configContainer;
         $this->newPasswordSender = $newPasswordSender;
     }
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
             !Mailer::is_mail_enabled() ||

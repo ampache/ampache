@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Album;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Wanted;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -53,7 +54,7 @@ final class ShowMissingAction implements ApplicationActionInterface
         $this->artCollector = $artCollector;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         require_once Ui::find_template('header.inc.php');
         

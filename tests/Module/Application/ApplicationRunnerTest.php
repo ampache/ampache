@@ -25,6 +25,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Application;
 
 use Ampache\MockeryTestCase;
+use Ampache\Module\Authorization\GatekeeperFactoryInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use DI\NotFoundException;
 use Mockery;
@@ -39,22 +41,27 @@ use Psr\Log\LoggerInterface;
 class ApplicationRunnerTest extends MockeryTestCase
 {
     /** @var ContainerInterface|MockInterface|null */
-    private ContainerInterface $dic;
+    private ?MockInterface $dic;
 
     /** @var LoggerInterface|MockInterface|null */
-    private LoggerInterface $logger;
+    private ?MockInterface $logger;
+
+    /** @var GatekeeperFactoryInterface|MockInterface|null */
+    private ?MockInterface $gatekeeperFactory;
     
     /** @var ApplicationRunner|null */
     private ApplicationRunner $subject;
     
     public function setUp(): void
     {
-        $this->dic    = Mockery::mock(ContainerInterface::class);
-        $this->logger = Mockery::mock(LoggerInterface::class);
+        $this->dic               = $this->mock(ContainerInterface::class);
+        $this->logger            = $this->mock(LoggerInterface::class);
+        $this->gatekeeperFactory = $this->mock(GatekeeperFactoryInterface::class);
         
         $this->subject = new ApplicationRunner(
             $this->dic,
-            $this->logger
+            $this->logger,
+            $this->gatekeeperFactory
         );
     }
     
@@ -123,10 +130,11 @@ class ApplicationRunnerTest extends MockeryTestCase
 
     public function testRunRunsWithActionFromBody(): void
     {
-        $request  = $this->mock(ServerRequestInterface::class);
-        $handler  = $this->mock(ApplicationActionInterface::class);
-        $response = $this->mock(ResponseInterface::class);
-        $emitter  = $this->mock(AbstractSapiEmitter::class);
+        $request    = $this->mock(ServerRequestInterface::class);
+        $handler    = $this->mock(ApplicationActionInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $emitter    = $this->mock(AbstractSapiEmitter::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
         $action       = 'some-action';
         $handler_name = 'some-handler';
@@ -155,9 +163,14 @@ class ApplicationRunnerTest extends MockeryTestCase
                 [LegacyLogger::CONTEXT_TYPE => ApplicationRunner::class]
             )
             ->once();
+
+        $this->gatekeeperFactory->shouldReceive('createGuiGatekeeper')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($gatekeeper);
         
         $handler->shouldReceive('run')
-            ->with($request)
+            ->with($request, $gatekeeper)
             ->once()
             ->andReturn($response);
 

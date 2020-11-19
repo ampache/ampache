@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\LostPassword;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseInterface;
@@ -44,7 +45,7 @@ final class ShowAction implements ApplicationActionInterface
         $this->configContainer = $configContainer;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
             !Mailer::is_mail_enabled() ||

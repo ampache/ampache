@@ -24,6 +24,7 @@ namespace Ampache\Module\Application\Logout;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -44,7 +45,7 @@ final class LogoutAction implements ApplicationActionInterface
         $this->authenticationManager = $authenticationManager;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         // To end a legitimate session, just call logout.
         setcookie($this->configContainer->getSessionName() . '_remember', null, -1);

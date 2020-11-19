@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Shout;
 use Ampache\Model\Shoutbox;
 use Ampache\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
@@ -46,7 +47,7 @@ final class ShowAddShoutAction implements ApplicationActionInterface
         $this->ui = $ui;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         // Get our object first
         $object = Shoutbox::get_object($_REQUEST['type'], (int) Core::get_request('id'));

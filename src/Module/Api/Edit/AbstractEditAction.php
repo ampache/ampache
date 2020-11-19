@@ -49,7 +49,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         $this->logger          = $logger;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, \Ampache\Module\Authorization\GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         debug_event('edit.server', 'Called for action: {' . Core::get_request('action') . '}', 5);
 

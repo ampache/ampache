@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Update;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -46,7 +47,7 @@ final class ShowAction implements ApplicationActionInterface
         $this->guiFactory = $guiFactory;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         echo $this->talFactory->createTalView()
             ->setTemplate('update.xhtml')

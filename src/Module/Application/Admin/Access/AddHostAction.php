@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Admin\Access;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
@@ -50,7 +51,7 @@ final class AddHostAction implements ApplicationActionInterface
         $this->configContainer = $configContainer;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (!Access::check('interface', 100)) {
             Ui::access_denied();

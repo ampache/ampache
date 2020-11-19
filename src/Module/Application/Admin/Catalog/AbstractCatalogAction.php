@@ -24,6 +24,7 @@ namespace Ampache\Module\Application\Admin\Catalog;
 
 use Ampache\Model\Catalog;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -40,7 +41,7 @@ abstract class AbstractCatalogAction implements ApplicationActionInterface
         $this->ui = $ui;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (!Access::check('interface', 75)) {
             Ui::access_denied();

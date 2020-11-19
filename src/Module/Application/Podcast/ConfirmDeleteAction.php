@@ -28,6 +28,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -54,7 +55,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         $this->modelFactory    = $modelFactory;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PODCAST) === false) {
             return null;

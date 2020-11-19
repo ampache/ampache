@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Admin\Catalog;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Ui;
@@ -50,7 +51,7 @@ final class ClearStatsAction implements ApplicationActionInterface
         $this->configContainer = $configContainer;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (!Access::check('interface', 75)) {
             Ui::access_denied();

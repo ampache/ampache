@@ -28,6 +28,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Update;
@@ -65,7 +66,7 @@ final class UpdateAction implements ApplicationActionInterface
         $this->streamFactory   = $streamFactory;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) == 'sources') {
             if (!Access::check('interface', 100)) {

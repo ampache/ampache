@@ -29,6 +29,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
@@ -55,7 +56,7 @@ final class RecentAction implements ApplicationActionInterface
         $this->configContainer = $configContainer;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
 

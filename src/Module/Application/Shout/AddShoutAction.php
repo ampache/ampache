@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Shout;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\Shoutbox;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
@@ -56,7 +57,7 @@ final class AddShoutAction implements ApplicationActionInterface
         $this->configContainer = $configContainer;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         // Must be at least a user to do this
         if (!Access::check('interface', 25)) {

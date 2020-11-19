@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Waveform;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Waveform;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -53,7 +54,7 @@ final class ShowAction implements ApplicationActionInterface
         $this->streamFactory   = $streamFactory;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WAVEFORM) === false) {
             return null;

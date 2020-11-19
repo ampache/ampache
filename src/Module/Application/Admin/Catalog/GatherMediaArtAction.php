@@ -25,7 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Admin\Catalog;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

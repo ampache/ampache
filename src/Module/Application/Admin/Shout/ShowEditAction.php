@@ -28,6 +28,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Shoutbox;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -54,7 +55,7 @@ final class ShowEditAction implements ApplicationActionInterface
         $this->modelFactory    = $modelFactory;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (!Access::check('interface', 100)) {
             Ui::access_denied();

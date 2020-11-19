@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\PrivateMessage;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\Ui;
@@ -55,7 +56,7 @@ final class DeleteAction implements ApplicationActionInterface
         $this->logger          = $logger;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
             !Access::check('interface', 25) ||

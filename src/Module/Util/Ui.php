@@ -81,6 +81,11 @@ class Ui implements UiInterface
         return false;
     }
 
+    public function accessDenied(): void
+    {
+        static::access_denied();
+    }
+
     /**
      * ajax_include
      *

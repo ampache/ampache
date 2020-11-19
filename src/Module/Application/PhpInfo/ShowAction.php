@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\PhpInfo;
 
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseInterface;
@@ -34,7 +35,7 @@ final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (!Access::check('interface', 100)) {
             Ui::access_denied();

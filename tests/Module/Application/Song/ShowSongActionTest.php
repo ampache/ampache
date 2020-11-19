@@ -31,6 +31,7 @@ use Ampache\Gui\TalFactoryInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Song;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
@@ -116,7 +117,8 @@ class ShowSongActionTest extends MockeryTestCase
         
         $this->assertNull(
             $this->subject->run(
-                $request
+                $request,
+                $this->mock(GuiGatekeeperInterface::class)
             )
         );
     }
@@ -191,7 +193,8 @@ class ShowSongActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run(
-                $request
+                $request,
+                $this->mock(GuiGatekeeperInterface::class)
             )
         );
     }

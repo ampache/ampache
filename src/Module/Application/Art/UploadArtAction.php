@@ -24,6 +24,7 @@ namespace Ampache\Module\Application\Art;
 
 use Ampache\Model\Art;
 use Ampache\Model\ModelFactoryInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -46,7 +47,7 @@ final class UploadArtAction extends AbstractArtAction
         $this->ui           = $ui;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $burl = '';
         if (filter_has_var(INPUT_GET, 'burl')) {

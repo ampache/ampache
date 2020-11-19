@@ -37,6 +37,7 @@ use Ampache\Model\Song_Preview;
 use Ampache\Model\User;
 use Ampache\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\Stream;
@@ -67,7 +68,7 @@ final class PlayAction implements ApplicationActionInterface
         $this->authenticationManager = $authenticationManager;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         ob_end_clean();
 

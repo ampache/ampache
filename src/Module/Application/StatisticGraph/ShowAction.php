@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\StatisticGraph;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Graph;
@@ -51,7 +52,7 @@ final class ShowAction implements ApplicationActionInterface
         $this->logger          = $logger;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         // Check to see if they've got an interface session or a valid API session, if not GTFO
         if (

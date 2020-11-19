@@ -24,12 +24,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Register;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
@@ -61,7 +61,7 @@ final class AddUserAction implements ApplicationActionInterface
         $this->modelFactory    = $modelFactory;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         /* Check Perms */
         if (

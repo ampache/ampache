@@ -30,6 +30,7 @@ use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\UiInterface;
@@ -64,7 +65,7 @@ final class ShowAction implements ApplicationActionInterface
         $this->talFactory      = $talFactory;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
 

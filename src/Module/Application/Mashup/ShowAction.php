@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Mashup;
 
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\Ui;
@@ -44,7 +45,7 @@ final class ShowAction implements ApplicationActionInterface
         $this->ui = $ui;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         session_start();
 

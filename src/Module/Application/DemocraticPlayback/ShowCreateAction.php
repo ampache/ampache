@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\DemocraticPlayback;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -49,7 +50,7 @@ final class ShowCreateAction implements ApplicationActionInterface
         $this->configContainer = $configContainer;
     }
     
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         /* Make sure they have access to this */
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_DEMOCRATIC_PLAYBACK) === false) {

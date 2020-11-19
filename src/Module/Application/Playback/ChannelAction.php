@@ -30,6 +30,7 @@ use Ampache\Model\Channel;
 use Ampache\Model\Preference;
 use Ampache\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
@@ -49,7 +50,7 @@ final class ChannelAction implements ApplicationActionInterface
         $this->authenticationManager = $authenticationManager;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         ob_end_clean();
 

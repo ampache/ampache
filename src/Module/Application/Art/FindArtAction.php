@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Art;
 
 use Ampache\Model\Art;
 use Ampache\Model\ModelFactoryInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
@@ -53,7 +54,7 @@ final class FindArtAction extends AbstractArtAction
         $this->ui           = $ui;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $item        = $this->getItem();

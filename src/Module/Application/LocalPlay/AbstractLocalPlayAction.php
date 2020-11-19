@@ -25,6 +25,7 @@ namespace Ampache\Module\Application\LocalPlay;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseInterface;
@@ -40,7 +41,7 @@ abstract class AbstractLocalPlayAction implements ApplicationActionInterface
         $this->configContainer = $configContainer;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_LOCALPLAY_PLAYBACK) === false ||

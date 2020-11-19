@@ -28,6 +28,7 @@ use Psr\Http\Message\ServerRequestInterface;
 interface ApplicationActionInterface
 {
     public function run(
-        ServerRequestInterface $request
+        ServerRequestInterface $request,
+        \Ampache\Module\Authorization\GuiGatekeeperInterface $gatekeeper
     ): ?ResponseInterface;
 }

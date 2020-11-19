@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Art;
 
 use Ampache\Model\ModelFactoryInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -47,7 +48,7 @@ final class ClearArtAction extends AbstractArtAction
         $this->ui           = $ui;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 

@@ -28,6 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\Preference;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Exception;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -50,9 +51,12 @@ final class ShowAction implements ApplicationActionInterface
     }
 
     /**
+     * @param ServerRequestInterface $request
+     * @param GuiGatekeeperInterface $gatekeeper
+     * @return ResponseInterface|null
      * @throws Exception
      */
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $configfile = __DIR__ . '/../../../../config/ampache.cfg.php';
 

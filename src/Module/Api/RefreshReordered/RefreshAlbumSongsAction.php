@@ -46,7 +46,7 @@ final class RefreshAlbumSongsAction implements ApplicationActionInterface
         $this->modelFactory  = $modelFactory;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, \Ampache\Module\Authorization\GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $object_id = $this->requestParser->getFromRequest('id');
 

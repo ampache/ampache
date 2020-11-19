@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Album;
 
 use Ampache\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
@@ -51,7 +52,7 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
         $this->logger = $logger;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         require_once Ui::find_template('header.inc.php');
         

@@ -29,6 +29,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Catalog;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -61,7 +62,8 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
     }
 
     public function run(
-        ServerRequestInterface $request
+        ServerRequestInterface $request,
+        GuiGatekeeperInterface $gatekeeper
     ): ?ResponseInterface {
         $this->ui->showHeader();
 

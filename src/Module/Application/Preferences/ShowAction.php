@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Preferences;
 
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -43,7 +44,7 @@ final class ShowAction implements ApplicationActionInterface
         $this->ui = $ui;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $fullname    = Core::get_global('user')->fullname;
         $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab']);

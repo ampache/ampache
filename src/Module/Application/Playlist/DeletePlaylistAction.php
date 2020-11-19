@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Playlist;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -57,7 +58,7 @@ final class DeletePlaylistAction implements ApplicationActionInterface
         $this->configContainer = $configContainer;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         // Check rights
         $playlist = $this->modelFactory->createPlaylist((int) $_REQUEST['playlist_id']);

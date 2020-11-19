@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\SmartPlaylist;
 
 use Ampache\Model\Search;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
@@ -45,7 +46,7 @@ final class CreatePlaylistAction implements ApplicationActionInterface
         $this->ui = $ui;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
 

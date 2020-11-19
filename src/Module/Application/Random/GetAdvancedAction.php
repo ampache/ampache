@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Random;
 
 use Ampache\Model\Random;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -34,7 +35,7 @@ final class GetAdvancedAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'get_advanced';
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $objectIds = Random::advanced($_REQUEST['type'], $_POST);
 

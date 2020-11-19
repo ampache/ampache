@@ -24,10 +24,10 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\SmartPlaylist;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\Search;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -54,7 +54,7 @@ final class DeletePlaylistAction implements ApplicationActionInterface
         $this->configContainer = $configContainer;
     }
 
-    public function run(ServerRequestInterface $request): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         // Check rights
         $playlist = new Search((int) $_REQUEST['playlist_id'], 'song');

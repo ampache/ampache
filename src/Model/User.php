@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
@@ -1209,18 +1210,18 @@ class User extends database_object
     {
         switch ($name) {
             case 'admin':
-                return 100;
+                return AccessLevelEnum::LEVEL_ADMIN;
             case 'user':
-                return 25;
+                return AccessLevelEnum::LEVEL_USER;
             case 'manager':
-                return 75;
+                return AccessLevelEnum::LEVEL_MANAGER;
             // FIXME why is content manager not here?
             //case 'manager':
-            //    return 50;
+                //return AccessLevelEnum::LEVEL_CONTENT_MANAGER;
             case 'guest':
-                return 5;
+                return AccessLevelEnum::LEVEL_GUEST;
             default:
-                return 0;
+                return AccessLevelEnum::LEVEL_DEFAULT;
         }
     } // access_name_to_level
 
