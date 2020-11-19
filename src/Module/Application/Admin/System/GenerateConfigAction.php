@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\System;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -32,7 +31,6 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\InstallationHelperInterface;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -42,20 +40,16 @@ final class GenerateConfigAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private UiInterface $ui;
-
     private Horde_Browser $browser;
 
     private InstallationHelperInterface $installationHelper;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui,
         Horde_Browser $browser,
         InstallationHelperInterface $installationHelper
     ) {
         $this->configContainer    = $configContainer;
-        $this->ui                 = $ui;
         $this->browser            = $browser;
         $this->installationHelper = $installationHelper;
     }
@@ -71,8 +65,6 @@ final class GenerateConfigAction implements ApplicationActionInterface
             return null;
         }
 
-        $this->ui->showHeader();
-
         $path = __DIR__ . '/../../../../../config/ampache.cfg.php';
 
         ob_end_clean();
@@ -85,9 +77,6 @@ final class GenerateConfigAction implements ApplicationActionInterface
             filesize($path)
         );
         echo $final;
-
-        $this->ui->showQueryStats();
-        $this->ui->showFooter();
 
         return null;
     }
