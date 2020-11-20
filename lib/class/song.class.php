@@ -2023,9 +2023,10 @@ class Song extends database_object implements media, library_item
     /**
      * Generate a simple play url.
      * @param integer $uid
+     * @param string $player
      * @return string
      */
-    public function get_play_url($uid = -1)
+    public function get_play_url($uid = -1, $player = false)
     {
         if (!$this->id) {
             return '';
@@ -2040,6 +2041,9 @@ class Song extends database_object implements media, library_item
         $media_name = rawurlencode($media_name);
 
         $url = Stream::get_base_url(false) . "type=song&oid=" . $this->id . "&uid=" . (string) $uid;
+        if ($player) {
+            $url .= "&client=" . $player;
+        }
         $url .= "&name=" . $media_name;
 
         return $url;

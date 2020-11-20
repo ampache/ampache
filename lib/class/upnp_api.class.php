@@ -1116,7 +1116,7 @@ class Upnp_Api
             //'dc:date'                   => date("c", (int) $song->addition_time),
             'upnp:originalTrackNumber' => $song->track,
 
-            'res' => Song::play_url($song->id, '', 'api'),
+            'res' => $song->get_play_url(-1, 'api'),
             'protocolInfo' => $arrFileType['mime'],
             'size' => $song->size,
             'duration' => $song->f_time_h . '.0',

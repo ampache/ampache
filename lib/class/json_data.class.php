@@ -817,7 +817,7 @@ class JSON_Data
             $ourSong['rate']             = (int) $song->rate;
             $ourSong['mode']             = $song->mode;
             $ourSong['mime']             = $song->mime;
-            $ourSong['url']              = Song::play_url($song->id, '', 'api', false, $user_id);
+            $ourSong['url']              = $song->get_play_url($user_id, 'api');
             $ourSong['size']             = (int) $song->size;
             $ourSong['mbid']             = $song->mbid;
             $ourSong['album_mbid']       = $song->album_mbid;
@@ -929,7 +929,7 @@ class JSON_Data
                 "track" => (int) $song->track,
                 "time" => (int) $song->time,
                 "mime" => $song->mime,
-                "url" => Song::play_url($song->id, '', 'api', false, $user_id),
+                "url" => $song->get_play_url($user_id, 'api'),
                 "size" => (int) $song->size,
                 "art" => $art_url,
                 "preciserating" => ($rating->get_user_rating() ?: null),
