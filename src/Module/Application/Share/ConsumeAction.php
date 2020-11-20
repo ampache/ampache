@@ -68,7 +68,7 @@ final class ConsumeAction implements ApplicationActionInterface
                 'Access Denied: sharing features are not enabled.',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }
@@ -89,7 +89,7 @@ final class ConsumeAction implements ApplicationActionInterface
                     ),
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
-                Ui::access_denied();
+                $this->ui->accessDenied();
 
                 return null;
             }
@@ -108,7 +108,7 @@ final class ConsumeAction implements ApplicationActionInterface
         }
 
         if (!$share->is_valid($secret, $action)) {
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }
@@ -135,7 +135,7 @@ final class ConsumeAction implements ApplicationActionInterface
                 'Access Denied: unknown action.',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            Ui::access_denied();
+            $this->ui->accessDenied();
         }
 
         return null;

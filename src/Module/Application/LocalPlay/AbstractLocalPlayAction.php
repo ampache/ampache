@@ -25,9 +25,10 @@ namespace Ampache\Module\Application\LocalPlay;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -35,24 +36,28 @@ abstract class AbstractLocalPlayAction implements ApplicationActionInterface
 {
     private ConfigContainerInterface $configContainer;
 
+    private UiInterface $ui;
+
     protected function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        UiInterface $ui
     ) {
         $this->configContainer = $configContainer;
+        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_LOCALPLAY_PLAYBACK) === false ||
-            !Access::check('interface', 25)
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false
         ) {
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }
 
-        return $this->handle($request);
+        return $this->handle($request, $gatekeeper);
     }
 
     protected function showRefresh(): void
@@ -64,5 +69,8 @@ abstract class AbstractLocalPlayAction implements ApplicationActionInterface
         }
     }
 
-    abstract protected function handle(ServerRequestInterface $request): ?ResponseInterface;
+    abstract protected function handle(
+        ServerRequestInterface $request,
+        GuiGatekeeperInterface $gatekeeper
+    ): ?ResponseInterface;
 }

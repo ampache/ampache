@@ -28,9 +28,8 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Search;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -57,16 +56,14 @@ final class SaveAsSmartPlaylistAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
-        
-        if (!Access::check('interface', 25)) {
-            Ui::access_denied();
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false) {
+            $this->ui->accessDenied();
 
-            $this->ui->showQueryStats();
-            $this->ui->showFooter();
-            
             return null;
         }
+
+        $this->ui->showHeader();
+
         $playlist = $this->modelFactory->createSearch();
         $playlist->parse_rules(Search::clean_request($_REQUEST));
         $playlist->save();

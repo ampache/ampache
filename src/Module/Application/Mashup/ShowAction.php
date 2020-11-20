@@ -51,7 +51,7 @@ final class ShowAction implements ApplicationActionInterface
 
         $object_type = Core::get_request('action');
         if (!InterfaceImplementationChecker::is_library_item($object_type)) {
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }

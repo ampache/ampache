@@ -28,8 +28,8 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Label;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -54,29 +54,23 @@ final class AddLabelAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
-        
+
         // Must be at least a content manager or edit upload enabled
         if (
-            !Access::check('interface', 50) &&
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === false &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === false
         ) {
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
-            $this->ui->showQueryStats();
-            $this->ui->showFooter();
-            
             return null;
         }
 
         if (!Core::form_verify('add_label', 'post')) {
-            Ui::access_denied();
-
-            $this->ui->showQueryStats();
-            $this->ui->showFooter();
+            $this->ui->accessDenied();
 
             return null;
         }
+        $this->ui->showHeader();
 
         // Remove unauthorized defined values from here
         if (filter_has_var(INPUT_POST, 'user')) {

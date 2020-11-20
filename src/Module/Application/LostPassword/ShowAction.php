@@ -30,6 +30,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -39,10 +40,14 @@ final class ShowAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private UiInterface $ui;
+
     public function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        UiInterface $ui
     ) {
         $this->configContainer = $configContainer;
+        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -51,7 +56,7 @@ final class ShowAction implements ApplicationActionInterface
             !Mailer::is_mail_enabled() ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
         ) {
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }

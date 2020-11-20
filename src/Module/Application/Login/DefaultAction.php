@@ -28,6 +28,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Preference;
 use Ampache\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Authorization\Access;
@@ -37,12 +38,12 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Teapot\StatusCode;
-use const Grpc\STATUS_ABORTED;
 
 final class DefaultAction implements ApplicationActionInterface
 {
@@ -56,16 +57,20 @@ final class DefaultAction implements ApplicationActionInterface
 
     private LoggerInterface $logger;
 
+    private UiInterface $ui;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         AuthenticationManagerInterface $authenticationManager,
         ResponseFactoryInterface $responseFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        UiInterface $ui
     ) {
         $this->configContainer       = $configContainer;
         $this->authenticationManager = $authenticationManager;
         $this->responseFactory       = $responseFactory;
         $this->logger                = $logger;
+        $this->ui                    = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -107,7 +112,7 @@ final class DefaultAction implements ApplicationActionInterface
                     ),
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
-                Ui::access_denied();
+                $this->ui->accessDenied();
 
                 return null;
             }
@@ -297,7 +302,7 @@ final class DefaultAction implements ApplicationActionInterface
             // If an admin, check for update
             if (
                 $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTOUPDATE) &&
-                Access::check('interface', 100)
+                $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
             ) {
                 AutoUpdate::is_update_available(true);
             }

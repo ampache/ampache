@@ -27,8 +27,8 @@ namespace Ampache\Module\Application\Album;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -61,8 +61,8 @@ final class UpdateGroupFromTagsAction implements ApplicationActionInterface
         $response = null;
         
         // Make sure they are a 'power' user at least
-        if (!Access::check('interface', 75)) {
-            Ui::access_denied();
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
+            $this->ui->accessDenied();
 
             return $response;
         }

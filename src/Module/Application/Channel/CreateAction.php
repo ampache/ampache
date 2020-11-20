@@ -58,18 +58,15 @@ final class CreateAction implements ApplicationActionInterface
             return null;
         }
         
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
-            Ui::access_denied();
+        if (
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) ||
+            !Core::form_verify('add_channel', 'post')
+        ) {
+            $this->ui->accessDenied();
 
             return null;
         }
 
-        if (!Core::form_verify('add_channel', 'post')) {
-            Ui::access_denied();
-
-            return null;
-        }
-        
         $this->ui->showHeader();
 
         $created = Channel::create(

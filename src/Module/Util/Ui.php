@@ -81,9 +81,9 @@ class Ui implements UiInterface
         return false;
     }
 
-    public function accessDenied(): void
+    public function accessDenied(string $error = 'Access Denied'): void
     {
-        static::access_denied();
+        static::access_denied($error);
     }
 
     /**

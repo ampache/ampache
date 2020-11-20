@@ -29,10 +29,10 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Democratic;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -46,35 +46,31 @@ final class CreateAction implements ApplicationActionInterface
 
     private ResponseFactoryInterface $responseFactory;
 
+    private UiInterface $ui;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        ResponseFactoryInterface $responseFactory
+        ResponseFactoryInterface $responseFactory,
+        UiInterface $ui
     ) {
         $this->configContainer = $configContainer;
         $this->responseFactory = $responseFactory;
+        $this->ui              = $ui;
     }
     
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         /* Make sure they have access to this */
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_DEMOCRATIC_PLAYBACK) === false) {
-            Ui::access_denied();
+        if (
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_DEMOCRATIC_PLAYBACK) === false ||
+            !Core::form_verify('create_democratic') ||
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false
+        ) {
+            $this->ui->accessDenied();
 
             return null;
         }
         
-        if (!Core::form_verify('create_democratic')) {
-            Ui::access_denied();
-
-            return null;
-        }
-
-        if (!Access::check('interface', 75)) {
-            Ui::access_denied();
-
-            return null;
-        }
-
         $democratic = Democratic::get_current_playlist();
 
         // If we don't have anything currently create something

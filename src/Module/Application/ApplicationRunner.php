@@ -25,9 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application;
 
-use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
-use Ampache\Module\Authorization\GuiGatekeeper;
 use Ampache\Module\System\LegacyLogger;
 use Narrowspark\HttpEmitter\SapiEmitter;
 use Psr\Container\ContainerExceptionInterface;

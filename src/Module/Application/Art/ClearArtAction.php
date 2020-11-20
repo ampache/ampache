@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\Art;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -57,10 +56,10 @@ final class ClearArtAction extends AbstractArtAction
             $burl = base64_decode(Core::get_get('burl'));
         }
 
-        $item = $this->getItem();
+        $item = $this->getItem($gatekeeper);
 
         if ($item === null) {
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }

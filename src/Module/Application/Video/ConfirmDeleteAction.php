@@ -31,7 +31,6 @@ use Ampache\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -57,8 +56,6 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
-        
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             return null;
         }
@@ -71,10 +68,12 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
                 sprintf('Unauthorized to remove the video `%s`', $video->id),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }
+
+        $this->ui->showHeader();
 
         if ($video->remove()) {
             show_confirmation(

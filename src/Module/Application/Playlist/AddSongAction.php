@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\Playlist;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -50,17 +49,13 @@ final class AddSongAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
-
         $playlist = $this->modelFactory->createPlaylist((int) $_REQUEST['playlist_id']);
         if (!$playlist->has_access()) {
-            Ui::access_denied();
-
-            $this->ui->showQueryStats();
-            $this->ui->showFooter();
+            $this->ui->accessDenied();
 
             return null;
         }
+        $this->ui->showHeader();
 
         $playlist->add_songs(array($_REQUEST['song_id']), true);
 

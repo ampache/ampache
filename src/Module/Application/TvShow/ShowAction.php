@@ -60,5 +60,7 @@ final class ShowAction implements ApplicationActionInterface
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();
+
+        return null;
     }
 }

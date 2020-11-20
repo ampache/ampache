@@ -24,12 +24,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Label;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Label;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -73,8 +73,8 @@ final class ShowAction implements ApplicationActionInterface
             return null;
         }
         if (
-            Access::check('interface', 50) ||
-            AmpConfig::get('upload_allow_edit')
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) ||
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true
         ) {
             require_once Ui::find_template('show_add_label.inc.php');
         } else {

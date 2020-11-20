@@ -27,8 +27,8 @@ namespace Ampache\Module\Application\Preferences;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
@@ -54,14 +54,14 @@ final class UpdateUserAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if (!Access::check('interface', 25) && Core::get_global('user')->id > 0) {
-            Ui::access_denied();
-
-            return null;
-        }
-
-        if (!Core::form_verify('update_user', 'post')) {
-            Ui::access_denied();
+        if (
+            (
+                $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false &&
+                Core::get_global('user')->id > 0
+            ) ||
+            !Core::form_verify('update_user', 'post')
+        ) {
+            $this->ui->accessDenied();
 
             return null;
         }

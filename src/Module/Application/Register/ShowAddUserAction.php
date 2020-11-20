@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -43,12 +44,16 @@ final class ShowAddUserAction implements ApplicationActionInterface
 
     private LoggerInterface $logger;
 
+    private UiInterface $ui;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        UiInterface $ui
     ) {
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
+        $this->ui              = $ui;
     }
 
     /**
@@ -68,7 +73,7 @@ final class ShowAddUserAction implements ApplicationActionInterface
                 'Error attempted registration',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }

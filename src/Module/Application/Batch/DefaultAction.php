@@ -33,7 +33,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -49,21 +49,25 @@ final class DefaultAction implements ApplicationActionInterface
 
     private ZipHandlerInterface $zipHandler;
 
+    private UiInterface $ui;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
-        ZipHandlerInterface $zipHandler
+        ZipHandlerInterface $zipHandler,
+        UiInterface $ui
     ) {
         $this->modelFactory = $modelFactory;
         $this->logger       = $logger;
         $this->zipHandler   = $zipHandler;
+        $this->ui           = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         ob_end_clean();
         if (!defined('NO_SESSION') && !Access::check_function('batch_download')) {
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }
@@ -85,7 +89,7 @@ final class DefaultAction implements ApplicationActionInterface
                 'Object type `' . $object_type . '` is not allowed to be zipped.',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }
@@ -146,7 +150,7 @@ final class DefaultAction implements ApplicationActionInterface
                 'UI::access_denied: Stream control failed for user ' . Core::get_global('user')->username,
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }

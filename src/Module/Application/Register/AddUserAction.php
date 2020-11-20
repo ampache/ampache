@@ -37,6 +37,7 @@ use Ampache\Module\User\Registration;
 use Ampache\Module\Util\Captcha\captcha;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -51,14 +52,18 @@ final class AddUserAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private UiInterface $ui;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         LoggerInterface $logger,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        UiInterface $ui
     ) {
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
         $this->modelFactory    = $modelFactory;
+        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -72,7 +77,7 @@ final class AddUserAction implements ApplicationActionInterface
                 'Error attempted registration',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }

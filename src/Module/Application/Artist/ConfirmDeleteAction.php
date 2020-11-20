@@ -32,7 +32,6 @@ use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -82,10 +81,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
                 sprintf('Unauthorized to remove the artist `%d`', $artist->id),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            Ui::access_denied();
-
-            $this->ui->showQueryStats();
-            $this->ui->showFooter();
+            $this->ui->accessDenied();
 
             return $response;
         }

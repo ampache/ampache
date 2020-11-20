@@ -40,12 +40,15 @@ final class AddCatalogAction extends AbstractCatalogAction
 
     private ConfigContainerInterface $configContainer;
 
+    private UiInterface $ui;
+
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer
     ) {
         parent::__construct($ui);
         $this->configContainer = $configContainer;
+        $this->ui              = $ui;
     }
 
     /**
@@ -70,7 +73,7 @@ final class AddCatalogAction extends AbstractCatalogAction
         }
 
         if (!Core::form_verify('add_catalog', 'post')) {
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }

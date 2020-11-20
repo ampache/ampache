@@ -28,8 +28,8 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Podcast;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -59,16 +59,11 @@ final class CreateAction implements ApplicationActionInterface
         }
 
         if (
-            !Access::check('interface', 75) ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false ||
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
+            !Core::form_verify('add_podcast', 'post')
         ) {
-            Ui::access_denied();
-
-            return null;
-        }
-
-        if (!Core::form_verify('add_podcast', 'post')) {
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }

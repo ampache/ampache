@@ -48,7 +48,7 @@ final class BasketAction extends AbstractStreamAction
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if ($this->preCheck() === false) {
+        if ($this->preCheck($gatekeeper) === false) {
             return null;
         }
 

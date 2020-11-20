@@ -22,12 +22,11 @@
 
 namespace Ampache\Module\Application\Upload;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -61,9 +60,9 @@ final class DefaultAction implements ApplicationActionInterface
     {
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_UPLOAD) === false ||
-            !Access::check('interface', 25)
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false
         ) {
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }
@@ -86,8 +85,8 @@ final class DefaultAction implements ApplicationActionInterface
 
         $uploadAction = $_REQUEST['actionp'] ?? null;
         if ($uploadAction === 'upload') {
-            if (AmpConfig::get('demo_mode')) {
-                Ui::access_denied();
+            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+                $this->ui->accessDenied();
 
                 return null;
             }

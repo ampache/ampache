@@ -26,11 +26,11 @@ namespace Ampache\Module\Application\Preferences;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\PreferencesFromRequestUpdaterInterface;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -46,26 +46,27 @@ final class AdminUpdatePreferencesAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private UiInterface $ui;
+
     public function __construct(
         PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater,
         ResponseFactoryInterface $responseFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        UiInterface $ui
     ) {
         $this->preferencesFromRequestUpdater = $preferencesFromRequestUpdater;
         $this->responseFactory               = $responseFactory;
         $this->configContainer               = $configContainer;
+        $this->ui                            = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if (!Access::check('interface', 100)) {
-            Ui::access_denied();
-
-            return null;
-        }
-
-        if (!Core::form_verify('update_preference', 'post')) {
-            Ui::access_denied();
+        if (
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false ||
+            !Core::form_verify('update_preference', 'post')
+        ) {
+            $this->ui->accessDenied();
 
             return null;
         }

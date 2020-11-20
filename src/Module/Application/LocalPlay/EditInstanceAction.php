@@ -26,7 +26,8 @@ namespace Ampache\Module\Application\LocalPlay;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -50,11 +51,13 @@ final class EditInstanceAction extends AbstractLocalPlayAction
         $this->ui              = $ui;
     }
 
-    protected function handle(ServerRequestInterface $request): ?ResponseInterface
-    {
+    protected function handle(
+        ServerRequestInterface $request,
+        GuiGatekeeperInterface $gatekeeper
+    ): ?ResponseInterface {
         // Check to make sure they've got the access
-        if (!Access::check('localplay', 75)) {
-            Ui::access_denied();
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_LOCALPLAY, AccessLevelEnum::LEVEL_MANAGER) === false) {
+            $this->ui->accessDenied();
 
             return null;
         }

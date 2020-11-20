@@ -81,8 +81,8 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
                 sprintf('Unauthorized to remove the album `%d`', $album->id),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            
-            Ui::access_denied();
+
+            $this->ui->accessDenied();
 
             return $response;
         }

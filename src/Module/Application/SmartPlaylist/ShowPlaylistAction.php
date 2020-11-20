@@ -25,7 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\SmartPlaylist;
 
 use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\Search;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;

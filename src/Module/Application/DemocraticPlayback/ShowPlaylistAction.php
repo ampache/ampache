@@ -60,7 +60,7 @@ final class ShowPlaylistAction implements ApplicationActionInterface
     {
         /* Make sure they have access to this */
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_DEMOCRATIC_PLAYBACK) === false) {
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }

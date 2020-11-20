@@ -29,6 +29,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -38,10 +39,14 @@ final class DeleteAction implements ApplicationActionInterface
     
     private ConfigContainerInterface $configContainer;
 
+    private UiInterface $ui;
+
     public function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        UiInterface $ui
     ) {
         $this->configContainer = $configContainer;
+        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -51,11 +56,9 @@ final class DeleteAction implements ApplicationActionInterface
         require_once Ui::find_template('header.inc.php');
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
+            $this->ui->showQueryStats();
+            $this->ui->showFooter();
 
-            // Show the Footer
-            Ui::show_query_stats();
-            Ui::show_footer();
-            
             return $response;
         }
 
@@ -73,9 +76,8 @@ final class DeleteAction implements ApplicationActionInterface
             'delete_album'
         );
 
-        // Show the Footer
-        Ui::show_query_stats();
-        Ui::show_footer();
+        $this->ui->showQueryStats();
+        $this->ui->showFooter();
 
         return $response;
     }

@@ -32,6 +32,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\User\NewPasswordSenderInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -43,12 +44,16 @@ final class SendAction implements ApplicationActionInterface
 
     private NewPasswordSenderInterface $newPasswordSender;
 
+    private UiInterface $ui;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        NewPasswordSenderInterface $newPasswordSender
+        NewPasswordSenderInterface $newPasswordSender,
+        UiInterface $ui
     ) {
         $this->configContainer   = $configContainer;
         $this->newPasswordSender = $newPasswordSender;
+        $this->ui                = $ui;
     }
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -56,7 +61,7 @@ final class SendAction implements ApplicationActionInterface
             !Mailer::is_mail_enabled() ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
         ) {
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }

@@ -24,16 +24,17 @@ namespace Ampache\Module\Application\Art;
 
 use Ampache\Model\database_object;
 use Ampache\Module\Application\ApplicationActionInterface;
-use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Ui;
 
 abstract class AbstractArtAction implements ApplicationActionInterface
 {
-    protected function getItem(): ?database_object
-    {
+    protected function getItem(
+        GuiGatekeeperInterface $gatekeeper
+    ): ?database_object {
         $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
         if (!InterfaceImplementationChecker::is_library_item($object_type)) {
@@ -44,9 +45,12 @@ abstract class AbstractArtAction implements ApplicationActionInterface
         $item       = new $class_name($object_id);
 
         // If not a content manager user then kick em out
-        if (!Access::check('interface', 50) && (!Access::check('interface', 25) || $item->get_user_owner() != Core::get_global('user')->id)) {
-            Ui::access_denied();
-
+        if (
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === false && (
+                $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false ||
+                $item->get_user_owner() != Core::get_global('user')->id
+            )
+        ) {
             return null;
         }
 

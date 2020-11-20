@@ -48,7 +48,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -60,12 +60,16 @@ final class PlayAction implements ApplicationActionInterface
 
     private AuthenticationManagerInterface $authenticationManager;
 
+    private UiInterface $ui;
+
     public function __construct(
         Horde_Browser $browser,
-        AuthenticationManagerInterface $authenticationManager
+        AuthenticationManagerInterface $authenticationManager,
+        UiInterface $ui
     ) {
         $this->browser               = $browser;
         $this->authenticationManager = $authenticationManager;
+        $this->ui                    = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -277,7 +281,7 @@ final class PlayAction implements ApplicationActionInterface
         // If we are in demo mode.. die here
         if (AmpConfig::get('demo_mode')) {
             debug_event('play/index', "Streaming Access Denied: Disable demo_mode in 'config/ampache.cfg.php'", 3);
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }
@@ -285,7 +289,7 @@ final class PlayAction implements ApplicationActionInterface
         $prefs = AmpConfig::get('allow_stream_playback') && $_SESSION['userdata']['preferences']['allow_stream_playback'];
         if (!$prefs) {
             debug_event('play/index', "Streaming Access Denied: Enable 'Allow Streaming' in Server Config -> Options", 3);
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }
@@ -295,7 +299,7 @@ final class PlayAction implements ApplicationActionInterface
             if (!Access::check_network('stream', Core::get_global('user')->id, 25) &&
                 !Access::check_network('network', Core::get_global('user')->id, 25)) {
                 debug_event('play/index', "Streaming Access Denied: " . Core::get_user_ip() . " does not have stream level access", 3);
-                Ui::access_denied();
+                $this->ui->accessDenied();
 
                 return null;
             }
@@ -306,7 +310,7 @@ final class PlayAction implements ApplicationActionInterface
             $playlist = new Stream_Playlist($object_id);
             // Some rudimentary security
             if ($uid != $playlist->user) {
-                Ui::access_denied();
+                $this->ui->accessDenied();
 
                 return null;
             }
@@ -384,7 +388,7 @@ final class PlayAction implements ApplicationActionInterface
 
         if (!User::stream_control(array(array('object_type' => $type, 'object_id' => $media->id)))) {
             debug_event('play/index', 'Stream control failed for user ' . Core::get_global('user')->username . ' on ' . $media->get_stream_name(), 3);
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }

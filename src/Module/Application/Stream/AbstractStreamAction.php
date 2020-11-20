@@ -28,7 +28,8 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
-use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
@@ -52,15 +53,16 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
         $this->configContainer = $configContainer;
     }
 
-    protected function preCheck(): bool
-    {
+    protected function preCheck(
+        GuiGatekeeperInterface $gatekeeper
+    ): bool {
         if (!defined('NO_SESSION')) {
             /* If we are running a demo, quick while you still can! */
             if (
                 $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
                 (
                     $this->configContainer->isAuthenticationEnabled() &&
-                    !Access::check('interface', 25)
+                    $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false
                 )
             ) {
                 Ui::access_denied();

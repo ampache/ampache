@@ -54,7 +54,7 @@ final class SortTrackAction implements ApplicationActionInterface
 
         $playlist = $this->modelFactory->createPlaylist((int) $_REQUEST['playlist_id']);
         if (!$playlist->has_access()) {
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }

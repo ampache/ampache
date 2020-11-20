@@ -52,16 +52,12 @@ final class DeleteAction implements ApplicationActionInterface
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper
     ): ?ResponseInterface {
-        $this->ui->showHeader();
-        
         $response = null;
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
-            // Show the Footer
-            $this->ui->showQueryStats();
-            $this->ui->showFooter();
-
             return $response;
         }
+
+        $this->ui->showHeader();
 
         $song_id = (string) scrub_in($_REQUEST['song_id']);
         show_confirmation(

@@ -50,18 +50,15 @@ final class RemoveDuplicatesAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
-
         $playlist = $this->modelFactory->createPlaylist((int) $_REQUEST['playlist_id']);
         /* Make sure they have permission */
         if (!$playlist->has_access()) {
-            Ui::access_denied();
-
-            $this->ui->showQueryStats();
-            $this->ui->showFooter();
+            $this->ui->accessDenied();
 
             return null;
         }
+
+        $this->ui->showHeader();
 
         $tracks_to_rm = [];
         $map          = [];

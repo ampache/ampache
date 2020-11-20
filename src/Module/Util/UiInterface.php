@@ -46,5 +46,5 @@ interface UiInterface
     /**
      * Displays the default error page
      */
-    public function accessDenied(): void;
+    public function accessDenied(string $error = 'Access Denied'): void;
 }

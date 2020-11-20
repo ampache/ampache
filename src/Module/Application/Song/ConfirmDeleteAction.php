@@ -31,7 +31,6 @@ use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -65,15 +64,8 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper
     ): ?ResponseInterface {
-        $this->ui->showHeader();
-
         $response = null;
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
-
-            // Show the Footer
-            $this->ui->showQueryStats();
-            $this->ui->showFooter();
-
             return $response;
         }
 
@@ -83,14 +75,12 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
                 'Unauthorized to remove the song `.' . $song->id . '`.',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            Ui::access_denied();
-
-            // Show the Footer
-            $this->ui->showQueryStats();
-            $this->ui->showFooter();
+            $this->ui->accessDenied();
 
             return $response;
         }
+
+        $this->ui->showHeader();
 
         if ($song->remove()) {
             show_confirmation(

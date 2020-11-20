@@ -22,6 +22,7 @@
 
 namespace Ampache\Module\Application;
 
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -29,6 +30,6 @@ interface ApplicationActionInterface
 {
     public function run(
         ServerRequestInterface $request,
-        \Ampache\Module\Authorization\GuiGatekeeperInterface $gatekeeper
+        GuiGatekeeperInterface $gatekeeper
     ): ?ResponseInterface;
 }

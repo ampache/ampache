@@ -30,7 +30,6 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -58,18 +57,15 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
-
         $playlist = $this->modelFactory->createPlaylist((int) $_REQUEST['playlist_id']);
         /* Make sure they have permission */
         if (!$playlist->has_access()) {
-            Ui::access_denied();
-
-            $this->ui->showQueryStats();
-            $this->ui->showFooter();
+            $this->ui->accessDenied();
 
             return null;
         }
+
+        $this->ui->showHeader();
 
         // Retrieving final song order from url
         foreach ($_GET as $key => $data) {

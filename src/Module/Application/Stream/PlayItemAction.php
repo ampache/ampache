@@ -50,7 +50,7 @@ final class PlayItemAction extends AbstractStreamAction
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if ($this->preCheck() === false) {
+        if ($this->preCheck($gatekeeper) === false) {
             return null;
         }
         $objectType = $_REQUEST['object_type'];

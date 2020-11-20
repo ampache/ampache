@@ -27,8 +27,8 @@ namespace Ampache\Module\Application\Preferences;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\Plugin;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -54,8 +54,11 @@ final class GrantAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         // Make sure we're a user and they came from the form
-        if (!Access::check('interface', 25) && Core::get_global('user')->id > 0) {
-            Ui::access_denied();
+        if (
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false &&
+            Core::get_global('user')->id > 0
+        ) {
+            $this->ui->accessDenied();
 
             return null;
         }

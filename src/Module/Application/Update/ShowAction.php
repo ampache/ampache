@@ -28,8 +28,10 @@ use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 final class ShowAction implements ApplicationActionInterface
 {
@@ -39,24 +41,35 @@ final class ShowAction implements ApplicationActionInterface
 
     private GuiFactoryInterface $guiFactory;
 
+    private ResponseFactoryInterface $responseFactory;
+
+    private StreamFactoryInterface $streamFactory;
+
     public function __construct(
         TalFactoryInterface $talFactory,
-        GuiFactoryInterface $guiFactory
+        GuiFactoryInterface $guiFactory,
+        ResponseFactoryInterface $responseFactory,
+        StreamFactoryInterface $streamFactory
     ) {
-        $this->talFactory = $talFactory;
-        $this->guiFactory = $guiFactory;
+        $this->talFactory      = $talFactory;
+        $this->guiFactory      = $guiFactory;
+        $this->responseFactory = $responseFactory;
+        $this->streamFactory   = $streamFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        echo $this->talFactory->createTalView()
+        $result = $this->talFactory->createTalView()
             ->setTemplate('update.xhtml')
             ->setContext(
                 'UPDATE',
                 $this->guiFactory->createUpdateViewAdapter()
             )
             ->render();
-        
-        return null;
+
+        return $this->responseFactory->createResponse()
+            ->withBody(
+                $this->streamFactory->createStream($result)
+            );
     }
 }

@@ -27,7 +27,6 @@ use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -61,9 +60,9 @@ final class SelectArtAction extends AbstractArtAction
 
         $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-        $item = $this->getItem();
+        $item = $this->getItem($gatekeeper);
         if ($item === null) {
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }

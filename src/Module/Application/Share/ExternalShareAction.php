@@ -37,7 +37,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\User\PasswordGeneratorInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -80,13 +79,13 @@ final class ExternalShareAction implements ApplicationActionInterface
                 'Access Denied: sharing features are not enabled.',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }
@@ -94,7 +93,7 @@ final class ExternalShareAction implements ApplicationActionInterface
 
         $plugin = new Plugin(Core::get_get('plugin'));
         if (!$plugin) {
-            Ui::access_denied('Access Denied - Unknown external share plugin');
+            $this->ui->accessDenied('Access Denied - Unknown external share plugin');
 
             return null;
         }

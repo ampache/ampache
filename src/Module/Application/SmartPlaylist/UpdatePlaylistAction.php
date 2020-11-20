@@ -55,20 +55,18 @@ final class UpdatePlaylistAction implements ApplicationActionInterface
             (int) $request->getParsedBody()['playlist_id'] ?? 0
         );
 
-        $this->ui->showHeader();
-
         if ($playlist->has_access()) {
             $playlist->parse_rules(Search::clean_request($_REQUEST));
             $playlist->update();
             $playlist->format();
         } else {
-            Ui::access_denied();
-
-            $this->ui->showQueryStats();
-            $this->ui->showFooter();
+            $this->ui->accessDenied();
 
             return null;
         }
+
+        $this->ui->showHeader();
+
         $object_ids = $playlist->get_items();
         require_once Ui::find_template('show_search.inc.php');
 

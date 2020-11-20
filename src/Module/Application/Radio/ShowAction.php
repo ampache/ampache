@@ -57,7 +57,7 @@ final class ShowAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RADIO) === false) {
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }

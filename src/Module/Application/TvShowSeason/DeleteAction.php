@@ -48,14 +48,11 @@ final class DeleteAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
-        
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
-            $this->ui->showQueryStats();
-            $this->ui->showFooter();
-            
             return null;
         }
+
+        $this->ui->showHeader();
 
         $tvshow_season_id = (string) scrub_in($_REQUEST['tvshow_season_id']);
         show_confirmation(

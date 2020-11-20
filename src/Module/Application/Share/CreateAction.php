@@ -65,19 +65,16 @@ final class CreateAction implements ApplicationActionInterface
                 'Access Denied: sharing features are not enabled.',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            Ui::access_denied();
+            $this->ui->accessDenied();
 
             return null;
         }
 
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
-            Ui::access_denied();
-
-            return null;
-        }
-
-        if (!Core::form_verify('add_share', 'post')) {
-            Ui::access_denied();
+        if (
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) ||
+            !Core::form_verify('add_share', 'post')
+        ) {
+            $this->ui->accessDenied();
 
             return null;
         }

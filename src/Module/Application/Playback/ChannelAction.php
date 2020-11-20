@@ -34,7 +34,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,10 +44,14 @@ final class ChannelAction implements ApplicationActionInterface
 
     private AuthenticationManagerInterface $authenticationManager;
 
+    private UiInterface $ui;
+
     public function __construct(
-        AuthenticationManagerInterface $authenticationManager
+        AuthenticationManagerInterface $authenticationManager,
+        UiInterface $ui
     ) {
         $this->authenticationManager = $authenticationManager;
+        $this->ui                    = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -89,7 +93,7 @@ final class ChannelAction implements ApplicationActionInterface
                         if (!Access::check_network('stream', Core::get_global('user')->id, 25) &&
                             !Access::check_network('network', Core::get_global('user')->id, 25)) {
                             debug_event('channel/index', "UI::access_denied: Streaming Access Denied: " . Core::get_user_ip() . " does not have stream level access", 2);
-                            Ui::access_denied();
+                            $this->ui->accessDenied();
 
                             return null;
                         }

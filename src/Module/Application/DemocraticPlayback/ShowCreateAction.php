@@ -27,8 +27,8 @@ namespace Ampache\Module\Application\DemocraticPlayback;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -53,20 +53,17 @@ final class ShowCreateAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         /* Make sure they have access to this */
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_DEMOCRATIC_PLAYBACK) === false) {
-            Ui::access_denied();
+        if (
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_DEMOCRATIC_PLAYBACK) === false ||
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false
+        ) {
+            $this->ui->accessDenied();
 
             return null;
         }
 
         $this->ui->showHeader();
-        
-        if (!Access::check('interface', 75)) {
-            Ui::access_denied();
-            
-            return null;
-        }
-        
+
         // Show the create page
         require_once Ui::find_template('show_create_democratic.inc.php');
         

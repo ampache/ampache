@@ -27,11 +27,10 @@ namespace Ampache\Module\Application\Shout;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\Shoutbox;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -61,24 +60,12 @@ final class AddShoutAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         // Must be at least a user to do this
-        if (!Access::check('interface', 25)) {
-            $this->ui->showHeader();
-
-            Ui::access_denied();
-
-            $this->ui->showQueryStats();
-            $this->ui->showFooter();
-            
-            return null;
-        }
-
-        if (!Core::form_verify('add_shout', 'post')) {
-            $this->ui->showHeader();
-
-            Ui::access_denied();
-
-            $this->ui->showQueryStats();
-            $this->ui->showFooter();
+        if (
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false ||
+            !Core::form_verify('add_shout', 'post') ||
+            !InterfaceImplementationChecker::is_library_item(Core::get_post('object_type'))
+        ) {
+            $this->ui->accessDenied();
 
             return null;
         }
@@ -89,17 +76,6 @@ final class AddShoutAction implements ApplicationActionInterface
         }
         if (filter_has_var(INPUT_POST, 'date')) {
             unset($_POST['date']);
-        }
-
-        if (!InterfaceImplementationChecker::is_library_item(Core::get_post('object_type'))) {
-            $this->ui->showHeader();
-
-            Ui::access_denied();
-
-            $this->ui->showQueryStats();
-            $this->ui->showFooter();
-            
-            return null;
         }
 
         Shoutbox::create($_POST);

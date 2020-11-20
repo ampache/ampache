@@ -74,9 +74,9 @@ final class ShowMissingAction implements ApplicationActionInterface
         }
         $walbum->load_all();
         $walbum->format();
-        
+
         // Title for this album
-        Ui::show_box_top(
+        $this->ui->showBoxTop(
             sprintf(
                 '%s&nbsp;(%d)&nbsp;-&nbsp;%s',
                 scrub_out($walbum->name),
@@ -85,7 +85,7 @@ final class ShowMissingAction implements ApplicationActionInterface
             ),
             'info-box missing'
         );
-        
+
         // Attempt to find the art.
         $art = $this->modelFactory->createArt((int) $walbum->mbid, 'album');
         
@@ -126,9 +126,9 @@ final class ShowMissingAction implements ApplicationActionInterface
         $walbum->show_action_buttons();
         
         print('</div></li></ul></div>');
-        
-        Ui::show_box_bottom();
-        
+
+        $this->ui->showBoxBottom();
+
         print('<div id="additional_information">&nbsp;</div><div>');
         
         $browse = $this->modelFactory->createBrowse();
