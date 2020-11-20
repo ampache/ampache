@@ -25,8 +25,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Admin\Access;
 
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -47,8 +47,8 @@ final class ShowAddRpcAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if (!Access::check('interface', 100)) {
-            Ui::access_denied();
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
+            $this->ui->accessDenied();
 
             return null;
         }

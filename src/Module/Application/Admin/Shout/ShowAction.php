@@ -26,9 +26,8 @@ namespace Ampache\Module\Application\Admin\Shout;
 
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -51,8 +50,8 @@ final class ShowAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if (!Access::check('interface', 100)) {
-            Ui::access_denied();
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
+            $this->ui->accessDenied();
 
             return null;
         }
@@ -62,8 +61,7 @@ final class ShowAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type('shoutbox');
         $browse->set_simple_browse(true);
-        $shoutbox_ids = $browse->get_objects();
-        $browse->show_objects($shoutbox_ids);
+        $browse->show_objects($browse->get_objects());
         $browse->store();
 
         $this->ui->showQueryStats();

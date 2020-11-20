@@ -25,8 +25,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -35,7 +35,8 @@ abstract class AbstractUserAction implements ApplicationActionInterface
 {
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if (!Access::check('interface', 100)) {
+        if (
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
             Ui::access_denied();
 
             return null;

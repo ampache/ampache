@@ -26,8 +26,8 @@ namespace Ampache\Module\Application\Admin\Modules;
 
 use Ampache\Model\Plugin;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -47,8 +47,8 @@ final class ShowPluginsAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if (!Core::get_global('user')->has_access(100)) {
-            Ui::access_denied();
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
+            $this->ui->accessDenied();
 
             return null;
         }
