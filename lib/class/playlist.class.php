@@ -493,20 +493,25 @@ class Playlist extends playlist_object
         $track_data = $playlist->get_songs();
         $base_track = count($track_data);
         $count      = 0;
+        $sql        = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) VALUES ";
+        $values     = array();
+        $unique     = AmpConfig::get('unique_playlist');
         foreach ($medias as $data) {
             $media = new $data['object_type']($data['object_id']);
-            if (AmpConfig::get('unique_playlist') && in_array($media->id, $track_data)) {
+            if ($unique && in_array($media->id, $track_data)) {
                 debug_event('playlist.class', "Can't add a duplicate " . $data['object_type'] . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
             } elseif ($media->id) {
                 $count++;
                 $track = $base_track + $count;
                 debug_event('playlist.class', 'Adding Media; Track number: ' . $track, 5);
-
-                $sql = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) " .
-                    " VALUES (?, ?, ?, ?)";
-                Dba::write($sql, array($this->id, $data['object_id'], $data['object_type'], $track));
+                $sql .= "(?, ?, ?, ?), ";
+                $values[] = $this->id;
+                $values[] = $data['object_id'];
+                $values[] = $data['object_type'];
+                $values[] = $track;
             } // if valid id
         } // end foreach medias
+        Dba::write(rtrim($sql, ', '), $values);
 
         $this->update_last_update();
     }
