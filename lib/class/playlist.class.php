@@ -497,10 +497,9 @@ class Playlist extends playlist_object
         $values     = array();
         $unique     = AmpConfig::get('unique_playlist');
         foreach ($medias as $data) {
-            $media = new $data['object_type']($data['object_id']);
-            if ($unique && in_array($media->id, $track_data)) {
+            if ($unique && in_array($data['object_id'], $track_data)) {
                 debug_event('playlist.class', "Can't add a duplicate " . $data['object_type'] . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
-            } elseif ($media->id) {
+            } else {
                 $count++;
                 $track = $base_track + $count;
                 $sql .= "(?, ?, ?, ?), ";
