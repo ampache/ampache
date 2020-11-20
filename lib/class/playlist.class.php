@@ -330,7 +330,7 @@ class Playlist extends playlist_object
         $songs  = $this->get_songs();
         $idlist = '(' . implode(',', $songs) . ')';
         if ($idlist == '()') {
-            return null;
+            return 0;
         }
         $sql        = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
@@ -419,7 +419,7 @@ class Playlist extends playlist_object
      * _update_item
      * This is the generic update function, it does the escaping and error checking
      * @param string $field
-     * @param $value
+     * @param string|integer $value
      * @param integer $level
      * @return PDOStatement|boolean
      */
