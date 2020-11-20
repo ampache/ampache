@@ -330,23 +330,23 @@ class Playlist extends playlist_object
     } // get_media_count
 
     /**
-     * get_total_duration
-     * Get the total duration of all songs.
-     * @return string|null
-     */
+    * get_total_duration
+    * Get the total duration of all songs.
+    * @return integer
+    */
     public function get_total_duration()
     {
         $songs  = $this->get_songs();
         $idlist = '(' . implode(',', $songs) . ')';
         if ($idlist == '()') {
-            return null;
+            return 0;
         }
         $sql        = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
         $results = Dba::fetch_row($db_results);
 
-        return $results['0'];
+        return (int) $results['0'];
     } // get_total_duration
 
     /**
@@ -428,7 +428,7 @@ class Playlist extends playlist_object
      * _update_item
      * This is the generic update function, it does the escaping and error checking
      * @param string $field
-     * @param $value
+     * @param string|integer $value
      * @param integer $level
      * @return PDOStatement|boolean
      */
@@ -498,26 +498,28 @@ class Playlist extends playlist_object
          * append, rather then integrate take end track # and add it to
          * $song->track add one to make sure it really is 'next'
          */
-        $playlist   = new Playlist($this->id);
-        $track_data = $playlist->get_songs();
+        debug_event('playlist.class', "add_medias to: " . $this->id, 5);
+        $track_data = $this->get_songs();
         $base_track = count($track_data);
         $count      = 0;
+        $sql        = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) VALUES ";
+        $values     = array();
+        $unique     = AmpConfig::get('unique_playlist');
         foreach ($medias as $data) {
-            $class_name = ObjectTypeToClassNameMapper::map($data['object_type']);
-            $media      = new $class_name($data['object_id']);
-            if (AmpConfig::get('unique_playlist') && in_array($media->id, $track_data)) {
-                debug_event('playlist.class',
-                    "Can't add a duplicate " . $data['object_type'] . " (" . $data['object_id'] . ") when unique_playlist is enabled",
-                    3);
-            } elseif ($media->id) {
+            if ($unique && in_array($data['object_id'], $track_data)) {
+                debug_event('playlist.class', "Can't add a duplicate " . $data['object_type'] . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
+            } else {
                 $count++;
                 $track = $base_track + $count;
-                debug_event('playlist.class', 'Adding Media; Track number: ' . $track, 5);
-
-                $sql = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) " . " VALUES (?, ?, ?, ?)";
-                Dba::write($sql, array($this->id, $data['object_id'], $data['object_type'], $track));
+                $sql .= "(?, ?, ?, ?), ";
+                $values[] = $this->id;
+                $values[] = $data['object_id'];
+                $values[] = $data['object_type'];
+                $values[] = $track;
             } // if valid id
         } // end foreach medias
+        Dba::write(rtrim($sql, ', '), $values);
+        debug_event('playlist.class', "Added $track tracks to playlist: " . $this->id, 5);
 
         $this->update_last_update();
     }
