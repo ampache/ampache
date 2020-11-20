@@ -298,6 +298,14 @@ class Song extends database_object implements media, library_item
      * @var string $f_license
      */
     public $f_license;
+    /**
+     * @var string $play_url
+     */
+    public $play_url;
+    /**
+     * @var array $stream_url
+     */
+    public $stream_url;
 
     /* Setting Variables */
     /**
@@ -1781,6 +1789,9 @@ class Song extends database_object implements media, library_item
             $license->format();
             $this->f_license = $license->f_link;
         }
+        $uid              = Core::get_global('user')->id;
+        $this->play_url   = $this->get_play_url($uid);
+        $this->stream_url = $this->get_stream_url($uid);
     } // format
 
     /**
@@ -2010,6 +2021,81 @@ class Song extends database_object implements media, library_item
     } // get_rel_path
 
     /**
+     * Generate a simple play url.
+     * @param integer $uid
+     * @return string
+     */
+    public function get_play_url($uid = -1)
+    {
+        if (!$this->id) {
+            return '';
+        }
+        // set no use when using auth
+        if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
+            $uid = -1;
+        }
+
+        $media_name = $this->get_stream_name() . "." . $this->type;
+        $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
+        $media_name = rawurlencode($media_name);
+
+        $url = Stream::get_base_url(false) . "type=song&oid=" . $this->id . "&uid=" . (string) $uid;
+        $url .= "&name=" . $media_name;
+
+        return $url;
+    }
+
+    /**
+     * get_stream_url
+     * @param string $additional_params
+     * @param string $urltype
+     * @return Stream_URL
+     */
+    public function get_stream_url($additional_params = '', $urltype = 'web')
+    {
+        $surl = null;
+        $url  = array();
+
+        $type        = 'song';
+        $url['type'] = $type;
+
+        // Don't add disabled media objects to the stream playlist
+        // Playing a disabled media return a 404 error that could make failed the player (mpd ...)
+        if (!isset($this->enabled) || make_bool($this->enabled)) {
+            if ($urltype == 'file') {
+                $url['url'] = $this->file;
+                // Relative path
+                if (!empty($additional_params) && strpos($url['url'], $additional_params) === 0) {
+                    $url['url'] = substr($url['url'], strlen((string) $additional_params));
+                    if (strlen((string) $url['url']) < 1) {
+                        return null;
+                    }
+                    if ($url['url'][0] == DIRECTORY_SEPARATOR) {
+                        $url['url'] = substr($url['url'], 1);
+                    }
+                }
+            } else {
+                $url['url'] = (isset($this->play_url)) ? $this->play_url : $this->get_play_url(Core::get_global('user')->id);
+            }
+
+            $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
+
+            // Set a default which can be overridden
+            $url['author']    = 'Ampache';
+            $url['time']      = $this->time;
+            $url['title']     = $this->title;
+            $url['author']    = $this->f_artist_full;
+            $url['info_url']  = $this->f_link;
+            $url['image_url'] = Art::url($this->album, 'album', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
+            $url['album']     = $this->f_album_full;
+            $url['track_num'] = $this->f_track;
+            $surl             = new Stream_URL($url);
+        }
+
+        return $surl;
+    }
+
+    /**
      * Generate generic play url.
      * @param string $object_type
      * @param integer $object_id
@@ -2026,39 +2112,14 @@ class Song extends database_object implements media, library_item
         if (!$media->id) {
             return '';
         }
+        $media->format();
+
         // set no use when using auth
         if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
             $uid = -1;
         }
 
-        $type = $media->type;
-
-        // Checking if the media is gonna be transcoded into another type
-        // Some players doesn't allow a type streamed into another without giving the right extension
-        if (!$original) {
-            $transcode_cfg = AmpConfig::get('transcode');
-            $valid_types   = Song::get_stream_types_for_type($type, $player);
-            if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
-                $transcode_settings = $media->get_transcode_settings(null);
-                if ($transcode_settings) {
-                    debug_event('song.class', "Changing play url type from {" . $type . "} to {" . $transcode_settings['format'] . "} due to encoding settings... ", 5);
-                    $type = $transcode_settings['format'];
-                }
-            }
-        }
-
-        $media->format();
-        $media_name = $media->get_stream_name() . "." . $type;
-        $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
-        $media_name = rawurlencode($media_name);
-
-        $url = Stream::get_base_url($local) . "type=" . $object_type . "&oid=" . $object_id . "&uid=" . (string) $uid . $additional_params;
-        if ($player !== '') {
-            $url .= "&player=" . $player;
-        }
-        $url .= "&name=" . $media_name;
-
-        return Stream_URL::format($url);
+        return Stream_URL::format($media->get_play_url($uid));
     }
 
     /**
