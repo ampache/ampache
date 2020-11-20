@@ -34,6 +34,7 @@ use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Teapot\StatusCode;
 
 final class AdminUpdatePreferencesAction implements ApplicationActionInterface
 {
@@ -72,7 +73,7 @@ final class AdminUpdatePreferencesAction implements ApplicationActionInterface
         $this->preferencesFromRequestUpdater->update((int) Core::get_post('user_id'));
 
         return $this->responseFactory
-            ->createResponse()
+            ->createResponse(StatusCode::FOUND)
             ->withHeader(
                 'Location',
                 sprintf(

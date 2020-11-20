@@ -36,6 +36,7 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Teapot\StatusCode;
 
 final class AddShoutAction implements ApplicationActionInterface
 {
@@ -104,7 +105,7 @@ final class AddShoutAction implements ApplicationActionInterface
         Shoutbox::create($_POST);
         
         return $this->responseFactory
-            ->createResponse()
+            ->createResponse(StatusCode::FOUND)
             ->withHeader(
                 'Location',
                 sprintf(

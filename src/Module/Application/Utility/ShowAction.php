@@ -29,6 +29,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Teapot\StatusCode;
 
 /**
  * This is a little bit of a special file, it takes the
@@ -75,7 +76,7 @@ final class ShowAction implements ApplicationActionInterface
             $response = $response->withHeader(
                 'Location',
                 $target
-            );
+            )->withStatus(StatusCode::FOUND);
         } else {
             // Prevent the update query as it's pointless
             define('NO_SESSION_UPDATE', '1');

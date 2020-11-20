@@ -36,6 +36,7 @@ use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Teapot\StatusCode;
 
 final class CreateAction implements ApplicationActionInterface
 {
@@ -95,7 +96,7 @@ final class CreateAction implements ApplicationActionInterface
         }
 
         return $this->responseFactory
-            ->createResponse()
+            ->createResponse(StatusCode::FOUND)
             ->withHeader(
                 'Location',
                 sprintf(

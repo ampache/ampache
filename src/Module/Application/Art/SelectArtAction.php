@@ -32,6 +32,7 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Teapot\StatusCode;
 
 final class SelectArtAction extends AbstractArtAction
 {
@@ -106,7 +107,7 @@ final class SelectArtAction extends AbstractArtAction
         }
 
         return $this->responseFactory
-            ->createResponse()
+            ->createResponse(StatusCode::FOUND)
             ->withHeader(
                 'Location',
                 $burl

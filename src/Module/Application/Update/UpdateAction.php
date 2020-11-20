@@ -37,6 +37,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Teapot\StatusCode;
 
 final class UpdateAction implements ApplicationActionInterface
 {
@@ -79,7 +80,8 @@ final class UpdateAction implements ApplicationActionInterface
             AutoUpdate::update_files();
             AutoUpdate::update_dependencies();
 
-            return $this->responseFactory->createResponse()
+            return $this->responseFactory
+                ->createResponse(StatusCode::FOUND)
                 ->withHeader(
                     'Location',
                     $this->configContainer->getWebPath()

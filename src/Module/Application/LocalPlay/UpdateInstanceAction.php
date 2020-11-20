@@ -32,6 +32,7 @@ use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Teapot\StatusCode;
 
 final class UpdateInstanceAction extends AbstractLocalPlayAction
 {
@@ -64,7 +65,7 @@ final class UpdateInstanceAction extends AbstractLocalPlayAction
         $localplay->update_instance($_REQUEST['instance'], $_POST);
 
         return $this->responseFactory
-            ->createResponse()
+            ->createResponse(StatusCode::FOUND)
             ->withHeader(
                 'Location',
                 sprintf('%s/localplay.php?action=show_instances', $this->configContainer->getWebPath())

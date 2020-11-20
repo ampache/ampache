@@ -33,6 +33,7 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Teapot\StatusCode;
 
 final class DeletePlaylistAction implements ApplicationActionInterface
 {
@@ -67,7 +68,7 @@ final class DeletePlaylistAction implements ApplicationActionInterface
 
             // Go elsewhere
             return $this->responseFactory
-                ->createResponse()
+                ->createResponse(StatusCode::FOUND)
                 ->withHeader(
                     'Location',
                     sprintf('%s/browse.php?action=playlist', $this->configContainer->getWebPath())

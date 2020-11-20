@@ -33,6 +33,7 @@ use Exception;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Teapot\StatusCode;
 
 final class ShowAction implements ApplicationActionInterface
 {
@@ -64,7 +65,7 @@ final class ShowAction implements ApplicationActionInterface
         $results = array();
         if (!file_exists($configfile)) {
             return $this->responseFactory
-                ->createResponse()
+                ->createResponse(StatusCode::FOUND)
                 ->withHeader(
                     'Location',
                     '/install.php'

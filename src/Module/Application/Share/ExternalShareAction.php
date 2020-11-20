@@ -43,6 +43,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use Teapot\StatusCode;
 
 final class ExternalShareAction implements ApplicationActionInterface
 {
@@ -109,7 +110,7 @@ final class ExternalShareAction implements ApplicationActionInterface
         $share->format(true);
 
         return $this->responseFactory
-            ->createResponse()
+            ->createResponse(StatusCode::FOUND)
             ->withHeader(
                 'Location',
                 $plugin->_plugin->external_share($share->public_url, $share->f_name)

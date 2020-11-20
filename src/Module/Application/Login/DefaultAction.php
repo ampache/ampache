@@ -41,6 +41,8 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use Teapot\StatusCode;
+use const Grpc\STATUS_ABORTED;
 
 final class DefaultAction implements ApplicationActionInterface
 {
@@ -80,7 +82,7 @@ final class DefaultAction implements ApplicationActionInterface
             }
             if ($auth) {
                 return $this->responseFactory
-                    ->createResponse()
+                    ->createResponse(StatusCode::FOUND)
                     ->withHeader(
                         'Location',
                         $this->configContainer->get('web_path')
@@ -314,7 +316,7 @@ final class DefaultAction implements ApplicationActionInterface
                 strpos($_POST['referrer'], 'activate.php') === false &&
                 strpos($_POST['referrer'], 'admin') === false) {
                 return $this->responseFactory
-                    ->createResponse()
+                    ->createResponse(StatusCode::FOUND)
                     ->withHeader(
                         'Location',
                         $_POST['referrer']
@@ -322,7 +324,7 @@ final class DefaultAction implements ApplicationActionInterface
             } // if we've got a referrer
 
             return $this->responseFactory
-                ->createResponse()
+                ->createResponse(StatusCode::FOUND)
                 ->withHeader(
                     'Location',
                     sprintf('%s/index.php', $this->configContainer->getWebPath())
