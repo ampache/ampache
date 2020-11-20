@@ -489,8 +489,8 @@ class Playlist extends playlist_object
          * append, rather then integrate take end track # and add it to
          * $song->track add one to make sure it really is 'next'
          */
-        $playlist   = new Playlist($this->id);
-        $track_data = $playlist->get_songs();
+        debug_event('playlist.class', "add_medias to: " . $this->id, 5);
+        $track_data = $this->get_songs();
         $base_track = count($track_data);
         $count      = 0;
         $sql        = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) VALUES ";
@@ -503,7 +503,6 @@ class Playlist extends playlist_object
             } elseif ($media->id) {
                 $count++;
                 $track = $base_track + $count;
-                debug_event('playlist.class', 'Adding Media; Track number: ' . $track, 5);
                 $sql .= "(?, ?, ?, ?), ";
                 $values[] = $this->id;
                 $values[] = $data['object_id'];
@@ -512,6 +511,7 @@ class Playlist extends playlist_object
             } // if valid id
         } // end foreach medias
         Dba::write(rtrim($sql, ', '), $values);
+        debug_event('playlist.class', "Added $track tracks to playlist: " . $this->id, 5);
 
         $this->update_last_update();
     }
