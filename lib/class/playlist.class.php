@@ -323,7 +323,7 @@ class Playlist extends playlist_object
     /**
     * get_total_duration
     * Get the total duration of all songs.
-    * @return string|null
+    * @return integer
     */
     public function get_total_duration()
     {
@@ -337,7 +337,7 @@ class Playlist extends playlist_object
 
         $results = Dba::fetch_row($db_results);
 
-        return $results['0'];
+        return (int) $results['0'];
     } // get_total_duration
 
     /**
