@@ -20,15 +20,14 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\SmartPlaylist;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Model\Search;
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -45,41 +44,43 @@ final class DeletePlaylistAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         UiInterface $ui,
         ResponseFactoryInterface $responseFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->ui              = $ui;
         $this->responseFactory = $responseFactory;
         $this->configContainer = $configContainer;
+        $this->modelFactory    = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        // Check rights
-        $playlist = new Search((int) $_REQUEST['playlist_id'], 'song');
-        if ($playlist->has_access()) {
-            $playlist->delete();
+        $playlistId = $request->getQueryParams()['playlist_id'] ?? null;
+        if ($playlistId !== null) {
+            $playlist = $this->modelFactory->createSearch((int) $playlistId);
+            // Check rights
+            if ($playlist->has_access()) {
+                $playlist->delete();
 
-            // Go elsewhere
-            return $this->responseFactory
-                ->createResponse(StatusCode::FOUND)
-                ->withHeader(
-                    'Location',
-                    sprintf(
-                        '%s/browse.php?action=smartplaylist',
-                        $this->configContainer->getWebPath()
-                    )
-                );
+                // Go elsewhere
+                return $this->responseFactory
+                    ->createResponse(StatusCode::FOUND)
+                    ->withHeader(
+                        'Location',
+                        sprintf(
+                            '%s/browse.php?action=smartplaylist',
+                            $this->configContainer->getWebPath()
+                        )
+                    );
+            }
         }
 
-        $this->ui->showHeader();
-
-        Ui::access_denied();
-
-        $this->ui->showQueryStats();
-        $this->ui->showFooter();
+        $this->ui->accessDenied();
 
         return null;
     }

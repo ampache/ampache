@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\SmartPlaylist;
 
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Search;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -38,17 +39,23 @@ final class ShowAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
+        ModelFactoryInterface $modelFactory
     ) {
-        $this->ui = $ui;
+        $this->ui           = $ui;
+        $this->modelFactory = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
+        $playlist = $this->modelFactory->createSearch(
+            (int) $request->getParsedBody()['playlist_id'] ?? 0
+        );
 
-        $playlist   = new Search((int) $_REQUEST['playlist_id'], 'song');
+        $this->ui->showHeader();
 
         $object_ids = $playlist->get_items();
         require_once  Ui::find_template('show_search.inc.php');

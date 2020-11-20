@@ -28,7 +28,6 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -61,26 +60,24 @@ final class DeletePlaylistAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        // Check rights
-        $playlist = $this->modelFactory->createPlaylist((int) $_REQUEST['playlist_id']);
-        if ($playlist->has_access()) {
-            $playlist->delete();
+        $playlistId = $request->getQueryParams()['playlist_id'] ?? null;
+        if ($playlistId !== null) {
+            // Check rights
+            $playlist = $this->modelFactory->createPlaylist((int) $playlistId);
+            if ($playlist->has_access()) {
+                $playlist->delete();
 
-            // Go elsewhere
-            return $this->responseFactory
-                ->createResponse(StatusCode::FOUND)
-                ->withHeader(
-                    'Location',
-                    sprintf('%s/browse.php?action=playlist', $this->configContainer->getWebPath())
-                );
+                // Go elsewhere
+                return $this->responseFactory
+                    ->createResponse(StatusCode::FOUND)
+                    ->withHeader(
+                        'Location',
+                        sprintf('%s/browse.php?action=playlist', $this->configContainer->getWebPath())
+                    );
+            }
         }
 
-        $this->ui->showHeader();
-
-        Ui::access_denied();
-
-        $this->ui->showQueryStats();
-        $this->ui->showFooter();
+        $this->ui->accessDenied();
 
         return null;
     }

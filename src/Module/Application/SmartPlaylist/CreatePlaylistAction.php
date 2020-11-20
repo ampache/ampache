@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\SmartPlaylist;
 
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Search;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -40,10 +41,14 @@ final class CreatePlaylistAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
+        ModelFactoryInterface $modelFactory
     ) {
-        $this->ui = $ui;
+        $this->ui           = $ui;
+        $this->modelFactory = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -79,7 +84,7 @@ final class CreatePlaylistAction implements ApplicationActionInterface
 
         $playlist_name    = (string) scrub_in($_REQUEST['playlist_name']);
 
-        $playlist = new Search(null, 'song');
+        $playlist = $this->modelFactory->createSearch(null);
         $playlist->parse_rules($data);
         $playlist->logic_operator = $operator;
         $playlist->name           = $playlist_name;

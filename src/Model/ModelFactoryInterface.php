@@ -100,4 +100,10 @@ interface ModelFactoryInterface
     public function createTmpPlaylist(
         int $tmpPlaylistId
     ): Tmp_Playlist;
+
+    public function createSearch(
+        ?int $searchId = 0,
+        string $searchType = 'song',
+        ?User $user = null
+    ): Search;
 }

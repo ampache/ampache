@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Model\Browse;
 use Ampache\Module\System\Core;
@@ -36,6 +37,14 @@ use Ampache\Module\Util\Ui;
 
 final class BrowseAjaxHandler implements AjaxHandlerInterface
 {
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->modelFactory = $modelFactory;
+    }
+
     public function handle(): void
     {
         if (!Core::is_session_started()) {
@@ -54,7 +63,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
 
         debug_event('browse.ajax', 'Called for action: {' . Core::get_request('action') . '}', 5);
 
-        $browse = new Browse($browse_id);
+        $browse = $this->modelFactory->createBrowse($browse_id);
 
         if (isset($_REQUEST['show_header']) && $_REQUEST['show_header']) {
             $browse->set_show_header($_REQUEST['show_header'] == 'true');
@@ -128,7 +137,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                         $key = 'playlist_row_' . $playlist->id;
                         break;
                     case 'smartplaylist':
-                        $playlist = new Search((int) Core::get_request('id'), 'song');
+                        $playlist = $this->modelFactory->createSearch((int) Core::get_request('id'));
                         if (!$playlist->has_access()) {
                             return;
                         }

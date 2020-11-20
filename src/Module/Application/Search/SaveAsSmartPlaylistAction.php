@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Search;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Search;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -42,12 +43,16 @@ final class SaveAsSmartPlaylistAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
+        $this->modelFactory    = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -62,7 +67,7 @@ final class SaveAsSmartPlaylistAction implements ApplicationActionInterface
             
             return null;
         }
-        $playlist = new Search();
+        $playlist = $this->modelFactory->createSearch();
         $playlist->parse_rules(Search::clean_request($_REQUEST));
         $playlist->save();
         

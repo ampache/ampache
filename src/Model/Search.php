@@ -63,7 +63,7 @@ class Search extends playlist_object
      * @param string $searchtype
      * @param User $user
      */
-    public function __construct($search_id = 0, $searchtype = 'song', $user = null)
+    public function __construct($search_id = 0, $searchtype = 'song', ?User $user = null)
     {
         if ($user) {
             $this->search_user = $user;

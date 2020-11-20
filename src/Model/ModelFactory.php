@@ -150,4 +150,12 @@ final class ModelFactory implements ModelFactoryInterface
     ): Tmp_Playlist {
         return new Tmp_Playlist($tmpPlaylistId);
     }
+
+    public function createSearch(
+        ?int $searchId = 0,
+        string $searchType = 'song',
+        ?User $user = null
+    ): Search {
+        return new Search($searchId, $searchType, $user);
+    }
 }

@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\SearchData;
 
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Search;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -42,17 +43,24 @@ final class ShowAction implements ApplicationActionInterface
 
     private StreamFactoryInterface $streamFactory;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
+        $this->modelFactory    = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $search = new Search(null, Core::get_request('type'));
+        $search = $this->modelFactory->createSearch(
+            null,
+            Core::get_request('type')
+        );
 
         $content = 'var types = ';
         $content .= $this->arrayToJSON($search->types) . ";\n";
