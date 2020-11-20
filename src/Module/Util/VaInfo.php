@@ -30,8 +30,8 @@ use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
 use Exception;
 use Ampache\Model\User;
+use getID3;
 use getid3_writetags;
-use JamesHeinrich\GetID3\GetID3;
 
 class VaInfo
 {
