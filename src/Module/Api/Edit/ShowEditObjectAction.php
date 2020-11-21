@@ -56,8 +56,7 @@ final class ShowEditObjectAction extends AbstractEditAction
         ServerRequestInterface $request,
         string $type,
         database_object $libitem
-    ): ?ResponseInterface
-    {
+    ): ?ResponseInterface {
         ob_start();
 
         require Ui::find_template('show_edit_' . $type . '.inc.php');

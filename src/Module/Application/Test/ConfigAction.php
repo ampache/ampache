@@ -54,7 +54,7 @@ final class ConfigAction implements ApplicationActionInterface
     {
         // Check to see if the config file is working now, if so fall
         // through to the default, else show the appropriate template
-        $configfile = __DIR__ . '/../../config/ampache.cfg.php';
+        $configfile = __DIR__ . '/../../../../config/ampache.cfg.php';
 
         if (!count(parse_ini_file($configfile))) {
             require_once __DIR__ . '/../../../../public/templates/show_test_config.inc.php';
@@ -76,7 +76,7 @@ final class ConfigAction implements ApplicationActionInterface
             $results = @parse_ini_file($configfile);
 
             if (empty($results)) {
-                $link = __DIR__ . '/../../public/test.php?action=config';
+                $link = __DIR__ . '/../../../../public/test.php?action=config';
             }
         }
         /* Temp Fixes */
