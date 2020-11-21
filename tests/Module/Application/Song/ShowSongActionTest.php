@@ -82,7 +82,10 @@ class ShowSongActionTest extends MockeryTestCase
         
         $song_id = 666;
         
-        $_REQUEST['song_id'] = (string) $song_id;
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['song_id' => (string) $song_id]);
         
         $this->modelFactory->shouldReceive('createSong')
             ->with($song_id)
@@ -129,6 +132,7 @@ class ShowSongActionTest extends MockeryTestCase
         $song            = $this->mock(Song::class);
         $songViewAdapter = $this->mock(SongViewAdapterInterface::class);
         $talView         = $this->mock(TalViewInterface::class);
+        $gatekeeper      = $this->mock(GuiGatekeeperInterface::class);
 
         $song_id = 666;
         $title   = 'some-song-title';
@@ -137,7 +141,10 @@ class ShowSongActionTest extends MockeryTestCase
         $song->id    = $song_id;
         $song->title = $title;
 
-        $_REQUEST['song_id'] = (string) $song_id;
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['song_id' => (string) $song_id]);
 
         $this->modelFactory->shouldReceive('createSong')
             ->with($song_id)
@@ -171,7 +178,7 @@ class ShowSongActionTest extends MockeryTestCase
             ->once();
         
         $this->guiFactory->shouldReceive('createSongViewAdapter')
-            ->with($song)
+            ->with($gatekeeper, $song)
             ->once()
             ->andReturn($songViewAdapter);
 
@@ -194,7 +201,7 @@ class ShowSongActionTest extends MockeryTestCase
         $this->assertNull(
             $this->subject->run(
                 $request,
-                $this->mock(GuiGatekeeperInterface::class)
+                $gatekeeper
             )
         );
     }

@@ -30,10 +30,12 @@ use Ampache\Gui\Song\SongViewAdapter;
 use Ampache\Gui\Stats\CatalogStats;
 use Ampache\Gui\Stats\StatsViewAdapter;
 use Ampache\Gui\System\ConfigViewAdapter;
+use Ampache\Gui\System\UpdateViewAdapter;
 use Ampache\MockeryTestCase;
 use Ampache\Model\Catalog;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Song;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Mockery\MockInterface;
 
 class GuiFactoryTest extends MockeryTestCase
@@ -63,6 +65,7 @@ class GuiFactoryTest extends MockeryTestCase
         $this->assertInstanceOf(
             SongViewAdapter::class,
             $this->subject->createSongViewAdapter(
+                $this->mock(GuiGatekeeperInterface::class),
                 $this->mock(Song::class)
             )
         );
@@ -99,6 +102,14 @@ class GuiFactoryTest extends MockeryTestCase
         $this->assertInstanceOf(
             CatalogStats::class,
             $this->subject->createCatalogStats([])
+        );
+    }
+
+    public function testCreateUpdateViewAdapterReturnsInstance(): void
+    {
+        $this->assertInstanceOf(
+            UpdateViewAdapter::class,
+            $this->subject->createUpdateViewAdapter()
         );
     }
 }

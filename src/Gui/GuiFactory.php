@@ -40,6 +40,7 @@ use Ampache\Gui\System\UpdateViewAdapterInterface;
 use Ampache\Model\Catalog;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Song;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 
 final class GuiFactory implements GuiFactoryInterface
 {
@@ -56,11 +57,13 @@ final class GuiFactory implements GuiFactoryInterface
     }
 
     public function createSongViewAdapter(
+        GuiGatekeeperInterface $gatekeeper,
         Song $song
     ): SongViewAdapterInterface {
         return new SongViewAdapter(
             $this->configContainer,
             $this->modelFactory,
+            $gatekeeper,
             $song
         );
     }

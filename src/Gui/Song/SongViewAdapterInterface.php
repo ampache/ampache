@@ -54,7 +54,7 @@ interface SongViewAdapterInterface
 
     public function getPostShoutIcon(): string;
 
-    public function canShare(): string;
+    public function canShare(): bool;
 
     public function getShareUi(): string;
 

@@ -69,7 +69,7 @@ final class ShowSongAction implements ApplicationActionInterface
     ): ?ResponseInterface {
         $this->ui->showHeader();
         
-        $song = $this->modelFactory->createSong((int) $_REQUEST['song_id']);
+        $song = $this->modelFactory->createSong((int) $request->getQueryParams()['song_id'] ?? 0);
         $song->format();
         $song->fill_ext_info();
         
@@ -91,7 +91,7 @@ final class ShowSongAction implements ApplicationActionInterface
             echo $this->talFactory
                 ->createTalView()
                 ->setTemplate('song.xhtml')
-                ->setContext('SONG', $this->guiFactory->createSongViewAdapter($song))
+                ->setContext('SONG', $this->guiFactory->createSongViewAdapter($gatekeeper, $song))
                 ->render();
 
             $this->ui->showBoxBottom();

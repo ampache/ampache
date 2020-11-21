@@ -6,6 +6,7 @@ namespace Ampache\Gui\System;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Application\Update\UpdateAction;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Update;
 use Ampache\Module\Util\Ui;
@@ -76,8 +77,9 @@ final class UpdateViewAdapter implements UpdateViewAdapterInterface
     public function getUpdateActionUrl(): string
     {
         return sprintf(
-            '%s/update.php?action=update',
-            $this->configContainer->getWebPath()
+            '%s/update.php?action=%s',
+            $this->configContainer->getWebPath(),
+            UpdateAction::REQUEST_KEY
         );
     }
     

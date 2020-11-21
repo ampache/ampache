@@ -25,11 +25,14 @@ declare(strict_types=1);
 namespace Ampache\Gui\Song;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Rating;
 use Ampache\Model\Song;
 use Ampache\Module\Application\Song\DeleteAction;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Mockery\MockInterface;
 
 class SongViewAdapterTest extends MockeryTestCase
@@ -39,6 +42,9 @@ class SongViewAdapterTest extends MockeryTestCase
 
     /** @var ModelFactoryInterface|MockInterface|null */
     private MockInterface $modelFactory;
+
+    /** @var MockInterface|GuiGatekeeperInterface|null */
+    private ?MockInterface $gatekeeper;
 
     /** @var Song|MockInterface|null */
     private MockInterface $song;
@@ -50,11 +56,13 @@ class SongViewAdapterTest extends MockeryTestCase
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->gatekeeper      = $this->mock(GuiGatekeeperInterface::class);
         $this->song            = $this->mock(Song::class);
         
         $this->subject = new SongViewAdapter(
             $this->configContainer,
             $this->modelFactory,
+            $this->gatekeeper,
             $this->song
         );
     }
@@ -365,6 +373,142 @@ class SongViewAdapterTest extends MockeryTestCase
         $this->assertSame(
             $value,
             $this->subject->getNumberSkipped()
+        );
+    }
+
+    public function testCanPostShoutReturnsFalseIfSocialIsNotEnabled(): void
+    {
+        $this->configContainer->shouldReceive('isAuthenticationEnabled')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SOCIABLE)
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertFalse(
+            $this->subject->canPostShout()
+        );
+    }
+
+    public function testCanPostShoutReturnsFalseIfNotAccessible(): void
+    {
+        $this->configContainer->shouldReceive('isAuthenticationEnabled')
+            ->withNoArgs()
+            ->once()
+            ->andReturnTrue();
+
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertFalse(
+            $this->subject->canPostShout()
+        );
+    }
+
+    public function testCanPostShoutReturnsFalseIfAllConditionsAreMet(): void
+    {
+        $this->configContainer->shouldReceive('isAuthenticationEnabled')
+            ->withNoArgs()
+            ->once()
+            ->andReturnTrue();
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SOCIABLE)
+            ->once()
+            ->andReturnTrue();
+
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->subject->canPostShout()
+        );
+    }
+
+    public function testCanShareReturnsFalseIfNotAccessible(): void
+    {
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertFalse(
+            $this->subject->canShare()
+        );
+    }
+
+    public function testCanShareReturnsFalseIfFeatureIsDeactivated(): void
+    {
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SHARE)
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertFalse(
+            $this->subject->canShare()
+        );
+    }
+
+    public function testCanShareReturnsTrueIfConditionsAreMet(): void
+    {
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SHARE)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->subject->canShare()
+        );
+    }
+
+    public function testCanDownloadReturnsValue(): void
+    {
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DOWNLOAD)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->subject->canDownload()
+        );
+    }
+
+    public function testCanEditPlaylistReturnsValue(): void
+    {
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->subject->canEditPlaylist()
+        );
+    }
+
+    public function testCanBeReorderedReturnsValus(): void
+    {
+        $this->gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->subject->canBeReordered()
         );
     }
 }

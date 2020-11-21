@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Gui\Song;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Catalog;
@@ -35,7 +34,8 @@ use Ampache\Model\Song;
 use Ampache\Model\Userflag;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Application\Song\DeleteAction;
-use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
@@ -46,15 +46,19 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private GuiGatekeeperInterface $gatekeeper;
+
     private Song $song;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
+        GuiGatekeeperInterface $gatekeeper,
         Song $song
     ) {
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
+        $this->gatekeeper      = $gatekeeper;
         $this->song            = $song;
     }
 
@@ -170,9 +174,10 @@ final class SongViewAdapter implements SongViewAdapterInterface
     public function canPostShout(): bool
     {
         return (
-            $this->configContainer->isAuthenticationEnabled() === false ||
-            Access::check('interface', 25)
-            ) && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
+                $this->configContainer->isAuthenticationEnabled() === false ||
+                $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === true
+            ) &&
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
     }
 
     public function getPostShoutUrl(): string
@@ -189,9 +194,10 @@ final class SongViewAdapter implements SongViewAdapterInterface
         return Ui::get_icon('comment', T_('Post Shout'));
     }
 
-    public function canShare(): string
+    public function canShare(): bool
     {
-        return Access::check('interface', 25) && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
+        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) &&
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
     }
 
     public function getShareUi(): string
@@ -201,7 +207,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function canDownload(): bool
     {
-        return Access::check_function('download');
+        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DOWNLOAD);
     }
 
     public function getExternalPlayUrl(): string
@@ -241,7 +247,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
         return (
             ($owner !== null && $owner == $GLOBALS['user']->id) ||
-            Access::check('interface', 50)
+            $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
         ) &&
         $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS) &&
         is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/');
@@ -264,9 +270,9 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function isEditable(): bool
     {
-        return Access::check('interface', 50) || (
+        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) || (
             $this->song->get_user_owner() == Core::get_global('user')->id &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true
         );
     }
 
@@ -282,9 +288,9 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function canToggleState(): bool
     {
-        return Access::check('interface', 75) || (
+        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) || (
             $this->song->get_user_owner() == Core::get_global('user')->id &&
-            AmpConfig::get('upload_allow_edit')
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true
         );
     }
 
@@ -366,7 +372,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
         if ($this->song->replaygain_album_gain != 0) {
             $songprops[T_('ReplayGain Album Gain')]   = scrub_out($this->song->replaygain_album_gain);
         }
-        if (Access::check('interface', 75)) {
+        if ($this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)) {
             $songprops[T_('Filename')]   = scrub_out($this->song->file) . " " . $this->song->f_size;
         }
         if ($this->song->update_time) {
@@ -400,7 +406,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function canEditPlaylist(): bool
     {
-        return Access::check('interface', 25);
+        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER);
     }
 
     public function getAddToPlaylistIcon(): string
@@ -410,7 +416,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function canBeReordered(): bool
     {
-        return Access::check('interface', 50);
+        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER);
     }
 
     public function getReorderIcon(): string

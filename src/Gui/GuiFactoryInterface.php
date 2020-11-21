@@ -30,10 +30,14 @@ use Ampache\Gui\System\ConfigViewAdapterInterface;
 use Ampache\Gui\System\UpdateViewAdapterInterface;
 use Ampache\Model\Catalog;
 use Ampache\Model\Song;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 
 interface GuiFactoryInterface
 {
-    public function createSongViewAdapter(Song $song): SongViewAdapterInterface;
+    public function createSongViewAdapter(
+        GuiGatekeeperInterface $gatekeeper,
+        Song $song
+    ): SongViewAdapterInterface;
 
     public function createConfigViewAdapter(): ConfigViewAdapterInterface;
 
