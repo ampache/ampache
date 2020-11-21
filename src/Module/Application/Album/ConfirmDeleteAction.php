@@ -60,8 +60,8 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
     {
         $response = null;
 
-        require_once Ui::find_template('header.inc.php');
-        
+        $this->ui->showHeader();
+
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             // Show the Footer
             $this->ui->showQueryStats();
