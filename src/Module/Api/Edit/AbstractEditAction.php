@@ -26,6 +26,7 @@ namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Model\database_object;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
@@ -73,6 +74,8 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         }
 
         $class_name = ObjectTypeToClassNameMapper::map($object_type);
+        debug_event('edit.server', $class_name, 3);
+        debug_event('edit.server', $object_id, 3);
         $libitem    = new $class_name($object_id);
         $libitem->format();
 
@@ -91,8 +94,12 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             return null;
         }
 
-        return $this->handle($request, $type);
+        return $this->handle($request, $type, $libitem);
     }
 
-    abstract protected function handle(ServerRequestInterface $request, string $type): ?ResponseInterface;
+    abstract protected function handle(
+        ServerRequestInterface $request,
+        string $type,
+        database_object $libitem
+    ): ?ResponseInterface;
 }

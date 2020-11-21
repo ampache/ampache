@@ -26,6 +26,7 @@ namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Model\database_object;
 use Ampache\Model\Label;
 use Ampache\Model\Tag;
 use Ampache\Module\Authorization\Access;
@@ -39,7 +40,7 @@ use Psr\Log\LoggerInterface;
 
 final class EditObjectAction extends AbstractEditAction
 {
-    public const REQUEST_KEY = 'edit_object_action';
+    public const REQUEST_KEY = 'edit_object';
 
     private ResponseFactoryInterface $responseFactory;
 
@@ -56,8 +57,11 @@ final class EditObjectAction extends AbstractEditAction
         $this->streamFactory   = $streamFactory;
     }
 
-    protected function handle(ServerRequestInterface $request, string $type): ?ResponseInterface
-    {
+    protected function handle(
+        ServerRequestInterface $request,
+        string $type,
+        database_object $libitem
+    ): ?ResponseInterface {
         // Scrub the data, walk recursive through array
         $entities = function (&$data) use (&$entities) {
             foreach ($data as $key => $value) {

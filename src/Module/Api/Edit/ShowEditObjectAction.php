@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Model\database_object;
 use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -51,7 +52,11 @@ final class ShowEditObjectAction extends AbstractEditAction
         $this->streamFactory   = $streamFactory;
     }
 
-    protected function handle(ServerRequestInterface $request, string $type): ?ResponseInterface
+    protected function handle(
+        ServerRequestInterface $request,
+        string $type,
+        database_object $libitem
+    ): ?ResponseInterface
     {
         ob_start();
 
