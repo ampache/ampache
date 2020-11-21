@@ -26,8 +26,8 @@ namespace Ampache\Module\Application\Song;
 
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\Song\SongViewAdapterInterface;
-use Ampache\Gui\TalViewInterface;
 use Ampache\Gui\TalFactoryInterface;
+use Ampache\Gui\TalViewInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Song;

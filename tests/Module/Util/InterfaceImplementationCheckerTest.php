@@ -28,10 +28,10 @@ namespace Ampache\Module\Util;
 use Ampache\Model\Channel;
 use Ampache\Model\library_item;
 use Ampache\Model\Media;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Ampache\Model\playable_item;
 use Ampache\Model\Song_Preview;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use stdClass;
 
 class InterfaceImplementationCheckerTest extends MockeryTestCase

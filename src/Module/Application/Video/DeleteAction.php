@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Video;
 
@@ -56,14 +56,15 @@ final class DeleteAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $video_id = (string) scrub_in(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
+        $videoId = (int) $request->getQueryParams()['video_id'] ?? 0;
+
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('The Video will be deleted'),
             sprintf(
-                '%s/video.php?action=confirm_delete&video_id=%s',
+                '%s/video.php?action=confirm_delete&video_id=%d',
                 $this->configContainer->getWebPath(),
-                $video_id
+                $videoId
             ),
             1,
             'delete_video'
