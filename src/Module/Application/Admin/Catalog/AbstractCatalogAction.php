@@ -84,6 +84,6 @@ abstract class AbstractCatalogAction implements ApplicationActionInterface
             }
         }
 
-        return [];
+        return $catalogs;
     }
 }
