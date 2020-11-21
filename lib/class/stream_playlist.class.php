@@ -71,12 +71,12 @@ class Stream_Playlist
     }
 
     /**
-     * @param $url
+     * @param Stream_URL $url
      * @return PDOStatement|boolean
      */
     private function _add_url($url)
     {
-        debug_event("stream_playlist.class.php", "Adding url {" . json_encode($url) . "}...", 5);
+        debug_event("stream_playlist.class", "Adding url {" . json_encode($url) . "}...", 5);
 
         $this->urls[] = $url;
         $sql          = 'INSERT INTO `stream_playlist` ';
@@ -99,6 +99,42 @@ class Stream_Playlist
         $sql .= 'VALUES(' . implode(',', $holders) . ')';
 
         return Dba::write($sql, $values);
+    }
+
+    /**
+     * @param array $urls
+     * @return PDOStatement|boolean
+     */
+    private function _add_urls($urls)
+    {
+        $sql       = 'INSERT INTO `stream_playlist` ';
+        $value_sql = 'VALUES ';
+        $values    = array();
+        $fields    = array();
+        $fields[]  = '`sid`';
+        $count     = true;
+        debug_event("stream_playlist.class", "Adding urls to {" . $this->id . "}...", 5);
+        foreach ($urls as $url) {
+            $this->urls[] = $url;
+            $values[]     = $this->id;
+            $holders      = array();
+            $holders[]    = '?';
+
+            foreach ($url->properties as $field) {
+                if ($url->$field) {
+                    $holders[] = '?';
+                    $values[]  = $url->$field;
+                    if ($count) {
+                        $fields[] = '`' . $field . '`';
+                    }
+                }
+            }
+            $count = false;
+            $value_sql .= '(' . implode(',', $holders) . '), ';
+        }
+        $sql .= '(' . implode(',', $fields) . ') ';
+
+        return Dba::write($sql . rtrim($value_sql, ', '), $values);
     }
 
     /**
@@ -352,9 +388,7 @@ class Stream_Playlist
     public function add($media = array(), $additional_params = '')
     {
         $urls = self::media_to_urlarray($media, $additional_params);
-        foreach ($urls as $url) {
-            $this->_add_url($url);
-        }
+        $this->_add_urls($urls);
     }
 
     /**
