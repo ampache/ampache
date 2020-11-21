@@ -66,7 +66,7 @@ final class DeleteAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $msgs = scrub_out($_REQUEST['msgs']);
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('The Message will be deleted'),
             sprintf(

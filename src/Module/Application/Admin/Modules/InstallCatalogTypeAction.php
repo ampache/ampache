@@ -77,7 +77,7 @@ final class InstallCatalogTypeAction implements ApplicationActionInterface
         $url   = sprintf('%s/admin/modules.php?action=show_catalog_types', $this->configContainer->getWebPath());
         $title = T_('No Problem');
         $body  = T_('The Module has been enabled');
-        show_confirmation($title, $body, $url);
+        $this->ui->showConfirmation($title, $body, $url);
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

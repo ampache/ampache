@@ -67,7 +67,7 @@ final class SaveAsSmartPlaylistAction implements ApplicationActionInterface
         $playlist->parse_rules(Search::clean_request($_REQUEST));
         $playlist->save();
         
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('No Problem'),
             /* HINT: playlist name */
             sprintf(

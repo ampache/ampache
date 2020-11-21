@@ -68,7 +68,11 @@ final class DeleteRecordAction implements ApplicationActionInterface
             '%s/admin/access.php',
             $this->configContainer->getWebPath()
         );
-        show_confirmation(T_('No Problem'), T_('Your Access List entry has been removed'), $url);
+        $this->ui->showConfirmation(
+            T_('No Problem'),
+            T_('Your Access List entry has been removed'),
+            $url
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

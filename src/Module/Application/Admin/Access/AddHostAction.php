@@ -84,7 +84,7 @@ final class AddHostAction implements ApplicationActionInterface
                 '%s/admin/access.php',
                 $this->configContainer->getWebPath()
             );
-            show_confirmation(
+            $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('Your new Access Control List(s) have been created'),
                 $url

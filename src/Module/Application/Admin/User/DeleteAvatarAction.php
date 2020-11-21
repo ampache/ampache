@@ -67,7 +67,7 @@ final class DeleteAvatarAction extends AbstractUserAction
         $client = $this->modelFactory->createUser((int) Core::get_request('user_id'));
         $client->delete_avatar();
 
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Avatar has been deleted'),
             sprintf('%s/admin/users.php', $this->configContainer->getWebPath())

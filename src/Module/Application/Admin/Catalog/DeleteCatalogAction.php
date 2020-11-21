@@ -74,9 +74,17 @@ final class DeleteCatalogAction implements ApplicationActionInterface
 
         $next_url = sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath());
         if ($deleted) {
-            show_confirmation(T_('No Problem'), T_('The Catalog has been deleted'), $next_url);
+            $this->ui->showConfirmation(
+                T_('No Problem'),
+                T_('The Catalog has been deleted'),
+                $next_url
+            );
         } else {
-            show_confirmation(T_("There Was a Problem"), T_("There was an error deleting this Catalog"), $next_url);
+            $this->ui->showConfirmation(
+                T_("There Was a Problem"),
+                T_("There was an error deleting this Catalog"),
+                $next_url
+            );
         }
 
         $this->ui->showQueryStats();

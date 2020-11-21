@@ -27,8 +27,8 @@ namespace Ampache\Module\Application\Art;
 use Ampache\Model\Art;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -118,9 +118,17 @@ final class FindArtAction extends AbstractArtAction
 
             if ($image_data != '') {
                 if ($art->insert($image_data, $upload['0']['mime'])) {
-                    show_confirmation(T_('No Problem'), T_('Art has been added'), $burl);
+                    $this->ui->showConfirmation(
+                        T_('No Problem'),
+                        T_('Art has been added'),
+                        $burl
+                    );
                 } else {
-                    show_confirmation(T_("There Was a Problem"), T_('Art file failed to insert, check the dimensions are correct.'), $burl);
+                    $this->ui->showConfirmation(
+                        T_("There Was a Problem"),
+                        T_('Art file failed to insert, check the dimensions are correct.'),
+                        $burl
+                    );
                 }
 
                 $this->ui->showQueryStats();

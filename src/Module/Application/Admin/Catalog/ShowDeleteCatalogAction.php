@@ -63,7 +63,13 @@ final class ShowDeleteCatalogAction implements ApplicationActionInterface
             $this->configContainer->getWebPath(),
             implode(',', $catalogs)
         );
-        show_confirmation(T_('Are You Sure?'), T_('This will permanently delete your Catalog'), $next_url, 1, 'delete_catalog');
+        $this->ui->showConfirmation(
+            T_('Are You Sure?'),
+            T_('This will permanently delete your Catalog'),
+            $next_url,
+            1,
+            'delete_catalog'
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

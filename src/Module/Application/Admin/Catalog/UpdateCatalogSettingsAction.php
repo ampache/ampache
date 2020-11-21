@@ -37,12 +37,15 @@ final class UpdateCatalogSettingsAction extends AbstractCatalogAction
 
     private ConfigContainerInterface $configContainer;
 
+    private UiInterface $ui;
+
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer
     ) {
         parent::__construct($ui);
         $this->configContainer = $configContainer;
+        $this->ui              = $ui;
     }
 
     /**
@@ -62,7 +65,8 @@ final class UpdateCatalogSettingsAction extends AbstractCatalogAction
         $url       = sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath());
         $title     = T_('No Problem');
         $body      = T_('The Catalog has been updated');
-        show_confirmation($title, $body, $url);
+
+        $this->ui->showConfirmation($title, $body, $url);
 
         return null;
     }

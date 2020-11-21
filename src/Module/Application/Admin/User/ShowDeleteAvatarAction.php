@@ -52,7 +52,7 @@ final class ShowDeleteAvatarAction extends AbstractUserAction
 
         $user_id = Core::get_request('user_id');
 
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('This Avatar will be deleted'),
             sprintf(

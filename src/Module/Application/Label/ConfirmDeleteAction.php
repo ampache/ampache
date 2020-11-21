@@ -70,13 +70,13 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         }
 
         if ($label->remove()) {
-            show_confirmation(
+            $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('The Label has been deleted'),
                 $this->configContainer->getWebPath()
             );
         } else {
-            show_confirmation(
+            $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 T_('Unable to delete this Label.'),
                 $this->configContainer->getWebPath()

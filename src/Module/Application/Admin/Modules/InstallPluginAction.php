@@ -89,7 +89,7 @@ final class InstallPluginAction implements ApplicationActionInterface
             $url   = sprintf('%s/admin/modules.php?action=show_plugins', $this->configContainer->getWebPath());
             $title = T_("There Was a Problem");
             $body  = T_('Unable to install this Plugin');
-            show_confirmation($title, $body, $url);
+            $this->ui->showConfirmation($title, $body, $url);
 
             $this->ui->showQueryStats();
             $this->ui->showFooter();
@@ -104,7 +104,7 @@ final class InstallPluginAction implements ApplicationActionInterface
         $url   = sprintf('%s/admin/modules.php?action=show_plugins', $this->configContainer->getWebPath());
         $title = T_('No Problem');
         $body  = T_('The Plugin has been enabled');
-        show_confirmation($title, $body, $url);
+        $this->ui->showConfirmation($title, $body, $url);
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

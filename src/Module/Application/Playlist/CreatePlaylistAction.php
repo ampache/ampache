@@ -58,7 +58,8 @@ final class CreatePlaylistAction implements ApplicationActionInterface
 
         $playlist_id                     = Playlist::create($playlist_name, $playlist_type);
         $_SESSION['data']['playlist_id'] = $playlist_id;
-        show_confirmation(
+
+        $this->ui->showConfirmation(
             T_('Playlist created'),
             /* HINT: %1 playlist name, %2 playlist type */
             sprintf(T_('%1$s (%2$s) has been created'), $playlist_name, $playlist_type),

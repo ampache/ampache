@@ -60,7 +60,7 @@ final class DeleteAction implements ApplicationActionInterface
         }
 
         $label_id = (string) scrub_in($_REQUEST['label_id']);
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('This Label will be deleted'),
             sprintf(

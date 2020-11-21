@@ -86,7 +86,7 @@ final class UpgradePluginAction implements ApplicationActionInterface
         $url   = sprintf('%s/admin/modules.php?action=show_plugins', $this->configContainer->getWebPath());
         $title = T_('No Problem');
         $body  = T_('The Plugin has been upgraded');
-        show_confirmation($title, $body, $url);
+        $this->ui->showConfirmation($title, $body, $url);
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

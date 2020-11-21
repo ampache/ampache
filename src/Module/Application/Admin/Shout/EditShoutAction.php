@@ -62,7 +62,7 @@ final class EditShoutAction implements ApplicationActionInterface
         if ($shout->id) {
             $shout->update($_POST);
         }
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Shoutbox post has been updated'),
             sprintf('%s/admin/shout.php', $this->configContainer->getWebPath())

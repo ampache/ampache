@@ -47,4 +47,23 @@ interface UiInterface
      * Displays the default error page
      */
     public function accessDenied(string $error = 'Access Denied'): void;
+
+    /**
+     * shows a confirmation of an action
+     *
+     * @param string $title The Title of the message
+     * @param string $text The details of the message
+     * @param string $next_url Where to go next
+     * @param integer $cancel T/F show a cancel button that uses return_referer()
+     * @param string $form_name
+     * @param boolean $visible
+     */
+    public function showConfirmation(
+        $title,
+        $text,
+        $next_url,
+        $cancel = 0,
+        $form_name = 'confirmation',
+        $visible = true
+    ): void;
 }

@@ -60,7 +60,7 @@ final class DeleteAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $song_id = (string) scrub_in($_REQUEST['song_id']);
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('The Song will be deleted'),
             sprintf(

@@ -66,7 +66,8 @@ final class ClearNowPlayingAction implements ApplicationActionInterface
             return null;
         }
         Stream::clear_now_playing();
-        show_confirmation(
+
+        $this->ui->showConfirmation(
             T_('No Problem'),
             T_('All Now Playing data has been cleared'),
             sprintf(

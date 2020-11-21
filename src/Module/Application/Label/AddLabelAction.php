@@ -78,7 +78,7 @@ final class AddLabelAction implements ApplicationActionInterface
         if (!$label_id) {
             require_once Ui::find_template('show_add_label.inc.php');
         } else {
-            show_confirmation(
+            $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('The Label has been added'),
                 sprintf(

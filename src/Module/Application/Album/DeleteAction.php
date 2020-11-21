@@ -64,7 +64,7 @@ final class DeleteAction implements ApplicationActionInterface
 
         $album_id = (int) $_REQUEST['album_id'];
         
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('The Album and all files will be deleted'),
             sprintf(

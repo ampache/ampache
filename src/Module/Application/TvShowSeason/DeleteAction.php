@@ -55,7 +55,7 @@ final class DeleteAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $tvshow_season_id = (string) scrub_in($_REQUEST['tvshow_season_id']);
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('The entire TV Season will be deleted'),
             sprintf(

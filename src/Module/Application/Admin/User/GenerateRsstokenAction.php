@@ -70,7 +70,7 @@ final class GenerateRsstokenAction extends AbstractUserAction
             $client->generate_rsstoken();
         }
 
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('No Problem'),
             T_('A new user RSS token has been generated'),
             sprintf('%s/admin/users.php', $this->configContainer->getWebPath())

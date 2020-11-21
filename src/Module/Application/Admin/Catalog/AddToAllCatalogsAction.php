@@ -35,12 +35,15 @@ final class AddToAllCatalogsAction extends AbstractCatalogAction
 
     private ConfigContainerInterface $configContainer;
 
+    private UiInterface $ui;
+
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer
     ) {
         parent::__construct($ui);
         $this->configContainer = $configContainer;
+        $this->ui              = $ui;
     }
 
     /**
@@ -51,7 +54,7 @@ final class AddToAllCatalogsAction extends AbstractCatalogAction
         array $catalogIds
     ): ?ResponseInterface {
         catalog_worker('add_to_all_catalogs');
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('Catalog update process has started'),
             '',
             sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath()),

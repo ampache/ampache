@@ -67,14 +67,14 @@ final class ConfirmDeleteAction extends AbstractUserAction
         $client = $this->modelFactory->createUser((int) Core::get_request('user_id'));
 
         if ($client->delete()) {
-            show_confirmation(
+            $this->ui->showConfirmation(
                 T_('No Problem'),
                 /* HINT: Username (Short Name) */
                 sprintf(T_('%s has been deleted'), $client->username),
                 sprintf('%s/admin/users.php', $this->configContainer->getWebPath())
             );
         } else {
-            show_confirmation(
+            $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 T_('You need at least one active Administrator account'),
                 sprintf('%s/admin/users.php', $this->configContainer->getWebPath())

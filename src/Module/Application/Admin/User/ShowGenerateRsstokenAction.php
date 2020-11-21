@@ -52,7 +52,7 @@ final class ShowGenerateRsstokenAction extends AbstractUserAction
 
         $user_id = Core::get_request('user_id');
 
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('This will replace your existing RSS token. Feeds with the old token might not work properly'),
             sprintf(

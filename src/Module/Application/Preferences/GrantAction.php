@@ -84,7 +84,7 @@ final class GrantAction implements ApplicationActionInterface
                     );
                 }
 
-                show_confirmation($title, $text, $next_url, 0);
+                $this->ui->showConfirmation($title, $text, $next_url, 0);
             }
         }
         $fullname    = Core::get_global('user')->fullname;

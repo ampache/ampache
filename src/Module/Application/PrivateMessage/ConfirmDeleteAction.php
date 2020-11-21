@@ -84,7 +84,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             }
         }
 
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Messages have been deleted'),
             sprintf(

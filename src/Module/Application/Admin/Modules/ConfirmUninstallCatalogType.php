@@ -65,7 +65,8 @@ final class ConfirmUninstallCatalogType implements ApplicationActionInterface
         );
         $title = T_('Are You Sure?');
         $body  = T_('This will disable the Catalog module');
-        show_confirmation($title, $body, $url, 1);
+
+        $this->ui->showConfirmation($title, $body, $url, 1);
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

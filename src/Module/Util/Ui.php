@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\Plugin;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
@@ -38,6 +39,14 @@ class Ui implements UiInterface
     private static $_ticker;
     private static $_icon_cache;
     private static $_image_cache;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->configContainer = $configContainer;
+    }
 
     /**
      * find_template
@@ -657,5 +666,34 @@ class Ui implements UiInterface
         }
 
         return $isgv;
+    }
+
+    /**
+     * shows a confirmation of an action
+     *
+     * @param string $title The Title of the message
+     * @param string $text The details of the message
+     * @param string $next_url Where to go next
+     * @param integer $cancel T/F show a cancel button that uses return_referer()
+     * @param string $form_name
+     * @param boolean $visible
+     */
+    public function showConfirmation(
+        $title,
+        $text,
+        $next_url,
+        $cancel = 0,
+        $form_name = 'confirmation',
+        $visible = true
+    ): void {
+        $webPath = $this->configContainer->getWebPath();
+
+        if (substr_count($next_url, $webPath)) {
+            $path = $next_url;
+        } else {
+            $path = sprintf('%s/%s', $webPath, $next_url);
+        }
+
+        require Ui::find_template('show_confirmation.inc.php');
     }
 }

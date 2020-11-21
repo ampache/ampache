@@ -78,13 +78,13 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         }
 
         if ($artist->remove()) {
-            show_confirmation(
+            $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('The Artist has been deleted'),
                 $this->configContainer->getWebPath()
             );
         } else {
-            show_confirmation(
+            $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 T_('Couldn\'t delete this Artist.'),
                 $this->configContainer->getWebPath()

@@ -67,7 +67,7 @@ final class ShowDeleteRecordAction implements ApplicationActionInterface
             return null;
         }
         $access = new Access((int) Core::get_get('access_id'));
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('Are You Sure?'),
             /* HINT: ACL Name */
             sprintf(T_('This will permanently delete the ACL "%s"'), $access->name),

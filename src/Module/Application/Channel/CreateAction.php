@@ -88,7 +88,11 @@ final class CreateAction implements ApplicationActionInterface
         if (!$created) {
             require_once Ui::find_template('show_add_channel.inc.php');
         } else {
-            show_confirmation(T_('No Problem'), T_('The Channel has been created'), AmpConfig::get('web_path') . '/browse.php?action=channel');
+            $this->ui->showConfirmation(
+                T_('No Problem'),
+                T_('The Channel has been created'),
+                AmpConfig::get('web_path') . '/browse.php?action=channel'
+            );
         }
         
         $this->ui->showFooter();

@@ -152,14 +152,15 @@ final class UpdateUserAction extends AbstractUserAction
                 (int) $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_MAX_WIDTH),
                 (int) $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_MAX_HEIGHT)
             );
-            show_confirmation(
+            $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 /* HINT: %1 Minimum are dimensions (200x300), %2 Maximum Art dimensions (2000x3000) */
-                sprintf(T_('Please check your image is within the minimum %1$s and maximum %2$s dimensions'), $mindimension, $maxdimension),
+                sprintf(T_('Please check your image is within the minimum %1$s and maximum %2$s dimensions'),
+                    $mindimension, $maxdimension),
                 sprintf('%s/admin/users.php', $this->configContainer->getWebPath())
             );
         } else {
-            show_confirmation(
+            $this->ui->showConfirmation(
                 T_('No Problem'),
                 sprintf(T_('%s (%s) updated'), $client->username, $client->fullname),
                 sprintf('%s/admin/users.php', $this->configContainer->getWebPath())

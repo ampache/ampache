@@ -84,7 +84,7 @@ final class SetIsReadAction implements ApplicationActionInterface
             }
         }
 
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Message\'s state has been changed'),
             sprintf(

@@ -62,7 +62,7 @@ final class DeleteAction implements ApplicationActionInterface
         }
 
         $artist_id = (string) scrub_in($_REQUEST['artist_id']);
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('The Artist and all files will be deleted'),
             sprintf(

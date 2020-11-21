@@ -1077,29 +1077,6 @@ function debug_event($type, $message, $level, $file = '', $username = '')
 } // debug_event
 
 /**
- * show_confirmation
- *
- * shows a confirmation of an action
- *
- * @param string $title The Title of the message
- * @param string $text The details of the message
- * @param string $next_url Where to go next
- * @param integer $cancel T/F show a cancel button that uses return_referer()
- * @param string $form_name
- * @param boolean $visible
- */
-function show_confirmation($title, $text, $next_url, $cancel = 0, $form_name = 'confirmation', $visible = true)
-{
-    if (substr_count($next_url, AmpConfig::get('web_path'))) {
-        $path = $next_url;
-    } else {
-        $path = AmpConfig::get('web_path') . "/$next_url";
-    }
-
-    require Ui::find_template('show_confirmation.inc.php');
-} // show_confirmation
-
-/**
  * @param $action
  * @param $catalogs
  * @param array $options

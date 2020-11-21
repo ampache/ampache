@@ -68,7 +68,11 @@ final class CleanAction implements ApplicationActionInterface
             '%s/stats.php?action=share',
             $this->configContainer->getWebPath()
         );
-        show_confirmation(T_('No Problem'), T_('Expired shares have been cleaned'), $next_url);
+        $this->ui->showConfirmation(
+            T_('No Problem'),
+            T_('Expired shares have been cleaned'),
+            $next_url
+        );
         $this->ui->showFooter();
 
         return null;

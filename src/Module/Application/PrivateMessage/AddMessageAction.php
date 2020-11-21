@@ -81,7 +81,7 @@ final class AddMessageAction implements ApplicationActionInterface
         if (!$pvmsg_id) {
             require_once Ui::find_template('show_add_pvmsg.inc.php');
         } else {
-            show_confirmation(
+            $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('Message has been sent'),
                 sprintf(

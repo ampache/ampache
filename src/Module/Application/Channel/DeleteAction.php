@@ -75,7 +75,7 @@ final class DeleteAction implements ApplicationActionInterface
                 '%s/browse.php?action=channel',
                 $this->configContainer->getWebPath()
             );
-            show_confirmation(
+            $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('The Channel has been deleted'),
                 $next_url

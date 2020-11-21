@@ -61,7 +61,7 @@ final class DeleteAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Shoutbox post has been deleted'),
             sprintf('%s/admin/shout.php', $this->configContainer->getWebPath())

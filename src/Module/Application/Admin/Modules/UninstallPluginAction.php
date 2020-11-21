@@ -89,7 +89,8 @@ final class UninstallPluginAction implements ApplicationActionInterface
         $url   = sprintf('%s/admin/modules.php?action=show_plugins', $this->configContainer->getWebPath());
         $title = T_('No Problem');
         $body  = T_('The Plugin has been disabled');
-        show_confirmation($title, $body, $url);
+
+        $this->ui->showConfirmation($title, $body, $url);
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

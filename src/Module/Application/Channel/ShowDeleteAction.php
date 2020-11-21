@@ -64,7 +64,7 @@ final class ShowDeleteAction implements ApplicationActionInterface
             $this->configContainer->getWebPath(),
             scrub_out($object_id)
         );
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('This Channel will be deleted'),
             $next_url,

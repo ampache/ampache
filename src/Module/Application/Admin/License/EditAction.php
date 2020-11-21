@@ -68,7 +68,7 @@ final class EditAction implements ApplicationActionInterface
             License::create($_POST);
             $text = T_('A new License has been created');
         }
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('No Problem'),
             $text,
             sprintf('%s/admin/license.php', $this->configContainer->getWebPath())

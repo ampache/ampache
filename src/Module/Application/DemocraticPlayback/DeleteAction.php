@@ -65,7 +65,7 @@ final class DeleteAction implements ApplicationActionInterface
 
         Democratic::delete((int) $_REQUEST['democratic_id']);
 
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('No Problem'),
             T_('The Playlist has been deleted'),
             sprintf(

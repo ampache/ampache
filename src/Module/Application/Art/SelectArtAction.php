@@ -82,7 +82,11 @@ final class SelectArtAction extends AbstractArtAction
         if (!Art::check_dimensions($dimensions)) {
             $this->ui->showHeader();
 
-            show_confirmation(T_('There Was a Problem'), T_('Art file failed size check'), $burl);
+            $this->ui->showConfirmation(
+                T_('There Was a Problem'),
+                T_('Art file failed size check'),
+                $burl
+            );
 
             $this->ui->showQueryStats();
             $this->ui->showFooter();

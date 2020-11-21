@@ -99,7 +99,7 @@ final class SendMailAction implements ApplicationActionInterface
                 '%s/admin/mail.php',
                 $this->configContainer->getWebPath()
             );
-            show_confirmation($title, $body, $url);
+            $this->ui->showConfirmation($title, $body, $url);
         }
 
         $this->ui->showQueryStats();

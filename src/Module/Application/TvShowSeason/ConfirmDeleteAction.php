@@ -67,13 +67,13 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         if ($tvshow_season->remove()) {
-            show_confirmation(
+            $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('TV Season has been deleted'),
                 $this->configContainer->getWebPath()
             );
         } else {
-            show_confirmation(
+            $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 T_('Couldn\'t delete this TV Season.'),
                 $this->configContainer->getWebPath()

@@ -67,7 +67,7 @@ final class UpdateRecordAction implements ApplicationActionInterface
         $access = new Access(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $access->update($_POST);
         if (!AmpError::occurred()) {
-            show_confirmation(
+            $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('Your Access Control List has been updated'),
                 sprintf(

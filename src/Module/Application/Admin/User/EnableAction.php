@@ -64,7 +64,7 @@ final class EnableAction extends AbstractUserAction
             Registration::send_account_enabled($client->username, $client->fullname, $client->email);
         }
 
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('No Problem'),
             /* HINT: Username and fullname together: Username (fullname) */
             sprintf(T_('%s (%s) has been enabled'), $client->username, $client->fullname),

@@ -57,7 +57,7 @@ final class DeleteAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $tvshow_id = (string) scrub_in($_REQUEST['tvshow_id']);
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('The TV Show and its files will be deleted'),
             sprintf(

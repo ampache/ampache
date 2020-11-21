@@ -72,7 +72,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
         $podcast = $this->modelFactory->createPodcast((int) $_REQUEST['podcast_id']);
         if ($podcast->remove()) {
-            show_confirmation(
+            $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('Podcast has been deleted'),
                 sprintf(
@@ -81,7 +81,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
                 )
             );
         } else {
-            show_confirmation(
+            $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 T_('Couldn\'t delete this Podcast.'),
                 sprintf(

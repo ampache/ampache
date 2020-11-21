@@ -67,13 +67,13 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         if ($video->remove()) {
-            show_confirmation(
+            $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('Video has been deleted'),
                 $this->configContainer->getWebPath()
             );
         } else {
-            show_confirmation(
+            $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 T_('Couldn\'t delete this Video.'),
                 $this->configContainer->getWebPath()

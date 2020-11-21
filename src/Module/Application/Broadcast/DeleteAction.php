@@ -73,7 +73,11 @@ final class DeleteAction implements ApplicationActionInterface
                 '%s/browse.php?action=broadcast',
                 $this->configContainer->getWebPath()
             );
-            show_confirmation(T_('No Problem'), T_('Broadcast has been deleted'), $next_url);
+            $this->ui->showConfirmation(
+                T_('No Problem'),
+                T_('Broadcast has been deleted'),
+                $next_url
+            );
         }
 
         $this->ui->showFooter();

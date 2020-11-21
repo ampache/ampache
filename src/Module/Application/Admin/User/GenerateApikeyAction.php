@@ -68,7 +68,7 @@ final class GenerateApikeyAction extends AbstractUserAction
         $client = $this->modelFactory->createUser((int) Core::get_request('user_id'));
         $client->generate_apikey();
 
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('No Problem'),
             T_('A new user API Key has been generated'),
             sprintf('%s/admin/users.php', $this->configContainer->getWebPath())

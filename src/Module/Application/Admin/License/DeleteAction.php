@@ -61,7 +61,8 @@ final class DeleteAction implements ApplicationActionInterface
 
         License::delete($_REQUEST['license_id']);
 
-        show_confirmation(T_('No Problem'),
+        $this->ui->showConfirmation(
+            T_('No Problem'),
             T_('The License has been deleted'),
             sprintf('%s/admin/license.php', $this->configContainer->getWebPath())
         );

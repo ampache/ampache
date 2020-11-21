@@ -68,7 +68,7 @@ final class ResetDbCharsetAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Your database and associated tables have been updated to match your currently configured charset'),
             sprintf('%s/admin/system.php?action=show_debug', $this->configContainer->getWebPath())

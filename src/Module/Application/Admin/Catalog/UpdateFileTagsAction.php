@@ -35,12 +35,15 @@ final class UpdateFileTagsAction extends AbstractCatalogAction
 
     private ConfigContainerInterface $configContainer;
 
+    private UiInterface $ui;
+
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer
     ) {
         parent::__construct($ui);
         $this->configContainer = $configContainer;
+        $this->ui              = $ui;
     }
 
     /**
@@ -51,12 +54,15 @@ final class UpdateFileTagsAction extends AbstractCatalogAction
         array $catalogIds
     ): ?ResponseInterface {
         catalog_worker("update_file_tags", $catalogIds);
-        show_confirmation(T_('No Problem'),
+
+        $this->ui->showConfirmation(
+            T_('No Problem'),
             T_('The Catalog write file tags has started'),
             sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath()),
             0,
             'confirmation',
-            false);
+            false
+        );
 
         return null;
     }

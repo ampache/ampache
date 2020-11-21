@@ -70,7 +70,13 @@ final class ShowDeleteAction implements ApplicationActionInterface
             $this->configContainer->getWebPath(),
             scrub_out($share_id)
         );
-        show_confirmation(T_('Are You Sure?'), T_('The Share will be deleted and no longer accessible to others'), $next_url, 1, 'delete_share');
+        $this->ui->showConfirmation(
+            T_('Are You Sure?'),
+            T_('The Share will be deleted and no longer accessible to others'),
+            $next_url,
+            1,
+            'delete_share'
+        );
 
         $this->ui->showFooter();
 

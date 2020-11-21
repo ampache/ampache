@@ -75,7 +75,8 @@ final class ClearCacheAction implements ApplicationActionInterface
                 Album::clear_cache();
                 break;
         }
-        show_confirmation(
+
+        $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Your cache has been cleared successfully'),
             sprintf('%s/admin/system.php?action=show_debug', $this->configContainer->getWebPath())

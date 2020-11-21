@@ -72,10 +72,11 @@ final class ImportPlaylistAction implements ApplicationActionInterface
             $title = T_("There Was a Problem");
             $body  = T_('The Playlist could not be imported') . ': ' . $result['error'];
         }
-        show_confirmation(
+        $this->ui->showConfirmation(
             $title,
             $body,
-            sprintf('%s/playlist.php?action=%s', $this->configContainer->getWebPath(), $url));
+            sprintf('%s/playlist.php?action=%s', $this->configContainer->getWebPath(), $url)
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

@@ -36,12 +36,15 @@ final class FullServiceAction extends AbstractCatalogAction
 
     private ConfigContainerInterface $configContainer;
 
+    private UiInterface $ui;
+
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer
     ) {
         parent::__construct($ui);
         $this->configContainer = $configContainer;
+        $this->ui              = $ui;
     }
 
     /**
@@ -56,12 +59,15 @@ final class FullServiceAction extends AbstractCatalogAction
         }
 
         catalog_worker('full_service', $catalogIds);
-        show_confirmation(T_('Catalog update process has started'),
+
+        $this->ui->showConfirmation(
+            T_('Catalog update process has started'),
             '',
             sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath()),
             0,
             'confirmation',
-            false);
+            false
+        );
 
         return null;
     }

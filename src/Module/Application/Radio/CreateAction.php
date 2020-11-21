@@ -74,7 +74,7 @@ final class CreateAction implements ApplicationActionInterface
         } else {
             $body  = T_('Radio Station created');
             $title = '';
-            show_confirmation(
+            $this->ui->showConfirmation(
                 $title,
                 $body,
                 sprintf(

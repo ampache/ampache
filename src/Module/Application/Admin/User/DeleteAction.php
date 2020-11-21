@@ -62,7 +62,7 @@ final class DeleteAction extends AbstractUserAction
 
         $client = $this->modelFactory->createUser((int) Core::get_request('user_id'));
 
-        show_confirmation(
+        $this->ui->showConfirmation(
             T_('Are You Sure?'),
             /* HINT: User Fullname */
             sprintf(T_('This will permanently delete the user "%s"'), $client->fullname),
