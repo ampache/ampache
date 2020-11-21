@@ -27,8 +27,8 @@ namespace Ampache\Module\Application\Playlist;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,20 +40,16 @@ final class DeletePlaylistAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
-    private UiInterface $ui;
-
     private ResponseFactoryInterface $responseFactory;
 
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
         ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
         ResponseFactoryInterface $responseFactory,
         ConfigContainerInterface $configContainer
     ) {
         $this->modelFactory    = $modelFactory;
-        $this->ui              = $ui;
         $this->responseFactory = $responseFactory;
         $this->configContainer = $configContainer;
     }
@@ -77,8 +73,6 @@ final class DeletePlaylistAction implements ApplicationActionInterface
             }
         }
 
-        $this->ui->accessDenied();
-
-        return null;
+        throw new AccessDeniedException();
     }
 }

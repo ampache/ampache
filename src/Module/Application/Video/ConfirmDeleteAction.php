@@ -29,12 +29,11 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Catalog;
 use Ampache\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 
 final class ConfirmDeleteAction implements ApplicationActionInterface
 {
@@ -42,16 +41,12 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private LoggerInterface $logger;
-
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        LoggerInterface $logger
+        UiInterface $ui
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
-        $this->logger          = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -64,13 +59,9 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS)
         );
         if (!Catalog::can_remove($video)) {
-            $this->logger->critical(
+            throw new AccessDeniedException(
                 sprintf('Unauthorized to remove the video `%s`', $video->id),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            $this->ui->accessDenied();
-
-            return null;
         }
 
         $this->ui->showHeader();

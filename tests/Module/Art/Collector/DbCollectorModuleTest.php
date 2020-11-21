@@ -31,7 +31,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 class DbCollectorModuleTest extends MockeryTestCase
 {
     /** @var DbCollectorModule|null */
-    private $subject;
+    private ?DbCollectorModule $subject;
 
     public function setUp(): void
     {

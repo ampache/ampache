@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Model\Playlist;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -48,9 +49,7 @@ final class CreatePlaylistAction implements ApplicationActionInterface
     {
         /* Check rights */
         if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false) {
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
         $this->ui->showHeader();
 

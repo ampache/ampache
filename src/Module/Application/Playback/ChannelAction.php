@@ -30,11 +30,11 @@ use Ampache\Model\Channel;
 use Ampache\Model\Preference;
 use Ampache\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,14 +44,10 @@ final class ChannelAction implements ApplicationActionInterface
 
     private AuthenticationManagerInterface $authenticationManager;
 
-    private UiInterface $ui;
-
     public function __construct(
-        AuthenticationManagerInterface $authenticationManager,
-        UiInterface $ui
+        AuthenticationManagerInterface $authenticationManager
     ) {
         $this->authenticationManager = $authenticationManager;
-        $this->ui                    = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -92,10 +88,12 @@ final class ChannelAction implements ApplicationActionInterface
                     if (AmpConfig::get('access_control')) {
                         if (!Access::check_network('stream', Core::get_global('user')->id, 25) &&
                             !Access::check_network('network', Core::get_global('user')->id, 25)) {
-                            debug_event('channel/index', "Streaming Access Denied: " . Core::get_user_ip() . " does not have stream level access", 2);
-                            $this->ui->accessDenied();
-
-                            return null;
+                            throw new AccessDeniedException(
+                                sprintf(
+                                    'Streaming Access Denied: %s does not have stream level access',
+                                    Core::get_user_ip()
+                                )
+                            );
                         }
                     }
                 }

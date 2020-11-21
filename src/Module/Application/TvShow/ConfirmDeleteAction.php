@@ -29,12 +29,11 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Catalog;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 
 final class ConfirmDeleteAction implements ApplicationActionInterface
 {
@@ -46,18 +45,14 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
-    private LoggerInterface $logger;
-
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        LoggerInterface $logger
+        ModelFactoryInterface $modelFactory
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
-        $this->logger          = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -69,13 +64,9 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         $tvshow = $this->modelFactory->createTvShow((int) $_REQUEST['tvshow_id']);
 
         if (!Catalog::can_remove($tvshow)) {
-            $this->logger->warning(
+            throw new AccessDeniedException(
                 sprintf('Unauthorized to remove the tvshow `%d`', $tvshow->id),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            $this->ui->accessDenied();
-
-            return null;
         }
 
         $this->ui->showHeader();

@@ -24,6 +24,7 @@ namespace Ampache\Module\Application\Art;
 
 use Ampache\Model\Art;
 use Ampache\Model\ModelFactoryInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -62,9 +63,7 @@ final class SelectArtAction extends AbstractArtAction
 
         $item = $this->getItem($gatekeeper);
         if ($item === null) {
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
 
         $object_id = $item->id;

@@ -29,10 +29,10 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\User\Registration;
 use Ampache\Module\Util\Captcha\captcha;
 use Ampache\Module\Util\Mailer;
@@ -40,7 +40,6 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 
 final class AddUserAction implements ApplicationActionInterface
 {
@@ -48,20 +47,16 @@ final class AddUserAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private LoggerInterface $logger;
-
     private ModelFactoryInterface $modelFactory;
 
     private UiInterface $ui;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger,
         ModelFactoryInterface $modelFactory,
         UiInterface $ui
     ) {
         $this->configContainer = $configContainer;
-        $this->logger          = $logger;
         $this->modelFactory    = $modelFactory;
         $this->ui              = $ui;
     }
@@ -73,13 +68,7 @@ final class AddUserAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_PUBLIC_REGISTRATION) === false &&
             !Mailer::is_mail_enabled()
         ) {
-            $this->logger->error(
-                'Error attempted registration',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            );
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException('Error attempted registration');
         }
 
         /* Don't even include it if we aren't going to use it */

@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Democratic;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
@@ -66,9 +67,7 @@ final class CreateAction implements ApplicationActionInterface
             !Core::form_verify('create_democratic') ||
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false
         ) {
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
         
         $democratic = Democratic::get_current_playlist();

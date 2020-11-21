@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Album;
 
 use Ampache\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
@@ -64,9 +65,7 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
         );
 
         if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
-            $this->ui->accessDenied();
-
-            return $response;
+            throw new AccessDeniedException();
         }
 
         // Retrieving final song order from url

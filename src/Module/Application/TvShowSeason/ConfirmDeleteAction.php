@@ -30,11 +30,10 @@ use Ampache\Model\Catalog;
 use Ampache\Model\TVShow_Season;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 final class ConfirmDeleteAction implements ApplicationActionInterface
 {
@@ -44,16 +43,12 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private LoggerInterface $logger;
-
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
+        ConfigContainerInterface $configContainer
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
-        $this->logger          = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -64,14 +59,9 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
         $tvshow_season = new TVShow_Season($_REQUEST['tvshow_season_id']);
         if (!Catalog::can_remove($tvshow_season)) {
-            $this->logger->critical(
+            throw new AccessDeniedException(
                 sprintf('Unauthorized to remove the tvshow `%s`', $tvshow_season->id),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-
-            $this->ui->accessDenied();
-
-            return null;
         }
 
         $this->ui->showHeader();

@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Admin\Catalog;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Catalog;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
@@ -53,6 +54,7 @@ final class AddCatalogAction extends AbstractCatalogAction
 
     /**
      * @param int[] $catalogIds
+     * @throws AccessDeniedException
      */
     protected function handle(
         ServerRequestInterface $request,
@@ -73,9 +75,7 @@ final class AddCatalogAction extends AbstractCatalogAction
         }
 
         if (!Core::form_verify('add_catalog', 'post')) {
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
 
         // If an error hasn't occurred

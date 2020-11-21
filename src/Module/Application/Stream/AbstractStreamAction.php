@@ -29,6 +29,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ApplicationException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Stream;
@@ -36,7 +37,6 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
-use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
@@ -54,6 +54,9 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
         $this->configContainer = $configContainer;
     }
 
+    /**
+     * @throws ApplicationException
+     */
     protected function preCheck(
         GuiGatekeeperInterface $gatekeeper
     ): bool {
@@ -73,6 +76,9 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
         return true;
     }
 
+    /**
+     * @throws ApplicationException
+     */
     protected function stream(
         array $mediaIds,
         array $urls,

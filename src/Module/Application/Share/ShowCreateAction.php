@@ -28,9 +28,9 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
@@ -66,13 +66,7 @@ final class ShowCreateAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE)) {
-            $this->logger->warning(
-                'Access Denied: sharing features are not enabled.',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            );
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException('Access Denied: sharing features are not enabled.');
         }
 
         $this->ui->showHeader();

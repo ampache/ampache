@@ -41,7 +41,7 @@ class AuthenticationManagerTest extends MockeryTestCase
     private string $authenticatorName = 'some-authenticator';
 
     /** @var AuthenticationManager|null */
-    private $subject;
+    private ?AuthenticationManager $subject;
 
     public function setUp(): void
     {

@@ -27,13 +27,13 @@ namespace Ampache\Module\Application\Batch;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -49,27 +49,21 @@ final class DefaultAction implements ApplicationActionInterface
 
     private ZipHandlerInterface $zipHandler;
 
-    private UiInterface $ui;
-
     public function __construct(
         ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
-        ZipHandlerInterface $zipHandler,
-        UiInterface $ui
+        ZipHandlerInterface $zipHandler
     ) {
         $this->modelFactory = $modelFactory;
         $this->logger       = $logger;
         $this->zipHandler   = $zipHandler;
-        $this->ui           = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         ob_end_clean();
         if (!defined('NO_SESSION') && !Access::check_function('batch_download')) {
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
 
         /* Drop the normal Time limit constraints, this can take a while */
@@ -89,9 +83,7 @@ final class DefaultAction implements ApplicationActionInterface
                 'Object type `' . $object_type . '` is not allowed to be zipped.',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
 
         if (InterfaceImplementationChecker::is_playable_item($object_type)) {
@@ -150,9 +142,7 @@ final class DefaultAction implements ApplicationActionInterface
                 'Access denied: Stream control failed for user ' . Core::get_global('user')->username,
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
 
         // Write/close session data to release session lock for this script.
@@ -176,7 +166,7 @@ final class DefaultAction implements ApplicationActionInterface
      * @param array $media_ids Media IDs.
      * @return array
      */
-    private function getMediaFiles($media_ids)
+    private function getMediaFiles(array $media_ids)
     {
         $media_files = [];
         $total_size  = 0;

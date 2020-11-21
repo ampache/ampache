@@ -27,9 +27,9 @@ namespace Ampache\Module\Application\Share;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -58,13 +58,7 @@ final class ShowDeleteAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE)) {
-            $this->logger->warning(
-                'Access Denied: sharing features are not enabled.',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            );
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException('Access Denied: sharing features are not enabled.');
         }
 
         $this->ui->showHeader();

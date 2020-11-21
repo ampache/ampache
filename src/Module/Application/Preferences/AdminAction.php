@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Preferences;
 
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
@@ -49,9 +50,7 @@ final class AdminAction implements ApplicationActionInterface
     {
         // Make sure only admins here
         if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
         $fullname    = T_('Server');
         $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab'], true);

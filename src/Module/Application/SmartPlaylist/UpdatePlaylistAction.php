@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\SmartPlaylist;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Search;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -60,9 +61,7 @@ final class UpdatePlaylistAction implements ApplicationActionInterface
             $playlist->update();
             $playlist->format();
         } else {
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
 
         $this->ui->showHeader();

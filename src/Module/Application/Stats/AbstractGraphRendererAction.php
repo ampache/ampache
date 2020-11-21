@@ -25,6 +25,7 @@ namespace Ampache\Module\Application\Stats;
 use Ampache\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ApplicationException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
@@ -34,6 +35,10 @@ use Ampache\Module\Util\Ui;
 
 abstract class AbstractGraphRendererAction implements ApplicationActionInterface
 {
+
+    /**
+     * @throws ApplicationException
+     */
     protected function renderGraph(
         GuiGatekeeperInterface $gatekeeper
     ): void {

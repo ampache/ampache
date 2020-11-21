@@ -28,6 +28,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Preference;
 use Ampache\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
@@ -38,7 +39,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -57,20 +57,16 @@ final class DefaultAction implements ApplicationActionInterface
 
     private LoggerInterface $logger;
 
-    private UiInterface $ui;
-
     public function __construct(
         ConfigContainerInterface $configContainer,
         AuthenticationManagerInterface $authenticationManager,
         ResponseFactoryInterface $responseFactory,
-        LoggerInterface $logger,
-        UiInterface $ui
+        LoggerInterface $logger
     ) {
         $this->configContainer       = $configContainer;
         $this->authenticationManager = $authenticationManager;
         $this->responseFactory       = $responseFactory;
         $this->logger                = $logger;
-        $this->ui                    = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -105,16 +101,12 @@ final class DefaultAction implements ApplicationActionInterface
          */
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ACCESS_CONTROL)) {
             if (!Access::check_network('interface', '', 5)) {
-                $this->logger->warning(
+                throw new AccessDeniedException(
                     sprintf(
                         'Access denied: %s is not in the Interface Access list',
                         (string) filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
-                    ),
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    )
                 );
-                $this->ui->accessDenied();
-
-                return null;
             }
         } // access_control is enabled
 

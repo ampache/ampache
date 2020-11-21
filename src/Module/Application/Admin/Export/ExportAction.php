@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Admin\Export;
 
 use Ampache\Model\Catalog;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -48,9 +49,7 @@ final class ExportAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
         // This may take a while
         set_time_limit(0);

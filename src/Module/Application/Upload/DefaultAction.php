@@ -25,6 +25,7 @@ namespace Ampache\Module\Application\Upload;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
@@ -62,9 +63,7 @@ final class DefaultAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_UPLOAD) === false ||
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false
         ) {
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
 
         $upload_max = return_bytes(ini_get('upload_max_filesize'));
@@ -86,9 +85,7 @@ final class DefaultAction implements ApplicationActionInterface
         $uploadAction = $_REQUEST['actionp'] ?? null;
         if ($uploadAction === 'upload') {
             if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
-                $this->ui->accessDenied();
-
-                return null;
+                throw new AccessDeniedException();
             }
 
             Upload::process();

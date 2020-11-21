@@ -28,11 +28,11 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Update;
-use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -53,31 +53,25 @@ final class UpdateAction implements ApplicationActionInterface
 
     private StreamFactoryInterface $streamFactory;
 
-    private UiInterface $ui;
-
     public function __construct(
         TalFactoryInterface $talFactory,
         GuiFactoryInterface $guiFactory,
         ResponseFactoryInterface $responseFactory,
         ConfigContainerInterface $configContainer,
-        StreamFactoryInterface $streamFactory,
-        UiInterface $ui
+        StreamFactoryInterface $streamFactory
     ) {
         $this->talFactory      = $talFactory;
         $this->guiFactory      = $guiFactory;
         $this->responseFactory = $responseFactory;
         $this->configContainer = $configContainer;
         $this->streamFactory   = $streamFactory;
-        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS) == 'sources') {
             if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
-                $this->ui->accessDenied();
-
-                return null;
+                throw new AccessDeniedException();
             }
 
             set_time_limit(300);

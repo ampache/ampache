@@ -29,12 +29,11 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Catalog;
 use Ampache\Model\Label;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 
 final class ConfirmDeleteAction implements ApplicationActionInterface
 {
@@ -44,16 +43,12 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private LoggerInterface $logger;
-
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        LoggerInterface $logger
+        UiInterface $ui
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
-        $this->logger          = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -69,14 +64,9 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
         $label = new Label($_REQUEST['label_id']);
         if (!Catalog::can_remove($label)) {
-            $this->logger->critical(
-                sprintf('Unauthorized to remove the label `%s`', $label->id),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            throw new AccessDeniedException(
+                sprintf('Unauthorized to remove the label `%s`', $label->id)
             );
-
-            $this->ui->accessDenied();
-
-            return null;
         }
 
         if ($label->remove()) {

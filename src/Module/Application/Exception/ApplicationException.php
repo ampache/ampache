@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Exception;
 
-abstract class ApplicationException extends \Exception
+use Exception;
+
+abstract class ApplicationException extends Exception
 {
 }

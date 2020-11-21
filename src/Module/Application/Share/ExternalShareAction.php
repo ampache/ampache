@@ -31,17 +31,16 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Plugin;
 use Ampache\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 use Teapot\StatusCode;
 
 final class ExternalShareAction implements ApplicationActionInterface
@@ -52,8 +51,6 @@ final class ExternalShareAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private LoggerInterface $logger;
-
     private PasswordGeneratorInterface $passwordGenerator;
 
     private ResponseFactoryInterface $responseFactory;
@@ -61,13 +58,11 @@ final class ExternalShareAction implements ApplicationActionInterface
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        LoggerInterface $logger,
         PasswordGeneratorInterface $passwordGenerator,
         ResponseFactoryInterface $responseFactory
     ) {
         $this->configContainer   = $configContainer;
         $this->ui                = $ui;
-        $this->logger            = $logger;
         $this->passwordGenerator = $passwordGenerator;
         $this->responseFactory   = $responseFactory;
     }
@@ -75,27 +70,16 @@ final class ExternalShareAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE)) {
-            $this->logger->warning(
-                'Access Denied: sharing features are not enabled.',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            );
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException('Access Denied: sharing features are not enabled.');
         }
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
-
 
         $plugin = new Plugin(Core::get_get('plugin'));
         if (!$plugin) {
-            $this->ui->accessDenied('Access Denied - Unknown external share plugin');
-
-            return null;
+            throw new AccessDeniedException('Access Denied - Unknown external share plugin');
         }
         $plugin->load(Core::get_global('user'));
 

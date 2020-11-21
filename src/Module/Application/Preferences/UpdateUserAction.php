@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Preferences;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
@@ -61,9 +62,7 @@ final class UpdateUserAction implements ApplicationActionInterface
             ) ||
             !Core::form_verify('update_user', 'post')
         ) {
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
 
         // Remove the value

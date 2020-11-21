@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Ampache\Gui;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Gui\TalView;
 use Ampache\MockeryTestCase;
 use Mockery\MockInterface;
 use PhpTal\PHPTAL;

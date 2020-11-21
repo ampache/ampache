@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Preferences;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\Plugin;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
@@ -58,9 +59,7 @@ final class GrantAction implements ApplicationActionInterface
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false &&
             Core::get_global('user')->id > 0
         ) {
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
 
         $this->ui->showHeader();

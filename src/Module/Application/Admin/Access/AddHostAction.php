@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Admin\Access;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -54,16 +55,12 @@ final class AddHostAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
-            $this->ui->accessDenied();
-
-            return null;
-        }
         // Make sure we've got a valid form submission
-        if (!Core::form_verify('add_acl', 'post')) {
-            $this->ui->accessDenied();
-
-            return null;
+        if (
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false ||
+            !Core::form_verify('add_acl', 'post')
+        ) {
+            throw new AccessDeniedException();
         }
 
         $this->ui->showHeader();

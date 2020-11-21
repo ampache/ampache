@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Mashup;
 
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
@@ -51,9 +52,7 @@ final class ShowAction implements ApplicationActionInterface
 
         $object_type = Core::get_request('action');
         if (!InterfaceImplementationChecker::is_library_item($object_type)) {
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
 
         $this->ui->showHeader();

@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Admin\Access;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -53,19 +54,15 @@ final class DeleteRecordAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
-            $this->ui->accessDenied();
-
-            return null;
+        if (
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false ||
+            !Core::form_verify('delete_access')
+        ) {
+            throw new AccessDeniedException();
         }
 
         $this->ui->showHeader();
 
-        if (!Core::form_verify('delete_access')) {
-            $this->ui->accessDenied();
-
-            return null;
-        }
         Access::delete(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $url = sprintf(
             '%s/admin/access.php',

@@ -12,7 +12,7 @@
 	convertWarningsToExceptions="true"
 	forceCoversAnnotation="false"
 	processIsolation="false"
-	stopOnError="true"
+	stopOnError="false"
 	stopOnFailure="false"
 	stopOnIncomplete="false"
 	stopOnSkipped="false"

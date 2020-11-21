@@ -28,14 +28,13 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 
 final class ConfirmDeleteAction implements ApplicationActionInterface
 {
@@ -47,18 +46,14 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
-    private LoggerInterface $logger;
-
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        LoggerInterface $logger
+        ModelFactoryInterface $modelFactory
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
-        $this->logger          = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -67,13 +62,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false
         ) {
-            $this->logger->warning(
-                'Access Denied: sociable features are not enabled.',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            );
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException('Access Denied: sociable features are not enabled.');
         }
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
             return null;
@@ -89,13 +78,9 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             if ($pvmsg->id && $pvmsg->to_user === Core::get_global('user')->id) {
                 $pvmsg->delete();
             } else {
-                $this->logger->warning(
-                    sprintf('Unknown or unauthorized private message #%d.', $msg_id),
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                throw new AccessDeniedException(
+                    sprintf('Unknown or unauthorized private message #%d.', $msg_id)
                 );
-                $this->ui->accessDenied();
-
-                return null;
             }
         }
 

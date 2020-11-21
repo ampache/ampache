@@ -25,6 +25,8 @@ namespace Ampache\Module\Application\LocalPlay;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ApplicationException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
@@ -52,9 +54,7 @@ abstract class AbstractLocalPlayAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_LOCALPLAY_PLAYBACK) === false ||
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false
         ) {
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
 
         return $this->handle($request, $gatekeeper);
@@ -69,6 +69,9 @@ abstract class AbstractLocalPlayAction implements ApplicationActionInterface
         }
     }
 
+    /**
+     * @throws ApplicationException
+     */
     abstract protected function handle(
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper

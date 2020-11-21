@@ -150,7 +150,7 @@ final class DefaultAction implements ApplicationActionInterface
         $this->environment->isSsl() ? $protocol = 'https' : $protocol = 'http';
 
         $web_path = sprintf(
-            '%s://%s%s%s',
+            '%s://%s%s',
             $protocol,
             Core::get_server('HTTP_HOST'),
             $safe_dirname

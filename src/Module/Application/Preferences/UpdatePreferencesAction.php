@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Preferences;
 
 use Ampache\Model\Preference;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
@@ -60,9 +61,7 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
             ) ||
             !Core::form_verify('update_preference', 'post')
         ) {
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
 
         $system = false;

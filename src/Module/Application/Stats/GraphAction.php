@@ -25,9 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Stats;
 
 use Ampache\Model\ModelFactoryInterface;
-use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

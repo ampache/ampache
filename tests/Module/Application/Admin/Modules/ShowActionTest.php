@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\Modules;
 
 use Ampache\MockeryTestCase;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -47,8 +48,10 @@ class ShowActionTest extends MockeryTestCase
         );
     }
 
-    public function testRunReturnsNullIfAccessIsDenied(): void
+    public function testThrowsExceptionIfAccessIsDenied(): void
     {
+        $this->expectException(AccessDeniedException::class);
+
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
@@ -57,13 +60,7 @@ class ShowActionTest extends MockeryTestCase
             ->once()
             ->andReturnFalse();
 
-        $this->ui->shouldReceive('accessDenied')
-            ->withNoArgs()
-            ->once();
-
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        $this->subject->run($request, $gatekeeper);
     }
 
     public function testRunShowsAndReturnsNull(): void

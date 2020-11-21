@@ -27,10 +27,10 @@ namespace Ampache\Module\Application\Admin\System;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\InstallationHelperInterface;
-use Ampache\Module\Util\UiInterface;
 use Mockery;
 use Mockery\MockInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -40,12 +40,8 @@ use Teapot\StatusCode;
 
 class WriteConfigActionTest extends MockeryTestCase
 {
-
     /** @var ConfigContainerInterface|MockInterface|null */
     private ?MockInterface $configContainer;
-
-    /** @var UiInterface|MockInterface|null */
-    private ?MockInterface $ui;
 
     /** @var InstallationHelperInterface|MockInterface|null */
     private ?MockInterface $installationHelper;
@@ -58,20 +54,20 @@ class WriteConfigActionTest extends MockeryTestCase
     public function setUp(): void
     {
         $this->configContainer    = $this->mock(ConfigContainerInterface::class);
-        $this->ui                 = $this->mock(UiInterface::class);
         $this->installationHelper = $this->mock(InstallationHelperInterface::class);
         $this->responseFactory    = $this->mock(ResponseFactoryInterface::class);
 
         $this->subject = new WriteConfigAction(
             $this->configContainer,
-            $this->ui,
             $this->installationHelper,
             $this->responseFactory
         );
     }
 
-    public function testRunReturnsNullIfAccessIsDenied(): void
+    public function testRunThrowsExceptionIfAccessIsDenied(): void
     {
+        $this->expectException(AccessDeniedException::class);
+
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
@@ -80,17 +76,13 @@ class WriteConfigActionTest extends MockeryTestCase
             ->once()
             ->andReturnFalse();
 
-        $this->ui->shouldReceive('accessDenied')
-            ->withNoArgs()
-            ->once();
-
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        $this->subject->run($request, $gatekeeper);
     }
 
-    public function testRunReturnsIfDemoMode(): void
+    public function testRunThrowsExceptionIfDemoMode(): void
     {
+        $this->expectException(AccessDeniedException::class);
+
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
@@ -104,15 +96,8 @@ class WriteConfigActionTest extends MockeryTestCase
             ->once()
             ->andReturnTrue();
 
-        $this->ui->shouldReceive('accessDenied')
-            ->withNoArgs()
-            ->once();
-
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        $this->subject->run($request, $gatekeeper);
     }
-
 
     public function testRunWritesConfigAndReturnsResponse(): void
     {

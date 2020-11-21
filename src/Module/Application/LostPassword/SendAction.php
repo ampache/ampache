@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\LostPassword;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\NewPasswordSenderInterface;
@@ -61,9 +62,7 @@ final class SendAction implements ApplicationActionInterface
             !Mailer::is_mail_enabled() ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
         ) {
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
 
         /* Check for posted email */

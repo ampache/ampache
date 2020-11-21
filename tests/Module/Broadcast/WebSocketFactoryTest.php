@@ -30,7 +30,7 @@ use Ratchet\Server\EchoServer;
 class WebSocketFactoryTest extends MockeryTestCase
 {
     /** @var WebSocketFactory|null */
-    private $subject;
+    private ?WebSocketFactory $subject;
 
     public function setUp(): void
     {

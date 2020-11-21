@@ -35,14 +35,14 @@ use SimpleXMLElement;
 
 class ArtistEventRetrieverTest extends MockeryTestCase
 {
-    /** @var MockInterface|null */
+    /** @var ConfigContainerInterface|MockInterface|null */
     private ConfigContainerInterface $configContainer;
 
-    /** @var MockInterface|null */
+    /** @var LastFmQueryInterface|MockInterface|null */
     private LastFmQueryInterface $lastFmQuery;
     
     /** @var ArtistEventRetriever|null */
-    private $subject;
+    private ?ArtistEventRetriever  $subject;
 
     public function setUp(): void
     {

@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
@@ -60,9 +61,7 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
         $playlist = $this->modelFactory->createPlaylist((int) $_REQUEST['playlist_id']);
         /* Make sure they have permission */
         if (!$playlist->has_access()) {
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
 
         $this->ui->showHeader();

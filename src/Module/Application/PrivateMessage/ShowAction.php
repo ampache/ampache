@@ -28,15 +28,14 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 
 final class ShowAction implements ApplicationActionInterface
 {
@@ -48,18 +47,14 @@ final class ShowAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private LoggerInterface $logger;
-
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
+        ConfigContainerInterface $configContainer
     ) {
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
-        $this->logger          = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -68,13 +63,7 @@ final class ShowAction implements ApplicationActionInterface
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false
         ) {
-            $this->logger->warning(
-                'Access Denied: sociable features are not enabled.',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            );
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException('Access Denied: sociable features are not enabled.');
         }
 
         $this->ui->showHeader();
@@ -89,13 +78,9 @@ final class ShowAction implements ApplicationActionInterface
             }
             require_once Ui::find_template('show_pvmsg.inc.php');
         } else {
-            $this->logger->warning(
+            throw new AccessDeniedException(
                 sprintf('Unknown or unauthorized private message #%d.', $msg_id),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            $this->ui->accessDenied();
-
-            return null;
         }
 
         $this->ui->showQueryStats();

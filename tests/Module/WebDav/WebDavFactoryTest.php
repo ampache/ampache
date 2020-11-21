@@ -37,7 +37,7 @@ class WebDavFactoryTest extends MockeryTestCase
     private $authenticationManager;
 
     /** @var WebDavFactory|null */
-    private $subject;
+    private ?WebDavFactory $subject;
 
     public function setUp(): void
     {

@@ -27,8 +27,8 @@ namespace Ampache\Module\Application\SmartPlaylist;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -38,8 +38,6 @@ final class DeletePlaylistAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'delete_playlist';
 
-    private UiInterface $ui;
-
     private ResponseFactoryInterface $responseFactory;
 
     private ConfigContainerInterface $configContainer;
@@ -47,12 +45,10 @@ final class DeletePlaylistAction implements ApplicationActionInterface
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
-        UiInterface $ui,
         ResponseFactoryInterface $responseFactory,
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory
     ) {
-        $this->ui              = $ui;
         $this->responseFactory = $responseFactory;
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
@@ -80,8 +76,6 @@ final class DeletePlaylistAction implements ApplicationActionInterface
             }
         }
 
-        $this->ui->accessDenied();
-
-        return null;
+        throw new AccessDeniedException();
     }
 }

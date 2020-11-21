@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -51,9 +52,7 @@ final class AddSongAction implements ApplicationActionInterface
     {
         $playlist = $this->modelFactory->createPlaylist((int) $_REQUEST['playlist_id']);
         if (!$playlist->has_access()) {
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
         $this->ui->showHeader();
 

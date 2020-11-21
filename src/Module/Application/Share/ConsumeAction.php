@@ -29,15 +29,14 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Preference;
 use Ampache\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 
 final class ConsumeAction implements ApplicationActionInterface
 {
@@ -47,16 +46,12 @@ final class ConsumeAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private LoggerInterface $logger;
-
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        LoggerInterface $logger
+        UiInterface $ui
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
-        $this->logger          = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -64,13 +59,7 @@ final class ConsumeAction implements ApplicationActionInterface
         Preference::init();
 
         if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE)) {
-            $this->logger->warning(
-                'Access Denied: sharing features are not enabled.',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            );
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException('Access Denied: sharing features are not enabled.');
         }
 
         $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
@@ -82,16 +71,12 @@ final class ConsumeAction implements ApplicationActionInterface
          */
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ACCESS_CONTROL)) {
             if (!Access::check_network('interface', '', 5)) {
-                $this->logger->warning(
+                throw new AccessDeniedException(
                     sprintf(
                         'Access Denied:%s is not in the Interface Access list',
                         Core::get_server('REMOTE_ADDR')
-                    ),
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    )
                 );
-                $this->ui->accessDenied();
-
-                return null;
             }
         } // access_control is enabled
 
@@ -108,9 +93,7 @@ final class ConsumeAction implements ApplicationActionInterface
         }
 
         if (!$share->is_valid($secret, $action)) {
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
 
         $share->format();
@@ -131,11 +114,7 @@ final class ConsumeAction implements ApplicationActionInterface
         } elseif ($action == 'stream') {
             require Ui::find_template('show_share.inc.php');
         } else {
-            $this->logger->warning(
-                'Access Denied: unknown action.',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            );
-            $this->ui->accessDenied();
+            throw new AccessDeniedException('Access Denied: unknown action.');
         }
 
         return null;

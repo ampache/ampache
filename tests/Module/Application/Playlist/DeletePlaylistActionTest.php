@@ -28,8 +28,8 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Playlist;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -38,9 +38,6 @@ use Teapot\StatusCode;
 
 class DeletePlaylistActionTest extends MockeryTestCase
 {
-    /** @var UiInterface|MockInterface|null */
-    private ?MockInterface  $ui;
-
     /** @var ResponseFactoryInterface|MockInterface|null */
     private ?MockInterface $responseFactory;
 
@@ -54,21 +51,21 @@ class DeletePlaylistActionTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->ui              = $this->mock(UiInterface::class);
         $this->responseFactory = $this->mock(ResponseFactoryInterface::class);
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
 
         $this->subject = new DeletePlaylistAction(
             $this->modelFactory,
-            $this->ui,
             $this->responseFactory,
             $this->configContainer
         );
     }
 
-    public function testRunReturnsAccessDeniedIfIdIsMissing(): void
+    public function testRunThrowsExceptionIfIdIsMissing(): void
     {
+        $this->expectException(AccessDeniedException::class);
+
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
@@ -77,17 +74,13 @@ class DeletePlaylistActionTest extends MockeryTestCase
             ->once()
             ->andReturn([]);
 
-        $this->ui->shouldReceive('accessDenied')
-            ->withNoArgs()
-            ->once();
-
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        $this->subject->run($request, $gatekeeper);
     }
 
-    public function testRunReturnsAccessDeniedIfNotAccessible(): void
+    public function testRunThrowsExceptionIfNotAccessible(): void
     {
+        $this->expectException(AccessDeniedException::class);
+
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
         $playlist   = $this->mock(Playlist::class);
@@ -109,13 +102,7 @@ class DeletePlaylistActionTest extends MockeryTestCase
             ->once()
             ->andReturnFalse();
 
-        $this->ui->shouldReceive('accessDenied')
-            ->withNoArgs()
-            ->once();
-
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
+        $this->subject->run($request, $gatekeeper);
     }
 
     public function testRunDeletesAndReturnsResponse(): void

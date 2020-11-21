@@ -28,14 +28,13 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 
 final class SetIsReadAction implements ApplicationActionInterface
 {
@@ -45,19 +44,15 @@ final class SetIsReadAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private LoggerInterface $logger;
-
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        LoggerInterface $logger,
         ModelFactoryInterface $modelFactory
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
-        $this->logger          = $logger;
         $this->modelFactory    = $modelFactory;
     }
 
@@ -67,13 +62,7 @@ final class SetIsReadAction implements ApplicationActionInterface
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false
         ) {
-            $this->logger->warning(
-                'Access Denied: sociable features are not enabled.',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            );
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException('Access Denied: sociable features are not enabled.');
         }
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
@@ -89,13 +78,9 @@ final class SetIsReadAction implements ApplicationActionInterface
                 $read = (int) $_REQUEST['read'];
                 $pvmsg->set_is_read($read);
             } else {
-                $this->logger->warning(
+                throw new AccessDeniedException(
                     sprintf('Unknown or unauthorized private message `%d`.', $pvmsg->id),
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
-                $this->ui->accessDenied();
-
-                return null;
             }
         }
 

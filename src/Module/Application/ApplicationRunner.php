@@ -34,6 +34,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 final class ApplicationRunner
 {
@@ -118,7 +119,7 @@ final class ApplicationRunner
             $this->ui->accessDenied($message);
 
             return;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->logger->critical(
                 $e->getMessage(),
                 [

@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Shout;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\Shoutbox;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
@@ -65,9 +66,7 @@ final class AddShoutAction implements ApplicationActionInterface
             !Core::form_verify('add_shout', 'post') ||
             !InterfaceImplementationChecker::is_library_item(Core::get_post('object_type'))
         ) {
-            $this->ui->accessDenied();
-
-            return null;
+            throw new AccessDeniedException();
         }
 
         // Remove unauthorized defined values from here

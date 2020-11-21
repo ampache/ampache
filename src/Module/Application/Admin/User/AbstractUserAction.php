@@ -26,9 +26,9 @@ namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ApplicationException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,5 +44,8 @@ abstract class AbstractUserAction implements ApplicationActionInterface
         return $this->handle($request);
     }
 
+    /**
+     * @throws ApplicationException
+     */
     abstract protected function handle(ServerRequestInterface $request): ?ResponseInterface;
 }

@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Album;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
@@ -62,9 +63,7 @@ final class UpdateGroupFromTagsAction implements ApplicationActionInterface
         
         // Make sure they are a 'power' user at least
         if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
-            $this->ui->accessDenied();
-
-            return $response;
+            throw new AccessDeniedException();
         }
 
         $object_id  = (int) filter_input(INPUT_GET, 'album_id', FILTER_SANITIZE_NUMBER_INT);

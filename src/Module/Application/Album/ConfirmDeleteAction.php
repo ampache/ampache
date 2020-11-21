@@ -29,13 +29,12 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Catalog;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 
 final class ConfirmDeleteAction implements ApplicationActionInterface
 {
@@ -47,18 +46,14 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private LoggerInterface $logger;
-
     public function __construct(
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
-        LoggerInterface $logger
+        UiInterface $ui
     ) {
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
         $this->ui              = $ui;
-        $this->logger          = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -77,14 +72,9 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
         $album = $this->modelFactory->createAlbum((int) $_REQUEST['album_id']);
         if (!Catalog::can_remove($album)) {
-            $this->logger->warning(
-                sprintf('Unauthorized to remove the album `%d`', $album->id),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            throw new AccessDeniedException(
+                sprintf('Unauthorized to remove the album `%d`', $album->id)
             );
-
-            $this->ui->accessDenied();
-
-            return $response;
         }
 
         if ($album->remove()) {
