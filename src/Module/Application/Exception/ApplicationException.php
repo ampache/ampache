@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -20,28 +20,10 @@
  *
  */
 
-use Ampache\Module\Application\ApplicationRunner;
-use Ampache\Module\Application\Batch\DefaultAction;
-use Ampache\Module\System\Session;
-use Ampache\Module\Util\UiInterface;
-use Nyholm\Psr7Server\ServerRequestCreatorInterface;
+declare(strict_types=1);
 
-if (isset($_REQUEST['ssid'])) {
-    define('NO_SESSION', 1);
-    /** @var \Psr\Container\ContainerInterface $dic */
-    $dic = require_once __DIR__ . '/../src/Config/Init.php';
-    if (!Session::exists('stream', $_REQUEST['ssid'])) {
-        $dic->get(UiInterface::class)->accessDenied();
+namespace Ampache\Module\Application\Exception;
 
-        return false;
-    }
-} else {
-    $dic = require_once __DIR__ . '/../src/Config/Init.php';
+abstract class ApplicationException extends \Exception
+{
 }
-$dic->get(ApplicationRunner::class)->run(
-    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
-    [
-        DefaultAction::REQUEST_KEY => DefaultAction::class,
-    ],
-    DefaultAction::REQUEST_KEY
-);

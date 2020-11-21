@@ -25,8 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application;
 
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\UiInterface;
 use Narrowspark\HttpEmitter\SapiEmitter;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -41,14 +43,18 @@ final class ApplicationRunner
 
     private GatekeeperFactoryInterface $gatekeeperFactory;
 
+    private UiInterface $ui;
+
     public function __construct(
         ContainerInterface $dic,
         LoggerInterface $logger,
-        GatekeeperFactoryInterface $gatekeeperFactory
+        GatekeeperFactoryInterface $gatekeeperFactory,
+        UiInterface $ui
     ) {
         $this->dic               = $dic;
         $this->logger            = $logger;
         $this->gatekeeperFactory = $gatekeeperFactory;
+        $this->ui                = $ui;
     }
 
     /**
@@ -82,15 +88,50 @@ final class ApplicationRunner
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
 
-        $response = $handler->run(
-            $request,
-            $this->gatekeeperFactory->createGuiGatekeeper()
-        );
+        try {
+            $response = $handler->run(
+                $request,
+                $this->gatekeeperFactory->createGuiGatekeeper()
+            );
 
-        if ($response !== null) {
-            $this->dic->get(SapiEmitter::class)->emit($response);
+            /**
+             * Emit response if available.
+             * This will become the default once the rendering of all actions got converted
+             */
+            if ($response !== null) {
+                $this->dic->get(SapiEmitter::class)->emit($response);
+            }
+        } catch (AccessDeniedException $e) {
+            $message = $e->getMessage();
+
+            $this->logger->warning(
+                $message,
+                [
+                    LegacyLogger::CONTEXT_TYPE => sprintf(
+                        '`%s` for `%s`',
+                        __CLASS__,
+                        $e->getFile()
+                    )
+                ]
+            );
+
+            $this->ui->accessDenied($message);
 
             return;
+        } catch (\Throwable $e) {
+            $this->logger->critical(
+                $e->getMessage(),
+                [
+                    LegacyLogger::CONTEXT_TYPE => sprintf(
+                        '%s:%d',
+                        $e->getFile(),
+                        $e->getLine()
+                    )
+                ]
+            );
+            /**
+             * @todo Add a nice error page
+             */
         }
     }
 }

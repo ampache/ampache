@@ -92,7 +92,7 @@ final class ChannelAction implements ApplicationActionInterface
                     if (AmpConfig::get('access_control')) {
                         if (!Access::check_network('stream', Core::get_global('user')->id, 25) &&
                             !Access::check_network('network', Core::get_global('user')->id, 25)) {
-                            debug_event('channel/index', "UI::access_denied: Streaming Access Denied: " . Core::get_user_ip() . " does not have stream level access", 2);
+                            debug_event('channel/index', "Streaming Access Denied: " . Core::get_user_ip() . " does not have stream level access", 2);
                             $this->ui->accessDenied();
 
                             return null;

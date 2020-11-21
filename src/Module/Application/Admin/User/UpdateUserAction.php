@@ -28,6 +28,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\User;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
@@ -63,9 +64,7 @@ final class UpdateUserAction extends AbstractUserAction
         }
 
         if (!Core::form_verify('edit_user', 'post')) {
-            Ui::access_denied();
-
-            return null;
+            throw new AccessDeniedException();
         }
 
         $this->ui->showHeader();

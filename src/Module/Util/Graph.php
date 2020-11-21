@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
@@ -819,57 +818,6 @@ class Graph
                     break;
                 }
             }
-        }
-    }
-
-    public static function display_from_request()
-    {
-        $object_type = Core::get_request('object_type');
-        $object_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
-
-        $libitem  = null;
-        $owner_id = 0;
-        if (($object_id) && (InterfaceImplementationChecker::is_library_item($object_type))) {
-            $class_name = ObjectTypeToClassNameMapper::map($object_type);
-            $libitem    = new $class_name($object_id);
-            $owner_id   = $libitem->get_user_owner();
-        }
-
-        if (($owner_id < 1 || $owner_id != Core::get_global('user')->id) && !Access::check('interface', 50)) {
-            Ui::access_denied();
-        } else {
-            $user_id      = (int)Core::get_request('user_id');
-            $end_date     = $_REQUEST['end_date'] ? strtotime($_REQUEST['end_date']) : time();
-            $f_end_date   = get_datetime((int)$end_date);
-            $start_date   = $_REQUEST['start_date'] ? strtotime($_REQUEST['start_date']) : ($end_date - 864000);
-            $f_start_date = get_datetime((int)$start_date);
-            $zoom         = $_REQUEST['zoom'] ?: 'day';
-
-            $gtypes   = array();
-            $gtypes[] = 'user_hits';
-            if ($object_type == null || $object_type == 'song' || $object_type == 'video') {
-                $gtypes[] = 'user_bandwidth';
-            }
-            if (!$user_id && !$object_id) {
-                $gtypes[] = 'catalog_files';
-                $gtypes[] = 'catalog_size';
-            }
-
-            $blink = '';
-            if ($libitem !== null) {
-                $libitem->format();
-                if (isset($libitem->f_link)) {
-                    $blink = $libitem->f_link;
-                }
-            } else {
-                if ($user_id) {
-                    $user = new User($user_id);
-                    $user->format();
-                    $blink = $user->f_link;
-                }
-            }
-
-            require_once Ui::find_template('show_graphs.inc.php');
         }
     }
 }

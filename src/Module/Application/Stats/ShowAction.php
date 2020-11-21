@@ -37,7 +37,7 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final class ShowAction extends AbstractGraphRendererAction
 {
     public const REQUEST_KEY = 'show';
 
@@ -89,7 +89,7 @@ final class ShowAction implements ApplicationActionInterface
                 $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS) &&
                 is_dir(__DIR__ . '/../../../../vendor/szymach/c-pchart/src/Chart/')
             ) {
-                Graph::display_from_request();
+                $this->renderGraph($gatekeeper);
             }
         }
 

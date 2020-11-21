@@ -32,7 +32,7 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class GraphAction implements ApplicationActionInterface
+final class GraphAction extends AbstractGraphRendererAction
 {
     public const REQUEST_KEY = 'graph';
 
@@ -57,7 +57,7 @@ final class GraphAction implements ApplicationActionInterface
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        Graph::display_from_request();
+        $this->renderGraph($gatekeeper);
 
         show_table_render(false, true);
 

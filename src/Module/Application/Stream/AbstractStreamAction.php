@@ -28,6 +28,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Stream;
@@ -65,9 +66,7 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
                     $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false
                 )
             ) {
-                Ui::access_denied();
-
-                return false;
+                throw new AccessDeniedException();
             }
         }
 
@@ -94,9 +93,7 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
                         'Stream control failed for user ' . Core::get_global('user')->username,
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
-                    Ui::access_denied();
-
-                    return null;
+                    throw new AccessDeniedException();
                 }
             }
 

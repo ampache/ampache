@@ -22,12 +22,18 @@
 
 namespace Ampache\Module\Application;
 
+use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ApplicationException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 interface ApplicationActionInterface
 {
+    /**
+     * @throws AccessDeniedException
+     * @throws ApplicationException
+     */
     public function run(
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper

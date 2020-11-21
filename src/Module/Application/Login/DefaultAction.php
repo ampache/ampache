@@ -107,7 +107,7 @@ final class DefaultAction implements ApplicationActionInterface
             if (!Access::check_network('interface', '', 5)) {
                 $this->logger->warning(
                     sprintf(
-                        'UI::access_denied:%s is not in the Interface Access list',
+                        'Access denied: %s is not in the Interface Access list',
                         (string) filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
                     ),
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]

@@ -64,26 +64,12 @@ class Ui implements UiInterface
         }
     }
 
-    /**
-     * access_denied
-     *
-     * Throw an error when they try to do something naughty.
-     * @param string $error
-     * @return false
-     */
-    public static function access_denied($error = 'Access Denied')
+    public function accessDenied(string $error = 'Access Denied'): void
     {
         // Clear any buffered crap
         ob_end_clean();
         header("HTTP/1.1 403 $error");
         require_once self::find_template('show_denied.inc.php');
-
-        return false;
-    }
-
-    public function accessDenied(string $error = 'Access Denied'): void
-    {
-        static::access_denied($error);
     }
 
     /**
