@@ -98,6 +98,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
         $query1 = '';
         $types  = $art->type . 's';
         $this->spotifyWebAPI->setAccessToken($accessToken);
+        $getType = 'getAlbum';
         
         if ($art->type == 'artist') {
             $this->logger->debug(

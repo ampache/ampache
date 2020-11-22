@@ -34,10 +34,10 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\System\Core;
 use Exception;
+use getID3;
 use PDOStatement;
 use Requests;
 use RuntimeException;
-use JamesHeinrich\GetID3\GetID3;
 
 /**
  * This class handles the images / artwork in ampache
@@ -374,9 +374,9 @@ class Art extends database_object
 
         $current_picturetypeid = ($this->type == 'album') ? 3 : 8;
         if (AmpConfig::get('write_id3_art', false)) {
-            $type   = ucfirst($this->type);
-            $object = new $type($this->uid);
-            debug_event('art.class', 'Inserting ' . $type . ' image' . $object->name . ' for song files.', 5);
+            $class_name = ObjectTypeToClassNameMapper::map($this->type);
+            $object     = new $class_name($this->uid);
+            debug_event('art.class', 'Inserting ' . $this->type . ' image' . $object->name . ' for song files.', 5);
             $songs = $object->get_songs();
             foreach ($songs as $song_id) {
                 $song   = new Song($song_id);
