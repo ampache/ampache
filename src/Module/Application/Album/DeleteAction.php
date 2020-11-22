@@ -28,7 +28,6 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -52,8 +51,8 @@ final class DeleteAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $response = null;
-        
-        require_once Ui::find_template('header.inc.php');
+
+        $this->ui->showHeader();
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
             $this->ui->showQueryStats();
@@ -62,15 +61,15 @@ final class DeleteAction implements ApplicationActionInterface
             return $response;
         }
 
-        $album_id = (int) $_REQUEST['album_id'];
-        
+        $albumId = $request->getQueryParams()['album_id'] ?? 0;
+
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('The Album and all files will be deleted'),
             sprintf(
                 '%s/albums.php?action=confirm_delete&album_id=%d',
                 $this->configContainer->getWebPath(),
-                $album_id
+                $albumId
             ),
             1,
             'delete_album'
