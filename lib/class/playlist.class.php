@@ -55,7 +55,7 @@ class Playlist extends playlist_object
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-        if ($this->last_duration == 0) {
+        if ($this->last_duration == 0 && $this->id) {
             $this->set_last($this->get_total_duration(), 'last_duration');
         }
     } // Playlist
@@ -567,7 +567,7 @@ class Playlist extends playlist_object
      */
     private function set_last($count, $column)
     {
-        if (in_array($column, array('last_count', 'last_duration')) && $count >= 0) {
+        if ($this->id && in_array($column, array('last_count', 'last_duration')) && $count >= 0) {
             $sql = "UPDATE `playlist` SET `" . Dba::escape($column) . "` = " . $count . " WHERE `id` = " . Dba::escape($this->id);
             Dba::write($sql);
         }
