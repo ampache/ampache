@@ -21,12 +21,15 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Gui\GuiFactoryInterface;
+use Ampache\Gui\TalFactoryInterface;
 use Ampache\Model\Rating;
 use Ampache\Model\Song;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path');
@@ -82,8 +85,9 @@ $thcount  = 8; ?>
     <tbody id="sortableplaylist_<?php echo $browse->get_filter('album'); ?>">
         <?php
             global $dic;
-            $talFactory = $dic->get(\Ampache\Gui\TalFactoryInterface::class);
-            $guiFactory = $dic->get(\Ampache\Gui\GuiFactoryInterface::class);
+            $talFactory = $dic->get(TalFactoryInterface::class);
+            $guiFactory = $dic->get(GuiFactoryInterface::class);
+            $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
             foreach ($object_ids as $song_id) {
                 $libitem = new Song($song_id, $limit_threshold);
@@ -94,7 +98,7 @@ $thcount  = 8; ?>
                     $content = $talFactory->createTalView()
                         ->setContext('BROWSE_ARGUMENT', isset($argument) ? $argument : '')
                         ->setContext('USER_IS_REGISTERED', User::is_registered())
-                        ->setContext('SONG', $guiFactory->createSongViewAdapter($libitem))
+                        ->setContext('SONG', $guiFactory->createSongViewAdapter($gatekeeper, $libitem))
                         ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
                         ->setTemplate('song_row.xhtml')
                         ->render();
