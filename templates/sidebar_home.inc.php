@@ -179,10 +179,6 @@ $t_search    = T_('Search'); ?>
                 <li id="sb_home_info_share"><a href="<?php echo $web_path ?>/stats.php?action=share"><?php echo T_('Shares') ?></a></li>
                 <?php
         } ?>
-                <?php if (AmpConfig::get('allow_upload')) { ?>
-                <li id="sb_home_info_upload"><a href="<?php echo $web_path ?>/stats.php?action=upload"><?php echo T_('Uploads') ?></a></li>
-                <?php
-        } ?>
                 <?php if (Access::check('interface', 50)) { ?>
                     <li id="sb_home_info_statistic"><a href="<?php echo $web_path ?>/stats.php?action=show"><?php echo T_('Statistics') ?></a></li>
                 <?php
