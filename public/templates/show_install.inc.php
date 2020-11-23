@@ -44,7 +44,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
         <li><?php echo T_('Step 3 - Set up the initial account'); ?></li>
     </ul>
 </div>
-<?php AmpError::display('general'); ?>
+<?php echo AmpError::display('general'); ?>
 <h2><?php echo T_('Insert Ampache Database'); ?></h2>
 <form role="form" class="form-horizontal" method="post" action="<?php echo $web_path . "/install.php?action=create_db&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data" autocomplete="off">
     <div class="form-group">

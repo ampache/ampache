@@ -228,7 +228,7 @@ class Catalog_remote extends Catalog
         } catch (Exception $error) {
             debug_event('remote.catalog', 'Connection error: ' . $error->getMessage(), 1);
             AmpError::add('general', $error->getMessage());
-            AmpError::display('general');
+            echo AmpError::display('general');
             flush();
 
             return false;
@@ -237,7 +237,7 @@ class Catalog_remote extends Catalog
         if ($remote_handle->state() != 'CONNECTED') {
             debug_event('remote.catalog', 'API client failed to connect', 1);
             AmpError::add('general', T_('Failed to connect to the remote server'));
-            AmpError::display('general');
+            echo AmpError::display('general');
 
             return false;
         }
@@ -282,7 +282,7 @@ class Catalog_remote extends Catalog
             } catch (Exception $error) {
                 debug_event('remote.catalog', 'Songs parsing error: ' . $error->getMessage(), 1);
                 AmpError::add('general', $error->getMessage());
-                AmpError::display('general');
+                echo AmpError::display('general');
                 flush();
             }
 
@@ -297,7 +297,7 @@ class Catalog_remote extends Catalog
                         debug_event('remote.catalog', 'Insert failed for ' . $data['song']['self']['id'], 1);
                         /* HINT: Song Title */
                         AmpError::add('general', T_('Unable to insert song - %s'), $data['song']['title']);
-                        AmpError::display('general');
+                        echo AmpError::display('general');
                         flush();
                     }
                 }

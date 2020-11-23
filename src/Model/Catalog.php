@@ -2800,7 +2800,7 @@ abstract class Catalog extends database_object
                     }
 
                     if (!defined('SSE_OUTPUT')) {
-                        AmpError::display('catalog_add');
+                        echo AmpError::display('catalog_add');
                     }
                 }
                 break;

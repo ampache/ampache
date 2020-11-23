@@ -97,7 +97,7 @@ final class SseApiApplication implements ApiApplicationInterface
                     ob_flush();
                     flush();
                 } else {
-                    AmpError::display('general');
+                    echo AmpError::display('general');
                 }
 
                 break;

@@ -28,7 +28,7 @@ use Ampache\Module\Util\Ui;
 
 ?>
 <?php Ui::show_box_top(T_('Editing Existing User')); ?>
-<?php AmpError::display('general'); ?>
+<?php echo AmpError::display('general'); ?>
 <form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/users.php"; ?>">
     <table class="tabledata">
         <tr>
@@ -37,7 +37,7 @@ use Ampache\Module\Util\Ui;
         <tr>
             <td><?php echo T_('Username'); ?>:</td>
             <td><input type="text" name="username" maxlength="128" value="<?php echo scrub_out($client->username); ?>" autofocus />
-                <?php AmpError::display('username'); ?>
+                <?php echo AmpError::display('username'); ?>
             </td>
         </tr>
         <tr>
@@ -46,37 +46,37 @@ use Ampache\Module\Util\Ui;
                 <input type="checkbox" name="fullname_public" value="1" <?php if ($client->fullname_public) {
     echo "checked";
 } ?> /> <?php echo T_('Public'); ?>
-                <?php AmpError::display('fullname'); ?>
+                <?php echo AmpError::display('fullname'); ?>
             </td>
         </tr>
         <tr>
             <td><?php echo T_('E-mail'); ?>:</td>
             <td><input type="text" name="email" value="<?php echo scrub_out($client->email); ?>" />
-                <?php AmpError::display('email'); ?>
+                <?php echo AmpError::display('email'); ?>
             </td>
         </tr>
         <tr>
             <td><?php echo  T_('Website'); ?>:</td>
             <td><input type="text" name="website" value="<?php echo scrub_out($client->website); ?>" />
-                <?php AmpError::display('website'); ?>
+                <?php echo AmpError::display('website'); ?>
             </td>
         </tr>
         <tr>
             <td><?php echo  T_('State'); ?>:</td>
             <td><input type="text" name="state" value="<?php echo scrub_out($client->state); ?>" autocomplete="off" />
-                <?php AmpError::display('state'); ?>
+                <?php echo AmpError::display('state'); ?>
             </td>
         </tr>
         <tr>
             <td><?php echo  T_('City'); ?>:</td>
             <td><input type="text" name="city" value="<?php echo scrub_out($client->city); ?>" autocomplete="off" />
-                <?php AmpError::display('city'); ?>
+                <?php echo AmpError::display('city'); ?>
             </td>
         </tr>
         <tr>
             <td><?php echo T_('Password'); ?>:</td>
             <td><input type="password" name="password_1" value="" autocomplete="off" />
-                <?php AmpError::display('password'); ?>
+                <?php echo AmpError::display('password'); ?>
             </td>
         </tr>
         <tr>

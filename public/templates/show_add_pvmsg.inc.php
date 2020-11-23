@@ -32,20 +32,20 @@ use Ampache\Module\Util\Ui;
 <tr>
     <td><?php echo T_('Recipient'); ?></td>
     <td><input type="text" name="to_user" value="<?php echo scrub_out($_REQUEST['to_user']); ?>" id="pvmsg_to_user" />
-        <?php AmpError::display('to_user'); ?>
+        <?php echo AmpError::display('to_user'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Subject'); ?></td>
     <td><input type="text" name="subject" value="<?php echo scrub_out($_REQUEST['subject']); ?>" />
-        <?php AmpError::display('subject'); ?>
+        <?php echo AmpError::display('subject'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Message'); ?></td>
     <td>
         <textarea name="message" cols="64" rows="10"><?php echo scrub_out($_REQUEST['message']); ?></textarea>
-        <?php AmpError::display('message'); ?>
+        <?php echo AmpError::display('message'); ?>
     </td>
 </tr>
 </table>

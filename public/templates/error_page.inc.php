@@ -57,7 +57,7 @@ $t_ampache = T_('Ampache'); ?>
             <p><?php echo(T_("The following error has occurred, you will be automatically redirected in 10 seconds.")); ?></p>
         </div>
         <h2><?php echo(T_("Error Messages"));?>:</h2>
-        <?php AmpError::display('general'); ?>
+        <?php echo AmpError::display('general'); ?>
     </div>
 </body>
 </html>

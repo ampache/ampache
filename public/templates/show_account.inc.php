@@ -29,7 +29,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
-<?php AmpError::display('general'); ?>
+<?php echo AmpError::display('general'); ?>
 <form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=update_user" enctype="multipart/form-data">
     <table class="tabledata">
         <?php if (in_array('fullname', $display_fields)) { ?>
@@ -66,7 +66,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
     } ?>
         <tr>
             <td><?php echo T_('New Password'); ?>:</td>
-            <td><?php AmpError::display('password'); ?><input type="password" name="password1" id="password1" /></td>
+            <td><?php echo AmpError::display('password'); ?><input type="password" name="password1" id="password1" /></td>
         </tr>
         <tr>
             <td><?php echo T_('Confirm Password'); ?>:</td>

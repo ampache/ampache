@@ -28,7 +28,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
         <div class="page-header">
             <h1><?php echo T_('Choose Installation Language'); ?></h1>
         </div>
-        <p><?php AmpError::display('general'); ?></p>
+        <p><?php echo AmpError::display('general'); ?></p>
         <form role="form" method="post" action="<?php echo $web_path . "/install.php?action=check"; ?>" enctype="multipart/form-data" >
             <div class="form-group">
         <?php

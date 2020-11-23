@@ -282,7 +282,7 @@ class Update
                         debug_event('update.class', 'run_update: successfully updated to ' . $version['version'], 3);
                         self::set_version('db_version', $version['version']);
                     } else {
-                        AmpError::display('update');
+                        echo AmpError::display('update');
 
                         return false;
                     }

@@ -32,7 +32,7 @@ use Ampache\Module\Util\Ui;
 <tr>
     <td><?php echo T_('Name'); ?></td>
     <td><input type="text" name="name" value="<?php echo scrub_out($_REQUEST['name']); ?>" />
-        <?php AmpError::display('name'); ?>
+        <?php echo AmpError::display('name'); ?>
     </td>
 </tr>
 <tr>
@@ -55,25 +55,25 @@ use Ampache\Module\Util\Ui;
     <td><?php echo T_('Summary'); ?></td>
     <td>
         <textarea name="summary" cols="44" rows="4"><?php echo scrub_out($_REQUEST['summary']); ?></textarea>
-        <?php AmpError::display('summary'); ?>
+        <?php echo AmpError::display('summary'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Address'); ?></td>
     <td><input type="text" name="address" value="<?php echo scrub_out($_REQUEST['address']); ?>" />
-        <?php AmpError::display('address'); ?>
+        <?php echo AmpError::display('address'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('E-mail'); ?></td>
     <td><input type="text" name="email" value="<?php echo scrub_out($_REQUEST['email']); ?>" />
-        <?php AmpError::display('email'); ?>
+        <?php echo AmpError::display('email'); ?>
     </td>
 </tr>
 <tr>
     <td><?php echo T_('Website'); ?></td>
     <td><input type="text" name="website" value="<?php echo scrub_out($_REQUEST['website']); ?>" />
-        <?php AmpError::display('website'); ?>
+        <?php echo AmpError::display('website'); ?>
     </td>
 </tr>
 </table>

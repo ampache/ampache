@@ -44,7 +44,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
         <dd><?php echo T_('This step creates your initial Ampache admin account. Once your admin account has been created you will be redirected to the login page.'); ?></dd>
     </dl>
 </div>
-    <?php AmpError::display('general'); ?>
+    <?php echo AmpError::display('general'); ?>
     <h2><?php echo T_('Create Admin Account'); ?></h2>
     <form method="post" action="<?php echo $web_path . "/install.php?action=create_account&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data">
 

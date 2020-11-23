@@ -668,7 +668,7 @@ class Catalog_local extends Catalog
             // catalog root.
             debug_event('local.catalog', 'Catalog path:' . $this->path . ' unreadable, clean failed', 1);
             AmpError::add('general', T_('Catalog root unreadable, stopping clean'));
-            AmpError::display('general');
+            echo AmpError::display('general');
 
             return 0;
         }

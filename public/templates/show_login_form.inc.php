@@ -77,7 +77,7 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
                     <label for="password"><?php echo  T_('Password'); ?>:</label>
                     <input type="password" id="password" name="password" value="" />
                 </div>
-                <?php AmpError::display('general'); ?>
+                <?php echo AmpError::display('general'); ?>
                 <div class="loginfield">
                     <div id="remembermefield">
                         <label for="rememberme"><?php echo T_('Remember Me'); ?></label>

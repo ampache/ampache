@@ -89,8 +89,8 @@ $_SESSION['login'] = true; ?>
                     <div class="registerfield require">
                         <label for="username"><?php echo T_('Username'); ?>:</label>
                         <input type='text' name='username' id='username' value='<?php echo scrub_out((string) $username); ?>' />
-                        <?php AmpError::display('username'); ?>
-                        <?php AmpError::display('duplicate_user'); ?>
+                        <?php echo AmpError::display('username'); ?>
+                        <?php echo AmpError::display('duplicate_user'); ?>
                     </div>
                     <?php if (in_array('fullname', $display_fields)) { ?>
                         <div class="registerfield <?php if (in_array('fullname', $mandatory_fields)) {
@@ -98,7 +98,7 @@ $_SESSION['login'] = true; ?>
                     } ?>">
                             <label for="fullname"><?php echo T_('Full Name'); ?>:</label>
                             <input type='text' name='fullname' id='fullname' value='<?php echo scrub_out((string) $fullname); ?>' />
-                            <?php AmpError::display('fullname'); ?>
+                            <?php echo AmpError::display('fullname'); ?>
                         </div>
                     <?php
                     } ?>
@@ -106,7 +106,7 @@ $_SESSION['login'] = true; ?>
                     <div class="registerfield require">
                         <label for="email"><?php echo T_('E-mail'); ?>:</label>
                         <input type='text' name='email' id='email' value='<?php echo scrub_out((string) $email); ?>' />
-                        <?php AmpError::display('email'); ?>
+                        <?php echo AmpError::display('email'); ?>
                     </div>
                     <?php if (in_array('website', $display_fields)) { ?>
                         <div class="registerfield <?php if (in_array('website', $mandatory_fields)) {
@@ -114,7 +114,7 @@ $_SESSION['login'] = true; ?>
                     } ?>">
                             <label for="website"><?php echo T_('Website'); ?>:</label>
                             <input type='text' name='website' id='website' value='<?php echo scrub_out((string) $website); ?>' />
-                            <?php AmpError::display('website'); ?>
+                            <?php echo AmpError::display('website'); ?>
                         </div>
                     <?php
                     } ?>
@@ -124,7 +124,7 @@ $_SESSION['login'] = true; ?>
                     } ?>">
                             <label for="state"><?php echo T_('State'); ?>:</label>
                             <input type='text' name='state' id='state' value='<?php echo scrub_out((string) $state); ?>' />
-                            <?php AmpError::display('state'); ?>
+                            <?php echo AmpError::display('state'); ?>
                         </div>
                     <?php
                     } ?>
@@ -134,7 +134,7 @@ $_SESSION['login'] = true; ?>
                     } ?>">
                             <label for="city"><?php echo T_('City'); ?>:</label>
                             <input type='text' name='city' id='city' value='<?php echo scrub_out((string) $city); ?>' />
-                            <?php AmpError::display('city'); ?>
+                            <?php echo AmpError::display('city'); ?>
                         </div>
                     <?php
                     } ?>
@@ -142,7 +142,7 @@ $_SESSION['login'] = true; ?>
                     <div class="registerfield require">
                         <label for="password_1"><?php echo T_('Password'); ?>:</label>
                         <input type='password' name='password_1' id='password_1' />
-                        <?php AmpError::display('password'); ?>
+                        <?php echo AmpError::display('password'); ?>
                     </div>
 
                     <div class="registerfield require">
@@ -153,7 +153,7 @@ $_SESSION['login'] = true; ?>
                     <?php
                     if (AmpConfig::get('captcha_public_reg')) {
                         echo captcha::form("&rarr;&nbsp;");
-                        AmpError::display('captcha');
+                        echo AmpError::display('captcha');
                     } ?>
                     <div class="submit-registration">
                         <?php if (AmpConfig::get('user_agreement')) { ?>
@@ -166,7 +166,7 @@ $_SESSION['login'] = true; ?>
                             <input type="hidden" name="action" value="add_user" />
                             <input type='submit' name='submit_registration' id='submit_registration' value='<?php echo T_('Register'); ?>' />
                         </div>
-                        <?php AmpError::display('user_agreement'); ?>
+                        <?php echo AmpError::display('user_agreement'); ?>
                     </div>
                 </form>
             </div>

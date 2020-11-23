@@ -27,7 +27,7 @@ use Ampache\Module\Util\Ui;
 
 ?>
 <?php Ui::show_box_top(T_('Edit Access Control List')); ?>
-<?php AmpError::display('general');
+<?php echo AmpError::display('general');
 $apirpc       = T_('API/RPC');
 $localnetwork = T_('Local Network Definition');
 $streamaccess = T_('Stream Access');
@@ -78,11 +78,11 @@ $all          = T_('All'); ?>
         <tr>
             <td><?php echo T_('Start') . ':'; ?></td>
             <td>
-                <?php AmpError::display('start'); ?>
+                <?php echo AmpError::display('start'); ?>
                 <input type="text" name="start" value="<?php echo $access->f_start; ?>" /></td>
             <td><?php echo T_('End') . ':'; ?></td>
             <td>
-                <?php AmpError::display('end'); ?>
+                <?php echo AmpError::display('end'); ?>
                 <input type="text" name="end" value="<?php echo $access->f_end; ?>" /></td>
         </tr>
     </table>

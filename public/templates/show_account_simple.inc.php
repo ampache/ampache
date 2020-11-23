@@ -28,7 +28,7 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Ui;
 
 $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
-<?php AmpError::display('general'); ?>
+<?php echo AmpError::display('general'); ?>
     <table class="tabledata">
             <tr>
                 <td><?php echo T_('Full Name'); ?>:</td>

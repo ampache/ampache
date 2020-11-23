@@ -64,7 +64,7 @@ final class UninstallCatalogTypeAction implements ApplicationActionInterface
         $catalog = Catalog::create_catalog_type($type);
         if ($catalog == null) {
             AmpError::add('general', T_("Unable to disable the Catalog module."));
-            AmpError::display('general');
+            echo AmpError::display('general');
 
             $this->ui->showQueryStats();
             $this->ui->showFooter();

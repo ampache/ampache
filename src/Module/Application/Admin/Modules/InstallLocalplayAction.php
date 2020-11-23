@@ -64,7 +64,7 @@ final class InstallLocalplayAction implements ApplicationActionInterface
         $localplay = new LocalPlay(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         if (!$localplay->player_loaded()) {
             AmpError::add('general', T_('Failed to enable the Localplay module'));
-            AmpError::display('general');
+            echo AmpError::display('general');
 
             $this->ui->showQueryStats();
             $this->ui->showFooter();

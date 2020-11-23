@@ -60,7 +60,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
                 <li><?php echo T_('Step 3 - Set up the initial account'); ?></li>
             </ul>
             </div>
-            <?php AmpError::display('general'); ?>
+            <?php echo AmpError::display('general'); ?>
 <form method="post" action="<?php echo $web_path . "/install.php?action=create_config"; ?>" enctype="multipart/form-data" autocomplete="off">
             <h2><?php echo T_('Generate Configuration File'); ?></h2>
             <h3><?php echo T_('Various'); ?></h3>
@@ -71,7 +71,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
     </div>
 </div>
             <h3><?php echo T_('Database Connection'); ?></h3>
-            <?php AmpError::display('config'); ?>
+            <?php echo AmpError::display('config'); ?>
 <div class="form-group">
     <label for="local_db" class="col-sm-4 control-label"><?php echo T_('Database Name'); ?></label>
     <div class="col-sm-8">

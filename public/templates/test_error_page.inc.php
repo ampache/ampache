@@ -55,7 +55,7 @@ use Ampache\Module\Util\Ui;
             <p><?php echo T_('You may have reached this page because Ampache was unable to load the required dependencies'); ?></p>
             <p><a href="https://github.com/ampache/ampache/wiki/Installation" rel="nofollow"><?php echo T_('Please visit the wiki for help'); ?></a></p>
         </div>
-        <?php AmpError::display('general'); ?>
+        <?php echo AmpError::display('general'); ?>
     </div>
 </body>
 </html>
