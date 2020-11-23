@@ -56,6 +56,8 @@ final class StreamMethod
     public static function stream(array $input)
     {
         if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
+            http_response_code(400);
+
             return false;
         }
         $type      = (string) $input['type'];

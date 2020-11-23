@@ -52,6 +52,8 @@ final class DownloadMethod
     public static function download(array $input)
     {
         if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
+            http_response_code(400);
+
             return false;
         }
         $object_id = (int) $input['id'];

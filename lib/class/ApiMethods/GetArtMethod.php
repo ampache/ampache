@@ -55,6 +55,8 @@ final class GetArtMethod
     public static function get_art(array $input)
     {
         if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
+            http_response_code(400);
+
             return false;
         }
         $object_id = (int) $input['id'];
