@@ -47,7 +47,7 @@ final class ShowPlaylistAction extends AbstractLocalPlayAction
         ConfigContainerInterface $configContainer,
         UiInterface $ui
     ) {
-        parent::__construct($configContainer);
+        parent::__construct($configContainer, $ui);
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
     }
