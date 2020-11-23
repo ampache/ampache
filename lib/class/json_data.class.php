@@ -190,6 +190,8 @@ class JSON_Data
                 return self::podcasts($objects);
             case 'podcast_episode':
                 return self::podcast_episodes($objects);
+            case 'video':
+                return self::videos($objects);
             default:
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 return self::error('4710', printf(T_('Bad Request: %s'), $type), 'indexes', 'type');
