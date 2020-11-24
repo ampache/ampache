@@ -2167,15 +2167,15 @@ class Song extends database_object implements media, library_item
      */
     public static function get_recently_played($user_id = 0)
     {
-        $personal_info_time  = Preference::id_from_name('allow_personal_info_time');
-        $personal_info_agent = Preference::id_from_name('allow_personal_info_agent');
+        $personal_info_time  = 92;
+        $personal_info_agent = 93;
 
         $results = array();
         $limit   = AmpConfig::get('popular_threshold', 10);
         $sql     = "SELECT `object_id`, `object_count`.`user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent` " .
                    "FROM `object_count`" .
-                   "RIGHT JOIN `user_preference` AS `pref_time` ON `pref_time`.`preference`='$personal_info_time' AND `pref_time`.`user` = `object_count`.`user`" .
-                   "RIGHT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`preference`='$personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user`" .
+                   "LEFT JOIN `user_preference` AS `pref_time` ON `pref_time`.`preference`='$personal_info_time' AND `pref_time`.`user` = `object_count`.`user`" .
+                   "LEFT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`preference`='$personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user`" .
                    "WHERE `object_type` = 'song' AND `count_type` = 'stream' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND " . Catalog::get_enable_filter('song', '`object_id`') . " ";

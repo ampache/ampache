@@ -69,6 +69,11 @@ final class LocalplayMethod
                 // for add commands get the object details
                 $object_id   = (int) $input['oid'];
                 $type        = $input['type'] ? (string) $input['type'] : 'Song';
+                if (!AmpConfig::get('allow_video') && $type == 'Video') {
+                    Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
+
+                    return false;
+                }
                 $clear       = (int) $input['clear'];
                 // clear before the add
                 if ($clear == 1) {

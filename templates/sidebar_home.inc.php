@@ -68,6 +68,7 @@ $t_search    = T_('Search'); ?>
             <li id="sb_home_browse_music_podcast"><a href="<?php echo $web_path ?>/browse.php?action=podcast"><?php echo T_('Podcasts') ?></a></li>
             <?php
         } ?>
+        <li id="sb_home_browse_music_tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag"><?php echo $t_tagcloud; ?></a></li>
             <?php if (AmpConfig::get('allow_upload')) { ?>
             <li id="sb_home_info_upload"><a href="<?php echo $web_path ?>/stats.php?action=upload"><?php echo T_('Uploads') ?></a></li>
             <?php
@@ -174,13 +175,8 @@ $t_search    = T_('Search'); ?>
                 <li id="sb_home_info_wanted"><a href="<?php echo $web_path ?>/stats.php?action=wanted"><?php echo T_('Wanted') ?></a></li>
                 <?php
         } ?>
-        <li id="sb_home_browse_music_tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag"><?php echo $t_tagcloud; ?></a></li>
                 <?php if (AmpConfig::get('share')) { ?>
                 <li id="sb_home_info_share"><a href="<?php echo $web_path ?>/stats.php?action=share"><?php echo T_('Shares') ?></a></li>
-                <?php
-        } ?>
-                <?php if (AmpConfig::get('allow_upload')) { ?>
-                <li id="sb_home_info_upload"><a href="<?php echo $web_path ?>/stats.php?action=upload"><?php echo T_('Uploads') ?></a></li>
                 <?php
         } ?>
                 <?php if (Access::check('interface', 50)) { ?>

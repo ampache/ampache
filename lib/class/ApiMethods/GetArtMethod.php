@@ -55,6 +55,8 @@ final class GetArtMethod
     public static function get_art(array $input)
     {
         if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
+            http_response_code(400);
+
             return false;
         }
         $object_id = (int) $input['id'];
@@ -104,8 +106,8 @@ final class GetArtMethod
             }
         }
 
-        header('Access-Control-Allow-Origin: *');
         if ($art != null) {
+            header('Access-Control-Allow-Origin: *');
             if ($art->has_db_info() && $size && AmpConfig::get('resize_images')) {
                 $dim           = array();
                 $dim['width']  = $size;
@@ -123,9 +125,13 @@ final class GetArtMethod
             header('Content-type: ' . $art->raw_mime);
             header('Content-Length: ' . strlen((string) $art->raw));
             echo $art->raw;
-        }
-        Session::extend($input['auth']);
+            Session::extend($input['auth']);
 
-        return true;
+            return true;
+        }
+        // art not found
+        http_response_code(404);
+
+        return false;
     }
 }

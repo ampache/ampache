@@ -52,6 +52,8 @@ final class DownloadMethod
     public static function download(array $input)
     {
         if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
+            http_response_code(400);
+
             return false;
         }
         $object_id = (int) $input['id'];
@@ -75,14 +77,14 @@ final class DownloadMethod
             $url = Song::generic_play_url('podcast_episode', $object_id, $params, 'api', function_exists('curl_version'), $user_id, $original);
         }
         if (!empty($url)) {
+            Session::extend($input['auth']);
             header('Location: ' . str_replace(':443/play', '/play', $url));
 
             return true;
         }
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(sprintf(T_('Bad Request: %s'), $url), '4710', self::ACTION, 'system', $input['api_format']);
-        Session::extend($input['auth']);
+        // download not found
+        http_response_code(404);
 
-        return true;
+        return false;
     }
 }
