@@ -320,21 +320,21 @@ class Playlist extends playlist_object
     /**
     * get_total_duration
     * Get the total duration of all songs.
-    * @return string|null
+    * @return integer
     */
     public function get_total_duration()
     {
         $songs  = $this->get_songs();
         $idlist = '(' . implode(',', $songs) . ')';
         if ($idlist == '()') {
-            return null;
+            return 0;
         }
         $sql        = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
         $results = Dba::fetch_row($db_results);
 
-        return $results['0'];
+        return (int) $results['0'];
     } // get_total_duration
 
     /**
@@ -415,7 +415,7 @@ class Playlist extends playlist_object
      * _update_item
      * This is the generic update function, it does the escaping and error checking
      * @param string $field
-     * @param $value
+     * @param string|integer $value
      * @param integer $level
      * @return PDOStatement|boolean
      */
@@ -485,24 +485,28 @@ class Playlist extends playlist_object
          * append, rather then integrate take end track # and add it to
          * $song->track add one to make sure it really is 'next'
          */
-        $playlist   = new Playlist($this->id);
-        $track_data = $playlist->get_songs();
+        debug_event('playlist.class', "add_medias to: " . $this->id, 5);
+        $track_data = $this->get_songs();
         $base_track = count($track_data);
         $count      = 0;
+        $sql        = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) VALUES ";
+        $values     = array();
+        $unique     = AmpConfig::get('unique_playlist');
         foreach ($medias as $data) {
-            $media = new $data['object_type']($data['object_id']);
-            if (AmpConfig::get('unique_playlist') && in_array($media->id, $track_data)) {
+            if ($unique && in_array($data['object_id'], $track_data)) {
                 debug_event('playlist.class', "Can't add a duplicate " . $data['object_type'] . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
-            } elseif ($media->id) {
+            } else {
                 $count++;
                 $track = $base_track + $count;
-                debug_event('playlist.class', 'Adding Media; Track number: ' . $track, 5);
-
-                $sql = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) " .
-                    " VALUES (?, ?, ?, ?)";
-                Dba::write($sql, array($this->id, $data['object_id'], $data['object_type'], $track));
+                $sql .= "(?, ?, ?, ?), ";
+                $values[] = $this->id;
+                $values[] = $data['object_id'];
+                $values[] = $data['object_type'];
+                $values[] = $track;
             } // if valid id
         } // end foreach medias
+        Dba::write(rtrim($sql, ', '), $values);
+        debug_event('playlist.class', "Added $track tracks to playlist: " . $this->id, 5);
 
         $this->update_last_update();
     }
@@ -690,17 +694,19 @@ class Playlist extends playlist_object
     public function sort_tracks()
     {
         /* First get all of the songs in order of their tracks */
-        $sql = "SELECT A.`id`
-                FROM `playlist_data` AS A
-           LEFT JOIN `song` AS B ON A.object_id = B.id
-           LEFT JOIN `artist` AS C ON B.artist = C.id
-           LEFT JOIN `album` AS D ON B.album = D.id
-               WHERE A.`playlist` = ?
-            ORDER BY C.`name` ASC,
-                     B.`title` ASC,
-                     D.`year` ASC,
-                     D.`name` ASC,
-                     B.`track` ASC";
+        $sql = "SELECT LIST.`id` " .
+               "FROM `playlist_data` AS LIST " .
+               "LEFT JOIN `song` AS SONG ON LIST.object_id = SONG.id " .
+               "LEFT JOIN `album` AS ALBUM ON SONG.album = ALBUM.id " .
+               "LEFT JOIN `artist` AS ARTIST ON ALBUM.album_artist = ARTIST.id " .
+               "WHERE LIST.`playlist` = ? " .
+               "ORDER BY ARTIST.`name` ASC, " .
+               "ALBUM.`name` ASC, " .
+               "ALBUM.`year` ASC, " .
+               "ALBUM.`disk` ASC, " .
+               "SONG.`track` ASC, " .
+               "SONG.`title` ASC, " .
+               "SONG.`track` ASC";
         $db_results = Dba::query($sql, array($this->id));
 
         $count   = 1;
@@ -713,12 +719,19 @@ class Playlist extends playlist_object
             $results[]              = $new_data;
             $count++;
         } // end while results
+        if (!empty($results)) {
+            $sql = "INSERT INTO `playlist_data` (`id`, `track`) VALUES ";
+            foreach ($results as $data) {
+                $sql .= "(" . Dba::escape($data['id']) . ", " . Dba::escape($data['track']) . "), ";
+            } // foreach re-ordered results
 
-        foreach ($results as $data) {
-            $sql = "UPDATE `playlist_data` SET `track` = ? WHERE `id` = ?";
-            Dba::write($sql, array($data['track'], $data['id']));
-        } // foreach re-ordered results
+            //replace the last comma
+            $sql = substr_replace($sql ,"", -2);
+            $sql .= "ON DUPLICATE KEY UPDATE `track`=VALUES(`track`)";
 
+            // do this in one go
+            Dba::write($sql);
+        }
         $this->update_last_update();
 
         return true;
