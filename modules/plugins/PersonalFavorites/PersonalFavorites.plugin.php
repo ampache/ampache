@@ -76,6 +76,7 @@ class AmpachePersonalFavorites
         Preference::delete('personalfav_display');
         Preference::delete('personalfav_playlist');
         Preference::delete('personalfav_smartlist');
+        Preference::delete('personalfav_gridview');
 
         return true;
     }
@@ -86,11 +87,6 @@ class AmpachePersonalFavorites
      */
     public function upgrade()
     {
-        $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version < 2) {
-            Preference::insert('personalfav_gridview', T_('Personal favorites grid view display'), '0', 25, 'boolean', 'plugins');
-        }
-
         return true;
     }
 
