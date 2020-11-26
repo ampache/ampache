@@ -26,12 +26,13 @@ class AmpacheRatingMatch
     public $categories  = 'metadata';
     public $description = 'Raise the album and artist rating to match the highest song rating';
     public $url;
-    public $version     = '000001';
+    public $version     = '000002';
     public $min_ampache = '360003';
     public $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $min_stars;
+    private $match_flags;
 
     /**
      * Constructor
@@ -58,6 +59,7 @@ class AmpacheRatingMatch
         }
 
         Preference::insert('ratingmatch_stars', T_('Minimum star rating to match'), 0, 25, 'integer', 'plugins', $this->name);
+        Preference::insert('ratingmatch_flags', T_('When you love a track, flag the album and artist'), 0, 25, 'boolean', 'plugins', $this->name);
 
         return true;
     } // install
@@ -70,6 +72,7 @@ class AmpacheRatingMatch
     public function uninstall()
     {
         Preference::delete('ratingmatch_stars');
+        Preference::delete('ratingmatch_flags');
     } // uninstall
 
     /**
@@ -78,6 +81,11 @@ class AmpacheRatingMatch
      */
     public function upgrade()
     {
+        $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version < 2) {
+            Preference::insert('ratingmatch_flags', T_('When you love a track, flag the album and artist'), 0, 25, 'boolean', 'plugins', $this->name);
+        }
+
         return true;
     } // upgrade
 
@@ -107,6 +115,26 @@ class AmpacheRatingMatch
     }
 
     /**
+     * set_flag
+     * If you love a song you probably love the artist and the album right?
+     * @param Song $song
+     * @param boolean $flagged
+     */
+    public function set_flag($song, $flagged)
+    {
+        if ($this->match_flags > 0 && $flagged) {
+            $album  = new Userflag($song->album, 'album');
+            $artist = new Userflag($song->artist, 'artist');
+            if (!$album->get_flag($this->user_id, false)) {
+                $album->set_flag($flagged, $this->user_id);
+            }
+            if (!$artist->get_flag($this->user_id, false)) {
+                $artist->set_flag($flagged, $this->user_id);
+            }
+        }
+    } // set_flag
+
+    /**
      * load
      * This loads up the data we need into this object, this stuff comes
      * from the preferences.
@@ -119,6 +147,7 @@ class AmpacheRatingMatch
         $data              = $user->prefs;
         $this->user_id     = $user->id;
         $this->min_stars   = (int) $data['ratingmatch_stars'];
+        $this->match_flags = (int) $data['ratingmatch_flags'];
 
         return true;
     } // load

@@ -223,6 +223,7 @@ function create_preference_input($name, $value)
         case 'cron_cache':
         case 'show_lyrics':
         case 'unique_playlist':
+        case 'ratingmatch_flags':
             $is_true  = '';
             $is_false = '';
             if ($value == '1') {

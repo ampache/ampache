@@ -22,7 +22,9 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
   * rsstoken: Identify users by token when generating RSS feeds
 * Replace 'Admin' icon with padlock in sidebar when access check fails. (Hide this new icon with 'simple_user_mode')
 * Disable API/Subsonic password resets in 'simple_user_mode'
-* NEW plugin: 'Personal Favorites'. Show a shortcut to a favorite smartlist or playlist on the homepage
+* NEW plugin:
+  * 'Personal Favorites'. Show a shortcut to a favorite smartlist or playlist on the homepage
+  * 'RatingMatch'. Raise the minimum star rating (and song loves) of artists and albums when you rate/love the song
 * Run garbage collection after catalog_update.inc 'clean' or 'verify'
 * Add duration to the table headers when browsing playlists and smartlists
 * Add time and duration to albums, artists instead of calculating from songs each time
