@@ -58,7 +58,7 @@ const QueueBar: React.FC<QueueBarProps> = (props) => {
                         : `${style.queueBar} ${style.hidden}`
                 }
             >
-                <div className={style.title}>Your Queue</div>
+                <div className={style.title}>Now playing</div>
                 <ul className={style.songs}>
                     {musicContext.songQueue.length == 0 && (
                         <div className={style.emptyQueue}>

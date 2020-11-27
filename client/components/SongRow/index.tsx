@@ -1,8 +1,8 @@
 import React from 'react';
+import SVG from 'react-inlinesvg';
 import useContextMenu from 'react-use-context-menu';
 import { Song } from '~logic/Song';
 import { Link } from 'react-router-dom';
-import heartIcon from '/images/icons/svg/heart.svg';
 
 interface SongRowProps {
     song: Song;
@@ -68,7 +68,7 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                         props.flagSong(props.song.id, !props.song.flag);
                     }}
                 >
-                    <img src={heartIcon} alt='Favorite song' />
+                    <SVG className='icon-button' src={require('~images/icons/svg/heart-full.svg')} alt="Favourite song" />
                 </span>
                 <span className='title'>{props.song.title}</span>
                 {props.showArtist && (

@@ -1,10 +1,18 @@
+@import "color.styl"
 @import "sizes.styl"
+@import "typography.styl"
 
 .container
   display flex
   min-height "calc(100% - %s)" % headerHeight
   position relative
   & > .content
+    padding: 1rem
+
+    @media all and (min-width: 700px) {
+      padding: 2rem
+    }  
+
     flex 1
     position relative
     &::after

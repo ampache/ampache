@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import SVG from 'react-inlinesvg';
 import { MusicContext } from '~Contexts/MusicContext';
 import CDImage from '/images/icons/svg/CD.svg';
 import { Link } from 'react-router-dom';
@@ -33,12 +34,12 @@ const CurrentPlaying: React.FC = () => {
                         <div className={style.songName}>
                             {musicContext.currentPlayingSong?.title}
                         </div>
-                        <Link
-                            className={style.artistName}
-                            to={`/artist/${musicContext.currentPlayingSong?.artist.id}`}
-                        >
+                        <div className={style.albumName}>
+                            {musicContext.currentPlayingSong?.album.name}
+                        </div>
+                        <div className={style.artistName}>
                             {musicContext.currentPlayingSong?.artist.name}
-                        </Link>
+                        </div>
                     </div>
                 </>
             )}

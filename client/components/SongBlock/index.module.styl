@@ -8,9 +8,6 @@
   border 1px solid transparent
   img
     width 20%
-  &:hover
-    background-color lighten(bodyBackgroundColor, 10%)
-    color linkHoverColor
   .details
     padding-left 10px
     display flex
@@ -22,11 +19,5 @@
         clear both
         float left
         color inherit
-        &:hover, &:focus
-          color linkHoverColor
   &.playing
     color currentlyPlayingColor
-  &:focus
-    border 1px solid linkHoverColor
-    &:before
-      opacity 0.5

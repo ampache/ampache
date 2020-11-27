@@ -1,4 +1,5 @@
 import React from 'react';
+import SVG from 'react-inlinesvg';
 import { Song } from '~logic/Song';
 import { Link } from 'react-router-dom';
 
@@ -21,29 +22,14 @@ const QueueSong: React.FC<QueueSongProps> = (props) => {
             onClick={props.onClick}
         >
             <div className={style.imageWrapper}>
-                <img src={props.song.art} alt='Album Cover' />
+                <img src={props.song.art} alt='Album cover' />
             </div>
             <div className={style.details}>
                 <div className={style.songName}>{props.song.title}</div>
-                <div className={style.albumArtist}>
-                    <Link
-                        to={`/artist/${props.song.artist.id}`}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                        }}
-                    >
-                        {props.song.artist.name}
-                    </Link>
-                    <span className={style.gap}>-</span>
-                    <Link
-                        to={`/album/${props.song.album.id}`}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                        }}
-                    >
-                        {props.song.album.name}
-                    </Link>
-                </div>
+                <div className={style.albumArtist}>{props.song.artist.name}</div>
+            </div>
+            <div className={style.actions}>
+                <SVG className='icon-button' src={require('~images/icons/svg/cross.svg')} alt="Remove" />
             </div>
         </li>
     );

@@ -1,51 +1,45 @@
+@import "~/stylus/color.styl"
+
 .artistPage
-  h1
-    font-size 3vw
-    margin 2px
   .artistInfo
-    background-color #1a1a1a
     display flex
-    min-height 350px
-    //padding 30px
-    position relative
-    .imageContainer
+    flex-direction: column
+    align-items: center;
+
+  .imageContainer
+    width: 50%
+    height: 100%
+    display: flex
+    align-items: center;
+    flex-direction: column
+    
+    img
       height 100%
-      flex 1
-      max-width: 350px
-      align-self center
-      img
-        height 100%
-        width 100%
-        object-fit contain
-        display block
-      @media all and (max-width: 1000px)
-        position absolute
-        z-index 0
-        width 100%
-        background-color black
-        max-width initial
-        img
-          object-fit cover
-          opacity 0.3
-    .details
-      padding 20px 0 20px 20px
-      display flex
-      flex-direction column
-      justify-content space-around
-      z-index 1
-      flex: 1;
-      max-width: 80%;
-      .name
-        font-size calc(1.5vw + 18px)
-      .summary
-        font-size calc(0.5vw + 12px)
-        margin-right 10px
-      .playRandom
-        width 25%
-        margin-top 2%
-        min-width 215px
-  .albums
-    display flex
-    flex-wrap wrap
-    .albumDisplayContainer
-      margin 20px
+      max-width 100%
+      max-height: 150px
+      // object-fit contain
+      display block
+      border-radius 9999px
+      border 3px solid colorGray700
+    
+  .name
+    font-size 22px
+    text-align: center
+  .summary
+    display none
+    // font-size calc(0.5vw + 12px)
+    // margin-right 10px
+  .playRandom
+    display: none
+    // width 25%
+    // margin-top 2%
+    // min-width 215px
+.albums
+  display: grid
+  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  
+  .albumDisplayContainer
+      // margin 20px
+.rating
+  text-align: center

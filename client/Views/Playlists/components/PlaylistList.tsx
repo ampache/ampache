@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import SVG from 'react-inlinesvg';
 import {
     createPlaylist,
     deletePlaylist,
@@ -9,7 +10,6 @@ import {
 import PlaylistRow from './PlaylistRow';
 import { AuthKey } from '~logic/Auth';
 import AmpacheError from '~logic/AmpacheError';
-import Plus from '~images/icons/svg/plus.svg';
 import { Modal } from 'react-async-popup';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
@@ -144,7 +144,11 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
     }
     return (
         <div className='playlistList'>
-            <img src={Plus} alt='Add Playlist' onClick={handleNewPlaylist} />
+            <SVG 
+                className='icon-button'
+                src={require('~images/icons/svg/plus.svg')}
+                alt="Add to playlist"
+                onClick={handleNewPlaylist} />
             <ul>
                 {playlists.map((playlist: Playlist) => {
                     return (

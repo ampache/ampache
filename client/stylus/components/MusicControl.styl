@@ -1,32 +1,40 @@
+@import "../color"
+
 .musicControl
   position fixed
   bottom 0
-  background-color rgba(16, 16, 16, 0.9)
+  background-color colorGray800
+  border-top 2px solid colorGray900
   display grid
   width 100%
   right 0
   align-items center
-  height musicPlayerHeight
-  grid-template-columns 1fr 1fr 1fr
+  // height musicPlayerHeight
+  // grid-template-columns 1fr 1fr 1fr
   z-index 100
   .controls
     display flex
-    width 50%
+    width 100%
     flex-direction column
     justify-self center
     .buttons
+      margin-top 20px
       display flex
-      justify-content center
+      justify-content space-between
+      cursor pointer
       img
-        width 32px
+        width 42px
+        min-width 42px
+        padding 9px
       .disabled
         pointer-events none
-        filter grayscale(1)
+        color colorGray600
   .volumeSide
     display flex
     justify-content space-around
     .queueIcon
-      height 32px
+      height 42px
+      padding 9px
       img
         height 100%
         filter invert(.8) //TODO: Replace this image

@@ -1,10 +1,14 @@
+@import "~stylus/color.styl"
 @import "~stylus/sizes.styl"
 
 .queueBar
-  max-width: queueBarWidth; //For desktop we only want the Queue Bar to get so big
-  transition .2s max-width //Max width transition so it only hits the mobile media query
-  background-color #1a1a1a
-  font-size 18px
+  // margin-right: 20px // WHAT THE HECK IS GOING ON
+  // max-width: queueBarWidth; //For desktop we only want the Queue Bar to get so big
+  // padding-top 20px
+  // padding-bottom 20px
+  // width: queueBarWidth; //For desktop we only want the Queue Bar to get so big
+  transition easeOut .15s max-width //Max width transition so it only hits the mobile media query
+  background-color colorGray800
   user-select none
   z-index 100
   titleHeight = 44px
@@ -21,18 +25,19 @@
       max-width 100% //Full screen on mobile, 100% instead of unset for transition to work
   .title
     text-align center
-    font-size 24px
-    height titleHeight
-    box-sizing border-box
+    // height titleHeight
+    // box-sizing border-box
     padding 10px 0
     white-space nowrap
     overflow hidden
     transition opacity 0.1s
     opacity 1
+    border-bottom: 2px solid colorAmber500
   .songs
     height: "calc(100% - %s)" % (titleHeight)
     overflow-y scroll
-    overflow-x hidden
+    // overflow-x hidden
+    padding-right: 1rem
     position sticky
     top 0
     display flex

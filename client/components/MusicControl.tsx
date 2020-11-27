@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react';
+import SVG from 'react-inlinesvg';
 import { PLAYERSTATUS } from '~enum/PlayerStatus';
 import { MusicContext } from '~Contexts/MusicContext';
 import InputRange from 'react-input-range';
 
-import listIcon from '~images/icons/svg/list.svg';
 import CurrentPlaying from '~components/CurrentPlaying/';
 
 interface MusicControlProps {
@@ -20,53 +20,6 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
         <div className='musicControl'>
             <CurrentPlaying />
             <div className='controls'>
-                <div className='buttons'>
-                    <div className='previousSong'>
-                        <img
-                            src='https://img.icons8.com/flat_round/50/000000/back--v2.png'
-                            alt='Back'
-                            onClick={() => {
-                                musicContext.playPrevious();
-                            }}
-                            className={
-                                musicContext.songQueueIndex <= 0
-                                    ? 'disabled'
-                                    : ''
-                            }
-                        />
-                    </div>
-                    <div className='playPause'>
-                        {musicContext.playerStatus === PLAYERSTATUS.STOPPED ||
-                        musicContext.playerStatus === PLAYERSTATUS.PAUSED ? (
-                            <img
-                                src='https://img.icons8.com/flat_round/50/000000/play.png'
-                                alt='Play'
-                                onClick={musicContext.playPause}
-                            />
-                        ) : (
-                            <img
-                                src='https://img.icons8.com/flat_round/50/000000/pause--v2.png'
-                                alt='Pause'
-                                onClick={musicContext.playPause}
-                            />
-                        )}
-                    </div>
-                    <div className='nextSong'>
-                        <img
-                            src='https://img.icons8.com/flat_round/50/000000/circled-chevron-right.png'
-                            alt='Next'
-                            onClick={() => {
-                                musicContext.playNext();
-                            }}
-                            className={
-                                musicContext.songQueueIndex ==
-                                musicContext.songQueue.length - 1
-                                    ? 'disabled'
-                                    : ''
-                            }
-                        />
-                    </div>
-                </div>
                 <InputRange
                     onChange={(value: number) => {
                         setSeekPosition(value);
@@ -88,10 +41,119 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                     minValue={0}
                     value={isSeeking ? seekPosition : musicContext.songPosition}
                 />
+                <div className='buttons'>
+                    <div className='shuffle'>
+                        <SVG
+                            src={require('~images/icons/svg/shuffle.svg')}
+                            alt='Shuffle'
+                            onClick={() => {
+                                // TODO: shuffle;
+                            }}
+                            className={`
+                                ${'icon-button'} 
+                            `}
+                        />
+                    </div>
+                    <div className='repeat'>
+                        <SVG
+                            src={require('~images/icons/svg/repeat.svg')}
+                            alt='Repeat'
+                            onClick={() => {
+                                // TODO: repeat;
+                            }}
+                            className={`
+                                ${'icon-button'} 
+                            `}
+                        />
+                    </div>
+                    <div className='previousSong'>
+                        <SVG
+                            src={require('~images/icons/svg/previous-track.svg')}
+                            alt='Back'
+                            onClick={() => {
+                                musicContext.playPrevious();
+                            }}
+                            className={`
+                                ${'icon-button'} 
+                                ${musicContext.songQueueIndex <= 0
+                                    ? 'disabled'
+                                    : ''}
+                            `}
+                        />
+                    </div>
+                    <div className='playPause'>
+                        {musicContext.playerStatus === PLAYERSTATUS.STOPPED ||
+                        musicContext.playerStatus === PLAYERSTATUS.PAUSED ? (
+                            <SVG
+                                src={require('~images/icons/svg/play.svg')}
+                                alt='Play'
+                                onClick={musicContext.playPause}
+                                className={`
+                                    ${'icon-button'} 
+                                    ${musicContext.songQueueIndex <= 0
+                                        ? 'disabled'
+                                        : ''}
+                                `}
+                            />
+                        ) : (
+                            <SVG
+                                src={require('~images/icons/svg/pause.svg')}
+                                alt='Pause'
+                                onClick={musicContext.playPause}
+                                className={`
+                                    ${'icon-button'} 
+                                    ${musicContext.songQueueIndex <= 0
+                                        ? 'disabled'
+                                        : ''}
+                                `}
+                            />
+                        )}
+                    </div>
+                    <div className='nextSong'>
+                        <SVG
+                            src={require('~images/icons/svg/next-track.svg')}
+                            alt='Next'
+                            onClick={() => {
+                                musicContext.playNext();
+                            }}
+                            className={`
+                                ${'icon-button'} 
+                                ${musicContext.songQueueIndex ==
+                                musicContext.songQueue.length - 1
+                                    ? 'disabled'
+                                    : ''}
+                            `}
+                        />
+                    </div>
+                    <div className='rating'>
+                        <SVG
+                            src={require('~images/icons/svg/star-full.svg')}
+                            alt='Show ratings'
+                            onClick={() => {
+                                // TODO: show rating;
+                            }}
+                            className={`
+                                ${'icon-button'} 
+                            `}
+                        />
+                    </div>
+                    <div className='moreOptions'>
+                        <SVG
+                            src={require('~images/icons/svg/more-options.svg')}
+                            alt='More options'
+                            onClick={() => {
+                                // TODO: open more options menu;
+                            }}
+                            className={`
+                                ${'icon-button'} 
+                            `}
+                        />
+                    </div>
+                </div>
             </div>
             <div className='volumeSide'>
                 <div className='queueIcon' onClick={props.toggleQueueBar}>
-                    <img src={listIcon} alt={'Show Queue'} />
+                    <SVG className='icon-button' src={require('~images/icons/svg/playlist.svg')} alt={'Show queue'} />
                 </div>
                 <InputRange
                     name='volume'

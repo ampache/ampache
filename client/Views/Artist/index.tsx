@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import { generateSongsFromArtist } from '~logic/Playlist_Generate';
 import { updateArtistArt } from '~logic/Art';
 import Button, { ButtonColors, ButtonSize } from '~components/Button/Button';
+import Rating from '~components/Rating/';
 
 import style from './index.module.styl';
 
@@ -103,19 +104,20 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
                     </div>
                     <div className={style.details}>
                         <div className={style.name}>{artist.name}</div>
+                        <div className={style.rating}><Rating /></div>
                         <div className={style.summary}>{artist.summary}</div>
                         <div className={style.playRandom}>
                             <Button
                                 onClick={playRandomArtistSongs}
                                 size={ButtonSize.large}
                                 color={ButtonColors.green}
-                                text='Play'
+                                text='Play Random'
                             />
                         </div>
                     </div>
                 </div>
             )}
-            <h1>Albums</h1>
+            <h1>[[Release type]]</h1>
             <div className={style.albums}>
                 {!artist && <ReactLoading color='#FF9D00' type={'bubbles'} />}
                 {artist &&

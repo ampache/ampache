@@ -1,8 +1,8 @@
 .homePage
   .randomAlbums
-    display flex
-    width 100%
-    justify-content space-around
-    flex-wrap wrap
+    display: grid
+    grid-gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+
     .albumDisplayContainer
-      margin 30px
+      // margin 30px

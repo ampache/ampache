@@ -1,22 +1,29 @@
 @import "~/stylus/sizes.styl"
+@import "~/stylus/color.styl"
 
 .currentPlaying
-  height musicPlayerHeight
+  // height musicPlayerHeight
   width 100%
   display flex
   .info
     display flex
     flex-direction column
-    color white
-    font-size calc(0.5vw + 12px)
+    // color white
+    // font-size calc(0.5vw + 12px)
     justify-content center
+    padding-left 10px
   .songName, .artistName
-      margin 5px 0 5px 8px
-    .artistName
-      color #9b9b9b
+      // margin 5px 0 5px 8px
+  .songName
+    font-size 14px
+  .artistName
+    font-weight 700
   .albumArt
-    width musicPlayerHeight
-    height musicPlayerHeight
-    background-color #555555
+    width 64px
+    height 64px
+    background-color colorGray500
     img
       height 100%
+  .songName
+    color colorWhite
+
