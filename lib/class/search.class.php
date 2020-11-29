@@ -792,6 +792,7 @@ class Search extends playlist_object
             case 'artist':
             case 'video':
             case 'song':
+            case 'tag':  // for Genres
             case 'playlist':
             case 'label':
             case 'user':
@@ -857,9 +858,11 @@ class Search extends playlist_object
         $offset = (int) ($data['offset']);
         $random = ((int) $data['random'] > 0) ? 1 : 0;
         $data   = self::clean_request($data);
+        debug_event('search.class', 'Cleaned req '.var_export($data, true), 5);
 
         $search = new Search(null, $data['type'], $user);
         $search->parse_rules($data);
+//        debug_event('search.class', 'Parsed      '.var_export($search, true), 5);
 
         // Generate BASE SQL
 
@@ -873,6 +876,8 @@ class Search extends playlist_object
         }
 
         $search_info = $search->to_sql();
+        debug_event('search.class', 'SI '.var_export($search_info, true), 5);
+
         $sql         = $search_info['base'] . ' ' . $search_info['table_sql'];
         if (!empty($search_info['where_sql'])) {
             $sql .= ' WHERE ' . $search_info['where_sql'];
@@ -1275,7 +1280,7 @@ class Search extends playlist_object
             } else {
                 $group[] = "`album`.`id`";
             }
-
+            debug_event('search.class', 'Rule[0]='.$rule[0], 5);
             switch ($rule[0]) {
                 case 'title':
                     $where[] = "(`album`.`name` $sql_match_operator '$input' " .
@@ -2402,6 +2407,61 @@ class Search extends playlist_object
             'having_sql' => ''
         );
     }
+   /**
+      * tag_to_sql
+      *
+      * Handles the generation of the SQL for tag (genre) searches.
+      * @return array
+      */
+
+    private function tag_to_sql()
+    {
+        $sql_logic_operator = $this->logic_operator;
+        $where              = array();
+        $table              = array();
+        $join               = array();
+
+        foreach ($this->rules as $rule) {
+            $type     = $this->name_to_basetype($rule[0]);
+            $operator = array();
+            foreach ($this->basetypes[$type] as $op) {
+                if ($op['name'] == $rule[1]) {
+                    $operator = $op;
+                    break;
+                }
+            }
+            $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
+            $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $sql_match_operator = $operator['sql'];
+
+            switch ($rule[0]) {
+                case 'title':
+                case 'name':
+                    $where[] = "`tag`.`name` $sql_match_operator '$input'";
+                break;
+                case 'category':
+                    $where[] = "`tag`.`category` $sql_match_operator '$input'";
+                break;
+                default:
+                    // Nihil
+                break;
+            } // switch on ruletype
+        } // foreach rule
+
+        $where_sql = implode(" $sql_logic_operator ", $where);
+
+        return array(
+            'base' => 'SELECT DISTINCT(`tag`.`id`) FROM `tag`',
+            'join' => $join,
+            'where' => $where,
+            'where_sql' => $where_sql,
+            'table' => $table,
+            'table_sql' => '',
+            'group_sql' => '',
+            'having_sql' => ''
+        );
+    }
+
 
     /**
      * user_to_sql

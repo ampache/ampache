@@ -31,13 +31,45 @@ $a_root = realpath(__DIR__ . "/../");
 require_once $a_root . '/lib/init.php';
 ob_end_clean();
 
-//debug_event('play/index', print_r(apache_request_headers(), true), 5);
+debug_event('play/index', $_SERVER['QUERY_STRING'], 5);
+// Example of what comes in
+// ssid/3ca112fff23376ef7c74f018497dd39d/type/song/oid/280/uid/player/api/name/Glad.mp3
+// The following code takes a "stream_beautified_url (necessary to avoid some DLNA players
+// barfing on the URL, particularly Windows Media Player), splits it into key/value pairs
+// then replaces the PHP $_REQUEST as if the URL had arrived in un-beautified form
+// It is assumed that the presence of more than two forward slashes indicates a beautified
+// URL in an Ampache compliant format
+// For this to work, mod_rewrite needs to have at least found the URL and changed the
+// first section to index.php?/rest_of_string
+// The reason for not trying to do the whole job in mod_rewrite is that there are typically
+// more than 10 arguments to this function now, and that's tricky with mod_rewrite's 10 arg
+// limit
+
+$slashcount   = substr_count($_SERVER['QUERY_STRING'], '/');
+if ($slashcount > 2) {
+    $new_arr = explode('/', $_SERVER['QUERY_STRING']);
+    $new_request = array();
+    $i = 0;
+    foreach ($new_arr as $v) {
+        if ($i==0) {
+            $key = $v;
+            $i = 1;
+        } else {
+            $value = $v;
+            $i = 0;
+            $new_request[$key] = $value;
+        }
+    }
+    $_REQUEST = $new_request;
+    //  debug_event('play/index','Dumping new_arr: '.var_export( $new_request, true ), 5);
+}
 
 /* These parameters had better come in on the url. */
 $uid          = scrub_in($_REQUEST['uid']);
 $object_id    = scrub_in($_REQUEST['oid']);
 $sid          = scrub_in($_REQUEST['ssid']);
 $type         = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
+$name         = (string) scrub_in(filter_input(INPUT_GET, 'name', FILTER_SANITIZE_SPECIAL_CHARS));
 $cache        = scrub_in($_REQUEST['cache']);
 $format       = scrub_in($_REQUEST['format']);
 $original     = $format == 'raw';
@@ -63,6 +95,8 @@ if ($cache === '1' || !in_array($type, array('song', 'video', 'podcast_episode')
     debug_event('play/index', 'record_stats disabled: cache {' . $type . "}", 5);
     $record_stats = false;
 }
+
+// debug_event('play/index', 'oid='.strval($object_id), 5);
 
 $transcode_to = null;
 $player       = null;
@@ -117,6 +151,9 @@ if ($type == 'playlist') {
     $object_id     = $sid;
 }
 
+// debug_event('play/index', 'oid='.strval($object_id), 5);
+
+
 /* First things first, if we don't have a uid/oid stop here */
 if (empty($object_id) && empty($demo_id) && empty($random)) {
     debug_event('play/index', 'No object UID specified, nothing to play', 2);
@@ -156,8 +193,8 @@ if (!empty($apikey)) {
         $user_authenticated = true;
     }
 }
-
-if (empty($uid) && (!$share_id && !$secret)) {
+// Added $sid here as user may not be specified but then ssid may be and will be checked later
+if (empty($uid) && empty($sid) && (!$share_id && !$secret)) {
     debug_event('play/index', 'No user specified', 2);
     header('HTTP/1.1 400 No User Specified');
 
@@ -545,6 +582,8 @@ if (!$cpaction && !$original) {
                             if (!empty($subtitle)) {
                                 $transcode = true;
                                 debug_event('play/index', 'Transcoding because subtitle requested', 5);
+                            } else {
+                                debug_event('play/index', 'Decided not to transcode', 5);
                             }
                         }
                     }
