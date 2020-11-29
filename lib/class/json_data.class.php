@@ -871,7 +871,7 @@ class JSON_Data
      * @param  integer $user_id
      * @return string JSON Object "video"
      */
-    public static function videos($videos, $user_id)
+    public static function videos($videos, $user_id = null)
     {
         if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
