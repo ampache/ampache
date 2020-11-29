@@ -12,7 +12,7 @@ require_once  '../lib/vendor/autoload.php';
 
 $address = '239.255.255.250:1900';
 
-$loop = React\EventLoop\Factory::create();
+$loop    = React\EventLoop\Factory::create();
 $factory = new Factory($loop);
 
 $socket = $factory->createReceiver($address);
@@ -35,7 +35,7 @@ $socket->on('message', function ($data, $remote) use ($socket) {
 
 function ssdpShutdown($signal)
 {
-    debug_event('upnp', 'SSDP server being shut down by signal '.$signal, 5);
+    debug_event('upnp', 'SSDP server being shut down by signal ' . $signal, 5);
     // Send a couple of times as UDP is unreliable
     Upnp_Api::sddpSend(1, "239.255.255.250", 1900, "NT", false);
     Upnp_Api::sddpSend(1, "239.255.255.250", 1900, "NT", false);
@@ -62,7 +62,7 @@ function sayAlive()
 ///});
 
 // Print ini file source to log file to help debug oddities
-debug_event('upnp', "=====================================================".PHP_EOL.'Beginning SSDP service', 5);
+debug_event('upnp', "=====================================================" . PHP_EOL . 'Beginning SSDP service', 5);
 $inipath = php_ini_loaded_file();
 if ($inipath) {
     debug_event('upnp', 'Loaded php.ini: ' . $inipath, 5);

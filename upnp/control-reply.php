@@ -9,7 +9,7 @@ if (!AmpConfig::get('upnp_backend')) {
     return false;
 }
 //
-// Make sure beautiful url is enabled 
+// Make sure beautiful url is enabled
 // (including upnp)
     debug_event('control-reply', "\r\nEntering control-reply", 5);
     AmpConfig::set('stream_beautiful_url', true, true);  // XXX needs t be false true
@@ -28,10 +28,11 @@ if (!AmpConfig::get('upnp_backend')) {
     if ($requestRaw != '') {
         $upnpRequest = Upnp_Api::parseUPnPRequest($requestRaw);
     
-    debug_event('control-reply', 'Request: ' . $requestRaw, 5);
+        debug_event('control-reply', 'Request: ' . $requestRaw, 5);
     } else {
         echo T_('Received an empty UPnP request');
         debug_event('control-reply', 'No request', 5);
+
         return false;
     }
 
@@ -43,26 +44,25 @@ if (!AmpConfig::get('upnp_backend')) {
     $filter       = $upnpRequest['filter'];
     $sort         = $upnpRequest['sortcriteria'];
     // upnp:class,dc:title are container defaults. Add.
-    if( $filter != '*' ){
-    // The following fields are required defaults
+    if ($filter != '*') {
+        // The following fields are required defaults
         $filter           = $filter . ',upnp:class,dc:title,res@id,res@protocolInfo';
-    }
-    else if( $filter == '' ){
+    } elseif ($filter == '') {
         $filter = '*';
     }
     
-    debug_event('control-reply', 'Action: ' . $upnpRequest['action'].' with filter ['.$filter.']', 5);
+    debug_event('control-reply', 'Action: ' . $upnpRequest['action'] . ' with filter [' . $filter . ']', 5);
 
     switch ($upnpRequest['action']) {
         case 'systemupdateID':
             // Should reflect changes to the database; Catalog::GetLaststUpdate() doesn't cut it though
             // debug_event('control-reply', 'SystemUpdate: ' . strval(Catalog::getLastUpdate()), 5);
-            $ud = sprintf('<Id>%1$04d</Id>', 0 ); // 0 for now, insert something suitable when found.
+            $ud      = sprintf('<Id>%1$04d</Id>', 0); // 0 for now, insert something suitable when found.
             $soapXML = "<?xml version=\"1.0\"?>" .
             "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" .
             "<SOAP-ENV:Body>" .
             "<u:GetSystemUpdateIDResponse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\">" .
-            $ud .		
+            $ud .
             "</u:GetSystemUpdateIDResponse>" .
             "</SOAP-ENV:Body> " .
             "</SOAP-ENV:Envelope>";
@@ -79,7 +79,7 @@ if (!AmpConfig::get('upnp_backend')) {
             "<u:GetSearchCapabilitiesResponse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\">" .
             "<SearchCaps>@id,@refID,dc:title,upnp:class,upnp:genre,upnp:artist,upnp:author,upnp:author@role,upnp:album,dc:creator,upnp:rating,upnp:actor,upnp:director,upnp:toc,dc:description</SearchCaps>" .
             "</u:GetSearchCapabilitiesResponse>" .
-            "</s:Body>"  .
+            "</s:Body>" .
             "</s:Envelope>";
             break;
 
@@ -97,7 +97,7 @@ if (!AmpConfig::get('upnp_backend')) {
         case 'search':
             debug_event('control-reply', 'Searchcriteria: ' . $upnpRequest['searchcriteria'], 5);
             debug_event('control-reply', 'Search filter : ' . $filter, 5);
-            $responseType = 'u:SearchResponse';
+            $responseType             = 'u:SearchResponse';
             list($totMatches, $items) = Upnp_Api::_callSearch($upnpRequest['searchcriteria'],$filter,$upnpRequest['startingindex'], $upnpRequest['requestedcount']);
             break;
 
@@ -119,12 +119,12 @@ if (!AmpConfig::get('upnp_backend')) {
                 } else {
                     $filter = '*';      // Some devices don't seem to specify a sensible filter (may remove)
 //                    $items[] = array();
-                    $items[] = Upnp_Api::_musicMetadata('');
-                    $items[] = Upnp_Api::_videoMetadata('');
-                    list($totMatches, $items) = Upnp_Api::_slice($items, $upnpRequest['startingindex'], $upnpRequest['requestedcount'] );
-                    debug_event('control-reply', 'Root items returning'.$items[0].$items[1] , 5);
-                    debug_event('control-reply', 'Root items detail '.var_export( $items, true ), 5);
-                    debug_event('control-reply', 'Root items sort   '.$upnpRequest['sortcriteria'], 5);
+                    $items[]                  = Upnp_Api::_musicMetadata('');
+                    $items[]                  = Upnp_Api::_videoMetadata('');
+                    list($totMatches, $items) = Upnp_Api::_slice($items, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
+                    debug_event('control-reply', 'Root items returning' . $items[0] . $items[1] , 5);
+                    debug_event('control-reply', 'Root items detail ' . var_export($items, true), 5);
+                    debug_event('control-reply', 'Root items sort   ' . $upnpRequest['sortcriteria'], 5);
                 }
 //              break;
             } else {
@@ -146,22 +146,21 @@ if (!AmpConfig::get('upnp_backend')) {
                         switch ($reqObjectURL['host']) {
                             case 'music':
                                 if ($upnpRequest['browseflag'] == 'BrowseMetadata') {
-                                    $items = Upnp_Api::_musicMetadata($reqObjectURL['path'], $reqObjectURL['query']);
-                                      $totMatches = 1;
-                                      $numRet = 1;
+                                    $items      = Upnp_Api::_musicMetadata($reqObjectURL['path'], $reqObjectURL['query']);
+                                    $totMatches = 1;
+                                    $numRet     = 1;
 //                                    debug_event('control-reply', 'Metadata count '.strval($totMatches).' '.strval(count($items)), 5);
 //                                    debug_event('control-reply', 'Export items '.var_export($items,true), 5);
-                                    
                                 } else {
                                     debug_event('control-reply', 'Listrequest ', 5);
                                     list($totMatches, $items) = Upnp_Api::_musicChilds($reqObjectURL['path'], $reqObjectURL['query'], $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
-                                    debug_event('control-reply', 'non-root items sort '.$upnpRequest['sortcriteria'], 5);
+                                    debug_event('control-reply', 'non-root items sort ' . $upnpRequest['sortcriteria'], 5);
 #                                    debug_event('control-reply', 'Listrequest '.strval($upnpRequest['startingindex'].':'.strval($upnpRequest['requestedcount']).':'.strval($totMatches), 5);
                                 }
                                 break;
                             case 'video':
                                 if ($upnpRequest['browseflag'] == 'BrowseMetadata') {
-                                    $items = Upnp_Api::_videoMetadata($reqObjectURL['path'], $reqObjectURL['query']);
+                                    $items      = Upnp_Api::_videoMetadata($reqObjectURL['path'], $reqObjectURL['query']);
                                     $totMatches = 1;
                                 } else {
                                     list($totMatches, $items) = Upnp_Api::_videoChilds($reqObjectURL['path'], $reqObjectURL['query'], $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
@@ -179,26 +178,26 @@ if (!AmpConfig::get('upnp_backend')) {
             break;
     }
 
-    if( $soapXML == "" ) {
+    if ($soapXML == "") {
         $totMatches = ($totMatches == 0) ? count($items) : $totMatches;
         if ($items == null || $totMatches == 0) {
             $domDIDL = Upnp_Api::createDIDL('','');
             $numRet  = 0;
         } else {
-            $domDIDL = Upnp_Api::createDIDL($items, $filter );
-            if( $numRet == 0 ){
+            $domDIDL = Upnp_Api::createDIDL($items, $filter);
+            if ($numRet == 0) {
                 $numRet  = count($items);
             }
         }
-        $xmlDIDL = $domDIDL->saveXML();
-        $xmlDIDLs = substr($xmlDIDL, strpos($xmlDIDL, '?'.'>') + 2); // Remove the unnecessary <xml... > tag at the head of the DIDL
-        $domSOAP = Upnp_Api::createSOAPEnvelope($xmlDIDLs, $numRet, $totMatches, $responseType);
-        $soapXML = $domSOAP->saveXML();
+        $xmlDIDL  = $domDIDL->saveXML();
+        $xmlDIDLs = substr($xmlDIDL, strpos($xmlDIDL, '?' . '>') + 2); // Remove the unnecessary <xml... > tag at the head of the DIDL
+        $domSOAP  = Upnp_Api::createSOAPEnvelope($xmlDIDLs, $numRet, $totMatches, $responseType);
+        $soapXML  = $domSOAP->saveXML();
     }
-    debug_event('control-reply', 'TailResponse: '.substr($soapXML, -24), 5);
-    debug_event('control-reply', 'Content-Length: '.strval(strlen($soapXML)), 5 );
+    debug_event('control-reply', 'TailResponse: ' . substr($soapXML, -24), 5);
+    debug_event('control-reply', 'Content-Length: ' . strval(strlen($soapXML)), 5);
 
-    $contentLength = strlen( $soapXML );
+    $contentLength = strlen($soapXML);
     header("Content-Length: $contentLength");
 //      echo $soapXML;
 //    print $soapXML;

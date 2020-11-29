@@ -858,7 +858,7 @@ class Search extends playlist_object
         $offset = (int) ($data['offset']);
         $random = ((int) $data['random'] > 0) ? 1 : 0;
         $data   = self::clean_request($data);
-        debug_event('search.class', 'Cleaned req '.var_export($data, true), 5);
+        debug_event('search.class', 'Cleaned req ' . var_export($data, true), 5);
 
         $search = new Search(null, $data['type'], $user);
         $search->parse_rules($data);
@@ -876,7 +876,7 @@ class Search extends playlist_object
         }
 
         $search_info = $search->to_sql();
-        debug_event('search.class', 'SI '.var_export($search_info, true), 5);
+        debug_event('search.class', 'SI ' . var_export($search_info, true), 5);
 
         $sql         = $search_info['base'] . ' ' . $search_info['table_sql'];
         if (!empty($search_info['where_sql'])) {
@@ -1280,7 +1280,7 @@ class Search extends playlist_object
             } else {
                 $group[] = "`album`.`id`";
             }
-            debug_event('search.class', 'Rule[0]='.$rule[0], 5);
+            debug_event('search.class', 'Rule[0]=' . $rule[0], 5);
             switch ($rule[0]) {
                 case 'title':
                     $where[] = "(`album`.`name` $sql_match_operator '$input' " .
@@ -2407,12 +2407,12 @@ class Search extends playlist_object
             'having_sql' => ''
         );
     }
-   /**
-      * tag_to_sql
-      *
-      * Handles the generation of the SQL for tag (genre) searches.
-      * @return array
-      */
+    /**
+       * tag_to_sql
+       *
+       * Handles the generation of the SQL for tag (genre) searches.
+       * @return array
+       */
 
     private function tag_to_sql()
     {

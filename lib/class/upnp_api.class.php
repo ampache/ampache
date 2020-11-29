@@ -63,6 +63,7 @@ class Upnp_Api
         // Create uuid based on host
         $key     = 'ampache_' . AmpConfig::get('http_host');
         $hash    = hash('md5', $key);
+
         return substr($hash, 0, 8) . '-' . substr($hash, 8, 4) . '-' . substr($hash, 12, 4) . '-' . substr($hash, 16, 4) . '-' . substr($hash, 20);
     }
 
@@ -137,24 +138,24 @@ class Upnp_Api
         $response  = 'HTTP/1.1 200 OK' . "\r\n";
         $response .= 'CACHE-CONTROL: max-age=1800' . "\r\n";
         $dt = new DateTime('UTC');
-        $response .= 'DATE: '.$dt->format('D, d M Y H:i:s \G\M\T')."\r\n"; // RFC2616 date
+        $response .= 'DATE: ' . $dt->format('D, d M Y H:i:s \G\M\T') . "\r\n"; // RFC2616 date
         $response .= 'EXT:' . "\r\n";
         // Note that quite a few devices are unable to resolve a URL into an IP address. Therefore we have to use a
         // local IP address - resolve http_host into IP address
-        $response .= 'LOCATION: http://' .gethostbyname(AmpConfig::get('http_host')). ':' . AmpConfig::get('http_port') . AmpConfig::get('raw_web_path') . '/upnp/MediaServerServiceDesc.php' . "\r\n";
+        $response .= 'LOCATION: http://' . gethostbyname(AmpConfig::get('http_host')) . ':' . AmpConfig::get('http_port') . AmpConfig::get('raw_web_path') . '/upnp/MediaServerServiceDesc.php' . "\r\n";
         $response .= 'SERVER: DLNADOC/1.50 UPnP/1.0 Ampache/' . AmpConfig::get('version') . "\r\n";
         $response .= 'ST: ' . $actst . "\r\n";
-        $response .= 'USN: ' . 'uuid:'.self::get_uuidStr() . '::' . $actst . "\r\n";
+        $response .= 'USN: ' . 'uuid:' . self::get_uuidStr() . '::' . $actst . "\r\n";
         $response .= "\r\n";  // gupnp-universal-cp cannot see us without this line.
 
         if ($delaytime > 5) {
             $delaytime = 5;
         }
-        $delay = random_int(15, $delaytime*1000);   // Delay in ms
+        $delay = random_int(15, $delaytime * 1000);   // Delay in ms
 
         $addr=explode(":", $address);
         if (self::SSDP_DEBUG) {
-            debug_event('upnp_api', 'Sending response to: '.$addr[0].':'.$addr[1].PHP_EOL.$response, 5);
+            debug_event('upnp_api', 'Sending response to: ' . $addr[0] . ':' . $addr[1] . PHP_EOL . $response, 5);
         }
         self::udpSend($response, $delay, $addr[0], $addr[1]);
         if (self::SSDP_DEBUG) {
@@ -165,7 +166,7 @@ class Upnp_Api
     public static function notify_request($unpacked, $remote)
     {
         $headers = self::get_headers($unpacked);
-        $str = 'Notify ' . $remote . ' ' . $headers['nts'] . ' for ' . $headers['nt'];
+        $str     = 'Notify ' . $remote . ' ' . $headers['nts'] . ' for ' . $headers['nt'];
         // We don't do anything with notifications except log them to check rx working
 //        if( self::SSDP_DEBUG ) {
 //             debug_event('upnp_api', $str, 5 );
@@ -174,12 +175,12 @@ class Upnp_Api
 
     public static function get_headers($data)
     {
-        $lines = explode(PHP_EOL, $data);   // split into lines
-        $keys = array();
+        $lines  = explode(PHP_EOL, $data);   // split into lines
+        $keys   = array();
         $values = array();
         foreach ($lines as $line) {
 //           $line = str_replace( ' ', '', $line );
-            $line = preg_replace('/[\x00-\x1F\x7F]/', '', $line);
+            $line   = preg_replace('/[\x00-\x1F\x7F]/', '', $line);
             $tokens = explode(' ', $line);
 //           echo 'BARELINE:'.$line.'&'.count($tokens).PHP_EOL;
             if (count($tokens) > 1) {
@@ -190,6 +191,7 @@ class Upnp_Api
                 array_push($values, $tokens[1]);
             }
         }
+
         return array_combine($keys, $values);
     }
     
@@ -199,15 +201,15 @@ class Upnp_Api
         $headers = self::get_headers($data);
         if (self::SSDP_DEBUG) {
             debug_event('upnp_api', 'Discovery request from ' . $address, 5);
-            debug_event('upnp_api', 'HEADERS:' .var_export($headers, true), 5);
+            debug_event('upnp_api', 'HEADERS:' . var_export($headers, true), 5);
         }
         
-        $new_usn = 'uuid:' .self::get_uuidStr();
-        $actst = $headers['st'];
+        $new_usn = 'uuid:' . self::get_uuidStr();
+        $actst   = $headers['st'];
 //        echo 'DELAYTIME: [' . $headers['mx'] . ']' . PHP_EOL;
         $delaytime = (int)($headers['mx']);
         if ($headers['man'] == 'ssdp:discover') {
-            if ($headers['st'] =='urn:schemas-upnp-org:device:MediaServer:1') {
+            if ($headers['st'] == 'urn:schemas-upnp-org:device:MediaServer:1') {
                 self::sendResponse($delaytime, $actst, $address);
             } elseif ($headers['st'] == 'urn:schemas-upnp-org:service:ConnectionManager:1') {
                 self::sendResponse($delaytime, $actst, $address);
@@ -233,7 +235,7 @@ class Upnp_Api
             }
         } else {
             if (self::SSDP_DEBUG) {
-                debug_event('upnp_api', 'M-SEARCH MAN header not understood ['.$headers['man'].']', 5);
+                debug_event('upnp_api', 'M-SEARCH MAN header not understood [' . $headers['man'] . ']', 5);
             }
         }
     }
@@ -336,7 +338,7 @@ class Upnp_Api
             return true;
         }
         if ($keyisRes) {
-            $testKey = 'res@'.$keytoCheck;
+            $testKey = 'res@' . $keytoCheck;
         } else {
             $testKey = $keytoCheck;
         }
@@ -467,7 +469,7 @@ class Upnp_Api
                             $ndTag = $xmlDoc->createElement($key);
                             $ndItem->appendChild($ndTag);
                             // check if string is already utf-8 encoded
-                            $xvalue = str_replace("&", "&amp;", $value);
+                            $xvalue     = str_replace("&", "&amp;", $value);
                             $ndTag_text = $xmlDoc->createTextNode((mb_detect_encoding($xvalue, 'auto') == 'UTF-8')?$xvalue:utf8_encode($xvalue));
                             $ndTag->appendChild($ndTag_text);
                         }
@@ -768,7 +770,7 @@ class Upnp_Api
                         // $artists = Catalog::get_artists();
                         // list($maxCount, $artists) = self::_slice($artists, $start, $count);
                         $artists                  = Catalog::get_artists(null, $count, $start);
-                        $counts = Catalog::count_server('');
+                        $counts                   = Catalog::count_server('');
                         list($maxCount, $artists) = array($counts['artists'], $artists); //99999
                         foreach ($artists as $artist) {
                             $artist->format();
@@ -795,7 +797,7 @@ class Upnp_Api
                         //!!$album_ids = Catalog::get_albums();
                         //!!list($maxCount, $album_ids) = self::_slice($album_ids, $start, $count);
                         $album_ids                  = Catalog::get_albums($count, $start);
-                        $counts = Catalog::count_server('');
+                        $counts                     = Catalog::count_server('');
                         list($maxCount, $album_ids) = array($counts['albums'], $album_ids); // 9999999
                         foreach ($album_ids as $album_id) {
                             $album = new Album($album_id);
@@ -943,6 +945,7 @@ class Upnp_Api
         if ($maxCount == 0) {
             $maxCount = count($mediaItems);
         }
+
         return array($maxCount, $mediaItems);
     }
 
@@ -1206,7 +1209,7 @@ class Upnp_Api
 
         /* trim spaces around tokens and discard those which have only spaces in them */
         $h=0;
-        for ($i=0;$i<sizeof($actualtokens);$i++) {
+        for ($i=0;$i < sizeof($actualtokens);$i++) {
             $actualtokens[$i]=trim($actualtokens[$i]);
             if ($actualtokens[$i] != "") {
                 $nospacetokens[$h++] = $actualtokens[$i];
@@ -1215,14 +1218,14 @@ class Upnp_Api
 
         /* now put together tokens which are actually one token e.g. upper hutt */
         $onetoken = "";
-        $h=0;
-        for ($i=0;$i<sizeof($nospacetokens);$i++) {
+        $h        =0;
+        for ($i=0;$i < sizeof($nospacetokens);$i++) {
             $token = $nospacetokens[$i];
             switch ($token) {
                 case ")":
                     if ($onetoken != "") {
                         $tokens[$h++] = $onetoken;
-                        $onetoken = "";
+                        $onetoken     = "";
                     }
                     $tokens[$h++] = $token;
                     break;
@@ -1230,7 +1233,7 @@ class Upnp_Api
                 case "(":
                     if ($onetoken != "") {
                         $tokens[$h++] = $onetoken;
-                        $onetoken = "";
+                        $onetoken     = "";
                     }
                     $tokens[$h++] = $token;
                     break;
@@ -1238,7 +1241,7 @@ class Upnp_Api
                 case "and":
                     if ($onetoken != "") {
                         $tokens[$h++] = $onetoken;
-                        $onetoken = "";
+                        $onetoken     = "";
                     }
                     $tokens[$h++] = $token;
                     break;
@@ -1246,7 +1249,7 @@ class Upnp_Api
                 case "or":
                     if ($onetoken != "") {
                         $tokens[$h++] = $onetoken;
-                        $onetoken = "";
+                        $onetoken     = "";
                     }
                     $tokens[$h++] = $token;
                     break;
@@ -1254,7 +1257,7 @@ class Upnp_Api
                 case "not":
                     if ($onetoken != "") {
                         $tokens[$h++] = $onetoken;
-                        $onetoken = "";
+                        $onetoken     = "";
                     }
                     $tokens[$h++] = $token;
                     break;
@@ -1263,15 +1266,16 @@ class Upnp_Api
                     if ($onetoken == "") {
                         $onetoken = $token;
                     } else {
-                        $onetoken = $onetoken." ".$token;
+                        $onetoken = $onetoken . " " . $token;
                     }
                     break;
             }
         }
         if ($onetoken != "") {
             $tokens[$h++] = $onetoken;
-            $onetoken = "";
+            $onetoken     = "";
         }
+
         return $tokens;
     }
 
@@ -1290,7 +1294,7 @@ class Upnp_Api
 //            echo $i, $tok[$i];
 //            echo "\n";
 //        }
-        debug_event('upnp_api.class', 'Token '.var_export($tok, true), 5);
+        debug_event('upnp_api.class', 'Token ' . var_export($tok, true), 5);
 
         if (sizeof($tok) == 3) { // tuple, we understand
             switch ($tok[0]) {
@@ -1317,6 +1321,7 @@ class Upnp_Api
                     break;
                 case 'upnp:author@role':
                     $term[ 'ruletype' ] = $tok[2];
+
                     return '';
                 default:
                     return '';
@@ -1334,6 +1339,7 @@ class Upnp_Api
             }
             $term[ 'input' ] = $tok[2];
         }
+
         return $term;
     }
     // Cannot be very precious about this as filtering capability ATM just relates to the kind of search we end up doing
@@ -1369,12 +1375,12 @@ class Upnp_Api
         /* Go through all the tokens and transform anything we recognize */
         /*If any translation goes to NUL then must remove previous token provided it is AND or OR */
 
-        for ($i=0;$i<sizeof($tokens);$i++) {
-            for ($j=0; $j<7; $j++) {
+        for ($i=0;$i < sizeof($tokens);$i++) {
+            for ($j=0; $j < 7; $j++) {
                 if ($tokens[$i] == $upnp_translations[$j][0]) {
                     $tokens[$i] = $upnp_translations[$j][1];
-                    if ($upnp_translations[$j][1] == '' && $i > 1 && ($tokens[$i-1] == "and" || $tokens[$i-1] == "or")) {
-                        $tokens[$i-1] = '';
+                    if ($upnp_translations[$j][1] == '' && $i > 1 && ($tokens[$i - 1] == "and" || $tokens[$i - 1] == "or")) {
+                        $tokens[$i - 1] = '';
                     }
                 }
             }
@@ -1399,7 +1405,7 @@ class Upnp_Api
            }
        } else {
            $data['type'] = $tokens[0];
-           $tokens[0] = '';
+           $tokens[0]    = '';
        }
 
         // Construct the operator type. The first one is likely to be 'and' (if present),
@@ -1409,14 +1415,14 @@ class Upnp_Api
 
         $num_and = 0;
         $num_or  = 0;
-        for ($i=0;$i<sizeof($tokens);$i++) {
+        for ($i=0;$i < sizeof($tokens);$i++) {
             if ($tokens[$i] == 'and') {
                 $num_and++;
                 $tokens[$i] = '';
             } elseif ($tokens[$i] == 'or') {
                 $num_or++;
                 $tokens[$i] = '';
-            } elseif ($tokens[$i] == '(' ||  $tokens[$i] == ')') {
+            } elseif ($tokens[$i] == '(' || $tokens[$i] == ')') {
                 $tokens[$i] = '';
             }
         }
@@ -1436,43 +1442,45 @@ class Upnp_Api
         }
 
         $rule_num = 1;
-        for ($i=0;$i<sizeof($tokens);$i++) {
+        for ($i=0;$i < sizeof($tokens);$i++) {
             if ($tokens[$i] != '') {
-                $rule = 'rule_'.strval($rule_num);
+                $rule = 'rule_' . strval($rule_num);
                 $term = self::parse_upnp_search_term($tokens[ $i ], $data['type']);
                 if ($term != '') {
-                    $data[ $rule ] = $term[ 'ruletype' ];
-                    $data[ $rule.'_operator' ] = $term[ 'operator' ];
-                    $data[ $rule.'_input' ] = $term[ 'input' ];
+                    $data[ $rule ]               = $term[ 'ruletype' ];
+                    $data[ $rule . '_operator' ] = $term[ 'operator' ];
+                    $data[ $rule . '_input' ]    = $term[ 'input' ];
                     $rule_num++;
                 }
             }
         }
         if ($rule_num == 1) {   // Must be a wildcard search: no tuples detected. How to tell search class to search for something?
             // Insert search qualified on "ID > 0", which should call for everything
-            $rule = 'rule_1';
-            $data[ $rule ] = 'id';
-            $data[ $rule.'_operator' ] = 'GT';
-            $data[ $rule.'_input' ] = '0';
+            $rule                        = 'rule_1';
+            $data[ $rule ]               = 'id';
+            $data[ $rule . '_operator' ] = 'GT';
+            $data[ $rule . '_input' ]    = '0';
         }
+
         return $data;
     }
 
 
     public static function _callSearch($criteria, $filter, $start, $count)
     {
-        $mediaItems = array();
-        $maxCount = 0;
-        $type = self::parse_upnp_filter($filter);
+        $mediaItems   = array();
+        $maxCount     = 0;
+        $type         = self::parse_upnp_filter($filter);
         $search_terms = self::parse_upnp_searchcriteria($criteria, $type);
-        debug_event('upnp_api.class', 'Dumping $search_terms: '.var_export($search_terms, true), 5);
+        debug_event('upnp_api.class', 'Dumping $search_terms: ' . var_export($search_terms, true), 5);
         $ids = Search::run($search_terms);// return a list of IDs
         if (count($ids) == 0) {
             debug_event('upnp_api.class', 'Search returned no hits', 5);
+
             return array(0, $mediaItems);
         }
 //        debug_event('upnp_api.class', 'Dumping $search results: '.var_export( $ids, true ) , 5);
-        debug_event('upnp_api.class', ' '.strval(count($ids)).' ids looking for type '.$search_terms['type'], 5);
+        debug_event('upnp_api.class', ' ' . strval(count($ids)) . ' ids looking for type ' . $search_terms['type'], 5);
 
         switch ($search_terms['type']) {
             case 'artist':
@@ -1489,7 +1497,7 @@ class Upnp_Api
                 foreach ($ids as $song_id) {
                     $song = new Song($song_id);
                     $song->format();
-                    $mediaItems[] = self::_itemSong($song, $parent = 'amp://music/albums/'.strval($song->album));
+                    $mediaItems[] = self::_itemSong($song, $parent = 'amp://music/albums/' . strval($song->album));
                 }
             break;
             case 'album':
@@ -1670,25 +1678,25 @@ class Upnp_Api
 
         return array(
             'id' => 'amp://music/songs/' . $song->id,
-            'parentID'     => $parent,
-            'restricted'   => 'false',  // XXX
-            'dc:title'     => self::_replaceSpecialSymbols($song->f_title),
-            'dc:date'      => date("c", (int) $song->addition_time),
-            'dc:creator'   => self::_replaceSpecialSymbols($song->f_artist),
-            'upnp:class'   => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
+            'parentID' => $parent,
+            'restricted' => 'false',  // XXX
+            'dc:title' => self::_replaceSpecialSymbols($song->f_title),
+            'dc:date' => date("c", (int) $song->addition_time),
+            'dc:creator' => self::_replaceSpecialSymbols($song->f_artist),
+            'upnp:class' => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
             'upnp:albumArtURI' => $art_url,
-            'upnp:artist'  => self::_replaceSpecialSymbols($song->f_artist),
-            'upnp:album'   => self::_replaceSpecialSymbols($song->f_album),
-            'upnp:genre'   => Tag::get_display($song->tags, false, 'song'),
+            'upnp:artist' => self::_replaceSpecialSymbols($song->f_artist),
+            'upnp:album' => self::_replaceSpecialSymbols($song->f_album),
+            'upnp:genre' => Tag::get_display($song->tags, false, 'song'),
             'upnp:originalTrackNumber' => $song->track,
-            'res'          => Song::play_url($song->id, '', 'api', true), // For upnp, use local
-            'size'         => $song->size,
-            'duration'     => $song->f_time_h . '.0',
-            'bitrate'      => $song->bitrate,
+            'res' => Song::play_url($song->id, '', 'api', true), // For upnp, use local
+            'size' => $song->size,
+            'duration' => $song->f_time_h . '.0',
+            'bitrate' => $song->bitrate,
             'sampleFrequency' => $song->rate,
             'nrAudioChannels' => '2',  // Just say its stereo as we don't have the real info
             'protocolInfo' => $arrFileType['mime'],
-            'description'  => self::_replaceSpecialSymbols($song->comment),
+            'description' => self::_replaceSpecialSymbols($song->comment),
         );
     }
 

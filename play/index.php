@@ -47,16 +47,16 @@ debug_event('play/index', $_SERVER['QUERY_STRING'], 5);
 
 $slashcount   = substr_count($_SERVER['QUERY_STRING'], '/');
 if ($slashcount > 2) {
-    $new_arr = explode('/', $_SERVER['QUERY_STRING']);
+    $new_arr     = explode('/', $_SERVER['QUERY_STRING']);
     $new_request = array();
-    $i = 0;
+    $i           = 0;
     foreach ($new_arr as $v) {
-        if ($i==0) {
+        if ($i == 0) {
             $key = $v;
-            $i = 1;
+            $i   = 1;
         } else {
-            $value = $v;
-            $i = 0;
+            $value             = $v;
+            $i                 = 0;
             $new_request[$key] = $value;
         }
     }
