@@ -145,7 +145,7 @@ if (!AmpConfig::get('upnp_backend')) {
                         switch ($reqObjectURL['host']) {
                             case 'music':
                                 if ($upnpRequest['browseflag'] == 'BrowseMetadata') {
-                                    $items      = Upnp_Api::_musicMetadata($reqObjectURL['path'], $reqObjectURL['query']);
+                                    $items      = Upnp_Api::_musicMetadata($reqObjectURL['path']);
                                     $totMatches = 1;
                                     $numRet     = 1;
                                 //debug_event('control-reply', 'Metadata count '.strval($totMatches).' '.strval(count($items)), 5);
@@ -159,7 +159,7 @@ if (!AmpConfig::get('upnp_backend')) {
                                 break;
                             case 'video':
                                 if ($upnpRequest['browseflag'] == 'BrowseMetadata') {
-                                    $items      = Upnp_Api::_videoMetadata($reqObjectURL['path'], $reqObjectURL['query']);
+                                    $items      = Upnp_Api::_videoMetadata($reqObjectURL['path']);
                                     $totMatches = 1;
                                 } else {
                                     list($totMatches, $items) = Upnp_Api::_videoChilds($reqObjectURL['path'], $reqObjectURL['query'], $upnpRequest['startingindex'], $upnpRequest['requestedcount']);

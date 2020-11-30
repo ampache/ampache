@@ -34,7 +34,8 @@ declare(strict_types=0);
  */
 class Upnp_Api
 {
-    /* UPnP classes:
+    /**
+     * UPnP classes:
      * object.item.audioItem
      * object.item.imageItem
      * object.item.videoItem
@@ -131,7 +132,13 @@ class Upnp_Api
         $buf = $strHeader . $serviceCD;
         self::udpSend($buf, $delay, $host, $port);
     }
-    //AmpConfig::get('http_host')
+
+    /**
+     * @param $delaytime
+     * @param $actst
+     * @param $address
+     * @throws Exception
+     */
     public static function sendResponse($delaytime, $actst, $address)
     {
         $response  = 'HTTP/1.1 200 OK' . "\r\n";
@@ -161,7 +168,11 @@ class Upnp_Api
             debug_event('upnp_api.class', '(Sent)', 5);     // for timing
         }
     }
-    
+
+    /**
+     * @param $unpacked
+     * @param $remote
+     */
     public static function notify_request($unpacked, $remote)
     {
         $headers = self::get_headers($unpacked);
@@ -172,6 +183,10 @@ class Upnp_Api
         }
     }
 
+    /**
+     * @param $data
+     * @return array
+     */
     public static function get_headers($data)
     {
         $lines  = explode(PHP_EOL, $data);   // split into lines
@@ -193,7 +208,12 @@ class Upnp_Api
 
         return array_combine($keys, $values);
     }
-    
+
+    /**
+     * @param $data
+     * @param $address
+     * @throws Exception
+     */
     public static function discovery_request($data, $address)
     {
         // Process a discovery request.  The response must be sent to the address specified by $remote
@@ -322,12 +342,14 @@ class Upnp_Api
 
         return $retArr;
     } // end function
+
     /**
      * @param $filterValue
      * @param $keyisRes
      * @param $keytoCheck
      * Checks whether key is in filter string, taking account of allowable filter wildcards and null strings
-    */
+     * @return bool
+     */
     public static function isinFilter($filterValue, $keyisRes, $keytoCheck)
     {
         if ($filterValue == null || $filterValue == '') {
@@ -345,8 +367,10 @@ class Upnp_Api
         //debug_event('upnp_api.class','checking '.$testKey.' in '.var_export($filt, true), 5);
         return in_array($testKey, $filt, true);  // this is necessary, (rather than strpos) because "res" turns up in many keys, whose results may not be wanted
     }
+
     /**
      * @param $prmItems
+     * @param $filterValue
      * @return DOMDocument
      */
     public static function createDIDL($prmItems, $filterValue)
@@ -532,10 +556,9 @@ class Upnp_Api
 
     /**
      * @param string $prmPath
-     * @param string $prmQuery
      * @return array|null
      */
-    public static function _musicMetadata($prmPath, $prmQuery = '')
+    public static function _musicMetadata($prmPath)
     {
         $root    = 'amp://music';
         $pathreq = explode('/', $prmPath);
@@ -950,10 +973,9 @@ class Upnp_Api
 
     /**
      * @param string $prmPath
-     * @param string $prmQuery
      * @return array|null
      */
-    public static function _videoMetadata($prmPath, $prmQuery = '')
+    public static function _videoMetadata($prmPath)
     {
         $root    = 'amp://video';
         $pathreq = explode('/', $prmPath);
@@ -1191,24 +1213,26 @@ class Upnp_Api
     }
 
     /**
-     * @param $str
+     * @param string $str
      * @return array
      */
     private static function gettokens($str)
     {
-        /* put the string into lowercase */
+        $tokens        = array();
+        $nospacetokens = array();
+        // put the string into lowercase
         //    $str = strtolower($str);
 
-        /* make sure ( or ) get picked up as separate tokens */
+        // make sure ( or ) get picked up as separate tokens
         $str = str_replace("(", " ( ", $str);
         $str = str_replace(")", " ) ", $str);
 
-        /* get the actual tokens */
+        // get the actual tokens
         $actualtokens = explode(" ", $str);
         $actualsize   = sizeof($actualtokens);
 
-        /* trim spaces around tokens and discard those which have only spaces in them */
-        $h=0;
+        // trim spaces around tokens and discard those which have only spaces in them
+        $h             = 0;
         for ($i=0; $i < $actualsize; $i++) {
             $actualtokens[$i]=trim($actualtokens[$i]);
             if ($actualtokens[$i] != "") {
@@ -1251,10 +1275,10 @@ class Upnp_Api
     }
 
     /**
-     * @param $str
+     * @param string $query
+     * @param string $context
      * @return array
      */
-
     private static function parse_upnp_search_term($query, $context)
     {
         //echo "Search term ", $query, "\n";
@@ -1265,54 +1289,61 @@ class Upnp_Api
         //}
         debug_event('upnp_api.class', 'Token ' . var_export($tok, true), 5);
 
+        $term = array();
         if (sizeof($tok) == 3) { // tuple, we understand
             switch ($tok[0]) {
                 case 'dc:title':
-                    $term[ 'ruletype' ] = 'title';
+                    $term['ruletype'] = 'title';
                     break;
                 case 'upnp:album':
-                    $term[ 'ruletype' ] = 'album';
+                    $term['ruletype'] = 'album';
                     break;
                 case 'upnp:genre':
-                    $term[ 'ruletype' ] = 'tag';
+                    $term['ruletype'] = 'tag';
                     break;
                 case 'upnp:artist': // Artist is not implemented unformly through the database
                                     // If we're about to search the album table, we need to look
                                     // for album_artist instead of artist
                     if ($context == 'album') {
-                        $term[ 'ruletype' ] = 'album_artist';
+                        $term['ruletype'] = 'album_artist';
                     } else {
-                        $term[ 'ruletype' ] = 'artist';
+                        $term['ruletype'] = 'artist';
                     }
                     break;
                 case 'upnp:author':
-                    $term[ 'ruletype' ] = 'author';
+                    $term['ruletype'] = 'author';
                     break;
                 case 'upnp:author@role':
-                    $term[ 'ruletype' ] = $tok[2];
+                    $term['ruletype'] = $tok[2];
 
-                    return '';
+                    return array();
                 default:
-                    return '';
+                    return array();
             }
             switch ($tok[1]) {
                 case '=':
-                    $term[ 'operator' ] = 4;
+                    $term['operator'] = 4;
                     break;
                 case 'contains':
                 default:
-                    $term[ 'operator' ] = 0;
+                    $term['operator'] = 0;
                     break;
             }
-            $term[ 'input' ] = $tok[2];
+            $term['input'] = $tok[2];
         }
 
         return $term;
     }
-    // Cannot be very precious about this as filtering capability ATM just relates to the kind of search we end up doing
+
+    /**
+     * Cannot be very precious about this as filtering capability ATM just relates to the kind of search we end up doing
+     * @param $filter
+     * @return string
+     */
     private static function parse_upnp_filter($filter)
     {
         // TODO patched out for now: creates problems in search results
+        unset($filter);
         // NB filtering is handled in creation of the DIDL now
         //if( strpos( $filter, 'upnp:album' ) ){
         //    return 'album';
@@ -1320,6 +1351,11 @@ class Upnp_Api
         return 'song';
     }
 
+    /**
+     * @param $query
+     * @param $type
+     * @return array
+     */
     private static function parse_upnp_searchcriteria($query, $type)
     {
         // Transforms a upnp search query into an Ampache search query
@@ -1413,11 +1449,11 @@ class Upnp_Api
         for ($i=0; $i < $size; $i++) {
             if ($tokens[$i] != '') {
                 $rule = 'rule_' . (string) $rule_num;
-                $term = self::parse_upnp_search_term($tokens[ $i ], $data['type']);
-                if ($term != '') {
-                    $data[ $rule ]               = $term[ 'ruletype' ];
-                    $data[ $rule . '_operator' ] = $term[ 'operator' ];
-                    $data[ $rule . '_input' ]    = $term[ 'input' ];
+                $term = self::parse_upnp_search_term($tokens[$i], $data['type']);
+                if (!empty($term)) {
+                    $data[$rule]               = $term['ruletype'];
+                    $data[$rule . '_operator'] = $term['operator'];
+                    $data[$rule . '_input']    = $term['input'];
                     $rule_num++;
                 }
             }
@@ -1425,16 +1461,22 @@ class Upnp_Api
         if ($rule_num == 1) {
             // Must be a wildcard search: no tuples detected. How to tell search class to search for something?
             // Insert search qualified on "ID > 0", which should call for everything
-            $rule                        = 'rule_1';
-            $data[ $rule ]               = 'id';
-            $data[ $rule . '_operator' ] = 'GT';
-            $data[ $rule . '_input' ]    = '0';
+            $rule                      = 'rule_1';
+            $data[$rule]               = 'id';
+            $data[$rule . '_operator'] = 'GT';
+            $data[$rule . '_input']    = '0';
         }
 
         return $data;
     }
 
-
+    /**
+     * @param $criteria
+     * @param $filter
+     * @param $start
+     * @param $count
+     * @return array
+     */
     public static function _callSearch($criteria, $filter, $start, $count)
     {
         $mediaItems   = array();
