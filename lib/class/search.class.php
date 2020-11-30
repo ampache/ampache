@@ -858,11 +858,8 @@ class Search extends playlist_object
         $offset = (int) ($data['offset']);
         $random = ((int) $data['random'] > 0) ? 1 : 0;
         $data   = self::clean_request($data);
-        debug_event('search.class', 'Cleaned req ' . var_export($data, true), 5);
-
         $search = new Search(null, $data['type'], $user);
         $search->parse_rules($data);
-        // debug_event('search.class', 'Parsed      '.var_export($search, true), 5);
 
         // Generate BASE SQL
         $limit_sql = "";

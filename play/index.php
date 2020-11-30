@@ -96,8 +96,6 @@ if ($cache === '1' || !in_array($type, array('song', 'video', 'podcast_episode')
     $record_stats = false;
 }
 
-// debug_event('play/index', 'oid='.strval($object_id), 5);
-
 $transcode_to = null;
 $player       = null;
 $bitrate      = 0;
@@ -151,10 +149,7 @@ if ($type == 'playlist') {
     $object_id     = $sid;
 }
 
-// debug_event('play/index', 'oid='.strval($object_id), 5);
-
-
-/* First things first, if we don't have a uid/oid stop here */
+// First things first, if we don't have a uid/oid stop here
 if (empty($object_id) && empty($demo_id) && empty($random)) {
     debug_event('play/index', 'No object UID specified, nothing to play', 2);
     header('HTTP/1.1 400 Nothing To Play');
@@ -582,8 +577,6 @@ if (!$cpaction && !$original) {
                             if (!empty($subtitle)) {
                                 $transcode = true;
                                 debug_event('play/index', 'Transcoding because subtitle requested', 5);
-                            } else {
-                                debug_event('play/index', 'Decided not to transcode', 5);
                             }
                         }
                     }

@@ -2078,7 +2078,7 @@ class Song extends database_object implements media, library_item
     {
         if (!$uid) {
             // No user in the case of upnp. Set to 0 instead. required to fix database insertion errors
-            $uid = (Core::get_global('user')->id) ? Core::get_global('user')->id : 0;
+            $uid = Core::get_global('user')->id ?: 0;
         }
 
         return self::generic_play_url('song', $object_id, $additional_params, $player, $local, $uid, $original);
