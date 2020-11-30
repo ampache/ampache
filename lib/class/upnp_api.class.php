@@ -326,7 +326,7 @@ class Upnp_Api
      * @param $filterValue
      * @param $keyisRes
      * @param $keytoCheck
-     Checks whether key is in filter string, taking account of allowable filter wildcards and null strings
+     * Checks whether key is in filter string, taking account of allowable filter wildcards and null strings
     */
     public static function isinFilter($filterValue, $keyisRes, $keytoCheck)
     {
@@ -769,7 +769,7 @@ class Upnp_Api
                         // $artists = Catalog::get_artists();
                         // list($maxCount, $artists) = self::_slice($artists, $start, $count);
                         $artists                  = Catalog::get_artists(null, $count, $start);
-                        $counts                   = Catalog::count_server('');
+                        $counts                   = Catalog::count_server();
                         list($maxCount, $artists) = array($counts['artists'], $artists); //99999
                         foreach ($artists as $artist) {
                             $artist->format();
@@ -796,7 +796,7 @@ class Upnp_Api
                         //!!$album_ids = Catalog::get_albums();
                         //!!list($maxCount, $album_ids) = self::_slice($album_ids, $start, $count);
                         $album_ids                  = Catalog::get_albums($count, $start);
-                        $counts                     = Catalog::count_server('');
+                        $counts                     = Catalog::count_server();
                         list($maxCount, $album_ids) = array($counts['albums'], $album_ids); // 9999999
                         foreach ($album_ids as $album_id) {
                             $album = new Album($album_id);
@@ -1205,22 +1205,28 @@ class Upnp_Api
 
         /* get the actual tokens */
         $actualtokens = explode(" ", $str);
+        $actualsize   = sizeof($actualtokens);
 
         /* trim spaces around tokens and discard those which have only spaces in them */
         $h=0;
-        for ($i=0; $i < sizeof($actualtokens); $i++) {
+        for ($i=0; $i < $actualsize; $i++) {
             $actualtokens[$i]=trim($actualtokens[$i]);
             if ($actualtokens[$i] != "") {
                 $nospacetokens[$h++] = $actualtokens[$i];
             }
         }
 
-        /* now put together tokens which are actually one token e.g. upper hutt */
-        $onetoken = "";
-        $h        =0;
-        for ($i=0; $i < sizeof($nospacetokens); $i++) {
+        // now put together tokens which are actually one token e.g. upper hutt
+        $onetoken    = "";
+        $h           = 0;
+        $nospacesize = sizeof($nospacetokens);
+        for ($i=0; $i < $nospacesize; $i++) {
             $token = $nospacetokens[$i];
             switch ($token) {
+                case "not":
+                case "or":
+                case "and":
+                case "(":
                 case ")":
                     if ($onetoken != "") {
                         $tokens[$h++] = $onetoken;
@@ -1228,39 +1234,6 @@ class Upnp_Api
                     }
                     $tokens[$h++] = $token;
                     break;
-
-                case "(":
-                    if ($onetoken != "") {
-                        $tokens[$h++] = $onetoken;
-                        $onetoken     = "";
-                    }
-                    $tokens[$h++] = $token;
-                    break;
-
-                case "and":
-                    if ($onetoken != "") {
-                        $tokens[$h++] = $onetoken;
-                        $onetoken     = "";
-                    }
-                    $tokens[$h++] = $token;
-                    break;
-
-                case "or":
-                    if ($onetoken != "") {
-                        $tokens[$h++] = $onetoken;
-                        $onetoken     = "";
-                    }
-                    $tokens[$h++] = $token;
-                    break;
-
-                case "not":
-                    if ($onetoken != "") {
-                        $tokens[$h++] = $onetoken;
-                        $onetoken     = "";
-                    }
-                    $tokens[$h++] = $token;
-                    break;
-
                 default:
                     if ($onetoken == "") {
                         $onetoken = $token;
@@ -1272,7 +1245,6 @@ class Upnp_Api
         }
         if ($onetoken != "") {
             $tokens[$h++] = $onetoken;
-            $onetoken     = "";
         }
 
         return $tokens;
@@ -1324,12 +1296,10 @@ class Upnp_Api
                     return '';
             }
             switch ($tok[1]) {
-                case 'contains':
-                    $term[ 'operator' ] = 0;
-                    break;
                 case '=':
                     $term[ 'operator' ] = 4;
                     break;
+                case 'contains':
                 default:
                     $term[ 'operator' ] = 0;
                     break;
@@ -1352,7 +1322,7 @@ class Upnp_Api
 
     private static function parse_upnp_searchcriteria($query, $type)
     {
-        /* Transforms a upnp search query into an Ampache search query */
+        // Transforms a upnp search query into an Ampache search query
         $upnp_translations = array(
             array( 'upnp:class = "object.container.album.musicAlbum"', 'album' ),
             array( 'upnp:class derivedfrom "object.item.audioItem"' ,'song' ),
@@ -1364,6 +1334,7 @@ class Upnp_Api
         );
 
         $tokens = self::gettokens($query);
+        $size   = sizeof($tokens);
         //   for ($i=0; $i<sizeof($tokens); $i++) {
         //       echo $tokens[$i]."|";
         //   }
@@ -1371,7 +1342,7 @@ class Upnp_Api
 
         // Go through all the tokens and transform anything we recognize
         //If any translation goes to NUL then must remove previous token provided it is AND or OR
-        for ($i=0; $i < sizeof($tokens); $i++) {
+        for ($i=0; $i < $size; $i++) {
             for ($j=0; $j < 7; $j++) {
                 if ($tokens[$i] == $upnp_translations[$j][0]) {
                     $tokens[$i] = $upnp_translations[$j][1];
@@ -1410,7 +1381,8 @@ class Upnp_Api
 
         $num_and = 0;
         $num_or  = 0;
-        for ($i=0; $i < sizeof($tokens); $i++) {
+        $size    = sizeof($tokens);
+        for ($i=0; $i < $size; $i++) {
             if ($tokens[$i] == 'and') {
                 $num_and++;
                 $tokens[$i] = '';
@@ -1432,12 +1404,13 @@ class Upnp_Api
         } elseif ($num_and > 0 && $num_or == 0) {
             $data['operator'] = 'and';
         } else {
-            $data['operator'] = 'error';               // Should really be an error operator/return
-           return $data;                              // go no further because we can't handle the combination of and and or
+            $data['operator'] = 'error'; // Should really be an error operator/return
+           return $data; // go no further because we can't handle the combination of and and or
         }
 
         $rule_num = 1;
-        for ($i=0; $i < sizeof($tokens); $i++) {
+        $size     = sizeof($tokens);
+        for ($i=0; $i < $size; $i++) {
             if ($tokens[$i] != '') {
                 $rule = 'rule_' . (string) $rule_num;
                 $term = self::parse_upnp_search_term($tokens[ $i ], $data['type']);
@@ -1449,7 +1422,8 @@ class Upnp_Api
                 }
             }
         }
-        if ($rule_num == 1) {   // Must be a wildcard search: no tuples detected. How to tell search class to search for something?
+        if ($rule_num == 1) {
+            // Must be a wildcard search: no tuples detected. How to tell search class to search for something?
             // Insert search qualified on "ID > 0", which should call for everything
             $rule                        = 'rule_1';
             $data[ $rule ]               = 'id';
@@ -1496,7 +1470,7 @@ class Upnp_Api
                 }
             break;
             case 'album':
-                //$counts = Catalog::count_server('');
+                //$counts = Catalog::count_server();
                 //list($maxCount, $ids) = array($counts['albums'], $ids); // 9999999
                 list($maxCount, $ids) = self::_slice($ids, $start, $count);
                 foreach ($ids as $album_id) {
@@ -1645,17 +1619,6 @@ class Upnp_Api
     }
 
     /**
-     * Properties observed for MS media player include
-     * GetSearchCapabilities
-     * @id, @refID,
-     * dc:title, dc:creator, dc:publisher, dc:language, dc:date, dc:description,
-     * upnp:class, upnp:genre, upnp:artist, upnp:author, upnp:author@role, upnp:album,
-     * upnp:originalTrackNumber, upnp:producer, upnp:rating,upnp:actor, upnp:director, upnp:toc,
-     * upnp:userAnnotation, upnp:channelName, upnp:longDescription, upnp:programTitle
-     * res@size, res@duration, res@protocolInfo, res@protection,
-     * microsoft:userRatingInStars, microsoft:userEffectiveRatingInStars, microsoft:userRating, microsoft:userEffectiveRating, microsoft:serviceProvider,
-     * microsoft:artistAlbumArtist, microsoft:artistPerformer, microsoft:artistConductor, microsoft:authorComposer, microsoft:authorOriginalLyricist,
-     * microsoft:authorWriter,
      * @param Song $song
      * @param string $parent
      * @return array
@@ -1667,7 +1630,19 @@ class Upnp_Api
 
         $fileTypesByExt = self::_getFileTypes();
         $arrFileType    = $fileTypesByExt[$song->type];
-
+        /**
+         * Properties observed for MS media player include
+         * GetSearchCapabilities
+         * @id, @refID,
+         * dc:title, dc:creator, dc:publisher, dc:language, dc:date, dc:description,
+         * upnp:class, upnp:genre, upnp:artist, upnp:author, upnp:author@role, upnp:album,
+         * upnp:originalTrackNumber, upnp:producer, upnp:rating,upnp:actor, upnp:director, upnp:toc,
+         * upnp:userAnnotation, upnp:channelName, upnp:longDescription, upnp:programTitle
+         * res@size, res@duration, res@protocolInfo, res@protection,
+         * microsoft:userRatingInStars, microsoft:userEffectiveRatingInStars, microsoft:userRating, microsoft:userEffectiveRating, microsoft:serviceProvider,
+         * microsoft:artistAlbumArtist, microsoft:artistPerformer, microsoft:artistConductor, microsoft:authorComposer, microsoft:authorOriginalLyricist,
+         * microsoft:authorWriter
+         */
         return array(
             'id' => 'amp://music/songs/' . $song->id,
             'parentID' => $parent,
