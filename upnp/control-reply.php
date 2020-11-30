@@ -118,7 +118,7 @@ if (!AmpConfig::get('upnp_backend')) {
                     );
                 } else {
                     $filter = '*';      // Some devices don't seem to specify a sensible filter (may remove)
-//                    $items[] = array();
+                    //$items[] = array();
                     $items[]                  = Upnp_Api::_musicMetadata('');
                     $items[]                  = Upnp_Api::_videoMetadata('');
                     list($totMatches, $items) = Upnp_Api::_slice($items, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
@@ -126,7 +126,6 @@ if (!AmpConfig::get('upnp_backend')) {
                     debug_event('control-reply', 'Root items detail ' . var_export($items, true), 5);
                     debug_event('control-reply', 'Root items sort   ' . $upnpRequest['sortcriteria'], 5);
                 }
-//              break;
             } else {
                 # The parse_url function returns an array in this format:
                 # Array (
@@ -149,13 +148,13 @@ if (!AmpConfig::get('upnp_backend')) {
                                     $items      = Upnp_Api::_musicMetadata($reqObjectURL['path'], $reqObjectURL['query']);
                                     $totMatches = 1;
                                     $numRet     = 1;
-//                                    debug_event('control-reply', 'Metadata count '.strval($totMatches).' '.strval(count($items)), 5);
-//                                    debug_event('control-reply', 'Export items '.var_export($items,true), 5);
+                                    //debug_event('control-reply', 'Metadata count '.strval($totMatches).' '.strval(count($items)), 5);
+                                    //debug_event('control-reply', 'Export items '.var_export($items,true), 5);
                                 } else {
                                     debug_event('control-reply', 'Listrequest ', 5);
                                     list($totMatches, $items) = Upnp_Api::_musicChilds($reqObjectURL['path'], $reqObjectURL['query'], $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
                                     debug_event('control-reply', 'non-root items sort ' . $upnpRequest['sortcriteria'], 5);
-#                                    debug_event('control-reply', 'Listrequest '.strval($upnpRequest['startingindex'].':'.strval($upnpRequest['requestedcount']).':'.strval($totMatches), 5);
+                                    //debug_event('control-reply', 'Listrequest '.strval($upnpRequest['startingindex'].':'.strval($upnpRequest['requestedcount']).':'.strval($totMatches), 5);
                                 }
                                 break;
                             case 'video':

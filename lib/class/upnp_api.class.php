@@ -1209,7 +1209,7 @@ class Upnp_Api
 
         /* trim spaces around tokens and discard those which have only spaces in them */
         $h=0;
-        for ($i=0;$i < sizeof($actualtokens);$i++) {
+        for ($i=0; $i < sizeof($actualtokens); $i++) {
             $actualtokens[$i]=trim($actualtokens[$i]);
             if ($actualtokens[$i] != "") {
                 $nospacetokens[$h++] = $actualtokens[$i];
@@ -1219,7 +1219,7 @@ class Upnp_Api
         /* now put together tokens which are actually one token e.g. upper hutt */
         $onetoken = "";
         $h        =0;
-        for ($i=0;$i < sizeof($nospacetokens);$i++) {
+        for ($i=0; $i < sizeof($nospacetokens); $i++) {
             $token = $nospacetokens[$i];
             switch ($token) {
                 case ")":
@@ -1286,14 +1286,12 @@ class Upnp_Api
 
     private static function parse_upnp_search_term($query, $context)
     {
-        $term;
-
-        //       echo "Search term ", $query, "\n";
+        //echo "Search term ", $query, "\n";
         $tok = str_getcsv($query, ' ');
-//        for ($i=0;$i<sizeof($tok);$i++) {
-//            echo $i, $tok[$i];
-//            echo "\n";
-//        }
+        //for ($i=0; $i<sizeof($tok); $i++) {
+        //    echo $i, $tok[$i];
+        //    echo "\n";
+        //}
         debug_event('upnp_api.class', 'Token ' . var_export($tok, true), 5);
 
         if (sizeof($tok) == 3) { // tuple, we understand
@@ -1367,15 +1365,14 @@ class Upnp_Api
         );
 
         $tokens = self::gettokens($query);
-        //   for ($i=0;$i<sizeof($tokens);$i++) {
+        //   for ($i=0; $i<sizeof($tokens); $i++) {
         //       echo $tokens[$i]."|";
         //   }
         //   echo "\n";
 
-        /* Go through all the tokens and transform anything we recognize */
-        /*If any translation goes to NUL then must remove previous token provided it is AND or OR */
-
-        for ($i=0;$i < sizeof($tokens);$i++) {
+        // Go through all the tokens and transform anything we recognize
+        //If any translation goes to NUL then must remove previous token provided it is AND or OR
+        for ($i=0; $i < sizeof($tokens); $i++) {
             for ($j=0; $j < 7; $j++) {
                 if ($tokens[$i] == $upnp_translations[$j][0]) {
                     $tokens[$i] = $upnp_translations[$j][1];
@@ -1385,9 +1382,9 @@ class Upnp_Api
                 }
             }
         }
-//       for ($i=0;$i<sizeof($tokens);$i++) {
-//           echo $tokens[$i]."|";
-//       }
+        //for ($i=0; $i<sizeof($tokens); $i++) {
+        //   echo $tokens[$i]."|";
+        //}
         // Start to construct the Ampache Search data array
         $data = array();
 
@@ -1415,7 +1412,7 @@ class Upnp_Api
 
         $num_and = 0;
         $num_or  = 0;
-        for ($i=0;$i < sizeof($tokens);$i++) {
+        for ($i=0; $i < sizeof($tokens); $i++) {
             if ($tokens[$i] == 'and') {
                 $num_and++;
                 $tokens[$i] = '';
@@ -1442,7 +1439,7 @@ class Upnp_Api
         }
 
         $rule_num = 1;
-        for ($i=0;$i < sizeof($tokens);$i++) {
+        for ($i=0; $i < sizeof($tokens); $i++) {
             if ($tokens[$i] != '') {
                 $rule = 'rule_' . strval($rule_num);
                 $term = self::parse_upnp_search_term($tokens[ $i ], $data['type']);

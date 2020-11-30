@@ -2082,7 +2082,7 @@ class Song extends database_object implements media, library_item
                 // No user in the case of upnp. Set to 0 instead. required to fix database insertion errors
                 $uid = 0;
             }
-//            debug_event('song.class','No UID; now set to '.strval($uid),5);
+            //debug_event('song.class','No UID; now set to ' . (string) $uid,5);
         }
 
         return self::generic_play_url('song', $object_id, $additional_params, $player, $local, $uid, $original);
