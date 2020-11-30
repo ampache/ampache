@@ -148,7 +148,7 @@ if (!AmpConfig::get('upnp_backend')) {
                                     $items      = Upnp_Api::_musicMetadata($reqObjectURL['path'], $reqObjectURL['query']);
                                     $totMatches = 1;
                                     $numRet     = 1;
-                                    //debug_event('control-reply', 'Metadata count '.strval($totMatches).' '.strval(count($items)), 5);
+                                //debug_event('control-reply', 'Metadata count '.strval($totMatches).' '.strval(count($items)), 5);
                                     //debug_event('control-reply', 'Export items '.var_export($items,true), 5);
                                 } else {
                                     debug_event('control-reply', 'Listrequest ', 5);

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3a6d813f3cb3a513e4526d3f9b702eb2",
+    "content-hash": "364c452c8523a3e4ea369ef6ce7b0cb8",
     "packages": [
         {
             "name": "aehlke/tag-it",
@@ -210,6 +210,59 @@
                 "websocket"
             ],
             "time": "2020-07-07T15:50:14+00:00"
+        },
+        {
+            "name": "clue/multicast-react",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/clue/reactphp-multicast.git",
+                "reference": "743c865c06f0273108848b406c3b8a54a4ce9fdd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/clue/reactphp-multicast/zipball/743c865c06f0273108848b406c3b8a54a4ce9fdd",
+                "reference": "743c865c06f0273108848b406c3b8a54a4ce9fdd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3",
+                "react/datagram": "~1.0",
+                "react/event-loop": "^1.0 || ^0.5 || ^0.4 || ^0.3"
+            },
+            "require-dev": {
+                "clue/hexdump": "0.2.*",
+                "phpunit/phpunit": "^9.0 ||^6.0 || ^5.7 || ^4.8.35"
+            },
+            "suggest": {
+                "ext-sockets": "Requires PHP 5.4+ and the low level socket API for listening on multicast addresses (socket options to send IGMP announcements)"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Clue\\React\\Multicast\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christian Lück",
+                    "email": "christian@lueck.tv"
+                }
+            ],
+            "description": "Simple multicast UDP message client and server for ReactPHP.",
+            "homepage": "https://github.com/clue/reactphp-multicast",
+            "keywords": [
+                "async",
+                "mcast",
+                "multicast",
+                "reactphp",
+                "udp"
+            ],
+            "time": "2020-06-05T10:04:59+00:00"
         },
         {
             "name": "components/bootstrap",
@@ -531,16 +584,6 @@
                 "zend",
                 "zikula"
             ],
-            "funding": [
-                {
-                    "url": "https://packagist.com",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
-                    "type": "tidelift"
-                }
-            ],
             "time": "2020-04-07T06:57:05+00:00"
         },
         {
@@ -622,20 +665,6 @@
                 "php",
                 "redis",
                 "xcache"
-            ],
-            "funding": [
-                {
-                    "url": "https://www.doctrine-project.org/sponsorship.html",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://www.patreon.com/phpdoctrine",
-                    "type": "patreon"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Fcache",
-                    "type": "tidelift"
-                }
             ],
             "time": "2020-07-07T18:54:01+00:00"
         },
@@ -1523,12 +1552,6 @@
                 "musicbrainz",
                 "php"
             ],
-            "funding": [
-                {
-                    "url": "https://github.com/mikealmond",
-                    "type": "github"
-                }
-            ],
             "time": "2020-02-14T19:39:17+00:00"
         },
         {
@@ -2158,6 +2181,61 @@
                 }
             ],
             "time": "2020-09-18T12:12:35+00:00"
+        },
+        {
+            "name": "react/datagram",
+            "version": "v1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/reactphp/datagram.git",
+                "reference": "e4c5bf8daf44630f0a938f40fe2104b2b76ad2ff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/reactphp/datagram/zipball/e4c5bf8daf44630f0a938f40fe2104b2b76ad2ff",
+                "reference": "e4c5bf8daf44630f0a938f40fe2104b2b76ad2ff",
+                "shasum": ""
+            },
+            "require": {
+                "evenement/evenement": "^3.0 || ^2.0 || ^1.0",
+                "php": ">=5.3",
+                "react/dns": "^1.0 || ^0.4.13",
+                "react/event-loop": "^1.0 || ^0.5 || ^0.4 || ^0.3",
+                "react/promise": "~2.1|~1.2"
+            },
+            "require-dev": {
+                "clue/block-react": "~1.0",
+                "phpunit/phpunit": "^5.0 || ^4.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "React\\Datagram\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christian Lück",
+                    "email": "christian@lueck.tv"
+                }
+            ],
+            "description": "Event-driven UDP datagram socket client and server for ReactPHP",
+            "homepage": "https://github.com/reactphp/datagram",
+            "keywords": [
+                "Socket",
+                "async",
+                "client",
+                "datagram",
+                "dgram",
+                "reactphp",
+                "server",
+                "udp"
+            ],
+            "time": "2019-07-10T10:04:15+00:00"
         },
         {
             "name": "react/dns",
@@ -4064,6 +4142,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "clue/multicast-react": 20,
         "james-heinrich/getid3": 20,
         "jeromeetienne/jquery-qrcode": 20,
         "krixon/xbmc-php-rpc": 20,
