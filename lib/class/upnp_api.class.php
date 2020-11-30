@@ -67,7 +67,9 @@ class Upnp_Api
         return substr($hash, 0, 8) . '-' . substr($hash, 8, 4) . '-' . substr($hash, 12, 4) . '-' . substr($hash, 16, 4) . '-' . substr($hash, 20);
     }
 
-    /** Begin SSDP functions =======================================================================
+    /* ================================== Begin SSDP functions ================================== */
+
+    /**
      * @param string $buf
      * @param integer $delay
      * @param string $host
@@ -258,7 +260,9 @@ class Upnp_Api
             }
         }
     }
-    // End SSDP functions =======================================================================
+
+    /* ================================== End SSDP functions ================================== */
+
     /**
      * @param $prmRequest
      * @return array

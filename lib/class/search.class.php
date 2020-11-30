@@ -862,10 +862,9 @@ class Search extends playlist_object
 
         $search = new Search(null, $data['type'], $user);
         $search->parse_rules($data);
-//        debug_event('search.class', 'Parsed      '.var_export($search, true), 5);
+        // debug_event('search.class', 'Parsed      '.var_export($search, true), 5);
 
         // Generate BASE SQL
-
         $limit_sql = "";
         if ($limit > 0) {
             $limit_sql = ' LIMIT ';
@@ -876,8 +875,6 @@ class Search extends playlist_object
         }
 
         $search_info = $search->to_sql();
-        debug_event('search.class', 'SI ' . var_export($search_info, true), 5);
-
         $sql         = $search_info['base'] . ' ' . $search_info['table_sql'];
         if (!empty($search_info['where_sql'])) {
             $sql .= ' WHERE ' . $search_info['where_sql'];
@@ -2407,6 +2404,7 @@ class Search extends playlist_object
             'having_sql' => ''
         );
     }
+
     /**
        * tag_to_sql
        *
@@ -2461,7 +2459,6 @@ class Search extends playlist_object
             'having_sql' => ''
         );
     }
-
 
     /**
      * user_to_sql
