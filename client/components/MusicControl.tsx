@@ -7,7 +7,7 @@ import InputRange from 'react-input-range';
 import CurrentPlaying from '~components/CurrentPlaying/';
 
 interface MusicControlProps {
-    toggleQueueBar: () => void;
+    
 }
 
 const MusicControl: React.FC<MusicControlProps> = (props) => {
@@ -152,9 +152,7 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                 </div>
             </div>
             <div className='volumeSide'>
-                <div className='queueIcon' onClick={props.toggleQueueBar}>
-                    <SVG className='icon-button' src={require('~images/icons/svg/playlist.svg')} alt={'Show queue'} />
-                </div>
+                
                 <InputRange
                     name='volume'
                     onChange={(value: number) => {

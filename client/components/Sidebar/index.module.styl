@@ -2,17 +2,30 @@
 @import "~stylus/color.styl"
 
 .sidebar
-  width sidebarWidth
-  min-height 100%
+  width: 180px
+  border-right 2px solid colorGray900
   font-size 13px
   background-color colorGray800
   padding-top 20px
   padding-bottom 20px
+  flex-shrink: 0;
+  overflow: hidden
+  will-change: transform
+  
+  position: absolute
+  top 0;
+  left 0
+  bottom: 0
+  z-index: 100
+  display: flex;
 
-  @media all and (max-width: 700px)
+  @media all and (min-width: toggleDesktop)
+    position: static;
+    transform none !important;
+
     &:not(.queueBar)
-      display none
-      
+      // display none
+
   section
     padding-bottom 10px    
 
@@ -41,4 +54,13 @@
   input, select
     width 75%
     margin 5px 0
+
+.sidebarInner
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  padding: inherit
 

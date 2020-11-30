@@ -9,6 +9,8 @@
   border-bottom: 2px solid colorGray900
   display flex
   position relative
+  flex-shrink: 0;
+
   .logoContainer
     width 100px
     height 100%
@@ -98,3 +100,7 @@
         color gray
         a
           color linkColor
+
+  .menuIcon 
+    @media all and (min-width: toggleDesktop)
+      display: none

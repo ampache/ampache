@@ -22,68 +22,53 @@ interface QueueBarProps {
 const QueueBar: React.FC<QueueBarProps> = (props) => {
     const musicContext = useContext(MusicContext);
 
-    const [{ x, width }, set] = useSpring(() => ({
-        x: 0,
-        width: 0
+    const queueBarStart = '100%';
+    const queueBarEnd = '0%';
+
+    const [{ x }, set] = useSpring(() => ({
+        x: queueBarStart,
+        from: { x: queueBarStart }
     }));
 
-    set({ width: props.visible ? 300 : 0 });
-
-    const bind = useDrag(({ down, movement: [mx, my] }) => {
-
-        console.log(mx)
-        if (mx >= 150 && !down) {
-            props.setQueueBarVisibility(false);
-            set({ x: 0, width: 0 });
-            return;
-        }
-
-        if (mx < 0) {
-            return; //We don't want to allow it to be pulled left
-        }
-        if (down) {
-            set({ x: mx });
-        } else {
-            set({ x: 0, width: 300 });
-        }
-    });
+    set({ x: props.visible ? queueBarEnd : queueBarStart });
 
     return (
             <animated.div
-                {...bind()}
-                style={{ x, width }}
+                style={{ x }}
                 className={
                     props.visible
                         ? `${style.queueBar} ${style.visible}`
                         : `${style.queueBar} ${style.hidden}`
                 }
             >
-                <div className={style.title}>Now playing</div>
-                <ul className={style.songs}>
-                    {musicContext.songQueue.length == 0 && (
-                        <div className={style.emptyQueue}>
-                            Nothing in the queue
-                        </div>
-                    )}
-                    {musicContext.songQueue.map((song: Song) => {
-                        return (
-                            <QueueSong
-                                key={song.id}
-                                song={song}
-                                currentlyPlaying={
-                                    musicContext.currentPlayingSong?.id ===
-                                    song.id
-                                }
-                                onClick={() => {
-                                    musicContext.startPlayingWithNewQueue(
-                                        song,
-                                        musicContext.songQueue
-                                    );
-                                }}
-                            />
-                        );
-                    })}
-                </ul>
+                <div className={style.queueBarInner}>
+                    <div className={style.title}>Now playing</div>
+                    <ul className={style.songs}>
+                        {musicContext.songQueue.length == 0 && (
+                            <div className={style.emptyQueue}>
+                                Nothing in the queue
+                            </div>
+                        )}
+                        {musicContext.songQueue.map((song: Song) => {
+                            return (
+                                <QueueSong
+                                    key={song.id}
+                                    song={song}
+                                    currentlyPlaying={
+                                        musicContext.currentPlayingSong?.id ===
+                                        song.id
+                                    }
+                                    onClick={() => {
+                                        musicContext.startPlayingWithNewQueue(
+                                            song,
+                                            musicContext.songQueue
+                                        );
+                                    }}
+                                />
+                            );
+                        })}
+                    </ul>
+                </div>
             </animated.div>
     );
 };
