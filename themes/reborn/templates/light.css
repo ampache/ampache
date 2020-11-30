@@ -104,6 +104,11 @@ input[type=submit]:focus:active {
     color: #000;
 }
 
+.editdialogstyle.ui-dialog.ui-widget-content a,
+.editdialogstyle.ui-dialog.ui-widget-content a:hover {
+    background-color: unset;
+}
+
 .editdialogstyle.ui-dialog .ui-dialog-titlebar,
 .editdialogstyle.ui-dialog.ui-widget-content a:hover,
 .playlistdialogstyle.ui-widget-content a:hover,
