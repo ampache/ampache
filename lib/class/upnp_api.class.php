@@ -167,8 +167,8 @@ class Upnp_Api
         $headers = self::get_headers($unpacked);
         $str     = 'Notify ' . $remote . ' ' . $headers['nts'] . ' for ' . $headers['nt'];
         // We don't do anything with notifications except log them to check rx working
-        if( self::SSDP_DEBUG ) {
-             debug_event('upnp_api.class', $str, 5 );
+        if (self::SSDP_DEBUG) {
+            debug_event('upnp_api.class', $str, 5);
         }
     }
 
@@ -255,7 +255,7 @@ class Upnp_Api
         }
 
         while ($reader->read()) {
-            debug_event('upnp_api.class', $reader->localName.' '.(string) $reader->nodeType . ' ' . (string) XMLReader::ELEMENT . ' '.(string) $reader->isEmptyElement, 5);
+            debug_event('upnp_api.class', $reader->localName . ' ' . (string) $reader->nodeType . ' ' . (string) XMLReader::ELEMENT . ' ' . (string) $reader->isEmptyElement, 5);
 
             if (($reader->nodeType == XMLReader::ELEMENT)) {
                 switch ($reader->localName) {
