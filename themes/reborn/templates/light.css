@@ -112,6 +112,10 @@ input[type=submit]:focus:active {
     color: #1990db;
 }
 
+.ui-icon-close {
+    background-color: #f0f0f0;
+}
+
 /* ------------------------
    Main
    ------------------------ */
