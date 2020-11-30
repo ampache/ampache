@@ -20,7 +20,7 @@ $socket = $factory->createReceiver($address);
 
 
 $socket->on('message', function ($data, $remote) use ($socket) {
-//    debug_event('upnp', "Received message", 5);
+    //debug_event('upnp', "Received message", 5);
     $unpacked = explode(PHP_EOL, $data);
     $command  = explode(' ', $unpacked[0]);
     if ($command[0] == 'M-SEARCH' && $command[1] == '*') {

@@ -50,9 +50,8 @@ class Upnp_Api
      */
     private function __construct()
     {
-        // Make sure beautiful url is disabled as it is not supported by most Ampache clients
-// (including upnp)
-//        AmpConfig::set('stream_beautiful_url', false, true);
+        // Make sure beautiful url is disabled as it is not supported by most Ampache clients (including upnp)
+        //AmpConfig::set('stream_beautiful_url', false, true);
     }
 
     /**
@@ -98,7 +97,7 @@ class Upnp_Api
         $strHeader .= 'LOCATION: http://' . gethostbyname(AmpConfig::get('http_host')) . ':' . AmpConfig::get('http_port') . AmpConfig::get('raw_web_path') . '/upnp/MediaServerServiceDesc.php' . "\r\n";
         $strHeader .= 'SERVER: DLNADOC/1.50 UPnP/1.0 Ampache/' . AmpConfig::get('version') . "\r\n";
         $strHeader .= 'CACHE-CONTROL: max-age=1800' . "\r\n";
-//        $strHeader .= 'NTS: ssdp:alive' . "\r\n";
+        //$strHeader .= 'NTS: ssdp:alive' . "\r\n";
         if ($alive) {
             $strHeader .= 'NTS: ssdp:alive' . "\r\n";
         } else {
@@ -155,11 +154,11 @@ class Upnp_Api
 
         $addr=explode(":", $address);
         if (self::SSDP_DEBUG) {
-            debug_event('upnp_api', 'Sending response to: ' . $addr[0] . ':' . $addr[1] . PHP_EOL . $response, 5);
+            debug_event('upnp_api.class', 'Sending response to: ' . $addr[0] . ':' . $addr[1] . PHP_EOL . $response, 5);
         }
-        self::udpSend($response, $delay, $addr[0], $addr[1]);
+        self::udpSend($response, $delay, $addr[0], (int) $addr[1]);
         if (self::SSDP_DEBUG) {
-            debug_event('upnp_api', '(Sent)', 5);     // for timing
+            debug_event('upnp_api.class', '(Sent)', 5);     // for timing
         }
     }
     
@@ -168,9 +167,9 @@ class Upnp_Api
         $headers = self::get_headers($unpacked);
         $str     = 'Notify ' . $remote . ' ' . $headers['nts'] . ' for ' . $headers['nt'];
         // We don't do anything with notifications except log them to check rx working
-//        if( self::SSDP_DEBUG ) {
-//             debug_event('upnp_api', $str, 5 );
-//        }
+        if( self::SSDP_DEBUG ) {
+             debug_event('upnp_api.class', $str, 5 );
+        }
     }
 
     public static function get_headers($data)
@@ -179,10 +178,10 @@ class Upnp_Api
         $keys   = array();
         $values = array();
         foreach ($lines as $line) {
-//           $line = str_replace( ' ', '', $line );
+            //$line = str_replace( ' ', '', $line );
             $line   = preg_replace('/[\x00-\x1F\x7F]/', '', $line);
             $tokens = explode(' ', $line);
-//           echo 'BARELINE:'.$line.'&'.count($tokens).PHP_EOL;
+            //echo 'BARELINE:'.$line.'&'.count($tokens).PHP_EOL;
             if (count($tokens) > 1) {
                 $tokens[0] = str_replace(':', '', $tokens[0]); // remove ':' and convert to keys lowercase for match
                 $tokens[0] = strtolower($tokens[0]);
@@ -200,13 +199,13 @@ class Upnp_Api
         // Process a discovery request.  The response must be sent to the address specified by $remote
         $headers = self::get_headers($data);
         if (self::SSDP_DEBUG) {
-            debug_event('upnp_api', 'Discovery request from ' . $address, 5);
-            debug_event('upnp_api', 'HEADERS:' . var_export($headers, true), 5);
+            debug_event('upnp_api.class', 'Discovery request from ' . $address, 5);
+            debug_event('upnp_api.class', 'HEADERS:' . var_export($headers, true), 5);
         }
         
         $new_usn = 'uuid:' . self::get_uuidStr();
         $actst   = $headers['st'];
-//        echo 'DELAYTIME: [' . $headers['mx'] . ']' . PHP_EOL;
+        //echo 'DELAYTIME: [' . $headers['mx'] . ']' . PHP_EOL;
         $delaytime = (int)($headers['mx']);
         if ($headers['man'] == 'ssdp:discover') {
             if ($headers['st'] == 'urn:schemas-upnp-org:device:MediaServer:1') {
@@ -230,12 +229,12 @@ class Upnp_Api
                 self::sendResponse($delaytime, 'urn:microsoft.com:service:X_MS_MediaReceiverRegistrar:1', $address);
             } else {
                 if (self::SSDP_DEBUG) {
-                    debug_event('upnp_api', 'ST header not for a service we provide [' . $actst . ']', 5);
+                    debug_event('upnp_api.class', 'ST header not for a service we provide [' . $actst . ']', 5);
                 }
             }
         } else {
             if (self::SSDP_DEBUG) {
-                debug_event('upnp_api', 'M-SEARCH MAN header not understood [' . $headers['man'] . ']', 5);
+                debug_event('upnp_api.class', 'M-SEARCH MAN header not understood [' . $headers['man'] . ']', 5);
             }
         }
     }
@@ -249,16 +248,16 @@ class Upnp_Api
         $retArr = array();
         $reader = new XMLReader();
         $result = $reader->XML($prmRequest);
-//        if ($result) {
-//            debug_event('upnp_api', 'XML reader passed', 5);
-//        } else {
-//            debug_event('upnp_api', 'XML reader failed', 5);
-//        }
+        if ($result) {
+            debug_event('upnp_api.class', 'XML reader passed', 5);
+        } else {
+            debug_event('upnp_api.class', 'XML reader failed', 5);
+        }
 
         while ($reader->read()) {
-//            debug_event('upnp_api', $reader->localName.' '.strval($reader->nodeType).' '.strval(XMLReader::ELEMENT).' '.strval($reader->isEmptyElement), 5);
+            debug_event('upnp_api.class', $reader->localName.' '.(string) $reader->nodeType . ' ' . (string) XMLReader::ELEMENT . ' '.(string) $reader->isEmptyElement, 5);
 
-            if (($reader->nodeType == XMLReader::ELEMENT) /* && !$reader->isEmptyElement */) {
+            if (($reader->nodeType == XMLReader::ELEMENT)) {
                 switch ($reader->localName) {
                     case 'Browse':
                         $retArr['action'] = 'browse';
@@ -343,7 +342,7 @@ class Upnp_Api
             $testKey = $keytoCheck;
         }
         $filt = explode(',', $filterValue);      // do exact word match rather than partial, which is what strpos does.
-//        debug_event('upnp_api.class','checking '.$testKey.' in '.var_export($filt, true), 5);
+        //debug_event('upnp_api.class','checking '.$testKey.' in '.var_export($filt, true), 5);
         return in_array($testKey, $filt, true);  // this is necessary, (rather than strpos) because "res" turns up in many keys, whose results may not be wanted
     }
     /**
@@ -473,9 +472,9 @@ class Upnp_Api
                             $ndTag_text = $xmlDoc->createTextNode((mb_detect_encoding($xvalue, 'auto') == 'UTF-8')?$xvalue:utf8_encode($xvalue));
                             $ndTag->appendChild($ndTag_text);
                         }
-//                        else {
-//                               debug_event('upnp_api.class', $key.' not found in filter '.$filterValue, 5);
-//                        }
+                        //else {
+                        //debug_event('upnp_api.class', $key.' not found in filter '.$filterValue, 5);
+                        //}
                 }
                 if ($useRes) {
                     $ndItem->appendChild($ndRes);
@@ -545,7 +544,7 @@ class Upnp_Api
         }
 
         $meta = null;
-//        debug_event('upnp_api_class', $pathreq[0].' '.strval(count($pathreq)), 5);
+        //debug_event('upnp_api_class', $pathreq[0].' '.(string) count($pathreq), 5);
 
         switch ($pathreq[0]) {
             case 'artists':
@@ -722,7 +721,7 @@ class Upnp_Api
                 );
                 break;
         }
-//        debug_event('upnp_api_class', 'Exit musicmetadata with '.var_export($meta, true), 5 );
+        //debug_event('upnp_api_class', 'Exit musicmetadata with '.var_export($meta, true), 5 );
         return $meta;
     }
 
@@ -735,7 +734,7 @@ class Upnp_Api
     public static function _slice($items, $start, $count)
     {
         $maxCount = count($items);
-//        debug_event('upnp_api.class', 'slice: ' . $maxCount . "   " . $start . "    " . $count, 5);
+        //debug_event('upnp_api.class', 'slice: ' . $maxCount . "   " . $start . "    " . $count, 5);
 
         return array($maxCount, array_slice($items, $start, ($count == 0 ? $maxCount - $start : $count)));
     }
@@ -1345,9 +1344,9 @@ class Upnp_Api
     {
         // TODO patched out for now: creates problems in search results
         // NB filtering is handled in creation of the DIDL now
-//        if( strpos( $filter, 'upnp:album' ) ){
-//            return 'album';
-//        }
+        //if( strpos( $filter, 'upnp:album' ) ){
+        //    return 'album';
+        //}
         return 'song';
     }
 
@@ -1389,11 +1388,10 @@ class Upnp_Api
         $data = array();
 
         // In some cases the first search term gives the type of search
-// Other types of device may specify the type of search implicitly by the type of filter
-// they supply after the search term.
-// Start with assuming a search type of "song" in the case where the first search term
-// is actually a term rather than a type
-//
+        // Other types of device may specify the type of search implicitly by the type of filter
+        // they supply after the search term.
+        // Start with assuming a search type of "song" in the case where the first search term
+        // is actually a term rather than a type
        if (str_word_count($tokens[0]) > 1) { // first token is not a type, need to work out one
            if ($type == '') {
                $data['type'] = 'song';
@@ -1441,7 +1439,7 @@ class Upnp_Api
         $rule_num = 1;
         for ($i=0; $i < sizeof($tokens); $i++) {
             if ($tokens[$i] != '') {
-                $rule = 'rule_' . strval($rule_num);
+                $rule = 'rule_' . (string) $rule_num;
                 $term = self::parse_upnp_search_term($tokens[ $i ], $data['type']);
                 if ($term != '') {
                     $data[ $rule ]               = $term[ 'ruletype' ];
@@ -1476,12 +1474,12 @@ class Upnp_Api
 
             return array(0, $mediaItems);
         }
-//        debug_event('upnp_api.class', 'Dumping $search results: '.var_export( $ids, true ) , 5);
-        debug_event('upnp_api.class', ' ' . strval(count($ids)) . ' ids looking for type ' . $search_terms['type'], 5);
+        //debug_event('upnp_api.class', 'Dumping $search results: '.var_export( $ids, true ) , 5);
+        debug_event('upnp_api.class', ' ' . (string) count($ids) . ' ids looking for type ' . $search_terms['type'], 5);
 
         switch ($search_terms['type']) {
             case 'artist':
-//                list($maxCount, $ids) = array($counts['artists'], $ids); //99999
+                //list($maxCount, $ids) = array($counts['artists'], $ids); //99999
                 list($maxCount, $ids) = self::_slice($ids, $start, $count);
                 foreach ($ids as $artist_id) {
                     $artist = new Artist($artist_id);
@@ -1494,18 +1492,17 @@ class Upnp_Api
                 foreach ($ids as $song_id) {
                     $song = new Song($song_id);
                     $song->format();
-                    $mediaItems[] = self::_itemSong($song, $parent = 'amp://music/albums/' . strval($song->album));
+                    $mediaItems[] = self::_itemSong($song, $parent = 'amp://music/albums/' . (string) $song->album);
                 }
             break;
             case 'album':
-//              $counts = Catalog::count_server('');
-//              list($maxCount, $ids) = array($counts['albums'], $ids); // 9999999
+                //$counts = Catalog::count_server('');
+                //list($maxCount, $ids) = array($counts['albums'], $ids); // 9999999
                 list($maxCount, $ids) = self::_slice($ids, $start, $count);
                 foreach ($ids as $album_id) {
                     $album = new Album($album_id);
                     $album->format();
-//                    debug_event('upnp_api.class', $album->f_title, 5);
-
+                    //debug_event('upnp_api.class', $album->f_title, 5);
                     $mediaItems[] = self::_itemAlbum($album, "amp://music/albums");
                 }
             break;
@@ -1539,14 +1536,15 @@ class Upnp_Api
      */
     private static function _replaceSpecialSymbols($title)
     {
-        ///debug_event('upnp_api.class', 'replace <<< ' . $title, 5);
-        // replace non letter or digits
-        // 17 Oct. patched this out because it's changing the titles of tracks so that
-        // when the device comes to play and searches for songs belonging to the album, the
-        // album is no longer found as a match
-//        $title = preg_replace('~[^\\pL\d\.:\s\(\)\.\,\'\"]+~u', '-', $title);
-        ///debug_event('upnp_api.class', 'replace >>> ' . $title, 5);
-
+        /*
+         * replace non letter or digits
+         * 17 Oct. patched this out because it's changing the titles of tracks so that
+         * when the device comes to play and searches for songs belonging to the album, the
+         * album is no longer found as a match
+         */
+        //debug_event('upnp_api.class', 'replace <<< ' . $title, 5);
+        //$title = preg_replace('~[^\\pL\d\.:\s\(\)\.\,\'\"]+~u', '-', $title);
+        //debug_event('upnp_api.class', 'replace >>> ' . $title, 5);
         if ($title == "") {
             $title = '(no title)';
         }
@@ -1567,7 +1565,7 @@ class Upnp_Api
             'restricted' => 'false',
             'childCount' => $artist->albums,
             'dc:title' => self::_replaceSpecialSymbols($artist->f_name),
-//            'upnp:class' => 'object.container.person.musicArtist',
+            //'upnp:class' => 'object.container.person.musicArtist',
             'upnp:class' => 'object.container',
         );
     }
@@ -1584,7 +1582,7 @@ class Upnp_Api
             'restricted' => 'false',
             'childCount' => 1,
             'dc:title' => self::_replaceSpecialSymbols($tag->f_name),
-//            'upnp:class' => 'object.container.person.musicArtist',
+            //'upnp:class' => 'object.container.person.musicArtist',
             'upnp:class' => 'object.container',
         );
     }
@@ -1606,7 +1604,7 @@ class Upnp_Api
             'childCount' => $album->song_count,
             'dc:title' => self::_replaceSpecialSymbols($album->f_title),
             'upnp:class' => 'object.container.album.musicAlbum',  // object.container.album.musicAlbum
-//            'upnp:class' => 'object.container',
+            //'upnp:class' => 'object.container',
             'upnp:albumArtist' => $album->album_artist,
             'upnp:albumArtURI' => $art_url,
         );
@@ -1647,24 +1645,21 @@ class Upnp_Api
     }
 
     /**
+     * Properties observed for MS media player include
+     * GetSearchCapabilities
+     * @id, @refID,
+     * dc:title, dc:creator, dc:publisher, dc:language, dc:date, dc:description,
+     * upnp:class, upnp:genre, upnp:artist, upnp:author, upnp:author@role, upnp:album,
+     * upnp:originalTrackNumber, upnp:producer, upnp:rating,upnp:actor, upnp:director, upnp:toc,
+     * upnp:userAnnotation, upnp:channelName, upnp:longDescription, upnp:programTitle
+     * res@size, res@duration, res@protocolInfo, res@protection,
+     * microsoft:userRatingInStars, microsoft:userEffectiveRatingInStars, microsoft:userRating, microsoft:userEffectiveRating, microsoft:serviceProvider,
+     * microsoft:artistAlbumArtist, microsoft:artistPerformer, microsoft:artistConductor, microsoft:authorComposer, microsoft:authorOriginalLyricist,
+     * microsoft:authorWriter,
      * @param Song $song
      * @param string $parent
      * @return array
      */
-    /* Properties observed for MS media player include
-    GetSearchCapabilities
-    @id, @refID,
-    dc:title, dc:creator, dc:publisher, dc:language, dc:date, dc:description,
-    upnp:class, upnp:genre, upnp:artist, upnp:author, upnp:author@role, upnp:album,
-    upnp:originalTrackNumber, upnp:producer, upnp:rating,upnp:actor, upnp:director, upnp:toc,
-    upnp:userAnnotation, upnp:channelName, upnp:longDescription, upnp:programTitle
-    res@size, res@duration, res@protocolInfo, res@protection,
-    microsoft:userRatingInStars, microsoft:userEffectiveRatingInStars, microsoft:userRating, microsoft:userEffectiveRating, microsoft:serviceProvider,
-    microsoft:artistAlbumArtist, microsoft:artistPerformer, microsoft:artistConductor, microsoft:authorComposer, microsoft:authorOriginalLyricist,
-    microsoft:authorWriter,
-    */
-
-
     public static function _itemSong($song, $parent)
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
