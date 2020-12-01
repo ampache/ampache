@@ -4,40 +4,85 @@
   flex-shrink: 0;
   background-color colorGray800
   border-top 2px solid colorGray900
-  // display grid
   align-items center
-  // height musicPlayerHeight
-  // grid-template-columns 1fr 1fr 1fr
-  // z-index 100
+
+  @media all and (min-width: size-small)
+    display grid
+    column-gap: 10px;
+    grid-template-rows 1fr 1fr
+    grid-template-columns: repeat(2, 1fr);
+    padding-right: 10px
+
+  @media all and (min-width: size-large)
+    column-gap: 60px;
+    grid-template-rows 1fr 1fr
+    grid-template-columns: repeat(3, 1fr);
+
+  .seekbar 
+    @media all and (min-width: size-small)
+      grid-column: 2;
+      grid-row: 2;
 
   .controls
     display flex
     width 100%
     flex-direction column
     justify-self center
+
+    @media all and (min-width: size-small)
+      grid-column: 2;
+      grid-row: 1;
+
     .buttons
-      margin-top 20px
+      margin-top 5px
       display flex
-      justify-content space-between
+      justify-content center
       cursor pointer
+
       img
         width 42px
         min-width 42px
         padding 9px
+
       .disabled
         pointer-events none
         color colorGray600
-  .volumeSide
+
+  .seekTimes 
     display flex
+    justify-content: space-between
+    padding 0 5px
+    line-height: 1
+
+  .MuiSlider-root
+    color: colorAmber500
+    padding: 10px 0
+
+  .MuiSlider-rail
+    background-color colorGray900
+
+  .MuiSlider-rail,
+  .MuiSlider-track
+    height: 3px
+
+  .MuiSlider-root.Mui-disabled 
+    color transparent
+    
+  .MuiSlider-thumb:hover
+    box-shadow: 0px 0px 0px 8px rgba(colorAmber500, 0.16);
+
+  .volumeSlide
+    display none
     justify-content space-around
-    padding-bottom 1.5rem //temp until vol gets redone
-    .queueIcon
-      height 42px
-      padding 9px
-      img
-        height 100%
-        // filter invert(.8) //TODO: Replace this image
-    .input-range
-      width 50%
-      @media all and (max-width: 800px)
-        display none
+    min-width: 200px
+    max-width: 10vw
+    margin-left auto
+
+    @media all and (min-width: size-large)
+      display flex
+      flex-direction: row
+      justify-content: space-between
+      align-items: center
+      grid-column: 3;
+      grid-row: 1 / 3;
+      

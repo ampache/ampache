@@ -41,7 +41,7 @@ const Header = withRouter(({ history, ...props }: any) => {
                     />
                 </form>
             </div>
-            <div className='queueIcon' onClick={props.toggleQueueBar}>
+            <div className={style.queueIcon} onClick={props.toggleQueueBar}>
                 <SVG className='icon-button' src={require('~images/icons/svg/playlist.svg')} alt={'Show queue'} />
             </div>
             <div className={style.account}>

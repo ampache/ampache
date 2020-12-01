@@ -6,8 +6,6 @@
   border-right 2px solid colorGray900
   font-size 13px
   background-color colorGray800
-  padding-top 20px
-  padding-bottom 20px
   flex-shrink: 0;
   overflow: hidden
   will-change: transform
@@ -18,27 +16,26 @@
   bottom: 0
   z-index: 100
   display: flex;
+  flex-direction: column
 
-  @media all and (min-width: toggleDesktop)
+  @media all and (min-width: size-large)
     position: static;
     transform none !important;
-
-    &:not(.queueBar)
-      // display none
 
   section
     padding-bottom 10px    
 
   section + section {
-    border-top 2px solid colorGray700
-    padding-top 20px
+    padding-top 24px
   }
     
   a
-    display block
+    display flex
     padding 0 20px
     margin-top 3px
-    line-height 42px
+    line-height 34px
+    justify-content: space-between
+    align-items: center
 
   h4
     display inline
@@ -64,3 +61,20 @@
   overflow: auto;
   padding: inherit
 
+.menuList
+  flex 1
+  position: relative
+  padding-top 20px
+  padding-bottom 20px
+
+.menuSettings
+  flex-shrink: 0
+  border-top: 2px solid colorGray700
+  background-color colorGray800
+  padding 15px 0 10px
+  position relative
+
+
+
+  
+    

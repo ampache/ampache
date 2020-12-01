@@ -48,7 +48,7 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (props: AlbumDisplayProps) => 
                             <SVG className='icon-button' src={require('~images/icons/svg/play.svg')} alt="Play" />
                             <SVG className='icon-button' src={require('~images/icons/svg/play-next.svg')} alt="Play next" />
                             <SVG className='icon-button' src={require('~images/icons/svg/play-last.svg')} alt="Play last" />
-                            <SVG className='icon-button' src={require('~images/icons/svg/more-options.svg')} alt="More options" />
+                            <SVG className='icon-button' src={require('~images/icons/svg/more-options-hori.svg')} alt="More options" />
                         </div>
                     </div>
                 </div>

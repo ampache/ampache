@@ -9,9 +9,10 @@ queuebarWidth = 280px
   border-left 2px solid colorGray900
   background-color colorGray800
   user-select none
-  titleHeight = 44px
   flex-shrink: 0;
   will-change: transform
+  display flex
+  flex-direction: column
   
   position: absolute
   top 0;
@@ -19,35 +20,29 @@ queuebarWidth = 280px
   bottom: 0
   z-index: 100
 
-  @media all and (min-width: toggleDesktop)
+  @media all and (min-width: size-large)
     position: static;
     margin-left: -(queuebarWidth)
 
   &.visible
-    @media all and (min-width: toggleDesktop)
+    @media all and (min-width: size-large)
       margin-left: 0
 
   .title
     text-align center
     padding 10px 0
-    white-space nowrap
-    overflow hidden
-    transition opacity 0.1s
-    opacity 1
-    border-bottom: 2px solid colorAmber500
+    border-bottom: 2px solid colorGray700
+    flex-shrink: 0
   .songs
-    height: "calc(100% - %s)" % (titleHeight)
-    padding-right: 1rem
-    white-space nowrap
     .emptyQueue
       margin auto
-      transition opacity 0.1s
-      opacity 1
-  &:not(.visible)
-    .title, .emptyQueue
-      opacity 0
+      padding: 20px
 
-.queueBarInner
+.queueList 
+  position relative
+  flex 1
+
+.queueListInner
   position: absolute;
   top: 0;
   left: 0;

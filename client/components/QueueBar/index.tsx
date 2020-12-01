@@ -41,33 +41,35 @@ const QueueBar: React.FC<QueueBarProps> = (props) => {
                         : `${style.queueBar} ${style.hidden}`
                 }
             >
-                <div className={style.queueBarInner}>
-                    <div className={style.title}>Now playing</div>
-                    <ul className={style.songs}>
-                        {musicContext.songQueue.length == 0 && (
-                            <div className={style.emptyQueue}>
-                                Nothing in the queue
-                            </div>
-                        )}
-                        {musicContext.songQueue.map((song: Song) => {
-                            return (
-                                <QueueSong
-                                    key={song.id}
-                                    song={song}
-                                    currentlyPlaying={
-                                        musicContext.currentPlayingSong?.id ===
-                                        song.id
-                                    }
-                                    onClick={() => {
-                                        musicContext.startPlayingWithNewQueue(
-                                            song,
-                                            musicContext.songQueue
-                                        );
-                                    }}
-                                />
-                            );
-                        })}
-                    </ul>
+                <h4 className={style.title}>Now playing</h4>
+                <div className={style.queueList}>
+                    <div className={style.queueListInner}>
+                        <ul className={style.songs}>
+                            {musicContext.songQueue.length == 0 && (
+                                <div className={style.emptyQueue}>
+                                    Nothing in the queue
+                                </div>
+                            )}
+                            {musicContext.songQueue.map((song: Song) => {
+                                return (
+                                    <QueueSong
+                                        key={song.id}
+                                        song={song}
+                                        currentlyPlaying={
+                                            musicContext.currentPlayingSong?.id ===
+                                            song.id
+                                        }
+                                        onClick={() => {
+                                            musicContext.startPlayingWithNewQueue(
+                                                song,
+                                                musicContext.songQueue
+                                            );
+                                        }}
+                                    />
+                                );
+                            })}
+                        </ul>
+                    </div>
                 </div>
             </animated.div>
     );

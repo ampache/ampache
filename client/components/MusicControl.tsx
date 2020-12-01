@@ -3,7 +3,7 @@ import SVG from 'react-inlinesvg';
 import { PLAYERSTATUS } from '~enum/PlayerStatus';
 import { MusicContext } from '~Contexts/MusicContext';
 import InputRange from 'react-input-range';
-
+import Slider from '@material-ui/core/Slider';
 import CurrentPlaying from '~components/CurrentPlaying/';
 
 interface MusicControlProps {
@@ -16,31 +16,39 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
     const [isSeeking, setIsSeeking] = useState(false);
     const [seekPosition, setSeekPosition] = useState(-1);
 
+    const [value, setValue] = React.useState(30);
+
+    const formatLabel = (s) => ([
+        (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s
+        //https://stackoverflow.com/a/37770048
+    ]);
+
     return (
         <div className='musicControl'>
             <CurrentPlaying />
-            <div className='controls'>
-                <InputRange
-                    onChange={(value: number) => {
-                        setSeekPosition(value);
-                    }}
-                    onChangeStart={() => {
-                        setIsSeeking(true);
-                    }}
-                    onChangeComplete={(e: number) => {
-                        setIsSeeking(false);
-                        musicContext.seekSongTo(e);
-                    }}
-                    formatLabel={(s) => {
-                        return (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s;
-                        //https://stackoverflow.com/a/37770048
-                    }}
-                    disabled={musicContext.currentPlayingSong == undefined}
-                    allowSameValues={true}
-                    maxValue={musicContext.currentPlayingSong?.time ?? 0}
-                    minValue={0}
+            <div className='seekbar'>
+                <Slider 
+                    min={0}
+                    max={musicContext.currentPlayingSong?.time ?? 0}
                     value={isSeeking ? seekPosition : musicContext.songPosition}
+                    onChange={(event, value: number) => {
+                        // setIsSeeking(true);
+                        // setValue(value);
+                        // setSeekPosition(value);
+                        musicContext.seekSongTo(value);
+                        // setIsSeeking(false);
+                    }}
+                    
+                    disabled={musicContext.currentPlayingSong == undefined}
+                    aria-labelledby="continuous-slider" 
                 />
+                <div className='seekTimes'>
+                    <span>{formatLabel(musicContext.songPosition)}</span>
+                    <span>{formatLabel(musicContext.currentPlayingSong?.time ?? 0)}</span>
+                </div>
+            </div>
+                    
+            <div className='controls'>
                 <div className='buttons'>
                     <div className='shuffle'>
                         <SVG
@@ -90,7 +98,7 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                                 onClick={musicContext.playPause}
                                 className={`
                                     ${'icon-button'} 
-                                    ${musicContext.songQueueIndex <= 0
+                                    ${musicContext.currentPlayingSong == undefined
                                         ? 'disabled'
                                         : ''}
                                 `}
@@ -102,7 +110,7 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                                 onClick={musicContext.playPause}
                                 className={`
                                     ${'icon-button'} 
-                                    ${musicContext.songQueueIndex <= 0
+                                    ${musicContext.currentPlayingSong == undefined
                                         ? 'disabled'
                                         : ''}
                                 `}
@@ -139,7 +147,7 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                     </div>
                     <div className='moreOptions'>
                         <SVG
-                            src={require('~images/icons/svg/more-options.svg')}
+                            src={require('~images/icons/svg/more-options-hori.svg')}
                             alt='More options'
                             onClick={() => {
                                 // TODO: open more options menu;
@@ -151,16 +159,35 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                     </div>
                 </div>
             </div>
-            <div className='volumeSide'>
-                
-                <InputRange
+            <div className='volumeSlide'>
+                <SVG
+                    src={require('~images/icons/svg/volume-down.svg')}
+                    alt='Volume down'
+                    onClick={() => {
+                        // TODO: decrease/mute volume;
+                    }}
+                    className={`
+                        ${'icon-button'} 
+                    `}
+                />
+                <Slider
                     name='volume'
-                    onChange={(value: number) => {
+                    onChange={(event, value: number) => {
                         musicContext.setVolume(value);
                     }}
-                    maxValue={100}
-                    minValue={0}
+                    max={100}
+                    min={0}
                     value={musicContext.volume}
+                />
+                <SVG
+                    src={require('~images/icons/svg/volume-up.svg')}
+                    alt='Volume up'
+                    onClick={() => {
+                        // TODO: increase volume;
+                    }}
+                    className={`
+                        ${'icon-button'} 
+                    `}
                 />
             </div>
         </div>
