@@ -29,12 +29,9 @@ if (!defined('AJAX_INCLUDE')) {
 
 $results = array();
 $action  = Core::get_request('action');
-$moment  = (int) AmpConfig::get('of_the_moment');
-$user    = Core::get_global('user');
 // filter album and video of the Moment instead of hardcoding
-if (!$moment > 0) {
-    $moment = 6;
-}
+$moment  = (int) AmpConfig::get('of_the_moment', 6);
+$user    = Core::get_global('user');
 
 // Switch on the actions
 switch ($_REQUEST['action']) {
