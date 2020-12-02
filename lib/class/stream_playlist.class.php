@@ -245,7 +245,7 @@ class Stream_Playlist
                     $url['info_url']  = $object->f_link;
                     $url['image_url'] = Art::url($object->album, 'album', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['album']     = $object->f_album_full;
-                    $url['track_num'] = $object->f_track;
+                    //$url['track_num'] = $object->f_track;
                     break;
                 case 'video':
                     $url['title']      = 'Video - ' . $object->title;
@@ -457,7 +457,7 @@ class Stream_Playlist
     }
 
     /**
-      * get_pls_string
+     * get_pls_string
      * @return string
      */
     public function get_pls_string()
@@ -696,9 +696,10 @@ class Stream_Playlist
             $data    = Stream_URL::parse($url->url);
             $items[] = array($data['type'], $data['id']);
         }
-
-        $democratic->add_vote($items);
-        display_notification(T_('Vote added'));
+        if (!empty($items)) {
+            $democratic->add_vote($items);
+            display_notification(T_('Vote added'));
+        }
     }
 
     /**

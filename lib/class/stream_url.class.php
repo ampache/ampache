@@ -29,7 +29,7 @@ declare(strict_types=0);
  */
 class Stream_URL extends memory_object
 {
-    public $properties = array('url', 'title', 'author', 'time', 'info_url', 'image_url', 'album', 'type', 'codec', 'track_num');
+    public $properties = array('url', 'title', 'author', 'time', 'info_url', 'image_url', 'album', 'type', 'codec');
 
     /**
      * parse
