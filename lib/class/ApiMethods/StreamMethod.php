@@ -86,10 +86,10 @@ final class StreamMethod
 
         $url = '';
         if ($type == 'song') {
-            $url = Song::generic_play_url('song', $object_id, $params, 'api', function_exists('curl_version'), $user_id, $original);
+            $url = Song::generic_play_url('Song', $object_id, $params, 'api', function_exists('curl_version'), $user_id, $original);
         }
         if ($type == 'podcast') {
-            $url = Song::generic_play_url('podcast_episode', $object_id, $params, 'api', function_exists('curl_version'), $user_id, $original);
+            $url = Song::generic_play_url('Podcast_Episode', $object_id, $params, 'api', function_exists('curl_version'), $user_id, $original);
         }
         if (!empty($url)) {
             Session::extend($input['auth']);

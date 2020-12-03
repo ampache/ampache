@@ -428,16 +428,15 @@ class Broadcast extends database_object implements library_item
     /**
      * Get play url.
      *
-     * @param integer $object_id
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
      * @return integer
      */
-    public static function play_url($object_id, $additional_params = '', $player = null, $local = false)
+    public function play_url($additional_params = '', $player = null, $local = false)
     {
         unset($additional_params, $player, $local);
 
-        return $object_id;
+        return $this->id;
     }
 } // end broadcast.class

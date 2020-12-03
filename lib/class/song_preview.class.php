@@ -311,21 +311,17 @@ class Song_Preview extends database_object implements media, playable_item
      * This function takes all the song information and correctly formats a
      * a stream URL taking into account the downsampling mojo and everything
      * else, this is the true function
-     * @param integer $object_id
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
      * @return string
      */
-    public static function play_url($object_id, $additional_params = '', $player = null, $local = false)
+    public function play_url($additional_params = '', $player = null, $local = false)
     {
-        $song        = new Song_Preview($object_id);
-        $user_id     = Core::get_global('user')->id ? scrub_out(Core::get_global('user')->id) : '-1';
-        $type        = $song->type;
-
-        $song_name = rawurlencode($song->get_artist_name() . " - " . $song->title . "." . $type);
-
-        $url = Stream::get_base_url($local) . "type=song_preview&oid=" . $song->id . "&uid=" . $user_id . "&name=" . $song_name;
+        $user_id   = Core::get_global('user')->id ? scrub_out(Core::get_global('user')->id) : '-1';
+        $type      = $this->type;
+        $song_name = rawurlencode($this->get_artist_name() . " - " . $this->title . "." . $type);
+        $url       = Stream::get_base_url($local) . "type=song_preview&oid=" . $this->id . "&uid=" . $user_id . "&name=" . $song_name;
 
         return Stream_URL::format($url . $additional_params);
     } // play_url

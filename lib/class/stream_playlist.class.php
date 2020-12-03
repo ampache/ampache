@@ -229,8 +229,7 @@ class Stream_Playlist
                     }
                 }
             } else {
-                // FIXME: play_url shouldn't be static
-                $url['url'] = ($type == 'song') ? $object->get_play_url(Core::get_global('user')->id) : $type::play_url($object->id, $additional_params);
+                $url['url'] = $object->play_url($additional_params);
             }
 
             $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
