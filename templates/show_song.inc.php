@@ -139,7 +139,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
     </dd>
     <?php
     $songprops[T_('Title')]   = scrub_out($song->title);
-    $songprops[T_('Artist')]  = $song->f_artist_link;
+    $songprops[T_('Song Artist')]  = $song->f_artist_link;
     if (!empty($song->f_albumartist_link)) {
         $songprops[T_('Album Artist')]   = $song->f_albumartist_link;
     }
