@@ -678,7 +678,6 @@ class Channel extends database_object implements media, library_item
      */
     public function play_url($additional_params = '', $player = null, $local = false)
     {
-
         return $this->get_stream_proxy_url() . '?rt=' . time() . '&filename=' . urlencode($this->name) . '.' . $this->stream_type . $additional_params;
     }
 
