@@ -2015,7 +2015,7 @@ class Song extends database_object implements media, library_item
      * @param string $player
      * @return string
      */
-    public function get_play_url($uid = -1, $player = false)
+    public function get_play_url($uid = -1, $player = '')
     {
         if (!$this->id) {
             return '';
