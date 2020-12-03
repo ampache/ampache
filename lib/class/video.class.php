@@ -464,7 +464,7 @@ class Video extends database_object implements media, library_item
      * @param boolean $original
      * @return string
      */
-    public function set_play_url($additional_params, $player = '', $local = false, $uid = -1, $original = false)
+    public function set_play_url($additional_params, $player = '', $local = false, $uid = -1)
     {
         if (!$this->id) {
             return '';
