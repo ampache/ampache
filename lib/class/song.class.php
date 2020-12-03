@@ -2039,56 +2039,6 @@ class Song extends database_object implements media, library_item
     }
 
     /**
-     * get_stream_url
-     * @param string $additional_params
-     * @param string $urltype
-     * @return Stream_URL
-     */
-    public function get_stream_url($additional_params = '', $urltype = 'web')
-    {
-        $surl = null;
-        $url  = array();
-
-        $type        = 'song';
-        $url['type'] = $type;
-
-        // Don't add disabled media objects to the stream playlist
-        // Playing a disabled media return a 404 error that could make failed the player (mpd ...)
-        if (!isset($this->enabled) || make_bool($this->enabled)) {
-            if ($urltype == 'file') {
-                $url['url'] = $this->file;
-                // Relative path
-                if (!empty($additional_params) && strpos($url['url'], $additional_params) === 0) {
-                    $url['url'] = substr($url['url'], strlen((string) $additional_params));
-                    if (strlen((string) $url['url']) < 1) {
-                        return null;
-                    }
-                    if ($url['url'][0] == DIRECTORY_SEPARATOR) {
-                        $url['url'] = substr($url['url'], 1);
-                    }
-                }
-            } else {
-                $url['url'] = (isset($this->play_url)) ? $this->play_url : $this->get_play_url(Core::get_global('user')->id);
-            }
-
-            $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
-
-            // Set a default which can be overridden
-            $url['author']    = 'Ampache';
-            $url['time']      = $this->time;
-            $url['title']     = $this->title;
-            $url['author']    = $this->f_artist_full;
-            $url['info_url']  = $this->f_link;
-            $url['image_url'] = Art::url($this->album, 'album', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
-            $url['album']     = $this->f_album_full;
-            $url['track_num'] = $this->f_track;
-            $surl             = new Stream_URL($url);
-        }
-
-        return $surl;
-    }
-
-    /**
      * Generate generic play url.
      * @param string $object_type
      * @param integer $object_id

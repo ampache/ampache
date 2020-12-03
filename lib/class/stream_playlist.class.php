@@ -190,10 +190,6 @@ class Stream_Playlist
         if ($_SESSION['iframe']['subtitle']) {
             $additional_params .= "&subtitle=" . $_SESSION['iframe']['subtitle'];
         }
-        // get songs in a faster way
-        if (in_array($type, array('song'))) {
-            return $object->get_stream_url($additional_params, $urltype);
-        }
 
         return self::media_object_to_url($object, $additional_params, $urltype);
     }
