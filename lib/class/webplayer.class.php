@@ -55,17 +55,19 @@ class WebPlayer
      * Get types information for an item.
      * @param Stream_URL $item
      * @param string $force_type
+     * @param array $urlinfo
+     * @param array $transcode_cfg
      * @return array
      */
-    protected static function get_types($item, $force_type = '', $urlinfo, $transcode_cfg)
+    protected static function get_types($item, $urlinfo, $transcode_cfg, $force_type = '')
     {
         $types   = array('real' => 'mp3', 'player' => '');
 
         if ($item->codec) {
-            //$transcode = self::can_transcode($urlinfo['type'], $item->codec, $types, $urlinfo, $force_type, $transcode_cfg);
-            $types     = self::get_media_types($urlinfo, $types, $item->codec, true);
+            $transcode = self::can_transcode($urlinfo['type'], $item->codec, $types, $urlinfo, $transcode_cfg, $force_type);
+            $types     = self::get_media_types($urlinfo, $types, $item->codec, $transcode);
         } elseif ($media = self::get_media_object($urlinfo)) {
-            $transcode = self::can_transcode(strtolower(get_class($media)), $media->type, $types, $urlinfo, $force_type, $transcode_cfg);
+            $transcode = self::can_transcode(strtolower(get_class($media)), $media->type, $types, $urlinfo, $transcode_cfg, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $media->type, $transcode);
         } else {
             if ($item->type == 'live_stream') {
@@ -165,9 +167,10 @@ class WebPlayer
      * @param array $types
      * @param array $urlinfo
      * @param string $force_type
+     * @param array $transcode_cfg
      * @return boolean
      */
-    public static function can_transcode($media_type, $file_type, $types, $urlinfo, $force_type = '', $transcode_cfg)
+    public static function can_transcode($media_type, $file_type, $types, $urlinfo, $transcode_cfg, $force_type = '')
     {
         $transcode = false;
 
@@ -217,7 +220,7 @@ class WebPlayer
                 $force_type = 'mp3';
             }
             $urlinfo = Stream_URL::parse($item->url);
-            $types   = self::get_types($item, $force_type, $urlinfo, $transcode_cfg);
+            $types   = self::get_types($item, $urlinfo, $transcode_cfg, $force_type);
             if (!in_array($types['player'], $jptypes)) {
                 $jptypes[] = $types['player'];
             }
@@ -241,7 +244,7 @@ class WebPlayer
                 $addjs .= $callback_container . "startBroadcastListening('" . $item->url . "');";
                 break;
             } else {
-                $addjs .= $callback_container . "addMedia(" . self::get_media_js_param($item, '', $transcode_cfg) . ");";
+                $addjs .= $callback_container . "addMedia(" . self::get_media_js_param($item, $transcode_cfg) . ");";
             }
         }
 
@@ -263,7 +266,7 @@ class WebPlayer
                 $addjs .= $callback_container . "startBroadcastListening('" . $item->url . "');";
                 break;
             } else {
-                $addjs .= $callback_container . "playNext(" . self::get_media_js_param($item, '', $transcode_cfg) . ");";
+                $addjs .= $callback_container . "playNext(" . self::get_media_js_param($item, $transcode_cfg) . ");";
             }
         }
 
@@ -274,9 +277,10 @@ class WebPlayer
      * Get media javascript parameters.
      * @param Stream_URL $item
      * @param string $force_type
+     * @param array $transcode_cfg
      * @return string
      */
-    public static function get_media_js_param($item, $force_type = '', $transcode_cfg)
+    public static function get_media_js_param($item, $transcode_cfg, $force_type = '')
     {
         $json = array();
         foreach (array('title', 'author') as $member) {
@@ -289,7 +293,7 @@ class WebPlayer
             $json[$kmember] = $item->$member;
         }
         $urlinfo  = Stream_URL::parse($item->url);
-        $types    = self::get_types($item, $force_type, $urlinfo, $transcode_cfg);
+        $types    = self::get_types($item, $urlinfo, $transcode_cfg, $force_type);
         $url      = $urlinfo['base_url'];
         $media    = self::get_media_object($urlinfo);
 
