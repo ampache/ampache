@@ -298,14 +298,6 @@ class Song extends database_object implements media, library_item
      * @var string $f_license
      */
     public $f_license;
-    /**
-     * @var string $play_url
-     */
-    public $play_url;
-    /**
-     * @var array $stream_url
-     */
-    public $stream_url;
 
     /* Setting Variables */
     /**
@@ -1789,9 +1781,6 @@ class Song extends database_object implements media, library_item
             $license->format();
             $this->f_license = $license->f_link;
         }
-        $uid              = Core::get_global('user')->id;
-        $this->play_url   = $this->get_play_url($uid);
-        $this->stream_url = $this->get_stream_url($uid);
     } // format
 
     /**
@@ -2116,8 +2105,6 @@ class Song extends database_object implements media, library_item
         if (!$media->id) {
             return '';
         }
-        $media->format();
-
         // set no use when using auth
         if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
             $uid = -1;
