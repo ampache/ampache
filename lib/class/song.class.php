@@ -2224,7 +2224,7 @@ class Song extends database_object implements media, library_item
      * @param string $player
      * @param string $media_type
      * @param array $options
-     * @return array|boolean
+     * @return array
      */
     public static function get_transcode_settings_for_media($source, $target = null, $player = null, $media_type = 'song', $options = array())
     {
@@ -2288,7 +2288,7 @@ class Song extends database_object implements media, library_item
         if (!$args) {
             debug_event('song.class', 'Target format ' . $target . ' is not properly configured', 2);
 
-            return false;
+            return array();
         }
         $args .= ' ' . $argst;
 
@@ -2302,7 +2302,7 @@ class Song extends database_object implements media, library_item
      * @param string $target
      * @param string $player
      * @param array $options
-     * @return array|boolean
+     * @return array
      */
     public function get_transcode_settings($target = null, $player = null, $options = array())
     {

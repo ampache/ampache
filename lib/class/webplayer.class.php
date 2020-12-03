@@ -180,7 +180,7 @@ class WebPlayer
                     debug_event("webplayer.class", "Forcing type to {" . $force_type . "}", 5);
                     // Transcode only if excepted type available
                     $transcode_settings = Song::get_transcode_settings_for_media($file_type, $force_type, 'webplayer', $media_type);
-                    if ($transcode_settings) {
+                    if (!empty($transcode_settings)) {
                         $types['real'] = $transcode_settings['format'];
                         $transcode     = true;
                     }
@@ -190,7 +190,7 @@ class WebPlayer
                 if (!$transcode) {
                     if ($transcode_cfg == 'always' || !in_array('native', $valid_types)) {
                         $transcode_settings = Song::get_transcode_settings_for_media($file_type, $force_type, 'webplayer', $media_type);
-                        if ($transcode_settings) {
+                        if (!empty($transcode_settings)) {
                             $types['real'] = $transcode_settings['format'];
                             $transcode     = true;
                         }
