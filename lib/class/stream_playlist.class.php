@@ -196,7 +196,7 @@ class Stream_Playlist
 
     /**
      * media_object_to_url
-     * @param Song|Podcast_Episode|Song_Preview|Video|Live_Stream|Channel $object
+     * @param media $object
      * @param string $additional_params
      * @param string $urltype
      * @return Stream_URL
