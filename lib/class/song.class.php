@@ -2030,7 +2030,7 @@ class Song extends database_object implements media, library_item
         $media_name = rawurlencode($media_name);
 
         $url = Stream::get_base_url(false) . "type=song&oid=" . $this->id . "&uid=" . (string) $uid;
-        if ($player) {
+        if ($player !== '') {
             $url .= "&client=" . $player;
         }
         $url .= "&name=" . $media_name;
@@ -2103,7 +2103,7 @@ class Song extends database_object implements media, library_item
         $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
         $media_name = rawurlencode($media_name);
 
-        $url = Stream::get_base_url($local) . "type=" . $this->type . "&oid=" . $this->id . "&uid=" . (string) $uid . $additional_params;
+        $url = Stream::get_base_url($local) . "type=song&oid=" . $this->id . "&uid=" . (string) $uid . $additional_params;
         if ($player !== '') {
             $url .= "&player=" . $player;
         }
