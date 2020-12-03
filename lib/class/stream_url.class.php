@@ -26,6 +26,14 @@ declare(strict_types=0);
  *
  * A class for passing around an URL and associated data
  * @property string $url
+ * @property string $title
+ * @property string $author
+ * @property string $time
+ * @property string $info_url
+ * @property string $image_url
+ * @property string $album
+ * @property string $type
+ * @property string $codec
  */
 class Stream_URL extends memory_object
 {
