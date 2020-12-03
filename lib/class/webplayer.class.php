@@ -53,7 +53,7 @@ class WebPlayer
 
     /**
      * Get types information for an item.
-     * @param playable_item $item
+     * @param Stream_URL $item
      * @param string $force_type
      * @return array
      */
@@ -268,7 +268,7 @@ class WebPlayer
 
     /**
      * Get media javascript parameters.
-     * @param playable_item $item
+     * @param Stream_URL $item
      * @param string $force_type
      * @return string
      */
