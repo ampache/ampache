@@ -100,7 +100,7 @@ $subtitles = $video->get_subtitles();
         <?php
     } ?>
         <?php if (Access::check_function('download')) { ?>
-            <a class="nohtml" href="<?php echo Video::play_url($video->id); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
+            <a class="nohtml" href="<?php echo $video->play_url(); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
             <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
         <?php
     } ?>

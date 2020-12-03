@@ -393,7 +393,7 @@ class Podcast_Episode extends database_object implements media, library_item
      * @param string $target
      * @param string $player
      * @param array $options
-     * @return array|boolean
+     * @return array
      */
     public function get_transcode_settings($target = null, $player = null, $options = array())
     {
@@ -401,11 +401,7 @@ class Podcast_Episode extends database_object implements media, library_item
     }
 
     /**
-     * play_url
-     * This function takes all the song information and correctly formats a
-     * a stream URL taking into account the downsmapling mojo and everything
-     * else, this is the true function
-     * @param integer $object_id
+     * Set a generic play url.
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
@@ -413,13 +409,51 @@ class Podcast_Episode extends database_object implements media, library_item
      * @param boolean $original
      * @return string
      */
-    public static function play_url($object_id, $additional_params = '', $player = '', $local = false, $uid = false, $original = false)
+    public function set_play_url($additional_params, $player = '', $local = false, $uid = -1)
+    {
+        if (!$this->id) {
+            return '';
+        }
+        // set no use when using auth
+        if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
+            $uid = -1;
+        }
+
+        $type = $this->type;
+
+        $this->format();
+        $media_name = $this->get_stream_name() . "." . $type;
+        $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
+        $media_name = rawurlencode($media_name);
+
+        $url = Stream::get_base_url($local) . "type=podcast_episode&oid=" . $this->id . "&uid=" . (string) $uid . $additional_params;
+        if ($player !== '') {
+            $url .= "&player=" . $player;
+        }
+        $url .= "&name=" . $media_name;
+
+        return Stream_URL::format($url);
+    } // set_play_url
+
+    /**
+     * play_url
+     * This function takes all the song information and correctly formats a
+     * a stream URL taking into account the downsmapling mojo and everything
+     * else, this is the true function
+     * @param string $additional_params
+     * @param string $player
+     * @param boolean $local
+     * @param integer $uid
+     * @param boolean $original
+     * @return string
+     */
+    public function play_url($additional_params = '', $player = '', $local = false, $uid = false)
     {
         if (!$uid) {
             $uid = Core::get_global('user')->id;
         }
 
-        return Song::generic_play_url('podcast_episode', $object_id, $additional_params, $player, $local, $uid, $original);
+        return $this->set_play_url($additional_params, $player, $local, $uid);
     }
 
     /**

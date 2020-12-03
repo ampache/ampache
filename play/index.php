@@ -35,8 +35,8 @@ ob_end_clean();
 
 /* These parameters had better come in on the url. */
 $uid          = scrub_in($_REQUEST['uid']);
-$object_id    = scrub_in($_REQUEST['oid']);
-$sid          = scrub_in($_REQUEST['ssid']);
+$object_id    = (int) scrub_in($_REQUEST['oid']);
+$sid          = (int) scrub_in($_REQUEST['ssid']);
 $type         = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 $cache        = scrub_in($_REQUEST['cache']);
 $format       = scrub_in($_REQUEST['format']);

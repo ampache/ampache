@@ -196,7 +196,7 @@ class Stream_Playlist
 
     /**
      * media_object_to_url
-     * @param $object
+     * @param media $object
      * @param string $additional_params
      * @param string $urltype
      * @return Stream_URL
@@ -225,8 +225,7 @@ class Stream_Playlist
                     }
                 }
             } else {
-                // FIXME: play_url shouldn't be static
-                $url['url'] = $type::play_url($object->id, $additional_params);
+                $url['url'] = $object->play_url($additional_params);
             }
 
             $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
@@ -241,33 +240,38 @@ class Stream_Playlist
                     $url['info_url']  = $object->f_link;
                     $url['image_url'] = Art::url($object->album, 'album', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['album']     = $object->f_album_full;
-                    $url['track_num'] = $object->f_track;
+                    $url['codec']     = $object->type;
+                    //$url['track_num'] = $object->f_track;
                     break;
                 case 'video':
                     $url['title']      = 'Video - ' . $object->title;
                     $url['author']     = $object->f_artist_full;
                     $url['resolution'] = $object->f_resolution;
+                    $url['codec']      = $object->type;
                     break;
                 case 'live_stream':
                     $url['title'] = 'Radio - ' . $object->name;
                     if (!empty($object->site_url)) {
                         $url['title'] .= ' (' . $object->site_url . ')';
                     }
-                    $url['codec']     = $object->codec;
                     $url['image_url'] = Art::url($object->id, 'live_stream', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
+                    $url['codec']     = $object->codec;
                     break;
                 case 'song_preview':
                     $url['title']  = $object->title;
                     $url['author'] = $object->f_artist_full;
+                    $url['codec']  = $object->type;
                     break;
                 case 'channel':
                     $url['title'] = $object->name;
+                    $url['codec'] = $object->stream_type;
                     break;
                 case 'podcast_episode':
                     $url['title']     = $object->f_title;
                     $url['author']    = $object->f_podcast;
                     $url['info_url']  = $object->f_link;
                     $url['image_url'] = Art::url($object->podcast, 'podcast', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
+                    $url['codec']     = $object->type;
                     break;
                 case 'random':
                     $url['title'] = 'Random URL';
@@ -453,7 +457,7 @@ class Stream_Playlist
     }
 
     /**
-      * get_pls_string
+     * get_pls_string
      * @return string
      */
     public function get_pls_string()
@@ -602,7 +606,8 @@ class Stream_Playlist
                     $additional_params .= '&' . $key . '=' . $value;
                 }
 
-                $hu = $type::play_url($id, $additional_params);
+                $item = new $type($id);
+                $hu   = $item->play_url($additional_params);
                 $ret .= $hu . "\n";
                 $soffset += $size;
                 $segment++;
@@ -692,9 +697,10 @@ class Stream_Playlist
             $data    = Stream_URL::parse($url->url);
             $items[] = array($data['type'], $data['id']);
         }
-
-        $democratic->add_vote($items);
-        display_notification(T_('Vote added'));
+        if (!empty($items)) {
+            $democratic->add_vote($items);
+            display_notification(T_('Vote added'));
+        }
     }
 
     /**
