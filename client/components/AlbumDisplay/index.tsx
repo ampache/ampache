@@ -25,34 +25,33 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (props: AlbumDisplayProps) => 
 
     return (
         <>
-            <Link
-                to={`/album/${props.album.id}`}
-                className={`${style.albumDisplayContainer} ${props.className}`}
-            >
-                <div {...bindTrigger} className={style.albumDisplay}>
-                    <div className={style.imageContainer}>
-                        <img
-                            src={props.album.art + '&thumb=true'}
-                            alt='Album cover'
-                        />
+            <div {...bindTrigger} className={`${style.albumDisplay} ${props.className}`}>
+                <div className={style.imageContainer}>
+                    <img
+                        src={props.album.art + '&thumb=true'}
+                        alt='Album cover'
+                    />
+                </div>
+                <div className={style.details}>
+                    <div className={style.albumInfo}>
+                        <div className={style.albumName}>
+                            {props.album.name}
+                            <Link to={`/album/${props.album.id}`} className={style.cardLink}></Link>
+                        </div>
+                        <div className={style.albumArtist}>Album artist</div>
+                        <div className={style.albumMeta}>Year - XX tracks</div>
+                        <Rating />
                     </div>
-                    <div className={style.details}>
-                        <div className={style.albumInfo}>
-                            <div className={style.albumName}>{props.album.name}</div>
-                            <div className={style.albumArtist}>Album artist</div>
-                            <div className={style.albumMeta}>Year - XX tracks</div>
-                            <Rating />
-                        </div>
 
-                        <div className={style.albumActions}>
-                            <SVG className='icon-button' src={require('~images/icons/svg/play.svg')} alt="Play" />
-                            <SVG className='icon-button' src={require('~images/icons/svg/play-next.svg')} alt="Play next" />
-                            <SVG className='icon-button' src={require('~images/icons/svg/play-last.svg')} alt="Play last" />
-                            <SVG className='icon-button' src={require('~images/icons/svg/more-options-hori.svg')} alt="More options" />
-                        </div>
+                    <div className={style.albumActions}>
+                        <SVG className='icon-button-small' src={require('~images/icons/svg/play.svg')} alt="Play" />
+                        <SVG className='icon-button-small' src={require('~images/icons/svg/play-next.svg')} alt="Play next" />
+                        <SVG className='icon-button-small' src={require('~images/icons/svg/play-last.svg')} alt="Play last" />
+                        <SVG className='icon-button-small' src={require('~images/icons/svg/more-options-hori.svg')} alt="More options" />
                     </div>
                 </div>
-            </Link>
+            </div>
+            
 
             <div {...bindMenu} className='contextMenu'>
                 <div

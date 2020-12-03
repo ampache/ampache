@@ -1,2 +1,26 @@
 @import "~stylus/sizes.styl"
 @import "~stylus/color.styl"
+
+.ratings
+    display: flex
+    align-items: center
+    padding: 8px 0
+
+    .heartIcon
+        fill colorRed500
+        cursor: pointer
+
+    .cancelIcon
+        fill colorGray400
+        transform scale(0.9)
+        cursor: pointer
+
+    .divider
+        content: "";
+        display: inline-block
+        border-radius: 50%
+        width 4px
+        height 4px
+        background-color colorGray400
+        align-self: center
+        margin: 0 5px

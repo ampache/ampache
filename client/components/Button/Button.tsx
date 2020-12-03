@@ -3,9 +3,11 @@ import React from 'react';
 import style from './index.module.styl';
 
 export enum ButtonColors {
+    gray = 'gray',
     green = 'green',
     blue = 'blue',
-    red = 'red'
+    red = 'red',
+    yellow = 'yellow'
 }
 
 export enum ButtonSize {
