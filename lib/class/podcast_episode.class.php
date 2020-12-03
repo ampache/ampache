@@ -421,20 +421,6 @@ class Podcast_Episode extends database_object implements media, library_item
 
         $type = $this->type;
 
-        // Checking if the media is gonna be transcoded into another type
-        // Some players doesn't allow a type streamed into another without giving the right extension
-        if (!$original) {
-            $transcode_cfg = AmpConfig::get('transcode');
-            $valid_types   = Song::get_stream_types_for_type($type, $player);
-            if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
-                $transcode_settings = $this->get_transcode_settings(null);
-                if ($transcode_settings) {
-                    debug_event('podcast_episode', "Changing play url type from {" . $type . "} to {" . $transcode_settings['format'] . "} due to encoding settings... ", 5);
-                    $type = $transcode_settings['format'];
-                }
-            }
-        }
-
         $this->format();
         $media_name = $this->get_stream_name() . "." . $type;
         $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
@@ -461,13 +447,13 @@ class Podcast_Episode extends database_object implements media, library_item
      * @param boolean $original
      * @return string
      */
-    public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $original = false)
+    public function play_url($additional_params = '', $player = '', $local = false, $uid = false)
     {
         if (!$uid) {
             $uid = Core::get_global('user')->id;
         }
 
-        return $this->set_play_url($additional_params, $player, $local, $uid, $original);
+        return $this->set_play_url($additional_params, $player, $local, $uid);
     }
 
     /**

@@ -1012,7 +1012,7 @@ class XML_Data
                     "\t<rate>" . $song->rate . "</rate>\n" .
                     "\t<mode><![CDATA[" . $song->mode . "]]></mode>\n" .
                     "\t<mime><![CDATA[" . $song->mime . "]]></mime>\n" .
-                    "\t<url><![CDATA[" . $song->play_url('', 'api', false, $user_id, true) . "]]></url>\n" .
+                    "\t<url><![CDATA[" . $song->play_url('&format=raw', 'api', false, $user_id) . "]]></url>\n" .
                     "\t<size>" . $song->size . "</size>\n" .
                     "\t<mbid><![CDATA[" . $song->mbid . "]]></mbid>\n" .
                     "\t<album_mbid><![CDATA[" . $song->album_mbid . "]]></album_mbid>\n" .
@@ -1126,7 +1126,7 @@ class XML_Data
                     "\t<track>" . $song->track . "</track>\n" .
                     "\t<time><![CDATA[" . $song->time . "]]></time>\n" .
                     "\t<mime><![CDATA[" . $song->mime . "]]></mime>\n" .
-                    "\t<url><![CDATA[" . $song->play_url('', 'api', false, $user_id, true) . "]]></url>\n" .
+                    "\t<url><![CDATA[" . $song->play_url('&format=raw', 'api', false, $user_id) . "]]></url>\n" .
                     "\t<size>" . $song->size . "</size>\n" .
                     "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
                     "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .

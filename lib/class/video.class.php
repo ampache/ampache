@@ -476,20 +476,6 @@ class Video extends database_object implements media, library_item
 
         $type = $this->type;
 
-        // Checking if the media is gonna be transcoded into another type
-        // Some players doesn't allow a type streamed into another without giving the right extension
-        if (!$original) {
-            $transcode_cfg = AmpConfig::get('transcode');
-            $valid_types   = Song::get_stream_types_for_type($type, $player);
-            if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
-                $transcode_settings = $this->get_transcode_settings(null);
-                if ($transcode_settings) {
-                    debug_event('video.class', "Changing play url type from {" . $type . "} to {" . $transcode_settings['format'] . "} due to encoding settings... ", 5);
-                    $type = $transcode_settings['format'];
-                }
-            }
-        }
-
         $this->format();
         $media_name = $this->get_stream_name() . "." . $type;
         $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
