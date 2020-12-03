@@ -39,17 +39,6 @@ interface media
     public function get_stream_types($player = array());
 
     /**
-     * Set a generic play url.
-     * @param string $additional_params
-     * @param string $player
-     * @param boolean $local
-     * @param integer $uid
-     * @param boolean $original
-     * @return string
-     */
-    public function set_play_url($additional_params, $player = '', $local = false, $uid = -1, $original = false);
-
-    /**
      * play_url
      *
      * Returns the url to stream the specified object
