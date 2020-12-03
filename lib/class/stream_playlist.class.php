@@ -606,7 +606,8 @@ class Stream_Playlist
                     $additional_params .= '&' . $key . '=' . $value;
                 }
 
-                $hu = $type::play_url($id, $additional_params);
+                $item = new $type($id);
+                $hu   = $item->play_url($additional_params);
                 $ret .= $hu . "\n";
                 $soffset += $size;
                 $segment++;

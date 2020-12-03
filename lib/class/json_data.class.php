@@ -888,7 +888,7 @@ class JSON_Data
                 "resolution" => $video->f_resolution,
                 "size" => (int) $video->size,
                 "genre" => self::genre_array($video->tags),
-                "url" => Video::play_url($video->id, '', 'api', false, $user_id)
+                "url" => $video->play_url('', 'api', false, $user_id)
             ));
         } // end foreach
 

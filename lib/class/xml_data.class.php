@@ -1078,7 +1078,7 @@ class XML_Data
                     "\t<resolution><![CDATA[" . $video->f_resolution . "]]></resolution>\n" .
                     "\t<size>" . $video->size . "</size>\n" .
                     self::genre_string($video->tags) .
-                    "\t<url><![CDATA[" . Video::play_url($video->id, '', 'api', false, $user_id) . "]]></url>\n" .
+                    "\t<url><![CDATA[" . $video->play_url('', 'api', false, $user_id) . "]]></url>\n" .
                     "</video>\n";
         } // end foreach
 
@@ -1423,7 +1423,7 @@ class XML_Data
             }
             $xitem->addChild("xmlns:itunes:duration", $media->f_time);
             if ($media->mime) {
-                $surl  = $media_info['object_type']::play_url($media_info['object_id'], '', 'api', false, $user_id);
+                $surl  = $media->play_url('', 'api', false, $user_id);
                 $xencl = $xitem->addChild("enclosure");
                 $xencl->addAttribute("type", (string) $media->mime);
                 $xencl->addAttribute("length", (string) $media->size);
