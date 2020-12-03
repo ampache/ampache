@@ -450,11 +450,6 @@ ratings = "true"
 ; DEFAULT: -1
 ;rating_file_tag_user = 1
 
-; Set the amount of items Album/Video of the Moment will display
-; This was previously hardcoded into the site
-; DEFAULT: 6
-;of_the_moment = 6
-
 ; User flags/favorites
 ; This allows user flags for almost any object in Ampache as favorite
 ; POSSIBLE VALUES: false true

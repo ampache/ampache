@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Lib\ApiMethods;
 
+use AmpConfig;
 use Api;
 use Core;
 use JSON_Data;

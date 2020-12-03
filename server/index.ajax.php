@@ -29,7 +29,7 @@ if (!defined('AJAX_INCLUDE')) {
 
 $results = array();
 $action  = Core::get_request('action');
-$moment  = (int) AmpConfig::get('of_the_moment');
+$moment  = (int) AmpConfig::get('of_the_moment', 6);
 $user    = Core::get_global('user');
 // filter album and video of the Moment instead of hardcoding
 if (!$moment > 0) {

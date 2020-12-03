@@ -55,9 +55,6 @@ class Playlist extends playlist_object
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-        if ($this->last_duration == 0 && $this->id) {
-            $this->set_last($this->get_total_duration(), 'last_duration');
-        }
     } // Playlist
 
     /**
@@ -492,6 +489,7 @@ class Playlist extends playlist_object
         debug_event('playlist.class', "add_medias to: " . $this->id, 5);
         $track_data = $this->get_songs();
         $base_track = count($track_data);
+        $track      = 0;
         $count      = 0;
         $sql        = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) VALUES ";
         $values     = array();

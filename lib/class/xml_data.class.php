@@ -478,7 +478,7 @@ class XML_Data
                     $string .= self::podcast_episodes($objects, false);
                     break;
                 case 'video':
-                    $string .= self::videos($objects, false);
+                    $string .= self::videos($objects);
                     break;
             }
         } // end foreach objects
