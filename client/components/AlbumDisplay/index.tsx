@@ -32,26 +32,27 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (props: AlbumDisplayProps) => 
                         alt='Album cover'
                     />
                 </div>
+                <div className={style.rating}>
+                    <Rating />
+                </div>
                 <div className={style.details}>
                     <div className={style.albumInfo}>
                         <div className={style.albumName}>
                             {props.album.name}
                             <Link to={`/album/${props.album.id}`} className={style.cardLink}></Link>
                         </div>
-                        <div className={style.albumArtist}>Album artist</div>
-                        <div className={style.albumMeta}>Year - XX tracks</div>
-                        <Rating />
-                    </div>
-
-                    <div className={style.albumActions}>
-                        <SVG className='icon-button-small' src={require('~images/icons/svg/play.svg')} alt="Play" />
-                        <SVG className='icon-button-small' src={require('~images/icons/svg/play-next.svg')} alt="Play next" />
-                        <SVG className='icon-button-small' src={require('~images/icons/svg/play-last.svg')} alt="Play last" />
-                        <SVG className='icon-button-small' src={require('~images/icons/svg/more-options-hori.svg')} alt="More options" />
+                        <div className={style.albumArtist}>{props.album.artist.name}</div>
+                        <div className={style.albumMeta}>{props.album.year} - {props.album.tracks} tracks</div>
+                        
                     </div>
                 </div>
+                <div className={style.albumActions}>
+                    <SVG className='icon-button-small' src={require('~images/icons/svg/play.svg')} alt="Play" />
+                    <SVG className='icon-button-small' src={require('~images/icons/svg/play-next.svg')} alt="Play next" />
+                    <SVG className='icon-button-small' src={require('~images/icons/svg/play-last.svg')} alt="Play last" />
+                    <SVG className='icon-button-small' src={require('~images/icons/svg/more-options-hori.svg')} alt="More options" />
+                </div>
             </div>
-            
 
             <div {...bindMenu} className='contextMenu'>
                 <div
