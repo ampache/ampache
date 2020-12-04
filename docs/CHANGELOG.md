@@ -1,5 +1,29 @@
 # CHANGELOG
 
+## Ampache 4.2.5-release
+
+### Added
+
+* Use _add_urls when building a stream playlist
+
+### Changed
+
+* Removed the forced random from search
+* Put the browse header at the top above plugins
+* Make the webplayer class a bit faster at deciding what to transcode
+
+### Fixed
+
+* Ampache Debug, cron.lib.php missing from init
+* Slow playlist creation when inserting a large amount of items
+* Stream_URL properties were inconsistently applied
+* Fix streaming when play_type is Democratic
+* Save your limit and random settings when creating a smartlist
+
+### API 4.2.5
+
+**NO CHANGE**
+
 ## Ampache 4.2.4-release
 
 ### Added
