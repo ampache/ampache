@@ -107,7 +107,7 @@ class Ampachelistenbrainz
             return false;
         }
         if ($song->time < 30) {
-            debug_event('librefm.plugin', 'Song less then 30 seconds not queueing', 3);
+            debug_event('listenbrainz.plugin', 'Song less then 30 seconds not queueing', 3);
 
             return false;
         }
