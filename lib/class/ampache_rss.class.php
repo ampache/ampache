@@ -255,7 +255,7 @@ class Ampache_RSS
             $song   = new Song($item['object_id']);
             $row_id = ($item['user'] > 0) ? (int) $item['user'] : -1;
 
-            $has_allowed_now = (bool) $item['user_now'];
+            $has_allowed_now  = (bool) $item['user_now'];
             $is_allowed       = ($user) ? $user->id == $row_id : $has_allowed_now;
             if ($song->enabled && $is_allowed) {
                 $song->format();
