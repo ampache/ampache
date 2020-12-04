@@ -79,7 +79,6 @@ class Stream_Playlist
         debug_event("stream_playlist.class", "Adding url {" . json_encode($url) . "}...", 5);
 
         $this->urls[] = $url;
-        $sql          = '';
         $fields       = array();
         $fields[]     = '`sid`';
         $values       = array();

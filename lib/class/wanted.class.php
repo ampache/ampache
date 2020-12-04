@@ -356,9 +356,9 @@ class Wanted extends database_object
             $this->accepted = true;
 
             foreach (Plugin::get_plugins('process_wanted') as $plugin_name) {
-                debug_event('wanted.class', 'Using Wanted Process plugin: ' . $plugin_name, 5);
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->load(Core::get_global('user'))) {
+                    debug_event('wanted.class', 'Using Wanted Process plugin: ' . $plugin_name, 5);
                     $plugin->_plugin->process_wanted($this);
                 }
             }

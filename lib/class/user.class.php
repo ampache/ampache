@@ -969,8 +969,8 @@ class User extends database_object
             try {
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->load($user)) {
-                    $plugin->_plugin->save_mediaplay($media);
                     debug_event('user.class', 'save_mediaplay... ' . $plugin->_plugin->name, 5);
+                    $plugin->_plugin->save_mediaplay($media);
                 }
             } catch (Exception $error) {
                 debug_event('user.class', 'save_mediaplay plugin error: ' . $error->getMessage(), 1);

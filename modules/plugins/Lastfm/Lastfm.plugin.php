@@ -123,18 +123,6 @@ class AmpacheLastfm
             return false;
         }
 
-        // Let's pull the last song submitted by this user
-        $previous = Stats::get_last_play($this->user_id);
-
-        $diff = time() - $previous['date'];
-
-        // Make sure it wasn't within the last min
-        if ($diff < 15) {
-            debug_event('lastfm.plugin', 'Last song played within ' . $diff . ' seconds, not recording stats', 3);
-
-            return false;
-        }
-
         if ($song->time < 30) {
             debug_event('lastfm.plugin', 'Song less then 30 seconds not queueing', 3);
 
