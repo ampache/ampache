@@ -140,11 +140,8 @@ switch ($_REQUEST['action']) {
         $stream_type = 'download';
         break;
     case 'democratic':
-        // Don't let them loop it
-        // FIXME: This looks hacky
-        if (AmpConfig::get('play_type') == 'democratic') {
-            AmpConfig::set('play_type', 'stream', true);
-        }
+        $stream_type = AmpConfig::get('playlist_type');
+        break;
     default:
         $stream_type = AmpConfig::get('play_type');
 
@@ -153,8 +150,6 @@ switch ($_REQUEST['action']) {
         }
         break;
 }
-
-debug_event('stream', 'Stream Type: ' . $stream_type . ' Media Count: ' . count($media_ids), 5);
 
 if (count($media_ids) || isset($urls)) {
     if ($stream_type != 'democratic') {
@@ -171,8 +166,13 @@ if (count($media_ids) || isset($urls)) {
     }
 
     $playlist = new Stream_Playlist();
-    $playlist->add($media_ids);
+    // don't do this if nothing is there
+    if (count($media_ids)) {
+        debug_event('stream', 'Stream Type: ' . $stream_type . ' Media Count: ' . count($media_ids), 5);
+        $playlist->add($media_ids);
+    }
     if (isset($urls)) {
+        debug_event('stream', 'Stream Type: ' . $stream_type . ' Loading URL: ' . $urls[0], 5);
         $playlist->add_urls($urls);
     }
     // Depending on the stream type, will either generate a redirect or actually do the streaming.

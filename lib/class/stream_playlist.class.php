@@ -79,24 +79,21 @@ class Stream_Playlist
         debug_event("stream_playlist.class", "Adding url {" . json_encode($url) . "}...", 5);
 
         $this->urls[] = $url;
-        $sql          = 'INSERT INTO `stream_playlist` ';
-
-        $fields    = array();
-        $fields[]  = '`sid`';
-        $values    = array();
-        $values[]  = $this->id;
-        $holders   = array();
-        $holders[] = '?';
+        $fields       = array();
+        $fields[]     = '`sid`';
+        $values       = array();
+        $values[]     = $this->id;
+        $holders      = array();
+        $holders[]    = '?';
 
         foreach ($url->properties as $field) {
             if ($url->$field) {
                 $fields[]  = '`' . $field . '`';
-                $holders[] = '?';
                 $values[]  = $url->$field;
+                $holders[] = '?';
             }
         }
-        $sql .= '(' . implode(',', $fields) . ') ';
-        $sql .= 'VALUES(' . implode(',', $holders) . ')';
+        $sql = 'INSERT INTO `stream_playlist` (' . implode(',', $fields) . ') VALUES (' . implode(',', $holders) . ')';
 
         return Dba::write($sql, $values);
     }

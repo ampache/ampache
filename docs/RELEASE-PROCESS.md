@@ -28,19 +28,24 @@ It's easy to use a program like github desktop to compare between branches.
 * Remove broken symbolic links
 
 ```shell
-  find . -xtype l -exec rm {} \;
+find . -xtype l -exec rm {} \;
+```
+
+* Set a version number to skip typing over and over
+```shell
+read -p "Enter Ampache Version: " a_version
 ```
 
 * Create a zip package named "ampache-4.x.x_all.zip and add the entire ampache directory tree. (excluding git/development specific files)
 
 ```shell
-  zip -r -q -u -9 --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml  --exclude=.tgitconfig --exclude=.travis.yml ../ampache-4.x.x_all.zip ./
+rm ../ampache-${a_version}_all.zip & zip -r -q -u -9 --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml ../ampache-${a_version}_all.zip ./
 ```
 
 * Then unpack the exact zip and create a server to test basic functionality
 
 ```shell
-rm -rf /var/www/html && unzip -o ../ampache-4.x.x_all.zip -d /var/www/html/
+rm -rf /var/www/html && unzip -o ../ampache-${a_version}_all.zip -d /var/www/html/
 ```
 
 * FIXME This might be where unit testing would be helpful.
@@ -53,7 +58,7 @@ rm -rf /var/www/html && unzip -o ../ampache-4.x.x_all.zip -d /var/www/html/
   * get the md5hash for the release page
 
 ```shell
-md5sum ../ampache-4.x.x_all.zip
+md5sum ../ampache-${a_version}_all.zip
 ```
 
 ## Post release
@@ -94,11 +99,16 @@ Log in to your docker account
 docker login -u USER -p PASSWORD
 ```
 
+To update master and nosql; add the latest zip file to the docker images
+```Dockerfile
+    &&  wget -q -O /tmp/master.zip https://github.com/ampache/ampache/releases/download/4.x.4/ampache-4.x.4_all.zip \
+```
 Build latest (master) images and push to docker hub.
 
 ```bash
 git clone -b master https://github.com/ampache/ampache-docker.git ampache-docker/
 cd ampache-docker
+nano Dockerfile
 docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/ampache:latest --push .
 ```
 
@@ -115,5 +125,6 @@ Build nosql images and push to docker hub.
 ```bash
 git clone -b nosql https://github.com/ampache/ampache-docker.git ampache-docker-nosql/
 cd ampache-docker-nosql
+nano Dockerfile
 docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/ampache:nosql --push .
 ```
