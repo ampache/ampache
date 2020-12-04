@@ -45,14 +45,14 @@ foreach ($data as $row) {
     $row_user = new User($row_id);
     $song     = new Song($row['object_id']);
 
-    $agent            = '';
-    $time_string      = '-';
-    $has_allowed_now  = (bool) $row['user_now'];
-    $has_allowed_time = (bool) $row['user_time'];
-    $is_allowed_now   = $is_admin || $my_id == $row_id || $has_allowed_now;
-    $is_allowed_time  = $is_admin || $my_id == $row_id || $has_allowed_time;
+    $agent              = '';
+    $time_string        = '-';
+    $has_allowed_recent = (bool) $row['user_recent'];
+    $has_allowed_time   = (bool) $row['user_time'];
+    $is_allowed_recent  = $is_admin || $my_id == $row_id || $has_allowed_recent;
+    $is_allowed_time    = $is_admin || $my_id == $row_id || $has_allowed_time;
     // if you don't allow now_playing don't show the whole row
-    if ($is_allowed_now) {
+    if ($is_allowed_recent) {
         // add the time if you've allowed it
         if ($is_allowed_time) {
             $interval = (int) (time() - $row['date']);

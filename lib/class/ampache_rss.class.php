@@ -255,9 +255,9 @@ class Ampache_RSS
             $song   = new Song($item['object_id']);
             $row_id = ($item['user'] > 0) ? (int) $item['user'] : -1;
 
-            $has_allowed_now  = (bool) $item['user_now'];
-            $is_allowed       = ($user) ? $user->id == $row_id : $has_allowed_now;
-            if ($song->enabled && $is_allowed) {
+            $has_allowed_recent = (bool) $item['user_recent'];
+            $is_allowed_recent  = ($user) ? $user->id == $row_id : $has_allowed_recent;
+            if ($song->enabled && $is_allowed_recent) {
                 $song->format();
 
                 $xml_array = array('title' => $song->f_title . ' - ' . $song->f_artist . ' - ' . $song->f_album,
