@@ -500,6 +500,9 @@ class Xml_Data
                 case 'podcast_episode':
                     $string .= self::podcast_episodes($objects, false);
                     break;
+                case 'video':
+                    $string .= self::videos($objects);
+                    break;
             }
         } // end foreach objects
 
@@ -986,7 +989,7 @@ class Xml_Data
                     "\t<rate>" . $song->rate . "</rate>\n" .
                     "\t<mode><![CDATA[" . $song->mode . "]]></mode>\n" .
                     "\t<mime><![CDATA[" . $song->mime . "]]></mime>\n" .
-                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api', false, $user_id, true) . "]]></url>\n" .
+                    "\t<url><![CDATA[" . $song->play_url('', 'api', false, $user_id) . "]]></url>\n" .
                     "\t<size>" . $song->size . "</size>\n" .
                     "\t<mbid><![CDATA[" . $song->mbid . "]]></mbid>\n" .
                     "\t<album_mbid><![CDATA[" . $song->album_mbid . "]]></album_mbid>\n" .
@@ -1048,7 +1051,7 @@ class Xml_Data
                     "\t<resolution><![CDATA[" . $video->f_resolution . "]]></resolution>\n" .
                     "\t<size>" . $video->size . "</size>\n" .
                     self::genre_string($video->tags) .
-                    "\t<url><![CDATA[" . Video::play_url($video->id, '', 'api', false, $user_id) . "]]></url>\n" .
+                    "\t<url><![CDATA[" . $video->play_url('', 'api', false, $user_id) . "]]></url>\n" .
                     "</video>\n";
         } // end foreach
 
@@ -1086,10 +1089,25 @@ class Xml_Data
 
             $art_url = Art::url($song->album, 'album', Core::get_request('auth'));
 
-            $string .= "<song id=\"" . $song->id . "\">\n" . // Title is an alias for name
-                "\t<title><![CDATA[" . $song->title . "]]></title>\n" . "\t<name><![CDATA[" . $song->title . "]]></name>\n" . "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->f_artist_full . "]]></artist>\n" . "\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->f_album_full . "]]></album>\n" . "\t<genre id=\"" . $song->genre . "\"><![CDATA[" . $song->f_genre . "]]></genre>\n" . $tag_string . "\t<track>" . $song->track . "</track>\n" . "\t<time><![CDATA[" . $song->time . "]]></time>\n" . "\t<mime><![CDATA[" . $song->mime . "]]></mime>\n" . "\t<url><![CDATA[" . Song::play_url($song->id,
-                    '', 'api', false, $user_id,
-                    true) . "]]></url>\n" . "\t<size>" . $song->size . "</size>\n" . "\t<art><![CDATA[" . $art_url . "]]></art>\n" . "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" . "\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" . "\t<averagerating>" . ($rating->get_average_rating() ?: null) . "</averagerating>\n" . "\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n" . "</song>\n";
+            $string .= "<song id=\"" . $song->id . "\">\n" .
+                    // Title is an alias for name
+                    "\t<title><![CDATA[" . $song->title . "]]></title>\n" .
+                    "\t<name><![CDATA[" . $song->title . "]]></name>\n" .
+                    "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->f_artist_full . "]]></artist>\n" .
+                    "\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->f_album_full . "]]></album>\n" .
+                    "\t<genre id=\"" . $song->genre . "\"><![CDATA[" . $song->f_genre . "]]></genre>\n" .
+                    $tag_string .
+                    "\t<track>" . $song->track . "</track>\n" .
+                    "\t<time><![CDATA[" . $song->time . "]]></time>\n" .
+                    "\t<mime><![CDATA[" . $song->mime . "]]></mime>\n" .
+                    "\t<url><![CDATA[" . $song->play_url('', 'api', false, $user_id) . "]]></url>\n" .
+                    "\t<size>" . $song->size . "</size>\n" .
+                    "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
+                    "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
+                    "\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" .
+                    "\t<averagerating>" . ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
+                    "\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n" .
+                    "</song>\n";
         } // end foreach
 
         return self::output_xml($string);
@@ -1351,7 +1369,7 @@ class Xml_Data
             }
             $xitem->addChild("xmlns:itunes:duration", $media->f_time);
             if ($media->mime) {
-                $surl  = $media_info['object_type']::play_url($media_info['object_id'], '', 'api', false, $user_id);
+                $surl  = $media->play_url('', 'api', false, $user_id);
                 $xencl = $xitem->addChild("enclosure");
                 $xencl->addAttribute("type", (string)$media->mime);
                 $xencl->addAttribute("length", (string)$media->size);

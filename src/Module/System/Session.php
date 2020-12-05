@@ -223,7 +223,7 @@ final class Session implements SessionInterface
      * _read
      *
      * This returns the specified column from the session row.
-     * @param $key
+     * @param string $key
      * @param string $column
      * @return string
      */
@@ -258,7 +258,7 @@ final class Session implements SessionInterface
      * agent
      *
      * This returns the agent associated with a session ID, if any
-     * @param $key
+     * @param string $key
      * @return string
      */
     public static function agent($key)
@@ -386,7 +386,7 @@ final class Session implements SessionInterface
      * exists
      * based on the type.
      * @param string $type
-     * @param $key
+     * @param string $key
      * @return boolean
      */
     public static function exists($type, $key)
@@ -432,7 +432,7 @@ final class Session implements SessionInterface
      * extend
      *
      * This takes a SID and extends its expiration.
-     * @param $sid
+     * @param string $sid
      * @param string $type
      * @return PDOStatement|boolean
      */

@@ -109,9 +109,23 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
 
             $playlist = new Stream_Playlist();
             $playlist->add($mediaIds);
+
+            // don't do this if nothing is there
+            if ($mediaIds !== []) {
+                $this->logger->debug(
+                    sprintf('Stream Type: %s Media Count: %d', $streamType, count($mediaIds)),
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
+                $playlist->add($mediaIds);
+            }
             if (isset($urls)) {
+                $this->logger->debug(
+                    sprintf('Stream Type: %s Loading URL: %s', $streamType, $urls[0]),
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
                 $playlist->add_urls($urls);
             }
+
             // Depending on the stream type, will either generate a redirect or actually do the streaming.
             $playlist->generate_playlist($streamType, false);
         } else {

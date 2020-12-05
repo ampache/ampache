@@ -1138,8 +1138,7 @@ class Upnp_Api
             'upnp:genre' => Tag::get_display($song->tags, false, 'song'),
             //'dc:date'                   => date("c", (int) $song->addition_time),
             'upnp:originalTrackNumber' => $song->track,
-
-            'res' => Song::play_url($song->id, '', 'api'),
+            'res' => $song->play_url('', 'api'),
             'protocolInfo' => $arrFileType['mime'],
             'size' => $song->size,
             'duration' => $song->f_time_h . '.0',
@@ -1232,7 +1231,7 @@ class Upnp_Api
             'upnp:albumArtURI' => $art_url,
             'upnp:genre' => Tag::get_display($video->tags, false, 'video'),
 
-            'res' => Video::play_url($video->id, '', 'api'),
+            'res' => $video->play_url('', 'api'),
             'protocolInfo' => $arrFileType['mime'],
             'size' => $video->size,
             'duration' => $video->f_time_h . '.0',
@@ -1279,7 +1278,7 @@ class Upnp_Api
             'upnp:albumArtURI' => $art_url
         );
         if (isset($arrFileType['mime'])) {
-            $ret['res']          = Podcast_Episode::play_url($episode->id, '', 'api');
+            $ret['res']          = $episode->play_url('', 'api');
             $ret['protocolInfo'] = $arrFileType['mime'];
             $ret['size']         = $episode->size;
             $ret['duration']     = $episode->f_time_h . '.0';

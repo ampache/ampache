@@ -26,6 +26,7 @@ namespace Ampache\Module\User;
 
 use Ampache\Model\User;
 use Ampache\Module\Util\Mailer;
+use PHPMailer\PHPMailer\Exception;
 
 final class NewPasswordSender implements NewPasswordSenderInterface
 {
@@ -37,6 +38,9 @@ final class NewPasswordSender implements NewPasswordSenderInterface
         $this->passwordGenerator = $passwordGenerator;
     }
 
+    /**
+     * @throws Exception
+     */
     public function send(
         string $email,
         string $current_ip

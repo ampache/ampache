@@ -2686,17 +2686,16 @@ abstract class Catalog extends database_object
                     $xml['dict']['Name']         = $song->title;
                     $xml['dict']['Artist']       = $song->f_artist_full;
                     $xml['dict']['Album']        = $song->f_album_full;
-                    $xml['dict']['Total Time']   = (int)($song->time) * 1000; // iTunes uses milliseconds
-                    $xml['dict']['Track Number'] = (int)($song->track);
-                    $xml['dict']['Year']         = (int)($song->year);
-                    $xml['dict']['Date Added']   = get_datetime((int)$song->addition_time, 'short', 'short',
-                        "Y-m-d\TH:i:s\Z");
-                    $xml['dict']['Bit Rate']    = (int)($song->bitrate / 1000);
-                    $xml['dict']['Sample Rate'] = (int)($song->rate);
-                    $xml['dict']['Play Count']  = (int)($song->played);
-                    $xml['dict']['Track Type']  = "URL";
-                    $xml['dict']['Location']    = Song::play_url($song->id);
-                    echo (string)xoutput_from_array($xml, true, 'itunes');
+                    $xml['dict']['Total Time']   = (int) ($song->time) * 1000; // iTunes uses milliseconds
+                    $xml['dict']['Track Number'] = (int) ($song->track);
+                    $xml['dict']['Year']         = (int) ($song->year);
+                    $xml['dict']['Date Added']   = get_datetime((int) $song->addition_time, 'short', 'short', "Y-m-d\TH:i:s\Z");
+                    $xml['dict']['Bit Rate']     = (int) ($song->bitrate / 1000);
+                    $xml['dict']['Sample Rate']  = (int) ($song->rate);
+                    $xml['dict']['Play Count']   = (int) ($song->played);
+                    $xml['dict']['Track Type']   = "URL";
+                    $xml['dict']['Location']     = $song->play_url();
+                    echo (string) xoutput_from_array($xml, true, 'itunes');
                     // flush output buffer
                 } // while result
                 echo xml_get_footer('itunes');

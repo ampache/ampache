@@ -694,6 +694,35 @@ function create_preference_input($name, $value)
             } // end foreach
             echo "</select>\n";
             break;
+        case 'ratingmatch_stars':
+            $is_0 = '';
+            $is_1 = '';
+            $is_2 = '';
+            $is_3 = '';
+            $is_4 = '';
+            $is_5 = '';
+            if ($value == 0) {
+                $is_0 = 'selected="selected"';
+            } elseif ($value == 1) {
+                $is_1 = 'selected="selected"';
+            } elseif ($value == 2) {
+                $is_2 = 'selected="selected"';
+            } elseif ($value == 3) {
+                $is_3 = 'selected="selected"';
+            } elseif ($value == 4) {
+                $is_4 = 'selected="selected"';
+            } elseif ($value == 4) {
+                $is_5 = 'selected="selected"';
+            }
+            echo "<select name=\"$name\">\n";
+            echo "<option value=\"0\" $is_0>" . T_('Disabled') . "</option>\n";
+            echo "<option value=\"1\" $is_1>" . T_('1 Star') . "</option>\n";
+            echo "<option value=\"2\" $is_2>" . T_('2 Stars') . "</option>\n";
+            echo "<option value=\"3\" $is_3>" . T_('3 Stars') . "</option>\n";
+            echo "<option value=\"4\" $is_4>" . T_('4 Stars') . "</option>\n";
+            echo "<option value=\"5\" $is_5>" . T_('5 Stars') . "</option>\n";
+            echo "</select>\n";
+            break;
         case 'localplay_level':
             $is_user    = '';
             $is_admin   = '';

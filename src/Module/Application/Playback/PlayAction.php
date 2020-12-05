@@ -76,8 +76,8 @@ final class PlayAction implements ApplicationActionInterface
 
         /* These parameters had better come in on the url. */
         $uid          = scrub_in($_REQUEST['uid']);
-        $object_id    = scrub_in($_REQUEST['oid']);
-        $sid          = scrub_in($_REQUEST['ssid']);
+        $object_id    = (int) scrub_in($_REQUEST['oid']);
+        $session_id   = (string) scrub_in($_REQUEST['ssid']);
         $type         = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $cache        = scrub_in($_REQUEST['cache']);
         $format       = scrub_in($_REQUEST['format']);
@@ -155,7 +155,7 @@ final class PlayAction implements ApplicationActionInterface
 
         if ($type == 'playlist') {
             $playlist_type = scrub_in($_REQUEST['playlist_type']);
-            $object_id     = $sid;
+            $object_id     = $session_id;
         }
 
         /* First things first, if we don't have a uid/oid stop here */
@@ -234,11 +234,11 @@ final class PlayAction implements ApplicationActionInterface
                     if (!AmpConfig::get('require_localnet_session') && Access::check_network('network', Core::get_global('user')->id, 5)) {
                         debug_event('play/index', 'Streaming access allowed for local network IP ' . Core::get_server('REMOTE_ADDR'), 4);
                     } else {
-                        if (!Session::exists('stream', $sid)) {
+                        if (!Session::exists('stream', $session_id)) {
                             // No valid session id given, try with cookie session from web interface
-                            $sid = $_COOKIE[AmpConfig::get('session_name')];
-                            if (!Session::exists('interface', $sid)) {
-                                debug_event('play/index', "Streaming access denied: Session $sid has expired", 3);
+                            $session_id = $_COOKIE[AmpConfig::get('session_name')];
+                            if (!Session::exists('interface', $session_id)) {
+                                debug_event('play/index', "Streaming access denied: Session $session_id has expired", 3);
                                 header('HTTP/1.1 403 Session Expired');
 
                                 return null;
@@ -248,7 +248,7 @@ final class PlayAction implements ApplicationActionInterface
 
                     // Now that we've confirmed the session is valid
                     // extend it
-                    Session::extend($sid, 'stream');
+                    Session::extend($session_id, 'stream');
                 }
             }
 
@@ -468,7 +468,7 @@ final class PlayAction implements ApplicationActionInterface
             if (!$share_id) {
                 if (Core::get_server('REQUEST_METHOD') != 'HEAD' && $record_stats) {
                     debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
-                    $sessionkey = $sid ?: Stream::get_session();
+                    $sessionkey = $session_id ?: Stream::get_session();
                     $agent      = Session::agent($sessionkey);
                     $location   = Session::get_geolocation($sessionkey);
                     Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
@@ -493,7 +493,7 @@ final class PlayAction implements ApplicationActionInterface
             if (!$share_id) {
                 if (Core::get_server('REQUEST_METHOD') != 'HEAD' && $record_stats) {
                     debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
-                    $sessionkey = $sid ?: Stream::get_session();
+                    $sessionkey = $session_id ?: Stream::get_session();
                     $agent      = Session::agent($sessionkey);
                     $location   = Session::get_geolocation($sessionkey);
                     Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
@@ -673,7 +673,7 @@ final class PlayAction implements ApplicationActionInterface
             header('ETag: ' . $media->id);
         }
         if (($action != 'download') && $record_stats) {
-            Stream::insert_now_playing((int) $media->id, (int) $uid, (int) $media->time, $sid, ObjectTypeToClassNameMapper::reverseMap(get_class($media)));
+            Stream::insert_now_playing((int) $media->id, (int) $uid, (int) $media->time, $session_id, ObjectTypeToClassNameMapper::reverseMap(get_class($media)));
         }
         // Handle Content-Range
 
@@ -717,18 +717,19 @@ final class PlayAction implements ApplicationActionInterface
             if ($start > 0) {
                 debug_event('play/index', 'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats', 5);
             } else {
-                $sessionkey = $sid ?: Stream::get_session();
+                $sessionkey = $session_id ?: Stream::get_session();
                 $agent      = Session::agent($sessionkey);
                 $location   = Session::get_geolocation($sessionkey);
                 if (!$share_id && $record_stats) {
                     if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                         debug_event('play/index', 'Registering stream for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 4);
+                        // internal stats (object_count, user_activity)
+                        $media->set_played($uid, $agent, $location, $time);
+
                         if ($user->id && get_class($media) == Song::class) {
                             // scrobble songs for the user
                             User::save_mediaplay($user, $media);
                         }
-                        // internal stats (object_count, user_activity)
-                        $media->set_played($uid, $agent, $location, $time);
                     }
                 } elseif (!$share_id && !$record_stats) {
                     if (Core::get_server('REQUEST_METHOD') != 'HEAD') {

@@ -212,14 +212,12 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getExternalPlayUrl(): string
     {
-        return Song::play_url(
-           $this->song->getId(),
-           '&action=download',
-           '',
-           false,
-           Core::get_global('user')->id,
-           true
-       );
+        return $this->song->play_url(
+            '&action=download',
+            '',
+            false,
+            Core::get_global('user')->id
+        );
     }
 
     public function getExternalPlayIcon(): string
@@ -338,8 +336,8 @@ final class SongViewAdapter implements SongViewAdapterInterface
     {
         $songprops = [];
 
-        $songprops[T_('Title')]   = scrub_out($this->song->title);
-        $songprops[T_('Artist')]  = $this->song->f_artist_link;
+        $songprops[T_('Title')]        = scrub_out($this->song->title);
+        $songprops[T_('Song Artist')]  = $this->song->f_artist_link;
         if (!empty($this->song->f_albumartist_link)) {
             $songprops[T_('Album Artist')]   = $this->song->f_albumartist_link;
         }

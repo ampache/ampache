@@ -64,17 +64,10 @@ final class DemocraticAction extends AbstractStreamAction
         $democratic = $this->modelFactory->createDemocratic((int) $_REQUEST['democratic_id']);
         $urls       = [$democratic->play_url()];
 
-        // Don't let them loop it
-        // FIXME: This looks hacky
-        if ($this->configContainer->get(ConfigurationKeyEnum::PLAY_TYPE) === 'democratic') {
-            $this->configContainer->updateConfig([
-                ConfigurationKeyEnum::PLAY_TYPE => 'stream'
-            ]);
-        }
-
         return $this->stream(
             [],
-            $urls
+            $urls,
+            $this->configContainer->get(ConfigurationKeyEnum::PLAYLIST_TYPE)
         );
     }
 }

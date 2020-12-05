@@ -25,12 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Bookmark;
 use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
@@ -61,6 +61,11 @@ final class GetBookmarkMethod
         $user      = User::get_from_username(Session::username($input['auth']));
         $object_id = (int) $input['filter'];
         $type      = $input['type'];
+        if (!AmpConfig::get('allow_video') && $type == 'video') {
+            Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
         // confirm the correct data
         if (!in_array($type, array('song', 'video', 'podcast_episode'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

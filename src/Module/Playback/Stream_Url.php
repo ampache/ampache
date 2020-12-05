@@ -32,21 +32,18 @@ use Ampache\Config\AmpConfig;
  *
  * A class for passing around an URL and associated data
  * @property string $url
+ * @property string $title
+ * @property string $author
+ * @property string $time
+ * @property string $info_url
+ * @property string $image_url
+ * @property string $album
+ * @property string $type
+ * @property string $codec
  */
 class Stream_Url extends MemoryObject
 {
-    public $properties = array(
-        'url',
-        'title',
-        'author',
-        'time',
-        'info_url',
-        'image_url',
-        'album',
-        'type',
-        'codec',
-        'track_num'
-    );
+    public $properties = array('url', 'title', 'author', 'time', 'info_url', 'image_url', 'album', 'type', 'codec');
 
     /**
      * parse

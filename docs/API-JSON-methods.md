@@ -6,7 +6,13 @@ metaDescription: "API documentation"
 
 Let's go through come calls and examples that you can do for each JSON method.
 
-Remember that Binary data methods will not return JSON; just the file/data you have requested.
+With the exception of Binary methods, all responses will return a HTTP 200 response.
+
+Also remember that Binary data methods will not return JSON; just the file/data you have requested.
+
+Binary methods will also return:
+* HTTP 400 responses for a bad or incomplete request
+* HTTP 404 responses where the requests data was not found
 
 ## Non-Data Methods
 
@@ -2376,10 +2382,16 @@ Delete an existing bookmark. (if it exists)
 
 ## Binary Data Methods
 
+Binary data methods are used for returning raw data to the user such as a image or stream.
+
 ### stream
 
 Streams a given media file. Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
 @param array $input
+@return file (HTTP 200 OK)
+
+@throws (HTTP 400 Bad Request)
+@throws (HTTP 404 Not Found)
 
 | Input     | Type    | Description                 | Optional |
 |-----------|---------|-----------------------------|---------:|
@@ -2394,6 +2406,10 @@ Streams a given media file. Takes the file id in parameter with optional max bit
 
 Downloads a given media file. set format=raw to download the full file
 @param array $input
+@return file (HTTP 200 OK)
+
+@throws (HTTP 400 Bad Request)
+@throws (HTTP 404 Not Found)
 
 | Input    | Type    | Description              | Optional |
 |----------|---------|--------------------------|---------:|
@@ -2405,6 +2421,16 @@ Downloads a given media file. set format=raw to download the full file
 
 Get an art image.
 @param array $input
+@return image (HTTP 200 OK)
+
+@throws (HTTP 400 Bad Request)
+@throws (HTTP 404 Not Found)
+
+
+| Input  | Type    | Description                                                | Optional |
+|--------|---------|------------------------------------------------------------|---------:|
+| 'id'   | integer | $object_id                                                 |       NO |
+| 'type' | string  | 'song', 'artist', 'album', 'playlist', 'search', 'podcast' |       NO |
 
 ## Control Methods
 

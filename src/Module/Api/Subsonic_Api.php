@@ -1136,12 +1136,12 @@ class Subsonic_Api
         }
 
         $url = '';
-        if (Subsonic_Xml_Data::isSong($fileid)) {
-            $url = Song::play_url(Subsonic_Xml_Data::getAmpacheId($fileid), $params, 'api',
-                function_exists('curl_version'), $user_id);
-        } elseif (Subsonic_Xml_Data::isPodcastEp($fileid)) {
-            $url = Podcast_Episode::play_url(Subsonic_Xml_Data::getAmpacheId($fileid), $params, 'api',
-                function_exists('curl_version'), $user_id);
+        if (Subsonic_XML_Data::isSong($fileid)) {
+            $object = new Song(Subsonic_XML_Data::getAmpacheId($fileid));
+            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
+        } elseif (Subsonic_XML_Data::isPodcastEp($fileid)) {
+            $object = new Podcast_Episode(Subsonic_XML_Data::getAmpacheId($fileid));
+            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
         }
 
         if (!empty($url)) {
@@ -1159,9 +1159,13 @@ class Subsonic_Api
     {
         $fileid = self::check_parameter($input, 'id', true);
 
-        $url = Song::play_url(Subsonic_Xml_Data::getAmpacheId($fileid),
-            '&action=download' . '&client=' . rawurlencode($input['c']) . '&cache=1', 'api',
-            function_exists('curl_version'));
+        $url = Song::generic_play_url(
+            Subsonic_XML_Data::getAmpacheType($fileid),
+            Subsonic_XML_Data::getAmpacheId($fileid),
+            '&action=download' . '&client=' . rawurlencode($input['c']) . '&cache=1',
+            'api',
+            function_exists('curl_version')
+        );
         self::follow_stream($url);
     }
 
@@ -1916,8 +1920,9 @@ class Subsonic_Api
 
                         foreach ($id as $i) {
                             $url = null;
-                            if (Subsonic_Xml_Data::isSong($i)) {
-                                $url = Song::generic_play_url('song', Subsonic_Xml_Data::getAmpacheId($i), '', 'api');
+
+                            if (Subsonic_XML_Data::isSong($i)) {
+                                $url = Song::generic_play_url('Song', Subsonic_XML_Data::getAmpacheId($i), '', 'api');
                             }
 
                             if ($url !== null) {

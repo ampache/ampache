@@ -31,6 +31,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -65,6 +66,8 @@ final class SaveAsSmartPlaylistAction implements ApplicationActionInterface
 
         $playlist = $this->modelFactory->createSearch();
         $playlist->parse_rules(Search::clean_request($_REQUEST));
+        $playlist->limit  = (int) Core::get_request('limit');
+        $playlist->random = (int) Core::get_request('random');
         $playlist->save();
         
         $this->ui->showConfirmation(

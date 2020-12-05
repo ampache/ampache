@@ -211,6 +211,8 @@ class Json_Data
                 return self::podcasts($objects);
             case 'podcast_episode':
                 return self::podcast_episodes($objects);
+            case 'video':
+                return self::videos($objects);
             default:
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 return self::error('4710', printf(T_('Bad Request: %s'), $type), 'indexes', 'type');
@@ -843,8 +845,8 @@ class Json_Data
             $ourSong['rate']             = (int)$song->rate;
             $ourSong['mode']             = $song->mode;
             $ourSong['mime']             = $song->mime;
-            $ourSong['url']              = Song::play_url($song->id, '', 'api', false, $user_id);
-            $ourSong['size']             = (int)$song->size;
+            $ourSong['url']              = $song->play_url('', 'api', false, $user_id);
+            $ourSong['size']             = (int) $song->size;
             $ourSong['mbid']             = $song->mbid;
             $ourSong['album_mbid']       = $song->album_mbid;
             $ourSong['artist_mbid']      = $song->artist_mbid;
@@ -896,7 +898,7 @@ class Json_Data
      * @param  integer $user_id
      * @return string JSON Object "video"
      */
-    public static function videos($videos, $user_id)
+    public static function videos($videos, $user_id = null)
     {
         if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
@@ -913,7 +915,7 @@ class Json_Data
                 "resolution" => $video->f_resolution,
                 "size" => (int) $video->size,
                 "genre" => self::genre_array($video->tags),
-                "url" => Video::play_url($video->id, '', 'api', false, $user_id)
+                "url" => $video->play_url('', 'api', false, $user_id)
             ));
         } // end foreach
 
@@ -957,8 +959,8 @@ class Json_Data
                 "track" => (int) $song->track,
                 "time" => (int) $song->time,
                 "mime" => $song->mime,
-                "url" => Song::play_url($song->id, '', 'api', false, $user_id),
-                "size" => (int)$song->size,
+                "url" => $song->play_url('', 'api', false, $user_id),
+                "size" => (int) $song->size,
                 "art" => $art_url,
                 "preciserating" => ($rating->get_user_rating() ?: null),
                 "rating" => ($rating->get_user_rating() ?: null),

@@ -296,7 +296,7 @@ final class DefaultAction implements ApplicationActionInterface
                 $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTOUPDATE) &&
                 $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
             ) {
-                AutoUpdate::is_update_available(true);
+                AutoUpdate::is_update_available();
             }
             // fix preferences that are missing for user
             User::fix_preferences($user->id);

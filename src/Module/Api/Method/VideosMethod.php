@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -52,15 +53,19 @@ final class VideosMethod
      */
     public static function videos(array $input)
     {
-        $browse = Api::getBrowse();
-        $browse->reset_filters();
-        $browse->set_type('video');
-        $browse->set_sort('title', 'ASC');
+        if (!AmpConfig::get('allow_video')) {
+            Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+        Api::$browse->reset_filters();
+        Api::$browse->set_type('video');
+        Api::$browse->set_sort('title', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter']);
 
-        $video_ids = $browse->get_objects();
+        $video_ids = Api::$browse->get_objects();
         $user      = User::get_from_username(Session::username($input['auth']));
         if (empty($video_ids)) {
             Api::empty('video', $input['api_format']);

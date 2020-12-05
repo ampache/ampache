@@ -56,6 +56,7 @@ final class SendAction implements ApplicationActionInterface
         $this->newPasswordSender = $newPasswordSender;
         $this->ui                = $ui;
     }
+
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (

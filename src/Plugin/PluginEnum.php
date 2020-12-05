@@ -64,5 +64,6 @@ final class PluginEnum
         'twitter' => AmpacheTwitter::class,
         'yourls' => AmpacheYourls::class,
         'personalfav_display' => AmpachePersonalFavorites::class,
+        'ratingmatch' => AmpacheRatingMatch::class,
     ];
 }
