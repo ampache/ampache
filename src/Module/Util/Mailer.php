@@ -30,8 +30,10 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 /**
  * This class handles the Mail
+ *
+ * @todo create setters for all properties
  */
-class Mailer
+final class Mailer implements MailerInterface
 {
     // The message, recipient and from
     public $message;

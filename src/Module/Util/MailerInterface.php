@@ -20,23 +20,37 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Util;
 
-use Ampache\Module\Util\FileSystem\FileNameConverter;
-use Ampache\Module\Util\FileSystem\FileNameConverterInterface;
-use function DI\autowire;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
 
-return [
-    Horde_Browser::class => autowire(Horde_Browser::class),
-    FileNameConverterInterface::class => autowire(FileNameConverter::class),
-    RequestParserInterface::class => autowire(RequestParser::class),
-    AjaxUriRetrieverInterface::class => autowire(AjaxUriRetriever::class),
-    EnvironmentInterface::class => autowire(Environment::class),
-    ZipHandlerInterface::class => autowire(ZipHandler::class),
-    SlideshowInterface::class => autowire(Slideshow::class),
-    UiInterface::class => autowire(Ui::class),
-    Mailer::class => autowire(),
-    UtilityFactoryInterface::class => autowire(UtilityFactory::class),
-];
+/**
+ * This class handles the Mail
+ */
+interface MailerInterface
+{
+    /**
+     * set_default_sender
+     *
+     * Does the config magic to figure out the "system" email sender and
+     * sets it as the sender.
+     */
+    public function set_default_sender();
+
+    /**
+     * send
+     * This actually sends the mail, how amazing
+     * @param PHPMailer $phpmailer
+     * @return boolean
+     * @throws Exception
+     */
+    public function send($phpmailer = null);
+
+    /**
+     * @param $group_name
+     * @return boolean
+     * @throws Exception
+     */
+    public function send_to_group($group_name);
+}

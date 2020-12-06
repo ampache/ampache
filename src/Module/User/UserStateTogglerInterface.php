@@ -20,23 +20,13 @@
  *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\User;
 
-namespace Ampache\Module\Util;
+use Ampache\Model\User;
 
-use Ampache\Module\Util\FileSystem\FileNameConverter;
-use Ampache\Module\Util\FileSystem\FileNameConverterInterface;
-use function DI\autowire;
+interface UserStateTogglerInterface
+{
+    public function enable(User $user): bool;
 
-return [
-    Horde_Browser::class => autowire(Horde_Browser::class),
-    FileNameConverterInterface::class => autowire(FileNameConverter::class),
-    RequestParserInterface::class => autowire(RequestParser::class),
-    AjaxUriRetrieverInterface::class => autowire(AjaxUriRetriever::class),
-    EnvironmentInterface::class => autowire(Environment::class),
-    ZipHandlerInterface::class => autowire(ZipHandler::class),
-    SlideshowInterface::class => autowire(Slideshow::class),
-    UiInterface::class => autowire(Ui::class),
-    Mailer::class => autowire(),
-    UtilityFactoryInterface::class => autowire(UtilityFactory::class),
-];
+    public function disable(User $user): bool;
+}

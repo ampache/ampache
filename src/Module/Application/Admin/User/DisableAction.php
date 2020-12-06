@@ -20,11 +20,12 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Model\ModelFactoryInterface;
+use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -37,25 +38,29 @@ final class DisableAction extends AbstractUserAction
 
     private ModelFactoryInterface $modelFactory;
 
+    private UserStateTogglerInterface $userStateToggler;
+
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        UserStateTogglerInterface $userStateToggler
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
+        $this->ui               = $ui;
+        $this->modelFactory     = $modelFactory;
+        $this->userStateToggler = $userStateToggler;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
         $this->ui->showHeader();
 
-        $client = $this->modelFactory->createUser((int) $request->getQueryParams()['user_id'] ?? 0);
+        $user = $this->modelFactory->createUser((int) $request->getQueryParams()['user_id'] ?? 0);
 
-        if ($client->disable()) {
+        if ($this->userStateToggler->disable($user) === true) {
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 /* HINT: Username and fullname together: Username (fullname) */
-                sprintf(T_('%s (%s) has been disabled'), $client->username, $client->fullname),
+                sprintf(T_('%s (%s) has been disabled'), $user->username, $user->fullname),
                 'admin/users.php'
             );
         } else {

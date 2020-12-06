@@ -20,23 +20,9 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Module\Util;
 
-use Ampache\Module\Util\FileSystem\FileNameConverter;
-use Ampache\Module\Util\FileSystem\FileNameConverterInterface;
-use function DI\autowire;
-
-return [
-    Horde_Browser::class => autowire(Horde_Browser::class),
-    FileNameConverterInterface::class => autowire(FileNameConverter::class),
-    RequestParserInterface::class => autowire(RequestParser::class),
-    AjaxUriRetrieverInterface::class => autowire(AjaxUriRetriever::class),
-    EnvironmentInterface::class => autowire(Environment::class),
-    ZipHandlerInterface::class => autowire(ZipHandler::class),
-    SlideshowInterface::class => autowire(Slideshow::class),
-    UiInterface::class => autowire(Ui::class),
-    Mailer::class => autowire(),
-    UtilityFactoryInterface::class => autowire(UtilityFactory::class),
-];
+interface UtilityFactoryInterface
+{
+    public function createMailer(): MailerInterface;
+}

@@ -24,19 +24,22 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Module\Util\FileSystem\FileNameConverter;
-use Ampache\Module\Util\FileSystem\FileNameConverterInterface;
-use function DI\autowire;
+use Ampache\MockeryTestCase;
 
-return [
-    Horde_Browser::class => autowire(Horde_Browser::class),
-    FileNameConverterInterface::class => autowire(FileNameConverter::class),
-    RequestParserInterface::class => autowire(RequestParser::class),
-    AjaxUriRetrieverInterface::class => autowire(AjaxUriRetriever::class),
-    EnvironmentInterface::class => autowire(Environment::class),
-    ZipHandlerInterface::class => autowire(ZipHandler::class),
-    SlideshowInterface::class => autowire(Slideshow::class),
-    UiInterface::class => autowire(Ui::class),
-    Mailer::class => autowire(),
-    UtilityFactoryInterface::class => autowire(UtilityFactory::class),
-];
+class UtilityFactoryTest extends MockeryTestCase
+{
+    private ?UtilityFactory $subject;
+
+    public function setUp(): void
+    {
+        $this->subject = new UtilityFactory();
+    }
+
+    public function testCreateMailerReturnsInstance(): void
+    {
+        $this->assertInstanceOf(
+            Mailer::class,
+            $this->subject->createMailer()
+        );
+    }
+}

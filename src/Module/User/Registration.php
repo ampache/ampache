@@ -89,31 +89,6 @@ class Registration
     } // send_confirmation
 
     /**
-     * send_account_enabled
-     * This sends the account enabled email for the specified user
-     *
-     * @param string $username
-     * @param string $fullname
-     * @param $email
-     */
-    public static function send_account_enabled($username, $fullname, $email)
-    {
-        $mailer = new Mailer();
-        $mailer->set_default_sender();
-
-        /* HINT: Ampache site_title */
-        $mailer->subject = sprintf(T_("Account enabled at %s"), AmpConfig::get('site_title'));
-        /* HINT: Username */
-        $mailer->message = sprintf(T_("A new user has been enabled. %s"), $username) . /* HINT: Ampache Login Page */
-            "\n\n " . sprintf(T_("You can log in at the following address %s"),
-                AmpConfig::get('web_path') . "/login.php");
-        $mailer->recipient      = $email;
-        $mailer->recipient_name = $fullname;
-
-        $mailer->send();
-    }
-
-    /**
      * show_agreement
      * This shows the registration agreement, /config/registration_agreement.php
      * @return boolean
