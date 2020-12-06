@@ -1,11 +1,14 @@
 language: php
 php:
- - 7.4
- - nightly
+ - "7.4"
+ - "8.0"
+ - "nightly"
 
 jobs:
   allow_failures:
-    - php: nightly
+    - php: "nightly"
+    - php: "8.0"
+
  
 before_install:
  - export PATH="$PATH:$HOME/.composer/vendor/bin"
