@@ -37,6 +37,11 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * @todo Check if those `clear cache` calls are really necessary
+ * Those caches exist just for the lifetime of a request (or a cli process).
+ * It makes no sense to eplicitly clear them within a gui request
+ */
 final class ClearCacheAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'clear_cache';

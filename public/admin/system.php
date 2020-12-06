@@ -44,7 +44,6 @@ $dic->get(ApplicationRunner::class)->run(
         ResetDbCharsetAction::REQUEST_KEY => ResetDbCharsetAction::class,
         ShowDebugAction::REQUEST_KEY => ShowDebugAction::class,
         ClearCacheAction::REQUEST_KEY => ClearCacheAction::class,
-        ShowAction::REQUEST_KEY => ShowAction::class,
     ],
-    ShowAction::REQUEST_KEY
+    ShowDebugAction::REQUEST_KEY
 );
