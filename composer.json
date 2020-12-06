@@ -49,7 +49,7 @@
         "aehlke/tag-it": "2.*",
         "ampache/ampacheapi-php": "^1.0",
         "aterrien/jquery-knob": "1.2.*",
-        "blueimp/jquery-file-upload": "10.2.0",
+        "blueimp/jquery-file-upload": "v10.2.0",
         "carhartl/jquery-cookie": "1.*",
         "cboden/ratchet": "0.4.*",
         "components/bootstrap": "3.*",
@@ -250,11 +250,11 @@
             "package": {
                 "name": "blueimp/jQuery-File-Upload",
                 "type": "component",
-                "version": "9.18.0",
+                "version": "v10.2.0",
                 "source": {
                     "url": "https://github.com/blueimp/jQuery-File-Upload.git",
                     "type": "git",
-                    "reference": "9.11.2"
+                    "reference": "v10.2.0"
                 },
                 "extra": {
                     "component": {
