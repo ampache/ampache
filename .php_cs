@@ -2,10 +2,10 @@
 
 $finder = PhpCsFixer\Finder::create()
     ->exclude('vendor')
+    ->exclude('lib/components')
     ->in('public/')
     ->in('src/')
     ->in('tests/')
-    ->exclude('public/lib/components')
 ;
 
 return PhpCsFixer\Config::create()
