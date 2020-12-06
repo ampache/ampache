@@ -60,16 +60,17 @@ final class DeleteAction extends AbstractUserAction
 
         $this->ui->showHeader();
 
-        $client = $this->modelFactory->createUser((int) Core::get_request('user_id'));
+        $userId = (int) $request->getQueryParams()['user_id'] ?? 0;
+
+        $client = $this->modelFactory->createUser($userId);
 
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             /* HINT: User Fullname */
             sprintf(T_('This will permanently delete the user "%s"'), $client->fullname),
             sprintf(
-                '%s/admin/users.php?action=confirm_delete&amp;user_id=%s',
-                $this->configContainer->getWebPath(),
-                Core::get_request('user_id')
+                'admin/users.php?action=confirm_delete&amp;user_id=%s',
+                $userId
             ),
             1,
             'delete_user'

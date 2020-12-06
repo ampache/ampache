@@ -57,7 +57,7 @@ final class EnableAction extends AbstractUserAction
     {
         $this->ui->showHeader();
 
-        $client = $this->modelFactory->createUser((int) Core::get_request('user_id'));
+        $client = $this->modelFactory->createUser((int)  Core::get_request('user_id'));
         $client->enable();
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_NO_EMAIL_CONFIRM) === false) {
@@ -68,7 +68,7 @@ final class EnableAction extends AbstractUserAction
             T_('No Problem'),
             /* HINT: Username and fullname together: Username (fullname) */
             sprintf(T_('%s (%s) has been enabled'), $client->username, $client->fullname),
-            sprintf('%s/admin/users.php', $this->configContainer->getWebPath())
+            'admin/users.php'
         );
 
         $this->ui->showQueryStats();
