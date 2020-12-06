@@ -228,10 +228,17 @@ class ConfigContainerTest extends MockeryTestCase
         );
     }
 
-    public function testIsDebugModeReturnsValus(): void
+    public function testIsDebugModeReturnsValue(): void
     {
         $this->assertFalse(
             $this->createSubject([])->isDebugMode()
+        );
+    }
+
+    public function testIsDemoModeReturnsValue(): void
+    {
+        $this->assertFalse(
+            $this->createSubject([])->isDemoMode()
         );
     }
 

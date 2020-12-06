@@ -20,12 +20,11 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\System;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -59,7 +58,7 @@ final class ResetDbCharsetAction implements ApplicationActionInterface
     {
         if (
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true
+            $this->configContainer->isDemoMode() === true
         ) {
             throw new AccessDeniedException();
         }
@@ -71,7 +70,7 @@ final class ResetDbCharsetAction implements ApplicationActionInterface
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Your database and associated tables have been updated to match your currently configured charset'),
-            sprintf('%s/admin/system.php?action=show_debug', $this->configContainer->getWebPath())
+            'admin/system.php?action=show_debug'
         );
 
         $this->ui->showQueryStats();

@@ -83,7 +83,12 @@ interface ConfigContainerInterface
     public function getThemePath(): string;
 
     /**
-     * @return Returns the debug mode state
+     * Returns the debug mode state
      */
     public function isDebugMode(): bool;
+
+    /**
+     * Returns the demo mode state
+     */
+    public function isDemoMode(): bool;
 }

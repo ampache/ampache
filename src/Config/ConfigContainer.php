@@ -109,4 +109,9 @@ final class ConfigContainer implements ConfigContainerInterface
     {
         return $this->isFeatureEnabled(ConfigurationKeyEnum::DEBUG_MODE);
     }
+
+    public function isDemoMode(): bool
+    {
+        return $this->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE);
+    }
 }
