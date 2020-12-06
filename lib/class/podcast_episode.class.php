@@ -401,7 +401,10 @@ class Podcast_Episode extends database_object implements media, library_item
     }
 
     /**
-     * Set a generic play url.
+     * play_url
+     * This function takes all the song information and correctly formats a
+     * a stream URL taking into account the downsmapling mojo and everything
+     * else, this is the true function
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
@@ -409,12 +412,15 @@ class Podcast_Episode extends database_object implements media, library_item
      * @param boolean $original
      * @return string
      */
-    public function set_play_url($additional_params, $player = '', $local = false, $uid = -1)
+    public function play_url($additional_params = '', $player = '', $local = false, $uid = false)
     {
         if (!$this->id) {
             return '';
         }
-        // set no use when using auth
+        if (!$uid) {
+            $uid = Core::get_global('user')->id;
+        }
+        // set no user when not using auth
         if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
             $uid = -1;
         }
@@ -433,28 +439,7 @@ class Podcast_Episode extends database_object implements media, library_item
         $url .= "&name=" . $media_name;
 
         return Stream_URL::format($url);
-    } // set_play_url
-
-    /**
-     * play_url
-     * This function takes all the song information and correctly formats a
-     * a stream URL taking into account the downsmapling mojo and everything
-     * else, this is the true function
-     * @param string $additional_params
-     * @param string $player
-     * @param boolean $local
-     * @param integer $uid
-     * @param boolean $original
-     * @return string
-     */
-    public function play_url($additional_params = '', $player = '', $local = false, $uid = false)
-    {
-        if (!$uid) {
-            $uid = Core::get_global('user')->id;
-        }
-
-        return $this->set_play_url($additional_params, $player, $local, $uid);
-    }
+    } // play_url
 
     /**
      * Get stream types.

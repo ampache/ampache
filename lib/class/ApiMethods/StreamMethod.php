@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Lib\ApiMethods;
 
 use Api;
+use Podcast_Episode;
 use Session;
 use Song;
 use User;
@@ -83,13 +84,14 @@ final class StreamMethod
         if ($timeOffset) {
             $params .= '&frame=' . $timeOffset;
         }
-
         $url = '';
         if ($type == 'song') {
-            $url = Song::generic_play_url('Song', $object_id, $params, 'api', function_exists('curl_version'), $user_id, $original);
+            $media = new Song($object_id);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
         }
         if ($type == 'podcast') {
-            $url = Song::generic_play_url('Podcast_Episode', $object_id, $params, 'api', function_exists('curl_version'), $user_id, $original);
+            $media = new Podcast_Episode($object_id);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
         }
         if (!empty($url)) {
             Session::extend($input['auth']);

@@ -1101,9 +1101,14 @@ class Subsonic_Api
             $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
         }
 
-        if (!empty($url)) {
-            self::follow_stream($url);
+        // return an error on missing files
+        if (empty($url)) {
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'download');
+            self::apiOutput($input, $response);
+
+            return;
         }
+        self::follow_stream($url);
     }
 
     /**
@@ -1114,9 +1119,25 @@ class Subsonic_Api
      */
     public static function download($input)
     {
-        $fileid = self::check_parameter($input, 'id', true);
+        $fileid  = self::check_parameter($input, 'id', true);
+        $user_id = User::get_from_username($input['u'])->id;
+        $params  = '&action=download' . '&client=';
+        $url     = '';
+        if (Subsonic_XML_Data::isSong($fileid)) {
+            $object = new Song(Subsonic_XML_Data::getAmpacheId($fileid));
+            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
+        } elseif (Subsonic_XML_Data::isPodcastEp($fileid)) {
+            $object = new Podcast_Episode(Subsonic_XML_Data::getAmpacheId($fileid));
+            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
+        }
 
-        $url = Song::generic_play_url(Subsonic_XML_Data::getAmpacheType($fileid), Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . rawurlencode($input['c']) . '&cache=1', 'api', function_exists('curl_version'));
+        // return an error on missing files
+        if (empty($url)) {
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'download');
+            self::apiOutput($input, $response);
+
+            return;
+        }
         self::follow_stream($url);
     }
 
@@ -1837,6 +1858,7 @@ class Subsonic_Api
                     $localplay->delete_all();
                     // Intentional break fall-through
                 case 'add':
+                    $user = User::get_from_username($input['u']);
                     if ($id) {
                         if (!is_array($id)) {
                             $rid   = array();
@@ -1844,10 +1866,11 @@ class Subsonic_Api
                             $id    = $rid;
                         }
 
-                        foreach ($id as $i) {
+                        foreach ($id as $song_id) {
                             $url = null;
-                            if (Subsonic_XML_Data::isSong($i)) {
-                                $url = Song::generic_play_url('Song', Subsonic_XML_Data::getAmpacheId($i), '', 'api');
+                            if (Subsonic_XML_Data::isSong($song_id)) {
+                                $media = new Song(Subsonic_XML_Data::getAmpacheId($song_id));
+                                $url   = $media->play_url('', 'api', function_exists('curl_version'), $user->id);
                             }
 
                             if ($url !== null) {

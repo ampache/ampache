@@ -456,20 +456,24 @@ class Video extends database_object implements media, library_item
     }
 
     /**
-     * Set a generic play url.
+     * play_url
+     * This returns a "PLAY" url for the video in question here, this currently feels a little
+     * like a hack, might need to adjust it in the future
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
      * @param integer $uid
-     * @param boolean $original
      * @return string
      */
-    public function set_play_url($additional_params, $player = '', $local = false, $uid = -1)
+    public function play_url($additional_params = '', $player = '', $local = false, $uid = null)
     {
         if (!$this->id) {
             return '';
         }
-        // set no use when using auth
+        if (!$uid) {
+            $uid = Core::get_global('user')->id;
+        }
+        // set no user when not using auth
         if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
             $uid = -1;
         }
@@ -488,25 +492,6 @@ class Video extends database_object implements media, library_item
         $url .= "&name=" . $media_name;
 
         return Stream_URL::format($url);
-    } // set_play_url
-
-    /**
-     * play_url
-     * This returns a "PLAY" url for the video in question here, this currently feels a little
-     * like a hack, might need to adjust it in the future
-     * @param string $additional_params
-     * @param string $player
-     * @param boolean $local
-     * @param integer $uid
-     * @return string
-     */
-    public function play_url($additional_params = '', $player = '', $local = false, $uid = null)
-    {
-        if (!$uid) {
-            $uid = Core::get_global('user')->id;
-        }
-
-        return $this->set_play_url($additional_params, $player, $local, $uid);
     } // play_url
 
     /**
