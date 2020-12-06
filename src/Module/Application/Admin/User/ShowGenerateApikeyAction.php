@@ -20,12 +20,11 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -50,15 +49,16 @@ final class ShowGenerateApikeyAction extends AbstractUserAction
     {
         $this->ui->showHeader();
 
-        $user_id = Core::get_request('user_id');
+        $userId = (int) $request->getQueryParams()['user_id'] ?? 0;
 
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('This will replace your existing API Key'),
             sprintf(
-                '%s/admin/users.php?action=generate_apikey&user_id=%s',
-                $this->configContainer->getWebPath(),
-                scrub_out($user_id)),
+                'admin/users.php?action=%s&user_id=%d',
+                GenerateApikeyAction::REQUEST_KEY,
+                $userId
+            ),
             1,
             'generate_apikey'
         );

@@ -25,7 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -50,15 +49,15 @@ final class ShowDeleteAvatarAction extends AbstractUserAction
     {
         $this->ui->showHeader();
 
-        $user_id = Core::get_request('user_id');
+        $userId = (int) $request->getQueryParams()['user_id'] ?? 0;
 
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('This Avatar will be deleted'),
             sprintf(
-                '%s/admin/users.php?action=delete_avatar&user_id=%s',
-                $this->configContainer->getWebPath(),
-                scrub_out($user_id)
+                'admin/users.php?action=%s&user_id=%d',
+                DeleteAvatarAction::REQUEST_KEY,
+                $userId
             ),
             1,
             'delete_avatar'
