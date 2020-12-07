@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "364c452c8523a3e4ea369ef6ce7b0cb8",
+    "content-hash": "5b07e47fa44d33ba4482b84beb91d7e1",
     "packages": [
         {
             "name": "aehlke/tag-it",
@@ -213,16 +213,16 @@
         },
         {
             "name": "clue/multicast-react",
-            "version": "dev-master",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/clue/reactphp-multicast.git",
-                "reference": "743c865c06f0273108848b406c3b8a54a4ce9fdd"
+                "reference": "a81d0b945a453548e573b2b644077036fa4e5601"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clue/reactphp-multicast/zipball/743c865c06f0273108848b406c3b8a54a4ce9fdd",
-                "reference": "743c865c06f0273108848b406c3b8a54a4ce9fdd",
+                "url": "https://api.github.com/repos/clue/reactphp-multicast/zipball/a81d0b945a453548e573b2b644077036fa4e5601",
+                "reference": "a81d0b945a453548e573b2b644077036fa4e5601",
                 "shasum": ""
             },
             "require": {
@@ -232,7 +232,7 @@
             },
             "require-dev": {
                 "clue/hexdump": "0.2.*",
-                "phpunit/phpunit": "^9.0 ||^6.0 || ^5.7 || ^4.8.35"
+                "phpunit/phpunit": "^9.3 ||^6.0 || ^5.7 || ^4.8.35"
             },
             "suggest": {
                 "ext-sockets": "Requires PHP 5.4+ and the low level socket API for listening on multicast addresses (socket options to send IGMP announcements)"
@@ -250,10 +250,10 @@
             "authors": [
                 {
                     "name": "Christian Lück",
-                    "email": "christian@lueck.tv"
+                    "email": "christian@clue.engineering"
                 }
             ],
-            "description": "Simple multicast UDP message client and server for ReactPHP.",
+            "description": "Simple, event-driven multicast UDP message client and server for ReactPHP.",
             "homepage": "https://github.com/clue/reactphp-multicast",
             "keywords": [
                 "async",
@@ -262,7 +262,17 @@
                 "reactphp",
                 "udp"
             ],
-            "time": "2020-06-05T10:04:59+00:00"
+            "funding": [
+                {
+                    "url": "https://clue.engineering/support",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/clue",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-12-06T15:24:48+00:00"
         },
         {
             "name": "components/bootstrap",
@@ -718,16 +728,16 @@
         },
         {
             "name": "gettext/gettext",
-            "version": "v4.8.2",
+            "version": "v4.8.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-gettext/Gettext.git",
-                "reference": "e474f872f2c8636cf53fd283ec4ce1218f3d236a"
+                "reference": "57ff4fb16647e78e80a5909fe3c190f1c3110321"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-gettext/Gettext/zipball/e474f872f2c8636cf53fd283ec4ce1218f3d236a",
-                "reference": "e474f872f2c8636cf53fd283ec4ce1218f3d236a",
+                "url": "https://api.github.com/repos/php-gettext/Gettext/zipball/57ff4fb16647e78e80a5909fe3c190f1c3110321",
+                "reference": "57ff4fb16647e78e80a5909fe3c190f1c3110321",
                 "shasum": ""
             },
             "require": {
@@ -776,7 +786,7 @@
                 "po",
                 "translation"
             ],
-            "time": "2019-12-02T10:21:14+00:00"
+            "time": "2020-11-18T22:35:49+00:00"
         },
         {
             "name": "gettext/languages",
@@ -1093,12 +1103,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "d869456fd195601f2cd4f358f082eb3aec9decf4"
+                "reference": "f09b63a51b9ba713e2c30aa628cda319e4d7ed72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/d869456fd195601f2cd4f358f082eb3aec9decf4",
-                "reference": "d869456fd195601f2cd4f358f082eb3aec9decf4",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/f09b63a51b9ba713e2c30aa628cda319e4d7ed72",
+                "reference": "f09b63a51b9ba713e2c30aa628cda319e4d7ed72",
                 "shasum": ""
             },
             "require": {
@@ -1148,7 +1158,7 @@
                 "php",
                 "tags"
             ],
-            "time": "2020-10-21T22:27:26+00:00"
+            "time": "2020-12-04T12:55:03+00:00"
         },
         {
             "name": "jeromeetienne/jquery-qrcode",
@@ -3244,7 +3254,7 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v3.4.46",
+            "version": "v3.4.47",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
@@ -3317,7 +3327,7 @@
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v3.4.46",
+            "version": "v3.4.47",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
@@ -3380,7 +3390,7 @@
         },
         {
             "name": "symfony/options-resolver",
-            "version": "v4.4.16",
+            "version": "v4.4.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
@@ -3823,7 +3833,7 @@
         },
         {
             "name": "symfony/process",
-            "version": "v3.4.46",
+            "version": "v3.4.47",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
@@ -3881,7 +3891,7 @@
         },
         {
             "name": "symfony/routing",
-            "version": "v3.4.46",
+            "version": "v3.4.47",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/routing.git",
@@ -4142,7 +4152,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "clue/multicast-react": 20,
         "james-heinrich/getid3": 20,
         "jeromeetienne/jquery-qrcode": 20,
         "krixon/xbmc-php-rpc": 20,
