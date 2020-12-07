@@ -21,18 +21,29 @@ then
 else
     echo -e "\e[1;31mPlease check code Formatting\e[00m"
     echo -e "\e[1;31m$PHPCSFIXER $PHPCSFIXERARGS$FIXERS1 .\e[00m"
-    EXIT=1
+    exit 1
 fi
 
-#echo -e "\e[1;34mChecking optionnal formatting/coding standards\e[00m"
-#$PHPCSFIXER $PHPCSFIXERARGS$FIXERS2 --dry-run .
-#rc=$?
-#if [[ $rc == 0 ]]
-#then
-#    echo -e "\e[1;32mOptionnal formatting is OK\e[00m"
-#else
-#    echo -e "\e[1;33mThere are errors in the formatting (or false positive)\e[00m"
-#    echo -e "\e[1;33m$PHPCSFIXER $PHPCSFIXERARGS$FIXERS2 .\e[00m"
-#fi
 
-exit $EXIT
+if [ -e "vendor/bin/phpcbf" ]
+then
+    PHPCS="vendor/bin/phpcs"
+else
+    echo -e "\e[1;31mphpcs not found: Please run composer install --dev\e[00m";
+    exit 1
+fi
+
+PHPCSARGS="--standard=.phpcs.xml src public"
+
+$PHPCS $PHPCSARGS
+rc=$?
+if [[ $rc == 0 ]]
+then
+    echo -e "\e[1;32mOptional formatting is OK\e[00m"
+else
+    echo -e "\e[1;33mThere are errors in the formatting (or false positive)\e[00m"
+    echo -e "\e[1;33m$PHPCS $PHPCSARGS .\e[00m"
+    exit 1
+fi
+
+exit 0

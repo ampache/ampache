@@ -37,7 +37,8 @@
   <rule ref="Generic.CodeAnalysis.UnconditionalIfStatement"/>
   <file>.</file>
   <exclude-pattern>*public/lib/components/*</exclude-pattern>
-  <exclude-pattern>*vendor/*</exclude-pattern>
   <exclude-pattern>*public/templates/*</exclude-pattern>
+  <exclude-pattern>*vendor/*</exclude-pattern>
   <exclude-pattern>*.js</exclude-pattern>
+  <exclude-pattern>*.min.css</exclude-pattern>
 </ruleset>
