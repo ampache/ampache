@@ -164,7 +164,7 @@ class AutoUpdate
             // Otherwise it is stable version, get latest tag
             else {
                 $tags = self::github_request('/tags');
-                $str  = strstr($tags[0]->name, "pre-release");
+                $str  = strstr($tags[0]->name, "-"); // ignore ALL tagged releases (e.g. 4.2.5-preview 4.2.5-beta)
                 if (!$str) {
                     $lastversion = $tags[0]->name;
                     Preference::update('autoupdate_lastversion', Core::get_global('user')->id, $lastversion);
