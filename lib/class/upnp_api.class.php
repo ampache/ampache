@@ -1236,17 +1236,17 @@ class Upnp_Api
         $actualsize   = sizeof($actualtokens);
 
         // trim spaces around tokens and discard those which have only spaces in them
-        $h             = 0;
+        $index = 0;
         for ($i=0; $i < $actualsize; $i++) {
             $actualtokens[$i]=trim($actualtokens[$i]);
             if ($actualtokens[$i] != "") {
-                $nospacetokens[$h++] = $actualtokens[$i];
+                $nospacetokens[$index++] = $actualtokens[$i];
             }
         }
 
         // now put together tokens which are actually one token e.g. upper hutt
-        $onetoken    = "";
-        $h           = 0;
+        $onetoken = "";
+        $index    = 0;
         $nospacesize = sizeof($nospacetokens);
         for ($i=0; $i < $nospacesize; $i++) {
             $token = $nospacetokens[$i];
@@ -1257,10 +1257,10 @@ class Upnp_Api
                 case "(":
                 case ")":
                     if ($onetoken != "") {
-                        $tokens[$h++] = $onetoken;
+                        $tokens[$index++] = $onetoken;
                         $onetoken     = "";
                     }
-                    $tokens[$h++] = $token;
+                    $tokens[$index++] = $token;
                     break;
                 default:
                     if ($onetoken == "") {
@@ -1272,7 +1272,7 @@ class Upnp_Api
             }
         }
         if ($onetoken != "") {
-            $tokens[$h++] = $onetoken;
+            $tokens[$index++] = $onetoken;
         }
 
         return $tokens;
