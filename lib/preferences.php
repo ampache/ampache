@@ -448,8 +448,6 @@ function create_preference_input($name, $value)
                     $options[] = '<option value="' . $list_id . '"' . $selected . '>' . $list_name . '</option>';
                 }
                 echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
-            } else {
-                echo '<input type="text" name="' . $name . '" value="' . $value . '" />';
             }
             break;
         case 'lastfm_grant_link':
