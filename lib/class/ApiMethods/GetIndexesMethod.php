@@ -50,7 +50,7 @@ final class GetIndexesMethod
      * Added 'include' to allow indexing all song tracks (enabled for xml by default)
      *
      * @param array $input
-     * type    = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video'
+     * type    = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'live_stream'
      * filter  = (string) //optional
      * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add     = self::set_filter(date) //optional
@@ -79,7 +79,7 @@ final class GetIndexesMethod
         $user    = User::get_from_username(Session::username($input['auth']));
         $include = (int) $input['include'] == 1;
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video'))) {
+        if (!in_array($type, array('song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'live_stream'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
