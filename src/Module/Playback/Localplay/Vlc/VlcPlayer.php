@@ -568,7 +568,6 @@ class VlcPlayer
                         $repeated_tag_index[$tag . '_' . $level] = 1;
                         if ($priority == 'tag' && $get_attributes) {
                             if (isset($current[$tag . '_attr'])) { // The attribute of the last(0th) tag must be moved as well
-
                                 $current[$tag]['0_attr'] = $current[$tag . '_attr'];
                                 unset($current[$tag . '_attr']);
                             }

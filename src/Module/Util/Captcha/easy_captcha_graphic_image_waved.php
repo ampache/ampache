@@ -136,14 +136,12 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
         #-- generate each new x,y pixel individually from orig $img
         for ($y = 0; $y < $height; $y++) {
             for ($x = 0; $x < $width; $x++) {
-
                 #-- pixel movement
                 list($distortx, $distorty) = $wave->dxy($x, $y);   // x- and y- sinus wave
                 // list($qx, $qy) = $spike->dxy($x, $y);
 
                 #-- if not out of bounds
                 if (($distortx + $x >= 0) && ($distorty + $y >= 0) && ($distortx + $x < $width) && ($distorty + $y < $height)) {
-
                     #-- get source pixel(s), paint dest
                     if ($single_pixel) {
                         // single source dot: one-to-one duplicate (unsmooth, hard edges)

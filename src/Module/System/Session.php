@@ -511,8 +511,12 @@ final class Session implements SessionInterface
     public function setup(): void
     {
         session_set_save_handler(
-            static function (): bool { return true; },
-            static function (): bool { return true; },
+            static function (): bool {
+                return true;
+            },
+            static function (): bool {
+                return true;
+            },
             static function ($key) {
                 return self::_read($key, 'value');
             },

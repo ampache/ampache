@@ -107,7 +107,8 @@ class Catalog_beets extends Catalog
      * @return boolean
      */
     public static function create_type($catalog_id, $data)
-    { // TODO: This Method should be required / provided by parent
+    {
+        // TODO: This Method should be required / provided by parent
         $beetsdb = $data['beetsdb'];
 
         if (preg_match('/^[\s]+$/', $beetsdb)) {

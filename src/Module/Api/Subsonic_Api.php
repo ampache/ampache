@@ -1588,7 +1588,6 @@ class Subsonic_Api
             debug_event('subsonic_api.class', 'createShare: sharing ' . $object_type . ' ' . $object_id, 4);
 
             if (!empty($object_type)) {
-
                 // @todo remove after refactoring
                 global $dic;
                 $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);

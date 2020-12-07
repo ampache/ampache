@@ -104,7 +104,8 @@ class Catalog_beetsremote extends Catalog
      * @return boolean
      */
     public static function create_type($catalog_id, $data)
-    { // TODO: This Method should be required / provided by parent
+    {
+        // TODO: This Method should be required / provided by parent
         $uri = $data['uri'];
 
         if (substr($uri, 0, 7) != 'http://' && substr($uri, 0, 8) != 'https://') {

@@ -66,7 +66,6 @@ class easy_captcha_utility
 
         #-- load data
         if ($id == Core::get_get(CAPTCHA_PARAM_ID)) {
-
             #-- special case
             if ($id == 'base.js') {
                 easy_captcha_utility::js_base();
@@ -76,7 +75,6 @@ class easy_captcha_utility
 
                 #-- JS-RPC request, check entered solution on the fly
                 if ($test = $_REQUEST[CAPTCHA_PARAM_INPUT]) {
-
                     #-- check
                     if ($expired || empty($c->image)) {
                         die(easy_captcha_utility::js_header('alert("captcha error: request invalid (wrong storage id) / or expired");'));
