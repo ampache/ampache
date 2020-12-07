@@ -257,11 +257,7 @@ class Album extends database_object implements library_item
         }
 
         // Little bit of formatting here
-        $this->full_name = trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name']));
-
-        if ($this->time == 0) {
-            $this->time = $this->update_time();
-        }
+        $this->full_name      = trim(trim((string) $info['prefix']) . ' ' . trim((string) $info['name']));
         $this->total_duration = $this->time;
 
         // Looking for other albums with same mbid, ordering by disk ascending

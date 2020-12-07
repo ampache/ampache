@@ -428,7 +428,8 @@ class Daap_Api
                         $params .= '&client=' . $client;
                     }
                     $params .= '&transcode_to=' . $type;
-                    $url = Song::play_url($object_id, $params, 'api', true);
+                    $media = new $type($object_id);
+                    $url   = $media->play_url($params, 'api', true);
                     self::follow_stream($url);
 
                     return false;

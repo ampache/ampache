@@ -459,21 +459,40 @@ class Video extends database_object implements media, library_item
      * play_url
      * This returns a "PLAY" url for the video in question here, this currently feels a little
      * like a hack, might need to adjust it in the future
-     * @param integer $object_id
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
      * @param integer $uid
      * @return string
      */
-    public static function play_url($object_id, $additional_params = '', $player = '', $local = false, $uid = false)
+    public function play_url($additional_params = '', $player = '', $local = false, $uid = null)
     {
+        if (!$this->id) {
+            return '';
+        }
         if (!$uid) {
             $uid = Core::get_global('user')->id;
         }
+        // set no user when not using auth
+        if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
+            $uid = -1;
+        }
 
-        return Song::generic_play_url('video', $object_id, $additional_params, $player, $local, $uid);
-    }
+        $type = $this->type;
+
+        $this->format();
+        $media_name = $this->get_stream_name() . "." . $type;
+        $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
+        $media_name = rawurlencode($media_name);
+
+        $url = Stream::get_base_url($local) . "type=video&oid=" . $this->id . "&uid=" . (string) $uid . $additional_params;
+        if ($player !== '') {
+            $url .= "&player=" . $player;
+        }
+        $url .= "&name=" . $media_name;
+
+        return Stream_URL::format($url);
+    } // play_url
 
     /**
      * Get stream name.

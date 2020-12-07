@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Lib\ApiMethods;
 
+use AmpConfig;
 use Api;
 use JSON_Data;
 use Session;
@@ -52,6 +53,11 @@ final class VideosMethod
      */
     public static function videos(array $input)
     {
+        if (!AmpConfig::get('allow_video')) {
+            Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
         Api::$browse->reset_filters();
         Api::$browse->set_type('video');
         Api::$browse->set_sort('title', 'ASC');

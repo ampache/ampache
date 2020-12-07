@@ -55,16 +55,25 @@ $t_preferences = T_('Preferences'); ?>
     <li>
     <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Playlist'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo ($_COOKIE['sb_home_playlist'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="playlist" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4>
     <ul class="sb3" id="sb_home_playlist">
-<li id="sb_home_playlist_playlist"><a href="<?php echo $web_path ?>/playlist.php?action=show_import_playlist"><?php echo T_('Import') ?></a></li>
+<li id="sb_preferences_sections_playlist"><a href="<?php echo $web_path ?>/playlist.php?action=show_import_playlist"><?php echo T_('Import') ?></a></li>
     </li>
 </ul>
 <?php } ?>
 <?php if (AmpConfig::get('allow_upload') && Access::check('interface', 25)) { ?>
             <li>
     <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Upload'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo ($_COOKIE['sb_home_playlist'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="playlist" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4>
-    <ul class="sb3" id="sb_home_playlist">
-    <li id="sb_home_info_upload"><a href="<?php echo $web_path ?>/stats.php?action=upload"><?php echo T_('Upload') ?></a></li>
+    <ul class="sb3" id="sb_upload_sections">
+    <li id="sb_upload_sections_upload"><a href="<?php echo $web_path ?>/upload.php"><?php echo T_('Upload') ?></a></li>
     </li>
-</ul> 
+</ul>
+       <?php } ?>
+<li>
+<?php if (!AmpConfig::get('simple_user_mode')) { ?>
+    <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Help'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo ($_COOKIE['sb_home_playlist'] == 'collapsed') ? 'collapsed' : 'expanded'; ?>" id="playlist" alt="<?php echo T_('Expand/Collapse'); ?>" title="<?php echo T_('Expand/Collapse'); ?>" /></h4>
+    <ul class="sb3" id="sb_help_sections">
+        <li id="sb_help_sections_wiki"><a href="https://github.com/ampache/ampache/wiki" target=\"_blank\"><?php echo T_('Ampache Wiki') ?></a></li>
+        <li id="sb_help_sections_api"><a href="http://ampache.org/api/" target=\"_blank\"><?php echo T_('API Documentation') ?></a></li>
+        </li>
+    </ul>
        <?php } ?>
 </ul>

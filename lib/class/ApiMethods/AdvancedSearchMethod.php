@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Lib\ApiMethods;
 
+use AmpConfig;
 use Api;
 use JSON_Data;
 use Search;
@@ -76,15 +77,20 @@ final class AdvancedSearchMethod
             return false;
         }
 
-        $user    = User::get_from_username(Session::username($input['auth']));
-        $results = Search::run($input, $user);
-        $type    = (isset($input['type'])) ? (string) $input['type'] : 'song';
+        $type = (isset($input['type'])) ? (string) $input['type'] : 'song';
+        if (!AmpConfig::get('allow_video') && $type == 'video') {
+            Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'label', 'user', 'video'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
+        $user    = User::get_from_username(Session::username($input['auth']));
+        $results = Search::run($input, $user);
         if (empty($results)) {
             Api::empty($type, $input['api_format']);
 

@@ -2010,20 +2010,14 @@ class Song extends database_object implements media, library_item
     } // get_rel_path
 
     /**
-     * Generate generic play url.
-     * @param string $object_type
-     * @param integer $object_id
-     * @param string $additional_params
-     * @param string $player
-     * @param boolean $local
+     * Generate a simple play url.
      * @param integer $uid
-     * @param boolean $original
+     * @param string $player
      * @return string
      */
-    public static function generic_play_url($object_type, $object_id, $additional_params, $player = '', $local = false, $uid = -1, $original = false)
+    public function get_play_url($uid = -1, $player = '')
     {
-        $media = new $object_type($object_id);
-        if (!$media->id) {
+        if (!$this->id) {
             return '';
         }
         // set no use when using auth
@@ -2031,42 +2025,24 @@ class Song extends database_object implements media, library_item
             $uid = -1;
         }
 
-        $type = $media->type;
-
-        // Checking if the media is gonna be transcoded into another type
-        // Some players doesn't allow a type streamed into another without giving the right extension
-        if (!$original) {
-            $transcode_cfg = AmpConfig::get('transcode');
-            $valid_types   = Song::get_stream_types_for_type($type, $player);
-            if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
-                $transcode_settings = $media->get_transcode_settings(null);
-                if ($transcode_settings) {
-                    debug_event('song.class', "Changing play url type from {" . $type . "} to {" . $transcode_settings['format'] . "} due to encoding settings... ", 5);
-                    $type = $transcode_settings['format'];
-                }
-            }
-        }
-
-        $media->format();
-        $media_name = $media->get_stream_name() . "." . $type;
+        $media_name = $this->get_stream_name() . "." . $this->type;
         $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
         $media_name = rawurlencode($media_name);
 
-        $url = Stream::get_base_url($local) . "type=" . $object_type . "&oid=" . $object_id . "&uid=" . (string) $uid . $additional_params;
+        $url = Stream::get_base_url(false) . "type=song&oid=" . $this->id . "&uid=" . (string) $uid;
         if ($player !== '') {
-            $url .= "&player=" . $player;
+            $url .= "&client=" . $player;
         }
         $url .= "&name=" . $media_name;
 
-        return Stream_URL::format($url);
+        return $url;
     }
 
     /**
      * play_url
      * This function takes all the song information and correctly formats a
-     * a stream URL taking into account the downsmapling mojo and everything
+     * a stream URL taking into account the downsampling mojo and everything
      * else, this is the true function
-     * @param integer $object_id
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
@@ -2074,15 +2050,35 @@ class Song extends database_object implements media, library_item
      * @param boolean $original
      * @return string
      */
-    public static function play_url($object_id, $additional_params = '', $player = '', $local = false, $uid = false, $original = false)
+    public function play_url($additional_params = '', $player = '', $local = false, $uid = false)
     {
+        if (!$this->id) {
+            return '';
+        }
         if (!$uid) {
             // No user in the case of upnp. Set to 0 instead. required to fix database insertion errors
             $uid = Core::get_global('user')->id ?: 0;
         }
+        // set no user when not using auth
+        if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
+            $uid = -1;
+        }
 
-        return self::generic_play_url('song', $object_id, $additional_params, $player, $local, $uid, $original);
-    }
+        $type = $this->type;
+
+        $this->format();
+        $media_name = $this->get_stream_name() . "." . $type;
+        $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
+        $media_name = rawurlencode($media_name);
+
+        $url = Stream::get_base_url($local) . "type=song&oid=" . $this->id . "&uid=" . (string) $uid . $additional_params;
+        if ($player !== '') {
+            $url .= "&player=" . $player;
+        }
+        $url .= "&name=" . $media_name;
+
+        return Stream_URL::format($url);
+    } // play_url
 
     /**
      * Get stream name.
@@ -2103,15 +2099,17 @@ class Song extends database_object implements media, library_item
      */
     public static function get_recently_played($user_id = 0)
     {
-        $personal_info_time  = Preference::id_from_name('allow_personal_info_time');
-        $personal_info_agent = Preference::id_from_name('allow_personal_info_agent');
+        $personal_info_recent = 91;
+        $personal_info_time   = 92;
+        $personal_info_agent  = 93;
 
         $results = array();
         $limit   = AmpConfig::get('popular_threshold', 10);
-        $sql     = "SELECT `object_id`, `object_count`.`user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent` " .
+        $sql     = "SELECT `object_id`, `object_count`.`user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_recent`.`value` AS `user_recent`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent` " .
                    "FROM `object_count`" .
-                   "RIGHT JOIN `user_preference` AS `pref_time` ON `pref_time`.`preference`='$personal_info_time' AND `pref_time`.`user` = `object_count`.`user`" .
-                   "RIGHT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`preference`='$personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user`" .
+                   "LEFT JOIN `user_preference` AS `pref_recent` ON `pref_recent`.`preference`='$personal_info_recent' AND `pref_recent`.`user` = `object_count`.`user`" .
+                   "LEFT JOIN `user_preference` AS `pref_time` ON `pref_time`.`preference`='$personal_info_time' AND `pref_time`.`user` = `object_count`.`user`" .
+                   "LEFT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`preference`='$personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user`" .
                    "WHERE `object_type` = 'song' AND `count_type` = 'stream' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND " . Catalog::get_enable_filter('song', '`object_id`') . " ";
@@ -2189,7 +2187,7 @@ class Song extends database_object implements media, library_item
      * @param string $player
      * @param string $media_type
      * @param array $options
-     * @return array|boolean
+     * @return array
      */
     public static function get_transcode_settings_for_media($source, $target = null, $player = null, $media_type = 'song', $options = array())
     {
@@ -2253,7 +2251,7 @@ class Song extends database_object implements media, library_item
         if (!$args) {
             debug_event('song.class', 'Target format ' . $target . ' is not properly configured', 2);
 
-            return false;
+            return array();
         }
         $args .= ' ' . $argst;
 
@@ -2267,7 +2265,7 @@ class Song extends database_object implements media, library_item
      * @param string $target
      * @param string $player
      * @param array $options
-     * @return array|boolean
+     * @return array
      */
     public function get_transcode_settings($target = null, $player = null, $options = array())
     {

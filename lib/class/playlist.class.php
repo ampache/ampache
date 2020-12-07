@@ -55,9 +55,6 @@ class Playlist extends playlist_object
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-        if ($this->last_duration == 0) {
-            $this->set_last($this->get_total_duration(), 'last_duration');
-        }
     } // Playlist
 
     /**
@@ -196,6 +193,29 @@ class Playlist extends playlist_object
     } // get_smartlists
 
     /**
+     * get_details
+     * Returns a keyed array of playlist id and name accessible by the user.
+     * @param string $type
+     * @param integer $user_id
+     * @return array
+     */
+    public static function get_details($type = 'playlist', $user_id = -1)
+    {
+        if (!$user_id) {
+            $user_id = Core::get_global('user')->id;
+        }
+
+        $sql        = "SELECT `id`, `name` FROM `$type` WHERE (`user` = ? OR `type` = 'public') ORDER BY `name`";
+        $results    = array();
+        $db_results = Dba::read($sql, array($user_id));
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[$row['id']] = $row['name'];
+        }
+
+        return $results;
+    } // get_playlists
+
+    /**
      * format
      * This takes the current playlist object and gussies it up a little
      * bit so it is presentable to the users
@@ -323,21 +343,21 @@ class Playlist extends playlist_object
     /**
     * get_total_duration
     * Get the total duration of all songs.
-    * @return string|null
+    * @return integer
     */
     public function get_total_duration()
     {
         $songs  = $this->get_songs();
         $idlist = '(' . implode(',', $songs) . ')';
         if ($idlist == '()') {
-            return null;
+            return 0;
         }
         $sql        = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
         $results = Dba::fetch_row($db_results);
 
-        return $results['0'];
+        return (int) $results['0'];
     } // get_total_duration
 
     /**
@@ -419,7 +439,7 @@ class Playlist extends playlist_object
      * _update_item
      * This is the generic update function, it does the escaping and error checking
      * @param string $field
-     * @param $value
+     * @param string|integer $value
      * @param integer $level
      * @return PDOStatement|boolean
      */
@@ -489,24 +509,29 @@ class Playlist extends playlist_object
          * append, rather then integrate take end track # and add it to
          * $song->track add one to make sure it really is 'next'
          */
-        $playlist   = new Playlist($this->id);
-        $track_data = $playlist->get_songs();
+        debug_event('playlist.class', "add_medias to: " . $this->id, 5);
+        $track_data = $this->get_songs();
         $base_track = count($track_data);
+        $track      = 0;
         $count      = 0;
+        $sql        = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) VALUES ";
+        $values     = array();
+        $unique     = AmpConfig::get('unique_playlist');
         foreach ($medias as $data) {
-            $media = new $data['object_type']($data['object_id']);
-            if (AmpConfig::get('unique_playlist') && in_array($media->id, $track_data)) {
+            if ($unique && in_array($data['object_id'], $track_data)) {
                 debug_event('playlist.class', "Can't add a duplicate " . $data['object_type'] . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
-            } elseif ($media->id) {
+            } else {
                 $count++;
                 $track = $base_track + $count;
-                debug_event('playlist.class', 'Adding Media; Track number: ' . $track, 5);
-
-                $sql = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) " .
-                    " VALUES (?, ?, ?, ?)";
-                Dba::write($sql, array($this->id, $data['object_id'], $data['object_type'], $track));
+                $sql .= "(?, ?, ?, ?), ";
+                $values[] = $this->id;
+                $values[] = $data['object_id'];
+                $values[] = $data['object_type'];
+                $values[] = $track;
             } // if valid id
         } // end foreach medias
+        Dba::write(rtrim($sql, ', '), $values);
+        debug_event('playlist.class', "Added $track tracks to playlist: " . $this->id, 5);
 
         $this->update_last_update();
     }
@@ -563,7 +588,7 @@ class Playlist extends playlist_object
      */
     private function set_last($count, $column)
     {
-        if (in_array($column, array('last_count', 'last_duration')) && $count >= 0) {
+        if ($this->id && in_array($column, array('last_count', 'last_duration')) && $count >= 0) {
             $sql = "UPDATE `playlist` SET `" . Dba::escape($column) . "` = " . $count . " WHERE `id` = " . Dba::escape($this->id);
             Dba::write($sql);
         }

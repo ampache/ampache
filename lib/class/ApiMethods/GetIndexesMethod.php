@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Lib\ApiMethods;
 
+use AmpConfig;
 use Api;
 use JSON_Data;
 use Playlist;
@@ -49,7 +50,7 @@ final class GetIndexesMethod
      * Added 'include' to allow indexing all song tracks (enabled for xml by default)
      *
      * @param array $input
-     * type    = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode'
+     * type    = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video'
      * filter  = (string) //optional
      * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add     = self::set_filter(date) //optional
@@ -64,11 +65,21 @@ final class GetIndexesMethod
         if (!Api::check_parameter($input, array('type'), self::ACTION)) {
             return false;
         }
+        $type = ((string) $input['type'] == 'album_artist') ? 'artist' : (string) $input['type'];
+        if (!AmpConfig::get('allow_video') && $type == 'video') {
+            Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+        if (!AmpConfig::get('podcast') && ($type == 'podcast' || $type == 'podcast_episode')) {
+            Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
         $user    = User::get_from_username(Session::username($input['auth']));
-        $type    = ((string) $input['type'] == 'album_artist') ? 'artist' : (string) $input['type'];
         $include = (int) $input['include'] == 1;
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode'))) {
+        if (!in_array($type, array('song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
 
             return false;
