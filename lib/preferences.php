@@ -444,7 +444,7 @@ function create_preference_input($name, $value)
             debug_event('playlist.class', 'get_songs ' . print_r($playlists, true), 5);
             if (!empty($playlists)) {
                 foreach ($playlists as $list_id => $list_name) {
-                    $selected = in_array($list_id, $ids) ? ' selected="selected"' : '';
+                    $selected  = in_array($list_id, $ids) ? ' selected="selected"' : '';
                     $options[] = '<option value="' . $list_id . '"' . $selected . '>' . $list_name . '</option>';
                 }
                 echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
