@@ -1245,8 +1245,8 @@ class Upnp_Api
         }
 
         // now put together tokens which are actually one token e.g. upper hutt
-        $onetoken = "";
-        $index    = 0;
+        $onetoken    = "";
+        $index       = 0;
         $nospacesize = sizeof($nospacetokens);
         for ($i=0; $i < $nospacesize; $i++) {
             $token = $nospacetokens[$i];
@@ -1258,7 +1258,7 @@ class Upnp_Api
                 case ")":
                     if ($onetoken != "") {
                         $tokens[$index++] = $onetoken;
-                        $onetoken     = "";
+                        $onetoken         = "";
                     }
                     $tokens[$index++] = $token;
                     break;
