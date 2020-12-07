@@ -1274,7 +1274,7 @@ class Search extends playlist_object
             } else {
                 $group[] = "`album`.`id`";
             }
-            debug_event('search.class', 'Rule[0]=' . $rule[0], 5);
+
             switch ($rule[0]) {
                 case 'title':
                     $where[] = "(`album`.`name` $sql_match_operator '$input' " .
