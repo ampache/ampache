@@ -193,6 +193,29 @@ class Playlist extends playlist_object
     } // get_smartlists
 
     /**
+     * get_details
+     * Returns a keyed array of playlist id and name accessible by the user.
+     * @param string $type
+     * @param integer $user_id
+     * @return array
+     */
+    public static function get_details($type = 'playlist', $user_id = -1)
+    {
+        if (!$user_id) {
+            $user_id = Core::get_global('user')->id;
+        }
+
+        $sql        = "SELECT `id`, `name` FROM `$type` WHERE (`user` = ? OR `type` = 'public') ORDER BY `name`";
+        $results    = array();
+        $db_results = Dba::read($sql, array($user_id));
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[$row['id']] = $row['name'];
+        }
+
+        return $results;
+    } // get_playlists
+
+    /**
      * format
      * This takes the current playlist object and gussies it up a little
      * bit so it is presentable to the users
