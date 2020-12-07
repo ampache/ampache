@@ -6,7 +6,13 @@ metaDescription: "API documentation"
 
 Let's go through come calls and examples that you can do for each JSON method.
 
-Remember that Binary data methods will not return JSON; just the file/data you have requested.
+With the exception of Binary methods, all responses will return a HTTP 200 response.
+
+Also remember that Binary data methods will not return JSON; just the file/data you have requested.
+
+Binary methods will also return:
+* HTTP 400 responses for a bad or incomplete request
+* HTTP 404 responses where the requests data was not found
 
 ## Non-Data Methods
 
@@ -173,7 +179,7 @@ This takes a collection of inputs and returns ID + name for the object type
 
 | Input     | Type       | Description                                                      | Optional |
 |-----------|------------|------------------------------------------------------------------|---------:|
-| 'type'    | string     | 'song', 'album', 'artist', 'playlist', 'podcast'                 |       NO |
+| 'type'    | string     | 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast' |       NO |
 | 'filter'  | string     |                                                                  |      YES |
 | 'add'     | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
 |           |            | Find objects with an 'add' date newer than the specified date    |          |
@@ -276,17 +282,18 @@ This takes a collection of inputs and returns artist objects.
 "error": {}
 ```
 
-| Input     | Type       | Description                                                       | Optional |
-|-----------|------------|-------------------------------------------------------------------|---------:|
-| 'filter'  | string     | Filter results to match this string                               |      YES |
-| 'exact'   | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE)          |      YES |
-| 'add'     | set_filter | ISO 8601 Date Format (2020-09-16)                                 |      YES |
-|           |            | Find objects with an 'add' date newer than the specified date     |          |
-| 'update'  | set_filter | ISO 8601 Date Format (2020-09-16)                                 |      YES |
-|           |            | Find objects with an 'update' time newer than the specified date  |          |
-| 'offset'  | integer    |                                                                   |      YES |
-| 'limit'   | integer    |                                                                   |      YES |
-| 'include' | string     | 'albums', 'songs' and will include JSON nested in the artist JSON |      YES |
+| Input          | Type       | Description                                                      | Optional |
+|----------------|------------|------------------------------------------------------------------|---------:|
+| 'filter'       | string     | Filter results to match this string                              |      YES |
+| 'exact'        | boolean    | 0,1 if true filter is exact (=) rather than fuzzy (LIKE)         |      YES |
+| 'add'          | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
+|                |            | Find objects with an 'add' date newer than the specified date    |          |
+| 'update'       | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
+|                |            | Find objects with an 'update' time newer than the specified date |          |
+| 'include'      | string     | 'albums', 'songs' and will include the corresponding JSON        |      YES |
+| 'album_artist' | boolean    | 0,1 if true filter for album artists only                        |      YES |
+| 'offset'       | integer    |                                                                  |      YES |
+| 'limit'        | integer    |                                                                  |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/artists.json)
 
@@ -2258,6 +2265,16 @@ Delete a non-system preference by name
 Get information about bookmarked media this user is allowed to manage.
 @param array $input
 
+```JSON
+"bookmark": {}
+```
+
+@throws object
+
+```JSON
+"error": {}
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/json-responses/bookmarks.json)
 
 ### get_bookmark
@@ -2266,6 +2283,16 @@ Get information about bookmarked media this user is allowed to manage.
 
 Get the bookmark from it's object_id and object_type.
 @param array $input
+
+```JSON
+"bookmark": {}
+```
+
+@throws object
+
+```JSON
+"error": {}
+```
 
 | Input    | Type   | Description                                       | Optional |
 |----------|--------|---------------------------------------------------|---------:|
@@ -2280,6 +2307,16 @@ Get the bookmark from it's object_id and object_type.
 
 Create a placeholder for the current media that you can return to later.
 @param array $input
+
+```JSON
+"bookmark": {}
+```
+
+@throws object
+
+```JSON
+"error": {}
+```
 
 | Input      | Type    | Description                                       | Optional |
 |------------|---------|---------------------------------------------------|---------:|
@@ -2298,6 +2335,16 @@ Create a placeholder for the current media that you can return to later.
 Edit a placeholder for the current media that you can return to later.
 @param array $input
 
+```JSON
+"bookmark": {}
+```
+
+@throws object
+
+```JSON
+"error": {}
+```
+
 | Input      | Type    | Description                                       | Optional |
 |------------|---------|---------------------------------------------------|---------:|
 | 'filter'   | string  | object_id to find                                 |       NO |
@@ -2315,6 +2362,16 @@ Edit a placeholder for the current media that you can return to later.
 Delete an existing bookmark. (if it exists)
 @param array $input
 
+```JSON
+"success": {}
+```
+
+@throws object
+
+```JSON
+"error": {}
+```
+
 | Input    | Type   | Description                                       | Optional |
 |----------|--------|---------------------------------------------------|---------:|
 | 'filter' | string | object_id to delete                               |       NO |
@@ -2325,10 +2382,16 @@ Delete an existing bookmark. (if it exists)
 
 ## Binary Data Methods
 
+Binary data methods are used for returning raw data to the user such as a image or stream.
+
 ### stream
 
 Streams a given media file. Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
 @param array $input
+@return file (HTTP 200 OK)
+
+@throws (HTTP 400 Bad Request)
+@throws (HTTP 404 Not Found)
 
 | Input     | Type    | Description                 | Optional |
 |-----------|---------|-----------------------------|---------:|
@@ -2343,6 +2406,10 @@ Streams a given media file. Takes the file id in parameter with optional max bit
 
 Downloads a given media file. set format=raw to download the full file
 @param array $input
+@return file (HTTP 200 OK)
+
+@throws (HTTP 400 Bad Request)
+@throws (HTTP 404 Not Found)
 
 | Input    | Type    | Description              | Optional |
 |----------|---------|--------------------------|---------:|
@@ -2354,6 +2421,16 @@ Downloads a given media file. set format=raw to download the full file
 
 Get an art image.
 @param array $input
+@return image (HTTP 200 OK)
+
+@throws (HTTP 400 Bad Request)
+@throws (HTTP 404 Not Found)
+
+
+| Input  | Type    | Description                                                | Optional |
+|--------|---------|------------------------------------------------------------|---------:|
+| 'id'   | integer | $object_id                                                 |       NO |
+| 'type' | string  | 'song', 'artist', 'album', 'playlist', 'search', 'podcast' |       NO |
 
 ## Control Methods
 

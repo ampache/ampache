@@ -337,7 +337,6 @@ class Live_Stream extends database_object implements media, library_item
     /**
      * play_url
      * This is needed by the media interface
-     * @param integer $object_id
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
@@ -345,11 +344,9 @@ class Live_Stream extends database_object implements media, library_item
      * @param string $force_http
      * @return string
      */
-    public static function play_url($object_id, $additional_params = '', $player = null, $local = false, $sid = '', $force_http = '')
+    public function play_url($additional_params = '', $player = null, $local = false, $sid = '', $force_http = '')
     {
-        $radio = new Live_Stream($object_id);
-
-        return $radio->url . $additional_params;
+        return $this->url . $additional_params;
     } // play_url
 
     /**

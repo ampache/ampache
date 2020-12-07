@@ -26,7 +26,6 @@ use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use SpotifyWebAPI\SpotifyWebAPI;
 use SpotifyWebAPI\Session as SpotifySession;
 use SpotifyWebAPI\SpotifyWebAPIException;
-use JamesHeinrich\GetID3\GetID3;
 
 /**
  * Art Class
@@ -410,7 +409,7 @@ class Art extends database_object
                 $song   = new Song($song_id);
                 $song->format();
                 $description = ($this->type == 'artist') ? $song->f_artist_full : $object->full_name;
-                $id3         = new VaInfo($song->file);
+                $id3         = new vainfo($song->file);
                 $ndata       = array();
                 $data        = $id3->read_id3();
                 if (isset($data['id3v2']['APIC'])) {
@@ -997,7 +996,7 @@ class Art extends database_object
         // Check to see if it is embedded in id3 of a song
         if (isset($data['song'])) {
             // If we find a good one, stop looking
-            $getID3 = new GetID3();
+            $getID3 = new getID3();
             $id3    = $getID3->analyze($data['song']);
 
             if ($id3['format_name'] == "WMA") {
@@ -1347,6 +1346,8 @@ class Art extends database_object
             } else {
                 $query = "\"{$data['album']}\"";
             }
+        } else {
+            return $images;
         }
 
         try {
@@ -1776,11 +1777,11 @@ class Art extends database_object
     {
         $mtype  = strtolower(get_class($media));
         $data   = array();
-        $getID3 = new GetID3();
+        $getID3 = new getID3();
         try {
             $id3 = $getID3->analyze($media->file);
         } catch (Exception $error) {
-            debug_event('art.class', 'Getid3' . $error->getMessage(), 1);
+            debug_event('art.class', 'getid3' . $error->getMessage(), 1);
         }
 
         if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {

@@ -226,8 +226,14 @@ class Update
         $update_string = "* Extend album and make artist even bigger. This should cover everyone.<br/ > ";
         $version[]     = array('version' => '400016', 'description' => $update_string);
 
-        $update_string = "* Extend video bitrate to unsigned. There's no reason for a negative bitrate.<br/ > ";
+        $update_string = ""; // REMOVED update
         $version[]     = array('version' => '400017', 'description' => $update_string);
+
+        $update_string = "* Extend video bitrate to unsigned. There's no reason for a negative bitrate.<br/ > ";
+        $version[]     = array('version' => '400018', 'description' => $update_string);
+
+        $update_string = "* Put 'of_the_moment' into a per user preference.<br/ > ";
+        $version[]     = array('version' => '400019', 'description' => $update_string);
 
         return $version;
     }
@@ -1312,14 +1318,45 @@ class Update
     /**
      * update_400017
      *
-     * Extend video bitrate to unsigned. There's no reason for a negative bitrate.
+     * Removed.
      */
     public static function update_400017()
     {
+        return true;
+    }
+
+    /**
+     * update_400018
+     *
+     * Extend video bitrate to unsigned. There's no reason for a negative bitrate.
+     */
+    public static function update_400018()
+    {
         $retval = true;
+        $sql    = "UPDATE `video` SET `video_bitrate` = 0 WHERE `video_bitrate` < 0;";
+        $retval &= Dba::write($sql);
 
         $sql    = "ALTER TABLE `video` MODIFY COLUMN `video_bitrate` int(11) unsigned DEFAULT NULL NULL;";
         $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400019
+     *
+     * Put of_the_moment into a per user preference
+     */
+    public static function update_400019()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " .
+            "VALUES ('of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', 25, 'integer', 'interface', 'home')";
+        $retval &= Dba::write($sql);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '')";
+        $retval &= Dba::write($sql, array($row_id));
 
         return $retval;
     }

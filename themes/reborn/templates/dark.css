@@ -43,7 +43,7 @@ a:hover {
 }
 
 hr {
-  border-top-color: #eee;
+    border-top-color: #eee;
 }
 
 input[type=password],
@@ -97,11 +97,18 @@ input[type=submit]:focus:active {
 }
 
 .playlistdialogstyle.ui-dialog .ui-dialog-content,
+.sharedialogstyle.ui-dialog .ui-dialog-content,
+.playlistdialogstyle.ui-widget-content a,
 .editdialogstyle.ui-dialog.ui-widget-content a,
 .broadcastsdialogstyle.ui-widget-content a,
 .sharedialogstyle.ui-widget-content a {
     background-color: #222;
     color: #999;
+}
+
+.editdialogstyle.ui-dialog.ui-widget-content a,
+.editdialogstyle.ui-dialog.ui-widget-content a:hover {
+    background-color: unset;
 }
 
 .editdialogstyle.ui-dialog .ui-dialog-titlebar,
@@ -110,6 +117,10 @@ input[type=submit]:focus:active {
 .broadcastsdialogstyle.ui-widget-content a:hover,
 .sharedialogstyle.ui-widget-content a:hover {
     color: #fff;
+}
+
+.ui-icon-close {
+    background-color: #f0f0f0;
 }
 
 /* --------------------------
@@ -419,9 +430,9 @@ table.tabledata tbody .cel_cover img:hover {
     border-color: #ff9d00;
 }
 
-input:invalid { 
-   border: 4px solid red;
- }
+input:invalid {
+    border: 4px solid red;
+}
 
 /* --------------------------
    Content (info-box)
@@ -603,6 +614,7 @@ div.jp-playlist li {
 .jp-type-playlist .jp-playlist a.jp-playlist-current {
     color: #ff9d00;
 }
+
 /* --------------------------
    Other
    -------------------------- */
@@ -613,7 +625,7 @@ div.jp-playlist li {
 }
 
 .followbtn {
-   background-color: #363f4a;
+    background-color: #363f4a;
 }
 
 .missing_album {
@@ -651,11 +663,11 @@ a.option-list:hover {
 }
 
 #tabs li a {
-  color: #ff9d00;
+    color: #ff9d00;
 }
 
 #tabs li a:hover {
-  color: #ffc466;
+    color: #ffc466;
 }
 
 #tabs li.tab_active a {

@@ -22,11 +22,13 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
   * rsstoken: Identify users by token when generating RSS feeds
 * Replace 'Admin' icon with padlock in sidebar when access check fails. (Hide this new icon with 'simple_user_mode')
 * Disable API/Subsonic password resets in 'simple_user_mode'
-* NEW plugin: 'Personal Favorites'. Show a shortcut to a favorite smartlist or playlist on the homepage
+* NEW plugin:
+  * 'Personal Favorites'. Show a shortcut to a favorite smartlist or playlist on the homepage
+  * 'RatingMatch'. Raise the minimum star rating (and song loves) of artists and albums when you rate/love the song
 * Run garbage collection after catalog_update.inc 'clean' or 'verify'
 * Add duration to the table headers when browsing playlists and smartlists
 * Add time and duration to albums, artists instead of calculating from songs each time
-* Add Random to the search pages to allow sorting by id or RAND()
+* Allow browsing by album_artist instead of artist
 
 ### Changed
 
@@ -37,13 +39,18 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Extend democratic cooldown past 255 and show an error when out of range
 * Sort smartlists by file when random is unticked
 * Don't block playlist information actions when you own the playlist
-* Searching 'original_year' will now fall back to 'year' if no release year is present
 * Add date parameter to Api::record_play
+* Changed sidebar back to browse for artist/album
+
+### Removed
+
+* Disabled the jPlayer fullscreen shortcut (ctrl + f)
 
 ### Fixed
 
 * Escape filepaths when removing from database
-* Search form not remembering limits
+* Check for mail_auth config correctly
+* Sublime Music requires ints for json data to be cast correctly
 
 ### API develop
 
@@ -100,6 +107,7 @@ All API code that used 'Tag' now references 'Genre' instead
   * 4742 Failed Access Check
 * get_indexes: 'playlist' now requires include=1 for xml calls if you want the tracks
 * stats: Removed back compat from older versions. Only 'type' is mandatory
+* Return empty objects when the request was correct but the results were empty
 
 ### Deprecated
 
@@ -111,6 +119,30 @@ All API code that used 'Tag' now references 'Genre' instead
 * Api::democratic was using action from localplay in the return responses
 * Setting a limit of 'none' would slice away all the results
 * get_indexes for XML didn't include podcast indexes
+
+## Ampache 4.2.4-release
+
+### Added
+
+* "Random" tickbox added to search pages
+
+### Changed
+
+* Searching 'original_year' will now fall back to 'year' if no release year is present
+
+### Fixed
+
+* User was being created but you were told it isn't
+* The search pages remember your limit correctly
+* PHP exception when < 7.1
+* Correct "Recently Added", "Recently Updated" searches
+* Check that song can be inserted before inserting the remaining rows
+* Logic in stat recording when skips occur
+* Don't query for null tag ids
+
+### API 4.2.4
+
+**NO CHANGE**
 
 ## Ampache 4.2.3-release
 

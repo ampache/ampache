@@ -150,7 +150,7 @@
     display: none;
 }
 
-.playlistdialogstyle.ui-dialog  .ui-dialog-title {
+.playlistdialogstyle.ui-dialog .ui-dialog-title {
     display: none;
 }
 
@@ -205,7 +205,7 @@
     display: none;
 }
 
-.broadcastsdialogstyle.ui-dialog  .ui-dialog-title {
+.broadcastsdialogstyle.ui-dialog .ui-dialog-title {
     display: none;
 }
 
@@ -267,8 +267,6 @@
 }
 
 .sharedialogstyle.ui-dialog .ui-dialog-content {
-    background-color: #222;
-    color: #999;
     border: 0;
 }
 

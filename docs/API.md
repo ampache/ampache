@@ -217,6 +217,8 @@ For more in depth information regarding the different api servers you can view t
 
 ### Non-Data Methods
 
+All Non-Data methods return HTTP 200 responses
+
 * handshake
 * ping
 * goodbye
@@ -226,6 +228,8 @@ For more in depth information regarding the different api servers you can view t
 * system_update **(develop only)**
 
 ### Data Methods
+
+All Data methods return HTTP 200 responses
 
 * get_indexes
 * artists
@@ -293,9 +297,6 @@ For more in depth information regarding the different api servers you can view t
 * user_delete
 * user_preferences **(develop only)**
 * user_preference **(develop only)**
-* stream
-* download
-* get_art
 * rate
 * flag
 * record_play
@@ -321,6 +322,17 @@ For more in depth information regarding the different api servers you can view t
 * bookmark_create **(develop only)**
 * bookmark_edit **(develop only)**
 * bookmark_delete **(develop only)**
+
+### Binary Data Methods
+
+All binary methods will not return XML/JSON responses. they will either return the requested file/data or an HTTP error code.
+@return (HTTP 200 OK)
+@throws (HTTP 400 Bad Request)
+@throws (HTTP 404 Not Found)
+
+* stream
+* download
+* get_art
 
 ### Control Methods
 

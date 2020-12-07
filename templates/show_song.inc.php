@@ -105,7 +105,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         <?php
         } ?>
         <?php if (Access::check_function('download')) { ?>
-        <a class="nohtml" href="<?php echo Song::play_url($song->id, '&action=download', '', false, Core::get_global('user')->id, true); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
+        <a class="nohtml" href="<?php echo $song->play_url('&action=download', '', false, Core::get_global('user')->id, true); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
         <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
         <?php
         } ?>
@@ -138,8 +138,8 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         } ?>
     </dd>
     <?php
-    $songprops[T_('Title')]   = scrub_out($song->title);
-    $songprops[T_('Artist')]  = $song->f_artist_link;
+    $songprops[T_('Title')]        = scrub_out($song->title);
+    $songprops[T_('Song Artist')]  = $song->f_artist_link;
     if (!empty($song->f_albumartist_link)) {
         $songprops[T_('Album Artist')]   = $song->f_albumartist_link;
     }

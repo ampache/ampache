@@ -410,7 +410,7 @@ $t_logout    = T_('Log out'); ?>
                     </a>
                 </div>
                 <div class="topmenu_item">
-                    <a href="<?php echo $web_path ?>/browse.php?action=artist">
+                    <a href="<?php echo $web_path ?>/browse.php?action=album_artist">
                         <?php echo UI::get_image('topmenu-artist', $t_artists); ?>
                         <span><?php echo $t_artists ?></span>
                     </a>

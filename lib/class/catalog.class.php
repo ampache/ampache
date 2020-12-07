@@ -1899,7 +1899,7 @@ abstract class Catalog extends database_object
                         array("\r\n", "\r", "\n"),
                         '<br />',
                         strip_tags($results['lyrics']));
-        $new_song->license = isset($results['license']) ? License::lookup($results['license']) : null;
+        $new_song->license = isset($results['license']) ? License::lookup((string) $results['license']) : null;
         $new_song->label   = isset($results['publisher']) ? Catalog::check_length($results['publisher'], 128) : null;
         if ($song->label && AmpConfig::get('label')) {
             // create the label if missing
@@ -2780,7 +2780,7 @@ abstract class Catalog extends database_object
                     $xml['dict']['Sample Rate']  = (int) ($song->rate);
                     $xml['dict']['Play Count']   = (int) ($song->played);
                     $xml['dict']['Track Type']   = "URL";
-                    $xml['dict']['Location']     = Song::play_url($song->id);
+                    $xml['dict']['Location']     = $song->play_url();
                     echo (string) xoutput_from_array($xml, true, 'itunes');
                     // flush output buffer
                 } // while result
@@ -2850,7 +2850,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * @param Artist|Album|Song|Video|Podcast_Episode $libitem
+     * @param Artist|Album|Song|Video|Podcast_Episode|Label|TVShow|TVShow_Season $libitem
      * @param integer|null $user_id
      * @return boolean
      */

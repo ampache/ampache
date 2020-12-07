@@ -292,6 +292,10 @@ class Stats
      */
     public static function get_time($object_id, $object_type)
     {
+        // you can't get the last played when you haven't played something before
+        if (!$object_id || !$object_type) {
+            return 0;
+        }
         $sql = "SELECT `time` FROM `$object_type` " .
                "WHERE `id` = ?";
         $db_results = Dba::read($sql, array($object_id));

@@ -60,8 +60,8 @@ class AmpachePersonalFavorites
         }
 
         Preference::insert('personalfav_display', T_('Personal favorites on the homepage'), '0', 25, 'boolean', 'plugins', $this->name);
-        Preference::insert('personalfav_playlist', T_('Favorite Playlists (comma separated)'), '', 25, 'integer', 'plugins', $this->name);
-        Preference::insert('personalfav_smartlist', T_('Favorite Smartlists (comma separated)'), '', 25, 'integer', 'plugins', $this->name);
+        Preference::insert('personalfav_playlist', T_('Favorite Playlists'), '', 25, 'integer', 'plugins', $this->name);
+        Preference::insert('personalfav_smartlist', T_('Favorite Smartlists'), '', 25, 'integer', 'plugins', $this->name);
 
         return true;
     }
@@ -76,6 +76,7 @@ class AmpachePersonalFavorites
         Preference::delete('personalfav_display');
         Preference::delete('personalfav_playlist');
         Preference::delete('personalfav_smartlist');
+        Preference::delete('personalfav_gridview');
 
         return true;
     }
@@ -86,11 +87,6 @@ class AmpachePersonalFavorites
      */
     public function upgrade()
     {
-        $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version < 2) {
-            Preference::insert('personalfav_gridview', T_('Personal favorites grid view display'), '0', 25, 'boolean', 'plugins');
-        }
-
         return true;
     }
 

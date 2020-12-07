@@ -31,7 +31,7 @@ $thcount  = 8; ?>
             <th class="cel_play essential"></th>
             <th class="cel_song essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title' . $argument_param, T_('Song Title'), 'sort_song_title' . $browse->id); ?></th>
             <th class="cel_add essential"></th>
-            <th class="cel_artist optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist' . $argument_param, T_('Artist'), 'sort_song_artist' . $browse->id); ?></th>
+            <th class="cel_artist optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist' . $argument_param, T_('Song Artist'), 'sort_song_artist' . $browse->id); ?></th>
             <th class="cel_album essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album' . $argument_param, T_('Album'), 'sort_song_album' . $browse->id); ?></th>
             <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'), 'album_sort_year_bottom'); ?></th>
             <th class="cel_tags optional"><?php echo T_('Genres'); ?></th>
@@ -93,7 +93,7 @@ $thcount  = 8; ?>
             <th class="cel_play"></th>
             <th class="cel_song"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title' . $argument_param, T_('Song Title'), 'sort_song_title' . $browse->id); ?></th>
             <th class="cel_add"></th>
-            <th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist' . $argument_param, T_('Artist'), 'sort_song_artist' . $browse->id); ?></th>
+            <th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist' . $argument_param, T_('Song Artist'), 'sort_song_artist' . $browse->id); ?></th>
             <th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album' . $argument_param, T_('Album'), 'sort_song_album' . $browse->id); ?></th>
             <th class="cel_tags"><?php echo T_('Genres'); ?></th>
             <th class="cel_time"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time' . $argument_param, T_('Time'), 'sort_song_time' . $browse->id); ?></th>

@@ -28,9 +28,6 @@ declare(strict_types=0);
  *
  */
 
-use JamesHeinrich\GetID3\WriteTags;
-use JamesHeinrich\GetID3\GetID3;
-use JamesHeinrich\GetID3\Utils;
 
 /**
  * Class vainfo
@@ -96,8 +93,8 @@ class vainfo
         $enabled_sources = (array) $this->get_metadata_order();
 
         if (in_array('getID3', $enabled_sources) && $this->islocal) {
-            // Initialize GetID3 engine
-            $this->_getID3 = new GetID3();
+            // Initialize getID3 engine
+            $this->_getID3 = new getID3();
 
             $this->_getID3->option_md5_data        = false;
             $this->_getID3->option_md5_data_source = false;
@@ -264,7 +261,7 @@ class vainfo
     public function write_id3($tag_data)
     {
         $TaggingFormat = 'UTF-8';
-        $tagwriter     = new WriteTags;
+        $tagWriter     = new getid3_writetags();
         $extension     = pathinfo($this->filename, PATHINFO_EXTENSION);
         if ($extension == 'mp3') {
             $format = 'id3v2.3';
@@ -278,19 +275,19 @@ class vainfo
             return;
         }
 
-        $tagwriter->filename          = $this->filename;
-        $tagwriter->tagformats        = array($format);
-        $tagwriter->overwrite_tags    = AmpConfig::get('overwrite_tags', false);
-        $tagwriter->tag_encoding      = $TaggingFormat;
-        $tagwriter->remove_other_tags = true;
-        $tagwriter->tag_data          = $tag_data;
-        if ($tagwriter->WriteTags() && !empty($tagwriter->warnings)) {
-            foreach ($tagwriter->warnings as $message) {
+        $tagWriter->filename          = $this->filename;
+        $tagWriter->tagformats        = array($format);
+        $tagWriter->overwrite_tags    = true;
+        $tagWriter->tag_encoding      = $TaggingFormat;
+        $tagWriter->remove_other_tags = true;
+        $tagWriter->tag_data          = $tag_data;
+        if ($tagWriter->WriteTags()) {
+            foreach ($tagWriter->warnings as $message) {
                 debug_event('vainfo.class', 'Warning Writing Image: ' . $message, 5);
             }
         }
-        if (!empty($tagwriter->errors)) {
-            foreach ($tagwriter->$tagwriter->errors as $message) {
+        if (!empty($tagWriter->errors)) {
+            foreach ($tagWriter->errors as $message) {
                 debug_event('vainfo.class', 'Error Writing Image: ' . $message, 1);
             }
         }
@@ -306,7 +303,6 @@ class vainfo
     public function prepare_id3_frames($frames)
     {
         $ndata = array();
-
         foreach ($frames as $key => $text) {
             switch ($key) {
                 case 'text':
