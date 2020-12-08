@@ -14,15 +14,23 @@ Binary methods will also return:
 * HTTP 400 responses for a bad or incomplete request
 * HTTP 404 responses where the requests data was not found
 
-## Non-Data Methods
+## Auth Methods
+
+Auth methods are used for authenticating or checking the status of your session in an Ampache server
 
 ### handshake
 
 This is the function that handles verifying a new handshake Takes a timestamp, auth key, and username.
 
-@param array $input
+| Input       | Type    | Description                                              | Optional |
+|-------------|---------|----------------------------------------------------------|---------:|
+| 'auth'      | string  | $passphrase (Timestamp . Password SHA hash) OR (API Key) |       NO |
+| 'user'      | string  | $username (Required if login/password authentication)    |      YES |
+| 'timestamp' | integer | UNIXTIME() The timestamp used in seed of password hash   |      YES |
+|             |         | (Required if login/password authentication)              |          |
+| 'version'   | string  | $version (API Version that the application understands)  |      YES |
 
-@return
+* return
 
 ```XML
 <root>
@@ -41,19 +49,11 @@ This is the function that handles verifying a new handshake Takes a timestamp, a
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
-
-| Input       | Type    | Description                                              | Optional |
-|-------------|---------|----------------------------------------------------------|---------:|
-| 'auth'      | string  | $passphrase (Timestamp . Password SHA hash) OR (API Key) |       NO |
-| 'user'      | string  | $username (Required if login/password authentication)    |      YES |
-| 'timestamp' | integer | UNIXTIME() The timestamp used in seed of password hash   |      YES |
-|             |         | (Required if login/password authentication)              |          |
-| 'version'   | string  | $version (API Version that the application understands)  |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/handshake.xml)
 
@@ -61,9 +61,11 @@ This is the function that handles verifying a new handshake Takes a timestamp, a
 
 This can be called without being authenticated, it is useful for determining if what the status of the server is, and what version it is running/compatible with
 
-@param array $input
+| Input  | Type   | Description                                                                | Optional |
+|--------|--------|----------------------------------------------------------------------------|---------:|
+| 'auth' | string | (Session ID) returns version information and extends the session if passed |      YES |
 
-@return
+* return
 
 ```XML
 <root>
@@ -74,7 +76,7 @@ This can be called without being authenticated, it is useful for determining if 
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root>
@@ -84,19 +86,17 @@ This can be called without being authenticated, it is useful for determining if 
 </root>
 ```
 
-| Input  | Type   | Description                                                                | Optional |
-|--------|--------|----------------------------------------------------------------------------|---------:|
-| 'auth' | string | (Session ID) returns version information and extends the session if passed |      YES |
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/ping.xml)
 
 ### goodbye
 
 Destroy a session using the auth parameter.
 
-@param array $input
+| Input  | Type   | Description                                    | Optional |
+|--------|--------|------------------------------------------------|---------:|
+| 'auth' | string | (Session ID) destroys the session if it exists |       NO |
 
-@return
+* return
 
 ```XML
 <root>
@@ -104,51 +104,25 @@ Destroy a session using the auth parameter.
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
-
-| Input  | Type   | Description                                    | Optional |
-|--------|--------|------------------------------------------------|---------:|
-| 'auth' | string | (Session ID) destroys the session if it exists |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/goodbye.xml)
 
-### url_to_song
+## Non-Data Methods
 
-This takes a url and returns the song object in question
-@param array $input
-
-@return
-
-```XML
-<root>
-    <song>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
-
-| Input | Type   | Description                                                   | Optional |
-|-------|--------|---------------------------------------------------------------|---------:|
-| 'url' | string | Full Ampache URL from server, translates back into a song XML |       NO |
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/url_to_song.xml)
+These methods take no parameters beyond your auth key to return information
 
 ### system_update
 
 * **NEW** in develop
 
 Check Ampache for updates and run the update if there is one.
-@param array $input
 
-@return
+* return
 
 ```XML
 <root>
@@ -156,7 +130,7 @@ Check Ampache for updates and run the update if there is one.
 </root>
 ```
 
-@throws
+* throws
 ```XML
 <root>
     <success>
@@ -165,33 +139,103 @@ Check Ampache for updates and run the update if there is one.
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/system_update.xml)
 
-## Data Methods
+### system_preferences
 
-### get_indexes
+* **NEW** in develop
 
-This takes a collection of inputs and returns ID + name for the object type
+Get your server preferences
 
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
-    <song>|<album>|<artist>|<playlist>|<podcast>
+    <preferences>
+        <pref>
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
 
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/system_preferences.xml)
+
+### users
+
+* **NEW** in develop
+
+Get ids and usernames for your site
+
+* return
+
+```XML
+<root>
+    <user>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/users.xml)
+
+### user_preferences
+
+* **NEW** in develop
+
+Get your user preferences
+
+* return
+
+```XML
+<root>
+    <preferences>
+        <pref>
+</root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/user_preferences.xml)
+
+### bookmarks
+
+* **NEW** in develop
+
+Get information about bookmarked media this user is allowed to manage.
+
+* return
+
+```XML
+<root>
+    <bookmark>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/bookmarks.xml)
+
+## Data Methods
+
+Data methods require additional information and parameters to return information
+
+### get_indexes
+
+This takes a collection of inputs and returns ID + name for the object type
+
 | Input     | Type       | Description                                                      | Optional |
 |-----------|------------|------------------------------------------------------------------|---------:|
-| 'type'    | string     | 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast' |       NO |
+| 'type'    | string     | 'song', 'album', 'artist', 'album_artist', 'playlist',           |       NO |
+|           |            | 'podcast', 'podcast_episode', 'live_stream'                      |          |
 | 'filter'  | string     |                                                                  |      YES |
-| 'add'     | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
 |           |            | Find objects with an 'add' date newer than the specified date    |          |
 | 'update'  | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
 |           |            | Find objects with an 'update' time newer than the specified date |          |
@@ -199,25 +243,29 @@ This takes a collection of inputs and returns ID + name for the object type
 | 'offset'  | integer    |                                                                  |      YES |
 | 'limit'   | integer    |                                                                  |      YES |
 
-SONGS
+* return
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/get_indexes%20\(song\).xml)
+```XML
+<root>
+    <song>|<album>|<artist>|<playlist>|<podcast>
+</root>
+```
 
-ARTIST
+* throws
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/get_indexes%20\(artist\).xml)
+```XML
+<root><error></root>
+```
 
-ALBUM
+SONGS [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/get_indexes%20\(song\).xml)
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/get_indexes%20\(album\).xml)
+ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/get_indexes%20\(artist\).xml)
 
-PLAYLIST
+ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/get_indexes%20\(album\).xml)
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/get_indexes%20\(playlist\).xml)
+PLAYLIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/get_indexes%20\(playlist\).xml)
 
-PODCAST
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/get_indexes%20\(podcast\).xml)
+PODCAST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/get_indexes%20\(podcast\).xml)
 
 ### advanced_search
 
@@ -231,21 +279,15 @@ Use operator ('and', 'or') to choose whether to join or separate each rule when 
 
 Refer to the [Advanced Search](http://ampache.org/api/api-advanced-search) page for details about creating searches.
 
-@param array $input
+**NOTE** the rules part can be confusing but essentially you can include as many 'arrays' of rules as you want.
+Just add 1 to the rule value to create a new group of rules.
 
-@return
-
-```XML
-<root>
-    <song>|<album>|<artist>|<playlist>|<label>|<user>|<video>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
+* Mandatory Rule Values
+  * rule_1
+  * rule_1_operator
+  * rule_1_input
+* Optional (Metadata searches **only**)
+  * rule_1_subtype
 
 | Input    | Type    | Description                                   | Optional |
 |----------|---------|--------------- -------------------------------|---------:|
@@ -258,47 +300,29 @@ Refer to the [Advanced Search](http://ampache.org/api/api-advanced-search) page 
 | offset   | integer |                                               |      YES |
 | limit'   | integer |                                               |      YES |
 
-**NOTE** the rules part can be confusing but essentially you can include as many 'arrays' of rules as you want.
-Just add 1 to the rule value to create a new group of rules.
-
-* Mandatory Rule Values
-  * rule_1
-  * rule_1_operator
-  * rule_1_input
-* Optional (Metadata searches **only**)
-  * rule_1_subtype
-
-SONG
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/advanced_search%20\(song\).xml)
-
-ARTIST
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/advanced_search%20\(artist\).xml)
-
-ALBUM
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/advanced_search%20\(album\).xml)
-
-### artists
-
-This takes a collection of inputs and returns artist objects.
-
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
-    <artist>
+    <song>|<album>|<artist>|<playlist>|<label>|<user>|<video>
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
+
+SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/advanced_search%20\(song\).xml)
+
+ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/advanced_search%20\(artist\).xml)
+
+ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/advanced_search%20\(album\).xml)
+
+### artists
+
+This takes a collection of inputs and returns artist objects.
 
 | Input          | Type       | Description                                                      | Optional |
 |----------------|------------|------------------------------------------------------------------|---------:|
@@ -313,14 +337,7 @@ This takes a collection of inputs and returns artist objects.
 | 'offset'       | integer    |                                                                  |      YES |
 | 'limit'        | integer    |                                                                  |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/artists.xml)
-
-### artist
-
-This returns a single artist based on the UID of said artist
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -328,37 +345,42 @@ This returns a single artist based on the UID of said artist
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/artists.xml)
+
+### artist
+
+This returns a single artist based on the UID of said artist
 
 | Input     | Type   | Description                                              | Optional |
 |-----------|--------|----------------------------------------------------------|---------:|
 | 'filter'  | string | UID of Artist, returns artist XML                        |       NO |
 | 'include' | string | 'albums', 'songs' and will include the corresponding XML |      YES |
 
+* return
+
+```XML
+<root>
+    <artist>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/artist.xml)
 
 ### artist_albums
 
 This returns the albums of an artist
-@param array $input
-
-@return
-
-```XML
-<root>
-    <album>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input    | Type    | Description                      | Optional |
 |----------|---------|----------------------------------|---------:|
@@ -366,41 +388,7 @@ This returns the albums of an artist
 | 'offset' | integer |                                  |      YES |
 | 'limit'  | integer |                                  |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/artist_albums.xml)
-
-### artist_songs
-
-This returns the songs of the specified artist
-@param array $input
-
-@return
-
-```XML
-<root>
-    <song>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
-
-| Input    | Type    | Description                     | Optional |
-|----------|---------|---------------------------------|---------:|
-| 'filter' | string  | UID of Artist, returns Song XML |       NO |
-| 'offset' | integer |                                 |      YES |
-| 'limit'  | integer |                                 |      YES |
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/artist_songs.xml)
-
-### albums
-
-This returns albums based on the provided search filters
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -408,11 +396,43 @@ This returns albums based on the provided search filters
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/artist_albums.xml)
+
+### artist_songs
+
+This returns the songs of the specified artist
+
+| Input    | Type    | Description                     | Optional |
+|----------|---------|---------------------------------|---------:|
+| 'filter' | string  | UID of Artist, returns Song XML |       NO |
+| 'offset' | integer |                                 |      YES |
+| 'limit'  | integer |                                 |      YES |
+
+* return
+
+```XML
+<root>
+    <song>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/artist_songs.xml)
+
+### albums
+
+This returns albums based on the provided search filters
 
 | Input     | Type       | Description                                                      | Optional |
 |-----------|------------|------------------------------------------------------------------|---------:|
@@ -426,14 +446,7 @@ This returns albums based on the provided search filters
 | 'limit'   | integer    |                                                                  |      YES |
 | 'include' | string     | 'albums', 'songs' will include the corresponding XML             |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/albums.xml)
-
-### album
-
-This returns a single album based on the UID provided
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -441,37 +454,42 @@ This returns a single album based on the UID provided
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/albums.xml)
+
+### album
+
+This returns a single album based on the UID provided
 
 | Input     | Type   | Description                                | Optional |
 |-----------|--------|--------------------------------------------|---------:|
 | 'filter'  | string | UID of Album, returns album XML            |       NO |
 | 'include' | string | 'songs' will include the corresponding XML |      YES |
 
+* return
+
+```XML
+<root>
+    <album>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/album.xml)
 
 ### album_songs
 
 This returns the songs of a specified album
-@param array $input
-
-@return
-
-```XML
-<root>
-    <song>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input    | Type    | Description                    | Optional |
 |----------|---------|--------------------------------|---------:|
@@ -479,26 +497,25 @@ This returns the songs of a specified album
 | 'offset' | integer |                                |      YES |
 | 'limit'  | integer |                                |      YES |
 
+* return
+
+```XML
+<root>
+    <song>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/album_songs.xml)
 
 ### genres
 
 This returns the genres (Tags) based on the specified filter
-@param array $input
-
-@return
-
-```XML
-<root>
-    <genre>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input    | Type    | Description                                              | Optional |
 |----------|---------|----------------------------------------------------------|---------:|
@@ -507,16 +524,7 @@ This returns the genres (Tags) based on the specified filter
 | 'offset' | integer |                                                          |      YES |
 | 'limit'  | integer |                                                          |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/genres.xml)
-
-### genre
-
-This returns a single genre based on UID.
-All XML Documents that have a ```<genre>``` element may have 0 or more genre elements associated with them.
-Each genre element has an attribute "count" that indicates the number of people who have specified this genre.
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -524,36 +532,43 @@ Each genre element has an attribute "count" that indicates the number of people 
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
 
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/genres.xml)
+
+### genre
+
+This returns a single genre based on UID.
+All XML Documents that have a ```<genre>``` element may have 0 or more genre elements associated with them.
+Each genre element has an attribute "count" that indicates the number of people who have specified this genre.
+
 | Input    | Type   | Description                     | Optional |
 |----------|--------|---------------------------------|---------:|
 | 'filter' | string | UID of genre, returns genre XML |       NO |
+
+* return
+
+```XML
+<root>
+    <genre>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/genre.xml)
 
 ### genre_artists
 
 This returns the artists associated with the genre in question as defined by the UID
-@param array $input
-
-@return
-
-```XML
-<root>
-    <artist>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input    | Type    | Description                      | Optional |
 |----------|---------|----------------------------------|---------:|
@@ -561,26 +576,25 @@ This returns the artists associated with the genre in question as defined by the
 | 'offset' | integer |                                  |      YES |
 | 'limit'  | integer |                                  |      YES |
 
+* return
+
+```XML
+<root>
+    <artist>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/genre_artists.xml)
 
 ### genre_albums
 
 This returns the albums associated with the genre in question
-@param array $input
-
-@return
-
-```XML
-<root>
-    <album>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input    | Type    | Description                     | Optional |
 |----------|---------|---------------------------------|---------:|
@@ -588,26 +602,25 @@ This returns the albums associated with the genre in question
 | 'offset' | integer |                                 |      YES |
 | 'limit'  | integer |                                 |      YES |
 
+* return
+
+```XML
+<root>
+    <album>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/genre_albums.xml)
 
 ### genre_songs
 
 returns the songs for this genre
-@param array $input
-
-@return
-
-```XML
-<root>
-    <song>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input    | Type    | Description                    | Optional |
 |----------|---------|--------------------------------|---------:|
@@ -615,14 +628,7 @@ returns the songs for this genre
 | 'offset' | integer |                                |      YES |
 | 'limit'  | integer |                                |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/genre_songs.xml)
-
-### songs
-
-Returns songs based on the specified filter
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -630,11 +636,17 @@ Returns songs based on the specified filter
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/genre_songs.xml)
+
+### songs
+
+Returns songs based on the specified filter
 
 | Input    | Type       | Description                                                      | Optional |
 |----------|------------|------------------------------------------------------------------|---------:|
@@ -647,14 +659,7 @@ Returns songs based on the specified filter
 | 'offset' | integer    |                                                                  |      YES |
 | 'limit'  | integer    |                                                                  |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/songs.xml)
-
-### song
-
-returns a single song
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -662,15 +667,35 @@ returns a single song
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
 
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/songs.xml)
+
+### song
+
+returns a single song
+
 | Input    | Type   | Description                   | Optional |
 |----------|--------|-------------------------------|---------:|
 | 'filter' | string | UID of Song, returns song XML |       NO |
+
+* return
+
+```XML
+<root>
+    <song>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/song.xml)
 
@@ -679,46 +704,53 @@ returns a single song
 * **NEW** in Develop
 
 Delete an existing song. (if you are allowed to)
-@param array $input
 
-@return
+| Input    | Type   | Description           | Optional |
+|----------|--------|-----------------------|---------:|
+| 'filter' | string | UID of song to delete |       NO |
+
+* return
 
 ```XML
 <root>
     <success>
 </root>
 ```
-
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
 
-| Input    | Type   | Description           | Optional |
-|----------|--------|-----------------------|---------:|
-| 'filter' | string | UID of song to delete |       NO |
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/song_delete.xml)
+
+### url_to_song
+
+This takes a url and returns the song object in question
+
+| Input | Type   | Description                                                   | Optional |
+|-------|--------|---------------------------------------------------------------|---------:|
+| 'url' | string | Full Ampache URL from server, translates back into a song XML |       NO |
+
+* return
+
+```XML
+<root>
+    <song>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/url_to_song.xml)
 
 ### playlists
 
 This returns playlists based on the specified filter
-@param array $input
-
-@return
-
-```XML
-<root>
-    <playlist>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input    | Type       | Description                                                      | Optional |
 |----------|------------|------------------------------------------------------------------|---------:|
@@ -731,14 +763,7 @@ This returns playlists based on the specified filter
 | 'offset' | integer    |                                                                  |      YES |
 | 'limit'  | integer    |                                                                  |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/playlists.xml)
-
-### playlist
-
-This returns a single playlist
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -746,36 +771,41 @@ This returns a single playlist
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
 
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/playlists.xml)
+
+### playlist
+
+This returns a single playlist
+
 | Input    | Type   | Description                           | Optional |
 |----------|--------|---------------------------------------|---------:|
 | 'filter' | string | UID of playlist, returns playlist XML |       NO |
+
+* return
+
+```XML
+<root>
+    <playlist>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/playlist.xml)
 
 ### playlist_songs
 
 This returns the songs for a playlist
-@param array $input
-
-@return
-
-```XML
-<root>
-    <song>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input    | Type    | Description                       | Optional |
 |----------|---------|-----------------------------------|---------:|
@@ -783,14 +813,32 @@ This returns the songs for a playlist
 | 'offset' | integer |                                   |      YES |
 | 'limit'  | integer |                                   |      YES |
 
+* return
+
+```XML
+<root>
+    <song>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/playlist_songs.xml)
 
 ### playlist_create
 
 This create a new playlist and return it
-@param array $input
 
-@return
+| Input  | Type   | Description                       | Optional |
+|--------|--------|-----------------------------------|---------:|
+| 'name' | string | Playlist name                     |       NO |
+| 'type' | string | Playlist type 'public', 'private' |      YES |
+
+* return
 
 ```XML
 <root>
@@ -798,16 +846,11 @@ This create a new playlist and return it
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
-
-| Input  | Type   | Description                       | Optional |
-|--------|--------|-----------------------------------|---------:|
-| 'name' | string | Playlist name                     |       NO |
-| 'type' | string | Playlist type 'public', 'private' |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/playlist_create.xml)
 
@@ -815,21 +858,6 @@ This create a new playlist and return it
 
 This modifies name and type of a playlist
 Previously name and type were mandatory while filter wasn't. this has been reversed.
-@param array $input
-
-@return
-
-```XML
-<root>
-    <success>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input    | Type   | Description                                                       | Optional |
 |----------|--------|-------------------------------------------------------------------|---------:|
@@ -839,14 +867,7 @@ Previously name and type were mandatory while filter wasn't. this has been rever
 | 'items'  | string | comma-separated song_id's (replaces existing items with a new id) |      YES |
 | 'tracks' | string | comma-separated playlisttrack numbers matched to 'items' in order |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/playlist_edit.xml)
-
-### playlist_delete
-
-This deletes a playlist
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -854,36 +875,41 @@ This deletes a playlist
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
 
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/playlist_edit.xml)
+
+### playlist_delete
+
+This deletes a playlist
+
 | Input    | Type   | Description     | Optional |
 |----------|--------|-----------------|---------:|
 | 'filter' | string | UID of Playlist |       NO |
+
+* return
+
+```XML
+<root>
+    <success>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/playlist_delete.xml)
 
 ### playlist_add_song
 
 This adds a song to a playlist. setting check=1 will not add duplicates to the playlist
-@param array $input
-
-@return
-
-```XML
-<root>
-    <success>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input    | Type    | Description                                               | Optional |
 |----------|---------|-----------------------------------------------------------|---------:|
@@ -891,15 +917,7 @@ This adds a song to a playlist. setting check=1 will not add duplicates to the p
 | 'song'   | string  | UID of song to add to playlist                            |       NO |
 | 'check'  | boolean | 0, 1 Whether to check and ignore duplicates (default = 0) |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/playlist_add_song.xml)
-
-### playlist_remove_song
-
-This remove a song from a playlist.
-Previous versions required 'track' instead of 'song'.
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -907,17 +925,38 @@ Previous versions required 'track' instead of 'song'.
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/playlist_add_song.xml)
+
+### playlist_remove_song
+
+This remove a song from a playlist.
+Previous versions required 'track' instead of 'song'.
 
 | Input    | Type    | Description                          | Optional |
 |----------|---------|--------------------------------------|---------:|
 | 'filter' | string  | UID of Playlist                      |       NO |
 | 'song'   | string  | UID of song to remove from playlist  |      YES |
 | 'track'  | integer | Track number to remove from playlist |      YES |
+
+* return
+
+```XML
+<root>
+    <success>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/playlist_remove_song.xml)
 
@@ -927,22 +966,6 @@ Get a list of song XML, indexes or id's based on some simple search criteria
 'recent' will search for tracks played after 'Popular Threshold' days
 'forgotten' will search for tracks played before 'Popular Threshold' days
 'unplayed' added in 400002 for searching unplayed tracks
-
-@param array $input
-
-@return
-
-```XML
-<root>
-    <song>|<index>|<id>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input    | Type    | Description                                                      | Optional |
 |----------|---------|------------------------------------------------------------------|---------:|
@@ -955,38 +978,29 @@ Get a list of song XML, indexes or id's based on some simple search criteria
 | 'offset' | integer |                                                                  |      YES |
 | 'limit'  | integer |                                                                  |      YES |
 
-SONG
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/playlist_generate%20\(song\).xml)
-
-INDEX
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/playlist_generate%20\(index\).xml)
-
-ID
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/playlist_generate%20\(id\).xml)
-
-### shares
-
-* **NEW** in 4.2.0
-
-This searches the shares and returns... shares
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
-    <share>
+    <song>|<index>|<id>
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
+
+SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/playlist_generate%20\(song\).xml)
+
+INDEX [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/playlist_generate%20\(index\).xml)
+
+ID [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/playlist_generate%20\(id\).xml)
+
+### shares
+
+This searches the shares and returns... shares
 
 | Input    | Type    | Description                                   | Optional |
 |----------|---------|-----------------------------------------------|---------:|
@@ -995,16 +1009,7 @@ This searches the shares and returns... shares
 | 'offset' | integer |                                               |      YES |
 | 'limit'  | integer |                                               |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/shares.xml)
-
-### share
-
-* **NEW** in 4.2.0
-
-Return shares by UID
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -1012,28 +1017,23 @@ Return shares by UID
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/shares.xml)
+
+### share
+
+Return shares by UID
 
 | Input    | Type   | Description                    | Optional |
 |----------|--------|--------------------------------|---------:|
 | 'filter' | string | UID of Share, returns song XML |       NO |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/share.xml)
-
-### share_create
-
-* **NEW** in 4.2.0
-
-Create a public url that can be used by anyone to stream media.
-Takes the file id with optional description and expires parameters.
-
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -1041,11 +1041,18 @@ Takes the file id with optional description and expires parameters.
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/share.xml)
+
+### share_create
+
+Create a public url that can be used by anyone to stream media.
+Takes the file id with optional description and expires parameters.
 
 | Input         | Type    | Description                                   | Optional |
 |---------------|---------|-----------------------------------------------|---------:|
@@ -1054,30 +1061,26 @@ Takes the file id with optional description and expires parameters.
 | 'description' | string  | description (will be filled for you if empty) |      YES |
 | 'expires'     | integer | days to keep active                           |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/share_create.xml)
-
-### share_edit
-
-* **NEW** in 4.2.0
-
-Update the description and/or expiration date for an existing share.
-Takes the share id to update with optional description and expires parameters.
-
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
-    <success>
+    <share>
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/share_create.xml)
+
+### share_edit
+
+Update the description and/or expiration date for an existing share.
+Takes the share id to update with optional description and expires parameters.
 
 | Input         | Type    | Description                        | Optional |
 |---------------|---------|------------------------------------|---------:|
@@ -1087,17 +1090,7 @@ Takes the share id to update with optional description and expires parameters.
 | 'expires'     | integer | number of whole days before expiry |      YES |
 | 'description' | string  | update description                 |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/share_edit.xml)
-
-### share_delete
-
-* **NEW** in 4.2.0
-
-Delete an existing share.
-
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -1105,38 +1098,41 @@ Delete an existing share.
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/share_edit.xml)
+
+### share_delete
+
+Delete an existing share.
 
 | Input    | Type   | Description            | Optional |
 |----------|--------|------------------------|---------:|
 | 'filter' | string | UID of Share to delete |       NO |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/share_delete.xml)
-
-### get_similar
-
-* **NEW** in 4.2.0
-
-Return similar artist id's or similar song ids compared to the input filter
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
-    <song>|<artist>
+    <success>
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/share_delete.xml)
+
+### get_similar
+
+Return similar artist id's or similar song ids compared to the input filter
 
 | Input    | Type    | Description          | Optional |
 |----------|---------|----------------------|---------:|
@@ -1145,26 +1141,25 @@ Return similar artist id's or similar song ids compared to the input filter
 | 'offset' | integer |                      |      YES |
 | 'limit'  | integer |                      |      YES |
 
+* return
+
+```XML
+<root>
+    <song>|<artist>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/get_similar.xml)
 
 ### search_songs
 
 This searches the songs and returns... songs
-@param array $input
-
-@return
-
-```XML
-<root>
-    <song>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input    | Type    | Description                         | Optional |
 |----------|---------|-------------------------------------|---------:|
@@ -1172,26 +1167,25 @@ This searches the songs and returns... songs
 | 'offset' | integer |                                     |      YES |
 | 'limit'  | integer |                                     |      YES |
 
+* return
+
+```XML
+<root>
+    <song>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/search_songs.xml)
 
 ### videos
 
 This returns video objects!
-@param array $input
-
-@return
-
-```XML
-<root>
-    <video>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input    | Type    | Description                                              | Optional |
 |----------|---------|----------------------------------------------------------|---------:|
@@ -1200,14 +1194,7 @@ This returns video objects!
 | 'offset' | integer |                                                          |      YES |
 | 'limit'  | integer |                                                          |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/videos.xml)
-
-### video
-
-This returns a single video
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -1215,15 +1202,35 @@ This returns a single video
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
 
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/videos.xml)
+
+### video
+
+This returns a single video
+
 | Input    | Type   | Description                     | Optional |
 |----------|--------|---------------------------------|---------:|
 | 'filter' | string | UID of video, returns video XML |       NO |
+
+* return
+
+```XML
+<root>
+    <video>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/video.xml)
 
@@ -1231,21 +1238,6 @@ This returns a single video
 
 Get some items based on some simple search types and filters. (Random by default)
 This method HAD partial backwards compatibility with older api versions but it has now been removed
-@param array $input
-
-@return
-
-```XML
-<root>
-    <song>|<album>|<artist>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input      | Type    | Description                                | Optional |
 |------------|---------|--------------------------------------------|---------:|
@@ -1257,38 +1249,29 @@ This method HAD partial backwards compatibility with older api versions but it h
 | 'offset'   | integer |                                            |      YES |
 | 'limit'    | integer |                                            |      YES |
 
-SONG
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/stats%20\(song\).xml)
-
-ARTIST
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/stats%20\(artist\).xml)
-
-ALBUM
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/stats%20\(album\).xml)
-
-### podcasts
-
-* **NEW** in 4.2.0
-
-Get information about podcasts
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
-    <podcast>
+    <song>|<album>|<artist>
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
+
+SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/stats%20\(song\).xml)
+
+ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/stats%20\(artist\).xml)
+
+ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/stats%20\(album\).xml)
+
+### podcasts
+
+Get information about podcasts
 
 | Input     | Type    | Description                                   | Optional |
 |-----------|---------|-----------------------------------------------|---------:|
@@ -1297,16 +1280,7 @@ Get information about podcasts
 | 'limit'   | integer |                                               |      YES |
 | 'include' | string  | 'episodes' (include episodes in the response) |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/podcasts.xml)
-
-### podcast
-
-* **NEW** in 4.2.0
-
-Get the podcast from it's id.
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -1314,28 +1288,24 @@ Get the podcast from it's id.
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/podcasts.xml)
+
+### podcast
+
+Get the podcast from it's id.
 
 | Input     | Type   | Description                                   | Optional |
 |-----------|--------|-----------------------------------------------|---------:|
 | 'filter'  | string |                                               |       NO |
 | 'include' | string | 'episodes' (include episodes in the response) |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/podcast.xml)
-
-### podcast_create
-
-* **NEW** in 4.2.0
-
-Create a podcast that can be used by anyone to stream media.
-Takes the url and catalog parameters.
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -1343,40 +1313,44 @@ Takes the url and catalog parameters.
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/podcast.xml)
+
+### podcast_create
+
+Create a podcast that can be used by anyone to stream media.
+Takes the url and catalog parameters.
 
 | Input     | Type   | Description         | Optional |
 |-----------|--------|---------------------|---------:|
 | 'url'     | string | rss url for podcast |       NO |
 | 'catalog' | string | podcast catalog     |       NO |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/podcast_create.xml)
-
-### podcast_edit
-
-* **NEW** in 4.2.0
-
-Update the description and/or expiration date for an existing podcast.
-Takes the podcast id to update with optional description and expires parameters.
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
-    <success>
+    <podcast>
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/podcast_create.xml)
+
+### podcast_edit
+
+Update the description and/or expiration date for an existing podcast.
+Takes the podcast id to update with optional description and expires parameters.
 
 | Input         | Type   | Description               | Optional |
 |---------------|--------|---------------------------|---------:|
@@ -1388,16 +1362,7 @@ Takes the podcast id to update with optional description and expires parameters.
 | 'generator'   | string |                           |      YES |
 | 'copyright'   | string |                           |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/podcast_edit.xml)
-
-### podcast_delete
-
-* **NEW** in 4.2.0
-
-Delete an existing podcast.
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -1405,24 +1370,41 @@ Delete an existing podcast.
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
 
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/podcast_edit.xml)
+
+### podcast_delete
+
+Delete an existing podcast.
+
 | Input    | Type   | Description              | Optional |
 |----------|--------|--------------------------|---------:|
 | 'filter' | string | UID of podcast to delete |       NO |
+
+* return
+
+```XML
+<root>
+    <success>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/podcast_delete.xml)
 
 ### podcast_episodes
 
-* **NEW** in 4.2.0
-
 This returns the episodes for a podcast
-@param array $input
 
 | Input    | Type    | Description    | Optional |
 |----------|---------|----------------|---------:|
@@ -1430,16 +1412,7 @@ This returns the episodes for a podcast
 | 'offset' | integer |                |      YES |
 | 'limit'  | integer |                |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/podcast_episodes.xml)
-
-### podcast_episode
-
-* **NEW** in 4.2.0
-
-Get the podcast_episode from it's id.
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -1447,26 +1420,47 @@ Get the podcast_episode from it's id.
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
 
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/podcast_episodes.xml)
+
+### podcast_episode
+
+Get the podcast_episode from it's id.
+
 | Input    | Type   | Description               | Optional |
 |----------|--------|---------------------------|---------:|
 | 'filter' | string | podcast_episode ID number |       NO |
+
+* return
+
+```XML
+<root>
+    <podcast_episode>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/podcast_episode.xml)
 
 ### podcast_episode_delete
 
-* **NEW** in 4.2.0
-
 Delete an existing podcast_episode.
-@param array $input
 
-@return
+| Input    | Type   | Description                      | Optional |
+|----------|--------|----------------------------------|---------:|
+| 'filter' | string | UID of podcast_episode to delete |       NO |
+
+* return
 
 ```XML
 <root>
@@ -1474,47 +1468,23 @@ Delete an existing podcast_episode.
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
-
-| Input    | Type   | Description                      | Optional |
-|----------|--------|----------------------------------|---------:|
-| 'filter' | string | UID of podcast_episode to delete |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/podcast_episode_delete.xml)
-
-### users
-
-* **NEW** in develop
-
-Get ids and usernames for your site
-@param array $input
-
-@return
-
-```XML
-<root>
-    <user>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/users.xml)
 
 ### user
 
 This get an user public information
-@param array $input
 
-@return
+| Input      | Type   | Description                             | Optional |
+|------------|--------|-----------------------------------------|---------:|
+| 'username' | string | Username of the user to get details for |       NO |
+
+* return
 
 ```XML
 <root>
@@ -1522,36 +1492,17 @@ This get an user public information
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
-
-| Input      | Type   | Description                             | Optional |
-|------------|--------|-----------------------------------------|---------:|
-| 'username' | string | Username of the user to get details for |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/user.xml)
 
 ### user_create
 
 Create a new user. (Requires the username, password and email.)
-@param array $input
-
-@return
-
-```XML
-<root>
-    <success>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input      | Type    | Description                | Optional |
 |------------|---------|----------------------------|---------:|
@@ -1561,18 +1512,31 @@ Create a new user. (Requires the username, password and email.)
 | 'fullname' | string  |                            |      YES |
 | 'disable'  | boolean | 0, 1                       |      YES |
 
+* return
+
+```XML
+<root>
+    <success>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/user_create.xml)
 
 ### user_update
 
 Update an existing user.
-@param array $input
 
 | Input        | Type    | Description                | Optional |
 |--------------|---------|----------------------------|---------:|
 | 'username'   | string  | $username                  |       NO |
 | 'password'   | string  | hash('sha256', $password)) |      YES |
-| 'email'      | string  | 'user@gmail.com'           |      YES |
+| 'email'      | string  | 'user#gmail.com'           |      YES |
 | 'fullname'   | string  |                            |      YES |
 | 'website'    | string  |                            |      YES |
 | 'state'      | string  |                            |      YES |
@@ -1585,9 +1549,12 @@ Update an existing user.
 ### user_delete
 
 Delete an existing user.
-@param array $input
 
-@return
+| Input      | Type   | Description | Optional |
+|------------|--------|-------------|---------:|
+| 'username' | string |             |       NO |
+
+* return
 
 ```XML
 <root>
@@ -1595,38 +1562,17 @@ Delete an existing user.
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
-
-| Input      | Type   | Description | Optional |
-|------------|--------|-------------|---------:|
-| 'username' | string |             |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/user_delete.xml)
 
 ### licenses
 
-* **NEW** in 4.2.0
-
 This returns licenses based on the specified filter
-@param array $input
-
-@return
-
-```XML
-<root>
-    <license>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input    | Type       | Description                                              | Optional |
 |----------|------------|----------------------------------------------------------|---------:|
@@ -1635,16 +1581,7 @@ This returns licenses based on the specified filter
 | 'offset' | integer    |                                                          |      YES |
 | 'limit'  | integer    |                                                          |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/licenses.xml)
-
-### license
-
-* **NEW** in 4.2.0
-
-This returns a single license
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -1652,26 +1589,49 @@ This returns a single license
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
 
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/licenses.xml)
+
+### license
+
+This returns a single license
+
 | Input    | Type   | Description                         | Optional |
 |----------|--------|-------------------------------------|---------:|
 | 'filter' | string | UID of license, returns license XML |       NO |
+
+* return
+
+```XML
+<root>
+    <license>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/license.xml)
 
 ### license_songs
 
-* **NEW** in 4.2.0
-
 This returns the songs for a license
-@param array $input
 
-@return
+| Input    | Type    | Description                      | Optional |
+|----------|---------|----------------------------------|---------:|
+| 'filter' | string  | UID of license, returns song XML |       NO |
+| 'offset' | integer |                                  |      YES |
+| 'limit'  | integer |                                  |      YES |
+
+* return
 
 ```XML
 <root>
@@ -1679,17 +1639,11 @@ This returns the songs for a license
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
-
-| Input    | Type    | Description                      | Optional |
-|----------|---------|----------------------------------|---------:|
-| 'filter' | string  | UID of license, returns song XML |       NO |
-| 'offset' | integer |                                  |      YES |
-| 'limit'  | integer |                                  |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/license_songs.xml)
 
@@ -1698,21 +1652,6 @@ This returns the songs for a license
 * **NEW** in develop
 
 This returns labels based on the specified filter
-@param array $input
-
-@return
-
-```XML
-<root>
-    <label>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input    | Type       | Description                                              | Optional |
 |----------|------------|----------------------------------------------------------|---------:|
@@ -1721,16 +1660,7 @@ This returns labels based on the specified filter
 | 'offset' | integer    |                                                          |      YES |
 | 'limit'  | integer    |                                                          |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/labels.xml)
-
-### label
-
-* **NEW** in develop
-
-This returns a single label
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -1738,15 +1668,37 @@ This returns a single label
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
 
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/labels.xml)
+
+### label
+
+* **NEW** in develop
+
+This returns a single label
+
 | Input    | Type   | Description                     | Optional |
 |----------|--------|---------------------------------|---------:|
 | 'filter' | string | UID of label, returns label XML |       NO |
+
+* return
+
+```XML
+<root>
+    <label>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/label.xml)
 
@@ -1755,21 +1707,6 @@ This returns a single label
 * **NEW** in develop
 
 This returns the artists for a label
-@param array $input
-
-@return
-
-```XML
-<root>
-    <artist>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input    | Type    | Description                      | Optional |
 |----------|---------|----------------------------------|---------:|
@@ -1777,14 +1714,31 @@ This returns the artists for a label
 | 'offset' | integer |                                  |      YES |
 | 'limit'  | integer |                                  |      YES |
 
+* return
+
+```XML
+<root>
+    <artist>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/label_artists.xml)
 
 ### followers
 
-This get an user followers
-@param array $input
+This gets the followers for the requested username
 
-@return
+| Input      | Type   | Description                                        | Optional |
+|------------|--------|----------------------------------------------------|---------:|
+| 'username' | string | Username of the user for who to get followers list |       NO |
+
+* return
 
 ```XML
 <root>
@@ -1792,24 +1746,23 @@ This get an user followers
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
 
-| Input      | Type   | Description                                        | Optional |
-|------------|--------|----------------------------------------------------|---------:|
-| 'username' | string | Username of the user for who to get followers list |       NO |
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/followers.xml)
 
 ### following
 
-This get the user list followed by an user
-@param array $input
+Get a list of people that this user follows
 
-@return
+| Input      | Type   | Description                                         | Optional |
+|------------|--------|-----------------------------------------------------|---------:|
+| 'username' | string | (Username of the user for who to get following list |       NO |
+
+* return
 
 ```XML
 <root>
@@ -1817,24 +1770,23 @@ This get the user list followed by an user
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
-
-| Input      | Type   | Description                                         | Optional |
-|------------|--------|-----------------------------------------------------|---------:|
-| 'username' | string | (Username of the user for who to get following list |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/following.xml)
 
 ### toggle_follow
 
 This follow/unfollow an user
-@param array $input
 
-@return
+| Input      | Type   | Description                             | Optional |
+|------------|--------|-----------------------------------------|---------:|
+| 'username' | string | Username of the user to follow/unfollow |       NO |
+
+* return
 
 ```XML
 <root>
@@ -1842,24 +1794,24 @@ This follow/unfollow an user
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
 
-| Input      | Type   | Description                             | Optional |
-|------------|--------|-----------------------------------------|---------:|
-| 'username' | string | Username of the user to follow/unfollow |       NO |
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/toggle_follow.xml)
 
 ### last_shouts
 
-This get the latest posted shouts
-@param array $input
+This gets the latest posted shouts
 
-@return
+| Input      | Type    | Description                         | Optional |
+|------------|---------|-------------------------------------|---------:|
+| 'username' | string  | Get latest shouts for this username |      YES |
+| 'limit'    | integer |                                     |      YES |
+
+* return
 
 ```XML
 <root>
@@ -1867,25 +1819,25 @@ This get the latest posted shouts
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
-
-| Input      | Type    | Description                         | Optional |
-|------------|---------|-------------------------------------|---------:|
-| 'username' | string  | Get latest shouts for this username |      YES |
-| 'limit'    | integer |                                     |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/last_shouts.xml)
 
 ### rate
 
 This rates a library item
-@param array $input
 
-@return
+| Input    | Type    | Description                                   | Optional |
+|----------|---------|-----------------------------------------------|---------:|
+| 'type'   | string  | library item type, album, artist, song, video |       NO |
+| 'id'     | string  | library item id                               |       NO |
+| 'rating' | integer | rating between 0-5                            |       NO |
+
+* return
 
 ```XML
 <root>
@@ -1893,17 +1845,11 @@ This rates a library item
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
-
-| Input    | Type    | Description                                   | Optional |
-|----------|---------|-----------------------------------------------|---------:|
-| 'type'   | string  | library item type, album, artist, song, video |       NO |
-| 'id'     | string  | library item id                               |       NO |
-| 'rating' | integer | rating between 0-5                            |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/rate.xml)
 
@@ -1913,21 +1859,6 @@ This flags a library item as a favorite
 
 * Setting flag to true (1) will set the flag
 * Setting flag to false (0) will remove the flag
-@param array $input
-
-@return
-
-```XML
-<root>
-    <success>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input  | Type    | Description                        | Optional |
 |--------|---------|------------------------------------|---------:|
@@ -1935,14 +1866,7 @@ This flags a library item as a favorite
 | 'id'   | integer | $object_id                         |       NO |
 | 'flag' | boolean | 0, 1                               |       NO |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/flag.xml)
-
-### record_play
-
-Take a song_id and update the object_count and user_activity table with a play. This allows other sources to record play history to ampache
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -1950,11 +1874,17 @@ Take a song_id and update the object_count and user_activity table with a play. 
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/flag.xml)
+
+### record_play
+
+Take a song_id and update the object_count and user_activity table with a play. This allows other sources to record play history to ampache
 
 | Input    | Type    | Description | Optional |
 |----------|---------|-------------|---------:|
@@ -1963,14 +1893,7 @@ Take a song_id and update the object_count and user_activity table with a play. 
 | 'client' | string  | $agent      |      YES |
 | 'date'   | integer | UNIXTIME()  |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/record_play.xml)
-
-### scrobble
-
-Search for a song using text info and then record a play if found. This allows other sources to record play history to ampache
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -1978,11 +1901,17 @@ Search for a song using text info and then record a play if found. This allows o
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/record_play.xml)
+
+### scrobble
+
+Search for a song using text info and then record a play if found. This allows other sources to record play history to ampache
 
 | Input        | Type    | Description  | Optional |
 |--------------|---------|--------------|---------:|
@@ -1995,69 +1924,7 @@ Search for a song using text info and then record a play if found. This allows o
 | 'date'       | integer | UNIXTIME()   |      YES |
 | 'client'     | string  | $agent       |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/scrobble.xml)
-
-### catalogs
-
-* **NEW** in 4.2.0
-
-This searches the catalogs and returns... catalogs
-@param array $input
-
-@return
-
-```XML
-<root>
-    <catalog>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
-
-| Input    | Type   | Description                        | Optional |
-|----------|--------|------------------------------------|---------:|
-| 'filter' | string | Catalog type: music, clip, tvshow, |      YES |
-|          |        | movie, personal_video, podcast     |          |
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/catalogs.xml)
-
-### catalog
-
-* **NEW** in 4.2.0
-
-Return catalog by UID
-@param array $input
-
-@return
-
-```XML
-<root>
-    <catalog>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
-
-| Input    | Type   | Description    | Optional |
-|----------|--------|----------------|---------:|
-| 'filter' | string | UID of Catalog |       NO |
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/catalog.xml)
-
-### catalog_action
-
-Kick off a catalog update or clean for the selected catalog
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -2065,16 +1932,85 @@ Kick off a catalog update or clean for the selected catalog
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
 
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/scrobble.xml)
+
+### catalogs
+
+This searches the catalogs and returns... catalogs
+
+| Input    | Type   | Description                        | Optional |
+|----------|--------|------------------------------------|---------:|
+| 'filter' | string | Catalog type: music, clip, tvshow, |      YES |
+|          |        | movie, personal_video, podcast     |          |
+
+* return
+
+```XML
+<root>
+    <catalog>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/catalogs.xml)
+
+### catalog
+
+Return catalog by UID
+
+| Input    | Type   | Description    | Optional |
+|----------|--------|----------------|---------:|
+| 'filter' | string | UID of Catalog |       NO |
+
+* return
+
+```XML
+<root>
+    <catalog>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/catalog.xml)
+
+### catalog_action
+
+Kick off a catalog update or clean for the selected catalog
+
 | Input     | Type    | Description                       | Optional |
 |-----------|---------|-----------------------------------|---------:|
 | 'task'    | string  | 'add_to_catalog', 'clean_catalog' |       NO |
 | 'catalog' | integer | $catalog_id                       |       NO |
+
+* return
+
+```XML
+<root>
+    <success>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
 
 [Example: clean_catalog](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/catalog_action%20\(clean_catalog\).xml)
 
@@ -2082,27 +2018,9 @@ Kick off a catalog update or clean for the selected catalog
 
 ### catalog_file
 
-* **NEW** in 4.2.0
-
 Perform actions on local catalog files.
 Single file versions of catalog add, clean, verify and remove (delete)
 Make sure you remember to urlencode those file names!
-
-@param array $input
-
-@return
-
-```XML
-<root>
-    <success>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input     | Type    | Description                      | Optional |
 |-----------|---------|----------------------------------|---------:|
@@ -2110,26 +2028,25 @@ Make sure you remember to urlencode those file names!
 | 'task'    | string  | 'add','clean','verify', 'remove' |       NO |
 | 'catalog' | integer | $catalog_id                      |       NO |
 
+* return
+
+```XML
+<root>
+    <success>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/catalog_file.xml)
 
 ### timeline
 
 This get an user timeline
-@param array $input
-
-@return
-
-```XML
-<root>
-    <activity>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input      | Type    | Description                                       | Optional |
 |------------|---------|---------------------------------------------------|---------:|
@@ -2137,14 +2054,7 @@ This get an user timeline
 | 'limit'    | integer |                                                   |      YES |
 | 'since'    | integer | UNIXTIME()                                        |      YES |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/timeline.xml)
-
-### friends_timeline
-
-This get current user friends timeline
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -2152,25 +2062,49 @@ This get current user friends timeline
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/timeline.xml)
+
+### friends_timeline
+
+This get current user friends timeline
 
 | Input   | Type    | Description | Optional |
 |---------|---------|-------------|---------:|
 | 'limit' | integer |             |      YES |
 | 'since' | integer | UNIXTIME()  |       NO |
 
+* return
+
+```XML
+<root>
+    <activity>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/friends_timeline.xml)
 
 ### update_from_tags
 
 Update a single album, artist, song from the tag data
-@param array $input
 
-@return
+| Input  | Type    | Description                     | Optional |
+|--------|---------|---------------------------------|---------:|
+| 'type' | string  | 'artist', 'album', 'song'       |       NO |
+| 'id'   | integer | $artist_id, $album_id, $song_id |       NO |
+
+* return
 
 ```XML
 <root>
@@ -2178,16 +2112,11 @@ Update a single album, artist, song from the tag data
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
-
-| Input  | Type    | Description                     | Optional |
-|--------|---------|---------------------------------|---------:|
-| 'type' | string  | 'artist', 'album', 'song'       |       NO |
-| 'id'   | integer | $artist_id, $album_id, $song_id |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/update_from_tags.xml)
 
@@ -2195,9 +2124,12 @@ Update a single album, artist, song from the tag data
 
 Update artist information and fetch similar artists from last.fm
 Make sure lastfm_API_key is set in your configuration file
-@param array $input
 
-@return
+| Input | Type    | Description | Optional |
+|-------|---------|-------------|---------:|
+| 'id'  | integer | $artist_id  |       NO |
+
+* return
 
 ```XML
 <root>
@@ -2205,15 +2137,11 @@ Make sure lastfm_API_key is set in your configuration file
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
-
-| Input | Type    | Description | Optional |
-|-------|---------|-------------|---------:|
-| 'id'  | integer | $artist_id  |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/update_artist_info.xml)
 
@@ -2221,9 +2149,14 @@ Make sure lastfm_API_key is set in your configuration file
 
 Updates a single album, artist, song running the gather_art process
 Doesn't overwrite existing art by default.
-@param array $input
 
-@return
+| Input       | Type    | Description       | Optional |
+|-------------|---------|-------------------|---------:|
+| 'id'        | integer | $object_id        |       NO |
+| 'type'      | string  | 'song', 'podcast' |       NO |
+| 'overwrite' | boolean | 0, 1              |      YES |
+
+* return
 
 ```XML
 <root>
@@ -2232,26 +2165,23 @@ Doesn't overwrite existing art by default.
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
-
-| Input       | Type    | Description       | Optional |
-|-------------|---------|-------------------|---------:|
-| 'id'        | integer | $object_id        |       NO |
-| 'type'      | string  | 'song', 'podcast' |       NO |
-| 'overwrite' | boolean | 0, 1              |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/update_art.xml)
 
 ### update_podcast
 
 Sync and download new podcast episodes
-@param array $input
 
-@return
+| Input | Type    | Description | Optional |
+|-------|---------|-------------|---------:|
+| 'id'  | integer | $object_id  |       NO |
+
+* return
 
 ```XML
 <root>
@@ -2259,72 +2189,25 @@ Sync and download new podcast episodes
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
 
-| Input | Type    | Description | Optional |
-|-------|---------|-------------|---------:|
-| 'id'  | integer | $object_id  |       NO |
-
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/update_podcast.xml)
-
-### user_preferences
-
-* **NEW** in develop
-
-Get your user preferences
-@param array $input
-
-@return
-
-```XML
-<root>
-    <preferences>
-        <pref>
-</root>
-```
-
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/user_preferences.xml)
 
 ### user_preference
 
 * **NEW** in develop
 
 Get your user preference by name
-@param array $input
-
-@return
-
-```XML
-<root>
-    <preferences>
-        <pref>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input    | Type   | Description                                       | Optional |
 |----------|--------|---------------------------------------------------|---------:|
 | 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') |       NO |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/user_preference.xml)
-
-### system_preferences
-
-* **NEW** in develop
-
-Get your server preferences
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
@@ -2333,22 +2216,25 @@ Get your server preferences
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/system_preferences.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/user_preference.xml)
 
 ### system_preference
 
 * **NEW** in develop
 
 Get your server preference by name
-@param array $input
 
-@return
+| Input    | Type   | Description                                       | Optional |
+|----------|--------|---------------------------------------------------|---------:|
+| 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') |       NO |
+
+* return
 
 ```XML
 <root>
@@ -2357,15 +2243,11 @@ Get your server preference by name
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
-
-| Input    | Type   | Description                                       | Optional |
-|----------|--------|---------------------------------------------------|---------:|
-| 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/system_preferences.xml)
 
@@ -2374,7 +2256,6 @@ Get your server preference by name
 * **NEW** in develop
 
 Add a new preference to your server
-@param array $input
 
 | Input         | Type    | Description                                             | Optional |
 |---------------|---------|---------------------------------------------------------|---------:|
@@ -2394,13 +2275,26 @@ Add a new preference to your server
 * **NEW** in develop
 
 Edit a preference value and apply to all users if allowed
-@param array $input
 
 | Input    | Type    | Description                                       | Optional |
 |----------|---------|---------------------------------------------------|---------:|
 | 'filter' | string  | Preference name e.g ('notify_email', 'ajax_load') |       NO |
 | 'value'  | mixed   | (string|integer) Preference value                 |       NO |
 | 'all'    | boolean | 0, 1 apply to all users                           |      YES |
+
+* return
+
+```XML
+<root>
+    <success>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/preference_edit.xml)
 
@@ -2409,45 +2303,39 @@ Edit a preference value and apply to all users if allowed
 * **NEW** in develop
 
 Delete a non-system preference by name
-@param array $input
 
 | Input    | Type   | Description                                       | Optional |
 |----------|--------|---------------------------------------------------|---------:|
 | 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') |       NO |
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/preference_delete.xml)
-
-### bookmarks
-
-* **NEW** in develop
-
-Get information about bookmarked media this user is allowed to manage.
-@param array $input
-
-@return
+* return
 
 ```XML
 <root>
-    <bookmark>
+    <success>
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/bookmarks.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/preference_delete.xml)
 
 ### get_bookmark
 
 * **NEW** in develop
 
 Get the bookmark from it's object_id and object_type.
-@param array $input
 
-@return
+| Input    | Type   | Description                                       | Optional |
+|----------|--------|---------------------------------------------------|---------:|
+| 'filter' | string | object_id to find                                 |       NO |
+| 'type'   | string | object_type  ('song', 'video', 'podcast_episode') |       NO |
+
+* return
 
 ```XML
 <root>
@@ -2455,16 +2343,11 @@ Get the bookmark from it's object_id and object_type.
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
-
-| Input    | Type   | Description                                       | Optional |
-|----------|--------|---------------------------------------------------|---------:|
-| 'filter' | string | object_id to find                                 |       NO |
-| 'type'   | string | object_type  ('song', 'video', 'podcast_episode') |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/get_bookmark.xml)
 
@@ -2473,21 +2356,6 @@ Get the bookmark from it's object_id and object_type.
 * **NEW** in develop
 
 Create a placeholder for the current media that you can return to later.
-@param array $input
-
-@return
-
-```XML
-<root>
-    <bookmark>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input      | Type    | Description                                       | Optional |
 |------------|---------|---------------------------------------------------|---------:|
@@ -2496,6 +2364,20 @@ Create a placeholder for the current media that you can return to later.
 | 'position' | integer | current track time in seconds                     |       NO |
 | 'client'   | string  | Agent string. (Default: 'AmpacheAPI')             |      YES |
 | 'date'     | integer | update time (Default: UNIXTIME())                 |      YES |
+
+* return
+
+```XML
+<root>
+    <bookmark>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/bookmark_create.xml)
 
@@ -2504,21 +2386,6 @@ Create a placeholder for the current media that you can return to later.
 * **NEW** in develop
 
 Edit a placeholder for the current media that you can return to later.
-@param array $input
-
-@return
-
-```XML
-<root>
-    <bookmark>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input      | Type    | Description                                       | Optional |
 |------------|---------|---------------------------------------------------|---------:|
@@ -2528,6 +2395,20 @@ Edit a placeholder for the current media that you can return to later.
 | 'client'   | string  | Agent string. (Default: 'AmpacheAPI')             |      YES |
 | 'date'     | integer | update time (Default: UNIXTIME())                 |      YES |
 
+* return
+
+```XML
+<root>
+    <bookmark>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/bookmark_edit.xml)
 
 ### bookmark_delete
@@ -2535,9 +2416,14 @@ Edit a placeholder for the current media that you can return to later.
 * **NEW** in develop
 
 Delete an existing bookmark. (if it exists)
-@param array $input
 
-@return
+| Input    | Type   | Description                                       | Optional |
+|----------|--------|---------------------------------------------------|---------:|
+| 'filter' | string | object_id to delete                               |       NO |
+| 'type'   | string | object_type  ('song', 'video', 'podcast_episode') |       NO |
+| 'client' | string | Agent string. (Default: 'AmpacheAPI')             |      YES |
+
+* return
 
 ```XML
 <root>
@@ -2545,17 +2431,11 @@ Delete an existing bookmark. (if it exists)
 </root>
 ```
 
-@throws
+* throws
 
 ```XML
 <root><error></root>
 ```
-
-| Input    | Type   | Description                                       | Optional |
-|----------|--------|---------------------------------------------------|---------:|
-| 'filter' | string | object_id to delete                               |       NO |
-| 'type'   | string | object_type  ('song', 'video', 'podcast_episode') |       NO |
-| 'client' | string | Agent string. (Default: 'AmpacheAPI')             |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/bookmark_delete)
 
@@ -2566,11 +2446,6 @@ Binary data methods are used for returning raw data to the user such as a image 
 ### stream
 
 Streams a given media file. Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
-@param array $input
-@return file (HTTP 200 OK)
-
-@throws (HTTP 400 Bad Request)
-@throws (HTTP 404 Not Found)
 
 | Input     | Type    | Description                 | Optional |
 |-----------|---------|-----------------------------|---------:|
@@ -2581,56 +2456,42 @@ Streams a given media file. Takes the file id in parameter with optional max bit
 | 'offset'  | integer | time offset in seconds      |      YES |
 | 'length'  | boolean | 0, 1                        |      YES |
 
+* return file (HTTP 200 OK)
+* throws (HTTP 400 Bad Request)
+* throws (HTTP 404 Not Found)
+
 ### download
 
 Downloads a given media file. set format=raw to download the full file
-@param array $input
-@return file (HTTP 200 OK)
 
-@throws (HTTP 400 Bad Request)
-@throws (HTTP 404 Not Found)
+| Input    | Type    | Description               | Optional |
+|----------|---------|---------------------------|---------:|
+| 'id'     | integer | $object_id                |       NO |
+| 'type'   | string  | 'song', 'podcast_episode' |       NO |
+| 'format' | string  | 'mp3', 'ogg', 'raw', etc  |      YES |
 
-| Input    | Type    | Description              | Optional |
-|----------|---------|--------------------------|---------:|
-| 'id'     | integer | $object_id               |       NO |
-| 'type'   | string  | 'song', 'podcast'        |       NO |
-| 'format' | string  | 'mp3', 'ogg', 'raw', etc |      YES |
+* return file (HTTP 200 OK)
+* throws (HTTP 400 Bad Request)
+* throws (HTTP 404 Not Found)
 
 ### get_art
 
 Get an art image.
-@param array $input
-@return image (HTTP 200 OK)
-
-@throws (HTTP 400 Bad Request)
-@throws (HTTP 404 Not Found)
 
 | Input  | Type    | Description                                                | Optional |
 |--------|---------|------------------------------------------------------------|---------:|
 | 'id'   | integer | $object_id                                                 |       NO |
 | 'type' | string  | 'song', 'artist', 'album', 'playlist', 'search', 'podcast' |       NO |
 
+* return image (HTTP 200 OK)
+* throws (HTTP 400 Bad Request)
+* throws (HTTP 404 Not Found)
+
 ## Control Methods
 
 ### localplay
 
 This is for controlling localplay
-@param array $input
-
-@return
-
-```XML
-<root>
-    <localplay>
-        <command>
-</root>
-```
-
-@throws
-
-```XML
-<root><error></root>
-```
 
 | Input     | Type    | Description                                                  | Optional |
 |-----------|---------|--------------------------------------------------------------|---------:|
@@ -2641,6 +2502,21 @@ This is for controlling localplay
 |           |         | 'Broadcast', 'Democratic', 'Live_Stream'                     |          |
 | 'clear'   | boolean | 0,1 Clear the current playlist before adding                 |      YES |
 
+* return
+
+```XML
+<root>
+    <localplay>
+        <command>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/localplay.xml)
 
 [Example (status)](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/localplay%20\(status\).xml)
@@ -2648,20 +2524,25 @@ This is for controlling localplay
 ### democratic
 
 This is for controlling democratic play (Songs only)
-@param array $input
 
-* ACTION
-  * method
-    * vote
-      * oid (Unique ID of the element you want to vote on)
-    * devote
-      * oid (Unique ID of the element you want to vote on)
-    * playlist (Returns an array of song items with an additional \<vote>[VOTE COUNT]\</vote> element)
-    * play (Returns the URL for playing democratic play)
+* **Method Descriptions**
+  * vote: +1 vote for the oid
+  * devote: -1 vote for the oid
+  * playlist: Return an array of song items with an additional \<vote>[VOTE COUNT]\</vote> element
+  * play: Returns the URL for playing democratic play
 
 | Input    | Type    | Description                  | Optional |
 |----------|---------|------------------------------|---------:|
 | 'oid'    | integer | UID of Song object           |       NO |
 | 'method' | string  | vote, devote, playlist, play |       NO |
 
+* return
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/democratic%20\(play\).xml)
+
