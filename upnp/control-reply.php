@@ -55,7 +55,7 @@ debug_event('control-reply', 'Action: ' . $upnpRequest['action'] . ' with filter
 switch ($upnpRequest['action']) {
     case 'systemupdateID':
         // Should reflect changes to the database; Catalog::GetLaststUpdate() doesn't cut it though
-        // debug_event('control-reply', 'SystemUpdate: ' . strval(Catalog::getLastUpdate()), 5);
+        // debug_event('control-reply', 'SystemUpdate: ' . (string) Catalog::getLastUpdate(), 5);
         $ud      = sprintf('<Id>%1$04d</Id>', 0); // 0 for now, insert something suitable when found.
         $soapXML = "<?xml version=\"1.0\"?>" .
         "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" .
@@ -120,16 +120,17 @@ switch ($upnpRequest['action']) {
                 debug_event('control-reply', 'Root items sort   ' . $upnpRequest['sortcriteria'], 5);
             }
         } else {
-            # The parse_url function returns an array in this format:
-            # Array (
-            #    [scheme] => http
-            #    [host] => hostname
-            #    [user] => username
-            #    [pass] => password
-            #    [path] => /path
-            #    [query] => arg=value
-            #    [fragment] => anchor
-            # )
+            /* The parse_url function returns an array in this format:
+             * Array (
+             *   [scheme] => http
+             *   [host] => hostname
+             *   [user] => username
+             *   [pass] => password
+             *   [path] => /path
+             *   [query] => arg=value
+             *   [fragment] => anchor
+             * )
+             */
             $reqObjectURL = parse_url($upnpRequest['objectid']);
             debug_event('control-reply', 'ObjectID: ' . $upnpRequest['objectid'], 5);
             switch ($reqObjectURL['scheme']) {
@@ -137,16 +138,16 @@ switch ($upnpRequest['action']) {
                     switch ($reqObjectURL['host']) {
                         case 'music':
                             if ($upnpRequest['browseflag'] == 'BrowseMetadata') {
-                                $items      = Upnp_Api::_musicMetadata($reqObjectURL['path']);
+                                $items = Upnp_Api::_musicMetadata($reqObjectURL['path']);
+                                //debug_event('control-reply', 'Metadata count '. (string) $totMatches . ' '. (string) count($items), 5);
+                                //debug_event('control-reply', 'Export items ' . var_export($items,true), 5);
                                 $totMatches = 1;
                                 $numRet     = 1;
-                                //debug_event('control-reply', 'Metadata count '.strval($totMatches).' '.strval(count($items)), 5);
-                                //debug_event('control-reply', 'Export items '.var_export($items,true), 5);
                             } else {
                                 debug_event('control-reply', 'Listrequest ', 5);
                                 list($totMatches, $items) = Upnp_Api::_musicChilds($reqObjectURL['path'], $reqObjectURL['query'], $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
                                 debug_event('control-reply', 'non-root items sort ' . $upnpRequest['sortcriteria'], 5);
-                                //debug_event('control-reply', 'Listrequest '.strval($upnpRequest['startingindex'].':'.strval($upnpRequest['requestedcount']).':'.strval($totMatches), 5);
+                                //debug_event('control-reply', 'Listrequest '. (string) $upnpRequest['startingindex'] . ':' . (string) $upnpRequest['requestedcount'] . ':' . (string) $totMatches, 5);
                             }
                             break;
                         case 'video':
@@ -186,7 +187,7 @@ if ($soapXML == "") {
     $soapXML  = $domSOAP->saveXML();
 }
 debug_event('control-reply', 'TailResponse: ' . substr($soapXML, -24), 5);
-debug_event('control-reply', 'Content-Length: ' . strval(strlen($soapXML)), 5);
+debug_event('control-reply', 'Content-Length: ' . (string) $soapXML, 5);
 
 $contentLength = strlen($soapXML);
 header("Content-Length: $contentLength");
