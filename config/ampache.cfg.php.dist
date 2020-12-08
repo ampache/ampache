@@ -262,7 +262,7 @@ additional_genre_delimiters = "[/]{2}|[/|\\\\|\|,|;]"
 ; Overwrite tags
 ; This switch allows removal of id3v1 tags from the files.
 ; DEFAULT: "false"
-; overwrite_tags = "false"
+;overwrite_tags = "true"
 
 ;#########################################################
 ; Catalog                                                #
