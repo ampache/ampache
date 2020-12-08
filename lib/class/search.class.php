@@ -1286,8 +1286,8 @@ class Search extends playlist_object
                     $where[] = "`album`.`" . $rule[0] . "` $sql_match_operator '$input'";
                     break;
                 case 'original_year':
-                    $where[] = "`album`.`original_year` $sql_match_operator '$input' OR " .
-                        "(`album`.`original_year` IS NULL AND `album`.`year` $sql_match_operator '$input')";
+                    $where[] = "(`album`.`original_year` $sql_match_operator '$input' OR " .
+                        "(`album`.`original_year` IS NULL AND `album`.`year` $sql_match_operator '$input'))";
                     break;
                 case 'time':
                     $input          = $input * 60;
