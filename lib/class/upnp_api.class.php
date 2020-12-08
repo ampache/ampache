@@ -1244,7 +1244,7 @@ class Upnp_Api
             }
         }
 
-        // now put together tokens which are actually one token e.g. upper hutt
+        // now put together the tokens which are not going to be search qualifiers 
         $onetoken    = "";
         $index       = 0;
         $nospacesize = sizeof($nospacetokens);

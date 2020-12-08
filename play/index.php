@@ -61,7 +61,7 @@ if ($slashcount > 2) {
         }
     }
     $_REQUEST = $new_request;
-    //  debug_event('play/index','Dumping new_arr: '.var_export( $new_request, true ), 5);
+    // debug_event('play/index','Dumping new_arr: '.var_export( $new_request, true ), 5);
 }
 
 /* These parameters had better come in on the url. */
@@ -188,8 +188,8 @@ if (!empty($apikey)) {
         $user_authenticated = true;
     }
 }
-// Added $sid here as user may not be specified but then ssid may be and will be checked later
-if (empty($uid) && empty($sid) && (!$share_id && !$secret)) {
+// Added $session_id here as user may not be specified but then ssid may be and will be checked later
+if (empty($uid) && empty($session_id) && (!$share_id && !$secret)) {
     debug_event('play/index', 'No user specified', 2);
     header('HTTP/1.1 400 No User Specified');
 
