@@ -103,8 +103,8 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
                         />
                     </div>
                     <div className={style.details}>
-                        <div className={style.name}>{artist.name}</div>
                         <div className={style.rating}><Rating /></div>
+                        <div className={style.name}>{artist.name}</div>
                         <div className={style.summary}>{artist.summary}</div>
                         <div className={style.actions}>
                             <Button
