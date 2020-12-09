@@ -4,14 +4,18 @@ import { Playlist } from '~logic/Playlist';
 import { Link, useHistory } from 'react-router-dom';
 import { Modal } from '~node_modules/react-async-popup';
 import HistoryShell from '~Modal/HistoryShell';
+import SVG from 'react-inlinesvg';
+import Rating from '~components/Rating/';
 
-interface PlaylistRowProps {
+import style from '/stylus/components/PlaylistItem.styl';
+
+interface PlaylistItemProps {
     playlist: Playlist;
     deletePlaylist?: (playlistID: number) => void;
     editPlaylist?: (playlistID: number, playlistCurrentName: string) => void;
 }
 
-const PlaylistRow: React.FC<PlaylistRowProps> = (props: PlaylistRowProps) => {
+const PlaylistItem: React.FC<PlaylistItemProps> = (props: PlaylistItemProps) => {
     const [
         bindMenu,
         bindMenuItems,
@@ -42,21 +46,41 @@ const PlaylistRow: React.FC<PlaylistRowProps> = (props: PlaylistRowProps) => {
 
     return (
         <>
-            <Link
-                className='playlistRow'
-                to={`/playlist/${props.playlist.id}`}
+            <div
+                className='playlistItem'
                 {...bindTrigger}
             >
-                <span
-                    className='verticalMenu'
-                    onClick={(e) => {
-                        showContextMenu(e);
-                    }}
-                />
-                <span className='name'>{props.playlist.name}</span>
-                <span className='itemCount'>{props.playlist.items}</span>
-                <span className='owner'>{props.playlist.owner}</span>
-            </Link>
+                <div className={style.details}>
+                    <div className={style.name}>
+                        {props.playlist.name}
+                        <Link 
+                            to={`/playlist/${props.playlist.id}`}
+                            className={style.cardLink}>
+                        </Link>
+                    </div>
+                    <div className={style.rating}>
+                        <Rating />
+                    </div>
+                </div>
+                <div className={style.meta}>
+                    <span className={style.itemCount}>{props.playlist.items} songs</span>
+                    <span className={style.owner}> by {props.playlist.owner}</span>
+                    <div className={style.random}>Random?</div>
+                    <div className={style.limit}>Item limit ###</div>
+                </div>
+                
+                <div className={style.actions}>
+                    <SVG className='icon-button-small' src={require('~images/icons/svg/play.svg')} alt="Play" />
+                    <SVG className='icon-button-small' src={require('~images/icons/svg/play-next.svg')} alt="Play next" />
+                    <SVG className='icon-button-small' src={require('~images/icons/svg/play-last.svg')} alt="Play last" />
+                    <SVG 
+                        onClick={(e) => {
+                            showContextMenu(e);
+                        }}
+                        className='icon-button-small' src={require('~images/icons/svg/more-options-hori.svg')} alt="More options" 
+                    />
+                </div>
+            </div>
 
             <div {...bindMenu} className='contextMenu'>
                 <div
@@ -91,4 +115,4 @@ const PlaylistRow: React.FC<PlaylistRowProps> = (props: PlaylistRowProps) => {
     );
 };
 
-export default PlaylistRow;
+export default PlaylistItem;

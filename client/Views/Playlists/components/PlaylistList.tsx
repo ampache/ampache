@@ -7,7 +7,7 @@ import {
     Playlist,
     renamePlaylist
 } from '~logic/Playlist';
-import PlaylistRow from './PlaylistRow';
+import PlaylistItem from './PlaylistItem';
 import { AuthKey } from '~logic/Auth';
 import AmpacheError from '~logic/AmpacheError';
 import { Modal } from 'react-async-popup';
@@ -16,6 +16,8 @@ import { toast } from 'react-toastify';
 import InputModal from '~Modal/types/InputModal';
 import { useHistory } from 'react-router-dom';
 import HistoryShell from '~Modal/HistoryShell';
+
+import style from '/stylus/components/PlaylistList.styl';
 
 interface PlaylistListProps {
     authKey?: AuthKey;
@@ -57,11 +59,11 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
 
     const handleNewPlaylist = async () => {
         const { show } = await Modal.new({
-            title: 'New Playlist',
+            title: 'Create new playlist',
             content: (
                 <HistoryShell history={history}>
                     <InputModal
-                        inputLabel='New Playlist Name'
+                        inputLabel='Name'
                         inputPlaceholder='Rock & Roll...'
                         submitButtonText='Create'
                     />
@@ -149,10 +151,10 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                 src={require('~images/icons/svg/plus.svg')}
                 alt="Add to playlist"
                 onClick={handleNewPlaylist} />
-            <ul>
+            <div className={style.playlistListContainer}>
                 {playlists.map((playlist: Playlist) => {
                     return (
-                        <PlaylistRow
+                        <PlaylistItem
                             playlist={playlist}
                             deletePlaylist={handleDeletePlaylist}
                             editPlaylist={handleEditPlaylist}
@@ -160,7 +162,7 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                         />
                     );
                 })}
-            </ul>
+            </div>
         </div>
     );
 };
