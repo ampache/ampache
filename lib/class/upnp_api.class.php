@@ -44,6 +44,12 @@ class Upnp_Api
      * object.container
      */
     const SSDP_DEBUG = false;
+    /**
+     * Cache all catalog total numbers to speed replies
+     * @var array $_totalcache = array()
+     */
+    protected $_totalcache = array();
+    private $_totaltime = 0;
      
     /**
      * constructor
@@ -273,7 +279,7 @@ class Upnp_Api
         $reader = new XMLReader();
         $result = $reader->XML($prmRequest);
         if ($result) {
-            debug_event('upnp_api.class', 'XML reader passed', 5);
+//            debug_event('upnp_api.class', 'XML reader passed', 5);
         } else {
             debug_event('upnp_api.class', 'XML reader failed', 5);
         }
@@ -577,12 +583,12 @@ class Upnp_Api
             case 'artists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_server();
+                        $counts = Catalog::count_server(false, 'artist');
                         $meta   = array(
                             'id' => $root . '/artists',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['artists'],
+                            'childCount' => $counts['artist'],
                             'dc:title' => T_('Artists'),
                             'upnp:class' => 'object.container',
                         );
@@ -599,12 +605,12 @@ class Upnp_Api
             case 'albums':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_server();
+                        $counts = Catalog::count_server(false, 'album');
                         $meta   = array(
                             'id' => $root . '/albums',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['albums'],
+                            'childCount' => $counts['album'],
                             'dc:title' => T_('Albums'),
                             'upnp:class' => 'object.container',
                         );
@@ -621,12 +627,12 @@ class Upnp_Api
             case 'songs':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_server();
+                        $counts = Catalog::count_server(false, 'song');
                         $meta   = array(
                             'id' => $root . '/songs',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['songs'],
+                            'childCount' => $counts['song'],
                             'dc:title' => T_('Songs'),
                             'upnp:class' => 'object.container',
                         );
@@ -643,12 +649,12 @@ class Upnp_Api
             case 'playlists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_server();
+                        $counts = Catalog::count_server(false, 'playlist');
                         $meta   = array(
                             'id' => $root . '/playlists',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['playlists'],
+                            'childCount' => $counts['playlist'],
                             'dc:title' => T_('Playlists'),
                             'upnp:class' => 'object.container',
                         );
@@ -665,12 +671,12 @@ class Upnp_Api
             case 'smartplaylists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_server();
+                        $counts = Catalog::count_server(false,'smartplaylist');
                         $meta   = array(
                             'id' => $root . '/smartplaylists',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['smartplaylists'],
+                            'childCount' => $counts['smartplaylist'],
                             'dc:title' => T_('Smart Playlists'),
                             'upnp:class' => 'object.container',
                         );
@@ -687,12 +693,12 @@ class Upnp_Api
             case 'live_streams':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_server();
+                        $counts = Catalog::count_server(false,'live_stream');
                         $meta   = array(
                             'id' => $root . '/live_streams',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['live_streams'],
+                            'childCount' => $counts['live_stream'],
                             'dc:title' => T_('Radio Stations'),
                             'upnp:class' => 'object.container',
                         );
@@ -709,12 +715,12 @@ class Upnp_Api
             case 'podcasts':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_server();
+                        $counts = Catalog::count_server(false, 'podcast');
                         $meta   = array(
                             'id' => $root . '/podcasts',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['podcasts'],
+                            'childCount' => $counts['podcast'],
                             'dc:title' => T_('Podcasts'),
                             'upnp:class' => 'object.container',
                         );
@@ -793,11 +799,9 @@ class Upnp_Api
             case 'artists':
                 switch (count($pathreq)) {
                     case 1: // Get artists list
-                        // $artists = Catalog::get_artists();
-                        // list($maxCount, $artists) = self::_slice($artists, $start, $count);
                         $artists                  = Catalog::get_artists(null, $count, $start);
-                        $counts                   = Catalog::count_server();
-                        list($maxCount, $artists) = array($counts['artists'], $artists); //99999
+                        $counts                   = Catalog::count_server(false,'artist');
+                        list($maxCount, $artists) = array($counts['artist'], $artists); 
                         foreach ($artists as $artist) {
                             $artist->format();
                             $mediaItems[] = self::_itemArtist($artist, $parent);
@@ -820,11 +824,9 @@ class Upnp_Api
             case 'albums':
                 switch (count($pathreq)) {
                     case 1: // Get albums list
-                        //!!$album_ids = Catalog::get_albums();
-                        //!!list($maxCount, $album_ids) = self::_slice($album_ids, $start, $count);
                         $album_ids                  = Catalog::get_albums($count, $start);
-                        $counts                     = Catalog::count_server();
-                        list($maxCount, $album_ids) = array($counts['albums'], $album_ids); // 9999999
+                        $counts                     = Catalog::count_server(false,'album');
+                        list($maxCount, $album_ids) = array($counts['album'], $album_ids); 
                         foreach ($album_ids as $album_id) {
                             $album = new Album($album_id);
                             $album->format();
@@ -1244,7 +1246,7 @@ class Upnp_Api
             }
         }
 
-        // now put together the tokens which are not going to be search qualifiers 
+        // now put together tokens which are actually one token e.g. upper hutt
         $onetoken    = "";
         $index       = 0;
         $nospacesize = sizeof($nospacetokens);
@@ -1499,7 +1501,6 @@ class Upnp_Api
 
         switch ($search_terms['type']) {
             case 'artist':
-                //list($maxCount, $ids) = array($counts['artists'], $ids); //99999
                 list($maxCount, $ids) = self::_slice($ids, $start, $count);
                 foreach ($ids as $artist_id) {
                     $artist = new Artist($artist_id);
@@ -1516,8 +1517,6 @@ class Upnp_Api
                 }
             break;
             case 'album':
-                //$counts = Catalog::count_server();
-                //list($maxCount, $ids) = array($counts['albums'], $ids); // 9999999
                 list($maxCount, $ids) = self::_slice($ids, $start, $count);
                 foreach ($ids as $album_id) {
                     $album = new Album($album_id);
@@ -1851,7 +1850,6 @@ class Upnp_Api
 
         return $ret;
     }
-
     /**
      * @return array
      */
