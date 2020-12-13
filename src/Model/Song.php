@@ -2106,51 +2106,24 @@ class Song extends database_object implements Media, library_item
     }
 
     /**
-     * Generate generic play url.
-     * @param string $object_type
-     * @param integer $object_id
+     * play_url
+     * This function takes all the song information and correctly formats a
+     * a stream URL taking into account the downsampling mojo and everything
+     * else, this is the true function
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
-     * @param integer $uid
+     * @param integer|bool $uid
      * @param boolean $original
      * @return string
      */
-    public static function generic_play_url(
-        $object_type,
-        $object_id,
-        $additional_params,
-        $player = '',
-        $local = false,
-        $uid = -1,
-        $original = false
-    ) {
-        $class_name = ObjectTypeToClassNameMapper::map($object_type);
-        $media      = new $class_name($object_id);
-        if (!$media->id) {
-            return '';
-        }
-        // set no use when using auth
-        if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
-            $uid = -1;
-        }
-
-        return Stream_URL::format($media->get_play_url($uid));
-    }
-
-    /**
-     * Set a generic play url.
-     * @param string $additional_params
-     * @param string $player
-     * @param boolean $local
-     * @param integer $uid
-     * @param boolean $original
-     * @return string
-     */
-    public function set_play_url($additional_params, $player = '', $local = false, $uid = -1)
+    public function play_url($additional_params = '', $player = '', $local = false, $uid = false)
     {
         if (!$this->id) {
             return '';
+        }
+        if (!$uid) {
+            $uid = Core::get_global('user')->id;
         }
         // set no use when using auth
         if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
@@ -2171,27 +2144,6 @@ class Song extends database_object implements Media, library_item
         $url .= "&name=" . $media_name;
 
         return Stream_URL::format($url);
-    } // set_play_url
-
-    /**
-     * play_url
-     * This function takes all the song information and correctly formats a
-     * a stream URL taking into account the downsampling mojo and everything
-     * else, this is the true function
-     * @param string $additional_params
-     * @param string $player
-     * @param boolean $local
-     * @param integer $uid
-     * @param boolean $original
-     * @return string
-     */
-    public function play_url($additional_params = '', $player = '', $local = false, $uid = false)
-    {
-        if (!$uid) {
-            $uid = Core::get_global('user')->id;
-        }
-
-        return $this->set_play_url($additional_params, $player, $local, $uid);
     }
 
     /**

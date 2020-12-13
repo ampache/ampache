@@ -28,6 +28,7 @@ use Ampache\Model\Song;
 use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Session;
+use Podcast_Episode;
 
 /**
  * Class StreamMethod
@@ -86,10 +87,12 @@ final class StreamMethod
 
         $url = '';
         if ($type == 'song') {
-            $url = Song::generic_play_url('Song', $object_id, $params, 'api', function_exists('curl_version'), $user_id, $original);
+            $media = new Song($object_id);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
         }
         if ($type == 'podcast') {
-            $url = Song::generic_play_url('Podcast_Episode', $object_id, $params, 'api', function_exists('curl_version'), $user_id, $original);
+            $media = new Podcast_Episode($object_id);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
         }
         if (!empty($url)) {
             Session::extend($input['auth']);

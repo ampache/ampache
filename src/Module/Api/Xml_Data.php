@@ -29,6 +29,7 @@ use Ampache\Model\Bookmark;
 use Ampache\Model\Label;
 use Ampache\Model\library_item;
 use Ampache\Model\License;
+use Ampache\Model\Live_Stream;
 use Ampache\Model\Shoutbox;
 use Ampache\Model\Video;
 use Ampache\Module\Playback\Stream;
@@ -388,7 +389,7 @@ class Xml_Data
      * we want
      *
      * @param  array $objects (description here...)
-     * @param  string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'
+     * @param  string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'live_stream'
      * @param  boolean $full_xml whether to return a full XML document or just the node.
      * @param  boolean $include include episodes from podcasts or tracks in a playlist
      * @return string   return xml
@@ -503,6 +504,14 @@ class Xml_Data
                 case 'video':
                     $string .= self::videos($objects);
                     break;
+                case 'live_stream':
+                    $live_stream = new Live_Stream($object_id);
+                    $live_stream->format();
+                    $string .= "<$object_type id=\"" . $object_id . "\">\n" .
+                        "\t<name><![CDATA[" . $live_stream->f_name . "]]></name>\n" .
+                        "\t<url><![CDATA[" . $live_stream->url . "]]></url>\n" .
+                        "\t<codec><![CDATA[" . $live_stream->codec . "]]></codec>\n" .
+                        "</$object_type>\n";
             }
         } // end foreach objects
 

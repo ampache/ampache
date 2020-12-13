@@ -27,6 +27,7 @@ namespace Ampache\Module\Api;
 use Ampache\Model\Album;
 use Ampache\Model\Bookmark;
 use Ampache\Model\Label;
+use Ampache\Model\Live_Stream;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
@@ -190,7 +191,7 @@ class Json_Data
      * @param  array $objects (description here...)
      * @param  string $type (description here...)
      * @param  bool $include (add the extra songs details if a playlist)
-     * @return string JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"
+     * @return string JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"live_stream"
      */
     public static function indexes($objects, $type, $include = false)
     {
@@ -213,11 +214,43 @@ class Json_Data
                 return self::podcast_episodes($objects);
             case 'video':
                 return self::videos($objects);
+            case 'live_stream':
+                return self::live_streams($objects);
             default:
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                return self::error('4710', printf(T_('Bad Request: %s'), $type), 'indexes', 'type');
+                return self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
         }
     } // indexes
+
+    /**
+     * live_streams
+     *
+     * This returns live_streams to the user, in a pretty JSON document with the information
+     *
+     * @param  integer[] $live_streams
+     * @return string JSON Object "live_stream"
+     */
+    public static function live_streams($live_streams)
+    {
+        if ((count($live_streams) > self::$limit || self::$offset > 0) && self::$limit) {
+            $live_streams = array_splice($live_streams, self::$offset, self::$limit);
+        }
+
+        $JSON = [];
+
+        foreach ($live_streams as $live_stream_id) {
+            $live_stream = new Live_Stream($live_stream_id);
+            $live_stream->format();
+            array_push($JSON, array(
+                "id" => (string) $live_stream_id,
+                "name" => $live_stream->f_name,
+                "url" => $live_stream->url,
+                "codec" => $live_stream->codec
+            ));
+        } // end foreach
+
+        return json_encode(array("live_stream" => $JSON), JSON_PRETTY_PRINT);
+    } // live_streams
 
     /**
      * licenses

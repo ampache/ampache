@@ -8,13 +8,16 @@ It's easy to use a program like github desktop to compare between branches.
 * Export database from a fresh install (phpMyAdmin exports well.)
   * Tables: Structure; **select all tables**
   * Tables: Data; **only select** `access_list`, `license`, `preference`, `search`, `update_info` and `user_preference`
-  * Object creation options: Tick "Add DROP TABLE / VIEW / PROCEDURE / FUNCTION / EVENT / TRIGGER statement"
-  * Remove user 1 settings from `preference` and `user_preference` inserts.
+  * Object creation options:
+    * Tick "Add DROP TABLE / VIEW / PROCEDURE / FUNCTION / EVENT / TRIGGER statement"
+    * Tick "IF NOT EXISTS (less efficient as indexes will be generated during table creation)"
+  * Save and then remove user 1 settings from `preference` and `user_preference` inserts.
 * Open Github Desktop and pull latest develop / master
 * Change to master branch
 * Go to Branch Menu -> Update from develop
 * Fix merge issues
   * lib/init.php (Set release version)
+  * lib/class/api.class.php (Set release version)
   * docs/CHANGELOG.md (Update for release)
   * add new ampache.sql
 * Commit merge for new version (e.g. 4.x.x) but **do not push!**
@@ -25,20 +28,24 @@ It's easy to use a program like github desktop to compare between branches.
 * Remove broken symbolic links
 
 ```shell
-  find . -xtype l -exec rm {} \;
+find . -xtype l -exec rm {} \;
+```
+
+* Set a version number to skip typing over and over
+```shell
+read -p "Enter Ampache Version: " a_version
 ```
 
 * Create a zip package named "ampache-4.x.x_all.zip and add the entire ampache directory tree. (excluding git/development specific files)
 
 ```shell
-  cd ampache
-  zip -r -q -u -9 --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml  --exclude=.tgitconfig --exclude=.travis.yml ../ampache-4.x.x_all.zip ./
+rm ../ampache-${a_version}_all.zip & zip -r -q -u -9 --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml ../ampache-${a_version}_all.zip ./
 ```
 
 * Then unpack the exact zip and create a server to test basic functionality
 
 ```shell
-rm -rf /var/www/html && unzip -o ../ampache-4.x.x_all.zip -d /var/www/html/
+rm -rf /var/www/html && unzip -o ../ampache-${a_version}_all.zip -d /var/www/html/
 ```
 
 * FIXME This might be where unit testing would be helpful.
@@ -51,7 +58,7 @@ rm -rf /var/www/html && unzip -o ../ampache-4.x.x_all.zip -d /var/www/html/
   * get the md5hash for the release page
 
 ```shell
-md5sum ../ampache-4.x.x_all.zip
+md5sum ../ampache-${a_version}_all.zip
 ```
 
 ## Post release
@@ -92,11 +99,16 @@ Log in to your docker account
 docker login -u USER -p PASSWORD
 ```
 
+To update master and nosql; add the latest zip file to the docker images
+```Dockerfile
+    &&  wget -q -O /tmp/master.zip https://github.com/ampache/ampache/releases/download/4.x.4/ampache-4.x.4_all.zip \
+```
 Build latest (master) images and push to docker hub.
 
 ```bash
 git clone -b master https://github.com/ampache/ampache-docker.git ampache-docker/
 cd ampache-docker
+nano Dockerfile
 docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/ampache:latest --push .
 ```
 
@@ -113,5 +125,6 @@ Build nosql images and push to docker hub.
 ```bash
 git clone -b nosql https://github.com/ampache/ampache-docker.git ampache-docker-nosql/
 cd ampache-docker-nosql
+nano Dockerfile
 docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/ampache:nosql --push .
 ```
