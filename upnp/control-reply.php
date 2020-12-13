@@ -116,8 +116,8 @@ switch ($upnpRequest['action']) {
                 $items[]                  = Upnp_Api::_videoMetadata('');
                 list($totMatches, $items) = Upnp_Api::_slice($items, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
                 debug_event('control-reply', 'Root items returning' . $items[0] . $items[1] , 5);
-                debug_event('control-reply', 'Root items detail ' . var_export($items, true), 5);
-                debug_event('control-reply', 'Root items sort   ' . $upnpRequest['sortcriteria'], 5);
+//                debug_event('control-reply', 'Root items detail ' . var_export($items, true), 5);
+//                debug_event('control-reply', 'Root items sort   ' . $upnpRequest['sortcriteria'], 5);
             }
         } else {
             /* The parse_url function returns an array in this format:
@@ -186,14 +186,12 @@ if ($soapXML == "") {
     $domSOAP  = Upnp_Api::createSOAPEnvelope($xmlDIDLs, $numRet, $totMatches, $responseType);
     $soapXML  = $domSOAP->saveXML();
 }
-debug_event('control-reply', 'TailResponse: ' . substr($soapXML, -24), 5);
-debug_event('control-reply', 'Content-Length: ' . (string) $soapXML, 5);
+debug_event('control-reply', 'Content: ' . (string) $soapXML, 5);
 
+// Set the overall content length in the header correctly, having appended $soapXML
 $contentLength = strlen($soapXML);
 header("Content-Length: $contentLength");
-//echo $soapXML;
+
 //print $soapXML;
 debug_event('control-reply', 'Response: ' . $soapXML, 5);
-
 echo $soapXML;
-//debug_event('control-reply', 'Response: ' . $soapXML, 5);
