@@ -44,12 +44,6 @@ class Upnp_Api
      * object.container
      */
     const SSDP_DEBUG = false;
-    /**
-     * Cache all catalog total numbers to speed replies
-     * @var array $_totalcache = array()
-     */
-    protected $_totalcache = array();
-    private $_totaltime = 0;
      
     /**
      * constructor
