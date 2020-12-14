@@ -795,7 +795,7 @@ class Upnp_Api
                     case 1: // Get artists list
                         $artists                  = Catalog::get_artists(null, $count, $start);
                         $counts                   = Catalog::count_server(false,'artist');
-                        list($maxCount, $artists) = array($counts['artist'], $artists); 
+                        list($maxCount, $artists) = array($counts['artist'], $artists);
                         foreach ($artists as $artist) {
                             $artist->format();
                             $mediaItems[] = self::_itemArtist($artist, $parent);
@@ -820,7 +820,7 @@ class Upnp_Api
                     case 1: // Get albums list
                         $album_ids                  = Catalog::get_albums($count, $start);
                         $counts                     = Catalog::count_server(false,'album');
-                        list($maxCount, $album_ids) = array($counts['album'], $album_ids); 
+                        list($maxCount, $album_ids) = array($counts['album'], $album_ids);
                         foreach ($album_ids as $album_id) {
                             $album = new Album($album_id);
                             $album->format();

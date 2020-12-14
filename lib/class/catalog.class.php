@@ -777,29 +777,27 @@ abstract class Catalog extends database_object
      * @param bool $enabled
      * @return array
      */
-    public static function count_server($enabled = false, $table = '' )
+    public static function count_server($enabled = false, $table = '')
     {
         // tables with media items to count, song-related tables and the rest
         $media_tables = array('song', 'video', 'podcast_episode');
         $song_tables  = array('artist', 'album');
         $list_tables  = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license');
-        if( in_array( $table, $media_tables ) ) {
-          $media_tables = array();
-          $song_tables = array();
-          $list_tables = array();
-          $media_tables[0] = $table;
-        }
-        else if( in_array( $table, $song_tables ) ){
-          $media_tables = array();
-          $song_tables = array();
-          $list_tables = array();
-          $song_tables[0] = $table;
-        }
-        else if( in_array( $table, $list_tables ) ){
-          $media_tables = array();
-          $song_tables = array();
-          $list_tables = array();
-          $list_tables[0] = $table;
+        if (in_array($table, $media_tables)) {
+            $media_tables    = array();
+            $song_tables     = array();
+            $list_tables     = array();
+            $media_tables[0] = $table;
+        } elseif (in_array($table, $song_tables)) {
+            $media_tables   = array();
+            $song_tables    = array();
+            $list_tables    = array();
+            $song_tables[0] = $table;
+        } elseif (in_array($table, $list_tables)) {
+            $media_tables   = array();
+            $song_tables    = array();
+            $list_tables    = array();
+            $list_tables[0] = $table;
         }
 
         $results = array();
@@ -829,7 +827,7 @@ abstract class Catalog extends database_object
             $db_results = Dba::read($sql);
             $data       = Dba::fetch_row($db_results);
             // save the object count
-            debug_event('catalog', $data[0] . ' '. $table . 's', 5); 
+            debug_event('catalog', $data[0] . ' ' . $table . 's', 5);
             $results[$table] = $data[0];
             // write the total_counts as well
             Catalog::set_count($table, $data[0]);
