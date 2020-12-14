@@ -42,7 +42,8 @@ All API code that used 'Tag' now references 'Genre' instead
   * 'type' (string) Default: 'Song' ('Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream') //optional
   * 'clear' (integer) 0|1 clear the current playlist on add //optional
 * API::playlist_edit added new parameter 'sort': (0,1) sort the playlist by 'Artist, Album, Song' //optional
-* Api::indexes added parameter 'include': (0,1) include song details with playlists (XML has this by default)
+* Api::indexes added parameter 'include': (0,1) include song details with playlists
+* Add time to artist and album objects. (total time of all songs in seconds)
 * NEW API functions
   * Api::users (ID and Username of the site users)
   * Api::song_delete (Delete files when you are allowed to)
@@ -57,6 +58,11 @@ All API code that used 'Tag' now references 'Genre' instead
   * Api::labels (list your record labels)
   * Api::label (get a label by id)
   * Api::label_artists (get all artists attached to that label)
+  * Api::get_bookmark (See if you've previously played the file)
+  * Api::bookmarks (List all bookmarks created by your account)
+  * Api::bookmark_create (Create a bookmark to allow revisting later)
+  * Api::bookmark_edit (Edit a bookmark)
+  * Api::bookmark_delete (Delete a bookmark by object id, type, user and client name)
 
 ### Changed
 
@@ -78,6 +84,9 @@ All API code that used 'Tag' now references 'Genre' instead
   * 4710 Bad Request
   * 4742 Failed Access Check
 * get_indexes: 'playlist' now requires include=1 for xml calls if you want the tracks
+* stats: Removed back compat from older versions. Only 'type' is mandatory
+* Return empty objects when the request was correct but the results were empty
+* record_play: Require 100 (Admin) permission to record plays for other users
 
 ### Deprecated
 
@@ -215,23 +224,29 @@ For more in depth information regarding the different api servers you can view t
 * [XML Documentation](http://ampache.org/api/api-xml-methods)
 * [JSON Documentation](http://ampache.org/api/api-json-methods)
 
-### Non-Data Methods
+### Auth Methods
 
-All Non-Data methods return HTTP 200 responses
+All Auth methods return HTTP 200 responses
 
 * handshake
 * ping
 * goodbye
-* url_to_song
-* check_parameter
-* message
+
+### Non-Data Methods
+
+All Non-Data methods return HTTP 200 responses
+
 * system_update **(develop only)**
+* users **(develop only)**
+* user_preferences **(develop only)**
+* bookmarks **(develop only)**
 
 ### Data Methods
 
 All Data methods return HTTP 200 responses
 
 * get_indexes
+* [advanced_search](http://ampache.org/api/api-advanced-search)
 * artists
 * artist
 * artist_songs
@@ -239,11 +254,6 @@ All Data methods return HTTP 200 responses
 * albums
 * album
 * album_songs
-* tags
-* tag
-* tag_artists
-* tag_albums
-* tag_songs
 * genres **(develop only)**
 * genre **(develop only)**
 * genre_artists **(develop only)**
@@ -251,9 +261,8 @@ All Data methods return HTTP 200 responses
 * genre_songs **(develop only)**
 * songs
 * song
-* song_delete
-* [advanced_search](http://ampache.org/api/api-advanced-search)
-* stats
+* song_delete **(develop only)**
+* url_to_song
 * playlists
 * playlist
 * playlist_songs
@@ -263,16 +272,15 @@ All Data methods return HTTP 200 responses
 * playlist_add_song
 * playlist_remove_song
 * playlist_generate
-* search_songs
-* song_delete **(develop only)**
-* videos
-* video
 * shares
 * share
 * share_create
 * share_edit
 * share_delete
 * get_similar
+* search_songs
+* videos
+* video
 * podcasts
 * podcast
 * podcast_create
@@ -281,6 +289,7 @@ All Data methods return HTTP 200 responses
 * podcast_episodes
 * podcast_episode
 * podcast_episode_delete
+* stats
 * catalogs
 * catalog
 * catalog_file
@@ -290,13 +299,10 @@ All Data methods return HTTP 200 responses
 * labels **(develop only)**
 * label **(develop only)**
 * label_artists **(develop only)**
-* users **(develop only)**
 * user
 * user_create
 * user_update
 * user_delete
-* user_preferences **(develop only)**
-* user_preference **(develop only)**
 * rate
 * flag
 * record_play
@@ -312,12 +318,12 @@ All Data methods return HTTP 200 responses
 * update_artist_info
 * update_art
 * update_podcast
+* user_preference **(develop only)**
 * system_preferences **(develop only)**
 * system_preference **(develop only)**
 * preference_create **(develop only)**
 * preference_edit **(develop only)**
 * preference_delete **(develop only)**
-* bookmarks **(develop only)**
 * get_bookmark **(develop only)**
 * bookmark_create **(develop only)**
 * bookmark_edit **(develop only)**
@@ -326,8 +332,11 @@ All Data methods return HTTP 200 responses
 ### Binary Data Methods
 
 All binary methods will not return XML/JSON responses. they will either return the requested file/data or an HTTP error code.
+
 @return (HTTP 200 OK)
+
 @throws (HTTP 400 Bad Request)
+
 @throws (HTTP 404 Not Found)
 
 * stream
@@ -336,8 +345,21 @@ All binary methods will not return XML/JSON responses. they will either return t
 
 ### Control Methods
 
+All Control methods return HTTP 200 responses
+
 * localplay
 * democratic
+
+## Access Levels
+
+Some methods have a user access level requirement. Access goes from 0-100 and is split into the following types.
+
+* 5: Guest
+* 25: User
+* 50: Content Manager
+* 75: Catalog Manager
+* 100: Admin
+
 
 ## Request URL Examples
 
