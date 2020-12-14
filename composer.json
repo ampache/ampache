@@ -337,6 +337,19 @@
         {
             "type": "package",
             "package": {
+                "name": "needim/noty",
+                "type": "component",
+                "version": "2.4.1",
+                "source": {
+                    "url": "https://github.com/needim/noty",
+                    "type": "git",
+                    "reference": "v2.4.1"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
                 "name": "swisnl/jQuery-contextMenu",
                 "type": "component",
                 "version": "2.1.0",
