@@ -108,6 +108,7 @@ All API code that used 'Tag' now references 'Genre' instead
 * get_indexes: 'playlist' now requires include=1 for xml calls if you want the tracks
 * stats: Removed back compat from older versions. Only 'type' is mandatory
 * Return empty objects when the request was correct but the results were empty
+* record_play: Require 100 (Admin) permission to record plays for other users
 
 ### Deprecated
 
