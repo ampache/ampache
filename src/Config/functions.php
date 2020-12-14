@@ -25,6 +25,7 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
 use Ampache\Model\Metadata\Repository\MetadataField;
+use Ampache\Model\Playlist;
 use Ampache\Model\Plugin;
 use Ampache\Model\Preference;
 use Ampache\Model\Rating;
@@ -820,6 +821,19 @@ function create_preference_input($name, $value)
                 $options[] = '<option value="' . $field->getId() . '"' . $selected . '>' . $field->getName() . '</option>';
             }
             echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
+            break;
+        case 'personalfav_playlist':
+        case 'personalfav_smartlist':
+            $ids       = explode(',', $value);
+            $options   = array();
+            $playlists = ($name == 'personalfav_smartlist') ? Playlist::get_details('search') : Playlist::get_details();
+            if (!empty($playlists)) {
+                foreach ($playlists as $list_id => $list_name) {
+                    $selected  = in_array($list_id, $ids) ? ' selected="selected"' : '';
+                    $options[] = '<option value="' . $list_id . '"' . $selected . '>' . $list_name . '</option>';
+                }
+                echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
+            }
             break;
         case 'lastfm_grant_link':
         case 'librefm_grant_link':
