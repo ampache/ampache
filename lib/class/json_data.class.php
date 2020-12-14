@@ -169,7 +169,7 @@ class JSON_Data
      * @param  array $objects (description here...)
      * @param  string $type (description here...)
      * @param  bool $include (add the extra songs details if a playlist)
-     * @return string JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"live_stream"
+     * @return string JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"live_stream"
      */
     public static function indexes($objects, $type, $include = false)
     {

@@ -1121,7 +1121,7 @@ class Subsonic_Api
     {
         $fileid  = self::check_parameter($input, 'id', true);
         $user_id = User::get_from_username($input['u'])->id;
-        $params  = '&action=download' . '&client=';
+        $params  = '&action=download' . '&client=' . rawurlencode($input['c']);
         $url     = '';
         if (Subsonic_XML_Data::isSong($fileid)) {
             $object = new Song(Subsonic_XML_Data::getAmpacheId($fileid));
