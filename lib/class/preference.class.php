@@ -639,7 +639,7 @@ class Preference extends database_object
                "(142, 'disabled_custom_metadata_fields', '', 'Custom metadata - Disable these fields', 100, 'string', 'system', 'metadata'), " .
                "(143, 'disabled_custom_metadata_fields_input', '', 'Custom metadata - Define field list', 100, 'string', 'system', 'metadata'), " .
                "(144, 'podcast_keep', '0', '# latest episodes to keep', 100, 'integer', 'system', 'podcast'), " .
-               "(145, 'podcast_new_download', '0', '# episodes to download when new episodes are available', 100, 'integer', 'system', 'podcast')";
+               "(145, 'podcast_new_download', '0', '# episodes to download when new episodes are available', 100, 'integer', 'system', 'podcast');";
         Dba::write($sql);
     } // set_defaults
 
