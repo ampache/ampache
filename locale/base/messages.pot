@@ -9738,7 +9738,7 @@ msgstr ""
 msgid "Only add unique items to playlists"
 msgstr ""
 
-#: Database preference table id 175
+#: Database preference table id 172
 msgid "Custom URL - Login page background"
 msgstr ""
 
