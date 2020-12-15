@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Artist } from '~logic/Artist';
+import Rating from '~components/Rating/';
 
 import style from './index.module.styl';
 
@@ -24,7 +25,10 @@ const ArtistDisplay: React.FC<ArtistDisplayProps> = (props: ArtistDisplayProps) 
                             alt={`Photo of ${props.artist.name}`}
                         />
                     </div>
-                    <span>{props.artist.name}</span>
+                    <div className={style.rating}>
+                        <Rating />
+                    </div>
+                    <span className={style.artistName}>{props.artist.name}</span>
                 </div>
             </Link>
         </>

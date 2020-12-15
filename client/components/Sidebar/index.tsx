@@ -38,16 +38,13 @@ const Sidebar: React.FC<SideBarProps> = (props) => {
                 <div className={style.menuList}>
                     <div className={style.sidebarInner}>
                         <section>
-                            <h4>Library</h4>
+                            <h4><Link to='/'>Library</Link></h4>
                             <ul>
                                 <li>
                                     <Link to='/artists'>Artists</Link>
                                 </li>
                                 <li>
                                     <Link to='/albums'>Albums</Link>
-                                </li>
-                                <li>
-                                    <Link to='/songs'>Songs</Link>
                                 </li>
                                 <li>
                                     <Link to='/playlists'>Playlists</Link>

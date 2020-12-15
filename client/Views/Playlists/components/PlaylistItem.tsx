@@ -44,18 +44,20 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (props: PlaylistItemProps) => 
         }
     };
 
+    //TODO: React version of this for card link: https://codepen.io/vikas-parashar/pen/qBOwMWj
+
     return (
         <>
             <div
-                className='playlistItem'
+                className={style.playlistItem}
                 {...bindTrigger}
             >
                 <div className={style.details}>
                     <div className={style.name}>
-                        {props.playlist.name}
                         <Link 
                             to={`/playlist/${props.playlist.id}`}
                             className={style.cardLink}>
+                                {props.playlist.name}
                         </Link>
                     </div>
                     <div className={style.rating}>

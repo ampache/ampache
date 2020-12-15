@@ -23,6 +23,8 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (props: AlbumDisplayProps) => 
     ] = useContextMenu();
     const [bindTrigger] = useContextTrigger();
 
+    //TODO: React version of this for card link: https://codepen.io/vikas-parashar/pen/qBOwMWj
+
     return (
         <>
             <div {...bindTrigger} className={`${style.albumDisplay} ${props.className}`}>
@@ -37,11 +39,12 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (props: AlbumDisplayProps) => 
                 </div>
                 <div className={style.details}>
                     <div className={style.albumInfo}>
-                        <div className={style.albumName}>
-                            {props.album.name}
-                            <Link to={`/album/${props.album.id}`} className={style.cardLink}></Link>
+                        <div className={style.albumName}>                            
+                            <Link to={`/album/${props.album.id}`} className={style.cardLink}>{props.album.name}</Link>
                         </div>
-                        <div className={style.albumArtist}>{props.album.artist.name}</div>
+                        <div className={style.albumArtist}>
+                            <Link to={`/artist/${props.album.artist.id}`} className={style.cardLink}>{props.album.artist.name}</Link>
+                        </div>
                         <div className={style.albumMeta}>{props.album.year} - {props.album.tracks} tracks</div>
                         
                     </div>

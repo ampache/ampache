@@ -35,10 +35,10 @@ const CurrentPlaying: React.FC = () => {
                             {musicContext.currentPlayingSong?.title}
                         </div>
                         <div className={style.albumName}>
-                            {musicContext.currentPlayingSong?.album.name}
+                            <Link to={`/album/${musicContext.currentPlayingSong.album.id}`}>{musicContext.currentPlayingSong?.album.name}</Link>
                         </div>
                         <div className={style.artistName}>
-                            {musicContext.currentPlayingSong?.artist.name}
+                            <Link to={`/artist/${musicContext.currentPlayingSong.artist.id}`}>{musicContext.currentPlayingSong?.artist.name}</Link>
                         </div>
                     </div>
                 </>
