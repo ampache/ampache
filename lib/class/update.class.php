@@ -701,7 +701,7 @@ class Update
 
         $sql = "UPDATE `preference` " .
                "SET `preference`.`subcatagory` = 'custom' " .
-               "WHERE `preference`.`name` in ('site_title', 'custom_logo', 'custom_login_background', 'custom_login_logo', 'custom_favicon', 'custom_text_footer', 'custom_blankalbum', 'custom_blankmovie') AND " .
+               "WHERE `preference`.`name` in ('site_title', 'custom_logo', 'custom_login_logo', 'custom_favicon', 'custom_text_footer', 'custom_blankalbum', 'custom_blankmovie') AND " .
                "`preference`.`subcatagory` IS NULL;";
         $retval &= Dba::write($sql);
 
@@ -947,11 +947,6 @@ class Update
         $sql = "UPDATE `preference` " .
                "SET `preference`.`description` = 'Custom URL - Logo' " .
                "WHERE `preference`.`name` = 'custom_logo' ";
-        $retval &= Dba::write($sql);
-
-        $sql = "UPDATE `preference` " .
-               "SET `preference`.`description` = 'Custom URL - Login page background' " .
-               "WHERE `preference`.`name` = 'custom_login_background' ";
         $retval &= Dba::write($sql);
 
         $sql = "UPDATE `preference` " .
@@ -1369,10 +1364,10 @@ class Update
         return $retval;
     }
     
-        /**
+    /**
      * update_400020
      *
-     * Cusotmizable login background image
+     * Customizable login background image
      */
     public static function update_400020()
     {
@@ -1382,7 +1377,7 @@ class Update
             "VALUES ('custom_login_background', '', 'Custom URL - Login page background', 75, 'string', 'interface', 'custom')";
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
-        $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '')";
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
         $retval &= Dba::write($sql, array($row_id));
 
         return $retval;
