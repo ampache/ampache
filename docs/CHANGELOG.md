@@ -29,6 +29,7 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Add duration to the table headers when browsing playlists and smartlists
 * Add time and duration to albums, artists instead of calculating from songs each time
 * Allow browsing by album_artist instead of artist
+* Allow setting a custom background on the login page
 
 ### Changed
 
@@ -120,6 +121,30 @@ All API code that used 'Tag' now references 'Genre' instead
 * Api::democratic was using action from localplay in the return responses
 * Setting a limit of 'none' would slice away all the results
 * get_indexes for XML didn't include podcast indexes
+
+## Ampache 4.2.5-release
+
+### Added
+
+* Use _add_urls when building a stream playlist
+
+### Changed
+
+* Removed the forced random from search
+* Put the browse header at the top above plugins
+* Make the webplayer class a bit faster at deciding what to transcode
+
+### Fixed
+
+* Ampache Debug, cron.lib.php missing from init
+* Slow playlist creation when inserting a large amount of items
+* Stream_URL properties were inconsistently applied
+* Fix streaming when play_type is Democratic
+* Save your limit and random settings when creating a smartlist
+
+### API 4.2.5
+
+**NO CHANGE**
 
 ## Ampache 4.2.4-release
 
