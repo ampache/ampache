@@ -77,9 +77,9 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         }
         $password = Core::get_server('PHP_AUTH_PW');
         if (empty($password)) {
-            $password = $_REQUEST['p'];
-            $token    = $_REQUEST['t'];
-            $salt     = $_REQUEST['s'];
+            $password = (string) $_REQUEST['p'];
+            $token    = (string) $_REQUEST['t'];
+            $salt     = (string) $_REQUEST['s'];
         }
         $version   = $_REQUEST['v'];
         $clientapp = $_REQUEST['c'];
