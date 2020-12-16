@@ -106,6 +106,8 @@ class easy_captcha_utility
 
             return false;
         }
+
+        return false;
     }
 
     #-- hardwired error img

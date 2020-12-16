@@ -44,6 +44,8 @@ class easy_captcha_persistent_grant extends easy_captcha
         if (CAPTCHA_PERSISTENT && filter_has_var(INPUT_COOKIE, $this->cookie())) {
             return in_array($_COOKIE[$this->cookie()], array($this->validity_token(), $this->validity_token(-1)));
         }
+
+        return false;
     }
 
     #-- set captcha persistence cookie

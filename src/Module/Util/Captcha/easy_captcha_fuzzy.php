@@ -51,5 +51,7 @@ class easy_captcha_fuzzy extends easy_captcha
 
             return ($pw == $input) || ($diff <= $maxdiff);  // either matches, or allows around 2 divergent letters
         }
+
+        return false;
     }
 }

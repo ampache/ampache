@@ -167,19 +167,19 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
     #-- get 4 pixels from source image, merges BLUE value simply
 
     /**
-     * @param $i
-     * @param $x
-     * @param $y
+     * @param $image
+     * @param $xaxis
+     * @param $yaxis
      * @return integer
      */
-    public function get_2x2_greyscale(&$i, $x, $y)
+    public function get_2x2_greyscale(&$image, $xaxis, $yaxis)
     {
         // this is a pretty simplistic method, actually adds more artefacts
-        // than it "smoothes"
-        // it just merges the brightness from 4 adjoining pixels into one
-        $cXY = (imagecolorat($i, $x + $distortx, $y + $distorty) & 0xFF) + (imagecolorat($i, $x + $distortx,
-                    $y + $distorty + 1) & 0xFF) + (imagecolorat($i, $x + $distortx + 1,
-                    $y + $distorty) & 0xFF) + (imagecolorat($i, $x + $distortx + 1, $y + $distorty + 1) & 0xFF);
+        // than it "smoothes" it just merges the brightness from 4 adjoining pixels into one
+        $cXY = (imagecolorat($image, $xaxis, $yaxis) & 0xFF)
+            + (imagecolorat($image, $xaxis, $yaxis + 1) & 0xFF)
+            + (imagecolorat($image, $xaxis + 1, $yaxis) & 0xFF)
+            + (imagecolorat($image, $xaxis + 1, $yaxis + 1) & 0xFF);
         $cXY = (int)($cXY / 4);
 
         return $cXY;
