@@ -33,6 +33,7 @@ const QueueBar: React.FC<QueueBarProps> = (props) => {
     set({ x: props.visible ? queueBarEnd : queueBarStart });
 
     return (
+        <>
             <animated.div
                 style={{ x }}
                 className={
@@ -72,6 +73,8 @@ const QueueBar: React.FC<QueueBarProps> = (props) => {
                     </div>
                 </div>
             </animated.div>
+            <div className={style.backdrop}></div>
+        </>
     );
 };
 

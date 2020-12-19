@@ -1,6 +1,9 @@
 @import "~/stylus/color.styl"
 
 .artistDisplayContainer
+  background-color colorGray800
+  border-radius 5px
+
   .artistDisplay
     display flex
     text-align center
@@ -13,6 +16,7 @@
     border 1px solid transparent
     transition 0.2s border
     max-width 160px
+    margin-top 5px
 
     img
       width 100%
@@ -21,9 +25,9 @@
 
   .artistName
     hyphens: auto;
-    margin-top 3px
+    margin-top 8px
     margin-bottom: 10px
     font-weight 700
 
   .rating
-    margin-top 5px
+    margin-top 8px

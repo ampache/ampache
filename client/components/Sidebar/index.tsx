@@ -26,6 +26,7 @@ const Sidebar: React.FC<SideBarProps> = (props) => {
     set({ x: props.visible ? sidebarEnd : sidebarStart });
 
     return (
+        <>
             <animated.div
                 style={{ x }}
                 className={
@@ -123,6 +124,8 @@ const Sidebar: React.FC<SideBarProps> = (props) => {
                     </ul>
                 </div>
             </animated.div>
+            <div className={style.backdrop}></div>
+        </>
     );
 };
 

@@ -3,9 +3,9 @@
 
 .sidebar
   width: 180px
-  border-right 2px solid colorGray900
+  border-right 2px solid colorGray800
   font-size 13px
-  background-color colorGray800
+  background-color colorGray900
   flex-shrink: 0;
   overflow: hidden
   will-change: transform
@@ -78,7 +78,21 @@
   padding 15px 0 10px
   position relative
 
+.backdrop
+  position absolute
+  top 0 
+  right 0
+  bottom 0
+  left 0
+  background-color black
+  z-index 1
+  opacity 0
+  transition opacity 100ms ease-out
+  pointer-events: none
 
+.sidebar.visible ~ .backdrop
+  pointer-events auto
+  opacity 0.6
 
-  
-    
+  @media all and (min-width: size-large)
+    display none

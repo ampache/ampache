@@ -6,8 +6,8 @@ queuebarWidth = 280px
 .queueBar
   width: queuebarWidth
   max-width: 90%;
-  border-left 2px solid colorGray900
-  background-color colorGray800
+  border-left 2px solid colorGray800
+  background-color colorGray900
   user-select none
   flex-shrink: 0;
   will-change: transform
@@ -18,7 +18,7 @@ queuebarWidth = 280px
   top 0;
   right 0
   bottom: 0
-  z-index: 100
+  z-index: 200
 
   @media all and (min-width: size-large)
     position: static;
@@ -32,6 +32,7 @@ queuebarWidth = 280px
     text-align center
     padding 10px 0
     border-bottom: 2px solid colorGray700
+    background-color colorGray800
     flex-shrink: 0
   .songs
     .emptyQueue
@@ -50,3 +51,22 @@ queuebarWidth = 280px
   bottom: 0;
   overflow: auto;
   padding: inherit
+
+.backdrop
+  position absolute
+  top 0 
+  right 0
+  bottom 0
+  left 0
+  background-color black
+  z-index 150
+  opacity 0
+  transition opacity 100ms ease-out
+  pointer-events: none
+
+.queueBar.visible ~ .backdrop
+  opacity 0.6
+  pointer-events: auto
+
+  @media all and (min-width: size-large)
+    display none
