@@ -94,7 +94,7 @@ class Search extends playlist_object
                 break;
             case 'album':
                 $this->album_types();
-                $this->order_by = '`album`.`name`';
+                $this->order_by = '`album`.`name`, `album`.`disk`';
                 break;
             case 'video':
                 $this->video_types();
