@@ -67,7 +67,7 @@ final class Init
             $redirectionUrl = 'update.php';
         } finally {
             if ($e == null) {
-                return ;
+                return;
             }
             if ($this->environment->isCli()) {
                 throw $e;
