@@ -50,18 +50,29 @@ final class Init
 
     public function init(): void
     {
+        $redirectionUrl = null;
+        $e              = null;
+
         try {
             foreach ($this->initializationHandler as $initializationHandler) {
                 $initializationHandler->init();
             }
         } catch (ConfigFileNotFoundException $e) {
-            $this->redirect('install.php');
+            $redirectionUrl = 'install.php';
         } catch (ConfigFileNotParsableException $e) {
-            $this->redirect('test.php?action=config');
+            $redirectionUrl = 'test.php?action=config';
         } catch (EnvironmentNotSuitableException | GetTextNotAvailableException $e) {
-            $this->redirect('test.php');
+            $redirectionUrl = 'test.php';
         } catch (DatabaseOutdatedException $e) {
-            $this->redirect('update.php');
+            $redirectionUrl = 'update.php';
+        } finally {
+            if ($e == null) {
+                return ;
+            }
+            if ($this->environment->isCli()) {
+                throw $e;
+            }
+            $this->redirect($redirectionUrl);
         }
     }
 
