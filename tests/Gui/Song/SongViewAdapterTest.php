@@ -342,12 +342,10 @@ class SongViewAdapterTest extends MockeryTestCase
 
     public function testGetLicenseLinkReturnsValue(): void
     {
-        $value = 'some-license-link';
-
-        $this->song->f_license = $value;
+        $this->song->f_license = null;
 
         $this->assertSame(
-            $value,
+            '',
             $this->subject->getLicenseLink()
         );
     }

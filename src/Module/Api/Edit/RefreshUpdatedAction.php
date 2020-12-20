@@ -54,12 +54,13 @@ final class RefreshUpdatedAction extends AbstractEditAction
 
     protected function handle(
         ServerRequestInterface $request,
-        string $type,
-        database_object $libitem
+        string $object_type,
+        database_object $libitem,
+        int $object_id
     ): ?ResponseInterface {
         ob_start();
 
-        require Ui::find_template('show_' . $type . '.inc.php');
+        require Ui::find_template('show_' . $object_type . '.inc.php');
 
         $results = ob_get_contents();
 

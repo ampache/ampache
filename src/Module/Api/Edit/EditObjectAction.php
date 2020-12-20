@@ -59,8 +59,9 @@ final class EditObjectAction extends AbstractEditAction
 
     protected function handle(
         ServerRequestInterface $request,
-        string $type,
-        database_object $libitem
+        string $object_type,
+        database_object $libitem,
+        int $object_id
     ): ?ResponseInterface {
         // Scrub the data, walk recursive through array
         $entities = function (&$data) use (&$entities) {
@@ -72,10 +73,10 @@ final class EditObjectAction extends AbstractEditAction
         };
         $entities($_POST);
 
-        if (empty($type)) {
+        if (empty($object_type)) {
             $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         } else {
-            $object_type = implode('_', explode('_', $type, -1));
+            $object_type = implode('_', explode('_', $object_type, -1));
         }
 
         $class_name = ObjectTypeToClassNameMapper::map($object_type);

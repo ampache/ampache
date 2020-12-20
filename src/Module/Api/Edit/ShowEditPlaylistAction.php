@@ -26,6 +26,7 @@ namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\database_object;
+use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -41,21 +42,26 @@ final class ShowEditPlaylistAction extends AbstractEditAction
 
     private StreamFactoryInterface $streamFactory;
 
+    private AjaxUriRetrieverInterface $ajaxUriRetriever;
+
     public function __construct(
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        AjaxUriRetrieverInterface $ajaxUriRetriever
     ) {
         parent::__construct($configContainer, $logger);
-        $this->responseFactory = $responseFactory;
-        $this->streamFactory   = $streamFactory;
+        $this->responseFactory  = $responseFactory;
+        $this->streamFactory    = $streamFactory;
+        $this->ajaxUriRetriever = $ajaxUriRetriever;
     }
 
     protected function handle(
         ServerRequestInterface $request,
-        string $type,
-        database_object $libitem
+        string $object_type,
+        database_object $libitem,
+        int $object_id
     ): ?ResponseInterface {
         ob_start();
 

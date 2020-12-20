@@ -474,7 +474,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getLicenseLink(): string
     {
-        return $this->song->f_license;
+        return (string) $this->song->f_license;
     }
 
     public function getNumberPlayed(): int

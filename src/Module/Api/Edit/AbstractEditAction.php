@@ -55,20 +55,20 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         debug_event('edit.server', 'Called for action: {' . Core::get_request('action') . '}', 5);
 
         // Post first
-        $type = $_POST['type'];
-        if (empty($type)) {
-            $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $object_type = $_POST['type'];
+        if (empty($object_type)) {
+            $object_type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         }
-        $object_id = Core::get_get('id');
+        $object_id = (int) Core::get_get('id');
 
-        if (empty($type)) {
+        if (empty($object_type)) {
             $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         } else {
-            $object_type = implode('_', explode('_', $type, -1));
+            $object_type = implode('_', explode('_', $object_type, -1));
         }
 
         if (!InterfaceImplementationChecker::is_library_item($object_type) && $object_type != 'share') {
-            debug_event('edit.server', 'Type `' . $type . '` is not based on an item library.', 3);
+            debug_event('edit.server', 'Type `' . $object_type . '` is not based on an item library.', 3);
 
             return null;
         }
@@ -94,12 +94,13 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             return null;
         }
 
-        return $this->handle($request, $type, $libitem);
+        return $this->handle($request, $object_type, $libitem, $object_id);
     }
 
     abstract protected function handle(
         ServerRequestInterface $request,
-        string $type,
-        database_object $libitem
+        string $object_type,
+        database_object $libitem,
+        int $object_id
     ): ?ResponseInterface;
 }
