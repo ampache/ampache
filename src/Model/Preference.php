@@ -64,6 +64,7 @@ class Preference extends database_object
         'concerts_limit_future',
         'concerts_limit_past',
         'custom_favicon',
+        'custom_login_backgound',
         'custom_login_logo',
         'custom_logo',
         'custom_text_footer',

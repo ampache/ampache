@@ -208,6 +208,9 @@ class Update
 
         $update_string = "* Put 'of_the_moment' into a per user preference.<br/ > ";
         $version[]     = array('version' => '400019', 'description' => $update_string);
+        
+        $update_string = "* Customizable login page background.<br/ > ";
+        $version[]     = array('version' => '400020', 'description' => $update_string);
 
         return $version;
     }
@@ -1072,6 +1075,25 @@ class Update
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '')";
+        $retval &= Dba::write($sql, array($row_id));
+
+        return $retval;
+    }
+    
+    /**
+     * update_400020
+     *
+     * Customizable login background image
+     */
+    public static function update_400020()
+    {
+        $retval = true;
+
+        $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " .
+            "VALUES ('custom_login_background', '', 'Custom URL - Login page background', 75, 'string', 'interface', 'custom')";
+        $retval &= Dba::write($sql);
+        $row_id = Dba::insert_id();
+        $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
         $retval &= Dba::write($sql, array($row_id));
 
         return $retval;
