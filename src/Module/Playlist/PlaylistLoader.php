@@ -17,29 +17,39 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Authorization;
+namespace Ampache\Module\Playlist;
 
-use Ampache\Module\System\Core;
+use Ampache\Model\ModelFactoryInterface;
+use Ampache\Model\Playlist;
 
-/**
- * Routes access checks and other authorization related calls to its static versions
- */
-final class GuiGatekeeper implements GuiGatekeeperInterface
+final class PlaylistLoader implements PlaylistLoaderInterface
 {
-    public function mayAccess(
-        string $access_type,
-        int $access_level
-    ): bool {
-        return Access::check($access_type, $access_level);
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->modelFactory = $modelFactory;
     }
 
-    public function getUserId(): int
+    public function loadByUserId(int $userId): array
     {
-        return (int) Core::get_global('user')->id;
+        $playlists = Playlist::get_users($userId);
+        Playlist::build_cache($playlists);
+
+        $result = [];
+
+        foreach ($playlists as $playlist_id) {
+            $playlist = $this->modelFactory->createPlaylist((int) $playlist_id);
+            $playlist->format(false);
+
+            $result[] = $playlist;
+        }
+
+        return $result;
     }
 }

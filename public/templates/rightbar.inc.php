@@ -21,10 +21,10 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Playlist;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
@@ -53,16 +53,17 @@ use Ampache\Module\Util\ZipHandlerInterface;
                     <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist'); ?>
                 </li>
             <?php
-                $playlists = Playlist::get_users(Core::get_global('user')->id);
-    Playlist::build_cache($playlists);
-    foreach ($playlists as $playlist_id) {
-        $playlist = new Playlist($playlist_id);
-        $playlist->format(false); ?>
+            global $dic;
+            $playlists = $dic->get(PlaylistLoaderInterface::class)->loadByUserId(
+                Core::get_global('user')->id
+            );
+            foreach ($playlists as $playlist) {
+                ?>
                 <li>
                     <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, $playlist->f_name, 'rb_append_playlist_' . $playlist->id); ?>
                 </li>
             <?php
-    } ?>
+            } ?>
             </ul>
         </li>
     <?php

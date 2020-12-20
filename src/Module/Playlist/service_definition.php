@@ -28,4 +28,5 @@ use function DI\autowire;
 
 return [
     PlaylistExporterInterface::class => autowire(PlaylistExporter::class),
+    PlaylistLoaderInterface::class => autowire(PlaylistLoader::class),
 ];

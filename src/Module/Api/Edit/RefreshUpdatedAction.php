@@ -26,6 +26,7 @@ namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\database_object;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -54,6 +55,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
 
     protected function handle(
         ServerRequestInterface $request,
+        GuiGatekeeperInterface $gatekeeper,
         string $object_type,
         database_object $libitem,
         int $object_id

@@ -30,6 +30,7 @@ use Ampache\Model\database_object;
 use Ampache\Model\Label;
 use Ampache\Model\Tag;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -59,6 +60,7 @@ final class EditObjectAction extends AbstractEditAction
 
     protected function handle(
         ServerRequestInterface $request,
+        GuiGatekeeperInterface $gatekeeper,
         string $object_type,
         database_object $libitem,
         int $object_id

@@ -26,7 +26,6 @@ namespace Ampache\Model;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use PDOStatement;
@@ -374,6 +373,8 @@ class Playlist extends playlist_object
      * This returns the specified users playlists as an array of playlist ids
      * @param integer $user_id
      * @return array
+     *
+     * @deprecated Use PlaylistLoader::getByUserId
      */
     public static function get_users($user_id)
     {

@@ -28,4 +28,9 @@ interface GuiGatekeeperInterface
      * Checks if the user may access the requested resource
      */
     public function mayAccess(string $access_type, int $access_level): bool;
+
+    /**
+     * Returns the id of the current logged in user
+     */
+    public function getUserId(): int;
 }

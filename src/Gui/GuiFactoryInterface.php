@@ -23,6 +23,7 @@
 namespace Ampache\Gui;
 
 use Ampache\Gui\Catalog\CatalogDetailsInterface;
+use Ampache\Gui\Playlist\NewPlaylistDialogAdapterInterface;
 use Ampache\Gui\Song\SongViewAdapterInterface;
 use Ampache\Gui\Stats\CatalogStatsInterface;
 use Ampache\Gui\Stats\StatsViewAdapterInterface;
@@ -50,4 +51,10 @@ interface GuiFactoryInterface
     public function createCatalogStats(array $stats): CatalogStatsInterface;
 
     public function createUpdateViewAdapter(): UpdateViewAdapterInterface;
+
+    public function createNewPlaylistDialogAdapter(
+        GuiGatekeeperInterface $gatekeeper,
+        string $object_type,
+        int $object_id
+    ): NewPlaylistDialogAdapterInterface;
 }

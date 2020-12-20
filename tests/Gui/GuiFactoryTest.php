@@ -26,6 +26,7 @@ namespace Ampache\Gui;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\Catalog\CatalogDetails;
+use Ampache\Gui\Playlist\NewPlaylistDialogAdapter;
 use Ampache\Gui\Song\SongViewAdapter;
 use Ampache\Gui\Stats\CatalogStats;
 use Ampache\Gui\Stats\StatsViewAdapter;
@@ -36,6 +37,8 @@ use Ampache\Model\Catalog;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Song;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Playlist\PlaylistLoaderInterface;
+use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Mockery\MockInterface;
 
 class GuiFactoryTest extends MockeryTestCase
@@ -45,18 +48,28 @@ class GuiFactoryTest extends MockeryTestCase
 
     /** @var MockInterface|ModelFactoryInterface|null */
     private MockInterface $modelFactory;
+
+    /** @var MockInterface|AjaxUriRetrieverInterface|null */
+    private MockInterface $ajaxUriRetriever;
+
+    /** @var MockInterface|PlaylistLoaderInterface|null */
+    private MockInterface $playlistLoader;
     
     /** @var GuiFactory|null */
     private GuiFactory $subject;
     
     public function setUp(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->configContainer  = $this->mock(ConfigContainerInterface::class);
+        $this->modelFactory     = $this->mock(ModelFactoryInterface::class);
+        $this->ajaxUriRetriever = $this->mock(AjaxUriRetrieverInterface::class);
+        $this->playlistLoader   = $this->mock(PlaylistLoaderInterface::class);
         
         $this->subject = new GuiFactory(
             $this->configContainer,
-            $this->modelFactory
+            $this->modelFactory,
+            $this->ajaxUriRetriever,
+            $this->playlistLoader
         );
     }
 
@@ -110,6 +123,18 @@ class GuiFactoryTest extends MockeryTestCase
         $this->assertInstanceOf(
             UpdateViewAdapter::class,
             $this->subject->createUpdateViewAdapter()
+        );
+    }
+
+    public function testCreateNewPlaylistDialogAdapterReturnsInstance(): void
+    {
+        $this->assertInstanceOf(
+            NewPlaylistDialogAdapter::class,
+            $this->subject->createNewPlaylistDialogAdapter(
+                $this->mock(GuiGatekeeperInterface::class),
+                'some-type',
+                666
+            )
         );
     }
 }

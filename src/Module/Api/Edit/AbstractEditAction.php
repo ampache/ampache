@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\database_object;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -50,7 +51,10 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         $this->logger          = $logger;
     }
 
-    public function run(ServerRequestInterface $request, \Ampache\Module\Authorization\GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(
+        ServerRequestInterface $request,
+        GuiGatekeeperInterface $gatekeeper
+    ): ?ResponseInterface
     {
         debug_event('edit.server', 'Called for action: {' . Core::get_request('action') . '}', 5);
 
@@ -94,11 +98,12 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             return null;
         }
 
-        return $this->handle($request, $object_type, $libitem, $object_id);
+        return $this->handle($request, $gatekeeper, $object_type, $libitem, $object_id);
     }
 
     abstract protected function handle(
         ServerRequestInterface $request,
+        GuiGatekeeperInterface $gatekeeper,
         string $object_type,
         database_object $libitem,
         int $object_id

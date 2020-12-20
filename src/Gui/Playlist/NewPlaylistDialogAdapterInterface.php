@@ -17,29 +17,19 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-declare(strict_types=1);
+namespace Ampache\Gui\Playlist;
 
-namespace Ampache\Module\Authorization;
-
-use Ampache\Module\System\Core;
-
-/**
- * Routes access checks and other authorization related calls to its static versions
- */
-final class GuiGatekeeper implements GuiGatekeeperInterface
+interface NewPlaylistDialogAdapterInterface
 {
-    public function mayAccess(
-        string $access_type,
-        int $access_level
-    ): bool {
-        return Access::check($access_type, $access_level);
-    }
+    public function getPlaylists(): array;
 
-    public function getUserId(): int
-    {
-        return (int) Core::get_global('user')->id;
-    }
+    public function getAjaxUri(): string;
+
+    public function getObjectType(): string;
+
+    public function getObjectId(): int;
+
+    public function getNewPlaylistTitle(): string;
 }

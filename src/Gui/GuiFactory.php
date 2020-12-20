@@ -27,6 +27,8 @@ namespace Ampache\Gui;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\Catalog\CatalogDetails;
 use Ampache\Gui\Catalog\CatalogDetailsInterface;
+use Ampache\Gui\Playlist\NewPlaylistDialogAdapter;
+use Ampache\Gui\Playlist\NewPlaylistDialogAdapterInterface;
 use Ampache\Gui\Song\SongViewAdapter;
 use Ampache\Gui\Song\SongViewAdapterInterface;
 use Ampache\Gui\Stats\CatalogStats;
@@ -41,6 +43,8 @@ use Ampache\Model\Catalog;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Song;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Playlist\PlaylistLoaderInterface;
+use Ampache\Module\Util\AjaxUriRetrieverInterface;
 
 final class GuiFactory implements GuiFactoryInterface
 {
@@ -48,12 +52,20 @@ final class GuiFactory implements GuiFactoryInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private AjaxUriRetrieverInterface $ajaxUriRetriever;
+
+    private PlaylistLoaderInterface $playlistLoader;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        AjaxUriRetrieverInterface $ajaxUriRetriever,
+        PlaylistLoaderInterface $playlistLoader
     ) {
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
+        $this->configContainer  = $configContainer;
+        $this->modelFactory     = $modelFactory;
+        $this->ajaxUriRetriever = $ajaxUriRetriever;
+        $this->playlistLoader   = $playlistLoader;
     }
 
     public function createSongViewAdapter(
@@ -101,6 +113,20 @@ final class GuiFactory implements GuiFactoryInterface
     {
         return new UpdateViewAdapter(
             $this->configContainer
+        );
+    }
+
+    public function createNewPlaylistDialogAdapter(
+        GuiGatekeeperInterface $gatekeeper,
+        string $object_type,
+        int $object_id
+    ): NewPlaylistDialogAdapterInterface {
+        return new NewPlaylistDialogAdapter(
+            $this->playlistLoader,
+            $this->ajaxUriRetriever,
+            $gatekeeper,
+            $object_type,
+            $object_id
         );
     }
 }

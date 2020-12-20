@@ -1,0 +1,20 @@
+<html>
+<ul>
+    <li>
+        <a
+            href="javascript:void(0);"
+            id="rb_append_dplaylist_new"
+            onclick="createNewPlaylist('${ADAPTER/getNewPlaylistTitle}', '${ADAPTER/getAjaxUri}?page=playlist&action=append_item&item_type=${ADAPTER/getObjectType}&item_id=${ADAPTER/getObjectId}', 'rb_append_dplaylist_new');"
+            tal:content="ADAPTER/getNewPlaylistTitle"
+        >TITLE</a>
+    </li>
+    <li tal:repeat="playlist ADAPTER/getPlaylists">
+        <a
+            href="javascript:void(0);"
+            id="rb_append_dplaylist_${playlist/id}"
+            onclick="handlePlaylistAction('${ADAPTER/getAjaxUri}?page=playlist&action=append_item&playlist_id=${playlist/id}&item_type=${ADAPTER/getObjectType}&item_id=${ADAPTER/getObjectId}', 'rb_append_dplaylist_${playlist/id}');"
+            tal:content="playlist/f_name"
+        >NAME</a>
+    </li>
+</ul>
+</html>
