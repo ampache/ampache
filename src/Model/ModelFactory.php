@@ -158,4 +158,10 @@ final class ModelFactory implements ModelFactoryInterface
     ): Search {
         return new Search($searchId, $searchType, $user);
     }
+
+    public function createShoutbox(
+        int $shoutboxId
+    ): Shoutbox {
+        return new Shoutbox($shoutboxId);
+    }
 }

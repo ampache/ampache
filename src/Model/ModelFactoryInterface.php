@@ -106,4 +106,8 @@ interface ModelFactoryInterface
         string $searchType = 'song',
         ?User $user = null
     ): Search;
+
+    public function createShoutbox(
+        int $shoutboxId
+    ): Shoutbox;
 }

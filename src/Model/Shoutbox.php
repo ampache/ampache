@@ -289,7 +289,7 @@ class Shoutbox
     public function update(array $data)
     {
         $sql = "UPDATE `user_shout` SET `text` = ?, `sticky` = ? WHERE `id` = ?";
-        Dba::write($sql, array($data['comment'], make_bool($data['sticky']), $this->id));
+        Dba::write($sql, array($data['comment'], (int) make_bool($data['sticky']), $this->id));
 
         return $this->id;
     } // create
@@ -309,18 +309,13 @@ class Shoutbox
     } // format
 
     /**
-     * delete
-     * this function deletes a specific shoutbox entry
-     * @param integer $shout_id
+     * this function deletes the current shoutbox entry
      */
-
-    public static function delete($shout_id)
+    public function delete(): void
     {
-        // Delete the shoutbox post
-        $shout_id = Dba::escape($shout_id);
-        $sql      = "DELETE FROM `user_shout` WHERE `id`='$shout_id'";
+        $sql      = sprintf('DELETE FROM `user_shout` WHERE `id` = \'%d\'', $this->id);
         Dba::write($sql);
-    } // delete
+    }
 
     /**
      * @param boolean $details

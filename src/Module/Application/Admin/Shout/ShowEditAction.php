@@ -64,7 +64,9 @@ final class ShowEditAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $shout  = new Shoutbox($_REQUEST['shout_id']);
+        $shout = $this->modelFactory->createShoutbox(
+            (int) $request->getQueryParams()['shout_id'] ?? 0
+        );
         $object = Shoutbox::get_object($shout->object_type, $shout->object_id);
         $object->format();
 
