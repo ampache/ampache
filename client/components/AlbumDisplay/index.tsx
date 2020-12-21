@@ -24,7 +24,6 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (props: AlbumDisplayProps) => 
     const handleLeave = (e) => {
         setActive(false);
     }
-    //TODO: React version of this for card link: https://codepen.io/vikas-parashar/pen/qBOwMWj
 
     return (
         <ClickAwayListener 
@@ -40,7 +39,7 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (props: AlbumDisplayProps) => 
             >
                 <div className={style.imageContainer}>
                     <img
-                        src={props.album.art + '&thumb=true'}
+                        src={props.album.art}
                         alt='Album cover'
                     />
                     <div className={`${style.albumActions}`}>
