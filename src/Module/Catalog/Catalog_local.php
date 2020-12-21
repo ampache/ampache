@@ -580,7 +580,8 @@ class Catalog_local extends Catalog
 
         $this->update_last_update();
 
-        foreach (array('video', 'song') as $media_type) {
+        /** @var Song|Video $media_type */
+        foreach (array(Video::class, Song::class) as $media_type) {
             $total = $stats['items'];
             if ($total == 0) {
                 continue;
