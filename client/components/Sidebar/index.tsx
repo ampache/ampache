@@ -124,7 +124,10 @@ const Sidebar: React.FC<SideBarProps> = (props) => {
                     </ul>
                 </div>
             </animated.div>
-            <div className={style.backdrop}></div>
+            <div 
+                className={style.backdrop}
+                onClick={(e) => props.setSideBarVisibility(false)}
+            ></div>
         </>
     );
 };

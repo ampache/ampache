@@ -73,7 +73,10 @@ const QueueBar: React.FC<QueueBarProps> = (props) => {
                     </div>
                 </div>
             </animated.div>
-            <div className={style.backdrop}></div>
+            <div 
+                className={style.backdrop}
+                onClick={(e) => props.setQueueBarVisibility(false)}
+            ></div>
         </>
     );
 };
