@@ -118,7 +118,6 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
                     </div>
                 </div>
             )}
-            <h1>[[Release type]]</h1>
             <div className={style.albums}>
                 {!artist && <ReactLoading color='#FF9D00' type={'bubbles'} />}
                 {artist &&

@@ -3,7 +3,7 @@
 
 .albumDisplay
     background-color colorGray800
-    border-radius: 5px
+    border-radius: 0 0 5px 5px
     display flex
     flex-direction column
     width 100%
@@ -11,22 +11,15 @@
     position relative
     overflow hidden
 
-    @media (any-hover: hover)
-        &:hover 
-            box-shadow 0 0 0 2px colorAmber800
-
+    &.active
+        box-shadow 0 0 0 2px colorAmber800
+            
 .imageContainer
     position relative
-    padding 15px 15px 0
     width: 100%
-    max-width: 200px
     max-height: 100%
-    font-size 0
     margin: 0 auto
-
-    @media all and (min-width: size-small)
-        max-width: none
-        padding 0
+    z-index 1
 
     &:after
         content ''
@@ -43,6 +36,13 @@
         object-fit: cover;
         width: 100%;
         height: 100%;
+        max-width: 200px
+        padding 15px 15px 0
+        margin 0 auto
+
+        @media all and (min-width: size-small)
+            max-width: none
+            padding 0
 
 .details 
     display: flex
@@ -72,13 +72,50 @@
 .albumMeta
     color colorGray400
 
-.albumActions 
-    border-top 2px solid colorGray900
+.albumActions
     display flex
-    flex-direction row
+    flex-direction column
     justify-content: center
-    margin-top auto
-    display none
+    align-items: left
+    font-weight 700
+    position absolute
+    top 0
+    right 0 
+    bottom 0
+    left 0
+    z-index 1   
+    transition opacity 100ms ease-out
+    opacity 0 
+    padding-left 20px
+    padding-bottom 5px
+    pointer-events: none
+
+    a  
+        padding 5px 0
+        filter: drop-shadow(0 0 5px black)
+        margin-left 16px
+
+    svg 
+        margin-left -20px
+        position absolute
+
+    .albumDisplay.active &
+        opacity 1
+        pointer-events: auto
+
+    &:before    
+        content ''
+        background-color rgba(black, 0.85)
+        top 0
+        bottom 0
+        left 0
+        right 0
+        position absolute
+        z-index: -1
+
+        @supports (backdrop-filter: blur(1px)) 
+            backdrop-filter: blur(5px);
+            background-color rgba(black, 0.6)
 
     img
         width 42px
@@ -93,5 +130,4 @@
     position relative
     top -10px  
     border-top 2px solid colorGray700
-    
-    
+    z-index 1

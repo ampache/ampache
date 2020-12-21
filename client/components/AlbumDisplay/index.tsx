@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import SVG from 'react-inlinesvg';
 import { Link } from 'react-router-dom';
 import { Album } from '~logic/Album';
 import Rating from '~components/Rating/';
-import useContextMenu from 'react-use-context-menu';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 import style from './index.module.styl';
 
@@ -15,24 +15,41 @@ interface AlbumDisplayProps {
 }
 
 const AlbumDisplay: React.FC<AlbumDisplayProps> = (props: AlbumDisplayProps) => {
-    const [
-        bindMenu,
-        bindMenuItems,
-        useContextTrigger,
-        { setVisible }
-    ] = useContextMenu();
-    const [bindTrigger] = useContextTrigger();
+    const [active, setActive] = useState(false);
+    
+    const handleEnter = (e) => {
+        setActive(true);       
+    }
 
+    const handleLeave = (e) => {
+        setActive(false);
+    }
     //TODO: React version of this for card link: https://codepen.io/vikas-parashar/pen/qBOwMWj
 
     return (
-        <>
-            <div {...bindTrigger} className={`${style.albumDisplay} ${props.className}`}>
+        <ClickAwayListener 
+            onClickAway={(e) => handleLeave(e)}
+            mouseEvent={false}
+            disableReactTree={true}
+        >
+            <div 
+                className={`${style.albumDisplay} ${props.className} ${active ? style.active : null}`}
+                onClick={(e) => handleEnter(e)}
+                onMouseEnter={(e) => handleEnter(e)}
+                onMouseLeave={(e) => handleLeave(e)}
+            >
                 <div className={style.imageContainer}>
                     <img
                         src={props.album.art + '&thumb=true'}
                         alt='Album cover'
                     />
+                    <div className={`${style.albumActions}`}>
+                        <Link to={`/album/${props.album.id}`}>View album</Link>
+                        <Link to={'#'}><SVG className='icon-inline' src={require('~images/icons/svg/play.svg')} alt="Play" /> Play</Link>
+                        <Link to={'#'}><SVG className='icon-inline' src={require('~images/icons/svg/play-next.svg')} alt="Play next" /> Play next</Link>
+                        <Link to={'#'}><SVG className='icon-inline' src={require('~images/icons/svg/play-last.svg')} alt="Play last" /> Add to queue</Link>
+                        <Link to={'#'}><SVG className='icon-inline' src={require('~images/icons/svg/more-options-hori.svg')} alt="More options" /> More options</Link>
+                    </div>
                 </div>
                 <div className={style.rating}>
                     <Rating />
@@ -49,45 +66,8 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (props: AlbumDisplayProps) => 
                         
                     </div>
                 </div>
-                <div className={style.albumActions}>
-                    <SVG className='icon-button-small' src={require('~images/icons/svg/play.svg')} alt="Play" />
-                    <SVG className='icon-button-small' src={require('~images/icons/svg/play-next.svg')} alt="Play next" />
-                    <SVG className='icon-button-small' src={require('~images/icons/svg/play-last.svg')} alt="Play last" />
-                    <SVG className='icon-button-small' src={require('~images/icons/svg/more-options-hori.svg')} alt="More options" />
-                </div>
             </div>
-
-            <div {...bindMenu} className='contextMenu'>
-                <div
-                    {...bindMenuItems}
-                    onClick={() => {
-                        setVisible(false);
-                        props.playSongFromAlbum(props.album.id, false);
-                    }}
-                >
-                    Play first song
-                </div>
-                {props.album.tracks.length > 1 && (
-                    <div
-                        {...bindMenuItems}
-                        onClick={() => {
-                            setVisible(false);
-                            props.playSongFromAlbum(props.album.id, true);
-                        }}
-                    >
-                        Play random song
-                    </div>
-                )}
-                {(props.showGoToAlbum ?? true) && (
-                    <Link
-                        {...bindMenuItems}
-                        to={`/artist/${props.album.artist.id}`}
-                    >
-                        Go to artist
-                    </Link>
-                )}
-            </div>
-        </>
+        </ClickAwayListener>
     );
 };
 
