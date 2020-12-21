@@ -3,6 +3,7 @@ import SVG from 'react-inlinesvg';
 import { Link } from 'react-router-dom';
 import { Album } from '~logic/Album';
 import Rating from '~components/Rating/';
+import useContextMenu from 'react-use-context-menu';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 import style from './index.module.styl';
@@ -17,6 +18,16 @@ interface AlbumDisplayProps {
 const AlbumDisplay: React.FC<AlbumDisplayProps> = (props: AlbumDisplayProps) => {
     const [active, setActive] = useState(false);
     
+    const [
+        bindMenu,
+        bindMenuItems,
+        useContextTrigger,
+        { setVisible }
+    ] = useContextMenu();
+    const [bindTrigger] = useContextTrigger({
+        mouseButton: 0 // left click
+    });
+
     const handleEnter = (e) => {
         setActive(true);       
     }
@@ -47,7 +58,7 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (props: AlbumDisplayProps) => 
                         <Link to={'#'}><SVG className='icon-inline' src={require('~images/icons/svg/play.svg')} alt="Play" /> Play</Link>
                         <Link to={'#'}><SVG className='icon-inline' src={require('~images/icons/svg/play-next.svg')} alt="Play next" /> Play next</Link>
                         <Link to={'#'}><SVG className='icon-inline' src={require('~images/icons/svg/play-last.svg')} alt="Play last" /> Add to queue</Link>
-                        <Link to={'#'}><SVG className='icon-inline' src={require('~images/icons/svg/more-options-hori.svg')} alt="More options" /> More options</Link>
+                        <Link {...bindTrigger} to={'#'}><SVG className='icon-inline' src={require('~images/icons/svg/more-options-hori.svg')} alt="More options" /> More options</Link>
                     </div>
                 </div>
                 <div className={style.rating}>
@@ -62,8 +73,35 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (props: AlbumDisplayProps) => 
                             <Link to={`/artist/${props.album.artist.id}`} className={style.cardLink}>{props.album.artist.name}</Link>
                         </div>
                         <div className={style.albumMeta}>{props.album.year} - {props.album.tracks} tracks</div>
-                        
                     </div>
+                </div>
+                <div {...bindMenu} className='contextMenu'>
+                    <div
+                        {...bindMenuItems}
+                        onClick={() => {
+                            setVisible(false);
+                            props.playSongFromAlbum(props.album.id, false);
+                        }}
+                    >
+                        Play first song
+                    </div>
+                    {props.album.tracks.length > 1 && (
+                        <div
+                            {...bindMenuItems}
+                            onClick={() => {
+                                setVisible(false);
+                                props.playSongFromAlbum(props.album.id, true);
+                            }}
+                        >
+                            Play random song
+                        </div>
+                    )}
+                    <Link
+                        {...bindMenuItems}
+                        to={`/artist/${props.album.artist.id}`}
+                    >
+                        Go to artist
+                    </Link>
                 </div>
             </div>
         </ClickAwayListener>
