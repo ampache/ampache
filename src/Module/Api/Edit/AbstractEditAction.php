@@ -54,8 +54,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
     public function run(
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper
-    ): ?ResponseInterface
-    {
+    ): ?ResponseInterface {
         debug_event('edit.server', 'Called for action: {' . Core::get_request('action') . '}', 5);
 
         // Post first
