@@ -65,8 +65,15 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         $object_id = (int) Core::get_get('id');
 
         if (empty($object_type)) {
-            $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $object_type = $source_object_type = filter_input(
+                INPUT_GET,
+                'object_type',
+                FILTER_SANITIZE_STRING,
+                FILTER_FLAG_NO_ENCODE_QUOTES
+            );
         } else {
+            $source_object_type = $object_type;
+
             $object_type = implode('_', explode('_', $object_type, -1));
         }
 
@@ -97,7 +104,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             return null;
         }
 
-        return $this->handle($request, $gatekeeper, $object_type, $libitem, $object_id);
+        return $this->handle($request, $gatekeeper, $source_object_type, $libitem, $object_id);
     }
 
     abstract protected function handle(
