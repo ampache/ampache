@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import SVG from 'react-inlinesvg';
 import { PLAYERSTATUS } from '~enum/PlayerStatus';
 import { MusicContext } from '~Contexts/MusicContext';
-import InputRange from 'react-input-range';
 import Slider from '@material-ui/core/Slider';
 import CurrentPlaying from '~components/CurrentPlaying/';
 
@@ -13,10 +12,18 @@ interface MusicControlProps {
 const MusicControl: React.FC<MusicControlProps> = (props) => {
     const musicContext = useContext(MusicContext);
 
+    const [ratingToggle, setRatingToggle] = useState(false);
+
     const [isSeeking, setIsSeeking] = useState(false);
     const [seekPosition, setSeekPosition] = useState(-1);
 
     const [value, setValue] = React.useState(30);
+
+    const handleRatingToggle = (e) => {
+        if (musicContext.currentPlayingSong !== undefined && musicContext.currentPlayingSong !== null) {
+            setRatingToggle(!ratingToggle); 
+        }
+    }
 
     const formatLabel = (s) => ([
         (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s
@@ -24,7 +31,7 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
     ]);
 
     return (
-        <div className='musicControl'>
+        <div className={`${'musicControl'} ${ratingToggle ? 'ratingShown' : null}`}>
             <CurrentPlaying />
             <div className='seekbar'>
                 <Slider 
@@ -133,12 +140,12 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                             `}
                         />
                     </div>
-                    <div className='rating'>
+                    <div className={`${'rating'} ${ratingToggle ? 'active' : null}`}>
                         <SVG
                             src={require('~images/icons/svg/star-full.svg')}
                             alt='Show ratings'
-                            onClick={() => {
-                                // TODO: show rating;
+                            onClick={(e) => {
+                                handleRatingToggle(e)
                             }}
                             className={`
                                 ${'icon-button'} 

@@ -1,10 +1,44 @@
 @import "../color"
 
+.ratingBar  
+  margin 0 auto
+
+.ratingBarContainer
+  display none
+  background-color colorGray900
+  border-top 2px solid colorGray800
+  padding 10px 0 12px
+  position: absolute
+  bottom 100%
+  right 0
+  width 100vw
+
+  @media all and (min-width: size-small)
+    position static
+    width auto
+    display flex
+    background-color transparent
+    border-top 0
+    padding-bottom 0
+
+.ratingShown .ratingBarContainer
+  display flex
+
+.rating
+  @media all and (min-width: size-small)
+    display none
+
 .musicControl
   flex-shrink: 0;
   background-color colorGray800
   border-top 2px solid colorGray900
   align-items center
+
+  &.ratingShown
+    margin-top 40px // magic number due to absolute positioned rating :(
+
+    @media all and (min-width: size-small)
+      margin-top 0
 
   @media all and (min-width: size-small)
     display grid
@@ -38,6 +72,9 @@
       display flex
       justify-content center
       cursor pointer
+
+      & .active
+        color colorAmber500
 
       img
         width 42px

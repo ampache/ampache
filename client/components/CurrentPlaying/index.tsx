@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
-import SVG from 'react-inlinesvg';
 import { MusicContext } from '~Contexts/MusicContext';
 import CDImage from '/images/icons/svg/CD.svg';
 import { Link } from 'react-router-dom';
+import Rating from '~components/Rating/';
 
 import style from './index.module.styl';
 
@@ -39,6 +39,11 @@ const CurrentPlaying: React.FC = () => {
                         </div>
                         <div className={style.artistName}>
                             <Link to={`/artist/${musicContext.currentPlayingSong.artist.id}`}>{musicContext.currentPlayingSong?.artist.name}</Link>
+                        </div>
+                        <div className='ratingBarContainer'>
+                            <div className='ratingBar'>
+                                <Rating />
+                            </div>
                         </div>
                     </div>
                 </>
