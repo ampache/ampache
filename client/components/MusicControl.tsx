@@ -57,30 +57,6 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                     
             <div className='controls'>
                 <div className='buttons'>
-                    <div className='shuffle'>
-                        <SVG
-                            src={require('~images/icons/svg/shuffle.svg')}
-                            alt='Shuffle'
-                            onClick={() => {
-                                // TODO: shuffle;
-                            }}
-                            className={`
-                                ${'icon-button'} 
-                            `}
-                        />
-                    </div>
-                    <div className='repeat'>
-                        <SVG
-                            src={require('~images/icons/svg/repeat.svg')}
-                            alt='Repeat'
-                            onClick={() => {
-                                // TODO: repeat;
-                            }}
-                            className={`
-                                ${'icon-button'} 
-                            `}
-                        />
-                    </div>
                     <div className='previousSong'>
                         <SVG
                             src={require('~images/icons/svg/previous-track.svg')}
@@ -137,6 +113,30 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                                 musicContext.songQueue.length - 1
                                     ? 'disabled'
                                     : ''}
+                            `}
+                        />
+                    </div>
+                    <div className='shuffle'>
+                        <SVG
+                            src={require('~images/icons/svg/shuffle.svg')}
+                            alt='Shuffle'
+                            onClick={() => {
+                                // TODO: shuffle;
+                            }}
+                            className={`
+                                ${'icon-button'} 
+                            `}
+                        />
+                    </div>
+                    <div className='repeat'>
+                        <SVG
+                            src={require('~images/icons/svg/repeat.svg')}
+                            alt='Repeat'
+                            onClick={() => {
+                                // TODO: repeat;
+                            }}
+                            className={`
+                                ${'icon-button'} 
                             `}
                         />
                     </div>
