@@ -168,10 +168,10 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
             </div>
             <div className='volumeSlide'>
                 <SVG
-                    src={require('~images/icons/svg/volume-down.svg')}
-                    alt='Volume down'
+                    src={require('~images/icons/svg/volume-up.svg')}
+                    alt='Volume'
                     onClick={() => {
-                        // TODO: decrease/mute volume;
+                        // TODO: toggle mute;
                     }}
                     className={`
                         ${'icon-button'} 
@@ -186,16 +186,7 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                     min={0}
                     value={musicContext.volume}
                 />
-                <SVG
-                    src={require('~images/icons/svg/volume-up.svg')}
-                    alt='Volume up'
-                    onClick={() => {
-                        // TODO: increase volume;
-                    }}
-                    className={`
-                        ${'icon-button'} 
-                    `}
-                />
+                
             </div>
         </div>
     );
