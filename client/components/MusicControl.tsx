@@ -4,6 +4,8 @@ import { PLAYERSTATUS } from '~enum/PlayerStatus';
 import { MusicContext } from '~Contexts/MusicContext';
 import Slider from '@material-ui/core/Slider';
 import CurrentPlaying from '~components/CurrentPlaying/';
+import CurrentPlayingArt from '~components/CurrentPlayingArt/';
+import Rating from '~components/Rating/';
 
 interface MusicControlProps {
     
@@ -32,7 +34,16 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
 
     return (
         <div className={`${'musicControl'} ${ratingToggle ? 'ratingShown' : null}`}>
+            <CurrentPlayingArt />
+            
             <CurrentPlaying />
+            
+            <div className='ratingBarContainer'>
+                <div className='ratingBar'>
+                    <Rating />
+                </div>
+            </div>
+
             <div className='seekbar'>
                 <Slider 
                     min={0}
@@ -49,123 +60,129 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                     disabled={musicContext.currentPlayingSong == undefined}
                     aria-labelledby="continuous-slider" 
                 />
-                <div className='seekTimes'>
-                    <span>{formatLabel(musicContext.songPosition)}</span>
-                    <span>{formatLabel(musicContext.currentPlayingSong?.time ?? 0)}</span>
-                </div>
+            </div>
+
+            <div className='seekTimes'>
+                <span className='seekStart'>{formatLabel(musicContext.songPosition)}</span>
+                <span className='seekEnd'>{formatLabel(musicContext.currentPlayingSong?.time ?? 0)}</span>
             </div>
                     
             <div className='controls'>
-                <div className='buttons'>
-                    <div className='previousSong'>
+                <div className='previousSong'>
+                    <SVG
+                        src={require('~images/icons/svg/previous-track.svg')}
+                        alt='Back'
+                        onClick={() => {
+                            musicContext.playPrevious();
+                        }}
+                        className={`
+                            ${'icon-button'} 
+                            ${musicContext.songQueueIndex <= 0
+                                ? 'disabled'
+                                : ''}
+                        `}
+                    />
+                </div>
+                <div className='playPause'>
+                    {musicContext.playerStatus === PLAYERSTATUS.STOPPED ||
+                    musicContext.playerStatus === PLAYERSTATUS.PAUSED ? (
                         <SVG
-                            src={require('~images/icons/svg/previous-track.svg')}
-                            alt='Back'
-                            onClick={() => {
-                                musicContext.playPrevious();
-                            }}
+                            src={require('~images/icons/svg/play.svg')}
+                            alt='Play'
+                            onClick={musicContext.playPause}
                             className={`
                                 ${'icon-button'} 
-                                ${musicContext.songQueueIndex <= 0
+                                ${musicContext.currentPlayingSong == undefined
                                     ? 'disabled'
                                     : ''}
                             `}
                         />
-                    </div>
-                    <div className='playPause'>
-                        {musicContext.playerStatus === PLAYERSTATUS.STOPPED ||
-                        musicContext.playerStatus === PLAYERSTATUS.PAUSED ? (
-                            <SVG
-                                src={require('~images/icons/svg/play.svg')}
-                                alt='Play'
-                                onClick={musicContext.playPause}
-                                className={`
-                                    ${'icon-button'} 
-                                    ${musicContext.currentPlayingSong == undefined
-                                        ? 'disabled'
-                                        : ''}
-                                `}
-                            />
-                        ) : (
-                            <SVG
-                                src={require('~images/icons/svg/pause.svg')}
-                                alt='Pause'
-                                onClick={musicContext.playPause}
-                                className={`
-                                    ${'icon-button'} 
-                                    ${musicContext.currentPlayingSong == undefined
-                                        ? 'disabled'
-                                        : ''}
-                                `}
-                            />
-                        )}
-                    </div>
-                    <div className='nextSong'>
+                    ) : (
                         <SVG
-                            src={require('~images/icons/svg/next-track.svg')}
-                            alt='Next'
-                            onClick={() => {
-                                musicContext.playNext();
-                            }}
+                            src={require('~images/icons/svg/pause.svg')}
+                            alt='Pause'
+                            onClick={musicContext.playPause}
                             className={`
                                 ${'icon-button'} 
-                                ${musicContext.songQueueIndex ==
-                                musicContext.songQueue.length - 1
+                                ${musicContext.currentPlayingSong == undefined
                                     ? 'disabled'
                                     : ''}
                             `}
                         />
-                    </div>
-                    <div className='shuffle'>
-                        <SVG
-                            src={require('~images/icons/svg/shuffle.svg')}
-                            alt='Shuffle'
-                            onClick={() => {
-                                // TODO: shuffle;
-                            }}
-                            className={`
-                                ${'icon-button'} 
-                            `}
-                        />
-                    </div>
-                    <div className='repeat'>
-                        <SVG
-                            src={require('~images/icons/svg/repeat.svg')}
-                            alt='Repeat'
-                            onClick={() => {
-                                // TODO: repeat;
-                            }}
-                            className={`
-                                ${'icon-button'} 
-                            `}
-                        />
-                    </div>
-                    <div className={`${'rating'} ${ratingToggle ? 'active' : null}`}>
-                        <SVG
-                            src={require('~images/icons/svg/star-full.svg')}
-                            alt='Show ratings'
-                            onClick={(e) => {
-                                handleRatingToggle(e)
-                            }}
-                            className={`
-                                ${'icon-button'} 
-                            `}
-                        />
-                    </div>
-                    <div className='moreOptions'>
-                        <SVG
-                            src={require('~images/icons/svg/more-options-hori.svg')}
-                            alt='More options'
-                            onClick={() => {
-                                // TODO: open more options menu;
-                            }}
-                            className={`
-                                ${'icon-button'} 
-                            `}
-                        />
-                    </div>
+                    )}
+                </div>
+                <div className='nextSong'>
+                    <SVG
+                        src={require('~images/icons/svg/next-track.svg')}
+                        alt='Next'
+                        onClick={() => {
+                            musicContext.playNext();
+                        }}
+                        className={`
+                            ${'icon-button'} 
+                            ${musicContext.songQueueIndex ==
+                            musicContext.songQueue.length - 1
+                                ? 'disabled'
+                                : ''}
+                        `}
+                    />
                 </div>
             </div>
+            
+            <div className='secondaryControls'>
+                <div className={`${'rating'} ${ratingToggle ? 'active' : null}`}>
+                    <SVG
+                        src={require('~images/icons/svg/star-full.svg')}
+                        alt='Show ratings'
+                        onClick={(e) => {
+                            handleRatingToggle(e)
+                        }}
+                        className={`
+                            ${'icon-button'} 
+                        `}
+                    />
+                </div>
+
+                <div className='shuffle'>
+                    <SVG
+                        src={require('~images/icons/svg/shuffle.svg')}
+                        alt='Shuffle'
+                        onClick={() => {
+                            // TODO: shuffle;
+                        }}
+                        className={`
+                            ${'icon-button'} 
+                        `}
+                    />
+                </div>
+
+                <div className='repeat'>
+                    <SVG
+                        src={require('~images/icons/svg/repeat.svg')}
+                        alt='Repeat'
+                        onClick={() => {
+                            // TODO: repeat;
+                        }}
+                        className={`
+                            ${'icon-button'} 
+                        `}
+                    />
+                </div>
+
+                <div className='moreOptions'>
+                    <SVG
+                        src={require('~images/icons/svg/more-options-hori.svg')}
+                        alt='More options'
+                        onClick={() => {
+                            // TODO: open more options menu;
+                        }}
+                        className={`
+                            ${'icon-button'} 
+                        `}
+                    />
+                </div>
+            </div>
+
             <div className='volumeSlide'>
                 <SVG
                     src={require('~images/icons/svg/volume-up.svg')}
