@@ -17,19 +17,19 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Album;
+namespace Ampache\Module\Album\Export\Writer;
 
-use Ampache\Module\Album\Export\AlbumArtExporter;
-use Ampache\Module\Album\Export\AlbumArtExporterInterface;
-use function DI\autowire;
+final class MetadataWriterTypeEnum
+{
+    public const EXPORT_DRIVER_WINDOWS = 'windows';
+    public const EXPORT_DRIVER_LINUX   = 'linux';
 
-return [
-    AlbumArtExporterInterface::class => autowire(AlbumArtExporter::class),
-    Export\Writer\LinuxMetadataWriter::class => autowire(),
-    Export\Writer\WindowsMetadataWriter::class => autowire(),
-];
+    public const MAP = [
+        self::EXPORT_DRIVER_WINDOWS => WindowsMetadataWriter::class,
+        self::EXPORT_DRIVER_LINUX => LinuxMetadataWriter::class,
+    ];
+}

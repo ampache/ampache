@@ -17,19 +17,21 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\Album\Export;
 
-namespace Ampache\Module\Album;
+use Ahc\Cli\IO\Interactor;
+use Ampache\Model\Catalog;
 
-use Ampache\Module\Album\Export\AlbumArtExporter;
-use Ampache\Module\Album\Export\AlbumArtExporterInterface;
-use function DI\autowire;
-
-return [
-    AlbumArtExporterInterface::class => autowire(AlbumArtExporter::class),
-    Export\Writer\LinuxMetadataWriter::class => autowire(),
-    Export\Writer\WindowsMetadataWriter::class => autowire(),
-];
+interface AlbumArtExporterInterface
+{
+    /**
+     * @throws Exception\AlbumArtExportException
+     */
+    public function export(
+        Interactor $interactor,
+        Catalog $catalog,
+        Writer\MetadataWriterInterface $metadataWriter
+    ): void;
+}

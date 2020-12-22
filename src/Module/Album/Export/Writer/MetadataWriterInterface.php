@@ -17,19 +17,17 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\Album\Export\Writer;
 
-namespace Ampache\Module\Album;
+use Ampache\Model\Album;
 
-use Ampache\Module\Album\Export\AlbumArtExporter;
-use Ampache\Module\Album\Export\AlbumArtExporterInterface;
-use function DI\autowire;
-
-return [
-    AlbumArtExporterInterface::class => autowire(AlbumArtExporter::class),
-    Export\Writer\LinuxMetadataWriter::class => autowire(),
-    Export\Writer\WindowsMetadataWriter::class => autowire(),
-];
+interface MetadataWriterInterface
+{
+    public function write(
+        Album $album,
+        string $dirName,
+        string $iconFileName
+    ): void;
+}

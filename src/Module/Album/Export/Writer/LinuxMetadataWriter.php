@@ -17,15 +17,30 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\Album;
+declare(strict_types=1);
 
-use Ahc\Cli\IO\Interactor;
-use Ampache\Model\Catalog;
+namespace Ampache\Module\Album\Export\Writer;
 
-interface AlbumArtExporterInterface
+use Ampache\Model\Album;
+
+final class LinuxMetadataWriter implements MetadataWriterInterface
 {
-    public function export(Interactor $interactor, Catalog $catalog, array $methods = []): void;
+    public function write(
+        Album $album,
+        string $dirName,
+        string $iconFileName
+    ): void {
+        $meta_file = $dirName . '/.directory';
+        $string    = sprintf(
+            "Name=%s\nIcon=%s",
+            $album->full_name,
+            $iconFileName
+        );
+
+        $meta_handle = fopen($meta_file, 'w');
+        fwrite($meta_handle, $string);
+        fclose($meta_handle);
+    }
 }

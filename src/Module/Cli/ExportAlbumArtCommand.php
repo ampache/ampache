@@ -27,7 +27,11 @@ namespace Ampache\Module\Cli;
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\Catalog;
-use Ampache\Module\Album\AlbumArtExporterInterface;
+use Ampache\Module\Album\Export\AlbumArtExporterInterface;
+use Ampache\Module\Album\Export\Exception\AlbumArtExportException;
+use Ampache\Module\Album\Export\Writer\MetadataWriterTypeEnum;
+use Ampache\Module\System\LegacyLogger;
+use Psr\Container\ContainerInterface;
 
 final class ExportAlbumArtCommand extends Command
 {
@@ -35,14 +39,18 @@ final class ExportAlbumArtCommand extends Command
 
     private AlbumArtExporterInterface $albumArtExporter;
 
+    private ContainerInterface $dic;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        AlbumArtExporterInterface $albumArtExporter
+        AlbumArtExporterInterface $albumArtExporter,
+        ContainerInterface $dic
     ) {
         parent::__construct('export:albumArt', 'Exports the album art');
 
         $this->configContainer  = $configContainer;
         $this->albumArtExporter = $albumArtExporter;
+        $this->dic              = $dic;
 
         $this
             ->argument('[type]', 'Metadata write mode (`linux` or `windows`)', 'linux')
@@ -53,17 +61,40 @@ final class ExportAlbumArtCommand extends Command
         string $type
     ): void {
         $interactor = $this->app()->io();
-        $metadata   = ['metadata' => $type];
+
+        $metadataWriterType = MetadataWriterTypeEnum::MAP[$type] ?? MetadataWriterTypeEnum::EXPORT_DRIVER_LINUX;
 
         $catalogs = Catalog::get_catalogs();
+
+        $interactor->info(
+            T_('Start Album Art Dump'),
+            true
+        );
 
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
 
-            $this->albumArtExporter->export(
-                $interactor,
-                $catalog,
-                $metadata
+            try {
+                $this->albumArtExporter->export(
+                    $interactor,
+                    $catalog,
+                    $this->dic->get($metadataWriterType)
+                );
+            } catch (AlbumArtExportException $e) {
+                $this->logger->error(
+                    $e->getMessage(),
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
+
+                $interactor->error(
+                    $e->getMessage(),
+                    true
+                );
+            }
+
+            $interactor->info(
+                T_('Album Art Dump Complete'),
+                true
             );
         }
     }

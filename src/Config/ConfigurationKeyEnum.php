@@ -99,4 +99,5 @@ final class ConfigurationKeyEnum
     public const ALBUM_ART_MIN_HEIGHT          = 'album_art_min_height';
     public const ALBUM_ART_MAX_HEIGHT          = 'album_art_max_height';
     public const DOWNLOAD                      = 'download';
+    public const ALBUM_ART_PREFERRED_FILENAME  = 'album_art_preferred_filename';
 }

@@ -17,19 +17,30 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Album;
+namespace Ampache\Module\Album\Export\Writer;
 
-use Ampache\Module\Album\Export\AlbumArtExporter;
-use Ampache\Module\Album\Export\AlbumArtExporterInterface;
-use function DI\autowire;
+use Ampache\Model\Album;
 
-return [
-    AlbumArtExporterInterface::class => autowire(AlbumArtExporter::class),
-    Export\Writer\LinuxMetadataWriter::class => autowire(),
-    Export\Writer\WindowsMetadataWriter::class => autowire(),
-];
+final class WindowsMetadataWriter implements MetadataWriterInterface
+{
+    public function write(
+        Album $album,
+        string $dirName,
+        string $iconFileName
+    ): void {
+        $meta_file = $dirName . '/desktop.ini';
+        $string    = sprintf(
+            "[.ShellClassInfo]\nIconFile=%s\nIconIndex=0\nInfoTip=%s",
+            $iconFileName,
+            $album->full_name
+        );
+
+        $meta_handle = fopen($meta_file, 'w');
+        fwrite($meta_handle, $string);
+        fclose($meta_handle);
+    }
+}
