@@ -437,11 +437,9 @@ function create_preference_input($name, $value)
             break;
         case 'personalfav_playlist':
         case 'personalfav_smartlist':
-            debug_event('playlist.class', 'personalfav_smartlist', 5);
             $ids       = explode(',', $value);
             $options   = array();
             $playlists = ($name == 'personalfav_smartlist') ? Playlist::get_details('search') : Playlist::get_details();
-            debug_event('playlist.class', 'get_songs ' . print_r($playlists, true), 5);
             if (!empty($playlists)) {
                 foreach ($playlists as $list_id => $list_name) {
                     $selected  = in_array($list_id, $ids) ? ' selected="selected"' : '';

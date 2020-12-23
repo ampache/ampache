@@ -120,6 +120,8 @@ These methods take no parameters beyond your auth key to return information
 
 Check Ampache for updates and run the update if there is one.
 
+**ACCESS REQUIRED:** 100 (Admin)
+
 * return object
 
 ```JSON
@@ -139,6 +141,8 @@ Check Ampache for updates and run the update if there is one.
 * **NEW** in develop
 
 Get your server preferences
+
+**ACCESS REQUIRED:** 100 (Admin)
 
 ```JSON
 "preference": {}
@@ -1201,6 +1205,8 @@ Get the podcast from it's id.
 Create a podcast that can be used by anyone to stream media.
 Takes the url and catalog parameters.
 
+**ACCESS REQUIRED:** 75 (Catalog Manager)
+
 | Input     | Type   | Description         | Optional |
 |-----------|--------|---------------------|---------:|
 | 'url'     | string | rss url for podcast |       NO |
@@ -1224,6 +1230,8 @@ Takes the url and catalog parameters.
 
 Update the description and/or expiration date for an existing podcast.
 Takes the podcast id to update with optional description and expires parameters.
+
+**ACCESS REQUIRED:** 50 (Content Manager)
 
 | Input         | Type   | Description               | Optional |
 |---------------|--------|---------------------------|---------:|
@@ -1252,6 +1260,8 @@ Takes the podcast id to update with optional description and expires parameters.
 ### podcast_delete
 
 Delete an existing podcast.
+
+**ACCESS REQUIRED:** 75 (Catalog Manager)
 
 | Input    | Type   | Description              | Optional |
 |----------|--------|--------------------------|---------:|
@@ -1398,6 +1408,8 @@ This get an user public information
 
 Create a new user. (Requires the username, password and email.)
 
+**ACCESS REQUIRED:** 100 (Admin)
+
 | Input      | Type    | Description                | Optional |
 |------------|---------|----------------------------|---------:|
 | 'username' | string  | $username                  |       NO |
@@ -1423,6 +1435,8 @@ Create a new user. (Requires the username, password and email.)
 ### user_update
 
 Update an existing user.
+
+**ACCESS REQUIRED:** 100 (Admin)
 
 | Input        | Type    | Description                | Optional |
 |--------------|---------|----------------------------|---------:|
@@ -1453,6 +1467,8 @@ Update an existing user.
 ### user_delete
 
 Delete an existing user.
+
+**ACCESS REQUIRED:** 100 (Admin)
 
 | Input      | Type   | Description | Optional |
 |------------|--------|-------------|---------:|
@@ -1770,12 +1786,16 @@ This flags a library item as a favorite
 
 ### record_play
 
-Take a song_id and update the object_count and user_activity table with a play. This allows other sources to record play history to ampache
+Take a song_id and update the object_count and user_activity table with a play. This allows other sources to record play history to Ampache.
+
+If you don't supply a user id (optional) then just fall back to you.
+
+**ACCESS REQUIRED:** 100 (Admin) permission to change another user's play history
 
 | Input    | Type    | Description | Optional |
 |----------|---------|-------------|---------:|
 | 'id'     | integer | $object_id  |       NO |
-| 'user'   | integer | $user_id    |       NO |
+| 'user'   | integer | $user_id    |      YES |
 | 'client' | string  | $agent      |      YES |
 | 'date'   | integer | UNIXTIME()  |      YES |
 
@@ -1871,6 +1891,8 @@ Return catalog by UID
 
 Kick off a catalog update or clean for the selected catalog
 
+**ACCESS REQUIRED:** 75 (Catalog Manager)
+
 | Input     | Type    | Description                       | Optional |
 |-----------|---------|-----------------------------------|---------:|
 | 'task'    | string  | 'add_to_catalog', 'clean_catalog' |       NO |
@@ -1895,6 +1917,8 @@ Kick off a catalog update or clean for the selected catalog
 Perform actions on local catalog files.
 Single file versions of catalog add, clean, verify and remove (delete)
 Make sure you remember to urlencode those file names!
+
+**ACCESS REQUIRED:** 50 (Content Manager)
 
 | Input     | Type    | Description                     | Optional |
 |-----------|---------|---------------------------------|---------:|
@@ -1991,6 +2015,8 @@ Update a single album, artist, song from the tag data
 Update artist information and fetch similar artists from last.fm
 Make sure lastfm_API_key is set in your configuration file
 
+**ACCESS REQUIRED:** 75 (Catalog Manager)
+
 | Input | Type    | Description | Optional |
 |-------|---------|-------------|---------:|
 | 'id'  | integer | $artist_id  |       NO |
@@ -2013,6 +2039,8 @@ Make sure lastfm_API_key is set in your configuration file
 
 Updates a single album, artist, song running the gather_art process
 Doesn't overwrite existing art by default.
+
+**ACCESS REQUIRED:** 75 (Catalog Manager)
 
 | Input       | Type    | Description       | Optional |
 |-------------|---------|-------------------|---------:|
@@ -2037,6 +2065,8 @@ Doesn't overwrite existing art by default.
 ### update_podcast
 
 Sync and download new podcast episodes
+
+**ACCESS REQUIRED:** 50 (Content Manager)
 
 | Input | Type    | Description | Optional |
 |-------|---------|-------------|---------:|
@@ -2086,6 +2116,8 @@ Get your user preference by name
 
 Get your server preference by name
 
+**ACCESS REQUIRED:** 100 (Admin)
+
 | Input    | Type   | Description                                       | Optional |
 |----------|--------|---------------------------------------------------|---------:|
 | 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') |       NO |
@@ -2109,6 +2141,8 @@ Get your server preference by name
 * **NEW** in develop
 
 Add a new preference to your server
+
+**ACCESS REQUIRED:** 100 (Admin)
 
 | Input         | Type    | Description                                             | Optional |
 |---------------|---------|---------------------------------------------------------|---------:|
@@ -2141,6 +2175,8 @@ Add a new preference to your server
 
 Edit a preference value and apply to all users if allowed
 
+**ACCESS REQUIRED:** 100 (Admin)
+
 | Input    | Type   | Description                                       | Optional |
 |----------|--------|---------------------------------------------------|---------:|
 | 'filter' | string | Preference name e.g ('notify_email', 'ajax_load') |       NO |
@@ -2166,6 +2202,8 @@ Edit a preference value and apply to all users if allowed
 * **NEW** in develop
 
 Delete a non-system preference by name
+
+**ACCESS REQUIRED:** 100 (Admin)
 
 | Input    | Type   | Description                                       | Optional |
 |----------|--------|---------------------------------------------------|---------:|

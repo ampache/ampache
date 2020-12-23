@@ -1154,7 +1154,17 @@ class Subsonic_Api
         $bitRate = $input['bitRate'];
 
         $media                = array();
-        $media['object_type'] = 'song';
+        if (Subsonic_XML_Data::isSong($fileid)) {
+            $media['object_type'] = 'song';
+        } elseif (Subsonic_XML_Data::isVideo($fileid)) {
+            $media['object_type'] = 'video';
+        } else {
+            self::apiOutput(
+                $input,
+                Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND,
+                                               'Invalid id',
+                                               'hls'));
+        }
         $media['object_id']   = Subsonic_XML_Data::getAmpacheId($fileid);
 
         $medias            = array();
@@ -1167,7 +1177,9 @@ class Subsonic_Api
         //$additional_params .= '&transcode_to=ts';
         $stream->add($medias, $additional_params);
 
-        header('Content-Type: application/vnd.apple.mpegurl;');
+        // vlc won't work if we use application/vnd.apple.mpegurl, but works fine with this. this is
+        // also an allowed header by the standard
+        header('Content-Type: audio/mpegurl;');
         $stream->create_m3u();
     }
 
