@@ -22,8 +22,6 @@
 
 namespace Ampache\Module\Util;
 
-use Ampache\Module\System\Core;
-
 /**
  *  #####################################################################
  *  #                               Warning                             #
@@ -59,192 +57,70 @@ class Horde_Browser
      *
      * @var integer
      */
-    protected $_majorVersion = 0;
+    private $_majorVersion = 0;
 
     /**
      * Minor version number.
      *
      * @var integer
      */
-    protected $_minorVersion = 0;
+    private $_minorVersion = 0;
 
     /**
      * Browser name.
      *
      * @var string
      */
-    protected $_browser = '';
+    private $_browser = '';
 
     /**
      * Full user agent string.
      *
      * @var string
      */
-    protected $_agent = '';
+    private $_agent = '';
 
     /**
      * Lower-case user agent string.
      *
      * @var string
      */
-    protected $_lowerAgent = '';
+    private $_lowerAgent = '';
 
     /**
      * HTTP_ACCEPT string
      *
      * @var string
      */
-    protected $_accept = '';
+    private $_accept = '';
 
     /**
      * Platform the browser is running on.
      *
      * @var string
      */
-    protected $_platform = '';
-
-    /**
-     * Known robots.
-     *
-     * @var array
-     */
-    protected $_robotAgents = array(
-        /* The most common ones. */
-        'Googlebot',
-        'msnbot',
-        'bingbot',
-        'Slurp',
-        'Yahoo',
-        /* The rest alphabetically. */
-        'appie',
-        'Arachnoidea',
-        'ArchitextSpider',
-        'Ask Jeeves',
-        'B-l-i-t-z-Bot',
-        'Baiduspider',
-        'BecomeBot',
-        'cfetch',
-        'ConveraCrawler',
-        'ExtractorPro',
-        'FAST-WebCrawler',
-        'FDSE robot',
-        'fido',
-        'findlinks',
-        'Francis',
-        'geckobot',
-        'Gigabot',
-        'Girafabot',
-        'grub-client',
-        'Gulliver',
-        'HTTrack',
-        'ia_archiver',
-        'iaskspider',
-        'iCCrawler',
-        'InfoSeek',
-        'kinjabot',
-        'KIT-Fireball',
-        'larbin',
-        'LEIA',
-        'lmspider',
-        'lwp-trivial',
-        'Lycos_Spider',
-        'Mediapartners-Google',
-        'MSRBOT',
-        'MuscatFerret',
-        'NaverBot',
-        'OmniExplorer_Bot',
-        'polybot',
-        'Pompos',
-        'RufusBot',
-        'Scooter',
-        'Seekbot',
-        'sogou spider',
-        'sproose',
-        'Teoma',
-        'TheSuBot',
-        'TurnitinBot',
-        'Twiceler',
-        'Ultraseek',
-        'Vagabondo/Kliksafe',
-        'ViolaBot',
-        'voyager',
-        'W3C-checklink',
-        'webbandit',
-        'www.almaden.ibm.com/cs/crawler',
-        'yacy',
-        'ZyBorg',
-    );
-
-    /**
-     * Regexp for matching those robot strings.
-     *
-     * @var string
-     */
-    protected $_robotAgentRegexp = null;
-
-    /**
-     * List of mobile user agents.
-     *
-     * Browsers like Mobile Safari (iPhone, iPod Touch) are much more
-     * full featured than OpenWave style browsers. This makes it dicey
-     * in some cases to treat all "mobile" browsers the same way.
-     *
-     * @TODO This list is not used in isMobile yet nor does it provide
-     * the same results as isMobile(). It is here for reference and
-     * future work.
-     */
-    protected $_mobileAgents = array(
-        'Blackberry',
-        'Blazer',
-        'Handspring',
-        'iPhone',
-        'iPod',
-        'Kyocera',
-        'LG',
-        'Motorola',
-        'Nokia',
-        'Palm',
-        'PlayStation Portable',
-        'Samsung',
-        'Smartphone',
-        'SonyEricsson',
-        'Symbian',
-        'WAP',
-        'Windows CE',
-    );
-
-    /**
-     * List of televison user agents.
-     *
-     * @TODO This list is not yet used anywhere. It is here for future
-     * media-type differentiation.
-     */
-    protected $_tvAgents = array(
-        'Nintendo Wii',
-        'Playstation 3',
-        'WebTV',
-    );
+    private $_platform = '';
 
     /**
      * Is this a mobile browser?
      *
      * @var boolean
      */
-    protected $_mobile = false;
+    private $_mobile = false;
 
     /**
      * Is this a tablet browser?
      *
      * @var boolean
      */
-    protected $_tablet = false;
+    private $_tablet = false;
 
     /**
      * Features.
      *
      * @var array
      */
-    protected $_features = array(
+    private $_features = array(
         'frames' => true,
         'html' => true,
         'images' => true,
@@ -258,15 +134,7 @@ class Horde_Browser
      *
      * @var array
      */
-    protected $_quirks = array();
-
-    /**
-     * List of viewable image MIME subtypes.
-     * This list of viewable images works for IE and Netscape/Mozilla.
-     *
-     * @var array
-     */
-    protected $_images = array('jpeg', 'gif', 'png', 'pjpeg', 'x-png', 'bmp');
+    private $_quirks = array();
 
     /**
      * Creates a browser instance (Constructor).
@@ -274,9 +142,9 @@ class Horde_Browser
      * @param string $userAgent The browser string to parse.
      * @param string $accept The HTTP_ACCEPT settings to use.
      */
-    public function __construct($userAgent = null, $accept = null)
+    public function __construct()
     {
-        $this->match($userAgent, $accept);
+        $this->match();
     }
 
     /**
@@ -316,7 +184,7 @@ class Horde_Browser
             return;
         }
 
-        $this->_setPlatform();
+        $this->setPlatform();
 
         // Use local scope for frequently accessed variables.
         $agent      = $this->_agent;
@@ -327,7 +195,7 @@ class Horde_Browser
             $this->setFeature('frames', false);
             $this->setFeature('javascript', false);
             $this->setQuirk('avoid_popup_windows');
-            $this->setMobile(true);
+            $this->_mobile = true;
 
             if (preg_match('|iemobile[/ ]([0-9.]+)|', $lowerAgent, $version)) {
                 list($this->_majorVersion, $this->_minorVersion) = explode('.', $version[1]);
@@ -348,7 +216,7 @@ class Horde_Browser
             $this->setFeature('frames', false);
             $this->setFeature('javascript');
             $this->setQuirk('avoid_popup_windows');
-            $this->setMobile(true);
+            $this->_mobile = true;
         } elseif (preg_match('|Opera[/ ]([0-9.]+)|', $agent, $version)) {
             $this->setBrowser('opera');
             list($this->_majorVersion, $this->_minorVersion) = explode('.', $version[1]);
@@ -358,10 +226,10 @@ class Horde_Browser
             /* Opera Mobile reports its screen resolution in the user
              * agent strings. */
             if (preg_match('/; (120x160|240x280|240x320|320x320)\)/', $agent)) {
-                $this->setMobile(true);
+                $this->_mobile = true;
             } elseif (preg_match('|Tablet|', $agent)) {
-                $this->setMobile(true);
-                $this->setTablet(true);
+                $this->_mobile = true;
+                $this->_tablet = true;
             }
 
             if ($this->_majorVersion >= 7) {
@@ -389,7 +257,7 @@ class Horde_Browser
             $this->setFeature('frames', false);
             $this->setFeature('javascript', false);
             $this->setQuirk('avoid_popup_windows');
-            $this->setMobile(true);
+            $this->_mobile = true;
         } elseif ((preg_match('|MSIE ([0-9.]+)|', $agent, $version)) || (preg_match('|Internet Explorer/([0-9.]+)|',
                 $agent, $version))) {
             $this->setBrowser('msie');
@@ -414,7 +282,7 @@ class Horde_Browser
              * agent string, which we can use to look for mobile
              * agents. */
             if (preg_match('/; (120x160|240x280|240x320|320x320)\)/', $agent)) {
-                $this->setMobile(true);
+                $this->_mobile = true;
             }
 
             $this->setFeature('xmlhttpreq');
@@ -499,7 +367,7 @@ class Horde_Browser
             $this->setQuirk('avoid_popup_windows');
         } elseif (strpos($lowerAgent, 'avantgo') !== false) {
             $this->setBrowser('avantgo');
-            $this->setMobile(true);
+            $this->_mobile = true;
         } elseif (preg_match('|Konqueror/([0-9]+)\.?([0-9]+)?|', $agent,
                 $version) || preg_match('|Safari/([0-9]+)\.?([0-9]+)?|', $agent, $version)) {
             $this->setBrowser('webkit');
@@ -516,7 +384,7 @@ class Horde_Browser
                 $this->setFeature('frames', false);
                 $this->setFeature('javascript');
                 $this->setQuirk('avoid_popup_windows');
-                $this->setMobile(true);
+                $this->_mobile = true;
             }
 
             $this->_majorVersion = $version[1];
@@ -623,10 +491,10 @@ class Horde_Browser
                         }
                     }
                     if (stripos($agent, 'mobile') !== false) {
-                        $this->setMobile(true);
+                        $this->_mobile = true;
                     } elseif (stripos($agent, 'tablet') !== false) {
-                        $this->setTablet(true);
-                        $this->setMobile(true);
+                        $this->_tablet = true;
+                        $this->_mobile = true;
                     }
                     break;
 
@@ -672,50 +540,50 @@ class Horde_Browser
                  * so exclude them. */
                 $this->setQuirk('ow_gui_1.3');
             }
-            $this->setMobile(true);
+            $this->_mobile = true;
         } elseif (strpos($agent, 'Xiino/') !== false) {
             $this->setBrowser('xiino');
             $this->setFeature('hdml');
             $this->setFeature('wml');
-            $this->setMobile(true);
+            $this->_mobile = true;
         } elseif (strpos($agent, 'Palmscape/') !== false) {
             $this->setBrowser('palmscape');
             $this->setFeature('javascript', false);
             $this->setFeature('hdml');
             $this->setFeature('wml');
-            $this->setMobile(true);
+            $this->_mobile = true;
         } elseif (strpos($agent, 'Nokia') !== false) {
             $this->setBrowser('nokia');
             $this->setFeature('html', false);
             $this->setFeature('wml');
             $this->setFeature('xhtml');
-            $this->setMobile(true);
+            $this->_mobile = true;
         } elseif (strpos($agent, 'Ericsson') !== false) {
             $this->setBrowser('ericsson');
             $this->setFeature('html', false);
             $this->setFeature('wml');
-            $this->setMobile(true);
+            $this->_mobile = true;
         } elseif (strpos($agent, 'Grundig') !== false) {
             $this->setBrowser('grundig');
             $this->setFeature('xhtml');
             $this->setFeature('wml');
-            $this->setMobile(true);
+            $this->_mobile = true;
         } elseif (strpos($agent, 'NetFront') !== false) {
             $this->setBrowser('netfront');
             $this->setFeature('xhtml');
             $this->setFeature('wml');
-            $this->setMobile(true);
+            $this->_mobile = true;
         } elseif (strpos($lowerAgent, 'wap') !== false) {
             $this->setBrowser('wap');
             $this->setFeature('html', false);
             $this->setFeature('javascript', false);
             $this->setFeature('hdml');
             $this->setFeature('wml');
-            $this->setMobile(true);
+            $this->_mobile = true;
         } elseif (strpos($lowerAgent, 'docomo') !== false || strpos($lowerAgent, 'portalmmm') !== false) {
             $this->setBrowser('imode');
             $this->setFeature('images', false);
-            $this->setMobile(true);
+            $this->_mobile = true;
         } elseif (preg_match('|BlackBerry.*?/([0-9.]+)|', $agent, $version)) {
             list($this->_majorVersion, $this->_minorVersion) = explode('.', $version[1]);
             $this->setBrowser('blackberry');
@@ -723,7 +591,7 @@ class Horde_Browser
             $this->setFeature('javascript', false);
             $this->setFeature('hdml');
             $this->setFeature('wml');
-            $this->setMobile(true);
+            $this->_mobile = true;
             if ($this->_majorVersion >= 5 || ($this->_majorVersion == 4 && $this->_minorVersion >= 6)) {
                 $this->setFeature('ajax');
                 $this->setFeature('iframes');
@@ -737,10 +605,10 @@ class Horde_Browser
             $this->setFeature('javascript', false);
             $this->setFeature('hdml');
             $this->setFeature('wml');
-            $this->setMobile(true);
+            $this->_mobile = true;
         } elseif (strpos($lowerAgent, 'j-') !== false) {
             $this->setBrowser('mml');
-            $this->setMobile(true);
+            $this->_mobile = true;
         }
     }
 
@@ -750,7 +618,7 @@ class Horde_Browser
      * This is a pretty simplistic implementation, but it's intended to let us
      * tell what line breaks to send, so it's good enough for its purpose.
      */
-    protected function _setPlatform()
+    private function setPlatform()
     {
         if (strpos($this->_lowerAgent, 'wind') !== false) {
             $this->_platform = 'win';
@@ -766,7 +634,7 @@ class Horde_Browser
      *
      * @return string  The user's platform.
      */
-    public function getPlatform()
+    private function getPlatform()
     {
         return $this->_platform;
     }
@@ -776,7 +644,7 @@ class Horde_Browser
      *
      * @param string $browser The browser to set as current.
      */
-    public function setBrowser($browser)
+    private function setBrowser($browser)
     {
         $this->_browser = $browser;
     }
@@ -791,120 +659,6 @@ class Horde_Browser
     public function isBrowser($browser)
     {
         return ($this->_browser === $browser);
-    }
-
-    /**
-     * Set this browser as a mobile device.
-     *
-     * @param boolean $mobile True if the browser is a mobile device.
-     */
-    public function setMobile($mobile)
-    {
-        $this->_mobile = (bool)$mobile;
-    }
-
-    /**
-     * Is the current browser to be a mobile device?
-     *
-     * @return boolean  True if we do, false if we don't.
-     */
-    public function isMobile()
-    {
-        return $this->_mobile;
-    }
-
-    /**
-     * Set this browser as a tablet device.
-     *
-     * @param boolean $tablet True if the browser is a tablet device.
-     * @since 2.1.0
-     *
-     */
-    public function setTablet($tablet)
-    {
-        $this->_tablet = (bool)$tablet;
-    }
-
-    /**
-     * Is the current browser a tablet device? This is not 100% reliable, as
-     * most browsers do not differentiate between smartphone and tablet
-     * versions.
-     *
-     * @return boolean  True if we do, false if we don't.
-     * @since 2.1.0
-     *
-     */
-    public function isTablet()
-    {
-        return $this->_tablet;
-    }
-
-    /**
-     * Is the browser a robot?
-     *
-     * @return boolean  True if browser is a known robot.
-     */
-    public function isRobot()
-    {
-        if ($this->_robotAgentRegexp === null) {
-            $regex = array();
-            foreach ($this->_robotAgents as $r) {
-                $regex[] = preg_quote($r, '/');
-            }
-            $this->_robotAgentRegexp = '/' . implode('|', $regex) . '/';
-        }
-
-        return (bool)preg_match($this->_robotAgentRegexp, $this->_agent);
-    }
-
-    /**
-     * Returns the current browser.
-     *
-     * @return string  The current browser.
-     */
-    public function getBrowser()
-    {
-        return $this->_browser;
-    }
-
-    /**
-     * Returns the current browser's major version.
-     *
-     * @return integer  The current browser's major version.
-     */
-    public function getMajor()
-    {
-        return $this->_majorVersion;
-    }
-
-    /**
-     * Returns the current browser's minor version.
-     *
-     * @return integer  The current browser's minor version.
-     */
-    public function getMinor()
-    {
-        return $this->_minorVersion;
-    }
-
-    /**
-     * Returns the current browser's version.
-     *
-     * @return string  The current browser's version.
-     */
-    public function getVersion()
-    {
-        return $this->_majorVersion . '.' . $this->_minorVersion;
-    }
-
-    /**
-     * Returns the full browser agent string.
-     *
-     * @return string  The browser agent string.
-     */
-    public function getAgentString()
-    {
-        return $this->_agent;
     }
 
     /**
@@ -930,7 +684,7 @@ class Horde_Browser
      *   - windowed_controls
      * @param boolean $value Special behavior parameter.
      */
-    public function setQuirk($quirk, $value = true)
+    private function setQuirk($quirk, $value = true)
     {
         if ($value) {
             $this->_quirks[$quirk] = $value;
@@ -946,21 +700,9 @@ class Horde_Browser
      *
      * @return boolean  Does the browser have the behavior set?
      */
-    public function hasQuirk($quirk)
+    private function hasQuirk($quirk)
     {
         return !empty($this->_quirks[$quirk]);
-    }
-
-    /**
-     * Returns unique behavior for the current browser.
-     *
-     * @param string $quirk The behavior to retrieve.
-     *
-     * @return string  The value for the requested behavior.
-     */
-    public function getQuirk($quirk)
-    {
-        return (isset($this->_quirks[$quirk])) ? $this->_quirks[$quirk] : null;
     }
 
     /**
@@ -998,116 +740,6 @@ class Horde_Browser
         } else {
             unset($this->_features[$feature]);
         }
-    }
-
-    /**
-     * Checks the current browser capabilities.
-     *
-     * @param string $feature The capability to check.
-     *
-     * @return boolean  Does the browser have the capability set?
-     */
-    public function hasFeature($feature)
-    {
-        return !empty($this->_features[$feature]);
-    }
-
-    /**
-     * Returns the current browser capability.
-     *
-     * @param string $feature The capability to retrieve.
-     *
-     * @return string  The value of the requested capability.
-     */
-    public function getFeature($feature)
-    {
-        return (isset($this->_features[$feature])) ? $this->_features[$feature] : null;
-    }
-
-    /**
-     * Determines if we are using a secure (SSL) connection.
-     *
-     * @return boolean  True if using SSL, false if not.
-     */
-    public function usingSSLConnection()
-    {
-        return ((filter_has_var(INPUT_SERVER,
-                    'HTTPS') && (Core::get_server('HTTPS') == 'on')) || getenv('SSL_PROTOCOL_VERSION'));
-    }
-
-    /**
-     * Returns the server protocol in use on the current server.
-     *
-     * @return string  The HTTP server protocol version.
-     */
-    public function getHTTPProtocol()
-    {
-        return (filter_has_var(INPUT_SERVER, 'SERVER_PROTOCOL') && ($pos = strrpos($_SERVER['SERVER_PROTOCOL'],
-                '/'))) ? substr($_SERVER['SERVER_PROTOCOL'], $pos + 1) : null;
-    }
-
-    /**
-     * DEPRECIATED FUNCTION, will be removed
-     *
-     * @return string  The client IP address.
-     */
-    public function getIPAddress()
-    {
-        return Core::get_user_ip();
-    }
-
-    /**
-     * Determines if files can be uploaded to the system.
-     *
-     * @return integer  If uploads allowed, returns the maximum size of the
-     *                  upload in bytes.  Returns 0 if uploads are not
-     *                  allowed.
-     */
-    public static function allowFileUploads()
-    {
-        if (!ini_get('file_uploads') || (($dir = ini_get('upload_tmp_dir')) && !is_writable($dir))) {
-            return 0;
-        }
-
-        $filesize = ini_get('upload_max_filesize');
-        switch (strtolower(substr($filesize, -1, 1))) {
-            case 'k':
-                $filesize = (int)(floatval($filesize) * 1024);
-                break;
-
-            case 'm':
-                $filesize = (int)(floatval($filesize) * 1024 * 1024);
-                break;
-
-            case 'g':
-                $filesize = (int)(floatval($filesize) * 1024 * 1024 * 1024);
-                break;
-
-            default:
-                $filesize = (int)($filesize);
-                break;
-        }
-
-        $postsize = ini_get('post_max_size');
-        switch (strtolower(substr($postsize, -1, 1))) {
-            case 'k':
-                $postsize = (int)(floatval($postsize) * 1024);
-                break;
-
-            case 'm':
-                $postsize = (int)(floatval($postsize) * 1024 * 1024);
-                break;
-
-            case 'g':
-                $postsize = (int)(floatval($postsize) * 1024 * 1024 * 1024);
-                break;
-
-            default:
-                $postsize = (int)($postsize);
-                break;
-        }
-
-        return min($filesize, $postsize);
     }
 
     /**
@@ -1187,51 +819,5 @@ class Horde_Browser
         }
 
         return $headers;
-    }
-
-    /**
-     * Determines if a browser can display a given MIME type.
-     *
-     * @param string $mimetype The MIME type to check.
-     *
-     * @return boolean  True if the browser can display the MIME type.
-     */
-    public function isViewable($mimetype)
-    {
-        $mimetype             = strtolower($mimetype);
-        list($type, $subtype) = explode('/', $mimetype);
-
-        if (!empty($this->_accept)) {
-            $wildcard_match = false;
-
-            if (strpos($this->_accept, $mimetype) !== false) {
-                return true;
-            }
-
-            if (strpos($this->_accept, '*/*') !== false) {
-                $wildcard_match = true;
-                if ($type != 'image') {
-                    return true;
-                }
-            }
-
-            /* image/jpeg and image/pjpeg *appear* to be the same entity, but
-             * Mozilla doesn't seem to want to accept the latter.  For our
-             * purposes, we will treat them the same. */
-            if ($this->isBrowser('mozilla') && ($mimetype == 'image/pjpeg') && (strpos($this->_accept,
-                        'image/jpeg') !== false)) {
-                return true;
-            }
-
-            if (!$wildcard_match) {
-                return false;
-            }
-        }
-
-        if (!$this->hasFeature('images') || ($type != 'image')) {
-            return false;
-        }
-
-        return in_array($subtype, $this->_images);
     }
 }
