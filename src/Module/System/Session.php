@@ -664,6 +664,8 @@ final class Session implements SessionInterface
      *
      * This function sets the cache limiting to public if you are running
      * some flavor of IE and not using HTTPS.
+     *
+     * @todo check if we still need to do this today
      */
     public static function ungimp_ie()
     {

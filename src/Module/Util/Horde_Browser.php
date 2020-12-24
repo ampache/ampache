@@ -1111,80 +1111,21 @@ class Horde_Browser
     }
 
     /**
-     * Determines if the file was uploaded or not.  If not, will return the
-     * appropriate error message.
-     *
-     * @param string $field The name of the field containing the uploaded
-     *                       file.
-     * @param string $name The file description string to use in the error
-     *                       message.  Default: 'file'.
-     *
-     * @throws Horde_Browser_Exception
-     *
-     * @deprecated Not in use - erroneous
-     */
-    public function wasFileUploaded($field, $name = null)
-    {
-        if ($name === null) {
-            $name = 'file';
-        }
-
-        if (!($uploadSize = self::allowFileUploads())) {
-            throw new Horde_Browser_Exception(Horde_Browser_Translation::t("File uploads not supported."));
-        }
-
-        /* Get any index on the field name. */
-        $index = Horde_Array::getArrayParts($field, $base, $keys);
-
-        if ($index) {
-            /* Index present, fetch the error var to check. */
-            $keys_path = array_merge(array($base, 'error'), $keys);
-            $error     = Horde_Array::getElement($_FILES, $keys_path);
-
-            /* Index present, fetch the tmp_name var to check. */
-            $keys_path = array_merge(array($base, 'tmp_name'), $keys);
-            $tmp_name  = Horde_Array::getElement($_FILES, $keys_path);
-        } else {
-            /* No index, simple set up of vars to check. */
-            if (!isset($_FILES[$field])) {
-                throw new Horde_Browser_Exception(Horde_Browser_Translation::t("No file uploaded"), UPLOAD_ERR_NO_FILE);
-            }
-            $error    = $_FILES[$field]['error'];
-            $tmp_name = $_FILES[$field]['tmp_name'];
-        }
-
-        if (empty($_FILES) || ($error == UPLOAD_ERR_NO_FILE)) {
-            throw new Horde_Browser_Exception(sprintf(Horde_Browser_Translation::t("There was a problem with the file upload: No %s was uploaded."),
-                $name), UPLOAD_ERR_NO_FILE);
-        } elseif (($error == UPLOAD_ERR_OK) && is_uploaded_file($tmp_name)) {
-            if (!filesize($tmp_name)) {
-                throw new Horde_Browser_Exception(Horde_Browser_Translation::t("The uploaded file appears to be empty. It may not exist on your computer."),
-                    UPLOAD_ERR_NO_FILE);
-            }
-            // SUCCESS
-        } elseif (($error == UPLOAD_ERR_INI_SIZE) || ($error == UPLOAD_ERR_FORM_SIZE)) {
-            throw new Horde_Browser_Exception(sprintf(Horde_Browser_Translation::t("There was a problem with the file upload: The %s was larger than the maximum allowed size (%d bytes)."),
-                $name, $uploadSize), $error);
-        } elseif ($error == UPLOAD_ERR_PARTIAL) {
-            throw new Horde_Browser_Exception(sprintf(Horde_Browser_Translation::t("There was a problem with the file upload: The %s was only partially uploaded."),
-                $name), $error);
-        }
-    }
-
-    /**
      * Returns the headers for a browser download.
      *
      * @param string $filename The filename of the download.
      * @param string $cType The content-type description of the file.
      * @param boolean $inline True if inline, false if attachment.
      * @param string $cLength The content-length of this file.
+     *
+     * @return string[]
      */
-    public function downloadHeaders(
+    public function getDownloadHeaders(
         $filename = 'unknown',
         $cType = null,
         $inline = false,
         $cLength = null
-    ) {
+    ): array {
         /* Remove linebreaks from file names. */
         $filename = str_replace(array("\r\n", "\r", "\n"), ' ', $filename);
 
@@ -1204,44 +1145,48 @@ class Horde_Browser
             $filename = rawurlencode($filename);
         }
 
+        $headers = [];
+
         /* Content-Type/Content-Disposition Header. */
         if ($inline) {
             if ($cType !== null) {
-                header('Content-Type: ' . trim($cType));
+                $headers['Content-Type'] = trim($cType);
             } elseif ($this->isBrowser('msie')) {
-                header('Content-Type: application/x-msdownload');
+                $headers['Content-Type'] = 'application/x-msdownload';
             } else {
-                header('Content-Type: application/octet-stream');
+                $headers['Content-Type'] = 'application/octet-stream';
             }
-            header('Content-Disposition: inline; filename="' . $filename . '"');
+            $headers['Content-Disposition'] = 'inline; filename="' . $filename . '"';
         } else {
             if ($this->isBrowser('msie')) {
-                header('Content-Type: application/x-msdownload');
+                $headers['Content-Type'] = 'application/x-msdownload';
             } elseif ($cType !== null) {
-                header('Content-Type: ' . trim($cType));
+                $headers['Content-Type'] = trim($cType);
             } else {
-                header('Content-Type: application/octet-stream');
+                $headers['Content-Type'] = 'application/octet-stream';
             }
 
             if ($this->hasQuirk('break_disposition_header')) {
-                header('Content-Disposition: filename="' . $filename . '"');
+                $headers['Content-Disposition'] = 'filename="' . $filename . '"';
             } else {
-                header('Content-Disposition: attachment; filename="' . $filename . '"');
+                $headers['Content-Disposition'] = 'attachment; filename="' . $filename . '"';
             }
         }
 
         /* Content-Length Header. Only send if we are not compressing
          * output. */
         if ($cLength !== null && !in_array('ob_gzhandler', ob_list_handlers())) {
-            header('Content-Length: ' . $cLength);
+            $headers['Content-Length'] = $cLength;
         }
 
         /* Overwrite Pragma: and other caching headers for IE. */
         if ($this->hasQuirk('cache_ssl_downloads')) {
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate');
-            header('Pragma: public');
+            $headers['Expires']       = 0;
+            $headers['Cache-Control'] = 'must-revalidate';
+            $headers['Pragma']        = 'public';
         }
+
+        return $headers;
     }
 
     /**

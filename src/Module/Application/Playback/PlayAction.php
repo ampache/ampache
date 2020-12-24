@@ -480,7 +480,12 @@ final class PlayAction implements ApplicationActionInterface
             // STUPID IE
             $media_name = str_replace(array('?', '/', '\\'), "_", $media->f_file);
 
-            $this->browser->downloadHeaders($media_name, $media->mime, false, $media->size);
+            $headers = $this->browser->getDownloadHeaders($media_name, $media->mime, false, $media->size);
+
+            foreach ($headers as $headerName => $value) {
+                header(sprintf('%s: %s', $headerName, $value));
+            }
+
             $filepointer   = fopen(Core::conv_lc_file($media->file), 'rb');
             $bytesStreamed = 0;
 
@@ -777,7 +782,11 @@ final class PlayAction implements ApplicationActionInterface
         // Warning: Do not change any session variable after this call
         session_write_close();
 
-        $this->browser->downloadHeaders($media_name, $mime, false, $stream_size);
+        $headers = $this->browser->getDownloadHeaders($media_name, $mime, false, $stream_size);
+
+        foreach ($headers as $headerName => $value) {
+            header(sprintf('%s: %s', $headerName, $value));
+        }
 
         $bytes_streamed = 0;
 

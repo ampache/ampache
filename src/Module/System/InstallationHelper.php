@@ -188,7 +188,11 @@ final class InstallationHelper implements InstallationHelperInterface
             }
         } else {
             $browser = new Horde_Browser();
-            $browser->downloadHeaders(basename($file), 'text/plain', false, strlen((string) $final));
+            $headers = $browser->getDownloadHeaders(basename($file), 'text/plain', false, strlen((string) $final));
+
+            foreach ($headers as $headerName => $value) {
+                header(sprintf('%s: %s', $headerName, $value));
+            }
             echo $final;
 
             return false;
@@ -368,7 +372,10 @@ final class InstallationHelper implements InstallationHelperInterface
             }
         } else {
             $browser = new Horde_Browser();
-            $browser->downloadHeaders('ampache.cfg.php', 'text/plain', false, strlen((string) $final));
+            $headers = $browser->getDownloadHeaders('ampache.cfg.php', 'text/plain', false, strlen((string) $final));
+            foreach ($headers as $headerName => $value) {
+                header(sprintf('%s: %s', $headerName, $value));
+            }
             echo $final;
 
             return false;

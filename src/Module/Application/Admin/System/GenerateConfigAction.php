@@ -33,8 +33,10 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\InstallationHelperInterface;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\UiInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 final class GenerateConfigAction implements ApplicationActionInterface
 {
@@ -48,16 +50,24 @@ final class GenerateConfigAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private ResponseFactoryInterface $responseFactory;
+
+    private StreamFactoryInterface $streamFactory;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         Horde_Browser $browser,
         InstallationHelperInterface $installationHelper,
-        UiInterface $ui
+        UiInterface $ui,
+        ResponseFactoryInterface $responseFactory,
+        StreamFactoryInterface $streamFactory
     ) {
         $this->configContainer    = $configContainer;
         $this->browser            = $browser;
         $this->installationHelper = $installationHelper;
         $this->ui                 = $ui;
+        $this->responseFactory    = $responseFactory;
+        $this->streamFactory      = $streamFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -71,17 +81,25 @@ final class GenerateConfigAction implements ApplicationActionInterface
 
         $path = __DIR__ . '/../../../../../config/ampache.cfg.php';
 
-        ob_end_clean();
-        $current = parse_ini_file($path);
-        $final   = $this->installationHelper->generate_config($current);
-        $this->browser->downloadHeaders(
+        $generatedConfig = $this->installationHelper->generate_config(parse_ini_file($path));
+
+        $headers = $this->browser->getDownloadHeaders(
             'ampache.cfg.php',
             'text/plain',
             false,
-            filesize($path)
+            strlen($generatedConfig)
         );
-        echo $final;
 
-        return null;
+        $response = $this->responseFactory->createResponse();
+
+        foreach ($headers as $headerName => $value) {
+            $response = $response->withHeader($headerName, $value);
+        }
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $generatedConfig
+            )
+        );
     }
 }

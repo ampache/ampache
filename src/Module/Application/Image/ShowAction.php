@@ -233,8 +233,12 @@ final class ShowAction implements ApplicationActionInterface
                 );
             }
 
-            $this->horde_browser->downloadHeaders($filename, $mime, true);
-            
+            $headers = $this->horde_browser->getDownloadHeaders($filename, $mime, true);
+
+            foreach ($headers as $headerName => $value) {
+                $response = $response->withHeader($headerName, $value);
+            }
+
             $response = $response->withHeader(
                 'Access-Control-Allow-Origin',
                 '*'
