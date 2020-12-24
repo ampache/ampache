@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Admin\System;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Browse\PersonalVideoAction;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -79,9 +80,9 @@ final class GenerateConfigAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $path = __DIR__ . '/../../../../../config/ampache.cfg.php';
-
-        $generatedConfig = $this->installationHelper->generate_config(parse_ini_file($path));
+        $generatedConfig = $this->installationHelper->generate_config(
+            parse_ini_file($this->configContainer->getConfigFilePath())
+        );
 
         $headers = $this->browser->getDownloadHeaders(
             'ampache.cfg.php',

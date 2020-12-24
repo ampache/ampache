@@ -242,6 +242,14 @@ class ConfigContainerTest extends MockeryTestCase
         );
     }
 
+    public function testGetConfigFilePathReturnsPath(): void
+    {
+        $this->assertStringContainsString(
+            '/config/ampache.cfg.php',
+            $this->createSubject([])->getConfigFilePath()
+        );
+    }
+
     private function createSubject(array $configuration = []): ConfigContainerInterface
     {
         return new ConfigContainer($configuration);

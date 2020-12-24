@@ -36,6 +36,7 @@ use Ampache\Module\Util\UiInterface;
 use Mockery;
 use Mockery\MockInterface;
 use org\bovigo\vfs\DirectoryIterationTestCase;
+use org\bovigo\vfs\vfsStream;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -125,9 +126,18 @@ class GenerateConfigActionTest extends MockeryTestCase
         $response   = $this->mock(ResponseInterface::class);
         $stream     = $this->mock(StreamInterface::class);
 
-        $headerValue     = 'some-header-key';
-        $headerName      = 'some-header-name';
-        $generatedConfig = 'some-config';
+        $root       = vfsStream::setup('/');
+        $configFile = vfsStream::newFile('config');
+
+        $root->addChild($configFile);
+
+        $headerValue       = 'some-header-key';
+        $headerName        = 'some-header-name';
+        $generatedConfig   = 'some-config';
+        $configFilePath    = $configFile->url();
+        $configFileContent = 'key=value';
+
+        $configFile->setContent($configFileContent);
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
@@ -138,6 +148,10 @@ class GenerateConfigActionTest extends MockeryTestCase
             ->with(ConfigurationKeyEnum::DEMO_MODE)
             ->once()
             ->andReturnFalse();
+        $this->configContainer->shouldReceive('getConfigFilePath')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($configFilePath);
 
         $this->browser->shouldReceive('getDownloadHeaders')
             ->with(
@@ -164,7 +178,7 @@ class GenerateConfigActionTest extends MockeryTestCase
             ->andReturnSelf();
 
         $this->installationHelper->shouldReceive('generate_config')
-            ->with(Mockery::type('array'))
+            ->with(['key' => 'value'])
             ->once()
             ->andReturn($generatedConfig);
 

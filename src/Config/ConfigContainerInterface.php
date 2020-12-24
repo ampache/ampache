@@ -91,4 +91,9 @@ interface ConfigContainerInterface
      * Returns the demo mode state
      */
     public function isDemoMode(): bool;
+
+    /**
+     * Returns the path to the ampache config file
+     */
+    public function getConfigFilePath(): string;
 }

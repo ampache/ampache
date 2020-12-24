@@ -114,4 +114,9 @@ final class ConfigContainer implements ConfigContainerInterface
     {
         return $this->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE);
     }
+
+    public function getConfigFilePath(): string
+    {
+        return __DIR__ . '/../../config/ampache.cfg.php';
+    }
 }
