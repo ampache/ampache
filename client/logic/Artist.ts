@@ -14,6 +14,7 @@ export type Artist = {
     preciserating: number;
     rating: number;
     averagerating: number;
+    flag: boolean;
     mbid: string;
     summary: string;
     yearformed: number;

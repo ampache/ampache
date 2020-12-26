@@ -5,7 +5,7 @@ import SVG from 'react-inlinesvg';
 
 import style from './index.module.styl';
 
-export default function SimpleRating() {
+export default function SimpleRating(props) {
     const [value, setValue] = React.useState(3);
 
     const StyledRating = withStyles({
@@ -27,21 +27,21 @@ export default function SimpleRating() {
             <StyledRating
                 className={style.simpleRating}
                 name="simple-controlled"
-                value={value}
-                icon={<SVG className={`${'icon'}`} src={require('~images/icons/svg/star-full.svg')} />}
-                emptyIcon={<SVG className={`${'icon'}`} src={require('~images/icons/svg/star-empty.svg')} />}
+                value={props.value}
+                icon={<SVG className={`${'icon'} ${style.starIcon} ${style.active}`} src={require('~images/icons/svg/star-full.svg')} />}
+                emptyIcon={<SVG className={`${'icon'} ${style.starIcon}`} src={require('~images/icons/svg/star-empty.svg')} />}
                 onChange={(event, newValue) => {
                     setValue(newValue);
                 }}
             />
             <span className={style.divider}></span>
             <SVG
-                src={require('~images/icons/svg/heart-full.svg')}
-                alt='Remove rating'
+                src={props.fav ? require('~images/icons/svg/heart-full.svg') : require('~images/icons/svg/heart-empty.svg')}
+                alt='Toggle favorite'
                 onClick={() => {
                     // TODO: toggle favourite;
                 }}
-                className={`${'icon'} ${style.heartIcon}`}
+                className={`${'icon'} ${style.heartIcon} ${props.fav ? style.active : null}`}
             />
         </div>
     );

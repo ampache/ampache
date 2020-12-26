@@ -71,7 +71,7 @@ const AlbumView: React.FC<AlbumViewProps> = (props: AlbumViewProps) => {
                     <img src={theAlbum.art} alt={'Album Cover'} />
                 </div>
                 <div className={style.details}>
-                    <div className={style.rating}><Rating /></div>
+                    <div className={style.rating}><Rating value={theAlbum.rating} fav={theAlbum.flag}/></div>
                     <div className={style.albumName}>{theAlbum.name}</div>
                     <div className={style.artistName}>
                         <Link

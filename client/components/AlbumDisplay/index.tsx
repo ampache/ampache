@@ -65,7 +65,7 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (props: AlbumDisplayProps) => 
                     </div>
                 </div>
                 <div className={style.rating}>
-                    <Rating />
+                    <Rating value={props.album.rating} fav={props.album.flag}/>
                 </div>
                 <div className={style.details}>
                     <div className={style.albumInfo}>

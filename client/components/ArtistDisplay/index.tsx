@@ -26,7 +26,7 @@ const ArtistDisplay: React.FC<ArtistDisplayProps> = (props: ArtistDisplayProps) 
                         />
                     </div>
                     <div className={style.rating}>
-                        <Rating />
+                        <Rating value={props.artist.rating} fav={props.artist.flag}/>
                     </div>
                     <span className={style.artistName}>{props.artist.name}</span>
                 </div>

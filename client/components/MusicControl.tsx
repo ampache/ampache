@@ -40,7 +40,7 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
             
             <div className='ratingBarContainer'>
                 <div className='ratingBar'>
-                    <Rating />
+                    <Rating value={musicContext.currentPlayingSong ? musicContext.currentPlayingSong.rating : 0} fav={musicContext.currentPlayingSong ? musicContext.currentPlayingSong.flag : 0}/>
                 </div>
             </div>
 
