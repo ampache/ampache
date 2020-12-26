@@ -5,6 +5,9 @@ import { Album } from '~logic/Album';
 import Rating from '~components/Rating/';
 import useContextMenu from 'react-use-context-menu';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import {
+    isBrowser,
+} from "react-device-detect";
 
 import style from './index.module.styl';
 
@@ -45,7 +48,7 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (props: AlbumDisplayProps) => 
             <div 
                 className={`${style.albumDisplay} ${props.className} ${active ? style.active : null}`}
                 onClick={(e) => handleEnter(e)}
-                onMouseEnter={(e) => handleEnter(e)}
+                onMouseEnter={(e) => isBrowser ? handleEnter(e) : null}
                 onMouseLeave={(e) => handleLeave(e)}
             >
                 <div className={style.imageContainer}>
