@@ -12,16 +12,23 @@
 
   .imageContainer
     position relative
-    display flex
-    border 1px solid transparent
-    transition 0.2s border
+    display block
+    width: 100%
     max-width 160px
-    margin-top 5px
+    
+    &:after
+      content ''
+      display block
+      padding-bottom 100%
 
     img
-      width 100%
-      height 100%
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover
       border-radius 50%
+      padding 5px
+      
 
   .artistName
     hyphens: auto;
