@@ -49,7 +49,7 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                     min={0}
                     max={musicContext.currentPlayingSong?.time ?? 0}
                     value={isSeeking ? seekPosition : musicContext.songPosition}
-                    onChange={(event, value: number) => {
+                    onChange={(_, value: number) => {
                         // setIsSeeking(true);
                         // setValue(value);
                         // setSeekPosition(value);
