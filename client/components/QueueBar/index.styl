@@ -1,10 +1,8 @@
 @import "~stylus/color.styl"
 @import "~stylus/sizes.styl"
 
-queuebarWidth = 280px
-
 .queueBar
-  width: queuebarWidth
+  width: queueBarWidth
   max-width: 90%;
   border-left 2px solid colorGray800
   background-color colorGray900
@@ -22,7 +20,7 @@ queuebarWidth = 280px
 
   @media all and (min-width: size-large)
     position: static;
-    margin-left: -(queuebarWidth)
+    margin-left: -(queueBarWidth)
 
   &.visible
     @media all and (min-width: size-large)
