@@ -76,7 +76,7 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                         props.flagSong(props.song.id, !props.song.flag);
                     }}
                 >
-                    <SVG className='icon-button' src={require('~images/icons/svg/heart-full.svg')} alt="Favourite song" />
+                    <SVG className='icon-button' src={require('~images/icons/svg/heart-full.svg')} alt="Favorite song" />
                 </span>
                 
                 <span className={style.songDetails}>

@@ -58,10 +58,10 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (props: AlbumDisplayProps) => 
                     />
                     <div className={`${style.albumActions}`}>
                         <Link to={`/album/${props.album.id}`}>View album</Link>
-                        <Link to={'#'}><SVG className='icon-inline' src={require('~images/icons/svg/play.svg')} alt="Play" /> Play</Link>
-                        <Link to={'#'}><SVG className='icon-inline' src={require('~images/icons/svg/play-next.svg')} alt="Play next" /> Play next</Link>
-                        <Link to={'#'}><SVG className='icon-inline' src={require('~images/icons/svg/play-last.svg')} alt="Play last" /> Add to queue</Link>
-                        <Link {...bindTrigger} to={'#'}><SVG className='icon-inline' src={require('~images/icons/svg/more-options-hori.svg')} alt="More options" /> More options</Link>
+                        <Link to={'#'}><SVG className='icon-inline' src={require('~images/icons/svg/play.svg')} alt="" /> Play</Link>
+                        <Link to={'#'}><SVG className='icon-inline' src={require('~images/icons/svg/play-next.svg')} alt="" /> Play next</Link>
+                        <Link to={'#'}><SVG className='icon-inline' src={require('~images/icons/svg/play-last.svg')} alt="" /> Add to queue</Link>
+                        <Link {...bindTrigger} to={'#'}><SVG className='icon-inline' src={require('~images/icons/svg/more-options-hori.svg')} alt="" /> More options</Link>
                     </div>
                 </div>
                 <div className={style.rating}>
