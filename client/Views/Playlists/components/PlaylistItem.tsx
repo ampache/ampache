@@ -53,6 +53,9 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (props: PlaylistItemProps) => 
                 {...bindTrigger}
             >
                 <div className={style.details}>
+                    {props.playlist.id === 0 &&
+                        <div>SMARTLIST</div>
+                    }
                     <div className={style.name}>
                         <Link 
                             to={`/playlist/${props.playlist.id}`}
@@ -60,15 +63,20 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (props: PlaylistItemProps) => 
                                 {props.playlist.name}
                         </Link>
                     </div>
-                    <div className={style.rating}>
-                        <Rating />
-                    </div>
+                    {props.playlist.id > 0 &&
+                        <div className={style.rating}>
+                            <Rating value={props.playlist.rating} fav={props.playlist.flag}/>
+                        </div>
+                    }
                 </div>
                 <div className={style.meta}>
-                    <span className={style.itemCount}>{props.playlist.items} songs</span>
+                    <span className={style.itemCount}>
+                        {props.playlist.id === 0 &&
+                            `Up to `
+                        }
+                        {`${props.playlist.items} songs`}
+                    </span>
                     <span className={style.owner}> by {props.playlist.owner}</span>
-                    <div className={style.random}>Random?</div>
-                    <div className={style.limit}>Item limit ###</div>
                 </div>
                 
                 <div className={style.actions}>
