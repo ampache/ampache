@@ -1,6 +1,6 @@
 import React from 'react';
 
-import style from './index.module.styl';
+import style from './index.styl';
 
 export enum ButtonColors {
     gray = 'gray',
@@ -23,7 +23,7 @@ interface ButtonProps {
     onClick: () => void;
 }
 
-const Button = (props: ButtonProps) => {
+const Index = (props: ButtonProps) => {
     return (
         <button
             onClick={props.onClick}
@@ -36,4 +36,4 @@ const Button = (props: ButtonProps) => {
     );
 };
 
-export default Button;
+export default Index;

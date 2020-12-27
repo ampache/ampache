@@ -10,7 +10,7 @@ import { playSongFromAlbum } from '~Helpers/playAlbumHelper';
 import { MusicContext } from '~Contexts/MusicContext';
 import Rating from '~components/Rating/';
 
-import style from "./index.styl"
+import style from './index.styl';
 
 interface AlbumViewProps {
     user: User;
@@ -71,7 +71,9 @@ const AlbumView: React.FC<AlbumViewProps> = (props: AlbumViewProps) => {
                     <img src={theAlbum.art} alt={'Album Cover'} />
                 </div>
                 <div className={style.details}>
-                    <div className={style.rating}><Rating value={theAlbum.rating} fav={theAlbum.flag}/></div>
+                    <div className={style.rating}>
+                        <Rating value={theAlbum.rating} fav={theAlbum.flag} />
+                    </div>
                     <div className={style.albumName}>{theAlbum.name}</div>
                     <div className={style.artistName}>
                         <Link
@@ -81,7 +83,9 @@ const AlbumView: React.FC<AlbumViewProps> = (props: AlbumViewProps) => {
                             {theAlbum.artist.name}
                         </Link>
                     </div>
-                    <div className={style.albumMeta}>{theAlbum.year} - {theAlbum.tracks.length} tracks</div>
+                    <div className={style.albumMeta}>
+                        {theAlbum.year} - {theAlbum.tracks.length} tracks
+                    </div>
                 </div>
             </div>
             <div className={style.songs}>

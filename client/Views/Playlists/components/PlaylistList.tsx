@@ -146,11 +146,12 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
     }
     return (
         <div className='playlistList'>
-            <SVG 
+            <SVG
                 className='icon-button'
                 src={require('~images/icons/svg/plus.svg')}
-                alt="Add to playlist"
-                onClick={handleNewPlaylist} />
+                alt='Add to playlist'
+                onClick={handleNewPlaylist}
+            />
             <div className={style.playlistListContainer}>
                 {playlists.map((playlist: Playlist) => {
                     return (

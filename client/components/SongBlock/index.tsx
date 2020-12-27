@@ -2,7 +2,7 @@ import { Song } from '~logic/Song';
 import { Link } from 'react-router-dom';
 import React from 'react';
 
-import style from './index.module.styl';
+import style from './index.styl';
 
 interface SongBlockProps {
     song: Song;

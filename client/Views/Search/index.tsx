@@ -8,7 +8,7 @@ import SongBlock from '~components/SongBlock';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 
-import style from './index.module.styl';
+import style from './index.styl';
 
 interface SearchProps {
     user: User;
@@ -36,7 +36,7 @@ const SearchView: React.FC<SearchProps> = (props) => {
                     setError(error);
                 });
         }
-    }, [props.match.params.searchQuery]);
+    }, [props.match.params.searchQuery, props.user.authKey]);
 
     const playSong = (song: Song) => {
         musicContext.startPlayingWithNewQueue(song, searchResults);

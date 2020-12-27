@@ -3,7 +3,7 @@ import SVG from 'react-inlinesvg';
 import { Link, withRouter } from 'react-router-dom';
 import logo from '~images/ampache-dark.png';
 
-import style from './index.module.styl';
+import style from './index.styl';
 
 interface HeaderProps {
     username: string;
@@ -28,7 +28,12 @@ const Header = withRouter(({ history, ...props }: any) => {
                 </Link>
             </div>
             <div className={style.menuIcon} onClick={props.toggleSideBar}>
-                <SVG className='icon-button' src={require('~images/icons/svg/hamburger.svg')} alt={'Show menu'} />
+                <SVG
+                    className='icon-button'
+                    src={require('~images/icons/svg/hamburger.svg')}
+                    title='Show menu'
+                    role='button'
+                />
             </div>
             <div className={style.search}>
                 <form onSubmit={(e) => searchSubmit(e)}>
@@ -42,10 +47,19 @@ const Header = withRouter(({ history, ...props }: any) => {
                 </form>
             </div>
             <div className={style.queueIcon} onClick={props.toggleQueueBar}>
-                <SVG className='icon-button' src={require('~images/icons/svg/playlist.svg')} alt={'Show queue'} />
+                <SVG
+                    className='icon-button'
+                    src={require('~images/icons/svg/playlist.svg')}
+                    title='Show queue'
+                    role='button'
+                />
             </div>
             <div className={style.account}>
-                <SVG src={require('~images/icons/svg/user.svg')} alt="User" />
+                <SVG
+                    src={require('~images/icons/svg/user.svg')}
+                    title='User'
+                    role='button'
+                />
                 <div className={style.options}>
                     <ul>
                         <li>

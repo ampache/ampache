@@ -3,7 +3,7 @@ import { MusicContext } from '~Contexts/MusicContext';
 import CDImage from '/images/icons/svg/CD.svg';
 import { Link } from 'react-router-dom';
 
-import style from './index.module.styl';
+import style from './index.styl';
 
 const CurrentPlayingArt: React.FC = () => {
     const musicContext = useContext(MusicContext);

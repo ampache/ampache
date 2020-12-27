@@ -28,15 +28,10 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
     ] = useContextMenu();
     const [bindTrigger] = useContextTrigger();
 
-    const minutes: number = Math.floor(props.song.time / 60);
-    const seconds: string = (props.song.time % 60).toString();
-    const paddedSeconds: string =
-        seconds.length === 1 ? seconds + '0' : seconds;
-
-    const formatLabel = (s) => ([
+    const formatLabel = (s) => [
         (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s
         //https://stackoverflow.com/a/37770048
-    ]);
+    ];
 
     const showContextMenu = (e) => {
         e.preventDefault();
@@ -63,7 +58,12 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                         showContextMenu(e);
                     }}
                 >
-                    <SVG className='icon-button' src={require('~images/icons/svg/more-options-hori.svg')} alt="More options" />
+                    <SVG
+                        className='icon-button'
+                        src={require('~images/icons/svg/more-options-hori.svg')}
+                        title='More options'
+                        role='button'
+                    />
                 </span>
                 <span
                     className={
@@ -76,13 +76,21 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                         props.flagSong(props.song.id, !props.song.flag);
                     }}
                 >
-                    <SVG className='icon-button' src={require('~images/icons/svg/heart-full.svg')} alt="Favorite song" />
+                    <SVG
+                        className='icon-button'
+                        src={require('~images/icons/svg/heart-full.svg')}
+                        title='Favorite this song'
+                        role='button'
+                    />
                 </span>
-                
+
                 <span className={style.songDetails}>
                     <span className={style.title}>{props.song.title}</span>
                     {props.showArtist && (
-                        <span className={style.artistContainer} onClick={(e) => e.stopPropagation()}>
+                        <span
+                            className={style.artistContainer}
+                            onClick={(e) => e.stopPropagation()}
+                        >
                             <Link
                                 className={style.artist}
                                 to={`/artist/${props.song.artist.id}`}
@@ -92,7 +100,10 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                         </span>
                     )}
                     {props.showAlbum && (
-                        <span className={style.albumContainer} onClick={(e) => e.stopPropagation()}>
+                        <span
+                            className={style.albumContainer}
+                            onClick={(e) => e.stopPropagation()}
+                        >
                             <Link
                                 className={style.album}
                                 to={`/album/${props.song.album.id}`}
@@ -105,7 +116,7 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                 </span>
 
                 <span className={style.rating}>
-                    <Rating value={props.song.rating} fav={props.song.flag}/>
+                    <Rating value={props.song.rating} fav={props.song.flag} />
                 </span>
 
                 <span className={style.time}>
@@ -113,7 +124,13 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                 </span>
 
                 <span className={style.remove}>
-                    <SVG className='icon-button' src={require('~images/icons/svg/cross.svg')} alt="Remove" />
+                    <SVG
+                        className='icon-button'
+                        src={require('~images/icons/svg/cross.svg')}
+                        title='Delete'
+                        description='Delete this song'
+                        role='button'
+                    />
                 </span>
             </li>
             <div {...bindMenu} className='contextMenu'>

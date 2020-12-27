@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import logo from '~images/ampache-dark.png';
 import AmpacheError from '~logic/AmpacheError';
 
-import style from './index.module.styl';
+import style from './index.styl';
 
 interface LoginProps {
     handleLogin: (

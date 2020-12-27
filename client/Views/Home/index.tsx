@@ -8,7 +8,7 @@ import { playSongFromAlbum } from '~Helpers/playAlbumHelper';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 
-import style from './index.module.styl';
+import style from './index.styl';
 
 interface HomeViewProps {
     user: User;

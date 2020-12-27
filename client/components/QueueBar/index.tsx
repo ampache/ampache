@@ -12,7 +12,7 @@ import {
     MobileView,
     isBrowser,
     isMobile
-} from "react-device-detect";
+} from 'react-device-detect';
 
 interface QueueBarProps {
     visible: boolean;
@@ -57,8 +57,8 @@ const QueueBar: React.FC<QueueBarProps> = (props) => {
                                         key={song.id}
                                         song={song}
                                         currentlyPlaying={
-                                            musicContext.currentPlayingSong?.id ===
-                                            song.id
+                                            musicContext.currentPlayingSong
+                                                ?.id === song.id
                                         }
                                         onClick={() => {
                                             musicContext.startPlayingWithNewQueue(
@@ -73,10 +73,10 @@ const QueueBar: React.FC<QueueBarProps> = (props) => {
                     </div>
                 </div>
             </animated.div>
-            <div 
+            <div
                 className={style.backdrop}
-                onClick={(e) => props.setQueueBarVisibility(false)}
-            ></div>
+                onClick={() => props.setQueueBarVisibility(false)}
+            />
         </>
     );
 };

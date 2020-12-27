@@ -7,45 +7,55 @@ import CurrentPlaying from '~components/CurrentPlaying/';
 import CurrentPlayingArt from '~components/CurrentPlayingArt/';
 import Rating from '~components/Rating/';
 
-interface MusicControlProps {
-    
-}
-
-const MusicControl: React.FC<MusicControlProps> = (props) => {
+const MusicControl: React.FC = () => {
     const musicContext = useContext(MusicContext);
 
     const [ratingToggle, setRatingToggle] = useState(false);
 
-    const [isSeeking, setIsSeeking] = useState(false);
+    const [isSeeking, setIsSeeking] = useState(false); //TODO: Figure if this is still needed
     const [seekPosition, setSeekPosition] = useState(-1);
 
     const [value, setValue] = React.useState(30);
 
-    const handleRatingToggle = (e) => {
-        if (musicContext.currentPlayingSong !== undefined && musicContext.currentPlayingSong !== null) {
-            setRatingToggle(!ratingToggle); 
+    const handleRatingToggle = () => {
+        if (
+            musicContext.currentPlayingSong !== undefined &&
+            musicContext.currentPlayingSong !== null
+        ) {
+            setRatingToggle(!ratingToggle);
         }
-    }
+    };
 
-    const formatLabel = (s) => ([
+    const formatLabel = (s) => [
         (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s
         //https://stackoverflow.com/a/37770048
-    ]);
+    ];
 
     return (
-        <div className={`${'musicControl'} ${ratingToggle ? 'ratingShown' : null}`}>
+        <div className={`musicControl ${ratingToggle ? 'ratingShown' : null}`}>
             <CurrentPlayingArt />
-            
+
             <CurrentPlaying />
-            
+
             <div className='ratingBarContainer'>
                 <div className='ratingBar'>
-                    <Rating value={musicContext.currentPlayingSong ? musicContext.currentPlayingSong.rating : 0} fav={musicContext.currentPlayingSong ? musicContext.currentPlayingSong.flag : 0}/>
+                    <Rating
+                        value={
+                            musicContext.currentPlayingSong
+                                ? musicContext.currentPlayingSong.rating
+                                : 0
+                        }
+                        fav={
+                            musicContext.currentPlayingSong
+                                ? musicContext.currentPlayingSong.flag
+                                : 0
+                        }
+                    />
                 </div>
             </div>
 
             <div className='seekbar'>
-                <Slider 
+                <Slider
                     min={0}
                     max={musicContext.currentPlayingSong?.time ?? 0}
                     value={isSeeking ? seekPosition : musicContext.songPosition}
@@ -56,30 +66,38 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                         musicContext.seekSongTo(value);
                         // setIsSeeking(false);
                     }}
-                    
                     disabled={musicContext.currentPlayingSong == undefined}
-                    aria-labelledby="continuous-slider" 
+                    aria-labelledby='continuous-slider'
                 />
             </div>
 
             <div className='seekTimes'>
-                <span className='seekStart'>{formatLabel(musicContext.songPosition)}</span>
-                <span className='seekEnd'>{formatLabel(musicContext.currentPlayingSong?.time ?? 0)}</span>
+                <span className='seekStart'>
+                    {formatLabel(musicContext.songPosition)}
+                </span>
+                <span className='seekEnd'>
+                    {formatLabel(musicContext.currentPlayingSong?.time ?? 0)}
+                </span>
             </div>
-                    
+
             <div className='controls'>
                 <div className='previousSong'>
                     <SVG
                         src={require('~images/icons/svg/previous-track.svg')}
-                        alt='Back'
+                        title='Previous'
+                        description='Play previous song'
+                        role='button'
+                        aria-disabled={musicContext.songQueueIndex <= 0}
                         onClick={() => {
                             musicContext.playPrevious();
                         }}
                         className={`
-                            ${'icon-button'} 
-                            ${musicContext.songQueueIndex <= 0
-                                ? 'disabled'
-                                : ''}
+                            icon-button 
+                            ${
+                                musicContext.songQueueIndex <= 0
+                                    ? 'disabled'
+                                    : ''
+                            }
                         `}
                     />
                 </div>
@@ -88,25 +106,39 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                     musicContext.playerStatus === PLAYERSTATUS.PAUSED ? (
                         <SVG
                             src={require('~images/icons/svg/play.svg')}
-                            alt='Play'
+                            title='Play'
+                            description='Resume music'
+                            role='button'
+                            aria-disabled={
+                                musicContext.currentPlayingSong == undefined
+                            }
                             onClick={musicContext.playPause}
                             className={`
-                                ${'icon-button'} 
-                                ${musicContext.currentPlayingSong == undefined
-                                    ? 'disabled'
-                                    : ''}
+                                icon-button 
+                                ${
+                                    musicContext.currentPlayingSong == undefined
+                                        ? 'disabled'
+                                        : ''
+                                }
                             `}
                         />
                     ) : (
                         <SVG
                             src={require('~images/icons/svg/pause.svg')}
-                            alt='Pause'
+                            title='Pause'
+                            description='Pause music'
+                            role='button'
                             onClick={musicContext.playPause}
+                            aria-disabled={
+                                musicContext.currentPlayingSong == undefined
+                            }
                             className={`
-                                ${'icon-button'} 
-                                ${musicContext.currentPlayingSong == undefined
-                                    ? 'disabled'
-                                    : ''}
+                                icon-button 
+                                ${
+                                    musicContext.currentPlayingSong == undefined
+                                        ? 'disabled'
+                                        : ''
+                                }
                             `}
                         />
                     )}
@@ -114,71 +146,76 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                 <div className='nextSong'>
                     <SVG
                         src={require('~images/icons/svg/next-track.svg')}
-                        alt='Next'
+                        title='Next'
+                        description='Play next song'
+                        role='button'
+                        aria-disabled={
+                            musicContext.songQueueIndex ==
+                            musicContext.songQueue.length - 1
+                        }
                         onClick={() => {
                             musicContext.playNext();
                         }}
                         className={`
-                            ${'icon-button'} 
-                            ${musicContext.songQueueIndex ==
-                            musicContext.songQueue.length - 1
-                                ? 'disabled'
-                                : ''}
+                            icon-button 
+                            ${
+                                musicContext.songQueueIndex ==
+                                musicContext.songQueue.length - 1
+                                    ? 'disabled'
+                                    : ''
+                            }
                         `}
                     />
                 </div>
             </div>
-            
+
             <div className='secondaryControls'>
-                <div className={`${'rating'} ${ratingToggle ? 'active' : null}`}>
+                <div className={`rating ${ratingToggle ? 'active' : null}`}>
                     <SVG
                         src={require('~images/icons/svg/star-full.svg')}
-                        alt='Show ratings'
-                        onClick={(e) => {
-                            handleRatingToggle(e)
+                        title='Show ratings'
+                        role='button'
+                        onClick={() => {
+                            handleRatingToggle();
                         }}
-                        className={`
-                            ${'icon-button'} 
-                        `}
+                        className='icon-button'
                     />
                 </div>
 
                 <div className='shuffle'>
                     <SVG
                         src={require('~images/icons/svg/shuffle.svg')}
-                        alt='Shuffle'
+                        title='Shuffle'
+                        description='Shuffle queued songs'
+                        role='button'
                         onClick={() => {
                             // TODO: shuffle;
                         }}
-                        className={`
-                            ${'icon-button'} 
-                        `}
+                        className='icon-button'
                     />
                 </div>
 
                 <div className='repeat'>
                     <SVG
                         src={require('~images/icons/svg/repeat.svg')}
-                        alt='Repeat'
+                        title='Repeat'
+                        description='Repeat the current song'
                         onClick={() => {
                             // TODO: repeat;
                         }}
-                        className={`
-                            ${'icon-button'} 
-                        `}
+                        className='icon-button'
                     />
                 </div>
 
                 <div className='moreOptions'>
                     <SVG
                         src={require('~images/icons/svg/more-options-hori.svg')}
-                        alt='More options'
+                        title='More options'
+                        role='button'
                         onClick={() => {
                             // TODO: open more options menu;
                         }}
-                        className={`
-                            ${'icon-button'} 
-                        `}
+                        className='icon-button'
                     />
                 </div>
             </div>
@@ -186,13 +223,13 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
             <div className='volumeSlide'>
                 <SVG
                     src={require('~images/icons/svg/volume-up.svg')}
-                    alt='Volume'
+                    title='Mute'
+                    description='Mute the music'
+                    role='button'
                     onClick={() => {
-                        // TODO: toggle mute;
+                        musicContext.setVolume(0); //TODO: Unmute? Store old volume level?
                     }}
-                    className={`
-                        ${'icon-button'} 
-                    `}
+                    className='icon-button'
                 />
                 <Slider
                     name='volume'
@@ -203,7 +240,6 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                     min={0}
                     value={musicContext.volume}
                 />
-                
             </div>
         </div>
     );

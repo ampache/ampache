@@ -1,11 +1,9 @@
-import React, { useContext } from 'react';
-import { MusicContext } from '~Contexts/MusicContext';
-import { useDrag } from 'react-use-gesture';
-import { useSpring, useTransition, animated } from 'react-spring';
+import React from 'react';
+import { useSpring, animated } from 'react-spring';
 import { Link } from 'react-router-dom';
 import SVG from 'react-inlinesvg';
 
-import style from './index.module.styl';
+import style from './index.styl';
 
 interface SideBarProps {
     visible: boolean;
@@ -13,8 +11,6 @@ interface SideBarProps {
 }
 
 const Sidebar: React.FC<SideBarProps> = (props) => {
-    const musicContext = useContext(MusicContext);
-
     const sidebarStart = '-100%';
     const sidebarEnd = '0%';
 
@@ -35,11 +31,12 @@ const Sidebar: React.FC<SideBarProps> = (props) => {
                         : `${style.sidebar} ${style.hidden}`
                 }
             >
-                
                 <div className={style.menuList}>
                     <div className={style.sidebarInner}>
                         <section>
-                            <h4><Link to='/'>Library</Link></h4>
+                            <h4>
+                                <Link to='/'>Library</Link>
+                            </h4>
                             <ul>
                                 <li>
                                     <Link to='/artists'>Artists</Link>
@@ -108,13 +105,12 @@ const Sidebar: React.FC<SideBarProps> = (props) => {
                                 User profile
                                 <SVG
                                     src={require('~images/icons/svg/more-options-hori.svg')}
-                                    alt='User options'
+                                    title='User options'
+                                    role='button'
                                     onClick={() => {
                                         // TODO: open more options menu;
                                     }}
-                                    className={`
-                                        ${'icon-inline'} 
-                                    `}
+                                    className='icon-inline'
                                 />
                             </Link>
                         </li>
@@ -124,10 +120,10 @@ const Sidebar: React.FC<SideBarProps> = (props) => {
                     </ul>
                 </div>
             </animated.div>
-            <div 
+            <div
                 className={style.backdrop}
-                onClick={(e) => props.setSideBarVisibility(false)}
-            ></div>
+                onClick={() => props.setSideBarVisibility(false)}
+            />
         </>
     );
 };

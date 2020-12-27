@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Artist } from '~logic/Artist';
 import Rating from '~components/Rating/';
 
-import style from './index.module.styl';
+import style from './index.styl';
 
 interface ArtistDisplayProps {
     artist: Artist;
@@ -11,7 +11,9 @@ interface ArtistDisplayProps {
     className?: string;
 }
 
-const ArtistDisplay: React.FC<ArtistDisplayProps> = (props: ArtistDisplayProps) => {
+const ArtistDisplay: React.FC<ArtistDisplayProps> = (
+    props: ArtistDisplayProps
+) => {
     return (
         <>
             <Link
@@ -26,9 +28,14 @@ const ArtistDisplay: React.FC<ArtistDisplayProps> = (props: ArtistDisplayProps) 
                         />
                     </div>
                     <div className={style.rating}>
-                        <Rating value={props.artist.rating} fav={props.artist.flag}/>
+                        <Rating
+                            value={props.artist.rating}
+                            fav={props.artist.flag}
+                        />
                     </div>
-                    <span className={style.artistName}>{props.artist.name}</span>
+                    <span className={style.artistName}>
+                        {props.artist.name}
+                    </span>
                 </div>
             </Link>
         </>

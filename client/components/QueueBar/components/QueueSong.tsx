@@ -1,15 +1,14 @@
 import React from 'react';
 import SVG from 'react-inlinesvg';
 import { Song } from '~logic/Song';
-import { Link } from 'react-router-dom';
 
 interface QueueSongProps {
     song: Song;
     currentlyPlaying: boolean;
-    onClick: any;
+    onClick: () => void;
 }
 
-import style from './index.module.styl';
+import style from './index.styl';
 
 const QueueSong: React.FC<QueueSongProps> = (props) => {
     return (
@@ -26,10 +25,18 @@ const QueueSong: React.FC<QueueSongProps> = (props) => {
             </div>
             <div className={style.details}>
                 <div className={style.songName}>{props.song.title}</div>
-                <div className={style.albumArtist}>{props.song.artist.name}</div>
+                <div className={style.albumArtist}>
+                    {props.song.artist.name}
+                </div>
             </div>
             <div className={style.actions}>
-                <SVG className='icon-button' src={require('~images/icons/svg/cross.svg')} alt="Remove" />
+                <SVG
+                    className='icon-button'
+                    src={require('~images/icons/svg/cross.svg')}
+                    title='Remove'
+                    description='Remove song from Queue'
+                    role='button'
+                />
             </div>
         </li>
     );

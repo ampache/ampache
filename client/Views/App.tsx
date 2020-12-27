@@ -8,8 +8,8 @@ import ReactLoading from 'react-loading';
 import MusicControl from '~components/MusicControl';
 import QueueBar from '~components/QueueBar/';
 
-import style from '~stylus/app.styl'
-import NavigationBlock from "~Views/NavigationBlock";
+import style from '~stylus/app.styl';
+import NavigationBlock from '~Views/NavigationBlock';
 
 interface AppViewProps {
     user: User;
@@ -29,7 +29,11 @@ class AppView extends Component<AppViewProps, AppViewStates> {
 
     constructor(props) {
         super(props);
-        this.state = { error: null, QueueBarVisible: false, SideBarVisible: false };
+        this.state = {
+            error: null,
+            QueueBarVisible: false,
+            SideBarVisible: false
+        };
 
         this.toggleQueueBarVisible = () => {
             this.setState({ QueueBarVisible: !this.state.QueueBarVisible });
@@ -67,14 +71,19 @@ class AppView extends Component<AppViewProps, AppViewStates> {
         }
 
         return (
-          <NavigationBlock enabled={this.state.QueueBarVisible} navigationAttempt={() => {this.setState({QueueBarVisible: false})}}>
-                <Header 
-                    username={this.props.user.username} 
+            <NavigationBlock
+                enabled={this.state.QueueBarVisible}
+                navigationAttempt={() => {
+                    this.setState({ QueueBarVisible: false });
+                }}
+            >
+                <Header
+                    username={this.props.user.username}
                     toggleQueueBar={this.toggleQueueBarVisible}
                     toggleSideBar={this.toggleSideBarVisible}
                 />
                 <div className={style.container}>
-                    <Sidebar 
+                    <Sidebar
                         visible={this.state.SideBarVisible}
                         setSideBarVisibility={this.setSideBarVisibility}
                     />
@@ -88,10 +97,9 @@ class AppView extends Component<AppViewProps, AppViewStates> {
                         visible={this.state.QueueBarVisible}
                         setQueueBarVisibility={this.setQueueBarVisibility}
                     />
-
                 </div>
                 <MusicControl />
-          </NavigationBlock>
+            </NavigationBlock>
         );
     }
 }

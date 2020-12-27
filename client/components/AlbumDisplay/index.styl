@@ -1,0 +1,154 @@
+@import "~/stylus/color.styl"
+@import "~/stylus/sizes.styl"
+
+.albumDisplay
+    background-color colorGray800
+    border-radius: 0 0 5px 5px
+    display flex
+    flex-direction column
+    width 100%
+    height: 100%
+    position relative
+    overflow hidden
+    color colorGray300
+    .imageContainer
+        position relative
+        width: 100%
+        max-height: 100%
+        margin: 0 auto
+        z-index 1
+
+        &:after
+            content ''
+            position absolute
+            top 0
+            right 0
+            bottom 0
+            left 0
+            border 2px solid colorGray800
+            border-bottom 0
+            mix-blend-mode: lighten
+
+
+        .albumActions
+            display flex
+            flex-direction column
+            justify-content: center
+            align-items: left
+            font-weight 700
+            position absolute
+            top 0
+            right 0
+            bottom 0
+            left 0
+            z-index 1
+            transition opacity 100ms ease-out
+            opacity 0
+            padding-left 20px
+            padding-bottom 5px
+            pointer-events: none
+
+            a
+                padding 5px 0
+                filter: drop-shadow(0 0 5px black)
+                margin-left 16px
+                &.viewAlbum:hover //Specifically hover over "View Album" lights it up
+                    color linkHoverColor
+            &:hover //Don't want "View Album" to have hover effect unless we specifically hover over it.
+                .viewAlbum
+                    color colorGray300
+
+            svg
+                margin-left -20px
+                position absolute
+            &:before
+                content ''
+                background-color rgba(black, 0.85)
+                top 0
+                bottom 0
+                left 0
+                right 0
+                position absolute
+                z-index: -1
+
+                @supports (backdrop-filter: blur(1px))
+                    backdrop-filter: blur(5px); //TODO: Not working for me
+                    background-color rgba(black, 0.6)
+
+            img
+                width 42px
+                padding: 9px
+                display: inline-block
+
+
+        img
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            max-width: 200px
+            padding 15px 15px 0
+            margin 0 auto
+
+            @media all and (min-width: size-small)
+                max-width: none
+                padding 0
+
+
+
+    .rating
+        margin 0 auto
+        padding 4px 7px 0
+        border-radius 999px
+        background-color colorGray800
+        position relative
+        top -10px
+        border-top 2px solid colorGray700
+        z-index 1
+
+    .details
+        display: flex
+        flex-direction column
+        width: auto
+        min-width: 50%
+        padding 15px
+        padding-top 0
+        justify-content:  space-between
+
+        .albumName
+            margin-bottom 5px
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight 700
+            font-size 13px
+
+        .albumArtist
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color colorGray400
+
+        .albumMeta
+            color colorGray400
+
+
+    &:hover
+        box-shadow 0 0 0 2px colorAmber800
+        .albumActions
+            opacity 1
+            pointer-events: auto
+            color colorGray300
+            .viewAlbum
+                color linkHoverColor
+        :global //As contextMenu is a child, it would otherwise have a constant hover effect
+            .contextMenu
+                color colorGray300
+    :global //Little hack to make "View Album" not have hover effect if we are in context menu
+        .contextMenu:hover ~ :local(.imageContainer .albumActions .viewAlbum)
+                    color colorGray300
+
+/*TODO: currently hovering over the rating stars makes "View Album" light up, may need to use JS to prevent
+    wasting too much time trying to fix it now.
+*/
