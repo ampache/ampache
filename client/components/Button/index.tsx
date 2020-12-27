@@ -23,7 +23,7 @@ interface ButtonProps {
     onClick: () => void;
 }
 
-const Index = (props: ButtonProps) => {
+const Button = (props: ButtonProps) => {
     return (
         <button
             onClick={props.onClick}
@@ -36,4 +36,4 @@ const Index = (props: ButtonProps) => {
     );
 };
 
-export default Index;
+export default Button;

@@ -149,7 +149,8 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
             <SVG
                 className='icon-button'
                 src={require('~images/icons/svg/plus.svg')}
-                alt='Add to playlist'
+                title='Add to playlist'
+                role='button'
                 onClick={handleNewPlaylist}
             />
             <div className={style.playlistListContainer}>

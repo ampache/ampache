@@ -9,7 +9,7 @@ import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import { generateSongsFromArtist } from '~logic/Playlist_Generate';
 import { updateArtistArt } from '~logic/Art';
-import Index, { ButtonColors, ButtonSize } from '~components/Button';
+import Button, { ButtonColors, ButtonSize } from '~components/Button';
 import Rating from '~components/Rating/';
 
 import style from './index.styl';
@@ -109,7 +109,7 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
                         <div className={style.name}>{artist.name}</div>
                         <div className={style.summary}>{artist.summary}</div>
                         <div className={style.actions}>
-                            <Index
+                            <Button
                                 onClick={playRandomArtistSongs}
                                 size={ButtonSize.medium}
                                 color={ButtonColors.green}
