@@ -1,19 +1,23 @@
+@css {
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&family=Rajdhani:wght@400;700&display=swap');
+}
 @import "reset"
 @import "sizes"
 @import "color.styl"
 
 html
   height 100%
-  #root
-    height 100%
-    overflow-x hidden
-  body
-    font-family 'Open Sans', Helvetica, Arial, sans-serif
-    font-weight normal
-    font-size 16px
-    height 100%
-    background-color bodyBackgroundColor
-    color #e1e1e1
+  
+#root
+  height 100%
+  overflow-x hidden  
+  
+body
+  height 100%
+  background-color colorGray900
+
+svg 
+  fill currentColor
 
 a
   text-decoration none
@@ -21,8 +25,6 @@ a
   color inherit
   &.disabled
    pointer-events none
-  &:hover
-    color linkHoverColor/* !important*/
 
 :global
   //Pages
@@ -31,9 +33,13 @@ a
 
   //Components
   @import './components/MusicControl'
-  @import './components/PlaylistRow'
+  @import './components/PlaylistItem'
   @import './components/PlaylistList'
   @import './components/ContextMenu'
   @import './components/InputModal'
   @import './components/Seekbar'
   @import './components/React-Async-Popup'
+  @import './components/Toastify'
+
+  //Elements
+  @import './icons'

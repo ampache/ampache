@@ -1,47 +1,70 @@
+@import "~stylus/color.styl"
 @import "~stylus/sizes.styl"
 
 .queueBar
-  max-width: queueBarWidth; //For desktop we only want the Queue Bar to get so big
-  transition .2s max-width //Max width transition so it only hits the mobile media query
-  background-color #1a1a1a
-  font-size 18px
+  width: queueBarWidth
+  max-width: 90%;
+  border-left 2px solid colorGray800
+  background-color colorGray900
   user-select none
-  z-index 100
-  titleHeight = 44px
-  position sticky
-  top 0
-  height "calc(100vh - %s - %s)" % (headerHeight musicPlayerHeight)
-  @media all and (max-width: 600px)
-    height "calc(100vh - %s)" % (musicPlayerHeight)
-    position fixed
-    top 0
-    right 0
+  flex-shrink: 0;
+  will-change: transform
+  display flex
+  flex-direction: column
+  
+  position: absolute
+  top 0;
+  right 0
+  bottom: 0
+  z-index: 50
+
+  @media all and (min-width: size-large)
+    position: static;
+    margin-left: -(queueBarWidth)
+
   &.visible
-    @media all and (max-width: 600px)
-      max-width 100% //Full screen on mobile, 100% instead of unset for transition to work
+    @media all and (min-width: size-large)
+      margin-left: 0
+
   .title
     text-align center
-    font-size 24px
-    height titleHeight
-    box-sizing border-box
     padding 10px 0
-    white-space nowrap
-    overflow hidden
-    transition opacity 0.1s
-    opacity 1
+    border-bottom: 2px solid colorGray700
+    background-color colorGray800
+    flex-shrink: 0
   .songs
-    height: "calc(100% - %s)" % (titleHeight)
-    overflow-y scroll
-    overflow-x hidden
-    position sticky
-    top 0
-    display flex
-    flex-direction column
-    white-space nowrap
     .emptyQueue
       margin auto
-      transition opacity 0.1s
-      opacity 1
-  &:not(.visible)
-    .title, .emptyQueue
-      opacity 0
+      padding: 20px
+
+.queueList 
+  position relative
+  flex 1
+
+.queueListInner
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  padding: inherit
+
+.backdrop
+  position absolute
+  top 0 
+  right 0
+  bottom 0
+  left 0
+  background-color black
+  z-index 49
+  opacity 0
+  transition opacity 100ms ease-out
+  pointer-events: none
+
+.queueBar.visible ~ .backdrop
+  opacity 0.6
+  pointer-events: auto
+
+  @media all and (min-width: size-large)
+    display none

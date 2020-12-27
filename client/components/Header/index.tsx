@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+import SVG from 'react-inlinesvg';
 import { Link, withRouter } from 'react-router-dom';
 import logo from '~images/ampache-dark.png';
-import userIcon from '~images/icons/svg/user.svg';
 
 import style from './index.module.styl';
 
 interface HeaderProps {
     username: string;
+    toggleQueueBar: () => void;
+    toggleSideBar: () => void;
 }
 
 //TODO: Figure out how to use HeaderProps type here
@@ -25,6 +27,9 @@ const Header = withRouter(({ history, ...props }: any) => {
                     <img src={logo} alt='Ampache Logo' />
                 </Link>
             </div>
+            <div className={style.menuIcon} onClick={props.toggleSideBar}>
+                <SVG className='icon-button' src={require('~images/icons/svg/hamburger.svg')} alt={'Show menu'} />
+            </div>
             <div className={style.search}>
                 <form onSubmit={(e) => searchSubmit(e)}>
                     <input
@@ -36,8 +41,11 @@ const Header = withRouter(({ history, ...props }: any) => {
                     />
                 </form>
             </div>
+            <div className={style.queueIcon} onClick={props.toggleQueueBar}>
+                <SVG className='icon-button' src={require('~images/icons/svg/playlist.svg')} alt={'Show queue'} />
+            </div>
             <div className={style.account}>
-                <img src={userIcon} alt='user icon' />
+                <SVG src={require('~images/icons/svg/user.svg')} alt="User" />
                 <div className={style.options}>
                     <ul>
                         <li>

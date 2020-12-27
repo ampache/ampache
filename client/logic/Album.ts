@@ -22,6 +22,7 @@ type Album = {
     preciserating: number;
     rating: number;
     averagerating: number;
+    flag: boolean;
     mbid: string;
 };
 

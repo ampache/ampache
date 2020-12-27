@@ -1,51 +1,64 @@
-.artistPage
-  h1
-    font-size 3vw
-    margin 2px
-  .artistInfo
-    background-color #1a1a1a
-    display flex
-    min-height 350px
-    //padding 30px
-    position relative
-    .imageContainer
-      height 100%
-      flex 1
-      max-width: 350px
-      align-self center
-      img
-        height 100%
-        width 100%
-        object-fit contain
-        display block
-      @media all and (max-width: 1000px)
-        position absolute
-        z-index 0
-        width 100%
-        background-color black
-        max-width initial
-        img
-          object-fit cover
-          opacity 0.3
-    .details
-      padding 20px 0 20px 20px
-      display flex
-      flex-direction column
-      justify-content space-around
-      z-index 1
-      flex: 1;
-      max-width: 80%;
-      .name
-        font-size calc(1.5vw + 18px)
-      .summary
-        font-size calc(0.5vw + 12px)
-        margin-right 10px
-      .playRandom
-        width 25%
-        margin-top 2%
-        min-width 215px
-  .albums
-    display flex
-    flex-wrap wrap
-    .albumDisplayContainer
-      margin 20px
+@import "~/stylus/color.styl"
+@import "~/stylus/sizes.styl"
+
+.artistInfo
+  display flex
+  flex-direction: column
+  align-items: center;
+  margin-bottom 20px
+
+  @media all and (min-width: size-small)
+    flex-direction: row
+
+.imageContainer
+  width: 100%
+  padding-bottom 40%
+  border-radius 3px
+  position relative
+
+  @media all and (min-width: size-micro)
+    padding-bottom 30%
+
+  @media all and (min-width: size-small)
+    padding-bottom 0
+    height: 150px
+    width 150px
+    border-radius 50%
+    overflow hidden
+    margin-right 20px
+  
+  img
+    width: 100%
+    height: 100%
+    display: block
+    position absolute
+    top: 0
+    left 0
+    bottom 0
+    right 0
+    object-fit: cover
+
+.details
+  display flex
+  flex-direction column
+  align-items center
+
+  @media all and (min-width: size-small)
+    align-items start
+
+.name
+  margin-bottom: 10px
+  font-size 22px
+  font-weight: 700
+
+.summary
+  display none
+
+.albums
+  display: grid
+  gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  
+.rating
+  text-align: center 
+  padding: 5px 0 

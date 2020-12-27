@@ -1,22 +1,44 @@
 @import "~/stylus/sizes.styl"
+@import "~/stylus/color.styl"
 
 .currentPlaying
-  height musicPlayerHeight
-  width 100%
+  min-width: 0; // prevents grid blowout
   display flex
+  align-self: center
+  grid-column: 2 / 8;
+  grid-row: 1;
+  overflow hidden
+
+  @media all and (min-width: size-small)
+    grid-column: 2;
+    grid-row: 1;
+    align-self end
+
+  @media all and (min-width: size-large)
+    grid-column: 3 / 4;
+    grid-row: 1;
+    margin-bottom 5px
+    
+
   .info
-    display flex
-    flex-direction column
-    color white
-    font-size calc(0.5vw + 12px)
-    justify-content center
-  .songName, .artistName
-      margin 5px 0 5px 8px
-    .artistName
-      color #9b9b9b
-  .albumArt
-    width musicPlayerHeight
-    height musicPlayerHeight
-    background-color #555555
-    img
-      height 100%
+    overflow hidden
+
+  .songName
+    font-weight 700
+    text-overflow ellipsis
+    overflow hidden
+    white-space: nowrap
+
+  .albumName
+    text-overflow ellipsis
+    overflow hidden
+    white-space: nowrap
+    color colorGray400
+
+  .artistName
+    text-overflow ellipsis
+    overflow hidden
+    white-space: nowrap
+    color colorGray400
+
+

@@ -1,0 +1,9 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="add-to-temp-playlist">
+<g id="Vector">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M14 12V10H12V12H10V14H12V16H14V14H16V12H14Z" />
+<path fill-rule="evenodd" clip-rule="evenodd" d="M14 8C14 8.34071 13.9716 8.67479 13.917 9H11V11H9V13.917C8.67479 13.9716 8.34071 14 8 14C4.68629 14 2 11.3137 2 8C2 4.68629 4.68629 2 8 2C11.3137 2 14 4.68629 14 8ZM8.5 4C8.5 3.72386 8.27614 3.5 8 3.5C7.72386 3.5 7.5 3.72386 7.5 4V8.5H5C4.72386 8.5 4.5 8.72386 4.5 9C4.5 9.27614 4.72386 9.5 5 9.5H8.5V4Z" />
+<path d="M12 10H13.6586C13.056 11.7048 11.7048 13.056 10 13.6586V12H12V10Z" />
+</g>
+</g>
+</svg>

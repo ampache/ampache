@@ -18,21 +18,31 @@ interface AppViewProps {
 interface AppViewStates {
     error: Error;
     QueueBarVisible: boolean;
+    SideBarVisible: boolean;
 }
 
 class AppView extends Component<AppViewProps, AppViewStates> {
     private readonly toggleQueueBarVisible: () => void;
     private readonly setQueueBarVisibility: (visible: boolean) => void;
+    private readonly toggleSideBarVisible: () => void;
+    private readonly setSideBarVisibility: (visible: boolean) => void;
 
     constructor(props) {
         super(props);
-        this.state = { error: null, QueueBarVisible: false };
+        this.state = { error: null, QueueBarVisible: false, SideBarVisible: false };
 
         this.toggleQueueBarVisible = () => {
             this.setState({ QueueBarVisible: !this.state.QueueBarVisible });
         };
         this.setQueueBarVisibility = (visible: boolean) => {
             this.setState({ QueueBarVisible: visible });
+        };
+
+        this.toggleSideBarVisible = () => {
+            this.setState({ SideBarVisible: !this.state.SideBarVisible });
+        };
+        this.setSideBarVisibility = (visible: boolean) => {
+            this.setState({ SideBarVisible: visible });
         };
     }
 
@@ -58,10 +68,21 @@ class AppView extends Component<AppViewProps, AppViewStates> {
 
         return (
           <NavigationBlock enabled={this.state.QueueBarVisible} navigationAttempt={() => {this.setState({QueueBarVisible: false})}}>
-                <Header username={this.props.user.username} />
+                <Header 
+                    username={this.props.user.username} 
+                    toggleQueueBar={this.toggleQueueBarVisible}
+                    toggleSideBar={this.toggleSideBarVisible}
+                />
                 <div className={style.container}>
-                    <Sidebar />
-                    <div className={style.content}>{this.props.children}</div>
+                    <Sidebar 
+                        visible={this.state.SideBarVisible}
+                        setSideBarVisibility={this.setSideBarVisibility}
+                    />
+                    <div className={style.content}>
+                        <div className={style.contentInner}>
+                            {this.props.children}
+                        </div>
+                    </div>
 
                     <QueueBar
                         visible={this.state.QueueBarVisible}
@@ -69,7 +90,7 @@ class AppView extends Component<AppViewProps, AppViewStates> {
                     />
 
                 </div>
-                <MusicControl toggleQueueBar={this.toggleQueueBarVisible} />
+                <MusicControl />
           </NavigationBlock>
         );
     }

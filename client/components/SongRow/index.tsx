@@ -1,8 +1,9 @@
 import React from 'react';
+import SVG from 'react-inlinesvg';
 import useContextMenu from 'react-use-context-menu';
 import { Song } from '~logic/Song';
 import { Link } from 'react-router-dom';
-import heartIcon from '/images/icons/svg/heart.svg';
+import Rating from '~components/Rating/';
 
 interface SongRowProps {
     song: Song;
@@ -32,6 +33,11 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
     const paddedSeconds: string =
         seconds.length === 1 ? seconds + '0' : seconds;
 
+    const formatLabel = (s) => ([
+        (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s
+        //https://stackoverflow.com/a/37770048
+    ]);
+
     const showContextMenu = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -52,11 +58,13 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                 tabIndex={1}
             >
                 <span
-                    className={style.verticalMenu}
+                    className={style.actions}
                     onClick={(e) => {
                         showContextMenu(e);
                     }}
-                />
+                >
+                    <SVG className='icon-button' src={require('~images/icons/svg/more-options-hori.svg')} alt="More options" />
+                </span>
                 <span
                     className={
                         props.song.flag
@@ -68,32 +76,44 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                         props.flagSong(props.song.id, !props.song.flag);
                     }}
                 >
-                    <img src={heartIcon} alt='Favorite song' />
+                    <SVG className='icon-button' src={require('~images/icons/svg/heart-full.svg')} alt="Favorite song" />
                 </span>
-                <span className='title'>{props.song.title}</span>
-                {props.showArtist && (
-                    <div onClick={(e) => e.stopPropagation()}>
-                        <Link
-                            className='artist'
-                            to={`/artist/${props.song.artist.id}`}
-                        >
-                            {props.song.artist.name}
-                        </Link>
-                    </div>
-                )}
-                {props.showAlbum && (
-                    <div onClick={(e) => e.stopPropagation()}>
-                        <Link
-                            className='album'
-                            to={`/album/${props.song.album.id}`}
-                        >
-                            {props.song.album.name}
-                        </Link>
-                    </div>
-                )}
+                
+                <span className={style.songDetails}>
+                    <span className={style.title}>{props.song.title}</span>
+                    {props.showArtist && (
+                        <span className={style.artistContainer} onClick={(e) => e.stopPropagation()}>
+                            <Link
+                                className={style.artist}
+                                to={`/artist/${props.song.artist.id}`}
+                            >
+                                {props.song.artist.name}
+                            </Link>
+                        </span>
+                    )}
+                    {props.showAlbum && (
+                        <span className={style.albumContainer} onClick={(e) => e.stopPropagation()}>
+                            <Link
+                                className={style.album}
+                                to={`/album/${props.song.album.id}`}
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                {props.song.album.name}
+                            </Link>
+                        </span>
+                    )}
+                </span>
+
+                <span className={style.rating}>
+                    <Rating value={props.song.rating} fav={props.song.flag}/>
+                </span>
 
                 <span className={style.time}>
-                    {minutes}:{paddedSeconds}
+                    {formatLabel(props.song.time)}
+                </span>
+
+                <span className={style.remove}>
+                    <SVG className='icon-button' src={require('~images/icons/svg/cross.svg')} alt="Remove" />
                 </span>
             </li>
             <div {...bindMenu} className='contextMenu'>

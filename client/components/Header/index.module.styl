@@ -1,33 +1,53 @@
+@import "~/stylus/color.styl"
 @import "~/stylus/sizes.styl"
 
 .header
-  height headerHeight
-  padding 0 5px
-  font-size 15px
-  background-color #000
-  display flex
+  padding 3px 0px
+  background-color colorGray800
+  border-bottom: 2px solid colorGray900
   position relative
+  flex-shrink: 0;
+
+  display grid
+  column-gap: 5px;
+  grid-template-columns: 60px 1fr 60px;
+
   .logoContainer
-    width 100px
-    height 100%
-    display flex
-    align-items center
-    .logo
-      height 100%
-      padding-right 5px
-      img
-        height 100%
-  .search
+    display: none
     align-self center
+    grid-column: 1;
+    padding-left 20px
+    
+
+    @media all and (min-width: size-large)
+      display block
+
+    .logo
+      img
+        width 36px
+        height 36px
+
+  .search
+    margin: 0 auto
+    display: flex
+    align-items: center
+    grid-column: 2;
+    width: 100%
+
     form
+      width: 100%
+      display: flex
+      justify-content: center
+      
       input
         border-radius 3px
         border none
-        padding 10px
-        background-color #3d3d3d
+        line-height: 32px
+        background-color colorGray700
         color white
-        width 175px
-        transition 0.2s width
+        width: 100%
+        max-width 300px
+        margin: 0 auto
         background-image url('https://img.icons8.com/cotton/64/000000/search.png')
         background-repeat no-repeat
         padding-left 35px
@@ -35,21 +55,18 @@
         background-position-y center
         background-position-x 5px
         &:focus
-          width 200px
+          box-shadow 0 0 0 2px colorAmber800
+        &::placeholder
+          color colorGray300
+
   .account
     position absolute
     right 0
-    display flex
+    display none
     align-items center
     justify-content flex-end
     height 100%
-    width 150px
     z-index 2
-    img
-      padding-right 10px
-      width 34px
-      transition 0.2s filter
-      filter invert(1) //You expect me to edit photos?
 
     @keyframes fadeInFromNone
       0%
@@ -68,7 +85,7 @@
       & > .options
         display block
         opacity 1
-        animation fadeInFromNone 0.3s ease
+        animation fadeInFromNone 0.15s easeOut
 
     .options
       animation-direction reverse
@@ -80,7 +97,7 @@
       padding-right 0
       display none
       font-size 18px
-      width 100%
+      width 150px
       &:after
         content ''
         display block
@@ -92,7 +109,21 @@
         border-bottom 10px solid #3d3d3d
         border-left 10px solid transparent
         border-right 10px solid transparent
+
       li
         color gray
+
         a
           color linkColor
+
+  .menuIcon 
+    margin-left: 5px
+    grid-column: 1;
+
+    @media all and (min-width: size-large)
+      display: none      
+
+  .queueIcon
+    grid-column: 3;
+    margin-left: auto
+    margin-right: 6px

@@ -1,40 +1,66 @@
 //This overrides some of the style that comes with react-async-popup
 
-//Colors
-popupColor = #2c2c2c
-cancelButton = #850000
-confirmButton = #166e16
-textColor = white
-closeButton = #9a9a9a
+@import "~stylus/color.styl"
+@import "~/components/Button/index.module.styl"
 
-.react-async-popup
+.react-async-popup.react-async-popup
+  border-radius 5px
+  overflow hidden
+  max-width: 90vw
+
+  .title-container
+    background-color colorGray700
+    border 0
+
   .popup-content
-    background-color popupColor !important
-    border none !important
-    color textColor
-    .close-button svg
-      fill closeButton
-    .body
-      padding 0
-    .footer
-      display flex
-      justify-content space-around
-      border-top none !important
-    .cancelButton, .footer button:first-of-type
-      background-color cancelButton
-      &:hover
-        background-color darken(@background-color, 20%)
-    .confirmButton, .footer button
-      background-color confirmButton
-      font-size 16px
-      font-weight normal
-      border none
-      color textColor
-      padding 10px 0
-      min-width: 200px;
-      cursor pointer
-      transition 0.2s background-color
-      &:hover
-        background-color darken(@background-color, 20%)
+    background-color colorGray800
+    border none
+    min-width: auto
+
+  .close-button svg
+    fill currentColor
+
+  .body
+    padding 0
+
+  .footer
+    display flex
+    justify-content space-around
+    border-top none
+
+  .cancelButton, 
+  .footer button:first-of-type
+    @extend .button
+    @extend .button.red
+    @extend .button.medium
+
+  .confirmButton, 
+  .footer button
+    @extend .button
+    @extend .button.green
+    @extend .button.medium
+
+  .confirmButton
+    margin-top 20px
+
   & ~ .mask
-    background-color rgba(0,0,0,0.5) !important
+    background-color rgba(0,0,0,0.5)
+
+  input[type=text]
+    background-color colorGray900
+    font-size inherit 
+    border-color transparent 
+    color inherit 
+    outline none  
+    border-radius 3px 
+
+    &:focus 
+      border-color colorAmber600 
+
+    @media (any-hover: hover)
+      &:hover 
+        border-color colorAmber800 
+
+  label 
+    font-weight: 700
+    color colorGray400 
