@@ -25,6 +25,27 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
 
+/**
+ * debug_wresult
+ *
+ * Convenience function to format the output.
+ * @param boolean $status
+ * @param string $value
+ * @param string $comment
+ * @return string
+ */
+function debug_wresult($status = false, $value = null, $comment = '')
+{
+    $class = $status ? 'success' : 'warning';
+
+    if ($value === null) {
+        $value = $status ? T_('OK') : T_('WARNING');
+    }
+
+    return '<button type="button" class="btn btn-' . $class . '">' . scrub_out($value) .
+        '</span> <em>' . $comment . '</em></button>';
+}
+
 // TODO remove me
 global $dic;
 $environment = $dic->get(EnvironmentInterface::class);

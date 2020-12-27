@@ -29,7 +29,6 @@ use Ampache\Model\Playlist;
 use Ampache\Model\Plugin;
 use Ampache\Model\Preference;
 use Ampache\Model\TVShow_Season;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
@@ -446,72 +445,6 @@ function get_datetime($time, $date_format = 'short', $time_format = 'short', $ov
 
     return $format->format($time);
 }
-
-/**
- * update_preferences
- * grabs the current keys that should be added and then runs
- * through $_REQUEST looking for those values and updates them for this user
- * @param integer $user_id
- */
-function update_preferences($user_id = 0)
-{
-    // Get current keys
-    $sql = "SELECT `id`, `name`, `type` FROM `preference`";
-
-    // If it isn't the System Account's preferences
-    if ($user_id != '-1') {
-        $sql .= " WHERE `catagory` != 'system'";
-    }
-
-    $db_results = Dba::read($sql);
-
-    $results = array();
-    // Collect the current possible keys
-    while ($row = Dba::fetch_assoc($db_results)) {
-        $results[] = array('id' => $row['id'], 'name' => $row['name'], 'type' => $row['type']);
-    } // end collecting keys
-
-    // Foreach through possible keys and assign them
-    foreach ($results as $data) {
-        // Get the Value from POST/GET var called $data
-        $name         = (string) $data['name'];
-        $apply_to_all = 'check_' . $data['name'];
-        $new_level    = 'level_' . $data['name'];
-        $pref_id      = $data['id'];
-        $value        = scrub_in($_REQUEST[$name]);
-
-        // Some preferences require some extra checks to be performed
-        switch ($name) {
-            case 'transcode_bitrate':
-                $value = (string) Stream::validate_bitrate($value);
-                break;
-            default:
-                break;
-        }
-
-        if (preg_match('/_pass$/', $name)) {
-            if ($value == '******') {
-                unset($_REQUEST[$name]);
-            } else {
-                if (preg_match('/md5_pass$/', $name)) {
-                    $value = md5((string) $value);
-                }
-            }
-        }
-
-        // Run the update for this preference only if it's set
-        if (isset($_REQUEST[$name])) {
-            Preference::update($pref_id, $user_id, $value, $_REQUEST[$apply_to_all]);
-        }
-
-        if (Access::check('interface', 100) && $_REQUEST[$new_level]) {
-            Preference::update_level($pref_id, $_REQUEST[$new_level]);
-        }
-    } // end foreach preferences
-
-    // Now that we've done that we need to invalidate the cached preverences
-    Preference::clear_from_session();
-} // update_preferences
 
 /**
  * create_preference_input
@@ -974,27 +907,6 @@ function debug_result($status = false, $value = null, $comment = '')
 
     if ($value === null) {
         $value = $status ? T_('OK') : T_('Error');
-    }
-
-    return '<button type="button" class="btn btn-' . $class . '">' . scrub_out($value) .
-        '</span> <em>' . $comment . '</em></button>';
-}
-
-/**
- * debug_wresult
- *
- * Convenience function to format the output.
- * @param boolean $status
- * @param string $value
- * @param string $comment
- * @return string
- */
-function debug_wresult($status = false, $value = null, $comment = '')
-{
-    $class = $status ? 'success' : 'warning';
-
-    if ($value === null) {
-        $value = $status ? T_('OK') : T_('WARNING');
     }
 
     return '<button type="button" class="btn btn-' . $class . '">' . scrub_out($value) .
@@ -1610,37 +1522,6 @@ function show_user_select($name, $selected = '', $style = '')
     echo "</select>\n";
 } // show_user_select
 
-/**
- * show_playlist_select
- * This one is for playlists!
- * @param string $name
- * @param string $selected
- * @param string $style
- */
-function show_playlist_select($name, $selected = '', $style = '')
-{
-    echo "<select name=\"$name\" style=\"$style\">\n";
-    echo "\t<option value=\"\">" . T_('None') . "</option>\n";
-
-    $sql              = "SELECT `id`, `name` FROM `playlist` ORDER BY `name`";
-    $db_results       = Dba::read($sql);
-    $nb_items         = Dba::num_rows($db_results);
-    $index            = 1;
-    $already_selected = false;
-
-    while ($row = Dba::fetch_assoc($db_results)) {
-        $select_txt = '';
-        if (!$already_selected && ($row['id'] == $selected || $index == $nb_items)) {
-            $select_txt       = 'selected="selected"';
-            $already_selected = true;
-        }
-
-        echo "\t<option value=\"" . $row['id'] . "\" $select_txt>" . scrub_out($row['name']) . "</option>\n";
-        ++$index;
-    } // end while users
-
-    echo "</select>\n";
-} // show_playlist_select
 
 function xoutput_headers()
 {
@@ -1674,71 +1555,9 @@ function xoutput_from_array($array, $callback = false, $type = '')
 
         return $array[$outputnode];
     } else {
-        return json_from_array($array, $callback, $type);
+        return json_encode($array);
     }
 }
-
-/**
- * @param $array
- * @param boolean $callback
- * @param string $type
- * @return false|string
- */
-function json_from_array($array, $callback = false, $type = '')
-{
-    return json_encode($array);
-}
-
-/**
- * xml_get_header
- * This takes the type and returns the correct xml header
- * @param string $type
- * @return string
- */
-function xml_get_header($type)
-{
-    switch ($type) {
-        case 'itunes':
-            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" .
-                "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\"\n" .
-                "\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n" .
-                "<plist version=\"1.0\">\n" .
-                "<dict>\n" .
-                "       <key>Major Version</key><integer>1</integer>\n" .
-                "       <key>Minor Version</key><integer>1</integer>\n" .
-                "       <key>Application Version</key><string>7.0.2</string>\n" .
-                "       <key>Features</key><integer>1</integer>\n" .
-                "       <key>Show Content Ratings</key><true/>\n" .
-                "       <key>Tracks</key>\n" .
-                "       <dict>\n";
-        case 'xspf':
-            return "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
-                "<!-- XML Generated by Ampache v." . AmpConfig::get('version') . " -->";
-        default:
-            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-    }
-} // xml_get_header
-
-/**
- * xml_get_footer
- * This takes the type and returns the correct xml footer
- * @param string $type
- * @return string
- */
-function xml_get_footer($type)
-{
-    switch ($type) {
-        case 'itunes':
-            return "      </dict>\n" .
-                "</dict>\n" .
-                "</plist>\n";
-        case 'xspf':
-            return "      </trackList>\n" .
-                "</playlist>\n";
-        default:
-            return '';
-    }
-} // xml_get_footer
 
 /**
  * toggle_visible
