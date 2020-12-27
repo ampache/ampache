@@ -241,21 +241,6 @@ class Playlist extends playlist_object
     } // format
 
     /**
-     * get_track
-     * Returns the single item on the playlist and all of it's information, restrict
-     * it to this Playlist
-     * @param $track_id
-     * @return array
-     */
-    public function get_track($track_id)
-    {
-        $sql        = "SELECT * FROM `playlist_data` WHERE `id` = ? AND `playlist` = ?";
-        $db_results = Dba::read($sql, array($track_id, $this->id));
-
-        return Dba::fetch_assoc($db_results);
-    } // get_track
-
-    /**
      * get_items
      * This returns an array of playlist medias that are in this playlist.
      * Because the same media can be on the same playlist twice they are

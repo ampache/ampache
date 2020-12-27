@@ -335,24 +335,6 @@ class Wanted extends database_object
     }
 
     /**
-     * Delete a wanted release by name.
-     * @param integer $artist
-     * @param string $album_name
-     * @param integer $year
-     */
-    public static function delete_wanted_by_name($artist, $album_name, $year)
-    {
-        $sql    = "DELETE FROM `wanted` WHERE `artist` = ? AND `name` = ? AND `year` = ?";
-        $params = array($artist, $album_name, $year);
-        if (!Core::get_global('user')->has_access('75')) {
-            $sql .= " AND `user` = ?";
-            $params[] = Core::get_global('user')->id;
-        }
-
-        Dba::write($sql, $params);
-    }
-
-    /**
      * Accept a wanted request.
      */
     public function accept()
