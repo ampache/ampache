@@ -25,6 +25,11 @@ namespace Ampache\Module\Util;
 interface UiInterface
 {
     /**
+     * Show the requested template file
+     */
+    public function show(string $template): void;
+
+    /**
      * This displays the query stats
      */
     public function showQueryStats(): void;

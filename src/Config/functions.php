@@ -28,7 +28,6 @@ use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Model\Playlist;
 use Ampache\Model\Plugin;
 use Ampache\Model\Preference;
-use Ampache\Model\Rating;
 use Ampache\Model\TVShow_Season;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Xml_Data;

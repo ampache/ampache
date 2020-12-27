@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\Browse;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -58,7 +57,7 @@ final class ChannelAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        Ui::show('show_browse_form.inc.php');
+        $this->ui->show('show_browse_form.inc.php');
 
         // Browser is able to save page on current session. Only applied to main menus.
         $browse->set_update_session(true);

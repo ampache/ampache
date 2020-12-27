@@ -450,12 +450,9 @@ class Ui implements UiInterface
     }
 
     /**
-     * show
-     *
      * Show the requested template file
-     * @param string $template
      */
-    public static function show(string $template)
+    public function show(string $template): void
     {
         require_once self::find_template($template);
     }

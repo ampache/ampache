@@ -25,7 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Module\Statistics\Stats;
-use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;

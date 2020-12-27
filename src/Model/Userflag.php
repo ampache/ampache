@@ -27,7 +27,6 @@ namespace Ampache\Model;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\Ui;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Exception;
