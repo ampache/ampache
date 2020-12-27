@@ -83,7 +83,13 @@ if (isset($ow_config) && is_array($ow_config)) {
 
 $results['raw_web_path'] = $results['web_path'];
 if (empty($results['http_host'])) {
-    $results['http_host'] = $_SERVER['SERVER_NAME'];
+    if (!empty($_SERVER['HTTP_HOST'])) {
+        $results['http_host'] = $_SERVER['HTTP_HOST'];
+    } elseif (!empty($_SERVER['SERVER_NAME'])) {
+        $results['http_host'] = $_SERVER['SERVER_NAME'];
+    } else {
+        $results['http_host'] = 'localhost';
+    }
 }
 if (empty($results['local_web_path'])) {
     $results['local_web_path'] = $http_type . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $results['raw_web_path'];
