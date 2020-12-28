@@ -25,11 +25,12 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Admin\License;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Model\License;
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\License\LicenseCreatorInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -42,12 +43,20 @@ final class EditAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private ModelFactoryInterface $modelFactory;
+
+    private LicenseCreatorInterface $licenseCreator;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        ModelFactoryInterface $modelFactory,
+        LicenseCreatorInterface $licenseCreator
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
+        $this->modelFactory    = $modelFactory;
+        $this->licenseCreator  = $licenseCreator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -58,16 +67,25 @@ final class EditAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        if ((filter_has_var(INPUT_POST, 'license_id'))) {
-            $license = new License(filter_input(INPUT_POST, 'license_id', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $data = $request->getParsedBody();
+
+        $licenseId = (int) ($data['license_id'] ?? 0);
+        if ($licenseId > 0) {
+            $license = $this->modelFactory->createLicense($licenseId);
+
             if ($license->id) {
-                $license->update($_POST);
+                $license->update($data);
             }
             $text = T_('The License has been updated');
         } else {
-            License::create($_POST);
+            $this->licenseCreator->create(
+                $data['name'] ?? '',
+                $data['description'] ?? '',
+                $data['external_link'] ?? ''
+            );
             $text = T_('A new License has been created');
         }
+
         $this->ui->showConfirmation(
             T_('No Problem'),
             $text,

@@ -123,15 +123,13 @@ class License
     } // format
 
     /**
-     * delete
-     * this function deletes a specific license entry
-     * @param integer $license_id
+     * Deletes the license
      */
-    public static function delete($license_id)
+    public function delete(): void
     {
         $sql = "DELETE FROM `license` WHERE `id` = ?";
-        Dba::write($sql, array($license_id));
-    } // delete
+        Dba::write($sql, [$this->id]);
+    }
 
     /**
      * get_licenses

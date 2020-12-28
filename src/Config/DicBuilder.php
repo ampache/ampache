@@ -55,6 +55,7 @@ $builder->addDefinitions(
     require_once __DIR__ . '/../Gui/service_definition.php',
     require_once __DIR__ . '/../Module/Application/service_definition.php',
     require_once __DIR__ . '/../Module/Authorization/service_definition.php',
+    require_once __DIR__ . '/../Module/License/service_definition.php',
 );
 
 return $builder->build();

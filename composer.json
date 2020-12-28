@@ -398,7 +398,7 @@
         }
     },
     "scripts": {
-        "coverage": "./vendor/bin/phpunit --warm-coverage-cache && ./vendor/bin/phpunit --coverage-html build/coverage tests",
+        "coverage": "./vendor/bin/phpunit --warm-coverage-cache && XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-html build/coverage tests",
         "tests": "./vendor/bin/phpunit tests",
         "codestyle": "resources/scripts/tests/codestyle.sh",
         "syntax": "resources/scripts/tests/syntax.sh",

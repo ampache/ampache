@@ -27,7 +27,7 @@ interface UiInterface
     /**
      * Show the requested template file
      */
-    public function show(string $template): void;
+    public function show(string $template, array $context = []): void;
 
     /**
      * This displays the query stats

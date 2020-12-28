@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Admin\License;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\License;
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -43,12 +44,16 @@ final class DeleteAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
+        $this->modelFactory    = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -59,7 +64,11 @@ final class DeleteAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        License::delete($_REQUEST['license_id']);
+        $license = $this->modelFactory->createLicense(
+            (int) $request->getQueryParams()['license_id'] ?? 0
+        );
+
+        $license->delete();
 
         $this->ui->showConfirmation(
             T_('No Problem'),

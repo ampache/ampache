@@ -164,4 +164,10 @@ final class ModelFactory implements ModelFactoryInterface
     ): Shoutbox {
         return new Shoutbox($shoutboxId);
     }
+
+    public function createLicense(
+        int $licenseId
+    ): License {
+        return new License($licenseId);
+    }
 }

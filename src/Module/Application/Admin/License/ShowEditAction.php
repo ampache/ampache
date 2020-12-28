@@ -24,12 +24,11 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\License;
 
-use Ampache\Model\License;
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,10 +39,14 @@ final class ShowEditAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
+        ModelFactoryInterface $modelFactory
     ) {
-        $this->ui = $ui;
+        $this->ui           = $ui;
+        $this->modelFactory = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -52,11 +55,13 @@ final class ShowEditAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
+        $license = $this->modelFactory->createLicense(
+            (int) $request->getQueryParams()['license_id'] ?? 0
+        );
+
         $this->ui->showHeader();
 
-        $license = new License($_REQUEST['license_id']);
-
-        require_once Ui::find_template('show_edit_license.inc.php');
+        $this->ui->show('show_edit_license.inc.php', ['license' => $license]);
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();
