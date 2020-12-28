@@ -28,10 +28,7 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (
     });
 
     return (
-        <Link
-            to={`/album/${props.album.id}`}
-            className={`${style.albumDisplay} ${props.className}`}
-        >
+        <div className={`${style.albumDisplay} ${props.className}`}>
             <div {...bindMenu} className='contextMenu'>
                 <div
                     {...bindMenuItems}
@@ -111,30 +108,27 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (
             <div className={style.rating} onClick={(e) => e.preventDefault()}>
                 <Rating value={props.album.rating} fav={props.album.flag} />
             </div>
-            <div className={style.details}>
+            <Link to={`/album/${props.album.id}`} className={style.details}>
                 <div className={style.albumInfo}>
-                    <div className={style.albumName}>
-                        <Link
-                            to={`/album/${props.album.id}`}
-                            className={style.cardLink}
-                        >
-                            {props.album.name}
-                        </Link>
-                    </div>
+                    <div className={style.albumName}>{props.album.name}</div>
                     <div className={style.albumArtist}>
-                        <Link
-                            to={`/artist/${props.album.artist.id}`}
-                            className={style.cardLink}
-                        >
-                            {props.album.artist.name}
-                        </Link>
+                        {/*HTML does not allow nested links, this hack makes it shutup,
+                        TODO: See if this can be refactored without this*/}
+                        <object type='owo/uwu'>
+                            <Link
+                                to={`/artist/${props.album.artist.id}`}
+                                className={style.cardLink}
+                            >
+                                {props.album.artist.name}
+                            </Link>
+                        </object>
                     </div>
                     <div className={style.albumMeta}>
                         {props.album.year} - {props.album.tracks} tracks
                     </div>
                 </div>
-            </div>
-        </Link>
+            </Link>
+        </div>
     );
 };
 

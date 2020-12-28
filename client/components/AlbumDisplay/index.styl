@@ -52,13 +52,9 @@
                 padding 5px 0
                 filter: drop-shadow(0 0 5px black)
                 margin-left 16px
-                &.viewAlbum:hover //Specifically hover over "View Album" lights it up
+                cursor pointer
+                &:hover
                     color linkHoverColor
-                &:hover //Specifically hover over "View Album" lights it up
-                    color linkHoverColor
-            &:hover //Don't want "View Album" to have hover effect unless we specifically hover over it.
-                .viewAlbum
-                    color colorGray300
 
             svg
                 margin-left -20px
@@ -132,14 +128,6 @@
             pointer-events: auto
             color colorGray300
             background-color rgba(black, 0.6)
-            .viewAlbum
-                color linkHoverColor
-        :global //As contextMenu is a child, it would otherwise have a constant hover effect
-            .contextMenu
-                color colorGray300
-    :global //Little hack to make "View Album" not have hover effect if we are in context menu
-        .contextMenu:hover ~ :local(.imageContainer .albumActions .viewAlbum)
-                    color colorGray300
 
 /*TODO: currently hovering over the rating stars makes "View Album" light up, may need to use JS to prevent
     wasting too much time trying to fix it now.
