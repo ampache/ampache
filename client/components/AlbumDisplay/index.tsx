@@ -69,38 +69,43 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (
                 >
                     <Link
                         to={`/album/${props.album.id}`}
-                        className={style.viewAlbum}
+                        className={`${style.action} ${style.viewAlbum}`}
                     >
                         View album
                     </Link>
-                    <Link to={'#'}>
+                    <span
+                        onClick={() => {
+                            props.playSongFromAlbum(props.album.id, false);
+                        }}
+                        className={style.action}
+                    >
                         <SVG
                             className='icon-inline'
                             src={require('~images/icons/svg/play.svg')}
                         />
                         Play
-                    </Link>
-                    <Link to={'#'}>
+                    </span>
+                    <span className={style.action}>
                         <SVG
                             className='icon-inline'
                             src={require('~images/icons/svg/play-next.svg')}
                         />
                         Play next
-                    </Link>
-                    <Link to={'#'}>
+                    </span>
+                    <span className={style.action}>
                         <SVG
                             className='icon-inline'
                             src={require('~images/icons/svg/play-last.svg')}
                         />
                         Add to queue
-                    </Link>
-                    <Link {...bindTrigger} to={'#'}>
+                    </span>
+                    <span {...bindTrigger} className={style.action}>
                         <SVG
                             className='icon-inline'
                             src={require('~images/icons/svg/more-options-hori.svg')}
                         />
                         More options
-                    </Link>
+                    </span>
                 </div>
             </div>
             <div className={style.rating} onClick={(e) => e.preventDefault()}>

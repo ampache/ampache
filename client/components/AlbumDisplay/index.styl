@@ -47,13 +47,14 @@
             opacity 0
             padding-left 20px
             padding-bottom 5px
-            pointer-events: none
 
-            a
+            .action
                 padding 5px 0
                 filter: drop-shadow(0 0 5px black)
                 margin-left 16px
                 &.viewAlbum:hover //Specifically hover over "View Album" lights it up
+                    color linkHoverColor
+                &:hover //Specifically hover over "View Album" lights it up
                     color linkHoverColor
             &:hover //Don't want "View Album" to have hover effect unless we specifically hover over it.
                 .viewAlbum

@@ -12,10 +12,8 @@ const MusicControl: React.FC = () => {
 
     const [ratingToggle, setRatingToggle] = useState(false);
 
-    const [isSeeking, setIsSeeking] = useState(false); //TODO: Figure if this is still needed
+    const [isSeeking, setIsSeeking] = useState(false);
     const [seekPosition, setSeekPosition] = useState(-1);
-
-    const [value, setValue] = React.useState(30);
 
     const handleRatingToggle = () => {
         if (
@@ -59,12 +57,16 @@ const MusicControl: React.FC = () => {
                     min={0}
                     max={musicContext.currentPlayingSong?.time ?? 0}
                     value={isSeeking ? seekPosition : musicContext.songPosition}
-                    onChange={(_, value: number) => {
+                    onChangeCommitted={(_, value: number) => {
                         // setIsSeeking(true);
                         // setValue(value);
                         // setSeekPosition(value);
                         musicContext.seekSongTo(value);
-                        // setIsSeeking(false);
+                        setIsSeeking(false);
+                    }}
+                    onChange={(_, value: number) => {
+                        setIsSeeking(true);
+                        setSeekPosition(value);
                     }}
                     disabled={musicContext.currentPlayingSong == undefined}
                     aria-labelledby='continuous-slider'
@@ -233,7 +235,7 @@ const MusicControl: React.FC = () => {
                 />
                 <Slider
                     name='volume'
-                    onChange={(event, value: number) => {
+                    onChange={(_, value: number) => {
                         musicContext.setVolume(value);
                     }}
                     max={100}
