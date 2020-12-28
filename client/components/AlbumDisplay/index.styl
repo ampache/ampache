@@ -28,6 +28,7 @@
             border 2px solid colorGray800
             border-bottom 0
             mix-blend-mode: lighten
+            transition backdrop-filter .3s
 
 
         .albumActions
@@ -42,7 +43,7 @@
             bottom 0
             left 0
             z-index 1
-            transition opacity 100ms ease-out
+            transition opacity 100ms ease-out, background-color 0.3s
             opacity 0
             padding-left 20px
             padding-bottom 5px
@@ -61,19 +62,6 @@
             svg
                 margin-left -20px
                 position absolute
-            &:before
-                content ''
-                background-color rgba(black, 0.85)
-                top 0
-                bottom 0
-                left 0
-                right 0
-                position absolute
-                z-index: -1
-
-                @supports (backdrop-filter: blur(1px))
-                    backdrop-filter: blur(5px); //TODO: Not working for me
-                    background-color rgba(black, 0.6)
 
             img
                 width 42px
@@ -136,10 +124,13 @@
 
     &:hover
         box-shadow 0 0 0 2px colorAmber800
+        .imageContainer:after
+            backdrop-filter: blur(5px);
         .albumActions
             opacity 1
             pointer-events: auto
             color colorGray300
+            background-color rgba(black, 0.6)
             .viewAlbum
                 color linkHoverColor
         :global //As contextMenu is a child, it would otherwise have a constant hover effect
