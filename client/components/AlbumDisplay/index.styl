@@ -18,7 +18,7 @@
         margin: 0 auto
         z-index 1
 
-        &:after
+        &:before
             content ''
             position absolute
             top 0
@@ -28,8 +28,15 @@
             border 2px solid colorGray800
             border-bottom 0
             mix-blend-mode: lighten
-            transition backdrop-filter .3s
 
+        &:after
+            content ''
+            position absolute
+            top 0
+            right 0
+            bottom 0
+            left 0
+            transition backdrop-filter .3s
 
         .albumActions
             display flex
@@ -98,6 +105,7 @@
         padding 15px
         padding-top 0
         justify-content:  space-between
+        height 100%
 
         .albumName
             margin-bottom 5px
@@ -122,13 +130,15 @@
     &:hover
         box-shadow 0 0 0 2px colorAmber800
         .imageContainer:after
-            backdrop-filter: blur(5px);
+            @supports (backdrop-filter: blur(1px))
+                backdrop-filter: blur(5px);
         .albumActions
             opacity 1
             pointer-events: auto
             color colorGray300
-            background-color rgba(black, 0.6)
-
+            background-color rgba(black, 0.85)
+            @supports (backdrop-filter: blur(1px))
+                background-color rgba(black, 0.6)
 /*TODO: currently hovering over the rating stars makes "View Album" light up, may need to use JS to prevent
     wasting too much time trying to fix it now.
 */
