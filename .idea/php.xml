@@ -20,7 +20,6 @@
       <path value="$PROJECT_DIR$/lib/vendor/jeromeetienne/jquery-qrcode" />
       <path value="$PROJECT_DIR$/lib/vendor/gettext/gettext" />
       <path value="$PROJECT_DIR$/lib/vendor/sabre/dav" />
-      <path value="$PROJECT_DIR$/lib/vendor/paragonie/random_compat" />
       <path value="$PROJECT_DIR$/lib/vendor/rmccue/requests" />
       <path value="$PROJECT_DIR$/lib/vendor/react/promise-timer" />
       <path value="$PROJECT_DIR$/lib/vendor/react/dns" />

@@ -76,7 +76,7 @@ export const getArtists = (
         if (JSONData.error) {
             throw new AmpacheError(JSONData.error);
         }
-        return JSONData as Artist[];
+        return JSONData.artist as Artist[];
     });
 };
 
@@ -103,6 +103,6 @@ export const getArtist = (
         if (JSONData.error) {
             throw new AmpacheError(JSONData.error);
         }
-        return JSONData[0] as Artist;
+        return JSONData.artist[0] as Artist;
     });
 };

@@ -10,6 +10,7 @@ type Album = {
         id: number;
         name: string;
     };
+    time: number;
     year: number;
     tracks?: Song[];
     disk: number;
@@ -29,7 +30,7 @@ type Album = {
 const getRandomAlbums = (username: string, count: number, authKey: AuthKey) => {
     return axios
         .get(
-            `${process.env.ServerURL}/server/json.server.php?action=stats&username=${username}&type=album&filter=random&limit=${count}&auth=${authKey}&version=400001`
+            `${process.env.ServerURL}/server/json.server.php?action=stats&username=${username}&type=album&filter=random&limit=${count}&auth=${authKey}&version=500001`
         )
         .then((response) => {
             const JSONData = response.data;
@@ -39,7 +40,7 @@ const getRandomAlbums = (username: string, count: number, authKey: AuthKey) => {
             if (JSONData.error) {
                 throw new AmpacheError(JSONData.error);
             }
-            return JSONData as Album[];
+            return JSONData.album as Album[];
         });
 };
 
@@ -56,7 +57,7 @@ const getAlbumSongs = (albumID: number, authKey: AuthKey) => {
             if (JSONData.error) {
                 throw new AmpacheError(JSONData.error);
             }
-            return JSONData as Song[];
+            return JSONData.song as Song[];
         });
 };
 
@@ -75,7 +76,7 @@ const getAlbum = (albumID: number, authKey: AuthKey, includeSongs = false) => {
         if (JSONData.error) {
             throw new AmpacheError(JSONData.error);
         }
-        return JSONData[0] as Album;
+        return JSONData.album[0] as Album;
     });
 };
 

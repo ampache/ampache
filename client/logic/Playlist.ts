@@ -28,7 +28,7 @@ export const getPlaylists = (authKey: AuthKey) => {
             if (JSONData.error) {
                 throw new AmpacheError(JSONData.error);
             }
-            return JSONData as Playlist[];
+            return JSONData.playlist as Playlist[];
         });
 };
 
@@ -45,7 +45,7 @@ export const getPlaylistSongs = (playlistID: number, authKey: AuthKey) => {
             if (JSONData.error) {
                 throw new AmpacheError(JSONData.error);
             }
-            return JSONData as Song[];
+            return JSONData.song as Song[];
         });
 };
 
