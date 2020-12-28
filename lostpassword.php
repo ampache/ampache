@@ -54,6 +54,7 @@ switch ($_REQUEST['action']) {
  * @param $email
  * @param $current_ip
  * @return boolean
+ * @throws \PHPMailer\PHPMailer\Exception
  */
 function send_newpassword($email, $current_ip)
 {

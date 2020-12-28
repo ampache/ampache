@@ -265,6 +265,7 @@ class TVShow_Season extends database_object implements library_item
     }
 
     /**
+     * display_art
      * @param integer $thumb
      * @param boolean $force
      */

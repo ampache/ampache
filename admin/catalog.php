@@ -256,7 +256,15 @@ switch ($_REQUEST['action']) {
         catalog_worker('gather_media_art', $catalogs);
         show_confirmation(T_('No Problem'), T_('The Catalog art search has started'), AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
         break;
-    case 'show_catalogs':
+    case 'update_all_file_tags':
+        catalog_worker('update_all_catalogs');
+        show_confirmation(T_('No Problem'), T_('The catalog write file tags has started'), AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
+        break;
+    case 'update_file_tags':
+        catalog_worker("update_file_tags", $catalogs);
+        show_confirmation(T_('No Problem'), T_('The Catalog write file tags has started'), AmpConfig::get('web_path') . '/admin/catalog.php', 0, 'confirmation', false);
+        break;
+   case 'show_catalogs':
     default:
         require_once AmpConfig::get('prefix') . UI::find_template('show_manage_catalogs.inc.php');
         break;

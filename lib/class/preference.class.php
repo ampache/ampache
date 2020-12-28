@@ -30,6 +30,101 @@ declare(strict_types=0);
 class Preference extends database_object
 {
     /**
+     * This array contains System preferences that can (should) not be edited or deleted from the api
+     */
+    public const SYSTEM_LIST = array(
+        'ajax_load',
+        'album_group',
+        'album_release_type',
+        'album_release_type_sort',
+        'album_sort',
+        'allow_democratic_playback',
+        'allow_localplay_playback',
+        'allow_personal_info_agent',
+        'allow_personal_info_now',
+        'allow_personal_info_recent',
+        'allow_personal_info_time',
+        'allow_stream_playback',
+        'allow_upload',
+        'allow_video',
+        'autoupdate',
+        'autoupdate_lastcheck',
+        'autoupdate_lastversion',
+        'autoupdate_lastversion_new',
+        'broadcast_by_default',
+        'browser_notify',
+        'browser_notify_timeout',
+        'concerts_limit_future',
+        'concerts_limit_past',
+        'custom_favicon',
+        'custom_login_backgound',
+        'custom_login_logo',
+        'custom_logo',
+        'custom_text_footer',
+        'daap_backend',
+        'daap_pass',
+        'demo_clear_sessions',
+        'direct_play_limit',
+        'disabled_custom_metadata_fields',
+        'disabled_custom_metadata_fields_input',
+        'download',
+        'force_http_play',
+        'geolocation',
+        'home_moment_albums',
+        'home_moment_videos',
+        'home_now_playing',
+        'home_recently_played',
+        'httpq_active',
+        'lang',
+        'lastfm_challenge',
+        'lastfm_grant_link',
+        'localplay_controller',
+        'localplay_level',
+        'lock_songs',
+        'mpd_active',
+        'notify_email',
+        'now_playing_per_user',
+        'offset_limit',
+        'play_type',
+        'playlist_method',
+        'playlist_type',
+        'podcast_keep',
+        'podcast_new_download',
+        'popular_threshold',
+        'rate_limit',
+        'share',
+        'share_expire',
+        'show_donate',
+        'show_lyrics',
+        'show_played_times',
+        'site_title',
+        'slideshow_time',
+        'song_page_title',
+        'stats_threshold',
+        'stream_beautiful_url',
+        'subsonic_backend',
+        'theme_color',
+        'theme_name',
+        'topmenu',
+        'transcode',
+        'transcode_bitrate',
+        'ui_fixed',
+        'upload_allow_edit',
+        'upload_allow_remove',
+        'upload_catalog',
+        'upload_script',
+        'upload_subdir',
+        'upload_user_artist',
+        'upnp_backend',
+        'webdav_backend',
+        'webplayer_aurora',
+        'webplayer_confirmclose',
+        'webplayer_flash',
+        'webplayer_html5',
+        'webplayer_pausetabs'
+    );
+
+    /**
      * __constructor
      * This does nothing... amazing isn't it!
      */
@@ -43,7 +138,7 @@ class Preference extends database_object
      * Return a preference for specific user identifier
      * @param integer $user_id
      * @param string $pref_name
-     * @return integer
+     * @return integer|string
      */
     public static function get_by_user($user_id, $pref_name)
     {
@@ -66,7 +161,7 @@ class Preference extends database_object
 
         parent::add_to_cache('get_by_user', $user_id, $data);
 
-        return (int) $data['value'];
+        return $data['value'];
     } // get_by_user
 
 
@@ -282,27 +377,54 @@ class Preference extends database_object
      */
     public static function get_all($user_id)
     {
-        $user_id = Dba::escape($user_id);
+        $user_id    = Dba::escape($user_id);
+        $user_limit = ($user_id != -1) ? "AND `preference`.`catagory` != 'system'" : "";
 
-        $user_limit = "";
-        if ($user_id != '-1') {
-            $user_limit = "AND `preference`.`catagory` != 'system'";
-        }
-
-        $sql = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`subcatagory`, `user_preference`.`value` FROM `preference` " .
-            " INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` " .
-            " WHERE `user_preference`.`user`='$user_id' AND `preference`.`catagory` != 'internal' $user_limit " .
+        $sql = "SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`," .
+            " `preference`.`type`, `preference`.`catagory`, `preference`.`subcatagory`, `user_preference`.`value`" .
+            " FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` " .
+            " WHERE `user_preference`.`user` = ? AND `preference`.`catagory` != 'internal' $user_limit " .
             " ORDER BY `preference`.`subcatagory`, `preference`.`description`";
 
-        $db_results = Dba::read($sql);
+        $db_results = Dba::read($sql, array($user_id));
         $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array('name' => $row['name'], 'level' => $row['level'], 'description' => $row['description'], 'value' => $row['value'], 'subcategory' => $row['subcatagory']);
+            $results[] = array('id' => $row['id'], 'name' => $row['name'], 'level' => $row['level'], 'description' => $row['description'],
+                'value' => $row['value'], 'type' => $row['type'], 'category' => $row['catagory'], 'subcategory' => $row['subcatagory']);
         }
 
         return $results;
     } // get_all
+
+    /**
+     * get
+     * This returns a nice flat array of all of the possible preferences for the specified user
+     * @param string $pref_name
+     * @param integer $user_id
+     * @return array
+     */
+    public static function get($pref_name, $user_id)
+    {
+        $user_id    = Dba::escape($user_id);
+        $user_limit = ($user_id != -1) ? "AND `preference`.`catagory` != 'system'" : "";
+
+        $sql = "SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`," .
+            " `preference`.`type`, `preference`.`catagory`, `preference`.`subcatagory`, `user_preference`.`value`" .
+            " FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` " .
+            " WHERE `preference`.`name` = ? AND `user_preference`.`user`= ? AND `preference`.`catagory` != 'internal' $user_limit " .
+            " ORDER BY `preference`.`subcatagory`, `preference`.`description`";
+
+        $db_results = Dba::read($sql, array($pref_name, $user_id));
+        $results    = array();
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = array('id' => $row['id'], 'name' => $row['name'], 'level' => $row['level'], 'description' => $row['description'],
+                'value' => $row['value'], 'type' => $row['type'], 'category' => $row['catagory'], 'subcategory' => $row['subcatagory']);
+        }
+
+        return $results;
+    } // get
 
     /**
      * insert
@@ -324,7 +446,7 @@ class Preference extends database_object
         }
         $sql = "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) " .
             "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($name, $description, $default, (int) ($level), $type, $category, $subcategory));
+        $db_results = Dba::write($sql, array($name, $description, $default, (int) $level, $type, $category, $subcategory));
 
         if (!$db_results) {
             return false;
@@ -350,7 +472,7 @@ class Preference extends database_object
     /**
      * delete
      * This deletes the specified preference, a name or a ID can be passed
-     * @param $preference
+     * @param string|integer $preference
      */
     public static function delete($preference)
     {

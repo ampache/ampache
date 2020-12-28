@@ -10,11 +10,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.    See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program.    If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -45,80 +45,80 @@ dir,
 hr,
 menu,
 pre {
-  display: block;
+    display: block;
 }
 
 li {
-  display: list-item;
+    display: list-item;
 }
 
 head {
-  display: none;
+    display: none;
 }
 
 table {
-  display: block;
+    display: block;
 }
 
 tr {
-  display: table-row;
+    display: table-row;
 }
 
 thead {
-  display: table-header-group;
+    display: table-header-group;
 }
 
 tbody {
-  display: table-row-group;
+    display: table-row-group;
 }
 
 tfoot {
-  display: table-footer-group;
+    display: table-footer-group;
 }
 
 col {
-  display: table-column;
+    display: table-column;
 }
 
 colgroup {
-  display: table-column-group;
+    display: table-column-group;
 }
 
 td,
 th {
-  display: table-cell;
+    display: table-cell;
 }
 
 caption {
-  display: table-caption;
+    display: table-caption;
 }
 
 th {
-  font-weight: bolder;
-  text-align: center;
+    font-weight: bolder;
+    text-align: center;
 }
 
 caption {
-  text-align: center;
+    text-align: center;
 }
 
 body {
-  margin: 8px;
+    margin: 8px;
 }
 
 h1 {
-  font-size: 2em;
-  margin: 0.67em 0;
+    font-size: 2em;
+    margin: 0.67em 0;
 }
 
 h2 {
-  font-size: 1.5em;
-  margin: 0.75em 0;
+    font-size: 1.5em;
+    margin: 0.75em 0;
 }
 
 h3 {
-  font-size: 1.17em;
-  margin: 0.83em 0;
+    font-size: 1.17em;
+    margin: 0.83em 0;
 }
 
 h4,
@@ -131,17 +131,17 @@ ol,
 dl,
 dir,
 menu {
-  margin: 1.12em 0;
+    margin: 1.12em 0;
 }
 
 h5 {
-  font-size: 0.83em;
-  margin: 1.5em 0;
+    font-size: 0.83em;
+    margin: 1.5em 0;
 }
 
 h6 {
-  font-size: 0.75em;
-  margin: 1.67em 0;
+    font-size: 0.75em;
+    margin: 1.67em 0;
 }
 
 h1,
@@ -152,12 +152,12 @@ h5,
 h6,
 b,
 strong {
-  font-weight: bolder;
+    font-weight: bolder;
 }
 
 blockquote {
-  margin-left: 40px;
-  margin-right: 40px;
+    margin-left: 40px;
+    margin-right: 40px;
 }
 
 i,
@@ -165,7 +165,7 @@ cite,
 em,
 var,
 address {
-  font-style: italic;
+    font-style: italic;
 }
 
 pre,
@@ -173,14 +173,14 @@ tt,
 code,
 kbd,
 samp {
-  font-family: monospace;
+    font-family: monospace;
 }
 pre { white-space: pre; }
 
 textarea,
 input,
 select {
-  display: block;
+    display: block;
 }
 
 big { font-size: 1.17em; }
@@ -188,7 +188,7 @@ big { font-size: 1.17em; }
 small,
 sub,
 sup {
-  font-size: 0.83em;
+    font-size: 0.83em;
 }
 
 sub { vertical-align: sub; }
@@ -198,18 +198,18 @@ table { border-spacing: 2px; }
 thead,
 tbody,
 tfoot {
-  vertical-align: middle;
+    vertical-align: middle;
 }
 
 td,
 th {
-  vertical-align: inherit;
+    vertical-align: inherit;
 }
 
 s,
 strike,
 del {
-  text-decoration: line-through;
+    text-decoration: line-through;
 }
 
 hr { border: 1px inset; }
@@ -219,7 +219,7 @@ ul,
 dir,
 menu,
 dd {
-  margin-left: 40px;
+    margin-left: 40px;
 }
 
 ol { list-style-type: decimal; }
@@ -228,87 +228,86 @@ ol ul,
 ul ol,
 ul ul,
 ol ol {
-  margin-top: 0;
-  margin-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 u,
 ins {
-  text-decoration: underline;
+    text-decoration: underline;
 }
 
 br:before { content: "\A"; }
 
 :before,
 :after {
-  white-space: pre;
+    white-space: pre;
 }
 
 center { text-align: center; }
 
 :link,
 :visited {
-  text-decoration: underline;
+    text-decoration: underline;
 }
 
 /* Begin bidirectionality settings (do not change) */
 
 bdo[DIR="ltr"] {
-  direction: ltr;
-  unicode-bidi: bidi-override;
+    direction: ltr;
+    unicode-bidi: bidi-override;
 }
 
 bdo[DIR="rtl"] {
-  direction: rtl;
-  unicode-bidi: bidi-override;
+    direction: rtl;
+    unicode-bidi: bidi-override;
 }
 
 *[DIR="ltr"] {
-  direction: ltr;
-  unicode-bidi: embed;
+    direction: ltr;
+    unicode-bidi: embed;
 }
 
 *[DIR="rtl"] {
-  direction: rtl;
-  unicode-bidi: embed;
+    direction: rtl;
+    unicode-bidi: embed;
 }
 
 @media print {
+    h1 {
+        page-break-before: always;
+    }
 
-  h1 {
-    page-break-before: always;
-  }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        page-break-after: avoid;
+    }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    page-break-after: avoid;
-  }
-
-  ul,
-  ol,
-  dl {
-    page-break-before: avoid;
-  }
+    ul,
+    ol,
+    dl {
+        page-break-before: avoid;
+    }
 }
 
 #sidebar {
-  display: none;
+    display: none;
 }
 
 .alphabet {
-display: none;
+    display: none;
 }
 
 li {
-  white-space: nowrap;
+    white-space: nowrap;
 }
 
 .button {
-  display: none;
+    display: none;
 }
 
 button {

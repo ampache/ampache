@@ -474,7 +474,7 @@ class Artist extends database_object implements library_item
                     " (SELECT `object_id` FROM `rating`" .
                     " WHERE `rating`.`object_type` = 'artist'" .
                     " AND `rating`.`rating` <=" . $rating_filter .
-                    " AND `rating`.`user` = " . $user_id . ")";
+                    " AND `rating`.`user` = " . $user_id . ") ";
         }
 
         $sql .= "ORDER BY RAND() LIMIT " . (string) $count;
@@ -485,6 +485,23 @@ class Artist extends database_object implements library_item
         }
 
         return $results;
+    }
+
+    /**
+     * get_time
+     *
+     * Get time for an artist's songs.
+     * @param integer $artist_id
+     * @return integer
+     */
+    public static function get_time($artist_id)
+    {
+        $params     = array($artist_id);
+        $sql        = "SELECT SUM(`song`.`time`) AS `time` from `song` WHERE `song`.`artist` = ?";
+        $db_results = Dba::read($sql, $params);
+        $results    = Dba::fetch_assoc($db_results);
+
+        return (int) $results['time'];
     }
 
     /**
@@ -597,6 +614,9 @@ class Artist extends database_object implements library_item
             }
 
             $this->object_cnt = $extra_info['object_cnt'];
+        }
+        if ($this->time == 0) {
+            $this->time = $this->update_time();
         }
 
         return true;
@@ -969,7 +989,7 @@ class Artist extends database_object implements library_item
         }
 
         if (isset($data['edit_tags'])) {
-            $this->update_tags($data['edit_tags'], $override_childs, $add_to_childs, $current_id, true);
+            $this->update_tags($data['edit_tags'], $override_childs, $add_to_childs, true);
         }
 
         if (AmpConfig::get('label') && isset($data['edit_labels'])) {
@@ -989,13 +1009,9 @@ class Artist extends database_object implements library_item
      * @param integer|null $current_id
      * @param boolean $force_update
      */
-    public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
+    public function update_tags($tags_comma, $override_childs, $add_to_childs, $force_update = false)
     {
-        if ($current_id === null) {
-            $current_id = $this->id;
-        }
-
-        Tag::update_tag_list($tags_comma, 'artist', $current_id, $force_update ? true : $override_childs);
+        Tag::update_tag_list($tags_comma, 'artist', $this->id, $force_update ? true : $override_childs);
 
         if ($override_childs || $add_to_childs) {
             $albums = $this->get_albums();
@@ -1046,6 +1062,23 @@ class Artist extends database_object implements library_item
     {
         $sql = "UPDATE `artist` SET `last_update` = ? WHERE `id` = ?";
         Dba::write($sql, array(time(), $object_id));
+    }
+
+    /**
+     * update_time
+     *
+     * Get time for an artist and set it.
+     * @return integer
+     */
+    public function update_time()
+    {
+        $time = self::get_time((int) $this->id);
+        if ($time !== $this->time && $this->id) {
+            $sql = "UPDATE `artist` SET `time`=$time WHERE `id`=" . $this->id;
+            Dba::write($sql);
+        }
+
+        return $time;
     }
 
     /**

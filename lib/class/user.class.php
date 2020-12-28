@@ -251,15 +251,19 @@ class User extends database_object
     /**
      * get_valid_users
      * This returns all valid users in database.
+     * @param bool $include_disabled
+     * @return array
      */
-    public static function get_valid_users()
+    public static function get_valid_users($include_disabled = false)
     {
         $users = array();
+        $sql   = ($include_disabled)
+            ? "SELECT `id` FROM `user`"
+            : "SELECT `id` FROM `user` WHERE `disabled` = '0'";
 
-        $sql        = "SELECT `id` FROM `user` WHERE `disabled` = '0'";
         $db_results = Dba::read($sql);
         while ($results = Dba::fetch_assoc($db_results)) {
-            $users[] = $results['id'];
+            $users[] = (int) $results['id'];
         }
 
         return $users;
@@ -860,8 +864,12 @@ class User extends database_object
      */
     public function generate_rsstoken()
     {
-        $rsstoken = bin2hex(random_bytes(32));
-        $this->update_rsstoken($rsstoken);
+        try {
+            $rsstoken = bin2hex(random_bytes(32));
+            $this->update_rsstoken($rsstoken);
+        } catch (Exception $error) {
+            debug_event('user.class', 'Could not generate random_bytes: ' . $error, 3);
+        }
     }
 
     /**
@@ -961,8 +969,8 @@ class User extends database_object
             try {
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->load($user)) {
-                    $plugin->_plugin->save_mediaplay($media);
                     debug_event('user.class', 'save_mediaplay... ' . $plugin->_plugin->name, 5);
+                    $plugin->_plugin->save_mediaplay($media);
                 }
             } catch (Exception $error) {
                 debug_event('user.class', 'save_mediaplay plugin error: ' . $error->getMessage(), 1);

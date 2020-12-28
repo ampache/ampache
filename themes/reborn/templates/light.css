@@ -43,7 +43,7 @@ a:hover {
 }
 
 hr {
-  border-top-color: #eee;
+    border-top-color: #eee;
 }
 
 input[type=password],
@@ -55,18 +55,19 @@ textarea {
     background-image: -webkit-gradient(linear, 0, 0 100%, from(#eee), to(#fff));
     background-image: -webkit-linear-gradient(top, #eee, #fff);
     background-image: -o-linear-gradient(top, #eee, #fff);
-    background-image: linear-gradient(top, #eee, #fff);
+    background-image: linear-gradient(to top, #eee, #fff);
     border-color: #d8d8d8;
 }
 
 input[type=button],
-input[type=submit] {
+input[type=submit],
+.editdialogstyle.ui-dialog .ui-dialog-buttonset button {
     background-image: -moz-linear-gradient(top, #1990db, #1473af);
     background-image: -ms-linear-gradient(top, #1990db, #1473af);
     background-image: -webkit-gradient(linear, 0, 0 100%, from(#1990db), to(#1473af));
     background-image: -webkit-linear-gradient(top, #1990db, #1473af);
     background-image: -o-linear-gradient(top, #1990db, #1473af);
-    background-image: linear-gradient(top, #1990db, #1473af);
+    background-image: linear-gradient(to top, #1990db, #1473af);
     -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.2);
@@ -76,7 +77,8 @@ input[type=submit] {
 input[type=button]:hover,
 input[type=button]:focus,
 input[type=submit]:hover,
-input[type=submit]:focus {
+input[type=submit]:focus,
+.editdialogstyle.ui-dialog .ui-dialog-buttonset button:hover {
     background-color: #1473af;
 }
 
@@ -92,8 +94,31 @@ input[type=submit]:focus:active {
     color: #000;
 }
 
-.editdialogstyle.ui-dialog .ui-dialog-titlebar {
+.playlistdialogstyle.ui-dialog .ui-dialog-content,
+.sharedialogstyle.ui-dialog .ui-dialog-content,
+.playlistdialogstyle.ui-widget-content a,
+.editdialogstyle.ui-dialog.ui-widget-content a,
+.broadcastsdialogstyle.ui-widget-content a,
+.sharedialogstyle.ui-widget-content a {
+    background-color: #f8f8f8;
     color: #000;
+}
+
+.editdialogstyle.ui-dialog.ui-widget-content a,
+.editdialogstyle.ui-dialog.ui-widget-content a:hover {
+    background-color: unset;
+}
+
+.editdialogstyle.ui-dialog .ui-dialog-titlebar,
+.editdialogstyle.ui-dialog.ui-widget-content a:hover,
+.playlistdialogstyle.ui-widget-content a:hover,
+.broadcastsdialogstyle.ui-widget-content a:hover,
+.sharedialogstyle.ui-widget-content a:hover {
+    color: #1990db;
+}
+
+.ui-icon-close {
+    background-color: #f0f0f0;
 }
 
 /* ------------------------
@@ -287,7 +312,7 @@ input[type=submit]:focus:active {
     background-image: -webkit-gradient(linear, 0, 0 100%, from(#bfe1f6), to(#82caf8));
     background-image: -webkit-linear-gradient(top, #bfe1f6, #82caf8);
     background-image: -o-linear-gradient(top, #bfe1f6, #82caf8);
-    background-image: linear-gradient(top, #bfe1f6, #82caf8);
+    background-image: linear-gradient(to top, #bfe1f6, #82caf8);
 }
 
 #rightbar #rb_current_playlist li.odd {
@@ -379,7 +404,7 @@ table.tabledata tr:focus {
     background-image: -webkit-gradient(linear, 0, 0 100%, from(#bfe1f6), to(#82caf8));
     background-image: -webkit-linear-gradient(top, #bfe1f6, #82caf8);
     background-image: -o-linear-gradient(top, #bfe1f6, #82caf8);
-    background-image: linear-gradient(top, #bfe1f6, #82caf8);
+    background-image: linear-gradient(to top, #bfe1f6, #82caf8);
 }
 
 table.tabledata .th-top:hover,
@@ -402,6 +427,10 @@ table.tabledata tbody .cel_cover img {
 
 table.tabledata tbody .cel_cover img:hover {
     border-color: #1990db;
+}
+
+input:invalid {
+    border: 4px solid red;
 }
 
 /* ------------------------
@@ -458,7 +487,7 @@ span.fatalerror {
     background-image: -webkit-gradient(linear, 0, 0 100%, from(#1473af), to(#027ecc));
     background-image: -webkit-linear-gradient(top, #1473af, #027ecc);
     background-image: -o-linear-gradient(top, #1473af, #027ecc);
-    background-image: linear-gradient(top, #1473af, #027ecc);
+    background-image: linear-gradient(to top, #1473af, #027ecc);
 }
 
 /* ------------------------------
@@ -577,6 +606,20 @@ div.jp-playlist li {
     border-bottom: 1px solid #bfbfbf;
 }
 
+.jp-type-playlist .jp-playlist a {
+    color: #000;
+}
+
+.jp-type-playlist .jp-playlist a:hover,
+.jp-type-playlist .jp-playlist a:active,
+.jp-type-playlist .jp-playlist a:focus {
+    color: #1990db;
+}
+
+.jp-type-playlist .jp-playlist a.jp-playlist-current {
+    color: #1990db;
+}
+
 /* ------------------------
    Other
    ------------------------ */
@@ -587,7 +630,7 @@ div.jp-playlist li {
 }
 
 .followbtn {
-   background-color: #167fc2;
+    background-color: #167fc2;
 }
 
 .missing_album {
@@ -611,6 +654,7 @@ div.jp-playlist li {
 }
 
 span.item-count,
+span.item-duration,
 span.query-count {
     color: #000;
 }
@@ -624,11 +668,11 @@ a.option-list:hover {
 }
 
 #tabs li a {
-  color: #1990db;
+    color: #1990db;
 }
 
 #tabs li a:hover {
-  color: #52aae4;
+    color: #52aae4;
 }
 
 #tabs li.tab_active a {

@@ -31,19 +31,23 @@ $thcount  = 7; ?>
             <th class="cel_add essential"></th>
             <th class="cel_podcast optional"><?php echo T_('Podcast'); ?></th>
             <th class="cel_time optional"><?php echo T_('Time'); ?></th>
+            <?php if (AmpConfig::get('show_played_times')) { ?>
+                <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
+                <?php
+            } ?>
             <th class="cel_pubdate optional"><?php echo T_('Publication Date'); ?></th>
             <th class="cel_state optional"><?php echo T_('State'); ?></th>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) {
-    ++$thcount; ?>
+                ++$thcount; ?>
                     <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
                 <?php
-} ?>
+            } ?>
                 <?php if (AmpConfig::get('userflags')) {
-        ++$thcount; ?>
+                ++$thcount; ?>
                     <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
                 <?php
-    } ?>
+            } ?>
             <?php
 } ?>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
@@ -84,6 +88,10 @@ $thcount  = 7; ?>
             <th class="cel_add"></th>
             <th class="cel_podcast"><?php echo T_('Podcast'); ?></th>
             <th class="cel_time"><?php echo T_('Time'); ?></th>
+            <?php if (AmpConfig::get('show_played_times')) { ?>
+                <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
+                <?php
+            } ?>
             <th class="cel_pubdate"><?php echo T_('Publication Date'); ?></th>
             <th class="cel_state"><?php echo T_('State'); ?></th>
             <?php if (User::is_registered()) { ?>

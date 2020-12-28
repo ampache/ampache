@@ -35,6 +35,7 @@ function update_action()
 <?php
 } ?>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/vendor/happyworm/jplayer/dist/jplayer/jquery.jplayer.min.js"></script>
+<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/jplayer.ext.js"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/vendor/happyworm/jplayer/dist/add-on/jplayer.playlist.min.js"></script>
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/jplayer.playlist.ext.js"></script>
 

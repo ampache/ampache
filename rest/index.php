@@ -100,7 +100,7 @@ if (!Access::check_network('init-api', $user, 5)) {
 
 $GLOBALS['user'] = User::get_from_username($user);
 // Check server version
-if (version_compare(Subsonic_XML_Data::API_VERSION, $version) < 0) {
+if (version_compare(Subsonic_XML_Data::API_VERSION, $version) < 0 && !($clientapp == 'Sublime Music' && $version == '1.15.0')) {
     ob_end_clean();
     debug_event('rest/index', 'Requested client version is not supported', 3);
     Subsonic_Api::apiOutput2($f, Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_APIVERSION_SERVER, 'Requested client version is not supported', $version), $callback);

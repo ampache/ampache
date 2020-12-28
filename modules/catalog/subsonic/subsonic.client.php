@@ -144,8 +144,6 @@ class SubsonicClient
         } else {
             return $this->error("Error: Invalid subsonic command: " . $action);
         }
-
-        return false;
     }
 
     /**

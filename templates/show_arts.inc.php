@@ -22,7 +22,7 @@
 
 // Gotta do some math here!
 $total_images = count($images);
-$rows         = floor($total_images / 4);
+$rows         = floor($total_images / 5);
 $count        = 0; ?>
 <?php UI::show_box_top(T_('Select New Art'), 'box box_album_art'); ?>
 <table class="table-data">
@@ -30,8 +30,8 @@ $count        = 0; ?>
 <?php
 while ($count <= $rows) {
     $j=0;
-    while ($j < 4) {
-        $key        = $count * 4 + $j;
+    while ($j < 5) {
+        $key        = $count * 5 + $j;
         $image_url  = AmpConfig::get('web_path') . '/image.php?type=session&image_index=' . $key . '&cache_bust=' . date('YmdHis') . mt_rand();
         $dimensions = array('width' => 0, 'height' => 0);
         if (!empty($_SESSION['form']['images'][$key])) {

@@ -42,19 +42,19 @@ header("Content-Disposition: attachment; filename=information.xml");
 if (!AmpConfig::get('access_control')) {
     ob_end_clean();
     debug_event('xml.server', 'Error Attempted to use XML API with Access Control turned off', 3);
-    echo XML_Data::error('501', T_('Access Control not enabled'));
+    echo XML_Data::error('4700', T_('Access Denied'), Core::get_request('action'), 'system');
 
     return false;
 }
 
 /**
- * Verify the existance of the Session they passed in we do allow them to
+ * Verify the existence of the Session they passed in we do allow them to
  * login via this interface so we do have an exception for action=login
  */
 if (!Session::exists('api', Core::get_request('auth')) && Core::get_request('action') != 'handshake' && Core::get_request('action') != 'ping') {
     debug_event('Access Denied', 'Invalid Session attempt to API [' . Core::get_request('action') . ']', 3);
     ob_end_clean();
-    echo XML_Data::error('401', T_('Session Expired'));
+    echo XML_Data::error('4701', T_('Session Expired'), Core::get_request('action'), 'account');
 
     return false;
 }
@@ -65,7 +65,7 @@ $username = ($_REQUEST['action'] == 'handshake') ? $_REQUEST['user'] : Session::
 if (!Access::check_network('init-api', $username, 5)) {
     debug_event('Access Denied', 'Unauthorized access attempt to API [' . Core::get_server('REMOTE_ADDR') . ']', 3);
     ob_end_clean();
-    echo XML_Data::error('403', T_('Unauthorized access attempt to API - ACL Error'));
+    echo XML_Data::error('4742', T_('Unauthorized access attempt to API - ACL Error'), Core::get_request('action'), 'account');
 
     return false;
 }
@@ -82,28 +82,17 @@ if ((Core::get_request('action') != 'handshake') && (Core::get_request('action')
 // Make sure beautiful url is disabled as it is not supported by most Ampache clients
 AmpConfig::set('stream_beautiful_url', false, true);
 
-// Get the list of possible methods for the Ampache API
-$methods = get_class_methods('api');
+$method = $_GET['action'];
 
-// Define list of internal functions that should be skipped
-$internal_functions = array('set_filter');
-
-// Recurse through them and see if we're calling one of them
-foreach ($methods as $method) {
-    if (in_array($method, $internal_functions)) {
-        continue;
-    }
-
-    // If the method is the same as the action being called
-    // Then let's call this function!
-    if (str_replace('tag', 'genre', $_GET['action']) == $method) {
-        $_GET['api_format'] = 'xml';
-        call_user_func(array('api', $method), $_GET);
-        // We only allow a single function to be called, and we assume it's cleaned up!
-        return false;
-    }
-} // end foreach methods in API
+// Retrieve the api method handler from the list of known methods
+$handler = Api::METHOD_LIST[$method] ?? null;
+if ($handler !== null) {
+    $_GET['api_format'] = 'xml';
+    call_user_func([$handler, $method], $_GET);
+    // We only allow a single function to be called, and we assume it's cleaned up!
+    return false;
+}
 
 // If we manage to get here, we still need to hand out an XML document
 ob_end_clean();
-echo XML_Data::error('405', T_('Invalid Request'));
+echo XML_Data::error('4705', T_('Invalid Request'), (string) $method, 'system');

@@ -249,10 +249,15 @@ class Ampache_RSS
         $data    = ($user) ? Song::get_recently_played($user->id) : Song::get_recently_played();
         $results = array();
 
+
         foreach ($data as $item) {
             $client = new User($item['user']);
             $song   = new Song($item['object_id']);
-            if ($song->enabled) {
+            $row_id = ($item['user'] > 0) ? (int) $item['user'] : -1;
+
+            $has_allowed_recent = (bool) $item['user_recent'];
+            $is_allowed_recent  = ($user) ? $user->id == $row_id : $has_allowed_recent;
+            if ($song->enabled && $is_allowed_recent) {
                 $song->format();
 
                 $xml_array = array('title' => $song->f_title . ' - ' . $song->f_artist . ' - ' . $song->f_album,

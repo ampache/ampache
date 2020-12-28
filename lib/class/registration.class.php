@@ -129,7 +129,7 @@ class Registration
             return false;
         }
 
-        /* Check for existance */
+        /* Check for existence */
         $filepointer = fopen($filename, 'r');
 
         if (!$filepointer) {

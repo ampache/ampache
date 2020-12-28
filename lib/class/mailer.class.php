@@ -146,6 +146,7 @@ class Mailer
      * This actually sends the mail, how amazing
      * @param PHPMailer $phpmailer
      * @return boolean
+     * @throws \PHPMailer\PHPMailer\Exception
      */
     public function send($phpmailer = null)
     {
@@ -192,7 +193,7 @@ class Mailer
                 $mail->IsSMTP();
                 $mail->Host = $mailhost;
                 $mail->Port = $mailport;
-                if ($mailauth === true) {
+                if ($mailauth) {
                     $mail->SMTPAuth = true;
                     $mail->Username = $mailuser;
                     $mail->Password = $mailpass;
@@ -222,6 +223,7 @@ class Mailer
     /**
      * @param $group_name
      * @return boolean
+     * @throws \PHPMailer\PHPMailer\Exception
      */
     public function send_to_group($group_name)
     {

@@ -147,7 +147,7 @@ class Session
      * _read
      *
      * This returns the specified column from the session row.
-     * @param $key
+     * @param string $key
      * @param string $column
      * @return string
      */
@@ -182,7 +182,7 @@ class Session
      * agent
      *
      * This returns the agent associated with a session ID, if any
-     * @param $key
+     * @param string $key
      * @return string
      */
     public static function agent($key)
@@ -311,7 +311,7 @@ class Session
      * exists
      * based on the type.
      * @param string $type
-     * @param $key
+     * @param string $key
      * @return boolean
      */
     public static function exists($type, $key)
@@ -358,7 +358,7 @@ class Session
      * extend
      *
      * This takes a SID and extends its expiration.
-     * @param $sid
+     * @param string $sid
      * @param string $type
      * @return PDOStatement|boolean
      */

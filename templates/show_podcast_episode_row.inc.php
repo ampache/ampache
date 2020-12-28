@@ -49,6 +49,10 @@
 </td>
 <td class="cel_podcast"><?php echo $libitem->f_podcast_link; ?></td>
 <td class="cel_time"><?php echo $libitem->f_time; ?></td>
+<?php if (AmpConfig::get('show_played_times')) { ?>
+    <td class="cel_counter optional"><?php echo $libitem->object_cnt; ?></td>
+    <?php
+} ?>
 <td class="cel_pubdate"><?php echo $libitem->f_pubdate; ?></td>
 <td class="cel_state"><?php echo $libitem->f_state; ?></td>
 <?php

@@ -128,7 +128,8 @@ use Lib\Metadata\Model\Metadata;
     <script>
         $('.metadataAccordionButton').button().click(function() {
             $('.metadataAccordion').toggle();
-            $(this).hide();
+         //   $(this).hide();
+              $(this).text($(this).text() == 'More Metadata' ? 'Less Metadata' : 'More Metadata');
             return false;
         });
     </script>

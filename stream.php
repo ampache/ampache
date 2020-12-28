@@ -108,18 +108,6 @@ switch ($_REQUEST['action']) {
         $playlist  = new Playlist($_REQUEST['playlist_id']);
         $media_ids = $playlist->get_random_items();
         break;
-    case 'random':
-        $matchlist = array();
-        if ($_REQUEST['genre'][0] != '-1') {
-            $matchlist['genre'] = $_REQUEST['genre'];
-        }
-        if (Core::get_request('catalog') != '-1') {
-            $matchlist['catalog'] = Core::get_request('catalog');
-        }
-        /* Setup the options array */
-        $options   = array('limit' => $_REQUEST['random'], 'random_type' => $_REQUEST['random_type'], 'size_limit' => $_REQUEST['size_limit']);
-        $media_ids = get_random_songs($options, $matchlist);
-        break;
     case 'democratic':
         $democratic = new Democratic($_REQUEST['democratic_id']);
         $urls       = array($democratic->play_url());
@@ -152,21 +140,14 @@ switch ($_REQUEST['action']) {
         $stream_type = 'download';
         break;
     case 'democratic':
-        // Don't let them loop it
-        // FIXME: This looks hacky
-        if (AmpConfig::get('play_type') == 'democratic') {
-            AmpConfig::set('play_type', 'stream', true);
-        }
+        $play_type   = AmpConfig::get('play_type');
+        $stream_type = ($play_type == 'democratic') ? AmpConfig::get('playlist_type') : $play_type;
+        break;
     default:
-        $stream_type = AmpConfig::get('play_type');
-
-        if ($stream_type == 'stream') {
-            $stream_type = AmpConfig::get('playlist_type');
-        }
+        $play_type   = AmpConfig::get('play_type');
+        $stream_type = ($play_type == 'stream') ? AmpConfig::get('playlist_type') : $play_type;
         break;
 }
-
-debug_event('stream', 'Stream Type: ' . $stream_type . ' Media IDs: ' . json_encode($media_ids), 5);
 
 if (count($media_ids) || isset($urls)) {
     if ($stream_type != 'democratic') {
@@ -183,8 +164,13 @@ if (count($media_ids) || isset($urls)) {
     }
 
     $playlist = new Stream_Playlist();
-    $playlist->add($media_ids);
+    // don't do this if nothing is there
+    if (count($media_ids)) {
+        debug_event('stream', 'Stream Type: ' . $stream_type . ' Media Count: ' . count($media_ids), 5);
+        $playlist->add($media_ids);
+    }
     if (isset($urls)) {
+        debug_event('stream', 'Stream Type: ' . $stream_type . ' Loading URL: ' . $urls[0], 5);
         $playlist->add_urls($urls);
     }
     // Depending on the stream type, will either generate a redirect or actually do the streaming.

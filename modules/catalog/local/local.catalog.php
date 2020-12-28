@@ -286,7 +286,7 @@ class Catalog_local extends Catalog
             // reduce the crazy log info
             if ($counter % 1000 == 0) {
                 debug_event('local.catalog', "Reading $file inside $path", 5);
-                debug_event('local.catalog', "Memory usage: " . (string)UI::format_bytes(memory_get_usage(true)), 5);
+                debug_event('local.catalog', "Memory usage: " . (string) UI::format_bytes(memory_get_usage(true)), 5);
             }
             $counter++;
 
@@ -750,7 +750,7 @@ class Catalog_local extends Catalog
             debug_event('local.catalog', 'File not found or empty: ' . $file, 5);
             /* HINT: filename (file path) */
             AmpError::add('general', sprintf(T_('File was not found or is 0 Bytes: %s'), $file));
-            $sql = "DELETE FROM `$media_type` WHERE `file` = '" . $file . "'";
+            $sql = "DELETE FROM `$media_type` WHERE `file` = '" . Dba::escape($file) . "'";
             Dba::write($sql);
         } // if error
         else {

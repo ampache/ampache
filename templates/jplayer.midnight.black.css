@@ -15,11 +15,11 @@
  * Date: October 2nd, 2013
  */
 
- body {
-     background: rgb(25, 25, 25) none;
+body {
+    background: rgb(25, 25, 25) none;
 }
 
- .jp-area {
+.jp-area {
     margin-left: 230px;
     margin-right: auto;
     margin-top: 10px;

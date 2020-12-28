@@ -130,18 +130,6 @@ switch ($_REQUEST['action']) {
 
         $playlist->add_songs(array($_REQUEST['song_id']), true);
         break;
-    case 'prune_empty':
-        if (!Core::get_global('user')->has_access(100)) {
-            UI::access_denied();
-            break;
-        }
-
-        prune_empty_playlists();
-        $url   = AmpConfig::get('web_path') . '/playlist.php';
-        $title = T_('No Problem');
-        $body  = T_('Empty Playlists have been deleted');
-        show_confirmation($title, $body, $url);
-        break;
     case 'remove_duplicates':
         debug_event('playlist', 'Remove duplicates called.', 4);
 

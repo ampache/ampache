@@ -93,8 +93,8 @@ class TVShow_Episode extends Video
             foreach ($tags as $tag) {
                 $tag = trim((string) $tag);
                 if (!empty($tag)) {
-                    Tag::add('tvshow_season', $tvshow_season, $tag, false);
-                    Tag::add('tvshow', $tvshow, $tag, false);
+                    Tag::add('tvshow_season', (int) $tvshow_season, $tag, false);
+                    Tag::add('tvshow', (int) $tvshow, $tag, false);
                 }
             }
         }
@@ -239,9 +239,9 @@ class TVShow_Episode extends Video
     }
 
     /**
+     * display_art
      * @param integer $thumb
      * @param boolean $force
-     * @return mixed|void
      */
     public function display_art($thumb = 2, $force = false)
     {

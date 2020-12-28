@@ -20,9 +20,13 @@
  *
  */
 
-$web_path = AmpConfig::get('web_path'); ?>
+$web_path = AmpConfig::get('web_path');
+$seconds  = $browse->duration;
+$duration = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600)
+?>
 <?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+    echo '<span class="item-duration">' . '| ' . T_('Duration') . ': ' . $duration . '</span>';
 } ?>
 <form method="post" id="reorder_playlist_<?php echo $playlist->id; ?>">
     <table id="reorder_playlist_table" class="tabledata <?php echo $browse->get_css_class() ?>" data-objecttype="media">
@@ -98,4 +102,5 @@ $web_path = AmpConfig::get('web_path'); ?>
 <?php show_table_render($argument); ?>
 <?php if ($browse->is_show_header()) {
         require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
+        echo '<span class="item-duration">' . '| ' . T_('Duration') . ': ' . $duration . '</span>';
     } ?>

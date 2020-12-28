@@ -46,6 +46,7 @@ class WebDAV_Directory extends DAV\Collection
     /**
      * getChildren
      * @return array
+     * @throws DAV\Exception\NotFound
      */
     public function getChildren()
     {
@@ -69,6 +70,7 @@ class WebDAV_Directory extends DAV\Collection
      * getChild
      * @param string $name
      * @return WebDAV_File|WebDAV_Directory
+     * @throws DAV\Exception\NotFound
      */
     public function getChild($name)
     {
@@ -94,6 +96,7 @@ class WebDAV_Directory extends DAV\Collection
      * getChildFromArray
      * @param $array
      * @return WebDAV_File|WebDAV_Directory
+     * @throws DAV\Exception\NotFound
      */
     public static function getChildFromArray($array)
     {

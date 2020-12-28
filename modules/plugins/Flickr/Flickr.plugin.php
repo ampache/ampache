@@ -23,7 +23,7 @@
 class Ampacheflickr
 {
     public $name        = 'Flickr';
-    public $categories  = 'misc,slideshow';
+    public $categories  = 'slideshow';
     public $description = 'Artist photos from Flickr';
     public $url         = 'http://www.flickr.com';
     public $version     = '000001';

@@ -520,8 +520,8 @@ function get_web_path()
 /**
  * get_datetime
  * @param integer $time
- * @param string $dateformat
- * @param string $timeformat
+ * @param string $date_format
+ * @param string $time_format
  * @param string $overwrite
  * @return string
  */

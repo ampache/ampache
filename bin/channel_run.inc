@@ -38,10 +38,10 @@ $start_date = time();
 $verbose    = false;
 $port       = 0;
 $chanid     = 0;
+$cargv      = count($_SERVER['argv']);
 
-$cargv = count($_SERVER['argv']);
+$operations_string = '';
 if ($cargv > 1) {
-    $operations_string = '';
     for ($x = 1; $x < $cargv; $x++) {
         if ($_SERVER['argv'][$x] == "-c" && ($x + 1) < $cargv) {
             $chanid = (int) $_SERVER['argv'][++$x];
@@ -82,6 +82,7 @@ if (!$channel->id) {
     die(T_("Unknown channel."));
 }
 
+$address = '';
 if ($port < 1) {
     if ($channel->fixed_endpoint) {
         $address = $channel->interface;
@@ -299,7 +300,7 @@ function client_disconnect($channel, &$client_socks, &$stream_clients, $sock)
     unset($client_socks[$key]);
     unset($stream_clients[$key]);
     if (fclose($sock) === false) {
-        throw new \RuntimeException('The file handle ' . $sock . ' could not be closed');
+        throw new RuntimeException('The file handle ' . $sock . ' could not be closed');
     }
     $channel->update_listeners(count($client_socks));
     debug_event('channel_run', 'A client disconnected. Now there are total ' . count($client_socks) . ' clients.', 4);

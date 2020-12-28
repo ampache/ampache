@@ -145,10 +145,10 @@ class Subsonic_XML_Data
         // Remove all al-, ar-, ... prefixs
         $tpos = strpos((string) $object_id, "-");
         if ($tpos !== false) {
-            $object_id = (int) (substr((string) $object_id, $tpos + 1));
+            $object_id = substr((string) $object_id, $tpos + 1);
         }
 
-        return $object_id;
+        return (int) $object_id;
     }
 
     /**
@@ -573,7 +573,6 @@ class Subsonic_XML_Data
         $album->format();
         $xalbum->addAttribute('coverArt', 'al-' . self::getAlbumId($album->id));
         $xalbum->addAttribute('songCount', (string) $album->song_count);
-        // FIXME total_duration on Album doesn't exist
         $xalbum->addAttribute('duration', (string) $album->total_duration);
         $xalbum->addAttribute('artistId', (string) self::getArtistId($album->artist_id));
         $xalbum->addAttribute('parent', (string) self::getArtistId($album->artist_id));
@@ -778,7 +777,7 @@ class Subsonic_XML_Data
         if ($songData['year'] > 0) {
             $xsong->addAttribute('year', (string) $songData['year']);
         }
-        $tags = Tag::get_object_tags('song', (string) $songData['id']);
+        $tags = Tag::get_object_tags('song', (int) $songData['id']);
         if (count($tags) > 0) {
             $xsong->addAttribute('genre', (string) $tags[0]['name']);
         }
@@ -1381,14 +1380,15 @@ class Subsonic_XML_Data
     /**
      * addArtistInfo
      * @param SimpleXMLElement $xml
-     * @param $info
-     * @param $similars
+     * @param array $info
+     * @param array $similars
+     * @param string $child
      */
-    public static function addArtistInfo($xml, $info, $similars)
+    public static function addArtistInfo($xml, $info, $similars, $child)
     {
         $artist = new Artist($info['id']);
 
-        $xartist = $xml->addChild('artistInfo');
+        $xartist = $xml->addChild($child);
         $xartist->addChild('biography', htmlspecialchars(trim((string) $info['summary'])));
         $xartist->addChild('musicBrainzId', $artist->mbid);
         //$xartist->addChild('lastFmUrl', "");
@@ -1407,10 +1407,11 @@ class Subsonic_XML_Data
      * addSimilarSongs
      * @param SimpleXMLElement $xml
      * @param array $similar_songs
+     * @param string $child
      */
-    public static function addSimilarSongs($xml, $similar_songs)
+    public static function addSimilarSongs($xml, $similar_songs, $child)
     {
-        $xsimilar = $xml->addChild('similarSongs');
+        $xsimilar = $xml->addChild($child);
         foreach ($similar_songs as $similar_song) {
             $song = new Song($similar_song['id']);
             $song->format();

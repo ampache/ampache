@@ -9,23 +9,49 @@ Look here for the code to change your 'custom_datetime' string [(<http://usergui
 This means Ampache now **requires** php-intl module/dll to be enabled.
 
 ### Added
-
+* Write metadata to mp3, flac and ogg files. Requires metaflac and vorbiscomment installed on Linux.
+* Write images to mp3 and flac files. Also requires metaflac on linux.
+* File tags can be updated from catalog management page.
+* Configurable settings for "Gather Art".
+* Configurable art search limit.
+* User selectable artist and year filter for Spotify album searches
+* User selectable limit for art searches.
 * php-intl is now required for translation of date formats into your locale
 * Generate rsstokens for each user allowing unique feed URLs
-* Allow setting custom databse collation and charset without overwriting your changes
+* Allow setting custom database collation and charset without overwriting your changes
   * rsstoken: Identify users by token when generating RSS feeds
 * Replace 'Admin' icon with padlock in sidebar when access check fails. (Hide this new icon with 'simple_user_mode')
 * Disable API/Subsonic password resets in 'simple_user_mode'
+* NEW plugin:
+  * 'Personal Favorites'. Show a shortcut to a favorite smartlist or playlist on the homepage
+  * 'RatingMatch'. Raise the minimum star rating (and song loves) of artists and albums when you rate/love the song
+* Run garbage collection after catalog_update.inc 'clean' or 'verify'
+* Add duration to the table headers when browsing playlists and smartlists
+* Add time and duration to albums, artists instead of calculating from songs each time
+* Allow browsing by album_artist instead of artist
+* Allow setting a custom background on the login page
 
 ### Changed
 
+* config version 47
 * get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
 * Renamed 'Tag' strings to 'Genre'
 * 'Sort Tracks by Artist, Album, Song' sorting done by 'Album_Artist, Album, Disk, Track Title'
+* Extend democratic cooldown past 255 and show an error when out of range
+* Sort smartlists by file when random is unticked
+* Don't block playlist information actions when you own the playlist
+* Add date parameter to Api::record_play
+* Changed sidebar back to browse for artist/album
+
+### Removed
+
+* Disabled the jPlayer fullscreen shortcut (ctrl + f)
 
 ### Fixed
 
-* Stop skips duplicating recent stat inserts
+* Escape filepaths when removing from database
+* Check for mail_auth config correctly
+* Sublime Music requires ints for json data to be cast correctly
 
 ### API develop
 
@@ -39,28 +65,134 @@ All API code that used 'Tag' now references 'Genre' instead
   * 'type' (string) Default: 'Song' ('Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream') //optional
   * 'clear' (integer) 0|1 clear the current playlist on add //optional
 * API::playlist_edit added new parameter 'sort': (0,1) sort the playlist by 'Artist, Album, Song' //optional
-* Api::indexes added parameter 'include': (0,1) include song details with playlists (XML has this by default)
+* Api::indexes added parameter 'include': (0,1) include song details with playlists
+* Add time to artist and album objects. (total time of all songs in seconds)
+* NEW API functions
+  * Api::users (ID and Username of the site users)
+  * Api::song_delete (Delete files when you are allowed to)
+  * Api::user_preferences (Get your user preferences)
+  * Api::user_preference (Get your preference by name)
+  * Api::system_update (Check Ampache for updates and run the update if there is one.)
+  * Api::system_preferences (Preferences for the system user)
+  * Api::system_preference (Get a system preference by name)
+  * Api::preference_create (Add a new preference to Ampache)
+  * Api::preference_edit (Edit a preference value by name; optionally apply to all users)
+  * Api::preference_delete (Delete a preference by name)
+  * Api::labels (list your record labels)
+  * Api::label (get a label by id)
+  * Api::label_artists (get all artists attached to that label)
+  * Api::get_bookmark (See if you've previously played the file)
+  * Api::bookmarks (List all bookmarks created by your account)
+  * Api::bookmark_create (Create a bookmark to allow revisting later)
+  * Api::bookmark_edit (Edit a bookmark)
+  * Api::bookmark_delete (Delete a bookmark by object id, type, user and client name)
 
 ### Changed
 
-* Renamed functions (Backcompatible string replacement until 5.0.0):
+* Renamed functions:
   * tags => genres
   * tag => genre
   * tag_artists => genre_artists
   * tag_albums => genre_albums
   * tag_songs => genre_songs
 * Don't allow duplicate podcast feeds
-* Extend democratic cooldown past 255 and show an error when out of range
-* Api::shares filter is optional
+* Make filter optional in shares, genre_artists, genre_albums, genre_songs (Used as a general catch all method like genres)
+* Error Codes and response structure has changed
+  * 4700 Access Control not Enabled
+  * 4701 Received Invalid Handshake
+  * 4703 Access Denied
+  * 4704 Not Found
+  * 4705 Missing Method
+  * 4706 Depreciated Method
+  * 4710 Bad Request
+  * 4742 Failed Access Check
+* get_indexes: 'playlist' now requires include=1 for xml calls if you want the tracks
+* stats: Removed back compat from older versions. Only 'type' is mandatory
+* Return empty objects when the request was correct but the results were empty
+* record_play: Require 100 (Admin) permission to record plays for other users
 
 ### Deprecated
 
-* Api::indexes will stop including playlist track and id in xml by default in Ampache 5.0.0
+* Api::get_indexes; stop including playlist track and id in xml by default
 
 ### Fixed
 
 * Api::podcast_edit wasn't able to edit a podcast...
+* Api::democratic was using action from localplay in the return responses
 * Setting a limit of 'none' would slice away all the results
+* get_indexes for XML didn't include podcast indexes
+
+## Ampache 4.2.5-release
+
+### Added
+
+* Use _add_urls when building a stream playlist
+
+### Changed
+
+* Removed the forced random from search
+* Put the browse header at the top above plugins
+* Make the webplayer class a bit faster at deciding what to transcode
+
+### Fixed
+
+* Ampache Debug, cron.lib.php missing from init
+* Slow playlist creation when inserting a large amount of items
+* Stream_URL properties were inconsistently applied
+* Fix streaming when play_type is Democratic
+* Save your limit and random settings when creating a smartlist
+
+### API 4.2.5
+
+**NO CHANGE**
+
+## Ampache 4.2.4-release
+
+### Added
+
+* "Random" tickbox added to search pages
+
+### Changed
+
+* Searching 'original_year' will now fall back to 'year' if no release year is present
+
+### Fixed
+
+* User was being created but you were told it isn't
+* The search pages remember your limit correctly
+* PHP exception when < 7.1
+* Correct "Recently Added", "Recently Updated" searches
+* Check that song can be inserted before inserting the remaining rows
+* Logic in stat recording when skips occur
+* Don't query for null tag ids
+
+### API 4.2.4
+
+**NO CHANGE**
+
+## Ampache 4.2.3-release
+
+### Added
+
+* Subsonic: Generate errors for objects missing art
+
+### Changed
+
+* Don't mark short songs as skipped
+* Subsonic: Stop converting strings to ints in JSON responses
+
+### Fixed
+
+* User registrations
+* Workaround null values for new columns in search table
+* Check release_type length before inserting into the database
+* Ensure Album Artist is set correctly on songs
+* Subsonic: Fix callbacks for similarSongs2 and artistInfo2
+* Subsonic: getCoverArt fixes
+
+### API 4.2.3
+
+**NO CHANGE**
 
 ## Ampache 4.2.2-release
 

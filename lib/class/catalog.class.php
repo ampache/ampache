@@ -521,6 +521,40 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get_count
+     *
+     * return the counts from update info to speed up responses
+     * @param string $table
+     * @return integer
+     */
+    public static function get_count(string $table)
+    {
+        if ($table == 'playlist' || $table == 'search') {
+            $sql        = "SELECT 'playlist' AS `key`, SUM(value) AS `value` FROM `update_info`" .
+                "WHERE `key` IN ('playlist', 'search')";
+            $db_results = Dba::read($sql);
+        } else {
+            $sql        = "SELECT * FROM `update_info` WHERE `key` = ?";
+            $db_results = Dba::read($sql, array($table));
+        }
+        $results    = Dba::fetch_assoc($db_results);
+
+        return (int) $results['value'];
+    } // get_count
+
+    /**
+     * set_count
+     *
+     * write the total_counts to update_info
+     * @param string $table
+     * @param string $value
+     */
+    public static function set_count(string $table, string $value)
+    {
+        Dba::write("REPLACE INTO `update_info` SET `key`= '" . $table . "', `value`=" . $value);
+    } // set_count
+
+    /**
      * update_enabled
      * sets the enabled flag
      * @param string $new_enabled
@@ -748,7 +782,7 @@ abstract class Catalog extends database_object
         // tables with media items to count, song-related tables and the rest
         $media_tables = array('song', 'video', 'podcast_episode');
         $song_tables  = array('artist', 'album');
-        $list_tables  = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog');
+        $list_tables  = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license');
 
         $results = array();
         $items   = '0';
@@ -764,6 +798,8 @@ abstract class Catalog extends database_object
             $items += $data[0];
             $time += $data[1];
             $size += $data[2];
+            // write the total_counts as well
+            Catalog::set_count($table, $data[0]);
         }
         // return the totals for all media tables
         $results['items'] = $items;
@@ -776,18 +812,36 @@ abstract class Catalog extends database_object
             $data       = Dba::fetch_row($db_results);
             // save the object count
             $results[$table] = $data[0];
+            // write the total_counts as well
+            Catalog::set_count($table, $data[0]);
         }
 
         foreach ($list_tables as $table) {
-            $sql        = "SELECT COUNT(`id`) FROM `$table`";
-            $db_results = Dba::read($sql);
-            $data       = Dba::fetch_row($db_results);
+            $data = self::count_table($table);
             // save the object count
             $results[$table] = $data[0];
         }
 
         return $results;
-    }
+    } // count_server
+
+    /**
+     * count_table
+     *
+     * Update a specific table count when adding/removing from the server
+     * @param string $table
+     * @return array
+     */
+    public static function count_table($table)
+    {
+        $sql        = "SELECT COUNT(`id`) FROM `$table`";
+        $db_results = Dba::read($sql);
+        $data       = Dba::fetch_row($db_results);
+
+        Catalog::set_count($table, $data[0]);
+
+        return $data;
+    } // count_table
 
     /**
      * count_catalog
@@ -817,9 +871,10 @@ abstract class Catalog extends database_object
         }
 
         return $results;
-    }
+    } // count_catalog
 
     /**
+     * get_uploads_sql
      *
      * @param string $type
      * @param integer|null $user_id
@@ -846,7 +901,7 @@ abstract class Catalog extends database_object
         }
 
         return $sql;
-    }
+    } // get_uploads_sql
 
     /**
      * get_album_ids
@@ -1734,10 +1789,12 @@ abstract class Catalog extends database_object
             case 'album':
                 $tags = self::getSongTags('album', $libitem->id);
                 Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, false);
+                $libitem->update_time();
                 break;
             case 'artist':
                 $tags = self::getSongTags('artist', $libitem->id);
                 Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, false);
+                $libitem->update_time();
                 break;
         } // end switch type
 
@@ -1773,12 +1830,13 @@ abstract class Catalog extends database_object
         $name     = (get_class($media) == 'Song') ? 'song' : 'video';
         $function = 'update_' . $name . '_from_tags';
 
-        // check for files without tags and try to update from their file name instead
-        $invalid_exts = array('wav', 'shn');
+        // try and get the tags from your file
         $extension    = strtolower(pathinfo($media->file, PATHINFO_EXTENSION));
         $results      = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
-        if (in_array($extension, $invalid_exts)) {
-            debug_event('catalog.class', 'update_media_from_tags: ' . $extension . ' extension: Updating from file name', 2);
+        // for files without tags try to update from their file name instead
+        if ($media->id && in_array($extension, array('wav', 'shn'))) {
+            debug_event('catalog.class', 'update_media_from_tags: ' . $extension . ' extension: parse_pattern', 2);
+            // match against your catalog 'Filename Pattern' and 'Folder Pattern'
             $patres  = vainfo::parse_pattern($media->file, $catalog->sort_pattern, $catalog->rename_pattern);
             $results = array_merge($results, $patres);
 
@@ -1829,7 +1887,7 @@ abstract class Catalog extends database_object
                         array("\r\n", "\r", "\n"),
                         '<br />',
                         strip_tags($results['lyrics']));
-        $new_song->license = isset($results['license']) ? License::lookup($results['license']) : null;
+        $new_song->license = isset($results['license']) ? License::lookup((string) $results['license']) : null;
         $new_song->label   = isset($results['publisher']) ? Catalog::check_length($results['publisher'], 128) : null;
         if ($song->label && AmpConfig::get('label')) {
             // create the label if missing
@@ -1855,14 +1913,13 @@ abstract class Catalog extends database_object
         $artist           = self::check_length($results['artist']);
         $artist_mbid      = $results['mb_artistid'];
         $albumartist_mbid = $results['mb_albumartistid'];
-
         // info for the album table.
         $album            = self::check_length($results['album']);
         $album_mbid       = $results['mb_albumid'];
         $disk             = $results['disk'];
         // year is also included in album
         $album_mbid_group = $results['mb_albumid_group'];
-        $release_type     = $results['release_type'];
+        $release_type     = Catalog::check_length($results['release_type'], 32);
         $albumartist      = self::check_length($results['albumartist'] ?: $results['band']);
         $albumartist      = $albumartist ?: null;
         $original_year    = $results['original_year'];
@@ -1873,12 +1930,20 @@ abstract class Catalog extends database_object
         $new_song->artist = Artist::check($artist, $artist_mbid);
         if ($albumartist) {
             $new_song->albumartist = Artist::check($albumartist, $albumartist_mbid);
+            if (!$new_song->albumartist) {
+                $new_song->albumartist = $song->albumartist;
+            }
+        }
+        if (!$new_song->artist) {
+            $new_song->artist = $song->artist;
         }
 
         // check whether this album exists
         $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group,
                                         $new_song->albumartist, $release_type, false, $original_year, $barcode, $catalog_number);
-
+        if (!$new_song->album) {
+            $new_song->album = $song->album;
+        }
         // set `song`.`update_time` when artist or album details change
         $update_time = time();
         if (self::migrate('artist', $song->artist, $new_song->artist) ||
@@ -1911,17 +1976,17 @@ abstract class Catalog extends database_object
         }
 
         // Duplicate arts if required
-        if ($song->artist != $new_song->artist) {
+        if (($song->artist && $new_song->artist) && $song->artist != $new_song->artist) {
             if (!Art::has_db($new_song->artist, 'artist')) {
                 Art::duplicate('artist', $song->artist, $new_song->artist);
             }
         }
-        if ($song->albumartist != $new_song->albumartist) {
+        if (($song->albumartist && $new_song->albumartist) && $song->albumartist != $new_song->albumartist) {
             if (!Art::has_db($new_song->albumartist, 'artist')) {
                 Art::duplicate('artist', $song->albumartist, $new_song->albumartist);
             }
         }
-        if ($song->album != $new_song->album) {
+        if (($song->album && $new_song->album) && $song->album != $new_song->album) {
             if (!Art::has_db($new_song->album, 'album')) {
                 Art::duplicate('album', $song->album, $new_song->album);
             }
@@ -1998,7 +2063,7 @@ abstract class Catalog extends database_object
         $new_video->display_x     = $results['display_x'];
         $new_video->display_y     = $results['display_y'];
         $new_video->frame_rate    = $results['frame_rate'];
-        $new_video->video_bitrate = $results['video_bitrate'];
+        $new_video->video_bitrate = (int) Catalog::check_int($results['video_bitrate'], 4294967294, 0);
         $tags                     = Tag::get_object_tags('video', $video->id);
         if ($tags) {
             foreach ($tags as $tag) {
@@ -2062,7 +2127,6 @@ abstract class Catalog extends database_object
      * @param string $sort_pattern
      * @param string $rename_pattern
      * @return array
-     * @throws Exception
      */
     public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
     {
@@ -2073,7 +2137,13 @@ abstract class Catalog extends database_object
         }
 
         $vainfo = new vainfo($media->file, $gather_types, '', '', '', $sort_pattern, $rename_pattern);
-        $vainfo->get_info();
+        try {
+            $vainfo->get_info();
+        } catch (Exception $error) {
+            debug_event('catalog.class', 'Error ' . $error->getMessage(), 1);
+
+            return array();
+        }
 
         $key = vainfo::get_tag_type($vainfo->tags);
 
@@ -2361,6 +2431,27 @@ abstract class Catalog extends database_object
         }
 
         return $retval;
+    }
+
+    /**
+     * check_int
+     * Check to make sure a number fits into the database
+     *
+     * @param integer $track
+     * @param integer $max
+     * @param integer $min
+     * @return integer
+     */
+    public static function check_int($track, $max, $min)
+    {
+        if ($track > $max) {
+            return $max;
+        }
+        if ($track < $min) {
+            return $min;
+        }
+
+        return $track;
     }
 
     /**
@@ -2677,7 +2768,7 @@ abstract class Catalog extends database_object
                     $xml['dict']['Sample Rate']  = (int) ($song->rate);
                     $xml['dict']['Play Count']   = (int) ($song->played);
                     $xml['dict']['Track Type']   = "URL";
-                    $xml['dict']['Location']     = Song::play_url($song->id);
+                    $xml['dict']['Location']     = $song->play_url();
                     echo (string) xoutput_from_array($xml, true, 'itunes');
                     // flush output buffer
                 } // while result
@@ -2747,8 +2838,8 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * @param $libitem
-     * @param User|null $user_id
+     * @param Artist|Album|Song|Video|Podcast_Episode|Label|TVShow|TVShow_Season $libitem
+     * @param integer|null $user_id
      * @return boolean
      */
     public static function can_remove($libitem, $user_id = null)
@@ -2882,6 +2973,27 @@ abstract class Catalog extends database_object
                     }
                 }
                 break;
+            case 'update_all_file_tags':
+                $catalogs = self::get_catalogs();
+                // Intentional break fall-through
+            case 'update_file_tags':
+                $write_id3 = AmpConfig::get('write_id3', false);
+                AmpConfig::set('write_id3', 'true', true);
+                $write_id3_art = AmpConfig::get('write_id3_art', false);
+                AmpConfig::set('write_id3_art', 'true', true);
+                foreach ($catalogs as $catalog_id) {
+                    $catalog = self::create_from_id($catalog_id);
+                    if ($catalog !== null) {
+                        $song_ids = $catalog->get_song_ids();
+                        foreach ($song_ids as $song_id) {
+                            $song = new Song($song_id);
+                            $song->format();
+                            $song->write_id3();
+                        }
+                    }
+                }
+                AmpConfig::set('write_id3', $write_id3, true);
+                AmpConfig::set('write_id3', $write_id3_art, true);
         }
 
         // Remove any orphaned artists/albums/etc.

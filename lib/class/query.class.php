@@ -474,6 +474,7 @@ class Query
                 }
                 break;
             case 'artist':
+            case 'album_artist':
             case 'catalog':
             case 'album':
                 $this->_state['filter'][$key] = $value;
@@ -1518,6 +1519,10 @@ class Query
                     $this->set_join('left', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
                     $this->set_join('left', '`catalog`', '`catalog`.`id`', '`song`.`catalog`', 100);
                     $filter_sql = " `catalog`.`enabled` = '1' AND ";
+                    break;
+                case 'album_artist':
+                    $this->set_join('left', '`album`', '`album`.`album_artist`', '`artist`.`id`', 100);
+                    $filter_sql = " `album`.`album_artist` IS NOT NULL AND ";
                     break;
                 default:
                     break;

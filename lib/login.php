@@ -112,15 +112,16 @@ if (!empty($username) && isset($auth)) {
         }
     } elseif (AmpConfig::get('auto_create') && $auth['success'] && ! $user->username) {
         // This is run if we want to autocreate users who don't exist (useful for non-mysql auth)
-        $access     = User::access_name_to_level(AmpConfig::get('auto_user', 'guest'));
-        $fullname   = array_key_exists('name', $auth) ? $auth['name']    : '';
-        $email      = array_key_exists('email', $auth) ? $auth['email']   : '';
-        $website    = array_key_exists('website', $auth) ? $auth['website'] : '';
-        $state      = array_key_exists('state', $auth) ? $auth['state']   : '';
-        $city       = array_key_exists('city', $auth) ? $auth['city']    : '';
+        $access   = User::access_name_to_level(AmpConfig::get('auto_user', 'guest'));
+        $fullname = array_key_exists('name', $auth) ? $auth['name']    : '';
+        $email    = array_key_exists('email', $auth) ? $auth['email']   : '';
+        $website  = array_key_exists('website', $auth) ? $auth['website'] : '';
+        $state    = array_key_exists('state', $auth) ? $auth['state']   : '';
+        $city     = array_key_exists('city', $auth) ? $auth['city']    : '';
 
         // Attempt to create the user
-        if (User::create($username, $fullname, $email, $website, hash('sha256', mt_rand()), $access, $state, $city) > 0) {
+        $user_id = User::create($username, $fullname, $email, $website, hash('sha256', mt_rand()), $access, $state, $city);
+        if ($user_id > 0) {
             $user = User::get_from_username($username);
 
             if (array_key_exists('avatar', $auth)) {
@@ -189,7 +190,7 @@ if (isset($auth) && $auth['success'] && isset($user)) {
     $GLOBALS['user'] = $user;
     // If an admin, check for update
     if (AmpConfig::get('autoupdate') && Access::check('interface', 100)) {
-        AutoUpdate::is_update_available(true);
+        AutoUpdate::is_update_available();
     }
     // fix preferences that are missing for user
     User::fix_preferences($user->id);

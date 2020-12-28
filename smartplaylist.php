@@ -98,6 +98,7 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . UI::find_template('show_search.inc.php');
         break;
     default:
+        $playlist   = new Search((int) $_REQUEST['playlist_id'], 'song');
         $object_ids = $playlist->get_items();
         require_once AmpConfig::get('prefix') . UI::find_template('show_search.inc.php');
         break;

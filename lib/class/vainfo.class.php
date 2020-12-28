@@ -27,6 +27,11 @@ declare(strict_types=0);
  * Ampache-friendly way.
  *
  */
+
+
+/**
+ * Class vainfo
+ */
 class vainfo
 {
     public $encoding       = '';
@@ -214,7 +219,6 @@ class vainfo
      * get_info
      *
      * This function runs the various steps to gathering the metadata
-     * @throws Exception
      */
     public function get_info()
     {
@@ -252,50 +256,72 @@ class vainfo
      * write_id3
      * This function runs the various steps to gathering the metadata
      * @param $data
+     * @throws Exception
      */
-    public function write_id3($data)
+    public function write_id3($tag_data)
     {
-        // Get the Raw file information
-        $this->read_id3();
-        if (isset($this->_raw['tags']['id3v2'])) {
-            getid3_lib::IncludeDependency(GETID3_INCLUDEPATH . 'write.php', __FILE__, true);
-            $tagWriter           = new getid3_writetags();
-            $tagWriter->filename = $this->filename;
-            //'id3v2.4' doesn't saves the year;
-            $tagWriter->tagformats        = array('id3v1', 'id3v2.3');
-            $tagWriter->overwrite_tags    = true;
-            $tagWriter->remove_other_tags = true;
-            $tagWriter->tag_encoding      = 'UTF-8';
-            $TagData                      = $this->_raw['tags']['id3v2'];
+        $TaggingFormat = 'UTF-8';
+        $tagWriter     = new getid3_writetags();
+        $extension     = pathinfo($this->filename, PATHINFO_EXTENSION);
+        if ($extension == 'mp3') {
+            $format = 'id3v2.3';
+        } elseif ($extension == 'flac') {
+            $format = 'metaflac';
+        } elseif ($extension = 'oga') {
+            $format = 'vorbiscomment';
+        } else {
+            debug_event('Writing Tags:', "Files with '" . $extension . "' extensions are currently ignored.", 5);
 
-            // Foreach what we've got
-            foreach ($data as $key => $value) {
-                if ($key != 'APIC') {
-                    $TagData[$key][0] = $value;
-                }
+            return;
+        }
+
+        $tagWriter->filename          = $this->filename;
+        $tagWriter->tagformats        = array($format);
+        $tagWriter->overwrite_tags    = true;
+        $tagWriter->tag_encoding      = $TaggingFormat;
+        $tagWriter->remove_other_tags = true;
+        $tagWriter->tag_data          = $tag_data;
+        if ($tagWriter->WriteTags()) {
+            foreach ($tagWriter->warnings as $message) {
+                debug_event('vainfo.class', 'Warning Writing Image: ' . $message, 5);
             }
-
-            if (isset($data['APIC'])) {
-                $TagData['attached_picture'][0]['data']          = $data['APIC']['data'];
-                $TagData['attached_picture'][0]['picturetypeid'] = '3';
-                $TagData['attached_picture'][0]['description']   = 'Cover';
-                $TagData['attached_picture'][0]['mime']          = $data['APIC']['mime'];
-            }
-
-            $tagWriter->tag_data = $TagData;
-
-            if ($tagWriter->WriteTags()) {
-                if (!empty($tagWriter->warnings)) {
-                    debug_event('vainfo.class', 'FWarnings ' . implode("\n", $tagWriter->warnings), 5);
-                }
-            } else {
-                debug_event('vainfo.class', 'Failed to write tags! ' . implode("\n", $tagWriter->errors), 3);
+        }
+        if (!empty($tagWriter->errors)) {
+            foreach ($tagWriter->errors as $message) {
+                debug_event('vainfo.class', 'Error Writing Image: ' . $message, 1);
             }
         }
     } // write_id3
 
+
+    /**
+     * prepare_id3_frames
+     * Prepares id3 frames for writing tag to file
+     * @param array $frames
+     * @return array
+     */
+    public function prepare_id3_frames($frames)
+    {
+        $ndata = array();
+        foreach ($frames as $key => $text) {
+            switch ($key) {
+                case 'text':
+                   foreach ($text as $tkey => $data) {
+                       $ndata['text'][] = array('data' => $data, 'description' => $tkey, 'encodingid' => 0);
+                   }
+                   break;
+                default:
+                   $ndata[$key][] = $key[0];
+                    break;
+            }
+        }
+
+        return $ndata;
+    } // prepare_id3_frames
+
     /**
      * read_id3
+
      * This function runs the various steps to gathering the metadata
      * @return array
      */
@@ -374,14 +400,14 @@ class vainfo
             $tags = $results[$key];
 
             $info['file']    = $info['file'] ?: $tags['file'];
-            $info['bitrate'] = $info['bitrate'] ?: (int) ($tags['bitrate']);
-            $info['rate']    = $info['rate'] ?: (int) ($tags['rate']);
+            $info['bitrate'] = $info['bitrate'] ?: (int) $tags['bitrate'];
+            $info['rate']    = $info['rate'] ?: (int) $tags['rate'];
             $info['mode']    = $info['mode'] ?: $tags['mode'];
             // size will be added later, because of conflicts between real file size and getID3 reported filesize
             $info['mime']     = $info['mime'] ?: $tags['mime'];
             $info['encoding'] = $info['encoding'] ?: $tags['encoding'];
             $info['rating']   = $info['rating'] ?: $tags['rating'];
-            $info['time']     = $info['time'] ?: (int) ($tags['time']);
+            $info['time']     = $info['time'] ?: (int) $tags['time'];
             $info['channels'] = $info['channels'] ?: $tags['channels'];
 
             // This because video title are almost always bad...
@@ -389,10 +415,10 @@ class vainfo
             $info['title']         = $info['title'] ?: stripslashes(trim((string) $tags['title']));
 
             // Not even sure if these can be negative, but better safe than llama.
-            $info['year'] = Catalog::normalize_year($info['year'] ?: (int) ($tags['year']));
-            $info['disk'] = abs($info['disk'] ?: (int) ($tags['disk']));
+            $info['year'] = Catalog::normalize_year($info['year'] ?: (int) $tags['year']);
+            $info['disk'] = abs($info['disk'] ?: (int) $tags['disk']);
 
-            $info['totaldisks'] = $info['totaldisks'] ?: (int) ($tags['totaldisks']);
+            $info['totaldisks'] = $info['totaldisks'] ?: (int) $tags['totaldisks'];
 
             $info['artist']         = $info['artist'] ?: trim((string) $tags['artist']);
             $info['albumartist']    = $info['albumartist'] ?: trim((string) $tags['albumartist']);
@@ -428,13 +454,13 @@ class vainfo
             $info['replaygain_album_gain'] = $info['replaygain_album_gain'] ?: floatval($tags['replaygain_album_gain']);
             $info['replaygain_album_peak'] = $info['replaygain_album_peak'] ?: floatval($tags['replaygain_album_peak']);
 
-            $info['track']         = $info['track'] ?: (int) ($tags['track']);
-            $info['resolution_x']  = $info['resolution_x'] ?: (int) ($tags['resolution_x']);
-            $info['resolution_y']  = $info['resolution_y'] ?: (int) ($tags['resolution_y']);
-            $info['display_x']     = $info['display_x'] ?: (int) ($tags['display_x']);
-            $info['display_y']     = $info['display_y'] ?: (int) ($tags['display_y']);
-            $info['frame_rate']    = $info['frame_rate'] ?: floatval($tags['frame_rate']);
-            $info['video_bitrate'] = $info['video_bitrate'] ?: (int) ($tags['video_bitrate']);
+            $info['track']         = $info['track'] ?: (int) $tags['track'];
+            $info['resolution_x']  = $info['resolution_x'] ?: (int) $tags['resolution_x'];
+            $info['resolution_y']  = $info['resolution_y'] ?: (int) $tags['resolution_y'];
+            $info['display_x']     = $info['display_x'] ?: (int) $tags['display_x'];
+            $info['display_y']     = $info['display_y'] ?: (int) $tags['display_y'];
+            $info['frame_rate']    = $info['frame_rate'] ?: (float) $tags['frame_rate'];
+            $info['video_bitrate'] = $info['video_bitrate'] ?: (int) Catalog::check_int($tags['video_bitrate'], 4294967294, 0);
             $info['audio_codec']   = $info['audio_codec'] ?: trim((string) $tags['audio_codec']);
             $info['video_codec']   = $info['video_codec'] ?: trim((string) $tags['video_codec']);
             $info['description']   = $info['description'] ?: trim((string) $tags['description']);
@@ -678,8 +704,8 @@ class vainfo
             $parsed['mode'] = 'cbr';
         }
         $parsed['bitrate']       = $tags['audio']['bitrate'];
-        $parsed['channels']      = (int) ($tags['audio']['channels']);
-        $parsed['rate']          = (int) ($tags['audio']['sample_rate']);
+        $parsed['channels']      = (int) $tags['audio']['channels'];
+        $parsed['rate']          = (int) $tags['audio']['sample_rate'];
         $parsed['size']          = $this->_forcedSize ?: $tags['filesize'];
         $parsed['encoding']      = $tags['encoding'];
         $parsed['mime']          = $tags['mime_type'];
@@ -1202,7 +1228,7 @@ class vainfo
             $tvyear  = array();
             $temp    = array();
             preg_match("~(?<=\(\[\<\{)[1|2][0-9]{3}|[1|2][0-9]{3}~", $filepath, $tvyear);
-            $results['year'] = !empty($tvyear) ? (int) ($tvyear[0]) : null;
+            $results['year'] = (!empty($tvyear)) ? (int) $tvyear[0] : null;
 
             if (preg_match("~[Ss](\d+)[Ee](\d+)~", $file, $seasonEpisode)) {
                 $temp = preg_split("~(((\.|_|\s)[Ss]\d+(\.|_)*[Ee]\d+))~", $file, 2);

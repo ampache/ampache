@@ -71,34 +71,67 @@ class Stream_Playlist
     }
 
     /**
-     * @param $url
+     * @param Stream_URL $url
      * @return PDOStatement|boolean
      */
     private function _add_url($url)
     {
-        debug_event("stream_playlist.class.php", "Adding url {" . json_encode($url) . "}...", 5);
+        debug_event("stream_playlist.class", "Adding url {" . json_encode($url) . "}...", 5);
 
         $this->urls[] = $url;
-        $sql          = 'INSERT INTO `stream_playlist` ';
-
-        $fields    = array();
-        $fields[]  = '`sid`';
-        $values    = array();
-        $values[]  = $this->id;
-        $holders   = array();
-        $holders[] = '?';
+        $fields       = array();
+        $fields[]     = '`sid`';
+        $values       = array();
+        $values[]     = $this->id;
+        $holders      = array();
+        $holders[]    = '?';
 
         foreach ($url->properties as $field) {
             if ($url->$field) {
                 $fields[]  = '`' . $field . '`';
-                $holders[] = '?';
                 $values[]  = $url->$field;
+                $holders[] = '?';
             }
         }
-        $sql .= '(' . implode(',', $fields) . ') ';
-        $sql .= 'VALUES(' . implode(',', $holders) . ')';
+        $sql = 'INSERT INTO `stream_playlist` (' . implode(',', $fields) . ') VALUES (' . implode(',', $holders) . ')';
 
         return Dba::write($sql, $values);
+    }
+
+    /**
+     * @param array $urls
+     * @return PDOStatement|boolean
+     */
+    private function _add_urls($urls)
+    {
+        $sql       = 'INSERT INTO `stream_playlist` ';
+        $value_sql = 'VALUES ';
+        $values    = array();
+        $fields    = array();
+        $fields[]  = '`sid`';
+        $count     = true;
+        debug_event("stream_playlist.class", "Adding urls to {" . $this->id . "}...", 5);
+        foreach ($urls as $url) {
+            $this->urls[] = $url;
+            $values[]     = $this->id;
+            $holders      = array();
+            $holders[]    = '?';
+
+            foreach ($url->properties as $field) {
+                if ($url->$field) {
+                    $holders[] = '?';
+                    $values[]  = $url->$field;
+                    if ($count) {
+                        $fields[] = '`' . $field . '`';
+                    }
+                }
+            }
+            $count = false;
+            $value_sql .= '(' . implode(',', $holders) . '), ';
+        }
+        $sql .= '(' . implode(',', $fields) . ') ';
+
+        return Dba::write($sql . rtrim($value_sql, ', '), $values);
     }
 
     /**
@@ -160,7 +193,7 @@ class Stream_Playlist
 
     /**
      * media_object_to_url
-     * @param $object
+     * @param media $object
      * @param string $additional_params
      * @param string $urltype
      * @return Stream_URL
@@ -189,8 +222,7 @@ class Stream_Playlist
                     }
                 }
             } else {
-                // FIXME: play_url shouldn't be static
-                $url['url'] = $type::play_url($object->id, $additional_params);
+                $url['url'] = $object->play_url($additional_params);
             }
 
             $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
@@ -205,33 +237,38 @@ class Stream_Playlist
                     $url['info_url']  = $object->f_link;
                     $url['image_url'] = Art::url($object->album, 'album', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['album']     = $object->f_album_full;
-                    $url['track_num'] = $object->f_track;
+                    $url['codec']     = $object->type;
+                    //$url['track_num'] = $object->f_track;
                     break;
                 case 'video':
                     $url['title']      = 'Video - ' . $object->title;
                     $url['author']     = $object->f_artist_full;
                     $url['resolution'] = $object->f_resolution;
+                    $url['codec']      = $object->type;
                     break;
                 case 'live_stream':
                     $url['title'] = 'Radio - ' . $object->name;
                     if (!empty($object->site_url)) {
                         $url['title'] .= ' (' . $object->site_url . ')';
                     }
-                    $url['codec']     = $object->codec;
                     $url['image_url'] = Art::url($object->id, 'live_stream', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
+                    $url['codec']     = $object->codec;
                     break;
                 case 'song_preview':
                     $url['title']  = $object->title;
                     $url['author'] = $object->f_artist_full;
+                    $url['codec']  = $object->type;
                     break;
                 case 'channel':
                     $url['title'] = $object->name;
+                    $url['codec'] = $object->stream_type;
                     break;
                 case 'podcast_episode':
                     $url['title']     = $object->f_title;
                     $url['author']    = $object->f_podcast;
                     $url['info_url']  = $object->f_link;
                     $url['image_url'] = Art::url($object->podcast, 'podcast', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
+                    $url['codec']     = $object->type;
                     break;
                 case 'random':
                     $url['title'] = 'Random URL';
@@ -352,15 +389,13 @@ class Stream_Playlist
     public function add($media = array(), $additional_params = '')
     {
         $urls = self::media_to_urlarray($media, $additional_params);
-        foreach ($urls as $url) {
-            $this->_add_url($url);
-        }
+        $this->_add_urls($urls);
     }
 
     /**
      * add_urls
      * Add an array of urls. This is used for things that aren't coming
-     * from media objects
+     * from media objects like democratic playlists
      * @param array $urls
      * @return boolean
      */
@@ -419,7 +454,7 @@ class Stream_Playlist
     }
 
     /**
-      * get_pls_string
+     * get_pls_string
      * @return string
      */
     public function get_pls_string()
@@ -568,7 +603,8 @@ class Stream_Playlist
                     $additional_params .= '&' . $key . '=' . $value;
                 }
 
-                $hu = $type::play_url($id, $additional_params);
+                $item = new $type($id);
+                $hu   = $item->play_url($additional_params);
                 $ret .= $hu . "\n";
                 $soffset += $size;
                 $segment++;
@@ -658,9 +694,10 @@ class Stream_Playlist
             $data    = Stream_URL::parse($url->url);
             $items[] = array($data['type'], $data['id']);
         }
-
-        $democratic->add_vote($items);
-        display_notification(T_('Vote added'));
+        if (!empty($items)) {
+            $democratic->add_vote($items);
+            display_notification(T_('Vote added'));
+        }
     }
 
     /**

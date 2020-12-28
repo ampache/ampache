@@ -111,35 +111,37 @@ class Stats
             return false;
         }
         $type = self::validate_type($input_type);
-        if (!self::is_already_inserted($type, $object_id, $user, $agent, $date)) {
-            $latitude  = null;
-            $longitude = null;
-            $geoname   = null;
-            if (isset($location['latitude'])) {
-                $latitude = $location['latitude'];
-            }
-            if (isset($location['longitude'])) {
-                $longitude = $location['longitude'];
-            }
-            if (isset($location['name'])) {
-                $geoname = $location['name'];
-            }
-            // allow setting date for scrobbles
-            if (!is_numeric($date)) {
-                $date = time();
-            }
+        if (self::is_already_inserted($type, $object_id, $user, $agent, $date)) {
+            return false;
+        }
 
-            $sql = "INSERT INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) " .
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $db_results = Dba::write($sql, array($type, $object_id, $count_type, $date, $user, $agent, $latitude, $longitude, $geoname));
+        $latitude  = null;
+        $longitude = null;
+        $geoname   = null;
+        if (isset($location['latitude'])) {
+            $latitude = $location['latitude'];
+        }
+        if (isset($location['longitude'])) {
+            $longitude = $location['longitude'];
+        }
+        if (isset($location['name'])) {
+            $geoname = $location['name'];
+        }
+        // allow setting date for scrobbles
+        if (!is_numeric($date)) {
+            $date = time();
+        }
 
-            if (in_array($type, array('song', 'video')) && $count_type === 'stream' && $user > 0) {
-                Useractivity::post_activity($user, 'play', $type, $object_id, $date);
-            }
+        $sql = "INSERT INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) " .
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $db_results = Dba::write($sql, array($type, $object_id, $count_type, $date, $user, $agent, $latitude, $longitude, $geoname));
 
-            if (!$db_results) {
-                debug_event('stats.class', 'Unable to insert statistics for ' . $user . ':' . $object_id, 3);
-            }
+        if (in_array($type, array('song', 'video')) && $count_type === 'stream' && $user > 0 && $agent !== 'debug') {
+            Useractivity::post_activity($user, 'play', $type, $object_id, $date);
+        }
+
+        if (!$db_results) {
+            debug_event('stats.class', 'Unable to insert statistics for ' . $user . ':' . $object_id, 3);
         }
 
         return true;
@@ -152,6 +154,7 @@ class Stats
      * @param integer $object_id
      * @param integer $user
      * @param string $agent
+     * @param integer $time
      * @return boolean
      */
     public static function is_already_inserted($type, $object_id, $user, $agent, $time)
@@ -159,7 +162,8 @@ class Stats
         $agent = Dba::escape($agent);
         $sql   = "SELECT `object_id`, `date`, `count_type` FROM `object_count` " .
                 "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND " .
-                "(`object_count`.`date` >= ($time - 20) AND `object_count`.`date` <= ($time + 5)) ";
+                "`object_count`.`count_type` = 'stream' AND " .
+                "(`object_count`.`date` >= ($time - 5) AND `object_count`.`date` <= ($time + 5)) ";
         if ($agent !== '') {
             $sql .= "AND `object_count`.`agent` = '$agent' ";
         }
@@ -248,6 +252,7 @@ class Stats
      * optional user_id because when streaming we don't have $GLOBALS()
      * @param string $user_id
      * @param string $agent
+     * @param integer $date
      * @return array
      */
     public static function get_last_play($user_id = '', $agent = '', $date = 0)
@@ -259,17 +264,10 @@ class Stats
         $sqlres = array($user_id);
 
         $sql = "SELECT `object_count`.`id`, `object_count`.`object_type`, `object_count`.`object_id`, " .
-               "`object_count`.`user`, `object_count`.`agent`, `object_count`.`date`, `song`.`time`, " .
+               "`object_count`.`user`, `object_count`.`agent`, `object_count`.`date`, " .
                "`object_count`.`count_type` FROM `object_count` " .
-               "LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
-        }
-        $sql .= "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` " .
-                "IN ('song', 'video', 'podcast_episode') AND `object_count`.`count_type` IN ('stream', 'skip') ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND `catalog`.`enabled` = '1' ";
-        }
+               "WHERE `object_count`.`user` = ? AND `object_count`.`object_type` " .
+               "IN ('song', 'video', 'podcast_episode') AND `object_count`.`count_type` IN ('stream', 'skip') ";
         if ($agent) {
             $sql .= "AND `object_count`.`agent` = ? ";
             array_push($sqlres, $agent);
@@ -283,6 +281,28 @@ class Stats
 
         return Dba::fetch_assoc($db_results);
     } // get_last_play
+
+    /**
+     * get_time
+     *
+     * get the time for the object (song, video, podcast_episode)
+     * @param integer $object_id
+     * @param string $object_type
+     * @return integer
+     */
+    public static function get_time($object_id, $object_type)
+    {
+        // you can't get the last played when you haven't played something before
+        if (!$object_id || !$object_type) {
+            return 0;
+        }
+        $sql = "SELECT `time` FROM `$object_type` " .
+               "WHERE `id` = ?";
+        $db_results = Dba::read($sql, array($object_id));
+        $results    = Dba::fetch_assoc($db_results);
+
+        return (int) $results['time'];
+    } // get_time
 
     /**
      * skip_last_play
@@ -323,12 +343,13 @@ class Stats
             return false;
         }
         $previous  = self::get_last_play($user, $agent, $date);
+        $last_time = self::get_time($previous['object_id'], $previous['object_type']);
         $diff      = $date - (int) $previous['date'];
         $item_time = $object->time;
-        $skip_time = AmpConfig::get_skip_timer($previous['time']);
+        $skip_time = AmpConfig::get_skip_timer($last_time);
 
         // if your last song is 30 seconds and your skip timer if 40 you don't want to keep skipping it.
-        if ($previous['time'] > 0 && $previous['time'] < $skip_time) {
+        if ($last_time > 0 && $last_time < $skip_time) {
             return true;
         }
 
@@ -340,7 +361,7 @@ class Stats
         }
 
         // when the difference between recordings is too short, the previous object has been skipped, so note that
-        if (($diff < $skip_time || ($diff < $skip_time && $previous['time'] > $skip_time))) {
+        if (($diff < $skip_time || ($diff < $skip_time && $last_time > $skip_time))) {
             debug_event('stats.class', 'Last ' . $previous['object_type'] . ' played within skip limit (' . $diff . '/' . $skip_time . 's). Skipping {' . $previous['object_id'] . '}', 3);
             self::skip_last_play($previous['date'], $previous['agent'], $previous['user']);
             // delete song, podcast_episode and video from user_activity to keep stats in line
@@ -623,6 +644,7 @@ class Stats
             case 'tvshow_episode':
             case 'movie':
             case 'playlist':
+            case 'podcast_episode':
                 return $type;
             default:
                 return 'song';

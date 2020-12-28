@@ -457,6 +457,7 @@ class AmpacheMpd extends localplay_controller
      * This functions returns an array containing information about
      * the songs that MPD currently has in its playlist. This must be
      * done in a standardized fashion
+     * @return array
      */
     public function get()
     {
@@ -468,6 +469,10 @@ class AmpacheMpd extends localplay_controller
         /* Get the Current Playlist */
         $playlist = $this->_mpd->playlist;
         $results  = array();
+        // if there isn't anything to return don't do it
+        if (empty($playlist)) {
+            return $results;
+        }
 
         foreach ($playlist as $entry) {
             $data = array();
