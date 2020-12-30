@@ -27,7 +27,10 @@ const getUser = (username: string, authKey: AuthKey) => {
             if (!JSONData) {
                 throw new Error('Server Error');
             }
-            if (JSONData.error && !JSONData.error.contains('Request Aborted')) {
+            if (JSONData.error) {
+                if (JSONData.error.errorMessage.includes('Request Aborted'))
+                    //TODO
+                    return;
                 throw new AmpacheError(JSONData.error);
             }
             return JSONData.user as User;

@@ -49,13 +49,13 @@ export default class Root extends React.PureComponent<void, RouterState> {
                             user.authKey = newAuthKey;
                             this.setState({ user });
                         })
-                        .catch((error) => {
+                        .catch((error: AmpacheError) => {
                             console.error('HANDSHAKE-GETUSERFAILED', error); //TODO: Error handling
-                            return new AmpacheError(error);
+                            throw error;
                         });
                 })
-                .catch((error) => {
-                    throw new Error(error);
+                .catch((error: AmpacheError) => {
+                    throw error;
                 });
         };
         this.handleLogout = this.handleLogout.bind(this);
@@ -82,7 +82,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
     }
 
     render() {
-        if (this.state.authKey == null) {
+        if (this.state.authKey == null || this.state.user == null) {
             return (
                 <BrowserRouter basename='/newclient'>
                     <Route
