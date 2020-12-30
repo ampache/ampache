@@ -26,6 +26,27 @@ a
   &.disabled
    pointer-events none
 
+/* W3C spec */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: colorAmber900 colorGray900;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  background: colorGray900;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: colorAmber900;
+  border-radius: 20px;
+  border: 3px solid colorGray900;
+}
+
 :global
   //Pages
   @import "./pages/Playlists"
