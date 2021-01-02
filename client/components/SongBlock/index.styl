@@ -2,12 +2,13 @@
 
 .songBlock
   display flex
-  width 450px
+  width 450px //TODO: Refactor, width shouldn't be set globally, make this component more reusable
   height 90px
   cursor pointer
   border 1px solid transparent
   img
     width 20%
+    object-fit contain
   .details
     padding-left 10px
     display flex

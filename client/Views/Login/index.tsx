@@ -3,6 +3,7 @@ import logo from '~images/ampache-dark.png';
 import AmpacheError from '~logic/AmpacheError';
 
 import style from './index.styl';
+import ReactLoading from 'react-loading';
 
 interface LoginProps {
     handleLogin: (
@@ -14,14 +15,21 @@ interface LoginProps {
 const LoginView: React.FC<LoginProps> = (props) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<Error | AmpacheError>(null);
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setLoading(true);
         props.handleLogin(username, password).catch((e) => {
+            setLoading(false);
             setError(e);
         });
     };
+
+    if (loading) {
+        return <ReactLoading />;
+    }
 
     return (
         <div className={style.loginPage}>

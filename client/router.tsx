@@ -17,11 +17,13 @@ import ArtistsView from './Views/Artists';
 import AmpacheError from './logic/AmpacheError';
 import PlaylistsView from './Views/Playlists';
 import PlaylistView from './Views/Playlist';
+import ReactLoading from 'react-loading';
 
 interface RouterState {
     authKey: AuthKey;
     username: string;
     user: User;
+    loading: boolean;
 }
 
 export default class Root extends React.PureComponent<void, RouterState> {
@@ -35,7 +37,8 @@ export default class Root extends React.PureComponent<void, RouterState> {
         this.state = {
             authKey: Cookies.get('authKey'),
             username: Cookies.get('username'),
-            user: null
+            user: null,
+            loading: true
         };
 
         this.handleLogin = (username: string, password: string) => {
@@ -66,12 +69,14 @@ export default class Root extends React.PureComponent<void, RouterState> {
             getUser(this.state.username, this.state.authKey)
                 .then((user: User) => {
                     user.authKey = this.state.authKey;
-                    this.setState({ user });
+                    this.setState({ user, loading: false });
                 })
                 .catch((error) => {
                     console.error('GETUSERFAILED', error); //TODO: Error handling
                     this.handleLogout();
                 });
+        } else {
+            this.setState({ loading: false });
         }
     }
 
@@ -82,6 +87,11 @@ export default class Root extends React.PureComponent<void, RouterState> {
     }
 
     render() {
+        console.log(this.state);
+        if (this.state.loading) {
+            return <ReactLoading />;
+        }
+
         if (this.state.authKey == null || this.state.user == null) {
             return (
                 <BrowserRouter basename='/newclient'>
