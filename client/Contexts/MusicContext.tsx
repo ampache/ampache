@@ -54,13 +54,14 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     );
 
     const playPause = useCallback(() => {
-        if (currentPlayingSongRef == undefined) return;
-        const isPaused = audioRef.audioEl?.paused;
+        if (currentPlayingSongRef.current == undefined) return;
+
+        const isPaused = audioRef.audioEl?.current.paused;
         if (isPaused) {
-            audioRef.audioEl.play();
+            audioRef.audioEl.current.play();
             return;
         } else {
-            audioRef.audioEl.pause();
+            audioRef.audioEl.current.pause();
         }
     }, [audioRef, currentPlayingSongRef]);
 
@@ -71,10 +72,10 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
                     'Playing an undefined song, something is wrong.'
                 );
             }
-            console.log(audioRef);
-            audioRef.audioEl.src = song.url;
-            audioRef.audioEl.title = `${song.artist.name} - ${song.title}`;
-            audioRef.audioEl.play();
+            console.log(audioRef.audioEl);
+            audioRef.audioEl.current.src = song.url;
+            audioRef.audioEl.current.title = `${song.artist.name} - ${song.title}`;
+            audioRef.audioEl.current.play();
             currentPlayingSongRef.current = song;
             if ('mediaSession' in navigator) {
                 navigator.mediaSession.metadata = new MediaMetadata({
@@ -164,7 +165,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     };
 
     const seekSongTo = (newPosition: number) => {
-        audioRef.audioEl.currentTime = newPosition;
+        audioRef.audioEl.current.currentTime = newPosition;
         setSongPosition(newPosition);
     };
 
@@ -189,7 +190,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
                 setVolume
             }}
         >
-            <ReactAudioPlayer //TODO: If this doesn't get updated soon, remove it.
+            <ReactAudioPlayer
                 ref={(element) => {
                     if (element == undefined) return;
                     audioRef = element;

@@ -14,7 +14,7 @@
         "js-cookie": "^2.2.1",
         "react": "^16.13.1",
         "react-async-popup": "^0.0.6",
-        "react-audio-player": "https://github.com/justinmc/react-audio-player",
+        "react-audio-player": "^0.14.0",
         "react-debounce-input": "^3.2.3",
         "react-device-detect": "^1.13.1",
         "react-dom": "npm:@hot-loader/react-dom",
