@@ -3,7 +3,7 @@
  # This file lists all description strings from your Ampache-database -> preference-table.
  # Please do not delete or modify the content by yourself. It will be automatically (re)generated
  # if you run './gather-messages.sh [-gu|--getutds].
- # Last Update: 11.10.2020 14:56:45 CEST 
+ # Last Update: 28.12.2020 20:06:12 CET 
 
  #######################################################################
 
@@ -393,6 +393,14 @@ msgstr ""
 
 #: Database preference table id 174
 msgid "Only add unique items to playlists"
+msgstr ""
+
+#: Database preference table id 175
+msgid "Set the amount of items Album/Video of the Moment will display"
+msgstr ""
+
+#: Database preference table id 176
+msgid "Custom URL - Login page background"
 msgstr ""
 
 #: Database preference subcategory table id 1
