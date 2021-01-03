@@ -196,7 +196,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
                                 />
                                 <Route
                                     exact
-                                    path='/search/:searchQuery'
+                                    path='/search/:searchQuery?'
                                     render={(props) => (
                                         <SearchView
                                             {...props}

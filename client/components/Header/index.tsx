@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import SVG from 'react-inlinesvg';
 import { Link, withRouter } from 'react-router-dom';
 import logo from '~images/ampache-dark.png';
 
 import style from './index.styl';
+import { DebounceInput } from 'react-debounce-input';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 interface HeaderProps {
     username: string;
@@ -14,9 +16,14 @@ interface HeaderProps {
 //TODO: Figure out how to use HeaderProps type here
 const Header = withRouter(({ history, ...props }: any) => {
     const [query, setQuery] = useState('');
+    const searchBox = useRef(null);
 
-    const searchSubmit = (e) => {
+    useHotkeys('ctrl+f', (e) => {
         e.preventDefault();
+        searchBox.current.focus();
+    });
+
+    const searchSubmit = (query) => {
         history.push(`/search/${query}`);
     };
 
@@ -37,12 +44,18 @@ const Header = withRouter(({ history, ...props }: any) => {
             </div>
             <div className={style.search}>
                 <form onSubmit={(e) => searchSubmit(e)}>
-                    <input
+                    <DebounceInput
                         type='text'
                         placeholder='Search'
                         autoComplete='off'
                         value={query}
-                        onChange={(event) => setQuery(event.target.value)}
+                        debounceTimeout={300}
+                        onChange={(event) => {
+                            event.preventDefault();
+                            setQuery(event.target.value);
+                            searchSubmit(event.target.value);
+                        }}
+                        inputRef={searchBox}
                     />
                 </form>
             </div>

@@ -41,7 +41,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     const [userQCount, setUserQCount] = useState(0);
     const [volume, setVolume] = useState(100);
 
-    let audioRef = undefined;
+    let audioRef = undefined; //TODO: Should this be useRef?
 
     useHotkeys(
         'space',

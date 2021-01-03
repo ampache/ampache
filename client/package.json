@@ -15,6 +15,7 @@
         "react": "^16.13.1",
         "react-async-popup": "^0.0.6",
         "react-audio-player": "https://github.com/justinmc/react-audio-player",
+        "react-debounce-input": "^3.2.3",
         "react-device-detect": "^1.13.1",
         "react-dom": "npm:@hot-loader/react-dom",
         "react-hotkeys-hook": "^2.1.3",

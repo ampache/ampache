@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { User } from '~logic/User';
-import { searchAlbums, searchSongs } from '~logic/Search';
+import { searchAlbums, searchArtists, searchSongs } from '~logic/Search';
 import { Song } from '~logic/Song';
 import AmpacheError from '~logic/AmpacheError';
 import { MusicContext } from '~Contexts/MusicContext';
@@ -11,6 +11,8 @@ import { toast } from 'react-toastify';
 import style from './index.styl';
 import { Album } from '~logic/Album';
 import AlbumDisplay from '~components/AlbumDisplay';
+import { Artist } from '~logic/Artist';
+import ArtistDisplay from '~components/ArtistDisplay';
 
 interface SearchProps {
     user: User;
@@ -26,11 +28,14 @@ const SearchView: React.FC<SearchProps> = (props) => {
 
     const [songResults, setSongResults] = useState<Song[]>(null);
     const [albumResults, setAlbumResults] = useState<Album[]>(null);
+    const [artistResults, setArtistResults] = useState<Artist[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
 
+    const searchQuery = props.match.params.searchQuery;
+
     useEffect(() => {
-        if (props.match.params.searchQuery != null) {
-            searchSongs(props.match.params.searchQuery, props.user.authKey, 10)
+        if (searchQuery != null) {
+            searchSongs(searchQuery, props.user.authKey, 10)
                 .then((Songs) => {
                     setSongResults(Songs);
                 })
@@ -38,7 +43,7 @@ const SearchView: React.FC<SearchProps> = (props) => {
                     toast.error('😞 Something went wrong during the search.');
                     setError(error);
                 });
-            searchAlbums(props.match.params.searchQuery, props.user.authKey, 6)
+            searchAlbums(searchQuery, props.user.authKey, 6)
                 .then((Albums) => {
                     setAlbumResults(Albums);
                 })
@@ -46,8 +51,16 @@ const SearchView: React.FC<SearchProps> = (props) => {
                     toast.error('😞 Something went wrong during the search.');
                     setError(error);
                 });
+            searchArtists(searchQuery, props.user.authKey, 6)
+                .then((Artists) => {
+                    setArtistResults(Artists);
+                })
+                .catch((error) => {
+                    toast.error('😞 Something went wrong during the search.');
+                    setError(error);
+                });
         }
-    }, [props.match.params.searchQuery, props.user.authKey]);
+    }, [searchQuery, props.user.authKey]);
 
     const playSong = (song: Song) => {
         musicContext.startPlayingWithNewQueue(song, songResults);
@@ -60,15 +73,26 @@ const SearchView: React.FC<SearchProps> = (props) => {
             </div>
         );
     }
+
+    if (!searchQuery) {
+        return (
+            <div className={style.searchPage}>
+                <div>Search for something!</div>
+            </div>
+        );
+    }
+
     return (
         <div className={style.searchPage}>
-            Search: {props.match.params.searchQuery}
-            <div className={style.songs}>
+            Search: {searchQuery}
+            <div className={style.resultSection}>
                 <h1>Songs</h1>
                 {!songResults && (
                     <ReactLoading color='#FF9D00' type={'bubbles'} />
                 )}
-                <div className={style.songsList}>
+                <div className={style.resultList}>
+                    {songResults?.length === 0 && 'No results :('}
+
                     {songResults?.map((song) => {
                         return (
                             <SongBlock
@@ -79,23 +103,45 @@ const SearchView: React.FC<SearchProps> = (props) => {
                                 }
                                 playSong={playSong}
                                 key={song.id}
-                                className={style.songBlock}
+                                className={style.song}
                             />
                         );
                     })}
                 </div>
             </div>
-            <div className={style.albums}>
+            <div className={style.resultSection}>
                 <h1>Albums</h1>
                 {!albumResults && (
                     <ReactLoading color='#FF9D00' type={'bubbles'} />
                 )}
-                <div className={style.albumsList}>
+                <div className={style.resultList}>
+                    {albumResults?.length === 0 && 'No results :('}
+
                     {albumResults?.map((album) => {
                         return (
                             <AlbumDisplay
                                 album={album}
                                 className={style.album}
+                                key={album.id}
+                            />
+                        );
+                    })}
+                </div>
+            </div>
+            <div className={style.resultSection}>
+                <h1>Artist</h1>
+                {!artistResults && (
+                    <ReactLoading color='#FF9D00' type={'bubbles'} />
+                )}
+                <div className={style.resultList}>
+                    {artistResults?.length === 0 && 'No results :('}
+
+                    {artistResults?.map((artist) => {
+                        return (
+                            <ArtistDisplay
+                                artist={artist}
+                                className={style.artist}
+                                key={artist.id}
                             />
                         );
                     })}
