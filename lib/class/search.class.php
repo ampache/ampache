@@ -2236,7 +2236,7 @@ class Search extends playlist_object
                     $where[] = "`video`.`file` $sql_match_operator '$input'";
                     break;
                 default:
-                    // WE WILLNA BE FOOLED AGAIN!
+                    break;
             } // switch on ruletype
         } // foreach rule
 
@@ -2433,13 +2433,12 @@ class Search extends playlist_object
                 case 'title':
                 case 'name':
                     $where[] = "`tag`.`name` $sql_match_operator '$input'";
-                break;
+                    break;
                 case 'category':
                     $where[] = "`tag`.`category` $sql_match_operator '$input'";
-                break;
+                    break;
                 default:
-                    // Nihil
-                break;
+                    break;
             } // switch on ruletype
         } // foreach rule
 
