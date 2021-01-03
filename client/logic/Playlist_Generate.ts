@@ -16,7 +16,7 @@ export const generateSongsFromArtist = (artistID: number, authKey: AuthKey) => {
             if (JSONData.error) {
                 throw new Error(JSONData.error);
             }
-            return JSONData as Song[];
+            return JSONData.song as Song[];
         });
 };
 
@@ -33,6 +33,6 @@ export const generateSongsFromAlbum = (albumID: number, authKey: AuthKey) => {
             if (JSONData.error) {
                 throw new Error(JSONData.error);
             }
-            return JSONData as Song[];
+            return JSONData.song as Song[];
         });
 };

@@ -72,7 +72,7 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (
                     </Link>
                     <span
                         onClick={() => {
-                            props.playSongFromAlbum(props.album.id, false);
+                            props.playSongFromAlbum(props.album.id, false); //TODO: Make playSongFromAlbum actually optional without errors. Also investigate if this click is being registered twice
                         }}
                         className={style.action}
                     >
