@@ -2,14 +2,16 @@ import axios from 'axios';
 import { AuthKey } from './Auth';
 import AmpacheError from './AmpacheError';
 
+//The API returns different information depending on if you are requesting yourself, or are an admin. Look at UserMethod.php:78
 type User = {
-    authKey: AuthKey;
     id: number;
     username: string;
-    email: string;
-    access: number;
-    fullname_public: boolean;
-    disabled: boolean;
+    auth?: AuthKey;
+    email?: string;
+    access?: string;
+    fullname_public?: boolean;
+    validation?: string;
+    disabled?: boolean;
     create_date: number;
     last_seen: number;
     website: string;

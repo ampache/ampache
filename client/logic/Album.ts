@@ -14,16 +14,15 @@ type Album = {
     year: number;
     tracks?: Song[];
     disk: number;
-    tags: {
+    genre: {
         id: number;
-        count: number;
         name: string;
     };
     art: string;
+    flag: boolean;
     preciserating: number;
     rating: number;
     averagerating: number;
-    flag: boolean;
     mbid: string;
 };
 

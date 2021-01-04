@@ -8,13 +8,13 @@ export type Artist = {
     id: number;
     name: string;
     tags: [];
-    albums?: Album[];
-    songs?: Song[];
+    albums: Album[] | number; //The API returns the count if the include is set to false.
+    songs: Song[] | number;
     art: string;
+    flag: boolean;
     preciserating: number;
     rating: number;
     averagerating: number;
-    flag: boolean;
     mbid: string;
     summary: string;
     yearformed: number;
