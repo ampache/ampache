@@ -116,11 +116,12 @@ switch ($upnpRequest['action']) {
                 $items[]                  = Upnp_Api::_videoMetadata('');
                 list($totMatches, $items) = Upnp_Api::_slice($items, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
                 debug_event('control-reply', 'Root items returning' . $items[0] . $items[1] , 5);
-//                debug_event('control-reply', 'Root items detail ' . var_export($items, true), 5);
-//                debug_event('control-reply', 'Root items sort   ' . $upnpRequest['sortcriteria'], 5);
+                // debug_event('control-reply', 'Root items detail ' . var_export($items, true), 5);
+                // debug_event('control-reply', 'Root items sort   ' . $upnpRequest['sortcriteria'], 5);
             }
         } else {
-            /* The parse_url function returns an array in this format:
+            /**
+             * The parse_url function returns an array in this format:
              * Array (
              *   [scheme] => http
              *   [host] => hostname

@@ -51,8 +51,6 @@ class Upnp_Api
      */
     private function __construct()
     {
-        // Make sure beautiful url is disabled as it is not supported by most Ampache clients (including upnp)
-        //AmpConfig::set('stream_beautiful_url', false, true);
     }
 
     /**
@@ -272,9 +270,7 @@ class Upnp_Api
         $retArr = array();
         $reader = new XMLReader();
         $result = $reader->XML($prmRequest);
-        if ($result) {
-//            debug_event('upnp_api.class', 'XML reader passed', 5);
-        } else {
+        if (!$result) {
             debug_event('upnp_api.class', 'XML reader failed', 5);
         }
 
