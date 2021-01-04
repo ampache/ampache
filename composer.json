@@ -52,6 +52,7 @@
         "blueimp/jquery-file-upload": "v10.2.0",
         "carhartl/jquery-cookie": "1.*",
         "cboden/ratchet": "0.4.*",
+        "clue/multicast-react": "^1.1.0",
         "components/bootstrap": "3.*",
         "components/jquery": "2.2.*",
         "components/jqueryui": "1.*",

@@ -74,10 +74,38 @@ final class PlayAction implements ApplicationActionInterface
 
         //debug_event('play/index', print_r(apache_request_headers(), true), 5);
 
+        /**
+         * The following code takes a "beautiful" url, splits it into key/value pairs and
+         * then replaces the PHP $_REQUEST as if the URL had arrived in un-beautified form.
+         * (This is necessary to avoid some DLNA players barfing on the URL, particularly Windows Media Player)
+         *
+         * The reason for not trying to do the whole job in mod_rewrite is that there are typically
+         * more than 10 arguments to this function now, and that's tricky with mod_rewrite's 10 arg limit
+         */
+        $slashcount = substr_count($_SERVER['QUERY_STRING'], '/');
+        if ($slashcount > 2) {
+            // e.g. ssid/3ca112fff23376ef7c74f018497dd39d/type/song/oid/280/uid/player/api/name/Glad.mp3
+            $new_arr     = explode('/', $_SERVER['QUERY_STRING']);
+            $new_request = array();
+            $i           = 0;
+            foreach ($new_arr as $v) {
+                if ($i == 0) {
+                    $key = $v;
+                    $i   = 1;
+                } else {
+                    $value             = $v;
+                    $i                 = 0;
+                    $new_request[$key] = $value;
+                }
+            }
+            $_REQUEST = $new_request;
+        }
+
         /* These parameters had better come in on the url. */
         $uid          = scrub_in($_REQUEST['uid']);
         $object_id    = (int) scrub_in($_REQUEST['oid']);
         $session_id   = (string) scrub_in($_REQUEST['ssid']);
+        $name         = (string) scrub_in(filter_input(INPUT_GET, 'name', FILTER_SANITIZE_SPECIAL_CHARS));
         $type         = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $cache        = scrub_in($_REQUEST['cache']);
         $format       = scrub_in($_REQUEST['format']);
@@ -158,8 +186,9 @@ final class PlayAction implements ApplicationActionInterface
             $object_id     = $session_id;
         }
 
-        /* First things first, if we don't have a uid/oid stop here */
-        if (empty($object_id) && empty($demo_id) && empty($random)) {
+        // First things first, if we don't have a uid/oid stop here
+        // Added $session_id here as user may not be specified but then ssid may be and will be checked later
+        if (empty($uid) && empty($session_id) && (!$share_id && !$secret)) {
             debug_event('play/index', 'No object UID specified, nothing to play', 2);
             header('HTTP/1.1 400 Nothing To Play');
 

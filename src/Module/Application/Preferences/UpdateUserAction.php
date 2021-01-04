@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Preferences;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -62,6 +63,10 @@ final class UpdateUserAction implements ApplicationActionInterface
             ) ||
             !Core::form_verify('update_user', 'post')
         ) {
+            throw new AccessDeniedException();
+        }
+        // block updates from simple users
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SIMPLE_USER_MODE) === true) {
             throw new AccessDeniedException();
         }
 

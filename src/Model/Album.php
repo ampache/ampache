@@ -1121,12 +1121,6 @@ class Album extends database_object implements library_item
         if (!empty($catalog_number) && $catalog_number != $this->catalog_number) {
             self::update_field('catalog_number', $catalog_number, $this->id);
         }
-        if (!empty($disk) && $disk != $this->disk) {
-            $album_id = self::check($name, $disk);
-            if ($album_id == $this->id) {
-                self::update_field('catalog_number', $catalog_number, $this->id);
-            }
-        }
 
         $this->year           = $year;
         $this->mbid_group     = $mbid_group;

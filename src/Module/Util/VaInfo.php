@@ -672,9 +672,6 @@ class VaInfo
     private function _get_plugin_tags()
     {
         $tag_order = $this->get_metadata_order();
-        if (!empty($tag_order)) {
-            $tag_order = array($tag_order);
-        }
 
         $plugin_names = Plugin::get_plugins('get_metadata');
         foreach ($tag_order as $tag_source) {
