@@ -1099,17 +1099,14 @@ class User extends database_object
      */
     public function update_password($new_password, $hashed_password = null)
     {
-        //$salt             = AmpConfig::get('secret_key');
+        debug_event('user.class', 'Updating password', 1);
         if (!$hashed_password) {
             $hashed_password = hash('sha256', $new_password);
         }
+
         $escaped_password = Dba::escape($hashed_password);
-
-        debug_event('user.class', 'Updating password', 4);
-
-
-        $sql          = "UPDATE `user` SET `password` = ? WHERE `id` = ?";
-        $db_results   = Dba::write($sql, array($escaped_password, $this->id));
+        $sql              = "UPDATE `user` SET `password` = ? WHERE `id` = ?";
+        $db_results       = Dba::write($sql, array($escaped_password, $this->id));
 
         // Clear this (temp fix)
         if ($db_results) {
