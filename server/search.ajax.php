@@ -114,17 +114,18 @@ switch ($_REQUEST['action']) {
                 $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
             }
             $show_song_art = AmpConfig::get('show_song_art', false);
-            foreach ($sres as $id) {
-                $song = new Song($id);
+            foreach ($sres as $songid) {
+                $song = new Song($songid);
                 $song->format(false);
                 $art_object = ($show_song_art) ? $song->id : $song->album;
+                $art_type   = ($show_song_art) ? 'song' : 'album';
                 $results[]  = array(
                     'type' => T_('Songs'),
                     'link' => $song->link,
                     'label' => $song->f_title_full,
                     'value' => $song->f_title_full,
                     'rels' => $song->f_artist_full,
-                    'image' => Art::url($art_object, 'song', null, 10),
+                    'image' => Art::url($art_object, $art_type, null, 10),
                 );
             }
         }
