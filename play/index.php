@@ -31,22 +31,17 @@ $a_root = realpath(__DIR__ . "/../");
 require_once $a_root . '/lib/init.php';
 ob_end_clean();
 
-debug_event('play/index', $_SERVER['QUERY_STRING'], 5);
-// Example of what comes in
-// ssid/3ca112fff23376ef7c74f018497dd39d/type/song/oid/280/uid/player/api/name/Glad.mp3
-// The following code takes a "stream_beautified_url (necessary to avoid some DLNA players
-// barfing on the URL, particularly Windows Media Player), splits it into key/value pairs
-// then replaces the PHP $_REQUEST as if the URL had arrived in un-beautified form
-// It is assumed that the presence of more than two forward slashes indicates a beautified
-// URL in an Ampache compliant format
-// For this to work, mod_rewrite needs to have at least found the URL and changed the
-// first section to index.php?/rest_of_string
-// The reason for not trying to do the whole job in mod_rewrite is that there are typically
-// more than 10 arguments to this function now, and that's tricky with mod_rewrite's 10 arg
-// limit
-
-$slashcount   = substr_count($_SERVER['QUERY_STRING'], '/');
+/**
+ * The following code takes a "beautiful" url, splits it into key/value pairs and
+ * then replaces the PHP $_REQUEST as if the URL had arrived in un-beautified form.
+ * (This is necessary to avoid some DLNA players barfing on the URL, particularly Windows Media Player)
+ *
+ * The reason for not trying to do the whole job in mod_rewrite is that there are typically
+ * more than 10 arguments to this function now, and that's tricky with mod_rewrite's 10 arg limit
+ */
+$slashcount = substr_count($_SERVER['QUERY_STRING'], '/');
 if ($slashcount > 2) {
+    // e.g. ssid/3ca112fff23376ef7c74f018497dd39d/type/song/oid/280/uid/player/api/name/Glad.mp3
     $new_arr     = explode('/', $_SERVER['QUERY_STRING']);
     $new_request = array();
     $i           = 0;
@@ -61,10 +56,9 @@ if ($slashcount > 2) {
         }
     }
     $_REQUEST = $new_request;
-    // debug_event('play/index','Dumping new_arr: '.var_export( $new_request, true ), 5);
 }
 
-/* These parameters had better come in on the url. */
+// These parameters had better come in on the url.
 $uid          = scrub_in($_REQUEST['uid']);
 $object_id    = (int) scrub_in($_REQUEST['oid']);
 $session_id   = (string) scrub_in($_REQUEST['ssid']);
