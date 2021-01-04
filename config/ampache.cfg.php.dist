@@ -608,14 +608,14 @@ art_order = "db,tags,folder,spotify,musicbrainz,lastfm,google"
 ; this should remain false to avoid multiple entries of the same image.
 ; You need to set show_song_art to true if you want to make the song images visible.
 ; DEFAULT = false
-;gather_song_art = "false"
+;gather_song_art = "true"
 
 ; Show song art
 ; Show song art instead of album art in web UI and Subsonic API.
 ; This will only work when gather_song_art is set to true AND when
 ; there is song art in the database.
 ; DEFAULT: false
-;show_song_art = "false"
+;show_song_art = "true"
 
 ; Spotify Album art search filter
 ;  Narrow the search.
