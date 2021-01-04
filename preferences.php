@@ -124,6 +124,13 @@ switch ($_REQUEST['action']) {
             return false;
         }
 
+        // block updates from simple users
+        if (AmpConfig::get('simple_user_mode')) {
+            UI::access_denied();
+
+            return false;
+        }
+
         // Remove the value
         unset($_SESSION['forms']['account']);
 

@@ -42,11 +42,12 @@ final class RecordPlayMethod
      * MINIMUM_API_VERSION=400001
      *
      * Take a song_id and update the object_count and user_activity table with a play
-     * This allows other sources to record play history to Ampache
+     * This allows other sources to record play history to Ampache.
+     * Require 100 (Admin) permission to change other user's play history
      *
      * @param array $input
      * id     = (integer) $object_id
-     * user   = (integer) $user_id
+     * user   = (integer) $user_id //optional
      * client = (string) $agent //optional
      * date   = (integer) UNIXTIME() //optional
      * @return boolean
@@ -56,10 +57,15 @@ final class RecordPlayMethod
         if (!Api::check_parameter($input, array('id', 'user'), self::ACTION)) {
             return false;
         }
+        $api_user = User::get_from_username(Session::username($input['auth']));
+        // If you are setting plays for other users make sure we have an admin
+        if (isset($input['user']) && ((int) $input['user'] !== $api_user->id && !Api::check_access('interface', 100, $api_user->id, self::ACTION, $input['api_format']))) {
+            return false;
+        }
         ob_end_clean();
         $object_id = (int) $input['id'];
-        $user_id   = (int) $input['user'];
-        $user      = new User($user_id);
+        $user_id   = (isset($input['user'])) ? (int) $input['user'] : $api_user->id;
+        $user      = (isset($input['user'])) ? new User($user_id) : $api_user;
         $valid     = in_array($user->id, User::get_valid_users());
         $date      = (is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
 

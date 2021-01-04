@@ -316,7 +316,7 @@ class Song_Preview extends database_object implements media, playable_item
      * @param boolean $local
      * @return string
      */
-    public function play_url($additional_params = '', $player = null, $local = false)
+    public function play_url($additional_params = '', $player = '', $local = false)
     {
         $user_id   = Core::get_global('user')->id ? scrub_out(Core::get_global('user')->id) : '-1';
         $type      = $this->type;

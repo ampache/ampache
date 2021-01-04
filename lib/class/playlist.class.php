@@ -199,10 +199,10 @@ class Playlist extends playlist_object
      * @param integer $user_id
      * @return array
      */
-    public static function get_details($type = 'playlist', $user_id = -1)
+    public static function get_details($type = 'playlist', $user_id = 0)
     {
         if (!$user_id) {
-            $user_id = Core::get_global('user')->id;
+            $user_id = Core::get_global('user')->id ?: -1;
         }
 
         $sql        = "SELECT `id`, `name` FROM `$type` WHERE (`user` = ? OR `type` = 'public') ORDER BY `name`";

@@ -471,7 +471,8 @@ class Video extends database_object implements media, library_item
             return '';
         }
         if (!$uid) {
-            $uid = Core::get_global('user')->id;
+            // No user in the case of upnp. Set to 0 instead. required to fix database insertion errors
+            $uid = Core::get_global('user')->id ?: 0;
         }
         // set no user when not using auth
         if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
@@ -600,7 +601,7 @@ class Video extends database_object implements media, library_item
         $release_date   = (int) $data['release_date'];
         // No release date, then release date = production year
         if (!$release_date && $data['year']) {
-            $release_date = strtotime(strval($data['year']) . '-01-01');
+            $release_date = strtotime((string) $data['year'] . '-01-01');
         }
         $tags           = $data['genre'];
         $channels       = (int) $data['channels'];

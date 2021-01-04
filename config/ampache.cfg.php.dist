@@ -238,7 +238,7 @@ deferred_ext_metadata = "true"
 ; This list specifies possible delimiters additional to \0
 ; This setting takes a regex pattern.
 ; DEFAULT: // / \ | , ;
-additional_genre_delimiters = "[/]{2}|[/|\\\\|\|,|;]"
+additional_genre_delimiters = "[/]{2}|[/\\\\|,;]"
 
 ; Enable importing custom metadata from files.
 ; This will need a bit of time during the import. So you may want to disable this
@@ -262,7 +262,7 @@ additional_genre_delimiters = "[/]{2}|[/|\\\\|\|,|;]"
 ; Overwrite tags
 ; This switch allows removal of id3v1 tags from the files.
 ; DEFAULT: "false"
-; overwrite_tags = "false"
+;overwrite_tags = "true"
 
 ;#########################################################
 ; Catalog                                                #
@@ -769,12 +769,12 @@ show_footer_statistics = "true"
 ; DEFAULT: "false"
 ;allow_php_themes = "true"
 
-; Subsonic clients all seem to ignore the download method
-; This setting will not scrobble actions from stream actions.
+; Subsonic clients all seem to ignore the download method and always stream.
+; This setting will stop recording stats from Subsonic stream actions.
 ; (This means you can sync playlists without overloading your server)
-; Make sure you enable scrobbling in your client to keep recording stats!
-; DEFAULT: "false"
-;subsonic_stream_scrobble = "true"
+; Make sure you enable scrobbling in your Subsonic client to keep recording stats!
+; DEFAULT: "true"
+;subsonic_stream_scrobble = "false"
 
 ;#########################################################
 ; Debugging                                              #
@@ -1056,6 +1056,7 @@ registration_mandatory_fields = "fullname"
 ;transcode_mpc  = "required"
 ;transcode_ogg  = "required"
 ;transcode_oga  = "required"
+;transcode_opus = "required"
 ;transcode_wav  = "required"
 ;transcode_wma  = "required"
 ;transcode_aif  = "required"

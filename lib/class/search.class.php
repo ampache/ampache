@@ -94,7 +94,7 @@ class Search extends playlist_object
                 break;
             case 'album':
                 $this->album_types();
-                $this->order_by = '`album`.`name`';
+                $this->order_by = '`album`.`name`, `album`.`disk`';
                 break;
             case 'video':
                 $this->video_types();
@@ -792,6 +792,7 @@ class Search extends playlist_object
             case 'artist':
             case 'video':
             case 'song':
+            case 'tag':  // for Genres
             case 'playlist':
             case 'label':
             case 'user':
@@ -857,12 +858,10 @@ class Search extends playlist_object
         $offset = (int) ($data['offset']);
         $random = ((int) $data['random'] > 0) ? 1 : 0;
         $data   = self::clean_request($data);
-
         $search = new Search(null, $data['type'], $user);
         $search->parse_rules($data);
 
         // Generate BASE SQL
-
         $limit_sql = "";
         if ($limit > 0) {
             $limit_sql = ' LIMIT ';
@@ -1286,8 +1285,8 @@ class Search extends playlist_object
                     $where[] = "`album`.`" . $rule[0] . "` $sql_match_operator '$input'";
                     break;
                 case 'original_year':
-                    $where[] = "`album`.`original_year` $sql_match_operator '$input' OR " .
-                        "(`album`.`original_year` IS NULL AND `album`.`year` $sql_match_operator '$input')";
+                    $where[] = "(`album`.`original_year` $sql_match_operator '$input' OR " .
+                        "(`album`.`original_year` IS NULL AND `album`.`year` $sql_match_operator '$input'))";
                     break;
                 case 'time':
                     $input          = $input * 60;
@@ -2237,7 +2236,7 @@ class Search extends playlist_object
                     $where[] = "`video`.`file` $sql_match_operator '$input'";
                     break;
                 default:
-                    // WE WILLNA BE FOOLED AGAIN!
+                    break;
             } // switch on ruletype
         } // foreach rule
 
@@ -2393,6 +2392,60 @@ class Search extends playlist_object
 
         return array(
             'base' => 'SELECT DISTINCT(`label`.`id`), `label`.`name` FROM `label`',
+            'join' => $join,
+            'where' => $where,
+            'where_sql' => $where_sql,
+            'table' => $table,
+            'table_sql' => '',
+            'group_sql' => '',
+            'having_sql' => ''
+        );
+    }
+
+    /**
+       * tag_to_sql
+       *
+       * Handles the generation of the SQL for tag (genre) searches.
+       * @return array
+       */
+
+    private function tag_to_sql()
+    {
+        $sql_logic_operator = $this->logic_operator;
+        $where              = array();
+        $table              = array();
+        $join               = array();
+
+        foreach ($this->rules as $rule) {
+            $type     = $this->name_to_basetype($rule[0]);
+            $operator = array();
+            foreach ($this->basetypes[$type] as $op) {
+                if ($op['name'] == $rule[1]) {
+                    $operator = $op;
+                    break;
+                }
+            }
+            $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
+            $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $sql_match_operator = $operator['sql'];
+
+            switch ($rule[0]) {
+                case 'title':
+                case 'name':
+                    $where[] = "`tag`.`name` $sql_match_operator '$input'";
+                    break;
+                case 'category':
+                    $where[] = "`tag`.`category` $sql_match_operator '$input'";
+                    break;
+                default:
+                    break;
+            } // switch on ruletype
+        } // foreach rule
+
+        $where_sql = implode(" $sql_logic_operator ", $where);
+
+        return array(
+            'base' => 'SELECT DISTINCT(`tag`.`id`) FROM `tag`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,

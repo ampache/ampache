@@ -775,14 +775,32 @@ abstract class Catalog extends database_object
      * This returns the current number of songs, videos, albums, and artists
      * across all catalogs on the server
      * @param bool $enabled
+     * @param string $table
      * @return array
      */
-    public static function count_server($enabled = false)
+    public static function count_server($enabled = false, $table = '')
     {
         // tables with media items to count, song-related tables and the rest
         $media_tables = array('song', 'video', 'podcast_episode');
         $song_tables  = array('artist', 'album');
         $list_tables  = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license');
+        if (!empty($table)) {
+            if (in_array($table, $media_tables)) {
+                $media_tables = array($table);
+                $song_tables  = array();
+                $list_tables  = array();
+            }
+            if (in_array($table, $song_tables)) {
+                $media_tables = array();
+                $song_tables  = array($table);
+                $list_tables  = array();
+            }
+            if (in_array($table, $list_tables)) {
+                $media_tables = array();
+                $song_tables  = array();
+                $list_tables  = array($table);
+            }
+        }
 
         $results = array();
         $items   = '0';

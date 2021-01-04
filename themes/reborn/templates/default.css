@@ -397,6 +397,7 @@ div#autoupdate > span {
     box-sizing: border-box;
     display: block;
     margin: 0 auto;
+    padding: 20px 0 20px 0;
 }
 
 #loginPage #maincontainer {
@@ -529,7 +530,7 @@ div#autoupdate > span {
 }
 
 .loginoptions {
-    margin-top: 10px;
+    margin-top: 20px;
     text-align: center;
 }
 

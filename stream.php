@@ -140,14 +140,12 @@ switch ($_REQUEST['action']) {
         $stream_type = 'download';
         break;
     case 'democratic':
-        $stream_type = AmpConfig::get('playlist_type');
+        $play_type   = AmpConfig::get('play_type');
+        $stream_type = ($play_type == 'democratic') ? AmpConfig::get('playlist_type') : $play_type;
         break;
     default:
-        $stream_type = AmpConfig::get('play_type');
-
-        if ($stream_type == 'stream') {
-            $stream_type = AmpConfig::get('playlist_type');
-        }
+        $play_type   = AmpConfig::get('play_type');
+        $stream_type = ($play_type == 'stream') ? AmpConfig::get('playlist_type') : $play_type;
         break;
 }
 
