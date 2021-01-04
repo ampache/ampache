@@ -174,7 +174,7 @@ switch ($upnpRequest['action']) {
 if ($soapXML == "") {
     $totMatches = ($totMatches == 0) ? count($items) : $totMatches;
     if ($items == null || $totMatches == 0) {
-        $domDIDL = Upnp_Api::createDIDL('','');
+        $domDIDL = Upnp_Api::createDIDL('', '');
         $numRet  = 0;
     } else {
         $domDIDL = Upnp_Api::createDIDL($items, $filter);

@@ -364,7 +364,7 @@ class Upnp_Api
             $testKey = $keytoCheck;
         }
         $filt = explode(',', $filterValue);      // do exact word match rather than partial, which is what strpos does.
-        //debug_event('upnp_api.class','checking '.$testKey.' in '.var_export($filt, true), 5);
+        //debug_event('upnp_api.class', 'checking '.$testKey.' in '.var_export($filt, true), 5);
         return in_array($testKey, $filt, true);  // this is necessary, (rather than strpos) because "res" turns up in many keys, whose results may not be wanted
     }
 
@@ -414,11 +414,12 @@ class Upnp_Api
             $ndRes_text = $xmlDoc->createTextNode($item['res']);
             $ndRes->appendChild($ndRes_text);
 
-            // Mini-substitution: & in value string needs to be double HTML escaped.
-            // saving DIDL as XML will do this once.
-            // Here we do it again (to match what MiniDLNA does)
-            
-            // Add each element / attribute in $item array to item node:
+            /**
+             * Add each element / attribute in $item array to item node:
+             * Mini-substitution: & in value string needs to be double HTML escaped.
+             * saving DIDL as XML will do this once.
+             * Here we do it again (to match what MiniDLNA does)
+             */
             foreach ($item as $key => $value) {
                 // Handle attributes. Better solution?
                 switch ($key) {
@@ -496,9 +497,6 @@ class Upnp_Api
                             $ndTag_text = $xmlDoc->createTextNode((mb_detect_encoding($xvalue, 'auto') == 'UTF-8')?$xvalue:utf8_encode($xvalue));
                             $ndTag->appendChild($ndTag_text);
                         }
-                        //else {
-                        //debug_event('upnp_api.class', $key.' not found in filter '.$filterValue, 5);
-                        //}
                 }
                 if ($useRes) {
                     $ndItem->appendChild($ndRes);
@@ -567,7 +565,6 @@ class Upnp_Api
         }
 
         $meta = null;
-        //debug_event('upnp_api_class', $pathreq[0].' '.(string) count($pathreq), 5);
 
         switch ($pathreq[0]) {
             case 'artists':
@@ -661,7 +658,7 @@ class Upnp_Api
             case 'smartplaylists':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_server(false,'smartplaylist');
+                        $counts = Catalog::count_server(false, 'smartplaylist');
                         $meta   = array(
                             'id' => $root . '/smartplaylists',
                             'parentID' => $root,
@@ -683,7 +680,7 @@ class Upnp_Api
             case 'live_streams':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::count_server(false,'live_stream');
+                        $counts = Catalog::count_server(false, 'live_stream');
                         $meta   = array(
                             'id' => $root . '/live_streams',
                             'parentID' => $root,
@@ -744,7 +741,7 @@ class Upnp_Api
                 );
                 break;
         }
-        //debug_event('upnp_api_class', 'Exit musicmetadata with '.var_export($meta, true), 5 );
+
         return $meta;
     }
 
@@ -790,7 +787,7 @@ class Upnp_Api
                 switch (count($pathreq)) {
                     case 1: // Get artists list
                         $artists                  = Catalog::get_artists(null, $count, $start);
-                        $counts                   = Catalog::count_server(false,'artist');
+                        $counts                   = Catalog::count_server(false, 'artist');
                         list($maxCount, $artists) = array($counts['artist'], $artists);
                         foreach ($artists as $artist) {
                             $artist->format();
@@ -815,7 +812,7 @@ class Upnp_Api
                 switch (count($pathreq)) {
                     case 1: // Get albums list
                         $album_ids                  = Catalog::get_albums($count, $start);
-                        $counts                     = Catalog::count_server(false,'album');
+                        $counts                     = Catalog::count_server(false, 'album');
                         list($maxCount, $album_ids) = array($counts['album'], $album_ids);
                         foreach ($album_ids as $album_id) {
                             $album = new Album($album_id);
@@ -1357,7 +1354,7 @@ class Upnp_Api
         // Transforms a upnp search query into an Ampache search query
         $upnp_translations = array(
             array( 'upnp:class = "object.container.album.musicAlbum"', 'album' ),
-            array( 'upnp:class derivedfrom "object.item.audioItem"' ,'song' ),
+            array( 'upnp:class derivedfrom "object.item.audioItem"' , 'song' ),
             array( 'upnp:class = "object.container.person.musicArtist"', 'artist'),
             array( 'upnp:class = "object.container.playlistContainer"', 'playlist'),
             array( 'upnp:class derivedfrom "object.container.playlistContainer"', 'playlist'),
@@ -1840,6 +1837,7 @@ class Upnp_Api
 
         return $ret;
     }
+
     /**
      * @return array
      */
