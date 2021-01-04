@@ -1,0 +1,22 @@
+[Unit]
+Description=Ampache SSDP daemon service
+Requires=
+After=
+
+[Service]
+User=www-data
+Type=exec
+TimeoutSec=10
+PIDFile=/run/ampache_ssdp.pid
+WorkingDirectory=/usr/share/ampache/upnp
+ExecStart=/usr/bin/php -f /usr/share/ampache/upnp/ssdp.php > /dev/null 2>/dev/null
+ExecStop=/bin/kill -HUP $MAINPID 
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=on-failure
+RestartSec=60s
+StandardOutput=null #If you don't want to make tons of logs you can set it null if you sent a file or some other options it will send all php output to this one.
+StandardError=/var/log/ampache_ssdp_error.log
+
+[Install]
+WantedBy=default.target
