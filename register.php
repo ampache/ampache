@@ -27,7 +27,7 @@ $a_root = realpath(__DIR__);
 require_once $a_root . '/lib/init.php';
 
 /* Check Perms */
-if (!AmpConfig::get('allow_public_registration') && !Mailer::is_mail_enabled()) {
+if (!AmpConfig::get('allow_public_registration')) {
     debug_event('register', 'Error Attempted registration', 2);
     UI::access_denied();
 
