@@ -1286,6 +1286,7 @@ class User extends database_object
         // If not system, exclude system... *gasp*
         if ($user_id != '-1') {
             $sql .= " WHERE catagory !='system'";
+            $sql .= " AND `preference`.`name` NOT IN ('custom_login_background')"; // TODO, remove before next release.
         }
         $db_results = Dba::read($sql);
 
