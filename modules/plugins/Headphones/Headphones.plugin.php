@@ -172,7 +172,7 @@ class AmpacheHeadphones
         }
 
         if (strlen(trim($data['headphones_api_url']))) {
-            $this->api_url = trim($data['headphones_api_url']);
+            $this->api_url = rtrim(trim($data['headphones_api_url']), '/');
         } else {
             debug_event('headphones.plugin', 'No Headphones url, auto download skipped', 3);
 
