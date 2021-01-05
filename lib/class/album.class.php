@@ -665,10 +665,14 @@ class Album extends database_object implements library_item
         if ($full_name == '') {
             return array();
         }
+        $album_artist = "is null";
         $release_type = "is null";
         $mbid         = "is null";
         $year         = (string) $this->year;
 
+        if ($this->album_artist) {
+            $album_artist = "= '" . ucwords((string) $this->album_artist) . "'";
+        }
         if ($this->release_type) {
             $release_type = "= '" . ucwords((string) $this->release_type) . "'";
         }
@@ -676,7 +680,7 @@ class Album extends database_object implements library_item
             $mbid = "= '$this->mbid'";
         }
         $results       = array();
-        $where         = "WHERE `album`.`mbid` $mbid AND `album`.`release_type` $release_type AND " .
+        $where         = "WHERE `album`.`album_artist` $album_artist AND `album`.`mbid` $mbid AND `album`.`release_type` $release_type AND " .
                          "(`album`.`name` = '$full_name' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$full_name') " .
                          "AND `album`.`year` = $year ";
         $catalog_where = "";
