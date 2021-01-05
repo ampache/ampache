@@ -937,7 +937,7 @@ span#sidebar-header-content::after {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    padding: 20px;
+    padding: 20px 20px 40px;
 }
 
 .content-float {
