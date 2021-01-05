@@ -160,7 +160,7 @@ switch ($_REQUEST['action']) {
                 $artist_mbid = $aobj->mbid;
             }
             $name = $_REQUEST['name'];
-            $year = $_REQUEST['year'];
+            $year = (int) $_REQUEST['year'];
 
             if (!Wanted::has_wanted($mbid)) {
                 Wanted::add_wanted($mbid, $artist, $artist_mbid, $name, $year);
