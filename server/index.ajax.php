@@ -110,35 +110,6 @@ switch ($_REQUEST['action']) {
             $results['similar_items_' . $media_id] = ob_get_clean();
         }
         break;
-    case 'concerts':
-        if (AmpConfig::get('show_concerts') && isset($_REQUEST['artist'])) {
-            $artist = new Artist($_REQUEST['artist']);
-            $artist->format();
-            if ($artist->id) {
-                $up_concerts     = Artist_Event::get_upcoming_events($artist);
-                $past_concerts   = Artist_Event::get_past_events($artist);
-                $coming_concerts = array();
-                $concerts        = array();
-                if ($up_concerts) {
-                    foreach ($up_concerts->children() as $item) {
-                        if ($item->getName() == 'event') {
-                            $coming_concerts[] = $item;
-                        }
-                    }
-                }
-                if ($past_concerts) {
-                    foreach ($past_concerts->children() as $item) {
-                        if ($item->getName() == 'event') {
-                            $concerts[] = $item;
-                        }
-                    }
-                }
-            }
-            ob_start();
-            require_once AmpConfig::get('prefix') . UI::find_template('show_concerts.inc.php');
-            $results['concerts'] = ob_get_clean();
-        }
-        break;
     case 'labels':
         if (AmpConfig::get('label') && isset($_REQUEST['artist'])) {
             $labels     = Label::get_labels($_REQUEST['artist']);
