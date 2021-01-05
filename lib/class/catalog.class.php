@@ -2030,7 +2030,7 @@ abstract class Catalog extends database_object
             // Update song_data table
             Song::update_song($song->id, $new_song);
 
-            if ($song->tags != $new_song->tags) {
+            if (!empty($new_song->tags) && $song->tags != $new_song->tags) {
                 Tag::update_tag_list(implode(',', $new_song->tags), 'song', $song->id, true);
                 self::updateAlbumTags($song);
                 self::updateArtistTags($song);
