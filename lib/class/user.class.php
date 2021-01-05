@@ -1241,8 +1241,8 @@ class User extends database_object
 
         // Delete that system pref that's not a user pref...
         if ($user_id > 0) {
-            // TODO, remove before next release.
-            $sql = "DELETE FROM `user_preference` WHERE `preference` IN (SELECT `id` from `preference` where `name` = 'custom_login_background') AND `user` = $user_id";
+            // TODO, remove before next release. ('custom_login_logo' needs to be here a while at least so 5.0.0+1)
+            $sql = "DELETE FROM `user_preference` WHERE `preference` IN (SELECT `id` from `preference` where `name` = 'custom_login_background', 'custom_login_logo') AND `user` = $user_id";
             Dba::write($sql);
         }
 
