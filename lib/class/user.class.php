@@ -1271,7 +1271,7 @@ class User extends database_object
         if ($user_id != '-1') {
             $sql = "SELECT `user_preference`.`preference`, `user_preference`.`value` FROM `user_preference`, `preference` " .
                 "WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND " .
-                "`preference`.`catagory` !='system' AND `preference`.`name` NOT IN ('custom_login_background') ";
+                "`preference`.`catagory` !='system' AND `preference`.`name` NOT IN ('custom_login_background', 'custom_login_logo') ";
             $db_results = Dba::read($sql);
             /* While through our base stuff */
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -1286,7 +1286,7 @@ class User extends database_object
         // If not system, exclude system... *gasp*
         if ($user_id != '-1') {
             $sql .= " WHERE catagory !='system'";
-            $sql .= " AND `preference`.`name` NOT IN ('custom_login_background')"; // TODO, remove before next release.
+            $sql .= " AND `preference`.`name` NOT IN ('custom_login_background', 'custom_login_logo')";
         }
         $db_results = Dba::read($sql);
 
