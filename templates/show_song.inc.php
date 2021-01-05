@@ -171,11 +171,17 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
     $songprops[T_('Song MBID')]      = scrub_out($song->mbid);
     $songprops[T_('Album MBID')]     = scrub_out($song->album_mbid);
     $songprops[T_('Artist MBID')]    = scrub_out($song->artist_mbid);
-    if ($song->replaygain_track_gain != 0) {
+    if ($song->replaygain_track_gain !== null) {
         $songprops[T_('ReplayGain Track Gain')]   = scrub_out($song->replaygain_track_gain);
     }
-    if ($song->replaygain_album_gain != 0) {
+    if ($song->replaygain_album_gain !== null) {
         $songprops[T_('ReplayGain Album Gain')]   = scrub_out($song->replaygain_album_gain);
+    }
+    if ($song->r128_track_gain !== null) {
+        $songprops[T_('R128 Track Gain')]   = scrub_out($song->r128_track_gain);
+    }
+    if ($song->r128_album_gain !== null) {
+        $songprops[T_('R128 Album Gain')]   = scrub_out($song->r128_album_gain);
     }
     if (Access::check('interface', 75)) {
         $songprops[T_('Filename')]   = scrub_out($song->file) . " " . $song->f_size;

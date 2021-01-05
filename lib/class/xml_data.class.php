@@ -1044,7 +1044,9 @@ class XML_Data
                     . "\t<replaygain_album_gain>" . $song->replaygain_album_gain . "</replaygain_album_gain>\n"
                     . "\t<replaygain_album_peak>" . $song->replaygain_album_peak . "</replaygain_album_peak>\n"
                     . "\t<replaygain_track_gain>" . $song->replaygain_track_gain . "</replaygain_track_gain>\n"
-                    . "\t<replaygain_track_peak>" . $song->replaygain_track_peak . "</replaygain_track_peak>\n";
+                    . "\t<replaygain_track_peak>" . $song->replaygain_track_peak . "</replaygain_track_peak>\n"
+                    . "\t<r128_album_gain>" . $song->r128_album_gain . "</r128_album_gain>\n"
+                    . "\t<r128_track_gain>" . $song->r128_track_gain . "</r128_track_gain>\n";
             if (Song::isCustomMetadataEnabled()) {
                 foreach ($song->getMetadata() as $metadata) {
                     $meta_name = str_replace(array(' ', '(', ')', '/', '\\', '#'), '_', $metadata->getField()->getName());

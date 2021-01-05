@@ -449,10 +449,12 @@ class vainfo
 
             $info['lyrics']    = $info['lyrics']
                     ?: strip_tags(nl2br((string) $tags['lyrics']), "<br>");
-            $info['replaygain_track_gain'] = $info['replaygain_track_gain'] ?: floatval($tags['replaygain_track_gain']);
-            $info['replaygain_track_peak'] = $info['replaygain_track_peak'] ?: floatval($tags['replaygain_track_peak']);
-            $info['replaygain_album_gain'] = $info['replaygain_album_gain'] ?: floatval($tags['replaygain_album_gain']);
-            $info['replaygain_album_peak'] = $info['replaygain_album_peak'] ?: floatval($tags['replaygain_album_peak']);
+            $info['replaygain_track_gain'] = $info['replaygain_track_gain'] ?: $tags['replaygain_track_gain'];
+            $info['replaygain_track_peak'] = $info['replaygain_track_peak'] ?: $tags['replaygain_track_peak'];
+            $info['replaygain_album_gain'] = $info['replaygain_album_gain'] ?: $tags['replaygain_album_gain'];
+            $info['replaygain_album_peak'] = $info['replaygain_album_peak'] ?: $tags['replaygain_album_peak'];
+            $info['r128_track_gain']       = $info['r128_track_gain'] ?: $tags['r128_track_gain'];
+            $info['r128_album_gain']       = $info['r128_album_gain'] ?: $tags['r128_album_gain'];
 
             $info['track']         = $info['track'] ?: (int) $tags['track'];
             $info['resolution_x']  = $info['resolution_x'] ?: (int) $tags['resolution_x'];
@@ -724,7 +726,7 @@ class vainfo
                         case 'replaygain_track_peak':
                         case 'replaygain_album_gain':
                         case 'replaygain_album_peak':
-                            $parsed[$key] = floatval($tag['data'][0]);
+                            $parsed[$key] = $tag['data'][0];
                             break;
                     }
                 }
@@ -1042,16 +1044,22 @@ class vainfo
                             implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $id3v2['comments']['text'][$txxx['description']]), array('')));
                         break;
                     case 'replaygain_track_gain':
-                        $parsed['replaygain_track_gain'] = floatval($txxx['data']);
+                        $parsed['replaygain_track_gain'] = $txxx['data'];
                         break;
                     case 'replaygain_track_peak':
-                        $parsed['replaygain_track_peak'] = floatval($txxx['data']);
+                        $parsed['replaygain_track_peak'] = $txxx['data'];
                         break;
                     case 'replaygain_album_gain':
-                        $parsed['replaygain_album_gain'] = floatval($txxx['data']);
+                        $parsed['replaygain_album_gain'] = $txxx['data'];
                         break;
                     case 'replaygain_album_peak':
-                        $parsed['replaygain_album_peak'] = floatval($txxx['data']);
+                        $parsed['replaygain_album_peak'] = $txxx['data'];
+                        break;
+                    case 'r128_track_gain':
+                        $parsed['r128_track_gain'] = $txxx['data'];
+                        break;
+                    case 'r128_album_gain':
+                        $parsed['r128_album_gain'] = $txxx['data'];
                         break;
                     case 'original_year':
                         $parsed['original_year'] = $id3v2['comments']['text'][$txxx['description']];

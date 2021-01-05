@@ -876,6 +876,8 @@ class JSON_Data
             $ourSong['replaygain_album_peak'] = $song->replaygain_album_peak;
             $ourSong['replaygain_track_gain'] = $song->replaygain_track_gain;
             $ourSong['replaygain_track_peak'] = $song->replaygain_track_peak;
+            $ourSong['r128_album_gain']       = $song->r128_album_gain;
+            $ourSong['r128_track_gain']       = $song->r128_track_gain;
 
             if (Song::isCustomMetadataEnabled()) {
                 foreach ($song->getMetadata() as $metadata) {

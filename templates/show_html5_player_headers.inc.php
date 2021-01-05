@@ -58,6 +58,8 @@ function convertMediaToJPMedia(media)
     jpmedia['replaygain_track_peak'] = media['replaygain_track_peak'];
     jpmedia['replaygain_album_gain'] = media['replaygain_album_gain'];
     jpmedia['replaygain_album_peak'] = media['replaygain_album_peak'];
+    jpmedia['r128_track_gain'] = media['r128_track_gain'];
+    jpmedia['r128_album_gain'] = media['r128_album_gain'];
 
     return jpmedia;
 }
@@ -309,18 +311,28 @@ function ApplyReplayGain()
         var replaygain = 0;
         var peakamplitude = 1;
         if (replaygainEnabled && currentjpitem != null) {
-            var track_gain = currentjpitem.attr("data-replaygain_track_gain");
-            if (track_gain !== 'null') {
-                replaygain = parseFloat(track_gain);
-            }
+            var replaygain_track_gain   = currentjpitem.attr("data-replaygain_track_gain");
+            var r128_track_gain = currentjpitem.attr("data-r128_track_gain"); 
+            
+            if (r128_track_gain !== 'null') { // R128 PREFERRED
+                replaygain = parseInt(r128_track_gain / 256); // how many LU/dB away from baseline of -23 LUFS/dB
+                referencelevel = parseInt(-23); // LUFS https://en.wikipedia.org/wiki/EBU_R_128#Specification
+                targetlevel = parseInt(0); // LUFS/dB
+                masteredvolume = referencelevel - replaygain;
+                difference = targetlevel - masteredvolume;
 
-            if (replaygain !== 0) {
-                var track_peak = currentjpitem.attr("data-replaygain_track_peak");
-                if (track_peak !== 'null') {
-                    peakamplitude = parseFloat(track_peak);
+                gainlevel = (1 + Math.pow(10, ((difference /* + Gpre-amp */) / 20)));
+            } else if (replaygain_track_gain !== 'null') { // REPLAYGAIN FALLBACK
+                replaygain = parseFloat(replaygain_track_gain);
+
+                if (replaygain != null) {
+                    var track_peak = currentjpitem.attr("data-replaygain_track_peak");
+                    if (track_peak !== 'null') {
+                        peakamplitude = parseFloat(track_peak);
+                    }
+                    gainlevel = (1 + Math.min(Math.pow(10, ((replaygain /* + Gpre-amp */) / 20)), (1 / peakamplitude)));
                 }
-                gainlevel = (1 + Math.min(Math.pow(10, ((replaygain /* + Gpre-amp */) / 20)), (1 / peakamplitude)));
-            }
+            }                
         }
 
         replaygainNode.gain.value = gainlevel;

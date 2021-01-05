@@ -299,6 +299,8 @@ class WebPlayer
 
         if ($media != null) {
             //$media->format();
+            $media->fill_ext_info(); // loads replaygain/r128 data without doing a full format()
+
             if ($urlinfo['type'] == 'song') {
                 $json['artist_id']             = $media->artist;
                 $json['album_id']              = $media->album;
@@ -306,6 +308,8 @@ class WebPlayer
                 $json['replaygain_track_peak'] = $media->replaygain_track_peak;
                 $json['replaygain_album_gain'] = $media->replaygain_album_gain;
                 $json['replaygain_album_peak'] = $media->replaygain_album_peak;
+                $json['r128_track_gain']       = $media->r128_track_gain;
+                $json['r128_album_gain']       = $media->r128_album_gain;
             }
             $json['media_id']   = $media->id;
             $json['media_type'] = $urlinfo['type'];
