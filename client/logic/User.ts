@@ -4,6 +4,7 @@ import AmpacheError from './AmpacheError';
 
 //The API returns different information depending on if you are requesting yourself, or are an admin. Look at UserMethod.php:78
 type User = {
+    authKey: AuthKey;
     id: number;
     username: string;
     auth?: AuthKey;
