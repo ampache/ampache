@@ -24,12 +24,13 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ZipHandlerInterface;
@@ -534,11 +535,15 @@ class Share extends database_object
     }
 
     /**
+     * @param FunctionCheckerInterface $functionChecker
      * @param string $object_type
      * @param integer $object_id
      */
-    public static function display_ui_links($object_type, $object_id)
-    {
+    public static function display_ui_links(
+        FunctionCheckerInterface $functionChecker,
+        $object_type,
+        $object_id
+    ): void {
         echo "<ul>";
         echo "<li><a onclick=\"handleShareAction('" . AmpConfig::get('web_path') . "/share.php?action=show_create&type=" . $object_type . "&id=" . $object_id . "')\">" . Ui::get_icon('share',
                 T_('Advanced Share')) . " &nbsp;" . T_('Advanced Share') . "</a></li>";
@@ -550,7 +555,7 @@ class Share extends database_object
                 // @todo remove after refactoring
                 global $dic;
                 $zipHandler = $dic->get(ZipHandlerInterface::class);
-                if (Access::check_function('batch_download') && $zipHandler->isZipable($object_type)) {
+                if ($functionChecker->check(AccessLevelEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable($object_type)) {
                     $dllink = AmpConfig::get('web_path') . "/batch.php?action=" . $object_type . "&id=" . $object_id;
                 }
             }

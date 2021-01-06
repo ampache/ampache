@@ -28,7 +28,8 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
@@ -92,7 +93,13 @@ final class HandshakeMethod
         // Log this attempt
         debug_event(self::class, "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
 
-        if ($user_id > 0 && Access::check_network('api', $user_id, 5)) {
+        // @todo replace by constructor injection
+        global $dic;
+        $networkAccessChecker = $dic->get(NetworkCheckerInterface::class);
+
+        if (
+            $user_id > 0 && $networkAccessChecker->check(AccessLevelEnum::TYPE_API, $user_id, AccessLevelEnum::LEVEL_GUEST)
+        ) {
             // Authentication with user/password, we still need to check the password
             if ($username) {
                 // If the timestamp isn't within 30 minutes sucks to be them

@@ -101,4 +101,6 @@ final class ConfigurationKeyEnum
     public const DOWNLOAD                      = 'download';
     public const ALBUM_ART_PREFERRED_FILENAME  = 'album_art_preferred_filename';
     public const SIMPLE_USER_MODE              = 'simple_user_mode';
+    public const LOCALPLAY_LEVEL               = 'localplay_level';
+    public const ALLOW_ZIP_DOWNLOAD            = 'allow_zip_download';
 }

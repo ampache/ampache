@@ -24,7 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Authorization;
 
-use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -294,92 +295,16 @@ class Access
      * This checks if specific functionality is enabled.
      * @param string $type
      * @return boolean
+     *
+     * @deprecated See FunctionChecker::check
      */
     public static function check_function($type)
     {
-        switch ($type) {
-            case 'download':
-                return make_bool(AmpConfig::get('download'));
-            case 'batch_download':
-                if (!function_exists('gzcompress')) {
-                    debug_event('access.class', 'ZLIB extension not loaded, batch download disabled', 3);
+        global $dic;
 
-                    return false;
-                }
-                if (!Core::get_global('user')) {
-                    return false;
-                }
-                if (AmpConfig::get('allow_zip_download') && Core::get_global('user')->has_access('5')) {
-                    return make_bool(AmpConfig::get('download'));
-                }
-                break;
-        }
-
-        return false;
-    }
-
-    /**
-     * check_network
-     *
-     * This takes a type, ip, user, level and key and then returns whether they
-     * are allowed. The IP is passed as a dotted quad.
-     * @param string $type
-     * @param integer|string $user
-     * @param integer $level
-     * @return boolean
-     */
-    public static function check_network($type, $user = null, $level = 25)
-    {
-        if (!AmpConfig::get('access_control')) {
-            switch ($type) {
-                case 'interface':
-                case 'stream':
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        switch ($type) {
-            case 'init-api':
-                if ($user) {
-                    $user = User::get_from_username($user);
-                    $user = $user->id;
-                }
-                // Intentional break fall-through
-            case 'api':
-                $type = 'rpc';
-                // Intentional break fall-through
-            case 'network':
-            case 'interface':
-            case 'stream':
-                break;
-            default:
-                return false;
-        } // end switch on type
-
-        $sql = 'SELECT `id` FROM `access_list` ' . 'WHERE `start` <= ? AND `end` >= ? ' . 'AND `level` >= ? AND `type` = ?';
-
-        $user_ip = Core::get_user_ip();
-        $params  = array(inet_pton($user_ip), inet_pton($user_ip), $level, $type);
-
-        if (strlen((string)$user) && $user != '-1') {
-            $sql .= " AND `user` IN(?, '-1')";
-            $params[] = $user;
-        } else {
-            $sql .= " AND `user` = '-1'";
-        }
-
-        $db_results = Dba::read($sql, $params);
-
-        if (Dba::fetch_row($db_results)) {
-            debug_event('access.class', 'check_network ' . $type . ': ip matched ACL ' . $user_ip, 5);
-
-            return true;
-        }
-        debug_event('access.class', 'check_network ' . $type . ': ip not found in ACL ' . $user_ip, 3);
-
-        return false;
+        return $dic->get(FunctionCheckerInterface::class)->check(
+            (string) $type
+        );
     }
 
     /**
@@ -394,32 +319,18 @@ class Access
      * @param integer $level
      * @param integer|null $user_id
      * @return boolean
+     *
+     * @deprecated See PrivilegeChecker::check
      */
     public static function check($type, $level, $user_id = null)
     {
-        if (AmpConfig::get('demo_mode')) {
-            return true;
-        }
-        if (defined('INSTALL')) {
-            return true;
-        }
+        global $dic;
 
-        $user = Core::get_global('user');
-        if ($user_id !== null) {
-            $user = new User($user_id);
-        }
-
-        // Switch on the type
-        switch ($type) {
-            case 'localplay':
-                // Check their localplay_level
-                return (AmpConfig::get('localplay_level') >= $level || $user->access >= 100);
-            case 'interface':
-                // Check their standard user level
-                return ($user->access >= $level);
-            default:
-                return false;
-        }
+        return $dic->get(PrivilegeCheckerInterface::class)->check(
+            (string) $type,
+            (int) $level,
+            $user_id
+        );
     }
 
     /**
@@ -430,7 +341,7 @@ class Access
      * @param string $type
      * @return string
      */
-    public static function validate_type($type)
+    private static function validate_type($type)
     {
         switch ($type) {
             case 'rpc':
@@ -467,7 +378,7 @@ class Access
      * take the int level and return a named level
      * @return string
      */
-    public function get_level_name()
+    private function get_level_name()
     {
         if ($this->level >= '75') {
             return T_('All');
@@ -491,7 +402,7 @@ class Access
      * Return a name for the users covered by this ACL.
      * @return string
      */
-    public function get_user_name()
+    private function get_user_name()
     {
         if ($this->user == '-1') {
             return T_('All');
@@ -508,7 +419,7 @@ class Access
      * This function returns the pretty name for our current type.
      * @return string
      */
-    public function get_type_name()
+    private function get_type_name()
     {
         switch ($this->type) {
             case 'rpc':
@@ -521,5 +432,25 @@ class Access
             default:
                 return T_('Stream Access');
         }
+    }
+
+    public static function findByIp(
+        string $userIp,
+        int $level,
+        string $type,
+        ?int $userId
+    ): bool {
+        $sql = 'SELECT `id` FROM `access_list` ' . 'WHERE `start` <= ? AND `end` >= ? ' . 'AND `level` >= ? AND `type` = ?';
+
+        $params  = array(inet_pton($userIp), inet_pton($userIp), $level, $type);
+
+        if ($userId !== null && $userId != -1) {
+            $sql .= " AND `user` IN(?, '-1')";
+            $params[] = $userId;
+        } else {
+            $sql .= " AND `user` = '-1'";
+        }
+
+        return Dba::num_rows(Dba::read($sql, $params)) > 0;
     }
 }

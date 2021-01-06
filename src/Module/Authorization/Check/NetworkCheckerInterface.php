@@ -17,38 +17,21 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\Authorization\Check;
 
-namespace Ampache\Module\Authorization;
+use Ampache\Module\Authorization\AccessLevelEnum;
 
-use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
-use Ampache\Module\System\Core;
-
-/**
- * Routes access checks and other authorization related calls to its static versions
- */
-final class GuiGatekeeper implements GuiGatekeeperInterface
+interface NetworkCheckerInterface
 {
-    private PrivilegeCheckerInterface $privilegeChecker;
-
-    public function __construct(
-        PrivilegeCheckerInterface $privilegeChecker
-    ) {
-        $this->privilegeChecker = $privilegeChecker;
-    }
-
-    public function mayAccess(
-        string $access_type,
-        int $access_level
-    ): bool {
-        return $this->privilegeChecker->check($access_type, $access_level);
-    }
-
-    public function getUserId(): int
-    {
-        return (int) Core::get_global('user')->id;
-    }
+    /**
+     * This takes a type, ip, user, level and key and then returns whether they
+     * are allowed. The IP is passed as a dotted quad.
+     */
+    public function check(
+        string $type,
+        ?int $user = null,
+        int $level = AccessLevelEnum::LEVEL_USER
+    ): bool;
 }

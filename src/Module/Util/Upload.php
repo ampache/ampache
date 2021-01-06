@@ -30,11 +30,19 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Artist;
 use Ampache\Model\Catalog;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\System\Core;
 use RuntimeException;
 
 class Upload
 {
+    private PrivilegeCheckerInterface $privilegeChecker;
+
+    public function __construct(
+        PrivilegeCheckerInterface $privilegeChecker
+    ) {
+        $this->privilegeChecker = $privilegeChecker;
+    }
 
     /**
      * process

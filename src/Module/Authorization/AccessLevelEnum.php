@@ -29,6 +29,9 @@ final class AccessLevelEnum
 {
     public const TYPE_INTERFACE = 'interface';
     public const TYPE_LOCALPLAY = 'localplay';
+    public const TYPE_API       = 'api';
+    public const TYPE_NETWORK   = 'network';
+    public const TYPE_STREAM    = 'stream';
 
     public const LEVEL_DEFAULT         = 0;
     public const LEVEL_GUEST           = 5;
@@ -36,4 +39,7 @@ final class AccessLevelEnum
     public const LEVEL_CONTENT_MANAGER = 50;
     public const LEVEL_MANAGER         = 75;
     public const LEVEL_ADMIN           = 100;
+
+    public const FUNCTION_DOWNLOAD       = 'download';
+    public const FUNCTION_BATCH_DOWNLOAD = 'batch_download';
 }

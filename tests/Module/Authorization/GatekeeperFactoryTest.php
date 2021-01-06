@@ -25,14 +25,23 @@ declare(strict_types=1);
 namespace Ampache\Module\Authorization;
 
 use Ampache\MockeryTestCase;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Mockery\MockInterface;
 
 class GatekeeperFactoryTest extends MockeryTestCase
 {
+    /** @var MockInterface|PrivilegeCheckerInterface|null */
+    private MockInterface $privilegeChecker;
+
     private ?GatekeeperFactory $subject;
 
     public function setUp(): void
     {
-        $this->subject = new GatekeeperFactory();
+        $this->privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
+
+        $this->subject = new GatekeeperFactory(
+            $this->privilegeChecker
+        );
     }
 
     public function testCreateGuiGatekeeperReturnsInstance(): void

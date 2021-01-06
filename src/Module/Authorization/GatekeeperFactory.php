@@ -24,10 +24,22 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Authorization;
 
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+
 final class GatekeeperFactory implements GatekeeperFactoryInterface
 {
+    private PrivilegeCheckerInterface $privilegeChecker;
+
+    public function __construct(
+        PrivilegeCheckerInterface $privilegeChecker
+    ) {
+        $this->privilegeChecker = $privilegeChecker;
+    }
+
     public function createGuiGatekeeper(): GuiGatekeeperInterface
     {
-        return new GuiGatekeeper();
+        return new GuiGatekeeper(
+            $this->privilegeChecker
+        );
     }
 }

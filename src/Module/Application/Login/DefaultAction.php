@@ -30,9 +30,9 @@ use Ampache\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\System\Core;
@@ -57,16 +57,20 @@ final class DefaultAction implements ApplicationActionInterface
 
     private LoggerInterface $logger;
 
+    private NetworkCheckerInterface $networkChecker;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         AuthenticationManagerInterface $authenticationManager,
         ResponseFactoryInterface $responseFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        NetworkCheckerInterface $networkChecker
     ) {
         $this->configContainer       = $configContainer;
         $this->authenticationManager = $authenticationManager;
         $this->responseFactory       = $responseFactory;
         $this->logger                = $logger;
+        $this->networkChecker        = $networkChecker;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -100,7 +104,7 @@ final class DefaultAction implements ApplicationActionInterface
          * page if they aren't in the ACL
          */
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ACCESS_CONTROL)) {
-            if (!Access::check_network('interface', '', 5)) {
+            if (!$this->networkChecker->check(AccessLevelEnum::TYPE_INTERFACE, null, AccessLevelEnum::LEVEL_GUEST)) {
                 throw new AccessDeniedException(
                     sprintf(
                         'Access denied: %s is not in the Interface Access list',

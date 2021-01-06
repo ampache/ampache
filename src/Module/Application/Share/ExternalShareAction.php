@@ -32,8 +32,9 @@ use Ampache\Model\Plugin;
 use Ampache\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\User\PasswordGeneratorInterface;
@@ -55,16 +56,20 @@ final class ExternalShareAction implements ApplicationActionInterface
 
     private ResponseFactoryInterface $responseFactory;
 
+    private FunctionCheckerInterface $functionChecker;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         PasswordGeneratorInterface $passwordGenerator,
-        ResponseFactoryInterface $responseFactory
+        ResponseFactoryInterface $responseFactory,
+        FunctionCheckerInterface $functionChecker
     ) {
         $this->configContainer   = $configContainer;
         $this->ui                = $ui;
         $this->passwordGenerator = $passwordGenerator;
         $this->responseFactory   = $responseFactory;
+        $this->functionChecker   = $functionChecker;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -85,8 +90,9 @@ final class ExternalShareAction implements ApplicationActionInterface
 
         $type           = Core::get_request('type');
         $share_id       = Core::get_request('id');
-        $allow_download = (($type == 'song' && Access::check_function('download')) || Access::check_function('batch_download'));
         $secret         = $this->passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH);
+        $allow_download = ($type == 'song' && $this->functionChecker->check(AccessLevelEnum::FUNCTION_DOWNLOAD)) ||
+            $this->functionChecker->check(AccessLevelEnum::FUNCTION_BATCH_DOWNLOAD);
 
         $share_id = Share::create_share($type, $share_id, true, $allow_download, AmpConfig::get('share_expire'), $secret, 0);
         $share    = new Share($share_id);

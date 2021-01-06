@@ -26,6 +26,7 @@ namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Model\User;
 use Ampache\Module\Api\Authentication\Gatekeeper;
 use Ampache\Module\Api\Exception\ApiException;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
@@ -34,6 +35,8 @@ use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Method\PingMethod;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Psr\Container\ContainerInterface;
@@ -51,17 +54,21 @@ final class ApiHandler implements ApiHandlerInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private NetworkCheckerInterface $networkChecker;
+
     private ContainerInterface $dic;
 
     public function __construct(
         StreamFactoryInterface $streamFactory,
         LoggerInterface $logger,
         ConfigContainerInterface $configContainer,
+        NetworkCheckerInterface $networkChecker,
         ContainerInterface $dic
     ) {
         $this->streamFactory   = $streamFactory;
         $this->logger          = $logger;
         $this->configContainer = $configContainer;
+        $this->networkChecker  = $networkChecker;
         $this->dic             = $dic;
     }
 
@@ -131,10 +138,16 @@ final class ApiHandler implements ApiHandlerInterface
             );
         }
 
+        if ($action === HandshakeMethod::ACTION) {
+            $userId = User::get_from_username($_REQUEST['user'])->id;
+        } else {
+            $userId = $gatekeeper->getUser()->id;
+        }
+
         // If the session exists then let's try to pull some data from it to see if we're still allowed to do this
         $username = ($action == HandshakeMethod::ACTION) ? $_REQUEST['user'] : $gatekeeper->getUserName();
 
-        if (!Access::check_network('init-api', $username, 5)) {
+        if (!$this->networkChecker->check(AccessLevelEnum::TYPE_API, $userId, AccessLevelEnum::LEVEL_GUEST)) {
             $this->logger->warning(
                 sprintf('Unauthorized access attempt to API [%s]', Core::get_server('REMOTE_ADDR')),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]

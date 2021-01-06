@@ -31,7 +31,8 @@ use Ampache\Model\Share;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\System\Session;
 use Ampache\Module\User\PasswordGenerator;
 use Ampache\Module\User\PasswordGeneratorInterface;
@@ -68,10 +69,10 @@ final class ShareCreateMethod
         if (!Api::check_parameter($input, array('type', 'filter'), self::ACTION)) {
             return false;
         }
+
         $description = $input['description'];
         $object_id   = $input['filter'];
         $type        = $input['type'];
-        $download    = Access::check_function('download');
         $expire_days = Share::get_expiry($input['expires']);
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist'))) {
@@ -92,14 +93,16 @@ final class ShareCreateMethod
 
                 return false;
             }
-            // @todo refactor
+            // @todo Replace by constructor injection
             global $dic;
+            $functionChecker   = $dic->get(FunctionCheckerInterface::class);
             $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
-            $share[]           = Share::create_share(
+
+            $share[] = Share::create_share(
                 $type,
                 $object_id,
                 true,
-                $download,
+                $functionChecker->check(AccessLevelEnum::FUNCTION_DOWNLOAD),
                 $expire_days,
                 $passwordGenerator->generate(PasswordGenerator::DEFAULT_LENGTH),
                 0,

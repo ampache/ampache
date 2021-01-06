@@ -30,6 +30,8 @@ use Ampache\Model\Preference;
 use Ampache\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
@@ -46,12 +48,16 @@ final class ConsumeAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private NetworkCheckerInterface $networkChecker;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        NetworkCheckerInterface $networkChecker
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
+        $this->networkChecker  = $networkChecker;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -70,7 +76,7 @@ final class ConsumeAction implements ApplicationActionInterface
          * page if they aren't in the ACL
          */
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ACCESS_CONTROL)) {
-            if (!Access::check_network('interface', '', 5)) {
+            if (!$this->networkChecker->check(AccessLevelEnum::TYPE_INTERFACE, null, AccessLevelEnum::LEVEL_GUEST)) {
                 throw new AccessDeniedException(
                     sprintf(
                         'Access Denied:%s is not in the Interface Access list',

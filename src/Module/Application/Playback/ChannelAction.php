@@ -31,6 +31,8 @@ use Ampache\Model\Preference;
 use Ampache\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Authorization\Access;
@@ -44,10 +46,14 @@ final class ChannelAction implements ApplicationActionInterface
 
     private AuthenticationManagerInterface $authenticationManager;
 
+    private NetworkCheckerInterface $networkChecker;
+
     public function __construct(
-        AuthenticationManagerInterface $authenticationManager
+        AuthenticationManagerInterface $authenticationManager,
+        NetworkCheckerInterface $networkChecker
     ) {
         $this->authenticationManager = $authenticationManager;
+        $this->networkChecker        = $networkChecker;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -85,9 +91,12 @@ final class ChannelAction implements ApplicationActionInterface
                     $is_auth         = true;
                     Preference::init();
 
+                    $userId = Core::get_global('user')->id;
+
                     if (AmpConfig::get('access_control')) {
-                        if (!Access::check_network('stream', Core::get_global('user')->id, 25) &&
-                            !Access::check_network('network', Core::get_global('user')->id, 25)) {
+                        if (!$this->networkChecker->check(AccessLevelEnum::TYPE_STREAM, $userId) &&
+                            !$this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, $userId)
+                        ) {
                             throw new AccessDeniedException(
                                 sprintf(
                                     'Streaming Access Denied: %s does not have stream level access',

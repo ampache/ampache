@@ -28,8 +28,9 @@ use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\InterfaceImplementationChecker;
@@ -49,20 +50,27 @@ final class DefaultAction implements ApplicationActionInterface
 
     private ZipHandlerInterface $zipHandler;
 
+    private FunctionCheckerInterface $functionChecker;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
-        ZipHandlerInterface $zipHandler
+        ZipHandlerInterface $zipHandler,
+        FunctionCheckerInterface $functionChecker
     ) {
-        $this->modelFactory = $modelFactory;
-        $this->logger       = $logger;
-        $this->zipHandler   = $zipHandler;
+        $this->modelFactory    = $modelFactory;
+        $this->logger          = $logger;
+        $this->zipHandler      = $zipHandler;
+        $this->functionChecker = $functionChecker;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         ob_end_clean();
-        if (!defined('NO_SESSION') && !Access::check_function('batch_download')) {
+        if (
+            !defined('NO_SESSION') &&
+            !$this->functionChecker->check(AccessLevelEnum::FUNCTION_BATCH_DOWNLOAD)
+        ) {
             throw new AccessDeniedException();
         }
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=0);
-
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -23,15 +21,16 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Model\ModelFactoryInterface;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Model\Live_Stream;
 use Ampache\Model\Playlist;
-use Ampache\Model\Search;
 use Ampache\Model\Share;
 use Ampache\Module\Util\Ui;
 
@@ -39,10 +38,14 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
 {
     private ModelFactoryInterface $modelFactory;
 
+    private FunctionCheckerInterface $functionChecker;
+
     public function __construct(
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        FunctionCheckerInterface $functionChecker
     ) {
-        $this->modelFactory = $modelFactory;
+        $this->modelFactory    = $modelFactory;
+        $this->functionChecker = $functionChecker;
     }
 
     public function handle(): void
@@ -231,7 +234,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
                 if (InterfaceImplementationChecker::is_library_item($object_type) && $object_id > 0) {
-                    Share::display_ui_links($object_type, $object_id);
+                    Share::display_ui_links($this->functionChecker, $object_type, $object_id);
 
                     return;
                 }

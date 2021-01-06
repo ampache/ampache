@@ -26,10 +26,20 @@ namespace Ampache\Module\System;
 
 use Ampache\Model\Preference;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Playback\Stream;
 
 final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdaterInterface
 {
+    private PrivilegeCheckerInterface $privilegeChecker;
+
+    public function __construct(
+        PrivilegeCheckerInterface $privilegeChecker
+    ) {
+        $this->privilegeChecker = $privilegeChecker;
+    }
+
     /**
      * grabs the current keys that should be added and then runs
      * through $_REQUEST looking for those values and updates them for this user
@@ -85,7 +95,10 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
                 Preference::update($pref_id, $user_id, $value, $_REQUEST[$apply_to_all]);
             }
 
-            if (Access::check('interface', 100) && $_REQUEST[$new_level]) {
+            if (
+                $this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) &&
+                $_REQUEST[$new_level]
+            ) {
                 Preference::update_level($pref_id, $_REQUEST[$new_level]);
             }
         } // end foreach preferences

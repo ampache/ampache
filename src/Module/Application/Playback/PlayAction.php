@@ -38,6 +38,8 @@ use Ampache\Model\User;
 use Ampache\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Authorization\Access;
@@ -60,12 +62,16 @@ final class PlayAction implements ApplicationActionInterface
 
     private AuthenticationManagerInterface $authenticationManager;
 
+    private NetworkCheckerInterface $networkChecker;
+
     public function __construct(
         Horde_Browser $browser,
-        AuthenticationManagerInterface $authenticationManager
+        AuthenticationManagerInterface $authenticationManager,
+        NetworkCheckerInterface $networkChecker
     ) {
         $this->browser               = $browser;
         $this->authenticationManager = $authenticationManager;
+        $this->networkChecker        = $networkChecker;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -260,7 +266,10 @@ final class PlayAction implements ApplicationActionInterface
 
                 // If require session is set then we need to make sure we're legit
                 if ($use_auth && AmpConfig::get('require_session')) {
-                    if (!AmpConfig::get('require_localnet_session') && Access::check_network('network', Core::get_global('user')->id, 5)) {
+                    if (
+                        !AmpConfig::get('require_localnet_session') &&
+                        $this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_GUEST)
+                    ) {
                         debug_event('play/index', 'Streaming access allowed for local network IP ' . Core::get_server('REMOTE_ADDR'), 4);
                     } else {
                         if (!Session::exists('stream', $session_id)) {
@@ -320,8 +329,8 @@ final class PlayAction implements ApplicationActionInterface
         // If they are using access lists let's make sure that they have enough access to play this mojo
         if (AmpConfig::get('access_control')) {
             if (
-                !Access::check_network('stream', Core::get_global('user')->id, 25) &&
-                !Access::check_network('network', Core::get_global('user')->id, 25)
+                !$this->networkChecker->check(AccessLevelEnum::TYPE_STREAM, Core::get_global('user')->id) &&
+                !$this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id)
             ) {
                 throw new AccessDeniedException(
                     sprintf('Streaming Access Denied: %s does not have stream level access', Core::get_user_ip())
@@ -563,7 +572,7 @@ final class PlayAction implements ApplicationActionInterface
 
         $force_downsample = false;
         if (AmpConfig::get('downsample_remote')) {
-            if (!Access::check_network('network', Core::get_global('user')->id, 0)) {
+            if (!$this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')->id, AccessLevelEnum::LEVEL_DEFAULT)) {
                 debug_event('play/index', 'Downsampling enabled for non-local address ' . Core::get_server('REMOTE_ADDR'), 5);
                 $force_downsample = true;
             }

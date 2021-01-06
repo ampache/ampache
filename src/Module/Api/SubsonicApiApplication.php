@@ -25,8 +25,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
-use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\System\Core;
 use Ampache\Model\Preference;
 use Ampache\Model\User;
@@ -35,10 +36,14 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 {
     private AuthenticationManagerInterface $authenticationManager;
 
+    private NetworkCheckerInterface $networkChecker;
+
     public function __construct(
-        AuthenticationManagerInterface $authenticationManager
+        AuthenticationManagerInterface $authenticationManager,
+        NetworkCheckerInterface $networkChecker
     ) {
         $this->authenticationManager = $authenticationManager;
+        $this->networkChecker        = $networkChecker;
     }
 
     public function run(): void
@@ -71,9 +76,9 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         }
 
         // Authenticate the user with preemptive HTTP Basic authentication first
-        $user = Core::get_server('PHP_AUTH_USER');
-        if (empty($user)) {
-            $user = $_REQUEST['u'];
+        $userName = Core::get_server('PHP_AUTH_USER');
+        if (empty($userName)) {
+            $userName = $_REQUEST['u'];
         }
         $password = Core::get_server('PHP_AUTH_PW');
         if (empty($password)) {
@@ -88,7 +93,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             $_SERVER['HTTP_USER_AGENT'] = $clientapp;
         }
 
-        if (empty($user) || (empty($password) && (empty($token) || empty($salt))) || empty($version) || empty($action) || empty($clientapp)) {
+        if (empty($userName) || (empty($password) && (empty($token) || empty($salt))) || empty($version) || empty($action) || empty($clientapp)) {
             ob_end_clean();
             debug_event('rest/index', 'Missing Subsonic base parameters', 3);
             Subsonic_Api::apiOutput2($f, Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, 'Missing Subsonic base parameters', $version), $callback);
@@ -99,19 +104,22 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         $password = Subsonic_Api::decrypt_password($password);
 
         // Check user authentication
-        $auth = $this->authenticationManager->tokenLogin($user, $token, $salt);
+        $auth = $this->authenticationManager->tokenLogin($userName, $token, $salt);
         if ($auth === []) {
-            $auth = $this->authenticationManager->login($user, $password, true);
+            $auth = $this->authenticationManager->login($userName, $password, true);
         }
         if (!$auth['success']) {
-            debug_event('rest/index', 'Invalid authentication attempt to Subsonic API for user [' . $user . ']', 3);
+            debug_event('rest/index', 'Invalid authentication attempt to Subsonic API for user [' . $userName . ']', 3);
             ob_end_clean();
-            Subsonic_Api::apiOutput2($f, Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_BADAUTH, 'Invalid authentication attempt to Subsonic API for user [' . $user . ']', $version), $callback);
+            Subsonic_Api::apiOutput2($f, Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_BADAUTH, 'Invalid authentication attempt to Subsonic API for user [' . $userName . ']', $version), $callback);
 
             return;
         }
 
-        if (!Access::check_network('init-api', $user, 5)) {
+        $user            = User::get_from_username($userName);
+        $GLOBALS['user'] = $user;
+
+        if (!$this->networkChecker->check(AccessLevelEnum::TYPE_API, $user->id, AccessLevelEnum::LEVEL_GUEST)) {
             debug_event('rest/index', 'Unauthorized access attempt to Subsonic API [' . Core::get_server('REMOTE_ADDR') . ']', 3);
             ob_end_clean();
             Subsonic_Api::apiOutput2($f, Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, 'Unauthorized access attempt to Subsonic API - ACL Error', $version), $callback);
@@ -119,7 +127,6 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             return;
         }
 
-        $GLOBALS['user'] = User::get_from_username($user);
         // Check server version
         if (
             version_compare(Subsonic_Xml_Data::API_VERSION, $version) < 0 &&
