@@ -433,20 +433,17 @@ class Album extends database_object implements library_item
 
     /**
      * can_edit
-     * @param integer $user_id
      * @return boolean
      */
-    public function can_edit($user_id = null)
+    public function can_edit()
     {
-        if ($user_id === null) {
-            $user_id = Core::get_global('user')->id;
-        }
+        $user_id = Core::get_global('user')->id;
 
         if (!$user_id) {
             return false;
         }
 
-        if (Access::check('interface', 50, $user_id)) {
+        if (Access::check('interface', 50)) {
             return true;
         }
 

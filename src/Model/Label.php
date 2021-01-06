@@ -257,14 +257,11 @@ class Label extends database_object implements library_item
 
     /**
      * can_edit
-     * @param string $user_id
      * @return boolean
      */
-    public function can_edit($user_id = null)
+    public function can_edit()
     {
-        if (!$user_id) {
-            $user_id = Core::get_global('user')->id;
-        }
+        $user_id = Core::get_global('user')->id;
 
         if (!$user_id) {
             return false;
@@ -276,7 +273,7 @@ class Label extends database_object implements library_item
             }
         }
 
-        return Access::check('interface', 50, $user_id);
+        return Access::check('interface', 50);
     }
 
     /**
