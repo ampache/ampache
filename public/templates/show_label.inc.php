@@ -77,7 +77,7 @@ if ($label->website) {
         </li>
         <?php
     } ?>
-        <?php if ($label->can_edit()) { ?>
+        <?php if ($isLabelEditable) { ?>
         <li>
             <a id="<?php echo 'edit_label_' . $label->id ?>" onclick="showEditDialog('label_row', '<?php echo $label->id ?>', '<?php echo 'edit_label_' . $label->id ?>', '<?php echo T_('Label Edit') ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit')); ?>

@@ -23,6 +23,7 @@
 declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Artist;
 use Ampache\Model\Catalog;
 use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Model\Playlist;
@@ -30,6 +31,9 @@ use Ampache\Model\Plugin;
 use Ampache\Model\Preference;
 use Ampache\Model\TVShow_Season;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\Playback\Stream;
@@ -1799,4 +1803,25 @@ function theme_exists($theme_name)
 function pGraph_Yformat_bytes($value)
 {
     return Ui::format_bytes($value);
+}
+
+/**
+ * @deprecated Will be removed
+ */
+function canEditArtist(
+    Artist $artist,
+    int $userId
+): bool {
+    if (AmpConfig::get('upload_allow_edit')) {
+        if ($artist->user !== null && $userId == $artist->user) {
+            return true;
+        }
+    }
+
+    global $dic;
+
+    return $dic->get(PrivilegeCheckerInterface::class)->check(
+        AccessLevelEnum::TYPE_INTERFACE,
+        AccessLevelEnum::LEVEL_CONTENT_MANAGER
+    );
 }

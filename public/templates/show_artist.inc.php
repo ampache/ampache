@@ -200,7 +200,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         } ?>
         <?php
     } ?>
-        <?php if ($artist->can_edit()) {
+        <?php if (canEditArtist($artist, $gatekeeper->getUserId())) {
         $artistedit = T_('Artist Edit'); ?>
         <?php if (AmpConfig::get('allow_upload')) {
             $t_upload = T_('Upload'); ?>

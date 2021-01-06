@@ -24,11 +24,13 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Label;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Label;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -43,12 +45,16 @@ final class ShowAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private PrivilegeCheckerInterface $privilegeChecker;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        PrivilegeCheckerInterface $privilegeChecker
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
+        $this->configContainer  = $configContainer;
+        $this->ui               = $ui;
+        $this->privilegeChecker = $privilegeChecker;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -64,8 +70,12 @@ final class ShowAction implements ApplicationActionInterface
         if ($label_id > 0) {
             $label = new Label($label_id);
             $label->format();
-            $object_ids  = $label->get_artists();
-            $object_type = 'artist';
+            $object_ids      = $label->get_artists();
+            $object_type     = 'artist';
+            $isLabelEditable = $this->isEditable(
+                $gatekeeper->getUserId(),
+                $label
+            );
             require_once Ui::find_template('show_label.inc.php');
             
             $this->ui->showFooter();
@@ -85,5 +95,21 @@ final class ShowAction implements ApplicationActionInterface
         $this->ui->showFooter();
         
         return null;
+    }
+
+    private function isEditable(
+        int $userId,
+        Label $label
+    ): bool {
+        if (AmpConfig::get('upload_allow_edit')) {
+            if ($label->user !== null && $userId == $label->user) {
+                return true;
+            }
+        }
+
+        return $this->privilegeChecker->check(
+            AccessLevelEnum::TYPE_INTERFACE,
+            AccessLevelEnum::LEVEL_CONTENT_MANAGER
+        );
     }
 }

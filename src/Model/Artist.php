@@ -27,7 +27,6 @@ namespace Ampache\Model;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Recommendation;
-use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use PDOStatement;
@@ -786,27 +785,6 @@ class Artist extends database_object implements library_item
         if ($artist_id !== null && $type !== null) {
             Art::display($type, $artist_id, $this->get_fullname(), $thumb, $this->link);
         }
-    }
-
-    /**
-     * can_edit
-     * @return boolean
-     */
-    public function can_edit()
-    {
-        $user_id = Core::get_global('user')->id;
-
-        if (!$user_id) {
-            return false;
-        }
-
-        if (AmpConfig::get('upload_allow_edit')) {
-            if ($this->user !== null && $user_id == $this->user) {
-                return true;
-            }
-        }
-
-        return Access::check('interface', 50);
     }
 
     /**

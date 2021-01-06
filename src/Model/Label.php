@@ -256,27 +256,6 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * can_edit
-     * @return boolean
-     */
-    public function can_edit()
-    {
-        $user_id = Core::get_global('user')->id;
-
-        if (!$user_id) {
-            return false;
-        }
-
-        if (AmpConfig::get('upload_allow_edit')) {
-            if ($this->user !== null && $user_id == $this->user) {
-                return true;
-            }
-        }
-
-        return Access::check('interface', 50);
-    }
-
-    /**
      * update
      * @param array $data
      * @return integer

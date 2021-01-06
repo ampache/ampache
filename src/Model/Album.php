@@ -432,35 +432,6 @@ class Album extends database_object implements library_item
     } // _get_extra_info
 
     /**
-     * can_edit
-     * @return boolean
-     */
-    public function can_edit()
-    {
-        $user_id = Core::get_global('user')->id;
-
-        if (!$user_id) {
-            return false;
-        }
-
-        if (Access::check('interface', 50)) {
-            return true;
-        }
-
-        if (!$this->album_artist) {
-            return false;
-        }
-
-        if (!AmpConfig::get('upload_allow_edit')) {
-            return false;
-        }
-
-        $owner = $this->get_user_owner();
-
-        return ($owner === $user_id);
-    }
-
-    /**
      * check
      *
      * Searches for an album; if none is found, insert a new one.
