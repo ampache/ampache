@@ -344,7 +344,6 @@ class Song extends database_object implements media, library_item
 
             return false;
         }
-        $this->fill_ext_info();
 
         return true;
     } // constructor
