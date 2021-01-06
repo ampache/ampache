@@ -966,40 +966,6 @@ class Tag extends database_object implements library_item
     }
 
     /**
-     * can_edit_tag_map
-     * @param string $object_type
-     * @param integer $object_id
-     * @param string|boolean $user
-     * @return boolean
-     */
-    public static function can_edit_tag_map($object_type, $object_id, $user = true)
-    {
-        if ($user === true) {
-            $uid = (int)(Core::get_global('user')->id);
-        } else {
-            $uid = (int)($user);
-        }
-
-        if ($uid > 0) {
-            return Access::check('interface', 25);
-        }
-
-        if (Access::check('interface', 75)) {
-            return true;
-        }
-
-        if (InterfaceImplementationChecker::is_library_item($object_type)) {
-            $class_name = ObjectTypeToClassNameMapper::map($object_type);
-            $libitem    = new $class_name($object_id);
-            $owner      = $libitem->get_user_owner();
-
-            return ($owner !== null && $owner == $uid);
-        }
-
-        return false;
-    }
-
-    /**
      * Migrate an object associate stats to a new object
      * @param string $object_type
      * @param integer $old_object_id
