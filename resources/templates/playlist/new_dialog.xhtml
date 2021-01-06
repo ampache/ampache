@@ -13,7 +13,7 @@
             href="javascript:void(0);"
             id="rb_append_dplaylist_${playlist/id}"
             onclick="handlePlaylistAction('${ADAPTER/getAjaxUri}?page=playlist&action=append_item&playlist_id=${playlist/id}&item_type=${ADAPTER/getObjectType}&item_id=${ADAPTER/getObjectId}', 'rb_append_dplaylist_${playlist/id}');"
-            tal:content="playlist/f_name"
+            tal:content="playlist/name"
         >NAME</a>
     </li>
 </ul>

@@ -618,12 +618,6 @@ art_order = "db,tags,folder,spotify,musicbrainz,lastfm,google"
 ; DEFAULT: "false"
 ;show_similar = "true"
 
-; Concerts
-; Set this to true to enable display of artist concerts
-; Requires Last.FM.
-; DEFAULT: "false"
-;show_concerts = "true"
-
 ;#########################################################
 ;      API keys                                          #
 ;#########################################################

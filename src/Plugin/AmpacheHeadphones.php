@@ -23,9 +23,9 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use Ampache\Model\Artist;
 use Ampache\Model\Preference;
 use Ampache\Model\User;
+use Ampache\Model\Wanted;
 use Exception;
 use Requests;
 
@@ -99,29 +99,21 @@ class AmpacheHeadphones
     /**
      * process_wanted
      * This takes care of auto-download accepted Wanted List albums
-     * @param $wanted
+     * @param Wanted $wanted
      * @return boolean
      */
     public function process_wanted($wanted)
     {
         set_time_limit(0);
 
-        $artist = new Artist($wanted->artist);
-        if (empty($artist->mbid)) {
-            debug_event('headphones.plugin', 'Artist `' . $artist->name . '` doesn\'t have MusicBrainz Id. Skipped.',
-                3);
-
-            return false;
-        }
-
         $headartist = json_decode($this->headphones_call('getArtist', array(
-            'id' => $artist->mbid
+            'id' => $wanted->artist_mbid
         )));
 
         // No artist info, need to add artist to Headphones first. Can be long!
         if (!$headartist->artist) {
             $this->headphones_call('addArtist', array(
-                'id' => $artist->mbid
+                'id' => $wanted->artist_mbid
             ));
         }
 
@@ -182,7 +174,7 @@ class AmpacheHeadphones
         }
 
         if (strlen(trim($data['headphones_api_url']))) {
-            $this->api_url = trim($data['headphones_api_url']);
+            $this->api_url = rtrim(trim($data['headphones_api_url']), '/');
         } else {
             debug_event('headphones.plugin', 'No Headphones url, auto download skipped', 3);
 

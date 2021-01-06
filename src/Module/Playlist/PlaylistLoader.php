@@ -44,10 +44,7 @@ final class PlaylistLoader implements PlaylistLoaderInterface
         $result = [];
 
         foreach ($playlists as $playlist_id) {
-            $playlist = $this->modelFactory->createPlaylist((int) $playlist_id);
-            $playlist->format(false);
-
-            $result[] = $playlist;
+            $result[] = $this->modelFactory->createPlaylist((int) $playlist_id);
         }
 
         return $result;

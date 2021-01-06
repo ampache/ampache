@@ -60,7 +60,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
             foreach ($playlists as $playlist) {
                 ?>
                 <li>
-                    <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, $playlist->f_name, 'rb_append_playlist_' . $playlist->id); ?>
+                    <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, $playlist->name, 'rb_append_playlist_' . $playlist->id); ?>
                 </li>
             <?php
             } ?>

@@ -46,7 +46,6 @@ $builder->addDefinitions(
     require_once __DIR__ . '/../Module/Broadcast/service_definition.php',
     require_once __DIR__ . '/../Module/Database/service_definition.php',
     require_once __DIR__ . '/../Module/Catalog/service_definition.php',
-    require_once __DIR__ . '/../Module/Artist/service_definition.php',
     require_once __DIR__ . '/../Module/LastFm/service_definition.php',
     require_once __DIR__ . '/../Module/System/service_definition.php',
     require_once __DIR__ . '/../Model/service_definition.php',

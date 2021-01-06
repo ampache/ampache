@@ -27,7 +27,6 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Model\Video;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
-use Ampache\Module\Artist\ArtistEventRetrieverInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Model\Album;
@@ -46,18 +45,14 @@ use Ampache\Model\Wanted;
 
 final class IndexAjaxHandler implements AjaxHandlerInterface
 {
-    private ArtistEventRetrieverInterface $artistEventRetriever;
-
     private ArtCollectorInterface $artCollector;
 
     private SlideshowInterface $slideshow;
 
     public function __construct(
-        ArtistEventRetrieverInterface $artistEventRetriever,
         ArtCollectorInterface $artCollector,
         SlideshowInterface $slideshow
     ) {
-        $this->artistEventRetriever = $artistEventRetriever;
         $this->artCollector         = $artCollector;
         $this->slideshow            = $slideshow;
     }
@@ -145,19 +140,6 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     ob_start();
                     require_once Ui::find_template('show_now_playing_similar.inc.php');
                     $results['similar_items_' . $media_id] = ob_get_clean();
-                }
-                break;
-            case 'concerts':
-                if (AmpConfig::get('show_concerts') && isset($_REQUEST['artist'])) {
-                    $artist = new Artist($_REQUEST['artist']);
-                    $artist->format();
-                    if ($artist->id) {
-                        $coming_concerts = $this->artistEventRetriever->getUpcomingEvents($artist);
-                        $concerts        = $this->artistEventRetriever->getPastEvents($artist);
-                    }
-                    ob_start();
-                    require_once Ui::find_template('show_concerts.inc.php');
-                    $results['concerts'] = ob_get_clean();
                 }
                 break;
             case 'labels':

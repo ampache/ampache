@@ -464,7 +464,7 @@ div#autoupdate > span {
 }
 
 .loginfield {
-    margin-top: 20px;
+    padding: 15px 0 15px;
     overflow: auto;
 }
 
@@ -530,7 +530,7 @@ div#autoupdate > span {
 }
 
 .loginoptions {
-    margin-top: 20px;
+    padding: 15px 0 15px;
     text-align: center;
 }
 
@@ -539,12 +539,11 @@ div#autoupdate > span {
 }
 
 #registerbutton {
-    padding-right: 60px;
+    float: left;
 }
 
 #lostpasswordbutton {
-    padding-top: 10px;
-    padding-left: 60px;
+    float: right;
 }
 
 #submit-lostpassword {
@@ -937,7 +936,7 @@ span#sidebar-header-content::after {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    padding: 20px;
+    padding: 20px 20px 40px;
 }
 
 .content-float {
