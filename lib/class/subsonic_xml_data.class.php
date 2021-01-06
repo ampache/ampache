@@ -1360,8 +1360,7 @@ class Subsonic_XML_Data
     public static function addLyrics($xml, $artist, $title, $song_id)
     {
         $song = new Song($song_id);
-        $song->format();
-        $song->fill_ext_info();
+        $song->fill_ext_info('lyrics');
         $lyrics = $song->get_lyrics();
 
         if (!empty($lyrics) && $lyrics['text']) {
