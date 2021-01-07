@@ -454,7 +454,7 @@ class Session
             array('Session', 'read'),
             array('Session', 'write'),
             array('Session', 'destroy'),
-            array('Session', 'gc'));
+            array('Session', 'garbage_collection'));
 
         // Make sure session_write_close is called during the early part of
         // shutdown, to avoid issues with object destruction.
