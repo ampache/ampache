@@ -60,7 +60,24 @@ const getAlbumSongs = (albumID: number, authKey: AuthKey) => {
         });
 };
 
-//TODO: Add getAlbums
+const getAlbums = (authKey: AuthKey, includeSongs = false) => {
+    let includeString = '';
+    if (includeSongs) {
+        includeString += '&include[]=songs';
+    }
+    const getUrl = `${process.env.ServerURL}/server/json.server.php?action=albums&auth=${authKey}${includeString}&version=400001`;
+    return axios.get(getUrl).then((response) => {
+        const JSONData = response.data;
+        if (!JSONData) {
+            throw new Error('Server Error');
+        }
+        if (JSONData.error) {
+            throw new AmpacheError(JSONData.error);
+        }
+        return JSONData.album as Album[];
+    });
+};
+
 const getAlbum = (albumID: number, authKey: AuthKey, includeSongs = false) => {
     let includeString = '';
     if (includeSongs) {
@@ -79,4 +96,4 @@ const getAlbum = (albumID: number, authKey: AuthKey, includeSongs = false) => {
     });
 };
 
-export { getRandomAlbums, Album, getAlbum, getAlbumSongs };
+export { getRandomAlbums, Album, getAlbums, getAlbum, getAlbumSongs };
