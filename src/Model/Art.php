@@ -233,7 +233,6 @@ class Art extends database_object
         }
     } // get
 
-
     /**
      * has_db_info
      * This pulls the information out from the database, depending
@@ -318,19 +317,6 @@ class Art extends database_object
         $image = self::get_from_source(array('url' => $url), $this->type);
         $rurl  = pathinfo($url);
         $mime  = "image/" . $rurl['extension'];
-        $this->insert($image, $mime);
-    }
-
-    /**
-     * This insert art from file on disk.
-     * @param string $filepath
-     */
-    public function insert_from_file($filepath)
-    {
-        debug_event('art.class', 'Insert art from file on disk ' . $filepath, 4);
-        $image = self::get_from_source(array('file' => $filepath), $this->type);
-        $rfile = pathinfo($filepath);
-        $mime  = "image/" . $rfile['extension'];
         $this->insert($image, $mime);
     }
 
@@ -1238,19 +1224,6 @@ class Art extends database_object
         }
 
         return $size;
-    }
-
-    /**
-     * Display an item art.
-     * @param library_item $item
-     * @param integer $thumb
-     * @param string $link
-     * @return boolean
-     */
-    public static function display_item($item, $thumb, $link = null)
-    {
-        return self::display($item->type ?: ObjectTypeToClassNameMapper::reverseMap(get_class($item)), $item->id, $item->get_fullname(), $thumb,
-            $link);
     }
 
     /**

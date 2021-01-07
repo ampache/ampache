@@ -316,32 +316,6 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
-     * Get all broadcasts sql query.
-     * @return string
-     */
-    public static function get_broadcast_list_sql()
-    {
-        return "SELECT `id` FROM `broadcast` WHERE `started` = '1' ";
-    }
-
-    /**
-     * Get all broadcasts.
-     * @return integer[]
-     */
-    public static function get_broadcast_list()
-    {
-        $sql        = self::get_broadcast_list_sql();
-        $db_results = Dba::read($sql);
-        $results    = array();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
-    }
-
-    /**
      * Generate a new broadcast key.
      * @return string
      */

@@ -24,7 +24,6 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;

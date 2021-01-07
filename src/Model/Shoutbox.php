@@ -147,23 +147,6 @@ class Shoutbox
     } // get_top
 
     /**
-     * @param integer $time
-     * @return array
-     */
-    public static function get_shouts_since($time)
-    {
-        $sql        = "SELECT * FROM `user_shout` WHERE `date` > ? ORDER BY `date` DESC";
-        $db_results = Dba::read($sql, array($time));
-
-        $shouts = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $shouts[] = $row['id'];
-        }
-
-        return $shouts;
-    }
-
-    /**
      * get_sticky
      * This returns all current sticky shoutbox items
      */

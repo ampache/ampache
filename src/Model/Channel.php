@@ -479,32 +479,6 @@ class Channel extends database_object implements Media, library_item
     }
 
     /**
-     * get_channel_list_sql
-     * @return string
-     */
-    public static function get_channel_list_sql()
-    {
-        return "SELECT `id` FROM `channel` ";
-    }
-
-    /**
-     * get_channel_list
-     * @return integer[]
-     */
-    public static function get_channel_list()
-    {
-        $sql        = self::get_channel_list_sql();
-        $db_results = Dba::read($sql);
-        $results    = array();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
-        }
-
-        return $results;
-    }
-
-    /**
      * start_channel
      */
     public function start_channel()

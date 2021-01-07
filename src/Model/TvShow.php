@@ -83,22 +83,6 @@ class TvShow extends database_object implements library_item
     }
 
     /**
-     * get_from_name
-     * This gets a tv show object based on the tv show name
-     * @param string $name
-     * @return TvShow
-     */
-    public static function get_from_name($name)
-    {
-        $sql        = "SELECT `id` FROM `tvshow` WHERE `name` = ?'";
-        $db_results = Dba::read($sql, array($name));
-
-        $row = Dba::fetch_assoc($db_results);
-
-        return new TvShow($row['id']);
-    } // get_from_name
-
-    /**
      * get_seasons
      * gets the tv show seasons
      * of

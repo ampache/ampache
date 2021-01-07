@@ -228,20 +228,6 @@ class Tmp_Playlist extends database_object
     } // create
 
     /**
-     * update_playlist
-     * This updates the base_playlist on this tmp_playlist
-     * @param $playlist_id
-     * @return boolean
-     */
-    public function update_playlist($playlist_id)
-    {
-        $sql = "UPDATE `tmp_playlist` SET " . "`base_playlist`= ? WHERE `id`= ?";
-        Dba::write($sql, array($playlist_id, $this->id));
-
-        return true;
-    } // update_playlist
-
-    /**
      * session_clean
      * This deletes any other tmp_playlists associated with this
      * session
@@ -321,22 +307,6 @@ class Tmp_Playlist extends database_object
             $this->add_object($media['object_id'], $media['object_type']);
         }
     }
-
-    /**
-     * vote_active
-     * This checks to see if this playlist is a voting playlist
-     * and if it is active
-     * @return boolean
-     */
-    public function vote_active()
-    {
-        /* Going to do a little more here later */
-        if ($this->type == 'vote') {
-            return true;
-        }
-
-        return false;
-    } // vote_active
 
     /**
      * delete_track

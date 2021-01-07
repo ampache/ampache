@@ -109,18 +109,6 @@ class Share extends database_object
     }
 
     /**
-     * delete_shares
-     * @param string $object_type
-     * @param integer $object_id
-     */
-    public static function delete_shares($object_type, $object_id)
-    {
-        $sql = "DELETE FROM `share` WHERE `object_type` = ? AND `object_id` = ?";
-
-        Dba::write($sql, array($object_type, $object_id));
-    }
-
-    /**
      * @param string $type
      * @return string
      */
@@ -260,24 +248,6 @@ class Share extends database_object
         $db_results = Dba::read($sql);
         $results    = array();
 
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
-    }
-
-    /**
-     * get_shares
-     * @param string $object_type
-     * @param integer $object_id
-     * @return array
-     */
-    public static function get_shares($object_type, $object_id)
-    {
-        $sql        = "SELECT `id` FROM `share` WHERE `object_type` = ? AND `object_id` = ?";
-        $db_results = Dba::read($sql, array($object_type, $object_id));
-        $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }

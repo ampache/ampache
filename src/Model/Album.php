@@ -25,7 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Module\Statistics\Stats;
-use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -280,25 +279,6 @@ class Album extends database_object implements library_item
 
         return true;
     } // constructor
-
-    /**
-     * construct_from_array
-     * This is often used by the metadata class, it fills out an album object from a
-     * named array, _fake is set to true
-     * @param array $data
-     * @return Album
-     */
-    public static function construct_from_array(array $data)
-    {
-        $album = new Album(0);
-        foreach ($data as $key => $value) {
-            $album->$key = $value;
-        }
-
-        $album->_fake = true;   // Make sure that we tell em it's fake
-
-        return $album;
-    } // construct_from_array
 
     /**
      * garbage_collection
@@ -684,20 +664,6 @@ class Album extends database_object implements library_item
 
         return $results;
     } // get_album_suite
-
-    /**
-     * has_track
-     * This checks to see if this album has a track of the specified title
-     * @param string $title
-     * @return array
-     */
-    public function has_track($title)
-    {
-        $sql        = "SELECT `id` FROM `song` WHERE `album` = ? AND `title` = ?";
-        $db_results = Dba::read($sql, array($this->id, $title));
-
-        return Dba::fetch_assoc($db_results);
-    } // has_track
 
     /**
      * get_addtime_first_song

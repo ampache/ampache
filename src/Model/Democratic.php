@@ -625,29 +625,4 @@ class Democratic extends Tmp_Playlist
 
         return (int)$results['count'];
     } // get_vote
-
-    /**
-     * get_voters
-     * This returns the users that voted for the specified object
-     * This is an array of user ids
-     * @param integer $object_id
-     * @return array
-     */
-    public function get_voters($object_id)
-    {
-        if (parent::is_cached('democratic_voters', $object_id)) {
-            return parent::get_from_cache('democratic_voters', $object_id);
-        }
-
-        $sql        = "SELECT `user` FROM `user_vote` WHERE `object_id` = ?";
-        $db_results = Dba::read($sql, array($object_id));
-
-        $voters = array();
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $voters[] = $results['user'];
-        }
-        parent::add_to_cache('democratic_vote', $object_id, $voters);
-
-        return $voters;
-    } // get_voters
 }

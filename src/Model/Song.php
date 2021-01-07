@@ -1380,20 +1380,6 @@ class Song extends database_object implements Media, library_item
     }
 
     /**
-     * write_id3_for_song
-     * Write id3 metadata to the file for the excepted song id
-     * @param integer $song_id
-     */
-    public static function write_id3_for_song($song_id)
-    {
-        $song = new Song($song_id);
-        if ($song->id) {
-            $song->format();
-            $song->write_id3();
-        }
-    }
-
-    /**
      * update_song
      * this is the main updater for a song it actually
      * calls a whole bunch of mini functions to update
@@ -2076,35 +2062,6 @@ class Song extends database_object implements Media, library_item
 
         return $catalog->get_rel_path($file_path);
     } // get_rel_path
-
-    /**
-     * Generate a simple play url.
-     * @param integer $uid
-     * @param string $player
-     * @return string
-     */
-    public function get_play_url($uid = -1, $player = '')
-    {
-        if (!$this->id) {
-            return '';
-        }
-        // set no use when using auth
-        if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
-            $uid = -1;
-        }
-
-        $media_name = $this->get_stream_name() . "." . $this->type;
-        $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
-        $media_name = rawurlencode($media_name);
-
-        $url = Stream::get_base_url(false) . "type=song&oid=" . $this->id . "&uid=" . (string) $uid;
-        if ($player !== '') {
-            $url .= "&client=" . $player;
-        }
-        $url .= "&name=" . $media_name;
-
-        return $url;
-    }
 
     /**
      * play_url
