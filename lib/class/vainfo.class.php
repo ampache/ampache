@@ -244,6 +244,7 @@ class vainfo
                 $this->tags['filename'] = $this->_parse_filename($this->filename);
             }
 
+            // somewhere inside _get_tags() tags with values of 0 are removed
             if (in_array('getID3', $enabled_sources) && $this->islocal) {
                 $this->tags['getID3'] = $this->_get_tags();
             }
