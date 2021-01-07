@@ -156,6 +156,16 @@ export default class Root extends React.PureComponent<void, RouterState> {
                                 />
                                 <Route
                                     exact
+                                    path='/albums'
+                                    render={(props) => (
+                                        <AlbumsView
+                                            {...props}
+                                            user={this.state.user}
+                                        />
+                                    )}
+                                />
+                                <Route
+                                    exact
                                     path='/artist/:artistID'
                                     render={(props) => (
                                         <ArtistView
