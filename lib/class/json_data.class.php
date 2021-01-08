@@ -364,16 +364,18 @@ class JSON_Data
             // Handle includes
             $albums = (in_array("albums", $include))
                 ? self::albums($artist->get_albums(), array(), $user_id, false)
-                : ($artist->albums ?: 0);
+                : array();
             $songs = (in_array("songs", $include))
                 ? self::songs($artist->get_songs(), $user_id, false)
-                : ($artist->songs ?: 0);
+                : array();
 
             array_push($JSON, array(
                 "id" => (string) $artist->id,
                 "name" => $artist->f_full_name,
                 "albums" => $albums,
+                "albumcount" => ($artist->albums ?: 0),
                 "songs" => $songs,
+                "songcount" => ($artist->songs ?: 0),
                 "genre" => self::genre_array($artist->tags),
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
@@ -452,7 +454,7 @@ class JSON_Data
             // Handle includes
             $songs = (in_array("songs", $include))
                 ? self::songs($album->get_songs(), $user_id, false)
-                : $album->song_count;
+                : array();
 
             // count multiple disks
             if ($album->allow_group_disks) {
@@ -462,6 +464,7 @@ class JSON_Data
             $theArray['time']          = (int) $album->total_duration;
             $theArray['year']          = (int) $album->year;
             $theArray['tracks']        = $songs;
+            $theArray['songcount']     = $album->song_count;
             $theArray['disk']          = (int) $disk;
             $theArray['genre']         = self::genre_array($album->tags);
             $theArray['art']           = $art_url;
