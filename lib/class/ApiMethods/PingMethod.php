@@ -49,6 +49,10 @@ final class PingMethod
      */
     public static function ping(array $input)
     {
+        // set the version to the old string for old api clients
+        $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
+        Api::$version = ($version[0] === '4' || $version[0] === '3') ? '500000' : Api::$version;
+
         $xmldata = array('server' => AmpConfig::get('version'), 'version' => Api::$version, 'compatible' => '350001');
 
         // Check and see if we should extend the api sessions (done if valid session is passed)
