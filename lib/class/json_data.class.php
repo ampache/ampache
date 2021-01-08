@@ -568,7 +568,7 @@ class JSON_Data
                 "type" => $playlist_type]
             );
         } // end foreach
-        $output = ($object) ? array("playlist" => $JSON) : $JSON;
+        $output = ($object) ? array("playlist" => $JSON) : $JSON[0];
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // playlists
