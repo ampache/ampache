@@ -21,7 +21,6 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
@@ -48,7 +47,7 @@ $addlocal   = T_('Add Local Network Definition'); ?>
 <?php Ui::show_box_bottom(); ?>
 <?php Ui::show_box_top(T_('Access Control Entries'), 'box box_access_entries'); ?>
 <?php Ajax::start_container('browse_content', 'browse_content'); ?>
-<?php if (count($list)) { ?>
+<?php if ($list !== []) { ?>
 <table class="tabledata">
 <thead>
     <tr class="th-top">
@@ -64,9 +63,8 @@ $addlocal   = T_('Add Local Network Definition'); ?>
 <tbody>
 <?php
     /* Start foreach List Item */
-    foreach ($list as $access_id) {
-        $access = new Access($access_id);
-        $access->format(); ?>
+    foreach ($list as $access) {
+        ?>
 <tr class="<?php echo Ui::flip_class(); ?>">
     <td><?php echo scrub_out($access->name); ?></td>
     <td><?php echo $access->f_start; ?></td>

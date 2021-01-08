@@ -20,17 +20,18 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access;
 
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\AccessRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -40,10 +41,18 @@ final class ShowAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private AccessRepositoryInterface $accessRepository;
+
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
+        AccessRepositoryInterface $accessRepository,
+        ModelFactoryInterface $modelFactory
     ) {
-        $this->ui = $ui;
+        $this->ui               = $ui;
+        $this->accessRepository = $accessRepository;
+        $this->modelFactory     = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -54,9 +63,20 @@ final class ShowAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $list = Access::get_access_lists();
+        $this->ui->show(
+            'show_access_list.inc.php',
+            [
+                'list' => array_map(
+                    function (int $accessId): Access {
+                        $access = $this->modelFactory->createAccess($accessId);
+                        $access->format();
 
-        require_once Ui::find_template('show_access_list.inc.php');
+                        return $access;
+                    },
+                    $this->accessRepository->getAccessLists()
+                )
+            ]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

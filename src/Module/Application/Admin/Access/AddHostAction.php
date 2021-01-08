@@ -32,8 +32,8 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\AccessRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -45,12 +45,16 @@ final class AddHostAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private AccessRepositoryInterface $accessRepository;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        AccessRepositoryInterface $accessRepository
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
+        $this->ui               = $ui;
+        $this->configContainer  = $configContainer;
+        $this->accessRepository = $accessRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -58,25 +62,64 @@ final class AddHostAction implements ApplicationActionInterface
         // Make sure we've got a valid form submission
         if (
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false ||
-            !Core::form_verify('add_acl', 'post')
+            !Core::form_verify('add_acl')
         ) {
             throw new AccessDeniedException();
         }
 
         $this->ui->showHeader();
 
-        Access::create($_POST);
+        $data = $request->getParsedBody();
 
-        // Create Additional stuff based on the type
-        if (Core::get_post('addtype') == 'stream' ||
-            Core::get_post('addtype') == 'all'
-        ) {
-            $_POST['type'] = 'stream';
-            Access::create($_POST);
-        }
-        if (Core::get_post('addtype') == 'all') {
-            $_POST['type'] = 'interface';
-            Access::create($_POST);
+        $start   = @inet_pton($data['start'] ?? '');
+        $end     = @inet_pton($data['end'] ?? '');
+        $type    = $data['type'] ?? '';
+        $name    = $data['name'] ?? '';
+        $user    = (int) ($data['user'] ?: -1);
+        $level   = (int) $data['level'] ?? 0;
+
+        if (Access::_verify_range($data['start'] ?? '', $data['end'] ?? '') === true) {
+            // Check existing ACLs to make sure we're not duplicating values here
+            if ($this->accessRepository->exists($start, $end, $type, $user) === true) {
+                debug_event(
+                    'access.class',
+                    'Error: An ACL entry equal to the created one already exists. Not adding duplicate: ' . $data['start'] . ' - ' . $data['end'],
+                    1
+                );
+                AmpError::add('general', T_('Duplicate ACL entry defined'));
+            } else {
+                Access::create($data);
+
+                // Create Additional stuff based on the type
+                if (Core::get_post('addtype') == 'stream' ||
+                    Core::get_post('addtype') == 'all'
+                ) {
+                    if ($this->accessRepository->exists($start, $end, 'stream', $user)) {
+                        debug_event(
+                            'access.class',
+                            'Error: An ACL entry equal to the created one already exists. Not adding duplicate: ' . $data['start'] . ' - ' . $data['end'],
+                            1
+                        );
+                        AmpError::add('general', T_('Duplicate ACL entry defined'));
+                    } else {
+                        $data['type'] = 'stream';
+                        Access::create($data);
+                    }
+                }
+                if (Core::get_post('addtype') == 'all') {
+                    if ($this->accessRepository->exists($start, $end, 'interface', $user)) {
+                        debug_event(
+                            'access.class',
+                            'Error: An ACL entry equal to the created one already exists. Not adding duplicate: ' . $data['start'] . ' - ' . $data['end'],
+                            1
+                        );
+                        AmpError::add('general', T_('Duplicate ACL entry defined'));
+                    } else {
+                        $data['type'] = 'interface';
+                        Access::create($data);
+                    }
+                }
+            }
         }
 
         if (!AmpError::occurred()) {
@@ -90,8 +133,10 @@ final class AddHostAction implements ApplicationActionInterface
                 $url
             );
         } else {
-            $action = 'show_add_' . Core::get_post('type');
-            require_once Ui::find_template('show_add_access.inc.php');
+            $this->ui->show(
+                'show_add_access.inc.php',
+                ['action' => 'show_add_' . Core::get_post('type')]
+            );
         }
 
         $this->ui->showQueryStats();

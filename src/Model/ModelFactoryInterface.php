@@ -24,6 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
+use Ampache\Module\Authorization\Access;
+
 interface ModelFactoryInterface
 {
     public function createPlaylist(int $id): Playlist;
@@ -114,4 +116,8 @@ interface ModelFactoryInterface
     public function createLicense(
         int $licenseId
     ): License;
+
+    public function createAccess(
+        int $accessId
+    ): Access;
 }

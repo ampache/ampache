@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace Ampache\Model;
 
+use Ampache\Module\Authorization\Access;
+
 /**
  * This class is used to intantiate model objects (like Playlist, Song, ...)
  */
@@ -169,5 +171,11 @@ final class ModelFactory implements ModelFactoryInterface
         int $licenseId
     ): License {
         return new License($licenseId);
+    }
+
+    public function createAccess(
+        int $accessId
+    ): Access {
+        return new Access($accessId);
     }
 }

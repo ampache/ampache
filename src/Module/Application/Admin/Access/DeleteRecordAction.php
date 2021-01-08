@@ -28,11 +28,11 @@ namespace Ampache\Module\Application\Admin\Access;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\AccessRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,12 +44,16 @@ final class DeleteRecordAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private AccessRepositoryInterface $accessRepository;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        AccessRepositoryInterface $accessRepository
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
+        $this->ui               = $ui;
+        $this->configContainer  = $configContainer;
+        $this->accessRepository = $accessRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -63,15 +67,17 @@ final class DeleteRecordAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        Access::delete(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
-        $url = sprintf(
-            '%s/admin/access.php',
-            $this->configContainer->getWebPath()
+        $this->accessRepository->delete(
+            (int) $request->getQueryParams()['access_id'] ?? 0
         );
+
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Your Access List entry has been removed'),
-            $url
+            sprintf(
+                '%s/admin/access.php',
+                $this->configContainer->getWebPath()
+            )
         );
 
         $this->ui->showQueryStats();

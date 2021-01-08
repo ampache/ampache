@@ -185,18 +185,6 @@ class Core
     }
 
     /**
-     * Place a new key on a specific position in array
-     * @param array $array
-     * @param integer $position
-     * @param array $add
-     * @return array
-     */
-    private static function insertInArray(array $array, $position, array $add)
-    {
-        return array_slice($array, 0, $position, true) + $add + array_slice($array, $position, null, true);
-    }
-
-    /**
      * form_register
      * This registers a form with a SID, inserts it into the session
      * variables and then returns a string for use in the HTML form

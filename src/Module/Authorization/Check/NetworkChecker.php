@@ -25,18 +25,22 @@ namespace Ampache\Module\Authorization\Check;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
+use Ampache\Repository\AccessRepositoryInterface;
 
 final class NetworkChecker implements NetworkCheckerInterface
 {
     private ConfigContainerInterface $configContainer;
 
+    private AccessRepositoryInterface $accessRepository;
+
     public function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        AccessRepositoryInterface $accessRepository
     ) {
-        $this->configContainer = $configContainer;
+        $this->configContainer  = $configContainer;
+        $this->accessRepository = $accessRepository;
     }
 
     /**
@@ -70,7 +74,7 @@ final class NetworkChecker implements NetworkCheckerInterface
                 return false;
         }
 
-        return Access::findByIp(
+        return $this->accessRepository->findByIp(
             Core::get_user_ip(),
             $level,
             $type,

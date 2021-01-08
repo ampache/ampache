@@ -27,7 +27,6 @@ namespace Ampache\Module\Authorization;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\System\AmpError;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Model\User;
 
@@ -163,7 +162,7 @@ class Access
      * @param string $endp
      * @return boolean
      */
-    private static function _verify_range($startp, $endp)
+    public static function _verify_range($startp, $endp)
     {
         $startn = @inet_pton($startp);
         $endn   = @inet_pton($endp);
@@ -229,16 +228,6 @@ class Access
             return false;
         }
 
-        // Check existing ACLs to make sure we're not duplicating values here
-        if (self::exists($data)) {
-            debug_event('access.class',
-                'Error: An ACL entry equal to the created one already exists. Not adding duplicate: ' . $data['start'] . ' - ' . $data['end'],
-                1);
-            AmpError::add('general', T_('Duplicate ACL entry defined'));
-
-            return false;
-        }
-
         $start   = @inet_pton($data['start']);
         $end     = @inet_pton($data['end']);
         $name    = $data['name'];
@@ -251,42 +240,6 @@ class Access
         Dba::write($sql, array($name, $level, $start, $end, $user, $type, $enabled));
 
         return true;
-    }
-
-    /**
-     * exists
-     *
-     * This sees if the ACL that we've specified already exists in order to
-     * prevent duplicates. The name is ignored.
-     * @param array $data
-     * @return boolean
-     */
-    public static function exists(array $data)
-    {
-        $start = inet_pton($data['start']);
-        $end   = inet_pton($data['end']);
-        $type  = self::validate_type($data['type']);
-        $user  = $data['user'] ?: '-1';
-
-        $sql        = 'SELECT * FROM `access_list` WHERE `start` = ? AND `end` = ? ' . 'AND `type` = ? AND `user` = ?';
-        $db_results = Dba::read($sql, array($start, $end, $type, $user));
-
-        if (Dba::fetch_assoc($db_results)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * delete
-     *
-     * deletes the specified access_list entry
-     * @param integer $user_id
-     */
-    public static function delete($user_id)
-    {
-        Dba::write('DELETE FROM `access_list` WHERE `id` = ?', array($user_id));
     }
 
     /**
@@ -354,25 +307,6 @@ class Access
     }
 
     /**
-     * get_access_lists
-     * returns a full listing of all access rules on this server
-     * @return array
-     */
-    public static function get_access_lists()
-    {
-        $sql        = 'SELECT `id` FROM `access_list`';
-        $db_results = Dba::read($sql);
-
-        $results = array();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
-    }
-
-    /**
      * get_level_name
      *
      * take the int level and return a named level
@@ -432,25 +366,5 @@ class Access
             default:
                 return T_('Stream Access');
         }
-    }
-
-    public static function findByIp(
-        string $userIp,
-        int $level,
-        string $type,
-        ?int $userId
-    ): bool {
-        $sql = 'SELECT `id` FROM `access_list` ' . 'WHERE `start` <= ? AND `end` >= ? ' . 'AND `level` >= ? AND `type` = ?';
-
-        $params  = array(inet_pton($userIp), inet_pton($userIp), $level, $type);
-
-        if ($userId !== null && $userId != -1) {
-            $sql .= " AND `user` IN(?, '-1')";
-            $params[] = $userId;
-        } else {
-            $sql .= " AND `user` = '-1'";
-        }
-
-        return Dba::num_rows(Dba::read($sql, $params)) > 0;
     }
 }
