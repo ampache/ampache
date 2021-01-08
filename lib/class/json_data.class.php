@@ -168,10 +168,11 @@ class JSON_Data
      *
      * @param  array $objects (description here...)
      * @param  string $type (description here...)
-     * @param  bool $include (add the extra songs details if a playlist)
+     * @param  boolean $include (add the extra songs details if a playlist)
+     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"live_stream"
      */
-    public static function indexes($objects, $type, $include = false)
+    public static function indexes($objects, $type, $include = false, $object = true)
     {
         //here is where we call the object type
         // 'artist'|'album'|'song'|'playlist'|'share'|'podcast'
@@ -206,9 +207,10 @@ class JSON_Data
      * This returns live_streams to the user, in a pretty JSON document with the information
      *
      * @param  integer[] $live_streams
+     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string JSON Object "live_stream"
      */
-    public static function live_streams($live_streams)
+    public static function live_streams($live_streams, $object = true)
     {
         if ((count($live_streams) > self::$limit || self::$offset > 0) && self::$limit) {
             $live_streams = array_splice($live_streams, self::$offset, self::$limit);
@@ -226,8 +228,9 @@ class JSON_Data
                 "codec" => $live_stream->codec
             ));
         } // end foreach
+        $output = ($object) ? array("live_stream" => $JSON) : $JSON;
 
-        return json_encode(array("live_stream" => $JSON), JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT);
     } // live_streams
 
     /**
@@ -236,9 +239,10 @@ class JSON_Data
      * This returns licenses to the user, in a pretty JSON document with the information
      *
      * @param  integer[] $licenses
+     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string JSON Object "license"
      */
-    public static function licenses($licenses)
+    public static function licenses($licenses, $object = true)
     {
         if ((count($licenses) > self::$limit || self::$offset > 0) && self::$limit) {
             $licenses = array_splice($licenses, self::$offset, self::$limit);
@@ -255,8 +259,9 @@ class JSON_Data
                 "external_link" => $license->external_link
             ));
         } // end foreach
+        $output = ($object) ? array("license" => $JSON) : $JSON;
 
-        return json_encode(array("license" => $JSON), JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT);
     } // licenses
 
     /**
@@ -265,9 +270,10 @@ class JSON_Data
      * This returns labels to the user, in a pretty JSON document with the information
      *
      * @param  integer[] $labels
+     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string JSON Object "label"
      */
-    public static function labels($labels)
+    public static function labels($labels, $object = true)
     {
         if ((count($labels) > self::$limit || self::$offset > 0) && self::$limit) {
             $labels = array_splice($labels, self::$offset, self::$limit);
@@ -291,8 +297,9 @@ class JSON_Data
                 "user" => $label->user,
             ));
         } // end foreach
+        $output = ($object) ? array("label" => $JSON) : $JSON;
 
-        return json_encode(array("label" => $JSON), JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT);
     } // labels
 
     /**
@@ -301,9 +308,10 @@ class JSON_Data
      * This returns genres to the user, in a pretty JSON document with the information
      *
      * @param  array    $tags    (description here...)
+     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string  JSON Object "genre"
      */
-    public static function genres($tags)
+    public static function genres($tags, $object = true)
     {
         if ((count($tags) > self::$limit || self::$offset > 0) && self::$limit) {
             $tags = array_splice($tags, self::$offset, self::$limit);
@@ -324,8 +332,9 @@ class JSON_Data
                 "stream" => (int) $counts['live_stream']
             ));
         } // end foreach
+        $output = ($object) ? array("genre" => $JSON) : $JSON;
 
-        return json_encode(array("genre" => $JSON), JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT);
     } // genres
 
     /**
@@ -337,10 +346,11 @@ class JSON_Data
      * @param  integer[] $artists (description here...)
      * @param  array $include
      * @param  integer|null $user_id
-     * @param  bool $encode
+     * @param  boolean $encode
+     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "artist"
      */
-    public static function artists($artists, $include = [], $user_id = null, $encode = true)
+    public static function artists($artists, $include = [], $user_id = null, $encode = true, $object = true)
     {
         if ((count($artists) > self::$limit || self::$offset > 0) && self::$limit) {
             $artists = array_splice($artists, self::$offset, self::$limit);
@@ -391,7 +401,9 @@ class JSON_Data
         } // end foreach artists
 
         if ($encode) {
-            return json_encode(array("artist" => $JSON), JSON_PRETTY_PRINT);
+            $output = ($object) ? array("artist" => $JSON) : $JSON;
+
+            return json_encode($output, JSON_PRETTY_PRINT);
         }
 
         return $JSON;
@@ -405,10 +417,11 @@ class JSON_Data
      * @param  integer[] $albums (description here...)
      * @param  array $include
      * @param  integer|null $user_id
-     * @param  bool $encode
+     * @param  boolean $encode
+     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "album"
      */
-    public static function albums($albums, $include = [], $user_id = null, $encode = true)
+    public static function albums($albums, $include = [], $user_id = null, $encode = true, $object = true)
     {
         if ((count($albums) > self::$limit || self::$offset > 0) && self::$limit) {
             $albums = array_splice($albums, self::$offset, self::$limit);
@@ -478,7 +491,9 @@ class JSON_Data
         } // end foreach
 
         if ($encode) {
-            return json_encode(array("album" => $JSON), JSON_PRETTY_PRINT);
+            $output = ($object) ? array("album" => $JSON) : $JSON;
+
+            return json_encode($output, JSON_PRETTY_PRINT);
         }
 
         return $JSON;
@@ -490,16 +505,17 @@ class JSON_Data
      * This takes an array of playlist ids and then returns a nice pretty JSON document
      *
      * @param  array $playlists (description here...)
-     * @param  bool $songs
+     * @param  boolean $songs
+     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string JSON Object "playlist"
      */
-    public static function playlists($playlists, $songs = false)
+    public static function playlists($playlists, $songs = false, $object = true)
     {
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
         }
 
-        $allPlaylists = [];
+        $JSON = [];
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
@@ -544,7 +560,7 @@ class JSON_Data
             }
 
             // Build this element
-            array_push($allPlaylists, [
+            array_push($JSON, [
                 "id" => (string) $playlist_id,
                 "name" => $playlist_name,
                 "owner" => $playlist_user,
@@ -552,8 +568,9 @@ class JSON_Data
                 "type" => $playlist_type]
             );
         } // end foreach
+        $output = ($object) ? array("playlist" => $JSON) : $JSON;
 
-        return json_encode(array("playlist" => $allPlaylists), JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT);
     } // playlists
 
     /**
@@ -562,15 +579,16 @@ class JSON_Data
      * This returns shares to the user, in a pretty json document with the information
      *
      * @param  array $shares (description here...)
+     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string JSON Object "share"
      */
-    public static function shares($shares)
+    public static function shares($shares, $object = true)
     {
         if ((count($shares) > self::$limit || self::$offset > 0) && self::$limit) {
             $shares = array_splice($shares, self::$offset, self::$limit);
         }
 
-        $allShares = [];
+        $JSON = [];
         foreach ($shares as $share_id) {
             $share = new Share($share_id);
             $share->format();
@@ -589,7 +607,7 @@ class JSON_Data
             $share_public_url     = $share->public_url;
             $share_description    = $share->description;
             // Build this element
-            array_push($allShares, [
+            array_push($JSON, [
                 "id" => (string) $share_id,
                 "name" => $share_name,
                 "owner" => $share_user,
@@ -606,8 +624,9 @@ class JSON_Data
                 "public_url" => $share_public_url,
                 "description" => $share_description]);
         } // end foreach
+        $output = ($object) ? array("share" => $JSON) : $JSON;
 
-        return json_encode(array("share" => $allShares), JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT);
     } // shares
 
     /**
@@ -616,15 +635,16 @@ class JSON_Data
      * This returns bookmarks to the user, in a pretty json document with the information
      *
      * @param  array $bookmarks (description here...)
+     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string JSON Object "bookmark"
      */
-    public static function bookmarks($bookmarks)
+    public static function bookmarks($bookmarks, $object = true)
     {
         if ((count($bookmarks) > self::$limit || self::$offset > 0) && self::$limit) {
             $bookmarks = array_splice($bookmarks, self::$offset, self::$limit);
         }
 
-        $allBookmarks = [];
+        $JSON = [];
         foreach ($bookmarks as $bookmark_id) {
             $bookmark = new Bookmark($bookmark_id);
             $bookmark->format();
@@ -636,7 +656,7 @@ class JSON_Data
             $bookmark_creation_date = $bookmark->creation_date;
             $bookmark_update_date   = $bookmark->update_date;
             // Build this element
-            array_push($allBookmarks, [
+            array_push($JSON, [
                 "id" => (string) $bookmark_id,
                 "owner" => $bookmark_user,
                 "object_type" => $bookmark_object_type,
@@ -646,8 +666,9 @@ class JSON_Data
                 "creation_date" => $bookmark_creation_date,
                 "update_date" => $bookmark_update_date]);
         } // end foreach
+        $output = ($object) ? array("bookmark" => $JSON) : $JSON;
 
-        return json_encode(array("bookmark" => $allBookmarks), JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT);
     } // bookmarks
 
     /**
@@ -656,15 +677,16 @@ class JSON_Data
      * This returns catalogs to the user, in a pretty json document with the information
      *
      * @param  integer[] $catalogs group of catalog id's
+     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string JSON Object "catalog"
      */
-    public static function catalogs($catalogs)
+    public static function catalogs($catalogs, $object = true)
     {
         if ((count($catalogs) > self::$limit || self::$offset > 0) && self::$limit) {
             $catalogs = array_splice($catalogs, self::$offset, self::$limit);
         }
 
-        $allCatalogs = [];
+        $JSON = [];
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
             $catalog->format();
@@ -679,7 +701,7 @@ class JSON_Data
             $catalog_rename_pattern = $catalog->rename_pattern;
             $catalog_sort_pattern   = $catalog->sort_pattern;
             // Build this element
-            array_push($allCatalogs, [
+            array_push($JSON, [
                 "id" => (string) $catalog_id,
                 "name" => $catalog_name,
                 "type" => $catalog_type,
@@ -692,8 +714,9 @@ class JSON_Data
                 "rename_pattern" => $catalog_rename_pattern,
                 "sort_pattern" => $catalog_sort_pattern]);
         } // end foreach
+        $output = ($object) ? array("catalog" => $JSON) : $JSON;
 
-        return json_encode(array("catalog" => $allCatalogs), JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT);
     } // catalogs
 
     /**
@@ -703,15 +726,16 @@ class JSON_Data
      *
      * @param  array $podcasts (description here...)
      * @param  boolean $episodes include the episodes of the podcast
+     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string JSON Object "podcast"
      */
-    public static function podcasts($podcasts, $episodes = false)
+    public static function podcasts($podcasts, $episodes = false, $object = true)
     {
         if ((count($podcasts) > self::$limit || self::$offset > 0) && self::$limit) {
             $podcasts = array_splice($podcasts, self::$offset, self::$limit);
         }
 
-        $allPodcasts = [];
+        $JSON = [];
         foreach ($podcasts as $podcast_id) {
             $podcast = new Podcast($podcast_id);
             $podcast->format();
@@ -731,7 +755,7 @@ class JSON_Data
                 $podcast_episodes = self::podcast_episodes($items, true);
             }
             // Build this element
-            array_push($allPodcasts, [
+            array_push($JSON, [
                 "id" => (string) $podcast_id,
                 "name" => $podcast_name,
                 "description" => $podcast_description,
@@ -745,8 +769,9 @@ class JSON_Data
                 "public_url" => $podcast_public_url,
                 "podcast_episode" => $podcast_episodes]);
         } // end foreach
+        $output = ($object) ? array("podcast" => $JSON) : $JSON;
 
-        return json_encode(array("podcast" => $allPodcasts), JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT);
     } // podcasts
 
     /**
@@ -756,18 +781,19 @@ class JSON_Data
      *
      * @param  array   $podcast_episodes    (description here...)
      * @param  boolean $simple just return the data as an array for pretty somewhere else
+     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "podcast_episode"
      */
-    public static function podcast_episodes($podcast_episodes, $simple = false)
+    public static function podcast_episodes($podcast_episodes, $simple = false, $object = true)
     {
         if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && self::$limit) {
             $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
         }
-        $allEpisodes = array();
+        $JSON = array();
         foreach ($podcast_episodes as $episode_id) {
             $episode = new Podcast_Episode($episode_id);
             $episode->format();
-            array_push($allEpisodes, [
+            array_push($JSON, [
                 "id" => (string) $episode_id,
                 "name" => $episode->f_title,
                 "description" => $episode->f_description,
@@ -784,10 +810,11 @@ class JSON_Data
                 "played" => $episode->played]);
         }
         if ($simple) {
-            return $allEpisodes;
+            return $JSON;
         }
+        $output = ($object) ? array("podcast_episode" => $JSON) : $JSON;
 
-        return json_encode(array("podcast_episode" => $allEpisodes), JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT);
     } // podcast_episodes
 
     /**
@@ -797,10 +824,11 @@ class JSON_Data
      * (Spiffy isn't it!)
      * @param  integer[] $songs
      * @param  integer|null $user_id
-     * @param  bool $encode
+     * @param  boolean $encode
+     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "song"
      */
-    public static function songs($songs, $user_id = null, $encode = true)
+    public static function songs($songs, $user_id = null, $encode = true, $object = true)
     {
         if ((count($songs) > self::$limit || self::$offset > 0) && self::$limit) {
             $songs = array_slice($songs, self::$offset, self::$limit);
@@ -891,7 +919,9 @@ class JSON_Data
         } // end foreach
 
         if ($encode) {
-            return json_encode(array("song" => $JSON), JSON_PRETTY_PRINT);
+            $output = ($object) ? array("song" => $JSON) : $JSON;
+
+            return json_encode($output, JSON_PRETTY_PRINT);
         }
 
         return $JSON;
@@ -904,9 +934,10 @@ class JSON_Data
      *
      * @param  array    $videos    (description here...)
      * @param  integer $user_id
+     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string JSON Object "video"
      */
-    public static function videos($videos, $user_id = null)
+    public static function videos($videos, $user_id = null, $object = true)
     {
         if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
@@ -926,8 +957,9 @@ class JSON_Data
                 "url" => $video->play_url('', 'api', false, $user_id)
             ));
         } // end foreach
+        $output = ($object) ? array("video" => $JSON) : $JSON;
 
-        return json_encode(array("video" => $JSON), JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT);
     } // videos
 
     /**
@@ -938,9 +970,10 @@ class JSON_Data
      *
      * @param  integer[] $object_ids Object IDs
      * @param  integer|null $user_id
+     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string JSON Object "song"
      */
-    public static function democratic($object_ids = array(), $user_id = null)
+    public static function democratic($object_ids = array(), $user_id = null, $object = true)
     {
         if (!is_array($object_ids)) {
             $object_ids = array();
@@ -975,8 +1008,9 @@ class JSON_Data
                 "vote" => $democratic->get_vote($row_id)
             ));
         } // end foreach
+        $output = ($object) ? array("song" => $JSON) : $JSON;
 
-        return json_encode(array("song" => $JSON), JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT);
     } // democratic
 
     /**
@@ -986,9 +1020,10 @@ class JSON_Data
      *
      * @param  User    $user    User
      * @param  boolean $fullinfo
+     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string JSON Object "user"
      */
-    public static function user(User $user, $fullinfo)
+    public static function user(User $user, $fullinfo, $object = true)
     {
         $user->format();
         if ($fullinfo) {
@@ -1022,8 +1057,9 @@ class JSON_Data
         if ($user->fullname_public) {
             $JSON['fullname'] = $user->fullname;
         }
+        $output = ($object) ? array("user" => $JSON) : $JSON;
 
-        return json_encode(array("user" => $JSON), JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT);
     } // user
 
     /**
@@ -1032,9 +1068,10 @@ class JSON_Data
      * This handles creating an JSON document for an user list
      *
      * @param  integer[]    $users    User identifier list
+     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string JSON Object "user"
      */
-    public static function users($users)
+    public static function users($users, $object = true)
     {
         $JSON = [];
         foreach ($users as $user_id) {
@@ -1044,8 +1081,9 @@ class JSON_Data
                 "username" => $user->username
             ));
         } // end foreach
+        $output = ($object) ? array("user" => $JSON) : $JSON;
 
-        return json_encode(array("user" => $JSON), JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT);
     } // users
 
     /**
@@ -1054,9 +1092,10 @@ class JSON_Data
      * This handles creating an JSON document for a shout list
      *
      * @param  integer[]    $shouts    Shout identifier list
+     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string JSON Object "shout"
      */
-    public static function shouts($shouts)
+    public static function shouts($shouts, $object = true)
     {
         $JSON = [];
         foreach ($shouts as $shout_id) {
@@ -1076,8 +1115,9 @@ class JSON_Data
             );
             array_push($JSON, $ourArray);
         }
+        $output = ($object) ? array("shout" => $JSON) : $JSON;
 
-        return json_encode(array("shout" => $JSON), JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT);
     } // shouts
 
     /**
@@ -1086,9 +1126,10 @@ class JSON_Data
      * This handles creating an JSON document for an activity list
      *
      * @param  integer[]    $activities    Activity identifier list
+     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string JSON Object "activity"
      */
-    public static function timeline($activities)
+    public static function timeline($activities, $object = true)
     {
         $JSON = array();
         foreach ($activities as $activity_id) {
@@ -1110,7 +1151,8 @@ class JSON_Data
 
             array_push($JSON, $ourArray);
         }
+        $output = ($object) ? array("activity" => $JSON) : $JSON;
 
-        return json_encode(array("activity" => $JSON), JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT);
     } // timeline
 } // end json_data.class

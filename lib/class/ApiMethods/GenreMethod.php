@@ -66,7 +66,7 @@ final class GenreMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::genres(array($object_id));
+                echo JSON_Data::genres(array($object_id), false);
                 break;
             default:
                 echo XML_Data::genres(array($object_id));

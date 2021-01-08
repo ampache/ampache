@@ -100,13 +100,12 @@ final class PreferenceCreateMethod
 
             return false;
         }
-        $output_array = array('preference' => $preference);
         switch ($input['api_format']) {
             case 'json':
-                echo json_encode($output_array, JSON_PRETTY_PRINT);
+                echo json_encode($preference, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo XML_Data::object_array($output_array['preference'], 'preference');
+                echo XML_Data::object_array($preference, 'preference');
         }
         // fix preferences that are missing for user
         User::fix_preferences($user->id);

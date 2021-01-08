@@ -78,7 +78,7 @@ final class PlaylistMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::playlists(array($object_id));
+                echo JSON_Data::playlists(array($object_id), false, false);
                 break;
             default:
                 echo XML_Data::playlists(array($object_id));

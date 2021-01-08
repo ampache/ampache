@@ -101,7 +101,7 @@ final class ShareCreateMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::shares($share);
+                echo JSON_Data::shares($share, false);
                 break;
             default:
                 echo XML_Data::shares($share);

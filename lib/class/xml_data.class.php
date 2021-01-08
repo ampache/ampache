@@ -1156,7 +1156,7 @@ class XML_Data
      * This handles creating an xml document for a user
      *
      * @param  User   $user User
-     * @param  bool   $fullinfo
+     * @param  boolean   $fullinfo
      * @return string return xml
      */
     public static function user(User $user, $fullinfo)

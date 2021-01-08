@@ -251,7 +251,7 @@ class User extends database_object
     /**
      * get_valid_users
      * This returns all valid users in database.
-     * @param bool $include_disabled
+     * @param boolean $include_disabled
      * @return array
      */
     public static function get_valid_users($include_disabled = false)
