@@ -1,0 +1,52 @@
+@import "~/stylus/color.styl"
+@import "~/stylus/typography.styl"
+
+.currentPlayModeContainer
+  position relative
+  background colorGray800
+  border-bottom 2px solid colorGray700
+
+.currentPlayMode
+  color colorAmber500
+  border-radius 5px
+  padding 10px 15px 11px
+  margin: 5px
+  border 2px solid colorGray700
+  display flex
+  justify-content: space-between
+  cursor pointer
+  line-height 1
+
+  h4
+    position relative
+    top 2px
+
+.playModeDropdown 
+    background-color colorGray800
+    border-radius 0 0 5px 5px
+    border 2px solid colorGray700
+    display none
+    position absolute
+    top 100%
+    z-index 1
+    margin 0 5px
+    overflow hidden
+
+    &.visible
+      display block
+
+.playModeOption
+    padding 15px 15px 17px
+    cursor pointer
+
+    @media (any-hover: hover)
+      &:hover
+        background-color colorGray700
+        color colorGray200
+
+  .disabled
+    opacity 0.4
+    cursor not-allowed
+
+.playModeOption + .playModeOption
+    border-top 1px solid colorGray700
