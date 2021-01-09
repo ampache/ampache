@@ -29,6 +29,10 @@ use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessListManagerInterface;
+use Ampache\Module\Authorization\Exception\InvalidEndIpException;
+use Ampache\Module\Authorization\Exception\InvalidIpRangeException;
+use Ampache\Module\Authorization\Exception\InvalidStartIpException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
@@ -46,14 +50,18 @@ final class UpdateRecordAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private AccessListManagerInterface $accessListManager;
+
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        AccessListManagerInterface $accessListManager
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
+        $this->ui                = $ui;
+        $this->configContainer   = $configContainer;
+        $this->modelFactory      = $modelFactory;
+        $this->accessListManager = $accessListManager;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -66,29 +74,49 @@ final class UpdateRecordAction implements ApplicationActionInterface
         }
 
         $accessId = (int) $request->getQueryParams()['access_id'] ?? 0;
-        $access   = $this->modelFactory->createAccess($accessId);
 
         $this->ui->showHeader();
 
-        $access->update($_POST);
-        if (!AmpError::occurred()) {
+        $data = $request->getParsedBody();
+
+        try {
+            $this->accessListManager->update(
+                $accessId,
+                $data['start'] ?? '',
+                $data['end'] ?? '',
+                $data['name'] ?? '',
+                (int) ($data['user'] ?: -1),
+                (int) $data['level'] ?? 0,
+                $data['type'] ?? ''
+            );
+        } catch (InvalidIpRangeException $e) {
+            AmpError::add('start', T_('IP Address version mismatch'));
+            AmpError::add('end', T_('IP Address version mismatch'));
+        } catch (InvalidStartIpException $e) {
+            AmpError::add('start', T_('An Invalid IPv4 / IPv6 Address was entered'));
+        } catch (InvalidEndIpException $e) {
+            AmpError::add('end', T_('An Invalid IPv4 / IPv6 Address was entered'));
+        }
+
+        if (AmpError::occurred()) {
+            $this->ui->show(
+                'show_edit_access.inc.php',
+                [
+                    'access' => new Lib\AccessListItem(
+                        $this->modelFactory,
+                        $this->modelFactory->createAccess($accessId)
+                    )
+                ]
+            );
+        } else {
             $this->ui->showConfirmation(
+
                 T_('No Problem'),
                 T_('Your Access Control List has been updated'),
                 sprintf(
                     '%s/admin/access.php',
                     $this->configContainer->getWebPath()
                 )
-            );
-        } else {
-            $this->ui->show(
-                'show_edit_access.inc.php',
-                [
-                    'access' => new Lib\AccessListItem(
-                        $this->modelFactory,
-                        $access
-                    )
-                ]
             );
         }
 

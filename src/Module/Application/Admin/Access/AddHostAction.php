@@ -27,15 +27,20 @@ namespace Ampache\Module\Application\Admin\Access;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessListManagerInterface;
+use Ampache\Module\Authorization\Exception\InvalidEndIpException;
+use Ampache\Module\Authorization\Exception\InvalidIpRangeException;
+use Ampache\Module\Authorization\Exception\InvalidStartIpException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\AccessRepositoryInterface;
+use PHPUnit\Framework\MockObject\DuplicateMethodException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 final class AddHostAction implements ApplicationActionInterface
 {
@@ -45,16 +50,20 @@ final class AddHostAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private AccessRepositoryInterface $accessRepository;
+    private AccessListManagerInterface $accessListManager;
+
+    private LoggerInterface $logger;
 
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
-        AccessRepositoryInterface $accessRepository
+        AccessListManagerInterface $accessListManager,
+        LoggerInterface $logger
     ) {
-        $this->ui               = $ui;
-        $this->configContainer  = $configContainer;
-        $this->accessRepository = $accessRepository;
+        $this->ui                = $ui;
+        $this->configContainer   = $configContainer;
+        $this->accessListManager = $accessListManager;
+        $this->logger            = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -71,66 +80,43 @@ final class AddHostAction implements ApplicationActionInterface
 
         $data = $request->getParsedBody();
 
-        $start   = @inet_pton($data['start'] ?? '');
-        $end     = @inet_pton($data['end'] ?? '');
-        $type    = $data['type'] ?? '';
-        $name    = $data['name'] ?? '';
-        $user    = (int) ($data['user'] ?: -1);
-        $level   = (int) $data['level'] ?? 0;
+        $startIp = $data['start'] ?? '';
+        $endIp   = $data['end'] ?? '';
 
-        if (Access::_verify_range($data['start'] ?? '', $data['end'] ?? '') === true) {
-            // Check existing ACLs to make sure we're not duplicating values here
-            if ($this->accessRepository->exists($start, $end, $type, $user) === true) {
-                debug_event(
-                    'access.class',
-                    'Error: An ACL entry equal to the created one already exists. Not adding duplicate: ' . $data['start'] . ' - ' . $data['end'],
-                    1
-                );
-                AmpError::add('general', T_('Duplicate ACL entry defined'));
-            } else {
-                Access::create($data);
+        try {
+            $this->accessListManager->create(
+                $startIp,
+                $endIp,
+                $data['name'] ?? '',
+                (int) ($data['user'] ?: -1),
+                (int) $data['level'] ?? 0,
+                $data['type'] ?? '',
+                $data['addtype'] ?? ''
+            );
+        } catch (InvalidIpRangeException $e) {
+            AmpError::add('start', T_('IP Address version mismatch'));
+            AmpError::add('end', T_('IP Address version mismatch'));
+        } catch (InvalidStartIpException $e) {
+            AmpError::add('start', T_('An Invalid IPv4 / IPv6 Address was entered'));
+        } catch (InvalidEndIpException $e) {
+            AmpError::add('end', T_('An Invalid IPv4 / IPv6 Address was entered'));
+        } catch (DuplicateMethodException $e) {
+            $this->logger->critical(
+                'Error: An ACL entry equal to the created one already exists. Not adding duplicate: ' . $startIp . ' - ' . $endIp,
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
 
-                // Create Additional stuff based on the type
-                if (Core::get_post('addtype') == 'stream' ||
-                    Core::get_post('addtype') == 'all'
-                ) {
-                    if ($this->accessRepository->exists($start, $end, 'stream', $user)) {
-                        debug_event(
-                            'access.class',
-                            'Error: An ACL entry equal to the created one already exists. Not adding duplicate: ' . $data['start'] . ' - ' . $data['end'],
-                            1
-                        );
-                        AmpError::add('general', T_('Duplicate ACL entry defined'));
-                    } else {
-                        $data['type'] = 'stream';
-                        Access::create($data);
-                    }
-                }
-                if (Core::get_post('addtype') == 'all') {
-                    if ($this->accessRepository->exists($start, $end, 'interface', $user)) {
-                        debug_event(
-                            'access.class',
-                            'Error: An ACL entry equal to the created one already exists. Not adding duplicate: ' . $data['start'] . ' - ' . $data['end'],
-                            1
-                        );
-                        AmpError::add('general', T_('Duplicate ACL entry defined'));
-                    } else {
-                        $data['type'] = 'interface';
-                        Access::create($data);
-                    }
-                }
-            }
+            AmpError::add('general', T_('Duplicate ACL entry defined'));
         }
 
         if (!AmpError::occurred()) {
-            $url = sprintf(
-                '%s/admin/access.php',
-                $this->configContainer->getWebPath()
-            );
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('Your new Access Control List(s) have been created'),
-                $url
+                sprintf(
+                    '%s/admin/access.php',
+                    $this->configContainer->getWebPath()
+                )
             );
         } else {
             $this->ui->show(

@@ -94,4 +94,54 @@ final class AccessRepository implements AccessRepositoryInterface
 
         return Dba::num_rows($db_results) > 0;
     }
+
+    /**
+     * Creates a new acl item
+     *
+     * @param string $startIp The startip in in-addr notation
+     * @param string $endIp The end ip in in-addr notation
+     * @param string $name Name of the acl
+     * @param int $userId Designated user id (or -1 if none)
+     * @param int $level Access level
+     * @param string $type Access type
+     */
+    public function create(
+        string $startIp,
+        string $endIp,
+        string $name,
+        int $userId,
+        int $level,
+        string $type
+    ): void {
+        Dba::write(
+            'INSERT INTO `access_list` (`name`, `level`, `start`, `end`, `user`, `type`) VALUES (?, ?, ?, ?, ?, ?)',
+            [$name, $level, $startIp, $endIp, $userId, $type]
+        );
+    }
+
+    /**
+     * Updates the data of a certain acl item
+     *
+     * @param int $accessId Id of an existing acl item
+     * @param string $startIp The startip in in-addr notation
+     * @param string $endIp The end ip in in-addr notation
+     * @param string $name Name of the acl
+     * @param int $userId Designated user id (or -1 if none)
+     * @param int $level Access level
+     * @param string $type Access type
+     */
+    public function update(
+        int $accessId,
+        string $startIp,
+        string $endIp,
+        string $name,
+        int $userId,
+        int $level,
+        string $type
+    ): void {
+        Dba::write(
+            'UPDATE `access_list` SET `start` = ?, `end` = ?, `level` = ?, ' . '`user` = ?, `name` = ?, `type` = ? WHERE `id` = ?',
+            [$startIp, $endIp, $level, $userId, $name, $type, $accessId]
+        );
+    }
 }

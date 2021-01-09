@@ -24,12 +24,38 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Authorization;
 
-use function DI\autowire;
+use Ampache\MockeryTestCase;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Mockery\MockInterface;
 
-return [
-    GatekeeperFactoryInterface::class => autowire(GatekeeperFactory::class),
-    Check\PrivilegeCheckerInterface::class => autowire(Check\PrivilegeChecker::class),
-    Check\FunctionCheckerInterface::class => autowire(Check\FunctionChecker::class),
-    Check\NetworkCheckerInterface::class => autowire(Check\NetworkChecker::class),
-    AccessListManagerInterface::class => autowire(AccessListManager::class),
-];
+class GuiGatekeeperTest extends MockeryTestCase
+{
+    /** @var MockInterface|PrivilegeCheckerInterface|null */
+    private MockInterface $privilegeChecker;
+
+    private ?GuiGatekeeper $subject;
+
+    public function setUp(): void
+    {
+        $this->privilegeChecker = $this->mock(PrivilegeCheckerInterface::class);
+
+        $this->subject = new GuiGatekeeper(
+            $this->privilegeChecker
+        );
+    }
+
+    public function testMayAccessPerformsPrivilegeCheck(): void
+    {
+        $type  = 'some-type';
+        $level = 666;
+
+        $this->privilegeChecker->shouldReceive('check')
+            ->with($type, $level)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->subject->mayAccess($type, $level)
+        );
+    }
+}

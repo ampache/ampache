@@ -29,9 +29,16 @@ final class AccessLevelEnum
 {
     public const TYPE_INTERFACE = 'interface';
     public const TYPE_LOCALPLAY = 'localplay';
-    public const TYPE_API       = 'api';
+    public const TYPE_API       = 'rpc';
     public const TYPE_NETWORK   = 'network';
     public const TYPE_STREAM    = 'stream';
+
+    public const CONFIGURABLE_TYPE_LIST = [
+        self::TYPE_API,
+        self::TYPE_INTERFACE,
+        self::TYPE_NETWORK,
+        self::TYPE_STREAM,
+    ];
 
     public const LEVEL_DEFAULT         = 0;
     public const LEVEL_GUEST           = 5;

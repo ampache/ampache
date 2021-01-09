@@ -26,7 +26,6 @@ namespace Ampache\Module\Authorization;
 
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
-use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Dba;
 
 /**
@@ -76,6 +75,8 @@ class Access
 
     /**
      * @var boolean $enabled
+     *
+     * @deprecated seems not to be in use
      */
     public $enabled;
 
@@ -110,90 +111,6 @@ class Access
         $db_results = Dba::read($sql, array($this->id));
 
         return Dba::fetch_assoc($db_results);
-    }
-
-    /**
-     * _verify_range
-     *
-     * This outputs an error if the IP range is bad.
-     * @param string $startp
-     * @param string $endp
-     * @return boolean
-     */
-    public static function _verify_range($startp, $endp)
-    {
-        $startn = @inet_pton($startp);
-        $endn   = @inet_pton($endp);
-
-        if (!$startn && $startp != '0.0.0.0' && $startp != '::') {
-            AmpError::add('start', T_('An Invalid IPv4 / IPv6 Address was entered'));
-
-            return false;
-        }
-        if (!$endn) {
-            AmpError::add('end', T_('An Invalid IPv4 / IPv6 Address was entered'));
-        }
-
-        if (strlen(bin2hex($startn)) != strlen(bin2hex($endn))) {
-            AmpError::add('start', T_('IP Address version mismatch'));
-            AmpError::add('end', T_('IP Address version mismatch'));
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * update
-     *
-     * This function takes a named array as a datasource and updates the current
-     * access list entry.
-     * @param array $data
-     * @return boolean
-     */
-    public function update(array $data)
-    {
-        if (!self::_verify_range($data['start'], $data['end'])) {
-            return false;
-        }
-
-        $start   = @inet_pton($data['start']);
-        $end     = @inet_pton($data['end']);
-        $name    = $data['name'];
-        $type    = self::validate_type($data['type']);
-        $level   = (int)$data['level'];
-        $user    = $data['user'] ?: '-1';
-        $enabled = make_bool($data['enabled']) ? 1 : 0;
-
-        $sql = 'UPDATE `access_list` SET `start` = ?, `end` = ?, `level` = ?, ' . '`user` = ?, `name` = ?, `type` = ?, `enabled` = ? WHERE `id` = ?';
-        Dba::write($sql, array($start, $end, $level, $user, $name, $type, $enabled, $this->id));
-
-        return true;
-    }
-
-    /**
-     * create
-     *
-     * This takes a keyed array of data and trys to insert it as a
-     * new ACL entry
-     * @param array $data
-     * @return boolean
-     */
-    public static function create(array $data)
-    {
-        $start   = @inet_pton($data['start']);
-        $end     = @inet_pton($data['end']);
-        $name    = $data['name'];
-        $user    = $data['user'] ?: '-1';
-        $level   = (int)$data['level'];
-        $type    = self::validate_type($data['type']);
-        $enabled = make_bool($data['enabled']) ? 1 : 0;
-
-        $sql = 'INSERT INTO `access_list` (`name`, `level`, `start`, `end`, ' . '`user`, `type`, `enabled`) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        Dba::write($sql, array($name, $level, $start, $end, $user, $type, $enabled));
-
-        return true;
     }
 
     /**
@@ -238,25 +155,5 @@ class Access
             (int) $level,
             $user_id
         );
-    }
-
-    /**
-     * validate_type
-     *
-     * This validates the specified type; it will always return a valid type,
-     * even if you pass in an invalid one.
-     * @param string $type
-     * @return string
-     */
-    private static function validate_type($type)
-    {
-        switch ($type) {
-            case 'rpc':
-            case 'interface':
-            case 'network':
-                return $type;
-            default:
-                return 'stream';
-        }
     }
 }

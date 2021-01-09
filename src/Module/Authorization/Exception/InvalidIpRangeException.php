@@ -22,14 +22,8 @@
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Authorization;
+namespace Ampache\Module\Authorization\Exception;
 
-use function DI\autowire;
-
-return [
-    GatekeeperFactoryInterface::class => autowire(GatekeeperFactory::class),
-    Check\PrivilegeCheckerInterface::class => autowire(Check\PrivilegeChecker::class),
-    Check\FunctionCheckerInterface::class => autowire(Check\FunctionChecker::class),
-    Check\NetworkCheckerInterface::class => autowire(Check\NetworkChecker::class),
-    AccessListManagerInterface::class => autowire(AccessListManager::class),
-];
+final class InvalidIpRangeException extends AclItemConfigurationException
+{
+}
