@@ -757,6 +757,7 @@ class vainfo
             case 'mpeg3':
                 return 'mp3';
             case 'vorbis':
+            case 'opus':
                 return 'ogg';
             case 'flac':
             case 'flv':
