@@ -25,14 +25,13 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Admin\Access;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -45,12 +44,16 @@ final class UpdateRecordAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
+        $this->modelFactory    = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -62,9 +65,11 @@ final class UpdateRecordAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
+        $accessId = (int) $request->getQueryParams()['access_id'] ?? 0;
+        $access   = $this->modelFactory->createAccess($accessId);
+
         $this->ui->showHeader();
 
-        $access = new Access(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $access->update($_POST);
         if (!AmpError::occurred()) {
             $this->ui->showConfirmation(
@@ -76,8 +81,15 @@ final class UpdateRecordAction implements ApplicationActionInterface
                 )
             );
         } else {
-            $access->format();
-            require_once Ui::find_template('show_edit_access.inc.php');
+            $this->ui->show(
+                'show_edit_access.inc.php',
+                [
+                    'access' => new Lib\AccessListItem(
+                        $this->modelFactory,
+                        $access
+                    )
+                ]
+            );
         }
 
         $this->ui->showQueryStats();

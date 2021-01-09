@@ -25,41 +25,26 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\Access;
 
 use Ampache\MockeryTestCase;
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Module\Application\Admin\Access\Lib\AccessListItemInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\AccessRepositoryInterface;
-use Mockery;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class ShowActionTest extends MockeryTestCase
+class ShowAddActionTest extends MockeryTestCase
 {
-    /** @var UiInterface|MockInterface|null */
+    /** @var MockInterface|UiInterface|null */
     private MockInterface $ui;
 
-    /** @var AccessRepositoryInterface|MockInterface|null */
-    private MockInterface $accessRepository;
-
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
-    private ?ShowAction $subject;
+    private ?ShowAddAction $subject;
 
     public function setUp(): void
     {
-        $this->ui               = $this->mock(UiInterface::class);
-        $this->accessRepository = $this->mock(AccessRepositoryInterface::class);
-        $this->modelFactory     = $this->mock(ModelFactoryInterface::class);
+        $this->ui = $this->mock(UiInterface::class);
 
-        $this->subject = new ShowAction(
-            $this->ui,
-            $this->accessRepository,
-            $this->modelFactory
+        $this->subject = new ShowAddAction(
+            $this->ui
         );
     }
 
@@ -78,28 +63,30 @@ class ShowActionTest extends MockeryTestCase
         $this->subject->run($request, $gatekeeper);
     }
 
-    public function testRunRendersList(): void
+    public function testRunRenders(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $access     = $this->mock(Access::class);
 
-        $accessId = 666;
+        $addType = 'add-type';
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
             ->once()
             ->andReturnTrue();
 
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['add_type' => $addType]);
+
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
         $this->ui->shouldReceive('show')
             ->with(
-                'show_access_list.inc.php',
-                Mockery::on(static function (array $context): bool {
-                    return current($context['list']) instanceof AccessListItemInterface;
-                })
+                'show_add_access.inc.php',
+                ['add_type' => $addType]
             )
             ->once();
         $this->ui->shouldReceive('showQueryStats')
@@ -108,16 +95,6 @@ class ShowActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showFooter')
             ->withNoArgs()
             ->once();
-
-        $this->accessRepository->shouldReceive('getAccessLists')
-            ->withNoArgs()
-            ->once()
-            ->andReturn([$accessId]);
-
-        $this->modelFactory->shouldReceive('createAccess')
-            ->with($accessId)
-            ->once()
-            ->andReturn($access);
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)

@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access;
 
@@ -28,15 +28,13 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAddLocalAction implements ApplicationActionInterface
+final class ShowAddAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'show_add_local';
+    public const REQUEST_KEY = 'show_add';
 
     private UiInterface $ui;
 
@@ -53,10 +51,10 @@ final class ShowAddLocalAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-
-        $action = Core::get_request('action');
-        require_once Ui::find_template('show_add_access.inc.php');
-
+        $this->ui->show(
+            'show_add_access.inc.php',
+            ['add_type' => $request->getQueryParams()['add_type'] ?? '']
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

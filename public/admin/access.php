@@ -26,10 +26,8 @@ declare(strict_types=1);
 use Ampache\Module\Application\Admin\Access\AddHostAction;
 use Ampache\Module\Application\Admin\Access\DeleteRecordAction;
 use Ampache\Module\Application\Admin\Access\ShowAction;
+use Ampache\Module\Application\Admin\Access\ShowAddAction;
 use Ampache\Module\Application\Admin\Access\ShowAddAdvancedAction;
-use Ampache\Module\Application\Admin\Access\ShowAddCurrentAction;
-use Ampache\Module\Application\Admin\Access\ShowAddLocalAction;
-use Ampache\Module\Application\Admin\Access\ShowAddRpcAction;
 use Ampache\Module\Application\Admin\Access\ShowDeleteRecordAction;
 use Ampache\Module\Application\Admin\Access\ShowEditRecordAction;
 use Ampache\Module\Application\Admin\Access\UpdateRecordAction;
@@ -49,10 +47,8 @@ $dic->get(ApplicationRunner::class)->run(
         ShowAction::REQUEST_KEY => ShowAction::class,
         ShowEditRecordAction::REQUEST_KEY => ShowEditRecordAction::class,
         UpdateRecordAction::REQUEST_KEY => UpdateRecordAction::class,
-        ShowAddCurrentAction::REQUEST_KEY => ShowAddCurrentAction::class,
-        ShowAddRpcAction::REQUEST_KEY => ShowAddRpcAction::class,
-        ShowAddLocalAction::REQUEST_KEY => ShowAddLocalAction::class,
         ShowAddAdvancedAction::REQUEST_KEY => ShowAddAdvancedAction::class,
+        ShowAddAction::REQUEST_KEY => ShowAddAction::class,
     ],
     ShowAction::REQUEST_KEY
 );

@@ -26,12 +26,11 @@ namespace Ampache\Module\Application\Admin\Access;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -44,12 +43,16 @@ final class ShowDeleteRecordAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
+        $this->modelFactory    = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -66,12 +69,15 @@ final class ShowDeleteRecordAction implements ApplicationActionInterface
 
             return null;
         }
-        $access = new Access((int) Core::get_get('access_id'));
+
+        $accessId = (int) $request->getQueryParams()['access_id'] ?? 0;
+        $access   = $this->modelFactory->createAccess($accessId);
+
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             /* HINT: ACL Name */
             sprintf(T_('This will permanently delete the ACL "%s"'), $access->name),
-            sprintf('admin/access.php?action=delete_record&amp;access_id=%s', $access->id),
+            sprintf('admin/access.php?action=delete_record&amp;access_id=%d', $access->id),
             1,
             'delete_access'
         );

@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Application\Admin\Access\Lib\AccessListTypeEnum;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
@@ -31,7 +32,10 @@ use Ampache\Module\Util\Ui;
 $apirpc       = T_('API/RPC');
 $localnetwork = T_('Local Network Definition');
 $streamaccess = T_('Stream Access');
-$all          = T_('All'); ?>
+$all          = T_('All');
+
+/** @var string $add_type */
+?>
 <form name="update_access" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=add_host">
     <table class="tabledata">
         <tr>
@@ -55,7 +59,7 @@ $all          = T_('All'); ?>
         <tr>
             <td><?php echo T_('Type') . ':'; ?></td>
             <td>
-        <?php if ($action == 'show_add_rpc') { ?>
+        <?php if ($add_type == AccessListTypeEnum::ADD_TYPE_RPC) { ?>
                 <input type="hidden" name="type" value="rpc" />
                 <select name="addtype">
                     <option value="rpc"><?php echo $apirpc; ?></option>
@@ -63,7 +67,7 @@ $all          = T_('All'); ?>
                     <option value="all"><?php echo $apirpc . ' + ' . $all; ?></option>
         <?php
 } else {
-    if ($action == 'show_add_local') { ?>
+    if ($add_type == AccessListTypeEnum::ADD_TYPE_LOCAL) { ?>
                 <input type="hidden" name="type" value="local" />
                 <select name="addtype">
                     <option value="network"><?php echo $localnetwork; ?></option>
@@ -95,7 +99,7 @@ $all          = T_('All'); ?>
                 <?php echo T_('Start'); ?>:
                     <?php echo AmpError::display('start'); ?>
                     <input type="text" name="start" value="<?php
-                if ($action == 'show_add_current') {
+                if ($add_type == AccessListTypeEnum::ADD_TYPE_CURRENT) {
                     echo scrub_out(Core::get_server('REMOTE_ADDR'));
                 } else {
                     echo scrub_out(Core::get_request('start'));
@@ -104,7 +108,7 @@ $all          = T_('All'); ?>
                 <?php echo T_('End'); ?>:
                     <?php echo AmpError::display('end'); ?>
                     <input type="text" name="end" value="<?php
-                    if ($action == 'show_add_current') {
+                    if ($add_type == AccessListTypeEnum::ADD_TYPE_CURRENT) {
                         echo scrub_out(Core::get_server('REMOTE_ADDR'));
                     } else {
                         echo scrub_out(Core::get_request('end'));

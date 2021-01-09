@@ -21,10 +21,12 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Application\Admin\Access\Lib\AccessListItemInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
+/** @var AccessListItemInterface $access */
 ?>
 <?php Ui::show_box_top(T_('Edit Access Control List')); ?>
 <?php echo AmpError::display('general');
@@ -32,17 +34,17 @@ $apirpc       = T_('API/RPC');
 $localnetwork = T_('Local Network Definition');
 $streamaccess = T_('Stream Access');
 $all          = T_('All'); ?>
-<form name="edit_access" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=update_record&access_id=<?php echo($access->id); ?>">
+<form name="edit_access" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=update_record&access_id=<?php echo($access->getId()); ?>">
     <table class="tabledata">
         <tr>
             <td><?php echo T_('Name') . ':'; ?></td>
             <td colspan="3">
-                <input type="text" name="name" value="<?php echo scrub_out($access->name); ?>" autofocus /></td>
+                <input type="text" name="name" value="<?php echo scrub_out($access->getName()); ?>" autofocus /></td>
         </tr>
         <tr>
             <td><?php echo T_('Level') . ':'; ?></td>
             <td colspan="3">
-                <?php $name = 'level_' . $access->level; ${$name} = 'checked="checked"'; ?>
+                <?php $name = 'level_' . $access->getLevel(); ${$name} = 'checked="checked"'; ?>
                 <input type="radio" name="level" value="5"  <?php echo $level_5;  ?>><?php echo T_('View'); ?>
                 <input type="radio" name="level" value="25" <?php echo $level_25; ?>><?php echo T_('Read'); ?>
                 <input type="radio" name="level" value="50" <?php echo $level_50; ?>><?php echo T_('Read/Write'); ?>
@@ -52,14 +54,14 @@ $all          = T_('All'); ?>
         <tr>
             <td><?php echo T_('User') . ':'; ?></td>
             <td colspan="3">
-                <?php show_user_select('user', $access->user); ?>
+                <?php show_user_select('user', $access->getUserId()); ?>
             </td>
         </tr>
         <tr>
             <td><?php echo T_('Type') . ':'; ?></td>
             <td colspan="3">
                 <select name="type">
-                <?php $name = 'sl_' . $access->type; ${$name} = ' selected="selected"'; ?>
+                <?php $name = 'sl_' . $access->getType(); ${$name} = ' selected="selected"'; ?>
                     <option value="stream"<?php echo $sl_stream; ?>><?php echo $streamaccess; ?></option>
                     <option value="interface"<?php echo $sl_interface; ?>><?php echo T_('Web Interface'); ?></option>
                     <option value="network"<?php echo $sl_network; ?>><?php echo $localnetwork; ?></option>
@@ -79,11 +81,11 @@ $all          = T_('All'); ?>
             <td><?php echo T_('Start') . ':'; ?></td>
             <td>
                 <?php echo AmpError::display('start'); ?>
-                <input type="text" name="start" value="<?php echo $access->f_start; ?>" /></td>
+                <input type="text" name="start" value="<?php echo $access->getStartIp(); ?>" /></td>
             <td><?php echo T_('End') . ':'; ?></td>
             <td>
                 <?php echo AmpError::display('end'); ?>
-                <input type="text" name="end" value="<?php echo $access->f_end; ?>" /></td>
+                <input type="text" name="end" value="<?php echo $access->getEndIp(); ?>" /></td>
         </tr>
     </table>
     <div class="formValidation">

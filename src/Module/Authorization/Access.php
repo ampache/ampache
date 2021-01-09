@@ -28,7 +28,6 @@ use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Dba;
-use Ampache\Model\User;
 
 /**
  * Access Class
@@ -81,31 +80,6 @@ class Access
     public $enabled;
 
     /**
-     * @var string $f_start
-     */
-    public $f_start;
-
-    /**
-     * @var string $f_end
-     */
-    public $f_end;
-
-    /**
-     * @var string $f_user
-     */
-    public $f_user;
-
-    /**
-     * @var string $f_level
-     */
-    public $f_level;
-
-    /**
-     * @var string $f_type
-     */
-    public $f_type;
-
-    /**
      * constructor
      *
      * Takes an ID of the access_id dealie :)
@@ -136,22 +110,6 @@ class Access
         $db_results = Dba::read($sql, array($this->id));
 
         return Dba::fetch_assoc($db_results);
-    }
-
-    /**
-     * format
-     *
-     * This makes the Access object a nice fuzzy human readable object, spiffy
-     * ain't it.
-     */
-    public function format()
-    {
-        $this->f_start = inet_ntop($this->start);
-        $this->f_end   = inet_ntop($this->end);
-
-        $this->f_user  = $this->get_user_name();
-        $this->f_level = $this->get_level_name();
-        $this->f_type  = $this->get_type_name();
     }
 
     /**
@@ -224,10 +182,6 @@ class Access
      */
     public static function create(array $data)
     {
-        if (!self::_verify_range($data['start'], $data['end'])) {
-            return false;
-        }
-
         $start   = @inet_pton($data['start']);
         $end     = @inet_pton($data['end']);
         $name    = $data['name'];
@@ -303,68 +257,6 @@ class Access
                 return $type;
             default:
                 return 'stream';
-        }
-    }
-
-    /**
-     * get_level_name
-     *
-     * take the int level and return a named level
-     * @return string
-     */
-    private function get_level_name()
-    {
-        if ($this->level >= '75') {
-            return T_('All');
-        }
-        if ($this->level == '5') {
-            return T_('View');
-        }
-        if ($this->level == '25') {
-            return T_('Read');
-        }
-        if ($this->level == '50') {
-            return T_('Read/Write');
-        }
-
-        return '';
-    }
-
-    /**
-     * get_user_name
-     *
-     * Return a name for the users covered by this ACL.
-     * @return string
-     */
-    private function get_user_name()
-    {
-        if ($this->user == '-1') {
-            return T_('All');
-        }
-
-        $user = new User($this->user);
-
-        return $user->fullname . " (" . $user->username . ")";
-    }
-
-    /**
-     * get_type_name
-     *
-     * This function returns the pretty name for our current type.
-     * @return string
-     */
-    private function get_type_name()
-    {
-        switch ($this->type) {
-            case 'rpc':
-                return T_('API/RPC');
-            case 'network':
-                return T_('Local Network Definition');
-            case 'interface':
-                return T_('Web Interface');
-            case 'stream':
-            default:
-                return T_('Stream Access');
         }
     }
 }
