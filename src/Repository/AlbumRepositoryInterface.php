@@ -17,16 +17,35 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use function DI\autowire;
+interface AlbumRepositoryInterface
+{
+    /**
+     * This returns a number of random albums.
+     *
+     * @return int[]
+     */
+    public function getRandom(
+        int $userId,
+        ?int $count = 1
+    ): array;
 
-return [
-    AccessRepositoryInterface::class => autowire(AccessRepository::class),
-    AlbumRepositoryInterface::class => autowire(AlbumRepository::class),
-];
+    /**
+     * Get the add date of first added song
+     */
+    public function getFirstSongAddTime(
+        int $albumId
+    ): int;
+
+    /**
+     * gets a random number, and a random assortment of songs from this album
+     *
+     * @return int[] Album ids
+     */
+    public function getRandomSongs(
+        int $albumId
+    ): array;
+}

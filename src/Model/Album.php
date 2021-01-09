@@ -666,24 +666,6 @@ class Album extends database_object implements library_item
     } // get_album_suite
 
     /**
-     * get_addtime_first_song
-     * Get the add date of first added song.
-     * @return integer
-     */
-    public function get_addtime_first_song()
-    {
-        $time = 0;
-
-        $sql        = "SELECT MIN(`addition_time`) AS `addition_time` FROM `song` WHERE `album` = ?";
-        $db_results = Dba::read($sql, array($this->id));
-        if ($data = Dba::fetch_row($db_results)) {
-            $time = $data[0];
-        }
-
-        return $time;
-    }
-
-    /**
      * format
      * This is the format function for this object. It sets cleaned up
      * album information with the base required
@@ -975,32 +957,6 @@ class Album extends database_object implements library_item
     }
 
     /**
-     * get_random_songs
-     * gets a random number, and a random assortment of songs from this album
-     * @return integer[]
-     */
-    public function get_random_songs()
-    {
-        $sql = "SELECT `song`.`id` FROM `song` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
-        }
-        $sql .= "WHERE `song`.`album` = ? ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND `catalog`.`enabled` = '1' ";
-        }
-        $sql .= "ORDER BY RAND()";
-        $db_results = Dba::read($sql, array($this->id));
-
-        $results = array();
-        while ($row = Dba::fetch_row($db_results)) {
-            $results[] = $row['0'];
-        }
-
-        return $results;
-    } // get_random_songs
-
-    /**
      * update_time
      *
      * Get time for an album disk and set it.
@@ -1157,55 +1113,6 @@ class Album extends database_object implements library_item
         $sql = "UPDATE `album` SET `" . $field . "` = ? WHERE `id` = ?";
 
         return Dba::write($sql, array($value, $album_id));
-    }
-
-    /**
-     * get_random
-     *
-     * This returns a number of random albums.
-     * @param integer $count
-     * @param boolean $with_art
-     * @param integer $user_id
-     * @return integer[]
-     */
-    public static function get_random($count = 1, $with_art = false, $user_id = null)
-    {
-        $results = array();
-
-        if (!$count) {
-            $count = 1;
-        }
-        if ($user_id === null) {
-            $user_id = Core::get_global('user')->id;
-        }
-        $sort_disk = (AmpConfig::get('album_group')) ? "AND `album`.`disk` = 1 " : "";
-
-        $sql = "SELECT DISTINCT `album`.`id` FROM `album` " . "LEFT JOIN `song` ON `song`.`album` = `album`.`id` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
-            $where = "WHERE `catalog`.`enabled` = '1' " . $sort_disk;
-        } else {
-            $where = "WHERE 1=1 " . $sort_disk;
-        }
-        if ($with_art) {
-            $sql .= "LEFT JOIN `image` ON (`image`.`object_type` = 'album' AND `image`.`object_id` = `album`.`id`) ";
-            $where .= "AND `image`.`id` IS NOT NULL ";
-        }
-        $sql .= $where;
-
-        $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
-            $sql .= "AND `album`.`id` NOT IN " . "(SELECT `object_id` FROM `rating` " . "WHERE `rating`.`object_type` = 'album' " . "AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ") ";
-        }
-        $sql .= "ORDER BY RAND() LIMIT " . (string)$count;
-        $db_results = Dba::read($sql);
-        //debug_event('album.class', 'get_random ' . $sql, 5);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
     }
 
     /**

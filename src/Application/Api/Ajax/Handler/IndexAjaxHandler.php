@@ -42,6 +42,7 @@ use Ampache\Model\Song;
 use Ampache\Module\Util\SlideshowInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\Wanted;
+use Ampache\Repository\AlbumRepositoryInterface;
 
 final class IndexAjaxHandler implements AjaxHandlerInterface
 {
@@ -49,12 +50,16 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
     private SlideshowInterface $slideshow;
 
+    private AlbumRepositoryInterface $albumRepository;
+
     public function __construct(
         ArtCollectorInterface $artCollector,
-        SlideshowInterface $slideshow
+        SlideshowInterface $slideshow,
+        AlbumRepositoryInterface $albumRepository
     ) {
-        $this->artCollector         = $artCollector;
-        $this->slideshow            = $slideshow;
+        $this->artCollector    = $artCollector;
+        $this->slideshow       = $slideshow;
+        $this->albumRepository = $albumRepository;
     }
     
     public function handle(): void
@@ -71,7 +76,10 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($_REQUEST['action']) {
             case 'random_albums':
-                $albums = Album::get_random($moment, false, $user->id);
+                $albums = $this->albumRepository->getRandom(
+                    $user->id,
+                    $moment
+                );
                 if (count($albums) && is_array($albums)) {
                     ob_start();
                     require_once Ui::find_template('show_random_albums.inc.php');

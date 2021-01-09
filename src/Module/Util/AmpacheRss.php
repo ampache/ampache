@@ -34,6 +34,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Playback\Stream;
 use Ampache\Model\User;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Repository\AlbumRepositoryInterface;
 
 class AmpacheRss
 {
@@ -315,7 +316,12 @@ class AmpacheRss
                 'description' => $album->f_artist_name . ' - ' . $album->f_name,
                 'image' => Art::url($album->id, 'album', null, 2),
                 'comments' => '',
-                'pubDate' => date("c", (int)$album->get_addtime_first_song())
+                'pubDate' => date(
+                    'c',
+                    static::getAlbumRepository()->getFirstSongAddTime(
+                        $album->id
+                    )
+                )
             );
             $results[] = $xml_array;
         } // end foreach
@@ -400,4 +406,11 @@ class AmpacheRss
 
         return $element['date'];
     } // pubdate_recently_played
-} // end ampache_rss.class
+
+    private static function getAlbumRepository(): AlbumRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumRepositoryInterface::class);
+    }
+}

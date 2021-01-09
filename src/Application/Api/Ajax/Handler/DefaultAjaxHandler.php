@@ -35,9 +35,18 @@ use Ampache\Model\Rating;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
+use Ampache\Repository\AlbumRepositoryInterface;
 
 final class DefaultAjaxHandler implements AjaxHandlerInterface
 {
+    private AlbumRepositoryInterface $albumRepository;
+
+    public function __construct(
+        AlbumRepositoryInterface $albumRepository
+    ) {
+        $this->albumRepository = $albumRepository;
+    }
+
     public function handle(): void
     {
         $action = Core::get_request('action');
@@ -86,7 +95,7 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                             foreach ($_REQUEST['id'] as $i) {
                                 $class_name = ObjectTypeToClassNameMapper::map($object_type);
                                 $object     = new $class_name($i);
-                                $songs      = $object->get_random_songs();
+                                $songs      = $this->albumRepository->getRandomSongs($object->id);
                                 foreach ($songs as $song_id) {
                                     Core::get_global('user')->playlist->add_object($song_id, 'song');
                                 }

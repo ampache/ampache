@@ -28,6 +28,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -40,14 +41,18 @@ final class AlbumRandomAction extends AbstractStreamAction
 
     private ConfigContainerInterface $configContainer;
 
+    private AlbumRepositoryInterface $albumRepository;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        AlbumRepositoryInterface $albumRepository
     ) {
         parent::__construct($logger, $configContainer);
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
+        $this->albumRepository = $albumRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -57,7 +62,7 @@ final class AlbumRandomAction extends AbstractStreamAction
         }
 
         $album    = $this->modelFactory->createAlbum((int) $_REQUEST['album_id']);
-        $mediaIds = $album->get_random_songs();
+        $mediaIds = $this->albumRepository->getRandomSongs($album->id);
 
         return $this->stream(
             $mediaIds,

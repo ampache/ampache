@@ -42,6 +42,7 @@ use Ampache\Model\Artist;
 use Ampache\Model\Bookmark;
 use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
+use Ampache\Repository\AlbumRepositoryInterface;
 use DOMDocument;
 use Ampache\Model\Live_Stream;
 use Ampache\Model\Playlist;
@@ -634,7 +635,10 @@ class Subsonic_Api
 
         switch ($type) {
             case "random":
-                $albums = Album::get_random($size, false, $user->id);
+                $albums = static::getAlbumRepository()->getRandom(
+                    $user->id,
+                    $size
+                );
                 break;
             case "newest":
                 $albums = Stats::get_newest("album", $size, $offset, $musicFolderId);
@@ -2518,5 +2522,15 @@ class Subsonic_Api
     {
         $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'getplayqueue');
         self::apiOutput($input, $response);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getAlbumRepository(): AlbumRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumRepositoryInterface::class);
     }
 }

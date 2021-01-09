@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=0);
-
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -23,6 +21,8 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Model\Album;
@@ -33,9 +33,18 @@ use Ampache\Module\System\Core;
 use Ampache\Model\Playlist;
 use Ampache\Model\Random;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\AlbumRepositoryInterface;
 
 final class RandomAjaxHandler implements AjaxHandlerInterface
 {
+    private AlbumRepositoryInterface $albumRepository;
+
+    public function __construct(
+        AlbumRepositoryInterface $albumRepository
+    ) {
+        $this->albumRepository = $albumRepository;
+    }
+
     public function handle(): void
     {
         $results = array();
@@ -57,7 +66,10 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             case 'album':
-                $album_id = Album::get_random(null, false, Core::get_global('user')->id);
+                $album_id = $this->albumRepository->getRandom(
+                    Core::get_global('user')->id,
+                    null
+                );
 
                 if (empty($album_id)) {
                     $results['rfc3514'] = '0x1';

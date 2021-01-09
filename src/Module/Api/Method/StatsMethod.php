@@ -37,6 +37,7 @@ use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Session;
+use Ampache\Repository\AlbumRepositoryInterface;
 
 /**
  * Class StatsMethod
@@ -132,7 +133,10 @@ final class StatsMethod
                         $results = Artist::get_random($limit, false, $user_id);
                         break;
                     case 'album':
-                        $results = Album::get_random($limit, false, $user_id);
+                        $results = static::getAlbumRepository()->getRandom(
+                            $user->id,
+                            $limit
+                        );
                 }
         }
         if (empty($results)) {
@@ -172,5 +176,15 @@ final class StatsMethod
         Session::extend($input['auth']);
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getAlbumRepository(): AlbumRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumRepositoryInterface::class);
     }
 }
