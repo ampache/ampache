@@ -298,8 +298,8 @@ class WebPlayer
         $media    = self::get_media_object($urlinfo);
 
         if ($media != null) {
-            //$media->format();
-            $media->fill_ext_info(); // loads replaygain/r128 data without doing a full format()
+            // get replaygain from the song_data table
+            $media->fill_ext_info('replaygain_track_gain, replaygain_track_peak, replaygain_album_gain, replaygain_album_peak');
 
             if ($urlinfo['type'] == 'song') {
                 $json['artist_id']             = $media->artist;
