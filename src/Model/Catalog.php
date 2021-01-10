@@ -24,29 +24,28 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Catalog\Catalog_beets;
+use Ampache\Module\Catalog\Catalog_beetsremote;
+use Ampache\Module\Catalog\Catalog_dropbox;
+use Ampache\Module\Catalog\Catalog_local;
+use Ampache\Module\Catalog\Catalog_remote;
+use Ampache\Module\Catalog\Catalog_Seafile;
+use Ampache\Module\Catalog\Catalog_soundcloud;
+use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Playback\Stream_Url;
+use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\AmpError;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
-use Ampache\Model\Metadata\Repository\Metadata;
-use Ampache\Model\Metadata\Repository\MetadataField;
-use Ampache\Module\Authorization\Access;
-use Ampache\Config\AmpConfig;
-use Ampache\Module\System\AmpError;
-use Ampache\Module\Catalog\Catalog_beets;
-use Ampache\Module\Catalog\Catalog_beetsremote;
-use Ampache\Module\Catalog\Catalog_dropbox;
-use Ampache\Module\Catalog\Catalog_local;
-use Ampache\Module\System\Core;
-use Ampache\Module\Catalog\Catalog_remote;
-use Ampache\Module\Catalog\Catalog_Seafile;
-use Ampache\Module\Catalog\Catalog_soundcloud;
-use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Exception;
@@ -2843,6 +2842,9 @@ abstract class Catalog extends database_object
                 AmpConfig::set('write_id3', 'true', true);
                 $write_id3_art = AmpConfig::get('write_id3_art', false);
                 AmpConfig::set('write_id3_art', 'true', true);
+
+                $id3Writer = static::getSongId3TagWriter();
+
                 foreach ($catalogs as $catalog_id) {
                     $catalog = self::create_from_id($catalog_id);
                     if ($catalog !== null) {
@@ -2850,7 +2852,8 @@ abstract class Catalog extends database_object
                         foreach ($song_ids as $song_id) {
                             $song = new Song($song_id);
                             $song->format();
-                            $song->write_id3();
+
+                            $id3Writer->write($song);
                         }
                     }
                 }
@@ -2972,5 +2975,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(CatalogGarbageCollectorInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private static function getSongId3TagWriter(): SongId3TagWriterInterface
+    {
+        global $dic;
+
+        return $dic->get(SongId3TagWriterInterface::class);
     }
 }

@@ -17,17 +17,20 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\Song\Tag;
 
-namespace Ampache\Module\Song;
+use Ampache\Model\Song;
 
-use function DI\autowire;
-
-return [
-    SongFilesystemCleanupInterface::class => autowire(SongFilesystemCleanup::class),
-    SongSorterInterface::class => autowire(SongSorter::class),
-    Tag\SongId3TagWriterInterface::class => autowire(Tag\SongId3TagWriter::class),
-];
+interface SongId3TagWriterInterface
+{
+    /**
+     * Write the current song id3 metadata to the file
+     */
+    public function write(
+        Song $song,
+        ?array $data = null,
+        ?array $changed = null
+    ): void;
+}

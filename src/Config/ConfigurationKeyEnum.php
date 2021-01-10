@@ -103,4 +103,6 @@ final class ConfigurationKeyEnum
     public const SIMPLE_USER_MODE              = 'simple_user_mode';
     public const LOCALPLAY_LEVEL               = 'localplay_level';
     public const ALLOW_ZIP_DOWNLOAD            = 'allow_zip_download';
+    public const ENABLE_CUSTOM_METADATA        = 'enable_custom_metadata';
+    public const WRITE_ID3                     = 'write_id3';
 }

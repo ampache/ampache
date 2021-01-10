@@ -26,11 +26,11 @@ namespace Ampache\Model;
 
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
+use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\VaInfo;
 use Ampache\Model\Metadata\Metadata;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
@@ -1285,99 +1285,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         } // end foreach
 
         $this->format();
-        $this->write_id3($data, $changed);
+
+        $this->getSongId3TagWriter()->write(
+            $this,
+            $data,
+            $changed
+        );
 
         return $this->id;
     } // update
-
-    /**
-     * write_id3
-     * Write the current song id3 metadata to the file
-     */
-    public function write_id3($data = null, $changed = null)
-    {
-        if (AmpConfig::get('write_id3', false)) {
-            $catalog = Catalog::create_from_id($this->catalog);
-            if ($catalog->get_type() == 'local') {
-                debug_event('song.class', 'Writing id3 metadata to file ' . $this->file, 5);
-                if (self::isCustomMetadataEnabled()) {
-                    foreach ($this->getMetadata() as $metadata) {
-                        $meta[$metadata->getField()->getName()] = $metadata->getData();
-                    }
-                }
-                $id3    = new VaInfo($this->file);
-                $result = $id3->read_id3();
-                if ($result['fileformat'] == 'mp3') {
-                    $tdata = $result['tags']['id3v2'];
-                    $meta  = $this->get_metadata();
-                } else {
-                    $tdata = $result['tags']['vorbiscomment'];
-                    $meta  = $this->get_vorbis_metadata();
-                }
-                $ndata = $id3->prepare_id3_frames($tdata);
-                // $song = new Song($this->id);
-                // $song->format();
-                if (isset($changed)) {
-                    foreach ($changed as $key => $value) {
-                        switch ($value) {
-                        case 'artist':
-                        case 'artist_name':
-                            $ndata['artist'][0] = $this->f_artist;
-                            break;
-                        case 'album':
-                        case 'album_name':
-                            $ndata['album'][0] = $this->f_album;
-                            break;
-                        case 'track':
-                            $ndata['track_number'][0] = $data['track'];
-                            break;
-                        case 'label':
-                            $ndata['publisher'][0] = $data['label'];
-                            break;
-                        case 'edit_tags':
-                            $ndata['genre'][0] = $data['edit_tags'];
-                            break;
-                        default:
-                            $ndata[$value][0] = $data[$value];
-                            break;
-                        }
-                    }
-                    $pics = array();
-                    if (isset($data['id3v2']['APIC'])) {
-                        $pics = Art::prepare_pics($data['id3v2']['APIC']);
-                    }
-                    $ndata = array_merge($pics, $ndata);
-                } else {
-                    // Fill in existing tag frames
-                    foreach ($meta as $key => $value) {
-                        if ($key != 'text' && $key != 'totaltracks') {
-                            $ndata[$key][0] = $meta[$key] ?:'';
-                        }
-                    }
-
-                    $art = new Art($this->album, 'album');
-                    if ($art->has_db_info()) {
-                        $album_image                                   = $art->get(true);
-                        $ndata['attached_picture'][0]['description']   = $this->f_album;
-                        $ndata['attached_picture'][0]['data']          = $album_image;
-                        $ndata['attached_picture'][0]['picturetypeid'] = '3';
-                        $ndata['attached_picture'][0]['mime']          = $art->raw_mime;
-                    }
-                    $art = new Art($this->artist, 'artist');
-                    if ($art->has_db_info()) {
-                        $artist_image                                   = $art->get(true);
-                        $i                                              = (!empty($album_image)) ? 1 : 0;
-                        $ndata['attached_picture'][$i]['description']   = $this->f_artist;
-                        $ndata['attached_picture'][$i]['data']          = $artist_image;
-                        $ndata['attached_picture'][$i]['picturetypeid'] = '8';
-                        $ndata['attached_picture'][$i]['mime']          = $art->raw_mime;
-                    }
-                }
-                $id3->write_id3($ndata);
-                // Catalog::update_media_from_tags($this);
-            }
-        }
-    }
 
     /**
      * update_song
@@ -2387,72 +2303,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     }
 
     /**
-     * get_metadata
-     * Get an array of metadata
-     * for writing id3 file tags.
-     * @return array
-     */
-    public function get_metadata()
-    {
-        $meta = array();
-
-        $meta['year']                  = $this->year;
-        $meta['time']                  = $this->time;
-        $meta['title']                 = $this->title;
-        $meta['comment']               = $this->comment;
-        $meta['album']                 = $this->f_album_full;
-        $meta['artist']                = $this->f_artist_full;
-        $meta['band']                  = $this->f_albumartist_full;
-        $meta['composer']              = $this->composer;
-        $meta['publisher']             = $this->f_publisher;
-        $meta['track_number']          = $this->f_track;
-        $meta['part_of_a_set']         = $this->disk;
-        $meta['genre']                 = array();
-        if (!empty($this->tags)) {
-            foreach ($this->tags as $tag) {
-                if (!in_array($tag['name'], $meta['genre'])) {
-                    $meta['genre'][] = $tag['name'];
-                }
-            }
-        }
-        $meta['genre'] = implode(',', $meta['genre']);
-
-        return $meta;
-    }
-
-    /**
-     * get_vorbis_metadata
-     * @return array
-     */
-    public function get_vorbis_metadata()
-    {
-        $meta = array();
-
-        $meta['date']                  = $this->year;
-        $meta['time']                  = $this->time;
-        $meta['title']                 = $this->title;
-        $meta['comment']               = $this->comment;
-        $meta['album']                 = $this->f_album_full;
-        $meta['artist']                = $this->f_artist_full;
-        $meta['albumartist']           = $this->f_albumartist_full;
-        $meta['composer']              = $this->composer;
-        $meta['publisher']             = $this->f_publisher;
-        $meta['track']                 = $this->f_track;
-        $meta['discnumber']            = $this->disk;
-        $meta['genre']                 = array();
-        if (!empty($this->tags)) {
-            foreach ($this->tags as $tag) {
-                if (!in_array($tag['name'], $meta['genre'])) {
-                    $meta['genre'][] = $tag['name'];
-                }
-            }
-        }
-        $meta['genre'] = implode(',', $meta['genre']);
-
-        return $meta;
-    }
-
-    /**
      * getId
      * @return integer
      */
@@ -2503,5 +2353,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         return $deleted;
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getSongId3TagWriter(): SongId3TagWriterInterface
+    {
+        global $dic;
+
+        return $dic->get(SongId3TagWriterInterface::class);
     }
 }
