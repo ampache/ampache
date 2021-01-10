@@ -1045,22 +1045,22 @@ class vainfo
                             implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $id3v2['comments']['text'][$txxx['description']]), array('')));
                         break;
                     case 'replaygain_track_gain':
-                        $parsed['replaygain_track_gain'] = $txxx['data'];
+                        $parsed['replaygain_track_gain'] = floatval($txxx['data']);
                         break;
                     case 'replaygain_track_peak':
-                        $parsed['replaygain_track_peak'] = $txxx['data'];
+                        $parsed['replaygain_track_peak'] = floatval($txxx['data']);
                         break;
                     case 'replaygain_album_gain':
-                        $parsed['replaygain_album_gain'] = $txxx['data'];
+                        $parsed['replaygain_album_gain'] = floatval($txxx['data']);
                         break;
                     case 'replaygain_album_peak':
-                        $parsed['replaygain_album_peak'] = $txxx['data'];
+                        $parsed['replaygain_album_peak'] = floatval($txxx['data']);
                         break;
                     case 'r128_track_gain':
-                        $parsed['r128_track_gain'] = $txxx['data'];
+                        $parsed['r128_track_gain'] = intval($txxx['data']);
                         break;
                     case 'r128_album_gain':
-                        $parsed['r128_album_gain'] = $txxx['data'];
+                        $parsed['r128_album_gain'] = intval($txxx['data']);
                         break;
                     case 'original_year':
                         $parsed['original_year'] = $id3v2['comments']['text'][$txxx['description']];
