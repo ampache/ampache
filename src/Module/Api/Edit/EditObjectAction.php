@@ -27,12 +27,12 @@ namespace Ampache\Module\Api\Edit;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\database_object;
-use Ampache\Model\Label;
 use Ampache\Model\Tag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\LabelRepositoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -47,15 +47,19 @@ final class EditObjectAction extends AbstractEditAction
 
     private StreamFactoryInterface $streamFactory;
 
+    private LabelRepositoryInterface $labelRepository;
+
     public function __construct(
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        LabelRepositoryInterface $labelRepository
     ) {
         parent::__construct($configContainer, $logger);
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
+        $this->labelRepository = $labelRepository;
     }
 
     protected function handle(
@@ -110,7 +114,7 @@ final class EditObjectAction extends AbstractEditAction
                 $_POST['edit_tags'] = Tag::clean_to_existing($_POST['edit_tags']);
             }
             if (filter_has_var(INPUT_POST, 'edit_labels')) {
-                $_POST['edit_labels'] = Label::clean_to_existing($_POST['edit_labels']);
+                $_POST['edit_labels'] = $this->clean_to_existing($_POST['edit_labels']);
             }
             // Check mbid and *_mbid match as it is used as identifier
             if (filter_has_var(INPUT_POST, 'mbid')) {
@@ -132,5 +136,27 @@ final class EditObjectAction extends AbstractEditAction
         echo (string) xoutput_from_array($results);
 
         return null;
+    }
+
+    /**
+     * clean_to_existing
+     * Clean label list to existing label list only
+     * @param array|string $labels
+     * @return array|string
+     */
+    private function clean_to_existing($labels)
+    {
+        $array = (is_array($labels)) ? $labels : preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labels);
+        $ret   = array();
+        foreach ($array as $label) {
+            $label = trim((string)$label);
+            if (!empty($label)) {
+                if ($this->labelRepository->lookup($label) > 0) {
+                    $ret[] = $label;
+                }
+            }
+        }
+
+        return (is_array($labels) ? $ret : implode(",", $ret));
     }
 }

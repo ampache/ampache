@@ -30,4 +30,13 @@ interface SongRepositoryInterface
      * @return int[]
      */
     public function getByAlbum(int $albumId, int $limit = 0): array;
+
+    /**
+     * gets the songs for a label, based on label name
+     *
+     * @return int[]
+     */
+    public function getByLabel(
+        string $labelName
+    ): array;
 }

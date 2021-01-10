@@ -33,9 +33,18 @@ use Ampache\Model\Label;
 use Ampache\Model\Tag;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\LabelRepositoryInterface;
 
 final class TagAjaxHandler implements AjaxHandlerInterface
 {
+    private LabelRepositoryInterface $labelRepository;
+
+    public function __construct(
+        LabelRepositoryInterface $labelRepository
+    ) {
+        $this->labelRepository = $labelRepository;
+    }
+
     public function handle(): void
     {
         $results = array();
@@ -50,7 +59,7 @@ final class TagAjaxHandler implements AjaxHandlerInterface
                 $results['tags'] = $tags;
                 break;
             case 'get_labels':
-                $labels            = Label::get_display(Label::get_all_labels());
+                $labels            = Label::get_display($this->labelRepository->getAll());
                 $results['labels'] = $labels;
                 break;
             case 'add_tag':

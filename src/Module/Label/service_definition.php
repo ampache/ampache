@@ -22,13 +22,10 @@
 
 declare(strict_types=1);
 
-namespace Ampache\Repository;
+namespace Ampache\Module\Label;
 
 use function DI\autowire;
 
 return [
-    AccessRepositoryInterface::class => autowire(AccessRepository::class),
-    AlbumRepositoryInterface::class => autowire(AlbumRepository::class),
-    SongRepositoryInterface::class => autowire(SongRepository::class),
-    LabelRepositoryInterface::class => autowire(LabelRepository::class),
+    LabelListUpdaterInterface::class => autowire(LabelListUpdater::class),
 ];

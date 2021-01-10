@@ -72,7 +72,7 @@ class Clip extends Video
      * @param array $data
      * @return integer|null
      */
-    public static function _get_artist_id($data)
+    private static function _get_artist_id($data)
     {
         if (isset($data['artist_id']) && !empty($data['artist_id'])) {
             return $data['artist_id'];

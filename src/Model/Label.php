@@ -27,6 +27,8 @@ namespace Ampache\Model;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use PDOStatement;
 
 /**
@@ -201,7 +203,7 @@ class Label extends database_object implements library_item
     {
         $medias = array();
         if ($filter_type === null || $filter_type == 'song') {
-            $songs = $this->get_songs();
+            $songs = static::getSongRepository()->getByLabel($this->name);
             foreach ($songs as $song_id) {
                 $medias[] = array(
                     'object_type' => 'song',
@@ -261,7 +263,7 @@ class Label extends database_object implements library_item
      */
     public function update(array $data)
     {
-        if (self::lookup($data, $this->id) !== 0) {
+        if (static::getLabelRepository()->lookup($data['name'], $this->id) !== 0) {
             return false;
         }
 
@@ -313,7 +315,7 @@ class Label extends database_object implements library_item
      */
     public static function create(array $data)
     {
-        if (self::lookup($data) !== 0) {
+        if (static::getLabelRepository()->lookup($data['name']) !== 0) {
             return false;
         }
 
@@ -333,33 +335,6 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * lookup
-     * @param array $data
-     * @param integer $label_id
-     * @return integer
-     */
-    public static function lookup(array $data, $label_id = 0)
-    {
-        $ret  = -1;
-        $name = trim((string)$data['name']);
-        if (!empty($name)) {
-            $ret    = 0;
-            $sql    = "SELECT `id` FROM `label` WHERE `name` = ?";
-            $params = array($name);
-            if ($label_id > 0) {
-                $sql .= " AND `id` != ?";
-                $params[] = $label_id;
-            }
-            $db_results = Dba::read($sql, $params);
-            if ($row = Dba::fetch_assoc($db_results)) {
-                $ret = $row['id'];
-            }
-        }
-
-        return $ret;
-    }
-
-    /**
      * get_artists
      * @return integer[]
      */
@@ -374,56 +349,6 @@ class Label extends database_object implements library_item
 
         return $results;
     }
-
-    /**
-     * add_artist_assoc
-     * @param integer $artist_id
-     * @return PDOStatement|boolean
-     */
-    public function add_artist_assoc($artist_id)
-    {
-        $sql = "INSERT INTO `label_asso` (`label`, `artist`, `creation_date`) VALUES (?, ?, ?)";
-
-        return Dba::write($sql, array($this->id, $artist_id, time()));
-    }
-
-    /**
-     * remove_artist_assoc
-     * @param integer $artist_id
-     * @return PDOStatement|boolean
-     */
-    public function remove_artist_assoc($artist_id)
-    {
-        $sql = "DELETE FROM `label_asso` WHERE `label` = ? AND `artist` = ?";
-
-        return Dba::write($sql, array($this->id, $artist_id));
-    }
-
-    /**
-     * get_songs
-     * gets the songs for this label, based on label name
-     * @return integer[]
-     */
-    public function get_songs()
-    {
-        $sql = "SELECT `song`.`id` FROM `song` " . "LEFT JOIN `song_data` ON `song_data`.`song_id` = `song`.`id` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
-        }
-        $sql .= "WHERE `song_data`.`label` = ? ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND `catalog`.`enabled` = '1' ";
-        }
-        $sql .= "ORDER BY `song`.`album`, `song`.`track`";
-        $db_results = Dba::read($sql, array($this->name));
-
-        $results = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
-    } // get_songs
 
     /**
      * remove
@@ -442,38 +367,6 @@ class Label extends database_object implements library_item
         }
 
         return $deleted;
-    }
-
-    /**
-     * get_all_labels
-     * @return array
-     */
-    public static function get_all_labels()
-    {
-        $sql        = "SELECT `id`, `name` FROM `label`";
-        $db_results = Dba::read($sql);
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = $row['name'];
-        }
-
-        return $results;
-    }
-
-    /**
-     * @param integer $artist_id
-     * @return array
-     */
-    public static function get_labels($artist_id)
-    {
-        $sql        = "SELECT `label`.`id`, `label`.`name` FROM `label` " . "LEFT JOIN `label_asso` ON `label_asso`.`label` = `label`.`id` " . "WHERE `label_asso`.`artist` = ?";
-        $db_results = Dba::read($sql, array($artist_id));
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = $row['name'];
-        }
-
-        return $results;
     }
 
     /**
@@ -508,85 +401,17 @@ class Label extends database_object implements library_item
         return $results;
     } // get_display
 
-    /**
-     * update_label_list
-     * Update the labels list based on commated list (ex. label1,label2,label3,..)
-     * @param $labels_comma
-     * @param integer $artist_id
-     * @param boolean $overwrite
-     * @return boolean
-     */
-    public static function update_label_list($labels_comma, $artist_id, $overwrite)
+    private static function getLabelRepository(): LabelRepositoryInterface
     {
-        debug_event('label.class', 'Updating labels for values {' . $labels_comma . '} artist {' . $artist_id . '}', 5);
+        global $dic;
 
-        $clabels      = Label::get_labels($artist_id);
-        $filter_list  = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labels_comma);
-        $editedLabels = (is_array($filter_list)) ? array_unique($filter_list) : array();
+        return $dic->get(LabelRepositoryInterface::class);
+    }
 
-        foreach ($clabels as $clid => $clv) {
-            if ($clid) {
-                $clabel = new Label($clid);
-                debug_event('label.class', 'Processing label {' . $clabel->name . '}...', 5);
-                $found   = false;
-                $lstring = '';
-
-                foreach ($editedLabels as $key => $value) {
-                    if ($clabel->name == $value) {
-                        $found   = true;
-                        $lstring = $key;
-                        break;
-                    }
-                }
-
-                if ($found) {
-                    debug_event('label.class', 'Already found. Do nothing.', 5);
-                    unset($editedLabels[$lstring]);
-                } elseif ($overwrite) {
-                    debug_event('label.class', 'Not found in the new list. Delete it.', 5);
-                    $clabel->remove_artist_assoc($artist_id);
-                }
-            }
-        }
-
-        // Look if we need to add some new labels
-        foreach ($editedLabels as $key => $value) {
-            if ($value != '') {
-                debug_event('label.class', 'Adding new label {' . $value . '}', 4);
-                $label_id = Label::lookup(array('name' => $value));
-                if ($label_id === 0) {
-                    debug_event('label.class', 'Creating a label directly from artist editing is not allowed.', 3);
-                    //$label_id = Label::create(array('name' => $lv));
-                }
-                if ($label_id > 0) {
-                    $clabel = new Label($label_id);
-                    $clabel->add_artist_assoc($artist_id);
-                }
-            }
-        }
-
-        return true;
-    } // update_tag_list
-
-    /**
-     * clean_to_existing
-     * Clean label list to existing label list only
-     * @param array|string $labels
-     * @return array|string
-     */
-    public static function clean_to_existing($labels)
+    private static function getSongRepository(): SongRepositoryInterface
     {
-        $array = (is_array($labels)) ? $labels : preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labels);
-        $ret   = array();
-        foreach ($array as $label) {
-            $label = trim((string)$label);
-            if (!empty($label)) {
-                if (Label::lookup(array('name' => $label)) > 0) {
-                    $ret[] = $label;
-                }
-            }
-        }
+        global $dic;
 
-        return (is_array($labels) ? $ret : implode(",", $ret));
+        return $dic->get(SongRepositoryInterface::class);
     }
 }

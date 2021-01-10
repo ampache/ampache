@@ -29,7 +29,6 @@ use Ampache\Model\Video;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
-use Ampache\Model\Album;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Artist;
 use Ampache\Model\Browse;
@@ -43,6 +42,8 @@ use Ampache\Module\Util\SlideshowInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\Wanted;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 
 final class IndexAjaxHandler implements AjaxHandlerInterface
 {
@@ -52,14 +53,22 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
     private AlbumRepositoryInterface $albumRepository;
 
+    private LabelRepositoryInterface $labelRepository;
+
+    private SongRepositoryInterface $songRepository;
+
     public function __construct(
         ArtCollectorInterface $artCollector,
         SlideshowInterface $slideshow,
-        AlbumRepositoryInterface $albumRepository
+        AlbumRepositoryInterface $albumRepository,
+        LabelRepositoryInterface $labelRepository,
+        SongRepositoryInterface $songRepository
     ) {
         $this->artCollector    = $artCollector;
         $this->slideshow       = $slideshow;
         $this->albumRepository = $albumRepository;
+        $this->labelRepository = $labelRepository;
+        $this->songRepository  = $songRepository;
     }
     
     public function handle(): void
@@ -152,7 +161,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'labels':
                 if (AmpConfig::get('label') && isset($_REQUEST['artist'])) {
-                    $labels     = Label::get_labels($_REQUEST['artist']);
+                    $labels     = $this->labelRepository->getByArtist((int) $_REQUEST['artist']);
                     $object_ids = array();
                     if (count($labels) > 0) {
                         foreach ($labels as $labelid => $label) {
@@ -334,7 +343,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 ob_start();
                 if ($label_id > 0) {
                     $label      = new Label($label_id);
-                    $object_ids = $label->get_songs();
+                    $object_ids = $this->songRepository->getByLabel($label->name);
 
                     $browse = new Browse();
                     $browse->set_type('song');

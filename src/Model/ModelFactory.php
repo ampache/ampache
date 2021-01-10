@@ -178,4 +178,10 @@ final class ModelFactory implements ModelFactoryInterface
     ): Access {
         return new Access($accessId);
     }
+
+    public function createLabel(
+        int $labelId
+    ): Label {
+        return new Label($labelId);
+    }
 }

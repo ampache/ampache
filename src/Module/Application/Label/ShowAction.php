@@ -24,16 +24,16 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Label;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Label;
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\LabelRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -47,37 +47,51 @@ final class ShowAction implements ApplicationActionInterface
 
     private PrivilegeCheckerInterface $privilegeChecker;
 
+    private LabelRepositoryInterface $labelRepository;
+
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        PrivilegeCheckerInterface $privilegeChecker
+        PrivilegeCheckerInterface $privilegeChecker,
+        LabelRepositoryInterface $labelRepository,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->configContainer  = $configContainer;
         $this->ui               = $ui;
         $this->privilegeChecker = $privilegeChecker;
+        $this->labelRepository  = $labelRepository;
+        $this->modelFactory     = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
-        
-        $label_id = (int) filter_input(INPUT_GET, 'label', FILTER_SANITIZE_NUMBER_INT);
+
+        $label_id = (int) $request->getQueryParams()['label'] ?? 0;
         if (!$label_id) {
-            if (!empty($_REQUEST['name'])) {
-                $label_id = Label::lookup($_REQUEST);
+            $name = $_REQUEST['name'] ?? null;
+            if ($name !== null) {
+                $label_id = $this->labelRepository->lookup((string) $name);
             }
         }
         if ($label_id > 0) {
-            $label = new Label($label_id);
+            $label = $this->modelFactory->createLabel($label_id);
             $label->format();
-            $object_ids      = $label->get_artists();
-            $object_type     = 'artist';
-            $isLabelEditable = $this->isEditable(
-                $gatekeeper->getUserId(),
-                $label
+
+            $this->ui->show(
+                'show_label.inc.php',
+                [
+                    'object_ids' => $label->get_artists(),
+                    'object_type' => 'artist',
+                    'isLabelEditable' => $this->isEditable(
+                        $gatekeeper->getUserId(),
+                        $label
+                    )
+                ]
             );
-            require_once Ui::find_template('show_label.inc.php');
-            
+
             $this->ui->showFooter();
 
             return null;
@@ -86,7 +100,10 @@ final class ShowAction implements ApplicationActionInterface
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true
         ) {
-            require_once Ui::find_template('show_add_label.inc.php');
+            $this->ui->show(
+                'show_add_label.inc.php',
+                []
+            );
         } else {
             echo T_('The Label cannot be found');
         }
@@ -101,7 +118,7 @@ final class ShowAction implements ApplicationActionInterface
         int $userId,
         Label $label
     ): bool {
-        if (AmpConfig::get('upload_allow_edit')) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true) {
             if ($label->user !== null && $userId == $label->user) {
                 return true;
             }

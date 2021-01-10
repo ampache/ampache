@@ -17,18 +17,27 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use function DI\autowire;
+interface LabelRepositoryInterface
+{
+    /**
+     * @return array<int, string>
+     */
+    public function getByArtist(int $artistId): array;
 
-return [
-    AccessRepositoryInterface::class => autowire(AccessRepository::class),
-    AlbumRepositoryInterface::class => autowire(AlbumRepository::class),
-    SongRepositoryInterface::class => autowire(SongRepository::class),
-    LabelRepositoryInterface::class => autowire(LabelRepository::class),
-];
+    /**
+     * Return the list of all available labels
+     *
+     * @return array<int, string>
+     */
+    public function getAll(): array;
+
+    public function lookup(string $labelName, int $label_id = 0): int;
+
+    public function removeArtistAssoc(int $labelId, int $artistId): void;
+
+    public function addArtistAssoc(int $labelId, int $artistId): void;
+}

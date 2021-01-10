@@ -47,6 +47,7 @@ use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 use PDOStatement;
@@ -1940,14 +1941,16 @@ abstract class Catalog extends database_object
             }
         }
         if ($song->label && AmpConfig::get('label')) {
+            $labelRepository = static::getLabelRepository();
+
             foreach (array_map('trim', explode(';', $song->label)) as $label_name) {
-                $label_id = Label::lookup(array('name' => $label_name));
+                $label_id = $labelRepository->lookup($label_name);
                 if ($label_id > 0) {
                     $label   = new Label($label_id);
                     $artists = $label->get_artists();
                     if (!in_array($song->artist, $artists)) {
                         debug_event('catalog.class', "$song->artist: adding association to $label->name", 4);
-                        $label->add_artist_assoc($song->artist);
+                        $labelRepository->addArtistAssoc($label->id, $song->artist);
                     }
                 }
             }
@@ -2985,5 +2988,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(SongId3TagWriterInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private static function getLabelRepository(): LabelRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LabelRepositoryInterface::class);
     }
 }

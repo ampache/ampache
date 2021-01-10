@@ -27,11 +27,13 @@ namespace Ampache\Model;
 use Ampache\Module\Album\Deletion\AlbumDeleterInterface;
 use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
 use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
+use Ampache\Module\Label\LabelListUpdaterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Repository\LabelRepositoryInterface;
 use PDOStatement;
 
 class Artist extends database_object implements library_item, GarbageCollectibleInterface
@@ -613,7 +615,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
             $this->f_tags = Tag::get_display($this->tags, true, 'artist');
 
             if (AmpConfig::get('label')) {
-                $this->labels   = Label::get_labels($this->id);
+                $this->labels   = $this->getLabelRepository()->getByArtist((int) $this->id);
                 $this->f_labels = Label::get_display($this->labels, true);
             }
 
@@ -976,7 +978,11 @@ class Artist extends database_object implements library_item, GarbageCollectible
         }
 
         if (AmpConfig::get('label') && isset($data['edit_labels'])) {
-            Label::update_label_list($data['edit_labels'], $this->id, true);
+            $this->getLabelListUpdater()->update(
+                $data['edit_labels'],
+                (int) $this->id,
+                true
+            );
         }
 
         return $current_id;
@@ -1120,5 +1126,25 @@ class Artist extends database_object implements library_item, GarbageCollectible
         global $dic;
 
         return $dic->get(AlbumTagUpdaterInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getLabelRepository(): LabelRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LabelRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getLabelListUpdater(): LabelListUpdaterInterface
+    {
+        global $dic;
+
+        return $dic->get(LabelListUpdaterInterface::class);
     }
 }

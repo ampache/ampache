@@ -120,4 +120,8 @@ interface ModelFactoryInterface
     public function createAccess(
         int $accessId
     ): Access;
+
+    public function createLabel(
+        int $labelId
+    ): Label;
 }
