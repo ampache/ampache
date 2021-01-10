@@ -26,10 +26,19 @@ namespace Ampache\Module\Catalog\Update;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Model\Catalog;
+use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\System\Dba;
 
 final class UpdateCatalog implements UpdateCatalogInterface
 {
+    private CatalogGarbageCollectorInterface $catalogGarbageCollector;
+
+    public function __construct(
+        CatalogGarbageCollectorInterface $catalogGarbageCollector
+    ) {
+        $this->catalogGarbageCollector = $catalogGarbageCollector;
+    }
+
     public function update(
         Interactor $interactor,
         bool $deactivateMemoryLimit,
@@ -131,7 +140,7 @@ final class UpdateCatalog implements UpdateCatalogInterface
             }
         }
         if ($cleanup === true || $verification === true) {
-            Catalog::garbage_collection();
+            $this->catalogGarbageCollector->collect();
         }
         if ($optimizeDatabase === true) {
             // Optimize Database Tables

@@ -63,9 +63,4 @@ interface library_item extends playable_item
      * @return mixed
      */
     public function update(array $data);
-
-    /**
-     * @return mixed
-     */
-    public static function garbage_collection();
 } // end library_item.interface

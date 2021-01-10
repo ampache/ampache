@@ -360,15 +360,6 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * garbage_collection
-     * @return mixed|void
-     */
-    public static function garbage_collection()
-    {
-        // Don't remove labels, it could still be used as description in a search
-    }
-
-    /**
      * get_artists
      * @return integer[]
      */

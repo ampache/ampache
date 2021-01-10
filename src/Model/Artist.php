@@ -34,7 +34,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use PDOStatement;
 
-class Artist extends database_object implements library_item
+class Artist extends database_object implements library_item, GarbageCollectibleInterface
 {
     protected const DB_TABLENAME = 'artist';
 

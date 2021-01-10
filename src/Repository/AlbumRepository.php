@@ -198,4 +198,12 @@ final class AlbumRepository implements AlbumRepositoryInterface
 
         return $results;
     }
+
+    /**
+     * Cleans out unused albums
+     */
+    public function collectGarbage(): void
+    {
+        Dba::write('DELETE FROM `album` USING `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `song`.`id` IS NULL');
+    }
 }

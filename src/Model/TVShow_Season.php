@@ -28,7 +28,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use PDOStatement;
 
-class TVShow_Season extends database_object implements library_item
+class TVShow_Season extends database_object implements library_item, GarbageCollectibleInterface
 {
     protected const DB_TABLENAME = 'tvshow_season';
 

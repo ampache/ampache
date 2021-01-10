@@ -1211,13 +1211,6 @@ class Search extends playlist_object
     }
 
     /**
-     * @return mixed|void
-     */
-    public static function garbage_collection()
-    {
-    }
-
-    /**
      * _mangle_data
      *
      * Private convenience function.  Mangles the input according to a set

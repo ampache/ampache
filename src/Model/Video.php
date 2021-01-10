@@ -33,7 +33,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 
-class Video extends database_object implements Media, library_item
+class Video extends database_object implements Media, library_item, GarbageCollectibleInterface
 {
     protected const DB_TABLENAME = 'video';
 

@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
+use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
@@ -46,6 +47,7 @@ use Ampache\Module\Catalog\Catalog_remote;
 use Ampache\Module\Catalog\Catalog_Seafile;
 use Ampache\Module\Catalog\Catalog_soundcloud;
 use Ampache\Module\Catalog\Catalog_subsonic;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 use PDOStatement;
@@ -1728,7 +1730,7 @@ abstract class Catalog extends database_object
 
         // Cleanup old objects that are no longer needed
         if (!AmpConfig::get('cron_cache')) {
-            Album::garbage_collection();
+            static::getAlbumRepository()->collectGarbage();
             Artist::garbage_collection();
         }
 
@@ -2168,33 +2170,6 @@ abstract class Catalog extends database_object
 
         return true;
     } // verify_catalog
-
-    /**
-     * garbage_collection
-     *
-     * This is a wrapper function for all of the different cleaning
-     * functions, it runs them in an order that resembles correctness.
-     */
-    public static function garbage_collection()
-    {
-        Song::garbage_collection();
-        Album::garbage_collection();
-        Artist::garbage_collection();
-        Video::garbage_collection();
-        Art::garbage_collection();
-        Stats::garbage_collection();
-        Rating::garbage_collection();
-        Userflag::garbage_collection();
-        Useractivity::garbage_collection();
-        Playlist::garbage_collection();
-        Tmp_Playlist::garbage_collection();
-        Shoutbox::garbage_collection();
-        Tag::garbage_collection();
-
-        // TODO: use InnoDB with foreign keys and on delete cascade to get rid of garbage collection
-        Metadata::garbage_collection();
-        MetadataField::garbage_collection();
-    }
 
     /**
      * trim_prefix
@@ -2885,7 +2860,7 @@ abstract class Catalog extends database_object
 
         // Remove any orphaned artists/albums/etc.
         if (!AmpConfig::get('cron_cache')) {
-            self::garbage_collection();
+            static::getCatalogGarbageCollector()->collect();
         }
     }
 
@@ -2977,5 +2952,25 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(SongRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private static function getAlbumRepository(): AlbumRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private static function getCatalogGarbageCollector(): CatalogGarbageCollectorInterface
+    {
+        global $dic;
+
+        return $dic->get(CatalogGarbageCollectorInterface::class);
     }
 }

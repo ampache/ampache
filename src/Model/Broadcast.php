@@ -406,13 +406,6 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
-     * @return mixed|void
-     */
-    public static function garbage_collection()
-    {
-    }
-
-    /**
      * Get play url.
      *
      * @param string $additional_params

@@ -411,14 +411,6 @@ class Live_Stream extends database_object implements Media, library_item
     }
 
     /**
-     * @return mixed|void
-     */
-    public static function garbage_collection()
-    {
-        // Do nothing
-    }
-
-    /**
      * @param integer $user
      * @param string $agent
      * @param array $location

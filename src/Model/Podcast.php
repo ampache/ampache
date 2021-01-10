@@ -83,15 +83,6 @@ class Podcast extends database_object implements library_item
     } // constructor
 
     /**
-     * garbage_collection
-     *
-     * This cleans out unused podcasts
-     */
-    public static function garbage_collection()
-    {
-    }
-
-    /**
      * get_catalogs
      *
      * Get all catalog ids related to this item.

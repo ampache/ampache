@@ -35,7 +35,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use PDOStatement;
 
-class Podcast_Episode extends database_object implements Media, library_item
+class Podcast_Episode extends database_object implements Media, library_item, GarbageCollectibleInterface
 {
     protected const DB_TABLENAME = 'podcast_episode';
 

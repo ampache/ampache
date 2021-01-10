@@ -790,14 +790,6 @@ class Channel extends database_object implements Media, library_item
     }
 
     /**
-     * @return mixed|void
-     */
-    public static function garbage_collection()
-    {
-        // Do nothing
-    }
-
-    /**
      * strtohex
      * @param string $source
      * @return string

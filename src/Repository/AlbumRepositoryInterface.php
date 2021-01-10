@@ -67,4 +67,9 @@ interface AlbumRepositoryInterface
         Album $album,
         int $catalogId = 0
     ): array;
+
+    /**
+     * Cleans out unused albums
+     */
+    public function collectGarbage(): void;
 }

@@ -31,6 +31,7 @@ use Ampache\Model\Catalog;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Share;
 use Ampache\Module\Cache\ObjectCacheInterface;
+use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Cron;
@@ -42,14 +43,18 @@ final class CronProcessCommand extends Command
 
     private ObjectCacheInterface $objectCache;
 
+    private CatalogGarbageCollectorInterface $catalogGarbageCollector;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        ObjectCacheInterface $objectCache
+        ObjectCacheInterface $objectCache,
+        CatalogGarbageCollectorInterface $catalogGarbageCollector
     ) {
         parent::__construct('run:cronProcess', 'Runs the cron process');
 
-        $this->configContainer = $configContainer;
-        $this->objectCache     = $objectCache;
+        $this->configContainer         = $configContainer;
+        $this->objectCache             = $objectCache;
+        $this->catalogGarbageCollector = $catalogGarbageCollector;
     }
 
     public function execute(): void
@@ -88,7 +93,7 @@ final class CronProcessCommand extends Command
          * Metadata::garbage_collection();
          * MetadataField::garbage_collection();
          */
-        Catalog::garbage_collection();
+        $this->catalogGarbageCollector->collect();
 
         /**
          * Session garbage_collection covers these functions.

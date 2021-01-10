@@ -36,7 +36,7 @@ use PDOStatement;
  * This class handles all of the genre related operations
  *
  */
-class Tag extends database_object implements library_item
+class Tag extends database_object implements library_item, GarbageCollectibleInterface
 {
     protected const DB_TABLENAME = 'tag';
 

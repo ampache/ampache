@@ -37,7 +37,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use PDOStatement;
 
-class Song extends database_object implements Media, library_item
+class Song extends database_object implements Media, library_item, GarbageCollectibleInterface
 {
     use Metadata;
 

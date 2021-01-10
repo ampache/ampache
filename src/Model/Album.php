@@ -283,16 +283,6 @@ class Album extends database_object implements library_item
     } // constructor
 
     /**
-     * garbage_collection
-     *
-     * Cleans out unused albums
-     */
-    public static function garbage_collection()
-    {
-        Dba::write('DELETE FROM `album` USING `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `song`.`id` IS NULL');
-    }
-
-    /**
      * build_cache
      * This takes an array of object ids and caches all of their information
      * with a single query
