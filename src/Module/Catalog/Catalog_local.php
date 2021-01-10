@@ -592,7 +592,7 @@ class Catalog_local extends Catalog
                 if ($chunk > 0) {
                     $media_type::clear_cache();
                 }
-                $total_updated += $this->_verify_chunk($media_type, $chunk, 10000);
+                $total_updated += $this->_verify_chunk(ObjectTypeToClassNameMapper::reverseMap($media_type), $chunk, 10000);
             }
         }
 
