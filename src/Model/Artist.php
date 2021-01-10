@@ -26,6 +26,7 @@ namespace Ampache\Model;
 
 use Ampache\Module\Album\Deletion\AlbumDeleterInterface;
 use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
+use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Recommendation;
@@ -996,10 +997,12 @@ class Artist extends database_object implements library_item
         Tag::update_tag_list($tags_comma, 'artist', $this->id, $force_update ? true : $override_childs);
 
         if ($override_childs || $add_to_childs) {
-            $albums = $this->get_albums();
+            $albums          = $this->get_albums();
+            $albumTagUpdater = $this->getAlbumTagUpdater();
+
             foreach ($albums as $album_id) {
                 $album = new Album($album_id);
-                $album->update_tags($tags_comma, $override_childs, $add_to_childs);
+                $albumTagUpdater->updateTags($album, $tags_comma, $override_childs, $add_to_childs);
             }
         }
     }
@@ -1099,10 +1102,23 @@ class Artist extends database_object implements library_item
         return $deleted;
     }
 
+    /**
+     * @deprecated
+     */
     private function getAlbumDeleter(): AlbumDeleterInterface
     {
         global $dic;
 
         return $dic->get(AlbumDeleterInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getAlbumTagUpdater(): AlbumTagUpdaterInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumTagUpdaterInterface::class);
     }
 }

@@ -17,21 +17,22 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\Album\Tag;
 
-namespace Ampache\Module\Album;
+use Ampache\Model\Album;
 
-use Ampache\Module\Album\Export\AlbumArtExporter;
-use Ampache\Module\Album\Export\AlbumArtExporterInterface;
-use function DI\autowire;
-
-return [
-    AlbumArtExporterInterface::class => autowire(AlbumArtExporter::class),
-    Export\Writer\LinuxMetadataWriter::class => autowire(),
-    Export\Writer\WindowsMetadataWriter::class => autowire(),
-    Deletion\AlbumDeleterInterface::class => autowire(Deletion\AlbumDeleter::class),
-    Tag\AlbumTagUpdaterInterface::class => autowire(Tag\AlbumTagUpdater::class),
-];
+interface AlbumTagUpdaterInterface
+{
+    /**
+     * Update tags of albums and/or songs
+     */
+    public function updateTags(
+        Album $album,
+        string $tagsComma,
+        bool $overrideChilds,
+        bool $addToChilds,
+        bool $forceUpdate = false
+    ): void;
+}

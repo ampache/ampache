@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
+use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
@@ -951,34 +952,18 @@ class Album extends database_object implements library_item
         }
 
         if (isset($data['edit_tags'])) {
-            $this->update_tags($data['edit_tags'], $override_childs, $add_to_childs, true);
+            $this->getAlbumTagUpdater()->updateTags(
+                $this,
+                $data['edit_tags'],
+                $override_childs,
+                $add_to_childs,
+                true
+            );
         }
 
         return $this->id;
     }
     // update
-
-    /**
-     * update_tags
-     *
-     * Update tags of albums and/or songs
-     * @param string $tags_comma
-     * @param boolean $override_childs
-     * @param boolean $add_to_childs
-     * @param boolean $force_update
-     */
-    public function update_tags($tags_comma, $override_childs, $add_to_childs, $force_update = false)
-    {
-        // When current_id not empty we force to overwrite current object
-        Tag::update_tag_list($tags_comma, 'album', $this->id, $force_update ? true : $override_childs);
-
-        if ($override_childs || $add_to_childs) {
-            $songs = $this->getSongRepository()->getByAlbum($this->id);
-            foreach ($songs as $song_id) {
-                Tag::update_tag_list($tags_comma, 'song', $song_id, $override_childs);
-            }
-        }
-    }
 
     /**
      * Update an album field.
@@ -1029,5 +1014,15 @@ class Album extends database_object implements library_item
         global $dic;
 
         return $dic->get(AlbumRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getAlbumTagUpdater(): AlbumTagUpdaterInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumTagUpdaterInterface::class);
     }
 }
