@@ -665,17 +665,19 @@ class Song extends database_object implements media, library_item
      * _get_ext_info
      * This function gathers information from the song_ext_info table and adds it to the
      * current object
+     * @param string $select
      * @return array
      */
-    public function _get_ext_info()
+    public function _get_ext_info($select = '')
     {
         $song_id = (int) ($this->id);
+        $columns = (!empty($select)) ? Dba::escape($select) : '*';
 
         if (parent::is_cached('song_data', $song_id)) {
             return parent::get_from_cache('song_data', $song_id);
         }
 
-        $sql        = "SELECT * FROM `song_data` WHERE `song_id` = ?";
+        $sql        = "SELECT $columns FROM `song_data` WHERE `song_id` = ?";
         $db_results = Dba::read($sql, array($song_id));
 
         $results = Dba::fetch_assoc($db_results);
@@ -686,12 +688,13 @@ class Song extends database_object implements media, library_item
     } // _get_ext_info
 
     /**
-      * fill_ext_info
+     * fill_ext_info
      * This calls the _get_ext_info and then sets the correct vars
+     * @param string $data_filter
      */
-    public function fill_ext_info()
+    public function fill_ext_info($data_filter = '')
     {
-        $info = $this->_get_ext_info();
+        $info = $this->_get_ext_info($data_filter);
 
         foreach ($info as $key => $value) {
             if ($key != 'song_id') {
