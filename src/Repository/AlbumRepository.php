@@ -206,4 +206,40 @@ final class AlbumRepository implements AlbumRepositoryInterface
     {
         Dba::write('DELETE FROM `album` USING `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `song`.`id` IS NULL');
     }
+
+    /**
+     * Get time for an album disk.
+     */
+    public function getDuration(int $albumId): int
+    {
+        $db_results = Dba::read(
+            'SELECT SUM(`song`.`time`) AS `time` from `song` WHERE `song`.`album` = ?',
+            [$albumId]
+        );
+
+        $results = Dba::fetch_assoc($db_results);
+
+        return (int) $results['time'];
+    }
+
+    /**
+     * Get time for an album disk and set it.
+     */
+    public function updateTime(
+        Album $album
+    ): int {
+        $albumId = (int) $album->id;
+
+        $time = $this->getDuration($albumId);
+        if ($time !== $album->time && $albumId) {
+            Dba::write(
+                sprintf(
+                    "UPDATE `album` SET `time`=$time WHERE `id`=%d",
+                    $albumId
+                )
+            );
+        }
+
+        return $time;
+    }
 }

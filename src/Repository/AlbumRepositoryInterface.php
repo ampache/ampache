@@ -72,4 +72,16 @@ interface AlbumRepositoryInterface
      * Cleans out unused albums
      */
     public function collectGarbage(): void;
+
+    /**
+     * Get time for an album disk.
+     */
+    public function getDuration(int $albumId): int;
+
+    /**
+     * Get time for an album disk and set it.
+     */
+    public function updateTime(
+        Album $album
+    ): int;
 }

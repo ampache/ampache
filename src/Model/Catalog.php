@@ -1719,7 +1719,7 @@ abstract class Catalog extends database_object
             case 'album':
                 $tags = self::getSongTags('album', $libitem->id);
                 Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, false);
-                $libitem->update_time();
+                static::getAlbumRepository()->updateTime($libitem);
                 break;
             case 'artist':
                 $tags = self::getSongTags('artist', $libitem->id);

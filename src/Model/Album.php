@@ -274,9 +274,15 @@ class Album extends database_object implements library_item
 
         // Looking for other albums with same mbid, ordering by disk ascending
         if (AmpConfig::get('album_group')) {
+            $total_duration  = 0;
+            $albumRepository = $this->getAlbumRepository();
+
+            foreach ($this->album_suite as $albumId) {
+                $total_duration = $albumRepository->getDuration((int) $albumId) + $total_duration;
+            }
             $this->allow_group_disks = true;
-            $this->album_suite       = $this->getAlbumRepository()->getAlbumSuite($this);
-            $this->total_duration    = $this->get_total_duration($this->album_suite);
+            $this->album_suite       = $albumRepository->getAlbumSuite($this);
+            $this->total_duration    = $total_duration;
         }
 
         return true;
@@ -633,7 +639,7 @@ class Album extends database_object implements library_item
         }
 
         if ($this->time == 0) {
-            $this->time = $this->update_time();
+            $this->time = $this->getAlbumRepository()->updateTime();
         }
     } // format
 
@@ -697,40 +703,6 @@ class Album extends database_object implements library_item
     public function get_childrens()
     {
         return $this->get_medias();
-    }
-
-    /**
-     * get_time
-     *
-     * Get time for an album disk.
-     * @param integer $album_id
-     * @return integer
-     */
-    public static function get_time($album_id)
-    {
-        $params     = array($album_id);
-        $sql        = "SELECT SUM(`song`.`time`) AS `time` from `song` WHERE `song`.`album` = ?";
-        $db_results = Dba::read($sql, $params);
-        $results    = Dba::fetch_assoc($db_results);
-
-        return (int) $results['time'];
-    }
-
-    /**
-     * get_total_duration
-     *
-     * Get time for a whole album
-     * @param array $album_ids
-     * @return integer
-     */
-    public function get_total_duration($album_ids)
-    {
-        $total_duration = 0;
-        foreach ($album_ids as $object_id) {
-            $total_duration = self::get_time((int) $object_id) + $total_duration;
-        }
-
-        return $total_duration;
     }
 
     /**
@@ -856,23 +828,6 @@ class Album extends database_object implements library_item
             $title = '[' . ($this->f_album_artist_name ?: $this->f_artist) . '] ' . $this->f_name;
             Art::display($type, $album_id, $title, $thumb, $this->link);
         }
-    }
-
-    /**
-     * update_time
-     *
-     * Get time for an album disk and set it.
-     * @return integer
-     */
-    public function update_time()
-    {
-        $time = self::get_time((int) $this->id);
-        if ($time !== $this->time && $this->id) {
-            $sql = "UPDATE `album` SET `time`=$time WHERE `id`=" . $this->id;
-            Dba::write($sql);
-        }
-
-        return $time;
     }
 
     /**
