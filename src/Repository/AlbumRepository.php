@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Album;
 use Ampache\Module\System\Dba;
 
 final class AlbumRepository implements AlbumRepositoryInterface
@@ -139,5 +140,62 @@ final class AlbumRepository implements AlbumRepositoryInterface
         );
 
         return $result !== false;
+    }
+
+    /**
+     * gets the album ids with the same musicbrainz identifier
+     *
+     * @return int[]
+     */
+    public function getAlbumSuite(
+        Album $album,
+        int $catalogId = 0
+    ): array {
+        $full_name = Dba::escape($album->full_name);
+        if ($full_name == '') {
+            return array();
+        }
+        $album_artist = "is null";
+        $release_type = "is null";
+        $mbid         = "is null";
+        $year         = (string)$album->year;
+
+        if ($album->album_artist) {
+            $album_artist = "= '" . ucwords((string) $album->album_artist) . "'";
+        }
+        if ($album->release_type) {
+            $release_type = "= '" . ucwords((string) $album->release_type) . "'";
+        }
+        if ($album->mbid) {
+            $mbid = "= '$album->mbid'";
+        }
+        $results       = array();
+        $where         = "WHERE `album`.`album_artist` $album_artist AND `album`.`mbid` $mbid AND `album`.`release_type` $release_type AND " .
+            "(`album`.`name` = '$full_name' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$full_name') " .
+            "AND `album`.`year` = $year ";
+        $catalog_where = "";
+        $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
+
+        if ($catalogId) {
+            $catalog_where .= " AND `catalog`.`id` = '$catalogId'";
+        }
+        if (AmpConfig::get('catalog_disable')) {
+            $catalog_where .= "AND `catalog`.`enabled` = '1'";
+        }
+
+        $db_results = Dba::read(
+            sprintf(
+                'SELECT DISTINCT `album`.`id`, MAX(`album`.`disk`) AS `disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` %s %s %s GROUP BY `album`.`id` ORDER BY `album`.`disk` ASC',
+                $catalog_join,
+                $where,
+                $catalog_where
+            )
+        );
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['id'];
+        }
+
+        return $results;
     }
 }

@@ -27,6 +27,7 @@ namespace Ampache\Model;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 use PDOStatement;
@@ -273,7 +274,7 @@ class Album extends database_object implements library_item
         // Looking for other albums with same mbid, ordering by disk ascending
         if (AmpConfig::get('album_group')) {
             $this->allow_group_disks = true;
-            $this->album_suite       = $this->get_album_suite();
+            $this->album_suite       = $this->getAlbumRepository()->getAlbumSuite($this);
             $this->total_duration    = $this->get_total_duration($this->album_suite);
         }
 
@@ -576,57 +577,6 @@ class Album extends database_object implements library_item
     }
 
     /**
-     * get_album_suite
-     * gets the album ids with the same musicbrainz identifier
-     * @param integer $catalog
-     * return integer[]
-     * @return array
-     */
-    public function get_album_suite($catalog = 0)
-    {
-        $full_name = Dba::escape($this->full_name);
-        if ($full_name == '') {
-            return array();
-        }
-        $album_artist = "is null";
-        $release_type = "is null";
-        $mbid         = "is null";
-        $year         = (string)$this->year;
-
-        if ($this->album_artist) {
-            $album_artist = "= '" . ucwords((string) $this->album_artist) . "'";
-        }
-        if ($this->release_type) {
-            $release_type = "= '" . ucwords((string)$this->release_type) . "'";
-        }
-        if ($this->mbid) {
-            $mbid = "= '$this->mbid'";
-        }
-        $results       = array();
-        $where         = "WHERE `album`.`album_artist` $album_artist AND `album`.`mbid` $mbid AND `album`.`release_type` $release_type AND " .
-                         "(`album`.`name` = '$full_name' OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = '$full_name') " .
-                         "AND `album`.`year` = $year ";
-        $catalog_where = "";
-        $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
-
-        if ($catalog) {
-            $catalog_where .= " AND `catalog`.`id` = '$catalog'";
-        }
-        if (AmpConfig::get('catalog_disable')) {
-            $catalog_where .= "AND `catalog`.`enabled` = '1'";
-        }
-
-        $sql        = "SELECT DISTINCT `album`.`id`, MAX(`album`.`disk`) AS `disk` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " . "$where $catalog_where GROUP BY `album`.`id` ORDER BY `album`.`disk` ASC";
-        $db_results = Dba::read($sql);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
-    } // get_album_suite
-
-    /**
      * format
      * This is the format function for this object. It sets cleaned up
      * album information with the base required
@@ -666,7 +616,7 @@ class Album extends database_object implements library_item
         $this->f_link = "<a href=\"" . $this->link . "\" title=\"" . scrub_out($this->full_name) . "\">" . scrub_out($this->f_name);
 
         // Looking if we need to combine or display disks
-        if ($this->disk && !$this->allow_group_disks && count($this->get_album_suite()) > 1) {
+        if ($this->disk && !$this->allow_group_disks && count($this->getAlbumRepository()->getAlbumSuite()) > 1) {
             $this->f_link .= " <span class=\"discnb\">[" . T_('Disk') . " " . $this->disk . "]</span>";
         }
 
@@ -1069,5 +1019,15 @@ class Album extends database_object implements library_item
         global $dic;
 
         return $dic->get(SongRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getAlbumRepository(): AlbumRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumRepositoryInterface::class);
     }
 }

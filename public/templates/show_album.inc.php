@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Album;
 use Ampache\Model\Art;
 use Ampache\Model\Catalog;
 use Ampache\Model\Rating;
@@ -39,12 +40,15 @@ use Ampache\Module\Util\ZipHandlerInterface;
 
 $web_path = AmpConfig::get('web_path');
 
+/** @var Album $album */
+/** @var \Ampache\Repository\AlbumRepositoryInterface $albumRepository */
+
 // Title for this album
 $title = scrub_out($album->name);
 if ($album->year > 0) {
     $title .= '&nbsp;(' . $album->year . ')';
 }
-if ($album->disk && !AmpConfig::get('album_group') && count($album->get_album_suite()) > 1) {
+if ($album->disk && !AmpConfig::get('album_group') && count($albumRepository->getAlbumSuite($album)) > 1) {
     $title .= "<span class=\"discnb disc" . $album->disk . "\">, " . T_('Disk') . " " . $album->disk . "</span>";
 }
 $title .= '&nbsp;-&nbsp;' . (($album->f_album_artist_link) ? $album->f_album_artist_link : $album->f_artist_link);

@@ -30,8 +30,8 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -45,43 +45,48 @@ final class UpdateGroupFromTagsAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private AlbumRepositoryInterface $albumRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
-        UiInterface $ui
+        UiInterface $ui,
+        AlbumRepositoryInterface $albumRepository
     ) {
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
         $this->ui              = $ui;
+        $this->albumRepository = $albumRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        require_once Ui::find_template('header.inc.php');
-        
-        $response = null;
-        
         // Make sure they are a 'power' user at least
         if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
             throw new AccessDeniedException();
         }
 
-        $object_id  = (int) filter_input(INPUT_GET, 'album_id', FILTER_SANITIZE_NUMBER_INT);
-        
+        $response = null;
+
+        $object_id = (int) $request->getQueryParams()['album_id'] ?? 0;
+
         $album = $this->modelFactory->createAlbum($object_id);
         $album->format();
-        
-        $catalog_id = $album->get_catalogs();
-        $type       = 'album';
-        $objects    = $album->get_album_suite();
-        $target_url = sprintf(
-            '%s/albums.php?action=show&amp;album=%d',
-            $this->configContainer->getWebPath(),
-            $object_id
-        );
-        
-        require_once Ui::find_template('show_update_item_group.inc.php');
 
+        $this->ui->showHeader();
+        $this->ui->show(
+            'show_update_item_group.inc.php',
+            [
+                'catalog_id' => $album->get_catalogs(),
+                'type' => 'album',
+                'objects' => $this->albumRepository->getAlbumSuite($album),
+                'target_url' => sprintf(
+                    '%s/albums.php?action=show&amp;album=%d',
+                    $this->configContainer->getWebPath(),
+                    $object_id
+                )
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
         

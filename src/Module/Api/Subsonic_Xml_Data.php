@@ -42,6 +42,7 @@ use Ampache\Model\PrivateMsg;
 use Ampache\Model\Rating;
 use Ampache\Model\Search;
 use Ampache\Model\Share;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use SimpleXMLElement;
 use Ampache\Model\Song;
@@ -832,11 +833,7 @@ class Subsonic_Xml_Data
     private static function formatAlbum($album)
     {
         $name = $album->full_name;
-        /*        if ($album->year > 0) {
-                    $name .= " [" . $album->year . "]";
-                }
-        */
-        if ($album->disk && !$album->allow_group_disks && count($album->get_album_suite()) > 1) {
+        if ($album->disk && !$album->allow_group_disks && count(static::getAlbumRepository()->getAlbumSuite($album)) > 1) {
             $name .= " [" . T_('Disk') . " " . $album->disk . "]";
         }
 
@@ -1605,5 +1602,15 @@ class Subsonic_Xml_Data
         global $dic;
 
         return $dic->get(SongRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private static function getAlbumRepository(): AlbumRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumRepositoryInterface::class);
     }
 }

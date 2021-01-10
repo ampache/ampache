@@ -21,6 +21,8 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Model\Album;
+
 interface AlbumRepositoryInterface
 {
     /**
@@ -55,4 +57,14 @@ interface AlbumRepositoryInterface
     public function delete(
         int $albumId
     ): bool;
+
+    /**
+     * gets the album ids with the same musicbrainz identifier
+     *
+     * @return int[]
+     */
+    public function getAlbumSuite(
+        Album $album,
+        int $catalogId = 0
+    ): array;
 }

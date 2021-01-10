@@ -34,6 +34,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -50,16 +51,20 @@ final class ShowAction implements ApplicationActionInterface
 
     private PrivilegeCheckerInterface $privilegeChecker;
 
+    private AlbumRepositoryInterface $albumRepository;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
         UiInterface $ui,
         LoggerInterface $logger,
-        PrivilegeCheckerInterface $privilegeChecker
+        PrivilegeCheckerInterface $privilegeChecker,
+        AlbumRepositoryInterface $albumRepository
     ) {
         $this->modelFactory     = $modelFactory;
         $this->ui               = $ui;
         $this->logger           = $logger;
         $this->privilegeChecker = $privilegeChecker;
+        $this->albumRepository  = $albumRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -76,11 +81,16 @@ final class ShowAction implements ApplicationActionInterface
             echo T_("You have requested an Album that does not exist.");
         // allow single disks to not be shown as multi's
         } elseif (count($album->album_suite) <= 1) {
-            $isAlbumEditable = $this->isEditable(
-                $gatekeeper->getUserId(),
-                $album
+            $this->ui->show(
+                'show_album.inc.php',
+                [
+                    'album' => $album,
+                    'isAlbumEditable' => $this->isEditable(
+                        $gatekeeper->getUserId(),
+                        $album
+                    )
+                ]
             );
-            require Ui::find_template('show_album.inc.php');
         } else {
             require Ui::find_template('show_album_group_disks.inc.php');
         }

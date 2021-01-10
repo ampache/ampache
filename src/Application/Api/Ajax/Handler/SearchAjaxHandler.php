@@ -35,9 +35,18 @@ use Ampache\Model\Search;
 use Ampache\Model\Song;
 use Ampache\Model\User;
 use Ampache\Model\Wanted;
+use Ampache\Repository\AlbumRepositoryInterface;
 
 final class SearchAjaxHandler implements AjaxHandlerInterface
 {
+    private AlbumRepositoryInterface $albumRepository;
+
+    public function __construct(
+        AlbumRepositoryInterface $albumRepository
+    ) {
+        $this->albumRepository = $albumRepository;
+    }
+
     public function handle(): void
     {
         // Switch on the actions
@@ -97,7 +106,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $album = new Album($albumid);
                         $album->format(true);
                         $a_title = $album->f_title;
-                        if ($album->disk && !$album->allow_group_disks && count($album->get_album_suite()) > 1) {
+                        if ($album->disk && !$album->allow_group_disks && count($this->albumRepository->getAlbumSuite($album)) > 1) {
                             $a_title .= " [" . T_('Disk') . " " . $album->disk . "]";
                         }
                         $results[] = array(
