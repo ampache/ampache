@@ -22,15 +22,8 @@
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Album;
+namespace Ampache\Module\Album\Deletion\Exception;
 
-use Ampache\Module\Album\Export\AlbumArtExporter;
-use Ampache\Module\Album\Export\AlbumArtExporterInterface;
-use function DI\autowire;
-
-return [
-    AlbumArtExporterInterface::class => autowire(AlbumArtExporter::class),
-    Export\Writer\LinuxMetadataWriter::class => autowire(),
-    Export\Writer\WindowsMetadataWriter::class => autowire(),
-    Deletion\AlbumDeleterInterface::class => autowire(Deletion\AlbumDeleter::class),
-];
+final class AlbumDeletionException extends \Exception
+{
+}

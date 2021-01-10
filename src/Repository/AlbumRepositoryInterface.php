@@ -48,4 +48,11 @@ interface AlbumRepositoryInterface
     public function getRandomSongs(
         int $albumId
     ): array;
+
+    /**
+     * Deletes the album entry
+     */
+    public function delete(
+        int $albumId
+    ): bool;
 }

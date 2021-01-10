@@ -126,4 +126,18 @@ final class AlbumRepository implements AlbumRepositoryInterface
 
         return $results;
     }
+
+    /**
+     * Deletes the album entry
+     */
+    public function delete(
+        int $albumId
+    ): bool {
+        $result = Dba::write(
+            'DELETE FROM `artist` WHERE `id` = ?',
+            [$albumId]
+        );
+
+        return $result !== false;
+    }
 }

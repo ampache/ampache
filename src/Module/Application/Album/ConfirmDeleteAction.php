@@ -28,6 +28,8 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Catalog;
 use Ampache\Model\ModelFactoryInterface;
+use Ampache\Module\Album\Deletion\AlbumDeleterInterface;
+use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -45,14 +47,18 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private AlbumDeleterInterface $albumDeleter;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
-        UiInterface $ui
+        UiInterface $ui,
+        AlbumDeleterInterface $albumDeleter
     ) {
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
         $this->ui              = $ui;
+        $this->albumDeleter    = $albumDeleter;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -76,20 +82,22 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             );
         }
 
-        if ($album->remove()) {
+        try {
+            $this->albumDeleter->delete($album);
+
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('The Album has been deleted'),
                 $this->configContainer->getWebPath()
             );
-        } else {
+        } catch (AlbumDeletionException $e) {
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 T_('Couldn\'t delete this Album.'),
                 $this->configContainer->getWebPath()
             );
         }
-        
+
         // Show the Footer
         $this->ui->showQueryStats();
         $this->ui->showFooter();

@@ -26,7 +26,6 @@ namespace Ampache\Model;
 
 use Ampache\Module\Statistics\Stats;
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Exception;
 use PDOStatement;
@@ -576,7 +575,7 @@ class Album extends database_object implements library_item
         $db_results = Dba::read($sql, $params);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
@@ -1067,38 +1066,6 @@ class Album extends database_object implements library_item
                 Tag::update_tag_list($tags_comma, 'song', $song_id, $override_childs);
             }
         }
-    }
-
-    /**
-     * remove
-     * @return PDOStatement|boolean
-     */
-    public function remove()
-    {
-        $deleted  = true;
-        $song_ids = $this->get_songs();
-        foreach ($song_ids as $song_id) {
-            $song    = new Song($song_id);
-            $deleted = $song->remove();
-            if (!$deleted) {
-                debug_event('album.class', 'Error when deleting the song `' . $song_id . '`.', 1);
-                break;
-            }
-        }
-
-        if ($deleted) {
-            $sql     = "DELETE FROM `album` WHERE `id` = ?";
-            $deleted = Dba::write($sql, array($this->id));
-            if ($deleted) {
-                Art::garbage_collection('album', $this->id);
-                Userflag::garbage_collection('album', $this->id);
-                Rating::garbage_collection('album', $this->id);
-                Shoutbox::garbage_collection('album', $this->id);
-                Useractivity::garbage_collection('album', $this->id);
-            }
-        }
-
-        return $deleted;
     }
 
     /**

@@ -24,6 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
+use Ampache\Module\Album\Deletion\AlbumDeleterInterface;
+use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Recommendation;
@@ -1071,8 +1073,12 @@ class Artist extends database_object implements library_item
         $album_ids = $this->get_albums();
         foreach ($album_ids as $albumid) {
             $album   = new Album($albumid);
-            $deleted = $album->remove();
-            if (!$deleted) {
+
+            try {
+                $this->getAlbumDeleter()->delete($album);
+            } catch (AlbumDeletionException $e) {
+                $deleted = false;
+
                 debug_event('artist.class', 'Error when deleting the album `' . $albumid . '`.', 1);
                 break;
             }
@@ -1091,5 +1097,12 @@ class Artist extends database_object implements library_item
         }
 
         return $deleted;
+    }
+
+    private function getAlbumDeleter(): AlbumDeleterInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumDeleterInterface::class);
     }
 }

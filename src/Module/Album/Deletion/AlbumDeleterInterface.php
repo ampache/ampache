@@ -20,17 +20,15 @@
  *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\Album\Deletion;
 
-namespace Ampache\Module\Album;
+use Ampache\Model\Album;
+use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
 
-use Ampache\Module\Album\Export\AlbumArtExporter;
-use Ampache\Module\Album\Export\AlbumArtExporterInterface;
-use function DI\autowire;
-
-return [
-    AlbumArtExporterInterface::class => autowire(AlbumArtExporter::class),
-    Export\Writer\LinuxMetadataWriter::class => autowire(),
-    Export\Writer\WindowsMetadataWriter::class => autowire(),
-    Deletion\AlbumDeleterInterface::class => autowire(Deletion\AlbumDeleter::class),
-];
+interface AlbumDeleterInterface
+{
+    /**
+     * @throws AlbumDeletionException
+     */
+    public function delete(Album $album): void;
+}
