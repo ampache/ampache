@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Album;
 
@@ -66,11 +66,9 @@ final class UpdateGroupFromTagsAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $response = null;
+        $albumId = (int) $request->getQueryParams()['album_id'] ?? 0;
 
-        $object_id = (int) $request->getQueryParams()['album_id'] ?? 0;
-
-        $album = $this->modelFactory->createAlbum($object_id);
+        $album = $this->modelFactory->createAlbum($albumId);
         $album->format();
 
         $this->ui->showHeader();
@@ -83,13 +81,13 @@ final class UpdateGroupFromTagsAction implements ApplicationActionInterface
                 'target_url' => sprintf(
                     '%s/albums.php?action=show&amp;album=%d',
                     $this->configContainer->getWebPath(),
-                    $object_id
+                    $albumId
                 )
             ]
         );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
         
-        return $response;
+        return null;
     }
 }
