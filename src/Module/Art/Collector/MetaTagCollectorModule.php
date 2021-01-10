@@ -32,6 +32,7 @@ use Ampache\Model\Song;
 use Ampache\Model\Video;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 use getID3;
 use Psr\Log\LoggerInterface;
@@ -42,12 +43,16 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
 
     private getID3 $getID3;
 
+    private SongRepositoryInterface $songRepository;
+
     public function __construct(
         LoggerInterface $logger,
-        getID3 $getID3
+        getID3 $getID3,
+        SongRepositoryInterface $songRepository
     ) {
-        $this->logger = $logger;
-        $this->getID3 = $getID3;
+        $this->logger         = $logger;
+        $this->getID3         = $getID3;
+        $this->songRepository = $songRepository;
     }
 
     /**
@@ -100,7 +105,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         // We need the filenames
         if ($art->type == 'album') {
             $album = new Album($art->uid);
-            $songs = $album->get_songs();
+            $songs = $this->songRepository->getByAlbum($album->id);
         } else {
             $artist = new Artist($art->uid);
             $songs  = $artist->get_songs();

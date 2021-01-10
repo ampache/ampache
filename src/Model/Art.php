@@ -33,6 +33,7 @@ use Ampache\Module\Util\VaInfo;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\System\Core;
+use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 use getID3;
 use PDOStatement;
@@ -363,7 +364,12 @@ class Art extends database_object
             $class_name = ObjectTypeToClassNameMapper::map($this->type);
             $object     = new $class_name($this->uid);
             debug_event('art.class', 'Inserting ' . $this->type . ' image' . $object->name . ' for song files.', 5);
-            $songs = $object->get_songs();
+            if ($this->type === 'album') {
+                /** Use special treatment for albums */
+                $this->getSongRepository()->getByAlbum($object->id);
+            } else {
+                $songs = $object->get_songs();
+            }
             foreach ($songs as $song_id) {
                 $song   = new Song($song_id);
                 $song->format();
@@ -1314,5 +1320,15 @@ class Art extends database_object
         echo "</div>";
 
         return true;
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 }

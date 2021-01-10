@@ -34,15 +34,20 @@ use Ampache\Model\Playlist;
 use Ampache\Model\Random;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 
 final class RandomAjaxHandler implements AjaxHandlerInterface
 {
     private AlbumRepositoryInterface $albumRepository;
 
+    private SongRepositoryInterface $songRepository;
+
     public function __construct(
-        AlbumRepositoryInterface $albumRepository
+        AlbumRepositoryInterface $albumRepository,
+        SongRepositoryInterface $songRepository
     ) {
         $this->albumRepository = $albumRepository;
+        $this->songRepository  = $songRepository;
     }
 
     public function handle(): void
@@ -82,14 +87,14 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                     $disc_ids = $album->get_group_disks_ids();
                     foreach ($disc_ids as $discid) {
                         $disc     = new Album($discid);
-                        $allsongs = $disc->get_songs();
+                        $allsongs = $this->songRepository->getByAlbum($disc->id);
                         foreach ($allsongs as $songid) {
                             $songs[] = $songid;
                         }
                     }
                 } else {
                     // songs for just this disk
-                    $songs = $album->get_songs();
+                    $songs = $this->songRepository->getByAlbum($album->id);
                 }
                 foreach ($songs as $song_id) {
                     Core::get_global('user')->playlist->add_object($song_id, 'song');

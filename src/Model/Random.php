@@ -27,6 +27,7 @@ namespace Ampache\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\SongRepositoryInterface;
 
 /**
  * Random Class
@@ -203,7 +204,7 @@ class Random
                 $songs = array();
                 foreach ($results as $result) {
                     $album = new Album($result);
-                    $songs = array_merge($songs, $album->get_songs());
+                    $songs = array_merge($songs, static::getSongRepository()->getByAlbum($album->id));
                 }
 
                 return $songs;
@@ -376,5 +377,15 @@ class Random
         $sql .= " ORDER BY RAND() $limit_sql";
 
         return $sql;
+    }
+
+    /**
+     * @deprecated
+     */
+    private static function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 }

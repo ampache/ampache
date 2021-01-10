@@ -34,6 +34,7 @@ use Ampache\Model\Userflag;
 use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -47,14 +48,18 @@ final class AlbumDeleter implements AlbumDeleterInterface
 
     private LoggerInterface $logger;
 
+    private SongRepositoryInterface $songRepository;
+
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
         ModelFactoryInterface $modelFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        SongRepositoryInterface $songRepository
     ) {
         $this->albumRepository = $albumRepository;
         $this->modelFactory    = $modelFactory;
         $this->logger          = $logger;
+        $this->songRepository  = $songRepository;
     }
 
     /**
@@ -63,7 +68,7 @@ final class AlbumDeleter implements AlbumDeleterInterface
     public function delete(
         Album $album
     ): void {
-        $songIds = $album->get_songs();
+        $songIds = $this->songRepository->getByAlbum($album->id);
         foreach ($songIds as $songId) {
             $song    = $this->modelFactory->createSong($songId);
             $deleted = $song->remove();

@@ -31,6 +31,7 @@ use Ampache\Model\Art;
 use Ampache\Model\Artist;
 use Ampache\Model\Catalog;
 use Ampache\Model\Clip;
+use Ampache\Repository\SongRepositoryInterface;
 use DateTime;
 use DOMDocument;
 use Ampache\Model\Live_Stream;
@@ -811,7 +812,7 @@ class Upnp_Api
                     case 1: // Get artists list
                         $artists                  = Catalog::get_artists(null, $count, $start);
                         $counts                   = Catalog::count_server(false, 'artist');
-                        list($maxCount, $artists) = array($counts['artist'], $artists);
+                        [$maxCount, $artists]     = array($counts['artist'], $artists);
                         foreach ($artists as $artist) {
                             $artist->format();
                             $mediaItems[] = self::_itemArtist($artist, $parent);
@@ -821,7 +822,7 @@ class Upnp_Api
                         $artist = new Artist($pathreq[1]);
                         if ($artist->id) {
                             $album_ids                  = $artist->get_albums();
-                            list($maxCount, $album_ids) = self::_slice($album_ids, $start, $count);
+                            [$maxCount, $album_ids]     = self::_slice($album_ids, $start, $count);
                             foreach ($album_ids as $album_id) {
                                 $album = new Album($album_id);
                                 $album->format();
@@ -836,7 +837,7 @@ class Upnp_Api
                     case 1: // Get albums list
                         $album_ids                  = Catalog::get_albums($count, $start);
                         $counts                     = Catalog::count_server(false, 'album');
-                        list($maxCount, $album_ids) = array($counts['album'], $album_ids);
+                        [$maxCount, $album_ids]     = array($counts['album'], $album_ids);
                         foreach ($album_ids as $album_id) {
                             $album = new Album($album_id);
                             $album->format();
@@ -846,8 +847,8 @@ class Upnp_Api
                     case 2: // Get album's songs list
                         $album = new Album($pathreq[1]);
                         if ($album->id) {
-                            $song_ids                  = $album->get_songs();
-                            list($maxCount, $song_ids) = self::_slice($song_ids, $start, $count);
+                            $song_ids              = static::getSongRepository()->getByAlbum($album->id);
+                            [$maxCount, $song_ids] = self::_slice($song_ids, $start, $count);
                             foreach ($song_ids as $song_id) {
                                 $song = new Song($song_id);
                                 $song->format();
@@ -864,7 +865,7 @@ class Upnp_Api
                         foreach ($catalogs as $catalog_id) {
                             $catalog                = Catalog::create_from_id($catalog_id);
                             $songs                  = $catalog->get_songs();
-                            list($maxCount, $songs) = self::_slice($songs, $start, $count);
+                            [$maxCount, $songs]     = self::_slice($songs, $start, $count);
                             foreach ($songs as $song) {
                                 $song->format();
                                 $mediaItems[] = self::_itemSong($song, $parent);
@@ -877,7 +878,7 @@ class Upnp_Api
                 switch (count($pathreq)) {
                     case 1: // Get playlists list
                         $pl_ids                  = Playlist::get_playlists();
-                        list($maxCount, $pl_ids) = self::_slice($pl_ids, $start, $count);
+                        [$maxCount, $pl_ids]     = self::_slice($pl_ids, $start, $count);
                         foreach ($pl_ids as $pl_id) {
                             $playlist = new Playlist($pl_id);
                             $playlist->format();
@@ -888,7 +889,7 @@ class Upnp_Api
                         $playlist = new Playlist($pathreq[1]);
                         if ($playlist->id) {
                             $items                  = $playlist->get_items();
-                            list($maxCount, $items) = self::_slice($items, $start, $count);
+                            [$maxCount, $items]     = self::_slice($items, $start, $count);
                             foreach ($items as $item) {
                                 if ($item['object_type'] == 'song') {
                                     $song = new Song($item['object_id']);
@@ -904,7 +905,7 @@ class Upnp_Api
                 switch (count($pathreq)) {
                     case 1: // Get playlists list
                         $pl_ids                  = Search::get_searches();
-                        list($maxCount, $pl_ids) = self::_slice($pl_ids, $start, $count);
+                        [$maxCount, $pl_ids]     = self::_slice($pl_ids, $start, $count);
                         foreach ($pl_ids as $pl_id) {
                             $playlist = new Search($pl_id, 'song');
                             $playlist->format();
@@ -915,7 +916,7 @@ class Upnp_Api
                         $playlist = new Search($pathreq[1], 'song');
                         if ($playlist->id) {
                             $items                  = $playlist->get_items();
-                            list($maxCount, $items) = self::_slice($items, $start, $count);
+                            [$maxCount, $items]     = self::_slice($items, $start, $count);
                             foreach ($items as $item) {
                                 if ($item['object_type'] == 'song') {
                                     $song = new Song($item['object_id']);
@@ -931,7 +932,7 @@ class Upnp_Api
                 switch (count($pathreq)) {
                     case 1: // Get radios list
                         $radios                  = Live_Stream::get_all_radios();
-                        list($maxCount, $radios) = self::_slice($radios, $start, $count);
+                        [$maxCount, $radios]     = self::_slice($radios, $start, $count);
                         foreach ($radios as $radio_id) {
                             $radio = new Live_Stream($radio_id);
                             $radio->format();
@@ -944,7 +945,7 @@ class Upnp_Api
                 switch (count($pathreq)) {
                     case 1: // Get podcasts list
                         $podcasts                  = Catalog::get_podcasts();
-                        list($maxCount, $podcasts) = self::_slice($podcasts, $start, $count);
+                        [$maxCount, $podcasts]     = self::_slice($podcasts, $start, $count);
                         foreach ($podcasts as $podcast) {
                             $podcast->format();
                             $mediaItems[] = self::_itemPodcast($podcast, $parent);
@@ -954,7 +955,7 @@ class Upnp_Api
                         $podcast = new Podcast($pathreq[1]);
                         if ($podcast->id) {
                             $episodes                  = $podcast->get_episodes();
-                            list($maxCount, $episodes) = self::_slice($episodes, $start, $count);
+                            [$maxCount, $episodes]     = self::_slice($episodes, $start, $count);
                             foreach ($episodes as $episode_id) {
                                 $episode = new Podcast_Episode($episode_id);
                                 $episode->format();
@@ -976,7 +977,7 @@ class Upnp_Api
                 if (AmpConfig::get('podcast')) {
                     $mediaItems[] = self::_musicMetadata('podcasts');
                 }
-                list($maxCount, $mediaItems) = self::_slice($mediaItems, $start, $count);
+                [$maxCount, $mediaItems] = self::_slice($mediaItems, $start, $count);
                 break;
         }
 
@@ -1145,7 +1146,7 @@ class Upnp_Api
                 switch (count($pathreq)) {
                     case 1: // Get tvshow list
                         $tvshows                  = Catalog::get_tvshows();
-                        list($maxCount, $tvshows) = self::_slice($tvshows, $start, $count);
+                        [$maxCount, $tvshows]     = self::_slice($tvshows, $start, $count);
                         foreach ($tvshows as $tvshow) {
                             $tvshow->format();
                             $mediaItems[] = self::_itemTVShow($tvshow, $parent);
@@ -1155,7 +1156,7 @@ class Upnp_Api
                         $tvshow = new TvShow($pathreq[1]);
                         if ($tvshow->id) {
                             $season_ids                  = $tvshow->get_seasons();
-                            list($maxCount, $season_ids) = self::_slice($season_ids, $start, $count);
+                            [$maxCount, $season_ids]     = self::_slice($season_ids, $start, $count);
                             foreach ($season_ids as $season_id) {
                                 $season = new TVShow_Season($season_id);
                                 $season->format();
@@ -1167,7 +1168,7 @@ class Upnp_Api
                         $season = new TVShow_Season($pathreq[2]);
                         if ($season->id) {
                             $episode_ids                  = $season->get_episodes();
-                            list($maxCount, $episode_ids) = self::_slice($episode_ids, $start, $count);
+                            [$maxCount, $episode_ids]     = self::_slice($episode_ids, $start, $count);
                             foreach ($episode_ids as $episode_id) {
                                 $video = new Video($episode_id);
                                 $video->format();
@@ -1181,7 +1182,7 @@ class Upnp_Api
                 switch (count($pathreq)) {
                     case 1: // Get clips list
                         $videos                  = Catalog::get_videos(null, 'clip');
-                        list($maxCount, $videos) = self::_slice($videos, $start, $count);
+                        [$maxCount, $videos]     = self::_slice($videos, $start, $count);
                         foreach ($videos as $video) {
                             $video->format();
                             $mediaItems[] = self::_itemVideo($video, $parent);
@@ -1193,7 +1194,7 @@ class Upnp_Api
                 switch (count($pathreq)) {
                     case 1: // Get clips list
                         $videos                  = Catalog::get_videos(null, 'movie');
-                        list($maxCount, $videos) = self::_slice($videos, $start, $count);
+                        [$maxCount, $videos]     = self::_slice($videos, $start, $count);
                         foreach ($videos as $video) {
                             $video->format();
                             $mediaItems[] = self::_itemVideo($video, $parent);
@@ -1205,7 +1206,7 @@ class Upnp_Api
                 switch (count($pathreq)) {
                     case 1: // Get clips list
                         $videos                  = Catalog::get_videos(null, 'personal_video');
-                        list($maxCount, $videos) = self::_slice($videos, $start, $count);
+                        [$maxCount, $videos]     = self::_slice($videos, $start, $count);
                         foreach ($videos as $video) {
                             $video->format();
                             $mediaItems[] = self::_itemVideo($video, $parent);
@@ -1512,7 +1513,7 @@ class Upnp_Api
 
         switch ($search_terms['type']) {
             case 'artist':
-                list($maxCount, $ids) = self::_slice($ids, $start, $count);
+                [$maxCount, $ids] = self::_slice($ids, $start, $count);
                 foreach ($ids as $artist_id) {
                     $artist = new Artist($artist_id);
                     $artist->format();
@@ -1520,7 +1521,7 @@ class Upnp_Api
                 }
             break;
             case 'song':
-                list($maxCount, $ids) = self::_slice($ids, $start, $count);
+                [$maxCount, $ids] = self::_slice($ids, $start, $count);
                 foreach ($ids as $song_id) {
                     $song = new Song($song_id);
                     $song->format();
@@ -1528,7 +1529,7 @@ class Upnp_Api
                 }
             break;
             case 'album':
-                list($maxCount, $ids) = self::_slice($ids, $start, $count);
+                [$maxCount, $ids] = self::_slice($ids, $start, $count);
                 foreach ($ids as $album_id) {
                     $album = new Album($album_id);
                     $album->format();
@@ -1537,7 +1538,7 @@ class Upnp_Api
                 }
             break;
             case 'playlist':
-                list($maxCount, $ids) = self::_slice($ids, $start, $count);
+                [$maxCount, $ids] = self::_slice($ids, $start, $count);
                 foreach ($ids as $pl_id) {
                     $playlist = new Playlist($pl_id);
                     $playlist->format();
@@ -1545,7 +1546,7 @@ class Upnp_Api
                 }
             break;
             case 'tag':
-                list($maxCount, $ids) = self::_slice($ids, $start, $count);
+                [$maxCount, $ids] = self::_slice($ids, $start, $count);
                 foreach ($ids as $tag_id) {
                     $tag = new Tag($tag_id);
                     $tag->format();
@@ -1923,5 +1924,15 @@ class Upnp_Api
             '3g2' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mp4:*',),
             '3gp' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mp4:*',),
         );
+    }
+
+    /**
+     * @deprecated
+     */
+    private static function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 }

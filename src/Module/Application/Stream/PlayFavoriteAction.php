@@ -28,6 +28,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
+use Ampache\Repository\SongRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -38,12 +39,16 @@ final class PlayFavoriteAction extends AbstractStreamAction
 
     private ConfigContainerInterface $configContainer;
 
+    private SongRepositoryInterface $songRepository;
+
     public function __construct(
         LoggerInterface $logger,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        SongRepositoryInterface $songRepository
     ) {
         parent::__construct($logger, $configContainer);
         $this->configContainer = $configContainer;
+        $this->songRepository  = $songRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -59,10 +64,17 @@ final class PlayFavoriteAction extends AbstractStreamAction
 
         switch ($inputType) {
             case 'artist':
-            case 'album':
                 foreach ($data as $value) {
                     $songs     = $value->get_songs();
                     $mediaIds  = array_merge($mediaIds, $songs);
+                }
+                break;
+            case 'album':
+                foreach ($data as $value) {
+                    $mediaIds  = array_merge(
+                        $mediaIds,
+                        $this->songRepository->getByAlbum((int) $value->id)
+                    );
                 }
                 break;
             case 'song':

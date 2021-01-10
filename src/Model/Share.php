@@ -420,34 +420,6 @@ class Share extends database_object
     }
 
     /**
-     * @param $media_id
-     * @return boolean
-     */
-    public function is_shared_media($media_id)
-    {
-        $is_shared = false;
-        switch ($this->object_type) {
-            case 'album':
-            case 'playlist':
-                $class_name = ObjectTypeToClassNameMapper::map($this->object_type);
-                $object     = new $class_name($this->object_id);
-                $songs      = $object->get_songs();
-                foreach ($songs as $songid) {
-                    $is_shared = ($media_id == $songid);
-                    if ($is_shared) {
-                        break;
-                    }
-                }
-                break;
-            default:
-                $is_shared = (($this->object_type == 'song' || $this->object_type == 'video') && $this->object_id == $media_id);
-                break;
-        }
-
-        return $is_shared;
-    }
-
-    /**
      * @return mixed
      */
     public function get_user_owner()

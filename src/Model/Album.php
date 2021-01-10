@@ -27,6 +27,7 @@ namespace Ampache\Model;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 use PDOStatement;
 
@@ -543,45 +544,6 @@ class Album extends database_object implements library_item
     }
 
     /**
-     * get_songs
-     * gets the songs for this album takes an optional limit
-     * and an optional artist, if artist is passed it only gets
-     * songs with this album + specified artist
-     * @param integer $limit
-     * @param string $artist
-     * @return integer[]
-     */
-    public function get_songs($limit = 0, $artist = '')
-    {
-        $results = array();
-
-        $sql = "SELECT `song`.`id` FROM `song` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
-        }
-        $sql .= "WHERE `song`.`album` = ? ";
-        $params = array($this->id);
-        if (strlen((string)$artist)) {
-            $sql .= "AND `artist` = ? ";
-            $params[] = $artist;
-        }
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND `catalog`.`enabled` = '1' ";
-        }
-        $sql .= "ORDER BY `song`.`track`, `song`.`title`";
-        if ($limit) {
-            $sql .= " LIMIT " . (string)$limit;
-        }
-        $db_results = Dba::read($sql, $params);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
-        }
-
-        return $results;
-    } // get_songs
-
-    /**
      * get_http_album_query_ids
      * return the html album parameters with all album suite ids
      * @param string $url_param_name
@@ -870,7 +832,7 @@ class Album extends database_object implements library_item
     {
         $medias = array();
         if (!$filter_type || $filter_type == 'song') {
-            $songs = $this->get_songs();
+            $songs = $this->getSongRepository()->getByAlbum($this->id);
             foreach ($songs as $song_id) {
                 $medias[] = array(
                     'object_type' => 'song',
@@ -1061,7 +1023,7 @@ class Album extends database_object implements library_item
         Tag::update_tag_list($tags_comma, 'album', $this->id, $force_update ? true : $override_childs);
 
         if ($override_childs || $add_to_childs) {
-            $songs = $this->get_songs();
+            $songs = $this->getSongRepository()->getByAlbum($this->id);
             foreach ($songs as $song_id) {
                 Tag::update_tag_list($tags_comma, 'song', $song_id, $override_childs);
             }
@@ -1097,5 +1059,15 @@ class Album extends database_object implements library_item
         }
 
         return (int)$disk;
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 }

@@ -33,6 +33,7 @@ use Ampache\Model\Catalog;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Song;
 use Ampache\Module\Album\Export\Writer\MetadataWriterInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Mockery\MockInterface;
 use org\bovigo\vfs\vfsStream;
 use Psr\Log\LoggerInterface;
@@ -48,6 +49,9 @@ class AlbumArtExporterTest extends MockeryTestCase
     /** @var ModelFactoryInterface|MockInterface|null */
     private MockInterface $modelFactory;
 
+    /** @var MockInterface|SongRepositoryInterface|null */
+    private MockInterface $songRepository;
+
     private ?AlbumArtExporter $subject;
 
     public function setUp(): void
@@ -55,11 +59,13 @@ class AlbumArtExporterTest extends MockeryTestCase
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->logger          = $this->mock(LoggerInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->songRepository  = $this->mock(SongRepositoryInterface::class);
 
         $this->subject = new AlbumArtExporter(
             $this->configContainer,
             $this->logger,
-            $this->modelFactory
+            $this->modelFactory,
+            $this->songRepository
         );
     }
 
@@ -109,6 +115,8 @@ class AlbumArtExporterTest extends MockeryTestCase
         $file     = $fs_root->url() . '/some-file';
         $raw_mime = '/some-raw-mime.png';
 
+        $album->id = $albumId;
+
         $this->expectException(Exception\AlbumArtExportException::class);
         $this->expectExceptionMessage(
             'Unable to open `vfs:/folder.some-raw-mime.png` for writing',
@@ -132,8 +140,8 @@ class AlbumArtExporterTest extends MockeryTestCase
             ->once()
             ->andReturn($song);
 
-        $album->shouldReceive('get_songs')
-            ->with(1)
+        $this->songRepository->shouldReceive('getByAlbum')
+            ->with($albumId, 1)
             ->once()
             ->andReturn([$songId]);
 
@@ -176,6 +184,8 @@ class AlbumArtExporterTest extends MockeryTestCase
         $raw_mime  = 'image/png';
         $raw_art   = 'some-raw-bytes';
 
+        $album->id = $albumId;
+
         $catalog->shouldReceive('get_album_ids')
             ->withNoArgs()
             ->once()
@@ -194,8 +204,8 @@ class AlbumArtExporterTest extends MockeryTestCase
             ->once()
             ->andReturn($song);
 
-        $album->shouldReceive('get_songs')
-            ->with(1)
+        $this->songRepository->shouldReceive('getByAlbum')
+            ->with($albumId, 1)
             ->once()
             ->andReturn([$songId]);
 

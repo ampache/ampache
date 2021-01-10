@@ -41,6 +41,7 @@ use Ampache\Model\Artist;
 use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Model\Democratic;
+use Ampache\Repository\SongRepositoryInterface;
 use DOMDocument;
 use Ampache\Model\Playlist;
 use Ampache\Model\Podcast;
@@ -717,8 +718,8 @@ class Xml_Data
 
             // Handle includes
             $songs = (in_array("songs", $include))
-                ? self::songs($album->get_songs(), $user_id, false)
-                :$album->song_count;
+                ? self::songs(static::getSongRepository()->getByAlbum($album->id), $user_id, false)
+                : $album->song_count;
 
             // count multiple disks
             if ($album->allow_group_disks) {
@@ -1396,5 +1397,15 @@ class Xml_Data
         } else {
             return $xmlstr;
         }
+    }
+
+    /**
+     * @deprecated
+     */
+    private static function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 }

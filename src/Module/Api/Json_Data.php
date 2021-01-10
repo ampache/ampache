@@ -50,6 +50,7 @@ use Ampache\Model\User;
 use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;
 use Ampache\Model\Video;
+use Ampache\Repository\SongRepositoryInterface;
 
 /**
  * JSON_Data Class
@@ -473,7 +474,7 @@ class Json_Data
 
             // Handle includes
             $songs = (in_array("songs", $include))
-                ? self::songs($album->get_songs(), $user_id, false)
+                ? self::songs(static::getSongRepository()->getByAlbum($album->id), $user_id, false)
                 : $album->song_count;
 
             // count multiple disks
@@ -1139,4 +1140,14 @@ class Json_Data
 
         return json_encode(array("activity" => $JSON), JSON_PRETTY_PRINT);
     } // timeline
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
+    }
 }

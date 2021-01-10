@@ -36,6 +36,7 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -52,16 +53,20 @@ final class DefaultAction implements ApplicationActionInterface
 
     private FunctionCheckerInterface $functionChecker;
 
+    private SongRepositoryInterface $songRepository;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
         ZipHandlerInterface $zipHandler,
-        FunctionCheckerInterface $functionChecker
+        FunctionCheckerInterface $functionChecker,
+        SongRepositoryInterface $songRepository
     ) {
         $this->modelFactory    = $modelFactory;
         $this->logger          = $logger;
         $this->zipHandler      = $zipHandler;
         $this->functionChecker = $functionChecker;
+        $this->songRepository  = $songRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -128,7 +133,7 @@ final class DefaultAction implements ApplicationActionInterface
                         switch ($object_type) {
                             case 'album':
                                 $album     = $this->modelFactory->createAlbum($media_id);
-                                $media_ids = array_merge($media_ids, $album->get_songs());
+                                $media_ids = array_merge($media_ids, $this->songRepository->getByAlbum($album->id));
                                 break;
                             case 'song':
                                 $media_ids[] = $media_id;

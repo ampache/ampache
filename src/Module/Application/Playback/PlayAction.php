@@ -42,7 +42,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Statistics\Stats;
@@ -51,6 +50,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\SongRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -64,14 +64,18 @@ final class PlayAction implements ApplicationActionInterface
 
     private NetworkCheckerInterface $networkChecker;
 
+    private SongRepositoryInterface $songRepository;
+
     public function __construct(
         Horde_Browser $browser,
         AuthenticationManagerInterface $authenticationManager,
-        NetworkCheckerInterface $networkChecker
+        NetworkCheckerInterface $networkChecker,
+        SongRepositoryInterface $songRepository
     ) {
         $this->browser               = $browser;
         $this->authenticationManager = $authenticationManager;
         $this->networkChecker        = $networkChecker;
+        $this->songRepository        = $songRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -302,7 +306,7 @@ final class PlayAction implements ApplicationActionInterface
                 return null;
             }
 
-            if (!$share->is_shared_media($object_id)) {
+            if (!$this->is_shared_media($share, $object_id)) {
                 header('HTTP/1.1 403 Access Unauthorized');
 
                 return null;
@@ -881,5 +885,39 @@ final class PlayAction implements ApplicationActionInterface
         debug_event('play/index', 'Stream ended at ' . $bytes_streamed . ' (' . $real_bytes_streamed . ') bytes out of ' . $stream_size, 5);
 
         return null;
+    }
+
+    private function is_shared_media(Share $share, $media_id): bool
+    {
+        $is_shared = false;
+        switch ($share->object_type) {
+            case 'album':
+                $class_name = ObjectTypeToClassNameMapper::map($share->object_type);
+                $object     = new $class_name($share->object_id);
+                $songs      = $this->songRepository->getByAlbum((int) $object->id);
+                foreach ($songs as $songid) {
+                    $is_shared = ($media_id == $songid);
+                    if ($is_shared) {
+                        break;
+                    }
+                }
+                break;
+            case 'playlist':
+                $class_name = ObjectTypeToClassNameMapper::map($share->object_type);
+                $object     = new $class_name($share->object_id);
+                $songs      = $object->get_songs();
+                foreach ($songs as $songid) {
+                    $is_shared = ($media_id == $songid);
+                    if ($is_shared) {
+                        break;
+                    }
+                }
+                break;
+            default:
+                $is_shared = (($share->object_type == 'song' || $share->object_type == 'video') && $share->object_id == $media_id);
+                break;
+        }
+
+        return $is_shared;
     }
 }

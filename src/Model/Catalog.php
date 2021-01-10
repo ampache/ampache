@@ -46,6 +46,7 @@ use Ampache\Module\Catalog\Catalog_remote;
 use Ampache\Module\Catalog\Catalog_Seafile;
 use Ampache\Module\Catalog\Catalog_soundcloud;
 use Ampache\Module\Catalog\Catalog_subsonic;
+use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 use PDOStatement;
 use ReflectionException;
@@ -1669,7 +1670,7 @@ abstract class Catalog extends database_object
         switch ($type) {
             case 'album':
                 $libitem = new Album($object_id);
-                $songs   = $libitem->get_songs();
+                $songs   = static::getSongRepository()->getByAlbum($libitem->id);
                 break;
             case 'artist':
                 $libitem = new Artist($object_id);
@@ -2967,4 +2968,14 @@ abstract class Catalog extends database_object
                 return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
         }
     } // xml_get_header
+
+    /**
+     * @deprecated
+     */
+    private static function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
+    }
 }

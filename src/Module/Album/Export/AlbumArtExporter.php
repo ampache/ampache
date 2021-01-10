@@ -30,6 +30,7 @@ use Ampache\Model\Art;
 use Ampache\Model\Catalog;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Album\Export;
+use Ampache\Repository\SongRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -44,14 +45,18 @@ final class AlbumArtExporter implements AlbumArtExporterInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private SongRepositoryInterface $songRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         LoggerInterface $logger,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        SongRepositoryInterface $songRepository
     ) {
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
         $this->modelFactory    = $modelFactory;
+        $this->songRepository  = $songRepository;
     }
 
     public function export(
@@ -76,7 +81,7 @@ final class AlbumArtExporter implements AlbumArtExporterInterface
             $album = $this->modelFactory->createAlbum((int) $album_id);
 
             // Get the first song in the album
-            $songs = $album->get_songs(1);
+            $songs = $this->songRepository->getByAlbum($album->id, 1);
             $song  = $this->modelFactory->createSong((int) $songs[0]);
             $dir   = dirname($song->file);
 

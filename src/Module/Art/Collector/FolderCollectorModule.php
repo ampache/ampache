@@ -34,6 +34,8 @@ use Ampache\Model\Video;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
 final class FolderCollectorModule implements CollectorModuleInterface
@@ -42,12 +44,16 @@ final class FolderCollectorModule implements CollectorModuleInterface
 
     private LoggerInterface $logger;
 
+    private SongRepositoryInterface $songRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        SongRepositoryInterface $songRepository
     ) {
         $this->configContainer = $configContainer;
         $this->logger          = $logger;
+        $this->songRepository  = $songRepository;
     }
 
     /**
@@ -93,7 +99,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
         $dirs = array();
         if ($art->type == 'album') {
             $media = new Album($art->uid);
-            $songs = $media->get_songs();
+            $songs = $this->songRepository->getByAlbum($media->id);
             foreach ($songs as $song_id) {
                 $song   = new Song($song_id);
                 $dirs[] = Core::conv_lc_file(dirname($song->file));

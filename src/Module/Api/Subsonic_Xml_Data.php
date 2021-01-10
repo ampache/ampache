@@ -42,6 +42,7 @@ use Ampache\Model\PrivateMsg;
 use Ampache\Model\Rating;
 use Ampache\Model\Search;
 use Ampache\Model\Share;
+use Ampache\Repository\SongRepositoryInterface;
 use SimpleXMLElement;
 use Ampache\Model\Song;
 use Ampache\Model\Tag;
@@ -621,7 +622,7 @@ class Subsonic_Xml_Data
             $disc_ids = $album->get_group_disks_ids();
             foreach ($disc_ids as $discid) {
                 $disc     = new Album($discid);
-                $allsongs = $disc->get_songs();
+                $allsongs = static::getSongRepository()->getByAlbum($disc->id);
                 foreach ($allsongs as $songid) {
                     self::addSong($xalbum, $songid, $addAmpacheInfo);
                 }
@@ -921,7 +922,7 @@ class Subsonic_Xml_Data
         $disc_ids = $album->get_group_disks_ids();
         foreach ($disc_ids as $discid) {
             $disc     = new Album($discid);
-            $allsongs = $disc->get_songs();
+            $allsongs = static::getSongRepository()->getByAlbum($disc->id);
             foreach ($allsongs as $songid) {
                 self::addSong($xdir, $songid, false, "child");
             }
@@ -1312,7 +1313,7 @@ class Subsonic_Xml_Data
             }
         } elseif ($share->object_type == 'album') {
             $album = new Album($share->object_id);
-            $songs = $album->get_songs();
+            $songs = static::getSongRepository()->getByAlbum($album->id);
             foreach ($songs as $songid) {
                 self::addSong($xshare, $songid, false, "entry");
             }
@@ -1594,5 +1595,15 @@ class Subsonic_Xml_Data
         }
         $xbookmark->addAttribute('time', (string)($message->creation_date * 1000));
         $xbookmark->addAttribute('message', (string)$message->message);
+    }
+
+    /**
+     * @deprecated
+     */
+    private static function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 }

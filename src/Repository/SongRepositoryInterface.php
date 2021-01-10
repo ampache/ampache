@@ -20,14 +20,14 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace Ampache\Repository;
 
-use function DI\autowire;
-
-return [
-    AccessRepositoryInterface::class => autowire(AccessRepository::class),
-    AlbumRepositoryInterface::class => autowire(AlbumRepository::class),
-    SongRepositoryInterface::class => autowire(SongRepository::class),
-];
+interface SongRepositoryInterface
+{
+    /**
+     * gets the songs for an album takes an optional limit
+     *
+     * @return int[]
+     */
+    public function getByAlbum(int $albumId, int $limit = 0): array;
+}

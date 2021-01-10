@@ -31,6 +31,7 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
+use Ampache\Repository\SongRepositoryInterface;
 
 /**
  * Class AlbumSongsMethod
@@ -74,14 +75,14 @@ class AlbumSongsMethod
             $disc_ids = $album->get_group_disks_ids();
             foreach ($disc_ids as $discid) {
                 $disc     = new Album($discid);
-                $allsongs = $disc->get_songs();
+                $allsongs = static::getSongRepository()->getByAlbum($disc->id);
                 foreach ($allsongs as $songid) {
                     $songs[] = $songid;
                 }
             }
         } else {
             // songs for just this disk
-            $songs = $album->get_songs();
+            $songs = static::getSongRepository()->getByAlbum($album->id);
         }
         if (empty($songs)) {
             Api::empty('song', $input['api_format']);
@@ -104,5 +105,15 @@ class AlbumSongsMethod
         Session::extend($input['auth']);
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 }
