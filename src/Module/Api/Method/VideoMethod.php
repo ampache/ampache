@@ -71,7 +71,7 @@ final class VideoMethod
         $user = User::get_from_username(Session::username($input['auth']));
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::videos(array($object_id), $user->id);
+                echo JSON_Data::videos(array($object_id), $user->id, false);
                 break;
             default:
                 echo Xml_Data::videos(array($object_id), $user->id);

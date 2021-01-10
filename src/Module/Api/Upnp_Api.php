@@ -108,7 +108,7 @@ class Upnp_Api
      * @param string $host
      * @param integer $port
      * @param string $prefix
-     * @param bool $alive
+     * @param boolean $alive
      */
     public static function sddpSend($delay = 15, $host = "239.255.255.250", $port = 1900, $prefix = "NT", $alive = true)
     {

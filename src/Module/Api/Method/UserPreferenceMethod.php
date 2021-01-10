@@ -63,13 +63,12 @@ final class UserPreferenceMethod
 
             return false;
         }
-        $output_array =  array('preference' => $preference);
         switch ($input['api_format']) {
             case 'json':
-                echo json_encode($output_array, JSON_PRETTY_PRINT);
+                echo json_encode($preference, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml_Data::object_array($output_array['preference'], 'preference');
+                echo XML_Data::object_array($preference, 'preference');
         }
         Session::extend($input['auth']);
 

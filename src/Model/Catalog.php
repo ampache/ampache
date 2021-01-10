@@ -771,7 +771,7 @@ abstract class Catalog extends database_object
      *
      * This returns the current number of songs, videos, albums, and artists
      * across all catalogs on the server
-     * @param bool $enabled
+     * @param boolean $enabled
      * @param string $table
      * @return array
      */

@@ -279,8 +279,7 @@ final class Session implements SessionInterface
         // Regenerate the session ID to prevent fixation
         switch ($data['type']) {
             case 'api':
-                $key = (isset($data['apikey'])) ? md5(((string)$data['apikey'] . (string)time())) : md5(uniqid((string)rand(),
-                    true));
+                $key = (isset($data['apikey'])) ? md5(((string) $data['apikey'] . md5(uniqid((string) rand(), true)))) : md5(uniqid((string) rand(), true));
                 break;
             case 'stream':
                 $key = (isset($data['sid'])) ? $data['sid'] : md5(uniqid((string)rand(), true));

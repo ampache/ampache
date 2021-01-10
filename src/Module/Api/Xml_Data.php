@@ -644,16 +644,18 @@ class Xml_Data
             // Handle includes
             $albums = (in_array("albums", $include))
                 ? self::albums($artist->get_albums(), array(), $user_id, false)
-                : ($artist->albums ?: 0);
+                : '';
             $songs = (in_array("songs", $include))
                 ? self::songs($artist->get_songs(), $user_id, false)
-                : ($artist->songs ?: 0);
+                : '';
 
             $string .= "<artist id=\"" . $artist->id . "\">\n" .
                     "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n" .
                     $tag_string .
                     "\t<albums>" . $albums . "</albums>\n" .
+                    "\t<albumcount>" . ($artist->albums ?: 0) . "</albumcount>\n" .
                     "\t<songs>" . $songs . "</songs>\n" .
+                    "\t<songcount>" . ($artist->songs ?: 0) . "</songcount>\n" .
                     "\t<art><![CDATA[$art_url]]></art>\n" .
                     "\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n" .
                     "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
@@ -719,7 +721,7 @@ class Xml_Data
             // Handle includes
             $songs = (in_array("songs", $include))
                 ? self::songs(static::getSongRepository()->getByAlbum($album->id), $user_id, false)
-                : $album->song_count;
+                : '';
 
             // count multiple disks
             if ($album->allow_group_disks) {
@@ -729,6 +731,7 @@ class Xml_Data
             $string .= "\t<time>" . $album->total_duration . "</time>\n" .
                     "\t<year>" . $album->year . "</year>\n" .
                     "\t<tracks>" . $songs . "</tracks>\n" .
+                    "\t<songcount>" . $album->song_count . "</songcount>\n" .
                     "\t<disk>" . $disk . "</disk>\n" .
                     self::genre_string($album->tags) .
                     "\t<art><![CDATA[$art_url]]></art>\n" .
@@ -1130,6 +1133,7 @@ class Xml_Data
      *
      * @param User $user User
      * @param bool $fullinfo
+     *
      * @return string return xml
      */
     public static function user(User $user, $fullinfo)
