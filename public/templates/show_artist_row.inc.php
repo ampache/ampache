@@ -28,9 +28,13 @@ use Ampache\Model\User;
 use Ampache\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
+// @deprecated
+global $dic;
+$gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
