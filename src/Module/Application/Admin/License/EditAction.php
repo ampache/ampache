@@ -30,8 +30,8 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\License\LicenseCreatorInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\LicenseRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -45,18 +45,18 @@ final class EditAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
-    private LicenseCreatorInterface $licenseCreator;
+    private LicenseRepositoryInterface $licenseRepository;
 
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
-        LicenseCreatorInterface $licenseCreator
+        LicenseRepositoryInterface $licenseRepository
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-        $this->licenseCreator  = $licenseCreator;
+        $this->ui                = $ui;
+        $this->configContainer   = $configContainer;
+        $this->modelFactory      = $modelFactory;
+        $this->licenseRepository = $licenseRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -74,11 +74,16 @@ final class EditAction implements ApplicationActionInterface
             $license = $this->modelFactory->createLicense($licenseId);
 
             if ($license->id) {
-                $license->update($data);
+                $this->licenseRepository->update(
+                    $licenseId,
+                    $data['name'] ?? '',
+                    $data['description'] ?? '',
+                    $data['external_link'] ?? ''
+                );
             }
             $text = T_('The License has been updated');
         } else {
-            $this->licenseCreator->create(
+            $this->licenseRepository->create(
                 $data['name'] ?? '',
                 $data['description'] ?? '',
                 $data['external_link'] ?? ''

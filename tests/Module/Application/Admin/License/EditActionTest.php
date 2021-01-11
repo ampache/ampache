@@ -31,8 +31,8 @@ use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\License\LicenseCreatorInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\LicenseRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -47,23 +47,23 @@ class EditActionTest extends MockeryTestCase
     /** @var MockInterface|ModelFactoryInterface|null */
     private MockInterface $modelFactory;
 
-    /** @var MockInterface|LicenseCreatorInterface|null */
-    private MockInterface $licenseCreator;
+    /** @var MockInterface|LicenseRepositoryInterface|null */
+    private MockInterface $licenseRepository;
 
     private ?EditAction $subject;
 
     public function setUp(): void
     {
-        $this->ui              = $this->mock(UiInterface::class);
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-        $this->licenseCreator  = $this->mock(LicenseCreatorInterface::class);
+        $this->ui                = $this->mock(UiInterface::class);
+        $this->configContainer   = $this->mock(ConfigContainerInterface::class);
+        $this->modelFactory      = $this->mock(ModelFactoryInterface::class);
+        $this->licenseRepository = $this->mock(LicenseRepositoryInterface::class);
 
         $this->subject = new EditAction(
             $this->ui,
             $this->configContainer,
             $this->modelFactory,
-            $this->licenseCreator
+            $this->licenseRepository
         );
     }
 
@@ -91,14 +91,27 @@ class EditActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
         $license    = $this->mock(License::class);
 
-        $licenseId = 666;
-        $data      = ['license_id' => (string) 666, 'some-key' => 'some-data'];
-        $webPath   = 'some-path';
+        $licenseId     = 666;
+        $webPath       = 'some-path';
+        $name          = 'some-name';
+        $description   = 'some-description';
+        $external_link = 'some-external-link';
+        $data          = [
+            'license_id' => (string) 666,
+            'name' => $name,
+            'description' => $description,
+            'external_link' => $external_link,
+        ];
 
         $license->id = $licenseId;
 
-        $license->shouldReceive('update')
-            ->with($data)
+        $this->licenseRepository->shouldReceive('update')
+            ->with(
+                $licenseId,
+                $name,
+                $description,
+                $external_link
+            )
             ->once();
 
         $this->configContainer->shouldReceive('getWebPath')
@@ -171,7 +184,7 @@ class EditActionTest extends MockeryTestCase
             ->once()
             ->andReturn($data);
 
-        $this->licenseCreator->shouldReceive('create')
+        $this->licenseRepository->shouldReceive('create')
             ->with($name, $description, '')
             ->once();
 

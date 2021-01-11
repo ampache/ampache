@@ -17,37 +17,44 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-declare(strict_types=1);
+namespace Ampache\Repository;
 
-namespace Ampache\Module\License;
-
-use Ampache\Model\License;
-use Ampache\Model\ModelFactoryInterface;
-
-final class LicenseCreator implements LicenseCreatorInterface
+interface LicenseRepositoryInterface
 {
-    private ModelFactoryInterface $modelFactory;
+    /**
+     * Returns a list of licenses accessible by the current user.
+     *
+     * @return int[]
+     */
+    public function getAll(): array;
 
-    public function __construct(
-        ModelFactoryInterface $modelFactory
-    ) {
-        $this->modelFactory = $modelFactory;
-    }
-
+    /**
+     * This inserts a new license entry, it returns the auto_inc id
+     *
+     * @return int The id of the created license
+     */
     public function create(
         string $name,
         string $description,
         string $externalLink
-    ): License {
-        $licenseId = License::create([
-            'name' => $name,
-            'description' => $description,
-            'external_link' => $externalLink
-        ]);
+    ): int;
 
-        return $this->modelFactory->createLicense($licenseId);
-    }
+    /**
+     * This takes a key'd array of data as input and updates a license entry
+     */
+    public function update(
+        int $licenseId,
+        string $name,
+        string $description,
+        string $externalLink
+    ): void;
+
+    /**
+     * Deletes the license
+     */
+    public function delete(
+        int $licenseId
+    ): void;
 }

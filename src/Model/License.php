@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Module\System\Dba;
+use Ampache\Repository\LicenseRepositoryInterface;
 
 class License
 {
@@ -85,35 +86,6 @@ class License
     } // has_info
 
     /**
-     * create
-     * This takes a key'd array of data as input and inserts a new license entry, it returns the auto_inc id
-     * @param array $data
-     * @return integer
-     */
-    public static function create(array $data)
-    {
-        $sql = "INSERT INTO `license` (`name`, `description`, `external_link`) " . "VALUES (? , ?, ?)";
-        Dba::write($sql, array($data['name'], $data['description'], $data['external_link']));
-        $insert_id = Dba::insert_id();
-
-        return (int)$insert_id;
-    } // create
-
-    /**
-     * update
-     * This takes a key'd array of data as input and updates a license entry
-     * @param array $data
-     * @return integer
-     */
-    public function update(array $data)
-    {
-        $sql = "UPDATE `license` SET `name` = ?, `description` = ?, `external_link` = ? WHERE `id` = ?";
-        Dba::write($sql, array($data['name'], $data['description'], $data['external_link'], $this->id));
-
-        return $this->id;
-    } // create
-
-    /**
      * format
      * this function takes the object and reformats some values
      */
@@ -121,53 +93,6 @@ class License
     {
         $this->f_link = ($this->external_link) ? '<a href="' . $this->external_link . '">' . $this->name . '</a>' : $this->name;
     } // format
-
-    /**
-     * Deletes the license
-     */
-    public function delete(): void
-    {
-        $sql = "DELETE FROM `license` WHERE `id` = ?";
-        Dba::write($sql, [$this->id]);
-    }
-
-    /**
-     * get_licenses
-     * Returns a list of licenses accessible by the current user.
-     * @return integer[]
-     */
-    public static function get_licenses()
-    {
-        $sql        = 'SELECT `id` from `license` ORDER BY `name`';
-        $db_results = Dba::read($sql);
-
-        $results = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
-    } // get_licenses
-
-    /**
-     * get_license_songs
-     * Returns a list of song ID's attached to a license ID.
-     *
-     * @param integer $license_id
-     * @return integer[]
-     */
-    public static function get_license_songs($license_id)
-    {
-        $sql        = 'SELECT `id` from `song` WHERE `song`.`license` = ?';
-        $db_results = Dba::read($sql, array($license_id));
-
-        $results = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
-    } // get_license_songs
 
     /**
      * lookup
@@ -191,13 +116,19 @@ class License
         while ($row = Dba::fetch_assoc($db_results)) {
             return $row['id'];
         }
-        // create one if missing
-        $license = array(
-            'name' => $value,
-            'description' => null,
-            'external_link' => null
-        );
 
-        return self::create($license);
+        // create one if missing
+        return static::getLicenseRepository()->create(
+            $value,
+            '',
+            ''
+        );
     } // get_licenses
+
+    private static function getLicenseRepository(): LicenseRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LicenseRepositoryInterface::class);
+    }
 }

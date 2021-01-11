@@ -32,6 +32,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\LicenseRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -46,18 +47,23 @@ class DeleteActionTest extends MockeryTestCase
     /** @var MockInterface|ConfigContainerInterface|null */
     private MockInterface $configContainer;
 
+    /** @var MockInterface|LicenseRepositoryInterface|null */
+    private MockInterface $licenseRepository;
+
     private ?DeleteAction $subject;
 
     public function setUp(): void
     {
-        $this->ui              = $this->mock(UiInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->ui                = $this->mock(UiInterface::class);
+        $this->modelFactory      = $this->mock(ModelFactoryInterface::class);
+        $this->configContainer   = $this->mock(ConfigContainerInterface::class);
+        $this->licenseRepository = $this->mock(LicenseRepositoryInterface::class);
 
         $this->subject = new DeleteAction(
             $this->ui,
             $this->configContainer,
-            $this->modelFactory
+            $this->modelFactory,
+            $this->licenseRepository
         );
     }
 
@@ -88,6 +94,8 @@ class DeleteActionTest extends MockeryTestCase
         $licenseId = 666;
         $webPath   = 'some-path';
 
+        $license->id = $licenseId;
+
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()
             ->once()
@@ -108,8 +116,8 @@ class DeleteActionTest extends MockeryTestCase
             ->once()
             ->andReturn($license);
 
-        $license->shouldReceive('delete')
-            ->withNoArgs()
+        $this->licenseRepository->shouldReceive('delete')
+            ->with($licenseId)
             ->once();
 
         $this->ui->shouldReceive('showHeader')

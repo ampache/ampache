@@ -28,6 +28,7 @@ use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Repository\LicenseRepositoryInterface;
 
 /**
  * Search-related voodoo.  Beware tentacles.
@@ -541,7 +542,7 @@ class Search extends playlist_object
         $this->type_text('label', T_('Label'));
         if (AmpConfig::get('licensing')) {
             $licenses = array();
-            foreach (License::get_licenses() as $license_id) {
+            foreach ($this->getLicenseRepository()->getAll() as $license_id) {
                 $license               = new License($license_id);
                 $licenses[$license_id] = $license->name;
             }
@@ -2440,5 +2441,15 @@ class Search extends playlist_object
         }
 
         return $search;
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getLicenseRepository(): LicenseRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LicenseRepositoryInterface::class);
     }
 }

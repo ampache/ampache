@@ -28,5 +28,4 @@ namespace Ampache\Module\License;
 use function DI\autowire;
 
 return [
-    LicenseCreatorInterface::class => autowire(LicenseCreator::class),
 ];

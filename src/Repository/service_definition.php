@@ -32,4 +32,5 @@ return [
     SongRepositoryInterface::class => autowire(SongRepository::class),
     LabelRepositoryInterface::class => autowire(LabelRepository::class),
     ArtistRepositoryInterface::class => autowire(ArtistRepository::class),
+    LicenseRepositoryInterface::class => autowire(LicenseRepository::class),
 ];

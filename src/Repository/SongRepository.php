@@ -175,4 +175,24 @@ final class SongRepository implements SongRepositoryInterface
 
         return $results;
     }
+
+    /**
+     * Returns a list of song ID's attached to a license ID.
+     *
+     * @return int[]
+     */
+    public function getByLicense(int $licenseId): array
+    {
+        $db_results = Dba::read(
+            'SELECT `id` from `song` WHERE `song`.`license` = ?',
+            [$licenseId]
+        );
+
+        $results = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['id'];
+        }
+
+        return $results;
+    }
 }

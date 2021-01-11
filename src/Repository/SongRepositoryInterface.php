@@ -69,4 +69,11 @@ interface SongRepositoryInterface
     public function getByArtist(
         Artist $artist
     ): array;
+
+    /**
+     * Returns a list of song ID's attached to a license ID.
+     *
+     * @return int[]
+     */
+    public function getByLicense(int $licenseId): array;
 }
