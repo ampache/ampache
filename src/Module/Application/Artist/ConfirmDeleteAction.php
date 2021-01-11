@@ -31,6 +31,8 @@ use Ampache\Model\Catalog;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Artist\Deletion\ArtistDeleterInterface;
+use Ampache\Module\Artist\Deletion\Exception\ArtistDeletionException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -46,14 +48,18 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
     
     private ModelFactoryInterface $modelFactory;
 
+    private ArtistDeleterInterface $artistDeleter;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        ArtistDeleterInterface $artistDeleter
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
+        $this->artistDeleter   = $artistDeleter;
     }
     
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -77,20 +83,22 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             );
         }
 
-        if ($artist->remove()) {
+        try {
+            $this->artistDeleter->remove($artist);
+
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('The Artist has been deleted'),
                 $this->configContainer->getWebPath()
             );
-        } else {
+        } catch (ArtistDeletionException $e) {
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 T_('Couldn\'t delete this Artist.'),
                 $this->configContainer->getWebPath()
             );
         }
-        
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

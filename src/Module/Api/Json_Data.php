@@ -50,6 +50,7 @@ use Ampache\Model\User;
 use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;
 use Ampache\Model\Video;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
 /**
@@ -396,7 +397,7 @@ class Json_Data
 
             // Handle includes
             $albums = (in_array("albums", $include))
-                ? self::albums($artist->get_albums(), array(), $user_id, false)
+                ? self::albums(static::getAlbumRepository()->getByArtist($artist), array(), $user_id, false)
                 : array();
             $songs = (in_array("songs", $include))
                 ? self::songs($artist->get_songs(), $user_id, false)
@@ -1190,5 +1191,15 @@ class Json_Data
         global $dic;
 
         return $dic->get(SongRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getAlbumRepository(): AlbumRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumRepositoryInterface::class);
     }
 }

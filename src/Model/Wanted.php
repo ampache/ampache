@@ -28,6 +28,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Exception;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
@@ -140,7 +141,7 @@ class Wanted extends database_object
         $owngroups = array();
         $wartist   = array();
         if ($artist) {
-            $albums = $artist->get_albums();
+            $albums = static::getAlbumRepository()->getByArtist($artist);
             foreach ($albums as $albumid) {
                 $album = new Album($albumid);
                 if (trim((string)$album->mbid_group)) {
@@ -544,5 +545,12 @@ class Wanted extends database_object
         }
 
         return $results;
+    }
+
+    private static function getAlbumRepository(): AlbumRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumRepositoryInterface::class);
     }
 }

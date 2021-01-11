@@ -17,19 +17,12 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Ampache\Repository;
+namespace Ampache\Module\Artist\Deletion\Exception;
 
-use function DI\autowire;
-
-return [
-    AccessRepositoryInterface::class => autowire(AccessRepository::class),
-    AlbumRepositoryInterface::class => autowire(AlbumRepository::class),
-    SongRepositoryInterface::class => autowire(SongRepository::class),
-    LabelRepositoryInterface::class => autowire(LabelRepository::class),
-    ArtistRepositoryInterface::class => autowire(ArtistRepository::class),
-];
+final class ArtistDeletionException extends \Exception
+{
+}

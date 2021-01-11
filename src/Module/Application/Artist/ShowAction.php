@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -48,28 +49,44 @@ final class ShowAction implements ApplicationActionInterface
 
     private LoggerInterface $logger;
 
+    private AlbumRepositoryInterface $albumRepository;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        AlbumRepositoryInterface $albumRepository
     ) {
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->logger          = $logger;
+        $this->albumRepository = $albumRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
-        
+
+        $catalogId = $_REQUEST['catalog'] ?? null;
+        if ($catalogId !== null) {
+            $catalogId = (int) $catalogId;
+        }
+
         $artist = $this->modelFactory->createArtist((int) $_REQUEST['artist']);
         $artist->format();
         if ($this->configContainer->get(ConfigurationKeyEnum::ALBUM_RELEASE_TYPE)) {
-            $multi_object_ids = $artist->get_albums($_REQUEST['catalog'], true);
+            $multi_object_ids = $this->albumRepository->getByArtist(
+                $artist,
+                $catalogId,
+                true
+            );
         } else {
-            $object_ids = $artist->get_albums($_REQUEST['catalog']);
+            $object_ids = $this->albumRepository->getByArtist(
+                $artist,
+                $catalogId
+            );
         }
         $object_type = 'album';
         if (!$artist->id) {

@@ -539,7 +539,7 @@ class Subsonic_Xml_Data
         $xartist->addAttribute('name', (string)self::checkName($artist->f_full_name));
         $allalbums = array();
         if (($extra && !$albumsSet) || $albums) {
-            $allalbums = $artist->get_albums();
+            $allalbums = static::getAlbumRepository()->getByArtist($artist);
         }
 
         if ($extra) {
@@ -894,7 +894,7 @@ class Subsonic_Xml_Data
         $xdir->addAttribute('id', (string)self::getArtistId($artist->id));
         $xdir->addAttribute('name', (string)$artist->f_full_name);
 
-        $allalbums = $artist->get_albums();
+        $allalbums = static::getAlbumRepository()->getByArtist($artist);
         foreach ($allalbums as $albumid) {
             $album = new Album($albumid);
             self::addAlbum($xdir, $album, false, false, "child");

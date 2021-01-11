@@ -24,15 +24,15 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
-use Ampache\Module\Album\Deletion\AlbumDeleterInterface;
-use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
 use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
+use Ampache\Module\Artist\Tag\ArtistTagUpdaterInterface;
 use Ampache\Module\Label\LabelListUpdaterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use PDOStatement;
 
@@ -282,84 +282,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
         return new Artist($row['id']);
     } // get_from_name
-
-    /**
-     * get_albums
-     * gets the album ids that this artist is a part
-     * of
-     * @param integer|null $catalog
-     * @param boolean $group_release_type
-     * @return integer[]
-     */
-    public function get_albums($catalog = null, $group_release_type = false)
-    {
-        $catalog_where = "";
-        $catalog_join  = "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog`";
-        if ($catalog !== null) {
-            $catalog_where .= " AND `catalog`.`id` = '" . Dba::escape($catalog) . "'";
-        }
-        if (AmpConfig::get('catalog_disable')) {
-            $catalog_where .= "AND `catalog`.`enabled` = '1'";
-        }
-
-        $sort_type = AmpConfig::get('album_sort');
-        $sort_disk = (AmpConfig::get('album_group')) ? "" : ", `album`.`disk`";
-        switch ($sort_type) {
-            case 'year_asc':
-                $sql_sort = '`album`.`year` ASC' . $sort_disk;
-                break;
-            case 'year_desc':
-                $sql_sort = '`album`.`year` DESC' . $sort_disk;
-                break;
-            case 'name_asc':
-                $sql_sort = '`album`.`name` ASC' . $sort_disk;
-                break;
-            case 'name_desc':
-                $sql_sort = '`album`.`name` DESC' . $sort_disk;
-                break;
-            default:
-                $sql_sort = '`album`.`name`' . $sort_disk . ', `album`.`year`';
-        }
-
-        $sql = "SELECT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " . "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort";
-
-        if (AmpConfig::get('album_group')) {
-            $sql = "SELECT MAX(`album`.`id`) AS `id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " . "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ORDER BY $sql_sort";
-        }
-        //debug_event('artist.class', 'get_albums ' . $sql, 5);
-
-        $db_results = Dba::read($sql);
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            if ($group_release_type) {
-                // We assume undefined release type is album
-                $rtype = $row['release_type'] ?: 'album';
-                if (!isset($results[$rtype])) {
-                    $results[$rtype] = array();
-                }
-                $results[$rtype][] = $row['id'];
-
-                $sort = (string)AmpConfig::get('album_release_type_sort');
-                if ($sort) {
-                    $results_sort = array();
-                    $asort        = explode(',', $sort);
-
-                    foreach ($asort as $rtype) {
-                        if (array_key_exists($rtype, $results)) {
-                            $results_sort[$rtype] = $results[$rtype];
-                            unset($results[$rtype]);
-                        }
-                    }
-
-                    $results = array_merge($results_sort, $results);
-                }
-            } else {
-                $results[] = $row['id'];
-            }
-        }
-
-        return $results;
-    } // get_albums
 
     /**
      * get_songs
@@ -674,7 +596,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     public function get_childrens()
     {
         $medias = array();
-        $albums = $this->get_albums();
+        $albums = $this->getAlbumRepository()->getByArtist($this);
         foreach ($albums as $album_id) {
             $medias[] = array(
                 'object_type' => 'album',
@@ -974,7 +896,13 @@ class Artist extends database_object implements library_item, GarbageCollectible
         }
 
         if (isset($data['edit_tags'])) {
-            $this->update_tags($data['edit_tags'], $override_childs, $add_to_childs, true);
+            $this->getArtistTagUpdater()->updateTags(
+                $this,
+                $data['edit_tags'],
+                $override_childs,
+                $add_to_childs,
+                true
+            );
         }
 
         if (AmpConfig::get('label') && isset($data['edit_labels'])) {
@@ -987,31 +915,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
         return $current_id;
     } // update
-
-    /**
-     * update_tags
-     *
-     * Update tags of artists and/or albums
-     * @param string $tags_comma
-     * @param boolean $override_childs
-     * @param boolean $add_to_childs
-     * @param integer|null $current_id
-     * @param boolean $force_update
-     */
-    public function update_tags($tags_comma, $override_childs, $add_to_childs, $force_update = false)
-    {
-        Tag::update_tag_list($tags_comma, 'artist', $this->id, $force_update ? true : $override_childs);
-
-        if ($override_childs || $add_to_childs) {
-            $albums          = $this->get_albums();
-            $albumTagUpdater = $this->getAlbumTagUpdater();
-
-            foreach ($albums as $album_id) {
-                $album = new Album($album_id);
-                $albumTagUpdater->updateTags($album, $tags_comma, $override_childs, $add_to_childs);
-            }
-        }
-    }
 
     /**
      * Update artist information.
@@ -1074,51 +977,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
     }
 
     /**
-     * @return PDOStatement|boolean
-     */
-    public function remove()
-    {
-        $deleted   = true;
-        $album_ids = $this->get_albums();
-        foreach ($album_ids as $albumid) {
-            $album   = new Album($albumid);
-
-            try {
-                $this->getAlbumDeleter()->delete($album);
-            } catch (AlbumDeletionException $e) {
-                $deleted = false;
-
-                debug_event('artist.class', 'Error when deleting the album `' . $albumid . '`.', 1);
-                break;
-            }
-        }
-
-        if ($deleted) {
-            $sql     = "DELETE FROM `artist` WHERE `id` = ?";
-            $deleted = Dba::write($sql, array($this->id));
-            if ($deleted) {
-                Art::garbage_collection('artist', $this->id);
-                Userflag::garbage_collection('artist', $this->id);
-                Rating::garbage_collection('artist', $this->id);
-                Shoutbox::garbage_collection('artist', $this->id);
-                Useractivity::garbage_collection('artist', $this->id);
-            }
-        }
-
-        return $deleted;
-    }
-
-    /**
-     * @deprecated
-     */
-    private function getAlbumDeleter(): AlbumDeleterInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumDeleterInterface::class);
-    }
-
-    /**
      * @deprecated
      */
     private function getAlbumTagUpdater(): AlbumTagUpdaterInterface
@@ -1146,5 +1004,25 @@ class Artist extends database_object implements library_item, GarbageCollectible
         global $dic;
 
         return $dic->get(LabelListUpdaterInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getAlbumRepository(): AlbumRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getArtistTagUpdater(): ArtistTagUpdaterInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistTagUpdaterInterface::class);
     }
 }

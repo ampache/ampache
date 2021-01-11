@@ -22,14 +22,11 @@
 
 declare(strict_types=1);
 
-namespace Ampache\Repository;
+namespace Ampache\Module\Artist;
 
 use function DI\autowire;
 
 return [
-    AccessRepositoryInterface::class => autowire(AccessRepository::class),
-    AlbumRepositoryInterface::class => autowire(AlbumRepository::class),
-    SongRepositoryInterface::class => autowire(SongRepository::class),
-    LabelRepositoryInterface::class => autowire(LabelRepository::class),
-    ArtistRepositoryInterface::class => autowire(ArtistRepository::class),
+    Deletion\ArtistDeleterInterface::class => autowire(Deletion\ArtistDeleter::class),
+    Tag\ArtistTagUpdaterInterface::class => autowire(Tag\ArtistTagUpdater::class),
 ];

@@ -22,6 +22,7 @@
 namespace Ampache\Repository;
 
 use Ampache\Model\Album;
+use Ampache\Model\Artist;
 
 interface AlbumRepositoryInterface
 {
@@ -84,4 +85,15 @@ interface AlbumRepositoryInterface
     public function updateTime(
         Album $album
     ): int;
+
+    /**
+     * gets the album ids that this artist is a part of
+     *
+     * @return int[]
+     */
+    public function getByArtist(
+        Artist $artist,
+        ?int $catalog = null,
+        bool $group_release_type = false
+    ): array;
 }

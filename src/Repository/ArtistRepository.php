@@ -17,19 +17,27 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use function DI\autowire;
+use Ampache\Module\System\Dba;
 
-return [
-    AccessRepositoryInterface::class => autowire(AccessRepository::class),
-    AlbumRepositoryInterface::class => autowire(AlbumRepository::class),
-    SongRepositoryInterface::class => autowire(SongRepository::class),
-    LabelRepositoryInterface::class => autowire(LabelRepository::class),
-    ArtistRepositoryInterface::class => autowire(ArtistRepository::class),
-];
+final class ArtistRepository implements ArtistRepositoryInterface
+{
+    /**
+     * Deletes the artist entry
+     */
+    public function delete(
+        int $artistId
+    ): bool {
+        $result = Dba::write(
+            'DELETE FROM `artist` WHERE `id` = ?',
+            [$artistId]
+        );
+
+        return $result !== false;
+    }
+}

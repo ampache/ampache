@@ -41,6 +41,7 @@ use Ampache\Model\Artist;
 use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Model\Democratic;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use DOMDocument;
 use Ampache\Model\Playlist;
@@ -408,7 +409,7 @@ class Xml_Data
                 case 'artist':
                     $artist = new Artist($object_id);
                     $artist->format();
-                    $albums = $artist->get_albums(null, true);
+                    $albums = static::getAlbumRepository()->getByArtist($artist, null, true);
                     $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                             "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n";
                     foreach ($albums as $album_id) {
@@ -643,7 +644,7 @@ class Xml_Data
 
             // Handle includes
             $albums = (in_array("albums", $include))
-                ? self::albums($artist->get_albums(), array(), $user_id, false)
+                ? self::albums(static::getAlbumRepository()->getByArtist($artist), array(), $user_id, false)
                 : '';
             $songs = (in_array("songs", $include))
                 ? self::songs($artist->get_songs(), $user_id, false)
@@ -1421,5 +1422,15 @@ class Xml_Data
         global $dic;
 
         return $dic->get(SongRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private static function getAlbumRepository(): AlbumRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumRepositoryInterface::class);
     }
 }

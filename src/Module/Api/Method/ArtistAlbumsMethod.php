@@ -31,11 +31,8 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
+use Ampache\Repository\AlbumRepositoryInterface;
 
-/**
- * Class ArtistAlbumsMethod
- * @package Lib\ApiMethods
- */
 final class ArtistAlbumsMethod
 {
     private const ACTION = 'artist_albums';
@@ -65,7 +62,7 @@ final class ArtistAlbumsMethod
 
             return false;
         }
-        $albums = $artist->get_albums();
+        $albums = static::getAlbumRepository()->getByArtist($artist);
         $user   = User::get_from_username(Session::username($input['auth']));
         if (empty($albums)) {
             Api::empty('album', $input['api_format']);
@@ -88,5 +85,15 @@ final class ArtistAlbumsMethod
         Session::extend($input['auth']);
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getAlbumRepository(): AlbumRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumRepositoryInterface::class);
     }
 }

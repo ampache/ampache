@@ -31,6 +31,7 @@ use Ampache\Model\Art;
 use Ampache\Model\Artist;
 use Ampache\Model\Catalog;
 use Ampache\Model\Clip;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use DateTime;
 use DOMDocument;
@@ -821,7 +822,7 @@ class Upnp_Api
                     case 2: // Get artist's albums list
                         $artist = new Artist($pathreq[1]);
                         if ($artist->id) {
-                            $album_ids                  = $artist->get_albums();
+                            $album_ids                  = static::getAlbumRepository()->getByArtist($artist);
                             [$maxCount, $album_ids]     = self::_slice($album_ids, $start, $count);
                             foreach ($album_ids as $album_id) {
                                 $album = new Album($album_id);
@@ -1934,5 +1935,15 @@ class Upnp_Api
         global $dic;
 
         return $dic->get(SongRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private static function getAlbumRepository(): AlbumRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(AlbumRepositoryInterface::class);
     }
 }
