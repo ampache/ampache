@@ -58,7 +58,7 @@ final class GoodbyeMethod
 
             debug_event(self::class, 'Goodbye Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
             ob_end_clean();
-            Api::message('goodbye: ' . $input['auth'], $input['api_format']);
+            Api::message($input['auth'], $input['api_format']);
 
             return true;
         }

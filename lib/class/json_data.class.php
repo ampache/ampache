@@ -394,7 +394,7 @@ class JSON_Data
                 "averagerating" => ($rating->get_average_rating() ?: null),
                 "mbid" => $artist->mbid,
                 "summary" => $artist->summary,
-                "time" => $artist->time,
+                "time" => (int) $artist->time,
                 "yearformed" => (int) $artist->yearformed,
                 "placeformed" => $artist->placeformed
             ));
