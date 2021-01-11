@@ -54,9 +54,7 @@ final class GoodbyeMethod
         }
         // Check and see if we should destroy the api session (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
-            $sql = 'DELETE FROM `session` WHERE `id` = ?';
-            $sql .= " AND `type` = 'api'";
-            Dba::write($sql, array($input['auth']));
+            Session::destroy($input['auth']);
 
             debug_event(self::class, 'Goodbye Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
             ob_end_clean();
