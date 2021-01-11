@@ -22,6 +22,8 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Model\Artist;
+
 interface SongRepositoryInterface
 {
     /**
@@ -38,5 +40,33 @@ interface SongRepositoryInterface
      */
     public function getByLabel(
         string $labelName
+    ): array;
+
+    /**
+     * Gets the songs from the artist in a random order
+     *
+     * @return int[]
+     */
+    public function getRandomByArtist(
+        Artist $artist
+    ): array;
+
+    /**
+     * gets the songs for this artist
+     *
+     * @return int[]
+     */
+    public function getTopSongsByArtist(
+        Artist $artist,
+        int $count = 50
+    ): array;
+
+    /**
+     * gets the songs for this artist
+     *
+     * @return int[]
+     */
+    public function getByArtist(
+        Artist $artist
     ): array;
 }

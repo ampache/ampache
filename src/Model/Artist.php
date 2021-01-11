@@ -34,6 +34,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use PDOStatement;
 
 class Artist extends database_object implements library_item, GarbageCollectibleInterface
@@ -284,142 +285,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
     } // get_from_name
 
     /**
-     * get_songs
-     * gets the songs for this artist
-     * @return integer[]
-     */
-    public function get_songs()
-    {
-        $sql = "SELECT `song`.`id` FROM `song` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
-        }
-        $sql .= "WHERE `song`.`artist` = ? ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND `catalog`.`enabled` = '1' ";
-        }
-        $sql .= "ORDER BY `song`.`album`, `song`.`track`";
-        $db_results = Dba::read($sql, array($this->id));
-
-        $results = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
-        }
-
-        return $results;
-    } // get_songs
-
-    /**
-     * get_top_songs
-     * gets the songs for this artist
-     * @param integer $artist
-     * @param integer $count
-     * @return integer[]
-     */
-    public static function get_top_songs($artist, $count = 50)
-    {
-        $sql = "SELECT `song`.`id`, COUNT(`object_count`.`object_id`) AS counting FROM `song` ";
-        $sql .= "LEFT JOIN `object_count` ON `object_count`.`object_id` = `song`.`id` AND `object_type` = 'song' ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
-        }
-        $sql .= "WHERE `song`.`artist` = " . $artist . " ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND `catalog`.`enabled` = '1' ";
-        }
-        $sql .= "GROUP BY `song`.`id` ORDER BY count(`object_count`.`object_id`) DESC LIMIT " . (string)$count;
-        $db_results = Dba::read($sql);
-        //debug_event('artist.class', 'get_top_songs sql: ' . $sql, 5);
-
-
-        $results = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
-    } // get_top_songs
-
-    /**
-     * get_random_songs
-     * Gets the songs from this artist in a random order
-     * @return integer[]
-     */
-    public function get_random_songs()
-    {
-        $results = array();
-
-        $sql = "SELECT `song`.`id` FROM `song` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
-        }
-        $sql .= "WHERE `song`.`artist` = ? ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "AND `catalog`.`enabled` = '1' ";
-        }
-        $sql .= "ORDER BY RAND()";
-        $db_results = Dba::read($sql, array($this->id));
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
-    } // get_random_songs
-
-    /**
-     * get_random
-     *
-     * This returns a number of random artists.
-     * @param integer $count
-     * @param boolean $with_art
-     * @param integer $user_id
-     * @return integer[]
-     */
-    public static function get_random($count = 1, $with_art = false, $user_id = null)
-    {
-        $results = array();
-
-        if (!$count) {
-            $count = 1;
-        }
-        if ($user_id === null) {
-            $user_id = Core::get_global('user');
-        }
-
-        $sql = "SELECT DISTINCT `artist`.`id` FROM `artist` " . "LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
-            $where = "WHERE `catalog`.`enabled` = '1' ";
-        } else {
-            $where = "WHERE 1=1 ";
-        }
-        if ($with_art) {
-            $sql .= "LEFT JOIN `image` ON (`image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id`) ";
-            $where .= "AND `image`.`id` IS NOT NULL ";
-        }
-        $sql .= $where;
-
-        $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
-            $sql .= " AND `artist`.`id` NOT IN" .
-                    " (SELECT `object_id` FROM `rating`" .
-                    " WHERE `rating`.`object_type` = 'artist'" .
-                    " AND `rating`.`rating` <=" . $rating_filter .
-                    " AND `rating`.`user` = " . $user_id . ") ";
-        }
-
-        $sql .= "ORDER BY RAND() LIMIT " . (string)$count;
-        $db_results = Dba::read($sql);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
-    }
-
-    /**
      * get_time
      *
      * Get time for an artist's songs.
@@ -644,7 +509,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
     {
         $medias = array();
         if ($filter_type === null || $filter_type == 'song') {
-            $songs = $this->get_songs();
+            $songs = $this->getSongRepository()->getByArtist($this);
             foreach ($songs as $song_id) {
                 $medias[] = array(
                     'object_type' => 'song',
@@ -834,7 +699,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
             // If it's changed we need to update
             if ($artist_id !== null && $artist_id !== $this->id) {
-                $songs = $this->get_songs();
+                $songs = $this->getSongRepository()->getByArtist($this);
                 foreach ($songs as $song_id) {
                     Song::update_artist($artist_id, $song_id, $this->id);
                 }
@@ -979,16 +844,6 @@ class Artist extends database_object implements library_item, GarbageCollectible
     /**
      * @deprecated
      */
-    private function getAlbumTagUpdater(): AlbumTagUpdaterInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumTagUpdaterInterface::class);
-    }
-
-    /**
-     * @deprecated
-     */
     private function getLabelRepository(): LabelRepositoryInterface
     {
         global $dic;
@@ -1024,5 +879,15 @@ class Artist extends database_object implements library_item, GarbageCollectible
         global $dic;
 
         return $dic->get(ArtistTagUpdaterInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 }

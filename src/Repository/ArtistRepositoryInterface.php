@@ -27,4 +27,14 @@ interface ArtistRepositoryInterface
      * Deletes the artist entry
      */
     public function delete(int $artistId): bool;
+
+    /**
+     * This returns a number of random artists.
+     *
+     * @return int[]
+     */
+    public function getRandom(
+        int $userId,
+        int $count = 1
+    ): array;
 }

@@ -31,6 +31,7 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
+use Ampache\Repository\SongRepositoryInterface;
 
 /**
  * Class ArtistSongsMethod
@@ -65,8 +66,8 @@ final class ArtistSongsMethod
 
             return false;
         }
-        $songs  = $artist->get_songs();
-        $user   = User::get_from_username(Session::username($input['auth']));
+        $songs = static::getSongRepository()->getByArtist($artist);
+        $user  = User::get_from_username(Session::username($input['auth']));
         if (empty($songs)) {
             Api::empty('song', $input['api_format']);
 
@@ -88,5 +89,12 @@ final class ArtistSongsMethod
         Session::extend($input['auth']);
 
         return true;
+    }
+
+    private static function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 }

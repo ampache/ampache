@@ -20,15 +20,15 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Artist;
 
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -40,24 +40,33 @@ final class ShowAllSongsAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private SongRepositoryInterface $songRepository;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
-        UiInterface $ui
+        UiInterface $ui,
+        SongRepositoryInterface $songRepository
     ) {
-        $this->modelFactory = $modelFactory;
-        $this->ui           = $ui;
+        $this->modelFactory   = $modelFactory;
+        $this->ui             = $ui;
+        $this->songRepository = $songRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $this->ui->showHeader();
-        
-        $artist = $this->modelFactory->createArtist((int) $_REQUEST['artist']);
+        $artistId = (int) $request->getQueryParams()['artist'] ?? 0;
+
+        $artist = $this->modelFactory->createArtist($artistId);
         $artist->format();
-        $object_type = 'song';
-        $object_ids  = $artist->get_songs();
-        
-        require_once Ui::find_template('show_artist.inc.php');
+
+        $this->ui->showHeader();
+        $this->ui->show(
+            'show_artist.inc.php',
+            [
+                'object_type' => 'song',
+                'object_ids' => $this->songRepository->getByArtist($artist),
+            ]
+        );
         
         $this->ui->showQueryStats();
         $this->ui->showFooter();

@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Model\Artist;
 use Ampache\Module\System\Dba;
 
 final class ArtistRepository implements ArtistRepositoryInterface
@@ -39,5 +41,48 @@ final class ArtistRepository implements ArtistRepositoryInterface
         );
 
         return $result !== false;
+    }
+
+    /**
+     * This returns a number of random artists.
+     *
+     * @return int[]
+     */
+    public function getRandom(
+        int $userId,
+        int $count = 1
+    ): array {
+        $results = array();
+
+        if (!$count) {
+            $count = 1;
+        }
+
+        $sql = "SELECT DISTINCT `artist`.`id` FROM `artist` " . "LEFT JOIN `song` ON `song`.`artist` = `artist`.`id` ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+            $where = "WHERE `catalog`.`enabled` = '1' ";
+        } else {
+            $where = "WHERE 1=1 ";
+        }
+        $sql .= $where;
+
+        $rating_filter = AmpConfig::get_rating_filter();
+        if ($rating_filter > 0 && $rating_filter <= 5) {
+            $sql .= " AND `artist`.`id` NOT IN" .
+                " (SELECT `object_id` FROM `rating`" .
+                " WHERE `rating`.`object_type` = 'artist'" .
+                " AND `rating`.`rating` <=" . $rating_filter .
+                " AND `rating`.`user` = " . $userId . ") ";
+        }
+
+        $sql .= "ORDER BY RAND() LIMIT " . (string)$count;
+        $db_results = Dba::read($sql);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['id'];
+        }
+
+        return $results;
     }
 }

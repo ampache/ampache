@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Album;
 use Ampache\Model\Artist;
 use Ampache\Model\Random;
 use Ampache\Model\Rating;
@@ -38,6 +37,7 @@ use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Session;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\ArtistRepositoryInterface;
 
 /**
  * Class StatsMethod
@@ -130,7 +130,10 @@ final class StatsMethod
                         $results = Random::get_default($limit, $user_id);
                         break;
                     case 'artist':
-                        $results = Artist::get_random($limit, false, $user_id);
+                        $results = static::getArtistRepository()->getRandom(
+                            $user_id,
+                            $limit
+                        );
                         break;
                     case 'album':
                         $results = static::getAlbumRepository()->getRandom(
@@ -186,5 +189,15 @@ final class StatsMethod
         global $dic;
 
         return $dic->get(AlbumRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getArtistRepository(): ArtistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ArtistRepositoryInterface::class);
     }
 }

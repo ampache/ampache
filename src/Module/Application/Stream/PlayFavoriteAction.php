@@ -65,8 +65,10 @@ final class PlayFavoriteAction extends AbstractStreamAction
         switch ($inputType) {
             case 'artist':
                 foreach ($data as $value) {
-                    $songs     = $value->get_songs();
-                    $mediaIds  = array_merge($mediaIds, $songs);
+                    $mediaIds  = array_merge(
+                        $mediaIds,
+                        $this->songRepository->getByArtist($value)
+                    );
                 }
                 break;
             case 'album':

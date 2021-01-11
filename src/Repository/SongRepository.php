@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Artist;
 use Ampache\Module\System\Dba;
 
 final class SongRepository implements SongRepositoryInterface
@@ -83,6 +84,91 @@ final class SongRepository implements SongRepositoryInterface
         $db_results = Dba::read($sql, [$labelName]);
 
         $results = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
+     * Gets the songs from the artist in a random order
+     *
+     * @return int[]
+     */
+    public function getRandomByArtist(
+        Artist $artist
+    ): array {
+        $results = [];
+
+        $sql = "SELECT `song`.`id` FROM `song` ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+        }
+        $sql .= "WHERE `song`.`artist` = ? ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "AND `catalog`.`enabled` = '1' ";
+        }
+        $sql .= "ORDER BY RAND()";
+        $db_results = Dba::read($sql, array($artist->id));
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
+     * gets the songs for this artist
+
+     * @return int[]
+     */
+    public function getTopSongsByArtist(
+        Artist $artist,
+        int $count = 50
+    ): array {
+        $sql = "SELECT `song`.`id`, COUNT(`object_count`.`object_id`) AS counting FROM `song` ";
+        $sql .= "LEFT JOIN `object_count` ON `object_count`.`object_id` = `song`.`id` AND `object_type` = 'song' ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+        }
+        $sql .= "WHERE `song`.`artist` = " . $artist->id . " ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "AND `catalog`.`enabled` = '1' ";
+        }
+        $sql .= "GROUP BY `song`.`id` ORDER BY count(`object_count`.`object_id`) DESC LIMIT " . (string)$count;
+        $db_results = Dba::read($sql);
+        //debug_event('artist.class', 'get_top_songs sql: ' . $sql, 5);
+
+        $results = array();
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
+     * gets the songs for this artist
+     *
+     * @return int[]
+     */
+    public function getByArtist(
+        Artist $artist
+    ): array {
+        $sql = "SELECT `song`.`id` FROM `song` ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
+        }
+        $sql .= "WHERE `song`.`artist` = ? ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "AND `catalog`.`enabled` = '1' ";
+        }
+        $sql .= "ORDER BY `song`.`album`, `song`.`track`";
+        $db_results = Dba::read($sql, array($artist->id));
+
+        $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['id'];
         }

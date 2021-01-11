@@ -366,9 +366,10 @@ class Art extends database_object
             debug_event('art.class', 'Inserting ' . $this->type . ' image' . $object->name . ' for song files.', 5);
             if ($this->type === 'album') {
                 /** Use special treatment for albums */
-                $this->getSongRepository()->getByAlbum($object->id);
-            } else {
-                $songs = $object->get_songs();
+                $songs = $this->getSongRepository()->getByAlbum($object->id);
+            } elseif ($this->type === 'artist') {
+                /** Use special treatment for artists */
+                $songs = $this->getSongRepository()->getByArtist($object);
             }
             foreach ($songs as $song_id) {
                 $song   = new Song($song_id);

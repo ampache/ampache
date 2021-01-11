@@ -36,15 +36,20 @@ use Ampache\Module\Util\Ui;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 
 final class DefaultAjaxHandler implements AjaxHandlerInterface
 {
     private AlbumRepositoryInterface $albumRepository;
 
+    private SongRepositoryInterface $songRepository;
+
     public function __construct(
-        AlbumRepositoryInterface $albumRepository
+        AlbumRepositoryInterface $albumRepository,
+        SongRepositoryInterface $songRepository
     ) {
         $this->albumRepository = $albumRepository;
+        $this->songRepository  = $songRepository;
     }
 
     public function handle(): void
@@ -107,7 +112,7 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                             $type       = $data['0'];
                             $class_name = ObjectTypeToClassNameMapper::map($type);
                             $object     = new $class_name($_REQUEST['id']);
-                            $songs      = $object->get_random_songs();
+                            $songs      = $this->songRepository->getRandomByArtist($object);
                             foreach ($songs as $song_id) {
                                 Core::get_global('user')->playlist->add_object($song_id, 'song');
                             }

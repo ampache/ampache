@@ -212,7 +212,7 @@ class Random
                 $songs = array();
                 foreach ($results as $result) {
                     $artist = new Artist($result);
-                    $songs  = array_merge($songs, $artist->get_songs());
+                    $songs  = array_merge($songs, static::getSongRepository()->getByArtist($artist));
                 }
 
                 return $songs;

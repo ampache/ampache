@@ -43,6 +43,7 @@ use Ampache\Model\Bookmark;
 use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use DOMDocument;
 use Ampache\Model\Live_Stream;
 use Ampache\Model\Playlist;
@@ -807,7 +808,10 @@ class Subsonic_Api
             $count = 50;
         }
         if ($artist) {
-            $songs = Artist::get_top_songs(Artist::get_from_name(urldecode($artist))->id, $count);
+            $songs = static::getSongRepository()->getTopSongsByArtist(
+                Artist::get_from_name(urldecode($artist)),
+                $count
+            );
         }
         $response = Subsonic_Xml_Data::createSuccessResponse('gettopsongs');
         Subsonic_Xml_Data::addTopSongs($response, $songs);
@@ -2147,7 +2151,7 @@ class Subsonic_Api
                     if ($similar['id']) {
                         $artist = new Artist($similar['id']);
                         // get the songs in a random order for even more chaos
-                        $artist_songs = $artist->get_random_songs();
+                        $artist_songs = static::getSongRepository()->getRandomByArtist($artist);
                         foreach ($artist_songs as $song) {
                             $songs[] = array('id' => $song);
                         }
@@ -2532,5 +2536,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(AlbumRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 }

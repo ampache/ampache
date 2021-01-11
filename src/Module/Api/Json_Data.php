@@ -400,7 +400,7 @@ class Json_Data
                 ? self::albums(static::getAlbumRepository()->getByArtist($artist), array(), $user_id, false)
                 : array();
             $songs = (in_array("songs", $include))
-                ? self::songs($artist->get_songs(), $user_id, false)
+                ? self::songs(static::getSongRepository()->getByArtist($artist), $user_id, false)
                 : array();
 
             array_push($JSON, array(

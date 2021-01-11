@@ -108,7 +108,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             $songs = $this->songRepository->getByAlbum($album->id);
         } else {
             $artist = new Artist($art->uid);
-            $songs  = $artist->get_songs();
+            $songs  = $this->songRepository->getByArtist($artist);
         }
 
         $data  = [];

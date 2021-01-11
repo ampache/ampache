@@ -647,7 +647,7 @@ class Xml_Data
                 ? self::albums(static::getAlbumRepository()->getByArtist($artist), array(), $user_id, false)
                 : '';
             $songs = (in_array("songs", $include))
-                ? self::songs($artist->get_songs(), $user_id, false)
+                ? self::songs(static::getSongRepository()->getByArtist($artist), $user_id, false)
                 : '';
 
             $string .= "<artist id=\"" . $artist->id . "\">\n" .

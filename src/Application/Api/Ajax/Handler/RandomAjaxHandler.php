@@ -110,7 +110,7 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                 }
 
                 $artist = new Artist($artist_id);
-                $songs  = $artist->get_songs();
+                $songs  = $this->songRepository->getByArtist($artist);
                 foreach ($songs as $song_id) {
                     Core::get_global('user')->playlist->add_object($song_id, 'song');
                 }

@@ -34,7 +34,6 @@ use Ampache\Model\Video;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
@@ -115,7 +114,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
                 $dirs[] = Core::conv_lc_file($artist_art_folder);
             }
             // get the folders from songs as well
-            $songs = $media->get_songs();
+            $songs = $this->songRepository->getByArtist($media);
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 // look in the directory name of the files (e.g. /mnt/Music/%artistName%/%album%)
