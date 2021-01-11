@@ -329,7 +329,7 @@ class JSON_Data
                 "songs" => (int) $counts['song'],
                 "videos" => (int) $counts['video'],
                 "playlists" => (int) $counts['playlist'],
-                "stream" => (int) $counts['live_stream']
+                "live_streams" => (int) $counts['live_stream']
             ));
         } // end foreach
         $output = ($object) ? array("genre" => $JSON) : $JSON[0];
@@ -594,15 +594,15 @@ class JSON_Data
             $share->format();
             $share_name           = $share->f_name;
             $share_user           = $share->f_user;
-            $share_allow_stream   = $share->f_allow_stream;
-            $share_allow_download = $share->f_allow_download;
+            $share_allow_stream   = (int) $share->f_allow_stream;
+            $share_allow_download = (int) $share->f_allow_download;
             $share_creation_date  = $share->f_creation_date;
             $share_lastvisit_date = $share->f_lastvisit_date;
             $share_object_type    = $share->object_type;
             $share_object_id      = $share->object_id;
-            $share_expire_days    = $share->expire_days;
-            $share_max_counter    = $share->max_counter;
-            $share_counter        = $share->counter;
+            $share_expire_days    = (int) $share->expire_days;
+            $share_max_counter    = (int) $share->max_counter;
+            $share_counter        = (int) $share->counter;
             $share_secret         = $share->secret;
             $share_public_url     = $share->public_url;
             $share_description    = $share->description;
@@ -693,7 +693,7 @@ class JSON_Data
             $catalog_name           = $catalog->name;
             $catalog_type           = $catalog->catalog_type;
             $catalog_gather_types   = $catalog->gather_types;
-            $catalog_enabled        = $catalog->enabled;
+            $catalog_enabled        = (int) $catalog->enabled;
             $catalog_last_add       = $catalog->f_add;
             $catalog_last_clean     = $catalog->f_clean;
             $catalog_last_update    = $catalog->f_update;
@@ -706,8 +706,8 @@ class JSON_Data
                 "name" => $catalog_name,
                 "type" => $catalog_type,
                 "gather_types" => $catalog_gather_types,
-                "last_add" => $catalog_enabled,
-                "allow_download" => $catalog_last_add,
+                "enabled" => $catalog_enabled,
+                "last_add" => $catalog_last_add,
                 "last_clean" => $catalog_last_clean,
                 "last_update" => $catalog_last_update,
                 "path" => $catalog_path,

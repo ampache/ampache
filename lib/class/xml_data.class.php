@@ -581,7 +581,7 @@ class XML_Data
                     "\t<songs>" . (int) ($counts['song']) . "</songs>\n" .
                     "\t<videos>" . (int) ($counts['video']) . "</videos>\n" .
                     "\t<playlists>" . (int) ($counts['playlist']) . "</playlists>\n" .
-                    "\t<stream>" . (int) ($counts['live_stream']) . "</stream>\n" .
+                    "\t<live_streams>" . (int) ($counts['live_stream']) . "</live_streams>\n" .
                     "</genre>\n";
         } // end foreach
 
