@@ -1101,17 +1101,15 @@ class JSON_Data
         foreach ($shouts as $shout_id) {
             $shout = new Shoutbox($shout_id);
             $shout->format();
-            $user       = new User($shout->user);
-            $user_array = [];
-            array_push($user_array[], array(
-                "id" => (string) $user->id,
-                "username" => $user->username
-            ));
+            $user     = new User($shout->user);
             $ourArray = array(
                 "id" => (string) $shout_id,
                 "date" => $shout->date,
                 "text" => $shout->text,
-                "user" => $user_array
+                "user" => array(
+                    "id" => (string) $shout->user,
+                    "username" => $user->username
+                )
             );
             array_push($JSON, $ourArray);
         }
@@ -1133,20 +1131,18 @@ class JSON_Data
     {
         $JSON = array();
         foreach ($activities as $activity_id) {
-            $activity   = new Useractivity($activity_id);
-            $user       = new User($activity->user);
-            $user_array = [];
-            array_push($user_array[], array(
-                "id" => (string) $user->id,
-                "username" => $user->username
-            ));
+            $activity = new Useractivity($activity_id);
+            $user     = new User($activity->user);
             $ourArray = array(
                 "id" => (string) $activity_id,
                 "data" => $activity->activity_date,
                 "object_type" => $activity->object_type,
                 "object_id" => $activity->object_id,
                 "action" => $activity->action,
-                "user" => $user_array
+                "user" => array(
+                    "id" => (string) $activity->user,
+                    "username" => $user->username
+                )
             );
 
             array_push($JSON, $ourArray);
