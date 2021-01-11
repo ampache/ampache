@@ -383,9 +383,9 @@ class JSON_Data
                 "id" => (string) $artist->id,
                 "name" => $artist->f_full_name,
                 "albums" => $albums,
-                "albumcount" => ($artist->albums ?: 0),
+                "albumcount" => (int) $artist->albums,
                 "songs" => $songs,
-                "songcount" => ($artist->songs ?: 0),
+                "songcount" => (int) $artist->songs,
                 "genre" => self::genre_array($artist->tags),
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
@@ -395,7 +395,7 @@ class JSON_Data
                 "mbid" => $artist->mbid,
                 "summary" => $artist->summary,
                 "time" => $artist->time,
-                "yearformed" => $artist->yearformed,
+                "yearformed" => (int) $artist->yearformed,
                 "placeformed" => $artist->placeformed
             ));
         } // end foreach artists
@@ -477,7 +477,7 @@ class JSON_Data
             $theArray['time']          = (int) $album->total_duration;
             $theArray['year']          = (int) $album->year;
             $theArray['tracks']        = $songs;
-            $theArray['songcount']     = $album->song_count;
+            $theArray['songcount']     = (int) $album->song_count;
             $theArray['disk']          = (int) $disk;
             $theArray['genre']         = self::genre_array($album->tags);
             $theArray['art']           = $art_url;
@@ -1032,12 +1032,12 @@ class JSON_Data
                 "username" => $user->username,
                 "auth" => $user->apikey,
                 "email" => $user->email,
-                "access" => (string) $user->access,
-                "fullname_public" => (string) $user->fullname_public,
+                "access" => (int) $user->access,
+                "fullname_public" => (int) $user->fullname_public,
                 "validation" => $user->validation,
-                "disabled" => (string) $user->disabled,
-                "create_date" => $user->create_date,
-                "last_seen" => $user->last_seen,
+                "disabled" => (int) $user->disabled,
+                "create_date" => (int) $user->create_date,
+                "last_seen" => (int) $user->last_seen,
                 "website" => $user->website,
                 "state" => $user->state,
                 "city" => $user->city
@@ -1135,7 +1135,7 @@ class JSON_Data
             $user     = new User($activity->user);
             $ourArray = array(
                 "id" => (string) $activity_id,
-                "data" => $activity->activity_date,
+                "date" => $activity->activity_date,
                 "object_type" => $activity->object_type,
                 "object_id" => $activity->object_id,
                 "action" => $activity->action,

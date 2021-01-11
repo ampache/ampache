@@ -389,7 +389,7 @@ class XML_Data
                     foreach ($albums as $album_id) {
                         if ($album_id) {
                             $album = new Album($album_id[0]);
-                            $string .= "\t\t<album id=\"" . $album_id[0] .
+                            $string .= "\t<album id=\"" . $album_id[0] .
                                     '"><![CDATA[' . $album->full_name .
                                     "]]></album>\n";
                         }
@@ -410,10 +410,10 @@ class XML_Data
                     $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                             "\t<title><![CDATA[" . $song->title . "]]></title>\n" .
                             "\t<name><![CDATA[" . $song->f_title . "]]></name>\n" .
-                            "\t\t<artist id=\"" . $song->artist .
+                            "\t<artist id=\"" . $song->artist .
                             '"><![CDATA[' . $song->get_artist_name() .
                             "]]></artist>\n" .
-                            "\t\t<album id=\"" . $song->album .
+                            "\t<album id=\"" . $song->album .
                             '"><![CDATA[' . $song->get_album_name() .
                             "]]></album>\n" .
                             "</$object_type>\n";
@@ -643,7 +643,7 @@ class XML_Data
                     "\t<mbid><![CDATA[" . $artist->mbid . "]]></mbid>\n" .
                     "\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n" .
                     "\t<time><![CDATA[" . $artist->time . "]]></time>\n" .
-                    "\t<yearformed>" . $artist->yearformed . "</yearformed>\n" .
+                    "\t<yearformed>" . (int) $artist->yearformed . "</yearformed>\n" .
                     "\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n" .
                     "</artist>\n";
         } // end foreach artists
@@ -1167,13 +1167,13 @@ class XML_Data
         if ($fullinfo) {
             $string .= "\t<auth><![CDATA[" . $user->apikey . "]]></auth>\n" .
                        "\t<email><![CDATA[" . $user->email . "]]></email>\n" .
-                       "\t<access><![CDATA[" . (string) $user->access . "]]></access>\n" .
-                       "\t<fullname_public><![CDATA[" . (string) $user->fullname_public . "]]></fullname_public>\n" .
+                       "\t<access>" . (int) $user->access . "</access>\n" .
+                       "\t<fullname_public>" . (int) $user->fullname_public . "</fullname_public>\n" .
                        "\t<validation><![CDATA[" . $user->validation . "]]></validation>\n" .
-                       "\t<disabled><![CDATA[" . (string) $user->disabled . "]]></disabled>\n";
+                       "\t<disabled>" . (int) $user->disabled . "</disabled>\n";
         }
-        $string .= "\t<create_date><![CDATA[" . (string) $user->create_date . "]]></create_date>\n" .
-                "\t<last_seen><![CDATA[" . (string) $user->last_seen . "]]></last_seen>\n" .
+        $string .= "\t<create_date>" . (int) $user->create_date . "</create_date>\n" .
+                "\t<last_seen>" . (int) $user->last_seen . "</last_seen>\n" .
                 "\t<link><![CDATA[" . $user->link . "]]></link>\n" .
                 "\t<website><![CDATA[" . $user->website . "]]></website>\n" .
                 "\t<state><![CDATA[" . $user->state . "]]></state>\n" .
