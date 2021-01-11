@@ -100,7 +100,7 @@ class Search extends playlist_object
                 break;
             case 'album':
                 $this->album_types();
-                $this->order_by = '`album`.`name`, `album`.`disk`';
+                $this->order_by = (AmpConfig::get('album_group')) ? '`album`.`name`' : '`album`.`name`, `album`.`disk`';
                 break;
             case 'video':
                 $this->video_types();
@@ -1277,6 +1277,7 @@ class Search extends playlist_object
                 $group[] = "`album`.`year`";
             } else {
                 $group[] = "`album`.`id`";
+                $group[] = "`album`.`disk`";
             }
 
             switch ($rule[0]) {
@@ -1463,7 +1464,7 @@ class Search extends playlist_object
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
-            'base' => 'SELECT MIN(`album`.`id`) AS `id`, MAX(`album`.`disk`) AS `disk` FROM `album`',
+            'base' => ($groupdisks) ? 'SELECT MIN(`album`.`id`) AS `id` FROM `album`' : 'SELECT MIN(`album`.`id`) AS `id`, MAX(`album`.`disk`) AS `disk` FROM `album`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,

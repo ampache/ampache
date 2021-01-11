@@ -768,6 +768,7 @@ class VaInfo
             case 'mpeg3':
                 return 'mp3';
             case 'vorbis':
+            case 'opus':
                 return 'ogg';
             case 'flac':
             case 'flv':
@@ -865,7 +866,7 @@ class VaInfo
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            // debug_event('vainfo.class', 'Vorbis tag: ' . $tag . ' value: ' . $data[0], 5);
+            //debug_event('vainfo.class', 'Vorbis tag: ' . $tag . ' value: ' . $data[0], 5);
             switch (strtolower($tag)) {
                 case 'genre':
                     // Pass the array through
@@ -967,7 +968,7 @@ class VaInfo
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            // debug_event('vainfo.class', 'id3v2 tag: ' . strtolower($tag) . ' value: ' . $data[0], 5);
+            //debug_event('vainfo.class', 'id3v2 tag: ' . strtolower($tag) . ' value: ' . $data[0], 5);
             switch (strtolower($tag)) {
                 case 'genre':
                     $parsed['genre'] = $this->parseGenres($data);
@@ -1035,6 +1036,7 @@ class VaInfo
             // getID3 has copies of text properly converted to utf-8 encoding in comments/text
             $enable_custom_metadata = AmpConfig::get('enable_custom_metadata');
             foreach ($id3v2['TXXX'] as $txxx) {
+                //debug_event('vainfo.class', 'id3v2 TXXX: ' . strtolower($this->trimAscii($txxx['description'])) . ' value: ' . $id3v2['comments']['text'][$txxx['description']], 5);
                 switch (strtolower($this->trimAscii($txxx['description']))) {
                     case 'musicbrainz album id':
                         $parsed['mb_albumid'] = $id3v2['comments']['text'][$txxx['description']];
