@@ -639,7 +639,7 @@ class Album extends database_object implements library_item
         }
 
         if ($this->time == 0) {
-            $this->time = $this->getAlbumRepository()->updateTime();
+            $this->time = $this->getAlbumRepository()->updateTime($this);
         }
     } // format
 
