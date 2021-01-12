@@ -453,8 +453,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $artist_id = (int)($results['artist_id']);
         }
         if (!isset($results['album_id'])) {
-            $album_id = Album::check($album, $year, $disk, $album_mbid, $album_mbid_group, $albumartist_id,
-                $release_type, false, $original_year, $barcode, $catalog_number);
+            $album_id = Album::check($album, $year, $disk, $album_mbid, $album_mbid_group, $albumartist_id, $release_type, $original_year, $barcode, $catalog_number);
         } else {
             $album_id = (int)($results['album_id']);
         }

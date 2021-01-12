@@ -692,10 +692,10 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
         // Check if name is different than current name
         if ($this->name != $name) {
-            $artist_id = self::check($name, $mbid, true);
-
-            $updated = false;
-            $songs   = array();
+            $updated    = false;
+            $songs      = array();
+            $artist_id  = self::check($name, $mbid, true);
+            $cron_cache = AmpConfig::get('cron_cache');
 
             // If it's changed we need to update
             if ($artist_id !== null && $artist_id !== $this->id) {
@@ -714,7 +714,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 Userflag::migrate('artist', $this->id, $artist_id);
                 Rating::migrate('artist', $this->id, $artist_id);
                 Art::migrate('artist', $this->id, $artist_id);
-                if (!AmpConfig::get('cron_cache')) {
+                if (!$cron_cache) {
                     self::garbage_collection();
                 }
             } // end if it changed
@@ -723,7 +723,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 foreach ($songs as $song_id) {
                     Song::update_utime($song_id);
                 }
-                if (!AmpConfig::get('cron_cache')) {
+                if (!$cron_cache) {
                     Stats::garbage_collection();
                     Rating::garbage_collection();
                     Userflag::garbage_collection();

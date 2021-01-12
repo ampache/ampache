@@ -1877,19 +1877,7 @@ abstract class Catalog extends database_object
         }
 
         // check whether this album exists
-        $new_song->album = Album::check(
-            $album,
-            $new_song->year,
-            $disk,
-            $album_mbid,
-            $album_mbid_group,
-            $new_song->albumartist,
-            $release_type,
-            false,
-            $original_year,
-            $barcode,
-            $catalog_number
-        );
+        $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group, $new_song->albumartist, $release_type, $original_year, $barcode, $catalog_number);
         if (!$new_song->album) {
             $new_song->album = $song->album;
         }

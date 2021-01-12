@@ -25,9 +25,11 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
+use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Exception;
@@ -420,26 +422,15 @@ class Album extends database_object implements library_item
      * @param string $mbid_group
      * @param string $album_artist
      * @param string $release_type
-     * @param boolean $readonly
      * @param integer $original_year
      * @param string $barcode
      * @param string $catalog_number
-     * @return integer|null
+     * @param boolean $readonly
+     * @return integer
      */
-    public static function check(
-        $name,
-        $year = 0,
-        $disk = 1,
-        $mbid = null,
-        $mbid_group = null,
-        $album_artist = null,
-        $release_type = null,
-        $readonly = false,
-        $original_year = 0,
-        $barcode = null,
-        $catalog_number = null
-    ) {
-        $trimmed        = Catalog::trim_prefix(trim((string)$name));
+    public static function check($name, $year = 0, $disk = 1, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $original_year = 0, $barcode = null, $catalog_number = null, $readonly = false)
+    {
+        $trimmed        = Catalog::trim_prefix(trim((string) $name));
         $name           = $trimmed['string'];
         $prefix         = $trimmed['prefix'];
         $album_artist   = (int)$album_artist;
@@ -502,7 +493,7 @@ class Album extends database_object implements library_item
         }
 
         if ($readonly) {
-            return null;
+            return 0;
         }
 
         $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `disk`, `mbid`, `mbid_group`, `release_type`, `album_artist`, `original_year`, `barcode`, `catalog_number`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
@@ -521,7 +512,7 @@ class Album extends database_object implements library_item
             $catalog_number
         ));
         if (!$db_results) {
-            return null;
+            return 0;
         }
 
         $album_id = Dba::insert_id();
@@ -839,40 +830,87 @@ class Album extends database_object implements library_item
      */
     public function update(array $data)
     {
-        $year = isset($data['year']) ? $data['year'] : $this->year;
-        //$artist         = isset($data['artist']) ? (int) $data['artist'] : $this->artist_id;
-        $album_artist   = isset($data['album_artist']) ? (int)$data['album_artist'] : $this->album_artist;
         $name           = isset($data['name']) ? $data['name'] : $this->name;
+        //$artist         = isset($data['artist']) ? (int) $data['artist'] : $this->artist_id;
+        $album_artist   = isset($data['album_artist']) ? (int) $data['album_artist'] : $this->album_artist;
+        $year           = isset($data['year']) ? $data['year'] : $this->year;
         $disk           = (self::sanitize_disk($data['disk']) > 0) ? self::sanitize_disk($data['disk']) : $this->disk;
         $mbid           = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
         $mbid_group     = isset($data['mbid_group']) ? $data['mbid_group'] : $this->mbid_group;
         $release_type   = isset($data['release_type']) ? $data['release_type'] : $this->release_type;
-        $original_year  = isset($data['original_year']) ? $data['original_year'] : $this->original_year;
         $barcode        = isset($data['barcode']) ? $data['barcode'] : $this->barcode;
         $catalog_number = isset($data['catalog_number']) ? $data['catalog_number'] : $this->catalog_number;
+        $original_year  = isset($data['original_year']) ? $data['original_year'] : $this->original_year;
 
+        // If you have created an album_artist using 'add new...' we need to create a new artist
         if (!empty($data['album_artist_name'])) {
-            // Need to create new artist according the name
             $album_artist = Artist::check($data['album_artist_name']);
             self::update_field('album_artist', $album_artist, $this->id);
         }
-        if (!empty($year) && $year != $this->year) {
-            self::update_field('year', $year, $this->id);
-        }
-        if (!empty($mbid_group) && $mbid_group != $this->mbid_group) {
-            self::update_field('mbid_group', $mbid_group, $this->id);
-        }
-        if (!empty($release_type) && $release_type != $this->release_type) {
-            self::update_field('release_type', $release_type, $this->id);
-        }
-        if (!empty($original_year) && $original_year != $this->original_year) {
-            self::update_field('original_year', $original_year, $this->id);
-        }
-        if (!empty($barcode) && $barcode != $this->barcode) {
-            self::update_field('barcode', $barcode, $this->id);
-        }
-        if (!empty($catalog_number) && $catalog_number != $this->catalog_number) {
-            self::update_field('catalog_number', $catalog_number, $this->id);
+
+        $current_id = $this->id;
+        $updated    = false;
+        $songs      = null;
+        // run an album check on the current object READONLY means that it won't insert a new album
+        $album_id   = self::check($name, $year, $disk, $mbid, $mbid_group, $album_artist, $release_type, $original_year, $barcode, $catalog_number, true);
+        $cron_cache = AmpConfig::get('cron_cache');
+        if ($album_id > 0 && $album_id != $this->id) {
+            debug_event('album.class', "Updating $this->id to new id and migrating stats {" . $album_id . '}.', 4);
+            if (!is_array($songs)) {
+                $songs = static::getSongRepository()->getByAlbum($this->id);
+            }
+            foreach ($songs as $song_id) {
+                Song::update_album($album_id, $song_id, $this->id);
+                Song::update_year($year, $song_id);
+
+                $this->getSongId3TagWriter()->write(new Song($song_id));
+            }
+            $current_id = $album_id;
+            $updated    = true;
+            Stats::migrate('album', $this->id, $album_id);
+            UserActivity::migrate('album', $this->id, $album_id);
+            Recommendation::migrate('album', $this->id, $album_id);
+            Share::migrate('album', $this->id, $album_id);
+            Shoutbox::migrate('album', $this->id, $album_id);
+            Tag::migrate('album', $this->id, $album_id);
+            Userflag::migrate('album', $this->id, $album_id);
+            Rating::migrate('album', $this->id, $album_id);
+            Art::migrate('album', $this->id, $album_id);
+            if (!$cron_cache) {
+                self::garbage_collection();
+            }
+        } else {
+            // run updates on the single fields
+            if (!empty($name) && $name != $this->name) {
+                self::update_field('name', $name, $this->id);
+            }
+            if (empty($data['album_artist_name']) && !empty($album_artist) && $album_artist != $this->album_artist) {
+                self::update_field('album_artist', $album_artist, $this->id);
+            }
+            if (!empty($year) && $year != $this->year) {
+                self::update_field('year', $year, $this->id);
+            }
+            if (!empty($disk) && $disk != $this->disk) {
+                self::update_field('disk', $disk, $this->id);
+            }
+            if (!empty($mbid) && $mbid != $this->mbid) {
+                self::update_field('mbid', $mbid, $this->id);
+            }
+            if (!empty($mbid_group) && $mbid_group != $this->mbid_group) {
+                self::update_field('mbid_group', $mbid_group, $this->id);
+            }
+            if (!empty($release_type) && $release_type != $this->release_type) {
+                self::update_field('release_type', $release_type, $this->id);
+            }
+            if (!empty($catalog_number) && $catalog_number != $this->catalog_number) {
+                self::update_field('catalog_number', $catalog_number, $this->id);
+            }
+            if (!empty($barcode) && $barcode != $this->barcode) {
+                self::update_field('barcode', $barcode, $this->id);
+            }
+            if (!empty($original_year) && $original_year != $this->original_year) {
+                self::update_field('original_year', $original_year, $this->id);
+            }
         }
 
         $this->year           = $year;
@@ -885,6 +923,18 @@ class Album extends database_object implements library_item
         $this->original_year  = $original_year;
         $this->barcode        = $barcode;
         $this->catalog_number = $catalog_number;
+
+        if ($updated && is_array($songs)) {
+            foreach ($songs as $song_id) {
+                Song::update_utime($song_id);
+            } // foreach song of album
+            if (!$cron_cache) {
+                Stats::garbage_collection();
+                Rating::garbage_collection();
+                Userflag::garbage_collection();
+                Useractivity::garbage_collection();
+            }
+        } // if updated
 
         $override_childs = false;
         if ($data['overwrite_childs'] == 'checked') {
@@ -906,7 +956,7 @@ class Album extends database_object implements library_item
             );
         }
 
-        return $this->id;
+        return $current_id;
     }
     // update
 
@@ -969,5 +1019,15 @@ class Album extends database_object implements library_item
         global $dic;
 
         return $dic->get(AlbumTagUpdaterInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getSongId3TagWriter(): SongId3TagWriterInterface
+    {
+        global $dic;
+
+        return $dic->get(SongId3TagWriterInterface::class);
     }
 }

@@ -552,7 +552,7 @@ final class Session implements SessionInterface
         $cookie_secure = make_bool(AmpConfig::get('cookie_secure'));
 
         if (isset($_SESSION)) {
-            setcookie(session_name(), session_id(), $cookie_life);
+            setcookie(session_name(), session_id(), $cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
         } else {
             session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
         }
@@ -596,6 +596,9 @@ final class Session implements SessionInterface
     {
         $remember_length = AmpConfig::get('remember_length');
         $session_name    = AmpConfig::get('session_name');
+        $cookie_path     = AmpConfig::get('cookie_path');
+        $cookie_domain   = '';
+        $cookie_secure   = make_bool(AmpConfig::get('cookie_secure'));
 
         $token = self::generateRandomToken(); // generate a token, should be 128 - 256 bit
         self::storeTokenForUser($username, $token, $remember_length);
@@ -603,7 +606,7 @@ final class Session implements SessionInterface
         $mac    = hash_hmac('sha256', $cookie, AmpConfig::get('secret_key'));
         $cookie .= ':' . $mac;
 
-        setcookie($session_name . '_remember', $cookie, time() + $remember_length);
+        setcookie($session_name . '_remember', $cookie, time() + $remember_length, $cookie_path, $cookie_domain, $cookie_secure);
     }
 
     /**
