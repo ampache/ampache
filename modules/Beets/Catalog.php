@@ -152,8 +152,7 @@ abstract class Catalog extends \Catalog
         if ($this->checkSong($song)) {
             debug_event('beets_catalog', 'Skipping existing song ' . $song['file'], 5);
         } else {
-            $album_id = Album::check($song['album'], $song['year'], $song['disc'], $song['mbid'],
-                $song['mb_releasegroupid'], $song['album_artist'], null, null);
+            $album_id = Album::check($song['album'], $song['year'], $song['disc'], $song['mbid'], $song['mb_releasegroupid'], $song['album_artist']);
             $song['album_id'] = $album_id;
             $songId           = $this->insertSong($song);
             if (Song::isCustomMetadataEnabled() && $songId) {
