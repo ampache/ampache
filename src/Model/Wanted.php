@@ -515,38 +515,6 @@ class Wanted extends database_object
         $this->f_user = $user->f_name;
     }
 
-    /**
-     * Get wanted list sql.
-     * @return string
-     */
-    public static function get_wanted_list_sql()
-    {
-        $sql = "SELECT `id` FROM `wanted` ";
-
-        if (!Core::get_global('user')->has_access('75')) {
-            $sql .= "WHERE `user` = '" . (string)Core::get_global('user')->id . "'";
-        }
-
-        return $sql;
-    }
-
-    /**
-     * Get wanted list.
-     * @return integer[]
-     */
-    public static function get_wanted_list()
-    {
-        $sql        = self::get_wanted_list_sql();
-        $db_results = Dba::read($sql);
-        $results    = array();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
-    }
-
     private static function getAlbumRepository(): AlbumRepositoryInterface
     {
         global $dic;

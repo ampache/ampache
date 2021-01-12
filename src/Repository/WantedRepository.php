@@ -17,22 +17,35 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use function DI\autowire;
+use Ampache\Module\System\Dba;
 
-return [
-    AccessRepositoryInterface::class => autowire(AccessRepository::class),
-    AlbumRepositoryInterface::class => autowire(AlbumRepository::class),
-    SongRepositoryInterface::class => autowire(SongRepository::class),
-    LabelRepositoryInterface::class => autowire(LabelRepository::class),
-    ArtistRepositoryInterface::class => autowire(ArtistRepository::class),
-    LicenseRepositoryInterface::class => autowire(LicenseRepository::class),
-    LiveStreamRepositoryInterface::class => autowire(LiveStreamRepository::class),
-    WantedRepositoryInterface::class => autowire(WantedRepository::class),
-];
+final class WantedRepository implements WantedRepositoryInterface
+{
+    /**
+     * Get wanted list.
+     *
+     * @return int[]
+     */
+    public function getAll(?int $userId): array
+    {
+        $sql = "SELECT `id` FROM `wanted` ";
+
+        if ($userId === null) {
+            $sql .= "WHERE `user` = '" . (string) $userId . "'";
+        }
+        $db_results = Dba::read($sql);
+        $results    = array();
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['id'];
+        }
+
+        return $results;
+    }
+}

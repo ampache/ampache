@@ -26,10 +26,11 @@ namespace Ampache\Module\Application\Stats;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\Wanted;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\WantedRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -43,14 +44,18 @@ final class WantedAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private WantedRepositoryInterface $wantedRepository;
+
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        WantedRepositoryInterface $wantedRepository
     ) {
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
+        $this->ui               = $ui;
+        $this->modelFactory     = $modelFactory;
+        $this->configContainer  = $configContainer;
+        $this->wantedRepository = $wantedRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -64,8 +69,13 @@ final class WantedAction implements ApplicationActionInterface
 
         $this->ui->showBoxTop(T_('Information'));
 
-        $object_ids = Wanted::get_wanted_list();
-        
+        $userId = null;
+        if (!Core::get_global('user')->has_access('75')) {
+            $userId = Core::get_global('user')->id;
+        }
+
+        $object_ids = $this->wantedRepository->getAll($userId);
+
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type('wanted');
         $browse->set_static_content(true);
