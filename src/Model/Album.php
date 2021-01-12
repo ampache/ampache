@@ -877,7 +877,7 @@ class Album extends database_object implements library_item
             Rating::migrate('album', $this->id, $album_id);
             Art::migrate('album', $this->id, $album_id);
             if (!$cron_cache) {
-                self::garbage_collection();
+                $this->getAlbumRepository()->collectGarbage();
             }
         } else {
             // run updates on the single fields
