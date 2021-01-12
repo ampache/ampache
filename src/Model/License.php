@@ -25,7 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Module\System\Dba;
-use Ampache\Repository\LicenseRepositoryInterface;
 
 class License
 {
@@ -93,42 +92,4 @@ class License
     {
         $this->f_link = ($this->external_link) ? '<a href="' . $this->external_link . '">' . $this->name . '</a>' : $this->name;
     } // format
-
-    /**
-     * lookup
-     * Returns a license matched by name or create one if missing
-     * @param string $value
-     * @return integer
-     */
-    public static function lookup($value)
-    {
-        // lookup the license by name
-        $sql        = 'SELECT `id` from `license` WHERE `name` = ?';
-        $db_results = Dba::read($sql, array($value));
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            return $row['id'];
-        }
-        // lookup the license by external_link
-        $sql        = 'SELECT `id` from `license` WHERE `external_link` = ?';
-        $db_results = Dba::read($sql, array($value));
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            return $row['id'];
-        }
-
-        // create one if missing
-        return static::getLicenseRepository()->create(
-            $value,
-            '',
-            ''
-        );
-    } // get_licenses
-
-    private static function getLicenseRepository(): LicenseRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(LicenseRepositoryInterface::class);
-    }
 }

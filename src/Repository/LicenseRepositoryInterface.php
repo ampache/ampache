@@ -57,4 +57,9 @@ interface LicenseRepositoryInterface
     public function delete(
         int $licenseId
     ): void;
+
+    /**
+     * Searches for the License by name and external link
+     */
+    public function find(string $searchValue): ?int;
 }

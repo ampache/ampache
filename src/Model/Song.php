@@ -35,6 +35,7 @@ use Ampache\Model\Metadata\Metadata;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Repository\LicenseRepositoryInterface;
 use PDOStatement;
 
 class Song extends database_object implements Media, library_item, GarbageCollectibleInterface
@@ -410,7 +411,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $tags                  = $results['genre']; // multiple genre support makes this an array
         $lyrics                = $results['lyrics'];
         $user_upload           = isset($results['user_upload']) ? $results['user_upload'] : null;
-        $license               = isset($results['license']) ? License::lookup((string) $results['license']) : null;
         $composer              = isset($results['composer']) ? Catalog::check_length($results['composer']) : null;
         $label                 = isset($results['publisher']) ? Catalog::get_unique_string(Catalog::check_length($results['publisher'], 128)) : null;
         if ($label && AmpConfig::get('label')) {
@@ -419,6 +419,17 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                 Label::helper($label_name);
             }
         }
+
+        if (isset($results['license'])) {
+            $licenseRepository = static::getLicenseRepository();
+            $licenseName       = (string) $results['license'];
+            $licenseId         = $licenseRepository->find($licenseName);
+
+            $license = $licenseId === 0 ? $licenseRepository->create($licenseName, '', '') : $licenseId;
+        } else {
+            $license = null;
+        }
+
         $catalog_number = isset($results['catalog_number']) ? Catalog::check_length($results['catalog_number'],
             64) : null;
         $language              = isset($results['language']) ? Catalog::check_length($results['language'], 128) : null;
@@ -2362,5 +2373,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         global $dic;
 
         return $dic->get(SongId3TagWriterInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private static function getLicenseRepository(): LicenseRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LicenseRepositoryInterface::class);
     }
 }

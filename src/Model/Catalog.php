@@ -48,6 +48,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 use PDOStatement;
@@ -1825,7 +1826,15 @@ abstract class Catalog extends database_object
             '<br />',
             strip_tags($results['lyrics'])
         );
-        $new_song->license = isset($results['license']) ? License::lookup((string) $results['license']) : null;
+        if (isset($results['license'])) {
+            $licenseRepository = static::getLicenseRepository();
+            $licenseName       = (string) $results['license'];
+            $licenseId         = $licenseRepository->find($licenseName);
+
+            $new_song->license = $licenseId === 0 ? $licenseRepository->create($licenseName, '', '') : $licenseId;
+        } else {
+            $new_song->license = null;
+        }
         $new_song->label   = isset($results['publisher']) ? Catalog::check_length($results['publisher'], 128) : null;
         if ($song->label && AmpConfig::get('label')) {
             // create the label if missing
@@ -2986,5 +2995,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(LabelRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private static function getLicenseRepository(): LicenseRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LicenseRepositoryInterface::class);
     }
 }

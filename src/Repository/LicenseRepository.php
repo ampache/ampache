@@ -89,4 +89,27 @@ final class LicenseRepository implements LicenseRepositoryInterface
             [$licenseId]
         );
     }
+
+    /**
+     * Searches for the License by name and external link
+     */
+    public function find(string $searchValue): ?int
+    {
+        // lookup the license by name
+        $sql        = 'SELECT `id` from `license` WHERE `name` = ?';
+        $db_results = Dba::read($sql, array($searchValue));
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            return (int) $row['id'];
+        }
+        // lookup the license by external_link
+        $sql        = 'SELECT `id` from `license` WHERE `external_link` = ?';
+        $db_results = Dba::read($sql, array($searchValue));
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            return (int) $row['id'];
+        }
+
+        return null;
+    }
 }
