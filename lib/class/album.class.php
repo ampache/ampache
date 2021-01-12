@@ -488,7 +488,7 @@ class Album extends database_object implements library_item
      * @param string $barcode
      * @param string $catalog_number
      * @param boolean $readonly
-     * @return integer|null
+     * @return integer
      */
     public static function check($name, $year = 0, $disk = 1, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $original_year = 0, $barcode = null, $catalog_number = null, $readonly = false)
     {
@@ -555,14 +555,14 @@ class Album extends database_object implements library_item
         }
 
         if ($readonly) {
-            return null;
+            return 0;
         }
 
         $sql = 'INSERT INTO `album` (`name`, `prefix`, `year`, `disk`, `mbid`, `mbid_group`, `release_type`, `album_artist`, `original_year`, `barcode`, `catalog_number`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
         $db_results = Dba::write($sql, array($name, $prefix, $year, $disk, $mbid, $mbid_group, $release_type, $album_artist, $original_year, $barcode, $catalog_number));
         if (!$db_results) {
-            return null;
+            return 0;
         }
 
         $album_id = Dba::insert_id();
@@ -1089,13 +1089,13 @@ class Album extends database_object implements library_item
             self::update_field('album_artist', $album_artist, $this->id);
         }
 
-        // run an album check on the current object
         $current_id = $this->id;
         $updated    = false;
         $songs      = null;
-        $album_id   = self::check($name, $year, $disk, $mbid, $mbid_group, $album_artist, $release_type, $original_year, $barcode, $catalog_number);
+        // run an album check on the current object READONLY means that it won't insert a new album
+        $album_id   = self::check($name, $year, $disk, $mbid, $mbid_group, $album_artist, $release_type, $original_year, $barcode, $catalog_number, true);
         $cron_cache = AmpConfig::get('cron_cache');
-        if ($album_id != $this->id) {
+        if ($album_id > 0 && $album_id != $this->id) {
             debug_event('album.class', "Updating $this->id to new id and migrating stats {" . $album_id . '}.', 4);
             if (!is_array($songs)) {
                 $songs = $this->get_songs();
