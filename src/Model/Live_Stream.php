@@ -383,34 +383,6 @@ class Live_Stream extends database_object implements Media, library_item
     }
 
     /**
-     * @param $catalog
-     * @return array
-     */
-    public static function get_all_radios($catalog = null)
-    {
-        $sql = "SELECT `live_stream`.`id` FROM `live_stream` JOIN `catalog` ON `catalog`.`id` = `live_stream`.`catalog` ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "WHERE `catalog`.`enabled` = '1' ";
-        }
-        $params = array();
-        if ($catalog) {
-            if (AmpConfig::get('catalog_disable')) {
-                $sql .= "AND ";
-            }
-            $sql .= "`catalog`.`id` = ?";
-            $params[] = $catalog;
-        }
-        $db_results = Dba::read($sql, $params);
-        $radios     = array();
-
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $radios[] = $results['id'];
-        }
-
-        return $radios;
-    }
-
-    /**
      * @param integer $user
      * @param string $agent
      * @param array $location

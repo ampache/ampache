@@ -17,21 +17,35 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use function DI\autowire;
+use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Dba;
 
-return [
-    AccessRepositoryInterface::class => autowire(AccessRepository::class),
-    AlbumRepositoryInterface::class => autowire(AlbumRepository::class),
-    SongRepositoryInterface::class => autowire(SongRepository::class),
-    LabelRepositoryInterface::class => autowire(LabelRepository::class),
-    ArtistRepositoryInterface::class => autowire(ArtistRepository::class),
-    LicenseRepositoryInterface::class => autowire(LicenseRepository::class),
-    LiveStreamRepositoryInterface::class => autowire(LiveStreamRepository::class),
-];
+final class LiveStreamRepository implements LiveStreamRepositoryInterface
+{
+    /**
+     * @return int[]
+     */
+    public function getAll(): array
+    {
+        $sql = "SELECT `live_stream`.`id` FROM `live_stream` JOIN `catalog` ON `catalog`.`id` = `live_stream`.`catalog` ";
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "WHERE `catalog`.`enabled` = '1' ";
+        }
+        $params = [];
+
+        $db_results = Dba::read($sql, $params);
+        $radios     = [];
+
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $radios[] = (int) $results['id'];
+        }
+
+        return $radios;
+    }
+}

@@ -32,6 +32,7 @@ use Ampache\Model\Artist;
 use Ampache\Model\Catalog;
 use Ampache\Model\Clip;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use DateTime;
 use DOMDocument;
@@ -932,7 +933,7 @@ class Upnp_Api
             case 'live_streams':
                 switch (count($pathreq)) {
                     case 1: // Get radios list
-                        $radios                  = Live_Stream::get_all_radios();
+                        $radios                  = static::getLiveStreamRepository()->getAll();
                         [$maxCount, $radios]     = self::_slice($radios, $start, $count);
                         foreach ($radios as $radio_id) {
                             $radio = new Live_Stream($radio_id);
@@ -1945,5 +1946,15 @@ class Upnp_Api
         global $dic;
 
         return $dic->get(AlbumRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getLiveStreamRepository(): LiveStreamRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LiveStreamRepositoryInterface::class);
     }
 }

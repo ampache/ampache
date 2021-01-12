@@ -43,6 +43,7 @@ use Ampache\Model\Bookmark;
 use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use DOMDocument;
 use Ampache\Model\Live_Stream;
@@ -1568,7 +1569,7 @@ class Subsonic_Api
     public static function getinternetradiostations($input)
     {
         $response = Subsonic_Xml_Data::createSuccessResponse('getinternetradiostations');
-        $radios   = Live_Stream::get_all_radios();
+        $radios   = static::getLiveStreamRepository()->getAll();
         Subsonic_Xml_Data::addRadios($response, $radios);
         self::apiOutput($input, $response);
     }
@@ -2546,5 +2547,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(SongRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getLiveStreamRepository(): LiveStreamRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LiveStreamRepositoryInterface::class);
     }
 }
