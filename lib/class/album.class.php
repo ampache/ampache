@@ -1071,25 +1071,41 @@ class Album extends database_object implements library_item
      */
     public function update(array $data)
     {
-        $year           = isset($data['year']) ? $data['year'] : $this->year;
-        //$artist         = isset($data['artist']) ? (int) $data['artist'] : $this->artist_id;
-        $album_artist   = isset($data['album_artist']) ? (int) $data['album_artist'] : $this->album_artist;
         $name           = isset($data['name']) ? $data['name'] : $this->name;
+        $artist         = isset($data['artist']) ? (int) $data['artist'] : $this->artist_id;
+        $album_artist   = isset($data['album_artist']) ? (int) $data['album_artist'] : $this->album_artist;
+        $year           = isset($data['year']) ? $data['year'] : $this->year;
         $disk           = (self::sanitize_disk($data['disk']) > 0) ? self::sanitize_disk($data['disk']) : $this->disk;
         $mbid           = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
         $mbid_group     = isset($data['mbid_group']) ? $data['mbid_group'] : $this->mbid_group;
         $release_type   = isset($data['release_type']) ? $data['release_type'] : $this->release_type;
-        $original_year  = isset($data['original_year']) ? $data['original_year'] : $this->original_year;
         $barcode        = isset($data['barcode']) ? $data['barcode'] : $this->barcode;
         $catalog_number = isset($data['catalog_number']) ? $data['catalog_number'] : $this->catalog_number;
+        $original_year  = isset($data['original_year']) ? $data['original_year'] : $this->original_year;
 
+        if (!empty($name) && $name != $this->name) {
+            self::update_field('name', $name, $this->id);
+        }
+        if (!empty($artist) && $artist != $this->artist_id) {
+            self::update_field('artist', $artist, $this->id);
+        }
+        // If you have created an artist using 'add new...' we need to create a new artist
         if (!empty($data['album_artist_name'])) {
-            // Need to create new artist according the name
             $album_artist = Artist::check($data['album_artist_name']);
+            self::update_field('album_artist', $album_artist, $this->id);
+        }
+        // otherwise have you selected a new one?
+        if (empty($data['album_artist_name']) && !empty($album_artist) && $album_artist != $this->album_artist) {
             self::update_field('album_artist', $album_artist, $this->id);
         }
         if (!empty($year) && $year != $this->year) {
             self::update_field('year', $year, $this->id);
+        }
+        if (!empty($disk) && $disk != $this->disk) {
+            self::update_field('disk', $disk, $this->id);
+        }
+        if (!empty($mbid) && $mbid != $this->mbid) {
+            self::update_field('mbid', $mbid, $this->id);
         }
         if (!empty($mbid_group) && $mbid_group != $this->mbid_group) {
             self::update_field('mbid_group', $mbid_group, $this->id);
@@ -1097,14 +1113,14 @@ class Album extends database_object implements library_item
         if (!empty($release_type) && $release_type != $this->release_type) {
             self::update_field('release_type', $release_type, $this->id);
         }
-        if (!empty($original_year) && $original_year != $this->original_year) {
-            self::update_field('original_year', $original_year, $this->id);
+        if (!empty($catalog_number) && $catalog_number != $this->catalog_number) {
+            self::update_field('catalog_number', $catalog_number, $this->id);
         }
         if (!empty($barcode) && $barcode != $this->barcode) {
             self::update_field('barcode', $barcode, $this->id);
         }
-        if (!empty($catalog_number) && $catalog_number != $this->catalog_number) {
-            self::update_field('catalog_number', $catalog_number, $this->id);
+        if (!empty($original_year) && $original_year != $this->original_year) {
+            self::update_field('original_year', $original_year, $this->id);
         }
 
         $this->year           = $year;
