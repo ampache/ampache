@@ -33,6 +33,7 @@ use Ampache\Model\Live_Stream;
 use Ampache\Model\Playlist;
 use Ampache\Model\Share;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\LiveStreamRepositoryInterface;
 
 final class BrowseAjaxHandler implements AjaxHandlerInterface
 {
@@ -40,12 +41,16 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
 
     private FunctionCheckerInterface $functionChecker;
 
+    private LiveStreamRepositoryInterface $liveStreamRepository;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
-        FunctionCheckerInterface $functionChecker
+        FunctionCheckerInterface $functionChecker,
+        LiveStreamRepositoryInterface $liveStreamRepository
     ) {
-        $this->modelFactory    = $modelFactory;
-        $this->functionChecker = $functionChecker;
+        $this->modelFactory         = $modelFactory;
+        $this->functionChecker      = $functionChecker;
+        $this->liveStreamRepository = $liveStreamRepository;
     }
 
     public function handle(): void
@@ -151,9 +156,9 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                         if (!Core::get_global('user')->has_access('75')) {
                             return;
                         }
-                        $radio = new Live_Stream((int) Core::get_request('id'));
-                        $radio->delete();
-                        $key = 'live_stream_' . $radio->id;
+                        $liveStreamId = (int) Core::get_request('id');
+                        $this->liveStreamRepository->delete($liveStreamId);
+                        $key = 'live_stream_' . $liveStreamId;
                         break;
                     default:
                         return;

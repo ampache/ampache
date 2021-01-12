@@ -27,4 +27,9 @@ interface LiveStreamRepositoryInterface
      * @return int[]
      */
     public function getAll(): array;
+
+    /**
+     * This deletes the object with the given id from the database
+     */
+    public function delete(int $liveStreamId): void;
 }

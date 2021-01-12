@@ -322,19 +322,6 @@ class Live_Stream extends database_object implements Media, library_item
     } // create
 
     /**
-     * delete
-     * This deletes the current object from the database
-     * @return true
-     */
-    public function delete()
-    {
-        $sql = "DELETE FROM `live_stream` WHERE `id` = ?";
-        Dba::write($sql, array($this->id));
-
-        return true;
-    } // delete
-
-    /**
      * get_stream_types
      * This is needed by the media interface
      * @param string $player
