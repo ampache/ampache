@@ -1914,12 +1914,12 @@ abstract class Catalog extends database_object
             }
         }
         $new_song->language              = self::check_length($results['language'], 128);
-        $new_song->replaygain_track_gain = $results['replaygain_track_gain'];
-        $new_song->replaygain_track_peak = $results['replaygain_track_peak'];
-        $new_song->replaygain_album_gain = $results['replaygain_album_gain'];
-        $new_song->replaygain_album_peak = $results['replaygain_album_peak'];
-        $new_song->r128_track_gain       = $results['r128_track_gain'];
-        $new_song->r128_album_gain       = $results['r128_album_gain'];
+        $new_song->replaygain_track_gain = !is_null($results['replaygain_track_gain']) ? floatval($results['replaygain_track_gain']) : null;
+        $new_song->replaygain_track_peak = !is_null($results['replaygain_track_peak']) ? floatval($results['replaygain_track_peak']) : null;
+        $new_song->replaygain_album_gain = !is_null($results['replaygain_album_gain']) ? floatval($results['replaygain_album_gain']) : null;
+        $new_song->replaygain_album_peak = !is_null($results['replaygain_album_peak']) ? floatval($results['replaygain_album_peak']) : null;
+        $new_song->r128_track_gain       = !is_null($results['r128_track_gain']) ? intval($results['r128_track_gain']) : null;
+        $new_song->r128_album_gain       = !is_null($results['r128_album_gain']) ? intval($results['r128_album_gain']) : null;
 
         // genre is used in the tag and tag_map tables
         $new_song->tags = $results['genre'];

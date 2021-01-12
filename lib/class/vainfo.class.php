@@ -244,7 +244,6 @@ class vainfo
                 $this->tags['filename'] = $this->_parse_filename($this->filename);
             }
 
-            // somewhere inside _get_tags() tags with values of 0 are removed
             if (in_array('getID3', $enabled_sources) && $this->islocal) {
                 $this->tags['getID3'] = $this->_get_tags();
             }
@@ -450,12 +449,13 @@ class vainfo
 
             $info['lyrics']    = $info['lyrics']
                     ?: strip_tags(nl2br((string) $tags['lyrics']), "<br>");
-            $info['replaygain_track_gain'] = $info['replaygain_track_gain'] ?: $tags['replaygain_track_gain'];
-            $info['replaygain_track_peak'] = $info['replaygain_track_peak'] ?: $tags['replaygain_track_peak'];
-            $info['replaygain_album_gain'] = $info['replaygain_album_gain'] ?: $tags['replaygain_album_gain'];
-            $info['replaygain_album_peak'] = $info['replaygain_album_peak'] ?: $tags['replaygain_album_peak'];
-            $info['r128_track_gain']       = $info['r128_track_gain'] ?: $tags['r128_track_gain'];
-            $info['r128_album_gain']       = $info['r128_album_gain'] ?: $tags['r128_album_gain'];
+
+            $info['replaygain_track_gain'] = $info['replaygain_track_gain'] ?: (!is_null($tags['replaygain_track_gain']) ? floatval($tags['replaygain_track_gain']) : null);
+            $info['replaygain_track_peak'] = $info['replaygain_track_peak'] ?: (!is_null($tags['replaygain_track_peak']) ? floatval($tags['replaygain_track_peak']) : null);
+            $info['replaygain_album_gain'] = $info['replaygain_album_gain'] ?: (!is_null($tags['replaygain_album_gain']) ? floatval($tags['replaygain_album_gain']) : null);
+            $info['replaygain_album_peak'] = $info['replaygain_album_peak'] ?: (!is_null($tags['replaygain_album_peak']) ? floatval($tags['replaygain_album_peak']) : null);
+            $info['r128_track_gain'] = $info['r128_track_gain'] ?: (!is_null($tags['r128_track_gain']) ? intval($tags['r128_track_gain']) : null);
+            $info['r128_album_gain'] = $info['r128_album_gain'] ?: (!is_null($tags['r128_album_gain']) ? intval($tags['r128_album_gain']) : null);
 
             $info['track']         = $info['track'] ?: (int) $tags['track'];
             $info['resolution_x']  = $info['resolution_x'] ?: (int) $tags['resolution_x'];
@@ -727,7 +727,7 @@ class vainfo
                         case 'replaygain_track_peak':
                         case 'replaygain_album_gain':
                         case 'replaygain_album_peak':
-                            $parsed[$key] = $tag['data'][0];
+                            $parsed[$key] = !is_null($tag['data'][0]) ? floatval($tag['data'][0]) : null;
                             break;
                     }
                 }

@@ -316,12 +316,16 @@ function ApplyReplayGain()
             
             if (r128_track_gain !== 'null') { // R128 PREFERRED
                 replaygain = parseInt(r128_track_gain / 256); // how many LU/dB away from baseline of -23 LUFS/dB
+                // TODO investigate different players methods
+                // BEETS seems to do it correctly (16 bits, signed, little endian)
+                // MUSICBEE seems to convert and store as dB?
                 referencelevel = parseInt(-23); // LUFS https://en.wikipedia.org/wiki/EBU_R_128#Specification
                 targetlevel = parseInt(0); // LUFS/dB
                 masteredvolume = referencelevel - replaygain;
                 difference = targetlevel - masteredvolume;
 
                 gainlevel = (1 + Math.pow(10, ((difference /* + Gpre-amp */) / 20)));
+                // is this any different from sample *= pow(10, output_gain/(20.0*256))
             } else if (replaygain_track_gain !== 'null') { // REPLAYGAIN FALLBACK
                 replaygain = parseFloat(replaygain_track_gain);
 
