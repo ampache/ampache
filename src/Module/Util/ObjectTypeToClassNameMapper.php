@@ -30,6 +30,7 @@ use Ampache\Model\Playlist;
 use Ampache\Model\Search;
 use Ampache\Model\Song;
 use Ampache\Model\Art;
+use Ampache\Model\Video;
 
 /**
  * This class maps object types like `album` to their corresponding php class name (if known)
@@ -45,6 +46,7 @@ final class ObjectTypeToClassNameMapper
         'artist' => Artist::class,
         'art' => Art::class,
         'search' => Search::class,
+        'video' => Video::class,
     ];
 
     public static function map(string $object_type)
