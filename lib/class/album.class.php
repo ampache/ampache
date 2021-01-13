@@ -1191,8 +1191,7 @@ class Album extends database_object implements library_item
         }
 
         return $current_id;
-    }
-    // update
+    } // update
 
     /**
      * update_tags

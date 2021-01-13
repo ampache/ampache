@@ -2123,10 +2123,9 @@ class Song extends database_object implements media, library_item
         } else {
             if (!Access::check('interface', 100)) {
                 // If user identifier is empty, we need to retrieve only users which have allowed view of personal info
-                $personal_info_id    = Preference::id_from_name('allow_personal_info_recent');
-                $current_user        = (int) Core::get_global('user')->id;
-                if ($personal_info_id && $current_user > 0) {
-                    $sql .= "AND `object_count`.`user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user') ";
+                $current_user = (int) Core::get_global('user')->id;
+                if ($current_user > 0) {
+                    $sql .= "AND `object_count`.`user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_recent' AND `value`='1') OR `user`='$current_user') ";
                 }
             }
         }
