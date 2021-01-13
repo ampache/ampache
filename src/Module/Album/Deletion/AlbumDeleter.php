@@ -28,12 +28,13 @@ use Ampache\Model\Album;
 use Ampache\Model\Art;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Rating;
-use Ampache\Model\Shoutbox;
 use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;
 use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
+use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
@@ -50,16 +51,24 @@ final class AlbumDeleter implements AlbumDeleterInterface
 
     private SongRepositoryInterface $songRepository;
 
+    private ShoutRepositoryInterface $shoutRepository;
+
+    private SongDeleterInterface $songDeleter;
+
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
         ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
-        SongRepositoryInterface $songRepository
+        SongRepositoryInterface $songRepository,
+        ShoutRepositoryInterface $shoutRepository,
+        SongDeleterInterface $songDeleter
     ) {
         $this->albumRepository = $albumRepository;
         $this->modelFactory    = $modelFactory;
         $this->logger          = $logger;
         $this->songRepository  = $songRepository;
+        $this->shoutRepository = $shoutRepository;
+        $this->songDeleter     = $songDeleter;
     }
 
     /**
@@ -71,7 +80,7 @@ final class AlbumDeleter implements AlbumDeleterInterface
         $songIds = $this->songRepository->getByAlbum($album->id);
         foreach ($songIds as $songId) {
             $song    = $this->modelFactory->createSong($songId);
-            $deleted = $song->remove();
+            $deleted = $this->songDeleter->delete($song);
             if (!$deleted) {
                 $this->logger->critical(
                     sprintf('Error when deleting the song `%d`.', $songId),
@@ -98,7 +107,7 @@ final class AlbumDeleter implements AlbumDeleterInterface
         Art::garbage_collection('album', $album->id);
         Userflag::garbage_collection('album', $album->id);
         Rating::garbage_collection('album', $album->id);
-        Shoutbox::garbage_collection('album', $album->id);
+        $this->shoutRepository->collectGarbage('album', $album->id);
         Useractivity::garbage_collection('album', $album->id);
     }
 }

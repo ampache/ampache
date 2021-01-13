@@ -31,6 +31,7 @@ use Ampache\Model\Song;
 use Ampache\Model\User;
 use Ampache\Model\Video;
 use Ampache\Module\Api\Api;
+use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Module\System\Session;
 
 /**
@@ -135,5 +136,15 @@ final class CatalogFileMethod
         Session::extend($input['auth']);
 
         return true;
+    }
+
+    /**
+     * @deprecated
+     */
+    public static function getSongDeleter(): SongDeleterInterface
+    {
+        global $dic;
+
+        return $dic->get(SongDeleterInterface::class);
     }
 }

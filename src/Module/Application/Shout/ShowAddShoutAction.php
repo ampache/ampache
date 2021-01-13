@@ -30,8 +30,10 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -41,10 +43,14 @@ final class ShowAddShoutAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private ShoutRepositoryInterface $shoutRepository;
+
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
+        ShoutRepositoryInterface $shoutRepository
     ) {
-        $this->ui = $ui;
+        $this->ui              = $ui;
+        $this->shoutRepository = $shoutRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -68,6 +74,8 @@ final class ShowAddShoutAction implements ApplicationActionInterface
         if (get_class($object) == Song::class) {
             $data = $_REQUEST['offset'];
         }
+        $object_type = ObjectTypeToClassNameMapper::reverseMap(get_class($object));
+        $shouts      = $this->shoutRepository->getBy($object_type, $object->id);
 
         // Now go ahead and display the page where we let them add a comment etc
         require_once Ui::find_template('show_add_shout.inc.php');

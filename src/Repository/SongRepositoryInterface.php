@@ -76,4 +76,6 @@ interface SongRepositoryInterface
      * @return int[]
      */
     public function getByLicense(int $licenseId): array;
+
+    public function delete(int $songId): bool;
 }

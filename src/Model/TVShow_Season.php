@@ -26,6 +26,7 @@ namespace Ampache\Model;
 
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\ShoutRepositoryInterface;
 use PDOStatement;
 
 class TVShow_Season extends database_object implements library_item, GarbageCollectibleInterface
@@ -389,7 +390,7 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
                 Art::garbage_collection('tvshow_season', $this->id);
                 Userflag::garbage_collection('tvshow_season', $this->id);
                 Rating::garbage_collection('tvshow_season', $this->id);
-                Shoutbox::garbage_collection('tvshow_season', $this->id);
+                $this->getShoutRepository()->collectGarbage('tvshow_season', $this->id);
                 Useractivity::garbage_collection('tvshow_season', $this->id);
             }
         }
@@ -407,5 +408,15 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         $sql = "UPDATE `tvshow_season` SET `tvshow` = ? WHERE `id` = ?";
 
         return Dba::write($sql, array($tvshow_id, $season_id));
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getShoutRepository(): ShoutRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShoutRepositoryInterface::class);
     }
 }

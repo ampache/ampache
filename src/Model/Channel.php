@@ -803,4 +803,8 @@ class Channel extends database_object implements Media, library_item
 
         return ($string);
     }
+
+    public function remove()
+    {
+    }
 }

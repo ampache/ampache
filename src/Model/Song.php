@@ -26,6 +26,7 @@ namespace Ampache\Model;
 
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
+use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
@@ -2343,26 +2344,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function remove()
     {
-        if (file_exists($this->file)) {
-            $deleted = unlink($this->file);
-        } else {
-            $deleted = true;
-        }
-        if ($deleted === true) {
-            $sql     = "DELETE FROM `song` WHERE `id` = ?";
-            $deleted = Dba::write($sql, array($this->id));
-            if ($deleted) {
-                Art::garbage_collection('song', $this->id);
-                Userflag::garbage_collection('song', $this->id);
-                Rating::garbage_collection('song', $this->id);
-                Shoutbox::garbage_collection('song', $this->id);
-                Useractivity::garbage_collection('song', $this->id);
-            }
-        } else {
-            debug_event('song.class', 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);
-        }
-
-        return $deleted;
+        return $this->getSongDeleter()->delete($this);
     }
 
     /**
@@ -2383,5 +2365,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         global $dic;
 
         return $dic->get(LicenseRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getSongDeleter(): SongDeleterInterface
+    {
+        global $dic;
+
+        return $dic->get(SongDeleterInterface::class);
     }
 }

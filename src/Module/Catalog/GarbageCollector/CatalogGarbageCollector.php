@@ -39,6 +39,7 @@ use Ampache\Model\Userflag;
 use Ampache\Model\Video;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\ShoutRepositoryInterface;
 
 /**
  * This is a wrapper for all of the different database cleaning
@@ -48,10 +49,14 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
 {
     private AlbumRepositoryInterface $albumRepository;
 
+    private ShoutRepositoryInterface $shoutRepository;
+
     public function __construct(
-        AlbumRepositoryInterface $albumRepository
+        AlbumRepositoryInterface $albumRepository,
+        ShoutRepositoryInterface $shoutRepository
     ) {
         $this->albumRepository = $albumRepository;
+        $this->shoutRepository = $shoutRepository;
     }
 
     public function collect(): void
@@ -67,7 +72,7 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
         Useractivity::garbage_collection();
         Playlist::garbage_collection();
         Tmp_Playlist::garbage_collection();
-        Shoutbox::garbage_collection();
+        $this->shoutRepository->collectGarbage();
         Tag::garbage_collection();
 
         // TODO: use InnoDB with foreign keys and on delete cascade to get rid of garbage collection

@@ -85,31 +85,6 @@ class Shoutbox
     } // has_info
 
     /**
-     * garbage_collection
-     *
-     * Cleans out orphaned shoutbox items
-     * @param string $object_type
-     * @param integer $object_id
-     */
-    public static function garbage_collection($object_type = null, $object_id = null)
-    {
-        $types = array('song', 'album', 'artist', 'label');
-
-        if ($object_type !== null) {
-            if (in_array($object_type, $types)) {
-                $sql = "DELETE FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ?";
-                Dba::write($sql, array($object_type, $object_id));
-            } else {
-                debug_event('shoutbox.class', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
-            }
-        } else {
-            foreach ($types as $type) {
-                Dba::write("DELETE FROM `user_shout` USING `user_shout` LEFT JOIN `$type` ON `$type`.`id` = `user_shout`.`object_id` WHERE `$type`.`id` IS NULL AND `user_shout`.`object_type` = '$type'");
-            }
-        }
-    }
-
-    /**
      * get_top
      * This returns the top user_shouts, shoutbox objects are always shown regardless and count against the total
      * number of objects shown
@@ -150,7 +125,7 @@ class Shoutbox
      * get_sticky
      * This returns all current sticky shoutbox items
      */
-    public static function get_sticky()
+    private static function get_sticky()
     {
         $sql        = "SELECT * FROM `user_shout` WHERE `sticky`='1' ORDER BY `date` DESC";
         $db_results = Dba::read($sql);
@@ -356,24 +331,6 @@ class Shoutbox
         $html .= "</div>";
 
         return $html;
-    }
-
-    /**
-     * @param string $object_type
-     * @param integer $object_id
-     * @return array
-     */
-    public static function get_shouts($object_type, $object_id)
-    {
-        $sql        = "SELECT `id` FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `sticky`, `date` DESC";
-        $db_results = Dba::read($sql, array($object_type, $object_id));
-        $results    = array();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
     }
 
     /**

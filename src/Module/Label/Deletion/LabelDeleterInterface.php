@@ -17,17 +17,13 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\Label\Deletion;
 
-namespace Ampache\Module\Label;
+use Ampache\Model\Label;
 
-use Ampache\Module\Label\Deletion\LabelDeleter;
-use function DI\autowire;
-
-return [
-    LabelListUpdaterInterface::class => autowire(LabelListUpdater::class),
-    Deletion\LabelDeleterInterface::class => autowire(LabelDeleter::class),
-];
+interface LabelDeleterInterface
+{
+    public function delete(Label $label): bool;
+}

@@ -30,9 +30,18 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Model\Shoutbox;
 use Ampache\Model\Song;
+use Ampache\Repository\ShoutRepositoryInterface;
 
 final class SongAjaxHandler implements AjaxHandlerInterface
 {
+    private ShoutRepositoryInterface $shoutRepository;
+
+    public function __construct(
+        ShoutRepositoryInterface $shoutRepository
+    ) {
+        $this->shoutRepository = $shoutRepository;
+    }
+
     public function handle(): void
     {
         // Switch on the actions
@@ -68,7 +77,7 @@ final class SongAjaxHandler implements AjaxHandlerInterface
 
                 if ($type == "song") {
                     $media  = new Song($songid);
-                    $shouts = Shoutbox::get_shouts($type, $songid);
+                    $shouts = $this->shoutRepository->getBy($type, $songid);
                     echo "<script>\r\n";
                     echo "shouts = {};\r\n";
                     foreach ($shouts as $shoutsid) {

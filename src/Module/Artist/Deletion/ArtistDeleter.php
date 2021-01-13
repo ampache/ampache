@@ -34,6 +34,7 @@ use Ampache\Module\Artist\Deletion\Exception\ArtistDeletionException;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
+use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
 final class ArtistDeleter implements ArtistDeleterInterface
@@ -48,18 +49,22 @@ final class ArtistDeleter implements ArtistDeleterInterface
 
     private LoggerInterface $logger;
 
+    private ShoutRepositoryInterface $shoutRepository;
+
     public function __construct(
         AlbumDeleterInterface $albumDeleter,
         ArtistRepositoryInterface $artistRepository,
         AlbumRepositoryInterface $albumRepository,
         ModelFactoryInterface $modelFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ShoutRepositoryInterface $shoutRepository
     ) {
         $this->albumDeleter     = $albumDeleter;
         $this->artistRepository = $artistRepository;
         $this->albumRepository  = $albumRepository;
         $this->modelFactory     = $modelFactory;
         $this->logger           = $logger;
+        $this->shoutRepository  = $shoutRepository;
     }
 
     /**
@@ -93,7 +98,7 @@ final class ArtistDeleter implements ArtistDeleterInterface
             Art::garbage_collection('artist', $artist->id);
             Userflag::garbage_collection('artist', $artist->id);
             Rating::garbage_collection('artist', $artist->id);
-            Shoutbox::garbage_collection('artist', $artist->id);
+            $this->shoutRepository->collectGarbage('artist', $artist->id);
             Useractivity::garbage_collection('artist', $artist->id);
         }
     }

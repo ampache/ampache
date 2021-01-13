@@ -27,7 +27,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
-$object_type = ObjectTypeToClassNameMapper::reverseMap(get_class($object)); ?>
+?>
 <div>
 <?php if (Access::check('interface', 25)) { ?>
 <div style="float: right">
@@ -70,7 +70,6 @@ $boxtitle = T_('Post to Shoutbox');
 $boxtitle = $object->f_title . ' ' . T_('Shoutbox');
 Ui::show_box_top($boxtitle, 'box box_add_shout'); ?>
 <?php
-$shouts = Shoutbox::get_shouts($object_type, $object->id);
 if (count($shouts)) {
     require_once Ui::find_template('show_shoutbox.inc.php');
 } ?>

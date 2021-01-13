@@ -23,6 +23,8 @@
 
 namespace Ampache\Model;
 
+use PDOStatement;
+
 /**
  * media Interface
  *
@@ -86,4 +88,11 @@ interface Media
      * @return boolean
      */
     public function check_play_history($user, $agent, $date);
-} // end media.interface
+
+    /**
+     * remove
+     * Remove the song from disk.
+     * @return PDOStatement|boolean
+     */
+    public function remove();
+}

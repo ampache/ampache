@@ -439,4 +439,8 @@ class Song_Preview extends database_object implements Media, playable_item
 
         return Dba::write($sql);
     }
+
+    public function remove()
+    {
+    }
 }

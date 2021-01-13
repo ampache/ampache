@@ -17,17 +17,22 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-declare(strict_types=1);
+namespace Ampache\Repository;
 
-namespace Ampache\Module\Label;
+interface ShoutRepositoryInterface
+{
+    /**
+     * @return int[]
+     */
+    public function getBy(
+        string $object_type,
+        int $object_id
+    ): array;
 
-use Ampache\Module\Label\Deletion\LabelDeleter;
-use function DI\autowire;
-
-return [
-    LabelListUpdaterInterface::class => autowire(LabelListUpdater::class),
-    Deletion\LabelDeleterInterface::class => autowire(LabelDeleter::class),
-];
+    /**
+     * Cleans out orphaned shoutbox items
+     */
+    public function collectGarbage(?string $object_type = null, ?int $object_id = null): void;
+}

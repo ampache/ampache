@@ -40,4 +40,6 @@ interface LabelRepositoryInterface
     public function removeArtistAssoc(int $labelId, int $artistId): void;
 
     public function addArtistAssoc(int $labelId, int $artistId): void;
+
+    public function delete(int $labelId): bool;
 }

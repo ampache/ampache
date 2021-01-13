@@ -32,6 +32,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Repository\ShoutRepositoryInterface;
 
 class Video extends database_object implements Media, library_item, GarbageCollectibleInterface
 {
@@ -1074,7 +1075,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
                 Art::garbage_collection('video', $this->id);
                 Userflag::garbage_collection('video', $this->id);
                 Rating::garbage_collection('video', $this->id);
-                Shoutbox::garbage_collection('video', $this->id);
+                $this->getShoutRepository()->collectGarbage('video', $this->id);
                 Useractivity::garbage_collection('video', $this->id);
             }
         } else {
@@ -1143,4 +1144,14 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
         return 0;
     } // get_item_count
+
+    /**
+     * @deprecated
+     */
+    private function getShoutRepository(): ShoutRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShoutRepositoryInterface::class);
+    }
 }

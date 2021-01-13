@@ -29,6 +29,7 @@ use Ampache\Model\Catalog;
 use Ampache\Model\Song;
 use Ampache\Model\User;
 use Ampache\Module\Api\Api;
+use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Module\System\Session;
 
 /**
@@ -69,7 +70,7 @@ final class SongDeleteMethod
 
             return false;
         }
-        if ($song->remove()) {
+        if (static::getSongDeleter()->delete($song)) {
             Api::message('song ' . $object_id . ' deleted', $input['api_format']);
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -79,5 +80,15 @@ final class SongDeleteMethod
         Session::extend($input['auth']);
 
         return true;
+    }
+
+    /**
+     * @deprecated
+     */
+    public static function getSongDeleter(): SongDeleterInterface
+    {
+        global $dic;
+
+        return $dic->get(SongDeleterInterface::class);
     }
 }

@@ -30,4 +30,5 @@ return [
     SongFilesystemCleanupInterface::class => autowire(SongFilesystemCleanup::class),
     SongSorterInterface::class => autowire(SongSorter::class),
     Tag\SongId3TagWriterInterface::class => autowire(Tag\SongId3TagWriter::class),
+    Deletion\SongDeleter::class => autowire(Deletion\SongDeleterInterface::class),
 ];

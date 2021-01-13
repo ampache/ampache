@@ -31,6 +31,7 @@ use Ampache\Model\Label;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Label\Deletion\LabelDeleterInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -43,12 +44,16 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private LabelDeleterInterface $labelDeleter;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        LabelDeleterInterface $labelDeleter
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
+        $this->labelDeleter    = $labelDeleter;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -69,7 +74,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             );
         }
 
-        if ($label->remove()) {
+        if ($this->labelDeleter->delete($label)) {
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('The Label has been deleted'),

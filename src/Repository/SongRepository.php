@@ -195,4 +195,14 @@ final class SongRepository implements SongRepositoryInterface
 
         return $results;
     }
+
+    public function delete(int $songId): bool
+    {
+        $deleted = Dba::write(
+            'DELETE FROM `song` WHERE `id` = ?',
+            [$songId]
+        );
+
+        return $deleted !== false;
+    }
 }

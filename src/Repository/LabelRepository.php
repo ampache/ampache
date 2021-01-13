@@ -99,4 +99,14 @@ final class LabelRepository implements LabelRepositoryInterface
             [$labelId, $artistId, time()]
         );
     }
+
+    public function delete(int $labelId): bool
+    {
+        $result = Dba::write(
+            "DELETE FROM `label` WHERE `id` = ?",
+            [$labelId]
+        );
+
+        return $result !== false;
+    }
 }

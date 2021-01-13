@@ -31,6 +31,7 @@ use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -45,14 +46,18 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private SongDeleterInterface $songDeleter;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        SongDeleterInterface $songDeleter
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
+        $this->songDeleter     = $songDeleter;
     }
 
     public function run(
@@ -73,7 +78,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        if ($song->remove()) {
+        if ($this->songDeleter->delete($song)) {
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('Song has been deleted'),
