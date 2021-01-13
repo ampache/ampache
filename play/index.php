@@ -27,16 +27,43 @@
  * This is also where it decides if you need to be downsampled.
  */
 define('NO_SESSION', '1');
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 ob_end_clean();
 
-//debug_event('play/index', print_r(apache_request_headers(), true), 5);
+/**
+ * The following code takes a "beautiful" url, splits it into key/value pairs and
+ * then replaces the PHP $_REQUEST as if the URL had arrived in un-beautified form.
+ * (This is necessary to avoid some DLNA players barfing on the URL, particularly Windows Media Player)
+ *
+ * The reason for not trying to do the whole job in mod_rewrite is that there are typically
+ * more than 10 arguments to this function now, and that's tricky with mod_rewrite's 10 arg limit
+ */
+$slashcount = substr_count($_SERVER['QUERY_STRING'], '/');
+if ($slashcount > 2) {
+    // e.g. ssid/3ca112fff23376ef7c74f018497dd39d/type/song/oid/280/uid/player/api/name/Glad.mp3
+    $new_arr     = explode('/', $_SERVER['QUERY_STRING']);
+    $new_request = array();
+    $i           = 0;
+    foreach ($new_arr as $v) {
+        if ($i == 0) {
+            $key = $v;
+            $i   = 1;
+        } else {
+            $value             = $v;
+            $i                 = 0;
+            $new_request[$key] = $value;
+        }
+    }
+    $_REQUEST = $new_request;
+}
 
-/* These parameters had better come in on the url. */
+// These parameters had better come in on the url.
 $uid          = scrub_in($_REQUEST['uid']);
-$object_id    = scrub_in($_REQUEST['oid']);
-$sid          = scrub_in($_REQUEST['ssid']);
+$object_id    = (int) scrub_in($_REQUEST['oid']);
+$session_id   = (string) scrub_in($_REQUEST['ssid']);
 $type         = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
+$name         = (string) scrub_in(filter_input(INPUT_GET, 'name', FILTER_SANITIZE_SPECIAL_CHARS));
 $cache        = scrub_in($_REQUEST['cache']);
 $format       = scrub_in($_REQUEST['format']);
 $original     = $format == 'raw';
@@ -58,7 +85,7 @@ if ($demo_id !== '') {
     $action = 'stream';
 }
 // allow disabling stat recording from the play url
-if ($cache === '1' || !in_array($type, array('song', 'video'))) {
+if ($cache === '1' || !in_array($type, array('song', 'video', 'podcast_episode'))) {
     debug_event('play/index', 'record_stats disabled: cache {' . $type . "}", 5);
     $record_stats = false;
 }
@@ -113,10 +140,10 @@ debug_event('play/index', 'Asked for type {' . $type . "}", 5);
 
 if ($type == 'playlist') {
     $playlist_type = scrub_in($_REQUEST['playlist_type']);
-    $object_id     = $sid;
+    $object_id     = $session_id;
 }
 
-/* First things first, if we don't have a uid/oid stop here */
+// First things first, if we don't have a uid/oid stop here
 if (empty($object_id) && empty($demo_id) && empty($random)) {
     debug_event('play/index', 'No object UID specified, nothing to play', 2);
     header('HTTP/1.1 400 Nothing To Play');
@@ -155,8 +182,8 @@ if (!empty($apikey)) {
         $user_authenticated = true;
     }
 }
-
-if (empty($uid) && (!$share_id && !$secret)) {
+// Added $session_id here as user may not be specified but then ssid may be and will be checked later
+if (empty($uid) && empty($session_id) && (!$share_id && !$secret)) {
     debug_event('play/index', 'No user specified', 2);
     header('HTTP/1.1 400 No User Specified');
 
@@ -189,14 +216,14 @@ if (!$share_id) {
 
         // If require session is set then we need to make sure we're legit
         if ($use_auth && AmpConfig::get('require_session')) {
-            if (!AmpConfig::get('require_localnet_session') && Access::check_network('network', Core::get_global('user')->id, '5')) {
+            if (!AmpConfig::get('require_localnet_session') && Access::check_network('network', Core::get_global('user')->id, 5)) {
                 debug_event('play/index', 'Streaming access allowed for local network IP ' . Core::get_server('REMOTE_ADDR'), 4);
             } else {
-                if (!Session::exists('stream', $sid)) {
+                if (!Session::exists('stream', $session_id)) {
                     // No valid session id given, try with cookie session from web interface
-                    $sid = $_COOKIE[AmpConfig::get('session_name')];
-                    if (!Session::exists('interface', $sid)) {
-                        debug_event('play/index', "Streaming access denied: Session $sid has expired", 3);
+                    $session_id = $_COOKIE[AmpConfig::get('session_name')];
+                    if (!Session::exists('interface', $session_id)) {
+                        debug_event('play/index', "Streaming access denied: Session $session_id has expired", 3);
                         header('HTTP/1.1 403 Session Expired');
 
                         return false;
@@ -206,7 +233,7 @@ if (!$share_id) {
 
             // Now that we've confirmed the session is valid
             // extend it
-            Session::extend($sid, 'stream');
+            Session::extend($session_id, 'stream');
         }
     }
 
@@ -250,8 +277,8 @@ if (!$prefs) {
 
 // If they are using access lists let's make sure that they have enough access to play this mojo
 if (AmpConfig::get('access_control')) {
-    if (!Access::check_network('stream', Core::get_global('user')->id, '25') &&
-        !Access::check_network('network', Core::get_global('user')->id, '25')) {
+    if (!Access::check_network('stream', Core::get_global('user')->id, 25) &&
+        !Access::check_network('network', Core::get_global('user')->id, 25)) {
         debug_event('play/index', "Streaming Access Denied: " . Core::get_user_ip() . " does not have stream level access", 3);
         UI::access_denied();
 
@@ -429,7 +456,7 @@ if ($action == 'download' && !$original) {
     if (!$share_id) {
         if (Core::get_server('REQUEST_METHOD') != 'HEAD' && $record_stats) {
             debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
-            $sessionkey = $sid ?: Stream::get_session();
+            $sessionkey = $session_id ?: Stream::get_session();
             $agent      = Session::agent($sessionkey);
             $location   = Session::get_geolocation($sessionkey);
             Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
@@ -454,7 +481,7 @@ if ($action == 'download' && !$original) {
     if (!$share_id) {
         if (Core::get_server('REQUEST_METHOD') != 'HEAD' && $record_stats) {
             debug_event('play/index', 'Registering download stats for {' . $media->get_stream_name() . '}...', 5);
-            $sessionkey = $sid ?: Stream::get_session();
+            $sessionkey = $session_id ?: Stream::get_session();
             $agent      = Session::agent($sessionkey);
             $location   = Session::get_geolocation($sessionkey);
             Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
@@ -490,13 +517,13 @@ if (AmpConfig::get('track_user_ip')) {
 
 $force_downsample = false;
 if (AmpConfig::get('downsample_remote')) {
-    if (!Access::check_network('network', Core::get_global('user')->id, '0')) {
+    if (!Access::check_network('network', Core::get_global('user')->id, 0)) {
         debug_event('play/index', 'Downsampling enabled for non-local address ' . Core::get_server('REMOTE_ADDR'), 5);
         $force_downsample = true;
     }
 }
 
-debug_event('play/index', 'Playing file (' . $media->file . '}...', 5);
+debug_event('play/index', $action . ' file (' . $media->file . '}...', 5);
 debug_event('play/index', 'Media type {' . $media->type . '}', 5);
 
 $cpaction = $_REQUEST['custom_play_action'];
@@ -544,8 +571,6 @@ if (!$cpaction && !$original) {
                             if (!empty($subtitle)) {
                                 $transcode = true;
                                 debug_event('play/index', 'Transcoding because subtitle requested', 5);
-                            } else {
-                                debug_event('play/index', 'Decided not to transcode', 5);
                             }
                         }
                     }
@@ -636,7 +661,7 @@ if (!$transcode) {
     header('ETag: ' . $media->id);
 }
 if (($action != 'download') && $record_stats) {
-    Stream::insert_now_playing((int) $media->id, (int) $uid, (int) $media->time, $sid, get_class($media));
+    Stream::insert_now_playing((int) $media->id, (int) $uid, (int) $media->time, $session_id, get_class($media));
 }
 // Handle Content-Range
 
@@ -680,20 +705,20 @@ if (!isset($_REQUEST['segment'])) {
     if ($start > 0) {
         debug_event('play/index', 'Content-Range doesn\'t start from 0, stats should already be registered previously; not collecting stats', 5);
     } else {
-        $sessionkey = $sid ?: Stream::get_session();
+        $sessionkey = $session_id ?: Stream::get_session();
         $agent      = Session::agent($sessionkey);
         $location   = Session::get_geolocation($sessionkey);
         if (!$share_id && $record_stats) {
             if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                 debug_event('play/index', 'Registering stream for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 4);
+                // internal stats (object_count, user_activity)
+                $media->set_played($uid, $agent, $location, $time);
                 if ($user->id && get_class($media) == 'Song') {
                     // scrobble songs for the user
                     User::save_mediaplay($user, $media);
                 }
-                // internal stats (object_count, user_activity)
-                $media->set_played($uid, $agent, $location, $time);
             }
-        } elseif (!$share_id && !$record_stats) {
+        } elseif (!$share_id && $record_stats) {
             if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                 debug_event('play/index', 'Registering download for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 5);
                 Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);
