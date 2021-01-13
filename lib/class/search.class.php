@@ -1867,8 +1867,8 @@ class Search extends playlist_object
                     $where[]         = "(`album_artist`.`name` $sql_match_operator '$input' " .
                         " OR LTRIM(CONCAT(COALESCE(`album_artist`.`prefix`, ''), " .
                         "' ', `album_artist`.`name`)) $sql_match_operator '$input')";
-                    $table['album']        = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
-                    $table['album_artist'] = "LEFT JOIN `artist` AS `album_artist` ON `album`.`album_artist`=`song`.`artist`";
+                    $table['album']        = "LEFT JOIN `album` ON `song`.`album`=`album`.`id` AND `song`.`artist`=`album`.`album_artist`";
+                    $table['album_artist'] = "LEFT JOIN `artist` AS `album_artist` ON `song`.`artist`=`album_artist`.`id`";
                     break;
                 case 'composer':
                     $where[] = "`song`.`composer` $sql_match_operator '$input'";
