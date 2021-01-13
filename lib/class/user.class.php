@@ -188,9 +188,9 @@ class User extends database_object
 
         $time      = time();
         $last_seen = $time - 1200;
-        $sql       = 'SELECT COUNT(DISTINCT `session`.`username`) FROM `session` ' .
-            'INNER JOIN `user` ON `session`.`username` = `user`.`username` ' .
-            'WHERE `session`.`expire` > ? and `user`.`last_seen` > ?';
+        $sql       = "SELECT COUNT(DISTINCT `session`.`username`) FROM `session` " .
+            "INNER JOIN `user` ON `session`.`username` = `user`.`username` " .
+            "WHERE `session`.`expire` > ? AND `user`.`last_seen` > ?";
         $db_results           = Dba::read($sql, array($time, $last_seen));
         $data                 = Dba::fetch_row($db_results);
         $results['connected'] = $data[0];
@@ -247,15 +247,19 @@ class User extends database_object
     /**
      * get_valid_users
      * This returns all valid users in database.
+     * @param boolean $include_disabled
+     * @return array
      */
-    public static function get_valid_users()
+    public static function get_valid_users($include_disabled = false)
     {
         $users = array();
+        $sql   = ($include_disabled)
+            ? "SELECT `id` FROM `user`"
+            : "SELECT `id` FROM `user` WHERE `disabled` = '0'";
 
-        $sql        = "SELECT `id` FROM `user` WHERE `disabled` = '0'";
         $db_results = Dba::read($sql);
         while ($results = Dba::fetch_assoc($db_results)) {
-            $users[] = $results['id'];
+            $users[] = (int) $results['id'];
         }
 
         return $users;
@@ -305,7 +309,7 @@ class User extends database_object
                 return User::get_from_username($results['username']);
             }
             // check for sha256 hashed apikey for client
-            // https://github.com/ampache/ampache/wiki/Ampache-API
+            // http://ampache.org/api/
             $sql        = "SELECT `id`, `apikey`, `username` FROM `user`";
             $db_results = Dba::read($sql);
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -454,7 +458,7 @@ class User extends database_object
     /**
      * get_favorites
      * returns an array of your $type favorites
-     * @param $type
+     * @param string $type
      * @return array
      */
     public function get_favorites($type)
@@ -803,10 +807,10 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `apikey` = ? WHERE `id` = ?";
 
-        debug_event('user.class', 'Updating apikey', 4);
+        debug_event('user.class', 'Updating apikey for ' . $this->id, 4);
 
         Dba::write($sql, array($new_apikey, $this->id));
-    } // update_website
+    } // update_apikey
 
     /**
      * generate_apikey
@@ -887,17 +891,17 @@ class User extends database_object
         $new_access = Dba::escape($new_access);
         $sql        = "UPDATE `user` SET `access`='$new_access' WHERE `id`='$this->id'";
 
-        debug_event('user.class', 'Updating access level', 4);
+        debug_event('user.class', 'Updating access level for ' . $this->id, 4);
 
         Dba::write($sql);
 
         return true;
     } // update_access
 
-    /*!
-        @function update_last_seen
-        @discussion updates the last seen data for this user
-    */
+    /**
+     * update_last_seen
+     * updates the last seen data for this user
+     */
     public function update_last_seen()
     {
         $sql = "UPDATE user SET last_seen='" . time() . "' WHERE `id`='$this->id'";
@@ -915,8 +919,8 @@ class User extends database_object
             try {
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->load($user)) {
-                    $plugin->_plugin->save_mediaplay($media);
                     debug_event('user.class', 'save_mediaplay... ' . $plugin->_plugin->name, 5);
+                    $plugin->_plugin->save_mediaplay($media);
                 }
             } catch (Exception $error) {
                 debug_event('user.class', 'save_mediaplay plugin error: ' . $error->getMessage(), 1);
@@ -1045,17 +1049,14 @@ class User extends database_object
      */
     public function update_password($new_password, $hashed_password = null)
     {
-        //$salt             = AmpConfig::get('secret_key');
+        debug_event('user.class', 'Updating password', 1);
         if (!$hashed_password) {
             $hashed_password = hash('sha256', $new_password);
         }
+
         $escaped_password = Dba::escape($hashed_password);
-
-        debug_event('user.class', 'Updating password', 4);
-
-
-        $sql          = "UPDATE `user` SET `password` = ? WHERE `id` = ?";
-        $db_results   = Dba::write($sql, array($escaped_password, $this->id));
+        $sql              = "UPDATE `user` SET `password` = ? WHERE `id` = ?";
+        $db_results       = Dba::write($sql, array($escaped_password, $this->id));
 
         // Clear this (temp fix)
         if ($db_results) {
@@ -1189,6 +1190,13 @@ class User extends database_object
     {
         $user_id = Dba::escape($user_id);
 
+        // Delete that system pref that's not a user pref...
+        if ($user_id > 0) {
+            // TODO, remove before next release. ('custom_login_logo' needs to be here a while at least so 5.0.0+1)
+            $sql = "DELETE FROM `user_preference` WHERE `preference` IN (SELECT `id` from `preference` where `name` IN ('custom_login_background', 'custom_login_logo')) AND `user` = $user_id";
+            Dba::write($sql);
+        }
+
         /* Get All Preferences for the current user */
         $sql        = "SELECT * FROM `user_preference` WHERE `user`='$user_id'";
         $db_results = Dba::read($sql);
@@ -1213,7 +1221,8 @@ class User extends database_object
         /* If we aren't the -1 user before we continue grab the -1 users values */
         if ($user_id != '-1') {
             $sql = "SELECT `user_preference`.`preference`, `user_preference`.`value` FROM `user_preference`, `preference` " .
-                "WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`catagory` !='system'";
+                "WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND " .
+                "`preference`.`catagory` !='system' AND `preference`.`name` NOT IN ('custom_login_background', 'custom_login_logo') ";
             $db_results = Dba::read($sql);
             /* While through our base stuff */
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -1228,6 +1237,7 @@ class User extends database_object
         // If not system, exclude system... *gasp*
         if ($user_id != '-1') {
             $sql .= " WHERE catagory !='system'";
+            $sql .= " AND `preference`.`name` NOT IN ('custom_login_background', 'custom_login_logo')";
         }
         $db_results = Dba::read($sql);
 
@@ -1452,7 +1462,7 @@ class User extends database_object
      */
     public function update_avatar($data, $mime = '')
     {
-        debug_event('user.class', 'Updating avatar', 4);
+        debug_event('user.class', 'Updating avatar for ' . $this->id, 4);
 
         $art = new Art($this->id, 'user');
 
