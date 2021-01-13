@@ -1830,7 +1830,7 @@ abstract class Catalog extends database_object
                         array("\r\n", "\r", "\n"),
                         '<br />',
                         strip_tags($results['lyrics']));
-        $new_song->license = isset($results['license']) ? License::lookup($results['license']) : null;
+        $new_song->license = isset($results['license']) ? License::lookup((string) $results['license']) : null;
         $new_song->label   = isset($results['publisher']) ? Catalog::check_length($results['publisher'], 128) : null;
         if ($song->label && AmpConfig::get('label')) {
             // create the label if missing
@@ -1882,8 +1882,7 @@ abstract class Catalog extends database_object
         }
 
         // check whether this album exists
-        $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group,
-                                        $new_song->albumartist, $release_type, false, $original_year, $barcode, $catalog_number);
+        $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group, $new_song->albumartist, $release_type, $original_year, $barcode, $catalog_number);
         if (!$new_song->album) {
             $new_song->album = $song->album;
         }
@@ -1919,17 +1918,17 @@ abstract class Catalog extends database_object
         }
 
         // Duplicate arts if required
-        if ($song->artist != $new_song->artist) {
+        if (($song->artist && $new_song->artist) && $song->artist != $new_song->artist) {
             if (!Art::has_db($new_song->artist, 'artist')) {
                 Art::duplicate('artist', $song->artist, $new_song->artist);
             }
         }
-        if ($song->albumartist != $new_song->albumartist) {
+        if (($song->albumartist && $new_song->albumartist) && $song->albumartist != $new_song->albumartist) {
             if (!Art::has_db($new_song->albumartist, 'artist')) {
                 Art::duplicate('artist', $song->albumartist, $new_song->albumartist);
             }
         }
-        if ($song->album != $new_song->album) {
+        if (($song->album && $new_song->album) && $song->album != $new_song->album) {
             if (!Art::has_db($new_song->album, 'album')) {
                 Art::duplicate('album', $song->album, $new_song->album);
             }
@@ -1955,7 +1954,7 @@ abstract class Catalog extends database_object
             // Update song_data table
             Song::update_song($song->id, $new_song);
 
-            if ($song->tags != $new_song->tags) {
+            if (!empty($new_song->tags) && $song->tags != $new_song->tags) {
                 Tag::update_tag_list(implode(',', $new_song->tags), 'song', $song->id, true);
                 self::updateAlbumTags($song);
                 self::updateArtistTags($song);
