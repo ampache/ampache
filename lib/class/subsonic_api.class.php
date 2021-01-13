@@ -248,6 +248,12 @@ class Subsonic_Api
             'namespaceSeparator' => ' :', // you may want this to be something other than a colon
             'attributePrefix' => '', // to distinguish between attributes and nodes with the same name
             'alwaysArray' => array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share'), // array of xml tag names which should always become arrays
+            'alwaysDouble' => array('AverageRating'),
+            'alwaysInteger' => array('albumCount', 'audioTrackId', 'bitRate', 'bookmarkPosition', 'code',
+                                     'count', 'current', 'currentIndex', 'discNumber', 'duration', 'folder',
+                                     'lastModified', 'maxBitRate', 'minutesAgo', 'offset', 'originalHeight',
+                                     'originalWidth', 'playCount', 'playerId', 'position', 'size', 'songCount',
+                                     'time', 'totalHits', 'track', 'UserRating', 'visitCount', 'year'), // array of xml tag names which should always become integers
             'autoArray' => true, // only create arrays for tags which appear more than once
             'textContent' => 'value', // key used for the text content of elements
             'autoText' => true, // skip textContent key if node has no attributes or child nodes
@@ -274,6 +280,12 @@ class Subsonic_Api
                     $vattr = ($strattr == "true");
                 } else {
                     $vattr = $strattr;
+                    if (in_array($attributeName, $options['alwaysInteger'])) {
+                        $vattr = (int) $strattr;
+                    }
+                    if (in_array($attributeName, $options['alwaysDouble'])) {
+                        $vattr = (double) $strattr;
+                    }
                 }
                 $attributesArray[$attributeKey] = $vattr;
             }
@@ -1087,9 +1099,14 @@ class Subsonic_Api
             $url = Podcast_Episode::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'), $user_id);
         }
 
-        if (!empty($url)) {
-            self::follow_stream($url);
+        // return an error on missing files
+        if (empty($url)) {
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'download');
+            self::apiOutput($input, $response);
+
+            return;
         }
+        self::follow_stream($url);
     }
 
     /**
@@ -1100,9 +1117,25 @@ class Subsonic_Api
      */
     public static function download($input)
     {
-        $fileid = self::check_parameter($input, 'id', true);
+        $fileid  = self::check_parameter($input, 'id', true);
+        $user_id = User::get_from_username($input['u'])->id;
+        $params  = '&action=download' . '&client=' . rawurlencode($input['c']);
+        $url     = '';
+        if (Subsonic_XML_Data::isSong($fileid)) {
+            $object = new Song(Subsonic_XML_Data::getAmpacheId($fileid));
+            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
+        } elseif (Subsonic_XML_Data::isPodcastEp($fileid)) {
+            $object = new Podcast_Episode(Subsonic_XML_Data::getAmpacheId($fileid));
+            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
+        }
 
-        $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), '&action=download' . '&client=' . rawurlencode($input['c']) . '&cache=1', 'api', function_exists('curl_version'));
+        // return an error on missing files
+        if (empty($url)) {
+            $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'download');
+            self::apiOutput($input, $response);
+
+            return;
+        }
         self::follow_stream($url);
     }
 
@@ -1119,7 +1152,17 @@ class Subsonic_Api
         $bitRate = $input['bitRate'];
 
         $media                = array();
-        $media['object_type'] = 'song';
+        if (Subsonic_XML_Data::isSong($fileid)) {
+            $media['object_type'] = 'song';
+        } elseif (Subsonic_XML_Data::isVideo($fileid)) {
+            $media['object_type'] = 'video';
+        } else {
+            self::apiOutput(
+                $input,
+                Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND,
+                                               'Invalid id',
+                                               'hls'));
+        }
         $media['object_id']   = Subsonic_XML_Data::getAmpacheId($fileid);
 
         $medias            = array();
@@ -1132,7 +1175,9 @@ class Subsonic_Api
         //$additional_params .= '&transcode_to=ts';
         $stream->add($medias, $additional_params);
 
-        header('Content-Type: application/vnd.apple.mpegurl;');
+        // vlc won't work if we use application/vnd.apple.mpegurl, but works fine with this. this is
+        // also an allowed header by the standard
+        header('Content-Type: audio/mpegurl;');
         $stream->create_m3u();
     }
 
@@ -1830,10 +1875,10 @@ class Subsonic_Api
                             $id    = $rid;
                         }
 
-                        foreach ($id as $i) {
+                        foreach ($id as $song_id) {
                             $url = null;
-                            if (Subsonic_XML_Data::isSong($i)) {
-                                $url = Song::generic_play_url('song', Subsonic_XML_Data::getAmpacheId($i), '', 'api');
+                            if (Subsonic_XML_Data::isSong($song_id)) {
+                                $url = Song::generic_play_url('song', Subsonic_XML_Data::getAmpacheId($song_id), '', 'api');
                             }
 
                             if ($url !== null) {
