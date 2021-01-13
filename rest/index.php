@@ -38,6 +38,9 @@ if (empty($action)) {
 }
 $f        = $_REQUEST['f'];
 $callback = $_REQUEST['callback'];
+if (empty($f)) {
+    $f = "xml";
+}
 /* Set the correct default headers */
 if ($action != "getcoverart" && $action != "hls" && $action != "stream" && $action != "download" && $action != "getavatar") {
     Subsonic_Api::setHeader($f);
