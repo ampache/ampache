@@ -686,11 +686,13 @@ class Song extends database_object implements media, library_item
     {
         $info = $this->_get_ext_info($data_filter);
 
-        foreach ($info as $key => $value) {
-            if ($key != 'song_id') {
-                $this->$key = $value;
-            }
-        } // end foreach
+        if (!empty($info)) {
+            foreach ($info as $key => $value) {
+                if ($key != 'song_id') {
+                    $this->$key = $value;
+                }
+            } // end foreach
+        }
     } // fill_ext_info
 
     /**
