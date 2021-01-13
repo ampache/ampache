@@ -682,12 +682,13 @@ class Song extends database_object implements media, library_item
     public function fill_ext_info()
     {
         $info = $this->_get_ext_info();
-
-        foreach ($info as $key => $value) {
-            if ($key != 'song_id') {
-                $this->$key = $value;
-            }
-        } // end foreach
+        if (!empty($info)) {
+            foreach ($info as $key => $value) {
+                if ($key != 'song_id') {
+                    $this->$key = $value;
+                }
+            } // end foreach
+        }
     } // fill_ext_info
 
     /**
@@ -1063,7 +1064,7 @@ class Song extends database_object implements media, library_item
     public static function compare_song_information(Song $song, Song $new_song)
     {
         // Remove some stuff we don't care about as this function only needs to check song information.
-        unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type);
+        unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type, $song->disk);
         $string_array = array('title', 'comment', 'lyrics', 'composer', 'tags', 'artist', 'album', 'time');
         $skip_array   = array('id', 'tag_id', 'mime', 'mbid', 'waveform', 'object_cnt', 'skip_cnt', 'albumartist', 'artist_mbid', 'album_mbid', 'albumartist_mbid', 'mb_albumid_group', 'disabledMetadataFields');
 
@@ -2026,23 +2027,30 @@ class Song extends database_object implements media, library_item
      */
     public static function get_recently_played($user_id = 0)
     {
+        $personal_info_recent = 91;
+        $personal_info_time   = 92;
+        $personal_info_agent  = 93;
+
         $results = array();
         $limit   = AmpConfig::get('popular_threshold', 10);
-        $sql     = "SELECT `object_id`, `user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name` " .
-                   "FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream' ";
+        $sql     = "SELECT `object_id`, `object_count`.`user`, `object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_recent`.`value` AS `user_recent`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent` " .
+                   "FROM `object_count`" .
+                   "LEFT JOIN `user_preference` AS `pref_recent` ON `pref_recent`.`preference`='$personal_info_recent' AND `pref_recent`.`user` = `object_count`.`user`" .
+                   "LEFT JOIN `user_preference` AS `pref_time` ON `pref_time`.`preference`='$personal_info_time' AND `pref_time`.`user` = `object_count`.`user`" .
+                   "LEFT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`preference`='$personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user`" .
+                   "WHERE `object_type` = 'song' AND `count_type` = 'stream' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND " . Catalog::get_enable_filter('song', '`object_id`') . " ";
         }
         if ($user_id > 0) {
             // If user is not empty, we're looking directly to user personal info (admin view)
-            $sql .= "AND `user`='$user_id' ";
+            $sql .= "AND `object_count`.`user`='$user_id' ";
         } else {
             if (!Access::check('interface', 100)) {
-                // If user identifier is empty, we need to retrieve only users which have allowed view of personnal info
-                $personal_info_id = Preference::id_from_name('allow_personal_info_recent');
-                $current_user     = (int) Core::get_global('user')->id;
-                if ($personal_info_id && $current_user > 0) {
-                    $sql .= "AND `user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user') ";
+                // If user identifier is empty, we need to retrieve only users which have allowed view of personal info
+                $current_user        = (int) Core::get_global('user')->id;
+                if ($current_user > 0) {
+                    $sql .= "AND `object_count`.`user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_recent' AND `value`='1') OR `user`='$current_user') ";
                 }
             }
         }
