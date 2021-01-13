@@ -2787,7 +2787,7 @@ class Api
         }
 
         if ($user_id > 0) {
-            if ($password) {
+            if ($password && !AmpConfig::get('simple_user_mode')) {
                 $user->update_password('', $password);
             }
             if ($fullname) {
