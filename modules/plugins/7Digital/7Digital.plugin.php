@@ -23,7 +23,7 @@
 class Ampache7digital
 {
     public $name        = '7digital';
-    public $categories  = 'misc,preview';
+    public $categories  = 'preview';
     public $description = 'Song preview from 7digital';
     public $url         = 'http://www.7digital.com';
     public $version     = '000001';
