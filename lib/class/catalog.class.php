@@ -2741,6 +2741,9 @@ abstract class Catalog extends database_object
         $sql = "DELETE FROM `catalog` WHERE `id` = ?";
         Dba::write($sql, array($catalog_id));
 
+        // run garbage collection
+        self::garbage_collection();
+
         return true;
     } // delete
 
