@@ -35,7 +35,6 @@
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-gd": "*",
-        "ext-http": "*",
         "ext-iconv": "*",
         "ext-intl": "*",
         "ext-json": "*",
