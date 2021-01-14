@@ -880,8 +880,12 @@ class Art extends database_object
      * @param string $type
      * @return string
      */
-    public static function get_from_source($data, $type = 'album')
+    public static function get_from_source($data, $type)
     {
+        if (!isset($type)) {
+            $type = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
+        }
+
         // Already have the data, this often comes from id3tags
         if (isset($data['raw'])) {
             return $data['raw'];

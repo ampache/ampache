@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Art\Collector;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Album;
 use Ampache\Model\Art;
 use Ampache\Model\Artist;
@@ -78,6 +79,8 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             $data = $this->gatherVideoTags($art);
         } elseif ($art->type == 'album' || $art->type == 'artist') {
             $data = $this->gatherSongTags($art, $limit);
+        } elseif (($art->type == 'song') && (AmpConfig::get('gather_song_art', false))) {
+            $data = $this->gatherSsongTagsSingle($art, $limit);
         } else {
             $data = [];
         }
@@ -167,6 +170,26 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
                     ];
                 }
             }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Gather tags from single song instead of full album
+     * (taken from function gather_song_tags with some changes)
+     * @param int $limit
+     * @return array
+     */
+    public function gatherSsongTagsSingle(Art $art, $limit = 5)
+    {
+        // get song object directly from id, not by loop through album
+        $song = new Song($art->uid);
+        $data = array();
+        $data = array_merge($data, $this->gatherMediaTags($song));
+
+        if ($limit && count($data) >= $limit) {
+            return array_slice($data, 0, $limit);
         }
 
         return $data;

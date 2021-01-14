@@ -249,24 +249,28 @@ class Subsonic_Api
         $conf = array('alwaysArray' => $alwaysArray);
         if ($format == "json") {
             echo json_encode(self::xml2json($xml, $conf), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+
+            return;
         }
         if ($format == "jsonp") {
             echo $callback . '(' . json_encode(self::xml2json($xml, $conf), JSON_PRETTY_PRINT) . ')';
+
+            return;
         }
-        if ($format == "xml") {
-            $xmlstr = $xml->asXml();
-            // clean illegal XML characters.
-            $clean_xml = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);
-            $dom       = new DOMDocument();
-            $dom->loadXML($clean_xml, LIBXML_PARSEHUGE);
-            $dom->formatOutput = true;
-            $output            = $dom->saveXML();
-            // saving xml can fail
-            if (!$output) {
-                $output = "<subsonic-response status=\"failed\" version=\"1.13.0\"><error code=\"0\" message=\"Error creating response.\"/></subsonic-response>";
-            }
-            echo $output;
+        $xmlstr = $xml->asXml();
+        // clean illegal XML characters.
+        $clean_xml = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);
+        $dom       = new DOMDocument();
+        $dom->loadXML($clean_xml, LIBXML_PARSEHUGE);
+        $dom->formatOutput = true;
+        $output            = $dom->saveXML();
+        // saving xml can fail
+        if (!$output) {
+            $output = "<subsonic-response status=\"failed\" version=\"1.13.0\"><error code=\"0\" message=\"Error creating response.\"/></subsonic-response>";
         }
+        echo $output;
+
+        return;
     }
 
     /**
@@ -1266,8 +1270,11 @@ class Subsonic_Api
             if ($art != null && $art->id == null) {
                 // in most cases the song doesn't have a picture, but the album where it belongs to has
                 // if this is the case, we take the album art
-                $song = new Song(Subsonic_Xml_Data::getAmpacheId(Subsonic_Xml_Data::getAmpacheId($sub_id)));
-                $art  = new Art(Subsonic_Xml_Data::getAmpacheId($song->album), "album");
+                $song          = new Song(Subsonic_XML_Data::getAmpacheId(Subsonic_XML_Data::getAmpacheId($sub_id)));
+                $show_song_art = AmpConfig::get('show_song_art', false);
+                $art_object    = ($show_song_art) ? $song->id : $song->album;
+                $art_type      = ($show_song_art) ? 'song' : 'album';
+                $art           = new Art(Subsonic_XML_Data::getAmpacheId($art_object), $art_type);
             }
         }
         if (($type == 'podcast')) {

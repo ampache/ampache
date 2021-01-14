@@ -116,7 +116,7 @@ final class ShowAction implements ApplicationActionInterface
          * @deprecated FIXME: Legacy stuff - should be removed after a version or so
          */
         if (!filter_has_var(INPUT_GET, 'object_type')) {
-            $_GET['object_type'] = 'album';
+            $_GET['object_type'] = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
         }
 
         $type = Core::get_get('object_type');

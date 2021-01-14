@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 47
+config_version = 48
 
 ; Allow you to hard code a default git branch for Ampache
 ; If you set this value the inbuilt updater will use this branch for updates.
@@ -599,6 +599,23 @@ sociable = "true"
 ; POSSIBLE VALUES (plugins): Amazon,TheAudioDb,Tmdb,Omdb,Flickr
 ; DEFAULT: db,tags,folder,spotify,musicbrainz,lastfm,google
 art_order = "db,tags,folder,spotify,musicbrainz,lastfm,google"
+
+; Gather song art
+; Gather song art additionally to the album art. This will add each
+; image of a song into the database. If your database contains
+; many songs not related to an album this should possibly be set to true.
+; Otherwise for an environment that contains mainly full albums
+; this should remain false to avoid multiple entries of the same image.
+; You need to set show_song_art to true if you want to make the song images visible.
+; DEFAULT = false
+;gather_song_art = "true"
+
+; Show song art
+; Show song art instead of album art in web UI and Subsonic API.
+; This will only work when gather_song_art is set to true AND when
+; there is song art in the database.
+; DEFAULT: false
+;show_song_art = "true"
 
 ; Spotify Album art search filter
 ;  Narrow the search.
