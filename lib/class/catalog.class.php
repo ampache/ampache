@@ -1503,9 +1503,7 @@ abstract class Catalog extends database_object
                         $searches['artist'][] = $song->artist;
                     }
                     if ($gather_song_art) {
-                        if (!in_array($song->id, $searches['song'])) {
-                            $searches['song'][] = $song->id;
-                        }
+                        $searches['song'][] = $song->id;
                     }
                 }
             }
