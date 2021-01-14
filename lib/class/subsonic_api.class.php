@@ -214,24 +214,28 @@ class Subsonic_Api
         $conf = array('alwaysArray' => $alwaysArray);
         if ($format == "json") {
             echo json_encode(self::xml2json($xml, $conf), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+
+            return;
         }
         if ($format == "jsonp") {
             echo $callback . '(' . json_encode(self::xml2json($xml, $conf), JSON_PRETTY_PRINT) . ')';
+
+            return;
         }
-        if ($format == "xml") {
-            $xmlstr = $xml->asXml();
-            // clean illegal XML characters.
-            $clean_xml = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);
-            $dom       = new DOMDocument();
-            $dom->loadXML($clean_xml, LIBXML_PARSEHUGE);
-            $dom->formatOutput = true;
-            $output            = $dom->saveXML();
-            // saving xml can fail
-            if (!$output) {
-                $output = "<subsonic-response status=\"failed\" version=\"1.13.0\"><error code=\"0\" message=\"Error creating response.\"/></subsonic-response>";
-            }
-            echo $output;
+        $xmlstr = $xml->asXml();
+        // clean illegal XML characters.
+        $clean_xml = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);
+        $dom       = new DOMDocument();
+        $dom->loadXML($clean_xml, LIBXML_PARSEHUGE);
+        $dom->formatOutput = true;
+        $output            = $dom->saveXML();
+        // saving xml can fail
+        if (!$output) {
+            $output = "<subsonic-response status=\"failed\" version=\"1.13.0\"><error code=\"0\" message=\"Error creating response.\"/></subsonic-response>";
         }
+        echo $output;
+
+        return;
     }
 
     /**
