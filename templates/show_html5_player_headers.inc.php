@@ -315,17 +315,16 @@ function ApplyReplayGain()
             var r128_track_gain = currentjpitem.attr("data-r128_track_gain"); 
             
             if (r128_track_gain !== 'null') { // R128 PREFERRED
-                replaygain = parseInt(r128_track_gain / 256); // how many LU/dB away from baseline of -23 LUFS/dB
-                // TODO investigate different players methods
-                // BEETS seems to do it correctly (16 bits, signed, little endian)
-                // MUSICBEE seems to convert and store as dB?
-                referencelevel = parseInt(-23); // LUFS https://en.wikipedia.org/wiki/EBU_R_128#Specification
-                targetlevel = parseInt(0); // LUFS/dB
-                masteredvolume = referencelevel - replaygain;
-                difference = targetlevel - masteredvolume;
+                // var replaygain; how many LU/dB away from baseline of -23 LUFS/dB
+                // RFC spec specifies Q7.8 (2 ^ 7.8) which is ~222.86
+                // Beets/ffmpeg uses approximation of Q8 (2 ^ 8) which is 256
+                replaygain = parseInt(r128_track_gain / 256);
+                referenceLevel = parseInt(-23); // LUFS https://en.wikipedia.org/wiki/EBU_R_128#Specification
+                targetLevel = parseInt(-5); // LUFS/dB; bring in line with ReplayGain level
+                masteredVolume = referenceLevel - replaygain;
+                difference = targetLevel - masteredVolume;
 
                 gainlevel = (1 + Math.pow(10, ((difference /* + Gpre-amp */) / 20)));
-                // is this any different from sample *= pow(10, output_gain/(20.0*256))
             } else if (replaygain_track_gain !== 'null') { // REPLAYGAIN FALLBACK
                 replaygain = parseFloat(replaygain_track_gain);
 
