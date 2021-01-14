@@ -755,7 +755,8 @@ class Subsonic_XML_Data
         // $artist->format();
         $xsong->addAttribute('artistId', (string) self::getArtistId($songData['artist']));
         $xsong->addAttribute('artist', (string) self::checkName($artistData['f_full_name']));
-        $xsong->addAttribute('coverArt', (string) self::getAlbumId($albumData['id']));
+        $art_object = (AmpConfig::get('show_song_art')) ? self::getSongId($songData['id']) : self::getAlbumId($albumData['id']);
+        $xsong->addAttribute('coverArt', (string) $art_object);
         $xsong->addAttribute('duration', (string) $songData['time']);
         $xsong->addAttribute('bitRate', (string) ((int) ($songData['bitrate'] / 1000)));
         if ($addAmpacheInfo) {

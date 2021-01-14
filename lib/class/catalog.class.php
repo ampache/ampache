@@ -1467,8 +1467,9 @@ abstract class Catalog extends database_object
     public function gather_art($songs = null, $videos = null)
     {
         // Make sure they've actually got methods
-        $art_order    = AmpConfig::get('art_order');
-        $db_art_first = ($art_order[0] == 'db');
+        $art_order       = AmpConfig::get('art_order');
+        $gather_song_art = AmpConfig::get('gather_song_art', false);
+        $db_art_first    = ($art_order[0] == 'db');
         if (!count($art_order)) {
             debug_event('catalog.class', 'art_order not set, self::gather_art aborting', 3);
 
@@ -1483,9 +1484,15 @@ abstract class Catalog extends database_object
         if ($songs == null) {
             $searches['album']  = $this->get_album_ids('art');
             $searches['artist'] = $this->get_artist_ids('art');
+            if ($gather_song_art) {
+                $searches['song'] = $this->get_songs();
+            }
         } else {
             $searches['album']  = array();
             $searches['artist'] = array();
+            if ($gather_song_art) {
+                $searches['song'] = array();
+            }
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->id) {
@@ -1494,6 +1501,9 @@ abstract class Catalog extends database_object
                     }
                     if (!in_array($song->artist, $searches['artist'])) {
                         $searches['artist'][] = $song->artist;
+                    }
+                    if ($gather_song_art) {
+                        $searches['song'][] = $song->id;
                     }
                 }
             }

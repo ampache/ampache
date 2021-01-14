@@ -160,7 +160,8 @@ switch ($_REQUEST['action']) {
         // Prevent the script from timing out
         set_time_limit(0);
 
-        $image      = Art::get_from_source($_SESSION['form']['images'][$image_id], 'album');
+        $art_type   = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
+        $image      = Art::get_from_source($_SESSION['form']['images'][$image_id], $art_type);
         $dimensions = Core::image_dimensions($image);
         $mime       = $_SESSION['form']['images'][$image_id]['mime'];
         if (!Art::check_dimensions($dimensions)) {

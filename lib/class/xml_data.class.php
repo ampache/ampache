@@ -994,10 +994,13 @@ class XML_Data
             }
 
             $song->format();
-            $tag_string = self::genre_string(Tag::get_top_tags('song', $song_id));
-            $rating     = new Rating($song_id, 'song');
-            $flag       = new Userflag($song_id, 'song');
-            $art_url    = Art::url($song->album, 'album', Core::get_request('auth'));
+            $tag_string    = self::genre_string(Tag::get_top_tags('song', $song_id));
+            $rating        = new Rating($song_id, 'song');
+            $flag          = new Userflag($song_id, 'song');
+            $show_song_art = AmpConfig::get('show_song_art', false);
+            $art_object    = ($show_song_art) ? $song->id : $song->album;
+            $art_type      = ($show_song_art) ? 'song' : 'album';
+            $art_url       = Art::url($art_object, $art_type, Core::get_request('auth'));
             $playlist_track++;
 
             $string .= "<song id=\"" . $song->id . "\">\n" .
