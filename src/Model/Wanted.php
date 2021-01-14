@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\WantedRepositoryInterface;
 use Exception;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
@@ -304,22 +305,6 @@ class Wanted extends database_object
     }
 
     /**
-     * Delete wanted release.
-     * @param string $mbid
-     */
-    public static function delete_wanted($mbid)
-    {
-        $sql    = "DELETE FROM `wanted` WHERE `mbid` = ?";
-        $params = array($mbid);
-        if (!Core::get_global('user')->has_access('75')) {
-            $sql .= " AND `user` = ?";
-            $params[] = Core::get_global('user')->id;
-        }
-
-        Dba::write($sql, $params);
-    }
-
-    /**
      * Delete a wanted release by mbid.
      * @param string $mbid
      * @throws \MusicBrainz\Exception
@@ -330,7 +315,11 @@ class Wanted extends database_object
             $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
             $malbum  = $mbrainz->lookup('release', $mbid, array('release-groups'));
             if ($malbum->{'release-group'}) {
-                self::delete_wanted(print_r($malbum->{'release-group'}, true));
+                $userId = Core::get_global('user')->has_access('75') ? null : Core::get_global('user')->id;
+                static::getWantedRepository()->deleteByMusicbrainzId(
+                    print_r($malbum->{'release-group'}, true),
+                    $userId
+                );
             }
         }
     }
@@ -353,28 +342,6 @@ class Wanted extends database_object
                 }
             }
         }
-    }
-
-    /**
-     * Check if a release mbid is already marked as wanted
-     * @param string $mbid
-     * @param integer $userid
-     * @return boolean|integer
-     */
-    public static function has_wanted($mbid, $userid = 0)
-    {
-        if ($userid == 0) {
-            $userid = Core::get_global('user')->id;
-        }
-
-        $sql        = "SELECT `id` FROM `wanted` WHERE `mbid` = ? AND `user` = ?";
-        $db_results = Dba::read($sql, array($mbid, $userid));
-
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return $row['id'];
-        }
-
-        return false;
     }
 
     /**
@@ -413,7 +380,13 @@ class Wanted extends database_object
                         'wanted_accept_' . $this->mbid);
                 }
             }
-            if (Core::get_global('user')->has_access('75') || (Wanted::has_wanted($this->mbid) && $this->accepted != '1')) {
+            if (
+                Core::get_global('user')->has_access('75') ||
+                (
+                    static::getWantedRepository()->find($this->mbid, Core::get_global('user')->id) &&
+                    $this->accepted != '1'
+                )
+            ) {
                 echo " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->mbid, 'disable', T_('Remove'),
                         'wanted_remove_' . $this->mbid);
             }
@@ -520,5 +493,12 @@ class Wanted extends database_object
         global $dic;
 
         return $dic->get(AlbumRepositoryInterface::class);
+    }
+
+    private static function getWantedRepository(): WantedRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(WantedRepositoryInterface::class);
     }
 }

@@ -44,6 +44,7 @@ use Ampache\Model\Wanted;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\WantedRepositoryInterface;
 
 final class IndexAjaxHandler implements AjaxHandlerInterface
 {
@@ -57,18 +58,22 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
     private SongRepositoryInterface $songRepository;
 
+    private WantedRepositoryInterface $wantedRepository;
+
     public function __construct(
         ArtCollectorInterface $artCollector,
         SlideshowInterface $slideshow,
         AlbumRepositoryInterface $albumRepository,
         LabelRepositoryInterface $labelRepository,
-        SongRepositoryInterface $songRepository
+        SongRepositoryInterface $songRepository,
+        WantedRepositoryInterface $wantedRepository
     ) {
-        $this->artCollector    = $artCollector;
-        $this->slideshow       = $slideshow;
-        $this->albumRepository = $albumRepository;
-        $this->labelRepository = $labelRepository;
-        $this->songRepository  = $songRepository;
+        $this->artCollector     = $artCollector;
+        $this->slideshow        = $slideshow;
+        $this->albumRepository  = $albumRepository;
+        $this->labelRepository  = $labelRepository;
+        $this->songRepository   = $songRepository;
+        $this->wantedRepository = $wantedRepository;
     }
     
     public function handle(): void
@@ -211,7 +216,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $name = $_REQUEST['name'];
                     $year = $_REQUEST['year'];
 
-                    if (!Wanted::has_wanted($mbid)) {
+                    if (!$this->wantedRepository->find($mbid, Core::get_global('user')->id)) {
                         Wanted::add_wanted($mbid, $artist, $artist_mbid, $name, $year);
                         ob_start();
                         $walbum = new Wanted(Wanted::get_wanted($mbid));
@@ -226,8 +231,10 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 if (AmpConfig::get('wanted') && isset($_REQUEST['mbid'])) {
                     $mbid = $_REQUEST['mbid'];
 
+                    $userId = Core::get_global('user')->has_access('75') ? null : Core::get_global('user')->id;
                     $walbum = new Wanted(Wanted::get_wanted($mbid));
-                    Wanted::delete_wanted($mbid);
+
+                    $this->wantedRepository->deleteByMusicbrainzId($mbid, $userId);
                     ob_start();
                     $walbum->accepted = false;
                     $walbum->id       = 0;

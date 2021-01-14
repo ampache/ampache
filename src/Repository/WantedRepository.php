@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 
 final class WantedRepository implements WantedRepositoryInterface
@@ -47,5 +48,39 @@ final class WantedRepository implements WantedRepositoryInterface
         }
 
         return $results;
+    }
+
+    /**
+     * Check if a release mbid is already marked as wanted
+     */
+    public function find(string $musicbrainzId, int $userId): ?int
+    {
+        $db_results = Dba::read(
+            'SELECT `id` FROM `wanted` WHERE `mbid` = ? AND `user` = ?',
+            [$musicbrainzId, $userId]
+        );
+
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return (int) $row['id'];
+        }
+
+        return null;
+    }
+
+    /**
+     * Delete wanted release.
+     */
+    public function deleteByMusicbrainzId(
+        string $musicbrainzId,
+        ?int $userId
+    ): void {
+        $sql    = "DELETE FROM `wanted` WHERE `mbid` = ?";
+        $params = [$musicbrainzId];
+        if ($userId !== null) {
+            $sql .= " AND `user` = ?";
+            $params[] = $userId;
+        }
+
+        Dba::write($sql, $params);
     }
 }

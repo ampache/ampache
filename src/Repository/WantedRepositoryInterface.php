@@ -29,4 +29,17 @@ interface WantedRepositoryInterface
      * @return int[]
      */
     public function getAll(?int $userId): array;
+
+    /**
+     * Check if a release mbid is already marked as wanted
+     */
+    public function find(string $musicbrainzId, int $userId): ?int;
+
+    /**
+     * Delete wanted release.
+     */
+    public function deleteByMusicbrainzId(
+        string $musicbrainzId,
+        ?int $userId
+    ): void;
 }
