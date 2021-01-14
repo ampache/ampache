@@ -17,34 +17,15 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Ampache\Repository;
+declare(strict_types=1);
 
-interface WantedRepositoryInterface
-{
-    /**
-     * Get wanted list.
-     *
-     * @return int[]
-     */
-    public function getAll(?int $userId): array;
+namespace Ampache\Module\Wanted;
 
-    /**
-     * Check if a release mbid is already marked as wanted
-     */
-    public function find(string $musicbrainzId, int $userId): ?int;
+use function DI\autowire;
 
-    /**
-     * Delete wanted release.
-     */
-    public function deleteByMusicbrainzId(
-        string $musicbrainzId,
-        ?int $userId
-    ): void;
-
-    /**
-     * Get accepted wanted release count.
-     */
-    public function getAcceptedCount(): int;
-}
+return [
+    MissingArtistFinderInterface::class => autowire(MissingArtistFinder::class),
+];

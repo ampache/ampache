@@ -19,32 +19,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Ampache\Repository;
+namespace Ampache\Module\Wanted;
 
-interface WantedRepositoryInterface
+interface MissingArtistFinderInterface
 {
     /**
-     * Get wanted list.
+     * @return array<array<string, string>>
      *
-     * @return int[]
+     * @throws \MusicBrainz\Exception
      */
-    public function getAll(?int $userId): array;
-
-    /**
-     * Check if a release mbid is already marked as wanted
-     */
-    public function find(string $musicbrainzId, int $userId): ?int;
-
-    /**
-     * Delete wanted release.
-     */
-    public function deleteByMusicbrainzId(
-        string $musicbrainzId,
-        ?int $userId
-    ): void;
-
-    /**
-     * Get accepted wanted release count.
-     */
-    public function getAcceptedCount(): int;
+    public function find(string $artistName): array;
 }

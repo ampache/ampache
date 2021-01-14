@@ -83,4 +83,19 @@ final class WantedRepository implements WantedRepositoryInterface
 
         Dba::write($sql, $params);
     }
+
+    /**
+     * Get accepted wanted release count.
+     */
+    public function getAcceptedCount(): int
+    {
+        $db_results = Dba::read(
+            'SELECT COUNT(`id`) AS `wanted_cnt` FROM `wanted` WHERE `accepted` = 1'
+        );
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return (int) $row['wanted_cnt'];
+        }
+
+        return 0;
+    }
 }

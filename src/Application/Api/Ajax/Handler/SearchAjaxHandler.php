@@ -35,16 +35,21 @@ use Ampache\Model\Search;
 use Ampache\Model\Song;
 use Ampache\Model\User;
 use Ampache\Model\Wanted;
+use Ampache\Module\Wanted\MissingArtistFinderInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 
 final class SearchAjaxHandler implements AjaxHandlerInterface
 {
     private AlbumRepositoryInterface $albumRepository;
 
+    private MissingArtistFinderInterface $missingArtistFinder;
+
     public function __construct(
-        AlbumRepositoryInterface $albumRepository
+        AlbumRepositoryInterface $albumRepository,
+        MissingArtistFinderInterface $missingArtistFinder
     ) {
-        $this->albumRepository = $albumRepository;
+        $this->albumRepository     = $albumRepository;
+        $this->missingArtistFinder = $missingArtistFinder;
     }
 
     public function handle(): void
@@ -209,7 +214,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                 }
 
                 if ($target == 'missing_artist' && AmpConfig::get('wanted')) {
-                    $sres     = Wanted::search_missing_artists($search);
+                    $sres     = $this->missingArtistFinder->find($search);
                     $count    = 0;
                     foreach ($sres as $artist) {
                         $results[] = array(

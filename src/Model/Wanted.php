@@ -249,46 +249,6 @@ class Wanted extends database_object
     }
 
     /**
-     * search_missing_artists
-     * @param string $name
-     * @return array
-     * @throws \MusicBrainz\Exception
-     */
-    public static function search_missing_artists($name)
-    {
-        $args = array(
-            'artist' => $name
-        );
-        $filter   = new ArtistFilter($args);
-        $mbrainz  = new MusicBrainz(new RequestsHttpAdapter());
-        $res      = $mbrainz->search($filter);
-        $wartists = array();
-        foreach ($res as $r) {
-            $wartists[] = array(
-                'mbid' => $r->id,
-                'name' => $r->name,
-            );
-        }
-
-        return $wartists;
-    }
-
-    /**
-     * Get accepted wanted release count.
-     * @return integer
-     */
-    public static function get_accepted_wanted_count()
-    {
-        $sql        = "SELECT COUNT(`id`) AS `wanted_cnt` FROM `wanted` WHERE `accepted` = 1";
-        $db_results = Dba::read($sql);
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return $row['wanted_cnt'];
-        }
-
-        return 0;
-    }
-
-    /**
      * Get wanted release by mbid.
      * @param string $mbid
      * @return integer
@@ -311,7 +271,7 @@ class Wanted extends database_object
      */
     public static function delete_wanted_release($mbid)
     {
-        if (self::get_accepted_wanted_count() > 0) {
+        if (static::getWantedRepository()->getAcceptedCount() > 0) {
             $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
             $malbum  = $mbrainz->lookup('release', $mbid, array('release-groups'));
             if ($malbum->{'release-group'}) {

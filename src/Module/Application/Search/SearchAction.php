@@ -26,12 +26,12 @@ namespace Ampache\Module\Application\Search;
 
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Search;
-use Ampache\Model\Wanted;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Wanted\MissingArtistFinderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -43,12 +43,16 @@ final class SearchAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private MissingArtistFinderInterface $missingArtistFinder;
+
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        MissingArtistFinderInterface $missingArtistFinder
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
+        $this->ui                  = $ui;
+        $this->modelFactory        = $modelFactory;
+        $this->missingArtistFinder = $missingArtistFinder;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -64,7 +68,7 @@ final class SearchAction implements ApplicationActionInterface
             $browse->show_objects($results);
             $browse->store();
         } else {
-            $wartists = Wanted::search_missing_artists($_REQUEST['rule_1_input']);
+            $wartists = $this->missingArtistFinder->find($_REQUEST['rule_1_input']);
             require_once Ui::find_template('show_missing_artists.inc.php');
             
             printf(
