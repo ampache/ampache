@@ -45,7 +45,7 @@ final class UpdateCatalogCommand extends Command
 
         $this
             ->option('-c|--cleanup', 'Cleans the catalog', 'boolval', false)
-            ->option('-e|--verify', 'Verifies the catalog', 'boolval', true)
+            ->option('-e|--verify', 'Verifies the catalog', 'boolval', false)
             ->option('-a|--add', 'Adds new media to the catalog', 'boolval', false)
             ->option('-g|--art', 'Searches for new art for the catalog', 'boolval', false)
             ->option('-u|--update', 'Update artist information and fetch similar artists from last.fm', 'boolval', false)
