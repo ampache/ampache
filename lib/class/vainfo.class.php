@@ -450,12 +450,13 @@ class vainfo
             $info['lyrics']    = $info['lyrics']
                     ?: strip_tags(nl2br((string) $tags['lyrics']), "<br>");
 
-            $info['replaygain_track_gain'] = $info['replaygain_track_gain'] ?: (!is_null($tags['replaygain_track_gain']) ? floatval($tags['replaygain_track_gain']) : null);
-            $info['replaygain_track_peak'] = $info['replaygain_track_peak'] ?: (!is_null($tags['replaygain_track_peak']) ? floatval($tags['replaygain_track_peak']) : null);
-            $info['replaygain_album_gain'] = $info['replaygain_album_gain'] ?: (!is_null($tags['replaygain_album_gain']) ? floatval($tags['replaygain_album_gain']) : null);
-            $info['replaygain_album_peak'] = $info['replaygain_album_peak'] ?: (!is_null($tags['replaygain_album_peak']) ? floatval($tags['replaygain_album_peak']) : null);
-            $info['r128_track_gain'] = $info['r128_track_gain'] ?: (!is_null($tags['r128_track_gain']) ? intval($tags['r128_track_gain']) : null);
-            $info['r128_album_gain'] = $info['r128_album_gain'] ?: (!is_null($tags['r128_album_gain']) ? intval($tags['r128_album_gain']) : null);
+            // extended checks to make sure "0" makes it through, which would otherwise eval to false
+            $info['replaygain_track_gain'] = isset($info['replaygain_track_gain']) ? $info['replaygain_track_gain'] : (!is_null($tags['replaygain_track_gain']) ? floatval($tags['replaygain_track_gain']) : null);
+            $info['replaygain_track_peak'] = isset($info['replaygain_track_peak']) ? $info['replaygain_track_peak'] : (!is_null($tags['replaygain_track_peak']) ? floatval($tags['replaygain_track_peak']) : null);
+            $info['replaygain_album_gain'] = isset($info['replaygain_album_gain']) ? $info['replaygain_album_gain'] : (!is_null($tags['replaygain_album_gain']) ? floatval($tags['replaygain_album_gain']) : null);
+            $info['replaygain_album_peak'] = isset($info['replaygain_album_peak']) ? $info['replaygain_album_peak'] : (!is_null($tags['replaygain_album_peak']) ? floatval($tags['replaygain_album_peak']) : null);
+            $info['r128_track_gain']       = isset($info['r128_track_gain'])       ? $info['r128_track_gain'] :       (!is_null($tags['r128_track_gain'])       ? intval($tags['r128_track_gain']) : null);
+            $info['r128_album_gain']       = isset($info['r128_album_gain'])       ? $info['r128_album_gain'] :       (!is_null($tags['r128_album_gain'])       ? intval($tags['r128_album_gain']) : null);
 
             $info['track']         = $info['track'] ?: (int) $tags['track'];
             $info['resolution_x']  = $info['resolution_x'] ?: (int) $tags['resolution_x'];
