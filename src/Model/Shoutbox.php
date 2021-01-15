@@ -64,6 +64,11 @@ class Shoutbox
         return true;
     } // Constructor
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * has_info
      * does the db call, reads from the user_shout table

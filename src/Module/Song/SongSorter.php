@@ -249,7 +249,7 @@ final class SongSorter implements SongSorterInterface
                 sprintf(T_('Copying "%1$s" to "%2$s"'), $file, $directory),
                 true
             );
-            $sql = "UPDATE song SET file='" . Dba::escape($fullname) . "' WHERE id='" . Dba::escape($song->id) . "'";
+            $sql = "UPDATE song SET file='" . Dba::escape($fullname) . "' WHERE id='" . Dba::escape($song) . "'";
             $interactor->info(sprintf('SQL: %s', $sql), true);
             flush();
         } else {

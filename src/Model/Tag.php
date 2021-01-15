@@ -68,6 +68,11 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         return true;
     } // constructor
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * construct_from_name
      * This attempts to construct the tag from a name, rather then the ID

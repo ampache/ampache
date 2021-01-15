@@ -378,6 +378,11 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         return true;
     } // constructor
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * insert
      *
@@ -2312,15 +2317,6 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         }
 
         return $actions;
-    }
-
-    /**
-     * getId
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

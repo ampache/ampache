@@ -48,13 +48,15 @@ final class LabelDeleter implements LabelDeleterInterface
     public function delete(
         Label $label
     ): bool {
-        $deleted = $this->labelRepository->delete($label->id);
+        $labelId = $label->getId();
+
+        $deleted = $this->labelRepository->delete($labelId);
         if ($deleted) {
-            Art::garbage_collection('label', $label->id);
-            Userflag::garbage_collection('label', $label->id);
-            Rating::garbage_collection('label', $label->id);
-            $this->shoutRepository->collectGarbage('label', $label->id);
-            Useractivity::garbage_collection('label', $label->id);
+            Art::garbage_collection('label', $labelId);
+            Userflag::garbage_collection('label', $labelId);
+            Rating::garbage_collection('label', $labelId);
+            $this->shoutRepository->collectGarbage('label', $labelId);
+            Useractivity::garbage_collection('label', $labelId);
         }
 
         return $deleted !== false;

@@ -57,7 +57,7 @@ final class ArtistTagUpdater implements ArtistTagUpdaterInterface
         ?int $add_to_childs,
         bool $force_update = false
     ): void {
-        Tag::update_tag_list($tags_comma, 'artist', $artist->id, $force_update ? true : $override_childs);
+        Tag::update_tag_list($tags_comma, 'artist', $artist->getId(), $force_update ? true : $override_childs);
 
         if ($override_childs || $add_to_childs) {
             $albums = $this->albumRepository->getByArtist($artist);

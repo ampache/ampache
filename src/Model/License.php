@@ -64,6 +64,11 @@ class License
         return true;
     } // Constructor
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * has_info
      * does the db call, reads from the license table

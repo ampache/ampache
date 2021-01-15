@@ -100,6 +100,11 @@ class Art extends database_object
         }
     } // constructor
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * @param string $type
      * @return boolean

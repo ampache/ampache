@@ -77,7 +77,8 @@ final class AlbumDeleter implements AlbumDeleterInterface
     public function delete(
         Album $album
     ): void {
-        $songIds = $this->songRepository->getByAlbum($album->id);
+        $albumId = $album->getId();
+        $songIds = $this->songRepository->getByAlbum($albumId);
         foreach ($songIds as $songId) {
             $song    = $this->modelFactory->createSong($songId);
             $deleted = $this->songDeleter->delete($song);
@@ -92,22 +93,22 @@ final class AlbumDeleter implements AlbumDeleterInterface
         }
 
         $deleted = $this->albumRepository->delete(
-            $album->id
+            $albumId
         );
 
         if ($deleted === false) {
             $this->logger->critical(
-                sprintf('Error when deleting the album `%d`.', $album->id),
+                sprintf('Error when deleting the album `%d`.', $albumId),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
 
             throw new AlbumDeletionException();
         }
 
-        Art::garbage_collection('album', $album->id);
-        Userflag::garbage_collection('album', $album->id);
-        Rating::garbage_collection('album', $album->id);
-        $this->shoutRepository->collectGarbage('album', $album->id);
-        Useractivity::garbage_collection('album', $album->id);
+        Art::garbage_collection('album', $albumId);
+        Userflag::garbage_collection('album', $albumId);
+        Rating::garbage_collection('album', $albumId);
+        $this->shoutRepository->collectGarbage('album', $albumId);
+        Useractivity::garbage_collection('album', $albumId);
     }
 }

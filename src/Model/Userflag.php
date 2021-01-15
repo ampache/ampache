@@ -58,6 +58,11 @@ class Userflag extends database_object
         return true;
     } // Constructor
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * build_cache
      * This attempts to get everything we'll need for this page load in a

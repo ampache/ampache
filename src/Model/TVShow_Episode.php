@@ -59,6 +59,11 @@ class TVShow_Episode extends Video
         return true;
     }
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * garbage_collection
      *

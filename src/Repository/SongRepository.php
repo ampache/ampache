@@ -110,7 +110,7 @@ final class SongRepository implements SongRepositoryInterface
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
         $sql .= "ORDER BY RAND()";
-        $db_results = Dba::read($sql, array($artist->id));
+        $db_results = Dba::read($sql, array($artist->getId()));
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['id'];
@@ -133,7 +133,7 @@ final class SongRepository implements SongRepositoryInterface
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";
         }
-        $sql .= "WHERE `song`.`artist` = " . $artist->id . " ";
+        $sql .= "WHERE `song`.`artist` = " . $artist->getId() . " ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
@@ -166,7 +166,7 @@ final class SongRepository implements SongRepositoryInterface
             $sql .= "AND `catalog`.`enabled` = '1' ";
         }
         $sql .= "ORDER BY `song`.`album`, `song`.`track`";
-        $db_results = Dba::read($sql, array($artist->id));
+        $db_results = Dba::read($sql, array($artist->getId()));
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {

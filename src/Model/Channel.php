@@ -87,6 +87,11 @@ class Channel extends database_object implements Media, library_item
         return true;
     } // constructor
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * update_start
      * @param string $start_date

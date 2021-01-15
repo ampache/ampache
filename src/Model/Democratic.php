@@ -74,6 +74,11 @@ class Democratic extends Tmp_Playlist
         }
     } // constructor
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * build_vote_cache
      * This builds a vote cache of the objects we've got in the playlist

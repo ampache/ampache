@@ -70,6 +70,11 @@ class Tmp_Playlist extends database_object
         return true;
     } // __construct
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * has_info
      * This is an internal (private) function that gathers the information

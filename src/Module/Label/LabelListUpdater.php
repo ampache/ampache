@@ -73,7 +73,7 @@ final class LabelListUpdater implements LabelListUpdaterInterface
                     unset($editedLabels[$lstring]);
                 } elseif ($overwrite) {
                     debug_event('label.class', 'Not found in the new list. Delete it.', 5);
-                    $this->labelRepository->removeArtistAssoc($artistId);
+                    $this->labelRepository->removeArtistAssoc($clabel->getId(), $artistId);
                 }
             }
         }
@@ -88,7 +88,7 @@ final class LabelListUpdater implements LabelListUpdaterInterface
                 }
                 if ($label_id > 0) {
                     $clabel = new Label($label_id);
-                    $this->labelRepository->addArtistAssoc($clabel->id, $artistId);
+                    $this->labelRepository->addArtistAssoc($clabel->getId(), $artistId);
                 }
             }
         }

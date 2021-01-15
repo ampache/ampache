@@ -102,6 +102,11 @@ class Broadcast extends database_object implements library_item
         return true;
     } // constructor
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * Update broadcast state.
      * @param boolean $started

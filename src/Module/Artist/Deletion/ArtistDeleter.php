@@ -25,7 +25,6 @@ use Ampache\Model\Art;
 use Ampache\Model\Artist;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Rating;
-use Ampache\Model\Shoutbox;
 use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;
 use Ampache\Module\Album\Deletion\AlbumDeleterInterface;
@@ -93,13 +92,15 @@ final class ArtistDeleter implements ArtistDeleterInterface
             }
         }
 
-        $deleted = $this->artistRepository->delete($artist->id);
+        $artistId = $artist->getId();
+
+        $deleted = $this->artistRepository->delete($artistId);
         if ($deleted) {
-            Art::garbage_collection('artist', $artist->id);
-            Userflag::garbage_collection('artist', $artist->id);
-            Rating::garbage_collection('artist', $artist->id);
-            $this->shoutRepository->collectGarbage('artist', $artist->id);
-            Useractivity::garbage_collection('artist', $artist->id);
+            Art::garbage_collection('artist', $artistId);
+            Userflag::garbage_collection('artist', $artistId);
+            Rating::garbage_collection('artist', $artistId);
+            $this->shoutRepository->collectGarbage('artist', $artistId);
+            Useractivity::garbage_collection('artist', $artistId);
         }
     }
 }

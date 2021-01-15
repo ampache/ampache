@@ -117,6 +117,11 @@ class Wanted extends database_object
         return true;
     } // constructor
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * get_missing_albums
      * Get list of library's missing albums from MusicBrainz

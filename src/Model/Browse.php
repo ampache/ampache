@@ -69,6 +69,11 @@ class Browse extends Query
         $this->show_header = true;
     }
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * set_simple_browse
      * This sets the current browse object to a 'simple' browse method

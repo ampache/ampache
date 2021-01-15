@@ -24,14 +24,12 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
-use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
 use Ampache\Module\Artist\Tag\ArtistTagUpdaterInterface;
 use Ampache\Module\Label\LabelListUpdaterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -199,6 +197,11 @@ class Artist extends database_object implements library_item, GarbageCollectible
 
         return true;
     } // constructor
+
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
 
     /**
      * construct_from_array

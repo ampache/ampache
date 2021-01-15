@@ -290,6 +290,11 @@ class Album extends database_object implements library_item
         return true;
     } // constructor
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * build_cache
      * This takes an array of object ids and caches all of their information

@@ -242,6 +242,11 @@ abstract class Catalog extends database_object
      */
     abstract public function prepare_media($media);
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * Check if the catalog is ready to perform actions (configuration completed, ...)
      * @return boolean

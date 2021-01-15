@@ -88,6 +88,11 @@ class Song_Preview extends database_object implements Media, playable_item
         return true;
     } // constructor
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * insert
      *

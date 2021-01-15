@@ -82,6 +82,11 @@ class Podcast extends database_object implements library_item
         return true;
     } // constructor
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * get_catalogs
      *

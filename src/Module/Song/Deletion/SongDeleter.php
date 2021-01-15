@@ -51,13 +51,14 @@ final class SongDeleter implements SongDeleterInterface
             $deleted = true;
         }
         if ($deleted === true) {
-            $deleted = $this->songRepository->delete($song->id);
+            $songId  = $song->getId();
+            $deleted = $this->songRepository->delete($songId);
             if ($deleted) {
-                Art::garbage_collection('song', $song->id);
-                Userflag::garbage_collection('song', $song->id);
-                Rating::garbage_collection('song', $song->id);
-                $this->shoutRepository->collectGarbage('song', $song->id);
-                Useractivity::garbage_collection('song', $song->id);
+                Art::garbage_collection('song', $songId);
+                Userflag::garbage_collection('song', $songId);
+                Rating::garbage_collection('song', $songId);
+                $this->shoutRepository->collectGarbage('song', $songId);
+                Useractivity::garbage_collection('song', $songId);
             }
         } else {
             debug_event('song.class', 'Cannot delete ' . $song->file . 'file. Please check permissions.', 1);

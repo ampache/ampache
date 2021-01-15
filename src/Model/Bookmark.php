@@ -86,6 +86,11 @@ class Bookmark extends database_object
         return true;
     }
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * garbage_collection
      *

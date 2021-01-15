@@ -63,6 +63,11 @@ class Useractivity extends database_object
         return true;
     } // Constructor
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * this attempts to build a cache of the data from the passed activities all in one query
      * @param integer[] $ids

@@ -109,6 +109,11 @@ class Podcast_Episode extends database_object implements Media, library_item, Ga
         return true;
     } // constructor
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * garbage_collection
      *

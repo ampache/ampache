@@ -71,17 +71,18 @@ final class AlbumArtExporter implements AlbumArtExporterInterface
         $count = 0;
 
         // Run through them and get the art!
-        foreach ($albums as $album_id) {
-            $art = $this->modelFactory->createArt((int) $album_id);
+        foreach ($albums as $albumId) {
+            $albumId = (int) $albumId;
+            $art     = $this->modelFactory->createArt($albumId);
 
             if (!$art->has_db_info()) {
                 continue;
             }
 
-            $album = $this->modelFactory->createAlbum((int) $album_id);
+            $album = $this->modelFactory->createAlbum($albumId);
 
             // Get the first song in the album
-            $songs = $this->songRepository->getByAlbum($album->id, 1);
+            $songs = $this->songRepository->getByAlbum($albumId, 1);
             $song  = $this->modelFactory->createSong((int) $songs[0]);
             $dir   = dirname($song->file);
 

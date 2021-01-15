@@ -66,6 +66,11 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         return true;
     } // constructor
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * garbage_collection
      *

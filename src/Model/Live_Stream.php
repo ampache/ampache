@@ -105,6 +105,11 @@ class Live_Stream extends database_object implements Media, library_item
         }
     } // constructor
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * format
      * This takes the normal data from the database and makes it pretty

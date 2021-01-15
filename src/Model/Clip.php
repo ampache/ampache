@@ -55,6 +55,11 @@ class Clip extends Video
         return true;
     } // Constructor
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * garbage_collection
      *

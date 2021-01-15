@@ -81,6 +81,11 @@ class Share extends database_object
         return true;
     } // constructor
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
     /**
      * delete_share
      * @param $share_id
