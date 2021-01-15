@@ -315,16 +315,13 @@ function ApplyReplayGain()
             var r128_track_gain = currentjpitem.attr("data-r128_track_gain"); 
             
             if (r128_track_gain !== 'null') { // R128 PREFERRED
-                // var replaygain; how many LU/dB away from baseline of -23 LUFS/dB
-                // RFC spec specifies Q7.8 (2 ^ 7.8) which is ~222.86
-                // Beets/ffmpeg uses approximation of Q8 (2 ^ 8) which is 256
-                replaygain = parseInt(r128_track_gain / 256);
+                replaygain = parseInt(r128_track_gain / 256); // LU/dB away from baseline of -23 LUFS/dB, stored as Q7.8 (2 ^ 8) https://tools.ietf.org/html/rfc7845.html#page-25
                 referenceLevel = parseInt(-23); // LUFS https://en.wikipedia.org/wiki/EBU_R_128#Specification
-                targetLevel = parseInt(-5); // LUFS/dB; bring in line with ReplayGain level
+                targetLevel = parseInt(-6); // LUFS/dB; bring in line with ReplayGain level
                 masteredVolume = referenceLevel - replaygain;
                 difference = targetLevel - masteredVolume;
 
-                gainlevel = (1 + Math.pow(10, ((difference /* + Gpre-amp */) / 20)));
+                gainlevel = (Math.pow(10, ((difference /* + Gpre-amp */) / 20)));
             } else if (replaygain_track_gain !== 'null') { // REPLAYGAIN FALLBACK
                 replaygain = parseFloat(replaygain_track_gain);
 
