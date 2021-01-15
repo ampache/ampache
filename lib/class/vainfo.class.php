@@ -730,6 +730,10 @@ class vainfo
                         case 'replaygain_album_peak':
                             $parsed[$key] = !is_null($tag['data'][0]) ? floatval($tag['data'][0]) : null;
                             break;
+                        case 'r128_track_gain':
+                        case 'r128_album_gain':
+                            $parsed[$key] = !is_null($tag['data'][0]) ? intval($tag['data'][0]) : null;
+                            break;
                     }
                 }
             }
