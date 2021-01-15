@@ -1232,12 +1232,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "ec1762d8f8fd44a29e8d894a7000fbfdfb422251"
+                "reference": "ac3d425dd1ca3828aaa5303568bfa18253a86a5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/ec1762d8f8fd44a29e8d894a7000fbfdfb422251",
-                "reference": "ec1762d8f8fd44a29e8d894a7000fbfdfb422251",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/ac3d425dd1ca3828aaa5303568bfa18253a86a5d",
+                "reference": "ac3d425dd1ca3828aaa5303568bfa18253a86a5d",
                 "shasum": ""
             },
             "require": {
@@ -1292,7 +1292,7 @@
                 "issues": "https://github.com/JamesHeinrich/getID3/issues",
                 "source": "https://github.com/JamesHeinrich/getID3/tree/master"
             },
-            "time": "2021-01-08T17:32:15+00:00"
+            "time": "2021-01-15T13:43:56+00:00"
         },
         {
             "name": "jeromeetienne/jquery-qrcode",
@@ -2206,16 +2206,16 @@
         },
         {
             "name": "php-di/invoker",
-            "version": "2.2.0",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-DI/Invoker.git",
-                "reference": "e08a7c87068daeaeef464b95d81643ea530bc535"
+                "reference": "992fec6c56f2d1ad1ad5fee28267867c85bfb8f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-DI/Invoker/zipball/e08a7c87068daeaeef464b95d81643ea530bc535",
-                "reference": "e08a7c87068daeaeef464b95d81643ea530bc535",
+                "url": "https://api.github.com/repos/PHP-DI/Invoker/zipball/992fec6c56f2d1ad1ad5fee28267867c85bfb8f9",
+                "reference": "992fec6c56f2d1ad1ad5fee28267867c85bfb8f9",
                 "shasum": ""
             },
             "require": {
@@ -2249,7 +2249,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-DI/Invoker/issues",
-                "source": "https://github.com/PHP-DI/Invoker/tree/2.2.0"
+                "source": "https://github.com/PHP-DI/Invoker/tree/2.3.0"
             },
             "funding": [
                 {
@@ -2257,7 +2257,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-12T12:15:50+00:00"
+            "time": "2021-01-15T10:25:40+00:00"
         },
         {
             "name": "php-di/php-di",
