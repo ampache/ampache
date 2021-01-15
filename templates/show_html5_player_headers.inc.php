@@ -317,7 +317,7 @@ function ApplyReplayGain()
             if (r128_track_gain !== 'null') { // R128 PREFERRED
                 replaygain = parseInt(r128_track_gain / 256); // LU/dB away from baseline of -23 LUFS/dB, stored as Q7.8 (2 ^ 8) https://tools.ietf.org/html/rfc7845.html#page-25
                 referenceLevel = parseInt(-23); // LUFS https://en.wikipedia.org/wiki/EBU_R_128#Specification
-                targetLevel = parseInt(-6); // LUFS/dB; bring in line with ReplayGain level
+                targetLevel = parseInt(-18); // LUFS/dB; 
                 masteredVolume = referenceLevel - replaygain;
                 difference = targetLevel - masteredVolume;
 
@@ -330,7 +330,7 @@ function ApplyReplayGain()
                     if (track_peak !== 'null') {
                         peakamplitude = parseFloat(track_peak);
                     }
-                    gainlevel = (1 + Math.min(Math.pow(10, ((replaygain /* + Gpre-amp */) / 20)), (1 / peakamplitude)));
+                    gainlevel = Math.min(Math.pow(10, ((replaygain /* + Gpre-amp */) / 20)), (1 / peakamplitude));
                 }
             }                
         }
