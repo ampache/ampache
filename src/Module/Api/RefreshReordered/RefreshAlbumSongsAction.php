@@ -26,6 +26,7 @@ namespace Ampache\Module\Api\RefreshReordered;
 
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -46,7 +47,7 @@ final class RefreshAlbumSongsAction implements ApplicationActionInterface
         $this->modelFactory  = $modelFactory;
     }
 
-    public function run(ServerRequestInterface $request, \Ampache\Module\Authorization\GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $object_id = $this->requestParser->getFromRequest('id');
 

@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Artist\Deletion\Exception;
 
-final class ArtistDeletionException extends \Exception
+use Exception;
+
+final class ArtistDeletionException extends Exception
 {
 }

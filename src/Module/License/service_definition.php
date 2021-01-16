@@ -25,7 +25,5 @@ declare(strict_types=0);
 
 namespace Ampache\Module\License;
 
-use function DI\autowire;
-
 return [
 ];

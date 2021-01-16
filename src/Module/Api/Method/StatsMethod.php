@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Artist;
 use Ampache\Model\Random;
 use Ampache\Model\Rating;
 use Ampache\Model\User;

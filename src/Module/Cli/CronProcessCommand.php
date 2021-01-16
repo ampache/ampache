@@ -27,7 +27,6 @@ namespace Ampache\Module\Cli;
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Model\Bookmark;
-use Ampache\Model\Catalog;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Share;
 use Ampache\Module\Cache\ObjectCacheInterface;

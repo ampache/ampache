@@ -26,6 +26,7 @@ namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Beets\Catalog;
+use Ampache\Module\Beets\JsonHandler;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Dba;
 
@@ -136,7 +137,7 @@ class Catalog_beetsremote extends Catalog
      */
     protected function getParser()
     {
-        return new \Ampache\Module\Beets\JsonHandler($this->uri);
+        return new JsonHandler($this->uri);
     }
 
     /**

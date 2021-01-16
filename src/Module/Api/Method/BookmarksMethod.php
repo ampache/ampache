@@ -38,8 +38,6 @@ use Ampache\Module\System\Session;
  */
 final class BookmarksMethod
 {
-    private const ACTION = 'bookmarks';
-
     /**
      * bookmarks
      * MINIMUM_API_VERSION=5.0.0

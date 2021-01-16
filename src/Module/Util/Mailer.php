@@ -26,6 +26,7 @@ namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
+use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
 /**
@@ -140,7 +141,7 @@ final class Mailer implements MailerInterface
      * This actually sends the mail, how amazing
      * @param PHPMailer $phpmailer
      * @return boolean
-     * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
      */
     public function send($phpmailer = null)
     {
@@ -217,7 +218,7 @@ final class Mailer implements MailerInterface
     /**
      * @param $group_name
      * @return boolean
-     * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
      */
     public function send_to_group($group_name)
     {

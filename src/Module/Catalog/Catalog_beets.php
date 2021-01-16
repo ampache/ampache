@@ -139,7 +139,7 @@ class Catalog_beets extends Catalog
      */
     protected function getParser()
     {
-        return new \Ampache\Module\Beets\CliHandler();
+        return new CliHandler();
     }
 
     /**

@@ -23,14 +23,12 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog\GarbageCollector;
 
-use Ampache\Model\Album;
 use Ampache\Model\Art;
 use Ampache\Model\Artist;
 use Ampache\Model\Metadata\Repository\Metadata;
 use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Model\Playlist;
 use Ampache\Model\Rating;
-use Ampache\Model\Shoutbox;
 use Ampache\Model\Song;
 use Ampache\Model\Tag;
 use Ampache\Model\Tmp_Playlist;

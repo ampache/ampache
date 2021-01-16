@@ -34,7 +34,6 @@ use Ampache\Module\Api\Method\HandshakeMethod;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Method\PingMethod;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\System\Core;

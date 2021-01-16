@@ -49,6 +49,7 @@ use Ampache\Model\TvShow;
 use Ampache\Model\TVShow_Episode;
 use Ampache\Model\TVShow_Season;
 use Ampache\Model\Video;
+use Exception;
 use XMLReader;
 
 /**
@@ -158,7 +159,7 @@ class Upnp_Api
      * @param $delaytime
      * @param $actst
      * @param $address
-     * @throws \Exception
+     * @throws Exception
      */
     public static function sendResponse($delaytime, $actst, $address)
     {
@@ -233,7 +234,7 @@ class Upnp_Api
     /**
      * @param $data
      * @param $address
-     * @throws \Exception
+     * @throws Exception
      */
     public static function discovery_request($data, $address)
     {

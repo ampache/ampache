@@ -156,7 +156,7 @@ class Api
     public static $version = '5.0.0';
 
     /**
-     * @var \Ampache\Model\Browse $browse
+     * @var Browse $browse
      */
     public static $browse = null;
 

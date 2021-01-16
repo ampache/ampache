@@ -55,7 +55,6 @@ final class FileNameConverter implements FileNameConverterInterface
                 sprintf(T_('Checking %1$s (%2$s)'), $catalog->name, $catalog->path),
                 true
             );
-            ;
             $this->charset_directory_correct($interactor, $catalog->path, $force);
         }
 

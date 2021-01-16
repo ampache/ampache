@@ -26,6 +26,7 @@ namespace Ampache\Module\Api\RefreshReordered;
 
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -43,22 +44,21 @@ final class RefreshPlaylistMediasAction implements ApplicationActionInterface
         ModelFactoryInterface $modelFactory
     ) {
         $this->requestParser = $requestParser;
-        $this->logger        = $logger;
         $this->modelFactory  = $modelFactory;
     }
 
-    public function run(ServerRequestInterface $request, \Ampache\Module\Authorization\GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
+    public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $object_id = $this->requestParser->getFromRequest('id');
+        $objectId = $this->requestParser->getFromRequest('id');
 
         $browse   = $this->modelFactory->createBrowse();
-        $playlist = $this->modelFactory->createPlaylist((int) $object_id);
+        $playlist = $this->modelFactory->createPlaylist((int) $objectId);
         $playlist->format();
 
         $object_ids = $playlist->get_items();
 
         $browse->set_type('playlist_media');
-        $browse->add_supplemental_object('playlist', $playlist->id);
+        $browse->add_supplemental_object('playlist', $playlist->getId());
         $browse->set_static_content(true);
         $browse->show_objects($object_ids);
         $browse->store();

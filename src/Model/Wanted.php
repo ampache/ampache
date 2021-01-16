@@ -33,7 +33,6 @@ use Ampache\Repository\WantedRepositoryInterface;
 use Exception;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
-use MusicBrainz\Filters\ArtistFilter;
 
 class Wanted extends database_object
 {

@@ -23,7 +23,6 @@
 namespace Ampache\Repository;
 
 use Ampache\Model\DatabaseObject;
-use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Module\System\Dba;
 use Ampache\Model\Model;
 use ReflectionClass;
@@ -66,7 +65,6 @@ class Repository
     /**
      *
      * @param integer $object_id
-     * @return MetadataField
      */
     public function findById($object_id)
     {

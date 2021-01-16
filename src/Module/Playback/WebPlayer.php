@@ -25,7 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback;
 
 use Ampache\Model\Media;
-use Ampache\Model\playable_item;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;

@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Authorization\Exception;
 
-abstract class AclItemConfigurationException extends \Exception
+use Exception;
+
+abstract class AclItemConfigurationException extends Exception
 {
 }

@@ -78,8 +78,7 @@ final class CreatePlaylistAction implements ApplicationActionInterface
 
         $playlist_name    = (string) scrub_in($_REQUEST['playlist_name']);
 
-        $playlist = $this->modelFactory->createSearch(null);
-        $playlist->parse_rules($data);
+        $playlist                 = $this->modelFactory->createSearch(null);
         $playlist->logic_operator = $operator;
         $playlist->name           = $playlist_name;
         $playlist->save();

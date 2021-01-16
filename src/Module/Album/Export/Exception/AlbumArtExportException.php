@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Album\Export\Exception;
 
-final class AlbumArtExportException extends \Exception
+use Exception;
+
+final class AlbumArtExportException extends Exception
 {
 }

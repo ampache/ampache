@@ -28,7 +28,7 @@ use Ampache\Model\Song;
 use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Session;
-use Podcast_Episode;
+use Ampache\Model\Podcast_Episode;
 
 /**
  * Class StreamMethod

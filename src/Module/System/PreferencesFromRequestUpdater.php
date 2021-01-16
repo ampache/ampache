@@ -25,7 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Model\Preference;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Playback\Stream;

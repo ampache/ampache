@@ -29,11 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Model\Preference;
-use Ampache\Module\Playback\Localplay\HttpQ\AmpacheHttpq;
-use Ampache\Module\Playback\Localplay\Mpd\AmpacheMpd;
-use Ampache\Module\Playback\Localplay\Upnp\AmpacheUPnP;
-use Ampache\Module\Playback\Localplay\Vlc\AmpacheVlc;
-use Ampache\Module\Playback\Localplay\Xbmc\AmpacheXbmc;
 
 class LocalPlay
 {

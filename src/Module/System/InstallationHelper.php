@@ -28,6 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Model\Preference;
 use Ampache\Model\User;
 use Ampache\Module\Util\Horde_Browser;
+use Exception;
 
 final class InstallationHelper implements InstallationHelperInterface
 {
@@ -331,7 +332,7 @@ final class InstallationHelper implements InstallationHelperInterface
      * Attempts to write out the config file or offer it as a download.
      * @param boolean $download
      * @return boolean
-     * @throws \Exception
+     * @throws Exception
      */
     public function install_create_config($download = false)
     {
@@ -623,7 +624,7 @@ final class InstallationHelper implements InstallationHelperInterface
     /**
      * Write new configuration into the current configuration file by keeping old values.
      * @param $current_file_path
-     * @throws \Exception
+     * @throws Exception
      */
     public function write_config(string $current_file_path): void
     {
@@ -640,7 +641,7 @@ final class InstallationHelper implements InstallationHelperInterface
      * this is used by the installer and by the admin/system page
      * @param array $current
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function generate_config(array $current): string
     {

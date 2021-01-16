@@ -1379,7 +1379,7 @@ class Xml_Data
         $medias = $libitem->get_medias();
         foreach ($medias as $media_info) {
             $class_name = ObjectTypeToClassNameMapper::map($media_info['object_type']);
-            $media      = new $class_name['object_type']($media_info['object_id']);
+            $media      = new $class_name($media_info['object_id']);
             $media->format();
             $xitem = $xchannel->addChild("item");
             $xitem->addChild("title", htmlentities($media->get_fullname()));

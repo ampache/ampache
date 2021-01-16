@@ -21,12 +21,14 @@
 
 namespace Ampache\Module\Wanted;
 
+use MusicBrainz\Exception;
+
 interface MissingArtistFinderInterface
 {
     /**
      * @return array<array<string, string>>
      *
-     * @throws \MusicBrainz\Exception
+     * @throws Exception
      */
     public function find(string $artistName): array;
 }
