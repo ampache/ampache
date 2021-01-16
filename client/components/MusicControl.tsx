@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import SVG from 'react-inlinesvg';
 import { PLAYERSTATUS } from '~enum/PlayerStatus';
 import { MusicContext } from '~Contexts/MusicContext';
@@ -6,14 +6,24 @@ import Slider from '@material-ui/core/Slider';
 import CurrentPlaying from '~components/CurrentPlaying/';
 import CurrentPlayingArt from '~components/CurrentPlayingArt/';
 import Rating from '~components/Rating/';
+import { flagSong } from '~logic/Song';
+import { AuthKey } from '~logic/Auth';
+import { toast } from 'react-toastify';
+import AmpacheError from '~logic/AmpacheError';
 
-const MusicControl: React.FC = () => {
+interface MusicControlProps {
+    authKey?: AuthKey;
+}
+
+const MusicControl: React.FC = (props) => {
     const musicContext = useContext(MusicContext);
 
     const [ratingToggle, setRatingToggle] = useState(false);
 
     const [isSeeking, setIsSeeking] = useState(false);
     const [seekPosition, setSeekPosition] = useState(-1);
+
+    const [error, setError] = useState<Error | AmpacheError>(null);
 
     const handleRatingToggle = () => {
         if (
@@ -22,6 +32,29 @@ const MusicControl: React.FC = () => {
         ) {
             setRatingToggle(!ratingToggle);
         }
+    };
+
+    const handleFlagSong = (songID: number, favorite: boolean) => {
+        flagSong(songID, favorite, props.authKey)
+            .then(() => {
+                musicContext.toggleFlag();
+                if (favorite) {
+                    return toast.success('Song added to favorites');
+                }
+                toast.success('Song removed from favorites');
+            })
+            .catch((err) => {
+                if (favorite) {
+                    toast.error(
+                        '😞 Something went wrong adding song to favorites.'
+                    );
+                } else {
+                    toast.error(
+                        '😞 Something went wrong removing song from favorites.'
+                    );
+                }
+                setError(err);
+            });
     };
 
     const formatLabel = (s) => [
@@ -48,6 +81,8 @@ const MusicControl: React.FC = () => {
                                 ? musicContext.currentPlayingSong.flag
                                 : 0
                         }
+                        song={musicContext.currentPlayingSong}
+                        flagSong={handleFlagSong}
                     />
                 </div>
             </div>

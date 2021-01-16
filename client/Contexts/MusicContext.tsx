@@ -110,6 +110,10 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
         _playSong(nextSong);
     }, [_playSong, songQueue, songQueueIndex, userQCount]);
 
+    const toggleFlag = useCallback(() => {
+        currentPlayingSongRef.current.flag = !currentPlayingSongRef.current.flag;
+    }, []);
+
     useEffect(() => {
         if (!currentPlayingSongRef) return;
         //This seems to work, but there is a slight delay if you spam next or previous.
@@ -184,6 +188,7 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
                 playPause,
                 playPrevious,
                 playNext,
+                toggleFlag,
                 startPlayingWithNewQueue,
                 addToQueue,
                 seekSongTo,

@@ -98,7 +98,9 @@ class AppView extends Component<AppViewProps, AppViewStates> {
                         setQueueBarVisibility={this.setQueueBarVisibility}
                     />
                 </div>
-                <MusicControl />
+                <MusicControl
+                    authKey={this.props.user.authKey}
+                />
             </NavigationBlock>
         );
     }
