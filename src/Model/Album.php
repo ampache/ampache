@@ -32,6 +32,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\UseractivityRepositoryInterface;
 use Exception;
 use PDOStatement;
 
@@ -937,7 +938,7 @@ class Album extends database_object implements library_item
                 Stats::garbage_collection();
                 Rating::garbage_collection();
                 Userflag::garbage_collection();
-                Useractivity::garbage_collection();
+                $this->getUseractivityRepository()->collectGarbage();
             }
         } // if updated
 
@@ -1033,5 +1034,15 @@ class Album extends database_object implements library_item
         global $dic;
 
         return $dic->get(SongId3TagWriterInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getUseractivityRepository(): UseractivityRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UseractivityRepositoryInterface::class);
     }
 }

@@ -28,8 +28,10 @@ use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
+use Ampache\Module\User\Activity\UserActivityRendererInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\UseractivityRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -41,12 +43,20 @@ final class ShowUserAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private UseractivityRepositoryInterface $useractivityRepository;
+
+    private UserActivityRendererInterface $userActivityRenderer;
+
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        UseractivityRepositoryInterface $useractivityRepository,
+        UserActivityRendererInterface $userActivityRenderer
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
+        $this->ui                     = $ui;
+        $this->modelFactory           = $modelFactory;
+        $this->useractivityRepository = $useractivityRepository;
+        $this->userActivityRenderer   = $userActivityRenderer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -60,7 +70,14 @@ final class ShowUserAction implements ApplicationActionInterface
 
         $client = $this->modelFactory->createUser((int) Core::get_request('user_id'));
 
-        require_once Ui::find_template('show_user.inc.php');
+        $this->ui->show(
+            'show_user.inc.php',
+            [
+                'client' => $client,
+                'activities' => $this->useractivityRepository->getActivities($client->getId()),
+                'userActivityRenderer' => $this->userActivityRenderer
+            ]
+        );
 
         show_table_render(false, true);
 

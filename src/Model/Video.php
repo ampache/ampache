@@ -33,6 +33,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\UseractivityRepositoryInterface;
 
 class Video extends database_object implements Media, library_item, GarbageCollectibleInterface
 {
@@ -1080,8 +1081,8 @@ class Video extends database_object implements Media, library_item, GarbageColle
                 Art::garbage_collection('video', $this->id);
                 Userflag::garbage_collection('video', $this->id);
                 Rating::garbage_collection('video', $this->id);
-                $this->getShoutRepository()->collectGarbage('video', $this->id);
-                Useractivity::garbage_collection('video', $this->id);
+                $this->getShoutRepository()->collectGarbage('video', $this->getId());
+                $this->getUseractivityRepository()->collectGarbage('video', $this->getId());
             }
         } else {
             debug_event('video.class', 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);
@@ -1158,5 +1159,15 @@ class Video extends database_object implements Media, library_item, GarbageColle
         global $dic;
 
         return $dic->get(ShoutRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getUseractivityRepository(): UseractivityRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UseractivityRepositoryInterface::class);
     }
 }

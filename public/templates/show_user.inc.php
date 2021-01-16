@@ -31,8 +31,11 @@ use Ampache\Model\Useractivity;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Model\Browse;
+use Ampache\Module\User\Activity\UserActivityRendererInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+
+/** @var UserActivityRendererInterface $userActivityRenderer */
 
 $last_seen   = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');
 $create_date = $client->create_date ? get_datetime((int) $client->create_date) : T_('Unknown');
@@ -210,11 +213,11 @@ if ($client->f_avatar) {
             <div id="timeline" class="tab_content">
                 <?php
                 if (Preference::get_by_user($client->id, 'allow_personal_info_recent')) {
-                    $activities = Useractivity::get_activities($client->id);
                     Useractivity::build_cache($activities);
                     foreach ($activities as $activity_id) {
-                        $activity = new Useractivity($activity_id);
-                        $activity->show();
+                        echo $userActivityRenderer->show(
+                            new Useractivity($activity_id)
+                        );
                     }
                 } ?>
             </div>

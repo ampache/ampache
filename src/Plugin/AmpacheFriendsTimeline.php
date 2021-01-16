@@ -30,7 +30,9 @@ use Ampache\Model\Preference;
 use Ampache\Model\User;
 use Ampache\Model\Useractivity;
 use Ampache\Module\System\Core;
+use Ampache\Module\User\Activity\UserActivityRendererInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\UseractivityRepositoryInterface;
 
 class AmpacheFriendsTimeline
 {
@@ -105,13 +107,20 @@ class AmpacheFriendsTimeline
             $user_id = Core::get_global('user')->id;
             if ($user_id) {
                 echo '<div class="home_plugin">';
-                $activities = Useractivity::get_friends_activities($user_id, $this->maxitems);
+                $activities = $this->getUseractivityRepository()->getFriendsActivities(
+                    (int) $user_id,
+                    (int) $this->maxitems
+                );
                 if (count($activities) > 0) {
                     Ui::show_box_top(T_('Friends Timeline'));
                     Useractivity::build_cache($activities);
+
+                    $activityRenderer = $this->getUserActivityRenderer();
+
                     foreach ($activities as $activity_id) {
-                        $activity = new Useractivity($activity_id);
-                        $activity->show();
+                        echo $activityRenderer->show(
+                            new Useractivity($activity_id)
+                        );
                     }
                     Ui::show_box_bottom();
                 }
@@ -138,5 +147,25 @@ class AmpacheFriendsTimeline
         }
 
         return true;
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getUseractivityRepository(): UseractivityRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UseractivityRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getUserActivityRenderer(): UserActivityRendererInterface
+    {
+        global $dic;
+
+        return $dic->get(UserActivityRendererInterface::class);
     }
 }

@@ -26,11 +26,11 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\User;
-use Ampache\Model\Useractivity;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
+use Ampache\Repository\UseractivityRepositoryInterface;
 
 /**
  * Class FriendsTimelineMethod
@@ -60,9 +60,13 @@ final class FriendsTimelineMethod
         }
         $limit = (int) ($input['limit']);
         $since = (int) ($input['since']);
-        $user  = User::get_from_username(Session::username($input['auth']))->id;
+        $user  = User::get_from_username(Session::username($input['auth']))->getId();
 
-        $activities = Useractivity::get_friends_activities($user, $limit, $since);
+        $activities = static::getUseractivityRepository()->getFriendsActivities(
+            $user,
+            $limit,
+            $since
+        );
         if (empty($activities)) {
             Api::empty('activity', $input['api_format']);
 
@@ -80,5 +84,12 @@ final class FriendsTimelineMethod
         Session::extend($input['auth']);
 
         return true;
+    }
+
+    private static function getUseractivityRepository(): UseractivityRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UseractivityRepositoryInterface::class);
     }
 }

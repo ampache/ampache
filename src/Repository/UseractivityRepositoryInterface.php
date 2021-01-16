@@ -20,15 +20,42 @@
  *
  */
 
-declare(strict_types=1);
+namespace Ampache\Repository;
 
-namespace Ampache\Module\User;
+interface UseractivityRepositoryInterface
+{
+    /**
+     * @return int[]
+     */
+    public function getFriendsActivities(
+        int $user_id,
+        int $limit = 0,
+        int $since = 0
+    ): array;
 
-use function DI\autowire;
+    /**
+     * @return int[]
+     */
+    public function getActivities(
+        int $user_id,
+        int $limit = 0,
+        int $since = 0
+    ): array;
 
-return [
-    PasswordGeneratorInterface::class => autowire(PasswordGenerator::class),
-    NewPasswordSenderInterface::class => autowire(NewPasswordSender::class),
-    UserStateTogglerInterface::class => autowire(UserStateToggler::class),
-    Activity\UserActivityRendererInterface::class => autowire(Activity\UserActivityRenderer::class),
-];
+    /**
+     * Delete activity by date
+     */
+    public function deleteByDate(
+        int $date,
+        string $action,
+        int $user_id = 0
+    ): void;
+
+    /**
+     * Remove activities for items that no longer exist.
+     */
+    public function collectGarbage(
+        ?string $object_type = null,
+        ?int $object_id = null
+    ): void;
+}

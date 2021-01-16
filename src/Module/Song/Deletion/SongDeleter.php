@@ -24,10 +24,10 @@ namespace Ampache\Module\Song\Deletion;
 use Ampache\Model\Art;
 use Ampache\Model\Rating;
 use Ampache\Model\Song;
-use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\UseractivityRepositoryInterface;
 
 final class SongDeleter implements SongDeleterInterface
 {
@@ -35,12 +35,16 @@ final class SongDeleter implements SongDeleterInterface
 
     private SongRepositoryInterface $songRepository;
 
+    private UseractivityRepositoryInterface $useractivityRepository;
+
     public function __construct(
         ShoutRepositoryInterface $shoutRepository,
-        SongRepositoryInterface $songRepository
+        SongRepositoryInterface $songRepository,
+        UseractivityRepositoryInterface $useractivityRepository
     ) {
-        $this->shoutRepository = $shoutRepository;
-        $this->songRepository  = $songRepository;
+        $this->shoutRepository        = $shoutRepository;
+        $this->songRepository         = $songRepository;
+        $this->useractivityRepository = $useractivityRepository;
     }
 
     public function delete(Song $song): bool
@@ -58,7 +62,7 @@ final class SongDeleter implements SongDeleterInterface
                 Userflag::garbage_collection('song', $songId);
                 Rating::garbage_collection('song', $songId);
                 $this->shoutRepository->collectGarbage('song', $songId);
-                Useractivity::garbage_collection('song', $songId);
+                $this->useractivityRepository->collectGarbage('song', $songId);
             }
         } else {
             debug_event('song.class', 'Cannot delete ' . $song->file . 'file. Please check permissions.', 1);

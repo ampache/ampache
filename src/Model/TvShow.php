@@ -29,6 +29,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\UseractivityRepositoryInterface;
 use PDOStatement;
 
 class TvShow extends database_object implements library_item
@@ -477,8 +478,8 @@ class TvShow extends database_object implements library_item
                 Art::garbage_collection('tvshow', $this->id);
                 Userflag::garbage_collection('tvshow', $this->id);
                 Rating::garbage_collection('tvshow', $this->id);
-                $this->getShoutRepository()->collectGarbage('tvshow', $this->id);
-                Useractivity::garbage_collection('tvshow', $this->id);
+                $this->getShoutRepository()->collectGarbage('tvshow', $this->getId());
+                $this->getUseractivityRepository()->collectGarbage('tvshow', $this->getId());
             }
         }
 
@@ -493,5 +494,15 @@ class TvShow extends database_object implements library_item
         global $dic;
 
         return $dic->get(ShoutRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getUseractivityRepository(): UseractivityRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UseractivityRepositoryInterface::class);
     }
 }

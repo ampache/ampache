@@ -27,6 +27,7 @@ namespace Ampache\Model;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\UseractivityRepositoryInterface;
 use PDOStatement;
 
 class TVShow_Season extends database_object implements library_item, GarbageCollectibleInterface
@@ -395,8 +396,8 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
                 Art::garbage_collection('tvshow_season', $this->id);
                 Userflag::garbage_collection('tvshow_season', $this->id);
                 Rating::garbage_collection('tvshow_season', $this->id);
-                $this->getShoutRepository()->collectGarbage('tvshow_season', $this->id);
-                Useractivity::garbage_collection('tvshow_season', $this->id);
+                $this->getShoutRepository()->collectGarbage('tvshow_season', $this->getId());
+                $this->getUseractivityRepository()->collectGarbage('tvshow_season', $this->getId());
             }
         }
 
@@ -423,5 +424,15 @@ class TVShow_Season extends database_object implements library_item, GarbageColl
         global $dic;
 
         return $dic->get(ShoutRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getUseractivityRepository(): UseractivityRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UseractivityRepositoryInterface::class);
     }
 }

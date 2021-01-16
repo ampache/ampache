@@ -28,7 +28,6 @@ use Ampache\Model\Album;
 use Ampache\Model\Art;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Rating;
-use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;
 use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
@@ -36,6 +35,7 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\UseractivityRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -55,20 +55,24 @@ final class AlbumDeleter implements AlbumDeleterInterface
 
     private SongDeleterInterface $songDeleter;
 
+    private UseractivityRepositoryInterface $useractivityRepository;
+
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
         ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
         SongRepositoryInterface $songRepository,
         ShoutRepositoryInterface $shoutRepository,
-        SongDeleterInterface $songDeleter
+        SongDeleterInterface $songDeleter,
+        UseractivityRepositoryInterface $useractivityRepository
     ) {
-        $this->albumRepository = $albumRepository;
-        $this->modelFactory    = $modelFactory;
-        $this->logger          = $logger;
-        $this->songRepository  = $songRepository;
-        $this->shoutRepository = $shoutRepository;
-        $this->songDeleter     = $songDeleter;
+        $this->albumRepository        = $albumRepository;
+        $this->modelFactory           = $modelFactory;
+        $this->logger                 = $logger;
+        $this->songRepository         = $songRepository;
+        $this->shoutRepository        = $shoutRepository;
+        $this->songDeleter            = $songDeleter;
+        $this->useractivityRepository = $useractivityRepository;
     }
 
     /**
@@ -109,6 +113,6 @@ final class AlbumDeleter implements AlbumDeleterInterface
         Userflag::garbage_collection('album', $albumId);
         Rating::garbage_collection('album', $albumId);
         $this->shoutRepository->collectGarbage('album', $albumId);
-        Useractivity::garbage_collection('album', $albumId);
+        $this->useractivityRepository->collectGarbage('album', $albumId);
     }
 }

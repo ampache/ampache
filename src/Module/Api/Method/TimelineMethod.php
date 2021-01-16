@@ -32,6 +32,7 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
+use Ampache\Repository\UseractivityRepositoryInterface;
 
 /**
  * Class TimelineMethod
@@ -71,7 +72,11 @@ final class TimelineMethod
             $user = User::get_from_username($username);
             if ($user !== null) {
                 if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
-                    $activities = Useractivity::get_activities($user->id, $limit, $since);
+                    $activities = static::getUseractivityRepository()->getActivities(
+                        $user->getId(),
+                        $limit,
+                        $since
+                    );
                     ob_end_clean();
                     switch ($input['api_format']) {
                         case 'json':
@@ -86,5 +91,12 @@ final class TimelineMethod
         Session::extend($input['auth']);
 
         return true;
+    }
+
+    private static function getUseractivityRepository(): UseractivityRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UseractivityRepositoryInterface::class);
     }
 }

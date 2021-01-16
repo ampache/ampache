@@ -31,6 +31,7 @@ use Ampache\Model\Song;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\UseractivityRepositoryInterface;
 use PDOStatement;
 use Ampache\Model\User;
 use Ampache\Model\Useractivity;
@@ -378,11 +379,18 @@ class Stats
             debug_event('stats.class', 'Last ' . $previous['object_type'] . ' played within skip limit (' . $diff . '/' . $skip_time . 's). Skipping {' . $previous['object_id'] . '}', 3);
             self::skip_last_play($previous['date'], $previous['agent'], $previous['user']);
             // delete song, podcast_episode and video from user_activity to keep stats in line
-            Useractivity::del_activity($previous['date'], 'play', $previous['user']);
+            static::getUseractivityRepository()->deleteByDate($previous['date'], 'play', (int) $previous['user']);
         }
 
         return true;
     } // has_played_history
+
+    private static function getUseractivityRepository(): UseractivityRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UseractivityRepositoryInterface::class);
+    }
 
     /**
      * get_object_history

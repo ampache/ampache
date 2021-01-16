@@ -35,5 +35,6 @@ return [
     LicenseRepositoryInterface::class => autowire(LicenseRepository::class),
     LiveStreamRepositoryInterface::class => autowire(LiveStreamRepository::class),
     ShoutRepositoryInterface::class => autowire(ShoutRepository::class),
+    UseractivityRepositoryInterface::class => autowire(UseractivityRepository::class),
     WantedRepositoryInterface::class => autowire(WantedRepository::class),
 ];
