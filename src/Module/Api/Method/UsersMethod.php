@@ -25,11 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * Class UsersMethod
@@ -50,7 +50,7 @@ final class UsersMethod
      */
     public static function users(array $input)
     {
-        $users = User::get_valid_users();
+        $users = static::getUserRepository()->getValid();
         if (empty($users)) {
             Api::empty('user', $input['api_format']);
 
@@ -68,5 +68,15 @@ final class UsersMethod
         Session::extend($input['auth']);
 
         return true;
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }

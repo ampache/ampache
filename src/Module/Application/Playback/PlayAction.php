@@ -51,6 +51,7 @@ use Ampache\Module\System\Session;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -66,16 +67,20 @@ final class PlayAction implements ApplicationActionInterface
 
     private SongRepositoryInterface $songRepository;
 
+    private UserRepositoryInterface $userRepository;
+
     public function __construct(
         Horde_Browser $browser,
         AuthenticationManagerInterface $authenticationManager,
         NetworkCheckerInterface $networkChecker,
-        SongRepositoryInterface $songRepository
+        SongRepositoryInterface $songRepository,
+        UserRepositoryInterface $userRepository
     ) {
         $this->browser               = $browser;
         $this->authenticationManager = $authenticationManager;
         $this->networkChecker        = $networkChecker;
         $this->songRepository        = $songRepository;
+        $this->userRepository        = $userRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -219,7 +224,7 @@ final class PlayAction implements ApplicationActionInterface
         // If explicit user authentication was passed
         $user_authenticated = false;
         if (!empty($apikey)) {
-            $user = User::get_from_apikey($apikey);
+            $user = $this->userRepository->findByApiKey(trim($apikey));
             if ($user != null) {
                 $GLOBALS['user'] = $user;
                 $uid             = $user->id;

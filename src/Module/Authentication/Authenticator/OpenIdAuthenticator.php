@@ -27,6 +27,7 @@ namespace Ampache\Module\Authentication\Authenticator;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\User;
 use Ampache\Module\Authentication\Openid;
+use Ampache\Repository\UserRepositoryInterface;
 use Auth_OpenID;
 use Auth_OpenID_PAPE_Request;
 use Auth_OpenID_SRegRequest;
@@ -34,6 +35,14 @@ use Auth_OpenID_SRegResponse;
 
 final class OpenIdAuthenticator implements AuthenticatorInterface
 {
+    private UserRepositoryInterface $userRepository;
+
+    public function __construct(
+        UserRepositoryInterface $userRepository
+    ) {
+        $this->userRepository = $userRepository;
+    }
+
     public function auth(string $username, string $password): array
     {
         unset($password);
@@ -141,7 +150,7 @@ final class OpenIdAuthenticator implements AuthenticatorInterface
                             $result['name'] = $sreg['fullname'];
                         }
 
-                        $users = User::get_from_website($result['website']);
+                        $users = $this->userRepository->findByWebsite($result['website']);
                         if (count($users) > 0) {
                             if (count($users) == 1) {
                                 $user                = new User($users[0]);

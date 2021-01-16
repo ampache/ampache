@@ -38,6 +38,7 @@ use Ampache\Module\Util\Captcha\captcha;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -51,14 +52,18 @@ final class AddUserAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private UserRepositoryInterface $userRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
-        UiInterface $ui
+        UiInterface $ui,
+        UserRepositoryInterface $userRepository
     ) {
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
         $this->ui              = $ui;
+        $this->userRepository  = $userRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -165,7 +170,7 @@ final class AddUserAction implements ApplicationActionInterface
             AmpError::add('password', T_("Passwords do not match"));
         }
 
-        if (!User::check_username((string) $username)) {
+        if ($this->userRepository->findByUsername((string) $username) !== null) {
             AmpError::add('duplicate_user', T_("That Username already exists"));
         }
 

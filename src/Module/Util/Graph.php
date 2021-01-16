@@ -27,6 +27,7 @@ namespace Ampache\Module\Util;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
+use Ampache\Repository\UserRepositoryInterface;
 use CpChart;
 use CpChart\Data;
 use Ampache\Module\System\Dba;
@@ -254,7 +255,7 @@ class Graph
         $ustats = User::count();
         // Only display other users if the graph is not for a specific user and user count is small
         if (!$user && $ustats['users'] < 10) {
-            $user_ids = User::get_valid_users();
+            $user_ids = $this->getUserRepository()->getValid();
             foreach ($user_ids as $user_id) {
                 $user_check  = new User($user_id);
                 $user_values = $this->get_all_type_pts($fct, $user_id, $object_type, $object_id, $start_date, $end_date,
@@ -819,5 +820,15 @@ class Graph
                 }
             }
         }
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }

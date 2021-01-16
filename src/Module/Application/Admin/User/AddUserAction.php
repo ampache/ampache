@@ -34,6 +34,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -47,14 +48,18 @@ final class AddUserAction extends AbstractUserAction
 
     private ConfigContainerInterface $configContainer;
 
+    private UserRepositoryInterface $userRepository;
+
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        UserRepositoryInterface $userRepository
     ) {
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
+        $this->userRepository  = $userRepository;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
@@ -88,7 +93,7 @@ final class AddUserAction extends AbstractUserAction
         }
 
         /* make sure the username doesn't already exist */
-        if (!User::check_username($username)) {
+        if ($this->userRepository->findByUsername($username) !== null) {
             AmpError::add('username', T_('That Username already exists'));
         }
 

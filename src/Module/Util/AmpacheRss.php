@@ -35,6 +35,7 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Model\User;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 
 class AmpacheRss
 {
@@ -266,7 +267,7 @@ class AmpacheRss
      */
     public static function load_recently_played($rsstoken = "")
     {
-        $user    = ($rsstoken) ? User::get_from_rsstoken($rsstoken) : null;
+        $user    = ($rsstoken) ? static::getUserRepository()->getByRssToken($rsstoken) : null;
         $data    = ($user) ? Song::get_recently_played($user->id) : Song::get_recently_played();
         $results = array();
 
@@ -407,10 +408,23 @@ class AmpacheRss
         return $element['date'];
     } // pubdate_recently_played
 
+    /**
+     * @deprecated
+     */
     private static function getAlbumRepository(): AlbumRepositoryInterface
     {
         global $dic;
 
         return $dic->get(AlbumRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }

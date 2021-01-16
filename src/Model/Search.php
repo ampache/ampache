@@ -29,6 +29,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Repository\LicenseRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * Search-related voodoo.  Beware tentacles.
@@ -531,7 +532,7 @@ class Search extends playlist_object
         $this->type_text('artist_tag', T_('Artist Tag'));
 
         $users = array();
-        foreach (User::get_valid_users() as $userid) {
+        foreach ($this->getUserRepository()->getValid() as $userid) {
             $user           = new User($userid);
             $users[$userid] = $user->username;
         }
@@ -655,7 +656,7 @@ class Search extends playlist_object
         $this->type_text('tag', T_('Genre'));
 
         $users = array();
-        foreach (User::get_valid_users() as $userid) {
+        foreach ($this->getUserRepository()->getValid() as $userid) {
             $user           = new User($userid);
             $users[$userid] = $user->username;
         }
@@ -702,7 +703,7 @@ class Search extends playlist_object
         $this->type_text('tag', T_('Genre'));
 
         $users = array();
-        foreach (User::get_valid_users() as $userid) {
+        foreach ($this->getUserRepository()->getValid() as $userid) {
             $user           = new User($userid);
             $users[$userid] = $user->username;
         }
@@ -2451,5 +2452,15 @@ class Search extends playlist_object
         global $dic;
 
         return $dic->get(LicenseRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }

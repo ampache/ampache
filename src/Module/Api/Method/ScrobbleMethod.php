@@ -29,6 +29,7 @@ use Ampache\Model\Song;
 use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Session;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * Class ScrobbleMethod
@@ -72,7 +73,7 @@ final class ScrobbleMethod
         $date        = (is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
         $user        = User::get_from_username(Session::username($input['auth']));
         $user_id     = $user->id;
-        $valid       = in_array($user->id, User::get_valid_users());
+        $valid       = in_array($user->id, static::getUserRepository()->getValid());
 
         // validate supplied user
         if ($valid === false) {
@@ -119,5 +120,15 @@ final class ScrobbleMethod
         Session::extend($input['auth']);
 
         return true;
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }

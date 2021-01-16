@@ -39,6 +39,7 @@ use Ampache\Model\Song;
 use Ampache\Model\Tag;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
+use Ampache\Repository\UserRepositoryInterface;
 
 final class Cron
 {
@@ -93,7 +94,8 @@ final class Cron
             if ($user_id > 0) {
                 $users = array($user_id);
             } else {
-                $users = User::get_valid_users();
+                global $dic;
+                $users = $dic->get(UserRepositoryInterface::class)->getValid();
             }
 
             foreach ($catalogs as $catalog_id) {

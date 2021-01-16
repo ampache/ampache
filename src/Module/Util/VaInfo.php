@@ -28,8 +28,8 @@ use Ampache\Model\Plugin;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
+use Ampache\Repository\UserRepositoryInterface;
 use Exception;
-use Ampache\Model\User;
 use getID3;
 use getid3_writetags;
 
@@ -1092,7 +1092,10 @@ class VaInfo
         // Find the rating
         if (is_array($id3v2['POPM'])) {
             foreach ($id3v2['POPM'] as $popm) {
-                if (array_key_exists('email', $popm) && $user = User::get_from_email($popm['email'])) {
+                if (
+                    array_key_exists('email', $popm) &&
+                    $user = $this->getUserRepository()->findByEmail($popm['email'])
+                ) {
                     if ($user) {
                         // Ratings are out of 255; scale it
                         $parsed['rating'][$user->id] = $popm['rating'] / 255 * 5;
@@ -1464,5 +1467,15 @@ class VaInfo
         }
 
         return $data;
+    }
+
+    /**
+     * @deprecated inject by constructor
+     */
+    private function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }

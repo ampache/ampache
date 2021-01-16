@@ -45,6 +45,7 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use DOMDocument;
 use Ampache\Model\Playlist;
 use Ampache\Model\Podcast;
@@ -1518,7 +1519,7 @@ class Subsonic_Api
         $myuser = User::get_from_username($input['u']);
         if ($myuser->access >= 100) {
             $response = Subsonic_Xml_Data::createSuccessResponse('getusers');
-            $users    = User::get_valid_users();
+            $users    = static::getUserRepository()->getValid();
             Subsonic_Xml_Data::addUsers($response, $users);
         } else {
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED,
@@ -2563,5 +2564,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(LiveStreamRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }

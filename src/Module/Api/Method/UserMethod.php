@@ -31,6 +31,7 @@ use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Session;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * Class UserMethod
@@ -65,7 +66,7 @@ final class UserMethod
         }
 
         $user  = User::get_from_username($username);
-        $valid = in_array($user->id, User::get_valid_users(true));
+        $valid = in_array($user->id, static::getUserRepository()->getValid(true));
         if (!$valid || !$user->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'username', $input['api_format']);
@@ -90,5 +91,15 @@ final class UserMethod
         Session::extend($input['auth']);
 
         return true;
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }

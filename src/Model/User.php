@@ -266,27 +266,6 @@ class User extends database_object
     } // load_playlist
 
     /**
-     * get_valid_users
-     * This returns all valid users in database.
-     * @param boolean $include_disabled
-     * @return array
-     */
-    public static function get_valid_users($include_disabled = false)
-    {
-        $users = array();
-        $sql   = ($include_disabled)
-            ? "SELECT `id` FROM `user`"
-            : "SELECT `id` FROM `user` WHERE `disabled` = '0'";
-
-        $db_results = Dba::read($sql);
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $users[] = (int) $results['id'];
-        }
-
-        return $users;
-    } // get_valid_users
-
-    /**
      * get_from_username
      * This returns a built user from a username. This is a
      * static function so it doesn't require an instance
@@ -301,108 +280,6 @@ class User extends database_object
 
         return new User($results['id']);
     } // get_from_username
-
-    /**
-     * get_from_apikey
-     * This returns a built user from an apikey. This is a
-     * static function so it doesn't require an instance
-     * @param $apikey
-     * @return User|null
-     */
-    public static function get_from_apikey($apikey)
-    {
-        $apikey = trim((string)$apikey);
-        if (!empty($apikey)) {
-            // check for legacy unencrypted apikey
-            $sql        = "SELECT `id` FROM `user` WHERE `apikey` = ?";
-            $db_results = Dba::read($sql, array($apikey));
-            $results    = Dba::fetch_assoc($db_results);
-
-            if ($results['id']) {
-                return new User($results['id']);
-            }
-            // check for api sessions
-            $sql        = "SELECT `username` FROM `session` WHERE `id` = ? AND `expire` > ? AND type = 'api'";
-            $db_results = Dba::read($sql, array($apikey, time()));
-            $results    = Dba::fetch_assoc($db_results);
-
-            if ($results['username']) {
-                return User::get_from_username($results['username']);
-            }
-            // check for sha256 hashed apikey for client
-            // http://ampache.org/api/
-            $sql        = "SELECT `id`, `apikey`, `username` FROM `user`";
-            $db_results = Dba::read($sql);
-            while ($row = Dba::fetch_assoc($db_results)) {
-                if ($row['apikey'] && $row['username']) {
-                    $key        = hash('sha256', $row['apikey']);
-                    $passphrase = hash('sha256', $row['username'] . $key);
-                    if ($passphrase == $apikey) {
-                        return new User($row['id']);
-                    }
-                }
-            }
-        }
-
-        return null;
-    } // get_from_apikey
-
-    /**
-     * get_from_email
-     * This returns a built user from a email. This is a
-     * static function so it doesn't require an instance
-     * @param $email
-     * @return User|null
-     */
-    public static function get_from_email($email)
-    {
-        $user_id    = null;
-        $sql        = "SELECT `id` FROM `user` WHERE `email` = ?";
-        $db_results = Dba::read($sql, array($email));
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $user_id = new User($results['id']);
-        }
-
-        return $user_id;
-    } // get_from_email
-
-    /**
-     * get_from_website
-     * This returns users list related to a website.
-     * @param $website
-     * @return array
-     */
-    public static function get_from_website($website)
-    {
-        $website    = rtrim((string)$website, "/");
-        $sql        = "SELECT `id` FROM `user` WHERE `website` = ? LIMIT 1";
-        $db_results = Dba::read($sql, array($website));
-        $users      = array();
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $users[] = $results['id'];
-        }
-
-        return $users;
-    } // get_from_website
-
-    /**
-     * get_from_rsstoken
-     * This returns a built user from a rsstoken. This is a
-     * static function so it doesn't require an instance
-     * @param $rsstoken
-     * @return User|null
-     */
-    public static function get_from_rsstoken($rsstoken)
-    {
-        $user_id    = null;
-        $sql        = "SELECT `id` FROM `user` WHERE `rsstoken` = ?";
-        $db_results = Dba::read($sql, array($rsstoken));
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $user_id = new User($results['id']);
-        }
-
-        return $user_id;
-    } // get_from_rsstoken
 
     /**
      * get_catalogs
@@ -541,67 +418,6 @@ class User extends database_object
 
         return $items;
     } // get_favorites
-
-    /**
-     * get_recommendations
-     * This returns recommended objects of $type. The recommendations
-     * are based on voodoo economics,the phase of the moon and my current BAL.
-     * @param $type
-     * @return array
-     */
-    public function get_recommendations($type)
-    {
-        /* First pull all of your ratings of this type */
-        $sql        = "SELECT `object_id`, `user_rating` FROM `ratings` " . "WHERE `object_type` = '" . Dba::escape($type) . "' AND `user` = '" . Dba::escape($this->id) . "'";
-        $db_results = Dba::read($sql);
-
-        // Incase they only have one user
-        $users   = array();
-        $ratings = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            /* Store the fact that you rated this */
-            $key           = $row['object_id'];
-            $ratings[$key] = true;
-
-            /* Build a key'd array of users with this same rating */
-            $sql          = "SELECT `user` FROM `ratings` WHERE `object_type` = '" . Dba::escape($type) . "' " . "AND `user` !='" . Dba::escape($this->id) . "' AND `object_id` = '" . Dba::escape($row['object_id']) . "' " . "AND `user_rating` ='" . Dba::escape($row['user_rating']) . "'";
-            $user_results = Dba::read($sql);
-
-            while ($user_info = Dba::fetch_assoc($user_results)) {
-                $key = $user_info['user'];
-                $users[$key]++;
-            }
-        } // end while
-
-        /* now we've got your ratings, and all users and the # of ratings that match your ratings
-         * sort the users[$key] array by value and then find things they've rated high (4+) that you
-         * haven't rated
-         */
-        $recommendations = array();
-        asort($users);
-
-        foreach ($users as $user_id => $score) {
-            /* Find everything they've rated at 4+ */
-            $sql        = "SELECT `object_id`, `user_rating` FROM `ratings` " . "WHERE `user` = '" . Dba::escape($user_id) . "' AND `user_rating` >='4' AND " . "`object_type` = '" . Dba::escape($type) . "' ORDER BY `user_rating` DESC";
-            $db_results = Dba::read($sql);
-
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $key = $row['object_id'];
-                if (isset($ratings[$key])) {
-                    continue;
-                }
-
-                /* Let's only get 5 total for now */
-                if (count($recommendations) > 5) {
-                    return $recommendations;
-                }
-
-                $recommendations[$key] = $row['user_rating'];
-            } // end while
-        } // end foreach users
-
-        return $recommendations;
-    } // get_recommendations
 
     /**
      * is_logged_in
@@ -1731,28 +1547,6 @@ class User extends database_object
 
         return $html;
     }
-
-    /**
-     * check_username
-     * This checks to make sure the username passed doesn't already
-     * exist in this instance of Ampache
-     *
-     * @param string $username
-     * @return boolean
-     */
-    public static function check_username($username)
-    {
-        $user = Dba::escape($username);
-
-        $sql        = "SELECT `id` FROM `user` WHERE `username`='$user'";
-        $db_results = Dba::read($sql);
-
-        if (Dba::num_rows($db_results)) {
-            return false;
-        }
-
-        return true;
-    } // check_username
 
     /**
      * rebuild_all_preferences

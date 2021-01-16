@@ -33,9 +33,9 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use PDOStatement;
 use Ampache\Model\User;
-use Ampache\Model\Useractivity;
 use Ampache\Model\Video;
 
 /**
@@ -404,7 +404,7 @@ class Stats
      */
     public static function get_object_history($user_id, $time, $newest = true)
     {
-        if (!in_array((string)$user_id, User::get_valid_users())) {
+        if (!in_array((string)$user_id, static::getUserRepository()->getValid())) {
             $user_id = Core::get_global('user')->id;
         }
         $order = ($newest) ? 'DESC' : 'ASC';
@@ -766,5 +766,15 @@ class Stats
         global $dic;
 
         return $dic->get(UserActivityPosterInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }

@@ -24,18 +24,22 @@ declare(strict_types=0);
 
 namespace Ampache\Module\User;
 
-use Ampache\Model\User;
 use Ampache\Module\Util\Mailer;
+use Ampache\Repository\UserRepositoryInterface;
 use PHPMailer\PHPMailer\Exception;
 
 final class NewPasswordSender implements NewPasswordSenderInterface
 {
     private PasswordGeneratorInterface $passwordGenerator;
 
+    private UserRepositoryInterface $userRepository;
+
     public function __construct(
-        PasswordGeneratorInterface $passwordGenerator
+        PasswordGeneratorInterface $passwordGenerator,
+        UserRepositoryInterface $userRepository
     ) {
         $this->passwordGenerator = $passwordGenerator;
+        $this->userRepository    = $userRepository;
     }
 
     /**
@@ -46,10 +50,10 @@ final class NewPasswordSender implements NewPasswordSenderInterface
         string $current_ip
     ): bool {
         // get the Client and set the new password
-        $client = User::get_from_email($email);
+        $client = $this->userRepository->findByEmail($email);
 
         // do not do anything if they aren't a user
-        if (!$client) {
+        if ($client === null) {
             return false;
         }
 

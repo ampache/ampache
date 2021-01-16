@@ -33,6 +33,7 @@ use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * Class HandshakeMethod
@@ -83,7 +84,7 @@ final class HandshakeMethod
         $user_id = -1;
         // Grab the correct userid
         if (!$username) {
-            $client = User::get_from_apikey($passphrase);
+            $client = static::getUserRepository()->findByApiKey(trim($passphrase));
             if ($client) {
                 $user_id = $client->id;
             }
@@ -183,5 +184,15 @@ final class HandshakeMethod
         Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), '4701', self::ACTION, 'account', $input['api_format']);
 
         return false;
+    }
+
+    /**
+     * @deprecated inject by constructor
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }

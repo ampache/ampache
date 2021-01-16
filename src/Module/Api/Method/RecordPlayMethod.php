@@ -28,6 +28,7 @@ use Ampache\Model\Song;
 use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Session;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * Class RecordPlayMethod
@@ -66,7 +67,7 @@ final class RecordPlayMethod
         $object_id = (int) $input['id'];
         $user_id   = (isset($input['user'])) ? (int) $input['user'] : $api_user->id;
         $user      = (isset($input['user'])) ? new User($user_id) : $api_user;
-        $valid     = in_array($user->id, User::get_valid_users());
+        $valid     = in_array($user->id, static::getUserRepository()->getValid());
         $date      = (is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
 
         // validate supplied user
@@ -101,5 +102,15 @@ final class RecordPlayMethod
         Session::extend($input['auth']);
 
         return true;
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }
