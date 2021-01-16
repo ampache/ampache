@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import SVG from 'react-inlinesvg';
 import { PLAYERSTATUS } from '~enum/PlayerStatus';
 import { MusicContext } from '~Contexts/MusicContext';
