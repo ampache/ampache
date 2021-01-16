@@ -2,11 +2,19 @@ build:
     environment:
         php:
             version: "7.4"
+    nodes:
+        coverage:
+            tests:
+                override:
+                    - command: XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-clover build/coverage-clover.xml tests
+                      coverage:
+                        file: build/coverage-clover.xml
+                        format: clover
 filter:
     excluded_paths:
         - 'public/lib/components/*'
         - 'vendor/*'
-        - 'modules/*'
+        - 'tests'
     paths: {  }
 tools:
     php_mess_detector:
@@ -15,7 +23,6 @@ tools:
             excluded_paths:
                 - 'public/lib/components/*'
                 - 'vendor/*'
-                - 'modules/*'
                 - 'public/themes/*'
                 - '.github.*'
             paths: {  }
@@ -31,7 +38,6 @@ tools:
             excluded_paths:
                 - 'public/lib/components/*'
                 - 'vendor/*'
-                - 'modules/*'
             paths: {  }
     php_analyzer:
         enabled: true
@@ -40,12 +46,10 @@ tools:
         dependency_paths:
             - 'public/lib/components/*'
             - 'vendor/*'
-            - 'modules/*'
         filter:
             excluded_paths:
                 - 'public/lib/components/*'
                 - 'vendor/*'
-                - 'modules/*'
                 - 'public/themes/*'
             paths: {  }
         path_configs: {  }
@@ -60,14 +64,12 @@ tools:
             excluded_paths:
                 - 'public/lib/components/*'
                 - 'vendor/*'
-                - 'modules/*'
             paths: {  }
     php_loc:
         enabled: true
         excluded_dirs:
             - 'public/lib/components/*'
             - 'vendor/*'
-            - 'modules/*'
     php_cpd:
         enabled: true
         excluded_dirs: {  }
@@ -75,5 +77,4 @@ tools:
             excluded_paths:
                 - 'public/lib/components/*'
                 - 'vendor/*'
-                - 'modules/*'
             paths: {  }
