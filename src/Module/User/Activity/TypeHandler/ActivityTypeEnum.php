@@ -22,19 +22,11 @@
 
 declare(strict_types=1);
 
-namespace Ampache\Repository;
+namespace Ampache\Module\User\Activity\TypeHandler;
 
-use function DI\autowire;
-
-return [
-    AccessRepositoryInterface::class => autowire(AccessRepository::class),
-    AlbumRepositoryInterface::class => autowire(AlbumRepository::class),
-    SongRepositoryInterface::class => autowire(SongRepository::class),
-    LabelRepositoryInterface::class => autowire(LabelRepository::class),
-    ArtistRepositoryInterface::class => autowire(ArtistRepository::class),
-    LicenseRepositoryInterface::class => autowire(LicenseRepository::class),
-    LiveStreamRepositoryInterface::class => autowire(LiveStreamRepository::class),
-    ShoutRepositoryInterface::class => autowire(ShoutRepository::class),
-    UserActivityRepositoryInterface::class => autowire(UserActivityRepository::class),
-    WantedRepositoryInterface::class => autowire(WantedRepository::class),
-];
+abstract class ActivityTypeEnum
+{
+    public const TYPE_SONG   = 'song';
+    public const TYPE_ALBUM  = 'album';
+    public const TYPE_ARTIST = 'artist';
+}

@@ -35,7 +35,7 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
-use Ampache\Repository\UseractivityRepositoryInterface;
+use Ampache\Repository\UserActivityRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -55,7 +55,7 @@ final class AlbumDeleter implements AlbumDeleterInterface
 
     private SongDeleterInterface $songDeleter;
 
-    private UseractivityRepositoryInterface $useractivityRepository;
+    private UserActivityRepositoryInterface $useractivityRepository;
 
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
@@ -64,7 +64,7 @@ final class AlbumDeleter implements AlbumDeleterInterface
         SongRepositoryInterface $songRepository,
         ShoutRepositoryInterface $shoutRepository,
         SongDeleterInterface $songDeleter,
-        UseractivityRepositoryInterface $useractivityRepository
+        UserActivityRepositoryInterface $useractivityRepository
     ) {
         $this->albumRepository        = $albumRepository;
         $this->modelFactory           = $modelFactory;

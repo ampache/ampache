@@ -20,17 +20,12 @@
  *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\User\Activity\TypeHandler;
 
-namespace Ampache\Module\User;
-
-use function DI\autowire;
-
-return [
-    PasswordGeneratorInterface::class => autowire(PasswordGenerator::class),
-    NewPasswordSenderInterface::class => autowire(NewPasswordSender::class),
-    UserStateTogglerInterface::class => autowire(UserStateToggler::class),
-    Activity\UserActivityRendererInterface::class => autowire(Activity\UserActivityRenderer::class),
-    Activity\UserActivityPosterInterface::class => autowire(Activity\UserActivityPoster::class),
-    Activity\TypeHandler\ActivityTypeHandlerMapperInterface::class => autowire(Activity\TypeHandler\ActivityTypeHandlerMapper::class),
-];
+/**
+ * Maps a certain object type to a type handler class
+ */
+interface ActivityTypeHandlerMapperInterface
+{
+    public function map(string $object_type): ActivityTypeHandlerInterface;
+}

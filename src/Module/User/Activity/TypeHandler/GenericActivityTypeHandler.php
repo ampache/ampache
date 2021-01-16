@@ -20,42 +20,35 @@
  *
  */
 
-namespace Ampache\Repository;
+declare(strict_types=1);
 
-interface UseractivityRepositoryInterface
+namespace Ampache\Module\User\Activity\TypeHandler;
+
+use Ampache\Repository\UserActivityRepositoryInterface;
+
+class GenericActivityTypeHandler implements ActivityTypeHandlerInterface
 {
-    /**
-     * @return int[]
-     */
-    public function getFriendsActivities(
-        int $user_id,
-        int $limit = 0,
-        int $since = 0
-    ): array;
+    private UserActivityRepositoryInterface $userActivityRepository;
 
-    /**
-     * @return int[]
-     */
-    public function getActivities(
-        int $user_id,
-        int $limit = 0,
-        int $since = 0
-    ): array;
+    public function __construct(
+        UserActivityRepositoryInterface $userActivityRepository
+    ) {
+        $this->userActivityRepository = $userActivityRepository;
+    }
 
-    /**
-     * Delete activity by date
-     */
-    public function deleteByDate(
-        int $date,
+    public function registerActivity(
+        int $objectId,
+        string $objectType,
         string $action,
-        int $user_id = 0
-    ): void;
-
-    /**
-     * Remove activities for items that no longer exist.
-     */
-    public function collectGarbage(
-        ?string $object_type = null,
-        ?int $object_id = null
-    ): void;
+        int $userId,
+        int $date
+    ): void {
+        $this->userActivityRepository->registerGenericEntry(
+            $userId,
+            $action,
+            $objectType,
+            $objectId,
+            $date
+        );
+    }
 }

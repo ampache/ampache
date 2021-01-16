@@ -30,8 +30,9 @@ use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Song;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\UseractivityRepositoryInterface;
+use Ampache\Repository\UserActivityRepositoryInterface;
 use PDOStatement;
 use Ampache\Model\User;
 use Ampache\Model\Useractivity;
@@ -151,7 +152,7 @@ class Stats
         $db_results = Dba::write($sql, array($type, $object_id, $count_type, $date, $user, $agent, $latitude, $longitude, $geoname));
 
         if (in_array($type, array('song', 'video')) && $count_type === 'stream' && $user > 0 && $agent !== 'debug') {
-            Useractivity::post_activity($user, 'play', $type, $object_id, $date);
+            static::getUserActivityPoster()->post((int) $user, 'play', $type, (int) $object_id, (int) $date);
         }
 
         if (!$db_results) {
@@ -385,11 +386,11 @@ class Stats
         return true;
     } // has_played_history
 
-    private static function getUseractivityRepository(): UseractivityRepositoryInterface
+    private static function getUseractivityRepository(): UserActivityRepositoryInterface
     {
         global $dic;
 
-        return $dic->get(UseractivityRepositoryInterface::class);
+        return $dic->get(UserActivityRepositoryInterface::class);
     }
 
     /**
@@ -756,4 +757,14 @@ class Stats
 
         return $items;
     } // get_newest
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserActivityPoster(): UserActivityPosterInterface
+    {
+        global $dic;
+
+        return $dic->get(UserActivityPosterInterface::class);
+    }
 }

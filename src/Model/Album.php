@@ -32,7 +32,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
-use Ampache\Repository\UseractivityRepositoryInterface;
+use Ampache\Repository\UserActivityRepositoryInterface;
 use Exception;
 use PDOStatement;
 
@@ -1039,10 +1039,10 @@ class Album extends database_object implements library_item
     /**
      * @deprecated
      */
-    private function getUseractivityRepository(): UseractivityRepositoryInterface
+    private function getUseractivityRepository(): UserActivityRepositoryInterface
     {
         global $dic;
 
-        return $dic->get(UseractivityRepositoryInterface::class);
+        return $dic->get(UserActivityRepositoryInterface::class);
     }
 }

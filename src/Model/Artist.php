@@ -33,7 +33,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
-use Ampache\Repository\UseractivityRepositoryInterface;
+use Ampache\Repository\UserActivityRepositoryInterface;
 use PDOStatement;
 
 class Artist extends database_object implements library_item, GarbageCollectibleInterface
@@ -898,10 +898,10 @@ class Artist extends database_object implements library_item, GarbageCollectible
     /**
      * @deprecated
      */
-    private function getUseractivityRepository(): UseractivityRepositoryInterface
+    private function getUseractivityRepository(): UserActivityRepositoryInterface
     {
         global $dic;
 
-        return $dic->get(UseractivityRepositoryInterface::class);
+        return $dic->get(UserActivityRepositoryInterface::class);
     }
 }

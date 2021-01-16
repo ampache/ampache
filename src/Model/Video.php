@@ -33,7 +33,7 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Repository\ShoutRepositoryInterface;
-use Ampache\Repository\UseractivityRepositoryInterface;
+use Ampache\Repository\UserActivityRepositoryInterface;
 
 class Video extends database_object implements Media, library_item, GarbageCollectibleInterface
 {
@@ -1164,10 +1164,10 @@ class Video extends database_object implements Media, library_item, GarbageColle
     /**
      * @deprecated
      */
-    private function getUseractivityRepository(): UseractivityRepositoryInterface
+    private function getUseractivityRepository(): UserActivityRepositoryInterface
     {
         global $dic;
 
-        return $dic->get(UseractivityRepositoryInterface::class);
+        return $dic->get(UserActivityRepositoryInterface::class);
     }
 }

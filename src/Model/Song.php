@@ -30,6 +30,7 @@ use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
+use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\Metadata\Metadata;
@@ -509,7 +510,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $song_id = (int)Dba::insert_id();
 
         if ($user_upload) {
-            Useractivity::post_activity((int)($user_upload), 'upload', 'song', $song_id, time());
+            static::getUserActivityPoster()->post((int) $user_upload, 'upload', 'song', (int) $song_id, time());
         }
 
         // Allow scripts to populate new tags when injecting user uploads
@@ -2372,5 +2373,15 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         global $dic;
 
         return $dic->get(SongDeleterInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserActivityPoster(): UserActivityPosterInterface
+    {
+        global $dic;
+
+        return $dic->get(UserActivityPosterInterface::class);
     }
 }

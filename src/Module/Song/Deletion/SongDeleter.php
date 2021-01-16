@@ -27,7 +27,7 @@ use Ampache\Model\Song;
 use Ampache\Model\Userflag;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
-use Ampache\Repository\UseractivityRepositoryInterface;
+use Ampache\Repository\UserActivityRepositoryInterface;
 
 final class SongDeleter implements SongDeleterInterface
 {
@@ -35,12 +35,12 @@ final class SongDeleter implements SongDeleterInterface
 
     private SongRepositoryInterface $songRepository;
 
-    private UseractivityRepositoryInterface $useractivityRepository;
+    private UserActivityRepositoryInterface $useractivityRepository;
 
     public function __construct(
         ShoutRepositoryInterface $shoutRepository,
         SongRepositoryInterface $songRepository,
-        UseractivityRepositoryInterface $useractivityRepository
+        UserActivityRepositoryInterface $useractivityRepository
     ) {
         $this->shoutRepository        = $shoutRepository;
         $this->songRepository         = $songRepository;

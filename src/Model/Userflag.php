@@ -29,6 +29,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Exception;
 use PDOStatement;
 
@@ -211,7 +212,7 @@ class Userflag extends database_object
             $params = array($this->id, $this->type, $user_id, $date);
             parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, array(1, $date));
 
-            Useractivity::post_activity($user_id, 'userflag', $this->type, $this->id, time());
+            static::getUserActivityPoster()->post((int) $user_id, 'userflag', $this->type, (int) $this->id, time());
         }
         Dba::write($sql, $params);
 
@@ -288,7 +289,7 @@ class Userflag extends database_object
                 $sql    = "REPLACE INTO `user_flag` " . "(`object_id`, `object_type`, `user`, `date`) " . "VALUES (?, ?, ?, ?)";
                 $params = array($album_id, 'album', $user_id, time());
 
-                Useractivity::post_activity($user_id, 'userflag', 'album', $album_id, time());
+                static::getUserActivityPoster()->post((int) $user_id, 'userflag', 'album', (int) $album_id, time());
                 Dba::write($sql, $params);
             }
 
@@ -420,5 +421,15 @@ class Userflag extends database_object
         $sql = "UPDATE IGNORE `user_flag` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserActivityPoster(): UserActivityPosterInterface
+    {
+        global $dic;
+
+        return $dic->get(UserActivityPosterInterface::class);
     }
 }

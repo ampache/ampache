@@ -20,17 +20,18 @@
  *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\User\Activity;
 
-namespace Ampache\Module\User;
-
-use function DI\autowire;
-
-return [
-    PasswordGeneratorInterface::class => autowire(PasswordGenerator::class),
-    NewPasswordSenderInterface::class => autowire(NewPasswordSender::class),
-    UserStateTogglerInterface::class => autowire(UserStateToggler::class),
-    Activity\UserActivityRendererInterface::class => autowire(Activity\UserActivityRenderer::class),
-    Activity\UserActivityPosterInterface::class => autowire(Activity\UserActivityPoster::class),
-    Activity\TypeHandler\ActivityTypeHandlerMapperInterface::class => autowire(Activity\TypeHandler\ActivityTypeHandlerMapper::class),
-];
+interface UserActivityPosterInterface
+{
+    /**
+     * Registers a certain user action for certain object types
+     */
+    public function post(
+        int $userId,
+        string $action,
+        string $objectType,
+        int $objectId,
+        int $date
+    ): void;
+}

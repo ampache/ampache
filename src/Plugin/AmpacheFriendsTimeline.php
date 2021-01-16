@@ -32,7 +32,7 @@ use Ampache\Model\Useractivity;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\Activity\UserActivityRendererInterface;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\UseractivityRepositoryInterface;
+use Ampache\Repository\UserActivityRepositoryInterface;
 
 class AmpacheFriendsTimeline
 {
@@ -152,11 +152,11 @@ class AmpacheFriendsTimeline
     /**
      * @deprecated
      */
-    private function getUseractivityRepository(): UseractivityRepositoryInterface
+    private function getUseractivityRepository(): UserActivityRepositoryInterface
     {
         global $dic;
 
-        return $dic->get(UseractivityRepositoryInterface::class);
+        return $dic->get(UserActivityRepositoryInterface::class);
     }
 
     /**

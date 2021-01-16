@@ -27,6 +27,7 @@ namespace Ampache\Model;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
+use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
@@ -1698,7 +1699,7 @@ class User extends database_object
             $sql      = "INSERT INTO `user_follower` (`user`, `follow_user`, `follow_date`) VALUES (?, ?, ?)";
             $params[] = time();
 
-            Useractivity::post_activity($this->id, 'follow', 'user', $user_id, time());
+            static::getUserActivityPoster()->post($this->getId(), 'follow', 'user', (int) $user_id, time());
         }
 
         return Dba::write($sql, $params);
@@ -1797,5 +1798,15 @@ class User extends database_object
         }
 
         return true;
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserActivityPoster(): UserActivityPosterInterface
+    {
+        global $dic;
+
+        return $dic->get(UserActivityPosterInterface::class);
     }
 }

@@ -31,7 +31,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\User\Activity\UserActivityRendererInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\UseractivityRepositoryInterface;
+use Ampache\Repository\UserActivityRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -43,14 +43,14 @@ final class ShowUserAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
-    private UseractivityRepositoryInterface $useractivityRepository;
+    private UserActivityRepositoryInterface $useractivityRepository;
 
     private UserActivityRendererInterface $userActivityRenderer;
 
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        UseractivityRepositoryInterface $useractivityRepository,
+        UserActivityRepositoryInterface $useractivityRepository,
         UserActivityRendererInterface $userActivityRenderer
     ) {
         $this->ui                     = $ui;

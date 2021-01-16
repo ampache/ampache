@@ -37,7 +37,7 @@ use Ampache\Model\Video;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
-use Ampache\Repository\UseractivityRepositoryInterface;
+use Ampache\Repository\UserActivityRepositoryInterface;
 
 /**
  * This is a wrapper for all of the different database cleaning
@@ -49,12 +49,12 @@ final class CatalogGarbageCollector implements CatalogGarbageCollectorInterface
 
     private ShoutRepositoryInterface $shoutRepository;
 
-    private UseractivityRepositoryInterface $useractivityRepository;
+    private UserActivityRepositoryInterface $useractivityRepository;
 
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
         ShoutRepositoryInterface $shoutRepository,
-        UseractivityRepositoryInterface $useractivityRepository
+        UserActivityRepositoryInterface $useractivityRepository
     ) {
         $this->albumRepository        = $albumRepository;
         $this->shoutRepository        = $shoutRepository;

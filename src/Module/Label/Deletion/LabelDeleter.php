@@ -29,7 +29,7 @@ use Ampache\Model\Rating;
 use Ampache\Model\Userflag;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
-use Ampache\Repository\UseractivityRepositoryInterface;
+use Ampache\Repository\UserActivityRepositoryInterface;
 
 final class LabelDeleter implements LabelDeleterInterface
 {
@@ -37,12 +37,12 @@ final class LabelDeleter implements LabelDeleterInterface
 
     private LabelRepositoryInterface $labelRepository;
 
-    private UseractivityRepositoryInterface $useractivityRepository;
+    private UserActivityRepositoryInterface $useractivityRepository;
 
     public function __construct(
         ShoutRepositoryInterface $shoutRepository,
         LabelRepositoryInterface $labelRepository,
-        UseractivityRepositoryInterface $useractivityRepository
+        UserActivityRepositoryInterface $useractivityRepository
     ) {
         $this->shoutRepository        = $shoutRepository;
         $this->labelRepository        = $labelRepository;

@@ -26,6 +26,7 @@ namespace Ampache\Model;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -209,7 +210,7 @@ class Shoutbox
         Dba::write($sql,
             array($user, $date, $comment, $sticky, $data['object_id'], $data['object_type'], $data['data']));
 
-        Useractivity::post_activity($user, 'shout', $data['object_type'], $data['object_id'], time());
+        static::getUserActivityPoster()->post((int) $user, 'shout', $data['object_type'], (int) $data['object_id'], time());
 
         $insert_id = Dba::insert_id();
 
@@ -350,5 +351,15 @@ class Shoutbox
         $sql = "UPDATE `user_shout` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserActivityPoster(): UserActivityPosterInterface
+    {
+        global $dic;
+
+        return $dic->get(UserActivityPosterInterface::class);
     }
 }

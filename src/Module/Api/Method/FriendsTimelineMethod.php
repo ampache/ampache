@@ -30,7 +30,7 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
-use Ampache\Repository\UseractivityRepositoryInterface;
+use Ampache\Repository\UserActivityRepositoryInterface;
 
 /**
  * Class FriendsTimelineMethod
@@ -86,10 +86,10 @@ final class FriendsTimelineMethod
         return true;
     }
 
-    private static function getUseractivityRepository(): UseractivityRepositoryInterface
+    private static function getUseractivityRepository(): UserActivityRepositoryInterface
     {
         global $dic;
 
-        return $dic->get(UseractivityRepositoryInterface::class);
+        return $dic->get(UserActivityRepositoryInterface::class);
     }
 }

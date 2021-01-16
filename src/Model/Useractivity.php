@@ -25,8 +25,6 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Config\AmpConfig;
 use PDOStatement;
 
 class Useractivity extends database_object
@@ -88,109 +86,6 @@ class Useractivity extends database_object
         }
 
         return true;
-    }
-
-    /**
-     * post_activity
-     * @param integer $user_id
-     * @param string $action
-     * @param string $object_type
-     * @param integer $object_id
-     * @param integer $date
-     * @return PDOStatement|boolean
-     */
-    public static function post_activity($user_id, $action, $object_type, $object_id, $date)
-    {
-        if ($object_type === 'song') {
-            // insert fields to be more like last.fm activity stats
-            $sql  = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`," . " `name_track`, `name_artist`, `name_album`, `mbid_track`, `mbid_artist`, `mbid_album`)" . " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $song = new Song($object_id);
-            $song->format();
-            $name_song   = $song->f_title;
-            $name_artist = $song->f_artist;
-            $name_album  = $song->f_album;
-            $mbid_song   = $song->mbid;
-            $mbid_artist = $song->artist_mbid;
-            $mbid_album  = $song->album_mbid;
-            debug_event('useractivity.class',
-                'post_activity: ' . $action . ' ' . $object_type . ' by user: ' . $user_id . ': {' . $object_id . '}',
-                5);
-
-            if ($name_song && $name_artist && $name_album) {
-                return Dba::write($sql, array(
-                    $user_id,
-                    $action,
-                    $object_type,
-                    $object_id,
-                    $date,
-                    $name_song,
-                    $name_artist,
-                    $name_album,
-                    $mbid_song,
-                    $mbid_artist,
-                    $mbid_album
-                ));
-            }
-            $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
-
-            return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date));
-        }
-        if ($object_type === 'artist') {
-            // insert fields to be more like last.fm activity stats
-            $sql    = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`, `name_artist`, `mbid_artist`)" . " VALUES (?, ?, ?, ?, ?, ?, ?)";
-            $artist = new Artist($object_id);
-            $artist->format();
-            $name_artist = $artist->f_name;
-            $mbid_artist = $artist->mbid;
-            debug_event('useractivity.class',
-                'post_activity: ' . $action . ' ' . $object_type . ' by user: ' . $user_id . ': {' . $object_id . '}',
-                5);
-
-            if ($name_artist) {
-                return Dba::write($sql,
-                    array($user_id, $action, $object_type, $object_id, $date, $name_artist, $mbid_artist));
-            }
-            $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
-
-            return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date));
-        }
-        if ($object_type === 'album') {
-            // insert fields to be more like last.fm activity stats
-            $sql   = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`, `name_artist`, `name_album`, `mbid_artist`, `mbid_album`)" . " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $album = new Album($object_id);
-            $album->format();
-            $name_artist = $album->f_album_artist_name;
-            $name_album  = $album->f_title;
-            $mbid_album  = $album->mbid;
-            $mbid_artist = $album->mbid_group;
-
-            if ($name_artist && $name_album) {
-                debug_event('useractivity.class',
-                    'post_activity: ' . $action . ' ' . $object_type . ' by user: ' . $user_id . ': {' . $object_id . '}',
-                    5);
-
-                return Dba::write($sql, array(
-                    $user_id,
-                    $action,
-                    $object_type,
-                    $object_id,
-                    $date,
-                    $name_artist,
-                    $name_album,
-                    $mbid_artist,
-                    $mbid_album
-                ));
-            }
-            $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
-
-            return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date));
-        }
-        // This is probably a good feature to keep by default
-        debug_event('useractivity.class',
-            'post_activity: ' . $action . ' ' . $object_type . ' by user: ' . $user_id . ': {' . $object_id . '}', 5);
-        $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
-
-        return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date));
     }
 
     /**
