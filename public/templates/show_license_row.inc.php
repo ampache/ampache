@@ -20,11 +20,14 @@
  *
  */
 
+use Ampache\Model\License;
 use Ampache\Module\Util\Ui;
+
+/** @var License $libitem */
 
 ?>
 <tr id="license_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
-    <td class="cel_name"><?php echo $libitem->f_link; ?></td>
+    <td class="cel_name"><?php echo $libitem->getLinkFormatted(); ?></td>
     <td class="cel_description"><?php echo $libitem->description; ?></td>
     <td class="cel_action">
         <a href="<?php echo $web_path; ?>/admin/license.php?action=show_edit&license_id=<?php echo $libitem->id; ?>">

@@ -1761,8 +1761,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         if (AmpConfig::get('licensing') && $this->license !== null) {
             $license = new License($this->license);
-            $license->format();
-            $this->f_license = $license->f_link;
+
+            $this->f_license = $license->getLinkFormatted();
         }
     } // format
 

@@ -89,12 +89,16 @@ class License
         return true;
     } // has_info
 
-    /**
-     * format
-     * this function takes the object and reformats some values
-     */
-    public function format()
+    public function getLinkFormatted(): string
     {
-        $this->f_link = ($this->external_link) ? '<a href="' . $this->external_link . '">' . $this->name . '</a>' : $this->name;
-    } // format
+        if ($this->external_link) {
+            return sprintf(
+                '<a href="%s">%s</a>',
+                $this->external_link,
+                $this->name
+            );
+        }
+
+        return $this->name;
+    }
 }
