@@ -617,9 +617,28 @@ class Podcast extends database_object implements library_item
 
         // create path if it doesn't exist
         if (!is_dir($catalog->path . DIRECTORY_SEPARATOR . $dirname)) {
-            Catalog::create_catalog_path($catalog->path . DIRECTORY_SEPARATOR . $dirname);
+            static::create_catalog_path($catalog->path . DIRECTORY_SEPARATOR . $dirname);
         }
 
         return $catalog->path . DIRECTORY_SEPARATOR . $dirname;
+    }
+
+    /**
+     * create_catalog_path
+     * This returns the catalog types that are available
+     * @param string $path
+     * @return boolean
+     */
+    private static function create_catalog_path($path)
+    {
+        if (!is_dir($path)) {
+            if (mkdir($path) === false) {
+                debug_event('podcast.class', 'Cannot create directory ' . $path, 2);
+
+                return false;
+            }
+        }
+
+        return true;
     }
 }

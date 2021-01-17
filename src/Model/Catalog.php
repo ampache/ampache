@@ -384,25 +384,6 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * create_catalog_path
-     * This returns the catalog types that are available
-     * @param string $path
-     * @return boolean
-     */
-    public static function create_catalog_path($path)
-    {
-        if (!is_dir($path)) {
-            if (mkdir($path) === false) {
-                debug_event('podcast.class', 'Cannot create directory ' . $path, 2);
-
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * get_catalog_types
      * This returns the catalog types that are available
      * @return string[]
