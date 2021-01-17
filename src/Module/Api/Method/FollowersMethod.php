@@ -30,6 +30,7 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
+use Ampache\Repository\UserFollowerRepositoryInterface;
 
 /**
  * Class FollowersMethod
@@ -72,7 +73,7 @@ final class FollowersMethod
             return false;
         }
 
-        $users = $user->get_followers();
+        $users = static::getUserFollowerRepository()->getFollowers($user->getId());
         if (empty($users)) {
             Api::empty('user', $input['api_format']);
 
@@ -90,5 +91,15 @@ final class FollowersMethod
         Session::extend($input['auth']);
 
         return true;
+    }
+
+    /**
+     * @deprecated inject by constructor
+     */
+    private static function getUserFollowerRepository(): UserFollowerRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserFollowerRepositoryInterface::class);
     }
 }

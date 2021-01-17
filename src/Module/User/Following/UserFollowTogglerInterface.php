@@ -20,19 +20,9 @@
  *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\User\Following;
 
-namespace Ampache\Module\User;
-
-use Ampache\Module\User\Following\UserFollowToggler;
-use function DI\autowire;
-
-return [
-    PasswordGeneratorInterface::class => autowire(PasswordGenerator::class),
-    NewPasswordSenderInterface::class => autowire(NewPasswordSender::class),
-    UserStateTogglerInterface::class => autowire(UserStateToggler::class),
-    Activity\UserActivityRendererInterface::class => autowire(Activity\UserActivityRenderer::class),
-    Activity\UserActivityPosterInterface::class => autowire(Activity\UserActivityPoster::class),
-    Activity\TypeHandler\ActivityTypeHandlerMapperInterface::class => autowire(Activity\TypeHandler\ActivityTypeHandlerMapper::class),
-    Following\UserFollowTogglerInterface::class => autowire(UserFollowToggler::class),
-];
+interface UserFollowTogglerInterface
+{
+    public function toggle(int $userId, int $followingUserId): void;
+}

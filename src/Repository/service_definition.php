@@ -39,4 +39,5 @@ return [
     UserActivityRepositoryInterface::class => autowire(UserActivityRepository::class),
     WantedRepositoryInterface::class => autowire(WantedRepository::class),
     IpHistoryRepositoryInterface::class => autowire(IpHistoryRepository::class),
+    UserFollowerRepositoryInterface::class => autowire(UserFollowerRepository::class),
 ];

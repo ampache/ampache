@@ -32,6 +32,7 @@ use Ampache\Module\User\Activity\UserActivityRendererInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Ampache\Repository\UserFollowerRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -47,16 +48,20 @@ final class ShowUserAction implements ApplicationActionInterface
 
     private UserActivityRendererInterface $userActivityRenderer;
 
+    private UserFollowerRepositoryInterface $userFollowerRepository;
+
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         UserActivityRepositoryInterface $useractivityRepository,
-        UserActivityRendererInterface $userActivityRenderer
+        UserActivityRendererInterface $userActivityRenderer,
+        UserFollowerRepositoryInterface $userFollowerRepository
     ) {
         $this->ui                     = $ui;
         $this->modelFactory           = $modelFactory;
         $this->useractivityRepository = $useractivityRepository;
         $this->userActivityRenderer   = $userActivityRenderer;
+        $this->userFollowerRepository = $userFollowerRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -68,13 +73,17 @@ final class ShowUserAction implements ApplicationActionInterface
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $client = $this->modelFactory->createUser((int) Core::get_request('user_id'));
+        $userId = (int) $request->getQueryParams()['user_id'] ?? 0;
+
+        $client = $this->modelFactory->createUser($userId);
 
         $this->ui->show(
             'show_user.inc.php',
             [
                 'client' => $client,
-                'activities' => $this->useractivityRepository->getActivities($client->getId()),
+                'activities' => $this->useractivityRepository->getActivities($userId),
+                'followers' => $this->userFollowerRepository->getFollowers($userId),
+                'following' => $this->userFollowerRepository->getFollowing($userId),
                 'userActivityRenderer' => $this->userActivityRenderer
             ]
         );

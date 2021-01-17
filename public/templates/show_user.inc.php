@@ -194,20 +194,18 @@ if ($client->f_avatar) {
         <?php if (AmpConfig::get('sociable')) { ?>
         <div id="following" class="tab_content">
         <?php
-            $following_ids         = $client->get_following();
             $browse                = new Browse();
             $browse->set_type('user');
             $browse->set_simple_browse(false);
-            $browse->show_objects($following_ids);
+            $browse->show_objects($following);
             $browse->store(); ?>
         </div>
         <div id="followers" class="tab_content">
         <?php
-            $follower_ids         = $client->get_followers();
             $browse               = new Browse();
             $browse->set_type('user');
             $browse->set_simple_browse(false);
-            $browse->show_objects($follower_ids);
+            $browse->show_objects($followers);
             $browse->store(); ?>
         </div>
             <div id="timeline" class="tab_content">

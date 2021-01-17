@@ -20,19 +20,36 @@
  *
  */
 
-declare(strict_types=1);
+namespace Ampache\Repository;
 
-namespace Ampache\Module\User;
+interface UserFollowerRepositoryInterface
+{
+    /**
+     * Get users following the user
+     *
+     * @return int[]
+     */
+    public function getFollowers(int $userId): array;
 
-use Ampache\Module\User\Following\UserFollowToggler;
-use function DI\autowire;
+    /**
+     * Get users followed by this user
+     *
+     * @return int[]
+     */
+    public function getFollowing(int $userId): array;
 
-return [
-    PasswordGeneratorInterface::class => autowire(PasswordGenerator::class),
-    NewPasswordSenderInterface::class => autowire(NewPasswordSender::class),
-    UserStateTogglerInterface::class => autowire(UserStateToggler::class),
-    Activity\UserActivityRendererInterface::class => autowire(Activity\UserActivityRenderer::class),
-    Activity\UserActivityPosterInterface::class => autowire(Activity\UserActivityPoster::class),
-    Activity\TypeHandler\ActivityTypeHandlerMapperInterface::class => autowire(Activity\TypeHandler\ActivityTypeHandlerMapper::class),
-    Following\UserFollowTogglerInterface::class => autowire(UserFollowToggler::class),
-];
+    /**
+     * Get if an user is followed by another user
+     */
+    public function isFollowedBy(int $userId, int $followingUserId): bool;
+
+    public function add(
+        int $userId,
+        int $followingUserId
+    ): void;
+
+    public function delete(
+        int $userId,
+        int $followingUserId
+    ): void;
+}

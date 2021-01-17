@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=0);
-
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -23,15 +21,26 @@ declare(strict_types=0);
  *
  */
 
+declare(strict_types=0);
+
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Model\User;
+use Ampache\Module\User\Following\UserFollowTogglerInterface;
 
 final class UserAjaxHandler implements AjaxHandlerInterface
 {
+    private UserFollowTogglerInterface $followToggler;
+
+    public function __construct(
+        UserFollowTogglerInterface $followToggler
+    ) {
+        $this->followToggler = $followToggler;
+    }
+
     public function handle(): void
     {
         $user_id = (int) (Core::get_request('user_id'));
@@ -42,7 +51,10 @@ final class UserAjaxHandler implements AjaxHandlerInterface
                 if (Access::check('interface', 25) && AmpConfig::get('sociable')) {
                     $fuser = new User($user_id);
                     if ($fuser->id > 0 && $user_id !== (int) Core::get_global('user')->id) {
-                        Core::get_global('user')->toggle_follow($user_id);
+                        $this->followToggler->toggle(
+                            $user_id,
+                            Core::get_global('user')->getId()
+                        );
                         $results['button_follow_' . $user_id] = $fuser->get_display_follow();
                     }
                 }

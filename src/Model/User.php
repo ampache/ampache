@@ -34,6 +34,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Repository\IpHistoryRepositoryInterface;
+use Ampache\Repository\UserFollowerRepositoryInterface;
 use Exception;
 use PDOStatement;
 
@@ -1365,92 +1366,6 @@ class User extends database_object
     } // is_xmlrpc
 
     /**
-     * get_followers
-     * Get users following this user
-     * @return integer[]
-     */
-    public function get_followers()
-    {
-        $sql        = "SELECT `user` FROM `user_follower` WHERE `follow_user` = ?";
-        $db_results = Dba::read($sql, array($this->id));
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['user'];
-        }
-
-        return $results;
-    }
-
-    /**
-     * get_following
-     * Get users followed by this user
-     * @return integer[]
-     */
-    public function get_following()
-    {
-        $sql        = "SELECT `follow_user` FROM `user_follower` WHERE `user` = ?";
-        $db_results = Dba::read($sql, array($this->id));
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['follow_user'];
-        }
-
-        return $results;
-    }
-
-    /**
-     * is_followed_by
-     * Get if an user is followed by this user
-     * @param integer $user_id
-     * @return boolean
-     */
-    public function is_followed_by($user_id)
-    {
-        $sql        = "SELECT `id` FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?";
-        $db_results = Dba::read($sql, array($user_id, $this->id));
-
-        return (Dba::num_rows($db_results) > 0);
-    }
-
-    /**
-     * is_following
-     * Get if this user is following an user
-     * @param integer $user_id
-     * @return boolean
-     */
-    public function is_following($user_id)
-    {
-        $sql        = "SELECT `id` FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?";
-        $db_results = Dba::read($sql, array($this->id, $user_id));
-
-        return (Dba::num_rows($db_results) > 0);
-    }
-
-    /**
-     * toggle_follow
-     * @param integer $user_id
-     * @return PDOStatement|boolean
-     */
-    public function toggle_follow($user_id)
-    {
-        if (!$user_id || $user_id === $this->id) {
-            return false;
-        }
-
-        $params = array($this->id, $user_id);
-        if ($this->is_following($user_id)) {
-            $sql = "DELETE FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?";
-        } else {
-            $sql      = "INSERT INTO `user_follower` (`user`, `follow_user`, `follow_date`) VALUES (?, ?, ?)";
-            $params[] = time();
-
-            static::getUserActivityPoster()->post($this->getId(), 'follow', 'user', (int) $user_id, time());
-        }
-
-        return Dba::write($sql, $params);
-    }
-
-    /**
      * get_display_follow
      * Get html code to display the follow/unfollow link
      * @param integer $user_id
@@ -1466,11 +1381,14 @@ class User extends database_object
             return "";
         }
 
-        $followed = $this->is_followed_by($user_id);
+        $userFollowerRepository = $this->getUserFollowerRepository();
+
+        $followed       = $userFollowerRepository->isFollowedBy($this->getId(), $user_id);
+        $followersCount = count($userFollowerRepository->getFollowers($this->getId()));
 
         $html = "<span id='button_follow_" . $this->id . "' class='followbtn'>";
         $html .= Ajax::text('?page=user&action=flip_follow&user_id=' . $this->id,
-            ($followed ? T_('Unfollow') : T_('Follow')) . ' (' . count($this->get_followers()) . ')',
+            ($followed ? T_('Unfollow') : T_('Follow')) . ' (' . $followersCount . ')',
             'flip_follow_' . $this->id);
         $html .= "</span>";
 
@@ -1541,5 +1459,15 @@ class User extends database_object
         global $dic;
 
         return $dic->get(IpHistoryRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getUserFollowerRepository(): UserFollowerRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserFollowerRepositoryInterface::class);
     }
 }

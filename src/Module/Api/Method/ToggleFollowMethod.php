@@ -28,6 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Session;
+use Ampache\Module\User\Following\UserFollowTogglerInterface;
 
 /**
  * Class ToggleFollowMethod
@@ -61,7 +62,10 @@ final class ToggleFollowMethod
         if (!empty($username)) {
             $user = User::get_from_username($username);
             if ($user !== null) {
-                User::get_from_username(Session::username($input['auth']))->toggle_follow($user->id);
+                static::getUserFollowToggler()->toggle(
+                    $user->getId(),
+                    User::get_from_username(Session::username($input['auth']))->getId()
+                );
                 ob_end_clean();
                 Api::message('follow toggled for: ' . $user->id, $input['api_format']);
             }
@@ -69,5 +73,12 @@ final class ToggleFollowMethod
         Session::extend($input['auth']);
 
         return true;
+    }
+
+    private static function getUserFollowToggler(): UserFollowTogglerInterface
+    {
+        global $dic;
+
+        return $dic->get(UserFollowTogglerInterface::class);
     }
 }
