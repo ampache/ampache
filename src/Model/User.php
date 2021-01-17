@@ -1189,22 +1189,6 @@ class User extends database_object
     } // is_online
 
     /**
-     * get_user_validation
-     * if user exists before activation can be done.
-     * @param string $username
-     * @return mixed
-     */
-    public static function get_validation($username)
-    {
-        $sql        = "SELECT `validation` FROM `user` WHERE `username` = ?";
-        $db_results = Dba::read($sql, array($username));
-
-        $row = Dba::fetch_assoc($db_results);
-
-        return $row['validation'];
-    } // get_validation
-
-    /**
      * get_recently_played
      * This gets the recently played items for this user respecting
      * the limit passed. ger recent by default or oldest if $newest is false.
@@ -1330,19 +1314,6 @@ class User extends database_object
         $art = new Art($this->id, 'user');
         $art->reset();
     }
-
-    /**
-     * activate_user
-     * the user from public_registration
-     * @param string $username
-     */
-    public static function activate_user($username)
-    {
-        $username = Dba::escape($username);
-
-        $sql = "UPDATE `user` SET `disabled`='0' WHERE `username` = ?";
-        Dba::write($sql, array($username));
-    } // activate_user
 
     /**
      * is_xmlrpc

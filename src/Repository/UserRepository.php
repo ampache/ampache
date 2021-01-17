@@ -181,4 +181,26 @@ final class UserRepository implements UserRepositoryInterface
             [$userId]
         );
     }
+
+    /**
+     * Retrieve the validation code of a certain user by its username
+     */
+    public function getValidationByUsername(string $username): ?string
+    {
+        $sql        = "SELECT `validation` FROM `user` WHERE `username` = ?";
+        $db_results = Dba::read($sql, [$username]);
+
+        $row = Dba::fetch_assoc($db_results);
+
+        return $row['validation'] ?? null;
+    }
+
+    /**
+     * Activates the user by username
+     */
+    public function activateByUsername(string $username): void
+    {
+        $sql = "UPDATE `user` SET `disabled`='0' WHERE `username` = ?";
+        Dba::write($sql, [$username]);
+    }
 }

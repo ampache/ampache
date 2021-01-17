@@ -72,4 +72,14 @@ interface UserRepositoryInterface
      * this enables the user
      */
     public function enable(int $userId): void;
+
+    /**
+     * Retrieve the validation code of a certain user by its username
+     */
+    public function getValidationByUsername(string $username): ?string;
+
+    /**
+     * Activates the user by username
+     */
+    public function activateByUsername(string $username): void;
 }

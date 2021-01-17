@@ -21,7 +21,6 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\User;
 use Ampache\Module\Util\Ui;
 
 $htmllang = str_replace("_", "-", AmpConfig::get('lang'));
@@ -46,8 +45,8 @@ $web_path = AmpConfig::get('web_path'); ?>
             <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js"></script>
             <div>
 <?php
-    if ($validation == User::get_validation($username) && strlen($validation)) {
-        User::activate_user($username); ?>
+    if ($validationResult) {
+        ?>
 <h3><?php echo T_('User Activated'); ?></h3>
 <p>
     <?php echo(T_('This User ID is activated and can be used') . ' <a href="' . AmpConfig::get('web_path') . '/login.php">' . T_('Login') . '</a>'); ?>

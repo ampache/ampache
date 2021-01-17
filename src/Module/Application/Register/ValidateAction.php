@@ -31,8 +31,8 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,12 +44,16 @@ final class ValidateAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private UserRepositoryInterface $userRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        UserRepositoryInterface $userRepository
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
+        $this->userRepository  = $userRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -78,10 +82,23 @@ final class ValidateAction implements ApplicationActionInterface
             require_once __DIR__ . '/../../Util/Captcha/init.php';
         }
 
-        $username   = scrub_in(Core::get_get('username'));
-        $validation = scrub_in(Core::get_get('auth'));
+        $username           = trim(scrub_in(Core::get_get('username')));
+        $validation         = trim(scrub_in(Core::get_get('auth')));
+        $userValidationCode = $this->userRepository->getValidationByUsername($username);
 
-        require_once Ui::find_template('show_user_activate.inc.php');
+        if ($validation !== '' && $validation === $userValidationCode) {
+            $this->userRepository->activateByUsername($username);
+            $validationResult = true;
+        } else {
+            $validationResult = false;
+        }
+
+        $this->ui->show(
+            'show_user_activate.inc.php',
+            [
+                'validationResult' => $validationResult
+            ]
+        );
 
         return null;
     }
