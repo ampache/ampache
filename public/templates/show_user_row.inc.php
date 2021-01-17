@@ -22,8 +22,11 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\System\Core;
+use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\Ui;
 
+/** @var UserFollowStateRendererInterface $userFollowStateRenderer */
 ?>
     <td class="cel_username">
         <a href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo $libitem->id; ?>">
@@ -53,7 +56,7 @@ use Ampache\Module\Util\Ui;
             }
         }
         if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
-            <td class="cel_follow"><?php echo $libitem->get_display_follow(); ?></td>
+            <td class="cel_follow"><?php echo $userFollowStateRenderer->render($libitem->getId(), Core::get_global('user')->getId()); ?></td>
             <?php
         } ?>
     <td class="cel_action">

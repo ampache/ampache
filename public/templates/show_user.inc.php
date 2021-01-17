@@ -27,15 +27,19 @@ use Ampache\Model\Plugin;
 use Ampache\Model\Preference;
 use Ampache\Model\Song;
 use Ampache\Model\Tmp_Playlist;
+use Ampache\Model\User;
 use Ampache\Model\Useractivity;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Model\Browse;
 use Ampache\Module\User\Activity\UserActivityRendererInterface;
+use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 /** @var UserActivityRendererInterface $userActivityRenderer */
+/** @var UserFollowStateRendererInterface $userFollowStateRenderer */
+/** @var User $client */
 
 $last_seen   = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');
 $create_date = $client->create_date ? get_datetime((int) $client->create_date) : T_('Unknown');
@@ -47,7 +51,10 @@ if ($client->f_avatar) {
     echo $client->f_avatar . "<br /><br />";
 } ?>
 <?php if (AmpConfig::get('sociable')) {
-    echo $client->get_display_follow();
+    echo $userFollowStateRenderer->render(
+        $client->getId(),
+        Core::get_global('user')->getId()
+    );
 
     $plugins = Plugin::get_plugins('display_user_field'); ?>
     <ul id="plugins_user_field">

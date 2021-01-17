@@ -24,6 +24,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Model\User;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path');
@@ -70,16 +71,20 @@ $web_path = AmpConfig::get('web_path');
 </thead>
 <tbody>
 <?php
+
+global $dic;
+$userFollowStateRenderer = $dic->get(UserFollowStateRendererInterface::class);
+
 foreach ($object_ids as $user_id) {
-        $libitem = new User($user_id);
-        $libitem->format();
-        $last_seen      = $libitem->last_seen ? get_datetime($libitem->last_seen) : T_('Never');
-        $create_date    = $libitem->create_date ? get_datetime($libitem->create_date) : T_('Unknown'); ?>
+    $libitem = new User($user_id);
+    $libitem->format();
+    $last_seen      = $libitem->last_seen ? get_datetime($libitem->last_seen) : T_('Never');
+    $create_date    = $libitem->create_date ? get_datetime($libitem->create_date) : T_('Unknown'); ?>
 <tr class="<?php echo Ui::flip_class(); ?>" id="admin_user_<?php echo $libitem->id; ?>">
     <?php require Ui::find_template('show_user_row.inc.php'); ?>
 </tr>
 <?php
-    } //end foreach users?>
+} //end foreach users?>
 </tbody>
 <tfoot>
     <tr class="th-bottom">

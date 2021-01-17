@@ -29,16 +29,21 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Model\User;
+use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\User\Following\UserFollowTogglerInterface;
 
 final class UserAjaxHandler implements AjaxHandlerInterface
 {
     private UserFollowTogglerInterface $followToggler;
 
+    private UserFollowStateRendererInterface $userFollowStateRenderer;
+
     public function __construct(
-        UserFollowTogglerInterface $followToggler
+        UserFollowTogglerInterface $followToggler,
+        UserFollowStateRendererInterface $userFollowStateRenderer
     ) {
-        $this->followToggler = $followToggler;
+        $this->followToggler           = $followToggler;
+        $this->userFollowStateRenderer = $userFollowStateRenderer;
     }
 
     public function handle(): void
@@ -55,7 +60,10 @@ final class UserAjaxHandler implements AjaxHandlerInterface
                             $user_id,
                             Core::get_global('user')->getId()
                         );
-                        $results['button_follow_' . $user_id] = $fuser->get_display_follow();
+                        $results['button_follow_' . $user_id] = $this->userFollowStateRenderer->render(
+                            $user_id,
+                            Core::get_global('user')->getId()
+                        );
                     }
                 }
                 break;

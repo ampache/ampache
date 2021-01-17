@@ -27,9 +27,8 @@ namespace Ampache\Module\Application\Stats;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\User\Activity\UserActivityRendererInterface;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\UserFollowerRepositoryInterface;
@@ -50,18 +49,22 @@ final class ShowUserAction implements ApplicationActionInterface
 
     private UserFollowerRepositoryInterface $userFollowerRepository;
 
+    private UserFollowStateRendererInterface $userFollowStateRenderer;
+
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         UserActivityRepositoryInterface $useractivityRepository,
         UserActivityRendererInterface $userActivityRenderer,
-        UserFollowerRepositoryInterface $userFollowerRepository
+        UserFollowerRepositoryInterface $userFollowerRepository,
+        UserFollowStateRendererInterface $userFollowStateRenderer
     ) {
-        $this->ui                     = $ui;
-        $this->modelFactory           = $modelFactory;
-        $this->useractivityRepository = $useractivityRepository;
-        $this->userActivityRenderer   = $userActivityRenderer;
-        $this->userFollowerRepository = $userFollowerRepository;
+        $this->ui                      = $ui;
+        $this->modelFactory            = $modelFactory;
+        $this->useractivityRepository  = $useractivityRepository;
+        $this->userActivityRenderer    = $userActivityRenderer;
+        $this->userFollowerRepository  = $userFollowerRepository;
+        $this->userFollowStateRenderer = $userFollowStateRenderer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -84,6 +87,7 @@ final class ShowUserAction implements ApplicationActionInterface
                 'activities' => $this->useractivityRepository->getActivities($userId),
                 'followers' => $this->userFollowerRepository->getFollowers($userId),
                 'following' => $this->userFollowerRepository->getFollowing($userId),
+                'userFollowStateRenderer' => $this->userFollowStateRenderer,
                 'userActivityRenderer' => $this->userActivityRenderer
             ]
         );

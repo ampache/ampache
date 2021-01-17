@@ -24,17 +24,14 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Statistics\Stats;
-use Ampache\Module\System\Dba;
-use Ampache\Module\User\Activity\UserActivityPosterInterface;
-use Ampache\Module\Util\Ui;
-use Ampache\Module\Api\Ajax;
-use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\IpHistoryRepositoryInterface;
-use Ampache\Repository\UserFollowerRepositoryInterface;
 use Exception;
 use PDOStatement;
 
@@ -1366,36 +1363,6 @@ class User extends database_object
     } // is_xmlrpc
 
     /**
-     * get_display_follow
-     * Get html code to display the follow/unfollow link
-     * @param integer $user_id
-     * @return string
-     */
-    public function get_display_follow($user_id = null)
-    {
-        if ($user_id === null) {
-            $user_id = Core::get_global('user')->id;
-        }
-
-        if ($user_id === $this->id) {
-            return "";
-        }
-
-        $userFollowerRepository = $this->getUserFollowerRepository();
-
-        $followed       = $userFollowerRepository->isFollowedBy($this->getId(), $user_id);
-        $followersCount = count($userFollowerRepository->getFollowers($this->getId()));
-
-        $html = "<span id='button_follow_" . $this->id . "' class='followbtn'>";
-        $html .= Ajax::text('?page=user&action=flip_follow&user_id=' . $this->id,
-            ($followed ? T_('Unfollow') : T_('Follow')) . ' (' . $followersCount . ')',
-            'flip_follow_' . $this->id);
-        $html .= "</span>";
-
-        return $html;
-    }
-
-    /**
      * rebuild_all_preferences
      * This rebuilds the user preferences for all installed users, called by the plugin functions
      */
@@ -1444,30 +1411,10 @@ class User extends database_object
     /**
      * @deprecated inject dependency
      */
-    private static function getUserActivityPoster(): UserActivityPosterInterface
-    {
-        global $dic;
-
-        return $dic->get(UserActivityPosterInterface::class);
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
     private function getIpHistoryRepository(): IpHistoryRepositoryInterface
     {
         global $dic;
 
         return $dic->get(IpHistoryRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private function getUserFollowerRepository(): UserFollowerRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserFollowerRepositoryInterface::class);
     }
 }

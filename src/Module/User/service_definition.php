@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User;
 
-use Ampache\Module\User\Following\UserFollowToggler;
 use function DI\autowire;
 
 return [
@@ -34,5 +33,6 @@ return [
     Activity\UserActivityRendererInterface::class => autowire(Activity\UserActivityRenderer::class),
     Activity\UserActivityPosterInterface::class => autowire(Activity\UserActivityPoster::class),
     Activity\TypeHandler\ActivityTypeHandlerMapperInterface::class => autowire(Activity\TypeHandler\ActivityTypeHandlerMapper::class),
-    Following\UserFollowTogglerInterface::class => autowire(UserFollowToggler::class),
+    Following\UserFollowTogglerInterface::class => autowire(Following\UserFollowToggler::class),
+    Following\UserFollowStateRendererInterface::class => autowire(Following\UserFollowStateRenderer::class),
 ];
