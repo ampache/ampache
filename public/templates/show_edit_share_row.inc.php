@@ -20,7 +20,10 @@
  *
  */
 
+use Ampache\Model\Share;
 use Ampache\Module\Authorization\Access;
+
+/** @var Share $libitem */
 
 ?>
 <div>
@@ -28,7 +31,7 @@ use Ampache\Module\Authorization\Access;
         <table class="tabledata">
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Share') ?></td>
-                <td><?php echo $libitem->f_object_link; ?></td>
+                <td><?php echo $libitem->getObjectUrl(); ?></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Max Counter') ?></td>

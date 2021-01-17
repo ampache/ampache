@@ -57,12 +57,9 @@ class Share extends database_object
     public $description;
 
     public $f_name;
-    public $f_object_link;
     public $f_user;
-    public $f_allow_stream;
-    public $f_allow_download;
-    public $f_creation_date;
-    public $f_lastvisit_date;
+
+    private $object;
 
     /**
      * Constructor
@@ -276,26 +273,43 @@ class Share extends database_object
         }
     }
 
-    /**
-     * format
-     * @param boolean $details
-     */
-    public function format($details = true)
+    private function getObject()
     {
-        if ($details) {
-            $class_name = ObjectTypeToClassNameMapper::map($this->object_type);
-            $object     = new $class_name($this->object_id);
-            $object->format();
-            $this->f_name        = $object->get_fullname();
-            $this->f_object_link = $object->f_link;
-            $user                = new User($this->user);
-            $user->format();
-            $this->f_user = $user->f_name;
+        if ($this->object === null) {
+            $class_name   = ObjectTypeToClassNameMapper::map($this->object_type);
+            $this->object = new $class_name($this->object_id);
+            $this->object->format();
         }
-        $this->f_allow_stream   = $this->allow_stream;
-        $this->f_allow_download = $this->allow_download;
-        $this->f_creation_date  = get_datetime((int)$this->creation_date);
-        $this->f_lastvisit_date = ($this->lastvisit_date > 0) ? get_datetime((int)$this->creation_date) : '';
+
+        return $this->object;
+    }
+
+    public function getObjectUrl(): string
+    {
+        return $this->getObject()->f_link;
+    }
+
+    public function getObjectName(): string
+    {
+        return $this->getObject()->get_fullname();
+    }
+
+    public function getUserName(): string
+    {
+        $user = new User($this->user);
+        $user->format();
+
+        return $user->f_name;
+    }
+
+    public function getLastVisitDateFormatted(): string
+    {
+        return $this->lastvisit_date > 0 ? get_datetime((int) $this->lastvisit_date) : '';
+    }
+
+    public function getCreationDateFormatted(): string
+    {
+        return get_datetime((int) $this->creation_date);
     }
 
     /**

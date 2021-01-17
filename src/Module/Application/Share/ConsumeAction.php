@@ -101,8 +101,6 @@ final class ConsumeAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $share->format();
-
         $share->save_access();
         if ($action == 'download') {
             if ($share->object_type == 'song' || $share->object_type == 'video') {

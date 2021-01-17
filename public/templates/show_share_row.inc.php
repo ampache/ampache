@@ -18,17 +18,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
 
-<td class="cel_object"><?php echo $libitem->f_object_link; ?></td>
+/** @var \Ampache\Model\Share $libitem */
+?>
+
+<td class="cel_object"><?php echo $libitem->getObjectUrl(); ?></td>
 <td class="cel_object_type"><?php echo $libitem->object_type; ?></td>
-<td class="cel_user"><?php echo $libitem->f_user; ?></td>
-<td class="cel_creation_date"><?php echo $libitem->f_creation_date; ?></td>
-<td class="cel_lastvisit_date"><?php echo $libitem->f_lastvisit_date; ?></td>
+<td class="cel_user"><?php echo $libitem->getUserName(); ?></td>
+<td class="cel_creation_date"><?php echo $libitem->getCreationDateFormatted(); ?></td>
+<td class="cel_lastvisit_date"><?php echo $libitem->getLastVisitDateFormatted(); ?></td>
 <td class="cel_counter"><?php echo $libitem->counter; ?></td>
 <td class="cel_max_counter"><?php echo $libitem->max_counter; ?></td>
-<td class="cel_allow_stream"><?php echo $libitem->f_allow_stream; ?></td>
-<td class="cel_allow_download"><?php echo $libitem->f_allow_download; ?></td>
+<td class="cel_allow_stream"><?php echo $libitem->allow_stream; ?></td>
+<td class="cel_allow_download"><?php echo $libitem->allow_download; ?></td>
 <td class="cel_expire"><?php echo $libitem->expire_days; ?></td>
 <td class="cel_public_url"><?php echo $libitem->public_url; ?></td>
 <td class="cel_action">

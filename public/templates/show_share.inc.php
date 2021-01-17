@@ -23,6 +23,8 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
+/** @var \Ampache\Model\Share $share */
+
 $embed = $_REQUEST['embed'];
 
 $is_share = true;
@@ -31,7 +33,7 @@ $playlist = $share->create_fake_playlist();
 require Ui::find_template('show_web_player.inc.php');
 
 if (empty($embed)) {
-    echo "<a href='" . $share->public_url . "'>" . T_('Shared by') . ' ' . $share->f_user . "</a><br />";
+    echo "<a href='" . $share->public_url . "'>" . T_('Shared by') . ' ' . $share->getUserName() . "</a><br />";
     if ($share->allow_download) {
         echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=download&id=" . $share->id . "&secret=" . $share->secret . "\">" . Ui::get_icon('download', T_('Download')) . "</a> ";
         echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=download&id=" . $share->id . "&secret=" . $share->secret . "\">" . T_('Download') . "</a>";

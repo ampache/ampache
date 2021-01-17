@@ -18,7 +18,7 @@ if ($iframed || $is_share) { ?>
     }
 
 if (!$iframed) {
-    require_once Ui::find_template('stylesheets.inc.php', true); ?>
+    require_once Ui::find_template('stylesheets.inc.php'); ?>
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path') . Ui::find_template('jquery-editdialog.css', true); ?>" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo AmpConfig::get('web_path'); ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
 <script src="<?php echo AmpConfig::get('web_path'); ?>/lib/components/jquery/jquery.min.js"></script>

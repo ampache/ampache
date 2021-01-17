@@ -96,13 +96,12 @@ final class ExternalShareAction implements ApplicationActionInterface
 
         $share_id = Share::create_share($type, $share_id, true, $allow_download, AmpConfig::get('share_expire'), $secret, 0);
         $share    = new Share($share_id);
-        $share->format(true);
 
         return $this->responseFactory
             ->createResponse(StatusCode::FOUND)
             ->withHeader(
                 'Location',
-                $plugin->_plugin->external_share($share->public_url, $share->f_name)
+                $plugin->_plugin->external_share($share->public_url, $share->getObjectName())
             );
     }
 }
