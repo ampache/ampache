@@ -31,6 +31,7 @@ use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Session;
+use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Module\Util\Mailer;
 
 /**
@@ -80,7 +81,7 @@ final class UserUpdateMethod
 
         // identify the user to modify
         $user    = User::get_from_username($username);
-        $user_id = $user->id;
+        $user_id = $user->getId();
 
         if ($password && Access::check('interface', 100, $user_id)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -88,6 +89,8 @@ final class UserUpdateMethod
 
             return false;
         }
+
+        $userStateToggler = static::getUserStateToggler();
 
         if ($user_id > 0) {
             if ($password && !AmpConfig::get('simple_user_mode')) {
@@ -109,9 +112,9 @@ final class UserUpdateMethod
                 $user->update_city($city);
             }
             if ($disable === '1') {
-                $user->disable();
+                $userStateToggler->disable($user);
             } elseif ($disable === '0') {
-                $user->enable();
+                $userStateToggler->enable($user);
             }
             if ((int) $maxbitrate > 0) {
                 Preference::update('transcode_bitrate', $user_id, $maxbitrate);
@@ -125,5 +128,15 @@ final class UserUpdateMethod
         Session::extend($input['auth']);
 
         return false;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getUserStateToggler(): UserStateTogglerInterface
+    {
+        global $dic;
+
+        return $dic->get(UserStateTogglerInterface::class);
     }
 }

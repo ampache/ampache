@@ -300,7 +300,7 @@ final class PlayAction implements ApplicationActionInterface
             }
 
             /* Update the users last seen information */
-            Core::get_global('user')->update_last_seen();
+            $this->userRepository->updateLastSeen((int) Core::get_global('user')->id);
         } else {
             $uid   = 0;
             $share = new Share($share_id);

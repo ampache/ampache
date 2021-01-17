@@ -158,4 +158,27 @@ final class UserRepository implements UserRepositoryInterface
 
         return null;
     }
+
+    /**
+     * updates the last seen data for the user
+     */
+    public function updateLastSeen(
+        int $userId
+    ): void {
+        Dba::write(
+            'UPDATE user SET last_seen = ? WHERE `id` = ?',
+            [time(), $userId]
+        );
+    }
+
+    /**
+     * this enables the user
+     */
+    public function enable(int $userId): void
+    {
+        Dba::write(
+            'UPDATE `user` SET `disabled`=\'0\' WHERE id = ?',
+            [$userId]
+        );
+    }
 }

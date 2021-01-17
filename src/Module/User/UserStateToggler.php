@@ -28,6 +28,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\User;
 use Ampache\Module\Util\UtilityFactoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * Disables/Enables users
@@ -38,17 +39,21 @@ final class UserStateToggler implements UserStateTogglerInterface
 
     private UtilityFactoryInterface $utilityFactory;
 
+    private UserRepositoryInterface $userRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UtilityFactoryInterface $utilityFactory
+        UtilityFactoryInterface $utilityFactory,
+        UserRepositoryInterface $userRepository
     ) {
         $this->configContainer = $configContainer;
         $this->utilityFactory  = $utilityFactory;
+        $this->userRepository  = $userRepository;
     }
 
     public function enable(User $user): bool
     {
-        $result = $user->enable();
+        $this->userRepository->enable($user->getId());
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_NO_EMAIL_CONFIRM) === false) {
             $mailer = $this->utilityFactory->createMailer();
@@ -73,7 +78,7 @@ final class UserStateToggler implements UserStateTogglerInterface
             $mailer->send();
         }
 
-        return $result;
+        return true;
     }
 
     public function disable(User $user): bool

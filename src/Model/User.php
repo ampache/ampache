@@ -742,18 +742,6 @@ class User extends database_object
     } // disable
 
     /**
-     * enable
-     * this enables the current user
-     */
-    public function enable()
-    {
-        $sql = "UPDATE `user` SET `disabled`='0' WHERE id='" . $this->id . "'";
-        Dba::write($sql);
-
-        return true;
-    } // enable
-
-    /**
      * update_access
      * updates their access level
      * @param $new_access
@@ -779,16 +767,6 @@ class User extends database_object
 
         return true;
     } // update_access
-
-    /**
-     * update_last_seen
-     * updates the last seen data for this user
-     */
-    public function update_last_seen()
-    {
-        $sql = "UPDATE user SET last_seen='" . time() . "' WHERE `id`='$this->id'";
-        Dba::write($sql);
-    } // update_last_seen
 
     /**
      * save_mediaplay
@@ -1398,24 +1376,6 @@ class User extends database_object
         $sql = "UPDATE `user` SET `disabled`='0' WHERE `username` = ?";
         Dba::write($sql, array($username));
     } // activate_user
-
-    /**
-     * get_artists
-     * Get artists associated with the user
-     * @return array
-     */
-    public function get_artists()
-    {
-        $sql        = "SELECT `id` FROM `artist` WHERE `user` = ?";
-        $db_results = Dba::read($sql, array($this->id));
-
-        $results = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
-    }
 
     /**
      * is_xmlrpc

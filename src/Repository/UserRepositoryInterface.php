@@ -60,4 +60,16 @@ interface UserRepositoryInterface
      * This returns a built user from an apikey
      */
     public function findByApiKey(string $apikey): ?User;
+
+    /**
+     * updates the last seen data for this user
+     */
+    public function updateLastSeen(
+        int $userId
+    ): void;
+
+    /**
+     * this enables the user
+     */
+    public function enable(int $userId): void;
 }

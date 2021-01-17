@@ -31,6 +31,7 @@ use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\UserRepositoryInterface;
 use PDOStatement;
 use Ampache\Model\Song_Preview;
 use Ampache\Model\Tmp_Playlist;
@@ -44,12 +45,16 @@ final class Session implements SessionInterface
 
     private AuthenticationManagerInterface $authenticationManager;
 
+    private UserRepositoryInterface $userRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        AuthenticationManagerInterface $authenticationManager
+        AuthenticationManagerInterface $authenticationManager,
+        UserRepositoryInterface $userRepository
     ) {
         $this->configContainer       = $configContainer;
         $this->authenticationManager = $authenticationManager;
+        $this->userRepository        = $userRepository;
     }
 
     public function auth(): bool
@@ -83,8 +88,7 @@ final class Session implements SessionInterface
                 return false;
             }
 
-            // Load preferences and theme
-            Core::get_global('user')->update_last_seen();
+            $this->userRepository->updateLastSeen((int) Core::get_global('user')->id);
         } elseif (!$useAuth) {
             $auth['success']      = 1;
             $auth['username']     = '-1';
@@ -116,7 +120,7 @@ final class Session implements SessionInterface
 
                     return false;
                 }
-                Core::get_global('user')->update_last_seen();
+                $this->userRepository->updateLastSeen((int) Core::get_global('user')->id);
             }
         } else {
             // If Auth, but no session is set
@@ -642,7 +646,7 @@ final class Session implements SessionInterface
         $auth  = false;
         $cname = AmpConfig::get('session_name') . '_remember';
         if (filter_has_var(INPUT_COOKIE, $cname)) {
-            list($username, $token, $mac) = explode(':', $_COOKIE[$cname]);
+            [$username, $token, $mac] = explode(':', $_COOKIE[$cname]);
             if ($mac === hash_hmac('sha256', $username . ':' . $token, AmpConfig::get('secret_key'))) {
                 $sql        = "SELECT * FROM `session_remember` WHERE `username` = ? AND `token` = ? AND `expire` >= ?";
                 $db_results = Dba::read($sql, array($username, $token, time()));

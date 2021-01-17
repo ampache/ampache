@@ -30,6 +30,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Model\User;
 use Ampache\Module\Util\MailerInterface;
 use Ampache\Module\Util\UtilityFactoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use Mockery\MockInterface;
 
 class UserStateTogglerTest extends MockeryTestCase
@@ -40,16 +41,21 @@ class UserStateTogglerTest extends MockeryTestCase
     /** @var MockInterface|UtilityFactoryInterface|null */
     private MockInterface $utilityFactory;
 
+    /** @var MockInterface|UserRepositoryInterface|null */
+    private MockInterface $userRepository;
+
     private ?UserStateToggler $subject;
 
     public function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->utilityFactory  = $this->mock(UtilityFactoryInterface::class);
+        $this->userRepository  = $this->mock(UserRepositoryInterface::class);
 
         $this->subject = new UserStateToggler(
             $this->configContainer,
-            $this->utilityFactory
+            $this->utilityFactory,
+            $this->userRepository
         );
     }
 
@@ -57,10 +63,16 @@ class UserStateTogglerTest extends MockeryTestCase
     {
         $user = $this->mock(User::class);
 
-        $user->shouldReceive('enable')
+        $userId = 666;
+
+        $this->userRepository->shouldReceive('enable')
+            ->with($userId)
+            ->once();
+
+        $user->shouldReceive('getId')
             ->withNoArgs()
             ->once()
-            ->andReturnTrue();
+            ->andReturn($userId);
 
         $this->configContainer->shouldReceive('isFeatureEnabled')
             ->with(ConfigurationKeyEnum::USER_NO_EMAIL_CONFIRM)
@@ -82,10 +94,16 @@ class UserStateTogglerTest extends MockeryTestCase
 
         $userName = 'some-name';
 
-        $user->shouldReceive('enable')
+        $userId = 666;
+
+        $this->userRepository->shouldReceive('enable')
+            ->with($userId)
+            ->once();
+
+        $user->shouldReceive('getId')
             ->withNoArgs()
             ->once()
-            ->andReturnTrue();
+            ->andReturn($userId);
 
         $user->username = $userName;
 
