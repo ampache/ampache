@@ -47,10 +47,6 @@ class Shoutbox
     public $data;
     public $date;
 
-    public $f_link;
-    public $f_date;
-    public $f_text;
-
     /**
      * Constructor
      * This pulls the shoutbox information from the database and returns
@@ -258,19 +254,20 @@ class Shoutbox
         return $this->id;
     } // create
 
-    /**
-     * format
-     * this function takes the object and reformats some values
-     */
-
-    public function format()
+    public function getStickyFormatted(): string
     {
-        $this->sticky = ($this->sticky == "0") ? 'No' : 'Yes';
-        $this->f_date = get_datetime((int)$this->date);
-        $this->f_text = preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text);
+        return $this->sticky == '0' ? 'No' : 'Yes';
+    }
 
-        return true;
-    } // format
+    public function getTextFormatted(): string
+    {
+        return preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text);
+    }
+
+    public function getDateFormatted(): string
+    {
+        return get_datetime((int)$this->date);
+    }
 
     /**
      * this function deletes the current shoutbox entry
@@ -301,7 +298,7 @@ class Shoutbox
             $html .= "<div class='shoutbox-object'>" . $object->f_link . "</div>";
             $html .= "<div class='shoutbox-date'>" . get_datetime((int)$this->date) . "</div>";
         }
-        $html .= "<div class='shoutbox-text'>" . $this->f_text . "</div>";
+        $html .= "<div class='shoutbox-text'>" . $this->getTextFormatted() . "</div>";
         $html .= "</div>";
         $html .= "</div>";
         $html .= "<div class='shoutbox-footer'>";

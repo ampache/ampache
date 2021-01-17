@@ -1130,8 +1130,7 @@ class Json_Data
     {
         $JSON = [];
         foreach ($shouts as $shout_id) {
-            $shout = new Shoutbox($shout_id);
-            $shout->format();
+            $shout    = new Shoutbox($shout_id);
             $user     = new User($shout->user);
             $ourArray = array(
                 "id" => (string)$shout_id,

@@ -20,15 +20,17 @@
  *
  */
 
+use Ampache\Model\Shoutbox;
 use Ampache\Module\Util\Ui;
 
+/** @var Shoutbox $libitem */
 ?>
 <tr id="flagged_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
     <td class="cel_object"><?php echo $object->f_link; ?></td>
     <td class="cel_username"><?php echo $client->f_link; ?></td>
-    <td class="cel_sticky"><?php echo $libitem->sticky; ?></td>
+    <td class="cel_sticky"><?php echo $libitem->getStickyFormatted(); ?></td>
     <td class="cel_comment"><?php echo scrub_out($libitem->text); ?></td>
-    <td class="cel_date"><?php echo $libitem->f_date; ?></td>
+    <td class="cel_date"><?php echo $libitem->getDateFormatted(); ?></td>
     <td class="cel_action">
         <a href="<?php echo $web_path; ?>/admin/shout.php?action=show_edit&amp;shout_id=<?php echo $libitem->id; ?>">
             <?php echo Ui::get_icon('edit', T_('Edit')); ?>

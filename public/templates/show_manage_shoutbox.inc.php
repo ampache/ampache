@@ -41,7 +41,6 @@ $web_path = AmpConfig::get('web_path'); ?>
         <?php
         foreach ($object_ids as $shout_id) {
             $libitem = new Shoutbox($shout_id);
-            $libitem->format();
 
             $object = Shoutbox::get_object($libitem->object_type, $libitem->object_id);
             $object->format();

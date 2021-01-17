@@ -372,8 +372,7 @@ class AmpacheRss
         $results = array();
 
         foreach ($ids as $shoutid) {
-            $shout = new Shoutbox($shoutid);
-            $shout->format();
+            $shout  = new Shoutbox($shoutid);
             $object = Shoutbox::get_object($shout->object_type, $shout->object_id);
             if ($object !== null) {
                 $object->format();

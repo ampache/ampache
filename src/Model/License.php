@@ -46,11 +46,6 @@ class License
     public $external_link;
 
     /**
-     * @var string $f_link
-     */
-    public $f_link;
-
-    /**
      * Constructor
      * This pulls the license information from the database and returns
      * a constructed object
