@@ -294,6 +294,7 @@ function ToggleReplayGain()
 
     if (replaygainNode != null) {
         replaygainEnabled = !replaygainEnabled;
+        $.cookie('replaygain', replaygainEnabled);
         ApplyReplayGain();
 
         if (replaygainEnabled) {
