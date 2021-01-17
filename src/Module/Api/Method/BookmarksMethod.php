@@ -31,6 +31,7 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
+use Ampache\Repository\BookmarkRepositoryInterface;
 
 /**
  * Class BookmarksMethod
@@ -50,7 +51,7 @@ final class BookmarksMethod
     public static function bookmarks(array $input)
     {
         $user      = User::get_from_username(Session::username($input['auth']));
-        $bookmarks = Bookmark::get_bookmarks_ids($user);
+        $bookmarks = static::getBookmarkRepository()->getBookmarks($user->getId());
         if (empty($bookmarks)) {
             Api::empty('bookmark', $input['api_format']);
 
@@ -68,5 +69,12 @@ final class BookmarksMethod
         Session::extend($input['auth']);
 
         return true;
+    }
+
+    private static function getBookmarkRepository(): BookmarkRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(BookmarkRepositoryInterface::class);
     }
 }

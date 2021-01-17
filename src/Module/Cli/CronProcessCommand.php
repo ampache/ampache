@@ -35,6 +35,7 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Cron;
 use Ampache\Module\Util\Recommendation;
+use Ampache\Repository\BookmarkRepositoryInterface;
 
 final class CronProcessCommand extends Command
 {
@@ -44,16 +45,20 @@ final class CronProcessCommand extends Command
 
     private CatalogGarbageCollectorInterface $catalogGarbageCollector;
 
+    private BookmarkRepositoryInterface $bookmarkRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         ObjectCacheInterface $objectCache,
-        CatalogGarbageCollectorInterface $catalogGarbageCollector
+        CatalogGarbageCollectorInterface $catalogGarbageCollector,
+        BookmarkRepositoryInterface $bookmarkRepository
     ) {
         parent::__construct('run:cronProcess', 'Runs the cron process');
 
         $this->configContainer         = $configContainer;
         $this->objectCache             = $objectCache;
         $this->catalogGarbageCollector = $catalogGarbageCollector;
+        $this->bookmarkRepository      = $bookmarkRepository;
     }
 
     public function execute(): void
@@ -110,7 +115,7 @@ final class CronProcessCommand extends Command
         Share::garbage_collection();
         Stream::garbage_collection();
         Podcast_Episode::garbage_collection();
-        Bookmark::garbage_collection();
+        $this->bookmarkRepository->collectGarbage();
         Recommendation::garbage_collection();
 
         /**

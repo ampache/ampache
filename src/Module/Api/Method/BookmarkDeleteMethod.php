@@ -31,6 +31,7 @@ use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\BookmarkRepositoryInterface;
 
 /**
  * Class BookmarkDeleteMethod
@@ -104,7 +105,7 @@ final class BookmarkDeleteMethod
             return false;
         }
 
-        $bookmark = Bookmark::delete($object);
+        $bookmark = static::getBookmarkRepository()->delete(current($find));
         if (!$bookmark) {
             Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
 
@@ -116,4 +117,11 @@ final class BookmarkDeleteMethod
 
         return true;
     } // bookmark_delete
+
+    private static function getBookmarkRepository(): BookmarkRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(BookmarkRepositoryInterface::class);
+    }
 }

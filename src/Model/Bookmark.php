@@ -92,69 +92,6 @@ class Bookmark extends database_object
     }
 
     /**
-     * garbage_collection
-     *
-     * Remove bookmark for items that no longer exist.
-     * @param string $object_type
-     * @param integer $object_id
-     */
-    public static function garbage_collection($object_type = null, $object_id = null)
-    {
-        $types = array('song', 'video', 'podcast_episode');
-
-        if ($object_type) {
-            if (in_array($object_type, $types)) {
-                $sql = "DELETE FROM `bookmark` WHERE `object_type` = ? AND `object_id` = ?";
-                Dba::write($sql, array($object_type, $object_id));
-            } else {
-                debug_event('bookmark.class', 'Garbage collect on type `' . $object_type . '` is not supported.', 3);
-            }
-        } else {
-            foreach ($types as $type) {
-                Dba::write("DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `$type` ON `$type`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = '$type' AND `$type`.`id` IS NULL");
-            }
-        }
-    }
-
-    /**
-     * get_bookmarks_ids
-     *
-     * @param User|null $user
-     * @return array
-     */
-    public static function get_bookmarks_ids($user = null)
-    {
-        $ids = array();
-        if ($user === null) {
-            $user = Core::get_global('user');
-        }
-
-        $sql        = "SELECT `id` FROM `bookmark` WHERE `user` = ?";
-        $db_results = Dba::read($sql, array($user->id));
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $ids[] = $results['id'];
-        }
-
-        return $ids;
-    }
-
-    /**
-     * get_bookmarks
-     * @param User $user
-     * @return array
-     */
-    public static function get_bookmarks($user = null)
-    {
-        $bookmarks = array();
-        $ids       = self::get_bookmarks_ids($user);
-        foreach ($ids as $bookmarkid) {
-            $bookmarks[] = new Bookmark($bookmarkid);
-        }
-
-        return $bookmarks;
-    }
-
-    /**
      * get_bookmark
      * @param array $data
      * @return integer[]
@@ -216,32 +153,6 @@ class Bookmark extends database_object
         $sql = "UPDATE `bookmark` SET `position` = ?, `update_date` = ? WHERE `id` = ?";
 
         return Dba::write($sql, array($position, time(), $this->id));
-    }
-
-    /**
-     * remove
-     * @return PDOStatement|boolean
-     */
-    public function remove()
-    {
-        $sql = "DELETE FROM `bookmark` WHERE `id` = ?";
-
-        return Dba::write($sql, array($this->id));
-    }
-
-    /**
-     * delete
-     *
-     * Delete the bookmark when you're done
-     *
-     * @param array $data
-     * @return PDOStatement|boolean
-     */
-    public static function delete(array $data)
-    {
-        $sql = "DELETE FROM `bookmark` WHERE `user` = ? AND `comment` = ? AND `object_type` = ? AND `object_id` = ?";
-
-        return Dba::write($sql, array($data['user'], $data['comment'], $data['object_type'], $data['object_id']));
     }
 
     public function format()

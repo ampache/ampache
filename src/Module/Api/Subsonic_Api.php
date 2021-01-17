@@ -43,6 +43,7 @@ use Ampache\Model\Bookmark;
 use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
@@ -2396,9 +2397,14 @@ class Subsonic_Api
      */
     public static function getbookmarks($input)
     {
-        $user_id   = User::get_from_username($input['u'])->id;
+        $user_id   = User::get_from_username($input['u'])->getId();
         $response  = Subsonic_Xml_Data::createSuccessResponse('getbookmarks');
-        $bookmarks = Bookmark::get_bookmarks($user_id);
+        $bookmarks = [];
+
+        foreach (static::getBookmarkRepository()->getBookmarks($user_id) as $bookmarkId) {
+            $bookmarks[] = new Bookmark($bookmarkId);
+        }
+
         Subsonic_XML_Data::addBookmarks($response, $bookmarks);
         self::apiOutput($input, $response);
     }
@@ -2450,7 +2456,7 @@ class Subsonic_Api
 
         $bookmark = new Bookmark(Subsonic_Xml_Data::getAmpacheId($id), $type);
         if ($bookmark->id) {
-            $bookmark->remove();
+            static::getBookmarkRepository()->delete($bookmark->getId());
             $response = Subsonic_Xml_Data::createSuccessResponse('deletebookmark');
         } else {
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'deletebookmark');
@@ -2574,5 +2580,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(UserRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getBookmarkRepository(): BookmarkRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(BookmarkRepositoryInterface::class);
     }
 }
