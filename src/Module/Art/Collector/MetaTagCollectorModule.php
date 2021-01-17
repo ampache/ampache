@@ -108,7 +108,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         // We need the filenames
         if ($art->type == 'album') {
             $album = new Album($art->uid);
-            $songs = $this->songRepository->getByAlbum($album->id);
+            $songs = $this->songRepository->getByAlbum((int) $album->id);
         } else {
             $artist = new Artist($art->uid);
             $songs  = $this->songRepository->getByArtist($artist);

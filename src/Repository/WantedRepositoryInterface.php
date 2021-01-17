@@ -47,4 +47,9 @@ interface WantedRepositoryInterface
      * Get accepted wanted release count.
      */
     public function getAcceptedCount(): int;
+
+    /**
+     * retrieves the info from the database and puts it in the cache
+     */
+    public function getById(int $wantedId): array;
 }

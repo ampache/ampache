@@ -98,7 +98,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
         $dirs = array();
         if ($art->type == 'album') {
             $media = new Album($art->uid);
-            $songs = $this->songRepository->getByAlbum($media->id);
+            $songs = $this->songRepository->getByAlbum((int) $media->id);
             foreach ($songs as $song_id) {
                 $song   = new Song($song_id);
                 $dirs[] = Core::conv_lc_file(dirname($song->file));

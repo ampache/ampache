@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\System\Core;
+use Ampache\Model\database_object;
 use Ampache\Module\System\Dba;
 
 final class WantedRepository implements WantedRepositoryInterface
@@ -37,7 +37,7 @@ final class WantedRepository implements WantedRepositoryInterface
     {
         $sql = "SELECT `id` FROM `wanted` ";
 
-        if ($userId === null) {
+        if ($userId !== null) {
             $sql .= "WHERE `user` = '" . (string) $userId . "'";
         }
         $db_results = Dba::read($sql);
@@ -97,5 +97,34 @@ final class WantedRepository implements WantedRepositoryInterface
         }
 
         return 0;
+    }
+
+    /**
+     * retrieves the info from the database and puts it in the cache
+     */
+    public function getById(int $wantedId): array
+    {
+        // Make sure we've got a real id
+        if ($wantedId < 1) {
+            return [];
+        }
+
+        if (database_object::is_cached('wanted', $wantedId)) {
+            return database_object::get_from_cache('wanted', $wantedId);
+        }
+
+        $params     = [$wantedId];
+        $sql        = "SELECT * FROM `wanted` WHERE `id`= ?";
+        $db_results = Dba::read($sql, $params);
+
+        if (!$db_results) {
+            return [];
+        }
+
+        $row = Dba::fetch_assoc($db_results);
+
+        database_object::add_to_cache('wanted', $wantedId, $row);
+
+        return $row;
     }
 }
