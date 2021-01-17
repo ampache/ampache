@@ -82,4 +82,20 @@ interface UserRepositoryInterface
      * Activates the user by username
      */
     public function activateByUsername(string $username): void;
+
+    /**
+     * Updates a users RSS token
+     */
+    public function updateRssToken(int $userId, string $rssToken): void;
+
+
+    /**
+     * Updates a users api key
+     */
+    public function updateApiKey(string $userId, string $apikey): void;
+
+    /**
+     * Get the current hashed user password
+     */
+    public function retrievePasswordFromUser(int $userId): string;
 }

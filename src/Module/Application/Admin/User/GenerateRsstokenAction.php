@@ -29,6 +29,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\Core;
+use Ampache\Module\User\Authorization\UserAccessKeyGeneratorInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -43,14 +44,18 @@ final class GenerateRsstokenAction extends AbstractUserAction
 
     private ConfigContainerInterface $configContainer;
 
+    private UserAccessKeyGeneratorInterface $userAccessKeyGenerator;
+
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        UserAccessKeyGeneratorInterface $userAccessKeyGenerator
     ) {
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
+        $this->ui                     = $ui;
+        $this->modelFactory           = $modelFactory;
+        $this->configContainer        = $configContainer;
+        $this->userAccessKeyGenerator = $userAccessKeyGenerator;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
@@ -67,7 +72,7 @@ final class GenerateRsstokenAction extends AbstractUserAction
         $client = $this->modelFactory->createUser((int) Core::get_request('user_id'));
 
         if ($client->id) {
-            $client->generate_rsstoken();
+            $this->userAccessKeyGenerator->generateRssToken($client);
         }
 
         $this->ui->showConfirmation(

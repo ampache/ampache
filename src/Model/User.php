@@ -652,71 +652,6 @@ class User extends database_object
     } // update_city
 
     /**
-     * update_apikey
-     * Updates their api key
-     * @param string $new_apikey
-     */
-    public function update_apikey($new_apikey)
-    {
-        $sql = "UPDATE `user` SET `apikey` = ? WHERE `id` = ?";
-
-        debug_event('user.class', 'Updating apikey for ' . $this->id, 4);
-
-        Dba::write($sql, array($new_apikey, $this->id));
-    } // update_apikey
-
-    /**
-     * update_rsstoken
-     * Updates their RSS token
-     * @param string $new_rsstoken
-     */
-    public function update_rsstoken($new_rsstoken)
-    {
-        $sql = "UPDATE `user` SET `rsstoken` = ? WHERE `id` = ?";
-
-        debug_event('user.class', 'Updating rsstoken for ' . $this->id, 4);
-
-        Dba::write($sql, array($new_rsstoken, $this->id));
-    } // update_rsstoken
-
-    /**
-     * generate_apikey
-     * Generate a new user API key
-     */
-    public function generate_apikey()
-    {
-        $apikey = hash('md5', time() . $this->username . $this->get_password());
-        $this->update_apikey($apikey);
-    }
-
-    /**
-     * generate_rsstoken
-     * Generate a new user RSS token
-     */
-    public function generate_rsstoken()
-    {
-        try {
-            $rsstoken = bin2hex(random_bytes(32));
-            $this->update_rsstoken($rsstoken);
-        } catch (Exception $error) {
-            debug_event('user.class', 'Could not generate random_bytes: ' . $error, 3);
-        }
-    }
-
-    /**
-     * get_password
-     * Get the current hashed user password from database.
-     */
-    public function get_password()
-    {
-        $sql        = 'SELECT * FROM `user` WHERE `id` = ?';
-        $db_results = Dba::read($sql, array($this->id));
-        $row        = Dba::fetch_assoc($db_results);
-
-        return $row['password'];
-    }
-
-    /**
      * disable
      * This disables the current user
      */
@@ -1314,24 +1249,6 @@ class User extends database_object
         $art = new Art($this->id, 'user');
         $art->reset();
     }
-
-    /**
-     * is_xmlrpc
-     * checks to see if this is a valid xmlrpc user
-     * @return boolean
-     */
-    public function is_xmlrpc()
-    {
-        /* If we aren't using XML-RPC return true */
-        if (!AmpConfig::get('xml_rpc')) {
-            return false;
-        }
-
-        // FIXME: Ok really what we will do is check the MD5 of the HTTP_REFERER
-        // FIXME: combined with the song title to make sure that the REFERER
-        // FIXME: is in the access list with full rights
-        return true;
-    } // is_xmlrpc
 
     /**
      * rebuild_all_preferences

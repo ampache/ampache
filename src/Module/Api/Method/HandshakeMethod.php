@@ -118,7 +118,7 @@ final class HandshakeMethod
                 // Now we're sure that there is an ACL line that matches
                 // this user or ALL USERS, pull the user's password and
                 // then see what we come out with
-                $realpwd = $client->get_password();
+                $realpwd = static::getUserRepository()->retrievePasswordFromUser($client->getId());
 
                 if (!$realpwd) {
                     debug_event(self::class, 'Unable to find user with userid of ' . $user_id, 1);

@@ -203,4 +203,36 @@ final class UserRepository implements UserRepositoryInterface
         $sql = "UPDATE `user` SET `disabled`='0' WHERE `username` = ?";
         Dba::write($sql, [$username]);
     }
+
+    /**
+     * Updates a users RSS token
+     */
+    public function updateRssToken(int $userId, string $rssToken): void
+    {
+        $sql = "UPDATE `user` SET `rsstoken` = ? WHERE `id` = ?";
+
+        Dba::write($sql, array($rssToken, $userId));
+    }
+
+    /**
+     * Updates a users api key
+     */
+    public function updateApiKey(string $userId, string $apikey): void
+    {
+        $sql = "UPDATE `user` SET `apikey` = ? WHERE `id` = ?";
+
+        Dba::write($sql, array($apikey, $userId));
+    }
+
+    /**
+     * Get the current hashed user password
+     */
+    public function retrievePasswordFromUser(int $userId): string
+    {
+        $sql        = 'SELECT * FROM `user` WHERE `id` = ?';
+        $db_results = Dba::read($sql, array($userId));
+        $row        = Dba::fetch_assoc($db_results);
+
+        return $row['password'] ?? '';
+    }
 }

@@ -34,6 +34,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Playback\Stream;
 use Ampache\Model\User;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\User\Authorization\UserAccessKeyGeneratorInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 
@@ -185,7 +186,7 @@ class AmpacheRss
         $user     = new User($user_id);
         if ($user->id > 0) {
             if (!$user->rsstoken) {
-                $user->generate_rsstoken();
+                static::getUserAccessKeyGenerator()->generateRssToken($user);
             }
             $rsstoken = "&rsstoken=" . $user->rsstoken;
         }
@@ -409,7 +410,7 @@ class AmpacheRss
     } // pubdate_recently_played
 
     /**
-     * @deprecated
+     * @deprecated Inject by constructor
      */
     private static function getAlbumRepository(): AlbumRepositoryInterface
     {
@@ -419,12 +420,22 @@ class AmpacheRss
     }
 
     /**
-     * @deprecated
+     * @deprecated Inject by constructor
      */
     private static function getUserRepository(): UserRepositoryInterface
     {
         global $dic;
 
         return $dic->get(UserRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getUserAccessKeyGenerator(): UserAccessKeyGeneratorInterface
+    {
+        global $dic;
+
+        return $dic->get(UserAccessKeyGeneratorInterface::class);
     }
 }
