@@ -33,6 +33,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
+use Ampache\Repository\IpHistoryRepositoryInterface;
 use Exception;
 use PDOStatement;
 
@@ -976,10 +977,9 @@ class User extends database_object
             $this->f_usage = Ui::format_bytes($total);
 
             /* Get Users Last ip */
-            if (count($data = $this->get_ip_history(1))) {
+            if (count($data = $this->getIpHistoryRepository()->getHistory($this->getId(), 1))) {
                 $user_ip          = inet_ntop($data['0']['ip']);
-                $this->ip_history = (!empty($user_ip) && filter_var($user_ip,
-                        FILTER_VALIDATE_IP)) ? $user_ip : T_('Invalid');
+                $this->ip_history = (!empty($user_ip) && filter_var($user_ip, FILTER_VALIDATE_IP)) ? $user_ip : T_('Invalid');
             } else {
                 $this->ip_history = T_('Not Enough Data');
             }
@@ -1232,37 +1232,6 @@ class User extends database_object
 
         return $results;
     } // get_recently_played
-
-    /**
-     * get_ip_history
-     * This returns the ip_history from the last AmpConfig::get('user_ip_cardinality') days
-     * @param integer $count
-     * @param boolean $distinct
-     * @return array
-     */
-    public function get_ip_history($count = 1, $distinct = false)
-    {
-        $username  = Dba::escape($this->id);
-        $count     = $count ? (int)($count) : (int)(AmpConfig::get('user_ip_cardinality'));
-        $limit_sql = ($count > 0) ? " LIMIT " . (string)($count) : '';
-
-        $group_sql = "";
-        if ($distinct) {
-            $group_sql = "GROUP BY `ip`, `date`";
-        }
-
-        /* Select ip history */
-        $sql        = "SELECT `ip`, `date` FROM `ip_history` " . "WHERE `user`='$username' " . "$group_sql ORDER BY `date` DESC$limit_sql";
-        $db_results = Dba::read($sql);
-
-        $results = array();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row;
-        }
-
-        return $results;
-    } // get_ip_history
 
     /**
      * Get item fullname.
@@ -1562,5 +1531,15 @@ class User extends database_object
         global $dic;
 
         return $dic->get(UserActivityPosterInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getIpHistoryRepository(): IpHistoryRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(IpHistoryRepositoryInterface::class);
     }
 }

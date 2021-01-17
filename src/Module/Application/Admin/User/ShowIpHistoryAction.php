@@ -28,6 +28,7 @@ use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\IpHistoryRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -39,29 +40,41 @@ final class ShowIpHistoryAction extends AbstractUserAction
 
     private ModelFactoryInterface $modelFactory;
 
+    private IpHistoryRepositoryInterface $ipHistoryRepository;
+
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        IpHistoryRepositoryInterface $ipHistoryRepository
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
+        $this->ui                  = $ui;
+        $this->modelFactory        = $modelFactory;
+        $this->ipHistoryRepository = $ipHistoryRepository;
     }
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
-        $this->ui->showHeader();
+        $queryParams = $request->getQueryParams();
 
+        $userId = (int) $queryParams['user_id'] ?? 0;
 
         /* get the user and their history */
-        $working_user = $this->modelFactory->createUser((int) Core::get_request('user_id'));
+        $working_user = $this->modelFactory->createUser($userId);
 
-        if (!isset($_REQUEST['all'])) {
-            $history = $working_user->get_ip_history(0, true);
+        if (!isset($queryParams['all'])) {
+            $history = $this->ipHistoryRepository->getHistory($userId, 0, true);
         } else {
-            $history = $working_user->get_ip_history(1);
+            $history = $this->ipHistoryRepository->getHistory($userId);
         }
-        require Ui::find_template('show_ip_history.inc.php');
 
+        $this->ui->showHeader();
+        $this->ui->show(
+            'show_ip_history.inc.php',
+            [
+                'working_user' => $working_user,
+                'history' => $history
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
