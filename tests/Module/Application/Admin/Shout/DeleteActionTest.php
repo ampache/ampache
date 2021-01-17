@@ -31,6 +31,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\ShoutRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -45,6 +46,9 @@ class DeleteActionTest extends MockeryTestCase
     /** @var MockInterface|ModelFactoryInterface|null */
     private MockInterface $modelFactory;
 
+    /** @var MockInterface|ShoutRepositoryInterface|null */
+    private MockInterface $shoutRepository;
+
     private ?DeleteAction $subject;
 
     public function setUp(): void
@@ -52,11 +56,13 @@ class DeleteActionTest extends MockeryTestCase
         $this->ui              = $this->mock(UiInterface::class);
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->shoutRepository = $this->mock(ShoutRepositoryInterface::class);
 
         $this->subject = new DeleteAction(
             $this->ui,
             $this->configContainer,
-            $this->modelFactory
+            $this->modelFactory,
+            $this->shoutRepository
         );
     }
 
@@ -102,8 +108,13 @@ class DeleteActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['shout_id' => (string) $shoutId]);
 
-        $shout->shouldReceive('delete')
+        $shout->shouldReceive('getId')
             ->withNoArgs()
+            ->once()
+            ->andReturn($shoutId);
+
+        $this->shoutRepository->shouldReceive('delete')
+            ->with($shoutId)
             ->once();
 
         $this->ui->shouldReceive('showHeader')

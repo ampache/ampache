@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Shout;
 
@@ -31,6 +31,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,14 +45,18 @@ final class DeleteAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private ShoutRepositoryInterface $shoutRepository;
+
     public function __construct(
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        ShoutRepositoryInterface $shoutRepository
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
+        $this->shoutRepository = $shoutRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -63,7 +68,10 @@ final class DeleteAction implements ApplicationActionInterface
         $shout = $this->modelFactory->createShoutbox(
             (int) $request->getQueryParams()['shout_id'] ?? 0
         );
-        $shout->delete();
+
+        $this->shoutRepository->delete(
+            $shout->getId()
+        );
 
         $this->ui->showHeader();
 

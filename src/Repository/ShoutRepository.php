@@ -65,4 +65,15 @@ final class ShoutRepository implements ShoutRepositoryInterface
             }
         }
     }
+
+    /**
+     * this function deletes the shoutbox entry
+     */
+    public function delete(int $shoutboxId): void
+    {
+        Dba::write(
+            'DELETE FROM `user_shout` WHERE `id` = ?',
+            [$shoutboxId]
+        );
+    }
 }

@@ -35,4 +35,9 @@ interface ShoutRepositoryInterface
      * Cleans out orphaned shoutbox items
      */
     public function collectGarbage(?string $object_type = null, ?int $object_id = null): void;
+
+    /**
+     * this function deletes the shoutbox entry
+     */
+    public function delete(int $shoutboxId): void;
 }

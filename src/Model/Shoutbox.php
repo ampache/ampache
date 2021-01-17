@@ -270,15 +270,6 @@ class Shoutbox
     }
 
     /**
-     * this function deletes the current shoutbox entry
-     */
-    public function delete(): void
-    {
-        $sql      = sprintf('DELETE FROM `user_shout` WHERE `id` = \'%d\'', $this->id);
-        Dba::write($sql);
-    }
-
-    /**
      * @param boolean $details
      * @param boolean $jsbuttons
      * @return string
