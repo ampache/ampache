@@ -24,6 +24,10 @@ jobs:
           ${{ runner.os }}-php-
 
     - name: Install dependencies
+      uses: php-actions/composer@v5
+      with:
+        php_version: 7.4
+        version: 1
       if: steps.composer-cache.outputs.cache-hit != 'true'
       run: composer install --prefer-dist --no-progress --no-suggest
 
