@@ -22,7 +22,6 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Preference;
-use Ampache\Model\PrivateMsg;
 use Ampache\Model\User;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -31,6 +30,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\PrivateMessageRepositoryInterface;
 
 $web_path          = AmpConfig::get('web_path');
 $htmllang          = str_replace("_", "-", AmpConfig::get('lang'));
@@ -387,7 +387,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
                             <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo Core::get_global('user')->id; ?>"><?php echo Core::get_global('user')->fullname; ?></a>
                         <?php
                             if (AmpConfig::get('sociable')) { ?>
-                            <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php echo count(PrivateMsg::get_private_msgs(Core::get_global('user')->id, true)); ?>)</a>
+                            <a href="<?php echo $web_path; ?>/browse.php?action=pvmsg" title="<?php echo T_('New messages'); ?>">(<?php global $dic; echo $dic->get(PrivateMessageRepositoryInterface::class)->getUnreadCount((Core::get_global('user')->getId())); ?>)</a>
                         <?php
                             } ?>
                         </span>

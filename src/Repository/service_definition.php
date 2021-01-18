@@ -41,4 +41,5 @@ return [
     IpHistoryRepositoryInterface::class => autowire(IpHistoryRepository::class),
     UserFollowerRepositoryInterface::class => autowire(UserFollowerRepository::class),
     BookmarkRepositoryInterface::class => autowire(BookmarkRepository::class),
+    PrivateMessageRepositoryInterface::class => autowire(PrivateMessageRepository::class),
 ];

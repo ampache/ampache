@@ -45,6 +45,7 @@ use Ampache\Module\System\Core;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
+use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use DOMDocument;
@@ -2473,8 +2474,13 @@ class Subsonic_Api
      */
     public static function getchatmessages($input)
     {
-        $since    = (int)$input['since'];
-        $messages = PrivateMsg::get_chat_msgs($since);
+        $since                    = (int) $input['since'];
+        $privateMessageRepository = static::getPrivateMessageRepository();
+
+        $privateMessageRepository->cleanChatMessages();
+
+        $messages = $privateMessageRepository->getChatMessages($since);
+
         $response = Subsonic_Xml_Data::createSuccessResponse('getchatmessages');
         Subsonic_Xml_Data::addMessages($response, $messages);
         self::apiOutput($input, $response);
@@ -2490,8 +2496,19 @@ class Subsonic_Api
     public static function addchatmessage($input)
     {
         $message = self::check_parameter($input, 'message');
-        $user_id = User::get_from_username($input['u'])->id;
-        if (PrivateMsg::send_chat_msg($message, $user_id) !== null) {
+
+        $message = trim(
+            strip_tags(
+                filter_var(
+                    $message,
+                    FILTER_SANITIZE_STRING,
+                    FILTER_FLAG_NO_ENCODE_QUOTES
+                )
+            )
+        );
+
+        $user_id = User::get_from_username($input['u'])->getId();
+        if (static::getPrivateMessageRepository()->sendChatMessage($message, $user_id) !== null) {
             $response = Subsonic_Xml_Data::createSuccessResponse('addchatmessage');
         } else {
             $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'addChatMessage');
@@ -2590,5 +2607,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(BookmarkRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPrivateMessageRepository(): PrivateMessageRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PrivateMessageRepositoryInterface::class);
     }
 }
