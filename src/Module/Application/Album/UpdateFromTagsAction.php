@@ -30,7 +30,6 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -57,32 +56,32 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        require_once Ui::find_template('header.inc.php');
-        
-        $response = null;
-        
         // Make sure they are a 'power' user at least
         if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
             throw new AccessDeniedException();
         }
-        $object_id  = (int) filter_input(INPUT_GET, 'album_id', FILTER_SANITIZE_NUMBER_INT);
-        
-        $album = $this->modelFactory->createAlbum($object_id);
+
+        $albumId = (int) $request->getQueryParams()['album_id'] ?? 0;
+
+        $album = $this->modelFactory->createAlbum($albumId);
         $album->format();
-        
-        $catalog_id = $album->get_catalogs();
-        $type       = 'album';
-        $target_url = sprintf(
-            '%s/albums.php?action=show&amp;album=%d',
-            $this->configContainer->getWebPath(),
-            $object_id
+
+        $this->ui->showHeader();
+        $this->ui->show(
+            'show_update_items.inc.php',
+            [
+                'catalog_id' => $album->get_catalogs(),
+                'type' => 'album',
+                'target_url' => sprintf(
+                    '%s/albums.php?action=show&amp;album=%d',
+                    $this->configContainer->getWebPath(),
+                    $albumId
+                )
+            ]
         );
-        
-        require_once Ui::find_template('show_update_items.inc.php');
-        
         $this->ui->showQueryStats();
         $this->ui->showFooter();
-        
-        return $response;
+
+        return null;
     }
 }

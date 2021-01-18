@@ -29,7 +29,6 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -53,9 +52,7 @@ final class ShowAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-
-        require_once Ui::find_template('show_export.inc.php');
-
+        $this->ui->show('show_export.inc.php');
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

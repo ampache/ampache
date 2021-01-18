@@ -670,9 +670,8 @@ class Json_Data
 
         $JSON = [];
         foreach ($bookmarks as $bookmark_id) {
-            $bookmark = new Bookmark($bookmark_id);
-            $bookmark->format();
-            $bookmark_user          = $bookmark->f_user;
+            $bookmark               = new Bookmark($bookmark_id);
+            $bookmark_user          = $bookmark->getUserName();
             $bookmark_object_type   = $bookmark->object_type;
             $bookmark_object_id     = $bookmark->object_id;
             $bookmark_position      = $bookmark->position;

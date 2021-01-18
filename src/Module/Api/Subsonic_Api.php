@@ -2427,7 +2427,7 @@ class Subsonic_Api
         if (!empty($type)) {
             $bookmark = new Bookmark(Subsonic_Xml_Data::getAmpacheId($object_id), $type);
             if ($bookmark->id) {
-                $bookmark->update($position);
+                static::getBookmarkRepository()->update($bookmark->getId(), (int) $position);
             } else {
                 Bookmark::create(array(
                     'object_id' => Subsonic_Xml_Data::getAmpacheId($object_id),

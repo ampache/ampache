@@ -61,4 +61,12 @@ final class BookmarkRepository implements BookmarkRepositoryInterface
             Dba::write("DELETE FROM `bookmark` USING `bookmark` LEFT JOIN `$type` ON `$type`.`id` = `bookmark`.`object_id` WHERE `bookmark`.`object_type` = '$type' AND `$type`.`id` IS NULL");
         }
     }
+
+    public function update(int $userId, int $position): void
+    {
+        Dba::write(
+            'UPDATE `bookmark` SET `position` = ?, `update_date` = ? WHERE `id` = ?',
+            [$position, time(), $userId]
+        );
+    }
 }

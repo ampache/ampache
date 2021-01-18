@@ -34,4 +34,6 @@ interface BookmarkRepositoryInterface
      * Remove bookmark for items that no longer exist.
      */
     public function collectGarbage(): void;
+
+    public function update(int $userId, int $position): void;
 }

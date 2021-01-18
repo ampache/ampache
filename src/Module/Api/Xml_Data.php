@@ -831,9 +831,8 @@ class Xml_Data
         $string = "";
         foreach ($bookmarks as $bookmark_id) {
             $bookmark = new Bookmark($bookmark_id);
-            $bookmark->format();
             $string .= "<bookmark id=\"$bookmark_id\">\n" .
-                "\t<user><![CDATA[" . $bookmark->f_user . "]]></user>\n" .
+                "\t<user><![CDATA[" . $bookmark->getUserName() . "]]></user>\n" .
                 "\t<object_type><![CDATA[" . $bookmark->object_type . "]]></object_type>\n" .
                 "\t<object_id>" . $bookmark->object_id . "</object_id>\n" .
                 "\t<position>" . $bookmark->position . "</position>\n" .

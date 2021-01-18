@@ -45,8 +45,6 @@ class Bookmark extends database_object
     public $creation_date;
     public $update_date;
 
-    public $f_user;
-
     /**
      * Constructor
      * This is run every time a new object is created, and requires
@@ -143,21 +141,10 @@ class Bookmark extends database_object
         return Dba::write($sql, array($position, $updated, $user, $comment,  $data['object_type'], $data['object_id']));
     }
 
-    /**
-     * update
-     * @param integer $position
-     * @return PDOStatement|boolean
-     */
-    public function update($position)
+    public function getUserName(): string
     {
-        $sql = "UPDATE `bookmark` SET `position` = ?, `update_date` = ? WHERE `id` = ?";
+        $user = new User($this->user);
 
-        return Dba::write($sql, array($position, time(), $this->id));
-    }
-
-    public function format()
-    {
-        $user         = new User($this->user);
-        $this->f_user = $user->username;
+        return $user->username;
     }
 }
