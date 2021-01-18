@@ -718,7 +718,7 @@ if (!isset($_REQUEST['segment'])) {
                     User::save_mediaplay($user, $media);
                 }
             }
-        } elseif (!$share_id && !$record_stats) {
+        } elseif (!$share_id && $record_stats) {
             if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                 debug_event('play/index', 'Registering download for ' . $uid . ': ' . $media->get_stream_name() . ' {' . $media->id . '}', 5);
                 Stats::insert($type, $media->id, $uid, $agent, $location, 'download', $time);

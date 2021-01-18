@@ -755,7 +755,8 @@ class Subsonic_XML_Data
         // $artist->format();
         $xsong->addAttribute('artistId', (string) self::getArtistId($songData['artist']));
         $xsong->addAttribute('artist', (string) self::checkName($artistData['f_full_name']));
-        $xsong->addAttribute('coverArt', (string) self::getAlbumId($albumData['id']));
+        $art_object = (AmpConfig::get('show_song_art')) ? self::getSongId($songData['id']) : self::getAlbumId($albumData['id']);
+        $xsong->addAttribute('coverArt', (string) $art_object);
         $xsong->addAttribute('duration', (string) $songData['time']);
         $xsong->addAttribute('bitRate', (string) ((int) ($songData['bitrate'] / 1000)));
         if ($addAmpacheInfo) {
@@ -1360,8 +1361,7 @@ class Subsonic_XML_Data
     public static function addLyrics($xml, $artist, $title, $song_id)
     {
         $song = new Song($song_id);
-        $song->format();
-        $song->fill_ext_info();
+        $song->fill_ext_info('lyrics');
         $lyrics = $song->get_lyrics();
 
         if (!empty($lyrics) && $lyrics['text']) {

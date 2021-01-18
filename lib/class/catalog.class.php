@@ -774,7 +774,7 @@ abstract class Catalog extends database_object
      *
      * This returns the current number of songs, videos, albums, and artists
      * across all catalogs on the server
-     * @param bool $enabled
+     * @param boolean $enabled
      * @param string $table
      * @return array
      */
@@ -1467,8 +1467,9 @@ abstract class Catalog extends database_object
     public function gather_art($songs = null, $videos = null)
     {
         // Make sure they've actually got methods
-        $art_order    = AmpConfig::get('art_order');
-        $db_art_first = ($art_order[0] == 'db');
+        $art_order       = AmpConfig::get('art_order');
+        $gather_song_art = AmpConfig::get('gather_song_art', false);
+        $db_art_first    = ($art_order[0] == 'db');
         if (!count($art_order)) {
             debug_event('catalog.class', 'art_order not set, self::gather_art aborting', 3);
 
@@ -1483,9 +1484,15 @@ abstract class Catalog extends database_object
         if ($songs == null) {
             $searches['album']  = $this->get_album_ids('art');
             $searches['artist'] = $this->get_artist_ids('art');
+            if ($gather_song_art) {
+                $searches['song'] = $this->get_songs();
+            }
         } else {
             $searches['album']  = array();
             $searches['artist'] = array();
+            if ($gather_song_art) {
+                $searches['song'] = array();
+            }
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->id) {
@@ -1494,6 +1501,9 @@ abstract class Catalog extends database_object
                     }
                     if (!in_array($song->artist, $searches['artist'])) {
                         $searches['artist'][] = $song->artist;
+                    }
+                    if ($gather_song_art) {
+                        $searches['song'][] = $song->id;
                     }
                 }
             }
@@ -1959,8 +1969,7 @@ abstract class Catalog extends database_object
         }
 
         // check whether this album exists
-        $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group,
-                                        $new_song->albumartist, $release_type, false, $original_year, $barcode, $catalog_number);
+        $new_song->album = Album::check($album, $new_song->year, $disk, $album_mbid, $album_mbid_group, $new_song->albumartist, $release_type, $original_year, $barcode, $catalog_number);
         if (!$new_song->album) {
             $new_song->album = $song->album;
         }
@@ -2032,7 +2041,7 @@ abstract class Catalog extends database_object
             // Update song_data table
             Song::update_song($song->id, $new_song);
 
-            if ($song->tags != $new_song->tags) {
+            if (!empty($new_song->tags) && $song->tags != $new_song->tags) {
                 Tag::update_tag_list(implode(',', $new_song->tags), 'song', $song->id, true);
                 self::updateAlbumTags($song);
                 self::updateArtistTags($song);
@@ -2743,6 +2752,9 @@ abstract class Catalog extends database_object
         // Next Remove the Catalog Entry it's self
         $sql = "DELETE FROM `catalog` WHERE `id` = ?";
         Dba::write($sql, array($catalog_id));
+
+        // run garbage collection
+        self::garbage_collection();
 
         return true;
     } // delete

@@ -283,7 +283,7 @@ class AutoUpdate
 
     /**
      * Update local git repository.
-     * @param bool $api
+     * @param boolean $api
      */
     public static function update_files($api = false)
     {
@@ -309,7 +309,7 @@ class AutoUpdate
 
     /**
      * Update project dependencies.
-     * @param bool $api
+     * @param boolean $api
      */
     public static function update_dependencies($api = false)
     {

@@ -78,7 +78,7 @@ final class PodcastCreateMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::podcasts(array($podcast));
+                echo JSON_Data::podcasts(array($podcast), false, false);
                 break;
             default:
                 echo XML_Data::podcasts(array($podcast));

@@ -434,7 +434,7 @@ class Song extends database_object implements media, library_item
             $artist_id = (int) ($results['artist_id']);
         }
         if (!isset($results['album_id'])) {
-            $album_id = Album::check($album, $year, $disk, $album_mbid, $album_mbid_group, $albumartist_id, $release_type, false, $original_year, $barcode, $catalog_number);
+            $album_id = Album::check($album, $year, $disk, $album_mbid, $album_mbid_group, $albumartist_id, $release_type, $original_year, $barcode, $catalog_number);
         } else {
             $album_id = (int) ($results['album_id']);
         }
@@ -665,17 +665,19 @@ class Song extends database_object implements media, library_item
      * _get_ext_info
      * This function gathers information from the song_ext_info table and adds it to the
      * current object
+     * @param string $select
      * @return array
      */
-    public function _get_ext_info()
+    public function _get_ext_info($select = '')
     {
         $song_id = (int) ($this->id);
+        $columns = (!empty($select)) ? Dba::escape($select) : '*';
 
         if (parent::is_cached('song_data', $song_id)) {
             return parent::get_from_cache('song_data', $song_id);
         }
 
-        $sql        = "SELECT * FROM `song_data` WHERE `song_id` = ?";
+        $sql        = "SELECT $columns FROM `song_data` WHERE `song_id` = ?";
         $db_results = Dba::read($sql, array($song_id));
 
         $results = Dba::fetch_assoc($db_results);
@@ -686,18 +688,21 @@ class Song extends database_object implements media, library_item
     } // _get_ext_info
 
     /**
-      * fill_ext_info
+     * fill_ext_info
      * This calls the _get_ext_info and then sets the correct vars
+     * @param string $data_filter
      */
-    public function fill_ext_info()
+    public function fill_ext_info($data_filter = '')
     {
-        $info = $this->_get_ext_info();
+        $info = $this->_get_ext_info($data_filter);
 
-        foreach ($info as $key => $value) {
-            if ($key != 'song_id') {
-                $this->$key = $value;
-            }
-        } // end foreach
+        if (!empty($info)) {
+            foreach ($info as $key => $value) {
+                if ($key != 'song_id') {
+                    $this->$key = $value;
+                }
+            } // end foreach
+        }
     } // fill_ext_info
 
     /**
@@ -2130,10 +2135,9 @@ class Song extends database_object implements media, library_item
         } else {
             if (!Access::check('interface', 100)) {
                 // If user identifier is empty, we need to retrieve only users which have allowed view of personal info
-                $personal_info_id    = Preference::id_from_name('allow_personal_info_recent');
-                $current_user        = (int) Core::get_global('user')->id;
-                if ($personal_info_id && $current_user > 0) {
-                    $sql .= "AND `object_count`.`user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user') ";
+                $current_user = (int) Core::get_global('user')->id;
+                if ($current_user > 0) {
+                    $sql .= "AND `object_count`.`user` IN (SELECT `user` FROM `user_preference` WHERE (`preference`='$personal_info_recent' AND `value`='1') OR `user`='$current_user') ";
                 }
             }
         }

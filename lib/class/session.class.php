@@ -203,7 +203,7 @@ class Session
         // Regenerate the session ID to prevent fixation
         switch ($data['type']) {
             case 'api':
-                $key = (isset($data['apikey'])) ? md5(((string) $data['apikey'] . (string) time())) : md5(uniqid((string) rand(), true));
+                $key = (isset($data['apikey'])) ? md5(((string) $data['apikey'] . md5(uniqid((string) rand(), true)))) : md5(uniqid((string) rand(), true));
                 break;
             case 'stream':
                 $key = (isset($data['sid'])) ? $data['sid'] : md5(uniqid((string) rand(), true));
@@ -454,7 +454,7 @@ class Session
             array('Session', 'read'),
             array('Session', 'write'),
             array('Session', 'destroy'),
-            array('Session', 'gc'));
+            array('Session', 'garbage_collection'));
 
         // Make sure session_write_close is called during the early part of
         // shutdown, to avoid issues with object destruction.
@@ -480,7 +480,7 @@ class Session
         $cookie_secure = make_bool(AmpConfig::get('cookie_secure'));
 
         if (isset($_SESSION)) {
-            setcookie(session_name(), session_id(), $cookie_life);
+            setcookie(session_name(), session_id(), $cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
         } else {
             session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
         }
@@ -523,6 +523,9 @@ class Session
     {
         $remember_length = AmpConfig::get('remember_length');
         $session_name    = AmpConfig::get('session_name');
+        $cookie_path     = AmpConfig::get('cookie_path');
+        $cookie_domain   = '';
+        $cookie_secure   = make_bool(AmpConfig::get('cookie_secure'));
 
         $token = self::generateRandomToken(); // generate a token, should be 128 - 256 bit
         self::storeTokenForUser($username, $token, $remember_length);
@@ -530,7 +533,7 @@ class Session
         $mac    = hash_hmac('sha256', $cookie, AmpConfig::get('secret_key'));
         $cookie .= ':' . $mac;
 
-        setcookie($session_name . '_remember', $cookie, time() + $remember_length);
+        setcookie($session_name . '_remember', $cookie, time() + $remember_length, $cookie_path, $cookie_domain, $cookie_secure);
     }
 
     /**

@@ -72,7 +72,7 @@ final class LicenseMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::licenses(array($object_id));
+                echo JSON_Data::licenses(array($object_id), false);
                 break;
             default:
                 echo XML_Data::licenses(array($object_id));

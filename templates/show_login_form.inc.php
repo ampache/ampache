@@ -83,21 +83,20 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
                         <?php echo AmpConfig::get('login_message'); ?>
                     </div>
                 </div>
+                <div class="loginoptions">
+                <?php if (AmpConfig::get('allow_public_registration')) { ?>
 
-                <?php if (Mailer::is_mail_enabled()) { ?>
-                    <div class="loginoptions">
-                        <?php if (AmpConfig::get('allow_public_registration')) { ?>
                             <a class="button nohtml" id="registerbutton" href="<?php echo AmpConfig::get('web_path'); ?>/register.php"><?php echo T_('Register'); ?></a>
-                        <?php
-    } // end if allow_public_registration?>
+                <?php } ?>
+                <?php if (Mailer::is_mail_enabled()) { ?>
                         <a class="button nohtml" id="lostpasswordbutton" href="<?php echo AmpConfig::get('web_path'); ?>/lostpassword.php"><?php echo T_('Lost password'); ?></a>
-                    </div>
-                <?php
-} ?>
+
+                <?php } ?>
+                </div>
             </form>
             <?php if ($mobile_session) {
-        echo '<div id="mobileheader"><!-- This is the header -->';
-        echo '<h1 id="headerlogo"></h1>';
-        echo '</div>';
-    }
+    echo '<div id="mobileheader"><!-- This is the header -->';
+    echo '<h1 id="headerlogo"></h1>';
+    echo '</div>';
+}
     UI::show_footer(); ?>

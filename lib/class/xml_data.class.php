@@ -389,7 +389,7 @@ class XML_Data
                     foreach ($albums as $album_id) {
                         if ($album_id) {
                             $album = new Album($album_id[0]);
-                            $string .= "\t\t<album id=\"" . $album_id[0] .
+                            $string .= "\t<album id=\"" . $album_id[0] .
                                     '"><![CDATA[' . $album->full_name .
                                     "]]></album>\n";
                         }
@@ -410,10 +410,10 @@ class XML_Data
                     $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                             "\t<title><![CDATA[" . $song->title . "]]></title>\n" .
                             "\t<name><![CDATA[" . $song->f_title . "]]></name>\n" .
-                            "\t\t<artist id=\"" . $song->artist .
+                            "\t<artist id=\"" . $song->artist .
                             '"><![CDATA[' . $song->get_artist_name() .
                             "]]></artist>\n" .
-                            "\t\t<album id=\"" . $song->album .
+                            "\t<album id=\"" . $song->album .
                             '"><![CDATA[' . $song->get_album_name() .
                             "]]></album>\n" .
                             "</$object_type>\n";
@@ -581,7 +581,7 @@ class XML_Data
                     "\t<songs>" . (int) ($counts['song']) . "</songs>\n" .
                     "\t<videos>" . (int) ($counts['video']) . "</videos>\n" .
                     "\t<playlists>" . (int) ($counts['playlist']) . "</playlists>\n" .
-                    "\t<stream>" . (int) ($counts['live_stream']) . "</stream>\n" .
+                    "\t<live_streams>" . (int) ($counts['live_stream']) . "</live_streams>\n" .
                     "</genre>\n";
         } // end foreach
 
@@ -623,16 +623,18 @@ class XML_Data
             // Handle includes
             $albums = (in_array("albums", $include))
                 ? self::albums($artist->get_albums(), array(), $user_id, false)
-                : ($artist->albums ?: 0);
+                : '';
             $songs = (in_array("songs", $include))
                 ? self::songs($artist->get_songs(), $user_id, false)
-                : ($artist->songs ?: 0);
+                : '';
 
             $string .= "<artist id=\"" . $artist->id . "\">\n" .
                     "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n" .
                     $tag_string .
                     "\t<albums>" . $albums . "</albums>\n" .
+                    "\t<albumcount>" . ($artist->albums ?: 0) . "</albumcount>\n" .
                     "\t<songs>" . $songs . "</songs>\n" .
+                    "\t<songcount>" . ($artist->songs ?: 0) . "</songcount>\n" .
                     "\t<art><![CDATA[$art_url]]></art>\n" .
                     "\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n" .
                     "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
@@ -641,7 +643,7 @@ class XML_Data
                     "\t<mbid><![CDATA[" . $artist->mbid . "]]></mbid>\n" .
                     "\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n" .
                     "\t<time><![CDATA[" . $artist->time . "]]></time>\n" .
-                    "\t<yearformed>" . $artist->yearformed . "</yearformed>\n" .
+                    "\t<yearformed>" . (int) $artist->yearformed . "</yearformed>\n" .
                     "\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n" .
                     "</artist>\n";
         } // end foreach artists
@@ -699,7 +701,7 @@ class XML_Data
             // Handle includes
             $songs = (in_array("songs", $include))
                 ? self::songs($album->get_songs(), $user_id, false)
-                :$album->song_count;
+                : '';
 
             // count multiple disks
             if ($album->allow_group_disks) {
@@ -709,6 +711,7 @@ class XML_Data
             $string .= "\t<time>" . $album->total_duration . "</time>\n" .
                     "\t<year>" . $album->year . "</year>\n" .
                     "\t<tracks>" . $songs . "</tracks>\n" .
+                    "\t<songcount>" . $album->song_count . "</songcount>\n" .
                     "\t<disk>" . $disk . "</disk>\n" .
                     self::genre_string($album->tags) .
                     "\t<art><![CDATA[$art_url]]></art>\n" .
@@ -991,10 +994,13 @@ class XML_Data
             }
 
             $song->format();
-            $tag_string = self::genre_string(Tag::get_top_tags('song', $song_id));
-            $rating     = new Rating($song_id, 'song');
-            $flag       = new Userflag($song_id, 'song');
-            $art_url    = Art::url($song->album, 'album', Core::get_request('auth'));
+            $tag_string    = self::genre_string(Tag::get_top_tags('song', $song_id));
+            $rating        = new Rating($song_id, 'song');
+            $flag          = new Userflag($song_id, 'song');
+            $show_song_art = AmpConfig::get('show_song_art', false);
+            $art_object    = ($show_song_art) ? $song->id : $song->album;
+            $art_type      = ($show_song_art) ? 'song' : 'album';
+            $art_url       = Art::url($art_object, $art_type, Core::get_request('auth'));
             $playlist_track++;
 
             $string .= "<song id=\"" . $song->id . "\">\n" .
@@ -1155,7 +1161,7 @@ class XML_Data
      * This handles creating an xml document for a user
      *
      * @param  User   $user User
-     * @param  bool   $fullinfo
+     * @param  boolean   $fullinfo
      * @return string return xml
      */
     public static function user(User $user, $fullinfo)
@@ -1166,13 +1172,13 @@ class XML_Data
         if ($fullinfo) {
             $string .= "\t<auth><![CDATA[" . $user->apikey . "]]></auth>\n" .
                        "\t<email><![CDATA[" . $user->email . "]]></email>\n" .
-                       "\t<access><![CDATA[" . (string) $user->access . "]]></access>\n" .
-                       "\t<fullname_public><![CDATA[" . (string) $user->fullname_public . "]]></fullname_public>\n" .
+                       "\t<access>" . (int) $user->access . "</access>\n" .
+                       "\t<fullname_public>" . (int) $user->fullname_public . "</fullname_public>\n" .
                        "\t<validation><![CDATA[" . $user->validation . "]]></validation>\n" .
-                       "\t<disabled><![CDATA[" . (string) $user->disabled . "]]></disabled>\n";
+                       "\t<disabled>" . (int) $user->disabled . "</disabled>\n";
         }
-        $string .= "\t<create_date><![CDATA[" . (string) $user->create_date . "]]></create_date>\n" .
-                "\t<last_seen><![CDATA[" . (string) $user->last_seen . "]]></last_seen>\n" .
+        $string .= "\t<create_date>" . (int) $user->create_date . "</create_date>\n" .
+                "\t<last_seen>" . (int) $user->last_seen . "</last_seen>\n" .
                 "\t<link><![CDATA[" . $user->link . "]]></link>\n" .
                 "\t<website><![CDATA[" . $user->website . "]]></website>\n" .
                 "\t<state><![CDATA[" . $user->state . "]]></state>\n" .

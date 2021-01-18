@@ -251,7 +251,7 @@ class User extends database_object
     /**
      * get_valid_users
      * This returns all valid users in database.
-     * @param bool $include_disabled
+     * @param boolean $include_disabled
      * @return array
      */
     public static function get_valid_users($include_disabled = false)
@@ -1239,6 +1239,13 @@ class User extends database_object
     {
         $user_id = Dba::escape($user_id);
 
+        // Delete that system pref that's not a user pref...
+        if ($user_id > 0) {
+            // TODO, remove before next release. ('custom_login_logo' needs to be here a while at least so 5.0.0+1)
+            $sql = "DELETE FROM `user_preference` WHERE `preference` IN (SELECT `id` from `preference` where `name` IN ('custom_login_background', 'custom_login_logo')) AND `user` = $user_id";
+            Dba::write($sql);
+        }
+
         /* Get All Preferences for the current user */
         $sql        = "SELECT * FROM `user_preference` WHERE `user`='$user_id'";
         $db_results = Dba::read($sql);
@@ -1263,7 +1270,8 @@ class User extends database_object
         /* If we aren't the -1 user before we continue grab the -1 users values */
         if ($user_id != '-1') {
             $sql = "SELECT `user_preference`.`preference`, `user_preference`.`value` FROM `user_preference`, `preference` " .
-                "WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`catagory` !='system'";
+                "WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND " .
+                "`preference`.`catagory` !='system' AND `preference`.`name` NOT IN ('custom_login_background', 'custom_login_logo') ";
             $db_results = Dba::read($sql);
             /* While through our base stuff */
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -1278,6 +1286,7 @@ class User extends database_object
         // If not system, exclude system... *gasp*
         if ($user_id != '-1') {
             $sql .= " WHERE catagory !='system'";
+            $sql .= " AND `preference`.`name` NOT IN ('custom_login_background', 'custom_login_logo')";
         }
         $db_results = Dba::read($sql);
 

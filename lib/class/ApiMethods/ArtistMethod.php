@@ -69,7 +69,7 @@ final class ArtistMethod
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::artists(array($object_id), $include, $user->id);
+                echo JSON_Data::artists(array($object_id), $include, $user->id, true, false);
                 break;
             default:
                 echo XML_Data::artists(array($object_id), $include, $user->id);
