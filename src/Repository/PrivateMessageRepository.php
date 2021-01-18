@@ -95,4 +95,20 @@ final class PrivateMessageRepository implements PrivateMessageRepositoryInterfac
 
         return null;
     }
+
+    public function setIsRead(int $privateMessageId, int $state): void
+    {
+        Dba::write(
+            'UPDATE `user_pvmsg` SET `is_read` = ? WHERE `id` = ?',
+            [$state, $privateMessageId]
+        );
+    }
+
+    public function delete(int $privateMessageId): void
+    {
+        Dba::write(
+            'DELETE FROM `user_pvmsg` WHERE `id` = ?',
+            [$privateMessageId]
+        );
+    }
 }

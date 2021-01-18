@@ -33,6 +33,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -46,14 +47,18 @@ final class SetIsReadAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private PrivateMessageRepositoryInterface $privateMessageRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        PrivateMessageRepositoryInterface $privateMessageRepository
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
+        $this->configContainer          = $configContainer;
+        $this->ui                       = $ui;
+        $this->modelFactory             = $modelFactory;
+        $this->privateMessageRepository = $privateMessageRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -76,7 +81,8 @@ final class SetIsReadAction implements ApplicationActionInterface
             $pvmsg = $this->modelFactory->createPrivateMsg((int) ($msg_id));
             if ($pvmsg->id && $pvmsg->to_user === Core::get_global('user')->id) {
                 $read = (int) $_REQUEST['read'];
-                $pvmsg->set_is_read($read);
+
+                $this->privateMessageRepository->setIsRead($pvmsg->getId(), $read);
             } else {
                 throw new AccessDeniedException(
                     sprintf('Unknown or unauthorized private message `%d`.', $pvmsg->id),

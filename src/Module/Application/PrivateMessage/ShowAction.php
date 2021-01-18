@@ -34,6 +34,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -47,14 +48,18 @@ final class ShowAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private PrivateMessageRepositoryInterface $privateMessageRepository;
+
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        PrivateMessageRepositoryInterface $privateMessageRepository
     ) {
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
+        $this->ui                       = $ui;
+        $this->modelFactory             = $modelFactory;
+        $this->configContainer          = $configContainer;
+        $this->privateMessageRepository = $privateMessageRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -74,7 +79,7 @@ final class ShowAction implements ApplicationActionInterface
         if ($pvmsg->id && $pvmsg->to_user === Core::get_global('user')->id) {
             $pvmsg->format();
             if (!$pvmsg->is_read) {
-                $pvmsg->set_is_read(1);
+                $this->privateMessageRepository->setIsRead($pvmsg->getId(), 1);
             }
             require_once Ui::find_template('show_pvmsg.inc.php');
         } else {

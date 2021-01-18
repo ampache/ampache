@@ -48,4 +48,8 @@ interface PrivateMessageRepositoryInterface
      * Sends a subsonic chat message
      */
     public function sendChatMessage(string $message, int $userId): ?int;
+
+    public function setIsRead(int $privateMessageId, int $state): void;
+
+    public function delete(int $privateMessageId): void;
 }

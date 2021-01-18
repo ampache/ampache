@@ -149,29 +149,6 @@ class PrivateMsg extends database_object
     }
 
     /**
-     * set_is_read
-     * @param integer $read
-     * @return PDOStatement|boolean
-     */
-    public function set_is_read($read)
-    {
-        $sql = "UPDATE `user_pvmsg` SET `is_read` = ? WHERE `id` = ?";
-
-        return Dba::write($sql, array($read, $this->id));
-    }
-
-    /**
-     * delete
-     * @return PDOStatement|boolean
-     */
-    public function delete()
-    {
-        $sql = "DELETE FROM `user_pvmsg` WHERE `id` = ?";
-
-        return Dba::write($sql, array($this->id));
-    }
-
-    /**
      * @param array $data
      * @return boolean|string|null
      */
