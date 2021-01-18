@@ -77,7 +77,6 @@ final class ShowAction implements ApplicationActionInterface
         $pvmsg  = $this->modelFactory->createPrivateMsg($msg_id);
 
         if ($pvmsg->id && $pvmsg->to_user === Core::get_global('user')->id) {
-            $pvmsg->format();
             if (!$pvmsg->is_read) {
                 $this->privateMessageRepository->setIsRead($pvmsg->getId(), 1);
             }

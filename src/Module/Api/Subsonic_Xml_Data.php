@@ -1572,7 +1572,6 @@ class Subsonic_Xml_Data
         }
         foreach ($messages as $message) {
             $chat = new PrivateMsg($message);
-            $chat->format();
             self::addMessage($xmessages, $chat);
         }
     }

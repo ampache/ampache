@@ -135,17 +135,42 @@ class PrivateMsg extends database_object
     public function format($details = true)
     {
         unset($details); //dead code but called from other format calls
-        $this->f_subject       = scrub_out($this->subject);
-        $this->f_message       = scrub_out($this->message);
-        $this->f_creation_date = get_datetime((int)$this->creation_date);
-        $from_user             = new User($this->from_user);
+    }
+
+    public function getSenderUserLink(): string
+    {
+        $from_user = new User($this->from_user);
         $from_user->format();
-        $this->f_from_user_link = $from_user->f_link;
-        $to_user                = new User($this->to_user);
+
+        return $from_user->f_link;
+    }
+
+    public function getRecipientUserLink(): string
+    {
+        $to_user = new User($this->to_user);
         $to_user->format();
-        $this->f_to_user_link = $to_user->f_link;
-        $this->link           = AmpConfig::get('web_path') . '/pvmsg.php?pvmsg_id=' . $this->id;
-        $this->f_link         = "<a href=\"" . $this->link . "\">" . $this->f_subject . "</a>";
+
+        return $to_user->f_link;
+    }
+
+    public function getCreationDateFormatted(): string
+    {
+        return get_datetime((int) $this->creation_date);
+    }
+
+    public function getLinkFormatted(): string
+    {
+        return sprintf(
+            '<a href="%s/pvmsg.php?pvmsg_id=%d">%s</a>',
+            AmpConfig::get('web_path'),
+            $this->id,
+            $this->getSubjectFormatted()
+        );
+    }
+
+    public function getSubjectFormatted(): string
+    {
+        return scrub_out($this->subject);
     }
 
     /**

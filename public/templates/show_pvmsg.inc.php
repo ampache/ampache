@@ -23,9 +23,11 @@
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
-Ui::show_box_top($pvmsg->f_subject, 'info-box'); ?>
+/** @var \Ampache\Model\PrivateMsg $pvmsg */
+
+Ui::show_box_top($pvmsg->getSubjectFormatted(), 'info-box'); ?>
 <div>
-    <?php echo T_('Sent by') . ' ' . $pvmsg->f_from_user_link . ' at ' . $pvmsg->f_creation_date; ?>
+    <?php echo T_('Sent by') . ' ' . $pvmsg->getSenderUserLink() . ' at ' . $pvmsg->getCreationDateFormatted(); ?>
 </div>
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>
@@ -41,7 +43,7 @@ Ui::show_box_top($pvmsg->f_subject, 'info-box'); ?>
 
 <hr />
 <div>
-    <?php echo nl2br($pvmsg->f_message); ?>
+    <?php echo nl2br(scrub_out($pvmsg->message)); ?>
 </div>
 
 <?php Ui::show_box_bottom(); ?>
