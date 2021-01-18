@@ -129,14 +129,6 @@ class PrivateMsg extends database_object
         return (int) $this->id;
     }
 
-    /**
-     * @param boolean $details
-     */
-    public function format($details = true)
-    {
-        unset($details); //dead code but called from other format calls
-    }
-
     public function getSenderUserLink(): string
     {
         $from_user = new User($this->from_user);
