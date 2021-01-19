@@ -440,14 +440,14 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " .
-            "VALUES ('browse_filter', '0', 'Show filter box on browse',25, 'boolean', 'interface', 'library')";
+            "VALUES ('browse_filter', '0', 'Show filter box on browse', 25, 'boolean', 'interface', 'library')";
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '0')";
         $retval &= Dba::write($sql, array($row_id));
 
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " .
-            "VALUES ('sidebar_light', '0', 'Light sidebar by default',25, 'boolean', 'interface', 'theme')";
+            "VALUES ('sidebar_light', '0', 'Light sidebar by default', 25, 'boolean', 'interface', 'theme')";
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '0')";

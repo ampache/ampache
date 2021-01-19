@@ -56,11 +56,8 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 
 * Escape filepaths when removing from database
 * Check for mail_auth config correctly
-* Sublime Music requires ints for json data to be cast correctly
-* HLS video streams using Subsonic
 * Regex in config for additional_genre_delimiters
 * **MAJOR** UPnP fixes
-* Browsing an album would ignore album artist
 
 ### API develop
 
@@ -130,6 +127,34 @@ All API code that used 'Tag' now references 'Genre' instead
 * Api::democratic was using action from localplay in the return responses
 * Setting a limit of 'none' would slice away all the results
 * get_indexes for XML didn't include podcast indexes
+
+## Ampache 4.2.6-release
+
+### Changed
+
+* Ignore ALL tagged releases (e.g. 4.2.6-preview 4.2.6-beta)
+* Don't check the times in save_mediaplay plugins
+* Plugins should only have 1 category
+* Update Composer requirements
+
+### Removed
+
+* Some system preferences were added as user preferences
+
+### Fixed
+
+* Search original_year query
+* Replaygain was missing from the webplayer
+* Check albumartist in get_album_suite queries
+* Recently played queries check for privacy options
+* Headphones plugin fix for missing mbid's
+* Duplicate downloads recorded in play/index
+* Subsonic video HLS stream and json values
+* Block more password resets when using simple_user_mode
+
+### API 4.2.6
+
+**NO CHANGE**
 
 ## Ampache 4.2.5-release
 
