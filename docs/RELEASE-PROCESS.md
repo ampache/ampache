@@ -25,6 +25,13 @@ It's easy to use a program like github desktop to compare between branches.
 * Add pchart to composer
   * composer require szymach/c-pchart "2.*"
 * ~~Run composer install~~ (adding pchart updates everything)
+* Get missing map files
+
+```shell
+wget -P ./lib/components/jQuery-contextMenu/dist/ https://raw.githubusercontent.com/swisnl/jQuery-contextMenu/a7a1b9f3b9cd789d6eb733ee5e7cbc6c91b3f0f8/dist/jquery.contextMenu.min.js.map
+wget -P ./lib/components/jQuery-contextMenu/dist/ https://raw.githubusercontent.com/swisnl/jQuery-contextMenu/a7a1b9f3b9cd789d6eb733ee5e7cbc6c91b3f0f8/dist/jquery.contextMenu.min.css.map
+```
+
 * Remove broken symbolic links
 
 ```shell
