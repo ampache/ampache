@@ -164,14 +164,18 @@ class AutoUpdate
             // Otherwise it is stable version, get latest tag
             else {
                 $tags = self::github_request('/tags');
-                $str  = strstr($tags[0]->name, "-"); // ignore ALL tagged releases (e.g. 4.2.5-preview 4.2.5-beta)
-                if (!$str) {
-                    $lastversion = $tags[0]->name;
-                    Preference::update('autoupdate_lastversion', Core::get_global('user')->id, $lastversion);
-                    AmpConfig::set('autoupdate_lastversion', $lastversion, true);
-                    $available = self::is_update_available(true);
-                    Preference::update('autoupdate_lastversion_new', Core::get_global('user')->id, $available);
-                    AmpConfig::set('autoupdate_lastversion_new', $available, true);
+                foreach ($tags as $releases) {
+                    $str = strstr($releases->name, "-"); // ignore ALL tagged releases (e.g. 4.2.5-preview 4.2.5-beta)
+                    if (empty($str)) {
+                        $lastversion = $releases->name;
+                        Preference::update('autoupdate_lastversion', Core::get_global('user')->id, $lastversion);
+                        AmpConfig::set('autoupdate_lastversion', $lastversion, true);
+                        $available = self::is_update_available(true);
+                        Preference::update('autoupdate_lastversion_new', Core::get_global('user')->id, $available);
+                        AmpConfig::set('autoupdate_lastversion_new', $available, true);
+
+                        return $lastversion;
+                    }
                 }
             }
         }
