@@ -541,32 +541,6 @@ class Video extends database_object implements Media, library_item, GarbageColle
     }
 
     /**
-     * Get derived video types.
-     * @return string[]
-     */
-    private static function get_derived_types()
-    {
-        return array('TVShow_Episode', 'Movie', 'Clip', 'Personal_Video');
-    }
-
-    /**
-     * Validate video type.
-     * @param string $type
-     * @return string
-     */
-    private static function validate_type($type)
-    {
-        $dtypes = self::get_derived_types();
-        foreach ($dtypes as $dtype) {
-            if (strtolower((string) $type) == strtolower((string) $dtype)) {
-                return $type;
-            }
-        }
-
-        return 'Video';
-    }
-
-    /**
      * type_to_mime
      *
      * Returns the mime type for the specified file extension/type
@@ -1098,26 +1072,6 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
         return true;
     } // _update_item
-
-    /**
-     * get_item_count
-     * Return the number of entries in the database...
-     * @param string $type
-     * @return integer
-     */
-    public static function get_item_count($type)
-    {
-        $type       = self::validate_type($type);
-        $sql        = 'SELECT COUNT(*) as count from `' . strtolower((string) $type) . '`;';
-        $db_results = Dba::read($sql,array());
-        if ($results = Dba::fetch_assoc($db_results)) {
-            if ($results['count']) {
-                return $results['count'];
-            }
-        }
-
-        return 0;
-    } // get_item_count
 
     /**
      * @deprecated

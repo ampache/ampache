@@ -45,6 +45,7 @@ use Ampache\Model\Song;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 
 final class GuiFactory implements GuiFactoryInterface
 {
@@ -56,16 +57,20 @@ final class GuiFactory implements GuiFactoryInterface
 
     private PlaylistLoaderInterface $playlistLoader;
 
+    private VideoRepositoryInterface $videoRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
         AjaxUriRetrieverInterface $ajaxUriRetriever,
-        PlaylistLoaderInterface $playlistLoader
+        PlaylistLoaderInterface $playlistLoader,
+        VideoRepositoryInterface $videoRepository
     ) {
         $this->configContainer  = $configContainer;
         $this->modelFactory     = $modelFactory;
         $this->ajaxUriRetriever = $ajaxUriRetriever;
         $this->playlistLoader   = $playlistLoader;
+        $this->videoRepository  = $videoRepository;
     }
 
     public function createSongViewAdapter(
@@ -91,7 +96,8 @@ final class GuiFactory implements GuiFactoryInterface
     {
         return new StatsViewAdapter(
             $this->configContainer,
-            $this
+            $this,
+            $this->videoRepository
         );
     }
     

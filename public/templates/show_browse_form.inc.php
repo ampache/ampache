@@ -22,6 +22,10 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Video;
+use Ampache\Repository\VideoRepositoryInterface;
+
+global $dic;
+$videoRepository = $dic->get(VideoRepositoryInterface::class);
 
 ?>
 <?php $filter_str = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) ?>
@@ -80,7 +84,7 @@ use Ampache\Model\Video;
             echo T_('Podcasts');
         } ?></td>
     <?php }
-    if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
+    if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
         <td><?php if ($filter_str != 'video') { ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/browse.php?action=video"><?php echo T_('Videos'); ?></a><?php
         } else {

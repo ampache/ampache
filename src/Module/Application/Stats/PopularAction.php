@@ -33,6 +33,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -46,14 +47,18 @@ final class PopularAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private VideoRepositoryInterface $videoRepository;
+
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        VideoRepositoryInterface $videoRepository
     ) {
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
+        $this->videoRepository = $videoRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -108,7 +113,7 @@ final class PopularAction implements ApplicationActionInterface
 
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
-            Video::get_item_count('Video')
+            $this->videoRepository->getItemCount(Video::class)
         ) {
             $browse = $this->modelFactory->createBrowse();
             $browse->set_type(

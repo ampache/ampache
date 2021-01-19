@@ -24,6 +24,10 @@ use Ampache\Config\AmpConfig;
 use Ampache\Model\Video;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\VideoRepositoryInterface;
+
+global $dic;
+$videoRepository = $dic->get(VideoRepositoryInterface::class);
 
 Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
 <form id="search" name="search" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=<?php echo (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) ? scrub_out((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)) : 'song'; ?>" enctype="multipart/form-data" style="Display:inline">
@@ -56,7 +60,7 @@ Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
         } else {
             echo T_('Playlists');
         } ?></td>
-    <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
+    <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
         <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'video') { ?>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=video"><?php echo T_('Videos'); ?></a> <?php
         } else {

@@ -21,6 +21,10 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Clip;
+use Ampache\Model\Movie;
+use Ampache\Model\Personal_Video;
+use Ampache\Model\TVShow_Episode;
 use Ampache\Model\User;
 use Ampache\Model\Video;
 use Ampache\Module\Authorization\Access;
@@ -28,9 +32,11 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\VideoRepositoryInterface;
 
-?>
-<?php
+global $dic;
+$videoRepository = $dic->get(VideoRepositoryInterface::class);
+
 // strings for the main page and templates
 $t_songs     = T_('Songs');
 $t_artists   = T_('Artists');
@@ -86,22 +92,22 @@ $t_search    = T_('Search'); ?>
         } ?>
         </ul>
     </li>
-    <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
+    <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
         <li class="sb2_video"><h4 class="header"><span class="sidebar-header-title"><?php echo $t_videos ?></span><?php echo UI::get_icon('all', $t_expander, 'browse_video', 'header-img ' . (($_COOKIE['sb_browse_video'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
             <ul class="sb3" id="sb_home_browse_video">
-          <?php if (Video::get_item_count('Clip')) { ?>
+          <?php if ($videoRepository->getItemCount(Clip::class)) { ?>
                 <li id="sb_home_browse_video_clip"><a href="<?php echo $web_path ?>/browse.php?action=clip"><?php echo T_('Music Clips') ?></a></li>
           <?php
             } ?>
-          <?php if (Video::get_item_count('tvshow_episode')) { ?>
+          <?php if ($videoRepository->getItemCount(TVShow_Episode::class)) { ?>
                 <li id="sb_home_browse_video_tvShow"><a href="<?php echo $web_path ?>/browse.php?action=tvshow"><?php echo T_('TV Shows') ?></a></li>
           <?php
             } ?>
-          <?php if (Video::get_item_count('Movie')) { ?>
+          <?php if ($videoRepository->getItemCount(Movie::class)) { ?>
                 <li id="sb_home_browse_video_movie"><a href="<?php echo $web_path ?>/browse.php?action=movie"><?php echo T_('Movies') ?></a></li>
           <?php
             } ?>
-          <?php if (Video::get_item_count('personal_video')) { ?>
+          <?php if ($videoRepository->getItemCount(Personal_Video::class)) { ?>
                 <li id="sb_home_browse_video_video"><a href="<?php echo $web_path ?>/browse.php?action=personal_video"><?php echo T_('Personal Videos') ?></a></li>
           <?php
             } ?>
@@ -135,7 +141,7 @@ $t_search    = T_('Search'); ?>
                 <?php
             } ?>
           <li id="sb_home_search_playlist"><a href="<?php echo $web_path; ?>/search.php?type=playlist"><?php echo $t_playlists; ?></a></li>
-          <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
+          <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
             <li id="sb_home_search_video"><a href="<?php echo $web_path ?>/search.php?type=video"><?php echo $t_videos ?></a></li>
           <?php
         } ?>

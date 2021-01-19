@@ -28,6 +28,8 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\MockeryTestCase;
+use Ampache\Model\Video;
+use Ampache\Repository\VideoRepositoryInterface;
 use Mockery\MockInterface;
 
 class StatsViewAdapterTest extends MockeryTestCase
@@ -38,16 +40,33 @@ class StatsViewAdapterTest extends MockeryTestCase
     /** @var GuiFactoryInterface|MockInterface|null */
     private ?MockInterface $guiFactory;
 
+    /** @var MockInterface|VideoRepositoryInterface|null */
+    private ?MockInterface $videoRepository;
+
     private ?StatsViewAdapter $subject;
 
     public function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->guiFactory      = $this->mock(GuiFactoryInterface::class);
+        $this->videoRepository = $this->mock(VideoRepositoryInterface::class);
 
         $this->subject = new StatsViewAdapter(
             $this->configContainer,
-            $this->guiFactory
+            $this->guiFactory,
+            $this->videoRepository
+        );
+    }
+
+    public function testDisplayVideoReturnsTrueIfItemsExist(): void
+    {
+        $this->videoRepository->shouldReceive('getItemCount')
+            ->with(Video::class)
+            ->once()
+            ->andReturn(42);
+
+        $this->assertTrue(
+            $this->subject->displayVideo()
         );
     }
 

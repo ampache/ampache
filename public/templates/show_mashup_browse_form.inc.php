@@ -2,6 +2,10 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Video;
+use Ampache\Repository\VideoRepositoryInterface;
+
+global $dic;
+$videoRepository = $dic->get(VideoRepositoryInterface::class);
 
 ?>
 <h3 class="box-title"><?php echo T_('Browse Ampache...'); ?></h3>
@@ -41,7 +45,7 @@ use Ampache\Model\Video;
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/browse.php?action=podcast"><?php echo T_('Podcasts'); ?></a>
             </td>
         <?php }
-        if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
+        if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
             <td>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/browse.php?action=video"><?php echo T_('Videos'); ?></a>
             </td>

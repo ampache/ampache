@@ -39,6 +39,7 @@ use Ampache\Model\Song;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 use Mockery\MockInterface;
 
 class GuiFactoryTest extends MockeryTestCase
@@ -54,6 +55,9 @@ class GuiFactoryTest extends MockeryTestCase
 
     /** @var MockInterface|PlaylistLoaderInterface|null */
     private MockInterface $playlistLoader;
+
+    /** @var MockInterface|VideoRepositoryInterface|null */
+    private MockInterface $videoRepository;
     
     /** @var GuiFactory|null */
     private GuiFactory $subject;
@@ -64,12 +68,14 @@ class GuiFactoryTest extends MockeryTestCase
         $this->modelFactory     = $this->mock(ModelFactoryInterface::class);
         $this->ajaxUriRetriever = $this->mock(AjaxUriRetrieverInterface::class);
         $this->playlistLoader   = $this->mock(PlaylistLoaderInterface::class);
+        $this->videoRepository  = $this->mock(VideoRepositoryInterface::class);
         
         $this->subject = new GuiFactory(
             $this->configContainer,
             $this->modelFactory,
             $this->ajaxUriRetriever,
-            $this->playlistLoader
+            $this->playlistLoader,
+            $this->videoRepository
         );
     }
 

@@ -24,6 +24,10 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Clip;
+use Ampache\Model\Movie;
+use Ampache\Model\Personal_Video;
+use Ampache\Model\TVShow_Episode;
 use Ampache\Module\System\Dba;
 
 final class VideoRepository implements VideoRepositoryInterface
@@ -58,4 +62,33 @@ final class VideoRepository implements VideoRepositoryInterface
 
         return $results;
     }
+
+    /**
+     * Return the number of entries in the database...
+     *
+     * @param string $type
+     *
+     * @return int
+     */
+    public function getItemCount(string $type): int
+    {
+        $dtypes = [
+            TVShow_Episode::class => 'tvshow_episode',
+            Movie::class => 'movie',
+            Clip::class => 'clip',
+            Personal_Video::class => 'personal_video'
+        ];
+
+        $type = $dtypes[$type] ?? 'video';
+
+        $sql        = 'SELECT COUNT(*) as count from `' . strtolower((string) $type) . '`;';
+        $db_results = Dba::read($sql,array());
+        if ($results = Dba::fetch_assoc($db_results)) {
+            if ($results['count']) {
+                return (int) $results['count'];
+            }
+        }
+
+        return 0;
+    } // get_item_count
 }
