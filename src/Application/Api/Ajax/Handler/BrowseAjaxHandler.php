@@ -27,11 +27,10 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
+use Ampache\Module\Share\ShareUiLinkRendererInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\System\Core;
-use Ampache\Model\Live_Stream;
 use Ampache\Model\Playlist;
-use Ampache\Model\Share;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 
@@ -43,14 +42,18 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
 
     private LiveStreamRepositoryInterface $liveStreamRepository;
 
+    private ShareUiLinkRendererInterface $shareUiLinkRenderer;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
         FunctionCheckerInterface $functionChecker,
-        LiveStreamRepositoryInterface $liveStreamRepository
+        LiveStreamRepositoryInterface $liveStreamRepository,
+        ShareUiLinkRendererInterface $shareUiLinkRenderer
     ) {
         $this->modelFactory         = $modelFactory;
         $this->functionChecker      = $functionChecker;
         $this->liveStreamRepository = $liveStreamRepository;
+        $this->shareUiLinkRenderer  = $shareUiLinkRenderer;
     }
 
     public function handle(): void
@@ -239,7 +242,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
                 if (InterfaceImplementationChecker::is_library_item($object_type) && $object_id > 0) {
-                    Share::display_ui_links($this->functionChecker, $object_type, $object_id);
+                    echo $this->shareUiLinkRenderer->render($object_type, $object_id);
 
                     return;
                 }

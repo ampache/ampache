@@ -24,16 +24,12 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
-use Ampache\Module\Playback\Stream;
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
-use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\ZipHandlerInterface;
 use Exception;
 use PDOStatement;
 
@@ -493,50 +489,6 @@ class Share extends database_object
         $result .= '</a>';
         
         return $result;
-    }
-
-    /**
-     * @param FunctionCheckerInterface $functionChecker
-     * @param string $object_type
-     * @param integer $object_id
-     */
-    public static function display_ui_links(
-        FunctionCheckerInterface $functionChecker,
-        $object_type,
-        $object_id
-    ): void {
-        echo "<ul>";
-        echo "<li><a onclick=\"handleShareAction('" . AmpConfig::get('web_path') . "/share.php?action=show_create&type=" . $object_type . "&id=" . $object_id . "')\">" . Ui::get_icon('share',
-                T_('Advanced Share')) . " &nbsp;" . T_('Advanced Share') . "</a></li>";
-        if (AmpConfig::get('download')) {
-            $dllink = "";
-            if ($object_type == "song" || $object_type == "video") {
-                $dllink = AmpConfig::get('web_path') . "/play/index.php?action=download&type=" . $object_type . "&oid=" . $object_id . "&uid=-1";
-            } else {
-                // @todo remove after refactoring
-                global $dic;
-                $zipHandler = $dic->get(ZipHandlerInterface::class);
-                if ($functionChecker->check(AccessLevelEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable($object_type)) {
-                    $dllink = AmpConfig::get('web_path') . "/batch.php?action=" . $object_type . "&id=" . $object_id;
-                }
-            }
-            if (!empty($dllink)) {
-                if (AmpConfig::get('require_session')) {
-                    // Add session information to the link to avoid authentication
-                    $dllink .= "&ssid=" . Stream::get_session();
-                }
-                echo "<li><a class=\"nohtml\" href=\"" . $dllink . "\">" . Ui::get_icon('download',
-                        T_('Temporary direct link')) . " &nbsp;" . T_('Temporary direct link') . "</a></li>";
-            }
-        }
-        echo "<li style='padding-top: 8px; text-align: right;'>";
-        $plugins = Plugin::get_plugins('external_share');
-        foreach ($plugins as $plugin_name) {
-            echo "<a onclick=\"handleShareAction('" . AmpConfig::get('web_path') . "/share.php?action=external_share&plugin=" . $plugin_name . "&type=" . $object_type . "&id=" . $object_id . "')\" target=\"_blank\">" . Ui::get_icon('share_' . strtolower((string)$plugin_name),
-                    $plugin_name) . "</a>&nbsp;";
-        }
-        echo "</li>";
-        echo "</ul>";
     }
 
     /**
