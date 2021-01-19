@@ -1122,11 +1122,9 @@ class Subsonic_Api
         $params  = '&action=download' . '&client=' . rawurlencode($input['c']);
         $url     = '';
         if (Subsonic_XML_Data::isSong($fileid)) {
-            $object = new Song(Subsonic_XML_Data::getAmpacheId($fileid));
-            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'), $user_id);
         } elseif (Subsonic_XML_Data::isPodcastEp($fileid)) {
-            $object = new Podcast_Episode(Subsonic_XML_Data::getAmpacheId($fileid));
-            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $url = Podcast_Episode::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'), $user_id);
         }
 
         // return an error on missing files
