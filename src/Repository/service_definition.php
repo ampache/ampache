@@ -42,4 +42,5 @@ return [
     UserFollowerRepositoryInterface::class => autowire(UserFollowerRepository::class),
     BookmarkRepositoryInterface::class => autowire(BookmarkRepository::class),
     PrivateMessageRepositoryInterface::class => autowire(PrivateMessageRepository::class),
+    VideoRepositoryInterface::class => autowire(VideoRepository::class),
 ];

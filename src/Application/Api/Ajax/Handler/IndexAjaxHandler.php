@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
-use Ampache\Model\Video;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -44,6 +43,7 @@ use Ampache\Model\Wanted;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 
 final class IndexAjaxHandler implements AjaxHandlerInterface
@@ -60,13 +60,16 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
     private WantedRepositoryInterface $wantedRepository;
 
+    private VideoRepositoryInterface $videoRepository;
+
     public function __construct(
         ArtCollectorInterface $artCollector,
         SlideshowInterface $slideshow,
         AlbumRepositoryInterface $albumRepository,
         LabelRepositoryInterface $labelRepository,
         SongRepositoryInterface $songRepository,
-        WantedRepositoryInterface $wantedRepository
+        WantedRepositoryInterface $wantedRepository,
+        VideoRepositoryInterface $videoRepository
     ) {
         $this->artCollector     = $artCollector;
         $this->slideshow        = $slideshow;
@@ -74,6 +77,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         $this->labelRepository  = $labelRepository;
         $this->songRepository   = $songRepository;
         $this->wantedRepository = $wantedRepository;
+        $this->videoRepository  = $videoRepository;
     }
     
     public function handle(): void
@@ -111,7 +115,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             case 'random_videos':
-                $videos = Video::get_random($moment);
+                $videos = $this->videoRepository->getRandom($moment);
                 if (count($videos) && is_array($videos)) {
                     ob_start();
                     require_once Ui::find_template('show_random_videos.inc.php');

@@ -554,7 +554,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      * @param string $type
      * @return string
      */
-    public static function validate_type($type)
+    private static function validate_type($type)
     {
         $dtypes = self::get_derived_types();
         foreach ($dtypes as $dtype) {
@@ -742,39 +742,6 @@ class Video extends database_object implements Media, library_item, GarbageColle
             $image = Stream::get_image_preview($video);
             $artp->insert($image, 'image/png');
         }
-    }
-
-    /**
-     * get_random
-     *
-     * This returns a number of random videos.
-     * @param integer $count
-     * @return integer[]
-     */
-    public static function get_random($count = 1)
-    {
-        $results = array();
-
-        if (!$count) {
-            $count = 1;
-        }
-
-        $sql   = "SELECT DISTINCT(`video`.`id`) AS `id` FROM `video` ";
-        $where = "WHERE `video`.`enabled` = '1' ";
-        if (AmpConfig::get('catalog_disable')) {
-            $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` ";
-            $where .= "AND `catalog`.`enabled` = '1' ";
-        }
-
-        $sql .= $where;
-        $sql .= "ORDER BY RAND() LIMIT " . (string) ($count);
-        $db_results = Dba::read($sql);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
     }
 
     /**
@@ -1131,6 +1098,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
         return true;
     } // _update_item
+
     /**
      * get_item_count
      * Return the number of entries in the database...
