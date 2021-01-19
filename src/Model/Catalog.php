@@ -2593,7 +2593,7 @@ abstract class Catalog extends database_object
         Dba::write($sql, array($catalog_id));
 
         // run garbage collection
-        self::garbage_collection();
+        static::getCatalogGarbageCollector()->collect();
 
         return true;
     } // delete

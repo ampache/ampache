@@ -26,6 +26,7 @@ namespace Ampache\Module\Util;
 
 use Ampache\Model\Album;
 use Ampache\Model\Artist;
+use Ampache\Model\Movie;
 use Ampache\Model\Playlist;
 use Ampache\Model\Search;
 use Ampache\Model\Share;
@@ -49,6 +50,7 @@ final class ObjectTypeToClassNameMapper
         'search' => Search::class,
         'video' => Video::class,
         'share' => Share::class,
+        'movie' => Movie::class,
     ];
 
     public static function map(string $object_type)

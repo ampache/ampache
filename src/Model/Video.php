@@ -251,7 +251,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
             $db_results = Dba::read($sql, array($video_id));
             $results    = Dba::fetch_assoc($db_results);
             if ($results['id']) {
-                $class_name = ObjectTypeToClassNameMapper::map($dtype);
+                $class_name = ObjectTypeToClassNameMapper::map(strtolower($dtype));
 
                 return new $class_name($video_id);
             }
