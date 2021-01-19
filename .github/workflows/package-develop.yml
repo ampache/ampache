@@ -14,30 +14,19 @@ jobs:
     - name: Validate composer.json and composer.lock
       run: composer validate
 
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v2
-      with:
-        path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-
-
     - uses: php-actions/composer@v5
       with:
         php_version: 7.4
+        php_extensions: bcmath gd intl pdo_mysql zip
         version: 1
-
-    - name: Install dependencies
-      if: steps.composer-cache.outputs.cache-hit != 'true'
-      run: composer install --prefer-dist --no-progress --no-suggest
 
     - name: create ampache-develop_all.zip
       uses: montudor/action-zip@v0.1.1
       with:
-        args: zip -r -q -u -9 --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml ../ampache-develop_all.zip ./
+        args: zip -r -q -u -9 --exclude=./.git/* --exclude=./.github/* --exclude=./.tx/* --exclude=./.idea/* --exclude=.gitignore --exclude=.gitattributes --exclude=.scrutinizer.yml --exclude=CNAME --exclude=.codeclimate.yml --exclude=.php* --exclude=.tgitconfig --exclude=.travis.yml ampache-develop_all.zip ./
 
     - name: upload ampache-develop_all.zip
       uses: actions/upload-artifact@v2
       with:
         name: ampache-develop_all.zip
+        path: ampache-develop_all.zip
