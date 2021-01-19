@@ -135,3 +135,17 @@ cd ampache-docker-nosql
 nano Dockerfile
 docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/ampache:nosql --push .
 ```
+
+## Additional info
+
+Make sure rolling tags are updated to the latest commit. This is good for pre-release/develop tags
+
+```shell
+git tag -f 5.0.0-pre-release 250237272
+```
+
+Then pushing it to github
+
+```shell
+git push –force origin 5.0.0-pre-release
+```

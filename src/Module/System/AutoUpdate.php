@@ -134,7 +134,7 @@ class AutoUpdate
      */
     public static function get_latest_version($force = false)
     {
-        $lastversion = '';
+        $lastversion = (string) AmpConfig::get('autoupdate_lastversion');
         // Forced or last check expired, check latest version from Github
         if ($force || (self::lastcheck_expired() && AmpConfig::get('autoupdate'))) {
             // Always update last check time to avoid infinite check on permanent errors (proxy, firewall, ...)
@@ -157,23 +157,25 @@ class AutoUpdate
                     $available = self::is_update_available(true);
                     Preference::update('autoupdate_lastversion_new', Core::get_global('user')->id, $available);
                     AmpConfig::set('autoupdate_lastversion_new', $available, true);
+
+                    return $lastversion;
                 }
-            } // Otherwise it is stable version, get latest tag
-            else {
-                $tags = self::github_request('/tags');
-                $str  = strstr($tags[0]->name, "-"); // ignore ALL tagged releases (e.g. 4.2.5-preview 4.2.5-beta)
-                if (!$str) {
-                    $lastversion = $tags[0]->name;
+            }
+            // Otherwise it is stable version, get latest tag
+            $tags = self::github_request('/tags');
+            foreach ($tags as $release) {
+                $str = strstr($release->name, "-"); // ignore ALL tagged releases (e.g. 4.2.5-preview 4.2.5-beta)
+                if (empty($str)) {
+                    $lastversion = $release->name;
                     Preference::update('autoupdate_lastversion', Core::get_global('user')->id, $lastversion);
                     AmpConfig::set('autoupdate_lastversion', $lastversion, true);
                     $available = self::is_update_available(true);
                     Preference::update('autoupdate_lastversion_new', Core::get_global('user')->id, $available);
                     AmpConfig::set('autoupdate_lastversion_new', $available, true);
+
+                    return $lastversion;
                 }
             }
-        } // Otherwise retrieve the cached version number
-        else {
-            $lastversion = AmpConfig::get('autoupdate_lastversion');
         }
 
         return $lastversion;
