@@ -20,20 +20,19 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\PrivateMessage;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -45,19 +44,15 @@ final class SetIsReadAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private ModelFactoryInterface $modelFactory;
-
     private PrivateMessageRepositoryInterface $privateMessageRepository;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
         PrivateMessageRepositoryInterface $privateMessageRepository
     ) {
         $this->configContainer          = $configContainer;
         $this->ui                       = $ui;
-        $this->modelFactory             = $modelFactory;
         $this->privateMessageRepository = $privateMessageRepository;
     }
 
@@ -74,22 +69,29 @@ final class SetIsReadAction implements ApplicationActionInterface
             return null;
         }
 
-        $this->ui->showHeader();
+        $queryParams = $request->getQueryParams();
 
-        $msgs = explode(',', $_REQUEST['msgs']);
-        foreach ($msgs as $msg_id) {
-            $pvmsg = $this->modelFactory->createPrivateMsg((int) ($msg_id));
-            if ($pvmsg->id && $pvmsg->to_user === Core::get_global('user')->id) {
-                $read = (int) $_REQUEST['read'];
+        $readMode   = (int) ($queryParams['read'] ?? 0);
+        $messageIds = array_map(
+            'intval',
+            explode(',', $queryParams['msgs'] ?? [])
+        );
 
-                $this->privateMessageRepository->setIsRead($pvmsg->getId(), $read);
-            } else {
+        foreach ($messageIds as $messageId) {
+            try {
+                $message = $this->privateMessageRepository->getById($messageId);
+                if ($message->getRecipientUserId() !== $gatekeeper->getUserId()) {
+                    throw new Exception();
+                }
+                $this->privateMessageRepository->setIsRead($messageId, $readMode);
+            } catch (\Exception $e) {
                 throw new AccessDeniedException(
-                    sprintf('Unknown or unauthorized private message `%d`.', $pvmsg->id),
+                    sprintf('Unknown or unauthorized private message `%d`.', $messageId),
                 );
             }
         }
 
+        $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Message\'s state has been changed'),
@@ -98,7 +100,6 @@ final class SetIsReadAction implements ApplicationActionInterface
                 $this->configContainer->getWebPath()
             )
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

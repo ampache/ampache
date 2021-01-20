@@ -20,19 +20,16 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\PrivateMessage;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -44,20 +41,16 @@ final class ShowAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private ModelFactoryInterface $modelFactory;
-
     private ConfigContainerInterface $configContainer;
 
     private PrivateMessageRepositoryInterface $privateMessageRepository;
 
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
         PrivateMessageRepositoryInterface $privateMessageRepository
     ) {
         $this->ui                       = $ui;
-        $this->modelFactory             = $modelFactory;
         $this->configContainer          = $configContainer;
         $this->privateMessageRepository = $privateMessageRepository;
     }
@@ -73,17 +66,25 @@ final class ShowAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $msg_id = (int) filter_input(INPUT_GET, 'pvmsg_id', FILTER_SANITIZE_NUMBER_INT);
-        $pvmsg  = $this->modelFactory->createPrivateMsg($msg_id);
+        $msgId = (int) $request->getQueryParams()['pvmsg_id'] ?? 0;
 
-        if ($pvmsg->id && $pvmsg->to_user === Core::get_global('user')->id) {
-            if (!$pvmsg->is_read) {
-                $this->privateMessageRepository->setIsRead($pvmsg->getId(), 1);
+        try {
+            $pvmsg = $this->privateMessageRepository->getById($msgId);
+
+            if ($pvmsg->getRecipientUserId() !== $gatekeeper->getUserId()) {
+                throw new \Exception();
             }
-            require_once Ui::find_template('show_pvmsg.inc.php');
-        } else {
+            if ($pvmsg->isRead() === false) {
+                $this->privateMessageRepository->setIsRead($msgId, 1);
+            }
+
+            $this->ui->show(
+                'show_pvmsg.inc.php',
+                ['pvmsg' => $pvmsg]
+            );
+        } catch (\Exception $e) {
             throw new AccessDeniedException(
-                sprintf('Unknown or unauthorized private message #%d.', $msg_id),
+                sprintf('Unknown or unauthorized private message #%d.', $msgId),
             );
         }
 

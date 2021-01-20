@@ -71,4 +71,6 @@ interface UiInterface
         $form_name = 'confirmation',
         $visible = true
     ): void;
+
+    public function scrubOut(?string $string): string;
 }

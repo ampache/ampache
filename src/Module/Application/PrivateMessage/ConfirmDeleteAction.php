@@ -20,20 +20,19 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\PrivateMessage;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -45,19 +44,15 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private ModelFactoryInterface $modelFactory;
-
     private PrivateMessageRepositoryInterface $privateMessageRepository;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
         PrivateMessageRepositoryInterface $privateMessageRepository
     ) {
         $this->configContainer          = $configContainer;
         $this->ui                       = $ui;
-        $this->modelFactory             = $modelFactory;
         $this->privateMessageRepository = $privateMessageRepository;
     }
 
@@ -73,22 +68,26 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $this->ui->showHeader();
+        $messageIds = array_map(
+            'intval',
+            explode(',', $request->getQueryParams()['msgs'] ?? [])
+        );
+        foreach ($messageIds as $messageId) {
+            try {
+                $message = $this->privateMessageRepository->getById($messageId);
 
-        $msgs = explode(',', $_REQUEST['msgs']);
-        foreach ($msgs as $msg_id) {
-            $msg_id = (int) ($msg_id);
-            $pvmsg  = $this->modelFactory->createPrivateMsg($msg_id);
-
-            if ($pvmsg->id && $pvmsg->to_user === Core::get_global('user')->id) {
-                $this->privateMessageRepository->delete($pvmsg->getId());
-            } else {
+                if ($message->getRecipientUserId() !== $gatekeeper->getUserId()) {
+                    throw new Exception();
+                }
+                $this->privateMessageRepository->delete($messageId);
+            } catch (\Exception $e) {
                 throw new AccessDeniedException(
-                    sprintf('Unknown or unauthorized private message #%d.', $msg_id)
+                    sprintf('Unknown or unauthorized private message `%d`.', $messageId)
                 );
             }
         }
 
+        $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Messages have been deleted'),
@@ -97,7 +96,6 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
                 $this->configContainer->getWebPath()
             )
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

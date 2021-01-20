@@ -92,6 +92,8 @@ function scrub_in($input)
  * This is the inverse of the scrub_in function
  * @param string|null $string
  * @return string
+ *
+ * @deprecated see Ui::scrubOut
  */
 function scrub_out($string)
 {

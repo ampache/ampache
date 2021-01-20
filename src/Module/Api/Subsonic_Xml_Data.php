@@ -1583,15 +1583,15 @@ class Subsonic_Xml_Data
      */
     private static function addMessage($xml, $message)
     {
-        $user      = new User($message->from_user);
+        $user      = new User($message->getSenderUserId());
         $xbookmark = $xml->addChild('chatMessage');
         if ($user->fullname_public) {
             $xbookmark->addAttribute('username', (string)$user->fullname);
         } else {
             $xbookmark->addAttribute('username', (string)$user->username);
         }
-        $xbookmark->addAttribute('time', (string)($message->creation_date * 1000));
-        $xbookmark->addAttribute('message', (string)$message->message);
+        $xbookmark->addAttribute('time', (string)($message->getCreationDate() * 1000));
+        $xbookmark->addAttribute('message', (string)$message->getMessage());
     }
 
     /**

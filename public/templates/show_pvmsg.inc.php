@@ -34,7 +34,7 @@ Ui::show_box_top($pvmsg->getSubjectFormatted(), 'info-box'); ?>
 
     <ul>
         <li>
-            <a id="<?php echo 'reply_pvmsg_' . $label->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&reply_to=<?php echo $pvmsg->id; ?>">
+            <a id="<?php echo 'reply_pvmsg_' . $pvmsg->getId() ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&reply_to=<?php echo $pvmsg->getId(); ?>">
                 <?php echo Ui::get_icon('mail', T_('Reply')); ?> <?php echo T_('Reply'); ?>
             </a>
         </li>
@@ -43,7 +43,7 @@ Ui::show_box_top($pvmsg->getSubjectFormatted(), 'info-box'); ?>
 
 <hr />
 <div>
-    <?php echo nl2br(scrub_out($pvmsg->message)); ?>
+    <?php echo nl2br(scrub_out($pvmsg->getMessage())); ?>
 </div>
 
 <?php Ui::show_box_bottom(); ?>

@@ -30,7 +30,7 @@ use Ampache\Config\AmpConfig;
  * This is the class responsible for handling the PrivateMsg object
  * it is related to the user_pvmsg table in the database.
  */
-class PrivateMsg extends database_object
+class PrivateMsg extends database_object implements PrivateMessageInterface
 {
     protected const DB_TABLENAME = 'user_pvmsg';
 
@@ -38,40 +38,39 @@ class PrivateMsg extends database_object
     /**
      * @var integer $id
      */
-    public $id;
+    private $id;
 
     /**
      * @var string $subject
      */
-    public $subject;
+    private $subject;
 
     /**
      * @var string $message
      */
-    public $message;
+    private $message;
 
     /**
      * @var integer $from_user
      */
-    public $from_user;
+    private $from_user;
 
     /**
      * @var integer $to_user
      */
-    public $to_user;
+    private $to_user;
 
     /**
      * @var integer $creation_date
      */
-    public $creation_date;
+    private $creation_date;
 
     /**
      * @var boolean $is_read
      */
-    public $is_read;
+    private $is_read;
 
     /**
-     * __construct
      * @param integer $pm_id
      */
     public function __construct($pm_id)
@@ -89,9 +88,14 @@ class PrivateMsg extends database_object
         return (int) $this->id;
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     public function getSenderUserLink(): string
     {
-        $from_user = new User($this->from_user);
+        $from_user = new User((int) $this->from_user);
         $from_user->format();
 
         return $from_user->f_link;
@@ -99,10 +103,15 @@ class PrivateMsg extends database_object
 
     public function getRecipientUserLink(): string
     {
-        $to_user = new User($this->to_user);
+        $to_user = new User((int) $this->to_user);
         $to_user->format();
 
         return $to_user->f_link;
+    }
+
+    public function getCreationDate(): int
+    {
+        return (int) $this->creation_date;
     }
 
     public function getCreationDateFormatted(): string
@@ -122,6 +131,31 @@ class PrivateMsg extends database_object
 
     public function getSubjectFormatted(): string
     {
-        return scrub_out($this->subject);
+        return scrub_out((string) $this->subject);
+    }
+
+    public function isRead(): bool
+    {
+        return (int) $this->is_read === 1;
+    }
+
+    public function getRecipientUserId(): int
+    {
+        return (int) $this->to_user;
+    }
+
+    public function getSenderUserId(): int
+    {
+        return (int) $this->from_user;
+    }
+
+    public function getMessage(): string
+    {
+        return (string) $this->message;
+    }
+
+    public function getSubject(): string
+    {
+        return (string) $this->subject;
     }
 }

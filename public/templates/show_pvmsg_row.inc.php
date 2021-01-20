@@ -25,16 +25,16 @@ use Ampache\Module\Util\Ui;
 
 /** @var \Ampache\Model\PrivateMsg $libitem */
 ?>
-<td class="cel_select"><input type="checkbox" name="pvmsg_select[]" value="<?php echo $libitem->id; ?>" title="<?php echo T_('Select'); ?>" /></td>
+<td class="cel_select"><input type="checkbox" name="pvmsg_select[]" value="<?php echo $libitem->getId(); ?>" title="<?php echo T_('Select'); ?>" /></td>
 <td class="cel_subject"><?php echo $libitem->getLinkFormatted(); ?></td>
 <td class="cel_from_user"><?php echo $libitem->getSenderUserLink(); ?></td>
 <td class="cel_to_user"><?php echo $libitem->getRecipientUserLink(); ?></td>
 <td class="cel_creation_date"><?php echo $libitem->getCreationDateFormatted(); ?></td>
 <td class="cel_action">
-<a id="<?php echo 'reply_pvmsg_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&reply_to=<?php echo $libitem->id; ?>">
+<a id="<?php echo 'reply_pvmsg_' . $libitem->getId() ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&reply_to=<?php echo $libitem->getId(); ?>">
     <?php echo Ui::get_icon('mail', T_('Reply')); ?>
 </a>
-<a id="<?php echo 'delete_pvmsg_' . $libitem->id ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=delete&msgs=<?php echo $libitem->id; ?>">
+<a id="<?php echo 'delete_pvmsg_' . $libitem->getId() ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=delete&msgs=<?php echo $libitem->getId(); ?>">
     <?php echo Ui::get_icon('delete', T_('Delete')); ?>
 </a>
 </td>

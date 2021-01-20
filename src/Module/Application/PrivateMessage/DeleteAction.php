@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\PrivateMessage;
 
@@ -64,20 +64,17 @@ final class DeleteAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-
-        $msgs = scrub_out($_REQUEST['msgs']);
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('The Message will be deleted'),
             sprintf(
                 '%s/pvmsg.php?action=confirm_delete&msgs=%s',
                 $this->configContainer->getWebPath(),
-                $msgs
+                $this->ui->scrubOut($request->getQueryParams()['msgs'] ?? '')
             ),
             1,
             'delete_message'
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

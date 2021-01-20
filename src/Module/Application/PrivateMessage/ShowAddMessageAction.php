@@ -31,9 +31,9 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Exception\ItemNotFoundException;
+use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -47,14 +47,18 @@ final class ShowAddMessageAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private PrivateMessageRepositoryInterface $privateMessageRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        PrivateMessageRepositoryInterface $privateMessageRepository
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
+        $this->configContainer          = $configContainer;
+        $this->ui                       = $ui;
+        $this->modelFactory             = $modelFactory;
+        $this->privateMessageRepository = $privateMessageRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -66,20 +70,30 @@ final class ShowAddMessageAction implements ApplicationActionInterface
             throw new AccessDeniedException('Access Denied: sociable features are not enabled.');
         }
 
-        $this->ui->showHeader();
+        $replyToMessageId = (int) ($request->getQueryParams()['reply_to'] ?? 0);
 
-        if (isset($_REQUEST['reply_to'])) {
-            $pvmsg = $this->modelFactory->createPrivateMsg((int) $_REQUEST['reply_to']);
-            if ($pvmsg->id && ($pvmsg->from_user === Core::get_global('user')->id || $pvmsg->to_user === Core::get_global('user')->id)) {
-                $to_user             = $this->modelFactory->createUser($pvmsg->from_user);
-                $_REQUEST['to_user'] = $to_user->username;
-                /* HINT: Shorthand for e-mail reply */
-                $_REQUEST['subject'] = T_('RE') . ": " . $pvmsg->subject;
-                $_REQUEST['message'] = "\n\n\n---\n> " . str_replace("\n", "\n> ", $pvmsg->message);
+        if ($replyToMessageId > 0) {
+            try {
+                $message      = $this->privateMessageRepository->getById($replyToMessageId);
+                $userId       = $gatekeeper->getUserId();
+                $senderUserId = $message->getSenderUserId();
+
+                if (
+                    $senderUserId === $userId ||
+                    $message->getRecipientUserId() === $userId
+                ) {
+                    $to_user             = $this->modelFactory->createUser($senderUserId);
+                    $_REQUEST['to_user'] = $to_user->username;
+                    /* HINT: Shorthand for e-mail reply */
+                    $_REQUEST['subject'] = sprintf('%s: %s', T_('RE'), $message->getSubject());
+                    $_REQUEST['message'] = "\n\n\n---\n> " . str_replace("\n", "\n> ", $message->getMessage());
+                }
+            } catch (ItemNotFoundException $e) {
             }
         }
-        require_once Ui::find_template('show_add_pvmsg.inc.php');
 
+        $this->ui->showHeader();
+        $this->ui->show('show_add_pvmsg.inc.php');
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

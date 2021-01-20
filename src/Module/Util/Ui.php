@@ -653,4 +653,18 @@ class Ui implements UiInterface
 
         require Ui::find_template('show_confirmation.inc.php');
     }
+
+    /**
+     * This function is used to escape user data that is getting redisplayed
+     * onto the page, it htmlentities the mojo
+     * This is the inverse of the scrub_in function
+     */
+    public function scrubOut(?string $string): string
+    {
+        if ($string === null) {
+            return '';
+        }
+
+        return htmlentities((string) $string, ENT_NOQUOTES, AmpConfig::get('site_charset'));
+    }
 }

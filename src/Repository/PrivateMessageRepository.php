@@ -24,10 +24,22 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\ModelFactoryInterface;
+use Ampache\Model\PrivateMessageInterface;
+use Ampache\Model\PrivateMsg;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Exception\ItemNotFoundException;
 
 final class PrivateMessageRepository implements PrivateMessageRepositoryInterface
 {
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->modelFactory = $modelFactory;
+    }
+
     /**
      * Get the user received private messages.
      *
@@ -128,5 +140,19 @@ final class PrivateMessageRepository implements PrivateMessageRepositoryInterfac
         }
 
         return null;
+    }
+
+    /**
+     * @throws ItemNotFoundException
+     */
+    public function getById(
+        int $privateMessageId
+    ): PrivateMessageInterface {
+        $item = $this->modelFactory->createPrivateMsg($privateMessageId);
+        if ($item->isNew() === true) {
+            throw new ItemNotFoundException((string) $privateMessageId);
+        }
+
+        return $item;
     }
 }

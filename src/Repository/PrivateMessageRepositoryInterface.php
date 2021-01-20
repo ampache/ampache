@@ -21,6 +21,9 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Model\PrivateMessageInterface;
+use Ampache\Repository\Exception\ItemNotFoundException;
+
 interface PrivateMessageRepositoryInterface
 {
     /**
@@ -62,4 +65,11 @@ interface PrivateMessageRepositoryInterface
         string $subject,
         string $message
     ): ?int;
+
+    /**
+     * @throws ItemNotFoundException
+     */
+    public function getById(
+        int $privateMessageId
+    ): PrivateMessageInterface;
 }
