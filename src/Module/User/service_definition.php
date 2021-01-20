@@ -36,4 +36,5 @@ return [
     Following\UserFollowTogglerInterface::class => autowire(Following\UserFollowToggler::class),
     Following\UserFollowStateRendererInterface::class => autowire(Following\UserFollowStateRenderer::class),
     Authorization\UserAccessKeyGeneratorInterface::class => autowire(Authorization\UserAccessKeyGenerator::class),
+    PrivateMessage\PrivateMessageCreatorInterface::class => autowire(PrivateMessage\PrivateMessageCreator::class),
 ];

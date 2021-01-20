@@ -61,6 +61,14 @@ final class Mailer implements MailerInterface
     }
 
     /**
+     * Check that the mail feature is enabled
+     */
+    public function isMailEnabled(): bool
+    {
+        return static::is_mail_enabled();
+    }
+
+    /**
      * validate_address
      *
      * Checks whether what we have looks like a valid address.

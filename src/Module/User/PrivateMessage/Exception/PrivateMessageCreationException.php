@@ -20,42 +20,10 @@
  *
  */
 
-namespace Ampache\Module\Util;
+declare(strict_types=1);
 
-use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\PHPMailer;
+namespace Ampache\Module\User\PrivateMessage\Exception;
 
-/**
- * This class handles the Mail
- */
-interface MailerInterface
+final class PrivateMessageCreationException extends \Exception
 {
-    /**
-     * Check that the mail feature is enabled
-     */
-    public function isMailEnabled(): bool;
-
-    /**
-     * set_default_sender
-     *
-     * Does the config magic to figure out the "system" email sender and
-     * sets it as the sender.
-     */
-    public function set_default_sender();
-
-    /**
-     * send
-     * This actually sends the mail, how amazing
-     * @param PHPMailer $phpmailer
-     * @return boolean
-     * @throws Exception
-     */
-    public function send($phpmailer = null);
-
-    /**
-     * @param $group_name
-     * @return boolean
-     * @throws Exception
-     */
-    public function send_to_group($group_name);
 }

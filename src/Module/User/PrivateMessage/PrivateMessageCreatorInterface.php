@@ -17,49 +17,25 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Ampache\Repository;
+namespace Ampache\Module\User\PrivateMessage;
 
-interface PrivateMessageRepositoryInterface
+use Ampache\Model\User;
+
+interface PrivateMessageCreatorInterface
 {
     /**
-     * Get the user received private messages.
+     * Sends a private message to an user
      *
-     * @return int[]
-     */
-    public function getUnreadCount(
-        int $userId
-    ): int;
-
-    /**
-     * Get the subsonic chat messages.
-     *
-     * @return int[]
-     */
-    public function getChatMessages(int $since = 0): array;
-
-    /**
-     * Clear old messages from the subsonic chat message list.
-     */
-    public function cleanChatMessages(int $days = 30): void;
-
-    /**
-     * Sends a subsonic chat message
-     */
-    public function sendChatMessage(string $message, int $userId): ?int;
-
-    public function setIsRead(int $privateMessageId, int $state): void;
-
-    public function delete(int $privateMessageId): void;
-
-    /**
-     * Creates a private message and returns the id of the newly created object
+     * @throws Exception\PrivateMessageCreationException
+     * @throws \PHPMailer\PHPMailer\Exception
      */
     public function create(
-        int $senderUserId,
-        int $recipientUserId,
+        User $recipient,
+        User $sender,
         string $subject,
         string $message
-    ): ?int;
+    ): void;
 }

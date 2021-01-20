@@ -24,12 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
-use Ampache\Module\System\Dba;
-use Ampache\Module\Util\Mailer;
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\AmpError;
-use Ampache\Module\System\Core;
-use PDOStatement;
 
 /**
  * This is the class responsible for handling the PrivateMsg object
@@ -74,41 +69,6 @@ class PrivateMsg extends database_object
      * @var boolean $is_read
      */
     public $is_read;
-
-    /**
-     * @var string $f_subject
-     */
-    public $f_subject;
-
-    /**
-     * @var string $f_message
-     */
-    public $f_message;
-
-    /**
-     * @var string $link
-     */
-    public $link;
-
-    /**
-     * @var string $f_link
-     */
-    public $f_link;
-
-    /**
-     * @var string $f_from_user_link
-     */
-    public $f_from_user_link;
-
-    /**
-     * @var string $f_to_user_link
-     */
-    public $f_to_user_link;
-
-    /**
-     * @var string $f_creation_date
-     */
-    public $f_creation_date;
 
     /**
      * __construct
@@ -163,59 +123,5 @@ class PrivateMsg extends database_object
     public function getSubjectFormatted(): string
     {
         return scrub_out($this->subject);
-    }
-
-    /**
-     * @param array $data
-     * @return boolean|string|null
-     */
-    public static function create(array $data)
-    {
-        $subject = trim(strip_tags(filter_var($data['subject'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
-        $message = trim(strip_tags(filter_var($data['message'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
-
-        if (empty($subject)) {
-            AmpError::add('subject', T_('Subject is required'));
-        }
-
-        $to_user = User::get_from_username($data['to_user']);
-        if (!$to_user->id) {
-            AmpError::add('to_user', T_('Unknown user'));
-        }
-
-        if (!AmpError::occurred()) {
-            $from_user     = $data['from_user'] ?: Core::get_global('user')->id;
-            $creation_date = $data['creation_date'] ?: time();
-            $is_read       = $data['is_read'] ?: 0;
-            $sql           = "INSERT INTO `user_pvmsg` (`subject`, `message`, `from_user`, `to_user`, `creation_date`, `is_read`) " . "VALUES (?, ?, ?, ?, ?, ?)";
-            if (Dba::write($sql, array($subject, $message, $from_user, $to_user->id, $creation_date, $is_read))) {
-                $insert_id = Dba::insert_id();
-
-                // Never send email in case of user impersonation
-                if (!isset($data['from_user']) && $insert_id) {
-                    if (Preference::get_by_user($to_user->id, 'notify_email')) {
-                        if (!empty($to_user->email) && Mailer::is_mail_enabled()) {
-                            $mailer = new Mailer();
-                            $mailer->set_default_sender();
-                            $mailer->recipient      = $to_user->email;
-                            $mailer->recipient_name = $to_user->fullname;
-                            $mailer->subject        = "[" . T_('Private Message') . "] " . $subject;
-                            /* HINT: User fullname */
-                            $mailer->message = sprintf(T_("You received a new private message from %s."),
-                                Core::get_global('user')->fullname);
-                            $mailer->message .= "\n\n----------------------\n\n";
-                            $mailer->message .= $message;
-                            $mailer->message .= "\n\n----------------------\n\n";
-                            $mailer->message .= AmpConfig::get('web_path') . "/pvmsg.php?action=show&pvmsg_id=" . $insert_id;
-                            $mailer->send();
-                        }
-                    }
-                }
-
-                return $insert_id;
-            }
-        }
-
-        return false;
     }
 }

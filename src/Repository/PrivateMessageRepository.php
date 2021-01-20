@@ -111,4 +111,22 @@ final class PrivateMessageRepository implements PrivateMessageRepositoryInterfac
             [$privateMessageId]
         );
     }
+
+    /**
+     * Creates a private message and returns the id of the newly created object
+     */
+    public function create(
+        int $senderUserId,
+        int $recipientUserId,
+        string $subject,
+        string $message
+    ): ?int {
+        $sql = 'INSERT INTO `user_pvmsg` (`subject`, `message`, `from_user`, `to_user`, `creation_date`, `is_read`) VALUES (?, ?, ?, ?, ?, ?)';
+
+        if (Dba::write($sql, [$subject, $message, $senderUserId, $recipientUserId, time(), 0])) {
+            return (int) Dba::insert_id();
+        }
+
+        return null;
+    }
 }

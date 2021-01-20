@@ -26,13 +26,17 @@ namespace Ampache\Module\Application\PrivateMessage;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Model\PrivateMsg;
+use Ampache\Model\ModelFactoryInterface;
+use Ampache\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\System\AmpError;
+use Ampache\Module\User\PrivateMessage\Exception\PrivateMessageCreationException;
+use Ampache\Module\User\PrivateMessage\PrivateMessageCreatorInterface;
 use Ampache\Module\Util\UiInterface;
+use PHPMailer\PHPMailer\Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,12 +48,20 @@ final class AddMessageAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private PrivateMessageCreatorInterface $privateMessageCreator;
+
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        PrivateMessageCreatorInterface $privateMessageCreator,
+        ModelFactoryInterface $modelFactory
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
+        $this->configContainer       = $configContainer;
+        $this->ui                    = $ui;
+        $this->privateMessageCreator = $privateMessageCreator;
+        $this->modelFactory          = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -64,23 +76,36 @@ final class AddMessageAction implements ApplicationActionInterface
             return null;
         }
 
+        $data = $request->getParsedBody();
+
         $this->ui->showHeader();
 
-        // Remove unauthorized defined values from here
-        if (filter_has_var(INPUT_POST, 'from_user')) {
-            unset($_POST['from_user']);
+        $subject = trim(strip_tags(filter_var($data['subject'] ?? '', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
+        $message = trim(strip_tags(filter_var($data['message'] ?? '', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
+        $to_user = User::get_from_username($data['to_user'] ?? '');
+
+        if (!$to_user->id) {
+            AmpError::add('to_user', T_('Unknown user'));
         }
-        if (filter_has_var(INPUT_POST, 'creation_date')) {
-            unset($_POST['creation_date']);
+        if (empty($subject)) {
+            AmpError::add('subject', T_('Subject is required'));
         }
-        if (filter_has_var(INPUT_POST, 'is_read')) {
-            unset($_POST['is_read']);
+        if (AmpError::occurred()) {
+            $this->ui->show('show_add_pvmsg.inc.php');
+            $this->ui->showQueryStats();
+            $this->ui->showFooter();
+
+            return null;
         }
 
-        $pvmsg_id = PrivateMsg::create($_POST);
-        if (!$pvmsg_id) {
-            require_once Ui::find_template('show_add_pvmsg.inc.php');
-        } else {
+        try {
+            $this->privateMessageCreator->create(
+                $to_user,
+                $this->modelFactory->createUser($gatekeeper->getUserId()),
+                $subject,
+                $message
+            );
+
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('Message has been sent'),
@@ -89,6 +114,8 @@ final class AddMessageAction implements ApplicationActionInterface
                     $this->configContainer->getWebPath()
                 )
             );
+        } catch (PrivateMessageCreationException | Exception $e) {
+            $this->ui->show('show_add_pvmsg.inc.php');
         }
 
         $this->ui->showQueryStats();
