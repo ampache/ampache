@@ -69,7 +69,7 @@ if (Art::is_enabled()) {
             } ?></td>
 <?php
     if (AmpConfig::get('show_played_times')) { ?>
-        <td class="cel_counter optional"><?php echo $libitem->object_cnt; ?></td>
+        <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->object_cnt; ?></td>
     <?php
     } ?>
 <td class="<?php echo $cel_tags; ?> optional"><?php echo $libitem->f_tags; ?></td>

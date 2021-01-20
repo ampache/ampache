@@ -62,15 +62,15 @@ if ($libitem->enabled || Access::check('interface', 50)) { ?>
 <td class="<?php echo $cel_album; ?>"><?php echo $libitem->f_album_link ?></td>
 <td class="cel_year"><?php echo $libitem->year ?></td>
 <td class="<?php echo $cel_tags; ?>"><?php echo $libitem->f_tags ?></td>
-<td class="cel_time"><?php echo $libitem->f_time ?></td>
+<td class="<?php echo $cel_time; ?>"><?php echo $libitem->f_time ?></td>
 <?php if (AmpConfig::get('licensing')) { ?>
-<td class="cel_license"><?php echo $libitem->f_license ?></td>
+<td class="<?php echo $cel_license; ?>"><?php echo $libitem->f_license ?></td>
 <?php } ?>
 <?php if (AmpConfig::get('show_played_times')) { ?>
-<td class="cel_counter"><?php echo $libitem->object_cnt ?></td>
+<td class="<?php echo $cel_counter; ?>"><?php echo $libitem->object_cnt ?></td>
 <?php } ?>
 <?php if (AmpConfig::get('show_skipped_times')) { ?>
-<td class="cel_counter"><?php echo $libitem->skip_cnt ?></td>
+<td class="<?php echo $cel_counter; ?>"><?php echo $libitem->skip_cnt ?></td>
 <?php
     }
     if (User::is_registered()) {

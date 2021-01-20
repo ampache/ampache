@@ -21,7 +21,8 @@
  */
 $is_table = $browse->is_grid_view();
 //mashup and grid view need different css
-$cel_cover  = ($is_table) ? "cel_cover" : 'mash_cover'; ?>
+$cel_cover  = ($is_table) ? "cel_cover" : 'mash_cover';
+$cel_flag   = ($is_table) ? "cel_userflag" : 'mash_userflag'; ?>
 <?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
@@ -45,7 +46,7 @@ $cel_cover  = ($is_table) ? "cel_cover" : 'mash_cover'; ?>
                 <?php
         } ?>
                 <?php if (AmpConfig::get('userflags')) { ?>
-                    <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
+                    <th class="<?php echo $cel_flag; ?> optional"><?php echo T_('Fav.'); ?></th>
                 <?php
         } ?>
             <?php
@@ -93,7 +94,7 @@ $cel_cover  = ($is_table) ? "cel_cover" : 'mash_cover'; ?>
                 <?php
             } ?>
                 <?php if (AmpConfig::get('userflags')) { ?>
-                    <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
+                    <th class="<?php echo $cel_flag; ?>"><?php echo T_('Fav.'); ?></th>
                 <?php
             } ?>
             <?php
