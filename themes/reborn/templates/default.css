@@ -1099,7 +1099,9 @@ table.tabledata tbody td.cel_userflag {
     max-width: 40px;
 }
 
-table.tabledata tbody .cel_tags {
+table.tabledata tbody .cel_cover,
+table.tabledata tbody .cel_tags,
+table.tabledata tbody .cel_license {
     width: 150px !important;
     max-width: 150px;
 }
@@ -1369,9 +1371,16 @@ div.box.box_rules {
 
 .cel_song,
 .cel_album,
-.cel_artist,
+.cel_artist {
+    width: 13%;
+    white-space: normal !important;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.cel_counter,
+.cel_songs,
 .cel_year {
-    max-width: 350px;
+    width: 60px;
     white-space: normal !important;
     text-overflow: ellipsis;
     overflow: hidden;
