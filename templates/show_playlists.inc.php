@@ -18,7 +18,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+$is_table = $browse->is_grid_view();
+//mashup and grid view need different css
+$cel_cover  = ($is_table) ? "cel_cover" : 'mash_cover'; ?>
 <?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
@@ -27,7 +30,7 @@
         <tr class="th-top">
             <th class="cel_play essential"></th>
             <?php if (AmpConfig::get('playlist_art')) { ?>
-            <th class="cel_cover optional"><?php echo T_('Art') ?></th>
+            <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art') ?></th>
             <?php
 } ?>
             <th class="cel_playlist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=name', T_('Playlist Name'), 'playlist_sort_name'); ?></th>
@@ -75,7 +78,7 @@
         <tr class="th-bottom">
             <th class="cel_play essential"></th>
             <?php if (AmpConfig::get('playlist_art')) { ?>
-            <th class="cel_cover"><?php echo T_('Art') ?></th>
+            <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art') ?></th>
             <?php
         } ?>
             <th class="cel_playlist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=name', T_('Playlist Name'), 'playlist_sort_name'); ?></th>

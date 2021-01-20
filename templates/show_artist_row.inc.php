@@ -65,7 +65,7 @@ if (Art::is_enabled()) {
     <td class="cel_counter optional"><?php echo $libitem->object_cnt; ?></td>
 <?php
         } ?>
-<td class="cel_tags"><?php echo $libitem->f_tags; ?></td>
+<td class="<?php echo $cel_tags; ?>"><?php echo $libitem->f_tags; ?></td>
 <?php
     if (User::is_registered()) {
         if (AmpConfig::get('ratings')) { ?>

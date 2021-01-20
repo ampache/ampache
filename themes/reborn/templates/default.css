@@ -1109,7 +1109,7 @@ table.tabledata tbody .cel_license {
     width: 150px !important;
     max-width: 150px;
 }
-table.tabledata tbody .mash_cover {
+table.tabledata tbody td.mash_cover {
     height: auto;
 }
 

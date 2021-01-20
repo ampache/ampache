@@ -28,7 +28,8 @@ $is_table = $browse->is_grid_view();
 //mashup and grid view need different css
 $cel_cover  = ($is_table) ? "cel_cover" : 'mash_cover';
 $cel_album  = ($is_table) ? "cel_album" : 'mash_album';
-$cel_artist = ($is_table) ? "cel_artist" : 'mash_artist'; ?>
+$cel_artist = ($is_table) ? "cel_artist" : 'mash_artist';
+$cel_tags   = ($is_table) ? "cel_tags" : 'mash_tags'; ?>
 <?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
@@ -50,7 +51,7 @@ $cel_artist = ($is_table) ? "cel_artist" : 'mash_artist'; ?>
             <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
             <?php
     } ?>
-            <th class="cel_tags optional"><?php echo T_('Genres'); ?></th>
+            <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) {
         ++$thcount; ?>
@@ -120,7 +121,7 @@ $cel_artist = ($is_table) ? "cel_artist" : 'mash_artist'; ?>
             <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
             <?php
         } ?>
-            <th class="cel_tags optional"><?php echo T_('Genres'); ?></th>
+            <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) { ?>
                     <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
