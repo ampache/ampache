@@ -4,63 +4,63 @@
 @import "~/components/Button/index.styl"
 
 .react-async-popup.react-async-popup
-  border-radius 5px
-  overflow hidden
-  max-width: 90vw
+    border-radius 5px
+    overflow hidden
+    max-width: 90vw
 
-  .title-container
-    background-color colorGray700
-    border 0
+    .title-container
+        background-color colorGray700
+        border 0
 
-  .popup-content
-    background-color colorGray800
-    border none
-    min-width: auto
+    .popup-content
+        background-color colorGray800
+        border none
+        min-width: auto
 
-  .close-button svg
-    fill currentColor
+    .close-button svg
+        fill currentColor
 
-  .body
-    padding 0
+    .body
+        padding 0
 
-  .footer
-    display flex
-    justify-content space-around
-    border-top none
+    .footer
+        display flex
+        justify-content space-around
+        border-top none
 
-  .cancelButton, 
-  .footer button:first-of-type
-    @extend .button
-    @extend .button.red
-    @extend .button.medium
+    .cancelButton,
+    .footer button:first-of-type
+        @extend .button
+        @extend .button.red
+        @extend .button.medium
 
-  .confirmButton, 
-  .footer button
-    @extend .button
-    @extend .button.green
-    @extend .button.medium
+    .confirmButton,
+    .footer button
+        @extend .button
+        @extend .button.green
+        @extend .button.medium
 
-  .confirmButton
-    margin-top 20px
+    .confirmButton
+        margin-top 20px
 
-  & ~ .mask
-    background-color rgba(0,0,0,0.5)
+    & ~ .mask
+        background-color rgba(0, 0, 0, 0.5)
 
-  input[type=text]
-    background-color colorGray900
-    font-size inherit 
-    border-color transparent 
-    color inherit 
-    outline none  
-    border-radius 3px 
+    input[type=text]
+        background-color colorGray900
+        font-size inherit
+        border-color transparent
+        color inherit
+        outline none
+        border-radius 3px
 
-    &:focus 
-      border-color colorAmber600 
+        &:focus
+            border-color colorAmber600
 
-    @media (any-hover: hover)
-      &:hover 
-        border-color colorAmber800 
+        @media (any-hover: hover)
+            &:hover
+                border-color colorAmber800
 
-  label 
-    font-weight: 700
-    color colorGray400 
+    label
+        font-weight: 700
+        color colorGray400

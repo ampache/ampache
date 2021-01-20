@@ -1,24 +1,29 @@
 @import "~/stylus/color.styl"
 
 .songBlock
-  display flex
-  width 450px //TODO: Refactor, width shouldn't be set globally, make this component more reusable
-  height 90px
-  cursor pointer
-  border 1px solid transparent
-  img
-    width 20%
-    object-fit contain
-  .details
+    display flex
+    width 450px //TODO: Refactor, width shouldn't be set globally, make this component more reusable
+    height 90px
+    cursor pointer
+    border 1px solid transparent
+
+    img
+        width 20%
+        object-fit contain
+
+    &.playing
+        color currentlyPlayingColor
+
+.details
     padding-left 10px
     display flex
     flex-direction column
     justify-content space-around
-    .bottom
-      color #878787
-      a
+
+.bottom
+    color #878787
+
+    a
         clear both
         float left
         color inherit
-  &.playing
-    color currentlyPlayingColor

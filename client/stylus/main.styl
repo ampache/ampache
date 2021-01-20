@@ -3,61 +3,62 @@
 @import "color.styl"
 
 html
-  height 100%
-  
-#root
-  height 100%
-  overflow-x hidden  
-  
-body
-  height 100%
-  background-color colorGray900
+    height 100%
 
-svg 
-  fill currentColor
+#root
+    height 100%
+    overflow-x hidden
+
+body
+    height 100%
+    background-color colorGray900
+
+svg
+    fill currentColor
 
 a
-  text-decoration none
-  cursor pointer
-  color inherit
-  &.disabled
-   pointer-events none
+    text-decoration none
+    cursor pointer
+    color inherit
+
+    &.disabled
+        pointer-events none
 
 /* W3C spec */
 * {
-  scrollbar-width: thin;
-  scrollbar-color: colorAmber900 colorGray900;
+    scrollbar-width: thin;
+    scrollbar-color: colorAmber900 colorGray900;
 }
 
 /* Chrome, Edge, and Safari */
 ::-webkit-scrollbar {
-  width: 12px;
+    width: 12px;
 }
 
 ::-webkit-scrollbar-track {
-  background: colorGray900;
+    background: colorGray900;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: colorAmber900;
-  border-radius: 20px;
-  border: 3px solid colorGray900;
+    background-color: colorAmber900;
+    border-radius: 20px;
+    border: 3px solid colorGray900;
 }
 
 :global
-  //Pages
-  @import "./pages/Playlists"
-  @import "./pages/Account"
+    //Pages
+    @import "./pages/Playlists"
+    @import "./pages/Account"
 
-  //Components
-  @import './components/MusicControl'
-  @import './components/PlaylistItem'
-  @import './components/PlaylistList'
-  @import './components/ContextMenu'
-  @import './components/InputModal'
-  @import './components/Seekbar'
-  @import './components/React-Async-Popup'
-  @import './components/Toastify'
+    //Components
+    @import './components/MusicControl'
+    @import './components/PlaylistItem'
+    @import './components/PlaylistList'
+    @import './components/ContextMenu'
+    @import './components/InputModal'
+    @import './components/Seekbar'
+    @import './components/React-Async-Popup'
+    @import './components/Toastify'
 
-  //Elements
-  @import './icons'
+    //Elements
+    @import './icons'

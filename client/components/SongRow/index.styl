@@ -2,104 +2,107 @@
 @import "~/stylus/sizes.styl"
 
 .songRow
-  border-radius: 3px
-  display grid
-  cursor pointer 
-  grid-template-columns: 42px 1fr auto auto 42px;
-  grid-template-rows: auto auto
-  grid-auto-flow: column;
-  grid-column-gap: 10px
-  align-items center
-  padding 10px 0
+    border-radius: 3px
+    display grid
+    cursor pointer
+    grid-template-columns: 42px 1fr auto auto 42px;
+    grid-template-rows: auto auto
+    grid-auto-flow: column;
+    grid-column-gap: 10px
+    align-items center
+    padding 10px 0
 
-  @media all and (min-width: size-medium)
-    grid-template-rows: 1fr
-    padding 0px 0
+    @media all and (min-width: size-medium)
+        grid-template-rows: 1fr
+        padding 0px 0
 
-  .heartIconWrapper
+    &:nth-of-type(odd)
+        background-color rgba(colorGray800, 0.3)
+
+    @media (any-hover: hover)
+        &:hover
+            box-shadow 0 0 0 2px colorAmber800
+            position: relative
+
+    &.playing
+        color colorAmber500
+
+.heartIconWrapper
     width 100%
     display flex
-    display: none // GRID TEMP
+    display: none // TODO: action removal
     align-items center
+
     &.fav
-      filter: invert(66%) sepia(95%) saturate(2455%) hue-rotate(359deg) brightness(101%) contrast(107%);
-      &:hover
-        filter none
+        filter: invert(66%) sepia(95%) saturate(2455%) hue-rotate(359deg) brightness(101%) contrast(107%);
+
+        &:hover
+            filter none
+
     &:not(.fav):hover
-      filter: invert(66%) sepia(95%) saturate(2455%) hue-rotate(359deg) brightness(101%) contrast(107%);
-    
+        filter: invert(66%) sepia(95%) saturate(2455%) hue-rotate(359deg) brightness(101%) contrast(107%);
+
     img
-      width 100%
-
-  &:nth-of-type(odd)
-    background-color rgba(colorGray800, 0.3)
-
-  @media (any-hover: hover)
-    &:hover 
-      box-shadow 0 0 0 2px colorAmber800
-      position: relative
-
-  &.playing
-    color colorAmber500
+        width 100%
 
 a
-  @media (any-hover: hover)
-    &:hover 
-      color colorAmber500
+    @media (any-hover: hover)
+        &:hover
+            color colorAmber500
 
 .songDetails
-  display flex
-  flex 1
-  grid-column 2
-  grid-row 1 / 2
-  grid-column-gap: 10px
-  flex-direction: column
-  overflow hidden
+    display flex
+    flex 1
+    grid-column 2
+    grid-row 1 / 2
+    grid-column-gap: 10px
+    flex-direction: column
+    overflow hidden
 
-  @media all and (min-width: size-micro)
-    grid-row 1 / 3
+    @media all and (min-width: size-micro)
+        grid-row 1 / 3
 
-  @media all and (min-width: size-medium)
-    display grid
-    grid-template-columns: repeat( auto-fit, minmax(120px, 1fr) )
+    @media all and (min-width: size-medium)
+        display grid
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr))
 
 .title
-  text-overflow ellipsis
-  overflow hidden
-  white-space nowrap
+    text-overflow ellipsis
+    overflow hidden
+    white-space nowrap
 
 .albumContainer
-  text-overflow ellipsis
-  overflow hidden
-  white-space nowrap
+    text-overflow ellipsis
+    overflow hidden
+    white-space nowrap
 
 .artistContainer
-  font-weight: 700
-  text-overflow ellipsis
-  overflow hidden
-  white-space nowrap
+    font-weight: 700
+    text-overflow ellipsis
+    overflow hidden
+    white-space nowrap
 
 .rating
-  padding-top: 5px
-  grid-column 2
-  grid-row 2 / 3
+    padding-top: 5px
+    grid-column 2
+    grid-row 2 / 3
 
-  @media all and (min-width: size-micro)
-    grid-column 3
-    grid-row 1 / 3
-    padding: inherit
+    @media all and (min-width: size-micro)
+        grid-column 3
+        grid-row 1 / 3
+        padding: inherit
 
 .time
-  padding-left: 5px
-  text-align right
-  grid-column 4
-  grid-row 1 / 3
-  color colorGray400
+    padding-left: 5px
+    text-align right
+    grid-column 4
+    grid-row 1 / 3
+    color colorGray400
 
 .remove
-  grid-column 5
-  grid-row 1 / 3
+    grid-column 5
+    grid-row 1 / 3
 
 .actions
-  grid-column 1
-  grid-row 1 / 3
+    grid-column 1
+    grid-row 1 / 3

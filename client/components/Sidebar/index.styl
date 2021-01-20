@@ -2,97 +2,98 @@
 @import "~stylus/color.styl"
 
 .sidebar
-  width: sidebarWidth
-  border-right 2px solid colorGray800
-  font-size 13px
-  background-color colorGray900
-  flex-shrink: 0;
-  overflow: hidden
-  will-change: transform
-  
-  position: absolute
-  top 0;
-  left 0
-  bottom: 0
-  z-index: 100
-  display: flex;
-  flex-direction: column
+    width: sidebarWidth
+    border-right 2px solid colorGray800
+    font-size 13px
+    background-color colorGray900
+    flex-shrink: 0;
+    overflow: hidden
+    will-change: transform
 
-  @media all and (min-width: size-large)
-    position: static;
-    transform none !important;
+    position: absolute
+    top 0;
+    left 0
+    bottom: 0
+    z-index: 100
+    display: flex;
+    flex-direction: column
 
-  section
-    padding-bottom 10px    
+    @media all and (min-width: size-large)
+        position: static;
+        transform none !important;
 
-  section + section {
-    padding-top 24px
-  }
-    
-  li a
-    display flex
-    padding 0 20px
-    margin-top 3px
-    line-height 34px
-    justify-content: space-between
-    align-items: center
+    section
+        padding-bottom 10px
 
-    @media (any-hover: hover)
-      &:hover
-        color colorAmber500
+    section + section {
+        padding-top 24px
+    }
 
-  h4
-    display inline
-    font-size 15px
-    padding 0 20px
-    line-height: 1.5
+    li a
+        display flex
+        padding 0 20px
+        margin-top 3px
+        line-height 34px
+        justify-content: space-between
+        align-items: center
 
-  form
-    display flex
-    flex-direction column
-    padding-top 5px
-    
-  input, select
-    width 75%
-    margin 5px 0
+        @media (any-hover: hover)
+            &:hover
+                color colorAmber500
+
+    h4
+        display inline
+        font-size 15px
+        padding 0 20px
+        line-height: 1.5
+
+    form
+        display flex
+        flex-direction column
+        padding-top 5px
+
+    input,
+    select
+        width 75%
+        margin 5px 0
 
 .sidebarInner
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow: auto;
-  padding: inherit
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    padding: inherit
 
 .menuList
-  flex 1
-  position: relative
-  padding-top 20px
-  padding-bottom 20px
+    flex 1
+    position: relative
+    padding-top 20px
+    padding-bottom 20px
 
 .menuSettings
-  flex-shrink: 0
-  border-top: 2px solid colorGray700
-  background-color colorGray800
-  padding 15px 0 10px
-  position relative
+    flex-shrink: 0
+    border-top: 2px solid colorGray700
+    background-color colorGray800
+    padding 15px 0 10px
+    position relative
 
 .backdrop
-  position absolute
-  top 0 
-  right 0
-  bottom 0
-  left 0
-  background-color black
-  z-index 99
-  opacity 0
-  transition opacity 100ms ease-out
-  pointer-events: none
+    position absolute
+    top 0
+    right 0
+    bottom 0
+    left 0
+    background-color black
+    z-index 99
+    opacity 0
+    transition opacity 100ms ease-out
+    pointer-events: none
 
 .sidebar.visible ~ .backdrop
-  pointer-events auto
-  opacity 0.6
+    pointer-events auto
+    opacity 0.6
 
-  @media all and (min-width: size-large)
-    display none
+    @media all and (min-width: size-large)
+        display none

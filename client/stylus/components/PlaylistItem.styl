@@ -1,53 +1,53 @@
 @import "~/stylus/color.styl"
 
 .playlistItem
-  background-color colorGray800
-  border-radius: 5px
-  display flex
-  flex-direction column
-  position relative
-
-  @media (any-hover: hover)
-    &:hover 
-      box-shadow 0 0 0 2px colorAmber800 
-      position: relative
-
-  .details
-    padding 10px
+    background-color colorGray800
+    border-radius: 5px
     display flex
-    align-items: center
     flex-direction column
+    position relative
 
-  .name a
-    font-weight 700
-    text-align: center
-    background-color colorGray700
-    padding: 3px 10px
-    border-radius 999px
-    margin-top 2px
-    display inline-block
+    @media (any-hover: hover)
+        &:hover
+            box-shadow 0 0 0 2px colorAmber800
+            position: relative
 
-  .meta
-    text-align: center
-    padding-bottom 10px
+    .details
+        padding 10px
+        display flex
+        align-items: center
+        flex-direction column
 
-  .itemCount
-    font-weight 700
+    .name a
+        font-weight 700
+        text-align: center
+        background-color colorGray700
+        padding: 3px 10px
+        border-radius 999px
+        margin-top 2px
+        display inline-block
 
-  .owner
-    color colorGray400
+    .meta
+        text-align: center
+        padding-bottom 10px
 
-  .rating
-    padding-top 5px
+    .itemCount
+        font-weight 700
 
-  .actions
-    border-top 2px solid colorGray900
-    display flex
-    flex-direction row
-    justify-content: center
-    margin-top auto
+    .owner
+        color colorGray400
 
-    img
-        width 42px
-        padding: 9px
-        display: inline-block
+    .rating
+        padding-top 5px
+
+    .actions
+        border-top 2px solid colorGray900
+        display flex
+        flex-direction row
+        justify-content: center
+        margin-top auto
+
+        img
+            width 42px
+            padding: 9px
+            display: inline-block
