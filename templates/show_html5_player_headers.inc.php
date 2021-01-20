@@ -333,7 +333,7 @@ function ApplyReplayGain()
                     }
                     gainlevel = Math.min(Math.pow(10, ((replaygain /* + Gpre-amp */) / 20)), (1 / peakamplitude));
                 }
-            }                
+            }
         }
 
         replaygainNode.gain.value = gainlevel;
