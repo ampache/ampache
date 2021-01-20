@@ -638,6 +638,17 @@ class Album extends database_object implements library_item
     }
 
     /**
+     * get_http_album_query_id
+     * return the html album parameters for a single album id
+     * @param string $url_param_name
+     * @return string
+     */
+    public function get_http_album_query_id($url_param_name)
+    {
+        return http_build_query(array($url_param_name => array($this->id)));
+    }
+
+    /**
      * get_group_disks_ids
      * return all album suite ids or current album if no albums
      * @return integer[]
