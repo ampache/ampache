@@ -24,11 +24,11 @@ $web_path = AmpConfig::get('web_path');
 $thcount  = 8;
 $is_table = $browse->is_grid_view();
 //mashup and grid view need different css
-$cel_cover  = ($is_table) ? "cel_cover" : 'mash_cover';
-$cel_album  = ($is_table) ? "cel_album" : 'mash_album';
-$cel_artist = ($is_table) ? "cel_artist" : 'mash_artist';
-$cel_tags   = ($is_table) ? "cel_tags" : 'mash_tags';
-$cel_flag   = ($is_table) ? "cel_userflag" : 'mash_userflag';
+$cel_cover   = ($is_table) ? "cel_cover" : 'mash_cover';
+$cel_album   = ($is_table) ? "cel_album" : 'mash_album';
+$cel_artist  = ($is_table) ? "cel_artist" : 'mash_artist';
+$cel_tags    = ($is_table) ? "cel_tags" : 'mash_tags';
+$cel_flag    = ($is_table) ? "cel_userflag" : 'mash_userflag';
 $cel_counter = ($is_table) ? "cel_counter" : 'mash_counter'; ?>
 <?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
