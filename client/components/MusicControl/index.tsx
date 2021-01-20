@@ -3,9 +3,11 @@ import SVG from 'react-inlinesvg';
 import { PLAYERSTATUS } from '~enum/PlayerStatus';
 import { MusicContext } from '~Contexts/MusicContext';
 import Slider from '@material-ui/core/Slider';
-import CurrentPlaying from '~components/CurrentPlaying/';
-import CurrentPlayingArt from '~components/CurrentPlayingArt/';
-import Rating from '~components/Rating/';
+import CurrentPlaying from '~components/CurrentPlaying';
+import CurrentPlayingArt from '~components/CurrentPlayingArt';
+import Rating from '~components/Rating';
+
+import style from './index.styl';
 
 const MusicControl: React.FC = () => {
     const musicContext = useContext(MusicContext);
@@ -30,13 +32,13 @@ const MusicControl: React.FC = () => {
     ];
 
     return (
-        <div className={`musicControl ${ratingToggle ? 'ratingShown' : null}`}>
+        <div className={`${style.musicControl} ${ratingToggle ? style.ratingShown : null}`}>
             <CurrentPlayingArt />
 
             <CurrentPlaying />
 
-            <div className='ratingBarContainer'>
-                <div className='ratingBar'>
+            <div className={style.ratingBarContainer}>
+                <div className={style.ratingBar}>
                     <Rating
                         value={
                             musicContext.currentPlayingSong
@@ -52,7 +54,7 @@ const MusicControl: React.FC = () => {
                 </div>
             </div>
 
-            <div className='seekbar'>
+            <div className={style.seekbar}>
                 <Slider
                     min={0}
                     max={musicContext.currentPlayingSong?.time ?? 0}
@@ -73,17 +75,17 @@ const MusicControl: React.FC = () => {
                 />
             </div>
 
-            <div className='seekTimes'>
-                <span className='seekStart'>
+            <div className={style.seekTimes}>
+                <span className={style.seekStart}>
                     {formatLabel(musicContext.songPosition)}
                 </span>
-                <span className='seekEnd'>
+                <span className={style.seekEnd}>
                     {formatLabel(musicContext.currentPlayingSong?.time ?? 0)}
                 </span>
             </div>
 
-            <div className='controls'>
-                <div className='previousSong'>
+            <div className={style.controls}>
+                <div className={style.previousSong}>
                     <SVG
                         src={require('~images/icons/svg/previous-track.svg')}
                         title='Previous'
@@ -97,13 +99,13 @@ const MusicControl: React.FC = () => {
                             icon-button 
                             ${
                                 musicContext.songQueueIndex <= 0
-                                    ? 'disabled'
+                                    ? style.disabled
                                     : ''
                             }
                         `}
                     />
                 </div>
-                <div className='playPause'>
+                <div className={style.playPause}>
                     {musicContext.playerStatus === PLAYERSTATUS.STOPPED ||
                     musicContext.playerStatus === PLAYERSTATUS.PAUSED ? (
                         <SVG
@@ -119,7 +121,7 @@ const MusicControl: React.FC = () => {
                                 icon-button 
                                 ${
                                     musicContext.currentPlayingSong == undefined
-                                        ? 'disabled'
+                                        ? style.disabled
                                         : ''
                                 }
                             `}
@@ -138,14 +140,14 @@ const MusicControl: React.FC = () => {
                                 icon-button 
                                 ${
                                     musicContext.currentPlayingSong == undefined
-                                        ? 'disabled'
+                                        ? style.disabled
                                         : ''
                                 }
                             `}
                         />
                     )}
                 </div>
-                <div className='nextSong'>
+                <div className={style.nextSong}>
                     <SVG
                         src={require('~images/icons/svg/next-track.svg')}
                         title='Next'
@@ -163,7 +165,7 @@ const MusicControl: React.FC = () => {
                             ${
                                 musicContext.songQueueIndex ==
                                 musicContext.songQueue.length - 1
-                                    ? 'disabled'
+                                    ? style.disabled
                                     : ''
                             }
                         `}
@@ -171,8 +173,8 @@ const MusicControl: React.FC = () => {
                 </div>
             </div>
 
-            <div className='secondaryControls'>
-                <div className={`rating ${ratingToggle ? 'active' : null}`}>
+            <div className={style.secondaryControls}>
+                <div className={`${style.rating} ${ratingToggle ? style.active : null}`}>
                     <SVG
                         src={require('~images/icons/svg/star-full.svg')}
                         title='Show ratings'
@@ -184,7 +186,7 @@ const MusicControl: React.FC = () => {
                     />
                 </div>
 
-                <div className='shuffle'>
+                <div className={style.shuffle}>
                     <SVG
                         src={require('~images/icons/svg/shuffle.svg')}
                         title='Shuffle'
@@ -197,7 +199,7 @@ const MusicControl: React.FC = () => {
                     />
                 </div>
 
-                <div className='repeat'>
+                <div className={style.repeat}>
                     <SVG
                         src={require('~images/icons/svg/repeat.svg')}
                         title='Repeat'
@@ -209,7 +211,7 @@ const MusicControl: React.FC = () => {
                     />
                 </div>
 
-                <div className='moreOptions'>
+                <div className={style.moreOptions}>
                     <SVG
                         src={require('~images/icons/svg/more-options-hori.svg')}
                         title='More options'
@@ -222,7 +224,7 @@ const MusicControl: React.FC = () => {
                 </div>
             </div>
 
-            <div className='volumeSlide'>
+            <div className={style.volumeSlide}>
                 <SVG
                     src={require('~images/icons/svg/volume-up.svg')}
                     title='Mute'

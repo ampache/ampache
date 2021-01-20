@@ -7,7 +7,7 @@ import HistoryShell from '~Modal/HistoryShell';
 import SVG from 'react-inlinesvg';
 import Rating from '~components/Rating/';
 
-import style from '/stylus/components/PlaylistItem.styl'; //TODO
+import style from './index.styl';
 
 interface PlaylistItemProps {
     playlist: Playlist;
@@ -64,8 +64,8 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
                     {props.playlist.id > 0 && (
                         <div className={style.rating}>
                             <Rating
-                                value={props.playlist.rating}
-                                fav={props.playlist.flag}
+                                value={""}
+                                fav={""}
                             />
                         </div>
                     )}

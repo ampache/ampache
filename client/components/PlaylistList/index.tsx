@@ -7,7 +7,7 @@ import {
     Playlist,
     renamePlaylist
 } from '~logic/Playlist';
-import PlaylistItem from './PlaylistItem';
+import PlaylistItem from '~components/PlaylistItem';
 import { AuthKey } from '~logic/Auth';
 import AmpacheError from '~logic/AmpacheError';
 import { Modal } from 'react-async-popup';
@@ -17,7 +17,7 @@ import InputModal from '~Modal/types/InputModal';
 import { useHistory } from 'react-router-dom';
 import HistoryShell from '~Modal/HistoryShell';
 
-import style from '/stylus/components/PlaylistList.styl';
+import style from './index.styl';
 
 interface PlaylistListProps {
     authKey?: AuthKey;

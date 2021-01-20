@@ -3,6 +3,8 @@ import { getUser, User } from '~logic/User';
 import { cleanCatalog, updateCatalog } from '~logic/Catalog';
 import { toast } from 'react-toastify';
 
+import style from './index.styl';
+
 interface AccountProps {
     user: User;
 }
@@ -45,11 +47,11 @@ const AccountView: React.FC<AccountProps> = (props) => {
     };
 
     return (
-        <div className='accountPage'>
+        <div className={style.accountPage}>
             <h1>Edit Account Settings</h1>
             <div>Username - {props.user.username}</div>
             <div>User ID - {props.user.id}</div>
-            <div className='accountInfo'>
+            <div className={style.accountInfo}>
                 <h2>Profile</h2>
                 <form>
                     <label htmlFor='fullName'>Full Name</label>
