@@ -234,7 +234,7 @@ class Update
 
         $update_string = "* Put 'of_the_moment' into a per user preference.<br/ > ";
         $version[]     = array('version' => '400019', 'description' => $update_string);
-        
+
         $update_string = "* Customizable login page background.<br/ > ";
         $version[]     = array('version' => '400020', 'description' => $update_string);
 
@@ -1366,7 +1366,7 @@ class Update
 
         return $retval;
     }
-    
+
     /**
      * update_400020
      *

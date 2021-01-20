@@ -314,7 +314,7 @@ function ApplyReplayGain()
         if (replaygainEnabled && currentjpitem != null) {
             var replaygain_track_gain   = currentjpitem.attr("data-replaygain_track_gain");
             var r128_track_gain = currentjpitem.attr("data-r128_track_gain"); 
-            
+
             if (r128_track_gain !== 'null') { // R128 PREFERRED
                 replaygain = parseInt(r128_track_gain / 256); // LU/dB away from baseline of -23 LUFS/dB, stored as Q7.8 (2 ^ 8) https://tools.ietf.org/html/rfc7845.html#page-25
                 var referenceLevel = parseInt(-23); // LUFS https://en.wikipedia.org/wiki/EBU_R_128#Specification

@@ -47,7 +47,7 @@ class Search extends playlist_object
     public $f_link;
 
     public $search_user;
-    
+
     private $stars;
     private $order_by;
 
