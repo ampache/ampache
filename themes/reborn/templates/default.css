@@ -378,6 +378,10 @@ div#autoupdate > span {
     vertical-align: bottom;
 }
 
+#ui-id-1 {
+    min-width: 20%;
+}
+
 /* --------------------------
    Login / Registration
    -------------------------- */
@@ -1077,8 +1081,8 @@ table.tabledata tbody .cel_time {
 }
 
 table.tabledata tbody .cel_action {
-    width: 130px !important;
-    max-width: 130px;
+    width: 90px !important;
+    max-width: 90px;
 }
 
 table.tabledata tbody .cel_action_text {
@@ -1372,7 +1376,7 @@ div.box.box_rules {
 .cel_song,
 .cel_album,
 .cel_artist {
-    width: 13%;
+    width: 15%;
     white-space: normal !important;
     text-overflow: ellipsis;
     overflow: hidden;
