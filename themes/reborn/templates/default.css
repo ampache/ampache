@@ -806,6 +806,7 @@ span#sidebar-header-content::after {
    -------------------------- */
 #rightbar {
     position: fixed;
+    overflow-y: auto;
     right: 10px;
     top: 66px;
     min-width: 100px;
