@@ -1060,8 +1060,6 @@ CREATE TABLE IF NOT EXISTS `song_data` (
   `replaygain_track_peak` decimal(10,6) DEFAULT NULL,
   `replaygain_album_gain` decimal(10,6) DEFAULT NULL,
   `replaygain_album_peak` decimal(10,6) DEFAULT NULL,
-  `r128_track_gain` smallint(5) DEFAULT NULL,
-  `r128_album_gain` smallint(5) DEFAULT NULL,
   UNIQUE KEY `song_id` (`song_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
