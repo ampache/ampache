@@ -58,6 +58,7 @@ var currentAudioElement = undefined;
             preload: 'auto',
             audioFullScreen: true,
             smoothPlayBar: true,
+            toggleDuration: true,
             keyEnabled: true,
             solution: "<?php
 $solutions = array();

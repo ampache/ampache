@@ -37,14 +37,14 @@
 <?php
 if (Art::is_enabled()) {
                 $name = '[' . $libitem->f_artist . '] ' . scrub_out($libitem->full_name); ?>
-<td class="cel_cover">
+<td class="<?php echo $cel_cover; ?>">
     <?php
     $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
                 Art::display('album', $libitem->id, $name, $thumb, AmpConfig::get('web_path') . '/albums.php?action=show&album=' . $libitem->id); ?>
 </td>
 <?php
             } ?>
-<td class="cel_album"><?php echo $libitem->f_link; ?></td>
+<td class="<?php echo $cel_album; ?>"><?php echo $libitem->f_link; ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
         <?php
@@ -62,17 +62,17 @@ if (Art::is_enabled()) {
             } ?>
     </span>
 </td>
-<td class="cel_artist"><?php echo(!empty($libitem->f_album_artist_link) ? $libitem->f_album_artist_link : $libitem->f_artist_link); ?></td>
+<td class="<?php echo $cel_artist; ?>"><?php echo(!empty($libitem->f_album_artist_link) ? $libitem->f_album_artist_link : $libitem->f_artist_link); ?></td>
 <td class="cel_songs optional"><?php echo $libitem->song_count; ?></td>
 <td class="cel_year"><?php if ($libitem->year > 0) {
                 echo $libitem->year;
             } ?></td>
 <?php
     if (AmpConfig::get('show_played_times')) { ?>
-        <td class="cel_counter optional"><?php echo $libitem->object_cnt; ?></td>
+        <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->object_cnt; ?></td>
     <?php
     } ?>
-<td class="cel_tags optional"><?php echo $libitem->f_tags; ?></td>
+<td class="<?php echo $cel_tags; ?> optional"><?php echo $libitem->f_tags; ?></td>
 <?php
     if (User::is_registered()) {
         if (AmpConfig::get('ratings')) { ?>
@@ -80,7 +80,7 @@ if (Art::is_enabled()) {
     <?php
         }
         if (AmpConfig::get('userflags')) { ?>
-            <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_album"><?php Userflag::show($libitem->id, 'album'); ?></td>
+            <td class="<?php echo $cel_flag; ?>" id="userflag_<?php echo $libitem->id; ?>_album"><?php Userflag::show($libitem->id, 'album'); ?></td>
     <?php
         }
     } ?>
