@@ -11,7 +11,8 @@
             </tal:block>
         </div>
     </td>
-    <td class="cel_song" tal:content="structure SONG/getSongLink">LINK</td>
+    <td tal:condition="IS_TABLE_VIEW" class="cel_song" tal:content="structure SONG/getSongLink">LINK</td>
+    <td tal:condition="not:IS_TABLE_VIEW" class="mash_song" tal:content="structure SONG/getSongLink">LINK</td>
     <td class="cel_add">
         <span class="cel_item_add">
             <tal:block tal:replace="structure SONG/getTemporaryPlaylistButton">TEMPORARY PLAYLIST BUTTON</tal:block>
@@ -25,17 +26,35 @@
             </tal:block>
         </span>
     </td>
-    <td class="cel_artist" tal:content="structure SONG/getArtistLink">ARTIST LINK</td>
-    <td class="cel_album" tal:content="structure SONG/getAlbumLink">ALBUM LINK</td>
+    <tal:block tal:condition="IS_TABLE_VIEW">
+        <td class="cel_artist" tal:content="structure SONG/getArtistLink">ARTIST LINK</td>
+        <td class="cel_album" tal:content="structure SONG/getAlbumLink">ALBUM LINK</td>
+    </tal:block>
+    <tal:block tal:condition="not:IS_TABLE_VIEW">
+        <td class="mash_artist" tal:content="structure SONG/getArtistLink">ARTIST LINK</td>
+        <td class="mash_album" tal:content="structure SONG/getAlbumLink">ALBUM LINK</td>
+    </tal:block>
     <td class="cel_year" tal:content="SONG/getYear">YEAR</td>
-    <td class="cel_tags" tal:content="structure SONG/getGenre">GENRE</td>
-    <td class="cel_time" tal:content="SONG/getPlayDuration">PLAY DURATION</td>
-    <td tal:condition="CONFIG/isLicensingEnabled" class="cel_license" tal:content="structure SONG/getLicenseLink">LICENSE</td>
-    <td tal:condition="CONFIG/isShowPlayedTimesEnabled" class="cel_counter" tal:content="SONG/getNumberPlayed">NUMBER PLAYED</td>
-    <td tal:condition="CONFIG/isShowSkippedTimesEnabled" class="cel_counter" tal:content="SONG/getNumberSkipped">NUMBER SKIPPED</td>
+    <tal:block tal:condition="IS_TABLE_VIEW">
+        <td class="cel_tags" tal:content="structure SONG/getGenre">GENRE</td>
+        <td class="cel_time" tal:content="SONG/getPlayDuration">PLAY DURATION</td>
+        <td tal:condition="CONFIG/isLicensingEnabled" class="cel_license" tal:content="structure SONG/getLicenseLink">LICENSE</td>
+        <td tal:condition="CONFIG/isShowPlayedTimesEnabled" class="cel_counter" tal:content="SONG/getNumberPlayed">NUMBER PLAYED</td>
+        <td tal:condition="CONFIG/isShowSkippedTimesEnabled" class="cel_counter" tal:content="SONG/getNumberSkipped">NUMBER SKIPPED</td>
+    </tal:block>
+    <tal:block tal:condition="not:IS_TABLE_VIEW">
+        <td class="mash_tags" tal:content="structure SONG/getGenre">GENRE</td>
+        <td class="mash_time" tal:content="SONG/getPlayDuration">PLAY DURATION</td>
+        <td tal:condition="CONFIG/isLicensingEnabled" class="mash_license" tal:content="structure SONG/getLicenseLink">LICENSE</td>
+        <td tal:condition="CONFIG/isShowPlayedTimesEnabled" class="mash_counter" tal:content="SONG/getNumberPlayed">NUMBER PLAYED</td>
+        <td tal:condition="CONFIG/isShowSkippedTimesEnabled" class="mash_counter" tal:content="SONG/getNumberSkipped">NUMBER SKIPPED</td>
+    </tal:block>
     <tal:block tal:condition="USER_IS_REGISTERED">
         <td tal:condition="CONFIG/isRatingEnabled" class="cel_rating" id="rating_${SONG/getId}_song" tal:content="structure SONG/getRating">RATING</td>
-        <td tal:condition="CONFIG/isUserflagsEnabled" class="cel_userflag" id="userflag_${SONG/getId}_song" tal:content="structure SONG/getUserFlags">USERFLAGS</td>
+        <tal:block tal:condition="CONFIG/isUserflagsEnabled">
+            <td tal:condition="IS_TABLE_VIEW" class="cel_userflag" id="userflag_${SONG/getId}_song" tal:content="structure SONG/getUserFlags">USERFLAGS</td>
+            <td tal:condition="not:IS_TABLE_VIEW" class="mash_userflag" id="userflag_${SONG/getId}_song" tal:content="structure SONG/getUserFlags">USERFLAGS</td>
+        </tal:block>
     </tal:block>
     <td class="cel_action">
         <a tal:attributes="href SONG/getSongUrl" tal:content="structure SONG/getPreferencesIcon">PREFERENCES</a>

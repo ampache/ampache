@@ -48,11 +48,8 @@ use Ampache\Module\Util\ZipHandlerInterface;
     </div>
 </td>
 <?php if (AmpConfig::get('playlist_art')) { ?>
-<td class="cel_cover">
-<div style="max-width: 128px;">
-    <?php
-    $libitem->display_art(2); ?>
-</div>
+<td class="<?php echo $cel_cover; ?>">
+    <?php $libitem->display_art(2); ?>
 </td>
 <?php
     } ?>
@@ -81,7 +78,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
     <?php
         }
         if (AmpConfig::get('userflags')) { ?>
-    <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_playlist"><?php echo Userflag::show($libitem->id, 'playlist'); ?></td>
+    <td class="<?php echo $cel_flag; ?>" id="userflag_<?php echo $libitem->id; ?>_playlist"><?php Userflag::show($libitem->id, 'playlist'); ?></td>
     <?php
         }
     } ?>

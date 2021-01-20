@@ -28,7 +28,10 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-?>
+$is_table = $browse->is_grid_view();
+//mashup and grid view need different css
+$cel_cover  = ($is_table) ? "cel_cover" : 'mash_cover';
+$cel_flag   = ($is_table) ? "cel_userflag" : 'mash_userflag'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
@@ -37,7 +40,7 @@ use Ampache\Module\Util\Ui;
         <tr class="th-top">
             <th class="cel_play essential"></th>
             <?php if (AmpConfig::get('playlist_art')) { ?>
-            <th class="cel_cover optional"><?php echo T_('Art') ?></th>
+            <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art') ?></th>
             <?php
 } ?>
             <th class="cel_playlist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=name', T_('Playlist Name'), 'playlist_sort_name'); ?></th>
@@ -52,7 +55,7 @@ use Ampache\Module\Util\Ui;
                 <?php
         } ?>
                 <?php if (AmpConfig::get('userflags')) { ?>
-                    <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
+                    <th class="<?php echo $cel_flag; ?> optional"><?php echo T_('Fav.'); ?></th>
                 <?php
         } ?>
             <?php
@@ -85,7 +88,7 @@ use Ampache\Module\Util\Ui;
         <tr class="th-bottom">
             <th class="cel_play essential"></th>
             <?php if (AmpConfig::get('playlist_art')) { ?>
-            <th class="cel_cover"><?php echo T_('Art') ?></th>
+            <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art') ?></th>
             <?php
         } ?>
             <th class="cel_playlist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=name', T_('Playlist Name'), 'playlist_sort_name'); ?></th>
@@ -100,7 +103,7 @@ use Ampache\Module\Util\Ui;
                 <?php
             } ?>
                 <?php if (AmpConfig::get('userflags')) { ?>
-                    <th class="cel_userflag"><?php echo T_('Fav.'); ?></th>
+                    <th class="<?php echo $cel_flag; ?>"><?php echo T_('Fav.'); ?></th>
                 <?php
             } ?>
             <?php

@@ -378,6 +378,10 @@ div#autoupdate > span {
     vertical-align: bottom;
 }
 
+#ui-id-1 {
+    min-width: 20%;
+}
+
 /* --------------------------
    Login / Registration
    -------------------------- */
@@ -802,6 +806,7 @@ span#sidebar-header-content::after {
    -------------------------- */
 #rightbar {
     position: fixed;
+    overflow-y: auto;
     right: 10px;
     top: 66px;
     min-width: 100px;
@@ -1077,8 +1082,8 @@ table.tabledata tbody .cel_time {
 }
 
 table.tabledata tbody .cel_action {
-    width: 130px !important;
-    max-width: 130px;
+    width: 90px !important;
+    max-width: 90px;
 }
 
 table.tabledata tbody .cel_action_text {
@@ -1099,11 +1104,22 @@ table.tabledata tbody td.cel_userflag {
     max-width: 40px;
 }
 
-table.tabledata tbody .cel_tags {
+table.tabledata tbody .cel_cover,
+table.tabledata tbody .cel_tags,
+table.tabledata tbody .cel_license {
     width: 150px !important;
     max-width: 150px;
 }
 
+table.tabledata tbody td.mash_cover {
+    height: auto;
+}
+
+table.tabledata tbody td.mash_userflag {
+    margin-left: 41%;
+}
+
+table.tabledata tbody .mash_cover img,
 table.tabledata tbody .cel_cover img {
     vertical-align: middle;
     -webkit-border-radius: 2px;
@@ -1113,6 +1129,7 @@ table.tabledata tbody .cel_cover img {
     object-fit: cover;
 }
 
+table.tabledata tbody .mash_cover img:hover,
 table.tabledata tbody .cel_cover img:hover {
     border: 2px solid;
     margin: 0;
@@ -1369,9 +1386,16 @@ div.box.box_rules {
 
 .cel_song,
 .cel_album,
-.cel_artist,
+.cel_artist {
+    width: 15%;
+    white-space: normal !important;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.cel_counter,
+.cel_songs,
 .cel_year {
-    max-width: 350px;
+    width: 60px;
     white-space: normal !important;
     text-overflow: ellipsis;
     overflow: hidden;

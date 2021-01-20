@@ -132,7 +132,7 @@ class AmpacheCatalogFavorites
 
                 if ($item->id) {
                     echo '<tr id="' . $userflag['type'] . '_' . $userflag['id'] . '" class="' . ((($count % 2) == 0) ? 'even' : 'odd') . ' libitem_menu">';
-                    echo '<td style="height: auto;">';
+                    echo '<td class=mash_cover>';
                     if ($this->gridview) {
                         echo '<span style="font-weight: bold;">' . $item->f_link . '</span> ';
                         echo '<span style="margin-right: 10px;">';
@@ -150,10 +150,8 @@ class AmpacheCatalogFavorites
                         echo '</span>';
                     }
 
-                    echo '<div style="float: left; margin-right: 10px;">';
-                    $thumb = ($this->gridview && Ui::is_grid_view('album')) ? 1 : 12; // default to 150x150
+                    $thumb = ($this->gridview && UI::is_grid_view('album')) ? 1 : 12; // default to 150x150
                     $item->display_art($thumb, true);
-                    echo '</div>';
                     echo '</td>';
 
                     if (!$this->gridview) {
