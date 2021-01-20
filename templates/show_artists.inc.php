@@ -23,7 +23,12 @@
 session_start();
 
 $web_path = AmpConfig::get('web_path');
-$thcount  = 8; ?>
+$thcount  = 8;
+$is_table = $browse->is_grid_view();
+//mashup and grid view need different css
+$cel_cover  = ($is_table) ? "cel_cover" : 'mash_cover';
+$cel_album  = ($is_table) ? "cel_album" : 'mash_album';
+$cel_artist = ($is_table) ? "cel_artist" : 'mash_artist'; ?>
 <?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
@@ -36,7 +41,7 @@ $thcount  = 8; ?>
                 <th class="cel_cover optional"><?php echo T_('Art'); ?></th>
             <?php
 } ?>
-            <th class="cel_artist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', T_('Artist'), 'artist_sort_name'); ?></th>
+            <th class="<?php echo $cel_artist; ?> essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', T_('Artist'), 'artist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
             <th class="cel_songs optional"><?php echo T_('Songs');  ?></th>
             <th class="cel_albums optional"><?php echo T_('Albums'); ?></th>
@@ -106,7 +111,7 @@ $thcount  = 8; ?>
                 <th class="cel_cover"><?php echo T_('Art'); ?></th>
             <?php
         } ?>
-            <th class="cel_artist essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', T_('Artist'), 'artist_sort_name'); ?></th>
+            <th class="<?php echo $cel_artist; ?> essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=artist&sort=name', T_('Artist'), 'artist_sort_name'); ?></th>
             <th class="cel_add essential"></th>
             <th class="cel_songs optional"><?php echo T_('Songs');  ?></th>
             <th class="cel_albums optional"><?php echo T_('Albums'); ?></th>

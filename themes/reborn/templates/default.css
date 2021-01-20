@@ -1109,7 +1109,11 @@ table.tabledata tbody .cel_license {
     width: 150px !important;
     max-width: 150px;
 }
+table.tabledata tbody .mash_cover {
+    height: auto;
+}
 
+table.tabledata tbody .mash_cover img,
 table.tabledata tbody .cel_cover img {
     vertical-align: middle;
     -webkit-border-radius: 2px;
@@ -1119,6 +1123,7 @@ table.tabledata tbody .cel_cover img {
     object-fit: cover;
 }
 
+table.tabledata tbody .mash_cover img:hover,
 table.tabledata tbody .cel_cover img:hover {
     border: 2px solid;
     margin: 0;

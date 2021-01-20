@@ -42,7 +42,7 @@ if ($libitem->enabled || Access::check('interface', 50)) { ?>
     } ?>
     </div>
 </td>
-<td class="cel_song"><?php echo $libitem->f_link ?></td>
+<td class="<?php echo $cel_song; ?>"><?php echo $libitem->f_link ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
 <?php
@@ -58,8 +58,8 @@ if ($libitem->enabled || Access::check('interface', 50)) { ?>
     } ?>
     </span>
 </td>
-<td class="cel_artist"><?php echo $libitem->f_artist_link ?></td>
-<td class="cel_album"><?php echo $libitem->f_album_link ?></td>
+<td class="<?php echo $cel_artist; ?>"><?php echo $libitem->f_artist_link ?></td>
+<td class="<?php echo $cel_album; ?>"><?php echo $libitem->f_album_link ?></td>
 <td class="cel_year"><?php echo $libitem->year ?></td>
 <td class="cel_tags"><?php echo $libitem->f_tags ?></td>
 <td class="cel_time"><?php echo $libitem->f_time ?></td>

@@ -21,7 +21,12 @@
  */
 
 $web_path = AmpConfig::get('web_path');
-$thcount  = 8; ?>
+$thcount  = 8;
+$is_table = $browse->is_grid_view();
+//mashup and grid view need different css
+$cel_cover  = ($is_table) ? "cel_cover" : 'mash_cover';
+$cel_album  = ($is_table) ? "cel_album" : 'mash_album';
+$cel_artist = ($is_table) ? "cel_artist" : 'mash_artist'; ?>
 <?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
@@ -32,13 +37,13 @@ $thcount  = 8; ?>
             <th class="cel_play essential"></th>
         <?php if (Art::is_enabled()) {
     ++$thcount; ?>
-            <th class="cel_cover optional"><?php echo T_('Art'); ?></th>
+            <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
         <?php
 } ?>
 </div>
-            <th class="cel_album essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Album'), 'album_sort_name'); ?></th>
+            <th class="<?php echo $cel_album; ?> essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Album'), 'album_sort_name'); ?></th>
             <th class="cel_add essential"></th>
-            <th class="cel_artist essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=generic_artist', T_('Album Artist'), 'album_sort_artist'); ?></th>
+            <th class="<?php echo $cel_artist; ?> essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=generic_artist', T_('Album Artist'), 'album_sort_artist'); ?></th>
             <th class="cel_songs optional"><?php echo T_('Songs'); ?></th>
             <th class="cel_year essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'), 'album_sort_year'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
@@ -105,9 +110,9 @@ $thcount  = 8; ?>
                 <th class="cel_cover"><?php echo T_('Art'); ?></th>
             <?php
         } ?>
-            <th class="cel_album"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Album'), 'album_sort_name_bottom'); ?></th>
+            <th class="<?php echo $cel_album; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Album'), 'album_sort_name_bottom'); ?></th>
             <th class="cel_add"></th>
-            <th class="cel_artist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=generic_artist', T_('Album Artist'), 'album_sort_artist_bottom'); ?></th>
+            <th class="<?php echo $cel_artist; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=generic_artist', T_('Album Artist'), 'album_sort_artist_bottom'); ?></th>
             <th class="cel_songs"><?php echo T_('Songs'); ?></th>
             <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'), 'album_sort_year_bottom'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
