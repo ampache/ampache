@@ -29,7 +29,8 @@ $is_table = $browse->is_grid_view();
 $cel_cover  = ($is_table) ? "cel_cover" : 'mash_cover';
 $cel_album  = ($is_table) ? "cel_album" : 'mash_album';
 $cel_artist = ($is_table) ? "cel_artist" : 'mash_artist';
-$cel_tags   = ($is_table) ? "cel_tags" : 'mash_tags'; ?>
+$cel_tags   = ($is_table) ? "cel_tags" : 'mash_tags';
+$cel_flag   = ($is_table) ? "cel_userflag" : 'mash_userflag'; ?>
 <?php if ($browse->is_show_header()) {
     require AmpConfig::get('prefix') . UI::find_template('list_header.inc.php');
 } ?>
@@ -60,7 +61,7 @@ $cel_tags   = ($is_table) ? "cel_tags" : 'mash_tags'; ?>
     } ?>
                 <?php if (AmpConfig::get('userflags')) {
         ++$thcount; ?>
-                    <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
+                    <th class="<?php echo $cel_flag; ?> optional"><?php echo T_('Fav.'); ?></th>
                 <?php
     } ?>
             <?php
@@ -128,7 +129,7 @@ $cel_tags   = ($is_table) ? "cel_tags" : 'mash_tags'; ?>
                 <?php
             } ?>
                 <?php if (AmpConfig::get('userflags')) { ?>
-                    <th class="cel_userflag optional"><?php echo T_('Fav.'); ?></th>
+                    <th class="<?php echo $cel_flag; ?> optional"><?php echo T_('Fav.'); ?></th>
                 <?php
             } ?>
             <?php

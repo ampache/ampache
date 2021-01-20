@@ -73,7 +73,7 @@ if (Art::is_enabled()) {
         <?php
         }
         if (AmpConfig::get('userflags')) { ?>
-            <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_artist"><?php Userflag::show($libitem->id, 'artist'); ?></td>
+            <td class="<?php echo $cel_flag; ?>" id="userflag_<?php echo $libitem->id; ?>_artist"><?php Userflag::show($libitem->id, 'artist'); ?></td>
         <?php
         }
     } ?>

@@ -81,7 +81,7 @@ if ($libitem->enabled || Access::check('interface', 50)) { ?>
     <?php
         }
         if (AmpConfig::get('userflags')) { ?>
-            <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_song">
+            <td class="<?php echo $cel_flag; ?>" id="userflag_<?php echo $libitem->id; ?>_song">
                 <?php Userflag::show($libitem->id, 'song') ?>
             </td>
     <?php

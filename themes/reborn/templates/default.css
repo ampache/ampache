@@ -1109,8 +1109,13 @@ table.tabledata tbody .cel_license {
     width: 150px !important;
     max-width: 150px;
 }
+
 table.tabledata tbody td.mash_cover {
     height: auto;
+}
+
+table.tabledata tbody td.mash_userflag {
+    margin-left: 41%;
 }
 
 table.tabledata tbody .mash_cover img,
