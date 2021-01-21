@@ -287,7 +287,7 @@ class Subsonic_XML_Data
     {
         $version  = self::API_VERSION;
         $response = self::createResponse($version, 'failed');
-        debug_event('subsonic_xml_data.class', 'API fail in function ' . $function . '-' . $version, 3);
+        debug_event(self::class, 'API fail in function ' . $function . '-' . $version, 3);
 
         return $response;
     }
@@ -301,7 +301,7 @@ class Subsonic_XML_Data
     {
         $version  = self::API_VERSION;
         $response = self::createResponse($version);
-        debug_event('subsonic_xml_data.class', 'API success in function ' . $function . '-' . $version, 5);
+        debug_event(self::class, 'API success in function ' . $function . '-' . $version, 5);
 
         return $response;
     }
@@ -1042,7 +1042,7 @@ class Subsonic_XML_Data
     public static function addSmartPlaylist($xml, $playlist, $songs = false)
     {
         $xplaylist = $xml->addChild('playlist');
-        debug_event('subsonic_xml_data.class', 'addsmartplaylist ' . $playlist->id, 5);
+        debug_event(self::class, 'addsmartplaylist ' . $playlist->id, 5);
         $xplaylist->addAttribute('id', (string) self::getSmartPlId($playlist->id));
         $xplaylist->addAttribute('name', (string) self::checkName($playlist->name));
         $user = new User($playlist->user);

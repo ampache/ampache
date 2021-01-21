@@ -56,7 +56,7 @@ class Recommendation
      */
     public static function query_lastfm($url)
     {
-        debug_event('recommendation.class', 'search url : ' . $url, 5);
+        debug_event(self::class, 'search url : ' . $url, 5);
 
         $request = Requests::get($url, array(), Core::requests_options());
 
@@ -206,14 +206,14 @@ class Recommendation
 
                     if ($result = Dba::fetch_assoc($db_result)) {
                         $local_id = $result['id'];
-                        debug_event('recommendation.class', "$name matched local song $local_id", 4);
+                        debug_event(self::class, "$name matched local song $local_id", 4);
                         $similars[] = array(
                             'id' => $local_id,
                             'name' => $name,
                             'rel' => $artist_name
                         );
                     } else {
-                        debug_event('recommendation.class', "$name did not match any local song", 5);
+                        debug_event(self::class, "$name did not match any local song", 5);
                         $similars[] = array(
                             'id' => null,
                             'name' => $name,
@@ -307,14 +307,14 @@ class Recommendation
 
                     // Then we give up
                     if ($local_id === null) {
-                        debug_event('recommendation.class', "$name did not match any local artist", 5);
+                        debug_event(self::class, "$name did not match any local artist", 5);
                         $similars[] = array(
                             'id' => null,
                             'name' => $name,
                             'mbid' => $mbid
                         );
                     } else {
-                        debug_event('recommendation.class', "$name matched local artist " . $local_id, 5);
+                        debug_event(self::class, "$name matched local artist " . $local_id, 5);
                         $similars[] = array(
                             'id' => $local_id,
                             'name' => $name

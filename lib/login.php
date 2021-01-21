@@ -33,7 +33,7 @@ Preference::init();
  */
 if (AmpConfig::get('access_control')) {
     if (!Access::check_network('interface', '', 5)) {
-        debug_event('login.class', 'UI::access_denied:' . (string) filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) . ' is not in the Interface Access list', 3);
+        debug_event('login', 'UI::access_denied:' . (string) filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) . ' is not in the Interface Access list', 3);
         UI::access_denied();
 
         return false;
@@ -77,7 +77,7 @@ if (empty($_REQUEST['step'])) {
 
                 return false;
             } else {
-                debug_event('login.class', scrub_out($username) . ' From ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) . ' attempted to login and failed', 1);
+                debug_event('login', scrub_out($username) . ' From ' . filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) . ' attempted to login and failed', 1);
                 AmpError::add('general', T_('Incorrect username or password'));
             }
         }
@@ -88,7 +88,7 @@ if (empty($_REQUEST['step'])) {
     if ($auth['success']) {
         $username = $auth['username'];
     } else {
-        debug_event('login.class', 'Second step authentication failed', 1);
+        debug_event('login', 'Second step authentication failed', 1);
         AmpError::add('general', $auth['error']);
     }
 }
@@ -100,7 +100,7 @@ if (!empty($username) && isset($auth)) {
         // if user disabled
         $auth['success'] = false;
         AmpError::add('general', T_('Account is disabled, please contact the administrator'));
-        debug_event('login.class', scrub_out($username) . ' is disabled and attempted to login', 1);
+        debug_event('login', scrub_out($username) . ' is disabled and attempted to login', 1);
     } elseif (AmpConfig::get('prevent_multiple_logins')) {
         // if logged in multiple times
         $session_ip = $user->is_logged_in();
@@ -108,7 +108,7 @@ if (!empty($username) && isset($auth)) {
         if ($current_ip && ($current_ip != $session_ip)) {
             $auth['success'] = false;
             AmpError::add('general', T_('User is already logged in'));
-            debug_event('login.class', scrub_out($username) . ' is already logged in from ' . (string) $session_ip . ' and attempted to login from ' . $current_ip, 1);
+            debug_event('login', scrub_out($username) . ' is already logged in from ' . (string) $session_ip . ' and attempted to login from ' . $current_ip, 1);
         }
     } elseif (AmpConfig::get('auto_create') && $auth['success'] && ! $user->username) {
         // This is run if we want to autocreate users who don't exist (useful for non-mysql auth)

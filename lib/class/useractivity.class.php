@@ -97,7 +97,7 @@ class Useractivity extends database_object
                 $sql = "DELETE FROM `user_activity` WHERE `object_type` = ? AND `object_id` = ?";
                 Dba::write($sql, array($object_type, $object_id));
             } else {
-                debug_event('useractivity.class', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+                debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
             }
         } else {
             foreach ($types as $type) {
@@ -130,7 +130,7 @@ class Useractivity extends database_object
             $mbid_song   = $song->mbid;
             $mbid_artist = $song->artist_mbid;
             $mbid_album  = $song->album_mbid;
-            debug_event('useractivity.class', 'post_activity: ' . $action . ' ' . $object_type . ' by user: ' . $user_id . ': {' . $object_id . '}', 5);
+            debug_event(self::class, 'post_activity: ' . $action . ' ' . $object_type . ' by user: ' . $user_id . ': {' . $object_id . '}', 5);
 
             if ($name_song && $name_artist && $name_album) {
                 return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date, $name_song, $name_artist, $name_album, $mbid_song, $mbid_artist, $mbid_album));
@@ -147,7 +147,7 @@ class Useractivity extends database_object
             $artist->format();
             $name_artist = $artist->f_name;
             $mbid_artist = $artist->mbid;
-            debug_event('useractivity.class', 'post_activity: ' . $action . ' ' . $object_type . ' by user: ' . $user_id . ': {' . $object_id . '}', 5);
+            debug_event(self::class, 'post_activity: ' . $action . ' ' . $object_type . ' by user: ' . $user_id . ': {' . $object_id . '}', 5);
 
             if ($name_artist) {
                 return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date, $name_artist, $mbid_artist));
@@ -168,7 +168,7 @@ class Useractivity extends database_object
             $mbid_artist  = $album->mbid_group;
 
             if ($name_artist && $name_album) {
-                debug_event('useractivity.class', 'post_activity: ' . $action . ' ' . $object_type . ' by user: ' . $user_id . ': {' . $object_id . '}', 5);
+                debug_event(self::class, 'post_activity: ' . $action . ' ' . $object_type . ' by user: ' . $user_id . ': {' . $object_id . '}', 5);
 
                 return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date, $name_artist, $name_album, $mbid_artist, $mbid_album));
             }
@@ -177,7 +177,7 @@ class Useractivity extends database_object
             return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date));
         }
         // This is probably a good feature to keep by default
-        debug_event('useractivity.class', 'post_activity: ' . $action . ' ' . $object_type . ' by user: ' . $user_id . ': {' . $object_id . '}', 5);
+        debug_event(self::class, 'post_activity: ' . $action . ' ' . $object_type . ' by user: ' . $user_id . ': {' . $object_id . '}', 5);
         $sql = "INSERT INTO `user_activity` (`user`, `action`, `object_type`, `object_id`, `activity_date`) VALUES (?, ?, ?, ?, ?)";
 
         return Dba::write($sql, array($user_id, $action, $object_type, $object_id, $date));

@@ -26,7 +26,7 @@ class Graph
     public function __construct()
     {
         if (!AmpConfig::get('statistical_graphs') || !is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) {
-            debug_event('graph', 'Access denied, statistical graph disabled.', 1);
+            debug_event(self::class, 'Access denied, statistical graph disabled.', 1);
 
             return false;
         }

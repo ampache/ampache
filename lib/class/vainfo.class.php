@@ -109,7 +109,7 @@ class vainfo
             try {
                 $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($file));
             } catch (Exception $error) {
-                debug_event('vainfo.class', 'getID3 Broken file detected: $file: ' . $error->getMessage(), 1);
+                debug_event(self::class, 'getID3 Broken file detected: $file: ' . $error->getMessage(), 1);
                 $this->_broken = true;
 
                 return false;
@@ -198,7 +198,7 @@ class vainfo
             }
         }
 
-        //!!debug_event('vainfo.class', 'encoding detection: ' . json_encode($encodings), 5);
+        //!!debug_event(self::class, 'encoding detection: ' . json_encode($encodings), 5);
         $high     = 0;
         $encoding = 'ISO-8859-1';
         foreach ($encodings as $key => $value) {
@@ -233,7 +233,7 @@ class vainfo
                 try {
                     $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($this->filename));
                 } catch (Exception $error) {
-                    debug_event('vainfo.class', 'getID2 Unable to catalog file: ' . $error->getMessage(), 1);
+                    debug_event(self::class, 'getID2 Unable to catalog file: ' . $error->getMessage(), 1);
                 }
             }
 
@@ -283,12 +283,12 @@ class vainfo
         $tagWriter->tag_data          = $tag_data;
         if ($tagWriter->WriteTags()) {
             foreach ($tagWriter->warnings as $message) {
-                debug_event('vainfo.class', 'Warning Writing Image: ' . $message, 5);
+                debug_event(self::class, 'Warning Writing Image: ' . $message, 5);
             }
         }
         if (!empty($tagWriter->errors)) {
             foreach ($tagWriter->errors as $message) {
-                debug_event('vainfo.class', 'Error Writing Image: ' . $message, 1);
+                debug_event(self::class, 'Error Writing Image: ' . $message, 1);
             }
         }
     } // write_id3
@@ -333,7 +333,7 @@ class vainfo
 
             return $this->_raw;
         } catch (Exception $error) {
-            debug_event('vainfo.class', "Unable to read file:" . $error->getMessage(), 1);
+            debug_event(self::class, "Unable to read file:" . $error->getMessage(), 1);
         }
 
         return array();
@@ -580,47 +580,47 @@ class vainfo
                     case 'avi':
                     case 'flv':
                     case 'matroska':
-                        debug_event('vainfo.class', 'Cleaning ' . $key, 5);
+                        debug_event(self::class, 'Cleaning ' . $key, 5);
                         $parsed = $this->_cleanup_generic($tag_array);
                         break;
                     case 'vorbiscomment':
-                        debug_event('vainfo.class', 'Cleaning vorbis', 5);
+                        debug_event(self::class, 'Cleaning vorbis', 5);
                         $parsed = $this->_cleanup_vorbiscomment($tag_array);
                         break;
                     case 'id3v1':
-                        debug_event('vainfo.class', 'Cleaning id3v1', 5);
+                        debug_event(self::class, 'Cleaning id3v1', 5);
                         $parsed = $this->_cleanup_id3v1($tag_array);
                         break;
                     case 'id3v2':
-                        debug_event('vainfo.class', 'Cleaning id3v2', 5);
+                        debug_event(self::class, 'Cleaning id3v2', 5);
                         $parsed = $this->_cleanup_id3v2($tag_array);
                         break;
                     case 'quicktime':
-                        debug_event('vainfo.class', 'Cleaning quicktime', 5);
+                        debug_event(self::class, 'Cleaning quicktime', 5);
                         $parsed = $this->_cleanup_quicktime($tag_array);
                         break;
                     case 'riff':
-                        debug_event('vainfo.class', 'Cleaning riff', 5);
+                        debug_event(self::class, 'Cleaning riff', 5);
                         $parsed = $this->_cleanup_riff($tag_array);
                         break;
                     case 'mpg':
                     case 'mpeg':
                         $key = 'mpeg';
-                        debug_event('vainfo.class', 'Cleaning MPEG', 5);
+                        debug_event(self::class, 'Cleaning MPEG', 5);
                         $parsed = $this->_cleanup_generic($tag_array);
                         break;
                     case 'asf':
                     case 'wmv':
                         $key = 'asf';
-                        debug_event('vainfo.class', 'Cleaning WMV/WMA/ASF', 5);
+                        debug_event(self::class, 'Cleaning WMV/WMA/ASF', 5);
                         $parsed = $this->_cleanup_generic($tag_array);
                         break;
                     case 'lyrics3':
-                        debug_event('vainfo.class', 'Cleaning lyrics3', 5);
+                        debug_event(self::class, 'Cleaning lyrics3', 5);
                         $parsed = $this->_cleanup_lyrics($tag_array);
                         break;
                     default:
-                        debug_event('vainfo.class', 'Cleaning unrecognised tag type ' . $key . ' for file ' . $this->filename, 5);
+                        debug_event(self::class, 'Cleaning unrecognised tag type ' . $key . ' for file ' . $this->filename, 5);
                         $parsed = $this->_cleanup_generic($tag_array);
                         break;
                 }
@@ -778,7 +778,7 @@ class vainfo
                 return $type;
             default:
                 /* Log the fact that we couldn't figure it out */
-                debug_event('vainfo.class', 'Unable to determine file type from ' . $type . ' on file ' . $this->filename, 3);
+                debug_event(self::class, 'Unable to determine file type from ' . $type . ' on file ' . $this->filename, 3);
 
                 return $type;
         }
@@ -863,7 +863,7 @@ class vainfo
         $parsed      = array();
 
         foreach ($tags as $tag => $data) {
-            //debug_event('vainfo.class', 'Vorbis tag: ' . $tag . ' value: ' . $data[0], 5);
+            //debug_event(self::class, 'Vorbis tag: ' . $tag . ' value: ' . $data[0], 5);
             switch (strtolower($tag)) {
                 case 'genre':
                     // Pass the array through
@@ -965,7 +965,7 @@ class vainfo
         $parsed = array();
 
         foreach ($tags as $tag => $data) {
-            //debug_event('vainfo.class', 'id3v2 tag: ' . strtolower($tag) . ' value: ' . $data[0], 5);
+            //debug_event(self::class, 'id3v2 tag: ' . strtolower($tag) . ' value: ' . $data[0], 5);
             switch (strtolower($tag)) {
                 case 'genre':
                     $parsed['genre'] = $this->parseGenres($data);
@@ -1033,7 +1033,7 @@ class vainfo
             // getID3 has copies of text properly converted to utf-8 encoding in comments/text
             $enable_custom_metadata = AmpConfig::get('enable_custom_metadata');
             foreach ($id3v2['TXXX'] as $txxx) {
-                //debug_event('vainfo.class', 'id3v2 TXXX: ' . strtolower($this->trimAscii($txxx['description'])) . ' value: ' . $id3v2['comments']['text'][$txxx['description']], 5);
+                //debug_event(self::class, 'id3v2 TXXX: ' . strtolower($this->trimAscii($txxx['description'])) . ' value: ' . $id3v2['comments']['text'][$txxx['description']], 5);
                 switch (strtolower($this->trimAscii($txxx['description']))) {
                     case 'musicbrainz album id':
                         $parsed['mb_albumid'] = $id3v2['comments']['text'][$txxx['description']];
@@ -1362,11 +1362,11 @@ class vainfo
 
         // Pull out our actual matches
         preg_match($pattern, $filepath, $matches);
-        debug_event('vainfo.class', 'Checking ' . $pattern . ' _ ' . $matches . ' on ' . $filepath, 5);
+        debug_event(self::class, 'Checking ' . $pattern . ' _ ' . $matches . ' on ' . $filepath, 5);
         if ($matches != null) {
             // The first element is the full match text
             $matched = array_shift($matches);
-            debug_event('vainfo.class', $pattern . ' matched ' . $matched . ' on ' . $filepath, 5);
+            debug_event(self::class, $pattern . ' matched ' . $matched . ' on ' . $filepath, 5);
 
             // Iterate over what we found
             foreach ($matches as $key => $value) {

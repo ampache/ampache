@@ -136,14 +136,14 @@ class Ampache7digital
         if (strlen(trim($data['7digital_api_key']))) {
             $this->api_key = trim($data['7digital_api_key']);
         } else {
-            debug_event('7digital.plugin', 'No 7digital api key, song preview plugin skipped', 3);
+            debug_event(self::class, 'No 7digital api key, song preview plugin skipped', 3);
 
             return false;
         }
         if (strlen(trim($data['7digital_secret_api_key']))) {
             $this->secret = trim($data['7digital_secret_api_key']);
         } else {
-            debug_event('7digital.plugin', 'No 7digital secret, song preview plugin skipped', 3);
+            debug_event(self::class, 'No 7digital secret, song preview plugin skipped', 3);
 
             return false;
         }

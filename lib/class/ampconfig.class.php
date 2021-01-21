@@ -105,7 +105,7 @@ class AmpConfig
     public static function set($name, $value, $clobber = false)
     {
         if (isset(self::$_global[$name]) && !$clobber) {
-            debug_event('ampconfig.class', "Tried to overwrite existing key $name without setting clobber", 5);
+            debug_event(self::class, "Tried to overwrite existing key $name without setting clobber", 5);
             AmpError::add('Config Global', sprintf(T_('Tried to clobber \'%s\' without setting clobber'), $name));
 
             return false;

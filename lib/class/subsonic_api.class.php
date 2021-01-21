@@ -141,7 +141,7 @@ class Subsonic_Api
                 $reqheaders[] = "Range: " . $headers['Range'];
             }
             // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
-            debug_event('subsonic_api.class', 'Stream proxy: ' . $url, 5);
+            debug_event(self::class, 'Stream proxy: ' . $url, 5);
             $curl = curl_init($url);
             if ($curl) {
                 curl_setopt_array($curl, array(
@@ -159,7 +159,7 @@ class Subsonic_Api
                     CURLOPT_TIMEOUT => 0
                 ));
                 if (curl_exec($curl) === false) {
-                    debug_event('subsonic_api.class', 'Stream error: ' . curl_error($curl), 1);
+                    debug_event(self::class, 'Stream error: ' . curl_error($curl), 1);
                 }
                 curl_close($curl);
             }
@@ -1566,7 +1566,7 @@ class Subsonic_Api
                     $object_type = 'playlist';
                 }
             }
-            debug_event('subsonic_api.class', 'createShare: sharing ' . $object_type . ' ' . $object_id, 4);
+            debug_event(self::class, 'createShare: sharing ' . $object_type . ' ' . $object_id, 4);
 
             if (!empty($object_type)) {
                 $response = Subsonic_XML_Data::createSuccessResponse('createshare');
@@ -1844,7 +1844,7 @@ class Subsonic_Api
         $gain   = $input['gain'];
 
         $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_DATA_NOTFOUND, '', 'jukeboxcontrol');
-        debug_event('subsonic_api.class', 'Using Localplay controller: ' . AmpConfig::get('localplay_controller'), 5);
+        debug_event(self::class, 'Using Localplay controller: ' . AmpConfig::get('localplay_controller'), 5);
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
 
         if ($localplay->connect()) {
@@ -1866,7 +1866,7 @@ class Subsonic_Api
                             $ret = $localplay->play();
                         }
                     } elseif (isset($input['offset'])) {
-                        debug_event('subsonic_api.class', 'Skip with offset is not supported on JukeboxControl.', 5);
+                        debug_event(self::class, 'Skip with offset is not supported on JukeboxControl.', 5);
                     } else {
                         $response = Subsonic_XML_Data::createError(Subsonic_XML_Data::SSERROR_MISSINGPARAM, '', 'jukeboxcontrol');
                     }
@@ -1891,7 +1891,7 @@ class Subsonic_Api
                             }
 
                             if ($url !== null) {
-                                debug_event('subsonic_api.class', 'Adding ' . $url, 5);
+                                debug_event(self::class, 'Adding ' . $url, 5);
                                 $stream        = array();
                                 $stream['url'] = $url;
                                 $ret           = $localplay->add_url(new Stream_URL($stream));
@@ -1958,7 +1958,7 @@ class Subsonic_Api
             // submission is true: go to scrobble plugins (Plugin::get_plugins('save_mediaplay'))
             if ($submission && get_class($media) == 'Song' && ($previous['object_id'] != $media->id) && (($time - $previous['time']) > 5)) {
                 // stream has finished
-                debug_event('subsonic_api.class', $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
+                debug_event(self::class, $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
                 User::save_mediaplay($user, $media);
             }
             // Submission is false and not a repeat. let repeats go though to saveplayqueue
@@ -2073,9 +2073,9 @@ class Subsonic_Api
         if (Subsonic_XML_Data::isArtist($id)) {
             $similars = Recommendation::get_artists_like(Subsonic_XML_Data::getAmpacheId($id));
             if (!empty($similars)) {
-                debug_event('subsonic_api.class', 'Found: ' . count($similars) . ' similar artists', 4);
+                debug_event(self::class, 'Found: ' . count($similars) . ' similar artists', 4);
                 foreach ($similars as $similar) {
-                    debug_event('subsonic_api.class', $similar['name'] . ' (id=' . $similar['id'] . ')', 5);
+                    debug_event(self::class, $similar['name'] . ' (id=' . $similar['id'] . ')', 5);
                     if ($similar['id']) {
                         $artist = new Artist($similar['id']);
                         // get the songs in a random order for even more chaos

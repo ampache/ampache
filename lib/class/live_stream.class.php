@@ -153,7 +153,7 @@ class Live_Stream extends database_object implements media, library_item
      */
     public function search_childrens($name)
     {
-        debug_event('live_stream.class', 'search_childrens ' . $name, 5);
+        debug_event(self::class, 'search_childrens ' . $name, 5);
 
         return array();
     }

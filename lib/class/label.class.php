@@ -545,7 +545,7 @@ class Label extends database_object implements library_item
      */
     public static function update_label_list($labels_comma, $artist_id, $overwrite)
     {
-        debug_event('label.class', 'Updating labels for values {' . $labels_comma . '} artist {' . $artist_id . '}', 5);
+        debug_event(self::class, 'Updating labels for values {' . $labels_comma . '} artist {' . $artist_id . '}', 5);
 
         $clabels      = Label::get_labels($artist_id);
         $filter_list  = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labels_comma);
@@ -554,7 +554,7 @@ class Label extends database_object implements library_item
         foreach ($clabels as $clid => $clv) {
             if ($clid) {
                 $clabel = new Label($clid);
-                debug_event('label.class', 'Processing label {' . $clabel->name . '}...', 5);
+                debug_event(self::class, 'Processing label {' . $clabel->name . '}...', 5);
                 $found   = false;
                 $lstring = '';
 
@@ -567,10 +567,10 @@ class Label extends database_object implements library_item
                 }
 
                 if ($found) {
-                    debug_event('label.class', 'Already found. Do nothing.', 5);
+                    debug_event(self::class, 'Already found. Do nothing.', 5);
                     unset($editedLabels[$lstring]);
                 } elseif ($overwrite) {
-                    debug_event('label.class', 'Not found in the new list. Delete it.', 5);
+                    debug_event(self::class, 'Not found in the new list. Delete it.', 5);
                     $clabel->remove_artist_assoc($artist_id);
                 }
             }
@@ -579,10 +579,10 @@ class Label extends database_object implements library_item
         // Look if we need to add some new labels
         foreach ($editedLabels as $key => $value) {
             if ($value != '') {
-                debug_event('label.class', 'Adding new label {' . $value . '}', 4);
+                debug_event(self::class, 'Adding new label {' . $value . '}', 4);
                 $label_id = Label::lookup(array('name' => $value));
                 if ($label_id === 0) {
-                    debug_event('label.class', 'Creating a label directly from artist editing is not allowed.', 3);
+                    debug_event(self::class, 'Creating a label directly from artist editing is not allowed.', 3);
                     //$label_id = Label::create(array('name' => $lv));
                 }
                 if ($label_id > 0) {

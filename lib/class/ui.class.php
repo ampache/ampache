@@ -158,7 +158,7 @@ class UI
                 return rtrim((string) $clean);
             }
 
-            debug_event('ui.class', 'Charset cleanup failed, something might break', 1);
+            debug_event(self::class, 'Charset cleanup failed, something might break', 1);
         }
 
         return '';

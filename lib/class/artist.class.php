@@ -315,7 +315,7 @@ class Artist extends database_object implements library_item
             $sql = "SELECT MAX(`album`.`id`) AS `id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " .
                     "WHERE (`song`.`artist`='$this->id' OR `album`.`album_artist`='$this->id') $catalog_where GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ORDER BY $sql_sort";
         }
-        //debug_event('artist.class', 'get_albums ' . $sql, 5);
+        //debug_event(self::class, 'get_albums ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -396,7 +396,7 @@ class Artist extends database_object implements library_item
         }
         $sql .= "GROUP BY `song`.`id` ORDER BY count(`object_count`.`object_id`) DESC LIMIT " . (string) $count;
         $db_results = Dba::read($sql);
-        //debug_event('artist.class', 'get_top_songs sql: ' . $sql, 5);
+        //debug_event(self::class, 'get_top_songs sql: ' . $sql, 5);
 
 
         $results = array();
@@ -894,7 +894,7 @@ class Artist extends database_object implements library_item
             return null;
         }
         $artist_id = (int) Dba::insert_id();
-        debug_event('artist.class', 'Artist check created new artist id `' . $artist_id . '`.', 4);
+        debug_event(self::class, 'Artist check created new artist id `' . $artist_id . '`.', 4);
 
         self::$_mapcache[$name][$prefix][$mbid] = $artist_id;
 
@@ -1092,7 +1092,7 @@ class Artist extends database_object implements library_item
             $album   = new Album($albumid);
             $deleted = $album->remove();
             if (!$deleted) {
-                debug_event('artist.class', 'Error when deleting the album `' . $albumid . '`.', 1);
+                debug_event(self::class, 'Error when deleting the album `' . $albumid . '`.', 1);
                 break;
             }
         }

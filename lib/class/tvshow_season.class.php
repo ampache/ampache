@@ -200,7 +200,7 @@ class TVShow_Season extends database_object implements library_item
      */
     public function search_childrens($name)
     {
-        debug_event('tvshow_season.class', 'search_childrens ' . $name, 5);
+        debug_event(self::class, 'search_childrens ' . $name, 5);
 
         return array();
     }
@@ -369,7 +369,7 @@ class TVShow_Season extends database_object implements library_item
             $video   = Video::create_from_id($video_id);
             $deleted = $video->remove();
             if (!$deleted) {
-                debug_event('tvshow_season.class', 'Error when deleting the video `' . $video_id . '`.', 1);
+                debug_event(self::class, 'Error when deleting the video `' . $video_id . '`.', 1);
                 break;
             }
         }

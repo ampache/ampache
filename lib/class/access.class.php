@@ -223,7 +223,7 @@ class Access
 
         // Check existing ACLs to make sure we're not duplicating values here
         if (self::exists($data)) {
-            debug_event('access.class', 'Error: An ACL entry equal to the created one already exists. Not adding duplicate: ' . $data['start'] . ' - ' . $data['end'], 1);
+            debug_event(self::class, 'Error: An ACL entry equal to the created one already exists. Not adding duplicate: ' . $data['start'] . ' - ' . $data['end'], 1);
             AmpError::add('general', T_('Duplicate ACL entry defined'));
 
             return false;
@@ -295,7 +295,7 @@ class Access
                 return make_bool(AmpConfig::get('download'));
             case 'batch_download':
                 if (!function_exists('gzcompress')) {
-                    debug_event('access.class', 'ZLIB extension not loaded, batch download disabled', 3);
+                    debug_event(self::class, 'ZLIB extension not loaded, batch download disabled', 3);
 
                     return false;
                 }
@@ -368,11 +368,11 @@ class Access
         $db_results = Dba::read($sql, $params);
 
         if (Dba::fetch_row($db_results)) {
-            debug_event('access.class', 'check_network ' . $type . ': ip matched ACL ' . $user_ip, 5);
+            debug_event(self::class, 'check_network ' . $type . ': ip matched ACL ' . $user_ip, 5);
 
             return true;
         }
-        debug_event('access.class', 'check_network ' . $type . ': ip not found in ACL ' . $user_ip, 3);
+        debug_event(self::class, 'check_network ' . $type . ': ip not found in ACL ' . $user_ip, 3);
 
         return false;
     }

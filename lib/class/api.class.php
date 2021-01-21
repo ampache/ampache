@@ -302,7 +302,7 @@ class Api
                 continue;
             }
             if (empty($input[$parameter])) {
-                debug_event('api.class', "'" . $parameter . "' required on " . $method . " function call.", 2);
+                debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 self::error(sprintf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);
 
@@ -329,7 +329,7 @@ class Api
     public static function check_access($type, $level, $user_id, $method, $format = 'xml')
     {
         if (!Access::check($type, $level, $user_id)) {
-            debug_event('api.class', $type . " '" . $level . "' required on " . $method . " function call.", 2);
+            debug_event(self::class, $type . " '" . $level . "' required on " . $method . " function call.", 2);
             /* HINT: Access level, eg 75, 100 */
             self::error(sprintf(T_('Require: %s'), $level), '4742', $method, 'account', $format);
 
