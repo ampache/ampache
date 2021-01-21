@@ -300,13 +300,15 @@ class WebPlayer
         if ($media != null) {
             if ($urlinfo['type'] == 'song') {
                 // get replaygain from the song_data table
-                $media->fill_ext_info('replaygain_track_gain, replaygain_track_peak, replaygain_album_gain, replaygain_album_peak');
+                $media->fill_ext_info('replaygain_track_gain, replaygain_track_peak, replaygain_album_gain, replaygain_album_peak, r128_track_gain, r128_album_gain');
                 $json['artist_id']             = $media->artist;
                 $json['album_id']              = $media->album;
                 $json['replaygain_track_gain'] = $media->replaygain_track_gain;
                 $json['replaygain_track_peak'] = $media->replaygain_track_peak;
                 $json['replaygain_album_gain'] = $media->replaygain_album_gain;
                 $json['replaygain_album_peak'] = $media->replaygain_album_peak;
+                $json['r128_track_gain']       = $media->r128_track_gain;
+                $json['r128_album_gain']       = $media->r128_album_gain;
             }
             $json['media_id']   = $media->id;
             $json['media_type'] = $urlinfo['type'];

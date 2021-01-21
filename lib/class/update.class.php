@@ -234,9 +234,12 @@ class Update
 
         $update_string = "* Put 'of_the_moment' into a per user preference.<br/ > ";
         $version[]     = array('version' => '400019', 'description' => $update_string);
-        
+
         $update_string = "* Customizable login page background.<br/ > ";
         $version[]     = array('version' => '400020', 'description' => $update_string);
+
+        $update_string = "* Add r128 gain columns to song_data.<br/ > ";
+        $version[]     = array('version' => '400021', 'description' => $update_string);
 
         return $version;
     }
@@ -1363,7 +1366,7 @@ class Update
 
         return $retval;
     }
-    
+
     /**
      * update_400020
      *
@@ -1379,6 +1382,23 @@ class Update
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '')";
         $retval &= Dba::write($sql, array($row_id));
+
+        return $retval;
+    }
+
+    /**
+     * update_400021
+     *
+     * Add r128 gain columns to song_data
+     */
+    public static function update_400021()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `song_data` " .
+            "ADD `r128_track_gain` smallint(5) DEFAULT NULL, " .
+            "ADD `r128_album_gain` smallint(5) DEFAULT NULL;";
+        $retval &= Dba::write($sql);
 
         return $retval;
     }
