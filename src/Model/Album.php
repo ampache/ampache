@@ -866,15 +866,13 @@ class Album extends database_object implements library_item
 
         $current_id = $this->id;
         $updated    = false;
-        $songs      = null;
+        $songs      = $this->getSongRepository()->getByAlbum($this->getId());
         // run an album check on the current object READONLY means that it won't insert a new album
         $album_id   = self::check($name, $year, $disk, $mbid, $mbid_group, $album_artist, $release_type, $original_year, $barcode, $catalog_number, true);
         $cron_cache = AmpConfig::get('cron_cache');
         if ($album_id > 0 && $album_id != $this->id) {
             debug_event(self::class, "Updating $this->id to new id and migrating stats {" . $album_id . '}.', 4);
-            if (!is_array($songs)) {
-                $songs = static::getSongRepository()->getByAlbum($this->id);
-            }
+
             foreach ($songs as $song_id) {
                 Song::update_album($album_id, $song_id, $this->id);
                 Song::update_year($year, $song_id);
@@ -904,7 +902,11 @@ class Album extends database_object implements library_item
                 self::update_field('album_artist', $album_artist, $this->id);
             }
             if (!empty($year) && $year != $this->year) {
-                self::update_field('year', $year, $this->id);
+                foreach ($songs as $song_id) {
+                    Song::update_year($year, $song_id);
+
+                    $this->getSongId3TagWriter()->write(new Song($song_id));
+                }
             }
             if (!empty($disk) && $disk != $this->disk) {
                 self::update_field('disk', $disk, $this->id);
