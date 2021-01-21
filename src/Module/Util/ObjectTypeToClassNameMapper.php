@@ -57,7 +57,7 @@ final class ObjectTypeToClassNameMapper
 
     public static function map(string $object_type)
     {
-        return self::OBJECT_TYPE_MAPPING[$object_type] ?? $object_type;
+        return self::OBJECT_TYPE_MAPPING[strtolower($object_type)] ?? $object_type;
     }
 
     public static function reverseMap(string $class_name): string
