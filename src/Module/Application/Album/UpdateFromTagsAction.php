@@ -61,7 +61,7 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $albumId = (int) $request->getQueryParams()['album_id'] ?? 0;
+        $albumId = (int) ($request->getQueryParams()['album_id'] ?? 0);
 
         $album = $this->modelFactory->createAlbum($albumId);
         $album->format();
@@ -70,6 +70,7 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
         $this->ui->show(
             'show_update_items.inc.php',
             [
+                'object_id' => $albumId,
                 'catalog_id' => $album->get_catalogs(),
                 'type' => 'album',
                 'target_url' => sprintf(

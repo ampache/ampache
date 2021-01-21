@@ -20,14 +20,14 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Artist;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,30 +40,39 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
+        $this->modelFactory    = $modelFactory;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $artistId = (int) ($request->getQueryParams()['artist'] ?? 0);
+
         $this->ui->showHeader();
-        
-        $type       = 'artist';
-        $object_id  = (int) filter_input(INPUT_GET, 'artist', FILTER_SANITIZE_NUMBER_INT);
-        $target_url = sprintf(
-            '%s/artists.php?action=show&amp;artist=%d',
-            $this->configContainer->getWebPath(),
-            $object_id
+        $this->ui->show(
+            'show_update_items.inc.php',
+            [
+                'object_id' => $artistId,
+                'catalog_id' => null,
+                'type' => 'artist',
+                'target_url' => sprintf(
+                    '%s/artists.php?action=show&amp;artist=%d',
+                    $this->configContainer->getWebPath(),
+                    $artistId
+                )
+            ]
         );
-        require_once Ui::find_template('show_update_items.inc.php');
-        
         $this->ui->showQueryStats();
         $this->ui->showFooter();
-        
+
         return null;
     }
 }

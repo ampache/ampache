@@ -17,18 +17,16 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Application\Album;
+namespace Ampache\Module\Application\Artist;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
-use Ampache\Model\Album;
 use Ampache\Model\ModelFactoryInterface;
-use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
@@ -36,82 +34,42 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class UpdateFromTagsActionTest extends MockeryTestCase
 {
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
+    /** @var ConfigContainerInterface|MockInterface|null */
+    private MockInterface $configContainer;
 
     /** @var UiInterface|MockInterface|null */
     private MockInterface $ui;
 
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
+    /** @var ModelFactoryInterface|MockInterface|null */
+    private MockInterface $modelFactory;
 
     private ?UpdateFromTagsAction $subject;
 
     public function setUp(): void
     {
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-        $this->ui              = $this->mock(UiInterface::class);
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
 
         $this->subject = new UpdateFromTagsAction(
-            $this->modelFactory,
+            $this->configContainer,
             $this->ui,
-            $this->configContainer
+            $this->modelFactory
         );
-    }
-
-    public function testRunThrowsExceptionIfAccessIsDenied(): void
-    {
-        $this->expectException(AccessDeniedException::class);
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
-            ->once()
-            ->andReturnFalse();
-
-        $this->subject->run($request, $gatekeeper);
     }
 
     public function testRunRenders(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $album      = $this->mock(Album::class);
 
-        $albumId   = 666;
-        $catalogId = [42];
-        $webPath   = 'some-web-path';
+        $artistId = 666;
+        $webPath  = 'some-web-path';
 
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
-            ->once()
-            ->andReturnTrue();
-
-        $request->shouldReceive('getQueryParams')
+        $request->shouldReceive('getQueryPArams')
             ->withNoArgs()
             ->once()
-            ->andReturn(['album_id' => (string) $albumId]);
-
-        $this->modelFactory->shouldReceive('createAlbum')
-            ->with($albumId)
-            ->once()
-            ->andReturn($album);
-
-        $this->configContainer->shouldReceive('getWebPath')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($webPath);
-
-        $album->shouldReceive('format')
-            ->withNoArgs()
-            ->once();
-        $album->shouldReceive('get_catalogs')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($catalogId);
+            ->andReturn(['artist' => (string) $artistId]);
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
@@ -120,13 +78,13 @@ class UpdateFromTagsActionTest extends MockeryTestCase
             ->with(
                 'show_update_items.inc.php',
                 [
-                    'object_id' => $albumId,
-                    'catalog_id' => $catalogId,
-                    'type' => 'album',
+                    'object_id' => $artistId,
+                    'catalog_id' => null,
+                    'type' => 'artist',
                     'target_url' => sprintf(
-                        '%s/albums.php?action=show&amp;album=%d',
+                        '%s/artists.php?action=show&amp;artist=%d',
                         $webPath,
-                        $albumId
+                        $artistId
                     )
                 ]
             )
@@ -137,6 +95,11 @@ class UpdateFromTagsActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showFooter')
             ->withNoArgs()
             ->once();
+
+        $this->configContainer->shouldReceive('getWebPath')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($webPath);
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
