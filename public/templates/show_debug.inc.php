@@ -100,9 +100,9 @@ $environment = $dic->get(EnvironmentInterface::class);
                 <td><?php echo T_('Override Execution Time'); ?></td>
                 <td><?php set_time_limit(0); echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
             </tr>
-            <tr class="<?php echo Ui::flip_class(); ?>">
-                <td><?php T_('Open Basedir'); ?></td>
-                <td><?php echo ini_get('open_basedir'); ?></td>
+            <tr class="<?php echo UI::flip_class(); ?>">
+                <td><?php echo T_('Open Basedir'); ?></td>
+                <td><?php echo (ini_get('open_basedir')) ?: 'missing'; ?></td>
             </tr>
             <tr class="<?php echo Ui::flip_class(); ?>">
                 <td><?php echo T_('Zlib Support'); ?></td>
