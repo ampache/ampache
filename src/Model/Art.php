@@ -181,17 +181,15 @@ class Art extends database_object
      */
     public static function test_image($source)
     {
-        if (strlen((string)$source) < 10) {
-            debug_event('art.class', 'Invalid image passed', 1);
+        if (strlen((string) $source) < 10) {
+            debug_event(self::class, 'Invalid image passed', 1);
 
             return false;
         }
 
         // Check image size doesn't exceed the limit
-        if (strlen((string)$source) > AmpConfig::get('max_upload_size')) {
-            debug_event('art.class',
-                'Image size (' . strlen((string)$source) . ') exceed the limit (' . AmpConfig::get('max_upload_size') . ').',
-                1);
+        if (strlen((string) $source) > AmpConfig::get('max_upload_size')) {
+            debug_event(self::class, 'Image size (' . strlen((string) $source) . ') exceed the limit (' . AmpConfig::get('max_upload_size') . ').', 1);
 
             return false;
         }
@@ -203,7 +201,7 @@ class Art extends database_object
             $test  = true;
             $image = ImageCreateFromString($source);
             if ($image == false || imagesx($image) < 5 || imagesy($image) < 5) {
-                debug_event('art.class', 'Image failed PHP-GD test', 1);
+                debug_event(self::class, 'Image failed PHP-GD test', 1);
                 $test = false;
             }
         }
@@ -286,8 +284,7 @@ class Art extends database_object
                 $this->thumb      = $data['thumb'];
                 $this->thumb_mime = $data['thumb_mime'];
             } else {
-                debug_event('art.class',
-                    'Unable to retrieve or generate thumbnail for ' . $this->type . '::' . $this->id, 1);
+                debug_event(self::class, 'Unable to retrieve or generate thumbnail for ' . $this->type . '::' . $this->id, 1);
             }
         } // if no thumb, but art and we want to resize
 
@@ -319,7 +316,7 @@ class Art extends database_object
      */
     public function insert_url($url)
     {
-        debug_event('art.class', 'Insert art from url ' . $url, 4);
+        debug_event(self::class, 'Insert art from url ' . $url, 4);
         $image = self::get_from_source(array('url' => $url), $this->type);
         $rurl  = pathinfo($url);
         $mime  = "image/" . $rurl['extension'];
@@ -344,8 +341,7 @@ class Art extends database_object
 
         // Check to make sure we like this image
         if (!self::test_image($source)) {
-            debug_event('art.class',
-                'Not inserting image for ' . $this->type . ' ' . $this->uid . ', invalid data passed', 1);
+            debug_event(self::class, 'Not inserting image for ' . $this->type . ' ' . $this->uid . ', invalid data passed', 1);
 
             return false;
         }
@@ -368,7 +364,7 @@ class Art extends database_object
         if (AmpConfig::get('write_id3_art', false)) {
             $class_name = ObjectTypeToClassNameMapper::map($this->type);
             $object     = new $class_name($this->uid);
-            debug_event('art.class', 'Inserting ' . $this->type . ' image' . $object->name . ' for song files.', 5);
+            debug_event(__CLASS__, 'Inserting ' . $this->type . ' image' . $object->name . ' for song files.', 5);
             if ($this->type === 'album') {
                 /** Use special treatment for albums */
                 $songs = $this->getSongRepository()->getByAlbum($object->id);
@@ -397,7 +393,7 @@ class Art extends database_object
                                 $ndata['attached_picture'][1]['picturetypeid'] =  $current_picturetypeid;
                                 $ndata['attached_picture'][1]['description']   = $description;
                             } else {
-                                debug_event('art.class', "only 1 image of type '" . $this->type . "' is permitted", 1);
+                                debug_event(self::class, "only 1 image of type '" . $this->type . "' is permitted", 1);
                             }
                             break;
                           case 2:
@@ -503,23 +499,23 @@ class Art extends database_object
 
             // minimum width is set and current width is too low
             if ($minw > 0 && $width < $minw) {
-                debug_event('art.class', "Image width not in range (min=$minw, max=$maxw, current=$width).", 1);
+                debug_event(self::class, "Image width not in range (min=$minw, max=$maxw, current=$width).", 1);
 
                 return false;
             }
             // max width is set and current width is too high
             if ($maxw > 0 && $width > $maxw) {
-                debug_event('art.class', "Image width not in range (min=$minw, max=$maxw, current=$width).", 1);
+                debug_event(self::class, "Image width not in range (min=$minw, max=$maxw, current=$width).", 1);
 
                 return false;
             }
             if ($minh > 0 && $height < $minh) {
-                debug_event('art.class', "Image height not in range (min=$minh, max=$maxh, current=$height).", 1);
+                debug_event(self::class, "Image height not in range (min=$minh, max=$maxh, current=$height).", 1);
 
                 return false;
             }
             if ($maxh > 0 && $height > $maxh) {
-                debug_event('art.class', "Image height not in range (min=$minh, max=$maxh, current=$height).", 1);
+                debug_event(self::class, "Image height not in range (min=$minh, max=$maxh, current=$height).", 1);
 
                 return false;
             }
@@ -540,7 +536,7 @@ class Art extends database_object
     {
         $path = AmpConfig::get('local_metadata_dir');
         if (!$path) {
-            debug_event('art.class', 'local_metadata_dir setting is required to store art on disk.', 1);
+            debug_event(self::class, 'local_metadata_dir setting is required to store art on disk.', 1);
 
             return false;
         }
@@ -615,7 +611,7 @@ class Art extends database_object
         }
         $path .= "art-" . $sizetext . ".jpg";
         if (!Core::is_readable($path)) {
-            debug_event('art.class', 'Local image art ' . $path . ' cannot be read.', 1);
+            debug_event(self::class, 'Local image art ' . $path . ' cannot be read.', 1);
 
             return null;
         }
@@ -652,7 +648,7 @@ class Art extends database_object
      */
     private static function delete_rec_dir($path)
     {
-        debug_event('art.class', 'Deleting ' . (string)$path . ' directory...', 5);
+        debug_event(self::class, 'Deleting ' . (string) $path . ' directory...', 5);
 
         if (Core::is_readable($path)) {
             foreach (scandir($path) as $file) {
@@ -693,7 +689,7 @@ class Art extends database_object
     {
         // Quick sanity check
         if (!self::test_image($source)) {
-            debug_event('art.class', 'Not inserting thumbnail, invalid data passed', 1);
+            debug_event(self::class, 'Not inserting thumbnail, invalid data passed', 1);
 
             return false;
         }
@@ -743,7 +739,7 @@ class Art extends database_object
                     'thumb_mime' => $results['mime']
                 );
             } else {
-                debug_event('art.class', 'Thumb entry found in database but associated data cannot be found.', 3);
+                debug_event(self::class, 'Thumb entry found in database but associated data cannot be found.', 3);
             }
         }
 
@@ -772,35 +768,35 @@ class Art extends database_object
         $type = ((string) $data['1'] !== '') ? strtolower((string) $data['1']) : 'jpg';
 
         if (!self::test_image($image)) {
-            debug_event('art.class', 'Not trying to generate thumbnail, invalid data passed', 1);
+            debug_event(self::class, 'Not trying to generate thumbnail, invalid data passed', 1);
 
             return array();
         }
 
         if (!function_exists('gd_info')) {
-            debug_event('art.class', 'PHP-GD Not found - unable to resize art', 1);
+            debug_event(self::class, 'PHP-GD Not found - unable to resize art', 1);
 
             return array();
         }
 
         // Check and make sure we can resize what you've asked us to
         if (($type == 'jpg' || $type == 'jpeg' || $type == 'jpg?v=2') && !(imagetypes() & IMG_JPG)) {
-            debug_event('art.class', 'PHP-GD Does not support JPGs - unable to resize', 1);
+            debug_event(self::class, 'PHP-GD Does not support JPGs - unable to resize', 1);
 
             return array();
         }
         if ($type == 'png' && !imagetypes() & IMG_PNG) {
-            debug_event('art.class', 'PHP-GD Does not support PNGs - unable to resize', 1);
+            debug_event(self::class, 'PHP-GD Does not support PNGs - unable to resize', 1);
 
             return array();
         }
         if ($type == 'gif' && !imagetypes() & IMG_GIF) {
-            debug_event('art.class', 'PHP-GD Does not support GIFs - unable to resize', 1);
+            debug_event(self::class, 'PHP-GD Does not support GIFs - unable to resize', 1);
 
             return array();
         }
         if ($type == 'bmp' && !imagetypes() & IMG_WBMP) {
-            debug_event('art.class', 'PHP-GD Does not support BMPs - unable to resize', 1);
+            debug_event(self::class, 'PHP-GD Does not support BMPs - unable to resize', 1);
 
             return array();
         }
@@ -808,7 +804,7 @@ class Art extends database_object
         $source = imagecreatefromstring($image);
 
         if (!$source) {
-            debug_event('art.class', 'Failed to create Image from string - Source Image is damaged / malformed', 2);
+            debug_event(self::class, 'Failed to create Image from string - Source Image is damaged / malformed', 2);
 
             return array();
         }
@@ -818,9 +814,8 @@ class Art extends database_object
         // Create a new blank image of the correct size
         $thumbnail = imagecreatetruecolor((int) $size['width'], (int) $size['height']);
 
-        if (!imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $size['width'], $size['height'], $source_size['width'],
-            $source_size['height'])) {
-            debug_event('art.class', 'Unable to create resized image', 1);
+        if (!imagecopyresampled($thumbnail, $source, 0, 0, 0, 0, $size['width'], $size['height'], $source_size['width'], $source_size['height'])) {
+            debug_event(self::class, 'Unable to create resized image', 1);
             imagedestroy($source);
             imagedestroy($thumbnail);
 
@@ -855,7 +850,7 @@ class Art extends database_object
         } // resized
 
         if ($mime_type === null) {
-            debug_event('art.class', 'Error: No mime type found using: ' . $mime, 2);
+            debug_event(self::class, 'Error: No mime type found using: ' . $mime, 2);
 
             return array();
         }
@@ -864,8 +859,9 @@ class Art extends database_object
         ob_end_clean();
 
         imagedestroy($thumbnail);
-        if (!strlen((string)$data)) {
-            debug_event('art.class', 'Unknown Error resizing art', 1);
+
+        if (!strlen((string) $data)) {
+            debug_event(self::class, 'Unknown Error resizing art', 1);
 
             return array();
         }
@@ -907,7 +903,7 @@ class Art extends database_object
 
         // Check to see if it's a URL
         if (filter_var($data['url'], FILTER_VALIDATE_URL)) {
-            debug_event('art.class', 'CHECKING URL ' . $data['url'], 2);
+            debug_event(self::class, 'CHECKING URL ' . $data['url'], 2);
             $options = array();
             try {
                 $options['timeout'] = 10;
@@ -915,7 +911,7 @@ class Art extends database_object
                 $request = Requests::get($data['url'], array(), Core::requests_options($options));
                 $raw     = $request->body;
             } catch (Exception $error) {
-                debug_event('art.class', 'Error getting art: ' . $error->getMessage(), 2);
+                debug_event(self::class, 'Error getting art: ' . $error->getMessage(), 2);
                 $raw = '';
             }
 
@@ -1052,7 +1048,7 @@ class Art extends database_object
                 $sql = "DELETE FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
                 Dba::write($sql, array($object_type, $object_id));
             } else {
-                debug_event('art.class', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+                debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
             }
         } else {
             // iterate over our types and delete the images
@@ -1093,7 +1089,7 @@ class Art extends database_object
      */
     public static function duplicate($object_type, $old_object_id, $new_object_id)
     {
-        debug_event('art.class', 'duplicate... type:' . $object_type . ' old_id:' . $old_object_id . ' new_id:' . $new_object_id, 5);
+        debug_event(self::class, 'duplicate... type:' . $object_type . ' old_id:' . $old_object_id . ' new_id:' . $new_object_id, 5);
         if (AmpConfig::get('album_art_store_disk')) {
             $sql        = "SELECT `size`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
             $db_results = Dba::read($sql, array($object_type, $old_object_id));

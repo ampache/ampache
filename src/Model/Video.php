@@ -378,7 +378,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public function search_childrens($name)
     {
-        debug_event('video.class', 'search_childrens ' . $name, 5);
+        debug_event(self::class, 'search_childrens ' . $name, 5);
 
         return array();
     }
@@ -1026,7 +1026,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
                 $this->getUseractivityRepository()->collectGarbage('video', $this->getId());
             }
         } else {
-            debug_event('video.class', 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);
+            debug_event(self::class, 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);
         }
 
         return $deleted;

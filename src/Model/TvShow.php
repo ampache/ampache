@@ -236,7 +236,7 @@ class TvShow extends database_object implements library_item
      */
     public function search_childrens($name)
     {
-        debug_event('tvshow.class', 'search_childrens ' . $name, 5);
+        debug_event(self::class, 'search_childrens ' . $name, 5);
 
         return array();
     }
@@ -466,7 +466,7 @@ class TvShow extends database_object implements library_item
             $season  = new TVShow_Season($season_object);
             $deleted = $season->remove();
             if (!$deleted) {
-                debug_event('tvshow.class', 'Error when deleting the season `' . (string)$season->id . '`.', 1);
+                debug_event(self::class, 'Error when deleting the season `' . (string) $season . '`.', 1);
                 break;
             }
         }

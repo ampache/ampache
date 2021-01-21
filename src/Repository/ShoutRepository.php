@@ -57,7 +57,7 @@ final class ShoutRepository implements ShoutRepositoryInterface
                 $sql = "DELETE FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ?";
                 Dba::write($sql, array($object_type, $object_id));
             } else {
-                debug_event('shoutbox.class', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+                debug_event(__CLASS__, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
             }
         } else {
             foreach ($types as $type) {

@@ -61,7 +61,7 @@ class Plugin
     {
         $controller = PluginEnum::LIST[strtolower($cname)] ?? null;
         if ($controller === null) {
-            debug_event('plugin.class', 'Cannot find plugin `' . $cname . '`.', 1);
+            debug_event(__CLASS__, 'Cannot find plugin `' . $cname . '`.', 1);
         }
         $this->_plugin = new $controller();
 
@@ -88,15 +88,15 @@ class Plugin
             if ($type != '') {
                 $plugin = new Plugin($name);
                 if (!Plugin::is_installed($plugin->_plugin->name)) {
-                    debug_event('plugin.class', 'Plugin ' . $plugin->_plugin->name . ' is not installed, skipping', 6);
+                    debug_event(__CLASS__, 'Plugin ' . $plugin->_plugin->name . ' is not installed, skipping', 6);
                     continue;
                 }
                 if (!$plugin->is_valid()) {
-                    debug_event('plugin.class', 'Plugin ' . $name . ' is not valid, skipping', 6);
+                    debug_event(__CLASS__, 'Plugin ' . $name . ' is not valid, skipping', 6);
                     continue;
                 }
                 if (!method_exists($plugin->_plugin, $type)) {
-                    debug_event('plugin.class', 'Plugin ' . $name . ' does not support ' . $type . ', skipping', 6);
+                    debug_event(__CLASS__, 'Plugin ' . $name . ' does not support ' . $type . ', skipping', 6);
                     continue;
                 }
             }

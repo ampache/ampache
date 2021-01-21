@@ -102,7 +102,7 @@ $environment = $dic->get(EnvironmentInterface::class);
             </tr>
             <tr class="<?php echo UI::flip_class(); ?>">
                 <td><?php echo T_('Open Basedir'); ?></td>
-                <td><?php echo (ini_get('open_basedir')) ?: 'missing'; ?></td>
+                <td><?php echo ini_get('open_basedir'); ?></td>
             </tr>
             <tr class="<?php echo Ui::flip_class(); ?>">
                 <td><?php echo T_('Zlib Support'); ?></td>

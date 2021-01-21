@@ -169,7 +169,7 @@ class Broadcast_Server implements MessageComponentInterface
             self::echo_message($this->verbose,
                 "[" . time() . "][info]Broadcast " . $broadcast->id . " now playing song " . $song_id . "." . "\r\n");
         } else {
-            debug_event('broadcast.class', 'Action unauthorized.', 3);
+            debug_event(self::class, 'Action unauthorized.', 3);
         }
     }
 
@@ -192,7 +192,7 @@ class Broadcast_Server implements MessageComponentInterface
             self::echo_message($this->verbose,
                 "[" . time() . "][info]Broadcast " . $broadcast->id . " has song position to " . $song_position . "." . "\r\n");
         } else {
-            debug_event('broadcast.class', 'Action unauthorized.', 3);
+            debug_event(self::class, 'Action unauthorized.', 3);
         }
     }
 
@@ -211,7 +211,7 @@ class Broadcast_Server implements MessageComponentInterface
             self::echo_message($this->verbose,
                 "[" . time() . "][info]Broadcast " . $broadcast->id . " player state: " . $play . "." . "\r\n");
         } else {
-            debug_event('broadcast.class', 'Action unauthorized.', 3);
+            debug_event(self::class, 'Action unauthorized.', 3);
         }
     }
 
@@ -229,7 +229,7 @@ class Broadcast_Server implements MessageComponentInterface
             self::echo_message($this->verbose,
                 "[" . time() . "][info]Broadcast " . $broadcast->id . " ended." . "\r\n");
         } else {
-            debug_event('broadcast.class', 'Action unauthorized.', 3);
+            debug_event(self::class, 'Action unauthorized.', 3);
         }
     }
 
@@ -306,7 +306,7 @@ class Broadcast_Server implements MessageComponentInterface
 
             self::echo_message($this->verbose, "[info]New listener on broadcast " . $broadcast->id . "." . "\r\n");
         } else {
-            debug_event('broadcast.class', 'Listener unauthorized.', 3);
+            debug_event(self::class, 'Listener unauthorized.', 3);
         }
     }
 
@@ -425,7 +425,7 @@ class Broadcast_Server implements MessageComponentInterface
      */
     public function onError(ConnectionInterface $conn, Exception $error)
     {
-        debug_event('broadcast_server.class', 'Broadcast error: ' . $error->getMessage(), 1);
+        debug_event(self::class, 'Broadcast error: ' . $error->getMessage(), 1);
         $conn->close();
     }
 

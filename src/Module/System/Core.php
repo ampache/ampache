@@ -202,10 +202,9 @@ class Core
         // Register it
         $_SESSION['forms'][$sid] = array('name' => $name, 'expire' => $expire);
         if (!isset($_SESSION['forms'][$sid])) {
-            debug_event('core.class', "Form $sid not found in session, failed to register!", 2);
+            debug_event(self::class, "Form $sid not found in session, failed to register!", 2);
         } else {
-            debug_event('core.class',
-                "Registered $type form $name with SID $sid and expiration $expire ($window seconds from now)", 5);
+            debug_event(self::class, "Registered $type form $name with SID $sid and expiration $expire ($window seconds from now)", 5);
         }
 
         switch ($type) {
@@ -251,7 +250,7 @@ class Core
         }
 
         if (!isset($_SESSION['forms'][$sid])) {
-            debug_event('core.class', "Form $sid not found in session, rejecting request", 2);
+            debug_event(self::class, "Form $sid not found in session, rejecting request", 2);
 
             return false;
         }
@@ -260,9 +259,9 @@ class Core
         unset($_SESSION['forms'][$sid]);
 
         if ($form['name'] == $name) {
-            debug_event('core.class', "Verified SID $sid for $type form $name", 5);
+            debug_event(self::class, "Verified SID $sid for $type form $name", 5);
             if ($form['expire'] < time()) {
-                debug_event('core.class', "Form $sid is expired, rejecting request", 2);
+                debug_event(self::class, "Form $sid is expired, rejecting request", 2);
 
                 return false;
             }
@@ -271,7 +270,7 @@ class Core
         }
 
         // OMG HAX0RZ
-        debug_event('core.class', "$type form $sid failed consistency check, rejecting request", 2);
+        debug_event(self::class, "$type form $sid failed consistency check, rejecting request", 2);
 
         return false;
     } // form_verify
@@ -317,7 +316,7 @@ class Core
         }
 
         if (empty($image_data)) {
-            debug_event('core.class', "Cannot create image from empty data", 2);
+            debug_event(self::class, "Cannot create image from empty data", 2);
 
             return array('width' => 0, 'height' => 0);
         }

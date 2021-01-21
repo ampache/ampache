@@ -220,7 +220,6 @@ final class FolderCollectorModule implements CollectorModuleInterface
             $results = $preferred;
         }
 
-        //debug_event('art.class', "gather_folder: Results: " . json_encode($results), 5);
         if ($limit && count($results) > $limit) {
             $results = array_slice($results, 0, $limit);
         }

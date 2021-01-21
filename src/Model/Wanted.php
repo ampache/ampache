@@ -138,7 +138,7 @@ class Wanted extends database_object
         try {
             $martist = $mbrainz->lookup('artist', $artist ? $artist->mbid : $mbid, $includes);
         } catch (Exception $error) {
-            debug_event('wanted.class', 'get_missing_albums ERROR: ' . $error, 3);
+            debug_event(self::class, 'get_missing_albums ERROR: ' . $error, 3);
 
             return null;
         }
@@ -180,7 +180,7 @@ class Wanted extends database_object
                 }
 
                 if ($add) {
-                    debug_event('wanted.class', 'get_missing_albums ADDING: ' . $group->title, 5);
+                    debug_event(self::class, 'get_missing_albums ADDING: ' . $group->title, 5);
                     if (!in_array($group->id, $owngroups)) {
                         $wantedid = self::get_wanted($group->id);
                         $wanted   = new Wanted($wantedid);
@@ -301,7 +301,7 @@ class Wanted extends database_object
             foreach (Plugin::get_plugins('process_wanted') as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->load(Core::get_global('user'))) {
-                    debug_event('wanted.class', 'Using Wanted Process plugin: ' . $plugin_name, 5);
+                    debug_event(self::class, 'Using Wanted Process plugin: ' . $plugin_name, 5);
                     $plugin->_plugin->process_wanted($this);
                 }
             }

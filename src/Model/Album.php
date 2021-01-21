@@ -522,14 +522,13 @@ class Album extends database_object implements library_item
         }
 
         $album_id = Dba::insert_id();
-        debug_event('album.class', 'Album check created new album id ' . $album_id, 4);
+        debug_event(self::class, 'Album check created new album id ' . $album_id, 4);
         // Remove from wanted album list if any request on it
         if (!empty($mbid) && AmpConfig::get('wanted')) {
             try {
                 Wanted::delete_wanted_release((string)$mbid);
             } catch (Exception $error) {
-                debug_event('album.class', 'Cannot process wanted releases auto-removal check: ' . $error->getMessage(),
-                    2);
+                debug_event(self::class, 'Cannot process wanted releases auto-removal check: ' . $error->getMessage(), 2);
             }
         }
 
@@ -872,7 +871,7 @@ class Album extends database_object implements library_item
         $album_id   = self::check($name, $year, $disk, $mbid, $mbid_group, $album_artist, $release_type, $original_year, $barcode, $catalog_number, true);
         $cron_cache = AmpConfig::get('cron_cache');
         if ($album_id > 0 && $album_id != $this->id) {
-            debug_event('album.class', "Updating $this->id to new id and migrating stats {" . $album_id . '}.', 4);
+            debug_event(self::class, "Updating $this->id to new id and migrating stats {" . $album_id . '}.', 4);
             if (!is_array($songs)) {
                 $songs = static::getSongRepository()->getByAlbum($this->id);
             }

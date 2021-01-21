@@ -65,7 +65,7 @@ final class SongDeleter implements SongDeleterInterface
                 $this->useractivityRepository->collectGarbage('song', $songId);
             }
         } else {
-            debug_event('song.class', 'Cannot delete ' . $song->file . 'file. Please check permissions.', 1);
+            debug_event(__CLASS__, 'Cannot delete ' . $song->file . 'file. Please check permissions.', 1);
         }
 
         return $deleted;

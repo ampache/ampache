@@ -78,7 +78,7 @@ final class OpenIdAuthenticator implements AuthenticatorInterface
                             $results['error']   = 'Could not redirect to server: ' . $redirect_url->message;
                         } else {
                             // Send redirect.
-                            debug_event('auth.class', 'OpenID 1: redirecting to ' . $redirect_url, 5);
+                            debug_event(__CLASS__, 'OpenID 1: redirecting to ' . $redirect_url, 5);
                             header("Location: " . $redirect_url);
                         }
                     } else {
@@ -91,24 +91,24 @@ final class OpenIdAuthenticator implements AuthenticatorInterface
                             $results['success'] = false;
                             $results['error']   = 'Could not render authentication form.';
                         } else {
-                            debug_event('auth.class', 'OpenID 2: javascript redirection code to OpenID form.', 5);
+                            debug_event(__CLASS__, 'OpenID 2: javascript redirection code to OpenID form.', 5);
                             // First step is a success, UI interaction required.
                             $results['success']     = false;
                             $results['ui_required'] = $form_html;
                         }
                     }
                 } else {
-                    debug_event('auth.class', $website . ' is not a valid OpenID.', 3);
+                    debug_event(__CLASS__, $website . ' is not a valid OpenID.', 3);
                     $results['success'] = false;
                     $results['error']   = 'Not a valid OpenID.';
                 }
             } else {
-                debug_event('auth.class', 'Cannot initialize OpenID resources.', 3);
+                debug_event(__CLASS__, 'Cannot initialize OpenID resources.', 3);
                 $results['success'] = false;
                 $results['error']   = 'Cannot initialize OpenID resources.';
             }
         } else {
-            debug_event('auth.class', 'Skipped OpenID authentication: missing scheme in ' . $website . '.', 3);
+            debug_event(__CLASS__, 'Skipped OpenID authentication: missing scheme in ' . $website . '.', 3);
             $results['success'] = false;
             $results['error']   = 'Missing scheme in OpenID.';
         }

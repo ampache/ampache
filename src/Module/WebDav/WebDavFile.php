@@ -60,18 +60,17 @@ class WebDavFile extends DAV\File
      */
     public function get()
     {
-        debug_event('webdav_file.class', 'File get', 5);
+        debug_event(self::class, 'File get', 5);
         // Only media associated to a local catalog is supported
         if ($this->libitem->catalog) {
             $catalog = Catalog::create_from_id($this->libitem->catalog);
             if ($catalog->get_type() === 'local') {
                 return fopen($this->libitem->file, 'r');
             } else {
-                debug_event('webdav_file.class',
-                    'Catalog associated to the media is not local. This is currently unsupported.', 3);
+                debug_event(self::class, 'Catalog associated to the media is not local. This is currently unsupported.', 3);
             }
         } else {
-            debug_event('webdav_file.class', 'No catalog associated to the media.', 3);
+            debug_event(self::class, 'No catalog associated to the media.', 3);
         }
 
         return null;

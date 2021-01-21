@@ -544,7 +544,7 @@ class User extends database_object
         $sql            = "UPDATE `user` SET `username` = ? WHERE `id` = ?";
         $this->username = $new_username;
 
-        debug_event('user.class', 'Updating username', 4);
+        debug_event(self::class, 'Updating username', 4);
 
         Dba::write($sql, array($new_username, $this->id));
     } // update_username
@@ -575,7 +575,7 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `fullname` = ? WHERE `id` = ?";
 
-        debug_event('user.class', 'Updating fullname', 4);
+        debug_event(self::class, 'Updating fullname', 4);
 
         Dba::write($sql, array($new_fullname, $this->id));
     } // update_fullname
@@ -589,7 +589,7 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `fullname_public` = ? WHERE `id` = ?";
 
-        debug_event('user.class', 'Updating fullname public', 4);
+        debug_event(self::class, 'Updating fullname public', 4);
 
         Dba::write($sql, array($new_fullname_public ? '1' : '0', $this->id));
     } // update_fullname_public
@@ -603,7 +603,7 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `email` = ? WHERE `id` = ?";
 
-        debug_event('user.class', 'Updating email', 4);
+        debug_event(self::class, 'Updating email', 4);
 
         Dba::write($sql, array($new_email, $this->id));
     } // update_email
@@ -618,7 +618,7 @@ class User extends database_object
         $new_website = rtrim((string)$new_website, "/");
         $sql         = "UPDATE `user` SET `website` = ? WHERE `id` = ?";
 
-        debug_event('user.class', 'Updating website', 4);
+        debug_event(self::class, 'Updating website', 4);
 
         Dba::write($sql, array($new_website, $this->id));
     } // update_website
@@ -632,7 +632,7 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `state` = ? WHERE `id` = ?";
 
-        debug_event('user.class', 'Updating state', 4);
+        debug_event(self::class, 'Updating state', 4);
 
         Dba::write($sql, array($new_state, $this->id));
     } // update_state
@@ -646,7 +646,7 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `city` = ? WHERE `id` = ?";
 
-        debug_event('user.class', 'Updating city', 4);
+        debug_event(self::class, 'Updating city', 4);
 
         Dba::write($sql, array($new_city, $this->id));
     } // update_city
@@ -695,7 +695,7 @@ class User extends database_object
         $new_access = Dba::escape($new_access);
         $sql        = "UPDATE `user` SET `access`='$new_access' WHERE `id`='$this->id'";
 
-        debug_event('user.class', 'Updating access level for ' . $this->id, 4);
+        debug_event(self::class, 'Updating access level for ' . $this->id, 4);
 
         Dba::write($sql);
 
@@ -713,11 +713,11 @@ class User extends database_object
             try {
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->load($user)) {
-                    debug_event('user.class', 'save_mediaplay... ' . $plugin->_plugin->name, 5);
+                    debug_event(self::class, 'save_mediaplay... ' . $plugin->_plugin->name, 5);
                     $plugin->_plugin->save_mediaplay($media);
                 }
             } catch (Exception $error) {
-                debug_event('user.class', 'save_mediaplay plugin error: ' . $error->getMessage(), 1);
+                debug_event(self::class, 'save_mediaplay plugin error: ' . $error->getMessage(), 1);
             }
         }
     }
@@ -731,10 +731,10 @@ class User extends database_object
     {
         if (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR')) {
             $sip = filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP);
-            debug_event('user.class', 'Login from IP address: ' . (string)$sip, 3);
+            debug_event(self::class, 'Login from IP address: ' . (string) $sip, 3);
         } else {
             $sip = filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
-            debug_event('user.class', 'Login from IP address: ' . (string)$sip, 3);
+            debug_event(self::class, 'Login from IP address: ' . (string) $sip, 3);
         }
 
         // Remove port information if any
@@ -852,7 +852,7 @@ class User extends database_object
      */
     public function update_password($new_password, $hashed_password = null)
     {
-        debug_event('user.class', 'Updating password', 1);
+        debug_event(self::class, 'Updating password', 1);
         if (!$hashed_password) {
             $hashed_password = hash('sha256', $new_password);
         }
@@ -1216,7 +1216,7 @@ class User extends database_object
      */
     public function update_avatar($data, $mime = '')
     {
-        debug_event('user.class', 'Updating avatar for ' . $this->id, 4);
+        debug_event(self::class, 'Updating avatar for ' . $this->id, 4);
 
         $art = new Art($this->id, 'user');
 

@@ -47,7 +47,7 @@ final class LabelListUpdater implements LabelListUpdaterInterface
         int $artistId,
         bool $overwrite
     ): bool {
-        debug_event('label.class', 'Updating labels for values {' . $labelsComma . '} artist {' . $artistId . '}', 5);
+        debug_event(__CLASS__, 'Updating labels for values {' . $labelsComma . '} artist {' . $artistId . '}', 5);
 
         $clabels      = $this->labelRepository->getByArtist((int) $artistId);
         $filter_list  = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labelsComma);
@@ -56,7 +56,7 @@ final class LabelListUpdater implements LabelListUpdaterInterface
         foreach ($clabels as $clid => $clv) {
             if ($clid) {
                 $clabel = new Label($clid);
-                debug_event('label.class', 'Processing label {' . $clabel->name . '}...', 5);
+                debug_event(__CLASS__, 'Processing label {' . $clabel->name . '}...', 5);
                 $found   = false;
                 $lstring = '';
 
@@ -69,10 +69,10 @@ final class LabelListUpdater implements LabelListUpdaterInterface
                 }
 
                 if ($found) {
-                    debug_event('label.class', 'Already found. Do nothing.', 5);
+                    debug_event(__CLASS__, 'Already found. Do nothing.', 5);
                     unset($editedLabels[$lstring]);
                 } elseif ($overwrite) {
-                    debug_event('label.class', 'Not found in the new list. Delete it.', 5);
+                    debug_event(__CLASS__, 'Not found in the new list. Delete it.', 5);
                     $this->labelRepository->removeArtistAssoc($clabel->getId(), $artistId);
                 }
             }
@@ -81,10 +81,10 @@ final class LabelListUpdater implements LabelListUpdaterInterface
         // Look if we need to add some new labels
         foreach ($editedLabels as $key => $value) {
             if ($value != '') {
-                debug_event('label.class', 'Adding new label {' . $value . '}', 4);
+                debug_event(__CLASS__, 'Adding new label {' . $value . '}', 4);
                 $label_id = $this->labelRepository->lookup($value);
                 if ($label_id === 0) {
-                    debug_event('label.class', 'Creating a label directly from artist editing is not allowed.', 3);
+                    debug_event(__CLASS__, 'Creating a label directly from artist editing is not allowed.', 3);
                 }
                 if ($label_id > 0) {
                     $clabel = new Label($label_id);

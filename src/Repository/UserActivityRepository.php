@@ -112,8 +112,7 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
                 $sql = "DELETE FROM `user_activity` WHERE `object_type` = ? AND `object_id` = ?";
                 Dba::write($sql, array($object_type, $object_id));
             } else {
-                debug_event('useractivity.class', 'Garbage collect on type `' . $object_type . '` is not supported.',
-                    1);
+                debug_event(__CLASS__, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
             }
         } else {
             foreach ($types as $type) {

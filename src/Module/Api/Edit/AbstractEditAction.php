@@ -55,7 +55,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper
     ): ?ResponseInterface {
-        debug_event('edit.server', 'Called for action: {' . Core::get_request('action') . '}', 5);
+        debug_event(__CLASS__, 'Called for action: {' . Core::get_request('action') . '}', 5);
 
         // Post first
         $object_type = $_POST['type'];
@@ -78,14 +78,14 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         }
 
         if (!InterfaceImplementationChecker::is_library_item($object_type) && $object_type != 'share') {
-            debug_event('edit.server', 'Type `' . $object_type . '` is not based on an item library.', 3);
+            debug_event(__CLASS__, 'Type `' . $object_type . '` is not based on an item library.', 3);
 
             return null;
         }
 
         $class_name = ObjectTypeToClassNameMapper::map($object_type);
-        debug_event('edit.server', $class_name, 3);
-        debug_event('edit.server', $object_id, 3);
+        debug_event(__CLASS__, $class_name, 3);
+        debug_event(__CLASS__, $object_id, 3);
         $libitem    = new $class_name($object_id);
         $libitem->format();
 

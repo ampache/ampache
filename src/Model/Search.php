@@ -893,7 +893,7 @@ class Search extends playlist_object
         $sql .= ' ' . $limit_sql;
         $sql = trim((string)$sql);
 
-        //debug_event('search.class', 'SQL get_items: ' . $sql, 5);
+        //debug_event(self::class, 'SQL get_items: ' . $sql, 5);
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -958,7 +958,7 @@ class Search extends playlist_object
         if ($this->limit > 0) {
             $sql .= " LIMIT " . (string)($this->limit);
         }
-        //debug_event('search.class', 'SQL get_items: ' . $sql, 5);
+        //debug_event(self::class, 'SQL get_items: ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1024,8 +1024,8 @@ class Search extends playlist_object
         }
 
         $sql .= ' ORDER BY RAND()';
-        $sql .= $limit ? ' LIMIT ' . (string)($limit) : ' ';
-        //debug_event('search.sql', 'SQL get_random_items: ' . $sql, 5);
+        $sql .= $limit ? ' LIMIT ' . (string) ($limit) : ' ';
+        //debug_event(self::class, 'SQL get_random_items: ' . $sql, 5);
 
         $db_results = Dba::read($sql);
 

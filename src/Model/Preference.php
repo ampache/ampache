@@ -161,8 +161,8 @@ class Preference extends database_object
      */
     public static function get_by_user($user_id, $pref_name)
     {
-        //debug_event('preference.class', 'Getting preference {'.$pref_name.'} for user identifier {'.$user_id.'}...', 5);
-        $user_id   = (int)Dba::escape($user_id);
+        //debug_event(self::class, 'Getting preference {'.$pref_name.'} for user identifier {'.$user_id.'}...', 5);
+        $user_id   = (int) Dba::escape($user_id);
         $pref_name = Dba::escape($pref_name);
         $pref_id   = self::id_from_name($pref_name);
 
@@ -230,9 +230,7 @@ class Preference extends database_object
 
             return true;
         } else {
-            debug_event('preference.class',
-                Core::get_global('user') ? Core::get_global('user')->username : '???' . ' attempted to update ' . $name . ' but does not have sufficient permissions',
-                3);
+            debug_event(self::class, Core::get_global('user') ? Core::get_global('user')->username : '???' . ' attempted to update ' . $name . ' but does not have sufficient permissions', 3);
         }
 
         return false;

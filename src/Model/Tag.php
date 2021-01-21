@@ -198,12 +198,12 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         // Check and see if the tag exists, if not create it, we need the tag id from this
         if (!$tag_id = self::tag_exists($cleaned_value)) {
-            debug_event('tag.class', 'Adding new tag {' . $cleaned_value . '}', 5);
+            debug_event(self::class, 'Adding new tag {' . $cleaned_value . '}', 5);
             $tag_id = self::add_tag($cleaned_value);
         }
 
         if (!$tag_id) {
-            debug_event('tag.class', 'Error unable to create tag value:' . $cleaned_value . ' unknown error', 1);
+            debug_event(self::class, 'Error unable to create tag value:' . $cleaned_value . ' unknown error', 1);
 
             return false;
         }
@@ -248,7 +248,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         if (!strlen((string)$data['name'])) {
             return false;
         }
-        debug_event('tag.class', 'Updating tag {' . $this->id . '} with name {' . $data['name'] . '}...', 5);
+        debug_event(self::class, 'Updating tag {' . $this->id . '} with name {' . $data['name'] . '}...', 5);
 
         $sql = 'UPDATE `tag` SET `name` = ? WHERE `id` = ?';
         Dba::write($sql, array($data['name'], $this->id));
@@ -292,7 +292,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     public function merge($merge_to, $is_persistent)
     {
         if ($this->id != $merge_to) {
-            debug_event('tag.class', 'Merging tag ' . $this->id . ' into ' . $merge_to . ')...', 5);
+            debug_event(self::class, 'Merging tag ' . $this->id . ' into ' . $merge_to . ')...', 5);
 
             $sql = "INSERT IGNORE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) " . "SELECT " . $merge_to . ",`user`, `object_type`, `object_id` " . "FROM `tag_map` AS `tm` " . "WHERE `tm`.`tag_id` = " . $this->id . " AND NOT EXISTS (" . "SELECT 1 FROM `tag_map` " . "WHERE `tag_map`.`tag_id` = " . $merge_to . " " . "AND `tag_map`.`object_id` = `tm`.`object_id` " . "AND `tag_map`.`object_type` = `tm`.`object_type` " . "AND `tag_map`.`user` = `tm`.`user`)";
             Dba::write($sql);
@@ -340,7 +340,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         if (!InterfaceImplementationChecker::is_library_item($type)) {
-            debug_event('tag.class', $type . " is not a library item.", 3);
+            debug_event(__CLASS__, $type . " is not a library item.", 3);
 
             return false;
         }
@@ -452,7 +452,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     public static function tag_map_exists($type, $object_id, $tag_id, $user)
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
-            debug_event('tag.class', 'Requested type is not a library item.', 3);
+            debug_event(__CLASS__, 'Requested type is not a library item.', 3);
 
             return false;
         }
@@ -616,9 +616,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      */
     public static function get_tags($type = '', $limit = 0, $order = 'count')
     {
-        //debug_event('tag.class', 'Get tags list called...', 5);
+        //debug_event(self::class, 'Get tags list called...', 5);
         if (parent::is_cached('tags_list', 'no_name')) {
-            //debug_event('tag.class', 'Tags list found into cache memory!', 5);
+            //debug_event(self::class, 'Tags list found into cache memory!', 5);
             return parent::get_from_cache('tags_list', 'no_name');
         }
 
@@ -665,7 +665,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      */
     public static function get_display($tags, $link = false, $filter_type = '')
     {
-        //debug_event('tag.class', 'Get display tags called...', 5);
+        //debug_event(self::class, 'Get display tags called...', 5);
         if (!is_array($tags)) {
             return '';
         }
@@ -704,7 +704,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         if (!strlen((string) $tags_comma) > 0) {
             return false;
         }
-        debug_event('tag.class', 'Updating tags for values {' . $tags_comma . '} type {' . $type . '} object_id {' . $object_id . '}', 5);
+        debug_event(self::class, 'Updating tags for values {' . $tags_comma . '} type {' . $type . '} object_id {' . $object_id . '}', 5);
 
         $ctags       = self::get_top_tags($type, $object_id);
         $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags_comma);
@@ -729,8 +729,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                     unset($editedTags[$ctag->name]);
                 } else {
                     if ($overwrite && $ctv['user'] == 0) {
-                        debug_event('tag.class',
-                            'The tag {' . $ctag->name . '} was not found in the new list. Delete it.', 5);
+                        debug_event(self::class, 'The tag {' . $ctag->name . '} was not found in the new list. Delete it.', 5);
                         $ctag->remove_map($type, $object_id, false);
                     }
                 }
@@ -893,7 +892,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      */
     public function search_childrens($name)
     {
-        debug_event('tag.class', 'search_childrens ' . $name, 5);
+        debug_event(self::class, 'search_childrens ' . $name, 5);
 
         return array();
     }

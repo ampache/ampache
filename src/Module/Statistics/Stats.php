@@ -121,7 +121,7 @@ class Stats
         $date = null
     ) {
         if (AmpConfig::get('use_auth') && $user < 0) {
-            debug_event('stats.class', 'Invalid user given ' . $user, 3);
+            debug_event(self::class, 'Invalid user given ' . $user, 3);
 
             return false;
         }
@@ -156,7 +156,7 @@ class Stats
         }
 
         if (!$db_results) {
-            debug_event('stats.class', 'Unable to insert statistics for ' . $user . ':' . $object_id, 3);
+            debug_event(self::class, 'Unable to insert statistics for ' . $user . ':' . $object_id, 3);
         }
 
         return true;
@@ -188,20 +188,19 @@ class Stats
         while ($row = Dba::fetch_assoc($db_results)) {
             // Stop double ups within 20s
             if ($row['object_id'] == $object_id) {
-                debug_event('stats.class',
-                    'Object already inserted {' . (string)$object_id . '} date: ' . (string)$time, 5);
+                debug_event(self::class, 'Object already inserted {' . (string) $object_id . '} date: ' . (string) $time, 5);
 
                 return true;
             }
             // if you've skipped recently it's also not needed!
             if (($row['date'] < $time && $row['date'] > ($time - 20)) && $row['count_type'] == 'skip') {
-                debug_event('stats.class', 'Recent skip inserted {' . (string) $row['object_id'] . '} date: ' . (string) $row['date'], 5);
+                debug_event(self::class, 'Recent skip inserted {' . (string) $row['object_id'] . '} date: ' . (string) $row['date'], 5);
 
                 return true;
             }
             // if you've recorded in less than 5 seconds i don't believe you
             if (($row['date'] < $time && $row['date'] > ($time - 5)) && $row['count_type'] !== 'download') {
-                debug_event('stats.class', 'Too fast! Skipping {' . (string) $object_id . '} date: ' . (string) $time, 5);
+                debug_event(self::class, 'Too fast! Skipping {' . (string) $object_id . '} date: ' . (string) $time, 5);
 
                 return true;
             }
@@ -368,16 +367,14 @@ class Stats
 
         // this object was your last play and the length between plays is too short.
         if ($previous['object_id'] == $object->id && $diff < ($item_time)) {
-            debug_event('stats.class',
-                'Repeated the same ' . ObjectTypeToClassNameMapper::reverseMap(get_class($object)) . ' too quickly (' . $diff . '/' . ($item_time) . 's), not recording stats for {' . $object->id . '}',
-                3);
+            debug_event(self::class, 'Repeated the same ' . get_class($object) . ' too quickly (' . $diff . '/' . ($item_time) . 's), not recording stats for {' . $object->id . '}', 3);
 
             return false;
         }
 
         // when the difference between recordings is too short, the previous object has been skipped, so note that
         if (($diff < $skip_time || ($diff < $skip_time && $last_time > $skip_time))) {
-            debug_event('stats.class', 'Last ' . $previous['object_type'] . ' played within skip limit (' . $diff . '/' . $skip_time . 's). Skipping {' . $previous['object_id'] . '}', 3);
+            debug_event(self::class, 'Last ' . $previous['object_type'] . ' played within skip limit (' . $diff . '/' . $skip_time . 's). Skipping {' . $previous['object_id'] . '}', 3);
             self::skip_last_play($previous['date'], $previous['agent'], $previous['user']);
             // delete song, podcast_episode and video from user_activity to keep stats in line
             static::getUseractivityRepository()->deleteByDate($previous['date'], 'play', (int) $previous['user']);
@@ -454,7 +451,7 @@ class Stats
                 $sql .= " WHERE `last_update` >= '" . $date . "' ";
             }
             $sql .= " GROUP BY `id`, `last_update` ORDER BY `last_update` DESC ";
-            //debug_event('stats.class', 'get_top_sql ' . $sql, 5);
+            //debug_event(self::class, 'get_top_sql ' . $sql, 5);
 
             return $sql;
         }
@@ -499,7 +496,7 @@ class Stats
         } else {
             $sql .= " ORDER BY `count` DESC ";
         }
-        //debug_event('stats.class', 'get_top_sql ' . $sql, 5);
+        //debug_event(self::class, 'get_top_sql ' . $sql, 5);
 
         return $sql;
     }
@@ -527,7 +524,7 @@ class Stats
         if ($user_id === null) {
             $sql .= "LIMIT $limit";
         }
-        //debug_event('stats.class', 'get_top ' . $sql, 5);
+        //debug_event(self::class, 'get_top ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -571,7 +568,7 @@ class Stats
             }
             $sql .= " ORDER BY `last_update` " . $ordersql;
         }
-        //debug_event('stats.class', 'get_recent ' . $sql, 5);
+        //debug_event(self::class, 'get_recent ' . $sql, 5);
 
         return $sql;
     }
@@ -719,7 +716,7 @@ class Stats
         } else {
             $sql .= "GROUP BY `$sql_type` ORDER BY `real_atime` DESC ";
         }
-        //debug_event('stats.class', 'get_newest_sql ' . $sql, 5);
+        //debug_event(self::class, 'get_newest_sql ' . $sql, 5);
 
         return $sql;
     }

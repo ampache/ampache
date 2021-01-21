@@ -90,7 +90,7 @@ class Rating extends database_object
                 $sql = "DELETE FROM `rating` WHERE `object_type` = ? AND `object_id` = ?";
                 Dba::write($sql, array($object_type, $object_id));
             } else {
-                debug_event('rating.class', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+                debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
             }
         } else {
             foreach ($types as $type) {
@@ -232,7 +232,7 @@ class Rating extends database_object
         } else {
             $sql .= " GROUP BY `object_id` ORDER BY `rating` DESC, `count` DESC, `order` DESC  ";
         }
-        //debug_event('rating.class', 'get_highest_sql ' . $sql, 5);
+        //debug_event(self::class, 'get_highest_sql ' . $sql, 5);
 
         return $sql;
     }
@@ -290,7 +290,7 @@ class Rating extends database_object
             return self::set_rating_for_group($rating, $results, $user_id);
         }
 
-        debug_event('rating.class', "Setting rating for $this->type $this->id to $rating", 5);
+        debug_event(self::class, "Setting rating for $this->type $this->id to $rating", 5);
 
         // If score is -1, then remove rating
         if ($rating == '-1') {
@@ -342,7 +342,7 @@ class Rating extends database_object
             $results[] = $row['id'];
         }
         foreach ($results as $album_id) {
-            debug_event('rating.class', "Setting rating for 'album' " . $album_id . " to " . $rating, 5);
+            debug_event(self::class, "Setting rating for 'album' " . $album_id . " to " . $rating, 5);
             // If score is -1, then remove rating
             if ($rating == '-1') {
                 $sql = "DELETE FROM `rating`" . " WHERE `object_id` = '" . $album_id . "' AND " . " `object_type` = 'album' AND" . " `user` = " . $user_id;
@@ -377,11 +377,11 @@ class Rating extends database_object
                 try {
                     $plugin = new Plugin($plugin_name);
                     if ($plugin->load($user)) {
-                        debug_event('rating.class', 'save_rating...' . $plugin->_plugin->name, 5);
+                        debug_event(self::class, 'save_rating...' . $plugin->_plugin->name, 5);
                         $plugin->_plugin->save_rating($rating, $new_rating);
                     }
                 } catch (Exception $error) {
-                    debug_event('rating.class', 'save_rating plugin error: ' . $error->getMessage(), 1);
+                    debug_event(self::class, 'save_rating plugin error: ' . $error->getMessage(), 1);
                 }
             }
         }

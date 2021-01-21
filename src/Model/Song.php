@@ -460,7 +460,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $barcode               = Catalog::check_length($results['barcode'], 64);
 
         if (!in_array($mode, ['vbr', 'cbr', 'abr'])) {
-            debug_event('song.class', 'Error analyzing: ' . $file . ' unknown file bitrate mode: ' . $mode, 2);
+            debug_event(self::class, 'Error analyzing: ' . $file . ' unknown file bitrate mode: ' . $mode, 2);
             $mode = null;
         }
         if (!isset($results['albumartist_id'])) {
@@ -512,7 +512,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         ));
 
         if (!$db_results) {
-            debug_event('song.class', 'Unable to insert ' . $file, 2);
+            debug_event(self::class, 'Unable to insert ' . $file, 2);
 
             return false;
         }
@@ -1201,7 +1201,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         } // end foreach
 
         if ($array['change']) {
-            debug_event('song.class', 'media-diff ' . json_encode($array['element']), 5);
+            debug_event(self::class, 'media-diff ' . json_encode($array['element']), 5);
         }
 
         return $array;
@@ -1235,7 +1235,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     {
         $changed = array();
         foreach ($data as $key => $value) {
-            debug_event('song.class', $key . '=' . $value, 5);
+            debug_event(self::class, $key . '=' . $value, 5);
 
             switch ($key) {
                 case 'artist_name':
@@ -1811,7 +1811,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public function search_childrens($name)
     {
-        debug_event('song.class', 'search_childrens ' . $name, 5);
+        debug_event(self::class, 'search_childrens ' . $name, 5);
 
         return array();
     }
@@ -2163,21 +2163,21 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         // Fall backwards from the specific transcode formats to default
         // TARGET > PLAYER > CODEC > DEFAULT
         if ($target) {
-            debug_event('song.class', 'Explicit target requested: {' . $target . '} format for: ' . $source, 5);
+            debug_event(self::class, 'Explicit target requested: {' . $target . '} format for: ' . $source, 5);
         } elseif ($has_player_target) {
             $target = $has_player_target;
-            debug_event('song.class', 'Transcoding for ' . $player . ': {' . $target . '} format for: ' . $source, 5);
+            debug_event(self::class, 'Transcoding for ' . $player . ': {' . $target . '} format for: ' . $source, 5);
         } elseif ($has_codec_target) {
             $target = $has_codec_target;
-            debug_event('song.class', 'Transcoding for codec: {' . $target . '} format for: ' . $source, 5);
+            debug_event(self::class, 'Transcoding for codec: {' . $target . '} format for: ' . $source, 5);
         } elseif ($has_default_target) {
             $target = $has_default_target;
-            debug_event('song.class', 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
+            debug_event(self::class, 'Transcoding to default: {' . $target . '} format for: ' . $source, 5);
         }
         // fall back to resampling if no defuault
         if (!$target) {
             $target = $source;
-            debug_event('song.class', 'No transcode target for: ' . $source . ', choosing to resample', 5);
+            debug_event(self::class, 'No transcode target for: ' . $source . ', choosing to resample', 5);
         }
 
         $cmd  = AmpConfig::get('transcode_cmd_' . $source) ?: AmpConfig::get('transcode_cmd');
@@ -2192,19 +2192,19 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $args .= ' ' . AmpConfig::get('transcode_input');
 
         if (AmpConfig::get('encode_srt') && $options['subtitle']) {
-            debug_event('song.class', 'Using subtitle ' . $options['subtitle'], 5);
+            debug_event(self::class, 'Using subtitle ' . $options['subtitle'], 5);
             $args .= ' ' . AmpConfig::get('encode_srt');
         }
 
         $argst = AmpConfig::get('encode_args_' . $target);
         if (!$args) {
-            debug_event('song.class', 'Target format ' . $target . ' is not properly configured', 2);
+            debug_event(self::class, 'Target format ' . $target . ' is not properly configured', 2);
 
             return array();
         }
         $args .= ' ' . $argst;
 
-        debug_event('song.class', 'Command: ' . $cmd . ' Arguments:' . $args, 5);
+        debug_event(self::class, 'Command: ' . $cmd . ' Arguments:' . $args, 5);
 
         return array('format' => $target, 'command' => $cmd . $args);
     }
@@ -2266,7 +2266,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             $run = str_replace("%A", $this->f_album, $run);
             $run = str_replace("%t", $this->f_title, $run);
 
-            debug_event('song.class', "Running custom play action: " . $run, 3);
+            debug_event(self::class, "Running custom play action: " . $run, 3);
 
             $descriptors = array(1 => array('pipe', 'w'));
             if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {

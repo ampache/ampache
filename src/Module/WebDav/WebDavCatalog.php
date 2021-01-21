@@ -69,9 +69,9 @@ class WebDavCatalog extends DAV\Collection
      */
     public function getChild($name)
     {
-        debug_event('webdav_catalog.class', 'Catalog getChild for `' . $name . '`', 5);
+        debug_event(self::class, 'Catalog getChild for `' . $name . '`', 5);
         $matches = Catalog::search_childrens($name, $this->catalog_id);
-        debug_event('webdav_catalog.class', 'Found ' . count($matches) . ' childs.', 5);
+        debug_event(self::class, 'Found ' . count($matches) . ' childs.', 5);
         // Always return first match
         // Warning: this means that two items with the same name will not be supported for now
         if (count($matches) > 0) {

@@ -54,7 +54,7 @@ final class LastFmQuery implements LastFmQueryInterface
 
     public function queryLastFm(string $url): SimpleXMLElement
     {
-        debug_event('recommendation.class', 'search url : ' . $url, 5);
+        debug_event(__CLASS__, 'search url : ' . $url, 5);
 
         $request = Requests::get($url, [], Core::requests_options());
 

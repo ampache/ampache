@@ -289,7 +289,6 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if (AmpConfig::get('album_group')) {
             $sql = "SELECT MAX(`album`.`id`) AS `id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `song` ON `song`.`album`=`album`.`id` $catalog_join " . "WHERE (`song`.`artist`='$artistId' OR `album`.`album_artist`='$artistId') $catalog_where GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ORDER BY $sql_sort";
         }
-        //debug_event('artist.class', 'get_albums ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = array();

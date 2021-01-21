@@ -669,8 +669,9 @@ class Artist extends database_object implements library_item, GarbageCollectible
         if (!$db_results) {
             return null;
         }
-        $artist_id = (int)Dba::insert_id();
-        debug_event('artist.class', 'Artist check created new artist id `' . $artist_id . '`.', 4);
+
+        $artist_id = (int) Dba::insert_id();
+        debug_event(self::class, 'Artist check created new artist id `' . $artist_id . '`.', 4);
 
         self::$_mapcache[$name][$prefix][$mbid] = $artist_id;
 
