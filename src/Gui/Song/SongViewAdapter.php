@@ -369,28 +369,28 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Song MBID')]      = scrub_out($this->song->mbid);
         $songprops[T_('Album MBID')]     = scrub_out($this->song->album_mbid);
         $songprops[T_('Artist MBID')]    = scrub_out($this->song->artist_mbid);
-        if ($this->song->replaygain_track_gain != 0) {
-            $songprops[T_('ReplayGain Track Gain')]   = scrub_out($this->song->replaygain_track_gain);
+        if ($this->song->replaygain_track_gain !== null) {
+            $songprops[T_('ReplayGain Track Gain')] = scrub_out($this->song->replaygain_track_gain);
         }
-        if ($this->song->replaygain_album_gain != 0) {
-            $songprops[T_('ReplayGain Album Gain')]   = scrub_out($this->song->replaygain_album_gain);
+        if ($this->song->replaygain_album_gain !== null) {
+            $songprops[T_('ReplayGain Album Gain')] = scrub_out($this->song->replaygain_album_gain);
         }
         if ($this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)) {
-            $songprops[T_('Filename')]   = scrub_out($this->song->file) . " " . $this->song->f_size;
+            $songprops[T_('Filename')] = scrub_out($this->song->file) . " " . $this->song->f_size;
         }
         if ($this->song->update_time) {
-            $songprops[T_('Last Updated')]   = get_datetime((int) $this->song->update_time);
+            $songprops[T_('Last Updated')] = get_datetime((int) $this->song->update_time);
         }
-        $songprops[T_('Added')]   = get_datetime((int) $this->song->addition_time);
+        $songprops[T_('Added')] = get_datetime((int) $this->song->addition_time);
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_PLAYED_TIMES)) {
-            $songprops[T_('# Played')]   = scrub_out($this->song->object_cnt);
+            $songprops[T_('# Played')] = scrub_out($this->song->object_cnt);
         }
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_SKIPPED_TIMES)) {
-            $songprops[T_('# Skipped')]  = scrub_out($this->song->skip_cnt);
+            $songprops[T_('# Skipped')] = scrub_out($this->song->skip_cnt);
         }
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_LYRICS)) {
-            $songprops[T_('Lyrics')]   = $this->song->f_lyrics;
+            $songprops[T_('Lyrics')] = $this->song->f_lyrics;
         }
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LICENSING) && $this->song->license) {

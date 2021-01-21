@@ -187,21 +187,29 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      */
     public $lyrics;
     /**
-     * @var float $replaygain_track_gain
+     * @var float|null $replaygain_track_gain
      */
     public $replaygain_track_gain;
     /**
-     * @var float $replaygain_track_peak
+     * @var float|null $replaygain_track_peak
      */
     public $replaygain_track_peak;
     /**
-     * @var float $replaygain_album_gain
+     * @var float|null $replaygain_album_gain
      */
     public $replaygain_album_gain;
     /**
-     * @var float $replaygain_album_peak
+     * @var float|null $replaygain_album_peak
      */
     public $replaygain_album_peak;
+    /**
+     * @var integer|null $r128_album_gain
+     */
+    public $r128_album_gain;
+    /**
+     * @var integer|null $r128_track_gain
+     */
+    public $r128_track_gain;
     /**
      * @var string $f_title
      */
@@ -446,6 +454,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $replaygain_track_peak = isset($results['replaygain_track_peak']) ? $results['replaygain_track_peak'] : null;
         $replaygain_album_gain = isset($results['replaygain_album_gain']) ? $results['replaygain_album_gain'] : null;
         $replaygain_album_peak = isset($results['replaygain_album_peak']) ? $results['replaygain_album_peak'] : null;
+        $r128_track_gain       = isset($results['r128_track_gain']) ? $results['r128_track_gain'] : null;
+        $r128_album_gain       = isset($results['r128_album_gain']) ? $results['r128_album_gain'] : null;
         $original_year         = Catalog::normalize_year($results['original_year'] ?: 0);
         $barcode               = Catalog::check_length($results['barcode'], 64);
 
@@ -530,18 +540,9 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             }
         }
 
-        $sql = 'INSERT INTO `song_data` (`song_id`, `comment`, `lyrics`, `label`, `language`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`) ' . 'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)';
-        Dba::write($sql, array(
-            $song_id,
-            $comment,
-            $lyrics,
-            $label,
-            $language,
-            $replaygain_track_gain,
-            $replaygain_track_peak,
-            $replaygain_album_gain,
-            $replaygain_album_peak
-        ));
+        $sql = 'INSERT INTO `song_data` (`song_id`, `comment`, `lyrics`, `label`, `language`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`) ' .
+            'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        Dba::write($sql, array($song_id, $comment, $lyrics, $label, $language, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak, $r128_track_gain, $r128_album_gain));
 
         return $song_id;
     }
@@ -1327,36 +1328,20 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     {
         $update_time = time();
 
-        $sql = "UPDATE `song` SET `album` = ?, `year` = ?, `artist` = ?, " . "`title` = ?, `composer` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, " . "`size` = ?, `time` = ?, `track` = ?, `mbid` = ?, " . "`update_time` = ? WHERE `id` = ?";
-        Dba::write($sql, array(
-            $new_song->album,
-            $new_song->year,
-            $new_song->artist,
-            $new_song->title,
-            $new_song->composer,
-            (int)$new_song->bitrate,
-            (int)$new_song->rate,
-            $new_song->mode,
-            (int)$new_song->size,
-            (int)$new_song->time,
-            $new_song->track,
-            $new_song->mbid,
-            $update_time,
-            $song_id
-        ));
+        $sql = "UPDATE `song` SET `album` = ?, `year` = ?, `artist` = ?, " .
+            "`title` = ?, `composer` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, " .
+            "`size` = ?, `time` = ?, `track` = ?, `mbid` = ?, " .
+            "`update_time` = ? WHERE `id` = ?";
+        Dba::write($sql, array($new_song->album, $new_song->year, $new_song->artist,
+                                $new_song->title, $new_song->composer, (int) $new_song->bitrate, (int) $new_song->rate, $new_song->mode,
+                                (int) $new_song->size, (int) $new_song->time, $new_song->track, $new_song->mbid,
+                                $update_time, $song_id));
 
-        $sql = "UPDATE `song_data` SET `label` = ?, `lyrics` = ?, `language` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, " . "`replaygain_album_gain` = ?, `replaygain_album_peak` = ? " . "WHERE `song_id` = ?";
-        Dba::write($sql, array(
-            $new_song->label,
-            $new_song->lyrics,
-            $new_song->language,
-            $new_song->comment,
-            $new_song->replaygain_track_gain,
-            $new_song->replaygain_track_peak,
-            $new_song->replaygain_album_gain,
-            $new_song->replaygain_album_peak,
-            $song_id
-        ));
+        $sql = "UPDATE `song_data` SET `label` = ?, `lyrics` = ?, `language` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, " .
+            "`replaygain_album_gain` = ?, `replaygain_album_peak` = ?, `r128_track_gain` = ?, `r128_album_gain` = ? " .
+            "WHERE `song_id` = ?";
+        Dba::write($sql, array($new_song->label, $new_song->lyrics, $new_song->language, $new_song->comment, $new_song->replaygain_track_gain,
+            $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $new_song->r128_track_gain, $new_song->r128_album_gain, $song_id));
     } // update_song
 
     /**

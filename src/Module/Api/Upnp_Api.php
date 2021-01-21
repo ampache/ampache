@@ -73,7 +73,7 @@ class Upnp_Api
      * object.container
      */
     const SSDP_DEBUG = false;
-     
+
     /**
      * @return string
      */
@@ -244,7 +244,7 @@ class Upnp_Api
             debug_event('upnp_api.class', 'Discovery request from ' . $address, 5);
             debug_event('upnp_api.class', 'HEADERS:' . var_export($headers, true), 5);
         }
-        
+
         $new_usn = 'uuid:' . self::get_uuidStr();
         $actst   = $headers['st'];
         //echo 'DELAYTIME: [' . $headers['mx'] . ']' . PHP_EOL;

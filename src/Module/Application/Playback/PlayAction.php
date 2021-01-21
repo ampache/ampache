@@ -669,9 +669,9 @@ final class PlayAction implements ApplicationActionInterface
             }
 
             if (isset($_REQUEST['frame'])) {
-                $troptions['frame'] = floatval($_REQUEST['frame']);
+                $troptions['frame'] = (float) $_REQUEST['frame'];
                 if (isset($_REQUEST['duration'])) {
-                    $troptions['duration'] = floatval($_REQUEST['duration']);
+                    $troptions['duration'] = (float) $_REQUEST['duration'];
                 }
             } else {
                 if (isset($_REQUEST['segment'])) {
