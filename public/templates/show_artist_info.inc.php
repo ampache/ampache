@@ -21,7 +21,10 @@
  */
 
 use Ampache\Model\Art;
+use Ampache\Model\Artist;
 use Ampache\Module\Util\Ui;
+
+/** @var Artist $artist */
 
 ?>
 

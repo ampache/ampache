@@ -21,6 +21,9 @@
  */
 
 use Ampache\Model\Tag;
+use Ampache\Model\TvShow;
+
+/** @var TvShow $libitem */
 
 ?>
 <div>

@@ -23,10 +23,13 @@
 // Because this is a reset of the persons password make the form a little more secure
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\User;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+
+/** @var User $client */
 
 $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
 <?php echo AmpError::display('general'); ?>

@@ -18,7 +18,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+/** @var Song $libitem */
+
+use Ampache\Model\Song;
+
+?>
 <td class="cel_song"><?php echo $libitem->title; ?></td>
 <td class="cel_artist"><?php echo $libitem->f_artist_link; ?></td>
 <td class="cel_album"><?php echo $libitem->f_album_link; ?></td>

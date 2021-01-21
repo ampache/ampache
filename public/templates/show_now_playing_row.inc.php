@@ -24,9 +24,12 @@ use Ampache\Config\AmpConfig;
 use Ampache\Model\Album;
 use Ampache\Model\Art;
 use Ampache\Model\Rating;
+use Ampache\Model\Song;
 use Ampache\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
+
+/** @var Song $media */
 
 ?>
 <div class="np_group" id="np_group_1">

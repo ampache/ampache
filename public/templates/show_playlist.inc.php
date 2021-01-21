@@ -27,6 +27,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Playlist;
 use Ampache\Model\Rating;
 use Ampache\Model\Search;
 use Ampache\Model\User;
@@ -39,6 +40,8 @@ use Ampache\Module\System\Core;
 use Ampache\Model\Browse;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
+
+/** @var Playlist $playlist */
 
 ?>
 <?php

@@ -22,6 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
+use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Rating;
 use Ampache\Model\Share;
 use Ampache\Model\User;
@@ -31,6 +32,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
+/** @var Podcast_Episode $episode */
 ?>
 <?php Ui::show_box_top($episode->f_title . ' - ' . $episode->f_podcast_link, 'box box_podcast_episode_details'); ?>
 <dl class="media_details">

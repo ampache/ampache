@@ -21,9 +21,10 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Share;
 use Ampache\Module\Util\Ui;
 
-/** @var \Ampache\Model\Share $share */
+/** @var Share $share */
 
 $embed = $_REQUEST['embed'];
 

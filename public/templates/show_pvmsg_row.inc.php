@@ -21,9 +21,10 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\PrivateMsg;
 use Ampache\Module\Util\Ui;
 
-/** @var \Ampache\Model\PrivateMsg $libitem */
+/** @var PrivateMsg $libitem */
 ?>
 <td class="cel_select"><input type="checkbox" name="pvmsg_select[]" value="<?php echo $libitem->getId(); ?>" title="<?php echo T_('Select'); ?>" /></td>
 <td class="cel_subject"><?php echo $libitem->getLinkFormatted(); ?></td>

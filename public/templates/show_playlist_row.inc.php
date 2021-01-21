@@ -21,6 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Playlist;
 use Ampache\Model\Rating;
 use Ampache\Model\Share;
 use Ampache\Model\User;
@@ -31,6 +32,7 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
+/** @var Playlist $libitem */
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>

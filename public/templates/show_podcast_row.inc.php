@@ -22,6 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
+use Ampache\Model\Podcast;
 use Ampache\Model\Rating;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
@@ -30,6 +31,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
+/** @var Podcast $libitem */
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>

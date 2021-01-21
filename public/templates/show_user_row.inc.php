@@ -21,12 +21,14 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\User;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\Ui;
 
 /** @var UserFollowStateRendererInterface $userFollowStateRenderer */
+/** @var User $libitem */
 ?>
     <td class="cel_username">
         <a href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo $libitem->id; ?>">

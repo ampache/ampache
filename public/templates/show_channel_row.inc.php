@@ -21,8 +21,11 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Channel;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+
+/** @var Channel $libitem */
 
 ?>
 <td class="cel_play">

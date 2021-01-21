@@ -22,6 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
+use Ampache\Model\Artist;
 use Ampache\Model\Catalog;
 use Ampache\Model\Rating;
 use Ampache\Model\User;
@@ -38,6 +39,8 @@ $web_path          = AmpConfig::get('web_path');
 $show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = Access::check('interface', 25);
 $directplay_limit  = AmpConfig::get('direct_play_limit');
+
+/** @var Artist $artist */
 
 if ($directplay_limit > 0) {
     $show_playlist_add = ($artist->songs <= $directplay_limit);

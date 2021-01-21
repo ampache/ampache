@@ -20,10 +20,12 @@
  *
  */
 
+use Ampache\Model\Album;
 use Ampache\Model\Tag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 
+/** @var Album $libitem */
 ?>
 <div>
     <form method="post" id="edit_album_<?php echo $libitem->id; ?>" class="edit_dialog_content">

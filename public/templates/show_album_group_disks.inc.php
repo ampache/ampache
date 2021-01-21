@@ -37,6 +37,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 
 $web_path = AmpConfig::get('web_path');
 
+/** @var Album $album */
 $album->allow_group_disks = true;
 // Title for this album
 $title = scrub_out($album->name) . '&nbsp;(' . $album->year . ')';

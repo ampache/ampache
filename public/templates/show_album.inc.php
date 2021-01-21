@@ -37,11 +37,12 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Model\Browse;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\AlbumRepositoryInterface;
 
 $web_path = AmpConfig::get('web_path');
 
 /** @var Album $album */
-/** @var \Ampache\Repository\AlbumRepositoryInterface $albumRepository */
+/** @var AlbumRepositoryInterface $albumRepository */
 
 // Title for this album
 $title = scrub_out($album->name);

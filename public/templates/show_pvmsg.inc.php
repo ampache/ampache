@@ -21,9 +21,10 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\PrivateMsg;
 use Ampache\Module\Util\Ui;
 
-/** @var \Ampache\Model\PrivateMsg $pvmsg */
+/** @var PrivateMsg $pvmsg */
 
 Ui::show_box_top($pvmsg->getSubjectFormatted(), 'info-box'); ?>
 <div>

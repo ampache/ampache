@@ -20,7 +20,10 @@
  *
  */
 
-/** @var \Ampache\Model\Share $libitem */
+/** @var Share $libitem */
+
+use Ampache\Model\Share;
+
 ?>
 
 <td class="cel_object"><?php echo $libitem->getObjectUrl(); ?></td>

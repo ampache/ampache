@@ -22,9 +22,11 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Shoutbox;
+use Ampache\Model\User;
 use Ampache\Module\Util\Ui;
 
 /** @var Shoutbox $shout */
+/** @var User $client */
 
 ?>
 <?php Ui::show_box_top(T_('Edit Existing Shoutbox Post')); ?>

@@ -25,7 +25,9 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Model\Browse;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\VideoRepositoryInterface;
 
+/** @var VideoRepositoryInterface $videoRepository */
 ?>
 <?php Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
 <form id="random" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/random.php?action=get_advanced&type=<?php echo Core::get_request('type') ? scrub_out(Core::get_request('type')) : 'song'; ?>">
@@ -46,7 +48,7 @@ use Ampache\Module\Util\Ui;
     } else {
         echo T_('Artists');
     } ?></td>
-    <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
+    <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount('Video')) { ?>
         <td><?php if ((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES) !== 'video') { ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=video"><?php echo T_('Videos'); ?></a>
             <?php } else {

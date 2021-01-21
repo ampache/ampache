@@ -21,10 +21,12 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Artist;
 use Ampache\Model\Label;
 use Ampache\Model\Tag;
 use Ampache\Module\Authorization\Access;
 
+/** @var Artist $libitem */
 ?>
 <div>
     <form method="post" id="edit_artist_<?php echo $libitem->id; ?>" class="edit_dialog_content">

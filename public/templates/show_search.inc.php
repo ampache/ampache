@@ -21,11 +21,15 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Playlist;
+use Ampache\Model\Search;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Model\Browse;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
+
+/** @var Playlist $playlist */
 
 ?>
 <?php

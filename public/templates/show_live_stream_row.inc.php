@@ -21,10 +21,12 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Live_Stream;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
+/** @var Live_Stream $libitem */
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>

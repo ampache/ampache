@@ -21,10 +21,8 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Shoutbox;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 ?>

@@ -20,14 +20,14 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Random;
 
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -37,18 +37,25 @@ final class AdvancedAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private VideoRepositoryInterface $videoRepository;
+
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
+        VideoRepositoryInterface $videoRepository
     ) {
-        $this->ui = $ui;
+        $this->ui              = $ui;
+        $this->videoRepository = $videoRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
-
-        require_once Ui::find_template('show_random.inc.php');
-
+        $this->ui->show(
+            'show_random.inc.php',
+            [
+                'videoRepository' => $this->videoRepository
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

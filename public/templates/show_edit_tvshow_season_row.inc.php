@@ -18,7 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+/** @var TVShow_Season $libitem */
+
+use Ampache\Model\TVShow_Season;
+
+?>
 <div>
     <form method="post" id="edit_tvshow_season_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">

@@ -20,4 +20,8 @@
  *
  */
 
+/** @var Tag $libitem */
+
+use Ampache\Model\Tag;
+
 echo $libitem->name;

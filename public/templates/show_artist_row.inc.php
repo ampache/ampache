@@ -22,6 +22,7 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
+use Ampache\Model\Artist;
 use Ampache\Model\Catalog;
 use Ampache\Model\Rating;
 use Ampache\Model\User;
@@ -32,6 +33,7 @@ use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
+/** @var Artist $libitem */
 // @deprecated
 global $dic;
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();

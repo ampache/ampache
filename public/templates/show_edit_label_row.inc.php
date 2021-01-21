@@ -18,7 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+/** @var Label $libitem */
+
+use Ampache\Model\Label;
+
+?>
 <div>
     <form method="post" id="edit_label_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">

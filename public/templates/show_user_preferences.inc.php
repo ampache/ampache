@@ -26,8 +26,11 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\User;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+
+/** @var User $client */
 
 ?>
 <?php /* HINT: Username FullName */ Ui::show_box_top(sprintf(T_('Editing %s Preferences'), $client->fullname), 'box box_preferences'); ?>

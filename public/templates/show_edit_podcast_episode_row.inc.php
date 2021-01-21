@@ -18,7 +18,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+/** @var Podcast_Episode $libitem */
+
+use Ampache\Model\Podcast_Episode;
+
+?>
 <div>
     <form method="post" id="edit_podcast_episode_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">

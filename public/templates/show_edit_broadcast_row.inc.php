@@ -20,8 +20,10 @@
  *
  */
 
+use Ampache\Model\Broadcast;
 use Ampache\Model\Tag;
 
+/** @var Broadcast $libitem */
 ?>
 <div>
     <form method="post" id="edit_broadcast_<?php echo $libitem->id; ?>" class="edit_dialog_content">

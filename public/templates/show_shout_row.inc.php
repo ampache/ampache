@@ -21,9 +21,11 @@
  */
 
 use Ampache\Model\Shoutbox;
+use Ampache\Model\User;
 use Ampache\Module\Util\Ui;
 
 /** @var Shoutbox $libitem */
+/** @var User $client */
 ?>
 <tr id="flagged_<?php echo $libitem->id; ?>" class="<?php echo Ui::flip_class(); ?>">
     <td class="cel_object"><?php echo $object->f_link; ?></td>

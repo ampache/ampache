@@ -25,6 +25,8 @@ use Ampache\Model\Search;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
+/** @var null|Search $playlist */
+
 if ($playlist) {
     $logic_operator = $playlist->logic_operator;
 } else {

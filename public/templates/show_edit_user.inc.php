@@ -21,10 +21,13 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\User;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+
+/** @var User $client */
 
 ?>
 <?php Ui::show_box_top(T_('Editing Existing User')); ?>

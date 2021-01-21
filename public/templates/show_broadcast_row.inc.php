@@ -21,8 +21,10 @@
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Broadcast;
 use Ampache\Module\Api\Ajax;
 
+/** @var Broadcast $libitem */
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
