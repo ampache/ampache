@@ -32,7 +32,7 @@ use Ampache\Model\Video;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 
-final class UpdateSingleCatalogFile implements UpdateSingleCatalogFileInterface
+final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements UpdateSingleCatalogFileInterface
 {
     public function update(
         Interactor $interactor,
@@ -55,7 +55,8 @@ final class UpdateSingleCatalogFile implements UpdateSingleCatalogFileInterface
         $sql        = "SELECT `id` FROM `catalog` WHERE `name` = '$catname' AND `catalog_type`='local'";
         $db_results = Dba::read($sql);
 
-        ob_start("ob_html_strip",'1024',true);
+        ob_end_clean();
+        ob_start();
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id($row['id']);
@@ -122,5 +123,14 @@ final class UpdateSingleCatalogFile implements UpdateSingleCatalogFileInterface
                 }
             }
         }
+
+        $buffer = ob_get_contents();
+
+        ob_end_clean();
+
+        $interactor->info(
+            $this->cleanBuffer($buffer),
+            true
+        );
     }
 }

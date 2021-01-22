@@ -30,7 +30,7 @@ use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\System\Dba;
 use PDOStatement;
 
-final class UpdateCatalog implements UpdateCatalogInterface
+final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalogInterface
 {
     private CatalogGarbageCollectorInterface $catalogGarbageCollector;
 
@@ -226,16 +226,5 @@ final class UpdateCatalog implements UpdateCatalogInterface
                 $where
             )
         );
-    }
-
-    private function cleanBuffer(string $string): string
-    {
-        $string = str_replace('<br />', "\n", $string);
-        $string = strip_tags($string);
-        $string = html_entity_decode($string);
-        $string = preg_replace("/[\r\n]+[\s\t]*[\r\n]+/","\n",$string);
-        $string = trim($string);
-
-        return $string;
     }
 }
