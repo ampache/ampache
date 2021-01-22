@@ -2879,7 +2879,7 @@ abstract class Catalog extends database_object
             debug_event(__CLASS__, 'migrate ' . $object_type . ' from ' . $old_object_id . ' to ' . $new_object_id, 4);
 
             Stats::migrate($object_type, $old_object_id, $new_object_id);
-            UserActivity::migrate($object_type, $old_object_id, $new_object_id);
+            Useractivity::migrate($object_type, $old_object_id, $new_object_id);
             Recommendation::migrate($object_type, $old_object_id, $new_object_id);
             Share::migrate($object_type, $old_object_id, $new_object_id);
             Shoutbox::migrate($object_type, $old_object_id, $new_object_id);

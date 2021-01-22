@@ -1533,7 +1533,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         // migrate stats for the old artist
         Stats::migrate('artist', $old_artist, $new_artist);
-        UserActivity::migrate('artist', $old_artist, $new_artist);
+        Useractivity::migrate('artist', $old_artist, $new_artist);
         Recommendation::migrate('artist', $old_artist, $new_artist);
         Share::migrate('artist', $old_artist, $new_artist);
         Shoutbox::migrate('artist', $old_artist, $new_artist);
@@ -1556,7 +1556,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         // migrate stats for the old album
         Stats::migrate('album', $old_album, $new_album);
-        UserActivity::migrate('album', $old_album, $new_album);
+        Useractivity::migrate('album', $old_album, $new_album);
         Recommendation::migrate('album', $old_album, $new_album);
         Share::migrate('album', $old_album, $new_album);
         Shoutbox::migrate('album', $old_album, $new_album);

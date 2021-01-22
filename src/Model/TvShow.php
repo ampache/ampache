@@ -391,7 +391,7 @@ class TvShow extends database_object implements library_item
                 }
                 $current_id = $tvshow_id;
                 Stats::migrate('tvshow', $this->id, (int)$tvshow_id);
-                UserActivity::migrate('tvshow', $this->id, (int)$tvshow_id);
+                Useractivity::migrate('tvshow', $this->id, (int)$tvshow_id);
                 Recommendation::migrate('tvshow', $this->id, (int)$tvshow_id);
                 Share::migrate('tvshow', $this->id, (int)$tvshow_id);
                 Shoutbox::migrate('tvshow', $this->id, (int)$tvshow_id);
