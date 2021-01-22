@@ -758,7 +758,7 @@ class Catalog_local extends Catalog
 
             return false;
         }
-        $sql    = "UPDATE `catalog_local` SET `path` = ? WHERE `id` = ?";
+        $sql    = "UPDATE `catalog_local` SET `path` = ? WHERE `catalog_id` = ?";
         $params = array($new_path, $this->id);
         Dba::write($sql, $params);
 
