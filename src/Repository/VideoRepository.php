@@ -29,6 +29,7 @@ use Ampache\Model\Movie;
 use Ampache\Model\Personal_Video;
 use Ampache\Model\TVShow_Episode;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 final class VideoRepository implements VideoRepositoryInterface
 {
@@ -72,14 +73,7 @@ final class VideoRepository implements VideoRepositoryInterface
      */
     public function getItemCount(string $type): int
     {
-        $dtypes = [
-            TVShow_Episode::class => 'tvshow_episode',
-            Movie::class => 'movie',
-            Clip::class => 'clip',
-            Personal_Video::class => 'personal_video'
-        ];
-
-        $type = $dtypes[$type] ?? 'video';
+        $type = ObjectTypeToClassNameMapper::VIDEO_TYPES[$type];
 
         $sql        = 'SELECT COUNT(*) as count from `' . strtolower((string) $type) . '`;';
         $db_results = Dba::read($sql,array());

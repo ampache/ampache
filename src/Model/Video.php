@@ -245,8 +245,7 @@ class Video extends database_object implements Media, library_item, GarbageColle
      */
     public static function create_from_id($video_id)
     {
-        $dtypes = self::get_derived_types();
-        foreach ($dtypes as $dtype) {
+        foreach (ObjectTypeToClassNameMapper::VIDEO_TYPES as $dtype) {
             $sql        = "SELECT `id` FROM `" . strtolower((string) $dtype) . "` WHERE `id` = ?";
             $db_results = Dba::read($sql, array($video_id));
             $results    = Dba::fetch_assoc($db_results);
@@ -692,6 +691,23 @@ class Video extends database_object implements Media, library_item, GarbageColle
     } // update
 
     /**
+     * @param integer $video_id
+     * @param Video $new_video
+     */
+    public static function update_video($video_id, Video $new_video)
+    {
+        $update_time = time();
+
+        $sql = "UPDATE `video` SET `title` = ?, `bitrate` = ?, " .
+            "`size` = ?, `time` = ?, `video_codec` = ?, `audio_codec` = ?, " .
+            "`resolution_x` = ?, `resolution_y` = ?, `release_date` = ?, `channels` = ?, " .
+            "`display_x` = ?, `display_y` = ?, `frame_rate` = ?, `video_bitrate` = ?, " .
+            "`update_time` = ? WHERE `id` = ?";
+
+        Dba::write($sql, array($new_video->title, $new_video->bitrate, $new_video->size, $new_video->time, $new_video->video_codec, $new_video->audio_codec, $new_video->resolution_x, $new_video->resolution_y, $new_video->release_date, $new_video->channels, $new_video->display_x, $new_video->display_y, $new_video->frame_rate, $new_video->video_bitrate, $update_time, $video_id));
+    }
+
+    /**
      * Get release item art.
      * @return array
      */
@@ -1072,6 +1088,26 @@ class Video extends database_object implements Media, library_item, GarbageColle
 
         return true;
     } // _update_item
+
+    /**
+     * compare_video_information
+     * this compares the new ID3 tags of a file against
+     * the ones in the database to see if they have changed
+     * it returns false if nothing has changes, or the true
+     * if they have. Static because it doesn't need this
+     * @param Video $video
+     * @param Video $new_video
+     * @return array
+     */
+    public static function compare_video_information(Video $video, Video $new_video)
+    {
+        // Remove some stuff we don't care about
+        unset($video->catalog, $video->played, $video->enabled, $video->addition_time, $video->update_time, $video->type);
+        $string_array = array('title', 'tags');
+        $skip_array   = array('id', 'tag_id', 'mime', 'object_cnt', 'disabledMetadataFields');
+
+        return Song::compare_media_information($video, $new_video, $string_array, $skip_array);
+    } // compare_video_information
 
     /**
      * @deprecated

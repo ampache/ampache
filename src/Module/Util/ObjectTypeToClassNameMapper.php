@@ -26,6 +26,7 @@ namespace Ampache\Module\Util;
 
 use Ampache\Model\Album;
 use Ampache\Model\Artist;
+use Ampache\Model\Clip;
 use Ampache\Model\Movie;
 use Ampache\Model\Personal_Video;
 use Ampache\Model\Playlist;
@@ -33,6 +34,7 @@ use Ampache\Model\Search;
 use Ampache\Model\Share;
 use Ampache\Model\Song;
 use Ampache\Model\Art;
+use Ampache\Model\TVShow_Episode;
 use Ampache\Model\Video;
 
 /**
@@ -53,6 +55,14 @@ final class ObjectTypeToClassNameMapper
         'share' => Share::class,
         'movie' => Movie::class,
         'personal_video' => Personal_Video::class,
+    ];
+
+    public const VIDEO_TYPES = [
+        TVShow_Episode::class => 'tvshow_episode',
+        Movie::class => 'movie',
+        Clip::class => 'clip',
+        Personal_Video::class => 'personal_video',
+        Video::class => 'video',
     ];
 
     public static function map(string $object_type)

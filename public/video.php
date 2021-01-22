@@ -36,9 +36,9 @@ $dic = require __DIR__ . '/../src/Config/Init.php';
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
     [
-        DeleteAction::class => DeleteAction::class,
-        ConfirmDeleteAction::class => ConfirmDeleteAction::class,
-        ShowVideoAction::class => ShowVideoAction::class,
+        DeleteAction::REQUEST_KEY => DeleteAction::class,
+        ConfirmDeleteAction::REQUEST_KEY => ConfirmDeleteAction::class,
+        ShowVideoAction::REQUEST_KEY => ShowVideoAction::class,
     ],
     ShowVideoAction::REQUEST_KEY
 );

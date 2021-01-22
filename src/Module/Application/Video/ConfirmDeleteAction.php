@@ -37,6 +37,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class ConfirmDeleteAction implements ApplicationActionInterface
 {
+    public const REQUEST_KEY = 'confirm_delete';
+
     private ConfigContainerInterface $configContainer;
 
     private UiInterface $ui;

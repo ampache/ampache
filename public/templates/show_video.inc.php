@@ -141,7 +141,7 @@ $subtitles = $video->get_subtitles();
   $videoprops[T_('Title')]   = scrub_out($video->f_title);
   $videoprops[T_('Length')]  = scrub_out($video->f_time);
 if (get_class($video) != Video::class) {
-    require Ui::find_template('show_partial_' . ObjectTypeToClassNameMapper::reverseMap($video) . '.inc.php');
+    require Ui::find_template('show_partial_' . ObjectTypeToClassNameMapper::reverseMap(get_class($video)) . '.inc.php');
 }
   $videoprops[T_('Release Date')]    = scrub_out($video->f_release_date);
   $videoprops[T_('Codec')]           = scrub_out($video->f_codec);

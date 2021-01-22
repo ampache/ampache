@@ -26,7 +26,6 @@ namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
-use PDOStatement;
 
 final class UserActivityRepository implements UserActivityRepositoryInterface
 {

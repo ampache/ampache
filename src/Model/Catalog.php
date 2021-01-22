@@ -1759,8 +1759,18 @@ abstract class Catalog extends database_object
 
         $type = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
         // Figure out what type of object this is and call the right  function
-        $name     = ($type == 'song') ? 'song' : 'video';
-        $function = 'update_' . $name . '_from_tags';
+        $name = ($type == 'song') ? 'song' : 'video';
+
+        $functions = [
+            'song' => static function ($results, $media) {
+                return Catalog::update_song_from_tags($results, $media);
+            },
+            'video' => static function ($results, $media) {
+                return Catalog::update_video_from_tags($results, $media);
+            },
+        ];
+
+        $callable = $functions[$name];
 
         // try and get the tags from your file
         $extension    = strtolower(pathinfo($media->file, PATHINFO_EXTENSION));
@@ -1772,12 +1782,11 @@ abstract class Catalog extends database_object
             $patres  = vainfo::parse_pattern($media->file, $catalog->sort_pattern, $catalog->rename_pattern);
             $results = array_merge($results, $patres);
 
-            return call_user_func(array(Catalog::class, $function), $results, $media);
+            return $callable($results, $media);
         }
         debug_event(self::class, 'Reading tags from ' . $media->file, 4);
 
-
-        return call_user_func(array(Catalog::class, $function), $results, $media);
+        return $callable($results, $media);
     } // update_media_from_tags
 
     /**
@@ -1984,6 +1993,55 @@ abstract class Catalog extends database_object
 
         return $info;
     } // update_song_from_tags
+
+    /**
+     * @param $results
+     * @param Video $video
+     * @return array
+     */
+    public static function update_video_from_tags($results, Video $video)
+    {
+        /* Setup the vars */
+        $new_video                = new Video();
+        $new_video->file          = $results['file'];
+        $new_video->title         = $results['title'];
+        $new_video->size          = $results['size'];
+        $new_video->video_codec   = $results['video_codec'];
+        $new_video->audio_codec   = $results['audio_codec'];
+        $new_video->resolution_x  = $results['resolution_x'];
+        $new_video->resolution_y  = $results['resolution_y'];
+        $new_video->time          = $results['time'];
+        $new_video->release_date  = $results['release_date'] ?: 0;
+        $new_video->bitrate       = $results['bitrate'];
+        $new_video->mode          = $results['mode'];
+        $new_video->channels      = $results['channels'];
+        $new_video->display_x     = $results['display_x'];
+        $new_video->display_y     = $results['display_y'];
+        $new_video->frame_rate    = $results['frame_rate'];
+        $new_video->video_bitrate = (int) Catalog::check_int($results['video_bitrate'], 4294967294, 0);
+        $tags                     = Tag::get_object_tags('video', $video->id);
+        if ($tags) {
+            foreach ($tags as $tag) {
+                $video->tags[]     = $tag['name'];
+            }
+        }
+        $new_video->tags        = $results['genre'];
+
+        $info = Video::compare_video_information($video, $new_video);
+        if ($info['change']) {
+            debug_event(self::class, $video->file . " : differences found, updating database", 5);
+
+            Video::update_video($video->id, $new_video);
+
+            if ($video->tags != $new_video->tags) {
+                Tag::update_tag_list(implode(',', $new_video->tags), 'video', $video->id, true);
+            }
+        } else {
+            debug_event(self::class, $video->file . " : no differences found", 5);
+        }
+
+        return $info;
+    }
 
     /**
      * Get rid of all tags found in the libraryItem
