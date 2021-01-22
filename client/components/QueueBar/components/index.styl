@@ -1,43 +1,49 @@
 @import "~stylus/settings/color.styl"
 
 .song
-  display flex
-  align-items center
-  cursor pointer
-  border 1px solid transparent
-  border-bottom 1px solid colorGray700
+    display flex
+    align-items center
+    cursor pointer
+    border 1px solid transparent
+    border-bottom 1px solid colorGray700
 
-  .imageWrapper
+    &.playing
+        color colorAmber500
+
+.imageWrapper
     flex-shrink: 0
     padding: 2px
 
     img
-      width 50px
-      height 50px
-  .details
+        width 50px
+        height 50px
+
+.details
     flex 1
     overflow hidden
     text-overflow ellipsis
     white-space: nowrap
     padding-left 0.5rem
-    .songName
-      text-overflow ellipsis
-      overflow hidden
-      white-space: nowrap
-    .albumArtist
-      text-overflow ellipsis
-      overflow hidden
-      white-space: nowrap
-      font-weight: 700
-      .gap
-        margin 0 2px
-  &.playing
-    color colorAmber500
+
+.songName
+    text-overflow ellipsis
+    overflow hidden
+    white-space: nowrap
+
+.albumArtist
+    text-overflow ellipsis
+    overflow hidden
+    white-space: nowrap
+    font-weight: 700
+
+.gap
+    margin 0 2px
 
 .actions
-  padding-right: 10px
-  flex-shrink 0
-  img
-    height: 100%;
-    width: 100%
-    padding: 4px
+    padding-right: 10px
+    flex-shrink 0
+
+    img
+        height: 100%;
+        width: 100%
+        padding: 4px
