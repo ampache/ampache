@@ -120,7 +120,7 @@ final class BookmarkEditMethod
                 echo JSON_Data::bookmarks($bookmark);
                 break;
             default:
-                echo XML_Data::bookmarks($bookmark);
+                echo Xml_Data::bookmarks($bookmark);
         }
         Session::extend($input['auth']);
 

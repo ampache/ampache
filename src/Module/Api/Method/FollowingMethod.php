@@ -87,7 +87,7 @@ final class FollowingMethod
                 echo JSON_Data::users($users);
                 break;
             default:
-                echo XML_Data::users($users);
+                echo Xml_Data::users($users);
         }
         Session::extend($input['auth']);
 

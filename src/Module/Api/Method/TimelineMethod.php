@@ -83,7 +83,7 @@ final class TimelineMethod
                             echo JSON_Data::timeline($activities);
                             break;
                         default:
-                            echo XML_Data::timeline($activities);
+                            echo Xml_Data::timeline($activities);
                     }
                 }
             }

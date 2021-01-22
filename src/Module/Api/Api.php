@@ -220,7 +220,7 @@ class Api
                 echo JSON_Data::empty($empty_type);
                 break;
             default:
-                echo XML_Data::empty();
+                echo Xml_Data::empty();
         }
     } // empty
 
