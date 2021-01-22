@@ -177,9 +177,9 @@ class Browse extends Query
         $extra_objects = $this->get_supplemental_objects();
         $browse        = $this;
 
-        foreach ($extra_objects as $class_name => $id) {
-            $class_name    = ObjectTypeToClassNameMapper::map($class_name);
-            ${$class_name} = new $class_name($id);
+        foreach ($extra_objects as $type => $id) {
+            $class_name = ObjectTypeToClassNameMapper::map($type);
+            ${$type}    = new $class_name($id);
         }
 
         $match = '';
