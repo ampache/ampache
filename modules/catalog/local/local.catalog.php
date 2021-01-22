@@ -187,25 +187,7 @@ class Catalog_local extends Catalog
         // Clean up the path just in case
         $path = rtrim(rtrim(trim($data['path']), '/'), '\\');
 
-        if (!strlen($path)) {
-            AmpError::add('general', T_('Path was not specified'));
-
-            return false;
-        }
-
-        // Make sure that there isn't a catalog with a directory above this one
-        if (self::get_from_path($path)) {
-            AmpError::add('general', T_('Specified path is inside an existing catalog'));
-
-            return false;
-        }
-
-        // Make sure the path is readable/exists
-        if (!Core::is_readable($path)) {
-            debug_event('local.catalog', 'Cannot add catalog at unopenable path ' . $path, 1);
-            /* HINT: directory (file path) */
-            AmpError::add('general', sprintf(T_("The folder couldn't be read. Does it exist? %s"), scrub_out($data['path'])));
-
+        if (!self::check_path($path)) {
             return false;
         }
 
@@ -761,6 +743,33 @@ class Catalog_local extends Catalog
     } // clean_file
 
     /**
+     * move_catalog_proc
+     * This function updates the file path of the catalog to a new location
+     * @param string $new_path
+     * @return boolean
+     */
+    public function move_catalog_proc($new_path)
+    {
+        if (!self::check_path($new_path)) {
+            return false;
+        }
+        if ($this->path == $new_path) {
+            debug_event('local.catalog', 'The new path equals the old path: ' . $new_path, 5);
+
+            return false;
+        }
+        $sql    = "UPDATE `catalog_local` SET `path` = ? WHERE `id` = ?";
+        $params = array($new_path, $this->id);
+        Dba::write($sql, $params);
+
+        $sql    = "UPDATE `song` SET `file` = REPLACE(`file`, '" . Dba::escape($this->path) . "', ' " . Dba::escape($new_path) . "') WHERE `catalog` = ?";
+        $params = array($this->id);
+        Dba::write($sql, $params);
+
+        return true;
+    } // move_catalog_proc
+
+    /**
      * insert_local_song
      *
      * Insert a song that isn't already in the database.
@@ -953,6 +962,39 @@ class Catalog_local extends Catalog
 
         return false;
     } // check_local_mp3
+
+    /**
+     * check_path
+     * Checks the path to see if it's there or conflicting with an existing catalot
+     * @param string $path
+     * @return boolean
+     */
+    public static function check_path($path)
+    {
+        if (!strlen($path)) {
+            AmpError::add('general', T_('Path was not specified'));
+
+            return false;
+        }
+
+        // Make sure that there isn't a catalog with a directory above this one
+        if (self::get_from_path($path)) {
+            AmpError::add('general', T_('Specified path is inside an existing catalog'));
+
+            return false;
+        }
+
+        // Make sure the path is readable/exists
+        if (!Core::is_readable($path)) {
+            debug_event('local.catalog', 'Cannot add catalog at unopenable path ' . $path, 1);
+            /* HINT: directory (file path) */
+            AmpError::add('general', sprintf(T_("The folder couldn't be read. Does it exist? %s"), scrub_out($path)));
+
+            return false;
+        }
+
+        return true;
+    } // check_path
 
     /**
      * @param string $file_path
