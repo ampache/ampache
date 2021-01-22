@@ -1,0 +1,44 @@
+@import "~stylus/settings/color"
+
+html
+    height 100%
+    overflow hidden
+
+#root
+    height 100%
+
+body
+    height 100%
+    background-color colorGray900
+
+svg
+    fill currentColor
+
+a
+    text-decoration none
+    cursor pointer
+    color inherit
+
+    &.disabled
+        pointer-events none
+
+/* W3C spec */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: colorAmber900 colorGray900;
+}
+
+/* Chrome, Edge, and Safari */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: colorGray900;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: colorAmber900;
+    border-radius: 20px;
+    border: 3px solid colorGray900;
+}

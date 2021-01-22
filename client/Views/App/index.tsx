@@ -8,7 +8,7 @@ import ReactLoading from 'react-loading';
 import MusicControl from '~components/MusicControl';
 import QueueBar from '~components/QueueBar/';
 
-import style from '~stylus/app.styl';
+import style from './index.styl';
 import NavigationBlock from '~Views/NavigationBlock';
 
 interface AppViewProps {
