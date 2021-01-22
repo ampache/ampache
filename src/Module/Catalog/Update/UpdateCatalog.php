@@ -28,6 +28,7 @@ use Ahc\Cli\IO\Interactor;
 use Ampache\Model\Catalog;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\System\Dba;
+use PDOStatement;
 
 final class UpdateCatalog implements UpdateCatalogInterface
 {
@@ -64,23 +65,7 @@ final class UpdateCatalog implements UpdateCatalogInterface
             'parse_playlist' => $importPlaylists
         ];
 
-        $where = sprintf(
-            'catalog_type = \'%s\'',
-            Dba::escape($catalogType)
-        );
-        if ($catalogName !== null) {
-            $where = sprintf(
-                '%s AND name = \'%s\'',
-                $where,
-                Dba::escape($catalogName)
-            );
-        }
-
-        $sql = sprintf(
-            'SELECT `id` FROM `catalog` WHERE %s',
-            $where
-        );
-        $db_results = Dba::read($sql);
+        $db_results = $this->lookupCatalogs($catalogType, $catalogName);
 
         ob_end_clean();
         ob_start();
@@ -159,6 +144,87 @@ final class UpdateCatalog implements UpdateCatalogInterface
         $interactor->info(
             $this->cleanBuffer($buffer),
             true
+        );
+    }
+
+    public function updatePath(
+        Interactor $interactor,
+        string $catalogType,
+        ?string $catalogName,
+        ?string $newPath
+    ): void {
+        $result = $this->lookupCatalogs(
+            $catalogType,
+            $catalogName
+        );
+
+        if ($newPath === null || !is_dir($newPath)) {
+            $interactor->error('The new path is invalid', true);
+
+            return;
+        }
+
+        while ($row = Dba::fetch_assoc($result)) {
+            $catalog = Catalog::create_from_id($row['id']);
+            /* HINT: Catalog Name */
+            $interactor->info(
+                sprintf(T_('Reading Catalog: "%s"'), $catalog->name),
+                true
+            );
+            $interactor->info(
+                sprintf('- %s - ', T_('Moving Catalog path')),
+                true
+            );
+            $interactor->eol();
+            $interactor->info(
+                sprintf('%s -> %s', $catalog->path, $newPath)
+            );
+            $interactor->eol(2);
+
+            // Migrate a catalog from the current path to a new one.
+            if (isset($catalog->path)) {
+                if ($catalog->move_catalog_proc($newPath)) {
+                    $interactor->info(
+                        sprintf('- %s -', T_('The Catalog path has changed')),
+                        true
+                    );
+                } else {
+                    $interactor->info(
+                        sprintf('- %s -', T_('There Was a Problem')),
+                        true
+                    );
+                }
+            } else {
+                $interactor->info(
+                    sprintf('- %s -', T_('There is an error with your parameters')),
+                    true
+                );
+            }
+            $interactor->info('----------------', true);
+        }
+    }
+
+    private function lookupCatalogs(
+        string $catalogType,
+        ?string $catalogName
+    ): PDOStatement {
+        $where = sprintf(
+            'catalog_type = \'%s\'',
+            Dba::escape($catalogType)
+        );
+        if ($catalogName !== null) {
+            $where = sprintf(
+                '%s AND name = \'%s\'',
+                $where,
+                Dba::escape($catalogName)
+            );
+        }
+
+        return Dba::read(
+            sprintf(
+                'SELECT `id` FROM `catalog` WHERE %s',
+                $where
+            )
         );
     }
 

@@ -39,4 +39,14 @@ interface UpdateCatalogInterface
         ?string $catalogName,
         string $catalogType
     ): void;
+
+    /**
+     * Updates the filesystem path of all files related to this catalog
+     */
+    public function updatePath(
+        Interactor $interactor,
+        string $catalogType,
+        ?string $catalogName,
+        ?string $newPath
+    ): void;
 }
