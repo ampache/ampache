@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Model\Album;
+use Ampache\Model\Bookmark;
 use Ampache\Model\Podcast;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Statistics\Stats;
@@ -1525,13 +1526,12 @@ class Subsonic_Xml_Data
     /**
      * addBookmarks
      * @param SimpleXMLElement $xml
-     * @param $bookmarks
+     * @param Bookmark[] $bookmarks
      */
     public static function addBookmarks($xml, $bookmarks)
     {
         $xbookmarks = $xml->addChild('bookmarks');
         foreach ($bookmarks as $bookmark) {
-            $bookmark->format();
             self::addBookmark($xbookmarks, $bookmark);
         }
     }
@@ -1539,13 +1539,13 @@ class Subsonic_Xml_Data
     /**
      * addBookmark
      * @param SimpleXMLElement $xml
-     * @param $bookmark
+     * @param Bookmark $bookmark
      */
     private static function addBookmark($xml, $bookmark)
     {
         $xbookmark = $xml->addChild('bookmark');
         $xbookmark->addAttribute('position', (string)$bookmark->position);
-        $xbookmark->addAttribute('username', (string)$bookmark->f_user);
+        $xbookmark->addAttribute('username', (string)$bookmark->getUserName());
         $xbookmark->addAttribute('comment', (string)$bookmark->comment);
         $xbookmark->addAttribute('created', date("c", (int)$bookmark->creation_date));
         $xbookmark->addAttribute('changed', date("c", (int)$bookmark->update_date));
