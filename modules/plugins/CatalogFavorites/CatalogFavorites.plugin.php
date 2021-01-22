@@ -116,7 +116,7 @@ class AmpacheCatalogFavorites
                 if ($item->id) {
                     echo '<tr id="' . $userflag['type'] . '_' . $userflag['id'] . '" class="' . ((($count % 2) == 0) ? 'even' : 'odd') . ' libitem_menu">';
                     if ($this->gridview) {
-                        echo '<td><span style="font-weight: bold;">' . $item->f_link . '</span><br> ';
+                        echo '<td class="cel_song"><span style="font-weight: bold;">' . $item->f_link . '</span><br> ';
                         echo '<span style="margin-right: 10px;">';
                         if (AmpConfig::get('directplay')) {
                             echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'], 'play', T_('Play'), 'play_' . $userflag['type'] . '_' . $userflag['id']);
