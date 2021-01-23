@@ -37,7 +37,6 @@ if (empty($rootdir)) {
     return false;
 }
 $rootdir .= DIRECTORY_SEPARATOR;
-ini_set('open_basedir', $rootdir);
 
 if (filter_has_var(INPUT_GET, 'operation')) {
     $fs = new FileSystem($rootdir);
