@@ -35,6 +35,7 @@ use Ampache\Model\Share;
 use Ampache\Model\Song;
 use Ampache\Model\Art;
 use Ampache\Model\TVShow_Episode;
+use Ampache\Model\User;
 use Ampache\Model\Video;
 
 /**
@@ -55,6 +56,7 @@ final class ObjectTypeToClassNameMapper
         'share' => Share::class,
         'movie' => Movie::class,
         'personal_video' => Personal_Video::class,
+        'user' => User::class,
     ];
 
     public const VIDEO_TYPES = [
