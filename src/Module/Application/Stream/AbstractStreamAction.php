@@ -108,7 +108,6 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
             }
 
             $playlist = new Stream_Playlist();
-            $playlist->add($mediaIds);
 
             // don't do this if nothing is there
             if ($mediaIds !== []) {
