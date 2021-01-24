@@ -2,10 +2,7 @@
 
 .songBlock
     display flex
-    width 450px //TODO: Refactor, width shouldn't be set globally, make this component more reusable
-    height 90px
     cursor pointer
-    border 1px solid transparent
 
     img
         width 20%
@@ -14,6 +11,9 @@
     &.playing
         color currentlyPlayingColor
 
+.title
+    font-weight 700
+
 .details
     padding-left 10px
     display flex
@@ -21,7 +21,7 @@
     justify-content space-around
 
 .bottom
-    color #878787
+    color colorGray400
 
     a
         clear both
