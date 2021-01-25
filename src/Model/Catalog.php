@@ -2177,7 +2177,7 @@ abstract class Catalog extends database_object
 
         debug_event(self::class, 'Starting clean on ' . $this->name, 5);
 
-        if (!defined('SSE_OUTPUT')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI')) {
             require Ui::find_template('show_clean_catalog.inc.php');
             ob_flush();
             flush();
@@ -2188,12 +2188,12 @@ abstract class Catalog extends database_object
 
         debug_event(self::class, 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 4);
 
-        if (!defined('SSE_OUTPUT')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI')) {
             Ui::show_box_top();
         }
         Ui::update_text(T_("Catalog Cleaned"),
             sprintf(nT_("%d file removed.", "%d files removed.", $dead_total), $dead_total));
-        if (!defined('SSE_OUTPUT')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI')) {
             Ui::show_box_bottom();
         }
 
@@ -2206,7 +2206,7 @@ abstract class Catalog extends database_object
      */
     public function verify_catalog()
     {
-        if (!defined('SSE_OUTPUT')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI')) {
             require Ui::find_template('show_verify_catalog.inc.php');
             ob_flush();
             flush();
@@ -2214,12 +2214,12 @@ abstract class Catalog extends database_object
 
         $verified = $this->verify_catalog_proc();
 
-        if (!defined('SSE_OUTPUT')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI')) {
             Ui::show_box_top();
         }
         Ui::update_text(T_("Catalog Verified"),
             sprintf(nT_('%d file updated.', '%d files updated.', $verified['updated']), $verified['updated']));
-        if (!defined('SSE_OUTPUT')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI')) {
             Ui::show_box_bottom();
         }
 
@@ -2801,7 +2801,7 @@ abstract class Catalog extends database_object
                         }
                     }
 
-                    if (!defined('SSE_OUTPUT')) {
+                    if (!defined('SSE_OUTPUT') && !defined('CLI')) {
                         echo AmpError::display('catalog_add');
                     }
                 }
