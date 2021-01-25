@@ -67,9 +67,9 @@ final class SongActivityTypeHandler extends GenericActivityTypeHandler
                 $songName,
                 $artistName,
                 $albumName,
-                $song->mbid,
-                $song->artist_mbid,
-                $song->album_mbid
+                (string) $song->mbid,
+                (string) $song->artist_mbid,
+                (string) $song->album_mbid
             );
 
             return;

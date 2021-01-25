@@ -64,7 +64,7 @@ final class ArtistActivityTypeHandler extends GenericActivityTypeHandler
                 $objectId,
                 $date,
                 $artistName,
-                $musicBrainzId
+                (string) $musicBrainzId
             );
 
             return;
