@@ -120,7 +120,7 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
                     </div>
                 </div>
             )}
-            <div className={style.albums}>
+            <div className={`album-grid ${style.albums}`}>
                 {!artist && <ReactLoading color='#FF9D00' type={'bubbles'} />}
                 {artist &&
                     artist.albums.map((theAlbum) => {
