@@ -110,35 +110,30 @@ class Bookmark extends database_object
     /**
      * create
      * @param array $data
+     * @param int $userId
+     * @param int $updateDate
      * @return PDOStatement|boolean
      */
-    public static function create(array $data)
+    public static function create(array $data, int $userId, int $updateDate)
     {
-        $user     = $data['user'] ?: Core::get_global('user')->id;
-        $position = $data['position'] ?: 0;
-        $comment  = scrub_in($data['comment']);
-        $updated  = $data['update_date'] ? (int) $data['update_date'] : time();
-
         $sql = "INSERT INTO `bookmark` (`user`, `position`, `comment`, `object_type`, `object_id`, `creation_date`, `update_date`) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        return Dba::write($sql, array($user, $position, $comment, $data['object_type'], $data['object_id'], time(), $updated));
+        return Dba::write($sql, array($userId, $data['position'], scrub_in($data['comment']), $data['object_type'], $data['object_id'], time(), $updateDate));
     }
 
     /**
      * edit
      * @param array $data
+     * @param int $userId
+     * @param int $updateDate
      * @return PDOStatement|boolean
      */
-    public static function edit($data)
+    public static function edit($data, int $userId, int $updateDate)
     {
-        $user     = $data['user'] ?: Core::get_global('user')->id;
-        $position = $data['position'] ?: 0;
-        $comment  = scrub_in($data['comment']);
-        $updated  = $data['update_date'] ? (int) $data['update_date'] : time();
         $sql      = "UPDATE `bookmark` SET `position` = ?, `update_date` = ? " .
                "WHERE `user` = ? AND `comment` = ? AND `object_type` = ? AND `object_id` = ?";
 
-        return Dba::write($sql, array($position, $updated, $user, $comment,  $data['object_type'], $data['object_id']));
+        return Dba::write($sql, array($data['position'], $updateDate, $userId, scrub_in($data['comment']),  $data['object_type'], $data['object_id']));
     }
 
     public function getUserName(): string

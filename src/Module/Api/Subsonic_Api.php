@@ -2427,12 +2427,16 @@ class Subsonic_Api
             if ($bookmark->id) {
                 static::getBookmarkRepository()->update($bookmark->getId(), (int) $position);
             } else {
-                Bookmark::create(array(
-                    'object_id' => Subsonic_Xml_Data::getAmpacheId($object_id),
-                    'object_type' => $type,
-                    'comment' => $comment,
-                    'position' => $position
-                ));
+                Bookmark::create(
+                    [
+                        'object_id' => Subsonic_Xml_Data::getAmpacheId($object_id),
+                        'object_type' => $type,
+                        'comment' => $comment,
+                        'position' => $position
+                    ],
+                    Core::get_global('user')->id,
+                    time()
+                );
             }
             $response = Subsonic_Xml_Data::createSuccessResponse('createbookmark');
         } else {

@@ -96,12 +96,10 @@ final class BookmarkEditMethod
             return false;
         }
         $object = array(
-            'user' => $user->id,
             'object_id' => $object_id,
             'object_type' => $type,
             'comment' => $comment,
             'position' => $position,
-            'update_date' => $time
         );
 
         // check for the bookmark first
@@ -112,7 +110,7 @@ final class BookmarkEditMethod
             return false;
         }
         // edit it
-        Bookmark::edit($object);
+        Bookmark::edit($object, $user->id, $time);
 
         ob_end_clean();
         switch ($input['api_format']) {

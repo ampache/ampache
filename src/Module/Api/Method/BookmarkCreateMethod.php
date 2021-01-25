@@ -31,6 +31,7 @@ use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
@@ -97,16 +98,14 @@ final class BookmarkCreateMethod
             return false;
         }
         $object = array(
-            'user' => $user->id,
             'object_id' => $object_id,
             'object_type' => $type,
             'comment' => $comment,
-            'position' => $position,
-            'update_date' => $time
+            'position' => $position
         );
 
         // create it then retrieve it
-        Bookmark::create($object);
+        Bookmark::create($object, $user->getId(), $time);
         $bookmark = Bookmark::get_bookmark($object);
         if (empty($bookmark)) {
             Api::empty('bookmark', $input['api_format']);
