@@ -77,6 +77,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
         // Authenticate the user with preemptive HTTP Basic authentication first
         $userName = Core::get_server('PHP_AUTH_USER');
+
         if (empty($userName)) {
             $userName = $_REQUEST['u'];
         }
@@ -85,6 +86,9 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             $password = (string) $_REQUEST['p'];
             $token    = (string) $_REQUEST['t'];
             $salt     = (string) $_REQUEST['s'];
+        } else {
+            $token = '';
+            $salt  = '';
         }
         $version   = $_REQUEST['v'];
         $clientapp = $_REQUEST['c'];
