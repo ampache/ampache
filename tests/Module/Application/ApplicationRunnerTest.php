@@ -93,7 +93,7 @@ class ApplicationRunnerTest extends MockeryTestCase
         
         $this->logger->shouldReceive('critical')
             ->with(
-                'No handler found for action ``',
+                'No handler found for action ""',
                 [LegacyLogger::CONTEXT_TYPE => ApplicationRunner::class]
             )
             ->once();
@@ -124,7 +124,7 @@ class ApplicationRunnerTest extends MockeryTestCase
 
         $this->logger->shouldReceive('critical')
             ->with(
-                sprintf('No handler found for action `%s`', $action),
+                sprintf('No handler found for action "%s"', $action),
                 [LegacyLogger::CONTEXT_TYPE => ApplicationRunner::class]
             )
             ->once();
@@ -167,7 +167,7 @@ class ApplicationRunnerTest extends MockeryTestCase
 
         $this->logger->shouldReceive('debug')
             ->with(
-                sprintf('Found handler `%s` for action `%s`', $handler_name, $action),
+                sprintf('Found handler "%s" for action "%s"', $handler_name, $action),
                 [LegacyLogger::CONTEXT_TYPE => ApplicationRunner::class]
             )
             ->once();
@@ -211,7 +211,7 @@ class ApplicationRunnerTest extends MockeryTestCase
 
         $this->logger->shouldReceive('debug')
             ->with(
-                sprintf('Found handler `%s` for action `%s`', $handler_name, $action),
+                sprintf('Found handler "%s" for action "%s"', $handler_name, $action),
                 [LegacyLogger::CONTEXT_TYPE => ApplicationRunner::class]
             )
             ->once();
@@ -266,7 +266,7 @@ class ApplicationRunnerTest extends MockeryTestCase
 
         $this->logger->shouldReceive('debug')
             ->with(
-                sprintf('Found handler `%s` for action `%s`', $handler_name, $action),
+                sprintf('Found handler "%s" for action "%s"', $handler_name, $action),
                 [LegacyLogger::CONTEXT_TYPE => ApplicationRunner::class]
             )
             ->once();

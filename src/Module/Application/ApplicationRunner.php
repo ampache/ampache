@@ -70,14 +70,18 @@ final class ApplicationRunner
     ): void {
         $action_name = $request->getParsedBody()['action'] ?? $request->getQueryParams()['action'] ?? '';
 
-        $handler_name = $action_list[$action_name] ?? $action_list[$default_action] ?? '';
+        if ($action_name === '') {
+            $action_name = $default_action;
+        }
+
+        $handler_name = $action_list[$action_name] ?? '';
 
         try {
             /** @var ApplicationActionInterface $handler */
             $handler = $this->dic->get($handler_name);
         } catch (ContainerExceptionInterface $e) {
             $this->logger->critical(
-                sprintf('No handler found for action `%s`', $action_name),
+                sprintf('No handler found for action "%s"', $action_name),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
 
@@ -85,7 +89,7 @@ final class ApplicationRunner
         }
 
         $this->logger->debug(
-            sprintf('Found handler `%s` for action `%s`', $handler_name, $action_name),
+            sprintf('Found handler "%s" for action "%s"', $handler_name, $action_name),
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
 
@@ -109,7 +113,7 @@ final class ApplicationRunner
                 $message,
                 [
                     LegacyLogger::CONTEXT_TYPE => sprintf(
-                        '`%s` for `%s`',
+                        '"%s" for "%s"',
                         __CLASS__,
                         $e->getFile()
                     )
