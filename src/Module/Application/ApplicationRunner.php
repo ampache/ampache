@@ -70,7 +70,7 @@ final class ApplicationRunner
     ): void {
         $action_name = $request->getParsedBody()['action'] ?? $request->getQueryParams()['action'] ?? '';
 
-        if ($action_name === '') {
+        if (array_key_exists($action_name, $action_list) === false) {
             $action_name = $default_action;
         }
 

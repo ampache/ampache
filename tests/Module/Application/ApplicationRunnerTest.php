@@ -189,6 +189,60 @@ class ApplicationRunnerTest extends MockeryTestCase
         );
     }
 
+    public function testRunRunsWithDefaultAction(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $handler    = $this->mock(ApplicationActionInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $emitter    = $this->mock(AbstractSapiEmitter::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $action         = 'some-action';
+        $default_action = 'some-default-action';
+        $handler_name   = 'some-handler';
+
+        $emitter->shouldReceive('emit')
+            ->with($response)
+            ->once();
+
+        $request->shouldReceive('getParsedBody')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['action' => $action]);
+
+        $this->dic->shouldReceive('get')
+            ->with($handler_name)
+            ->once()
+            ->andReturn($handler);
+        $this->dic->shouldReceive('get')
+            ->with(SapiEmitter::class)
+            ->once()
+            ->andReturn($emitter);
+
+        $this->logger->shouldReceive('debug')
+            ->with(
+                sprintf('Found handler "%s" for action "%s"', $handler_name, $default_action),
+                [LegacyLogger::CONTEXT_TYPE => ApplicationRunner::class]
+            )
+            ->once();
+
+        $this->gatekeeperFactory->shouldReceive('createGuiGatekeeper')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($gatekeeper);
+
+        $handler->shouldReceive('run')
+            ->with($request, $gatekeeper)
+            ->once()
+            ->andReturn($response);
+
+        $this->subject->run(
+            $request,
+            [$default_action => $handler_name],
+            $default_action
+        );
+    }
+
     public function testRunCatchesDeniedException(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
