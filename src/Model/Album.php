@@ -296,6 +296,11 @@ class Album extends database_object implements library_item
         return (int) $this->id;
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * build_cache
      * This takes an array of object ids and caches all of their information

@@ -20,11 +20,12 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Album;
 
-use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Model\Album;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -32,7 +33,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -53,32 +53,39 @@ final class ShowAction implements ApplicationActionInterface
 
     private AlbumRepositoryInterface $albumRepository;
 
+    private ConfigContainerInterface $configContainer;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
         UiInterface $ui,
         LoggerInterface $logger,
         PrivilegeCheckerInterface $privilegeChecker,
-        AlbumRepositoryInterface $albumRepository
+        AlbumRepositoryInterface $albumRepository,
+        ConfigContainerInterface $configContainer
     ) {
         $this->modelFactory     = $modelFactory;
         $this->ui               = $ui;
         $this->logger           = $logger;
         $this->privilegeChecker = $privilegeChecker;
         $this->albumRepository  = $albumRepository;
+        $this->configContainer  = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
 
-        $album = $this->modelFactory->createAlbum((int) $_REQUEST['album']);
+        $albumId = (int) ($request->getQueryParams()['album'] ?? 0);
+
+        $album = $this->modelFactory->createAlbum($albumId);
         $album->format();
-        if (!$album->id) {
+
+        if ($album->isNew()) {
             $this->logger->warning(
                 'Requested an album that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            echo T_("You have requested an Album that does not exist.");
+            echo T_('You have requested an Album that does not exist.');
         // allow single disks to not be shown as multi's
         } elseif (count($album->album_suite) <= 1) {
             $this->ui->show(
@@ -86,13 +93,18 @@ final class ShowAction implements ApplicationActionInterface
                 [
                     'album' => $album,
                     'isAlbumEditable' => $this->isEditable(
-                        $gatekeeper->getUserId(),
+                        $gatekeeper,
                         $album
                     )
                 ]
             );
         } else {
-            require Ui::find_template('show_album_group_disks.inc.php');
+            $this->ui->show(
+                'show_album_group_disks.inc.php',
+                [
+                    'album' => $album
+                ]
+            );
         }
 
         // Show the Footer
@@ -102,8 +114,8 @@ final class ShowAction implements ApplicationActionInterface
         return null;
     }
 
-    public function isEditable(
-        int $userId,
+    private function isEditable(
+        GuiGatekeeperInterface $gatekeeper,
         Album $album
     ): bool {
         if (
@@ -116,10 +128,10 @@ final class ShowAction implements ApplicationActionInterface
             return false;
         }
 
-        if (!AmpConfig::get('upload_allow_edit')) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === false) {
             return false;
         }
 
-        return $album->get_user_owner() === $userId;
+        return $album->get_user_owner() === $gatekeeper->getUserId();
     }
 }
