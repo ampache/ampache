@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Artist;
 
@@ -61,19 +61,19 @@ final class DeleteAction implements ApplicationActionInterface
             return $response;
         }
 
-        $artist_id = (string) scrub_in($_REQUEST['artist_id']);
+        $artistId = (int) ($request->getQueryParams()['artist_id'] ?? 0);
+
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('The Artist and all files will be deleted'),
             sprintf(
                 '%s/artists.php?action=confirm_delete&artist_id=%d',
                 $this->configContainer->getWebPath(),
-                $artist_id
+                $artistId
             ),
             1,
             'delete_artist'
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

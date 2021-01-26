@@ -29,6 +29,7 @@ use Ampache\Model\User;
 use Ampache\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\AmpacheRss;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Model\Browse;
@@ -41,6 +42,7 @@ $show_playlist_add = Access::check('interface', 25);
 $directplay_limit  = AmpConfig::get('direct_play_limit');
 
 /** @var Artist $artist */
+/** @var GuiGatekeeperInterface $gatekeeper */
 
 if ($directplay_limit > 0) {
     $show_playlist_add = ($artist->songs <= $directplay_limit);
@@ -260,7 +262,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     <div id="tabs_content">
         <div id="albums" class="tab_content" style="display: block;">
 <?php
-    if (!isset($multi_object_ids)) {
+    if ($multi_object_ids === null) {
         $multi_object_ids = array('' => $object_ids);
     }
 

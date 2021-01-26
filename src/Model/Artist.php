@@ -204,6 +204,11 @@ class Artist extends database_object implements library_item, GarbageCollectible
         return (int) $this->id;
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * construct_from_array
      * This is used by the metadata class specifically but fills out a Artist object

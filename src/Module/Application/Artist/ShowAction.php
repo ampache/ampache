@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Artist;
 
@@ -30,7 +30,6 @@ use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -69,36 +68,50 @@ final class ShowAction implements ApplicationActionInterface
     {
         $this->ui->showHeader();
 
-        $catalogId = $_REQUEST['catalog'] ?? null;
+        $queryParams = $request->getQueryParams();
+
+        $artistId  = (int) ($queryParams['artist'] ?? 0);
+        $catalogId = $queryParams['catalog'] ?? null;
         if ($catalogId !== null) {
             $catalogId = (int) $catalogId;
         }
 
-        $artist = $this->modelFactory->createArtist((int) $_REQUEST['artist']);
+        $artist = $this->modelFactory->createArtist($artistId);
         $artist->format();
-        if ($this->configContainer->get(ConfigurationKeyEnum::ALBUM_RELEASE_TYPE)) {
-            $multi_object_ids = $this->albumRepository->getByArtist(
-                $artist,
-                $catalogId,
-                true
-            );
-        } else {
-            $object_ids = $this->albumRepository->getByArtist(
-                $artist,
-                $catalogId
-            );
-        }
-        $object_type = 'album';
-        if (!$artist->id) {
+
+        if ($artist->isNew()) {
             $this->logger->warning(
                 'Requested an artist that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            echo T_("You have requested an Artist that does not exist.");
+            echo T_('You have requested an Artist that does not exist.');
         } else {
-            require_once Ui::find_template('show_artist.inc.php');
+            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_RELEASE_TYPE) === true) {
+                $multi_object_ids = $this->albumRepository->getByArtist(
+                    $artist,
+                    $catalogId,
+                    true
+                );
+                $object_ids = null;
+            } else {
+                $object_ids = $this->albumRepository->getByArtist(
+                    $artist,
+                    $catalogId
+                );
+                $multi_object_ids = null;
+            }
+
+            $this->ui->show(
+                'show_artist.inc.php',
+                [
+                    'multi_object_ids' => $multi_object_ids,
+                    'object_ids' => $object_ids,
+                    'object_type' => 'album',
+                    'artist' => $artist,
+                    'gatekeeper' => $gatekeeper,
+                ]
+            );
         }
-        
         $this->ui->showQueryStats();
         $this->ui->showFooter();
         
