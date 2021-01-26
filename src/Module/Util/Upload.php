@@ -154,6 +154,8 @@ class Upload
             if ($upload_catalog->catalog_type == "local") {
                 return $upload_catalog;
             }
+        } else {
+            debug_event(self::class, 'File upload error (check filesize limits).', 2);
         }
 
         return null;
