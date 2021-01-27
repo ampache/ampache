@@ -15,8 +15,8 @@ const QueueSong: React.FC<QueueSongProps> = (props) => {
         <li
             className={
                 props.currentlyPlaying
-                    ? `${style.song} ${style.playing}`
-                    : `${style.song}`
+                    ? `${style.song} nowPlaying striped-list`
+                    : `${style.song} striped-list`
             }
             onClick={props.onClick}
         >
@@ -31,7 +31,7 @@ const QueueSong: React.FC<QueueSongProps> = (props) => {
             </div>
             <div className={style.actions}>
                 <SVG
-                    className='icon-button'
+                    className='icon-button-smallest'
                     src={require('~images/icons/svg/cross.svg')}
                     title='Remove'
                     description='Remove song from Queue'

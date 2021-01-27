@@ -1,14 +1,21 @@
+// Album grids should have this on the containing element
 .album-grid
     display: grid
     gap: 20px;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
 
+// Artist grids should have this on the containing element
 .artist-grid
     display: grid
     gap: 20px;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
 
+// Song grids should have this on the containing element
 .song-list
     display: grid
     gap: 20px;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+
+// Subtle row striping for lists
+.striped-list:nth-of-type(odd)
+    background-color rgba(colorGray800, 0.3)

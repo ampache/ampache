@@ -45,49 +45,20 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
             <li
                 className={
                     props.isCurrentlyPlaying
-                        ? `${style.playing} ${style.songRow} ${props.className}`
-                        : `${style.songRow} ${props.className} `
+                        ? `nowPlaying ${style.songRow} striped-list ${props.className}`
+                        : `${style.songRow} striped-list ${props.className} `
                 }
                 {...bindTrigger}
                 onClick={props.startPlaying}
                 tabIndex={1}
             >
-                <span
-                    className={style.actions}
-                    onClick={(e) => {
-                        showContextMenu(e);
-                    }}
-                >
-                    <SVG
-                        className='icon-button'
-                        src={require('~images/icons/svg/more-options-hori.svg')}
-                        title='More options'
-                        role='button'
-                    />
-                </span>
-                <span
-                    className={
-                        props.song.flag
-                            ? `${style.heartIconWrapper} ${style.fav}`
-                            : style.heartIconWrapper
-                    }
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        props.flagSong(props.song.id, !props.song.flag);
-                    }}
-                >
-                    <SVG
-                        className='icon-button'
-                        src={require('~images/icons/svg/heart-full.svg')}
-                        title='Favorite this song'
-                        role='button'
-                    />
-                </span>
-
-                <span className={style.songDetails}>
-                    <span className={style.title}>{props.song.title}</span>
+                <div className={style.songDetails}>
+                    <div className={style.trackNumber}>
+                        {props.song.track}
+                    </div>
+                    <div className={style.title}>{props.song.title}</div>
                     {props.showArtist && (
-                        <span
+                        <div
                             className={style.artistContainer}
                             onClick={(e) => e.stopPropagation()}
                         >
@@ -97,10 +68,10 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                             >
                                 {props.song.artist.name}
                             </Link>
-                        </span>
+                        </div>
                     )}
                     {props.showAlbum && (
-                        <span
+                        <div
                             className={style.albumContainer}
                             onClick={(e) => e.stopPropagation()}
                         >
@@ -111,27 +82,42 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                             >
                                 {props.song.album.name}
                             </Link>
-                        </span>
+                        </div>
                     )}
-                </span>
+                    <div className={style.time}>
+                        {formatLabel(props.song.time)}
+                    </div>
+                </div>
 
-                <span className={style.rating}>
-                    <Rating value={props.song.rating} fav={props.song.flag} />
-                </span>
+                <div className={style.songActions}>
+                    <div
+                      className={style.options}
+                      onClick={(e) => {
+                          showContextMenu(e);
+                      }}
+                    >
+                        <SVG
+                          className='icon-button-smallest'
+                          src={require("~images/icons/svg/more-options-hori.svg")}
+                          title='More options'
+                          role='button'
+                        />
+                    </div>
 
-                <span className={style.time}>
-                    {formatLabel(props.song.time)}
-                </span>
+                    <div className={style.rating}>
+                        <Rating value={props.song.rating} fav={props.song.flag} />
+                    </div>
 
-                <span className={style.remove}>
-                    <SVG
-                        className='icon-button'
-                        src={require('~images/icons/svg/cross.svg')}
-                        title='Delete'
-                        description='Delete this song'
-                        role='button'
-                    />
-                </span>
+                    <div className={style.remove}>
+                        <SVG
+                          className='icon-button-smallest'
+                          src={require("~images/icons/svg/cross.svg")}
+                          title='Delete'
+                          description='Delete this song'
+                          role='button'
+                        />
+                    </div>
+                </div>
             </li>
             <div {...bindMenu} className='contextMenu'>
                 <div

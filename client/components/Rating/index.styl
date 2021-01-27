@@ -7,29 +7,22 @@
     padding: inherit
 
 .heartIcon
-    fill colorGray500
     cursor: pointer
+    margin-left: 8px
 
     &.active
         fill colorRed500
 
 .starIcon
-    fill colorGray500
+    fill inherit
 
     &.active
         fill colorAmber500
 
 .cancelIcon
-    fill colorGray400
     transform scale(0.9)
     cursor: pointer
 
-.divider
-    content: "";
-    display: inline-block
-    border-radius: 50%
-    width 4px
-    height 4px
-    background-color colorGray400
-    align-self: center
-    margin: 0 5px
+:global .MuiRating-root.MuiRating-root
+    color inherit
+    fill currentColor

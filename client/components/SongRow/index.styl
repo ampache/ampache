@@ -3,73 +3,63 @@
 
 .songRow
     border-radius: 3px
-    display grid
     cursor pointer
-    grid-template-columns: 42px 1fr auto auto 42px;
-    grid-template-rows: auto auto
-    grid-auto-flow: column;
-    grid-column-gap: 10px
-    align-items center
-    padding 10px 0
+    display flex
+    flex-direction column
+    justify-content space-between
+    color colorGray400
 
     @media all and (min-width: size-medium)
-        grid-template-rows: 1fr
-        padding 0px 0
-
-    &:nth-of-type(odd)
-        background-color rgba(colorGray800, 0.3)
+        flex-direction row
 
     @media (any-hover: hover)
         &:hover
             box-shadow 0 0 0 2px colorAmber800
-            position: relative
-
-    &.playing
-        color colorAmber500
-
-.heartIconWrapper
-    width 100%
-    display flex
-    display: none // TODO: action removal
-    align-items center
-
-    &.fav
-        filter: invert(66%) sepia(95%) saturate(2455%) hue-rotate(359deg) brightness(101%) contrast(107%);
-
-        &:hover
-            filter none
-
-    &:not(.fav):hover
-        filter: invert(66%) sepia(95%) saturate(2455%) hue-rotate(359deg) brightness(101%) contrast(107%);
-
-    img
-        width 100%
 
 a
     @media (any-hover: hover)
         &:hover
             color colorAmber500
 
-.songDetails
+.songActions
     display flex
-    flex 1
-    grid-column 2
-    grid-row 1 / 2
-    grid-column-gap: 10px
-    flex-direction: column
-    overflow hidden
-
-    @media all and (min-width: size-micro)
-        grid-row 1 / 3
+    align-items center
+    margin-left auto
 
     @media all and (min-width: size-medium)
-        display grid
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr))
+        & > *
+            margin-left 10px
+
+.songDetails
+    padding 10px 10px 0 10px
+    overflow hidden
+    position relative
+
+    @media all and (min-width: size-medium)
+        display flex
+        flex-direction row
+        width 100%
+
+.trackNumber
+    display inline-block
+    vertical-align bottom
+    margin-right 10px
+
+    &:after
+        content '.'
+        display inline-block
+
+    @media all and (min-width: size-medium)
+        min-width 3ch
+        text-align right
 
 .title
+    display inline-block
+    vertical-align bottom
     text-overflow ellipsis
     overflow hidden
     white-space nowrap
+    font-weight 700
 
 .albumContainer
     text-overflow ellipsis
@@ -77,32 +67,29 @@ a
     white-space nowrap
 
 .artistContainer
-    font-weight: 700
     text-overflow ellipsis
     overflow hidden
     white-space nowrap
 
-.rating
-    padding-top: 5px
-    grid-column 2
-    grid-row 2 / 3
-
-    @media all and (min-width: size-micro)
-        grid-column 3
-        grid-row 1 / 3
-        padding: inherit
+.title,
+.albumContainer,
+.artistContainer {
+    flex: 1
+    margin-right 10px
+}
 
 .time
-    padding-left: 5px
     text-align right
-    grid-column 4
-    grid-row 1 / 3
-    color colorGray400
+    min-width 10ch
+    position absolute
+    top 10px
+    right 10px
 
-.remove
-    grid-column 5
-    grid-row 1 / 3
+    @media all and (min-width: size-medium)
+        position relative
+        top initial
+        right initial
+        margin-left auto;
+        padding-left 10px
 
-.actions
-    grid-column 1
-    grid-row 1 / 3
+
