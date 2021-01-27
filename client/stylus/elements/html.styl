@@ -1,6 +1,9 @@
 @import "~stylus/settings/color.styl"
 @import "~stylus/settings/typography.styl"
 
+:root
+    --initial-text-color: colorGray400;
+
 html
     height 100%
     overflow hidden
@@ -11,7 +14,7 @@ html
 body
     height 100%
     background-color colorGray900
-    color: colorGray400
+    color: var(--initial-text-color)
     font-family fontBody
     font-size 12px
     font-weight 400
@@ -48,6 +51,10 @@ a
 
     &.disabled
         pointer-events none
+
+    @media (any-hover: hover)
+        &:hover
+            color colorAmber500
 
 /* W3C spec */
 * {
