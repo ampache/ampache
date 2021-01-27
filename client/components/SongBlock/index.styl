@@ -5,14 +5,18 @@
     cursor pointer
 
     img
+        border-radius 3px
         width 20%
         object-fit contain
-
-    &.playing
-        color currentlyPlayingColor
+        margin 3px
 
 .title
+    color cardTitleColor
     font-weight 700
+
+    // Restore hover color
+    a:hover &
+        color inherit
 
 .details
     padding-left 10px
@@ -21,9 +25,8 @@
     justify-content space-around
 
 .bottom
-    color colorGray400
+    color var(--initial-text-color)
 
     a
         clear both
         float left
-        color inherit

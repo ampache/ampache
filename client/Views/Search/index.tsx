@@ -84,7 +84,9 @@ const SearchView: React.FC<SearchProps> = (props) => {
 
     return (
         <div className={style.searchPage}>
-            Search: {searchQuery}
+            <div className={style.query}>
+                Search: <span className={style.queryText}>"{searchQuery}"</span>
+            </div>
             <div className={style.resultSection}>
                 <h2>Songs</h2>
                 {!songResults && (

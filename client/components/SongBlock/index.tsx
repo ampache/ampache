@@ -15,8 +15,8 @@ const SongBlock = (props: SongBlockProps) => {
     return (
         <div
             onClick={() => props.playSong(props.song)}
-            className={`${props.className} ${style.songBlock} ${
-                props.currentlyPlaying ? style.playing : ''
+            className={`card ${props.className} ${style.songBlock} ${
+                props.currentlyPlaying ? 'nowPlaying' : ''
             }`}
             tabIndex={1}
         >

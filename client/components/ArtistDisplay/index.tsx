@@ -18,7 +18,7 @@ const ArtistDisplay: React.FC<ArtistDisplayProps> = (
         <>
             <Link
                 to={`/artist/${props.artist.id}`}
-                className={`${style.artistDisplayContainer} ${props.className}`}
+                className={`card ${style.artistDisplayContainer} ${props.className}`}
             >
                 <div className={style.artistDisplay}>
                     <div className={style.imageContainer}>

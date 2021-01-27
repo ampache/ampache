@@ -28,7 +28,7 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (
     });
 
     return (
-        <div className={`${style.albumDisplay} ${props.className}`}>
+        <div className={`card ${style.albumDisplay} ${props.className}`}>
             <div {...bindMenu} className='contextMenu'>
                 <div
                     {...bindMenuItems}
@@ -108,26 +108,20 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (
             <div className={style.rating} onClick={(e) => e.preventDefault()}>
                 <Rating value={props.album.rating} fav={props.album.flag} />
             </div>
-            <Link to={`/album/${props.album.id}`} className={style.details}>
+            <div className={style.details}>
                 <div className={style.albumInfo}>
-                    <div className={style.albumName}>{props.album.name}</div>
-                    <div className={style.albumArtist}>
-                        {/*HTML does not allow nested links, this hack makes it shutup,
-                        TODO: See if this can be refactored without this*/}
-                        <object type='owo/uwu'>
-                            <Link
-                                to={`/artist/${props.album.artist.id}`}
-                                className={style.cardLink}
-                            >
-                                {props.album.artist.name}
-                            </Link>
-                        </object>
-                    </div>
+                    <Link to={`/album/${props.album.id}`} className={style.albumName}>{props.album.name}</Link>
+                    <Link
+                      to={`/artist/${props.album.artist.id}`}
+                      className={style.albumArtist}
+                    >
+                        {props.album.artist.name}
+                    </Link>
                     <div className={style.albumMeta}>
                         {props.album.year} - {props.album.tracks} tracks
                     </div>
                 </div>
-            </Link>
+            </div>
         </div>
     );
 };

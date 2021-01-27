@@ -10,11 +10,8 @@
     height: 100%
     position relative
     overflow hidden
-    color colorGray300
 
     &:hover
-        box-shadow 0 0 0 2px colorAmber800
-
         .imageContainer:after
             @supports (backdrop-filter: blur(1px))
                 backdrop-filter: blur(5px);
@@ -22,10 +19,15 @@
         .albumActions
             opacity 1
             pointer-events: auto
-            color colorGray300
             background-color rgba(black, 0.85)
             @supports (backdrop-filter: blur(1px))
                 background-color rgba(black, 0.6)
+
+        .details
+            color inherit
+
+        .albumName
+            //color inherit
 
 /*TODO: currently hovering over the rating stars makes "View Album" light up, may need to use JS to prevent
     wasting too much time trying to fix it now.
@@ -101,6 +103,7 @@
     filter: drop-shadow(0 0 5px black)
     margin-left 16px
     cursor pointer
+    color cardTitleColor
 
     &:hover
         color linkHoverColor
@@ -112,7 +115,7 @@
     background-color colorGray800
     position relative
     top -10px
-    border-top 2px solid colorGray700
+    border-top 1px solid colorGray700
     z-index 1
 
 .details
@@ -133,13 +136,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
     font-weight 700
-    font-size 13px
+    color cardTitleColor
 
 .albumArtist
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color colorGray400
-
-.albumMeta
-    color colorGray400
