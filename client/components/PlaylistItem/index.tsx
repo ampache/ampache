@@ -50,7 +50,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
 
     return (
         <>
-            <div className={style.playlistItem} {...bindTrigger}>
+            <div className={`card ${style.playlistItem}`} {...bindTrigger}>
                 <div className={style.details}>
                     {props.playlist.id === 0 && <div>SMARTLIST</div>}
                     <div className={style.name}>

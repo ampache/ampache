@@ -15,8 +15,8 @@ const QueueSong: React.FC<QueueSongProps> = (props) => {
         <li
             className={
                 props.currentlyPlaying
-                    ? `${style.song} nowPlaying striped-list`
-                    : `${style.song} striped-list`
+                    ? `${style.song} nowPlaying card-clear striped-list`
+                    : `${style.song} card-clear striped-list`
             }
             onClick={props.onClick}
         >
