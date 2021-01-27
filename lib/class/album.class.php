@@ -1082,17 +1082,17 @@ class Album extends database_object implements library_item
      */
     public function update(array $data)
     {
-        $name           = isset($data['name']) ? $data['name'] : $this->name;
+        $name           = (isset($data['name'])) ? $data['name'] : $this->name;
         //$artist         = isset($data['artist']) ? (int) $data['artist'] : $this->artist_id;
-        $album_artist   = isset($data['album_artist']) ? (int) $data['album_artist'] : $this->album_artist;
-        $year           = isset($data['year']) ? $data['year'] : $this->year;
+        $album_artist   = (isset($data['album_artist'])) ? (int) $data['album_artist'] : $this->album_artist;
+        $year           = (isset($data['year'])) ? $data['year'] : $this->year;
         $disk           = (self::sanitize_disk($data['disk']) > 0) ? self::sanitize_disk($data['disk']) : $this->disk;
-        $mbid           = isset($data['mbid']) ? $data['mbid'] : $this->mbid;
-        $mbid_group     = isset($data['mbid_group']) ? $data['mbid_group'] : $this->mbid_group;
-        $release_type   = isset($data['release_type']) ? $data['release_type'] : $this->release_type;
-        $barcode        = isset($data['barcode']) ? $data['barcode'] : $this->barcode;
-        $catalog_number = isset($data['catalog_number']) ? $data['catalog_number'] : $this->catalog_number;
-        $original_year  = isset($data['original_year']) ? $data['original_year'] : $this->original_year;
+        $mbid           = (isset($data['mbid'])) ? $data['mbid'] : $this->mbid;
+        $mbid_group     = (isset($data['mbid_group'])) ? $data['mbid_group'] : $this->mbid_group;
+        $release_type   = (isset($data['release_type'])) ? $data['release_type'] : $this->release_type;
+        $barcode        = (isset($data['barcode'])) ? $data['barcode'] : $this->barcode;
+        $catalog_number = (isset($data['catalog_number'])) ? $data['catalog_number'] : $this->catalog_number;
+        $original_year  = (isset($data['original_year'])) ? $data['original_year'] : $this->original_year;
 
         // If you have created an album_artist using 'add new...' we need to create a new artist
         if (!empty($data['album_artist_name'])) {
@@ -1136,6 +1136,7 @@ class Album extends database_object implements library_item
                 self::update_field('album_artist', $album_artist, $this->id);
             }
             if (!empty($year) && $year != $this->year) {
+                self::update_field('year', $year, $this->id);
                 foreach ($songs as $song_id) {
                     Song::update_year($year, $song_id);
                     Song::write_id3_for_song($song_id);
