@@ -83,19 +83,19 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
 
                 <div className={style.actions}>
                     <SVG
-                        className='icon-button-small'
+                        className='icon icon-button-small'
                         src={require('~images/icons/svg/play.svg')}
                         title='Play'
                         role='button'
                     />
                     <SVG
-                        className='icon-button-small'
+                        className='icon icon-button-small'
                         src={require('~images/icons/svg/play-next.svg')}
                         title='Play next'
                         role='button'
                     />
                     <SVG
-                        className='icon-button-small'
+                        className='icon icon-button-small'
                         src={require('~images/icons/svg/play-last.svg')}
                         title='Play last'
                         role='button'
@@ -104,7 +104,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
                         onClick={(e) => {
                             showContextMenu(e);
                         }}
-                        className='icon-button-small'
+                        className='icon icon-button-small'
                         src={require('~images/icons/svg/more-options-hori.svg')}
                         title='More options'
                         role='button'

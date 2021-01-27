@@ -118,7 +118,7 @@
 
     &:after
         content ''
-        border 2px solid colorGray700
+        border 2px solid currentColor
         border-radius 999px
         position: absolute;
         top: 50%;
@@ -127,6 +127,14 @@
         z-index -1
         width: 90%
         height 90%
+        opacity 0.4
+
+    @media (any-hover: hover)
+        &:hover
+            color colorAmber500
+
+            :global .icon
+                color currentColor
 
 .secondaryControls
     display flex

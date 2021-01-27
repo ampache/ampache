@@ -110,7 +110,7 @@ const Sidebar: React.FC<SideBarProps> = (props) => {
                                     onClick={() => {
                                         // TODO: open more options menu;
                                     }}
-                                    className='icon-inline'
+                                    className='icon icon-inline'
                                 />
                             </Link>
                         </li>

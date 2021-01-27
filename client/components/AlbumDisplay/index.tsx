@@ -77,28 +77,28 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (
                         className={style.action}
                     >
                         <SVG
-                            className='icon-inline'
+                            className='icon icon-inline'
                             src={require('~images/icons/svg/play.svg')}
                         />
                         Play
                     </span>
                     <span className={style.action}>
                         <SVG
-                            className='icon-inline'
+                            className='icon icon-inline'
                             src={require('~images/icons/svg/play-next.svg')}
                         />
                         Play next
                     </span>
                     <span className={style.action}>
                         <SVG
-                            className='icon-inline'
+                            className='icon icon-inline'
                             src={require('~images/icons/svg/play-last.svg')}
                         />
                         Add to queue
                     </span>
                     <span {...bindTrigger} className={style.action}>
                         <SVG
-                            className='icon-inline'
+                            className='icon icon-inline'
                             src={require('~images/icons/svg/more-options-hori.svg')}
                         />
                         More options

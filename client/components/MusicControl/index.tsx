@@ -96,7 +96,7 @@ const MusicControl: React.FC = () => {
                             musicContext.playPrevious();
                         }}
                         className={`
-                            icon-button 
+                            icon icon-button 
                             ${
                                 musicContext.songQueueIndex <= 0
                                     ? style.disabled
@@ -118,7 +118,7 @@ const MusicControl: React.FC = () => {
                             }
                             onClick={musicContext.playPause}
                             className={`
-                                icon-button 
+                                icon icon-button 
                                 ${
                                     musicContext.currentPlayingSong == undefined
                                         ? style.disabled
@@ -137,7 +137,7 @@ const MusicControl: React.FC = () => {
                                 musicContext.currentPlayingSong == undefined
                             }
                             className={`
-                                icon-button 
+                                icon icon-button 
                                 ${
                                     musicContext.currentPlayingSong == undefined
                                         ? style.disabled
@@ -161,7 +161,7 @@ const MusicControl: React.FC = () => {
                             musicContext.playNext();
                         }}
                         className={`
-                            icon-button 
+                            icon icon-button 
                             ${
                                 musicContext.songQueueIndex ==
                                 musicContext.songQueue.length - 1
@@ -182,7 +182,7 @@ const MusicControl: React.FC = () => {
                         onClick={() => {
                             handleRatingToggle();
                         }}
-                        className='icon-button'
+                        className='icon icon-button'
                     />
                 </div>
 
@@ -195,7 +195,7 @@ const MusicControl: React.FC = () => {
                         onClick={() => {
                             // TODO: shuffle;
                         }}
-                        className='icon-button'
+                        className='icon icon-button'
                     />
                 </div>
 
@@ -207,7 +207,7 @@ const MusicControl: React.FC = () => {
                         onClick={() => {
                             // TODO: repeat;
                         }}
-                        className='icon-button'
+                        className='icon icon-button'
                     />
                 </div>
 
@@ -219,7 +219,7 @@ const MusicControl: React.FC = () => {
                         onClick={() => {
                             // TODO: open more options menu;
                         }}
-                        className='icon-button'
+                        className='icon icon-button'
                     />
                 </div>
             </div>
@@ -233,7 +233,7 @@ const MusicControl: React.FC = () => {
                     onClick={() => {
                         musicContext.setVolume(0); //TODO: Unmute? Store old volume level?
                     }}
-                    className='icon-button'
+                    className='icon icon-button'
                 />
                 <Slider
                     name='volume'

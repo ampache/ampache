@@ -31,7 +31,7 @@ const QueueSong: React.FC<QueueSongProps> = (props) => {
             </div>
             <div className={style.actions}>
                 <SVG
-                    className='icon-button-smallest'
+                    className='icon icon-button-smallest'
                     src={require('~images/icons/svg/cross.svg')}
                     title='Remove'
                     description='Remove song from Queue'
