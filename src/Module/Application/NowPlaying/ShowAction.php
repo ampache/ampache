@@ -78,7 +78,7 @@ final class ShowAction implements ApplicationActionInterface
 
         if ($nowPlayingCssFile) {
             $css = sprintf(
-                '<link rel="stylesheet" href="%s%s" type="text/css" media="screen" />',
+                '<link rel="stylesheet" href="%s/%s" type="text/css" media="screen" />',
                 $this->configContainer->getWebPath(),
                 $nowPlayingCssFile
             );
