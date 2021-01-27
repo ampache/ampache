@@ -153,7 +153,7 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                 role='button'
                 onClick={handleNewPlaylist}
             />
-            <div className={style.playlistListContainer}>
+            <div className={`playlist-grid ${style.playlistListContainer}`}>
                 {playlists.map((playlist: Playlist) => {
                     return (
                         <PlaylistItem

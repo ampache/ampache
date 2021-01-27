@@ -1,8 +1,8 @@
 @import "~/stylus/settings/color.styl"
 
+// TODO redo playlist display, not happy with current
+
 .playlistItem
-    background-color colorGray800
-    border-radius: 5px
     display flex
     flex-direction column
     position relative
@@ -13,14 +13,10 @@
     align-items: center
     flex-direction column
 
-.name a
+.name
+    color cardTitleColor
     font-weight 700
     text-align: center
-    background-color colorGray700
-    padding: 3px 10px
-    border-radius 999px
-    margin-top 2px
-    display inline-block
 
 .meta
     text-align: center

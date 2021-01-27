@@ -46,13 +46,10 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
         }
     };
 
-    //TODO: React version of this for card link: https://codepen.io/vikas-parashar/pen/qBOwMWj
-
     return (
         <>
             <div className={`card ${style.playlistItem}`} {...bindTrigger}>
                 <div className={style.details}>
-                    {props.playlist.id === 0 && <div>SMARTLIST</div>}
                     <div className={style.name}>
                         <Link
                             to={`/playlist/${props.playlist.id}`}
