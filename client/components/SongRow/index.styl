@@ -11,6 +11,7 @@
     grid-column-gap: 10px
     align-items center
     padding 10px 0
+    position: relative
 
     @media all and (min-width: size-medium)
         grid-template-rows: 1fr
@@ -22,10 +23,9 @@
     @media (any-hover: hover)
         &:hover
             box-shadow 0 0 0 2px colorAmber800
-            position: relative
 
     &.playing
-        color colorAmber500
+        color currentlyPlayingColor
 
 .heartIconWrapper
     width 100%

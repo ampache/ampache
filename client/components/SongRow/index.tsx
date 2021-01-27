@@ -59,7 +59,7 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                     }}
                 >
                     <SVG
-                        className='icon-button'
+                        className='icon-button-smallest'
                         src={require('~images/icons/svg/more-options-hori.svg')}
                         title='More options'
                         role='button'
@@ -125,7 +125,7 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
 
                 <span className={style.remove}>
                     <SVG
-                        className='icon-button'
+                        className='icon-button-smallest'
                         src={require('~images/icons/svg/cross.svg')}
                         title='Delete'
                         description='Delete this song'
