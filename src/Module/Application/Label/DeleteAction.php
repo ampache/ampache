@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Label;
 
@@ -59,14 +59,15 @@ final class DeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $label_id = (string) scrub_in($_REQUEST['label_id']);
+        $labelId = (int) ($request->getQueryParams()['label_id'] ?? 0);
+
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('This Label will be deleted'),
             sprintf(
                 '%s/labels.php?action=confirm_delete&label_id=%s',
                 $this->configContainer->getWebPath(),
-                $label_id
+                $labelId
             ),
             1,
             'delete_label'
