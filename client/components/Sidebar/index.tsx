@@ -48,9 +48,6 @@ const Sidebar: React.FC<SideBarProps> = (props) => {
                                     <Link to='/playlists'>Playlists</Link>
                                 </li>
                                 <li>
-                                    <Link to='/smartlists'>Smartlists</Link>
-                                </li>
-                                <li>
                                     <Link to='/favorites'>Favorites</Link>
                                 </li>
                                 <li>

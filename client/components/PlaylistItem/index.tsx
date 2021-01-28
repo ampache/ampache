@@ -46,36 +46,43 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
         }
     };
 
+    console.log(props.playlist.name + ": " + props.playlist.id);
+
     return (
         <>
             <li className={`card-clear ${style.playlistItem}`} {...bindTrigger}>
-                <div className={style.details}>
+                <div className={style.info}>
                     <div className={`card-title ${style.name}`}>
-                        <Link
-                            to={`/playlist/${props.playlist.id}`}
-                            className={style.cardLink}
-                        >
+                        <Link to={`/playlist/${props.playlist.id}`}>
                             {props.playlist.name}
                         </Link>
                     </div>
-                    {props.playlist.id > 0 && (
-                        <div className={style.rating}>
-                            <Rating
-                                value={""}
-                                fav={""}
-                            />
-                        </div>
-                    )}
-                </div>
-                <div className={style.meta}>
-                    <span className={style.itemCount}>
-                        {props.playlist.id === 0 && `Up to `}
-                        {`${props.playlist.items} songs`}
-                    </span>
-                    <span className={style.owner}>
-                        {' '}
-                        by {props.playlist.owner}
-                    </span>
+                    <div className={style.details}>
+                        {props.playlist.id.includes("smart_") // indicate if smartlist, else show rating
+                          ?
+                              <div className={style.smartlistTag}>
+                                  Smartlist
+                              </div>
+                          :
+                              <div className={style.rating}>
+                                  <Rating
+                                    value={""}
+                                    fav={""}
+                                  />
+                              </div>
+                        }
+                    </div>
+                    <div className={style.meta}>
+                        {props.playlist.id.includes("smart_") && `Up to `}
+                        <span className={style.itemCount}>
+                            {props.playlist.items}
+                        </span>
+                        {` songs`}
+                        <span className={style.owner}>
+                            {' '}
+                            by {props.playlist.owner}
+                        </span>
+                    </div>
                 </div>
 
                 <div className={style.actions}>

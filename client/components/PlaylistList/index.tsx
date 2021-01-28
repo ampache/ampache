@@ -153,7 +153,7 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                 role='button'
                 onClick={handleNewPlaylist}
             />
-            <ul className={`playlist-grid striped-list ${style.playlistListContainer}`}>
+            <ul className={`striped-list ${style.playlistListContainer}`}>
                 {playlists.map((playlist: Playlist) => {
                     return (
                         <PlaylistItem

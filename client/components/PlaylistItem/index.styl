@@ -1,44 +1,46 @@
 @import "~/stylus/settings/color.styl"
+@import "~/stylus/settings/typography.styl"
 
-// TODO redo playlist display, not happy with current
+.playlistItem *
+    //outline 1px solid rgba(lime, 0.2)
 
 .playlistItem
     display flex
-    flex-direction column
+    flex-direction row
     position relative
+    border-radius 3px
+    padding-left 15px
+    justify-content space-between
 
-.details
-    padding 10px
+.info
     display flex
-    align-items: center
-    flex-direction column
+    flex-direction row
+    width 100%
+    align-items center
 
 .name
-    color cardTitleColor
     font-weight 700
-    text-align: center
-
-.meta
-    text-align: center
-    padding-bottom 10px
+    display block
 
 .itemCount
     font-weight 700
 
-.owner
-    color colorGray400
-
-.rating
-    padding-top 5px
-
 .actions
-    border-top 2px solid colorGray900
     display flex
-    flex-direction row
-    justify-content: center
-    margin-top auto
 
-    img
-        width 42px
-        padding: 9px
-        display: inline-block
+.smartlistTag
+    font-family fontHeading
+    border-radius 2px
+    text-transform uppercase
+    letter-spacing 0.03em
+    font-weight 700
+    background-color rgba(colorGray700, 0.5)
+    color colorAmber500
+    display inline-block
+    padding 3px 7px
+
+.name,
+.details,
+.meta
+    flex: 1
+    margin-right 10px
