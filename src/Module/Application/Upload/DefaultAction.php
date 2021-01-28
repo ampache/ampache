@@ -89,7 +89,7 @@ final class DefaultAction implements ApplicationActionInterface
             return null;
         }
 
-        $uploadAction = $_REQUEST['action'] ?? null;
+        $uploadAction = $_REQUEST['upload_action'] ?? null;
         if ($uploadAction === 'upload') {
             if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
                 throw new AccessDeniedException();
