@@ -511,7 +511,7 @@ span.fatalerror {
 }
 
 .item_art:hover {
-    border-color: #1990db;
+    color: #1990db;
 }
 
 #information_actions ul li {
