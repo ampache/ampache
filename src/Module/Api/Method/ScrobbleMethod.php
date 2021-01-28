@@ -100,20 +100,20 @@ final class ScrobbleMethod
         if ($scrobble_id === '') {
             Api::error(T_('Not Found'), '4704', self::ACTION, 'song', $input['api_format']);
         } else {
-            $item = new Song((int) $scrobble_id);
-            if (!$item->id) {
+            $media = new Song((int) $scrobble_id);
+            if (!$media->id) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api::error(sprintf(T_('Not Found: %s'), $scrobble_id), '4704', self::ACTION, 'song', $input['api_format']);
 
                 return false;
             }
-            debug_event(self::class, 'scrobble: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
+            debug_event(self::class, 'scrobble: ' . $media->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
             // internal scrobbling (user_activity and object_count tables)
-            $item->set_played($user_id, $agent, array(), $date);
-
-            // scrobble plugins
-            User::save_mediaplay($user, $item);
+            if ($media->set_played($user_id, $agent, array(), $date)) {
+                // scrobble plugins
+                User::save_mediaplay($user, $media);
+            }
 
             Api::message('successfully scrobbled: ' . $scrobble_id, $input['api_format']);
         }
