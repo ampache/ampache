@@ -691,7 +691,7 @@ div#autoupdate > span {
     content: "";
     display: inline-block;
     position: absolute;
-    background-color: #ff9d00;
+    background-color: currentColor;
     border-radius: 2px;
     height: 2px;
     bottom: -2px;
