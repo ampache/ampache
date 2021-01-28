@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Channel;
 
@@ -30,7 +30,6 @@ use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -65,20 +64,19 @@ final class DeleteAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
+        $channelId = (int) ($request->getQueryParams()['id'] ?? 0);
+        $channel   = $this->modelFactory->createChannel($channelId);
+
         $this->ui->showHeader();
 
-        $object_id = Core::get_request('id');
-        $channel   = $this->modelFactory->createChannel((int) $object_id);
-        
         if ($channel->delete()) {
-            $next_url = sprintf(
-                '%s/browse.php?action=channel',
-                $this->configContainer->getWebPath()
-            );
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('The Channel has been deleted'),
-                $next_url
+                sprintf(
+                    '%s/browse.php?action=channel',
+                    $this->configContainer->getWebPath()
+                )
             );
         }
 

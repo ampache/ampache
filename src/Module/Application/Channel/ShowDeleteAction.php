@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=01);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Channel;
 
@@ -54,24 +54,21 @@ final class ShowDeleteAction implements ApplicationActionInterface
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CHANNEL) === false) {
             return null;
         }
-        
-        $this->ui->showHeader();
-        
-        $object_id = Core::get_request('id');
 
-        $next_url = sprintf(
-            '%s/channel.php?action=delete&id=%s',
-            $this->configContainer->getWebPath(),
-            scrub_out($object_id)
-        );
+        $channelId = (int) ($request->getQueryParams()['id'] ?? 0);
+
+        $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             T_('This Channel will be deleted'),
-            $next_url,
+            sprintf(
+                '%s/channel.php?action=delete&id=%d',
+                $this->configContainer->getWebPath(),
+                $channelId
+            ),
             1,
             'delete_channel'
         );
-        
         $this->ui->showFooter();
         
         return null;
