@@ -88,8 +88,10 @@ class ShowAllSongsActionTest extends MockeryTestCase
             ->with(
                 'show_artist.inc.php',
                 [
+                    'artist' => $artist,
                     'object_type' => 'song',
                     'object_ids' => $songList,
+                    'gatekeeper' => $gatekeeper,
                 ]
             )
             ->once();

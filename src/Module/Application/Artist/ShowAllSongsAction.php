@@ -54,7 +54,7 @@ final class ShowAllSongsAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $artistId = (int) $request->getQueryParams()['artist'] ?? 0;
+        $artistId = (int) ($request->getQueryParams()['artist'] ?? 0);
 
         $artist = $this->modelFactory->createArtist($artistId);
         $artist->format();
@@ -63,8 +63,10 @@ final class ShowAllSongsAction implements ApplicationActionInterface
         $this->ui->show(
             'show_artist.inc.php',
             [
+                'artist' => $artist,
                 'object_type' => 'song',
                 'object_ids' => $this->songRepository->getByArtist($artist),
+                'gatekeeper' => $gatekeeper
             ]
         );
         
