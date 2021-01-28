@@ -110,7 +110,7 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (
             </div>
             <div className={style.details}>
                 <div className={style.albumInfo}>
-                    <Link to={`/album/${props.album.id}`} className={style.albumName}>{props.album.name}</Link>
+                    <Link to={`/album/${props.album.id}`} className={`card-title ${style.albumName}`}>{props.album.name}</Link>
                     <Link
                       to={`/artist/${props.album.artist.id}`}
                       className={style.albumArtist}

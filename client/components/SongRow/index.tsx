@@ -56,7 +56,7 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                     <div className={style.trackNumber}>
                         {props.song.track}
                     </div>
-                    <div className={style.title}>{props.song.title}</div>
+                    <div className={`card-title ${style.title}`}>{props.song.title}</div>
                     {props.showArtist && (
                         <div
                             className={style.artistContainer}

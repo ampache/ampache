@@ -50,7 +50,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
         <>
             <li className={`card-clear ${style.playlistItem}`} {...bindTrigger}>
                 <div className={style.details}>
-                    <div className={style.name}>
+                    <div className={`card-title ${style.name}`}>
                         <Link
                             to={`/playlist/${props.playlist.id}`}
                             className={style.cardLink}

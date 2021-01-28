@@ -24,7 +24,7 @@ const QueueSong: React.FC<QueueSongProps> = (props) => {
                 <img src={props.song.art} alt='Album cover' />
             </div>
             <div className={style.details}>
-                <div className={style.songName}>{props.song.title}</div>
+                <div className={`card-title ${style.songName}`}>{props.song.title}</div>
                 <div className={style.albumArtist}>
                     {props.song.artist.name}
                 </div>

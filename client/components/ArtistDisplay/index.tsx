@@ -33,7 +33,7 @@ const ArtistDisplay: React.FC<ArtistDisplayProps> = (
                             fav={props.artist.flag}
                         />
                     </div>
-                    <span className={style.artistName}>
+                    <span className={`card-title ${style.artistName}`}>
                         {props.artist.name}
                     </span>
                 </div>

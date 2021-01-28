@@ -22,7 +22,7 @@ const SongBlock = (props: SongBlockProps) => {
         >
             <img src={props.song.art} alt='Album Cover' />
             <div className={style.details}>
-                <div className={style.title}>{props.song.title}</div>
+                <div className={`card-title ${style.title}`}>{props.song.title}</div>
                 <div className={style.bottom}>
                     <Link
                         to={`/album/${props.song.album.id}`}
