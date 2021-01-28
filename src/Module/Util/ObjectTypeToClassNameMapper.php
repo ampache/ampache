@@ -27,6 +27,7 @@ namespace Ampache\Module\Util;
 use Ampache\Model\Album;
 use Ampache\Model\Artist;
 use Ampache\Model\Clip;
+use Ampache\Model\Label;
 use Ampache\Model\Live_Stream;
 use Ampache\Model\Movie;
 use Ampache\Model\Personal_Video;
@@ -63,6 +64,7 @@ final class ObjectTypeToClassNameMapper
         'podcast_episode' => Podcast_Episode::class,
         'tvshow_episore' => TVShow_Episode::class,
         'clip' => Clip::class,
+        'label' => Label::class,
     ];
 
     public const VIDEO_TYPES = [
