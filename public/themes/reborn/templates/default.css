@@ -683,6 +683,22 @@ div#autoupdate > span {
     height: 25px;
 }
 
+#sidebar-tabs .active > a {
+    position: relative;
+}
+
+#sidebar-tabs .active > a:after {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    background-color: #ff9d00;
+    border-radius: 2px;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+}
+
 /* Tabs content */
 #sidebar-page {
     width: 148px;
