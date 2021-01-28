@@ -82,22 +82,22 @@ final class RecordPlayMethod
             ? $input['client']
             : 'api';
 
-        $item = new Song($object_id);
-        if (!$item->id) {
+        $media = new Song($object_id);
+        if (!$media->id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
 
             return false;
         }
-        debug_event(self::class, 'record_play: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
+        debug_event(self::class, 'record_play: ' . $media->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
         // internal scrobbling (user_activity and object_count tables)
-        $item->set_played($user_id, $agent, array(), $date);
+        if ($media->set_played($user_id, $agent, array(), $date)) {
+            // scrobble plugins
+            User::save_mediaplay($user, $media);
+        }
 
-        // scrobble plugins
-        User::save_mediaplay($user, $item);
-
-        Api::message('successfully recorded play: ' . $item->id, $input['api_format']);
+        Api::message('successfully recorded play: ' . $media->id, $input['api_format']);
         Session::extend($input['auth']);
 
         return true;
