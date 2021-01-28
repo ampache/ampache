@@ -28,15 +28,13 @@ use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Song;
+use Ampache\Model\Video;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use PDOStatement;
-use Ampache\Model\User;
-use Ampache\Model\Video;
 
 /**
  * Stats Class
@@ -711,7 +709,7 @@ class Stats
         }
         if ($allow_group_disks && $type == 'album') {
             $sql .= $multi_where . " `album`.`id` IS NOT NULL GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ORDER BY `real_atime` DESC ";
-        } elseif ($type === 'song' || $base_type === 'video') {
+        } elseif ($type === 'song' || $type === 'video') {
             $sql .= "GROUP BY `$sql_type`, `real_atime` ORDER BY `real_atime` DESC ";
         } else {
             $sql .= "GROUP BY `$sql_type` ORDER BY `real_atime` DESC ";
