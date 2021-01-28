@@ -45,8 +45,8 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
             <li
                 className={
                     props.isCurrentlyPlaying
-                        ? `nowPlaying ${style.songRow} card-clear striped-list ${props.className}`
-                        : `${style.songRow} card-clear striped-list ${props.className} `
+                        ? `nowPlaying ${style.songRow} card-clear ${props.className}`
+                        : `${style.songRow} card-clear ${props.className} `
                 }
                 {...bindTrigger}
                 onClick={props.startPlaying}

@@ -48,7 +48,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
 
     return (
         <>
-            <div className={`card ${style.playlistItem}`} {...bindTrigger}>
+            <li className={`card-clear ${style.playlistItem}`} {...bindTrigger}>
                 <div className={style.details}>
                     <div className={style.name}>
                         <Link
@@ -107,7 +107,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
                         role='button'
                     />
                 </div>
-            </div>
+            </li>
 
             <div {...bindMenu} className='contextMenu'>
                 <div

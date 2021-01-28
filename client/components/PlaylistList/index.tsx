@@ -153,7 +153,7 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                 role='button'
                 onClick={handleNewPlaylist}
             />
-            <div className={`playlist-grid ${style.playlistListContainer}`}>
+            <ul className={`playlist-grid striped-list ${style.playlistListContainer}`}>
                 {playlists.map((playlist: Playlist) => {
                     return (
                         <PlaylistItem
@@ -164,7 +164,7 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                         />
                     );
                 })}
-            </div>
+            </ul>
         </div>
     );
 };

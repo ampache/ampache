@@ -147,7 +147,7 @@ const SongList: React.FC<SongListProps> = (props) => {
     }
     return (
         <div>
-            <ul>
+            <ul className={'striped-list'}>
                 {songs.map((song: Song) => {
                     return (
                         <SongRow
