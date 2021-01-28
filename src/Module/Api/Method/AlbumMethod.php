@@ -21,24 +21,37 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\Album;
-use Ampache\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Model\ModelFactoryInterface;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
  * Class AlbumMethod
  * @package Lib\ApiMethods
  */
-final class AlbumMethod
+final class AlbumMethod implements MethodInterface
 {
-    private const ACTION = 'album';
+    public const ACTION = 'album';
+
+    private ModelFactoryInterface $modelFactory;
+
+    private StreamFactoryInterface $streamFactory;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory,
+        StreamFactoryInterface $streamFactory
+    ) {
+        $this->modelFactory  = $modelFactory;
+        $this->streamFactory = $streamFactory;
+    }
 
     /**
      * album
@@ -46,36 +59,54 @@ final class AlbumMethod
      *
      * This returns a single album based on the UID provided
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter  = (string) UID of Album
      * include = (array|string) 'songs' //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws ResultEmptyException
+     * @throws RequestParamMissingException
      */
-    public static function album(array $input)
-    {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-        $object_id = (int) $input['filter'];
-        $album     = new Album($object_id);
-        if (!$album->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $objectId = $input['filter'] ?? null;
 
-            return false;
+        if ($objectId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
         }
 
-        $user    = User::get_from_username(Session::username($input['auth']));
-        $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
-        switch ($input['api_format']) {
-            case 'json':
-                echo JSON_Data::albums(array($object_id), $include, $user->id, true, false);
-                break;
-            default:
-                echo Xml_Data::albums(array($object_id), $include, $user->id);
-        }
-        Session::extend($input['auth']);
+        $album = $this->modelFactory->createAlbum((int) $objectId);
 
-        return true;
+        if ($album->isNew()) {
+            throw new ResultEmptyException((string) $objectId);
+        }
+
+        $include = [];
+
+        if (array_key_exists('include', $input)) {
+            $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
+        }
+
+        $result = $output->albums(
+            [$album->getId()],
+            $include,
+            $gatekeeper->getUser()->getId()
+        );
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $result
+            )
+        );
     }
 }

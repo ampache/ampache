@@ -26,9 +26,9 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\MockeryTestCase;
 use Ampache\Model\Album;
-use Ampache\Model\Browse;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Mockery\MockInterface;
@@ -36,102 +36,90 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 
-class AlbumsMethodTest extends MockeryTestCase
+class AlbumMethodTest extends MockeryTestCase
 {
-    /** @var MockInterface|StreamFactoryInterface|null */
-    private MockInterface $streamFactory;
-
-    /** @var MockInterface|ModelFactoryInterface|null */
+    /** @var ModelFactoryInterface|MockInterface|null */
     private MockInterface $modelFactory;
 
-    /** @var AlbumsMethod|null */
-    private AlbumsMethod $subject;
+    /** @var StreamFactoryInterface|MockInterface|null */
+    private MockInterface $streamFactory;
+
+    private ?AlbumMethod $subject;
 
     public function setUp(): void
     {
-        $this->streamFactory = $this->mock(StreamFactoryInterface::class);
         $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
+        $this->streamFactory = $this->mock(StreamFactoryInterface::class);
 
-        $this->subject = new AlbumsMethod(
-            $this->streamFactory,
-            $this->modelFactory
+        $this->subject = new AlbumMethod(
+            $this->modelFactory,
+            $this->streamFactory
         );
     }
 
-    public function testHandleThrowExceptionIfListIsEmpty(): void
+    public function testHandleThrowsExceptionIfFilterIsMissing(): void
     {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+
+        $this->expectException(RequestParamMissingException::class);
+        $this->expectExceptionMessage(sprintf(T_('Bad Request: %s'), 'filter'));
+
+        $this->subject->handle($gatekeeper, $response, $output, []);
+    }
+
+    public function testHandleThrowsExceptionIfAlbumDoesNotExist(): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $album      = $this->mock(Album::class);
+
+        $albumId = 666;
+
+        $this->modelFactory->shouldReceive('createAlbum')
+            ->with($albumId)
+            ->once()
+            ->andReturn($album);
+
+        $album->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnTrue();
+
         $this->expectException(ResultEmptyException::class);
-        $this->expectExceptionMessage('No Results');
+        $this->expectExceptionMessage((string) $albumId);
 
-        $gatekeeper = $this->mock(GatekeeperInterface::class);
-        $response   = $this->mock(ResponseInterface::class);
-        $output     = $this->mock(ApiOutputInterface::class);
-        $browse     = $this->mock(Browse::class);
-
-        $this->modelFactory->shouldReceive('createBrowse')
-            ->with(null, false)
-            ->once()
-            ->andReturn($browse);
-
-        $browse->shouldReceive('reset_filters')
-            ->withNoArgs()
-            ->once();
-        $browse->shouldReceive('set_type')
-            ->with('album')
-            ->once();
-        $browse->shouldReceive('set_sort')
-            ->with('name', 'ASC')
-            ->once();
-        $browse->shouldReceive('get_objects')
-            ->withNoArgs()
-            ->once()
-            ->andReturn([]);
-
-        $this->subject->handle(
-            $gatekeeper,
-            $response,
-            $output,
-            [
-                'exact' => true
-            ]
-        );
+        $this->subject->handle($gatekeeper, $response, $output, ['filter' => (string) $albumId]);
     }
 
-    public function testHandleReturnsResponse(): void
+    public function testHandleReturnsOutput(): void
     {
-        ob_start();
-
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
-        $browse     = $this->mock(Browse::class);
         $album      = $this->mock(Album::class);
         $stream     = $this->mock(StreamInterface::class);
 
-        $userId  = 666;
+        $albumId = 666;
+        $userId  = 42;
+        $include = [3];
         $result  = 'some-result';
-        $include = [123, 456];
-        $limit   = 42;
-        $offset  = 33;
 
-        $this->modelFactory->shouldReceive('createBrowse')
-            ->with(null, false)
+        $this->modelFactory->shouldReceive('createAlbum')
+            ->with($albumId)
             ->once()
-            ->andReturn($browse);
+            ->andReturn($album);
 
-        $browse->shouldReceive('reset_filters')
-            ->withNoArgs()
-            ->once();
-        $browse->shouldReceive('set_type')
-            ->with('album')
-            ->once();
-        $browse->shouldReceive('set_sort')
-            ->with('name', 'ASC')
-            ->once();
-        $browse->shouldReceive('get_objects')
+        $album->shouldReceive('isNew')
             ->withNoArgs()
             ->once()
-            ->andReturn([$album]);
+            ->andReturnFalse();
+        $album->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($albumId);
 
         $gatekeeper->shouldReceive('getUser->getId')
             ->withNoArgs()
@@ -140,12 +128,9 @@ class AlbumsMethodTest extends MockeryTestCase
 
         $output->shouldReceive('albums')
             ->with(
-                [$album],
+                [$albumId],
                 $include,
-                $userId,
-                true,
-                $limit,
-                $offset
+                $userId
             )
             ->once()
             ->andReturn($result);
@@ -162,17 +147,7 @@ class AlbumsMethodTest extends MockeryTestCase
 
         $this->assertSame(
             $response,
-            $this->subject->handle(
-                $gatekeeper,
-                $response,
-                $output,
-                [
-                    'exact' => true,
-                    'include' => $include,
-                    'limit' => $limit,
-                    'offset' => $offset,
-                ]
-            )
+            $this->subject->handle($gatekeeper, $response, $output, ['filter' => (string) $albumId, 'include' => $include])
         );
     }
 }

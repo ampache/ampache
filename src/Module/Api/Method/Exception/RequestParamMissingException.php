@@ -22,24 +22,13 @@
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Api;
+namespace Ampache\Module\Api\Method\Exception;
 
-use Ampache\Module\Api\Output\ApiOutputFactory;
-use Ampache\Module\Api\Output\ApiOutputFactoryInterface;
-use function DI\autowire;
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 
-return [
-    XmlApiApplication::class => autowire(),
-    JsonApiApplication::class => autowire(),
-    SubsonicApiApplication::class => autowire(),
-    DaapApiApplication::class => autowire(),
-    SseApiApplication::class => autowire(),
-    ApiOutputFactoryInterface::class => autowire(ApiOutputFactory::class),
-    ApiHandlerInterface::class => autowire(ApiHandler::class),
-    Method\AlbumsMethod::class => autowire(),
-    Method\AlbumMethod::class => autowire(),
-    Edit\EditObjectAction::class => autowire(),
-    Edit\RefreshUpdatedAction::class => autowire(),
-    Edit\ShowEditObjectAction::class => autowire(),
-    Edit\ShowEditPlaylistAction::class => autowire(),
-];
+final class RequestParamMissingException extends ApiMethodException
+{
+    protected $code = ErrorCodeEnum::BAD_REQUEST;
+
+    protected string $type = 'system';
+}
