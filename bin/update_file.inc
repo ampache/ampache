@@ -98,7 +98,7 @@ while ($row = Dba::fetch_assoc($db_results)) {
         case 'personal_video':
             $type    = 'video';
             $file_id = Catalog::get_id_from_file($catfile, $type);
-            $media   = new Video(Catalog::get_id_from_file($catfile, $type));
+            $media   = new Video($file_id);
             break;
         case 'music':
         default:
@@ -132,9 +132,28 @@ while ($row = Dba::fetch_assoc($db_results)) {
             // get the new id after adding it
             $file_id = Catalog::get_id_from_file($catfile, $type);
         }
-        if ($artadd == 1 && $file_id && $catverify != 1) {
-            // Look for media art after adding new files
-            Catalog::gather_art_item($type, $file_id, true);
+        // for songs and videos run an art gather
+        if ($artadd == 1 && $file_id) {
+            $gather_song_art = (AmpConfig::get('gather_song_art', false));
+            if ($type == 'song') {
+                $media    = new Song($file_id);
+                $art      = ($gather_song_art) ? new Art($file_id, $type) : new Art($media->album, $type);
+                $art_id   = ($gather_song_art) ? $file_id : $media->album;
+                $art_type = ($gather_song_art) ? 'song' : 'album';
+                $artist   = new Art($media->artist, $type);
+                if (!$art->has_db_info()) {
+                    Catalog::gather_art_item($art_type, $art_id, true);
+                }
+                if (!$artist->has_db_info()) {
+                    Catalog::gather_art_item('artist', $media->artist, true);
+                }
+            }
+            if ($type == 'video') {
+                $art = new Art($file_id, $type);
+                if (!$art->has_db_info()) {
+                    Catalog::gather_art_item($type, $file_id, true);
+                }
+            }
         }
     }
 }
