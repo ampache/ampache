@@ -1220,7 +1220,7 @@ class Subsonic_Api
                 $show_song_art = AmpConfig::get('show_song_art', false);
                 $art_object    = ($show_song_art) ? $song->id : $song->album;
                 $art_type      = ($show_song_art) ? 'song' : 'album';
-                $art           = new Art(Subsonic_XML_Data::getAmpacheId($art_object), $art_type);
+                $art           = new Art($art_object, $art_type);
             }
         }
         if (($type == 'podcast')) {
