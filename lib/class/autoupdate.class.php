@@ -126,7 +126,7 @@ class AutoUpdate
             AmpConfig::set('autoupdate_lastcheck', '1', true);
         }
 
-        return ((time() - (3600 * 3)) > $lastcheck);
+        return ((time() - (3600 * 8)) > $lastcheck);
     }
 
     /**
@@ -136,7 +136,7 @@ class AutoUpdate
      */
     public static function get_latest_version($force = false)
     {
-        $lastversion = '';
+        $lastversion = (string) AmpConfig::get('autoupdate_lastversion');
         // Forced or last check expired, check latest version from Github
         if ($force || (self::lastcheck_expired() && AmpConfig::get('autoupdate'))) {
             // Always update last check time to avoid infinite check on permanent errors (proxy, firewall, ...)
@@ -159,29 +159,25 @@ class AutoUpdate
                     $available = self::is_update_available(true);
                     Preference::update('autoupdate_lastversion_new', Core::get_global('user')->id, $available);
                     AmpConfig::set('autoupdate_lastversion_new', $available, true);
+
+                    return $lastversion;
                 }
             }
             // Otherwise it is stable version, get latest tag
-            else {
-                $tags = self::github_request('/tags');
-                foreach ($tags as $releases) {
-                    $str = strstr($releases->name, "-"); // ignore ALL tagged releases (e.g. 4.2.5-preview 4.2.5-beta)
-                    if (empty($str)) {
-                        $lastversion = $releases->name;
-                        Preference::update('autoupdate_lastversion', Core::get_global('user')->id, $lastversion);
-                        AmpConfig::set('autoupdate_lastversion', $lastversion, true);
-                        $available = self::is_update_available(true);
-                        Preference::update('autoupdate_lastversion_new', Core::get_global('user')->id, $available);
-                        AmpConfig::set('autoupdate_lastversion_new', $available, true);
+            $tags = self::github_request('/tags');
+            foreach ($tags as $release) {
+                $str = strstr($release->name, "-"); // ignore ALL tagged releases (e.g. 4.2.5-preview 4.2.5-beta)
+                if (empty($str)) {
+                    $lastversion = $release->name;
+                    Preference::update('autoupdate_lastversion', Core::get_global('user')->id, $lastversion);
+                    AmpConfig::set('autoupdate_lastversion', $lastversion, true);
+                    $available = self::is_update_available(true);
+                    Preference::update('autoupdate_lastversion_new', Core::get_global('user')->id, $available);
+                    AmpConfig::set('autoupdate_lastversion_new', $available, true);
 
-                        return $lastversion;
-                    }
+                    return $lastversion;
                 }
             }
-        }
-        // Otherwise retrieve the cached version number
-        else {
-            $lastversion = AmpConfig::get('autoupdate_lastversion');
         }
 
         return $lastversion;
@@ -287,8 +283,9 @@ class AutoUpdate
 
     /**
      * Update local git repository.
+     * @param boolean $api
      */
-    public static function update_files()
+    public static function update_files($api = false)
     {
         $cmd        = 'git pull https://github.com/ampache/ampache.git';
         $git_branch = self::is_force_git_branch();
@@ -297,26 +294,35 @@ class AutoUpdate
         } elseif (self::is_develop()) {
             $cmd = 'git pull https://github.com/ampache/ampache.git develop';
         }
-        echo T_('Updating Ampache sources with `' . $cmd . '` ...') . '<br />';
+        if (!$api) {
+            echo T_('Updating Ampache sources with `' . $cmd . '` ...') . '<br />';
+        }
         ob_flush();
         chdir(AmpConfig::get('prefix'));
         exec($cmd);
-        echo T_('Done') . '<br />';
+        if (!$api) {
+            echo T_('Done') . '<br />';
+        }
         ob_flush();
         self::get_latest_version(true);
     }
 
     /**
      * Update project dependencies.
+     * @param boolean $api
      */
-    public static function update_dependencies()
+    public static function update_dependencies($api = false)
     {
         $cmd = 'composer install --prefer-source --no-interaction';
-        echo T_('Updating dependencies with `' . $cmd . '` ...') . '<br />';
+        if (!$api) {
+            echo T_('Updating dependencies with `' . $cmd . '` ...') . '<br />';
+        }
         ob_flush();
         chdir(AmpConfig::get('prefix'));
         exec($cmd);
-        echo T_('Done') . '<br />';
+        if (!$api) {
+            echo T_('Done') . '<br />';
+        }
         ob_flush();
     }
 } // end autoupdate.class
