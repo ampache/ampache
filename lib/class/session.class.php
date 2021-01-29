@@ -147,7 +147,7 @@ class Session
      * _read
      *
      * This returns the specified column from the session row.
-     * @param $key
+     * @param string $key
      * @param string $column
      * @return string
      */
@@ -182,7 +182,7 @@ class Session
      * agent
      *
      * This returns the agent associated with a session ID, if any
-     * @param $key
+     * @param string $key
      * @return string
      */
     public static function agent($key)
@@ -203,11 +203,11 @@ class Session
         // Regenerate the session ID to prevent fixation
         switch ($data['type']) {
             case 'api':
-                $key = (isset($data['apikey'])) ? md5(((string) $data['apikey'] . (string) time())) : md5(uniqid((string) rand(), true));
+                $key = (isset($data['apikey'])) ? md5(((string) $data['apikey'] . md5(uniqid((string) rand(), true)))) : md5(uniqid((string) rand(), true));
                 break;
             case 'stream':
                 $key = (isset($data['sid'])) ? $data['sid'] : md5(uniqid((string) rand(), true));
-            break;
+                break;
             case 'mysql':
             default:
                 session_regenerate_id();
@@ -215,7 +215,7 @@ class Session
                 // Before refresh we don't have the cookie so we
                 // have to use session ID
                 $key = session_id();
-            break;
+                break;
         } // end switch on data type
 
         $username = '';
@@ -311,7 +311,7 @@ class Session
      * exists
      * based on the type.
      * @param string $type
-     * @param $key
+     * @param string $key
      * @return boolean
      */
     public static function exists($type, $key)
@@ -331,7 +331,7 @@ class Session
                 if (Dba::num_rows($db_results)) {
                     return true;
                 }
-            break;
+                break;
             case 'interface':
                 $sql = 'SELECT * FROM `session` WHERE `id` = ? AND `expire` > ?';
                 if (AmpConfig::get('use_auth')) {
@@ -345,7 +345,7 @@ class Session
                 if (Dba::num_rows($db_results)) {
                     return true;
                 }
-            break;
+                break;
             default:
                 return false;
         }
@@ -358,7 +358,7 @@ class Session
      * extend
      *
      * This takes a SID and extends its expiration.
-     * @param $sid
+     * @param string $sid
      * @param string $type
      * @return PDOStatement|boolean
      */
@@ -454,7 +454,7 @@ class Session
             array('Session', 'read'),
             array('Session', 'write'),
             array('Session', 'destroy'),
-            array('Session', 'gc'));
+            array('Session', 'garbage_collection'));
 
         // Make sure session_write_close is called during the early part of
         // shutdown, to avoid issues with object destruction.
@@ -480,7 +480,7 @@ class Session
         $cookie_secure = make_bool(AmpConfig::get('cookie_secure'));
 
         if (isset($_SESSION)) {
-            setcookie(session_name(), session_id(), $cookie_life);
+            setcookie(session_name(), session_id(), $cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
         } else {
             session_set_cookie_params($cookie_life, $cookie_path, $cookie_domain, $cookie_secure);
         }
@@ -523,6 +523,9 @@ class Session
     {
         $remember_length = AmpConfig::get('remember_length');
         $session_name    = AmpConfig::get('session_name');
+        $cookie_path     = AmpConfig::get('cookie_path');
+        $cookie_domain   = '';
+        $cookie_secure   = make_bool(AmpConfig::get('cookie_secure'));
 
         $token = self::generateRandomToken(); // generate a token, should be 128 - 256 bit
         self::storeTokenForUser($username, $token, $remember_length);
@@ -530,7 +533,7 @@ class Session
         $mac    = hash_hmac('sha256', $cookie, AmpConfig::get('secret_key'));
         $cookie .= ':' . $mac;
 
-        setcookie($session_name . '_remember', $cookie, time() + $remember_length);
+        setcookie($session_name . '_remember', $cookie, time() + $remember_length, $cookie_path, $cookie_domain, $cookie_secure);
     }
 
     /**
