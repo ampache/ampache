@@ -44,10 +44,9 @@
                 $playlists = Playlist::get_users(Core::get_global('user')->id);
     Playlist::build_cache($playlists);
     foreach ($playlists as $playlist_id) {
-        $playlist = new Playlist($playlist_id);
-        $playlist->format(false); ?>
+        $playlist = new Playlist($playlist_id); ?>
                 <li>
-                    <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, $playlist->f_name, 'rb_append_playlist_' . $playlist->id); ?>
+                    <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, $playlist->name, 'rb_append_playlist_' . $playlist->id); ?>
                 </li>
             <?php
     } ?>
