@@ -25,8 +25,7 @@ define('CLI', 1);
 
 $path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
-$a_root = realpath(__DIR__ . "/../");
-require_once $a_root . '/lib/init.php';
+require_once $prefix . '/lib/init.php';
 
 ob_end_flush();
 
@@ -78,8 +77,6 @@ ob_start("ob_html_strip",'1024',true);
 
 while ($row = Dba::fetch_assoc($db_results)) {
     $catalog = Catalog::create_from_id($row['id']);
-    /* HINT: File path */
-    printf(T_('Reading File: "%s"'), $catfile);
     ob_flush();
     echo "\n";
     if (!$catalog->id) {
@@ -100,7 +97,7 @@ while ($row = Dba::fetch_assoc($db_results)) {
         case 'personal_video':
             $type    = 'video';
             $file_id = Catalog::get_id_from_file($catfile, $type);
-            $media   = new Video(Catalog::get_id_from_file($catfile, $type));
+            $media   = new Video($file_id);
             break;
         case 'music':
         default:
@@ -109,8 +106,18 @@ while ($row = Dba::fetch_assoc($db_results)) {
             $media   = new Song($file_id);
             break;
     }
+    // deleted file
+    if (!is_file($catfile) && $catclean == 1) {
+        $catalog->clean_file($catfile, $type);
+        /* HINT: File path */
+        printf(T_('Removing File: "%s"'), $catfile);
+
+        return false;
+    }
     // existing files
     if (is_file($catfile) && Core::is_readable($catfile)) {
+        /* HINT: File path */
+        printf(T_('Reading File: "%s"'), $catfile);
         if ($media->id && $catverify == 1) {
             // Verify Existing files
             $catalog = $media->catalog;
@@ -124,14 +131,28 @@ while ($row = Dba::fetch_assoc($db_results)) {
             // get the new id after adding it
             $file_id = Catalog::get_id_from_file($catfile, $type);
         }
+        // for songs and videos run an art gather
         if ($artadd == 1 && $file_id) {
-            // Look for media art after adding new files
-            Catalog::gather_art_item($type, $file_id);
+            if ($type == 'song') {
+                $media    = new Song($file_id);
+                $art      = new Art($media->album, $type);
+                $art_id   = $media->album;
+                $art_type = 'album';
+                $artist   = new Art($media->artist, $type);
+                if (!$art->has_db_info()) {
+                    Catalog::gather_art_item($art_type, $art_id, true);
+                }
+                if (!$artist->has_db_info()) {
+                    Catalog::gather_art_item('artist', $media->artist, true);
+                }
+            }
+            if ($type == 'video') {
+                $art = new Art($file_id, $type);
+                if (!$art->has_db_info()) {
+                    Catalog::gather_art_item($type, $file_id, true);
+                }
+            }
         }
-    }
-    // deleted file
-    if (!is_file($catfile) && $catclean == 1) {
-        $catalog->clean_file($catfile, $type);
     }
 }
 
