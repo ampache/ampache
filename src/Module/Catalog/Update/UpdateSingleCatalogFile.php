@@ -25,6 +25,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Catalog\Update;
 
 use Ahc\Cli\IO\Interactor;
+use Ampache\Config\AmpConfig;
+use Ampache\Model\Art;
 use Ampache\Model\Catalog;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Song;
@@ -71,7 +73,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                 case 'podcast':
                     $type    = 'podcast_episode';
                     $file_id = Catalog::get_id_from_file($filePath, $type);
-                    $media   = new Podcast_Episode(Catalog::get_id_from_file($filePath, $type));
+                    $media   = new Podcast_Episode($file_id);
                     break;
                 case 'clip':
                 case 'tvshow':
@@ -79,7 +81,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                 case 'personal_video':
                     $type    = 'video';
                     $file_id = Catalog::get_id_from_file($filePath, $type);
-                    $media   = new Video(Catalog::get_id_from_file($filePath, $type));
+                    $media   = new Video($file_id);
                     break;
                 case 'music':
                 default:
@@ -119,7 +121,26 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                 }
                 if ($searchArtMode == 1 && $file_id && $verificationMode === false) {
                     // Look for media art after adding new files
-                    Catalog::gather_art_item($type, $file_id, true);
+                    $gather_song_art = (AmpConfig::get('gather_song_art', false));
+                    if ($type == 'song') {
+                        $media    = new Song($file_id);
+                        $art      = ($gather_song_art) ? new Art($file_id, $type) : new Art($media->album, $type);
+                        $art_id   = ($gather_song_art) ? $file_id : $media->album;
+                        $art_type = ($gather_song_art) ? 'song' : 'album';
+                        $artist   = new Art($media->artist, $type);
+                        if (!$art->has_db_info()) {
+                            Catalog::gather_art_item($art_type, $art_id, true);
+                        }
+                        if (!$artist->has_db_info()) {
+                            Catalog::gather_art_item('artist', $media->artist, true);
+                        }
+                    }
+                    if ($type == 'video') {
+                        $art = new Art($file_id, $type);
+                        if (!$art->has_db_info()) {
+                            Catalog::gather_art_item($type, $file_id, true);
+                        }
+                    }
                 }
             }
         }
