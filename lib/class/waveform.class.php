@@ -295,7 +295,7 @@ class Waveform
         // create original image width based on amount of detail
         // each waveform to be processed with be $height high, but will be condensed
         // and resized later (if specified)
-        $img = imagecreatetruecolor((int) ($data_size / $detail), $height);
+        $img = imagecreatetruecolor((int) ($data_size / $detail), (int) $height);
         if ($img === false) {
             debug_event('waveform.class', 'Cannot create image.', 1);
 
@@ -317,24 +317,24 @@ class Waveform
                 }
 
                 switch ($byte) {
-                // get value for 8-bit wav
-                case 1:
-                  $data = self::findValues($bytes[0], $bytes[1]);
-                break;
-                // get value for 16-bit wav
-                case 2:
-                  if (ord($bytes[1]) & 128) {
-                      $temp = 0;
-                  } else {
-                      $temp = 128;
-                  }
-                  $temp = chr((ord($bytes[1]) & 127) + $temp);
-                  $data = floor(self::findValues($bytes[0], $temp) / 256);
-                break;
-                default:
-                    $data = 0;
-                break;
-              }
+                    case 1:
+                        // get value for 8-bit wav
+                        $data = self::findValues($bytes[0], $bytes[1]);
+                        break;
+                    case 2:
+                        // get value for 16-bit wav
+                        if (ord($bytes[1]) & 128) {
+                            $temp = 0;
+                        } else {
+                            $temp = 128;
+                        }
+                            $temp = chr((ord($bytes[1]) & 127) + $temp);
+                            $data = floor(self::findValues($bytes[0], $temp) / 256);
+                            break;
+                    default:
+                        $data = 0;
+                        break;
+                }
 
                 // skip bytes for memory optimization
                 fseek($handle, $ratio, SEEK_CUR);
@@ -348,17 +348,17 @@ class Waveform
                 if (!($value / $height == 0.5 && !$draw_flat)) {
                     // draw the line on the image using the $value and centering it vertically on the canvas
                     imageline(
-                  $img,
-                  // x1
-                  (int) ($data_point / $detail),
-                  // y1: height of the image minus  as a percentage of the height for the wave amplitude
-                  $height - $value,
-                  // x2
-                  (int) ($data_point / $detail),
-                  // y2: same as y1, but from the bottom of the image
-                  $height - ($height - $value),
-                  imagecolorallocate($img, (int) $red, (int) $green, (int) $blue)
-                );
+                        $img,
+                        // x1
+                        (int) ($data_point / $detail),
+                        // y1: height of the image minus  as a percentage of the height for the wave amplitude
+                        $height - $value,
+                        // x2
+                        (int) ($data_point / $detail),
+                        // y2: same as y1, but from the bottom of the image
+                        $height - ($height - $value),
+                        imagecolorallocate($img, (int) $red, (int) $green, (int) $blue)
+                    );
                 }
             } else {
                 // skip this one due to lack of detail
@@ -373,7 +373,7 @@ class Waveform
         // want it resized?
         if ($width) {
             // resample the image to the proportions defined in the form
-            $rimg = imagecreatetruecolor($width, $height);
+            $rimg = imagecreatetruecolor((int) $width, (int) $height);
             if ($rimg !== false) {
                 // save alpha from original image
                 imagesavealpha($rimg, true);

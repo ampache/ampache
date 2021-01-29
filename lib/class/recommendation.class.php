@@ -273,8 +273,8 @@ class Recommendation
 
             if ($xml->similarartists) {
                 foreach ($xml->similarartists->children() as $child) {
-                    $name     = (string)$child->name;
-                    $mbid     = (string)$child->mbid;
+                    $name     = (string) $child->name;
+                    $mbid     = (string) $child->mbid;
                     $local_id = null;
 
                     // First we check by MBID

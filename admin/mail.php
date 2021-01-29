@@ -73,10 +73,10 @@ switch ($_REQUEST['action']) {
             show_confirmation($title, $body, $url);
         }
 
-    break;
+        break;
     default:
         require_once AmpConfig::get('prefix') . UI::find_template('show_mail_users.inc.php');
-    break;
+        break;
 } // end switch
 
 // Show the Footer

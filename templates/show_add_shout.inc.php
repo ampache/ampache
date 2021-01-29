@@ -50,8 +50,7 @@ $boxtitle = T_('Post to Shoutbox');
         <input type="hidden" name="object_id" value="<?php echo $object->id; ?>" />
         <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
         <input type="hidden" name="data" value="<?php echo $data; ?>" />
-        <input type="submit" value="<?php echo T_('Create'); ?>" />
-    </td>
+        <input type="submit" value="<?php echo T_('Create'); ?>" /></td>
 </tr>
 </table>
 </form>

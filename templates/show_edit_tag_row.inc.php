@@ -29,9 +29,7 @@
             <tr><td>&nbsp;</td></tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Re-tag') ?></td>
-                <td>
-                    <input type="text" name="edit_tags" id="edit_tags" />
-                </td>
+                <td><input type="text" name="edit_tags" id="edit_tags" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Persistent') ?></td>

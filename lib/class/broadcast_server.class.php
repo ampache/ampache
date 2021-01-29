@@ -92,28 +92,28 @@ class Broadcast_Server implements MessageComponentInterface
                     switch ($cmdinfo[0]) {
                         case self::BROADCAST_SONG:
                             $this->notifySong($from, (int) $cmdinfo[1]);
-                        break;
+                            break;
                         case self::BROADCAST_SONG_POSITION:
                             $this->notifySongPosition($from, (int) $cmdinfo[1]);
-                        break;
+                            break;
                         case self::BROADCAST_PLAYER_PLAY:
                             $this->notifyPlayerPlay($from, make_bool($cmdinfo[1]));
-                        break;
+                            break;
                         case self::BROADCAST_ENDED:
                             $this->notifyEnded($from);
-                        break;
+                            break;
                         case self::BROADCAST_REGISTER_BROADCAST:
                             $this->registerBroadcast($from, (int) $cmdinfo[1]);
-                        break;
+                            break;
                         case self::BROADCAST_REGISTER_LISTENER:
                             $this->registerListener($from, (int) $cmdinfo[1]);
-                        break;
+                            break;
                         case self::BROADCAST_AUTH_SID:
                             $this->authSid($from, $cmdinfo[1]);
-                        break;
+                            break;
                         default:
                             self::echo_message($this->verbose, "[" . time() . "][warning]Unknown message code." . "\r\n");
-                        break;
+                            break;
                     }
                 } else {
                     self::echo_message($this->verbose, "[" . time() . "][error]Wrong message format (" . $command . ")." . "\r\n");
@@ -158,7 +158,7 @@ class Broadcast_Server implements MessageComponentInterface
 
             self::echo_message($this->verbose, "[" . time() . "][info]Broadcast " . $broadcast->id . " now playing song " . $song_id . "." . "\r\n");
         } else {
-            debug_event('broadcast.class', 'Action unauthorized.', 3);
+            debug_event('broadcast_server.class', 'Action unauthorized.', 3);
         }
     }
 
@@ -180,7 +180,7 @@ class Broadcast_Server implements MessageComponentInterface
 
             self::echo_message($this->verbose, "[" . time() . "][info]Broadcast " . $broadcast->id . " has song position to " . $song_position . "." . "\r\n");
         } else {
-            debug_event('broadcast.class', 'Action unauthorized.', 3);
+            debug_event('broadcast_server.class', 'Action unauthorized.', 3);
         }
     }
 
@@ -198,7 +198,7 @@ class Broadcast_Server implements MessageComponentInterface
 
             self::echo_message($this->verbose, "[" . time() . "][info]Broadcast " . $broadcast->id . " player state: " . $play . "." . "\r\n");
         } else {
-            debug_event('broadcast.class', 'Action unauthorized.', 3);
+            debug_event('broadcast_server.class', 'Action unauthorized.', 3);
         }
     }
 
@@ -215,7 +215,7 @@ class Broadcast_Server implements MessageComponentInterface
 
             self::echo_message($this->verbose, "[" . time() . "][info]Broadcast " . $broadcast->id . " ended." . "\r\n");
         } else {
-            debug_event('broadcast.class', 'Action unauthorized.', 3);
+            debug_event('broadcast_server.class', 'Action unauthorized.', 3);
         }
     }
 
@@ -289,7 +289,7 @@ class Broadcast_Server implements MessageComponentInterface
 
             self::echo_message($this->verbose, "[info]New listener on broadcast " . $broadcast->id . "." . "\r\n");
         } else {
-            debug_event('broadcast.class', 'Listener unauthorized.', 3);
+            debug_event('broadcast_server.class', 'Listener unauthorized.', 3);
         }
     }
 

@@ -131,19 +131,19 @@ class SubsonicClient
                 CURLOPT_PORT => (int) ($this->_serverPort)
             );
             $curl = curl_init();
-            curl_setopt_array($curl, $options);
-            $answer = curl_exec($curl);
-            curl_close($curl);
-            if ($rawAnswer) {
-                return $answer;
-            } else {
-                return $this->parseResponse($answer);
+            if ($curl) {
+                curl_setopt_array($curl, $options);
+                $answer = curl_exec($curl);
+                curl_close($curl);
+                if ($rawAnswer) {
+                    return $answer;
+                } else {
+                    return $this->parseResponse($answer);
+                }
             }
         } else {
             return $this->error("Error: Invalid subsonic command: " . $action);
         }
-
-        return false;
     }
 
     /**

@@ -165,7 +165,7 @@ switch ($_REQUEST['action']) {
  * page if they aren't in the ACL
  */
 if (AmpConfig::get('access_control')) {
-    if (!Access::check_network('interface', '', '5')) {
+    if (!Access::check_network('interface', '', 5)) {
         debug_event('share', 'Access Denied:' . Core::get_server('REMOTE_ADDR') . ' is not in the Interface Access list', 3);
         UI::access_denied();
 

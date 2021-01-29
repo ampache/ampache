@@ -51,7 +51,7 @@ switch ($_REQUEST['action']) {
         require_once AmpConfig::get('prefix') . UI::find_template('sidebar.inc.php');
         $results['sidebar-content'] = ob_get_contents();
         ob_end_clean();
-    break;
+        break;
     case 'command':
         // Make sure they are allowed to do this
         if (!Access::check('localplay', 50)) {
@@ -79,7 +79,7 @@ switch ($_REQUEST['action']) {
             case 'pause':
                 $command = scrub_in($_REQUEST['command']);
                 $localplay->$command();
-            break;
+                break;
             case 'volume_up':
             case 'volume_down':
             case 'volume_mute':
@@ -92,7 +92,7 @@ switch ($_REQUEST['action']) {
                 require_once AmpConfig::get('prefix') . UI::find_template('show_localplay_status.inc.php');
                 $results['localplay_status'] = ob_get_contents();
                 ob_end_clean();
-            break;
+                break;
             case 'delete_all':
                 $localplay->delete_all();
                 ob_start();
@@ -104,7 +104,7 @@ switch ($_REQUEST['action']) {
                 $browse->store();
                 $results[$browse->get_content_div()] = ob_get_contents();
                 ob_end_clean();
-            break;
+                break;
             case 'skip':
                 $localplay->skip((int) filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT));
                 $objects = $localplay->get();
@@ -117,13 +117,12 @@ switch ($_REQUEST['action']) {
                 $browse->store();
                 $results[$browse->get_content_div()] = ob_get_contents();
                 ob_end_clean();
-            break;
+                break;
             default:
-                // Nothing
-            break;
+                break;
         } // end whitelist
 
-    break;
+        break;
     case 'delete_track':
         // Load Connect... yada yada
         if (!Access::check('localplay', 50)) {
@@ -154,7 +153,7 @@ switch ($_REQUEST['action']) {
         $results[$browse->get_content_div()] = ob_get_contents();
         ob_end_clean();
 
-    break;
+        break;
     case 'delete_instance':
         // Make sure that you have access to do this...
         if (!Access::check('localplay', 75)) {
@@ -169,7 +168,7 @@ switch ($_REQUEST['action']) {
 
         $key           = 'localplay_instance_' . $_REQUEST['instance'];
         $results[$key] = '';
-    break;
+        break;
     case 'repeat':
         // Make sure that they have access to do this again no clue
         if (!Access::check('localplay', 50)) {
@@ -189,7 +188,7 @@ switch ($_REQUEST['action']) {
         $results['localplay_status'] = ob_get_contents();
         ob_end_clean();
 
-    break;
+        break;
     case 'random':
         // Make sure that they have access to do this
         if (!Access::check('localplay', 50)) {
@@ -209,10 +208,10 @@ switch ($_REQUEST['action']) {
         $results['localplay_status'] = ob_get_contents();
         ob_end_clean();
 
-    break;
+        break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 } // switch on action;
 
 // We always do this

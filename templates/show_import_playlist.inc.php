@@ -26,7 +26,7 @@
             <td>
                 <?php echo T_('Filename'); ?> (<?php echo AmpConfig::get('catalog_playlist_pattern'); ?>):
             </td>
-            <td><input type="file" name="filename" value="<?php echo scrub_out($_REQUEST['filename']); ?>" /></td>
+            <td><input type="file" name="filename" value="<?php echo scrub_out(Core::get_request('filename')); ?>" /></td>
         </tr>
     </table>
     <div class="formValidation">

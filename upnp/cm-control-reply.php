@@ -28,5 +28,5 @@ switch ($upnpRequest['action']) {
     case 'getprotocolinfo':
         $responseType = 'u:GetProtocolInfoResponse';
         //$items = Upnp_Api::cm_getProtocolInfo();
-    break;
+        break;
 }

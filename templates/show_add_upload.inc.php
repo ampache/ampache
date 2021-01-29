@@ -157,7 +157,7 @@ $(function () {
 </script>
 
 <form id="uploadfile" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/upload.php">
-<input type="hidden" name="actionp" value="upload" />
+<input type="hidden" name="upload_action" value="upload" />
 <input type="hidden" id="folder" name="folder" value="" />
 <?php
 // Display a max file size client side if we know it

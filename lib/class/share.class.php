@@ -387,13 +387,13 @@ class Share extends database_object
                 foreach ($songs as $song) {
                     $medias[] = $song;
                 }
-            break;
+                break;
             default:
                 $medias[] = array(
                     'object_type' => $this->object_type,
                     'object_id' => $this->object_id,
                 );
-            break;
+                break;
         }
 
         $playlist->add($medias, '&share_id=' . $this->id . '&share_secret=' . $this->secret);
@@ -419,10 +419,10 @@ class Share extends database_object
                         break;
                     }
                 }
-            break;
+                break;
             default:
                 $is_shared = (($this->object_type == 'song' || $this->object_type == 'video') && $this->object_id == $media_id);
-            break;
+                break;
         }
 
         return $is_shared;

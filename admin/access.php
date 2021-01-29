@@ -41,7 +41,7 @@ switch ($_REQUEST['action']) {
         Access::delete(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $url = AmpConfig::get('web_path') . '/admin/access.php';
         show_confirmation(T_('No Problem'), T_('Your Access List entry has been removed'), $url);
-    break;
+        break;
     case 'show_delete_record':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -51,7 +51,7 @@ switch ($_REQUEST['action']) {
                 /* HINT: ACL Name */
                 sprintf(T_('This will permanently delete the ACL "%s"'), $access->name),
                 'admin/access.php?action=delete_record&amp;access_id=' . $access->id, 1, 'delete_access');
-    break;
+        break;
     case 'add_host':
         // Make sure we've got a valid form submission
         if (!Core::form_verify('add_acl', 'post')) {
@@ -81,7 +81,7 @@ switch ($_REQUEST['action']) {
             $action = 'show_add_' . Core::get_post('type');
             require_once AmpConfig::get('prefix') . UI::find_template('show_add_access.inc.php');
         }
-    break;
+        break;
     case 'update_record':
         if (!Core::form_verify('edit_acl')) {
             UI::access_denied();
@@ -96,24 +96,24 @@ switch ($_REQUEST['action']) {
             $access->format();
             require_once AmpConfig::get('prefix') . UI::find_template('show_edit_access.inc.php');
         }
-    break;
+        break;
     case 'show_add_current':
     case 'show_add_rpc':
     case 'show_add_local':
     case 'show_add_advanced':
         $action = Core::get_request('action');
         require_once AmpConfig::get('prefix') . UI::find_template('show_add_access.inc.php');
-    break;
+        break;
     case 'show_edit_record':
         $access = new Access(filter_input(INPUT_GET, 'access_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $access->format();
         require_once AmpConfig::get('prefix') . UI::find_template('show_edit_access.inc.php');
-    break;
+        break;
     default:
         $list = array();
         $list = Access::get_access_lists();
         require_once AmpConfig::get('prefix') . UI::find_template('show_access_list.inc.php');
-    break;
+        break;
 } // end switch on action
 
 // Show the Footer

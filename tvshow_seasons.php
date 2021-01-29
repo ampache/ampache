@@ -32,12 +32,13 @@ switch ($_REQUEST['action']) {
         }
 
         $tvshow_season_id = (string) scrub_in($_REQUEST['tvshow_season_id']);
-        show_confirmation(T_('Are You Sure?'), T_("The entire TV Season will be deleted"),
+        show_confirmation(T_('Are You Sure?'),
+            T_("The entire TV Season will be deleted"),
             AmpConfig::get('web_path') . "/tvshow_seasons.php?action=confirm_delete&tvshow_season_id=" . $tvshow_season_id,
             1,
             'delete_tvshow_season'
         );
-    break;
+        break;
     case 'confirm_delete':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -56,7 +57,7 @@ switch ($_REQUEST['action']) {
         } else {
             show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this TV Season."), AmpConfig::get('web_path'));
         }
-    break;
+        break;
     case 'show':
         $season = new TVShow_Season($_REQUEST['season']);
         $season->format();

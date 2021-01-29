@@ -25,6 +25,13 @@ It's easy to use a program like github desktop to compare between branches.
 * Add pchart to composer
   * composer require szymach/c-pchart "2.*"
 * ~~Run composer install~~ (adding pchart updates everything)
+* Get missing map files
+
+```shell
+wget -P ./lib/components/jQuery-contextMenu/dist/ https://raw.githubusercontent.com/swisnl/jQuery-contextMenu/a7a1b9f3b9cd789d6eb733ee5e7cbc6c91b3f0f8/dist/jquery.contextMenu.min.js.map
+wget -P ./lib/components/jQuery-contextMenu/dist/ https://raw.githubusercontent.com/swisnl/jQuery-contextMenu/a7a1b9f3b9cd789d6eb733ee5e7cbc6c91b3f0f8/dist/jquery.contextMenu.min.css.map
+```
+
 * Remove broken symbolic links
 
 ```shell
@@ -127,4 +134,18 @@ git clone -b nosql https://github.com/ampache/ampache-docker.git ampache-docker-
 cd ampache-docker-nosql
 nano Dockerfile
 docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ampache/ampache:nosql --push .
+```
+
+## Additional info
+
+Make sure rolling tags are updated to the latest commit. This is good for pre-release/develop tags
+
+```shell
+git tag -f 5.0.0-pre-release 250237272
+```
+
+Then pushing it to github
+
+```shell
+git push –force origin 5.0.0-pre-release
 ```

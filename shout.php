@@ -75,10 +75,10 @@ switch ($_REQUEST['action']) {
 
         // Now go ahead and display the page where we let them add a comment etc
         require_once AmpConfig::get('prefix') . UI::find_template('show_add_shout.inc.php');
-    break;
+        break;
     default:
         header("Location:" . AmpConfig::get('web_path'));
-    break;
+        break;
 } // end switch on action
 
 // Show the Footer

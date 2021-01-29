@@ -32,12 +32,13 @@ switch ($_REQUEST['action']) {
         }
 
         $album_id = (string) scrub_in($_REQUEST['album_id']);
-        show_confirmation(T_('Are You Sure?'), T_("The Album and all files will be deleted"),
+        show_confirmation(T_('Are You Sure?'),
+            T_("The Album and all files will be deleted"),
             AmpConfig::get('web_path') . "/albums.php?action=confirm_delete&album_id=" . $album_id,
             1,
             'delete_album'
         );
-    break;
+        break;
     case 'confirm_delete':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -56,7 +57,7 @@ switch ($_REQUEST['action']) {
         } else {
             show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Album."), AmpConfig::get('web_path'));
         }
-    break;
+        break;
     case 'update_from_tags':
         // Make sure they are a 'power' user at least
         if (!Access::check('interface', 75)) {
@@ -71,7 +72,7 @@ switch ($_REQUEST['action']) {
         $object_id  = (int) filter_input(INPUT_GET, 'album_id', FILTER_SANITIZE_NUMBER_INT);
         $target_url = AmpConfig::get('web_path') . '/albums.php?action=show&amp;album=' . $object_id;
         require_once AmpConfig::get('prefix') . UI::find_template('show_update_items.inc.php');
-    break;
+        break;
     case 'update_group_from_tags':
         // Make sure they are a 'power' user at least
         if (!Access::check('interface', 75)) {
@@ -113,7 +114,7 @@ switch ($_REQUEST['action']) {
                 }
             }
         }
-    break;
+        break;
     case 'show_missing':
         set_time_limit(600);
         $mbid   = $_REQUEST['mbid'];
@@ -132,7 +133,7 @@ switch ($_REQUEST['action']) {
         $walbum->load_all();
         $walbum->format();
         require AmpConfig::get('prefix') . UI::find_template('show_missing_album.inc.php');
-    break;
+        break;
     // Browse by Album
     case 'show':
     default:
@@ -147,8 +148,7 @@ switch ($_REQUEST['action']) {
         } else {
             require AmpConfig::get('prefix') . UI::find_template('show_album_group_disks.inc.php');
         }
-
-    break;
+        break;
 } // switch on view
 
 // Show the Footer

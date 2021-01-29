@@ -7,14 +7,13 @@
 
 **News:**
 
-* Develop **DATABASE CHANGES** You can now force a default collation and charset on your database. (Read the changelog!)
-* Get your docker images without sql using the new ampache/ampache:nosql image!
-* Develop branch now has a **mandatory** requirement of php-intl for date formatting.
+* Develop changes
+  * **DATABASE CHANGES** You can now force a default collation and charset on your database. (Read the changelog!)
+  * Develop branch now has a **mandatory** requirement of php-intl for date formatting.
+  * The initial development version of api 5.0.0 has been released! Please go over the changes on the [ampache.org](http://ampache.org/api/) website!
 * Get your album/artist art right from Spotify's web API. Go to the [dashboard](https://developer.spotify.com/dashboard/)
   * Then put your client ID and secret in your ampache config
   * And don't forget to set your art order! (art_order = "db,tags,folder,spotify,musicbrainz")
-* JSON support has landed! Documentation [wiki](https://github.com/ampache/ampache/wiki/Ampache-API) and example responses [here](https://github.com/ampache/python3-ampache/tree/master/docs).
-* Multiarch docker images are now available on [Docker Hub](https://hub.docker.com/r/ampache/ampache)
 
 ## Basics
 

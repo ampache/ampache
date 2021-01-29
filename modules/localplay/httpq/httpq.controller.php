@@ -545,6 +545,7 @@ class AmpacheHttpq extends localplay_controller
      * status
      * This returns bool/int values for features, loop, repeat and any other features
      * That this Localplay method supports. required function
+     * @return array
      */
     public function status()
     {

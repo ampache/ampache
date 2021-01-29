@@ -83,7 +83,7 @@ switch ($_REQUEST['action']) {
         ob_start();
         $browse->show_objects(null, $argument);
         $results[$browse->get_content_div()] = ob_get_clean();
-    break;
+        break;
     case 'set_sort':
         if ($_REQUEST['sort']) {
             $browse->set_sort($_REQUEST['sort']);
@@ -96,11 +96,11 @@ switch ($_REQUEST['action']) {
         ob_start();
         $browse->show_objects(null, $argument);
         $results[$browse->get_content_div()] = ob_get_clean();
-    break;
+        break;
     case 'toggle_tag':
         $type = $_SESSION['tagcloud_type'] ? $_SESSION['tagcloud_type'] : 'song';
         $browse->set_type($type);
-    break;
+        break;
     case 'delete_object':
         switch ($_REQUEST['type']) {
             case 'playlist':
@@ -113,7 +113,7 @@ switch ($_REQUEST['action']) {
                 // Delete it!
                 $playlist->delete();
                 $key = 'playlist_row_' . $playlist->id;
-            break;
+                break;
             case 'smartplaylist':
                 $playlist = new Search((int) Core::get_request('id'), 'song');
                 if (!$playlist->has_access()) {
@@ -121,7 +121,7 @@ switch ($_REQUEST['action']) {
                 }
                 $playlist->delete();
                 $key = 'smartplaylist_row_' . $playlist->id;
-            break;
+                break;
             case 'live_stream':
                 if (!Core::get_global('user')->has_access('75')) {
                     return false;
@@ -129,32 +129,32 @@ switch ($_REQUEST['action']) {
                 $radio = new Live_Stream((int) Core::get_request('id'));
                 $radio->delete();
                 $key = 'live_stream_' . $radio->id;
-            break;
+                break;
             default:
                 return false;
         } // end switch on type
 
         $results[$key] = '';
 
-    break;
+        break;
     case 'page':
         $browse->set_start($_REQUEST['start']);
         ob_start();
         $browse->show_objects(null, $argument);
         $results[$browse->get_content_div()] = ob_get_clean();
-    break;
+        break;
     case 'show_art':
         Art::set_enabled();
 
         ob_start();
         $browse->show_objects(null, $argument);
         $results[$browse->get_content_div()] = ob_get_clean();
-    break;
+        break;
     case 'get_filters':
         ob_start();
         require_once AmpConfig::get('prefix') . UI::find_template('browse_filters.inc.php');
         $results['browse_filters'] = ob_get_clean();
-    break;
+        break;
     case 'options':
         $option = $_REQUEST['option'];
         $value  = $_REQUEST['value'];
@@ -166,7 +166,7 @@ switch ($_REQUEST['action']) {
                 if ($value) {
                     $browse->set_start(0);
                 }
-            break;
+                break;
             case 'use_alpha':
                 $value = ($value == 'true');
                 $browse->set_use_alpha($value);
@@ -176,17 +176,17 @@ switch ($_REQUEST['action']) {
                 } else {
                     $browse->set_filter('regex_not_match', '');
                 }
-            break;
+                break;
             case 'grid_view':
                 $value = ($value == 'true');
                 $browse->set_grid_view($value);
-            break;
+                break;
             case 'limit':
                 $value = (int) ($value);
                 if ($value > 0) {
                     $browse->set_offset($value);
                 }
-            break;
+                break;
             case 'custom':
                 $value = (int) ($value);
                 $limit = $browse->get_offset();
@@ -199,13 +199,13 @@ switch ($_REQUEST['action']) {
                         $browse->set_start($offset);
                     }
                 }
-            break;
+                break;
         }
 
         ob_start();
         $browse->show_objects(null, $argument);
         $results[$browse->get_content_div()] = ob_get_clean();
-    break;
+        break;
     case 'get_share_links':
         $object_type = Core::get_request('object_type');
         $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
@@ -215,10 +215,10 @@ switch ($_REQUEST['action']) {
 
             return false;
         }
-    break;
+        break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 } // switch on action;
 
 $browse->store();

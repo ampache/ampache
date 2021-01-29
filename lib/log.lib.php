@@ -75,32 +75,32 @@ function ampache_error_handler($errno, $errstr, $errfile, $errline)
     switch ($errno) {
         case E_WARNING:
             $error_name = 'Runtime Error';
-        break;
+            break;
         case E_COMPILE_WARNING:
         case E_NOTICE:
         case E_CORE_WARNING:
             $error_name = 'Warning';
             $level      = 6;
-        break;
+            break;
         case E_ERROR:
             $error_name = 'Fatal run-time Error';
-        break;
+            break;
         case E_PARSE:
             $error_name = 'Parse Error';
-        break;
+            break;
         case E_CORE_ERROR:
             $error_name = 'Fatal Core Error';
-        break;
+            break;
         case E_COMPILE_ERROR:
             $error_name = 'Zend run-time Error';
-        break;
+            break;
         case E_STRICT:
             $error_name = "Strict Error";
-        break;
+            break;
         default:
             $error_name = "Error";
             $level      = 2;
-        break;
+            break;
     } // end switch
 
     // List of things that should only be displayed if they told us to turn

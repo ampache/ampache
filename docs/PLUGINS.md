@@ -23,7 +23,7 @@ The following public methods may be implemented:
 
 Finally, for the plugin to actually be useful one or more of the following hooks should be implemented as a public method:
 
-* display_home() Display someting in the home page / index
+* display_home() Display something in the home page / index
 * display_on_footer() Same as home, except in the page footer
 * display_user_field(library_item $libitem = null) This display the module in user page
 * display_map(array $points) Used for graphs and charts

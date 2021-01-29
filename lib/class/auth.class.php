@@ -37,7 +37,7 @@ class Auth
     private function __construct()
     {
         // Rien a faire
-    }
+    } // __construct
 
     /**
      * logout

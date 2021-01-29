@@ -44,17 +44,17 @@ switch ($_REQUEST['action']) {
             $text = T_('A new License has been created');
         }
         show_confirmation(T_('No Problem'), $text, AmpConfig::get('web_path') . '/admin/license.php');
-    break;
+        break;
     case 'show_edit':
         $license = new License($_REQUEST['license_id']);
-        // intentional fall through
+        // Intentional break fall-through
     case 'show_create':
         require_once AmpConfig::get('prefix') . UI::find_template('show_edit_license.inc.php');
         break;
     case 'delete':
         License::delete($_REQUEST['license_id']);
         show_confirmation(T_('No Problem'), T_('The License has been deleted'), AmpConfig::get('web_path') . '/admin/license.php');
-    break;
+        break;
     default:
         $browse = new Browse();
         $browse->set_type('license');
@@ -62,7 +62,7 @@ switch ($_REQUEST['action']) {
         $license_ids = $browse->get_objects();
         $browse->show_objects($license_ids);
         $browse->store();
-    break;
+        break;
 }
 
 // Show the Footer

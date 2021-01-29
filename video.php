@@ -32,12 +32,13 @@ switch ($_REQUEST['action']) {
         }
 
         $video_id = (string) scrub_in(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
-        show_confirmation(T_('Are You Sure?'), T_("The Video will be deleted"),
+        show_confirmation(T_('Are You Sure?'),
+            T_("The Video will be deleted"),
             AmpConfig::get('web_path') . "/video.php?action=confirm_delete&video_id=" . $video_id,
             1,
             'delete_video'
         );
-    break;
+        break;
     case 'confirm_delete':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -56,14 +57,14 @@ switch ($_REQUEST['action']) {
         } else {
             show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Video."), AmpConfig::get('web_path'));
         }
-    break;
+        break;
     case 'show_video':
     default:
         $video = Video::create_from_id(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $video->format();
         $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
         require_once AmpConfig::get('prefix') . UI::find_template('show_video.inc.php');
-    break;
+        break;
 }
 
 // Show the Footer

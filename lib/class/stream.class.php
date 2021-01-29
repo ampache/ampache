@@ -185,7 +185,7 @@ class Stream
 
         $string_map = array(
             '%FILE%' => $song_file,
-            '%SAMPLE%' => $bit_rate,   // Deprecated
+            '%SAMPLE%' => $bit_rate, // Deprecated
             '%BITRATE%' => $bit_rate
         );
         if (isset($options['maxbitrate'])) {
@@ -482,10 +482,10 @@ class Stream
         switch (AmpConfig::get('playlist_method')) {
             case 'send':
                 $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket';
-            break;
+                break;
             case 'send_clear':
                 $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket&playlist_method=clear';
-            break;
+                break;
             case 'clear':
             case 'default':
             default:

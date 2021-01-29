@@ -51,15 +51,14 @@ switch ($_REQUEST['action']) {
                     break 2;
                 }
                 $new = Core::get_post('type');
-            break;
+                break;
             case 'web_player':
                 $new = 'web_player';
-                // Rien a faire
-            break;
+                break;
             default:
                 $new                = 'stream';
                 $results['rfc3514'] = '0x1';
-            break 2;
+                break 2;
         } // end switch
 
         $current = AmpConfig::get('play_type');
@@ -74,7 +73,7 @@ switch ($_REQUEST['action']) {
         }
 
         $results['rfc3514'] = '0x0';
-    break;
+        break;
     case 'directplay':
         $object_type = Core::get_request('object_type');
         $object_id   = $_GET['object_id'];
@@ -103,7 +102,7 @@ switch ($_REQUEST['action']) {
             }
             $results['rfc3514'] = '<script>' . Core::get_reloadutil() . '(\'' . AmpConfig::get('web_path') . '/util.php\');</script>';
         }
-    break;
+        break;
     case 'basket':
         // Go ahead and see if we should clear the playlist here or not,
         // we might not actually clear it in the session.
@@ -117,10 +116,10 @@ switch ($_REQUEST['action']) {
         // We need to set the basket up!
         $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method']);
         $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '(\'' . AmpConfig::get('web_path') . '/util.php\');</script>';
-    break;
+        break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 } // switch on action;
 
 // We always do this

@@ -40,29 +40,29 @@ switch ($_REQUEST['action']) {
     // Show stats
     case 'newest':
         require_once AmpConfig::get('prefix') . UI::find_template('show_newest.inc.php');
-    break;
+        break;
     case 'popular':
         require_once AmpConfig::get('prefix') . UI::find_template('show_popular.inc.php');
-    break;
+        break;
     case 'highest':
         require_once AmpConfig::get('prefix') . UI::find_template('show_highest.inc.php');
-    break;
+        break;
     case 'userflag':
         require_once AmpConfig::get('prefix') . UI::find_template('show_userflag.inc.php');
-    break;
+        break;
     case 'recent':
         $user_id = Core::get_request('user_id');
         require_once AmpConfig::get('prefix') . UI::find_template('show_recent.inc.php');
-    break;
+        break;
     case 'wanted':
         require_once AmpConfig::get('prefix') . UI::find_template('show_wanted.inc.php');
-    break;
+        break;
     case 'share':
         require_once AmpConfig::get('prefix') . UI::find_template('show_shares.inc.php');
-    break;
+        break;
     case 'upload':
         require_once AmpConfig::get('prefix') . UI::find_template('show_uploads.inc.php');
-    break;
+        break;
     case 'graph':
         Graph::display_from_request();
         break;
@@ -71,7 +71,7 @@ switch ($_REQUEST['action']) {
         if (Access::check('interface', 50)) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_stats.inc.php');
         }
-    break;
+        break;
 } // end switch on action
 
 show_table_render(false, true);

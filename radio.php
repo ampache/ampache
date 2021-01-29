@@ -41,7 +41,7 @@ switch ($_REQUEST['action']) {
 
         require_once AmpConfig::get('prefix') . UI::find_template('show_add_live_stream.inc.php');
 
-    break;
+        break;
     case 'create':
         if (!Access::check('interface', 75) || AmpConfig::get('demo_mode')) {
             UI::access_denied();
@@ -65,13 +65,13 @@ switch ($_REQUEST['action']) {
             $title = '';
             show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=live_stream');
         }
-    break;
+        break;
     case 'show':
     default:
         $radio = new Live_Stream($_REQUEST['radio']);
         $radio->format();
         require AmpConfig::get('prefix') . UI::find_template('show_live_stream.inc.php');
-    break;
+        break;
 } // end data collection
 
 // Show the Footer

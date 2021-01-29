@@ -46,8 +46,7 @@
         <tr>
             <td><?php echo T_('Subject'); ?>:</td>
             <td colspan="3">
-                <input name="subject" value="<?php echo scrub_out(Core::get_post('subject')); ?>" />
-            </td>
+                <input name="subject" value="<?php echo scrub_out(Core::get_post('subject')); ?>" /></td>
         </tr>
         <tr>
             <td><?php echo T_('Message'); ?>:</td>

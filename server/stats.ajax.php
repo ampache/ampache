@@ -35,8 +35,8 @@ switch ($_REQUEST['action']) {
     case 'geolocation':
         if (AmpConfig::get('geolocation')) {
             if (Core::get_global('user')->id) {
-                $latitude  = floatval($_REQUEST['latitude']);
-                $longitude = floatval($_REQUEST['longitude']);
+                $latitude  = (float) $_REQUEST['latitude'];
+                $longitude = (float) $_REQUEST['longitude'];
                 $name      = $_REQUEST['name'];
                 if (empty($name)) {
                     // First try to get from local cache (avoid external api requests)
@@ -66,7 +66,7 @@ switch ($_REQUEST['action']) {
         break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 } // switch on action;
 
 // We always do this

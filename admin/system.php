@@ -52,7 +52,7 @@ switch ($_REQUEST['action']) {
     case 'reset_db_charset':
         Dba::reset_db_charset();
         show_confirmation(T_('No Problem'), T_('Your database and associated tables have been updated to match your currently configured charset'), AmpConfig::get('web_path') . '/admin/system.php?action=show_debug');
-    break;
+        break;
     case 'show_debug':
         $configuration = AmpConfig::get_all();
         $time_format   = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
@@ -60,7 +60,7 @@ switch ($_REQUEST['action']) {
             $version = AutoUpdate::get_latest_version(true);
         }
         require_once AmpConfig::get('prefix') . UI::find_template('show_debug.inc.php');
-    break;
+        break;
     case 'clear_cache':
         switch ($_REQUEST['type']) {
             case 'song':
@@ -74,10 +74,9 @@ switch ($_REQUEST['action']) {
                 break;
         }
         show_confirmation(T_('No Problem'), T_('Your cache has been cleared successfully'), AmpConfig::get('web_path') . '/admin/system.php?action=show_debug');
-    break;
+        break;
     default:
-        // Rien a faire
-    break;
+        break;
 } // end switch
 
 // Show the Footer

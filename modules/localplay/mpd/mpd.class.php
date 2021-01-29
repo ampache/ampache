@@ -141,14 +141,14 @@ class mpd
     self::COMMAND_CONSUME => array('min' => '0.15.0', 'max' => false),
     self::COMMAND_IDLE => array('min' => '0.14.0', 'max' => false),
     self::COMMAND_PASSWORD => array('min' => '0.10.0', 'max' => false),
-    self::COMMAND_MOVETRACK => array('min' => '0.9.1',  'max' => false),
-    self::COMMAND_PLSWAPTRACK => array('min' => '0.9.1',  'max' => false),
-    self::COMMAND_RANDOM => array('min' => '0.9.1',  'max' => false),
-    self::COMMAND_SEEK => array('min' => '0.9.1',  'max' => false),
+    self::COMMAND_MOVETRACK => array('min' => '0.9.1', 'max' => false),
+    self::COMMAND_PLSWAPTRACK => array('min' => '0.9.1', 'max' => false),
+    self::COMMAND_RANDOM => array('min' => '0.9.1', 'max' => false),
+    self::COMMAND_SEEK => array('min' => '0.9.1', 'max' => false),
     self::COMMAND_SETVOL => array('min' => '0.10.0', 'max' => false),
     self::COMMAND_SINGLE => array('min' => '0.15.0', 'max' => false),
     self::COMMAND_STICKER => array('min' => '0.15.0', 'max' => false),
-    self::COMMAND_VOLUME => array('min' => false,    'max' => '0.10.0')
+    self::COMMAND_VOLUME => array('min' => false, 'max' => '0.10.0')
     );
 
     // TCP/Connection variables

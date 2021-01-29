@@ -52,10 +52,10 @@ switch ($_REQUEST['action']) {
             }
         }
         $results['rfc3514'] = '0x1';
-    break;
+        break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 }
 
 // We always do this

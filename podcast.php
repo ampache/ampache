@@ -41,7 +41,7 @@ switch ($_REQUEST['action']) {
 
         require_once AmpConfig::get('prefix') . UI::find_template('show_add_podcast.inc.php');
 
-    break;
+        break;
     case 'create':
         if (!Access::check('interface', 75) || AmpConfig::get('demo_mode')) {
             UI::access_denied();
@@ -65,7 +65,7 @@ switch ($_REQUEST['action']) {
             $body   = T_('Subscribed to the Podcast');
             show_confirmation($title, $body, AmpConfig::get('web_path') . '/browse.php?action=podcast');
         }
-    break;
+        break;
     case 'delete':
         if (!Access::check('interface', 75) || AmpConfig::get('demo_mode')) {
             UI::access_denied();
@@ -74,12 +74,13 @@ switch ($_REQUEST['action']) {
         }
 
         $podcast_id = (string) scrub_in($_REQUEST['podcast_id']);
-        show_confirmation(T_('Are You Sure?'), T_("The Podcast will be removed from the database"),
+        show_confirmation(T_('Are You Sure?'),
+            T_("The Podcast will be removed from the database"),
             AmpConfig::get('web_path') . "/podcast.php?action=confirm_delete&podcast_id=" . $podcast_id,
             1,
             'delete_podcast'
         );
-    break;
+        break;
     case 'confirm_delete':
         if (!Access::check('interface', 75) || AmpConfig::get('demo_mode')) {
             UI::access_denied();
@@ -93,7 +94,7 @@ switch ($_REQUEST['action']) {
         } else {
             show_confirmation(T_("There Was a Problem"), T_("Couldn't delete this Podcast."), AmpConfig::get('web_path') . '/browse.php?action=podcast');
         }
-    break;
+        break;
     case 'show':
         $podcast_id = (int) filter_input(INPUT_GET, 'podcast', FILTER_SANITIZE_NUMBER_INT);
         if ($podcast_id > 0) {
@@ -103,7 +104,7 @@ switch ($_REQUEST['action']) {
             $object_type = 'podcast_episode';
             require_once AmpConfig::get('prefix') . UI::find_template('show_podcast.inc.php');
         }
-    break;
+        break;
 } // end data collection
 
 // Show the Footer

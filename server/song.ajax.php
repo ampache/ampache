@@ -52,7 +52,7 @@ switch ($_REQUEST['action']) {
             $buttontext = T_('Enable');
         }
         $results[$id] = Ajax::button('?page=song&action=flip_state&song_id=' . $song->id, $button, $buttontext, 'flip_state_' . $song->id);
-    break;
+        break;
     case 'shouts':
         ob_start();
         $type   = Core::get_request('object_type');
@@ -74,10 +74,10 @@ switch ($_REQUEST['action']) {
             echo "</script>\r\n";
         }
         $results['shouts_data'] = ob_get_clean();
-    break;
+        break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 } // switch on action;
 
 // We always do this

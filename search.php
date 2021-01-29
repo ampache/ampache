@@ -40,7 +40,7 @@ switch ($_REQUEST['action']) {
             require_once AmpConfig::get('prefix') . UI::find_template('show_missing_artists.inc.php');
             echo '<a href="http://musicbrainz.org/search?query=' . rawurlencode($_REQUEST['rule_1_input']) . '&type=artist&method=indexed" target="_blank">' . T_('View on MusicBrainz') . '</a><br />';
         }
-    break;
+        break;
     case 'save_as_smartplaylist':
         if (!Access::check('interface', 25)) {
             UI::access_denied();
@@ -55,7 +55,7 @@ switch ($_REQUEST['action']) {
         show_confirmation(T_('No Problem'),
                 /* HINT: playlist name */
                 sprintf(T_('Your search has been saved as a Smart Playlist with the name %s'), $playlist->name), AmpConfig::get('web_path') . "/browse.php?action=smartplaylist");
-    break;
+        break;
     case 'descriptor':
         // This is a little special we don't want header/footers so trash what we've got in the OB
         ob_clean();
@@ -64,7 +64,7 @@ switch ($_REQUEST['action']) {
         return false;
     default:
         require_once AmpConfig::get('prefix') . UI::find_template('show_search_form.inc.php');
-    break;
+        break;
 }
 
 // Show the Footer

@@ -70,7 +70,7 @@ switch ($_REQUEST['action']) {
         } else {
             $notification_text = T_('User preferences updated successfully');
         }
-    break;
+        break;
     case 'admin_update_preferences':
         // Make sure only admins here
         if (!Access::check('interface', 100)) {
@@ -88,7 +88,7 @@ switch ($_REQUEST['action']) {
         update_preferences((int) Core::get_post('user_id'));
 
         header("Location: " . AmpConfig::get('web_path') . "/admin/users.php?action=show_preferences&user_id=" . scrub_out(Core::get_post('user_id')));
-    break;
+        break;
     case 'admin':
         // Make sure only admins here
         if (!Access::check('interface', 100)) {
@@ -98,7 +98,7 @@ switch ($_REQUEST['action']) {
         }
         $fullname    = T_('Server');
         $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab'], true);
-    break;
+        break;
     case 'user':
         if (!Access::check('interface', 100)) {
             UI::access_denied();
@@ -108,7 +108,7 @@ switch ($_REQUEST['action']) {
         $client      = new User((int) Core::get_request('user_id'));
         $fullname    = $client->fullname;
         $preferences = $client->get_preferences($_REQUEST['tab']);
-    break;
+        break;
     case 'update_user':
         // Make sure we're a user and they came from the form
         if (!Access::check('interface', 25) && Core::get_global('user')->id > 0) {
@@ -163,7 +163,7 @@ switch ($_REQUEST['action']) {
         }
 
         $notification_text = T_('User updated successfully');
-    break;
+        break;
     case 'grant':
         // Make sure we're a user and they came from the form
         if (!Access::check('interface', 25) && Core::get_global('user')->id > 0) {
@@ -188,11 +188,11 @@ switch ($_REQUEST['action']) {
         }
         $fullname    = Core::get_global('user')->fullname;
         $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab']);
-    break;
+        break;
     default:
         $fullname    = Core::get_global('user')->fullname;
         $preferences = Core::get_global('user')->get_preferences($_REQUEST['tab']);
-    break;
+        break;
 } // End Switch Action
 
 UI::show_header();
@@ -204,15 +204,14 @@ switch ($_REQUEST['action']) {
     case 'confirm':
     case 'grant':
         show_confirmation($title, $text, $next_url, $cancel);
-    break;
+        break;
     default:
         if (!empty($notification_text)) {
             display_notification($notification_text);
         }
-
         // Show the default preferences page
         require AmpConfig::get('prefix') . UI::find_template('show_preferences.inc.php');
-    break;
+        break;
 } // end switch on action
 
 // Show the Footer

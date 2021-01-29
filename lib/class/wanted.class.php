@@ -114,6 +114,7 @@ class Wanted extends database_object
      * @param Artist|null $artist
      * @param string $mbid
      * @return array
+     * @throws \MusicBrainz\Exception
      */
     public static function get_missing_albums($artist, $mbid = '')
     {
@@ -242,6 +243,7 @@ class Wanted extends database_object
      * search_missing_artists
      * @param string $name
      * @return array
+     * @throws \MusicBrainz\Exception
      */
     public static function search_missing_artists($name)
     {
@@ -312,6 +314,7 @@ class Wanted extends database_object
     /**
      * Delete a wanted release by mbid.
      * @param string $mbid
+     * @throws \MusicBrainz\Exception
      */
     public static function delete_wanted_release($mbid)
     {
@@ -353,9 +356,9 @@ class Wanted extends database_object
             $this->accepted = true;
 
             foreach (Plugin::get_plugins('process_wanted') as $plugin_name) {
-                debug_event('wanted.class', 'Using Wanted Process plugin: ' . $plugin_name, 5);
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->load(Core::get_global('user'))) {
+                    debug_event('wanted.class', 'Using Wanted Process plugin: ' . $plugin_name, 5);
                     $plugin->_plugin->process_wanted($this);
                 }
             }
@@ -396,7 +399,7 @@ class Wanted extends database_object
     {
         $sql    = "INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $accept = Core::get_global('user')->has_access('75') ? true : AmpConfig::get('wanted_auto_accept');
-        $params = array(Core::get_global('user')->id, $artist, $artist_mbid, $mbid, $name, $year, time(), '0');
+        $params = array(Core::get_global('user')->id, $artist, $artist_mbid, $mbid, $name, (int) $year, time(), '0');
         Dba::write($sql, $params);
 
         if ($accept) {
@@ -423,7 +426,7 @@ class Wanted extends database_object
                 echo " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->mbid, 'disable', T_('Remove'), 'wanted_remove_' . $this->mbid);
             }
         } else {
-            echo Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . ($this->artist ? '&artist=' . $this->artist : '&artist_mbid=' . $this->artist_mbid) . '&name=' . urlencode($this->name) . '&year=' . $this->year, 'add_wanted', T_('Add to wanted list'), 'wanted_add_' . $this->mbid);
+            echo Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . ($this->artist ? '&artist=' . $this->artist : '&artist_mbid=' . $this->artist_mbid) . '&name=' . urlencode($this->name) . '&year=' . (int) $this->year, 'add_wanted', T_('Add to wanted list'), 'wanted_add_' . $this->mbid);
         }
     }
 

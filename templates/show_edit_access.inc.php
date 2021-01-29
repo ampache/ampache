@@ -30,8 +30,7 @@ $all          = T_('All'); ?>
         <tr>
             <td><?php echo T_('Name') . ':'; ?></td>
             <td colspan="3">
-                <input type="text" name="name" value="<?php echo scrub_out($access->name); ?>" autofocus />
-            </td>
+                <input type="text" name="name" value="<?php echo scrub_out($access->name); ?>" autofocus /></td>
         </tr>
         <tr>
             <td><?php echo T_('Level') . ':'; ?></td>
@@ -73,13 +72,11 @@ $all          = T_('All'); ?>
             <td><?php echo T_('Start') . ':'; ?></td>
             <td>
                 <?php AmpError::display('start'); ?>
-                <input type="text" name="start" value="<?php echo $access->f_start; ?>" />
-            </td>
+                <input type="text" name="start" value="<?php echo $access->f_start; ?>" /></td>
             <td><?php echo T_('End') . ':'; ?></td>
             <td>
                 <?php AmpError::display('end'); ?>
-                <input type="text" name="end" value="<?php echo $access->f_end; ?>" />
-            </td>
+                <input type="text" name="end" value="<?php echo $access->f_end; ?>" /></td>
         </tr>
     </table>
     <div class="formValidation">

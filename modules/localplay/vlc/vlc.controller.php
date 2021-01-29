@@ -503,16 +503,16 @@ class AmpacheVlc extends localplay_controller
                         $song->format();
                         $data['name']   = $song->f_title . ' - ' . $song->f_album . ' - ' . $song->f_artist;
                         $data['link']   = $song->f_link;
-                break;
+                    break;
                 case 'demo_id':
                         $democratic     = new Democratic($url_data['demo_id']);
                         $data['name']   = T_('Democratic') . ' - ' . $democratic->name;
                         $data['link']   = '';
-                break;
+                    break;
                 case 'random':
                     $data['name'] = T_('Random') . ' - ' . scrub_out(ucfirst($url_data['type']));
                     $data['link'] = '';
-                break;
+                    break;
                 default:
                     // If we don't know it, look up by filename
                     $filename = Dba::escape($entry);
@@ -531,7 +531,7 @@ class AmpacheVlc extends localplay_controller
                         $lastis       = count($getlast) - 1;
                         $data['name'] = htmlspecialchars("(VLC local) " . substr($getlast[$lastis], 0, 50));
                     } // end if loop
-                break;
+                    break;
             } // end switch on primary key type
 
             $data['track']    = $key + 1;
@@ -547,6 +547,7 @@ class AmpacheVlc extends localplay_controller
      * This returns bool/int values for features, loop, repeat and any other features
      * That this Localplay method supports. required function
      * This works as in requesting the status.xml file from VLC.
+     * @return array
      */
     public function status()
     {

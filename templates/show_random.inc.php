@@ -122,3 +122,4 @@
         echo Ajax::observe('window', 'load', Ajax::action('?action=refresh_rightbar', 'playlist_refresh_load'));
     } ?>
 </div>
+

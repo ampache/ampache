@@ -8,7 +8,7 @@
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/browse.php?action=album"><?php echo T_('Albums'); ?></a>
         </td>
         <td>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/browse.php?action=artist"><?php echo T_('Artists'); ?></a>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/browse.php?action=album_artist"><?php echo T_('Artists'); ?></a>
         </td>
         <?php if (AmpConfig::get('label')) { ?>
             <td>

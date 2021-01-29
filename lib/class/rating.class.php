@@ -202,7 +202,7 @@ class Rating extends database_object
         $sql  = "SELECT MIN(`rating`.`object_id`) as `id`, AVG(`rating`) AS `rating`, COUNT(`object_id`) AS `count`, MAX(`rating`.`id`) AS `order` FROM `rating`";
 
         if (AmpConfig::get('album_group') && $type === 'album') {
-            $sql .= " LEFT JOIN `album` on `rating`.`object_id` = `album`.`id` and `rating`.`object_type` = 'album'";
+            $sql .= " LEFT JOIN `album` ON `rating`.`object_id` = `album`.`id` AND `rating`.`object_type` = 'album'";
         }
         $sql .= " WHERE `object_type` = '" . $type . "'";
         if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {

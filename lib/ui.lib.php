@@ -591,7 +591,7 @@ function xoutput_headers()
 }
 
 /**
- * @param $array
+ * @param array $array
  * @param boolean $callback
  * @param string $type
  * @return false|mixed|string

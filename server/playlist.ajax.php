@@ -52,7 +52,7 @@ switch ($_REQUEST['action']) {
         $browse->store();
 
         $results[$browse->get_content_div()] = ob_get_clean();
-    break;
+        break;
     case 'append_item':
         // Only song item are supported with playlists
         if (!isset($_REQUEST['playlist_id']) || empty($_REQUEST['playlist_id'])) {
@@ -107,10 +107,10 @@ switch ($_REQUEST['action']) {
         } else {
             debug_event('playlist.ajax', 'No item to add. Aborting...', 5);
         }
-    break;
+        break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 }
 
 echo (string) xoutput_from_array($results);
