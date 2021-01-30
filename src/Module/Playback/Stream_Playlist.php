@@ -715,6 +715,26 @@ class Stream_Playlist
     }
 
     /**
+     * create_download
+     * This prompts for a download of the song
+     */
+    private function create_download()
+    {
+        // There should only be one here...
+        if (count($this->urls) != 1) {
+            debug_event(self::class, 'Download called, but $urls contains ' . json_encode($this->urls), 2);
+        }
+
+        // Header redirect baby!
+        $url = current($this->urls);
+        $url = Stream_URL::add_options($url->url, '&action=download');
+        header('Location: ' . $url);
+
+        return false;
+    } // create_download
+
+
+    /**
      * create_ram
      *this functions creates a RAM file for use by Real Player
      */
