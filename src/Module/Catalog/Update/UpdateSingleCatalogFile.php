@@ -119,7 +119,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     // get the new id after adding it
                     $file_id = Catalog::get_id_from_file($filePath, $type);
                 }
-                if ($searchArtMode == 1 && $file_id && $verificationMode === false) {
+                if ($searchArtMode == 1 && $file_id) {
                     // Look for media art after adding new files
                     $gather_song_art = (AmpConfig::get('gather_song_art', false));
                     if ($type == 'song') {
