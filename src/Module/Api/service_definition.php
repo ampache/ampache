@@ -42,6 +42,7 @@ return [
     Method\ArtistAlbumsMethod::class => autowire(),
     Method\ArtistMethod::class => autowire(),
     Method\ArtistsMethod::class => autowire(),
+    Method\ArtistSongsMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

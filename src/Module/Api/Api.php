@@ -54,7 +54,7 @@ class Api
         Method\ArtistsMethod::ACTION => Method\ArtistsMethod::class,
         Method\ArtistMethod::ACTION => Method\ArtistMethod::class,
         Method\ArtistAlbumsMethod::ACTION => Method\ArtistAlbumsMethod::class,
-        'artist_songs' => Method\ArtistSongsMethod::class,
+        Method\ArtistSongsMethod::ACTION => Method\ArtistSongsMethod::class,
         Method\AlbumsMethod::ACTION => Method\AlbumsMethod::class,
         Method\AlbumMethod::ACTION => Method\AlbumMethod::class,
         Method\AlbumSongsMethod::ACTION => Method\AlbumSongsMethod::class,
