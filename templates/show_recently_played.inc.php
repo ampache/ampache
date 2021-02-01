@@ -20,8 +20,9 @@
  *
  */
 
-$my_id = (isset($client)) ? $user_id : $user->id;
-$link  = AmpConfig::get('use_rss') ? ' ' . Ampache_RSS::get_display('recently_played', $my_id) :  '';
+$my_id    = (isset($client)) ? $user_id : $user->id;
+$link     = AmpConfig::get('use_rss') ? ' ' . Ampache_RSS::get_display('recently_played', $my_id) :  '';
+$is_admin = Access::check('interface', 100);
 UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
 <table class="tabledata">
     <thead>
@@ -34,18 +35,22 @@ UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
             <th class="cel_year"><?php echo T_('Year'); ?></th>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
             <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
+            <?php if ($is_admin) {
+    ?>
+                <th class="cel_agent"><?php echo T_('Agent'); ?></th>
+                <?php
+} ?>
         </tr>
     </thead>
     <tbody>
 <?php
 $count    = 0;
-$is_admin = Access::check('interface', 100);
 foreach ($data as $row) {
     $row_id   = ($row['user'] > 0) ? (int) $row['user'] : -1;
     $row_user = new User($row_id);
     $song     = new Song($row['object_id']);
 
-    $agent              = '';
+    $agent              = ($is_admin) ? $row['agent'] : '';
     $time_string        = '-';
     $has_allowed_recent = (bool) $row['user_recent'];
     $has_allowed_time   = (bool) $row['user_time'];
@@ -119,6 +124,15 @@ foreach ($data as $row) {
                 </a>
             </td>
             <td class="cel_lastplayed"><?php echo $time_string; ?></td>
+            <?php if ($is_admin) {
+            ?>
+                <td class="cel_agent">
+                    <?php if (!empty($agent)) {
+                echo UI::get_icon('info', $agent);
+            } ?>
+                </td>
+                <?php
+        } ?>
         </tr>
     <?php
         ++$count;
@@ -141,6 +155,11 @@ foreach ($data as $row) {
             <th class="cel_year"><?php echo T_('Year'); ?></th>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
             <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
+            <?php if ($is_admin) {
+    ?>
+                <th class="cel_agent"><?php echo T_('Agent'); ?></th>
+                <?php
+} ?>
         </tr>
     </tfoot>
 </table>
