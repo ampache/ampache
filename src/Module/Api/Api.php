@@ -57,7 +57,7 @@ class Api
         'artist_songs' => Method\ArtistSongsMethod::class,
         Method\AlbumsMethod::ACTION => Method\AlbumsMethod::class,
         Method\AlbumMethod::ACTION => Method\AlbumMethod::class,
-        'album_songs' => Method\AlbumSongsMethod::class,
+        Method\AlbumSongsMethod::ACTION => Method\AlbumSongsMethod::class,
         'licenses' => Method\LicensesMethod::class,
         'license' => Method\LicenseMethod::class,
         'license_songs' => Method\LicenseSongsMethod::class,

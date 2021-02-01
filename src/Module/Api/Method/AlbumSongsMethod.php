@@ -20,100 +20,114 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Model\Album;
-use Ampache\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Model\ModelFactoryInterface;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class AlbumSongsMethod
- * @package Lib\ApiMethods
- */
-class AlbumSongsMethod
+final class AlbumSongsMethod implements MethodInterface
 {
-    private const ACTION = 'album_songs';
+    public const ACTION = 'album_songs';
+
+    private ModelFactoryInterface $modelFactory;
+
+    private SongRepositoryInterface $songRepository;
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory,
+        SongRepositoryInterface $songRepository,
+        StreamFactoryInterface $streamFactory,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->modelFactory    = $modelFactory;
+        $this->songRepository  = $songRepository;
+        $this->streamFactory   = $streamFactory;
+        $this->configContainer = $configContainer;
+    }
 
     /**
-     * album_songs
      * MINIMUM_API_VERSION=380001
      *
      * This returns the songs of a specified album
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of Album
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws ResultEmptyException
+     * @throws RequestParamMissingException
      */
-    public static function album_songs(array $input)
-    {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-        $object_id = (int) $input['filter'];
-        $album     = new Album($object_id);
-        if (!$album->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $objectId = $input['filter'] ?? null;
 
-            return false;
+        if ($objectId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
         }
 
-        ob_end_clean();
+        $album = $this->modelFactory->createAlbum((int) $objectId);
+        if ($album->isNew() === true) {
+            throw new ResultEmptyException((string) $objectId);
+        }
+
         // songs for all disks
-        $songs = array();
-        $user  = User::get_from_username(Session::username($input['auth']));
-        if (AmpConfig::get('album_group')) {
-            $disc_ids = $album->get_group_disks_ids();
-            foreach ($disc_ids as $discid) {
-                $disc     = new Album($discid);
-                $allsongs = static::getSongRepository()->getByAlbum($disc->id);
-                foreach ($allsongs as $songid) {
-                    $songs[] = $songid;
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP)) {
+            $songs = [];
+
+            $discIds = $album->get_group_disks_ids();
+            foreach ($discIds as $discId) {
+                $disc = $this->modelFactory->createAlbum((int) $discId);
+                foreach ($this->songRepository->getByAlbum((int) $disc->id) as $songId) {
+                    $songs[] = $songId;
                 }
             }
         } else {
             // songs for just this disk
-            $songs = static::getSongRepository()->getByAlbum($album->id);
-        }
-        if (empty($songs)) {
-            Api::empty('song', $input['api_format']);
-
-            return false;
+            $songs = $this->songRepository->getByAlbum($album->id);
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                echo Json_Data::songs($songs, $user->id);
-                break;
-            default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::songs($songs, $user->id);
+        if ($songs === []) {
+            $result = $output->emptyResult('song');
+        } else {
+            $result = $output->songs(
+                $songs,
+                $gatekeeper->getUser()->getId(),
+                true,
+                true,
+                true,
+                (int) ($input['limit'] ?? 0),
+                (int) ($input['offset'] ?? 0)
+            );
         }
-        Session::extend($input['auth']);
 
-        return true;
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SongRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }

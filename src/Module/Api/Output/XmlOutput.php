@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
-use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 
 final class XmlOutput implements ApiOutputInterface
@@ -45,9 +44,9 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param integer[] $albums
+     * @param int[] $albums
      * @param array $include
-     * @param integer|null $user_id
+     * @param int|null $user_id
      * @param bool $fullXml
      * @param int $limit
      * @param int $offset
@@ -76,11 +75,13 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param integer[] $artists
+     * @param int[] $artists
      * @param array $include
-     * @param null|integer $user_id
+     * @param null|int $user_id
      * @param boolean $encode
      * @param boolean $object (whether to return as a named object array or regular array)
+     * @param int $limit
+     * @param int $offset
      *
      * @return array|string
      */
@@ -89,12 +90,49 @@ final class XmlOutput implements ApiOutputInterface
         array $include = [],
         ?int $user_id = null,
         bool $encode = true,
-        bool $object = true
+        bool $object = true,
+        int $limit = 0,
+        int $offset = 0
     ) {
+        Xml_Data::set_offset($offset);
+        Xml_Data::set_limit($limit);
+
         return Xml_Data::artists(
             $artists,
             $include,
             $user_id
+        );
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param int[] $songs
+     * @param int|null $user_id
+     * @param boolean $encode
+     * @param boolean $object (whether to return as a named object array or regular array)
+     * @param boolean $full_xml
+     * @param int $limit
+     * @param int $offset
+     *
+     * @return array|string
+     */
+    public function songs(
+        array $songs,
+        ?int $user_id = null,
+        bool $encode = true,
+        bool $object = true,
+        bool $full_xml = true,
+        int $limit = 0,
+        int $offset = 0
+    ) {
+        Xml_Data::set_offset($offset);
+        Xml_Data::set_limit($limit);
+
+        return Xml_Data::songs(
+            $songs,
+            $user_id,
+            $full_xml
         );
     }
 }

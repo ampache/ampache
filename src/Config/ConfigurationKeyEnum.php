@@ -105,4 +105,5 @@ final class ConfigurationKeyEnum
     public const ALLOW_ZIP_DOWNLOAD            = 'allow_zip_download';
     public const ENABLE_CUSTOM_METADATA        = 'enable_custom_metadata';
     public const WRITE_ID3                     = 'write_id3';
+    public const ALBUM_GROUP                   = 'album_group';
 }

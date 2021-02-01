@@ -35,9 +35,9 @@ interface ApiOutputInterface
     ): string;
 
     /**
-     * @param integer[] $albums
+     * @param int[] $albums
      * @param array $include
-     * @param integer|null $user_id
+     * @param int|null $user_id
      * @param bool $encode
      * @param int $limit
      * @param int $offset
@@ -66,11 +66,13 @@ interface ApiOutputInterface
      * This takes an array of artists and then returns a pretty JSON document with the information
      * we want
      *
-     * @param integer[] $artists
+     * @param int[] $artists
      * @param array $include
-     * @param null|integer $user_id
+     * @param null|int $user_id
      * @param boolean $encode
      * @param boolean $object (whether to return as a named object array or regular array)
+     * @param int $limit
+     * @param int $offset
      *
      * @return array|string
      */
@@ -79,6 +81,32 @@ interface ApiOutputInterface
         array $include = [],
         ?int $user_id = null,
         bool $encode = true,
-        bool $object = true
+        bool $object = true,
+        int $limit = 0,
+        int $offset = 0
+    );
+
+    /**
+     * This returns an array of songs populated from an array of song ids.
+     * (Spiffy isn't it!)
+     *
+     * @param int[] $songs
+     * @param int|null $user_id
+     * @param boolean $encode
+     * @param boolean $object (whether to return as a named object array or regular array)
+     * @param bool $full_xml
+     * @param int $limit
+     * @param int $offset
+     *
+     * @return array|string
+     */
+    public function songs(
+        array $songs,
+        ?int $user_id = null,
+        bool $encode = true,
+        bool $object = true,
+        bool $full_xml = true,
+        int $limit = 0,
+        int $offset = 0
     );
 }

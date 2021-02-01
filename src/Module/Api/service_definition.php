@@ -38,6 +38,7 @@ return [
     ApiHandlerInterface::class => autowire(ApiHandler::class),
     Method\AlbumsMethod::class => autowire(),
     Method\AlbumMethod::class => autowire(),
+    Method\AlbumSongsMethod::class => autowire(),
     Method\ArtistAlbumsMethod::class => autowire(),
     Method\ArtistMethod::class => autowire(),
     Method\ArtistsMethod::class => autowire(),
