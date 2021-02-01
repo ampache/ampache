@@ -1015,7 +1015,6 @@ table.tabledata td {
     padding: 3px 10px 3px 0;
     word-wrap: break-word;
     min-width: 50px;
-    width: 100px;
 }
 
 table.tabledata tr:hover,
@@ -1294,6 +1293,7 @@ table.disablegv td.cel_rating {
 
 .upload_select {
     display: grid;
+    width: 50%;
 }
 
 /* --------------------------
