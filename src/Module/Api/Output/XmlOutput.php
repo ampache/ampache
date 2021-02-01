@@ -66,4 +66,9 @@ final class XmlOutput implements ApiOutputInterface
 
         return Xml_Data::albums($albums, $include, $user_id, $fullXml);
     }
+
+    public function emptyResult(string $type): string
+    {
+        return Xml_Data::empty();
+    }
 }

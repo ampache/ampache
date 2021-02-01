@@ -33,10 +33,6 @@ use Ampache\Module\Api\Output\ApiOutputInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class AlbumMethod
- * @package Lib\ApiMethods
- */
 final class AlbumMethod implements MethodInterface
 {
     public const ACTION = 'album';
@@ -54,7 +50,6 @@ final class AlbumMethod implements MethodInterface
     }
 
     /**
-     * album
      * MINIMUM_API_VERSION=380001
      *
      * This returns a single album based on the UID provided

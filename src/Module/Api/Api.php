@@ -53,7 +53,7 @@ class Api
         'advanced_search' => Method\AdvancedSearchMethod::class,
         'artists' => Method\ArtistsMethod::class,
         'artist' => Method\ArtistMethod::class,
-        'artist_albums' => Method\ArtistAlbumsMethod::class,
+        Method\ArtistAlbumsMethod::ACTION => Method\ArtistAlbumsMethod::class,
         'artist_songs' => Method\ArtistSongsMethod::class,
         Method\AlbumsMethod::ACTION => Method\AlbumsMethod::class,
         Method\AlbumMethod::ACTION => Method\AlbumMethod::class,

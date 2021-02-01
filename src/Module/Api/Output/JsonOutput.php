@@ -66,4 +66,16 @@ final class JsonOutput implements ApiOutputInterface
 
         return Json_Data::albums($albums, $include, $user_id, $encode);
     }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param string $type object type
+     *
+     * @return string return empty JSON message
+     */
+    public function emptyResult(string $type): string
+    {
+        return Json_Data::empty($type);
+    }
 }

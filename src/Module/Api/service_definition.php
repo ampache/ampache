@@ -38,6 +38,7 @@ return [
     ApiHandlerInterface::class => autowire(ApiHandler::class),
     Method\AlbumsMethod::class => autowire(),
     Method\AlbumMethod::class => autowire(),
+    Method\ArtistAlbumsMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

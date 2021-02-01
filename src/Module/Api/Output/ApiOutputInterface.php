@@ -52,4 +52,13 @@ interface ApiOutputInterface
         int $limit = 0,
         int $offset = 0
     );
+
+    /**
+     * Returns an empty response
+     *
+     * @param string $type object type
+     *
+     * @return string return empty JSON message
+     */
+    public function emptyResult(string $type): string;
 }

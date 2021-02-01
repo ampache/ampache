@@ -21,79 +21,94 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\Artist;
-use Ampache\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Model\ModelFactoryInterface;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-final class ArtistAlbumsMethod
+final class ArtistAlbumsMethod implements MethodInterface
 {
-    private const ACTION = 'artist_albums';
+    public const ACTION = 'artist_albums';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private AlbumRepositoryInterface $albumRepository;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        AlbumRepositoryInterface $albumRepository,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->streamFactory   = $streamFactory;
+        $this->albumRepository = $albumRepository;
+        $this->modelFactory    = $modelFactory;
+    }
 
     /**
-     * artist_albums
      * MINIMUM_API_VERSION=380001
      *
      * This returns the albums of an artist
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of artist
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
+     * @return ResponseInterface
+     *
+     * @throws ResultEmptyException
+     * @throws RequestParamMissingException
      */
-    public static function artist_albums(array $input)
-    {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-        $object_id = (int) $input['filter'];
-        $artist    = new Artist($object_id);
-        if (!$artist->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $objectId = $input['filter'] ?? null;
 
-            return false;
-        }
-        $albums = static::getAlbumRepository()->getByArtist($artist);
-        $user   = User::get_from_username(Session::username($input['auth']));
-        if (empty($albums)) {
-            Api::empty('album', $input['api_format']);
-
-            return false;
+        if ($objectId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                echo Json_Data::albums($albums, array(), $user->id);
-                break;
-            default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::albums($albums, array(), $user->id);
+        $artist = $this->modelFactory->createArtist((int) $objectId);
+
+        if ($artist->isNew()) {
+            throw new ResultEmptyException((string) $objectId);
         }
-        Session::extend($input['auth']);
 
-        return true;
-    }
+        $albums = $this->albumRepository->getByArtist($artist);
+        if ($albums === []) {
+            $result = $output->emptyResult('album');
+        } else {
+            $result = $output->albums(
+                $albums,
+                [],
+                $gatekeeper->getUser()->getId(),
+                true,
+                (int)($input['limit'] ?? 0),
+                (int)($input['offset'] ?? 0)
+            );
+        }
 
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $result
+            )
+        );
     }
 }
