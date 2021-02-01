@@ -21,31 +21,43 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\User;
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class ArtistsMethod
- * @package Lib\ApiMethods
- */
-final class ArtistsMethod
+final class ArtistsMethod implements MethodInterface
 {
-    const ACTION = 'artists';
+    public const ACTION = 'artists';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->streamFactory = $streamFactory;
+        $this->modelFactory  = $modelFactory;
+    }
 
     /**
-     * artists
      * MINIMUM_API_VERSION=380001
      *
      * This takes a collection of inputs and returns
      * artist objects. This function is deprecated!
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter       = (string) Alpha-numeric search term //optional
      * exact        = (integer) 0,1, if true filter is exact rather then fuzzy //optional
@@ -55,47 +67,39 @@ final class ArtistsMethod
      * album_artist = (integer) 0,1, if true filter for album artists only //optional
      * offset       = (integer) //optional
      * limit        = (integer) //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws ResultEmptyException
      */
-    public static function artists(array $input)
-    {
-        $browse = Api::getBrowse();
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $browse = $this->modelFactory->createBrowse(null, false);
         $browse->reset_filters();
         $browse->set_type('artist');
         $browse->set_sort('name', 'ASC');
+        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        Api::set_filter($method, $input['filter'] ?? '', $browse);
+        Api::set_filter('add', $input['add'] ?? '', $browse);
+        Api::set_filter('update', $input['update'] ?? '', $browse);
 
-        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter']);
-        Api::set_filter('add', $input['add']);
-        Api::set_filter('update', $input['update']);
-        // set the album_artist filter (if enabled)
-        if (($input['album_artist'])) {
-            Api::set_filter('album_artist', true);
+        $artists  = $browse->get_objects();
+        if ($artists === []) {
+            throw new ResultEmptyException(
+                T_('No Results')
+            );
         }
 
-        $artists = $browse->get_objects();
-        if (empty($artists)) {
-            Api::empty('artist', $input['api_format']);
-
-            return false;
-        }
-
-        ob_end_clean();
-        $user    = User::get_from_username(Session::username($input['auth']));
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
-        switch ($input['api_format']) {
-            case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                echo Json_Data::artists($artists, $include, $user->id);
-                break;
-            default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::artists($artists, $include, $user->id);
-        }
-        Session::extend($input['auth']);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->artists($artists, $include, $gatekeeper->getUser()->getId())
+            )
+        );
     }
 }

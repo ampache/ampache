@@ -619,10 +619,9 @@ class Xml_Data
      * @param  integer[] $artists (description here...)
      * @param  array $include Array of other items to include.
      * @param  integer $user_id
-     * @param  boolean $full_xml whether to return a full XML document or just the node.
      * @return string    return xml
      */
-    public static function artists($artists, $include = [], $user_id = null, $full_xml = true)
+    public static function artists($artists, $include = [], $user_id = null)
     {
         if ((count($artists) > self::$limit || self::$offset > 0) && self::$limit) {
             $artists = array_splice($artists, self::$offset, self::$limit);
@@ -670,7 +669,7 @@ class Xml_Data
                     "</artist>\n";
         } // end foreach artists
 
-        return self::output_xml($string, $full_xml);
+        return self::output_xml($string, true);
     } // artists
 
     /**

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 
 final class XmlOutput implements ApiOutputInterface
@@ -70,5 +71,30 @@ final class XmlOutput implements ApiOutputInterface
     public function emptyResult(string $type): string
     {
         return Xml_Data::empty();
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param integer[] $artists
+     * @param array $include
+     * @param null|integer $user_id
+     * @param boolean $encode
+     * @param boolean $object (whether to return as a named object array or regular array)
+     *
+     * @return array|string
+     */
+    public function artists(
+        array $artists,
+        array $include = [],
+        ?int $user_id = null,
+        bool $encode = true,
+        bool $object = true
+    ) {
+        return Xml_Data::artists(
+            $artists,
+            $include,
+            $user_id
+        );
     }
 }

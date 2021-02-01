@@ -61,4 +61,24 @@ interface ApiOutputInterface
      * @return string return empty JSON message
      */
     public function emptyResult(string $type): string;
+
+    /**
+     * This takes an array of artists and then returns a pretty JSON document with the information
+     * we want
+     *
+     * @param integer[] $artists
+     * @param array $include
+     * @param null|integer $user_id
+     * @param boolean $encode
+     * @param boolean $object (whether to return as a named object array or regular array)
+     *
+     * @return array|string
+     */
+    public function artists(
+        array $artists,
+        array $include = [],
+        ?int $user_id = null,
+        bool $encode = true,
+        bool $object = true
+    );
 }

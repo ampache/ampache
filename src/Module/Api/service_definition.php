@@ -39,6 +39,8 @@ return [
     Method\AlbumsMethod::class => autowire(),
     Method\AlbumMethod::class => autowire(),
     Method\ArtistAlbumsMethod::class => autowire(),
+    Method\ArtistMethod::class => autowire(),
+    Method\ArtistsMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),
