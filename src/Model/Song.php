@@ -392,6 +392,11 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         return (int) $this->id;
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * insert
      *

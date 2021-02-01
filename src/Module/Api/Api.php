@@ -75,7 +75,7 @@ class Api
         'label' => Method\LabelMethod::class,
         'label_artists' => Method\LabelArtistsMethod::class,
         'songs' => Method\SongsMethod::class,
-        'song' => Method\SongMethod::class,
+        Method\SongMethod::ACTION => Method\SongMethod::class,
         'song_delete' => Method\SongDeleteMethod::class,
         'playlists' => Method\PlaylistsMethod::class,
         'playlist' => Method\PlaylistMethod::class,

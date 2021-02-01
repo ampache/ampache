@@ -44,6 +44,7 @@ return [
     Method\ArtistsMethod::class => autowire(),
     Method\ArtistSongsMethod::class => autowire(),
     Method\FollowersMethod::class => autowire(),
+    Method\SongMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

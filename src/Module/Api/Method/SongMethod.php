@@ -21,60 +21,78 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\Song;
-use Ampache\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Model\ModelFactoryInterface;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class SongMethod
- * @package Lib\ApiMethods
- */
-final class SongMethod
+final class SongMethod implements MethodInterface
 {
-    private const ACTION = 'song';
+    public const ACTION = 'song';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->streamFactory = $streamFactory;
+        $this->modelFactory  = $modelFactory;
+    }
 
     /**
-     * song
      * MINIMUM_API_VERSION=380001
      *
      * return a single song
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of song
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws RequestParamMissingException
+     * @throws ResultEmptyException
      */
-    public static function song(array $input)
-    {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-        $object_id = (int) $input['filter'];
-        $user      = User::get_from_username(Session::username($input['auth']));
-        $song      = new Song($object_id);
-        if (!$song->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $objectId = $input['filter'] ?? null;
 
-            return false;
+        if ($objectId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo JSON_Data::songs(array((int) $object_id), $user->id, true, false);
-                break;
-            default:
-                echo Xml_Data::songs(array((int) $object_id), $user->id);
+        $song = $this->modelFactory->createSong((int) $objectId);
+        if ($song->isNew() === true) {
+            throw new ResultEmptyException((string) $objectId);
         }
-        Session::extend($input['auth']);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->songs(
+                    [(int) $objectId],
+                    $gatekeeper->getUser()->getId(),
+                    true,
+                    false
+                )
+            )
+        );
     }
 }
