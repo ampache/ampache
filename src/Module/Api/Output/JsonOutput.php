@@ -145,4 +145,16 @@ final class JsonOutput implements ApiOutputInterface
             $object
         );
     }
+
+    /**
+     * This handles creating a list of users
+     *
+     * @param int[] $users User identifier list
+     *
+     * @return string
+     */
+    public function users(array $users): string
+    {
+        return Json_Data::users($users);
+    }
 }

@@ -135,4 +135,16 @@ final class XmlOutput implements ApiOutputInterface
             $full_xml
         );
     }
+
+    /**
+     * This handles creating a list of users
+     *
+     * @param int[] $users User identifier list
+     *
+     * @return string
+     */
+    public function users(array $users): string
+    {
+        return Xml_Data::users($users);
+    }
 }

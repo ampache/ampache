@@ -114,7 +114,7 @@ class Api
         'user_create' => Method\UserCreateMethod::class,
         'user_update' => Method\UserUpdateMethod::class,
         'user_delete' => Method\UserDeleteMethod::class,
-        'followers' => Method\FollowersMethod::class,
+        Method\FollowersMethod::ACTION => Method\FollowersMethod::class,
         'following' => Method\FollowingMethod::class,
         'toggle_follow' => Method\ToggleFollowMethod::class,
         'last_shouts' => Method\LastShoutsMethod::class,

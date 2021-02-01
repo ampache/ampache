@@ -1099,10 +1099,9 @@ class Json_Data
      * This handles creating an JSON document for an user list
      *
      * @param  integer[]    $users    User identifier list
-     * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string JSON Object "user"
      */
-    public static function users($users, $object = true)
+    public static function users($users)
     {
         $JSON = [];
         foreach ($users as $user_id) {
@@ -1112,7 +1111,7 @@ class Json_Data
                 "username" => $user->username
             ));
         } // end foreach
-        $output = ($object) ? array("user" => $JSON) : $JSON[0];
+        $output = array("user" => $JSON);
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // users

@@ -20,86 +20,113 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\UserFollowerRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Log\LoggerInterface;
 
-/**
- * Class FollowersMethod
- * @package Lib\ApiMethods
- */
-final class FollowersMethod
+final class FollowersMethod implements MethodInterface
 {
-    private const ACTION = 'followers';
+    public const ACTION = 'followers';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private UserFollowerRepositoryInterface $userFollowerRepository;
+
+    private ConfigContainerInterface $configContainer;
+
+    private UserRepositoryInterface $userRepository;
+
+    private LoggerInterface $logger;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        UserFollowerRepositoryInterface $userFollowerRepository,
+        ConfigContainerInterface $configContainer,
+        UserRepositoryInterface $userRepository,
+        LoggerInterface $logger
+    ) {
+        $this->streamFactory          = $streamFactory;
+        $this->userFollowerRepository = $userFollowerRepository;
+        $this->configContainer        = $configContainer;
+        $this->userRepository         = $userRepository;
+        $this->logger                 = $logger;
+    }
 
     /**
-     * followers
      * MINIMUM_API_VERSION=380001
      * CHANGED_IN_API_VERSION=400004
      *
      * This gets followers of the user
      * Error when user not found or no followers
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * username = (string) $username
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws FunctionDisabledException
+     * @throws ResultEmptyException
+     * @throws RequestParamMissingException
      */
-    public static function followers(array $input)
-    {
-        if (!AmpConfig::get('sociable')) {
-            Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-        if (!Api::check_parameter($input, array('username'), self::ACTION)) {
-            return false;
-        }
-        $username = $input['username'];
-
-        $user     = User::get_from_username($username);
-        if (!$user->id) {
-            debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'username', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false) {
+            throw new FunctionDisabledException(T_('Enable: sociable'));
         }
 
-        $users = static::getUserFollowerRepository()->getFollowers($user->getId());
-        if (empty($users)) {
-            Api::empty('user', $input['api_format']);
+        $username = $input['username'] ?? null;
 
-            return false;
+        if ($username === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'username')
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo JSON_Data::users($users);
-                break;
-            default:
-                echo Xml_Data::users($users);
+        $userId = $this->userRepository->findByUsername((string) $username);
+        if ($userId === null) {
+            $this->logger->critical(
+                sprintf(
+                    'User `%s` cannot be found.',
+                    $username
+                ),
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %s'), $username)
+            );
         }
-        Session::extend($input['auth']);
 
-        return true;
-    }
+        $users = $this->userFollowerRepository->getFollowers($userId);
+        if ($users === []) {
+            $result = $output->emptyResult('user');
+        } else {
+            $result = $output->users($users);
+        }
 
-    /**
-     * @deprecated inject by constructor
-     */
-    private static function getUserFollowerRepository(): UserFollowerRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserFollowerRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }
