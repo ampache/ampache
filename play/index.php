@@ -589,7 +589,7 @@ if (!$cpaction && !$original) {
 if ($transcode) {
     $troptions = array();
     if ($bitrate) {
-        $troptions['bitrate'] = $bitrate;
+        $troptions['bitrate'] = ($maxbitrate < $media_bitrate) ? $maxbitrate : $bitrate;
     }
     if ($maxbitrate) {
         $troptions['maxbitrate'] = $maxbitrate;
