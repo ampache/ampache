@@ -34,18 +34,26 @@ This is the function that handles verifying a new handshake Takes a timestamp, a
 
 ```XML
 <root>
-    <auth>
-    <api>
-    <session_expire>
-    <update>
-    <add>
-    <clean>
-    <songs>
-    <albums>
-    <artists>
-    <playlists>
-    <videos>
-    <catalogs>
+	<auth>
+	<api>
+	<session_expire>
+	<update>
+	<add>
+	<clean>
+	<songs>
+	<albums>
+	<artists>
+	<genres>
+	<playlists>
+	<users>
+	<catalogs>
+	<videos>
+	<podcasts>
+	<podcast_episodes>
+	<shares>
+	<licenses>
+	<live_streams>
+	<labels>
 </root>
 ```
 
@@ -69,10 +77,29 @@ This can be called without being authenticated, it is useful for determining if 
 
 ```XML
 <root>
-    <session_expire>
-    <server>
-    <version>
-    <compatible>
+	<session_expire>
+	<server>
+	<version>
+	<compatible>
+	<auth>
+	<api>
+	<update>
+	<add>
+	<clean>
+	<songs>
+	<albums>
+	<artists>
+	<genres>
+	<playlists>
+	<users>
+	<catalogs>
+	<videos>
+	<podcasts>
+	<podcast_episodes>
+	<shares>
+	<licenses>
+	<live_streams>
+	<labels>
 </root>
 ```
 
@@ -133,10 +160,9 @@ Check Ampache for updates and run the update if there is one.
 ```
 
 * throws
+
 ```XML
-<root>
-    <success>
-</root>
+<root><error></root>
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/system_update.xml)
@@ -154,7 +180,6 @@ Get your server preferences
 ```XML
 <root>
     <preferences>
-        <pref>
 </root>
 ```
 
@@ -198,8 +223,7 @@ Get your user preferences
 
 ```XML
 <root>
-    <preferences>
-        <pref>
+    <preference>
 </root>
 ```
 
@@ -251,6 +275,7 @@ This takes a collection of inputs and returns ID + name for the object type
 
 ```XML
 <root>
+    <total_count>
     <song>|<album>|<artist>|<playlist>|<podcast>
 </root>
 ```
@@ -308,6 +333,7 @@ Just add 1 to the rule value to create a new group of rules.
 
 ```XML
 <root>
+    <total_count>
     <song>|<album>|<artist>|<playlist>|<label>|<user>|<video>
 </root>
 ```
@@ -345,6 +371,7 @@ This takes a collection of inputs and returns artist objects.
 
 ```XML
 <root>
+    <total_count>
     <artist>
 </root>
 ```
@@ -370,6 +397,7 @@ This returns a single artist based on the UID of said artist
 
 ```XML
 <root>
+    <total_count>
     <artist>
 </root>
 ```
@@ -396,6 +424,7 @@ This returns the albums of an artist
 
 ```XML
 <root>
+    <total_count>
     <album>
 </root>
 ```
@@ -422,6 +451,7 @@ This returns the songs of the specified artist
 
 ```XML
 <root>
+    <total_count>
     <song>
 </root>
 ```
@@ -454,6 +484,7 @@ This returns albums based on the provided search filters
 
 ```XML
 <root>
+    <total_count>
     <album>
 </root>
 ```
@@ -479,6 +510,7 @@ This returns a single album based on the UID provided
 
 ```XML
 <root>
+    <total_count>
     <album>
 </root>
 ```
@@ -505,6 +537,7 @@ This returns the songs of a specified album
 
 ```XML
 <root>
+    <total_count>
     <song>
 </root>
 ```
@@ -532,6 +565,7 @@ This returns the genres (Tags) based on the specified filter
 
 ```XML
 <root>
+    <total_count>
     <genre>
 </root>
 ```
@@ -558,6 +592,7 @@ Each genre element has an attribute "count" that indicates the number of people 
 
 ```XML
 <root>
+    <total_count>
     <genre>
 </root>
 ```
@@ -584,6 +619,7 @@ This returns the artists associated with the genre in question as defined by the
 
 ```XML
 <root>
+    <total_count>
     <artist>
 </root>
 ```
@@ -610,6 +646,7 @@ This returns the albums associated with the genre in question
 
 ```XML
 <root>
+    <total_count>
     <album>
 </root>
 ```
@@ -636,6 +673,7 @@ returns the songs for this genre
 
 ```XML
 <root>
+    <total_count>
     <song>
 </root>
 ```
@@ -667,6 +705,7 @@ Returns songs based on the specified filter
 
 ```XML
 <root>
+    <total_count>
     <song>
 </root>
 ```
@@ -691,6 +730,7 @@ returns a single song
 
 ```XML
 <root>
+    <total_count>
     <song>
 </root>
 ```
@@ -740,6 +780,7 @@ This takes a url and returns the song object in question
 
 ```XML
 <root>
+    <total_count>
     <song>
 </root>
 ```
@@ -771,6 +812,7 @@ This returns playlists based on the specified filter
 
 ```XML
 <root>
+    <total_count>
     <playlist>
 </root>
 ```
@@ -795,6 +837,7 @@ This returns a single playlist
 
 ```XML
 <root>
+    <total_count>
     <playlist>
 </root>
 ```
@@ -821,6 +864,7 @@ This returns the songs for a playlist
 
 ```XML
 <root>
+    <total_count>
     <song>
 </root>
 ```
@@ -846,6 +890,7 @@ This create a new playlist and return it
 
 ```XML
 <root>
+    <total_count>
     <playlist>
 </root>
 ```
@@ -971,6 +1016,8 @@ Get a list of song XML, indexes or id's based on some simple search criteria
 'forgotten' will search for tracks played before 'Popular Threshold' days
 'unplayed' added in 400002 for searching unplayed tracks
 
+**Note** when using the 'id' format total_count is not returned.
+
 | Input    | Type    | Description                                                      | Optional |
 |----------|---------|------------------------------------------------------------------|---------:|
 | 'mode'   | string  | 'recent', 'forgotten', 'unplayed', 'random' (default = 'random') |      YES |
@@ -986,6 +1033,7 @@ Get a list of song XML, indexes or id's based on some simple search criteria
 
 ```XML
 <root>
+    <total_count>
     <song>|<index>|<id>
 </root>
 ```
@@ -1017,6 +1065,7 @@ This searches the shares and returns... shares
 
 ```XML
 <root>
+    <total_count>
     <share>
 </root>
 ```
@@ -1041,6 +1090,7 @@ Return shares by UID
 
 ```XML
 <root>
+    <total_count>
     <share>
 </root>
 ```
@@ -1069,6 +1119,7 @@ Takes the file id with optional description and expires parameters.
 
 ```XML
 <root>
+    <total_count>
     <share>
 </root>
 ```
@@ -1149,6 +1200,7 @@ Return similar artist id's or similar song ids compared to the input filter
 
 ```XML
 <root>
+    <total_count>
     <song>|<artist>
 </root>
 ```
@@ -1175,6 +1227,7 @@ This searches the songs and returns... songs
 
 ```XML
 <root>
+    <total_count>
     <song>
 </root>
 ```
@@ -1202,6 +1255,7 @@ This returns video objects!
 
 ```XML
 <root>
+    <total_count>
     <video>
 </root>
 ```
@@ -1226,6 +1280,7 @@ This returns a single video
 
 ```XML
 <root>
+    <total_count>
     <video>
 </root>
 ```
@@ -1257,6 +1312,7 @@ This method HAD partial backwards compatibility with older api versions but it h
 
 ```XML
 <root>
+    <total_count>
     <song>|<album>|<artist>
 </root>
 ```
@@ -1288,6 +1344,7 @@ Get information about podcasts
 
 ```XML
 <root>
+    <total_count>
     <podcast>
 </root>
 ```
@@ -1306,13 +1363,14 @@ Get the podcast from it's id.
 
 | Input     | Type   | Description                                   | Optional |
 |-----------|--------|-----------------------------------------------|---------:|
-| 'filter'  | string |                                               |       NO |
+| 'filter'  | string | UID of podcast, returns podcast XML           |       NO |
 | 'include' | string | 'episodes' (include episodes in the response) |      YES |
 
 * return
 
 ```XML
 <root>
+    <total_count>
     <podcast>
 </root>
 ```
@@ -1341,6 +1399,7 @@ Takes the url and catalog parameters.
 
 ```XML
 <root>
+    <total_count>
     <podcast>
 </root>
 ```
@@ -1426,6 +1485,7 @@ This returns the episodes for a podcast
 
 ```XML
 <root>
+    <total_count>
     <podcast_episode>
 </root>
 ```
@@ -1450,6 +1510,7 @@ Get the podcast_episode from it's id.
 
 ```XML
 <root>
+    <total_count>
     <podcast_episode>
 </root>
 ```
@@ -1558,6 +1619,20 @@ Update an existing user.
 | 'disable'    | boolean | 0, 1                       |      YES |
 | 'maxbitrate' | string  |                            |      YES |
 
+* return
+
+```XML
+<root>
+    <success>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/user_update.xml)
 
 ### user_delete
@@ -1601,6 +1676,7 @@ This returns licenses based on the specified filter
 
 ```XML
 <root>
+    <total_count>
     <license>
 </root>
 ```
@@ -1625,6 +1701,7 @@ This returns a single license
 
 ```XML
 <root>
+    <total_count>
     <license>
 </root>
 ```
@@ -1651,6 +1728,7 @@ This returns the songs for a license
 
 ```XML
 <root>
+    <total_count>
     <song>
 </root>
 ```
@@ -1680,6 +1758,7 @@ This returns labels based on the specified filter
 
 ```XML
 <root>
+    <total_count>
     <label>
 </root>
 ```
@@ -1706,6 +1785,7 @@ This returns a single label
 
 ```XML
 <root>
+    <total_count>
     <label>
 </root>
 ```
@@ -1734,6 +1814,7 @@ This returns the artists for a label
 
 ```XML
 <root>
+    <total_count>
     <artist>
 </root>
 ```
@@ -1758,7 +1839,7 @@ This gets the followers for the requested username
 
 ```XML
 <root>
-    <song>
+    <user>
 </root>
 ```
 
@@ -1973,6 +2054,7 @@ This searches the catalogs and returns... catalogs
 
 ```XML
 <root>
+    <total_count>
     <catalog>
 </root>
 ```
@@ -1997,6 +2079,7 @@ Return catalog by UID
 
 ```XML
 <root>
+    <total_count>
     <catalog>
 </root>
 ```
@@ -2241,8 +2324,7 @@ Get your user preference by name
 
 ```XML
 <root>
-    <preferences>
-        <pref>
+    <preference>
 </root>
 ```
 
@@ -2270,8 +2352,7 @@ Get your server preference by name
 
 ```XML
 <root>
-    <preferences>
-        <pref>
+    <preference>
 </root>
 ```
 
@@ -2301,6 +2382,20 @@ Add a new preference to your server
 | 'description' | string  |                                                         |      YES |
 | 'subcategory' | string  |                                                         |      YES |
 | 'level'       | integer | access level required to change the value (default 100) |      YES |
+
+* return
+
+```XML
+<root>
+    <preference>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/preference_create.xml)
 
@@ -2546,6 +2641,9 @@ This is for controlling localplay
 <root>
     <localplay>
         <command>
+            <next>|<prev>|<stop>|<play>|<pause>|<add>|<volume_up>|<volume_down>|<volume_mute>|<delete_all>|<skip>|<status>
+        </command>
+    </localplay>
 </root>
 ```
 
@@ -2576,6 +2674,12 @@ This is for controlling democratic play (Songs only)
 
 * return
 
+```XML
+<root>
+    <url>|<method><result>|<song>
+</root>
+```
+
 * throws
 
 ```XML
@@ -2583,4 +2687,6 @@ This is for controlling democratic play (Songs only)
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/democratic%20\(play\).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/democratic%20\(vote\).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/master/docs/xml-responses/democratic%20\(playlist\).xml)
 

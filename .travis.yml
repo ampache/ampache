@@ -1,17 +1,25 @@
 language: php
 php:
- - 7.1
- - 7.3
- - 7.4
+ - "7.4"
+ - "8.0"
+ - "nightly"
+
+jobs:
+  allow_failures:
+    - php: "nightly"
+    - php: "8.0"
+
  
 before_install:
  - export PATH="$PATH:$HOME/.composer/vendor/bin"
- - composer global require friendsofphp/php-cs-fixer:~2.15.0
- - 
+ - composer global require friendsofphp/php-cs-fixer:^2.16.8
+
 before_script:
- - chmod +x scripts/tests/syntax.sh
- - chmod +x scripts/tests/codestyle.sh
+ - chmod +x resources/scripts/tests/syntax.sh
+ - chmod +x resources/scripts/tests/codestyle.sh
+ - composer update
 
 script:
- - scripts/tests/syntax.sh
- - scripts/tests/codestyle.sh
+ - resources/scripts/tests/syntax.sh
+ - resources/scripts/tests/codestyle.sh
+ - composer tests

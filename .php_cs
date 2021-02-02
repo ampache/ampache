@@ -1,20 +1,10 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
-    ->exclude('master')
-    ->exclude('develop')
-    ->exclude('core')
-    ->exclude('lib/components')
-    ->exclude('lib/vendor')
-    ->exclude('modules')
-    ->exclude('modules/captcha')
-    ->exclude('modules/oauth')
-    ->exclude('nbproject')
-    ->notPath('src/Symfony/Component/Translation/Tests/fixtures/resources.php')
-    ->in(__DIR__)
-    ->in(__DIR__ . '/modules/localplay')
-    ->in(__DIR__ . '/modules/catalog')
-    ->in(__DIR__ . '/modules/plugins')
+    ->exclude(['vendor', 'lib/components'])
+    ->in('public/')
+    ->in('src/')
+    ->in('tests/')
 ;
 
 return PhpCsFixer\Config::create()

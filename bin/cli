@@ -1,0 +1,72 @@
+#!/usr/bin/env php
+<?php
+/*
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright 2001 - 2020 Ampache.org
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+declare(strict_types=1);
+
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Cli;
+use Psr\Container\ContainerInterface;
+
+define('NO_SESSION', '1');
+define('CLI', 1);
+
+/** @var ContainerInterface $dic */
+$dic = require __DIR__ . '/../src/Config/Init.php';
+
+// Init App with name and version
+$app = new Ahc\Cli\Application(
+    'Ampache CLI',
+    $dic->get(ConfigContainerInterface::class)->get('version')
+);
+$app->add($dic->get(Cli\BroadcastCommand::class));
+$app->add($dic->get(Cli\ComputeCacheCommand::class));
+$app->add($dic->get(Cli\CronProcessCommand::class));
+$app->add($dic->get(Cli\ArtSizeCalculationCommand::class));
+$app->add($dic->get(Cli\RunChannelCommand::class));
+$app->add($dic->get(Cli\PrintTagsCommand::class));
+$app->add($dic->get(Cli\SongCleanupCommand::class));
+$app->add($dic->get(Cli\SortFilesCommand::class));
+$app->add($dic->get(Cli\ExportPlaylistCommand::class));
+$app->add($dic->get(Cli\ExportAlbumArtCommand::class));
+$app->add($dic->get(Cli\ArtCleanupCommand::class));
+$app->add($dic->get(Cli\RunWebsocketCommand::class));
+$app->add($dic->get(Cli\UpdateDbCommand::class));
+$app->add($dic->get(Cli\ConvertFileNamesCommand::class));
+$app->add($dic->get(Cli\UpdateCatalogFileCommand::class));
+$app->add($dic->get(Cli\UpdateCatalogCommand::class));
+$app->add($dic->get(Cli\AdminAddUserCommand::class));
+$app->add($dic->get(Cli\AdminUpdateDatabaseCommand::class));
+$app->add($dic->get(Cli\MoveCatalogPathCommand::class));
+
+$logo = <<<LOGO
+    _                               _          
+   / \   _ __ ___  _ __   __ _  ___| |__   ___ 
+  / _ \ | '_ ` _ \| '_ \ / _` |/ __| '_ \ / _ \
+ / ___ \| | | | | | |_) | (_| | (__| | | |  __/
+/_/   \_\_| |_| |_| .__/ \__,_|\___|_| |_|\___|
+                  |_|    
+LOGO;
+
+$app->logo($logo);
+
+$app->handle($_SERVER['argv']);

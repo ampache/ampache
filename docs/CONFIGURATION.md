@@ -24,7 +24,7 @@ This section contains all of the preferences directly relating to the interface 
 * **Popular Threshold** - This setting determines how many Top artists, Top Albums, Statistics, Recently Played Tracks are listed throughout the interface. Larger numbers can increase load times as more data has to be displayed on any one page. The Default is 10.
 * **Language** - Ampache is translated into many different languages using GETTEXT, this is a list of all current translations. At any one moment some of the strings may be missing from any one of the translations. If you would like to fix a missing string or contribute a new language please read [Translating](https://github.com/ampache/ampache/blob/master/locale/base/TRANSLATIONS).
 
-* **Theme** - This sets the them for the current user. Ampache reads the /themes directory for a listing of all current installed themes. For more information on creating a theme see the [Themes](https://github.com/ampache/ampache/wiki/Themes).
+* **Theme** - This sets the theme for the current user. Ampache reads the /themes directory for a listing of all current installed themes. For more information on creating a theme see the [Themes](https://github.com/ampache/ampache/wiki/Themes).
 
 * **Album Ellipse Threshold**, **Artist Ellipse Threshold** & **Title Ellipse Threshold** - These define how many letters, numbers, etc are displayed before a ellipse (...) is appended to the name and it is truncated. The truncation prevents interface distortion due to very long names.
 

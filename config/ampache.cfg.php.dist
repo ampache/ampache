@@ -7,7 +7,7 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 47
+config_version = 48
 
 ; Allow you to hard code a default git branch for Ampache
 ; If you set this value the inbuilt updater will use this branch for updates.
@@ -238,7 +238,7 @@ deferred_ext_metadata = "true"
 ; This list specifies possible delimiters additional to \0
 ; This setting takes a regex pattern.
 ; DEFAULT: // / \ | , ;
-additional_genre_delimiters = "[/]{2}|[/|\\\\|\|,|;]"
+additional_genre_delimiters = "[/]{2}|[/\\\\|,;]"
 
 ; Enable importing custom metadata from files.
 ; This will need a bit of time during the import. So you may want to disable this
@@ -600,6 +600,23 @@ sociable = "true"
 ; DEFAULT: db,tags,folder,spotify,musicbrainz,lastfm,google
 art_order = "db,tags,folder,spotify,musicbrainz,lastfm,google"
 
+; Gather song art
+; Gather song art additionally to the album art. This will add each
+; image of a song into the database. If your database contains
+; many songs not related to an album this should possibly be set to true.
+; Otherwise for an environment that contains mainly full albums
+; this should remain false to avoid multiple entries of the same image.
+; You need to set show_song_art to true if you want to make the song images visible.
+; DEFAULT = false
+;gather_song_art = "true"
+
+; Show song art
+; Show song art instead of album art in web UI and Subsonic API.
+; This will only work when gather_song_art is set to true AND when
+; there is song art in the database.
+; DEFAULT: false
+;show_song_art = "true"
+
 ; Spotify Album art search filter
 ;  Narrow the search.
 ;  POSSIBLE VALUES:  artist,(year:1991 or year:1991-2000)
@@ -617,12 +634,6 @@ art_order = "db,tags,folder,spotify,musicbrainz,lastfm,google"
 ; while browsing. Requires Last.FM.
 ; DEFAULT: "false"
 ;show_similar = "true"
-
-; Concerts
-; Set this to true to enable display of artist concerts
-; Requires Last.FM.
-; DEFAULT: "false"
-;show_concerts = "true"
 
 ;#########################################################
 ;      API keys                                          #
