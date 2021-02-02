@@ -15,15 +15,13 @@ interface MusicControlProps {
     authKey?: AuthKey;
 }
 
-const MusicControl: React.FC = (props) => {
+const MusicControl: React.FC<MusicControlProps> = (props) => {
     const musicContext = useContext(MusicContext);
 
     const [ratingToggle, setRatingToggle] = useState(false);
 
     const [isSeeking, setIsSeeking] = useState(false);
     const [seekPosition, setSeekPosition] = useState(-1);
-
-    const [error, setError] = useState<Error | AmpacheError>(null);
 
     const handleRatingToggle = () => {
         if (
