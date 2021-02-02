@@ -222,7 +222,7 @@ class Stats
             $threshold = 0;
         }
 
-        if (AmpConfig::get('cron_cache') && !defined('NO_CRON_CACHE')) {
+        if (AmpConfig::get('cron_cache')) {
             $sql = "SELECT `count` AS `object_cnt` FROM `cache_object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ? AND `threshold` = " . $threshold;
         } else {
             $sql = "SELECT COUNT(*) AS `object_cnt` FROM `object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ?";
@@ -432,6 +432,7 @@ class Stats
      * @param string $count_type
      * @param integer $user_id
      * @param boolean $random
+     * @param boolean $addAdditionalColumns
      * @return string
      */
     public static function get_top_sql(
@@ -439,7 +440,8 @@ class Stats
         $threshold,
         $count_type = 'stream',
         $user_id = null,
-        $random = false
+        $random = false,
+        bool $addAdditionalColumns = false
     ) {
         $type = self::validate_type($input_type);
         $date = time() - (86400 * (int)$threshold);
@@ -453,14 +455,14 @@ class Stats
 
             return $sql;
         }
-        if ($user_id === null && AmpConfig::get('cron_cache') && !defined('NO_CRON_CACHE')) {
+        if ($user_id === null && AmpConfig::get('cron_cache') && !$addAdditionalColumns) {
             $sql = "SELECT `object_id` as `id`, MAX(`count`) AS `count` FROM `cache_object_count` " . "WHERE `object_type` = '" . $type . "' AND `count_type` = '" . $count_type . "' AND `threshold` = '" . $threshold . "' " . "GROUP BY `object_id`, `object_type`";
         } else {
             $allow_group_disks = (AmpConfig::get('album_group')) ? true : false;
             // Select Top objects counting by # of rows for you only
             $sql = "SELECT MAX(`object_id`) as `id`, COUNT(*) AS `count`";
             // Add additional columns to use the select query as insert values directly
-            if (defined('NO_CRON_CACHE')) {
+            if ($addAdditionalColumns) {
                 $sql .= ", `object_type`, `count_type`, " . $threshold . " AS `threshold`";
             }
             $sql .= " FROM `object_count`";
