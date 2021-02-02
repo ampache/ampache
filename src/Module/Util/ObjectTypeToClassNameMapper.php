@@ -62,7 +62,7 @@ final class ObjectTypeToClassNameMapper
         'user' => User::class,
         'live_stream' => Live_Stream::class,
         'podcast_episode' => Podcast_Episode::class,
-        'tvshow_episore' => TVShow_Episode::class,
+        'tvshow_episode' => TVShow_Episode::class,
         'clip' => Clip::class,
         'label' => Label::class,
     ];
