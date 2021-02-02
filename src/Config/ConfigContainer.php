@@ -119,4 +119,14 @@ final class ConfigContainer implements ConfigContainerInterface
     {
         return __DIR__ . '/../../config/ampache.cfg.php';
     }
+
+    public function getPopularThreshold(int $default): int
+    {
+        $value = $this->get(ConfigurationKeyEnum::POPULAR_THRESHOLD);
+        if ($value === null) {
+            return $default;
+        }
+
+        return (int) $value;
+    }
 }

@@ -20,65 +20,94 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Model\Shoutbox;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class LastShoutsMethod
- * @package Lib\ApiMethods
- */
-final class LastShoutsMethod
+final class LastShoutsMethod implements MethodInterface
 {
-    private const ACTION = 'last_shouts';
+    public const ACTION = 'last_shouts';
+
+    private const LIMIT = 10;
+
+    private UserRepositoryInterface $userRepository;
+
+    private ShoutRepositoryInterface $shoutRepository;
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        UserRepositoryInterface $userRepository,
+        ShoutRepositoryInterface $shoutRepository,
+        StreamFactoryInterface $streamFactory,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->userRepository  = $userRepository;
+        $this->shoutRepository = $shoutRepository;
+        $this->streamFactory   = $streamFactory;
+        $this->configContainer = $configContainer;
+    }
 
     /**
-     * last_shouts
      * MINIMUM_API_VERSION=380001
      *
      * This get the latest posted shouts
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * username = (string) $username //optional
      * limit = (integer) $limit //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws FunctionDisabledException
+     * @throws RequestParamMissingException
      */
-    public static function last_shouts(array $input)
-    {
-        if (!AmpConfig::get('sociable')) {
-            Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false) {
+            throw new FunctionDisabledException(T_('Enable: sociable'));
+        }
 
-            return false;
+        $username = $input['username'] ?? null;
+
+        if ($username === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'username')
+            );
         }
-        if (!Api::check_parameter($input, array('username'), self::ACTION)) {
-            return false;
-        }
-        $limit = (int) ($input['limit']);
+        $limit = (int) ($input['limit'] ?? 0);
         if ($limit < 1) {
-            $limit = AmpConfig::get('popular_threshold', 10);
+            $limit = $this->configContainer->getPopularThreshold(static::LIMIT);
         }
-        $username = $input['username'];
-        $shouts   = (!empty($username))
-            ? Shoutbox::get_top($limit, $username)
-            : Shoutbox::get_top($limit);
+        $shouts = $this->shoutRepository->getTop(
+            $limit,
+            $this->userRepository->findByUsername($input['username'])
+        );
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json_Data::shouts($shouts);
-                break;
-            default:
-                echo Xml_Data::shouts($shouts);
-        }
-        Session::extend($input['auth']);
-
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->shouts($shouts)
+            )
+        );
     }
 }

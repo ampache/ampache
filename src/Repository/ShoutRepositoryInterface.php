@@ -37,7 +37,15 @@ interface ShoutRepositoryInterface
     public function collectGarbage(?string $object_type = null, ?int $object_id = null): void;
 
     /**
-     * this function deletes the shoutbox entry
+     * This function deletes the shoutbox entry
      */
     public function delete(int $shoutboxId): void;
+
+    /**
+     * This returns the top user_shouts, shoutbox objects are always shown regardless and count against the total
+     * number of objects shown
+     *
+     * @return int[]
+     */
+    public function getTop(int $limit, ?int $userId = null): array;
 }

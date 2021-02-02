@@ -250,6 +250,26 @@ class ConfigContainerTest extends MockeryTestCase
         );
     }
 
+    public function testGetPopularThresholdReturnsDefault(): void
+    {
+        $default = 666;
+
+        $this->assertSame(
+            $default,
+            $this->createSubject([])->getPopularThreshold($default)
+        );
+    }
+
+    public function testGetPopularThresholdReturnsValueFromConfig(): void
+    {
+        $value = 666;
+
+        $this->assertSame(
+            $value,
+            $this->createSubject([ConfigurationKeyEnum::POPULAR_THRESHOLD => (string) $value])->getPopularThreshold(42)
+        );
+    }
+
     private function createSubject(array $configuration = []): ConfigContainerInterface
     {
         return new ConfigContainer($configuration);

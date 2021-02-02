@@ -24,10 +24,21 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Model\ModelFactoryInterface;
+use Ampache\Model\Shoutbox;
+use Ampache\Model\User;
 use Ampache\Module\Api\Json_Data;
 
 final class JsonOutput implements ApiOutputInterface
 {
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->modelFactory = $modelFactory;
+    }
+
     /**
      * At the moment, this method just acts as a proxy
      */
@@ -147,7 +158,7 @@ final class JsonOutput implements ApiOutputInterface
     }
 
     /**
-     * This handles creating a list of users
+     * At the moment, this method just acts as a proxy
      *
      * @param int[] $users User identifier list
      *
@@ -156,5 +167,31 @@ final class JsonOutput implements ApiOutputInterface
     public function users(array $users): string
     {
         return Json_Data::users($users);
+    }
+
+    /**
+     * This handles creating a result for a shout list
+     *
+     * @param int[] $shoutIds Shout identifier list
+     */
+    public function shouts(array $shoutIds): string
+    {
+        $result = [];
+        foreach ($shoutIds as $shoutId) {
+            $shout = $this->modelFactory->createShoutbox($shoutId);
+            $user  = $this->modelFactory->createUser((int) $shout->user);
+
+            $result[] = [
+                'id' => (string) $shoutId,
+                'date' => $shout->date,
+                'text' => $shout->text,
+                'user' => [
+                    'id' => (string) $shout->user,
+                    'username' => $user->username
+                ]
+            ];
+        }
+
+        return json_encode(['shout' => $result], JSON_PRETTY_PRINT);
     }
 }

@@ -96,4 +96,9 @@ interface ConfigContainerInterface
      * Returns the path to the ampache config file
      */
     public function getConfigFilePath(): string;
+
+    /**
+     * Returns the amount if items displayed in `popular` lists
+     */
+    public function getPopularThreshold(int $default): int;
 }

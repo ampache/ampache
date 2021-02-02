@@ -117,7 +117,7 @@ class Api
         Method\FollowersMethod::ACTION => Method\FollowersMethod::class,
         'following' => Method\FollowingMethod::class,
         'toggle_follow' => Method\ToggleFollowMethod::class,
-        'last_shouts' => Method\LastShoutsMethod::class,
+        Method\LastShoutsMethod::ACTION => Method\LastShoutsMethod::class,
         'rate' => Method\RateMethod::class,
         'flag' => Method\FlagMethod::class,
         'record_play' => Method\RecordPlayMethod::class,

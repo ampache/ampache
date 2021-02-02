@@ -1117,37 +1117,6 @@ class Json_Data
     } // users
 
     /**
-     * shouts
-     *
-     * This handles creating an JSON document for a shout list
-     *
-     * @param  integer[]    $shouts    Shout identifier list
-     * @param  boolean $object (whether to return as a named object array or regular array)
-     * @return string JSON Object "shout"
-     */
-    public static function shouts($shouts, $object = true)
-    {
-        $JSON = [];
-        foreach ($shouts as $shout_id) {
-            $shout    = new Shoutbox($shout_id);
-            $user     = new User($shout->user);
-            $ourArray = array(
-                "id" => (string)$shout_id,
-                "date" => $shout->date,
-                "text" => $shout->text,
-                "user" => array(
-                    "id" => (string) $shout->user,
-                    "username" => $user->username
-                )
-            );
-            array_push($JSON, $ourArray);
-        }
-        $output = ($object) ? array("shout" => $JSON) : $JSON[0];
-
-        return json_encode($output, JSON_PRETTY_PRINT);
-    } // shouts
-
-    /**
      * timeline
      *
      * This handles creating an JSON document for an activity list

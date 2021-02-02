@@ -120,4 +120,13 @@ interface ApiOutputInterface
     public function users(
         array $users
     ): string;
+
+    /**
+     * This handles creating a result for a shout list
+     *
+     * @param int[] $shouts List of shout ids
+     *
+     * @return string
+     */
+    public function shouts(array $shoutIds): string;
 }

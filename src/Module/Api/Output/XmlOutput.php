@@ -24,10 +24,21 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Model\ModelFactoryInterface;
+use Ampache\Model\Shoutbox;
+use Ampache\Model\User;
 use Ampache\Module\Api\Xml_Data;
 
 final class XmlOutput implements ApiOutputInterface
 {
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->modelFactory = $modelFactory;
+    }
+
     /**
      * At the moment, this method just acts a proxy
      */
@@ -137,7 +148,7 @@ final class XmlOutput implements ApiOutputInterface
     }
 
     /**
-     * This handles creating a list of users
+     * At the moment, this method just acts as a proxy
      *
      * @param int[] $users User identifier list
      *
@@ -146,5 +157,27 @@ final class XmlOutput implements ApiOutputInterface
     public function users(array $users): string
     {
         return Xml_Data::users($users);
+    }
+
+    /**
+     * This handles creating an xml document for a shout list
+     *
+     * @param int[] $shoutIds Shout identifier list
+     */
+    public function shouts(array $shoutIds): string
+    {
+        $result = '';
+        foreach ($shoutIds as $shoutId) {
+            $shout = $this->modelFactory->createShoutbox($shoutId);
+            $user  = $this->modelFactory->createUser((int) $shout->user);
+
+            $result .= "\t<shout id=\"" . $shoutId . "\">\n" . "\t\t<date>" . $shout->date . "</date>\n" . "\t\t<text><![CDATA[" . $shout->text . "]]></text>\n";
+            if ($user->id) {
+                $result .= "\t\t<user id=\"" . (string)$user->id . "\">\n" . "\t\t\t<username><![CDATA[" . $user->username . "]]></username>\n" . "\t\t</user>\n";
+            }
+            $result .= "\t</shout>\n";
+        }
+
+        return Xml_Data::output_xml($result);
     }
 }
