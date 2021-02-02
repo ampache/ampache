@@ -24,11 +24,10 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\Podcast_Episode;
-use Ampache\Model\Song;
 use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Session;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**
  * Class DownloadMethod
@@ -71,13 +70,10 @@ final class DownloadMethod
             $params .= '&format=' . $format;
         }
         $url = '';
-        if ($type == 'song') {
-            $media = new Song($object_id);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
-        }
-        if ($type == 'podcast_episode' || $type == 'podcast') {
-            $media = new Podcast_Episode($object_id);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
+        if (in_array($type, ['song', 'podcast_episode', 'podcast'])) {
+            $className = ObjectTypeToClassNameMapper::map($type);
+            $media     = new $className($object_id);
+            $url       = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
         }
         if (!empty($url)) {
             Session::extend($input['auth']);
