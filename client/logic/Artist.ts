@@ -7,9 +7,11 @@ import { Song } from '~logic/Song';
 export type Artist = {
     id: number;
     name: string;
-    tags: [];
-    albums: Album[] | number; //The API returns the count if the include is set to false.
-    songs: Song[] | number;
+    tags: []; //TODO: Did this change into genre?
+    albums: Album[];
+    albumcount: number;
+    songs: Song[];
+    songcount: number;
     art: string;
     flag: boolean;
     preciserating: number;
@@ -17,6 +19,7 @@ export type Artist = {
     averagerating: number;
     mbid: string;
     summary: string;
+    time: number;
     yearformed: number;
     placeformed: string;
 };
@@ -103,6 +106,6 @@ export const getArtist = (
         if (JSONData.error) {
             throw new AmpacheError(JSONData.error);
         }
-        return JSONData.artist[0] as Artist;
+        return JSONData as Artist;
     });
 };

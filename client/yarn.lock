@@ -6209,9 +6209,10 @@ react-async-popup@^0.0.6:
   resolved "https://registry.yarnpkg.com/react-async-popup/-/react-async-popup-0.0.6.tgz#ccd5aa802c81c82d056357bef825fb98f0b15d08"
   integrity sha512-uzUGHENIkAsUsZk3da4HEijhEOTJWX+wgg3MVgE5Y40hUPImcC5lRjtFajx2MiUZxmKgpL1ebKULUmRHIMrE7g==
 
-"react-audio-player@https://github.com/justinmc/react-audio-player":
+react-audio-player@^0.14.0:
   version "0.14.0"
-  resolved "https://github.com/justinmc/react-audio-player#f05e92d060624018c212589172ce7d30df698062"
+  resolved "https://registry.yarnpkg.com/react-audio-player/-/react-audio-player-0.14.0.tgz#b57bc2b980b1bb3c8b4f6a2134062160462c5081"
+  integrity sha512-B0kP3KVjbp+TXG8TUh1kl91xnYwYx8c+YLbx3oZS9drcHvgTPWl4sl8inmwyLWPH0bMW5eqGFL5qT1fuHk8Ysw==
   dependencies:
     prop-types "^15.7.2"
 
