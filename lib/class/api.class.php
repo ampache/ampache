@@ -2122,7 +2122,7 @@ class Api
         self::$browse->set_sort('title', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter']);
+        self::set_filter($method, $input['filter']);
 
         $video_ids = self::$browse->get_objects();
         $user      = User::get_from_username(Session::username($input['auth']));
@@ -3161,12 +3161,14 @@ class Api
      * MINIMUM_API_VERSION=400001
      *
      * Take a song_id and update the object_count and user_activity table with a play
-     * This allows other sources to record play history to Ampache
+     * This allows other sources to record play history to Ampache.
+     * Require 100 (Admin) permission to change other user's play history
      *
      * @param array $input
      * id     = (integer) $object_id
-     * user   = (integer) $user_id
+     * user   = (integer) $user_id //optional
      * client = (string) $agent //optional
+     * date   = (integer) UNIXTIME() //optional
      * @return boolean
      */
     public static function record_play($input)
@@ -3174,11 +3176,17 @@ class Api
         if (!self::check_parameter($input, array('id', 'user'), 'record_play')) {
             return false;
         }
+        $api_user = User::get_from_username(Session::username($input['auth']));
+        // If you are setting plays for other users make sure we have an admin
+        if (isset($input['user']) && ((int) $input['user'] !== $api_user->id && !self::check_access('interface', 100, $api_user->id, 'record_play', $input['api_format']))) {
+            return false;
+        }
         ob_end_clean();
-        $object_id = $input['id'];
-        $user_id   = (int) $input['user'];
-        $user      = new User($user_id);
+        $object_id = (int) $input['id'];
+        $user_id   = (isset($input['user'])) ? (int) $input['user'] : $api_user->id;
+        $user      = (isset($input['user'])) ? new User($user_id) : $api_user;
         $valid     = in_array($user->id, User::get_valid_users());
+        $date      = (is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
 
         // validate supplied user
         if ($valid === false) {
@@ -3188,27 +3196,25 @@ class Api
         }
 
         // validate client string or fall back to 'api'
-        if ($input['client']) {
-            $agent = $input['client'];
-        } else {
-            $agent = 'api';
-        }
+        $agent = ($input['client'])
+            ? $input['client']
+            : 'api';
 
-        $item = new Song($object_id);
-        if (!$item->id) {
+        $media = new Song($object_id);
+        if (!$media->id) {
             self::message('error', T_('Library item not found'), '404', $input['api_format']);
 
             return false;
         }
-        debug_event('api.class', 'record_play: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
+        debug_event('api.class', 'record_play: ' . $media->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
         // internal scrobbling (user_activity and object_count tables)
-        $item->set_played($user_id, $agent, array(), time());
+        if ($media->set_played($user_id, $agent, array(), $date)) {
+            // scrobble plugins
+            User::save_mediaplay($user, $media);
+        }
 
-        // scrobble plugins
-        User::save_mediaplay($user, $item);
-
-        self::message('success', 'successfully recorded play: ' . $item->id, null, $input['api_format']);
+        self::message('success', 'successfully recorded play: ' . $media->id, null, $input['api_format']);
         Session::extend($input['auth']);
 
         return true;
