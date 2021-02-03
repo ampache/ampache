@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 import AmpacheError from '~logic/AmpacheError';
 
 interface MusicControlProps {
-    authKey?: AuthKey;
+    authKey: AuthKey;
 }
 
 const MusicControl: React.FC<MusicControlProps> = (props) => {
