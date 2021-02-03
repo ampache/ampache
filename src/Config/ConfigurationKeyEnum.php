@@ -107,4 +107,5 @@ final class ConfigurationKeyEnum
     public const WRITE_ID3                     = 'write_id3';
     public const ALBUM_GROUP                   = 'album_group';
     public const POPULAR_THRESHOLD             = 'popular_threshold';
+    public const STREAM_BEAUTIFUL_URL          = 'stream_beautiful_url';
 }

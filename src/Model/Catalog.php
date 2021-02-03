@@ -39,6 +39,7 @@ use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\Stream\Url\StreamUrlParserInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -2420,7 +2421,7 @@ abstract class Catalog extends database_object
                 $file = trim((string)$file);
                 // Check to see if it's a url from this ampache instance
                 if (substr($file, 0, strlen(AmpConfig::get('web_path'))) == AmpConfig::get('web_path')) {
-                    $data       = Stream_Url::parse($file);
+                    $data       = static::getStreamUrlParser()->parse($file);
                     $sql        = 'SELECT COUNT(*) FROM `song` WHERE `id` = ?';
                     $db_results = Dba::read($sql, array($data['id']));
                     if (Dba::num_rows($db_results)) {
@@ -3061,5 +3062,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(LicenseRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private static function getStreamUrlParser(): StreamUrlParserInterface
+    {
+        global $dic;
+
+        return $dic->get(StreamUrlParserInterface::class);
     }
 }

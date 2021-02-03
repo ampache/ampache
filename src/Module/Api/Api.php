@@ -46,7 +46,7 @@ class Api
         'handshake' => Method\HandshakeMethod::class,
         'ping' => Method\PingMethod::class,
         'goodbye' => Method\GoodbyeMethod::class,
-        'url_to_song' => Method\UrlToSongMethod::class,
+        Method\UrlToSongMethod::ACTION => Method\UrlToSongMethod::class,
         'get_indexes' => Method\GetIndexesMethod::class,
         'get_bookmark' => Method\GetBookmarkMethod::class,
         'get_similar' => Method\GetSimilarMethod::class,

@@ -53,6 +53,7 @@ return [
     Method\SongsMethod::class => autowire(),
     Method\VideosMethod::class => autowire(),
     Method\VideoMethod::class => autowire(),
+    Method\UrlToSongMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

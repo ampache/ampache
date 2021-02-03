@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback;
 
 use Ampache\Model\Media;
+use Ampache\Module\Stream\Url\StreamUrlParserInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
@@ -232,7 +233,7 @@ class WebPlayer
             if ($item->type == 'broadcast') {
                 $force_type = 'mp3';
             }
-            $urlinfo = Stream_URL::parse($item->url);
+            $urlinfo = static::getStreamUrlParser()->parse($item->url);
             $types   = self::get_types($item, $urlinfo, $transcode_cfg, $force_type);
             if (!in_array($types['player'], $jptypes)) {
                 $jptypes[] = $types['player'];
@@ -306,10 +307,10 @@ class WebPlayer
             $json[$kmember] = $item->$member;
         }
 
-        $urlinfo  = Stream_URL::parse($item->url);
-        $types    = self::get_types($item, $urlinfo, $transcode_cfg, $force_type);
-        $url      = $urlinfo['base_url'];
-        $media    = self::get_media_object($urlinfo);
+        $urlinfo = static::getStreamUrlParser()->parse($item->url);
+        $types   = self::get_types($item, $urlinfo, $transcode_cfg, $force_type);
+        $url     = $urlinfo['base_url'];
+        $media   = self::get_media_object($urlinfo);
 
         if ($media != null) {
             if ($urlinfo['type'] == 'song') {
@@ -340,5 +341,15 @@ class WebPlayer
         }
 
         return json_encode($json);
+    }
+
+    /**
+     * @deprecated inject by constructor
+     */
+    private static function getStreamUrlParser(): StreamUrlParserInterface
+    {
+        global $dic;
+
+        return $dic->get(StreamUrlParserInterface::class);
     }
 }

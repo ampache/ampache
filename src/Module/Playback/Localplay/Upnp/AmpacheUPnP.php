@@ -27,6 +27,7 @@ use Ampache\Module\Playback\Localplay\localplay_controller;
 use Ampache\Model\Preference;
 use Ampache\Model\Song;
 use Ampache\Module\Playback\Stream_Url;
+use Ampache\Module\Stream\Url\StreamUrlParserInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;
@@ -469,15 +470,17 @@ class AmpacheUPnP extends localplay_controller
 
         $playlist = $this->_upnp->GetPlaylistItems();
 
-        $results = array();
-        $idx     = 1;
+        $results         = array();
+        $idx             = 1;
+        $streamUrlParser = $this->getStreamUrlParser();
+
         foreach ($playlist as $key => $item) {
             $data          = array();
             $data['link']  = $item['link'];
             $data['id']    = $idx;
             $data['track'] = $idx;
 
-            $url_data = Stream_Url::parse($item['link']);
+            $url_data = $streamUrlParser->parse($item['link']);
             if ($url_data != null) {
                 $song = new Song($url_data['id']);
                 if ($song != null) {
@@ -520,7 +523,7 @@ class AmpacheUPnP extends localplay_controller
         $status['track']       = $item['link'];
         $status['track_title'] = $item['name'];
 
-        $url_data = Stream_Url::parse($item['link']);
+        $url_data = $this->getStreamUrlParser()->parse($item['link']);
         if ($url_data != null) {
             $song = new Song($url_data['id']);
             if ($song != null) {
@@ -547,5 +550,15 @@ class AmpacheUPnP extends localplay_controller
         debug_event('upnp.controller', 'Connected.', 5);
 
         return true;
+    }
+
+    /**
+     * @deprecated inject by constructor
+     */
+    private function getStreamUrlParser(): StreamUrlParserInterface
+    {
+        global $dic;
+
+        return $dic->get(StreamUrlParserInterface::class);
     }
 }
