@@ -298,9 +298,9 @@ class TVShow extends database_object implements library_item
     }
 
     /**
+     * display_art
      * @param integer $thumb
      * @param boolean $force
-     * @return mixed|void
      */
     public function display_art($thumb = 2, $force = false)
     {
@@ -429,7 +429,7 @@ class TVShow extends database_object implements library_item
         }
 
         if (isset($data['edit_tags'])) {
-            $this->update_tags($data['edit_tags'], $override_childs, $add_to_childs, $current_id, true);
+            $this->update_tags($data['edit_tags'], $override_childs, $add_to_childs, true);
         }
 
         return $current_id;
@@ -442,16 +442,11 @@ class TVShow extends database_object implements library_item
      * @param string $tags_comma
      * @param boolean $override_childs
      * @param boolean $add_to_childs
-     * @param integer $current_id
      * @param boolean $force_update
      */
-    public function update_tags($tags_comma, $override_childs, $add_to_childs, $current_id = null, $force_update = false)
+    public function update_tags($tags_comma, $override_childs, $add_to_childs, $force_update = false)
     {
-        if ($current_id === null) {
-            $current_id = $this->id;
-        }
-
-        Tag::update_tag_list($tags_comma, 'tvshow', $current_id, $force_update ? true : $override_childs);
+        Tag::update_tag_list($tags_comma, 'tvshow', $this->id, $force_update ? true : $override_childs);
 
         if ($override_childs || $add_to_childs) {
             $episodes = $this->get_episodes();

@@ -48,7 +48,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
 } ?>
 <div id="information_actions">
     <ul>
-    <?php if (Core::get_global('user')->has_access('50')) { ?>
+    <?php if (Core::get_global('user')->has_access('50') || $playlist->user == Core::get_global('user')->id) { ?>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $playlist->id; ?>', 'reorder_playlist_table', 'track_',
                                             '<?php echo AmpConfig::get('web_path'); ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id; ?>', 'refresh_playlist_medias')">
@@ -124,6 +124,7 @@ UI::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
     $browse->set_type('playlist_media');
     $browse->add_supplemental_object('playlist', $playlist->id);
     $browse->set_static_content(true);
+    $browse->duration = Search::get_total_duration($object_ids);
     $browse->show_objects($object_ids, true);
     $browse->store(); ?>
 </div>

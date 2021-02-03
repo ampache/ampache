@@ -381,7 +381,7 @@ $t_logout    = T_('Log out'); ?>
                     <?php
                         } else { ?>
                         <span id="loginInfo">
-                            <a href="<?php echo $web_path; ?>/login.php" class="nohtml"><?php echo T_('Login'); ?></a>
+                            <a href="<?php echo $web_path; ?>/login.php?force_display=1" class="nohtml"><?php echo T_('Login'); ?></a>
                         <?php
                             if (AmpConfig::get('allow_public_registration') && Mailer::is_mail_enabled()) { ?>
                                 / <a href="<?php echo $web_path; ?>/register.php" class="nohtml"><?php echo T_('Register'); ?></a>
@@ -410,7 +410,7 @@ $t_logout    = T_('Log out'); ?>
                     </a>
                 </div>
                 <div class="topmenu_item">
-                    <a href="<?php echo $web_path ?>/browse.php?action=artist">
+                    <a href="<?php echo $web_path ?>/browse.php?action=album_artist">
                         <?php echo UI::get_image('topmenu-artist', $t_artists); ?>
                         <span><?php echo $t_artists ?></span>
                     </a>

@@ -134,14 +134,14 @@ if ($directplay_limit > 0) {
     <div class="album_group_disks_actions">
         <?php
             if ($show_direct_play) {
-                echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $c_album->get_http_album_query_ids('object_id'), 'play', T_('Play'), 'directplay_full_' . $c_album->id);
+                echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $c_album->get_http_album_query_id('object_id'), 'play', T_('Play'), 'directplay_full_' . $c_album->id);
                 if (Stream_Playlist::check_autoplay_append()) {
-                    echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $c_album->get_http_album_query_ids('object_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_' . $c_album->id);
+                    echo Ajax::button('?page=stream&action=directplay&object_type=album&' . $c_album->get_http_album_query_id('object_id') . '&append=true', 'play_add', T_('Play last'), 'addplay_album_' . $c_album->id);
                 }
             }
         if ($show_playlist_add) {
-            echo Ajax::button('?action=basket&type=album&' . $c_album->get_http_album_query_ids('id'), 'add', T_('Add to temporary playlist'), 'play_full_' . $c_album->id);
-            echo Ajax::button('?action=basket&type=album_random&' . $c_album->get_http_album_query_ids('id'), 'random', T_('Random to temporary playlist'), 'play_random_' . $c_album->id);
+            echo Ajax::button('?action=basket&type=album&' . $c_album->get_http_album_query_id('id'), 'add', T_('Add to temporary playlist'), 'play_full_' . $c_album->id);
+            echo Ajax::button('?action=basket&type=album_random&' . $c_album->get_http_album_query_id('id'), 'random', T_('Random to temporary playlist'), 'play_random_' . $c_album->id);
         } ?>
         <?php if (Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
@@ -155,7 +155,7 @@ if ($directplay_limit > 0) {
         <?php
         } ?>
         <?php if (Access::check_function('batch_download') && check_can_zip('album')) { ?>
-            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $c_album->get_http_album_query_ids('id'); ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
+            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&<?php echo $c_album->get_http_album_query_id('id'); ?>"><?php echo UI::get_icon('batch_download', T_('Download')); ?></a>
         <?php
         } ?>
         <?php if (Access::check('interface', 50)) { ?>

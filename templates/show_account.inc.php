@@ -29,64 +29,46 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
         <?php if (in_array('fullname', $display_fields)) { ?>
             <tr>
                 <td><?php echo T_('Full Name'); ?>:</td>
-                <td>
-                    <input type="text" name="fullname" id="fullname" value="<?php echo scrub_out($client->fullname); ?>" />
-                </td>
+                <td><input type="text" name="fullname" id="fullname" value="<?php echo scrub_out($client->fullname); ?>" /></td>
             </tr>
         <?php
 } ?>
         <tr>
             <td><?php echo T_('E-mail'); ?>:</td>
-            <td>
-                <input type="text" name="email" id="email" value="<?php echo scrub_out($client->email); ?>" />
-            </td>
+            <td><input type="text" name="email" id="email" value="<?php echo scrub_out($client->email); ?>" /></td>
         </tr>
         <?php if (in_array('website', $display_fields)) { ?>
             <tr>
                 <td><?php echo T_('Website'); ?>:</td>
-                <td>
-                    <input type="text" name="website" id="website" value="<?php echo scrub_out($client->website); ?>" />
-                </td>
+                <td><input type="text" name="website" id="website" value="<?php echo scrub_out($client->website); ?>" /></td>
             </tr>
         <?php
     } ?>
         <?php if (in_array('state', $display_fields)) { ?>
             <tr>
                 <td><?php echo T_('State'); ?>:</td>
-                <td>
-                    <input type="text" name="state" id="state" value="<?php echo scrub_out($client->state); ?>" />
-                </td>
+                <td><input type="text" name="state" id="state" value="<?php echo scrub_out($client->state); ?>" /></td>
             </tr>
         <?php
     } ?>
         <?php if (in_array('city', $display_fields)) { ?>
             <tr>
                 <td><?php echo T_('City'); ?>:</td>
-                <td>
-                    <input type="text" name="city" id="city" value="<?php echo scrub_out($client->city); ?>" />
-                </td>
+                <td><input type="text" name="city" id="city" value="<?php echo scrub_out($client->city); ?>" /></td>
             </tr>
         <?php
     } ?>
         <tr>
             <td><?php echo T_('New Password'); ?>:</td>
-            <td>
-                <?php AmpError::display('password'); ?>
-                <input type="password" name="password1" id="password1" />
-            </td>
+            <td><?php AmpError::display('password'); ?><input type="password" name="password1" id="password1" /></td>
         </tr>
         <tr>
             <td><?php echo T_('Confirm Password'); ?>:</td>
-            <td>
-                <input type="password" name="password2" id="password2" />
-            </td>
+            <td><input type="password" name="password2" id="password2" /></td>
         </tr>
         <tr>
-            <td>
-                <?php echo T_('Avatar'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)
-            </td>
-            <td>
-                <input type="file" id="avatar" name="avatar" value="" />
+            <td><?php echo T_('Avatar'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)</td>
+            <td><input type="file" id="avatar" name="avatar" value="" />
         </tr>
         <tr>
             <td>
@@ -97,8 +79,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
                     echo $client->f_avatar;
                 } ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_delete_avatar&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
-                <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
-            </td>
+                <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" /></td>
         </tr>
         <tr>
             <td>

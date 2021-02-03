@@ -27,18 +27,14 @@
             <th colspan="2"><?php echo T_('User Properties'); ?></th>
         </tr>
         <tr>
-            <td>
-                <?php echo T_('Username'); ?>:
-            </td>
-            <td>
-                <input type="text" name="username" maxlength="128" value="<?php echo scrub_out($client->username); ?>" autofocus />
+            <td><?php echo T_('Username'); ?>:</td>
+            <td><input type="text" name="username" maxlength="128" value="<?php echo scrub_out($client->username); ?>" autofocus />
                 <?php AmpError::display('username'); ?>
             </td>
         </tr>
         <tr>
             <td><?php echo T_('Full Name'); ?>:</td>
-            <td>
-                <input type="text" name="fullname" value="<?php echo scrub_out($client->fullname); ?>" />
+            <td><input type="text" name="fullname" value="<?php echo scrub_out($client->fullname); ?>" />
                 <input type="checkbox" name="fullname_public" value="1" <?php if ($client->fullname_public) {
     echo "checked";
 } ?> /> <?php echo T_('Public'); ?>
@@ -46,62 +42,41 @@
             </td>
         </tr>
         <tr>
-            <td>
-                <?php echo T_('E-mail'); ?>:
-            </td>
-            <td>
-                <input type="text" name="email" value="<?php echo scrub_out($client->email); ?>" />
+            <td><?php echo T_('E-mail'); ?>:</td>
+            <td><input type="text" name="email" value="<?php echo scrub_out($client->email); ?>" />
                 <?php AmpError::display('email'); ?>
             </td>
         </tr>
         <tr>
-            <td>
-                <?php echo  T_('Website'); ?>:
-            </td>
-            <td>
-                <input type="text" name="website" value="<?php echo scrub_out($client->website); ?>" />
+            <td><?php echo  T_('Website'); ?>:</td>
+            <td><input type="text" name="website" value="<?php echo scrub_out($client->website); ?>" />
                 <?php AmpError::display('website'); ?>
             </td>
         </tr>
         <tr>
-            <td>
-                <?php echo  T_('State'); ?>:
-            </td>
-            <td>
-                <input type="text" name="state" value="<?php echo scrub_out($client->state); ?>" autocomplete="off" />
+            <td><?php echo  T_('State'); ?>:</td>
+            <td><input type="text" name="state" value="<?php echo scrub_out($client->state); ?>" autocomplete="off" />
                 <?php AmpError::display('state'); ?>
             </td>
         </tr>
         <tr>
-            <td>
-                <?php echo  T_('City'); ?>:
-            </td>
-            <td>
-                <input type="text" name="city" value="<?php echo scrub_out($client->city); ?>" autocomplete="off" />
+            <td><?php echo  T_('City'); ?>:</td>
+            <td><input type="text" name="city" value="<?php echo scrub_out($client->city); ?>" autocomplete="off" />
                 <?php AmpError::display('city'); ?>
             </td>
         </tr>
         <tr>
-            <td>
-                <?php echo T_('Password'); ?>:
-            </td>
-            <td>
-                <input type="password" name="password_1" value="" autocomplete="off" />
+            <td><?php echo T_('Password'); ?>:</td>
+            <td><input type="password" name="password_1" value="" autocomplete="off" />
                 <?php AmpError::display('password'); ?>
             </td>
         </tr>
         <tr>
-            <td>
-                <?php echo T_('Confirm Password'); ?>:
-            </td>
-            <td>
-                <input type="password" name="password_2" value="" autocomplete="off" />
-            </td>
+            <td><?php echo T_('Confirm Password'); ?>:</td>
+            <td><input type="password" name="password_2" value="" autocomplete="off" /></td>
         </tr>
         <tr>
-            <td>
-                <?php echo  T_('User Access Level'); ?>:
-            </td>
+            <td><?php echo  T_('User Access Level'); ?>:</td>
             <td>
                 <?php $var_name = "on_" . $client->access; ${$var_name} = 'selected="selected"'; ?>
                 <select name="access">
@@ -114,11 +89,8 @@
             </td>
         </tr>
         <tr>
-            <td>
-                <?php echo T_('Avatar'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)
-            </td>
-            <td>
-                <input type="file" id="avatar" name="avatar" value="" />
+            <td><?php echo T_('Avatar'); ?> (&lt; <?php echo UI::format_bytes(AmpConfig::get('max_upload_size')); ?>)</td>
+            <td><input type="file" id="avatar" name="avatar" value="" />
         </tr>
         <tr>
             <td>
@@ -129,8 +101,7 @@
                     echo $client->f_avatar;
                 } ?>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_delete_avatar&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('delete', T_('Delete')); ?></a>
-                <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
-            </td>
+                <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" /></td>
         </tr>
         <tr>
             <th colspan="2"><?php echo T_('Other Options'); ?></th>
@@ -169,15 +140,12 @@
         </tr>
         <tr>
             <td><?php echo T_('Prevent Preset Override'); ?></td>
-            <td>
-                <input type="checkbox" value="1" name="prevent_override" /><span class="information"> <?php echo T_('This affects all non-admin accounts'); ?></span>
+            <td><input type="checkbox" value="1" name="prevent_override" /><span class="information"> <?php echo T_('This affects all non-admin accounts'); ?></span>
             </td>
         </tr>
         <tr>
             <td><?php echo T_('Clear Stats'); ?></td>
-            <td>
-                <input type="checkbox" value="1" name="reset_stats" />
-            </td>
+            <td><input type="checkbox" value="1" name="reset_stats" /></td>
         </tr>
     </table>
     <div class="formValidation">
