@@ -47,8 +47,9 @@ class Search extends playlist_object
     public $f_link;
 
     public $search_user;
-    
+
     private $stars;
+    private $order_by;
 
     /**
      * constructor
@@ -92,24 +93,31 @@ class Search extends playlist_object
         switch ($searchtype) {
             case 'song':
                 $this->song_types();
+                $this->order_by = '`song`.`file`';
                 break;
             case 'album':
                 $this->album_types();
+                $this->order_by = (AmpConfig::get('album_group')) ? '`album`.`name`' : '`album`.`name`, `album`.`disk`';
                 break;
             case 'video':
                 $this->video_types();
+                $this->order_by = '`video`.`file`';
                 break;
             case 'artist':
                 $this->artist_types();
+                $this->order_by = '`artist`.`name`';
                 break;
             case 'playlist':
                 $this->playlist_types();
+                $this->order_by = '`playlist`.`name`';
                 break;
             case 'label':
                 $this->label_types();
+                $this->order_by = '`label`.`name`';
                 break;
             case 'user':
                 $this->user_types();
+                $this->order_by = '`user`.`username`';
                 break;
         } // end switch on searchtype
     } // end constructor
@@ -484,6 +492,7 @@ class Search extends playlist_object
         $this->type_text('title', T_('Title'));
         $this->type_text('album', T_('Album'));
         $this->type_text('artist', T_('Artist'));
+        $this->type_text('album_artist', T_('Album Artist'));
         $this->type_text('composer', T_('Composer'));
 
         $this->type_numeric('year', T_('Year'));
@@ -590,6 +599,10 @@ class Search extends playlist_object
         }
         $this->type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs);
 
+        $this->type_text('mbid', T_('MusicBrainz ID'));
+        $this->type_text('mbid_album', T_('MusicBrainz ID (Album)'));
+        $this->type_text('mbid_artist', T_('MusicBrainz ID (Artist)'));
+
         if (AmpConfig::get('enable_custom_metadata')) {
             $metadataFields          = array();
             $metadataFieldRepository = new MetadataField();
@@ -644,6 +657,8 @@ class Search extends playlist_object
         }
         $this->type_select('other_user', T_('Another User'), 'user_numeric', $users);
 
+        $this->type_text('mbid', T_('MusicBrainz ID'));
+
         $this->type_boolean('has_image', T_('Local Image'));
         $this->type_numeric('image_width', T_('Image Width'));
         $this->type_numeric('image_height', T_('Image Height'));
@@ -696,6 +711,8 @@ class Search extends playlist_object
             $catalogs[$catid] = $catalog->f_name;
         }
         $this->type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs);
+
+        $this->type_text('mbid', T_('MusicBrainz ID'));
 
         $this->type_boolean('has_image', T_('Local Image'));
         $this->type_numeric('image_width', T_('Image Width'));
@@ -778,6 +795,7 @@ class Search extends playlist_object
             case 'artist':
             case 'video':
             case 'song':
+            case 'tag':  // for Genres
             case 'playlist':
             case 'label':
             case 'user':
@@ -843,12 +861,10 @@ class Search extends playlist_object
         $offset = (int) ($data['offset']);
         $random = ((int) $data['random'] > 0) ? 1 : 0;
         $data   = self::clean_request($data);
-
         $search = new Search(null, $data['type'], $user);
         $search->parse_rules($data);
 
         // Generate BASE SQL
-
         $limit_sql = "";
         if ($limit > 0) {
             $limit_sql = ' LIMIT ';
@@ -869,9 +885,7 @@ class Search extends playlist_object
                 $sql .= ' HAVING ' . $search_info['having_sql'];
             }
         }
-        if ($random > 0) {
-            $sql .= " ORDER BY RAND()";
-        }
+        $sql .= ($random > 0) ? " ORDER BY RAND()" : " ORDER BY " . $search->order_by;
         $sql .= ' ' . $limit_sql;
         $sql = trim((string) $sql);
 
@@ -936,9 +950,7 @@ class Search extends playlist_object
             $sql .= ' HAVING ' . $sqltbl['having_sql'];
         }
 
-        if ($this->random > 0) {
-            $sql .= " ORDER BY RAND()";
-        }
+        $sql .= ($this->random > 0) ? " ORDER BY RAND()" : " ORDER BY " . $this->order_by;
         if ($this->limit > 0) {
             $sql .= " LIMIT " . (string) ($this->limit);
         }
@@ -1013,7 +1025,7 @@ class Search extends playlist_object
 
         $sql .= ' ORDER BY RAND()';
         $sql .= $limit ? ' LIMIT ' . (string) ($limit) : ' ';
-        //debug_event('search.sql', 'SQL get_random_items: ' . $sql, 5);
+        //debug_event('search.class', 'SQL get_random_items: ' . $sql, 5);
 
         $db_results = Dba::read($sql);
 
@@ -1265,6 +1277,7 @@ class Search extends playlist_object
                 $group[] = "`album`.`year`";
             } else {
                 $group[] = "`album`.`id`";
+                $group[] = "`album`.`disk`";
             }
 
             switch ($rule[0]) {
@@ -1423,6 +1436,9 @@ class Search extends playlist_object
                     $where[]         = "(`artist`.`name` $sql_match_operator '$input' OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $sql_match_operator '$input')";
                     $table['artist'] = "LEFT JOIN `artist` ON `album`.`album_artist`=`artist`.`id`";
                     break;
+                case 'mbid':
+                    $where[] = "`album`.`mbid` $sql_match_operator '$input'";
+                    break;
                 default:
                     break;
             } // switch on ruletype album
@@ -1473,7 +1489,7 @@ class Search extends playlist_object
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
-            'base' => 'SELECT MIN(`album`.`id`) AS `id` FROM `album`',
+            'base' => ($groupdisks) ? 'SELECT MIN(`album`.`id`) AS `id` FROM `album`' : 'SELECT MIN(`album`.`id`) AS `id`, MAX(`album`.`disk`) AS `disk` FROM `album`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
@@ -1652,6 +1668,9 @@ class Search extends playlist_object
                             "`rating_" . $my_type . "_" . $userid . "`.`user` = $userid " : ' ';
                     }
                     break;
+                case 'mbid':
+                    $where[] = "`artist`.`mbid` $sql_match_operator '$input'";
+                    break;
                 default:
                     break;
             } // switch on ruletype artist
@@ -1702,7 +1721,7 @@ class Search extends playlist_object
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
-            'base' => 'SELECT DISTINCT(`artist`.`id`) FROM `artist`',
+            'base' => 'SELECT DISTINCT(`artist`.`id`), `artist`.`name` FROM `artist`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
@@ -1853,6 +1872,13 @@ class Search extends playlist_object
                                        " OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), " .
                                        "' ', `artist`.`name`)) $sql_match_operator '$input')";
                     $table['artist'] = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
+                    break;
+                case 'album_artist':
+                    $where[]         = "(`album_artist`.`name` $sql_match_operator '$input' " .
+                        " OR LTRIM(CONCAT(COALESCE(`album_artist`.`prefix`, ''), " .
+                        "' ', `album_artist`.`name`)) $sql_match_operator '$input')";
+                    $table['album']        = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
+                    $table['album_artist'] = "LEFT JOIN `artist` AS `album_artist` ON `album`.`album_artist`=`album_artist`.`id`";
                     break;
                 case 'composer':
                     $where[] = "`song`.`composer` $sql_match_operator '$input'";
@@ -2071,6 +2097,17 @@ class Search extends playlist_object
                     $where[]                 = "`update_time_$key`.`id` IS NOT NULL";
                     $table['update_' . $key] = "LEFT JOIN (SELECT `id` from `song` ORDER BY $sql_match_operator DESC LIMIT $input) as `update_time_$key` ON `song`.`id` = `update_time_$key`.`id`";
                     break;
+                case 'mbid':
+                    $where[] = "`song`.`mbid` $sql_match_operator '$input'";
+                    break;
+                case 'mbid_album':
+                    $table['album'] = "LEFT JOIN `album` ON `song`.`album`=`album`.`id`";
+                    $where[]        = "`album`.`mbid` $sql_match_operator '$input'";
+                    break;
+                case 'mbid_artist':
+                    $table['artist'] = "LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id`";
+                    $where[]         = "`artist`.`mbid` $sql_match_operator '$input'";
+                    break;
                 case 'metadata':
                     $field = (int) $rule[3];
                     if ($sql_match_operator === '=' && strlen($input) == 0) {
@@ -2165,7 +2202,7 @@ class Search extends playlist_object
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
-            'base' => 'SELECT DISTINCT(`song`.`id`) FROM `song`',
+            'base' => 'SELECT DISTINCT(`song`.`id`), `song`.`file` FROM `song`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
@@ -2210,7 +2247,7 @@ class Search extends playlist_object
                     $where[] = "`video`.`file` $sql_match_operator '$input'";
                     break;
                 default:
-                    // WE WILLNA BE FOOLED AGAIN!
+                    break;
             } // switch on ruletype
         } // foreach rule
 
@@ -2232,7 +2269,7 @@ class Search extends playlist_object
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
-            'base' => 'SELECT DISTINCT(`video`.`id`) FROM `video`',
+            'base' => 'SELECT DISTINCT(`video`.`id`), `video`.`file` FROM `video`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
@@ -2312,7 +2349,7 @@ class Search extends playlist_object
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return array(
-            'base' => 'SELECT DISTINCT(`playlist`.`id`) FROM `playlist`',
+            'base' => 'SELECT DISTINCT(`playlist`.`id`), `playlist`.`name` FROM `playlist`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
@@ -2365,7 +2402,61 @@ class Search extends playlist_object
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         return array(
-            'base' => 'SELECT DISTINCT(`label`.`id`) FROM `label`',
+            'base' => 'SELECT DISTINCT(`label`.`id`), `label`.`name` FROM `label`',
+            'join' => $join,
+            'where' => $where,
+            'where_sql' => $where_sql,
+            'table' => $table,
+            'table_sql' => '',
+            'group_sql' => '',
+            'having_sql' => ''
+        );
+    }
+
+    /**
+       * tag_to_sql
+       *
+       * Handles the generation of the SQL for tag (genre) searches.
+       * @return array
+       */
+
+    private function tag_to_sql()
+    {
+        $sql_logic_operator = $this->logic_operator;
+        $where              = array();
+        $table              = array();
+        $join               = array();
+
+        foreach ($this->rules as $rule) {
+            $type     = $this->name_to_basetype($rule[0]);
+            $operator = array();
+            foreach ($this->basetypes[$type] as $op) {
+                if ($op['name'] == $rule[1]) {
+                    $operator = $op;
+                    break;
+                }
+            }
+            $raw_input          = $this->_mangle_data($rule[2], $type, $operator);
+            $input              = filter_var($raw_input, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+            $sql_match_operator = $operator['sql'];
+
+            switch ($rule[0]) {
+                case 'title':
+                case 'name':
+                    $where[] = "`tag`.`name` $sql_match_operator '$input'";
+                    break;
+                case 'category':
+                    $where[] = "`tag`.`category` $sql_match_operator '$input'";
+                    break;
+                default:
+                    break;
+            } // switch on ruletype
+        } // foreach rule
+
+        $where_sql = implode(" $sql_logic_operator ", $where);
+
+        return array(
+            'base' => 'SELECT DISTINCT(`tag`.`id`) FROM `tag`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
@@ -2414,7 +2505,7 @@ class Search extends playlist_object
         $where_sql = implode(" $sql_logic_operator ", $where);
 
         return array(
-            'base' => 'SELECT DISTINCT(`user`.`id`) FROM `user`',
+            'base' => 'SELECT DISTINCT(`user`.`id`), `user`.`username` FROM `user`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
