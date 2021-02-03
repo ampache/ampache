@@ -98,7 +98,7 @@ class Stream
         $max_bitrate = AmpConfig::get('max_bit_rate');
         $min_bitrate = AmpConfig::get('min_bit_rate');
         // FIXME: This should be configurable for each output type
-        $user_bit_rate = AmpConfig::get('transcode_bitrate');
+        $user_bit_rate = AmpConfig::get('transcode_bitrate', '128');
 
         // If the user's crazy, that's no skin off our back
         if ($user_bit_rate < $min_bitrate) {
