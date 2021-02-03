@@ -151,10 +151,11 @@ class Bookmark extends database_object
         $user     = $data['user'] ?: Core::get_global('user')->id;
         $position = $data['position'] ?: 0;
         $comment  = scrub_in($data['comment']);
+        $updated  = $data['update_date'] ? (int) $data['update_date'] : time();
 
         $sql = "INSERT INTO `bookmark` (`user`, `position`, `comment`, `object_type`, `object_id`, `creation_date`, `update_date`) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        return Dba::write($sql, array($user, $position, $comment, $data['object_type'], $data['object_id'], time(), time()));
+        return Dba::write($sql, array($user, $position, $comment, $data['object_type'], $data['object_id'], time(), $updated));
     }
 
     /**
