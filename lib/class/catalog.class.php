@@ -817,7 +817,7 @@ abstract class Catalog extends database_object
             $time += $data[1];
             $size += $data[2];
             // write the total_counts as well
-            Catalog::set_count($table, $data[0]);
+            self::set_count($table, $data[0]);
         }
         // return the totals for all media tables
         $results['items'] = $items;
@@ -831,7 +831,7 @@ abstract class Catalog extends database_object
             // save the object count
             $results[$table] = $data[0];
             // write the total_counts as well
-            Catalog::set_count($table, $data[0]);
+            self::set_count($table, $data[0]);
         }
 
         foreach ($list_tables as $table) {
@@ -856,7 +856,7 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql);
         $data       = Dba::fetch_row($db_results);
 
-        Catalog::set_count($table, $data[0]);
+        self::set_count($table, $data[0]);
 
         return $data;
     } // count_table
