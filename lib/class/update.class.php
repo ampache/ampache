@@ -204,7 +204,7 @@ class Update
         $version[]     = array('version' => '400010', 'description' => $update_string);
 
         $update_string = "**IMPORTANT UPDATE NOTES**<br /><br />" .
-                         "To allow negatives the maximum value of `song`.`track` has been reduced.  " .
+                         "To allow negatives the maximum value of `song`.`track` has been reduced. " .
                          "This shouldn't affect anyone due to the large size allowed.<br /><br />" .
                          "* Allow negative track numbers for albums. (-32,767 -> 32,767)<br />" .
                          "* Truncate database tracks to 0 when greater than 32,767<br />";
@@ -318,12 +318,6 @@ class Update
             }
         } // end foreach version
 
-        // Once we've run all of the updates let's re-sync the character set as
-        // the user can change this between updates and cause mis-matches on any
-        // new tables.
-        debug_event('update.class', 'run_update: starting reset_db_charset', 5);
-        Dba::reset_db_charset();
-
         // Let's also clean up the preferences unconditionally
         debug_event('update.class', 'run_update: starting rebuild_all_preferences', 5);
         User::rebuild_all_preferences();
@@ -418,14 +412,14 @@ class Update
         $retval = true;
 
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " .
-            "VALUES ('browse_filter', '0', 'Show filter box on browse',25, 'boolean', 'interface', 'library')";
+            "VALUES ('browse_filter', '0', 'Show filter box on browse', 25, 'boolean', 'interface', 'library')";
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '0')";
         $retval &= Dba::write($sql, array($row_id));
 
         $sql = "INSERT INTO `preference` (`name`, `value`, `description`, `level`, `type`, `catagory`, `subcatagory`) " .
-            "VALUES ('sidebar_light', '0', 'Light sidebar by default',25, 'boolean', 'interface', 'theme')";
+            "VALUES ('sidebar_light', '0', 'Light sidebar by default', 25, 'boolean', 'interface', 'theme')";
         $retval &= Dba::write($sql);
         $row_id = Dba::insert_id();
         $sql    = "INSERT INTO `user_preference` VALUES (-1,?, '0')";
@@ -1139,16 +1133,19 @@ class Update
         $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, '0')";
         $retval &= Dba::write($sql, array($row_id));
 
-        $tables = [ 'cache_object_count', 'cache_object_count_run' ];
+        $tables    = [ 'cache_object_count', 'cache_object_count_run' ];
+        $collation = (AmpConfig::get('database_collation', 'utf8_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
         foreach ($tables as $table) {
             $sql = "CREATE TABLE IF NOT EXISTS `" . $table . "` (" .
               "`object_id` int(11) unsigned NOT NULL," .
-              "`object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast_episode') CHARACTER SET utf8 NOT NULL," .
+              "`object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast_episode') CHARACTER SET $charset NOT NULL," .
               "`count` int(11) unsigned NOT NULL DEFAULT '0'," .
               "`threshold` int(11) unsigned NOT NULL DEFAULT '0'," .
               "`count_type` varchar(16) NOT NULL," .
               "PRIMARY KEY (`object_id`, `object_type`, `threshold`, `count_type`)" .
-              ") ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+              ") ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
             $retval &= Dba::write($sql);
         }
 
