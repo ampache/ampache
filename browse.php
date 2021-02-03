@@ -61,12 +61,16 @@ switch ($_REQUEST['action']) {
     case 'podcast_episode':
         $browse->set_type(Core::get_request('action'));
         $browse->set_simple_browse(true);
-    break;
+        break;
+    case 'album_artist':
+        $browse->set_type('artist');
+        $browse->set_simple_browse(true);
+        break;
 } // end switch
 
 UI::show_header();
 
-if (in_array($_REQUEST['action'], array('song', 'album', 'artist', 'label', 'channel', 'broadcast', 'live_stream', 'podcast', 'video'))) {
+if (in_array($_REQUEST['action'], array('song', 'album', 'album_artist', 'label', 'channel', 'broadcast', 'live_stream', 'podcast', 'video'))) {
     UI::show('show_browse_form.inc.php');
 }
 
@@ -82,7 +86,7 @@ switch ($_REQUEST['action']) {
         $browse->set_sort('name', 'ASC');
         $browse->update_browse_from_session();  // Update current index depending on what is in session.
         $browse->show_objects();
-    break;
+        break;
     case 'tag':
         // FIXME: This whole thing is ugly, even though it works.
         $browse->set_sort('count', 'ASC');
@@ -101,7 +105,7 @@ switch ($_REQUEST['action']) {
         UI::show_box_bottom();
         $type = $browse2->get_type();
         require_once AmpConfig::get('prefix') . UI::find_template('browse_content.inc.php');
-    break;
+        break;
     case 'artist':
         $browse->set_filter('catalog', $_SESSION['catalog']);
         if (AmpConfig::get('catalog_disable')) {
@@ -110,7 +114,17 @@ switch ($_REQUEST['action']) {
         $browse->set_sort('name', 'ASC');
         $browse->update_browse_from_session();
         $browse->show_objects();
-    break;
+        break;
+    case 'album_artist':
+        $browse->set_filter('catalog', $_SESSION['catalog']);
+        if (AmpConfig::get('catalog_disable')) {
+            $browse->set_filter('catalog_enabled', '1');
+        }
+        $browse->set_filter('album_artist', true);
+        $browse->set_sort('name', 'ASC');
+        $browse->update_browse_from_session();
+        $browse->show_objects();
+        break;
     case 'song':
         $browse->set_filter('catalog', $_SESSION['catalog']);
         if (AmpConfig::get('catalog_disable')) {
@@ -119,7 +133,7 @@ switch ($_REQUEST['action']) {
         $browse->set_sort('title', 'ASC');
         $browse->update_browse_from_session();
         $browse->show_objects();
-    break;
+        break;
     case 'live_stream':
     case 'tvshow':
     case 'label':
@@ -129,26 +143,26 @@ switch ($_REQUEST['action']) {
         $browse->set_sort('name', 'ASC');
         $browse->update_browse_from_session();
         $browse->show_objects();
-    break;
+        break;
     case 'playlist':
-        $browse->set_sort('type', 'ASC');
+        $browse->set_sort('name', 'ASC');
         $browse->set_sort('last_update', 'DESC');
         $browse->set_filter('playlist_type', '1');
         $browse->update_browse_from_session();
         $browse->show_objects();
-    break;
+        break;
     case 'smartplaylist':
-        $browse->set_sort('type', 'ASC');
+        $browse->set_sort('name', 'ASC');
         $browse->set_filter('playlist_type', '1');
         $browse->update_browse_from_session();
         $browse->show_objects();
-    break;
+        break;
     case 'channel':
     case 'broadcast':
         $browse->set_sort('id', 'ASC');
         $browse->update_browse_from_session();
         $browse->show_objects();
-    break;
+        break;
     case 'video':
     case 'podcast':
         if (AmpConfig::get('catalog_disable')) {
@@ -157,7 +171,7 @@ switch ($_REQUEST['action']) {
         $browse->set_sort('title', 'ASC');
         $browse->update_browse_from_session();
         $browse->show_objects();
-    break;
+        break;
     case 'tvshow_season':
         if (AmpConfig::get('catalog_disable')) {
             $browse->set_filter('catalog_enabled', '1');
@@ -165,7 +179,7 @@ switch ($_REQUEST['action']) {
         $browse->set_sort('season_number', 'ASC');
         $browse->update_browse_from_session();
         $browse->show_objects();
-    break;
+        break;
     case 'tvshow_episode':
     case 'movie':
     case 'clip':
@@ -175,7 +189,7 @@ switch ($_REQUEST['action']) {
         }
         $browse->update_browse_from_session();
         $browse->show_objects();
-    break;
+        break;
     case 'pvmsg':
         $browse->set_sort('creation_date', 'DESC');
         $folder = $_REQUEST['folder'];
@@ -198,7 +212,7 @@ switch ($_REQUEST['action']) {
     case 'file':
     case 'catalog':
     default:
-    break;
+        break;
 } // end Switch $action
 
 $browse->store();
