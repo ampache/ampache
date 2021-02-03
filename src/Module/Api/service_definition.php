@@ -46,6 +46,7 @@ return [
     Method\FollowersMethod::class => autowire(),
     Method\SongMethod::class => autowire(),
     Method\LastShoutsMethod::class => autowire(),
+    Method\UsersMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),
