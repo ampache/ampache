@@ -30,7 +30,6 @@ if (empty($rootdir)) {
     return false;
 }
 $rootdir .= DIRECTORY_SEPARATOR;
-ini_set('open_basedir', $rootdir);
 
 /**
  * Class fs

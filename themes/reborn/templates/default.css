@@ -1296,6 +1296,11 @@ table.disablegv td.cel_rating {
     width: 50%;
 }
 
+.vakata-context,
+.vakata-context ul {
+    z-index: 3000001;
+}
+
 /* --------------------------
    Content (info-box)
    -------------------------- */
