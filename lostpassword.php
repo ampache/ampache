@@ -69,7 +69,7 @@ function send_newpassword($email, $current_ip)
     if ($client->has_access(100)) {
         return false;
     }
-    if ($client->email == $email && Mailer::is_mail_enabled()) {
+    if ($client->email == $email && Mailer::is_mail_enabled() && !AmpConfig::get('simple_user_mode')) {
         $newpassword = generate_password();
         $client->update_password($newpassword);
 
