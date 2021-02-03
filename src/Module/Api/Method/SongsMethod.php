@@ -21,32 +21,43 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\User;
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class SongsMethod
- * @package Lib\ApiMethods
- */
-final class SongsMethod
+final class SongsMethod implements MethodInterface
 {
-    const ACTION = 'songs';
+    public const ACTION = 'songs';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->streamFactory = $streamFactory;
+        $this->modelFactory  = $modelFactory;
+    }
 
     /**
-     * songs
      * MINIMUM_API_VERSION=380001
      * CHANGED_IN_API_VERSION=420000
      *
      * Returns songs based on the specified filter
      * All calls that return songs now include <playlisttrack> which can be used to identify track order.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
@@ -54,44 +65,44 @@ final class SongsMethod
      * update = self::set_filter(date) //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
      */
-    public static function songs(array $input)
-    {
-        $browse = Api::getBrowse();
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $browse = $this->modelFactory->createBrowse();
         $browse->reset_filters();
         $browse->set_type('song');
         $browse->set_sort('title', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter']);
-        Api::set_filter('add', $input['add']);
-        Api::set_filter('update', $input['update']);
+        Api::set_filter($method, $input['filter'] ?? '', $browse);
+        Api::set_filter('add', $input['add'] ?? '', $browse);
+        Api::set_filter('update', $input['update'] ?? '', $browse);
         // Filter out disabled songs
-        Api::set_filter('enabled', '1');
+        Api::set_filter('enabled', '1', $browse);
 
         $songs = $browse->get_objects();
         if (empty($songs)) {
-            Api::empty('song', $input['api_format']);
-
-            return false;
+            $result = $output->emptyResult('song');
+        } else {
+            $result = $output->songs(
+                $songs,
+                $gatekeeper->getUser()->getId(),
+                true,
+                true,
+                true,
+                (int) ($input['limit'] ?? 0),
+                (int) ($input['offset'] ?? 0)
+            );
         }
 
-        ob_end_clean();
-        $user = User::get_from_username(Session::username($input['auth']));
-        switch ($input['api_format']) {
-            case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                echo Json_Data::songs($songs, $user->id);
-                break;
-            default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::songs($songs, $user->id);
-        }
-        Session::extend($input['auth']);
-
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }

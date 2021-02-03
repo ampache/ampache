@@ -50,6 +50,7 @@ return [
     Method\UserMethod::class => autowire(),
     Method\GenreMethod::class => autowire(),
     Method\GenresMethod::class => autowire(),
+    Method\SongsMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),
