@@ -51,6 +51,8 @@ return [
     Method\GenreMethod::class => autowire(),
     Method\GenresMethod::class => autowire(),
     Method\SongsMethod::class => autowire(),
+    Method\VideosMethod::class => autowire(),
+    Method\VideoMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

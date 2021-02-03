@@ -128,4 +128,8 @@ interface ModelFactoryInterface
     public function createTag(
         int $tagId
     ): Tag;
+
+    public function createVideo(
+        int $videoId
+    ): Video;
 }

@@ -190,4 +190,10 @@ final class ModelFactory implements ModelFactoryInterface
     ): Tag {
         return new Tag($tagId);
     }
+
+    public function createVideo(
+        int $videoId
+    ): Video {
+        return new Video($videoId);
+    }
 }

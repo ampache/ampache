@@ -21,72 +21,84 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Model\User;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class VideosMethod
- * @package Lib\ApiMethods
- */
-final class VideosMethod
+final class VideosMethod implements MethodInterface
 {
-    private const ACTION = 'videos';
+    public const ACTION = 'videos';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->streamFactory   = $streamFactory;
+        $this->modelFactory    = $modelFactory;
+        $this->configContainer = $configContainer;
+    }
 
     /**
-     * videos
      * This returns video objects!
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, Whether to match the exact term or not //optional
-     * offset = (integer) //optional
-     * limit  = (integer) //optional
-     * @return bool
+     *
+     * @return ResponseInterface
+     *
+     * @throws FunctionDisabledException
      */
-    public static function videos(array $input)
-    {
-        if (!AmpConfig::get('allow_video')) {
-            Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) === false) {
+            throw new FunctionDisabledException(T_('Enable: video'));
         }
-        Api::$browse->reset_filters();
-        Api::$browse->set_type('video');
-        Api::$browse->set_sort('title', 'ASC');
+        $browse = $this->modelFactory->createBrowse();
+        $browse->reset_filters();
+        $browse->set_type('video');
+        $browse->set_sort('title', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter']);
+        Api::set_filter($method, $input['filter'] ?? '', $browse);
 
-        $video_ids = Api::$browse->get_objects();
-        $user      = User::get_from_username(Session::username($input['auth']));
-        if (empty($video_ids)) {
-            Api::empty('video', $input['api_format']);
+        $videoIds = $browse->get_objects();
 
-            return false;
+        if ($videoIds === []) {
+            $result = $output->emptyResult('video');
+        } else {
+            $result = $output->videos(
+                array_map('intval', $videoIds),
+                $gatekeeper->getUser()->getId()
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                echo Json_Data::videos($video_ids, $user->id);
-                break;
-            default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::videos($video_ids, $user->id);
-        }
-        Session::extend($input['auth']);
-
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }

@@ -246,4 +246,19 @@ final class XmlOutput implements ApiOutputInterface
 
         return Xml_Data::output_xml($string);
     }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param int[] $videoIds
+     * @param int|null $userId
+     * @param bool $asObject
+     */
+    public function videos(
+        array $videoIds,
+        ?int $userId = null,
+        bool $asObject = true
+    ): string {
+        return Xml_Data::videos($videoIds, $userId);
+    }
 }

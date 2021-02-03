@@ -25,8 +25,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Output;
 
 use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\Shoutbox;
-use Ampache\Model\Tag;
 use Ampache\Model\User;
 use Ampache\Module\Api\Json_Data;
 
@@ -275,5 +273,17 @@ final class JsonOutput implements ApiOutputInterface
         $output = ($asObject) ? ['genre' => $result] : $result[0];
 
         return json_encode($output, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param int[] $videoIds
+     * @param int|null $userId
+     * @param bool $object (whether to return as a named object array or regular array)
+     */
+    public function videos(array $videoIds, ?int $userId = null, $object = true): string
+    {
+        return Json_Data::videos($videoIds, $userId, $object);
     }
 }
