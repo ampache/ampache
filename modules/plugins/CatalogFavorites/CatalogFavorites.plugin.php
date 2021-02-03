@@ -115,9 +115,8 @@ class AmpacheCatalogFavorites
 
                 if ($item->id) {
                     echo '<tr id="' . $userflag['type'] . '_' . $userflag['id'] . '" class="' . ((($count % 2) == 0) ? 'even' : 'odd') . ' libitem_menu">';
-                    echo '<td style="height: auto;">';
                     if ($this->gridview) {
-                        echo '<span style="font-weight: bold;">' . $item->f_link . '</span> ';
+                        echo '<td class="cel_song"><span style="font-weight: bold;">' . $item->f_link . '</span><br> ';
                         echo '<span style="margin-right: 10px;">';
                         if (AmpConfig::get('directplay')) {
                             echo Ajax::button('?page=stream&action=directplay&object_type=' . $userflag['type'] . '&object_id=' . $userflag['id'], 'play', T_('Play'), 'play_' . $userflag['type'] . '_' . $userflag['id']);
@@ -126,13 +125,11 @@ class AmpacheCatalogFavorites
                             }
                         }
                         echo Ajax::button('?action=basket&type=' . $userflag['type'] . '&id=' . $userflag['id'], 'add', T_('Add to temporary playlist'), 'play_full_' . $userflag['id']);
-                        echo '</span>';
+                        echo '</span></td>';
                     }
-
-                    echo '<div style="float: left; margin-right: 10px;">';
+                    echo '<td class=mash_cover>';
                     $thumb = ($this->gridview && UI::is_grid_view('album')) ? 1 : 12; // default to 150x150
                     $item->display_art($thumb, true);
-                    echo '</div>';
                     echo '</td>';
 
                     if (!$this->gridview) {

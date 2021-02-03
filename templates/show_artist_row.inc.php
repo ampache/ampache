@@ -37,14 +37,14 @@
 <?php
 if (Art::is_enabled()) {
             $name = scrub_out($libitem->full_name); ?>
-<td class="cel_cover">
+<td class="<?php echo $cel_cover; ?>">
     <?php
     $thumb = (isset($browse) && !$browse->is_grid_view()) ? 11 : 1;
             Art::display('artist', $libitem->id, $name, $thumb, AmpConfig::get('web_path') . '/artists.php?action=show&artist=' . $libitem->id); ?>
 </td>
 <?php
         } ?>
-<td class="cel_artist"><?php echo $libitem->f_link; ?></td>
+<td class="<?php echo $cel_artist; ?>"><?php echo $libitem->f_link; ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
     <?php
@@ -65,7 +65,7 @@ if (Art::is_enabled()) {
     <td class="cel_counter optional"><?php echo $libitem->object_cnt; ?></td>
 <?php
         } ?>
-<td class="cel_tags"><?php echo $libitem->f_tags; ?></td>
+<td class="<?php echo $cel_tags; ?>"><?php echo $libitem->f_tags; ?></td>
 <?php
     if (User::is_registered()) {
         if (AmpConfig::get('ratings')) { ?>
@@ -73,7 +73,7 @@ if (Art::is_enabled()) {
         <?php
         }
         if (AmpConfig::get('userflags')) { ?>
-            <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_artist"><?php Userflag::show($libitem->id, 'artist'); ?></td>
+            <td class="<?php echo $cel_flag; ?>" id="userflag_<?php echo $libitem->id; ?>_artist"><?php Userflag::show($libitem->id, 'artist'); ?></td>
         <?php
         }
     } ?>

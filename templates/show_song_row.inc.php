@@ -42,7 +42,7 @@ if ($libitem->enabled || Access::check('interface', 50)) { ?>
     } ?>
     </div>
 </td>
-<td class="cel_song"><?php echo $libitem->f_link ?></td>
+<td class="<?php echo $cel_song; ?>"><?php echo $libitem->f_link ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
 <?php
@@ -58,19 +58,19 @@ if ($libitem->enabled || Access::check('interface', 50)) { ?>
     } ?>
     </span>
 </td>
-<td class="cel_artist"><?php echo $libitem->f_artist_link ?></td>
-<td class="cel_album"><?php echo $libitem->f_album_link ?></td>
+<td class="<?php echo $cel_artist; ?>"><?php echo $libitem->f_artist_link ?></td>
+<td class="<?php echo $cel_album; ?>"><?php echo $libitem->f_album_link ?></td>
 <td class="cel_year"><?php echo $libitem->year ?></td>
-<td class="cel_tags"><?php echo $libitem->f_tags ?></td>
-<td class="cel_time"><?php echo $libitem->f_time ?></td>
+<td class="<?php echo $cel_tags; ?>"><?php echo $libitem->f_tags ?></td>
+<td class="<?php echo $cel_time; ?>"><?php echo $libitem->f_time ?></td>
 <?php if (AmpConfig::get('licensing')) { ?>
-<td class="cel_license"><?php echo $libitem->f_license ?></td>
+<td class="<?php echo $cel_license; ?>"><?php echo $libitem->f_license ?></td>
 <?php } ?>
 <?php if (AmpConfig::get('show_played_times')) { ?>
-<td class="cel_counter"><?php echo $libitem->object_cnt ?></td>
+<td class="<?php echo $cel_counter; ?>"><?php echo $libitem->object_cnt ?></td>
 <?php } ?>
 <?php if (AmpConfig::get('show_skipped_times')) { ?>
-<td class="cel_counter"><?php echo $libitem->skip_cnt ?></td>
+<td class="<?php echo $cel_counter; ?>"><?php echo $libitem->skip_cnt ?></td>
 <?php
     }
     if (User::is_registered()) {
@@ -81,7 +81,7 @@ if ($libitem->enabled || Access::check('interface', 50)) { ?>
     <?php
         }
         if (AmpConfig::get('userflags')) { ?>
-            <td class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_song">
+            <td class="<?php echo $cel_flag; ?>" id="userflag_<?php echo $libitem->id; ?>_song">
                 <?php Userflag::show($libitem->id, 'song') ?>
             </td>
     <?php
