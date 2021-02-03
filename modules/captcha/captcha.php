@@ -551,11 +551,11 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
     {
         $s = "";
         for ($n=0; $n < 10; $n++) {
-            $s .= chr(rand(0, 255));
+          $s .= chr(rand(0, 255));
         }
         $s = base64_encode($s); // base64-set, but filter out unwanted chars
-      $s   = preg_replace("/[+\/=IG0ODQR]/i", "", $s); // strips hard to discern letters, depends on used font type
-      $s   = substr($s, 0, rand(CAPTCHA_MIN_CHARS, CAPTCHA_MAX_CHARS));
+        $s = preg_replace("/[+\/=IG0ODQR]/i", "", $s); // strips hard to discern letters, depends on used font type
+        $s = substr($s, 0, rand(CAPTCHA_MIN_CHARS, CAPTCHA_MAX_CHARS));
 
         return($s);
     }
