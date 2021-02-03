@@ -164,4 +164,6 @@ interface ApiOutputInterface
         ?int $userId = null,
         bool $asObject = true
     ): string;
+
+    public function success(string $string, array $return_data = []): string;
 }

@@ -261,4 +261,16 @@ final class XmlOutput implements ApiOutputInterface
     ): string {
         return Xml_Data::videos($videoIds, $userId);
     }
+
+    public function success(
+        string $string,
+        array $return_data = []
+    ): string {
+        $xml_string = "\t<success code=\"1\"><![CDATA[$string]]></success>";
+        foreach ($return_data as $title => $data) {
+            $xml_string .= "\n\t<$title><![CDATA[$data]]></$title>";
+        }
+
+        return Xml_Data::output_xml($xml_string);
+    }
 }

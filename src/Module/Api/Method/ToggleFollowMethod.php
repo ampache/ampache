@@ -20,65 +20,96 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\User\Following\UserFollowTogglerInterface;
+use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class ToggleFollowMethod
- * @package Lib\ApiMethods
- */
-final class ToggleFollowMethod
+final class ToggleFollowMethod implements MethodInterface
 {
-    private const ACTION = 'toggle_follow';
+    public const ACTION = 'toggle_follow';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private UserFollowTogglerInterface $userFollowToggler;
+
+    private ConfigContainerInterface $configContainer;
+
+    private UserRepositoryInterface $userRepository;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        UserFollowTogglerInterface $userFollowToggler,
+        ConfigContainerInterface $configContainer,
+        UserRepositoryInterface $userRepository
+    ) {
+        $this->streamFactory     = $streamFactory;
+        $this->userFollowToggler = $userFollowToggler;
+        $this->configContainer   = $configContainer;
+        $this->userRepository    = $userRepository;
+    }
 
     /**
-     * toggle_follow
      * MINIMUM_API_VERSION=380001
      *
      * This will follow/unfollow a user
      *
      * @param array $input
      * username = (string) $username
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws FunctionDisabledException
+     * @throws RequestParamMissingException
+     * @throws ResultEmptyException
      */
-    public static function toggle_follow(array $input)
-    {
-        if (!AmpConfig::get('sociable')) {
-            Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false) {
+            throw new FunctionDisabledException(
+                T_('Enable: sociable')
+            );
         }
-        if (!Api::check_parameter($input, array('username'), self::ACTION)) {
-            return false;
+
+        $username = $input['username'] ?? null;
+
+        if ($username === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'username')
+            );
         }
-        $username = $input['username'];
-        if (!empty($username)) {
-            $user = User::get_from_username($username);
-            if ($user !== null) {
-                static::getUserFollowToggler()->toggle(
-                    $user->getId(),
-                    User::get_from_username(Session::username($input['auth']))->getId()
-                );
-                ob_end_clean();
-                Api::message('follow toggled for: ' . $user->id, $input['api_format']);
-            }
+
+        $userId = $this->userRepository->findByUsername((string) $username);
+        if ($userId === null) {
+            throw new ResultEmptyException((string) $username);
         }
-        Session::extend($input['auth']);
 
-        return true;
-    }
+        $this->userFollowToggler->toggle(
+            $userId,
+            $gatekeeper->getUser()->getId()
+        );
 
-    private static function getUserFollowToggler(): UserFollowTogglerInterface
-    {
-        global $dic;
-
-        return $dic->get(UserFollowTogglerInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->success(
+                    sprintf('follow toggled for: %d', $userId)
+                )
+            )
+        );
     }
 }

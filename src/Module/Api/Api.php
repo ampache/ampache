@@ -116,7 +116,7 @@ class Api
         'user_delete' => Method\UserDeleteMethod::class,
         Method\FollowersMethod::ACTION => Method\FollowersMethod::class,
         'following' => Method\FollowingMethod::class,
-        'toggle_follow' => Method\ToggleFollowMethod::class,
+        Method\ToggleFollowMethod::ACTION => Method\ToggleFollowMethod::class,
         Method\LastShoutsMethod::ACTION => Method\LastShoutsMethod::class,
         'rate' => Method\RateMethod::class,
         'flag' => Method\FlagMethod::class,

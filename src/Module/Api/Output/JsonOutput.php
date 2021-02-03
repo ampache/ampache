@@ -286,4 +286,14 @@ final class JsonOutput implements ApiOutputInterface
     {
         return Json_Data::videos($videoIds, $userId, $object);
     }
+
+    public function success(string $string, array $return_data = []): string
+    {
+        $message = ['success' => $string];
+        foreach ($return_data as $title => $data) {
+            $message[$title] = $data;
+        }
+
+        return json_encode($message, JSON_PRETTY_PRINT);
+    }
 }

@@ -54,6 +54,7 @@ return [
     Method\VideosMethod::class => autowire(),
     Method\VideoMethod::class => autowire(),
     Method\UrlToSongMethod::class => autowire(),
+    Method\ToggleFollowMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),
