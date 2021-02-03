@@ -282,4 +282,16 @@ class JsonOutputTest extends MockeryTestCase
             $this->subject->genres([$tagId, 999], false, 1)
         );
     }
+
+    public function testSuccessReturnsData(): void
+    {
+        $value = 'some-value';
+        $title = 'some-title';
+        $data  = 'some-data';
+
+        $this->assertSame(
+            json_encode(['success' => $value, $title => $data], JSON_PRETTY_PRINT),
+            $this->subject->success($value, [$title => $data])
+        );
+    }
 }
