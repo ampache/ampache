@@ -43,7 +43,7 @@ class Preference extends database_object
      * Return a preference for specific user identifier
      * @param integer $user_id
      * @param string $pref_name
-     * @return integer
+     * @return integer|string
      */
     public static function get_by_user($user_id, $pref_name)
     {
@@ -66,7 +66,7 @@ class Preference extends database_object
 
         parent::add_to_cache('get_by_user', $user_id, $data);
 
-        return (int) $data['value'];
+        return $data['value'];
     } // get_by_user
 
 
@@ -282,27 +282,54 @@ class Preference extends database_object
      */
     public static function get_all($user_id)
     {
-        $user_id = Dba::escape($user_id);
+        $user_id    = Dba::escape($user_id);
+        $user_limit = ($user_id != -1) ? "AND `preference`.`catagory` != 'system'" : "";
 
-        $user_limit = "";
-        if ($user_id != '-1') {
-            $user_limit = "AND `preference`.`catagory` != 'system'";
-        }
-
-        $sql = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`subcatagory`, `user_preference`.`value` FROM `preference` " .
-            " INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` " .
-            " WHERE `user_preference`.`user`='$user_id' AND `preference`.`catagory` != 'internal' $user_limit " .
+        $sql = "SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`," .
+            " `preference`.`type`, `preference`.`catagory`, `preference`.`subcatagory`, `user_preference`.`value`" .
+            " FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` " .
+            " WHERE `user_preference`.`user` = ? AND `preference`.`catagory` != 'internal' $user_limit " .
             " ORDER BY `preference`.`subcatagory`, `preference`.`description`";
 
-        $db_results = Dba::read($sql);
+        $db_results = Dba::read($sql, array($user_id));
         $results    = array();
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array('name' => $row['name'], 'level' => $row['level'], 'description' => $row['description'], 'value' => $row['value'], 'subcategory' => $row['subcatagory']);
+            $results[] = array('id' => $row['id'], 'name' => $row['name'], 'level' => $row['level'], 'description' => $row['description'],
+                'value' => $row['value'], 'type' => $row['type'], 'category' => $row['catagory'], 'subcategory' => $row['subcatagory']);
         }
 
         return $results;
     } // get_all
+
+    /**
+     * get
+     * This returns a nice flat array of all of the possible preferences for the specified user
+     * @param string $pref_name
+     * @param integer $user_id
+     * @return array
+     */
+    public static function get($pref_name, $user_id)
+    {
+        $user_id    = Dba::escape($user_id);
+        $user_limit = ($user_id != -1) ? "AND `preference`.`catagory` != 'system'" : "";
+
+        $sql = "SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`," .
+            " `preference`.`type`, `preference`.`catagory`, `preference`.`subcatagory`, `user_preference`.`value`" .
+            " FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` " .
+            " WHERE `preference`.`name` = ? AND `user_preference`.`user`= ? AND `preference`.`catagory` != 'internal' $user_limit " .
+            " ORDER BY `preference`.`subcatagory`, `preference`.`description`";
+
+        $db_results = Dba::read($sql, array($pref_name, $user_id));
+        $results    = array();
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = array('id' => $row['id'], 'name' => $row['name'], 'level' => $row['level'], 'description' => $row['description'],
+                'value' => $row['value'], 'type' => $row['type'], 'category' => $row['catagory'], 'subcategory' => $row['subcatagory']);
+        }
+
+        return $results;
+    } // get
 
     /**
      * insert
@@ -324,7 +351,7 @@ class Preference extends database_object
         }
         $sql = "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) " .
             "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($name, $description, $default, (int) ($level), $type, $category, $subcategory));
+        $db_results = Dba::write($sql, array($name, $description, $default, (int) $level, $type, $category, $subcategory));
 
         if (!$db_results) {
             return false;
@@ -350,7 +377,7 @@ class Preference extends database_object
     /**
      * delete
      * This deletes the specified preference, a name or a ID can be passed
-     * @param $preference
+     * @param string|integer $preference
      */
     public static function delete($preference)
     {
@@ -436,17 +463,17 @@ class Preference extends database_object
                "(22, 'site_title', 'Ampache :: For the Love of Music', 'Website Title', 100, 'string', 'interface', 'custom'), " .
                "(23, 'lock_songs', '0', 'Lock Songs', 100, 'boolean', 'system', null), " .
                "(24, 'force_http_play', '0', 'Force HTTP playback regardless of port', 100, 'boolean', 'system', null), " .
-               "(41, 'localplay_controller', '0', 'Localplay Type', 100, 'special', 'options', 'localplay'), " .
                "(29, 'play_type', 'web_player', 'Playback Type', 25, 'special', 'streaming', null), " .
                "(31, 'lang', 'en_US', 'Language', 100, 'special', 'interface', null), " .
                "(32, 'playlist_type', 'm3u', 'Playlist Type', 100, 'special', 'playlist', null), " .
                "(33, 'theme_name', 'reborn', 'Theme', 0, 'special', 'interface', 'theme'), " .
-               "(51, 'offset_limit', '50', 'Offset Limit', 5, 'integer', 'interface', 'query'), " .
                "(40, 'localplay_level', '0', 'Localplay Access', 100, 'special', 'options', 'localplay'), " .
+               "(41, 'localplay_controller', '0', 'Localplay Type', 100, 'special', 'options', 'localplay'), " .
                "(44, 'allow_stream_playback', '1', 'Allow Streaming', 100, 'boolean', 'options', 'feature'), " .
                "(45, 'allow_democratic_playback', '0', 'Allow Democratic Play', 100, 'boolean', 'options', 'feature'), " .
                "(46, 'allow_localplay_playback', '0', 'Allow Localplay Play', 100, 'boolean', 'options', 'localplay'), " .
                "(47, 'stats_threshold', '7', 'Statistics Day Threshold', 25, 'integer', 'interface', 'query'), " .
+               "(51, 'offset_limit', '50', 'Offset Limit', 5, 'integer', 'interface', 'query'), " .
                "(52, 'rate_limit', '8192', 'Rate Limit', 100, 'integer', 'streaming', 'transcoding'), " .
                "(53, 'playlist_method', 'default', 'Playlist Method', 5, 'string', 'playlist', null), " .
                "(55, 'transcode', 'default', 'Allow Transcoding', 25, 'string', 'streaming', 'transcoding'), " .
@@ -455,8 +482,6 @@ class Preference extends database_object
                "(71, 'httpq_active', '0', 'httpQ Active Instance', 25, 'integer', 'internal', 'httpq'), " .
                "(77, 'lastfm_grant_link', '', 'Last.FM Grant URL', 25, 'string', 'internal', 'lastfm'), " .
                "(78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', 25, 'string', 'internal', 'lastfm'), " .
-               "(102, 'share', '0', 'Allow Share', 100, 'boolean', 'options', 'feature'), " .
-               "(123, 'ajax_load', '1', 'Ajax page load', 25, 'boolean', 'interface', null), " .
                "(82, 'now_playing_per_user', '1', 'Now Playing filtered per user', 50, 'boolean', 'interface', 'home'), " .
                "(83, 'album_sort', '0', 'Album - Default sort', 25, 'string', 'interface', 'library'), " .
                "(84, 'show_played_times', '0', 'Show # played', 25, 'string', 'interface', 'library'), " .
@@ -476,6 +501,7 @@ class Preference extends database_object
                "(99, 'webplayer_confirmclose', '0', 'Confirmation when closing current playing window', 25, 'boolean', 'interface', 'player'), " .
                "(100, 'webplayer_pausetabs', '1', 'Auto-pause between tabs', 25, 'boolean', 'interface', 'player'), " .
                "(101, 'stream_beautiful_url', '0', 'Enable URL Rewriting', 100, 'boolean', 'streaming', null), " .
+               "(102, 'share', '0', 'Allow Share', 100, 'boolean', 'options', 'feature'), " .
                "(103, 'share_expire', '7', 'Share links default expiration days (0=never)', 100, 'integer', 'system', 'share'), " .
                "(104, 'slideshow_time', '0', 'Artist slideshow inactivity time', 25, 'integer', 'interface', 'player'), " .
                "(105, 'broadcast_by_default', '0', 'Broadcast web player by default', 25, 'boolean', 'streaming', 'player'), " .
@@ -496,6 +522,7 @@ class Preference extends database_object
                "(120, 'upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system', 'backend'), " .
                "(121, 'allow_video', '0', 'Allow Video Features', 75, 'integer', 'options', 'feature'), " .
                "(122, 'album_release_type', '1', 'Album - Group per release type', 25, 'boolean', 'interface', 'library'), " .
+               "(123, 'ajax_load', '1', 'Ajax page load', 25, 'boolean', 'interface', null), " .
                "(124, 'direct_play_limit', '0', 'Limit direct play to maximum media count', 25, 'integer', 'interface', 'player'), " .
                "(125, 'home_moment_albums', '1', 'Show Albums of the Moment', 25, 'integer', 'interface', 'home'), " .
                "(126, 'home_moment_videos', '0', 'Show Videos of the Moment', 25, 'integer', 'interface', 'home'), " .
@@ -517,7 +544,19 @@ class Preference extends database_object
                "(142, 'disabled_custom_metadata_fields', '', 'Custom metadata - Disable these fields', 100, 'string', 'system', 'metadata'), " .
                "(143, 'disabled_custom_metadata_fields_input', '', 'Custom metadata - Define field list', 100, 'string', 'system', 'metadata'), " .
                "(144, 'podcast_keep', '0', '# latest episodes to keep', 100, 'integer', 'system', 'podcast'), " .
-               "(145, 'podcast_new_download', '0', '# episodes to download when new episodes are available', 100, 'integer', 'system', 'podcast');";
+               "(145, 'podcast_new_download', '0', '# episodes to download when new episodes are available', 100, 'integer', 'system', 'podcast'), " .
+               "(146, 'libitem_contextmenu', '1', 'Library item context menu', 0, 'boolean', 'interface', 'library'), " .
+               "(147, 'upload_catalog_pattern', '0', 'Rename uploaded file according to catalog pattern', 100, 'boolean', 'system', 'upload'), " .
+               "(148, 'catalog_check_duplicate', '0', 'Check library item at import time and don\'t import duplicates', 100, 'boolean', 'system', 'catalog'), " .
+               "(149, 'browse_filter', '0', 'Show filter box on browse', 25, 'boolean', 'interface', 'library'), " .
+               "(150, 'sidebar_light', '0', 'Light sidebar by default', 25, 'boolean', 'interface', 'theme'), " .
+               "(151, 'custom_blankalbum', '', 'Custom blank album default image', 75, 'string', 'interface', 'custom'), " .
+               "(152, 'custom_blankmovie', '', 'Custom blank video default image', 75, 'string', 'interface', 'custom'), " .
+               "(153, 'libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', 75, 'string', 'interface', 'library'), " .
+               "(154, 'show_skipped_times', '0', 'Show # skipped', 25, 'boolean', 'interface', 'library'), " .
+               "(155, 'custom_datetime', '', 'Custom datetime', 25, 'string', 'interface', 'custom'), " .
+               "(156, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 25, 'boolean', 'system', 'catalog'), " .
+               "(157, 'unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', NULL);";
         Dba::write($sql);
     } // set_defaults
 
