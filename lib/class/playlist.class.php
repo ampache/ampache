@@ -192,6 +192,29 @@ class Playlist extends playlist_object
     } // get_smartlists
 
     /**
+     * get_details
+     * Returns a keyed array of playlist id and name accessible by the user.
+     * @param string $type
+     * @param integer $user_id
+     * @return array
+     */
+    public static function get_details($type = 'playlist', $user_id = 0)
+    {
+        if (!$user_id) {
+            $user_id = Core::get_global('user')->id ?: -1;
+        }
+
+        $sql        = "SELECT `id`, `name` FROM `$type` WHERE (`user` = ? OR `type` = 'public') ORDER BY `name`";
+        $results    = array();
+        $db_results = Dba::read($sql, array($user_id));
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[$row['id']] = $row['name'];
+        }
+
+        return $results;
+    } // get_playlists
+
+    /**
      * format
      * This takes the current playlist object and gussies it up a little
      * bit so it is presentable to the users
@@ -488,6 +511,7 @@ class Playlist extends playlist_object
         debug_event('playlist.class', "add_medias to: " . $this->id, 5);
         $track_data = $this->get_songs();
         $base_track = count($track_data);
+        $track      = 0;
         $count      = 0;
         $sql        = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) VALUES ";
         $values     = array();
@@ -694,19 +718,19 @@ class Playlist extends playlist_object
     public function sort_tracks()
     {
         /* First get all of the songs in order of their tracks */
-        $sql = "SELECT LIST.`id` " .
-               "FROM `playlist_data` AS LIST " .
-               "LEFT JOIN `song` AS SONG ON LIST.object_id = SONG.id " .
-               "LEFT JOIN `album` AS ALBUM ON SONG.album = ALBUM.id " .
-               "LEFT JOIN `artist` AS ARTIST ON ALBUM.album_artist = ARTIST.id " .
-               "WHERE LIST.`playlist` = ? " .
-               "ORDER BY ARTIST.`name` ASC, " .
-               "ALBUM.`name` ASC, " .
-               "ALBUM.`year` ASC, " .
-               "ALBUM.`disk` ASC, " .
-               "SONG.`track` ASC, " .
-               "SONG.`title` ASC, " .
-               "SONG.`track` ASC";
+        $sql = "SELECT LIST.`id`
+                FROM `playlist_data` AS LIST
+           LEFT JOIN `song` AS SONG ON LIST.object_id = SONG.id
+           LEFT JOIN `album` AS ALBUM ON SONG.album = ALBUM.id
+           LEFT JOIN `artist` AS ARTIST ON ALBUM.album_artist = ARTIST.id
+               WHERE LIST.`playlist` = ?
+            ORDER BY ARTIST.`name` ASC,
+                     ALBUM.`name` ASC,
+                     ALBUM.`year` ASC,
+                     ALBUM.`disk` ASC,
+                     SONG.`track` ASC,
+                     SONG.`title` ASC,
+                     SONG.`track` ASC";
         $db_results = Dba::query($sql, array($this->id));
 
         $count   = 1;
