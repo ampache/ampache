@@ -3807,12 +3807,15 @@ class Api
 
         $url = '';
         if ($type == 'song') {
-            $url = Song::generic_play_url('song', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
+            $media = new Song($fileid);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
         }
         if ($type == 'podcast') {
-            $url = Song::generic_play_url('podcast_episode', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
+            $media = new Podcast_Episode($fileid);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
         }
         if (!empty($url)) {
+            Session::extend($input['auth']);
             header('Location: ' . str_replace(':443/play', '/play', $url));
 
             return true;
@@ -3855,10 +3858,12 @@ class Api
             $params .= '&format=' . $format;
         }
         if ($type == 'song') {
-            $url = Song::generic_play_url('song', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
+            $media = new Song($fileid);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
         }
-        if ($type == 'podcast') {
-            $url = Song::generic_play_url('podcast_episode', $fileid, $params, 'api', function_exists('curl_version'), $user_id, $original);
+        if ($type == 'podcast_episode' || $type == 'podcast') {
+            $media = new Podcast_Episode($fileid);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
         }
         if (!empty($url)) {
             header('Location: ' . str_replace(':443/play', '/play', $url));

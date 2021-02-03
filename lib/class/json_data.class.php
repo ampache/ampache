@@ -71,11 +71,7 @@ class JSON_Data
             return false;
         }
 
-        if (strtolower($limit) == "none") {
-            self::$limit = null;
-        } else {
-            self::$limit = (int) ($limit);
-        }
+        self::$limit = (strtolower((string) $limit) == "none") ? null : (int) $limit;
 
         return true;
     } // set_limit
@@ -190,7 +186,7 @@ class JSON_Data
      */
     public static function licenses($licenses)
     {
-        if (count($licenses) > self::$limit || self::$offset > 0) {
+        if ((count($licenses) > self::$limit || self::$offset > 0) && self::$limit) {
             $licenses = array_splice($licenses, self::$offset, self::$limit);
         }
 
@@ -219,7 +215,7 @@ class JSON_Data
      */
     public static function tags($tags)
     {
-        if (count($tags) > self::$limit || self::$offset > 0) {
+        if ((count($tags) > self::$limit || self::$offset > 0) && self::$limit) {
             $tags = array_splice($tags, self::$offset, self::$limit);
         }
 
@@ -263,7 +259,7 @@ class JSON_Data
      */
     public static function artists($artists, $include = [], $user_id = null, $encode = true)
     {
-        if (count($artists) > self::$limit || self::$offset > 0) {
+        if ((count($artists) > self::$limit || self::$offset > 0) && self::$limit) {
             $artists = array_splice($artists, self::$offset, self::$limit);
         }
 
@@ -332,7 +328,7 @@ class JSON_Data
      */
     public static function albums($albums, $include = [], $user_id = null, $encode = true)
     {
-        if (count($albums) > self::$limit || self::$offset > 0) {
+        if ((count($albums) > self::$limit || self::$offset > 0) && self::$limit) {
             $albums = array_splice($albums, self::$offset, self::$limit);
         }
 
@@ -416,7 +412,7 @@ class JSON_Data
      */
     public static function playlists($playlists)
     {
-        if (count($playlists) > self::$limit || self::$offset > 0) {
+        if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
         }
 
@@ -474,7 +470,7 @@ class JSON_Data
      */
     public static function shares($shares)
     {
-        if (count($shares) > self::$limit || self::$offset > 0) {
+        if ((count($shares) > self::$limit || self::$offset > 0) && self::$limit) {
             $shares = array_splice($shares, self::$offset, self::$limit);
         }
 
@@ -528,7 +524,7 @@ class JSON_Data
      */
     public static function catalogs($catalogs)
     {
-        if (count($catalogs) > self::$limit || self::$offset > 0) {
+        if ((count($catalogs) > self::$limit || self::$offset > 0) && self::$limit) {
             $catalogs = array_splice($catalogs, self::$offset, self::$limit);
         }
 
@@ -575,7 +571,7 @@ class JSON_Data
      */
     public static function podcasts($podcasts, $episodes = false)
     {
-        if (count($podcasts) > self::$limit || self::$offset > 0) {
+        if ((count($podcasts) > self::$limit || self::$offset > 0) && self::$limit) {
             $podcasts = array_splice($podcasts, self::$offset, self::$limit);
         }
 
@@ -628,7 +624,7 @@ class JSON_Data
      */
     public static function podcast_episodes($podcast_episodes, $simple = false)
     {
-        if (count($podcast_episodes) > self::$limit || self::$offset > 0) {
+        if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && self::$limit) {
             $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
         }
         $allEpisodes = array();
@@ -669,7 +665,7 @@ class JSON_Data
      */
     public static function songs($songs, $user_id = null, $encode = true)
     {
-        if (count($songs) > self::$limit || self::$offset > 0) {
+        if ((count($songs) > self::$limit || self::$offset > 0) && self::$limit) {
             $songs = array_slice($songs, self::$offset, self::$limit);
         }
 
@@ -722,7 +718,7 @@ class JSON_Data
             $ourSong['rate']             = (int) $song->rate;
             $ourSong['mode']             = $song->mode;
             $ourSong['mime']             = $song->mime;
-            $ourSong['url']              = Song::play_url($song->id, '', 'api', false, $user_id);
+            $ourSong['url']              = $song->play_url('', 'api', false, $user_id);
             $ourSong['size']             = (int) $song->size;
             $ourSong['mbid']             = $song->mbid;
             $ourSong['album_mbid']       = $song->album_mbid;
@@ -777,7 +773,7 @@ class JSON_Data
      */
     public static function videos($videos, $user_id)
     {
-        if (count($videos) > self::$limit || self::$offset > 0) {
+        if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
         }
 
@@ -792,7 +788,7 @@ class JSON_Data
                 "resolution" => $video->f_resolution,
                 "size" => (int) $video->size,
                 "tag" => self::tags_array($video->tags),
-                "url" => Video::play_url($video->id, '', 'api', false, $user_id)
+                "url" => $video->play_url('', 'api', false, $user_id)
             ));
         } // end foreach
 
@@ -835,7 +831,7 @@ class JSON_Data
                 "track" => (int) $song->track,
                 "time" => (int) $song->time,
                 "mime" => $song->mime,
-                "url" => Song::play_url($song->id, '', 'api', false, $user_id),
+                "url" => $song->play_url('', 'api', false, $user_id),
                 "size" => (int) $song->size,
                 "art" => $art_url,
                 "preciserating" => ($rating->get_user_rating() ?: null),

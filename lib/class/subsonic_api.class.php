@@ -214,24 +214,26 @@ class Subsonic_Api
         $conf = array('alwaysArray' => $alwaysArray);
         if ($format == "json") {
             echo json_encode(self::xml2json($xml, $conf), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+
+            return;
         }
         if ($format == "jsonp") {
             echo $callback . '(' . json_encode(self::xml2json($xml, $conf), JSON_PRETTY_PRINT) . ')';
+
+            return;
         }
-        if ($format == "xml") {
-            $xmlstr = $xml->asXml();
-            // clean illegal XML characters.
-            $clean_xml = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);
-            $dom       = new DOMDocument();
-            $dom->loadXML($clean_xml, LIBXML_PARSEHUGE);
-            $dom->formatOutput = true;
-            $output            = $dom->saveXML();
-            // saving xml can fail
-            if (!$output) {
-                $output = "<subsonic-response status=\"failed\" version=\"1.13.0\"><error code=\"0\" message=\"Error creating response.\"/></subsonic-response>";
-            }
-            echo $output;
+        $xmlstr = $xml->asXml();
+        // clean illegal XML characters.
+        $clean_xml = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);
+        $dom       = new DOMDocument();
+        $dom->loadXML($clean_xml, LIBXML_PARSEHUGE);
+        $dom->formatOutput = true;
+        $output            = $dom->saveXML();
+        // saving xml can fail
+        if (!$output) {
+            $output = "<subsonic-response status=\"failed\" version=\"1.13.0\"><error code=\"0\" message=\"Error creating response.\"/></subsonic-response>";
         }
+        echo $output;
     }
 
     /**
@@ -1094,9 +1096,11 @@ class Subsonic_Api
 
         $url = '';
         if (Subsonic_XML_Data::isSong($fileid)) {
-            $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'), $user_id);
+            $object = new Song(Subsonic_XML_Data::getAmpacheId($fileid));
+            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
         } elseif (Subsonic_XML_Data::isPodcastEp($fileid)) {
-            $url = Podcast_Episode::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'), $user_id);
+            $object = new Podcast_Episode(Subsonic_XML_Data::getAmpacheId($fileid));
+            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
         }
 
         // return an error on missing files
@@ -1122,9 +1126,11 @@ class Subsonic_Api
         $params  = '&action=download' . '&client=' . rawurlencode($input['c']);
         $url     = '';
         if (Subsonic_XML_Data::isSong($fileid)) {
-            $url = Song::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'), $user_id);
+            $object = new Song(Subsonic_XML_Data::getAmpacheId($fileid));
+            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
         } elseif (Subsonic_XML_Data::isPodcastEp($fileid)) {
-            $url = Podcast_Episode::play_url(Subsonic_XML_Data::getAmpacheId($fileid), $params, 'api', function_exists('curl_version'), $user_id);
+            $object = new Podcast_Episode(Subsonic_XML_Data::getAmpacheId($fileid));
+            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user_id);
         }
 
         // return an error on missing files
@@ -1211,7 +1217,7 @@ class Subsonic_Api
                 // in most cases the song doesn't have a picture, but the album where it belongs to has
                 // if this is the case, we take the album art
                 $song = new Song(Subsonic_XML_Data::getAmpacheId(Subsonic_XML_Data::getAmpacheId($sub_id)));
-                $art  = new Art(Subsonic_XML_Data::getAmpacheId($song->album), "album");
+                $art  = new Art($song->album, "album");
             }
         }
         if (($type == 'podcast')) {
@@ -1866,6 +1872,7 @@ class Subsonic_Api
                     $localplay->delete_all();
                     // Intentional break fall-through
                 case 'add':
+                    $user = User::get_from_username($input['u']);
                     if ($id) {
                         if (!is_array($id)) {
                             $rid   = array();
@@ -1876,7 +1883,8 @@ class Subsonic_Api
                         foreach ($id as $song_id) {
                             $url = null;
                             if (Subsonic_XML_Data::isSong($song_id)) {
-                                $url = Song::generic_play_url('song', Subsonic_XML_Data::getAmpacheId($song_id), '', 'api');
+                                $media = new Song(Subsonic_XML_Data::getAmpacheId($song_id));
+                                $url   = $media->play_url('', 'api', function_exists('curl_version'), $user->id);
                             }
 
                             if ($url !== null) {

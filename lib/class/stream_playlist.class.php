@@ -222,8 +222,7 @@ class Stream_Playlist
                     }
                 }
             } else {
-                // FIXME: play_url shouldn't be static
-                $url['url'] = $type::play_url($object->id, $additional_params);
+                $url['url'] = $object->play_url($additional_params);
             }
 
             $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
@@ -396,7 +395,7 @@ class Stream_Playlist
     /**
      * add_urls
      * Add an array of urls. This is used for things that aren't coming
-     * from media objects
+     * from media objects like democratic playlists
      * @param array $urls
      * @return boolean
      */
@@ -604,7 +603,8 @@ class Stream_Playlist
                     $additional_params .= '&' . $key . '=' . $value;
                 }
 
-                $hu = $type::play_url($id, $additional_params);
+                $item = new $type($id);
+                $hu   = $item->play_url($additional_params);
                 $ret .= $hu . "\n";
                 $soffset += $size;
                 $segment++;

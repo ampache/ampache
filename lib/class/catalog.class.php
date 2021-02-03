@@ -356,7 +356,7 @@ abstract class Catalog extends database_object
     {
         if (!is_dir($path)) {
             if (mkdir($path) === false) {
-                debug_event('podcast.class', 'Cannot create directory ' . $path, 2);
+                debug_event('catalog.class', 'Cannot create directory ' . $path, 2);
 
                 return false;
             }
@@ -741,15 +741,33 @@ abstract class Catalog extends database_object
      *
      * This returns the current number of songs, videos, albums, and artists
      * across all catalogs on the server
-     * @param bool $enabled
+     * @param boolean $enabled
+     * @param string $table
      * @return array
      */
-    public static function count_server($enabled = false)
+    public static function count_server($enabled = false, $table = '')
     {
         // tables with media items to count, song-related tables and the rest
         $media_tables = array('song', 'video', 'podcast_episode');
         $song_tables  = array('artist', 'album');
-        $list_tables  = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog');
+        $list_tables  = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license');
+        if (!empty($table)) {
+            if (in_array($table, $media_tables)) {
+                $media_tables = array($table);
+                $song_tables  = array();
+                $list_tables  = array();
+            }
+            if (in_array($table, $song_tables)) {
+                $media_tables = array();
+                $song_tables  = array($table);
+                $list_tables  = array();
+            }
+            if (in_array($table, $list_tables)) {
+                $media_tables = array();
+                $song_tables  = array();
+                $list_tables  = array($table);
+            }
+        }
 
         $results = array();
         $items   = '0';
@@ -780,15 +798,29 @@ abstract class Catalog extends database_object
         }
 
         foreach ($list_tables as $table) {
-            $sql        = "SELECT COUNT(`id`) FROM `$table`";
-            $db_results = Dba::read($sql);
-            $data       = Dba::fetch_row($db_results);
+            $data = self::count_table($table);
             // save the object count
             $results[$table] = $data[0];
         }
 
         return $results;
-    }
+    } // count_server
+
+    /**
+     * count_table
+     *
+     * Update a specific table count when adding/removing from the server
+     * @param string $table
+     * @return array
+     */
+    public static function count_table($table)
+    {
+        $sql        = "SELECT COUNT(`id`) FROM `$table`";
+        $db_results = Dba::read($sql);
+        $data       = Dba::fetch_row($db_results);
+
+        return $data;
+    } // count_table
 
     /**
      * count_catalog
@@ -818,9 +850,10 @@ abstract class Catalog extends database_object
         }
 
         return $results;
-    }
+    } // count_catalog
 
     /**
+     * get_uploads_sql
      *
      * @param string $type
      * @param integer|null $user_id
@@ -847,7 +880,7 @@ abstract class Catalog extends database_object
         }
 
         return $sql;
-    }
+    } // get_uploads_sql
 
     /**
      * get_album_ids
@@ -1735,10 +1768,12 @@ abstract class Catalog extends database_object
             case 'album':
                 $tags = self::getSongTags('album', $libitem->id);
                 Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, false);
+                $libitem->update_time();
                 break;
             case 'artist':
                 $tags = self::getSongTags('artist', $libitem->id);
                 Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, false);
+                $libitem->update_time();
                 break;
         } // end switch type
 
@@ -1774,12 +1809,13 @@ abstract class Catalog extends database_object
         $name     = (get_class($media) == 'Song') ? 'song' : 'video';
         $function = 'update_' . $name . '_from_tags';
 
-        // check for files without tags and try to update from their file name instead
-        $invalid_exts = array('wav', 'shn');
+        // try and get the tags from your file
         $extension    = strtolower(pathinfo($media->file, PATHINFO_EXTENSION));
         $results      = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
-        if (in_array($extension, $invalid_exts)) {
-            debug_event('catalog.class', 'update_media_from_tags: ' . $extension . ' extension: Updating from file name', 2);
+        // for files without tags try to update from their file name instead
+        if ($media->id && in_array($extension, array('wav', 'shn'))) {
+            debug_event('catalog.class', 'update_media_from_tags: ' . $extension . ' extension: parse_pattern', 2);
+            // match against your catalog 'Filename Pattern' and 'Folder Pattern'
             $patres  = vainfo::parse_pattern($media->file, $catalog->sort_pattern, $catalog->rename_pattern);
             $results = array_merge($results, $patres);
 
@@ -1839,10 +1875,10 @@ abstract class Catalog extends database_object
             }
         }
         $new_song->language              = self::check_length($results['language'], 128);
-        $new_song->replaygain_track_gain = floatval($results['replaygain_track_gain']);
-        $new_song->replaygain_track_peak = floatval($results['replaygain_track_peak']);
-        $new_song->replaygain_album_gain = floatval($results['replaygain_album_gain']);
-        $new_song->replaygain_album_peak = floatval($results['replaygain_album_peak']);
+        $new_song->replaygain_track_gain = !is_null($results['replaygain_track_gain']) ? (float) $results['replaygain_track_gain'] : null;
+        $new_song->replaygain_track_peak = !is_null($results['replaygain_track_peak']) ? (float) $results['replaygain_track_peak'] : null;
+        $new_song->replaygain_album_gain = !is_null($results['replaygain_album_gain']) ? (float) $results['replaygain_album_gain'] : null;
+        $new_song->replaygain_album_peak = !is_null($results['replaygain_album_peak']) ? (float) $results['replaygain_album_peak'] : null;
 
         // genre is used in the tag and tag_map tables
         $new_song->tags = $results['genre'];
@@ -2005,7 +2041,7 @@ abstract class Catalog extends database_object
         $new_video->display_x     = $results['display_x'];
         $new_video->display_y     = $results['display_y'];
         $new_video->frame_rate    = $results['frame_rate'];
-        $new_video->video_bitrate = $results['video_bitrate'];
+        $new_video->video_bitrate = (int) Catalog::check_int($results['video_bitrate'], 4294967294, 0);
         $tags                     = Tag::get_object_tags('video', $video->id);
         if ($tags) {
             foreach ($tags as $tag) {
@@ -2069,7 +2105,6 @@ abstract class Catalog extends database_object
      * @param string $sort_pattern
      * @param string $rename_pattern
      * @return array
-     * @throws Exception
      */
     public function get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern)
     {
@@ -2080,7 +2115,13 @@ abstract class Catalog extends database_object
         }
 
         $vainfo = new vainfo($media->file, $gather_types, '', '', '', $sort_pattern, $rename_pattern);
-        $vainfo->get_info();
+        try {
+            $vainfo->get_info();
+        } catch (Exception $error) {
+            debug_event('catalog.class', 'Error ' . $error->getMessage(), 1);
+
+            return array();
+        }
 
         $key = vainfo::get_tag_type($vainfo->tags);
 
@@ -2371,6 +2412,27 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * check_int
+     * Check to make sure a number fits into the database
+     *
+     * @param integer $track
+     * @param integer $max
+     * @param integer $min
+     * @return integer
+     */
+    public static function check_int($track, $max, $min)
+    {
+        if ($track > $max) {
+            return $max;
+        }
+        if ($track < $min) {
+            return $min;
+        }
+
+        return $track;
+    }
+
+    /**
      * get_unique_string
      * Check to make sure the string doesn't have duplicate strings ({)e.g. "Enough Records; Enough Records")
      *
@@ -2640,6 +2702,9 @@ abstract class Catalog extends database_object
         $sql = "DELETE FROM `catalog` WHERE `id` = ?";
         Dba::write($sql, array($catalog_id));
 
+        // run garbage collection
+        self::garbage_collection();
+
         return true;
     } // delete
 
@@ -2661,8 +2726,8 @@ abstract class Catalog extends database_object
         } else {
             $sql = 'SELECT `id` FROM `song` ORDER BY `album`, `track`';
         }
-        $db_results      = Dba::read($sql, $params);
-        $time_format     = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : "Y-m-d\TH:i:s\Z";
+        $db_results  = Dba::read($sql, $params);
+        $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : "Y-m-d\TH:i:s\Z";
 
         switch ($type) {
             case 'itunes':
@@ -2685,7 +2750,7 @@ abstract class Catalog extends database_object
                     $xml['dict']['Sample Rate']  = (int) ($song->rate);
                     $xml['dict']['Play Count']   = (int) ($song->played);
                     $xml['dict']['Track Type']   = "URL";
-                    $xml['dict']['Location']     = Song::play_url($song->id);
+                    $xml['dict']['Location']     = $song->play_url();
                     echo (string) xoutput_from_array($xml, true, 'itunes');
                     // flush output buffer
                 } // while result
@@ -2755,7 +2820,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * @param Artist|Album|Song|Video|Podcast_Episode|Video $libitem
+     * @param Artist|Album|Song|Video|Podcast_Episode|Label|TVShow|TVShow_Season $libitem
      * @param integer|null $user_id
      * @return boolean
      */

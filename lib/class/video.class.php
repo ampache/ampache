@@ -460,21 +460,41 @@ class Video extends database_object implements media, library_item
      * play_url
      * This returns a "PLAY" url for the video in question here, this currently feels a little
      * like a hack, might need to adjust it in the future
-     * @param integer $object_id
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
      * @param integer $uid
      * @return string
      */
-    public static function play_url($object_id, $additional_params = '', $player = '', $local = false, $uid = false)
+    public function play_url($additional_params = '', $player = '', $local = false, $uid = null)
     {
+        if (!$this->id) {
+            return '';
+        }
         if (!$uid) {
-            $uid = Core::get_global('user')->id;
+            // No user in the case of upnp. Set to 0 instead. required to fix database insertion errors
+            $uid = Core::get_global('user')->id ?: 0;
+        }
+        // set no user when not using auth
+        if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
+            $uid = -1;
         }
 
-        return Song::generic_play_url('video', $object_id, $additional_params, $player, $local, $uid);
-    }
+        $type = $this->type;
+
+        $this->format();
+        $media_name = $this->get_stream_name() . "." . $type;
+        $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
+        $media_name = rawurlencode($media_name);
+
+        $url = Stream::get_base_url($local) . "type=video&oid=" . $this->id . "&uid=" . (string) $uid . $additional_params;
+        if ($player !== '') {
+            $url .= "&player=" . $player;
+        }
+        $url .= "&name=" . $media_name;
+
+        return Stream_URL::format($url);
+    } // play_url
 
     /**
      * Get stream name.
@@ -575,21 +595,21 @@ class Video extends database_object implements media, library_item
      */
     public static function insert(array $data, $gtypes = array(), $options = array())
     {
-        $bitrate        = (int) ($data['bitrate']);
+        $bitrate        = (int) $data['bitrate'];
         $mode           = $data['mode'];
-        $rezx           = (int) ($data['resolution_x']);
-        $rezy           = (int) ($data['resolution_y']);
-        $release_date   = (int) ($data['release_date']);
+        $rezx           = (int) $data['resolution_x'];
+        $rezy           = (int) $data['resolution_y'];
+        $release_date   = (int) $data['release_date'];
         // No release date, then release date = production year
         if (!$release_date && $data['year']) {
-            $release_date = strtotime(strval($data['year']) . '-01-01');
+            $release_date = strtotime((string) $data['year'] . '-01-01');
         }
         $tags           = $data['genre'];
-        $channels       = (int) ($data['channels']);
-        $disx           = (int) ($data['display_x']);
-        $disy           = (int) ($data['display_y']);
-        $frame_rate     = floatval($data['frame_rate']);
-        $video_bitrate  = (int) ($data['video_bitrate']);
+        $channels       = (int) $data['channels'];
+        $disx           = (int) $data['display_x'];
+        $disy           = (int) $data['display_y'];
+        $frame_rate     = (float) $data['frame_rate'];
+        $video_bitrate  = (int) Catalog::check_int($data['video_bitrate'], 4294967294, 0);
 
         $sql = "INSERT INTO `video` (`file`, `catalog`, `title`, `video_codec`, `audio_codec`, `resolution_x`, `resolution_y`, `size`, `time`, `mime`, `release_date`, `addition_time`, `bitrate`, `mode`, `channels`, `display_x`, `display_y`, `frame_rate`, `video_bitrate`) " .
             " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";

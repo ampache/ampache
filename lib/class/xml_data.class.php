@@ -72,11 +72,7 @@ class XML_Data
             return false;
         }
 
-        if (strtolower((string) $limit) == "none") {
-            self::$limit = null;
-        } else {
-            self::$limit = (int) ($limit);
-        }
+        self::$limit = (strtolower((string) $limit) == "none") ? null : (int) $limit;
 
         return true;
     } // set_limit
@@ -328,7 +324,7 @@ class XML_Data
      */
     public static function indexes($objects, $object_type, $full_xml = true)
     {
-        if (count($objects) > self::$limit || self::$offset > 0) {
+        if ((count($objects)  > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
         $string = "<total_count>" . count($objects) . "</total_count>\n";
@@ -417,7 +413,7 @@ class XML_Data
      */
     public static function licenses($licenses)
     {
-        if (count($licenses) > self::$limit || self::$offset > 0) {
+        if ((count($licenses)  > self::$limit || self::$offset > 0) && self::$limit) {
             $licenses = array_splice($licenses, self::$offset, self::$limit);
         }
         $string = "<total_count>" . count($licenses) . "</total_count>\n";
@@ -444,7 +440,7 @@ class XML_Data
      */
     public static function tags($tags)
     {
-        if (count($tags) > self::$limit || self::$offset > 0) {
+        if ((count($tags)  > self::$limit || self::$offset > 0) && self::$limit) {
             $tags = array_splice($tags, self::$offset, self::$limit);
         }
         $string = "<total_count>" . count($tags) . "</total_count>\n";
@@ -480,7 +476,7 @@ class XML_Data
      */
     public static function artists($artists, $include = [], $user_id = null, $full_xml = true)
     {
-        if (count($artists) > self::$limit || self::$offset > 0) {
+        if ((count($artists)  > self::$limit || self::$offset > 0) && self::$limit) {
             $artists = array_splice($artists, self::$offset, self::$limit);
         }
         $string = "<total_count>" . count($artists) . "</total_count>\n";
@@ -550,7 +546,7 @@ class XML_Data
             $include = explode(',', $include);
         }
 
-        if (count($albums) > self::$limit || self::$offset > 0) {
+        if ((count($albums)  > self::$limit || self::$offset > 0) && self::$limit) {
             $albums = array_splice($albums, self::$offset, self::$limit);
         }
         $string = "<total_count>" . count($albums) . "</total_count>\n";
@@ -618,7 +614,7 @@ class XML_Data
      */
     public static function playlists($playlists)
     {
-        if (count($playlists) > self::$limit || self::$offset > 0) {
+        if ((count($playlists)  > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
         }
         $string = "<total_count>" . count($playlists) . "</total_count>\n";
@@ -675,7 +671,7 @@ class XML_Data
      */
     public static function shares($shares)
     {
-        if (count($shares) > self::$limit || self::$offset > 0) {
+        if ((count($shares)  > self::$limit || self::$offset > 0) && self::$limit) {
             $shares = array_splice($shares, self::$offset, self::$limit);
         }
         $string = "<total_count>" . count($shares) . "</total_count>\n";
@@ -714,7 +710,7 @@ class XML_Data
      */
     public static function catalogs($catalogs)
     {
-        if (count($catalogs) > self::$limit || self::$offset > 0) {
+        if ((count($catalogs)  > self::$limit || self::$offset > 0) && self::$limit) {
             $catalogs = array_splice($catalogs, self::$offset, self::$limit);
         }
         $string = "<total_count>" . count($catalogs) . "</total_count>\n";
@@ -750,7 +746,7 @@ class XML_Data
      */
     public static function podcasts($podcasts, $episodes = false)
     {
-        if (count($podcasts) > self::$limit || self::$offset > 0) {
+        if ((count($podcasts)  > self::$limit || self::$offset > 0) && self::$limit) {
             $podcasts = array_splice($podcasts, self::$offset, self::$limit);
         }
         $string = "<total_count>" . count($podcasts) . "</total_count>\n";
@@ -792,7 +788,7 @@ class XML_Data
      */
     public static function podcast_episodes($podcast_episodes, $full_xml = true)
     {
-        if (count($podcast_episodes) > self::$limit || self::$offset > 0) {
+        if ((count($podcast_episodes)  > self::$limit || self::$offset > 0) && self::$limit) {
             $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
         }
         $string = ($full_xml) ? "<total_count>" . count($podcast_episodes) . "</total_count>\n" : '';
@@ -831,7 +827,7 @@ class XML_Data
      */
     public static function songs($songs, $user_id = null, $full_xml = true)
     {
-        if (count($songs) > self::$limit || self::$offset > 0) {
+        if ((count($songs)  > self::$limit || self::$offset > 0) && self::$limit) {
             $songs = array_slice($songs, self::$offset, self::$limit);
         }
         $string = "<total_count>" . count($songs) . "</total_count>\n";
@@ -881,7 +877,7 @@ class XML_Data
                     "\t<rate>" . $song->rate . "</rate>\n" .
                     "\t<mode><![CDATA[" . $song->mode . "]]></mode>\n" .
                     "\t<mime><![CDATA[" . $song->mime . "]]></mime>\n" .
-                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api', false, $user_id, true) . "]]></url>\n" .
+                "\t<url><![CDATA[" . $song->play_url('', 'api', false, $user_id) . "]]></url>\n" .
                     "\t<size>" . $song->size . "</size>\n" .
                     "\t<mbid><![CDATA[" . $song->mbid . "]]></mbid>\n" .
                     "\t<album_mbid><![CDATA[" . $song->album_mbid . "]]></album_mbid>\n" .
@@ -933,7 +929,7 @@ class XML_Data
      */
     public static function videos($videos, $user_id = null)
     {
-        if (count($videos) > self::$limit || self::$offset > 0) {
+        if ((count($videos)  > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
         }
         $string = '<total_count>' . count($videos) . "</total_count>\n";
@@ -950,7 +946,7 @@ class XML_Data
                     "\t<resolution><![CDATA[" . $video->f_resolution . "]]></resolution>\n" .
                     "\t<size>" . $video->size . "</size>\n" .
                     self::tags_string($video->tags) .
-                    "\t<url><![CDATA[" . Video::play_url($video->id, '', 'api', false, $user_id) . "]]></url>\n" .
+                "\t<url><![CDATA[" . $video->play_url('', 'api', false, $user_id) . "]]></url>\n" .
                     "</video>\n";
         } // end foreach
 
@@ -998,7 +994,7 @@ class XML_Data
                     "\t<track>" . $song->track . "</track>\n" .
                     "\t<time><![CDATA[" . $song->time . "]]></time>\n" .
                     "\t<mime><![CDATA[" . $song->mime . "]]></mime>\n" .
-                    "\t<url><![CDATA[" . Song::play_url($song->id, '', 'api', false, $user_id, true) . "]]></url>\n" .
+                    "\t<url><![CDATA[" . $song->play_url('', 'api', false, $user_id) . "]]></url>\n" .
                     "\t<size>" . $song->size . "</size>\n" .
                     "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
                     "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
@@ -1309,7 +1305,7 @@ class XML_Data
             }
             $xitem->addChild("xmlns:itunes:duration", $media->f_time);
             if ($media->mime) {
-                $surl  = $media_info['object_type']::play_url($media_info['object_id'], '', 'api', false, $user_id);
+                $surl  = $media->play_url('', 'api', false, $user_id);
                 $xencl = $xitem->addChild("enclosure");
                 $xencl->addAttribute("type", (string) $media->mime);
                 $xencl->addAttribute("length", (string) $media->size);

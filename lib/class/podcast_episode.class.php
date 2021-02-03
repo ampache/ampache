@@ -64,7 +64,7 @@ class Podcast_Episode extends database_object implements media, library_item
      * Constructor
      *
      * Podcast Episode class
-     * @param integer|null $podcastep_id
+     * @param integer $podcastep_id
      */
     public function __construct($podcastep_id = null)
     {
@@ -153,6 +153,9 @@ class Podcast_Episode extends database_object implements media, library_item
             $this->f_podcast      = $podcast->f_title;
             $this->f_podcast_link = $podcast->f_link;
             $this->f_file         = $this->f_podcast . ' - ' . $this->f_file;
+        }
+        if (AmpConfig::get('show_played_times')) {
+            $this->object_cnt = Stats::get_object_count('podcast_episode', $this->id);
         }
 
         return true;
@@ -251,6 +254,7 @@ class Podcast_Episode extends database_object implements media, library_item
     }
 
     /**
+     * display_art
      * @param integer $thumb
      * @param boolean $force
      */
@@ -312,12 +316,14 @@ class Podcast_Episode extends database_object implements media, library_item
      */
     public function set_played($user, $agent, $location, $date = null)
     {
-        if ($this->played) {
-            return true;
+        // ignore duplicates or skip the last track
+        if ($this->check_play_history($user, $agent, $date)) {
+            Stats::insert('podcast_episode', $this->id, $user, $agent, $location, 'stream', $date);
         }
 
-        /* If it hasn't been played, set it! */
-        self::update_played(true, $this->id);
+        if (!$this->played) {
+            self::update_played(true, $this->id);
+        }
 
         return true;
     } // set_played
@@ -388,7 +394,7 @@ class Podcast_Episode extends database_object implements media, library_item
      * @param string $target
      * @param string $player
      * @param array $options
-     * @return array|boolean
+     * @return array
      */
     public function get_transcode_settings($target = null, $player = null, $options = array())
     {
@@ -400,7 +406,6 @@ class Podcast_Episode extends database_object implements media, library_item
      * This function takes all the song information and correctly formats a
      * a stream URL taking into account the downsmapling mojo and everything
      * else, this is the true function
-     * @param integer $object_id
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
@@ -408,14 +413,35 @@ class Podcast_Episode extends database_object implements media, library_item
      * @param boolean $original
      * @return string
      */
-    public static function play_url($object_id, $additional_params = '', $player = '', $local = false, $uid = false, $original = false)
+    public function play_url($additional_params = '', $player = '', $local = false, $uid = false)
     {
+        if (!$this->id) {
+            return '';
+        }
         if (!$uid) {
-            $uid = Core::get_global('user')->id;
+            // No user in the case of upnp. Set to 0 instead. required to fix database insertion errors
+            $uid = Core::get_global('user')->id ?: 0;
+        }
+        // set no user when not using auth
+        if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
+            $uid = -1;
         }
 
-        return Song::generic_play_url('podcast_episode', $object_id, $additional_params, $player, $local, $uid, $original);
-    }
+        $type = $this->type;
+
+        $this->format();
+        $media_name = $this->get_stream_name() . "." . $type;
+        $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
+        $media_name = rawurlencode($media_name);
+
+        $url = Stream::get_base_url($local) . "type=podcast_episode&oid=" . $this->id . "&uid=" . (string) $uid . $additional_params;
+        if ($player !== '') {
+            $url .= "&player=" . $player;
+        }
+        $url .= "&name=" . $media_name;
+
+        return Stream_URL::format($url);
+    } // play_url
 
     /**
      * Get stream types.

@@ -105,7 +105,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         <?php
         } ?>
         <?php if (Access::check_function('download')) { ?>
-        <a class="nohtml" href="<?php echo Song::play_url($song->id, '&action=download', '', false, Core::get_global('user')->id, true); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
+        <a class="nohtml" href="<?php echo $song->play_url('&action=download', '', false, Core::get_global('user')->id, true); ?>"><?php echo UI::get_icon('link', T_('Link')); ?></a>
         <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&amp;song_id=<?php echo $song->id; ?>"><?php echo UI::get_icon('download', T_('Download')); ?></a>
         <?php
         } ?>
@@ -138,10 +138,10 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         } ?>
     </dd>
     <?php
-    $songprops[T_('Title')]   = scrub_out($song->title);
-    $songprops[T_('Artist')]  = $song->f_artist_link;
+    $songprops[T_('Title')]  = scrub_out($song->title);
+    $songprops[T_('Artist')] = $song->f_artist_link;
     if (!empty($song->f_albumartist_link)) {
-        $songprops[T_('Album Artist')]   = $song->f_albumartist_link;
+        $songprops[T_('Album Artist')] = $song->f_albumartist_link;
     }
     $songprops[T_('Album')]         = $song->f_album_link . ($song->year ? " (" . scrub_out($song->year) . ")" : "");
     $songprops[T_('Composer')]      = scrub_out($song->composer);
@@ -163,28 +163,31 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
     $songprops[T_('Barcode')]        = scrub_out($song->get_album_barcode($song->album));
     $songprops[T_('Bitrate')]        = scrub_out($song->f_bitrate);
     $songprops[T_('Channels')]       = scrub_out($song->channels);
-    if ($song->replaygain_track_gain != 0) {
-        $songprops[T_('ReplayGain Track Gain')]   = scrub_out($song->replaygain_track_gain);
+    $songprops[T_('Song MBID')]      = scrub_out($song->mbid);
+    $songprops[T_('Album MBID')]     = scrub_out($song->album_mbid);
+    $songprops[T_('Artist MBID')]    = scrub_out($song->artist_mbid);
+    if ($song->replaygain_track_gain !== null) {
+        $songprops[T_('ReplayGain Track Gain')] = scrub_out($song->replaygain_track_gain);
     }
-    if ($song->replaygain_album_gain != 0) {
-        $songprops[T_('ReplayGain Album Gain')]   = scrub_out($song->replaygain_album_gain);
+    if ($song->replaygain_album_gain !== null) {
+        $songprops[T_('ReplayGain Album Gain')] = scrub_out($song->replaygain_album_gain);
     }
     if (Access::check('interface', 75)) {
-        $songprops[T_('Filename')]   = scrub_out($song->file) . " " . $song->f_size;
+        $songprops[T_('Filename')] = scrub_out($song->file) . " " . $song->f_size;
     }
     if ($song->update_time) {
-        $songprops[T_('Last Updated')]   = get_datetime($time_format, (int) $song->update_time);
+        $songprops[T_('Last Updated')] = get_datetime($time_format, (int) $song->update_time);
     }
-    $songprops[T_('Added')]   = get_datetime($time_format, (int) $song->addition_time);
+    $songprops[T_('Added')] = get_datetime($time_format, (int) $song->addition_time);
     if (AmpConfig::get('show_played_times')) {
-        $songprops[T_('# Played')]   = scrub_out($song->object_cnt);
+        $songprops[T_('# Played')] = scrub_out($song->object_cnt);
     }
     if (AmpConfig::get('show_skipped_times')) {
-        $songprops[T_('# Skipped')]  = scrub_out($song->skip_cnt);
+        $songprops[T_('# Skipped')] = scrub_out($song->skip_cnt);
     }
 
     if (AmpConfig::get('show_lyrics')) {
-        $songprops[T_('Lyrics')]   = $song->f_lyrics;
+        $songprops[T_('Lyrics')] = $song->f_lyrics;
     }
 
     if (AmpConfig::get('licensing') && $song->license) {
@@ -195,7 +198,7 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
     if (AmpConfig::get('sociable') && $owner_id > 0) {
         $owner = new User($owner_id);
         $owner->format();
-        $songprops[T_('Uploaded by')]  = $owner->f_link;
+        $songprops[T_('Uploaded by')] = $owner->f_link;
     }
 
     foreach ($songprops as $key => $value) {
