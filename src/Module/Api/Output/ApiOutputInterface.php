@@ -151,4 +151,17 @@ interface ApiOutputInterface
         int $limit = 0,
         int $offset = 0
     ): string;
+
+    /**
+     * This builds the xml document for displaying video objects
+     *
+     * @param int[] $videoIds
+     * @param int|null $userId
+     * @param bool $asObject
+     */
+    public function videos(
+        array $videoIds,
+        ?int $userId = null,
+        bool $asObject = true
+    ): string;
 }

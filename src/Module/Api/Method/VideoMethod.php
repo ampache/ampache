@@ -21,63 +21,87 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Model\User;
-use Ampache\Model\Video;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Model\ModelFactoryInterface;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class VideoMethod
- * @package Lib\ApiMethods
- */
-final class VideoMethod
+final class VideoMethod implements MethodInterface
 {
-    private const ACTION = 'video';
+    public const ACTION = 'video';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->streamFactory   = $streamFactory;
+        $this->modelFactory    = $modelFactory;
+        $this->configContainer = $configContainer;
+    }
 
     /**
-     * video
      * This returns a single video
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of video
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws FunctionDisabledException
+     * @throws RequestParamMissingException
+     * @throws ResultEmptyException
      */
-    public static function video(array $input)
-    {
-        if (!AmpConfig::get('allow_video')) {
-            Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-        $object_id = (int) $input['filter'];
-        $video     = new Video($object_id);
-        if (!$video->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'song', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) === false) {
+            throw new FunctionDisabledException(T_('Enable: video'));
         }
 
-        $user = User::get_from_username(Session::username($input['auth']));
-        switch ($input['api_format']) {
-            case 'json':
-                echo JSON_Data::videos(array($object_id), $user->id, false);
-                break;
-            default:
-                echo Xml_Data::videos(array($object_id), $user->id);
-        }
-        Session::extend($input['auth']);
+        $objectId = $input['filter'] ?? null;
 
-        return true;
+        if ($objectId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
+        }
+
+        $video = $this->modelFactory->createVideo((int) $objectId);
+
+        if ($video->isNew() === true) {
+            throw new ResultEmptyException((string) $objectId);
+        }
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->videos(
+                    [$objectId],
+                    $gatekeeper->getUser()->getId()
+                )
+            )
+        );
     }
 }
