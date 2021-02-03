@@ -120,7 +120,7 @@ switch ($_REQUEST['action']) {
         } else {
             show_confirmation(T_('No Problem'), $client->username . ' (' . $client->fullname . ') ' . T_('updated'), AmpConfig::get('web_path') . '/admin/users.php');
         }
-    break;
+        break;
     case 'add_user':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -196,7 +196,7 @@ switch ($_REQUEST['action']) {
                 /* HINT: %1 Username, %2 Access (Guest, User, Admin) */
                 sprintf(T_('%1$s has been created with an access level of %2$s'), $username, $useraccess), AmpConfig::get('web_path') . '/admin/users.php');
 
-    break;
+        break;
     case 'enable':
         $client = new User((int) Core::get_request('user_id'));
         $client->enable();
@@ -206,7 +206,7 @@ switch ($_REQUEST['action']) {
         show_confirmation(T_('No Problem'),
             /* HINT: Username and fullname together: Username (fullname) */
             sprintf(T_('%s has been enabled'), $client->username . ' (' . $client->fullname . ')'), AmpConfig::get('web_path') . '/admin/users.php');
-    break;
+        break;
     case 'disable':
         $client = new User((int) Core::get_request('user_id'));
         if ($client->disable()) {
@@ -216,7 +216,7 @@ switch ($_REQUEST['action']) {
         } else {
             show_confirmation(T_("There Was a Problem"), T_('You need at least one active Administrator account'), AmpConfig::get('web_path') . '/admin/users.php');
         }
-    break;
+        break;
     case 'show_edit':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -224,7 +224,7 @@ switch ($_REQUEST['action']) {
         $client = new User((int) Core::get_request('user_id'));
         $client->format();
         require_once AmpConfig::get('prefix') . UI::find_template('show_edit_user.inc.php');
-    break;
+        break;
     case 'confirm_delete':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -242,7 +242,7 @@ switch ($_REQUEST['action']) {
         } else {
             show_confirmation(T_("There Was a Problem"), T_('You need at least one active Administrator account'), AmpConfig::get('web_path') . "/admin/users.php");
         }
-    break;
+        break;
     case 'delete':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -252,13 +252,13 @@ switch ($_REQUEST['action']) {
             /* HINT: User Fullname */
             sprintf(T_('This will permanently delete the user "%s"'), $client->fullname),
             AmpConfig::get('web_path') . "/admin/users.php?action=confirm_delete&amp;user_id=" . Core::get_request('user_id'), 1, 'delete_user');
-    break;
+        break;
     case 'show_delete_avatar':
         $user_id = Core::get_request('user_id');
 
         $next_url = AmpConfig::get('web_path') . '/admin/users.php?action=delete_avatar&user_id=' . scrub_out($user_id);
         show_confirmation(T_('Are You Sure?'), T_('This Avatar will be deleted'), $next_url, 1, 'delete_avatar');
-    break;
+        break;
     case 'delete_avatar':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -275,13 +275,13 @@ switch ($_REQUEST['action']) {
 
         $next_url = AmpConfig::get('web_path') . '/admin/users.php';
         show_confirmation(T_('No Problem'), T_('Avatar has been deleted'), $next_url);
-    break;
+        break;
     case 'show_generate_apikey':
         $user_id = Core::get_request('user_id');
 
         $next_url = AmpConfig::get('web_path') . '/admin/users.php?action=generate_apikey&user_id=' . scrub_out($user_id);
         show_confirmation(T_('Are You Sure?'), T_('This will replace your existing API Key'), $next_url, 1, 'generate_apikey');
-    break;
+        break;
     case 'generate_apikey':
         if (AmpConfig::get('demo_mode')) {
             break;
@@ -311,18 +311,18 @@ switch ($_REQUEST['action']) {
             $history = $working_user->get_ip_history(1);
         }
         require AmpConfig::get('prefix') . UI::find_template('show_ip_history.inc.php');
-    break;
+        break;
     case 'show_add_user':
             if (AmpConfig::get('demo_mode')) {
                 break;
             }
         require_once AmpConfig::get('prefix') . UI::find_template('show_add_user.inc.php');
-    break;
+        break;
     case 'show_preferences':
         $client      = new User((int) Core::get_request('user_id'));
         $preferences = Preference::get_all($client->id);
         require_once AmpConfig::get('prefix') . UI::find_template('show_user_preferences.inc.php');
-    break;
+        break;
     default:
         $browse = new Browse();
         $browse->reset_filters();
@@ -332,7 +332,7 @@ switch ($_REQUEST['action']) {
         $user_ids = $browse->get_objects();
         $browse->show_objects($user_ids);
         $browse->store();
-    break;
+        break;
 } // end switch on action
 
 // Show the Footer

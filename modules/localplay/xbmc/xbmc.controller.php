@@ -655,14 +655,15 @@ class AmpacheXbmc extends localplay_controller
      * This returns bool/int values for features, loop, repeat and any other features
      * that this Localplay method supports.
      * This works as in requesting the xbmc properties
+     * @return array
      */
     public function status()
     {
+        $array = array();
         if (!$this->_xbmc) {
-            return false;
+            return $array;
         }
 
-        $array = array();
         try {
             $appprop = $this->_xbmc->Application->GetProperties(array(
                 'properties' => array('volume')

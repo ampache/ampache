@@ -97,8 +97,7 @@ switch ($page) {
 
         return false;
     default:
-        // A taste of compatibility
-    break;
+        break;
 } // end switch on page
 
 $action = Core::get_request('action');
@@ -107,7 +106,7 @@ $action = Core::get_request('action');
 switch ($action) {
     case 'refresh_rightbar':
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
-    break;
+        break;
     case 'current_playlist':
         switch ($_REQUEST['type']) {
             case 'delete':
@@ -139,7 +138,7 @@ switch ($action) {
                     foreach ($objects as $object_id) {
                         Core::get_global('user')->playlist->add_object($object_id, 'song');
                     }
-                break;
+                    break;
                 case 'album_random':
                     $data = explode('_', $_REQUEST['type']);
                     $type = $data['0'];
@@ -150,7 +149,7 @@ switch ($action) {
                             Core::get_global('user')->playlist->add_object($song_id, 'song');
                         }
                     }
-                break;
+                    break;
                 case 'artist_random':
                 case 'tag_random':
                     $data   = explode('_', $_REQUEST['type']);
@@ -160,22 +159,22 @@ switch ($action) {
                     foreach ($songs as $song_id) {
                         Core::get_global('user')->playlist->add_object($song_id, 'song');
                     }
-                break;
+                    break;
                 case 'playlist_random':
                     $playlist = new Playlist($_REQUEST['id']);
                     $items    = $playlist->get_random_items();
                     foreach ($items as $item) {
                         Core::get_global('user')->playlist->add_object($item['object_id'], $item['object_type']);
                     }
-                break;
+                    break;
                 case 'clear_all':
                     Core::get_global('user')->playlist->clear();
-                break;
+                    break;
             }
         }
 
         $results['rightbar'] = UI::ajax_include('rightbar.inc.php');
-    break;
+        break;
     /* Setting ratings */
     case 'set_rating':
         if (User::is_registered()) {
@@ -204,7 +203,7 @@ switch ($action) {
         } else {
             $results['rfc3514'] = '0x1';
         }
-    break;
+        break;
     case 'action_buttons':
         ob_start();
         if (AmpConfig::get('ratings')) {
@@ -219,18 +218,10 @@ switch ($action) {
         }
         $results['action_buttons'] = ob_get_contents();
         ob_end_clean();
-        $object_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
-        $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        $user        = Core::get_global('user');
-        $previous    = Stats::get_last_play($user->id);
-        $song        = new Song($object_id);
-        if ($object_type == 'song' && $previous['object_id'] == $object_id && !stats::is_already_inserted($object_type, $object_id, $user->id, '', $time)) {
-            User::save_mediaplay($user, $song);
-        }
-    break;
+        break;
     default:
         $results['rfc3514'] = '0x1';
-    break;
+        break;
 } // end switch action
 
 // Go ahead and do the echo

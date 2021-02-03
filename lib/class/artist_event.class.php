@@ -39,23 +39,6 @@ class Artist_Event
      */
     public static function get_upcoming_events(Artist $artist)
     {
-        if (isset($artist->mbid)) {
-            $query = 'mbid=' . rawurlencode($artist->mbid);
-        } else {
-            $query = 'artist=' . rawurlencode($artist->name);
-        }
-
-        $limit = AmpConfig::get('concerts_limit_future');
-        if ($limit) {
-            $query .= '&limit=' . $limit;
-        }
-
-        $xml = Recommendation::get_lastfm_results('artist.getevents', $query);
-
-        if ($xml->events) {
-            return $xml->events;
-        }
-
         return false;
     }
 
@@ -67,23 +50,6 @@ class Artist_Event
      */
     public static function get_past_events(Artist $artist)
     {
-        if (isset($artist->mbid)) {
-            $query = 'mbid=' . rawurlencode($artist->mbid);
-        } else {
-            $query = 'artist=' . rawurlencode($artist->name);
-        }
-
-        $limit = AmpConfig::get('concerts_limit_past');
-        if ($limit) {
-            $query .= '&limit=' . $limit;
-        }
-
-        $xml = Recommendation::get_lastfm_results('artist.getpastevents', $query);
-
-        if ($xml->events) {
-            return $xml->events;
-        }
-
         return false;
     }
 } // end artist_event.class

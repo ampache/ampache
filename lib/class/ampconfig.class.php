@@ -43,7 +43,7 @@ class AmpConfig
     public function __construct()
     {
         // Rien a faire
-    }
+    } // __construct
 
     /**
      * get

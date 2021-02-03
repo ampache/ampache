@@ -242,19 +242,19 @@ class UI
         switch ($unit) {
             case 'p':
                 $value *= 1024;
-            // Intentional break fall-through
+                // Intentional break fall-through
             case 't':
                 $value *= 1024;
-            // Intentional break fall-through
+                // Intentional break fall-through
             case 'g':
                 $value *= 1024;
-            // Intentional break fall-through
+                // Intentional break fall-through
             case 'm':
                 $value *= 1024;
-            // Intentional break fall-through
+                // Intentional break fall-through
             case 'k':
                 $value *= 1024;
-            // Intentional break fall-through
+                // Intentional break fall-through
         }
 
         return (string) $value;

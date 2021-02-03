@@ -239,11 +239,13 @@ class UPnPPlayer
     private function CallAsyncURL($url)
     {
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
-        curl_setopt($curl, CURLOPT_HEADER, false);
-        curl_exec($curl);
-        curl_close($curl);
+        if ($curl) {
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
+            curl_setopt($curl, CURLOPT_HEADER, false);
+            curl_exec($curl);
+            curl_close($curl);
+        }
     }
 
     /**

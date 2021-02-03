@@ -668,13 +668,12 @@ class User extends database_object
                         $function = 'update_' . $name;
                         $this->$function($value);
                     }
-                break;
+                    break;
                 case 'clear_stats':
                     Stats::clear($this->id);
-                break;
+                    break;
                 default:
-                    // Rien a faire
-                break;
+                    break;
             }
         }
 

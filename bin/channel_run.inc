@@ -36,8 +36,9 @@ $start_date = time();
 $verbose    = false;
 $port       = 0;
 $chanid     = 0;
+$cargv      = count($_SERVER['argv']);
 
-$cargv = count($_SERVER['argv']);
+$operations_string = '';
 if ($cargv > 1) {
     for ($x = 1; $x < $cargv; $x++) {
         if ($_SERVER['argv'][$x] == "-c" && ($x + 1) < $cargv) {
@@ -58,12 +59,18 @@ if ($chanid < 1) {
 
     return false;
 }
+if (!AmpConfig::get('channel')) {
+    echo ('Cannot start channel, enable channels in your server config first.');
 
+    return false;
+}
 // Transcode is mandatory to have consistent stream codec
 $transcode_cfg = AmpConfig::get('transcode');
 
 if ($transcode_cfg == 'never') {
-    die('Cannot start channel, transcoding is mandatory to work');
+    echo ('Cannot start channel, transcoding is mandatory to work');
+
+    return false;
 }
 
 echo T_("Starting Channel...") . $operations_string . "\n";
@@ -73,6 +80,7 @@ if (!$channel->id) {
     die(T_("Unknown channel."));
 }
 
+$address = '';
 if ($port < 1) {
     if ($channel->fixed_endpoint) {
         $address = $channel->interface;
@@ -290,7 +298,7 @@ function client_disconnect($channel, &$client_socks, &$stream_clients, $sock)
     unset($client_socks[$key]);
     unset($stream_clients[$key]);
     if (fclose($sock) === false) {
-        throw new \RuntimeException('The file handle ' . $sock . ' could not be closed');
+        throw new RuntimeException('The file handle ' . $sock . ' could not be closed');
     }
     $channel->update_listeners(count($client_socks));
     debug_event('channel_run', 'A client disconnected. Now there are total ' . count($client_socks) . ' clients.', 4);
@@ -456,7 +464,7 @@ function http_serve($channel, &$client_socks, &$stream_clients, &$read_socks, $s
                     $xsl .= "</tr>" . "\n";
                     $xsl .= "<tr>" . "\n";
                     $xsl .= "<td>Mount Start:</td>" . "\n";
-                    $xsl .= "<td class=\"streamdata\">" . get_datetime((string) AmpConfig::get('custom_datetime'), $channel->start_date) . "</td>" . "\n";
+                    $xsl .= "<td class=\"streamdata\">" . get_datetime($channel->start_date) . "</td>" . "\n";
                     $xsl .= "</tr>" . "\n";
                     $xsl .= "<tr>" . "\n";
                     $xsl .= "<td>Bitrate:</td>" . "\n";

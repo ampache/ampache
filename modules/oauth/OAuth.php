@@ -1030,13 +1030,13 @@ class OAuthUtil
     //                  see http://code.google.com/p/oauth/issues/detail?id=163
     /**
      * @param $header
-     * @param boolean $only_allow_oauth_parameters
+     * @param boolean $oauth_parameters
      * @return array
      */
-    public static function split_header($header, $only_allow_oauth_parameters = true)
+    public static function split_header($header, $oauth_parameters = true)
     {
         $params = array();
-        if (preg_match_all('/(' . ($only_allow_oauth_parameters ? 'oauth_' : '') . '[a-z_-]*)=(:?"([^"]*)"|([^,]*))/', $header, $matches)) {
+        if (preg_match_all('/(' . ($oauth_parameters ? 'oauth_' : '') . '[a-z_-]*)=(:?"([^"]*)"|([^,]*))/', $header, $matches)) {
             foreach ($matches[1] as $i => $h) {
                 $params[$h] = OAuthUtil::urldecode_rfc3986(empty($matches[3][$i]) ? $matches[4][$i] : $matches[3][$i]);
             }
