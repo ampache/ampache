@@ -36,8 +36,8 @@ class Catalog_local extends Catalog
     private $description    = 'Local Catalog';
 
     private $count;
-    private $added_songs_to_gather;
-    private $added_videos_to_gather;
+    private $songs_to_gather;
+    private $videos_to_gather;
 
     /**
      * get_description
@@ -187,25 +187,7 @@ class Catalog_local extends Catalog
         // Clean up the path just in case
         $path = rtrim(rtrim(trim($data['path']), '/'), '\\');
 
-        if (!strlen($path)) {
-            AmpError::add('general', T_('Path was not specified'));
-
-            return false;
-        }
-
-        // Make sure that there isn't a catalog with a directory above this one
-        if (self::get_from_path($path)) {
-            AmpError::add('general', T_('Specified path is inside an existing catalog'));
-
-            return false;
-        }
-
-        // Make sure the path is readable/exists
-        if (!Core::is_readable($path)) {
-            debug_event('local.catalog', 'Cannot add catalog at unopenable path ' . $path, 1);
-            /* HINT: directory (file path) */
-            AmpError::add('general', sprintf(T_("The folder couldn't be read. Does it exist? %s"), scrub_out($data['path'])));
-
+        if (!self::check_path($path)) {
             return false;
         }
 
@@ -286,7 +268,7 @@ class Catalog_local extends Catalog
             // reduce the crazy log info
             if ($counter % 1000 == 0) {
                 debug_event('local.catalog', "Reading $file inside $path", 5);
-                debug_event('local.catalog', "Memory usage: " . (string)UI::format_bytes(memory_get_usage(true)), 5);
+                debug_event('local.catalog', "Memory usage: " . (string) UI::format_bytes(memory_get_usage(true)), 5);
             }
             $counter++;
 
@@ -479,8 +461,8 @@ class Catalog_local extends Catalog
         }
 
         $this->count                  = 0;
-        $this->added_songs_to_gather  = array();
-        $this->added_videos_to_gather = array();
+        $this->songs_to_gather        = array();
+        $this->videos_to_gather       = array();
 
         if (!defined('SSE_OUTPUT')) {
             require AmpConfig::get('prefix') . UI::find_template('show_adds_catalog.inc.php');
@@ -522,7 +504,7 @@ class Catalog_local extends Catalog
                     require AmpConfig::get('prefix') . UI::find_template('show_gather_art.inc.php');
                     flush();
                 }
-                $this->gather_art($this->added_songs_to_gather, $this->added_videos_to_gather);
+                $this->gather_art($this->songs_to_gather, $this->videos_to_gather);
             }
         }
 
@@ -750,7 +732,7 @@ class Catalog_local extends Catalog
             debug_event('local.catalog', 'File not found or empty: ' . $file, 5);
             /* HINT: filename (file path) */
             AmpError::add('general', sprintf(T_('File was not found or is 0 Bytes: %s'), $file));
-            $sql = "DELETE FROM `$media_type` WHERE `file` = '" . $file . "'";
+            $sql = "DELETE FROM `$media_type` WHERE `file` = '" . Dba::escape($file) . "'";
             Dba::write($sql);
         } // if error
         else {
@@ -759,6 +741,33 @@ class Catalog_local extends Catalog
             }
         }
     } // clean_file
+
+    /**
+     * move_catalog_proc
+     * This function updates the file path of the catalog to a new location
+     * @param string $new_path
+     * @return boolean
+     */
+    public function move_catalog_proc($new_path)
+    {
+        if (!self::check_path($new_path)) {
+            return false;
+        }
+        if ($this->path == $new_path) {
+            debug_event('local.catalog', 'The new path equals the old path: ' . $new_path, 5);
+
+            return false;
+        }
+        $sql    = "UPDATE `catalog_local` SET `path` = ? WHERE `catalog_id` = ?";
+        $params = array($new_path, $this->id);
+        Dba::write($sql, $params);
+
+        $sql    = "UPDATE `song` SET `file` = REPLACE(`file`, '" . Dba::escape($this->path) . "', ' " . Dba::escape($new_path) . "') WHERE `catalog` = ?";
+        $params = array($this->id);
+        Dba::write($sql, $params);
+
+        return true;
+    } // move_catalog_proc
 
     /**
      * insert_local_song
@@ -866,7 +875,7 @@ class Catalog_local extends Catalog
                 $results = array_diff_key($results, array_flip($song->getDisabledMetadataFields()));
                 self::add_metadata($song, $results);
             }
-            $this->added_songs_to_gather[] = $song_id;
+            $this->songs_to_gather[] = $song_id;
 
             $this->_filecache[strtolower($file)] = $song_id;
         }
@@ -905,7 +914,7 @@ class Catalog_local extends Catalog
                 Video::generate_preview($video_id);
             }
         } else {
-            $this->added_videos_to_gather[] = $video_id;
+            $this->videos_to_gather[] = $video_id;
         }
 
         $this->_filecache[strtolower($file)] = 'v_' . $video_id;
@@ -953,6 +962,39 @@ class Catalog_local extends Catalog
 
         return false;
     } // check_local_mp3
+
+    /**
+     * check_path
+     * Checks the path to see if it's there or conflicting with an existing catalot
+     * @param string $path
+     * @return boolean
+     */
+    public static function check_path($path)
+    {
+        if (!strlen($path)) {
+            AmpError::add('general', T_('Path was not specified'));
+
+            return false;
+        }
+
+        // Make sure that there isn't a catalog with a directory above this one
+        if (self::get_from_path($path)) {
+            AmpError::add('general', T_('Specified path is inside an existing catalog'));
+
+            return false;
+        }
+
+        // Make sure the path is readable/exists
+        if (!Core::is_readable($path)) {
+            debug_event('local.catalog', 'Cannot add catalog at unopenable path ' . $path, 1);
+            /* HINT: directory (file path) */
+            AmpError::add('general', sprintf(T_("The folder couldn't be read. Does it exist? %s"), scrub_out($path)));
+
+            return false;
+        }
+
+        return true;
+    } // check_path
 
     /**
      * @param string $file_path

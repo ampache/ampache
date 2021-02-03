@@ -25,7 +25,7 @@ define('CLI', 1);
 
 $path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
-require_once $prefix . '/lib/init.php';
+require_once '../lib/init.php';
 
 ob_end_flush();
 
@@ -37,13 +37,16 @@ $artadd         = 0;
 $infoupdate     = 0;
 $plimp          = 0;
 $optimizetables = 0;
+$catmove        = 0;
 $cattype        = false;
 $catname        = false;
-$options        = getopt("hn:t:mvcaguio");
+$catpath        = false;
+$options        = getopt("hn:t:mvcaguiop:");
 
 if (count($options) == 0) {
     $operations_string = "\n\t- " . T_('Doing all Catalog operations');
 } else {
+    $operations_string = '';
     if (array_key_exists('h', $options)) {
         usage();
 
@@ -89,19 +92,37 @@ if (count($options) == 0) {
         $operations_string .= "\n\t- " . T_('Database table optimization');
         $optimizetables = 1;
     }
+    if (array_key_exists('m', $options)) {
+        $operations_string .= "\n\t- " . T_('Temporarily deactivating PHP memory limit');
+        $tmpmemlimoff = 1;
+    }
+    if (array_key_exists('p', $options)) {
+        $operations_string .= "\n\t- " . T_('Moving Catalog path');
+        $catmove = 1;
+        $catpath = Dba::escape(preg_replace("/\//i", "/", $options['p']));
+    }
 }
-if (count($_SERVER['argv']) != 1 && $artadd != 1 && $infoupdate != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1 && $plimp != 1) {
+if (count($_SERVER['argv']) != 1 && $artadd != 1 && $infoupdate != 1 && $catclean != 1 && $catverify != 1 && $catadd != 1 && $plimp != 1 && $catmove != 1) {
     usage();
 
     return false;
 }
 
-if ($catclean == 0 && $catverify == 0 && $catadd == 0 && $artadd == 0 && $optimizetables == 0 && $plimp == 0 && $infoupdate != 1) {    //didn't pass any clean/verify/add arguments
+//didn't pass any clean/verify/add arguments
+if ($catclean == 0 && $catverify == 0 && $catadd == 0 && $artadd == 0 && $optimizetables == 0 && $plimp == 0 && $infoupdate != 1 && $catmove != 1) {
     $catclean       = 1;     //set them all to on
     $catverify      = 1;
     $catadd         = 1;
     $artadd         = 1;
     $optimizetables = 1;
+}
+// if moving, don't do anything else
+if ($catname && $catmove) {
+    $catclean       = 0;
+    $catverify      = 0;
+    $catadd         = 0;
+    $artadd         = 0;
+    $optimizetables = 0;
 }
 echo "\n----------------------------------------------------------\n";
 echo T_("Starting Catalog operations...") . $operations_string . "\n";
@@ -111,22 +132,23 @@ echo "----------------------------------------------------------\n\n";
 if ($tmpmemlimoff == 1) {
     // Temporarily deactivate PHP memory limit
     echo "\033[31m- " . T_("Deactivated PHP memory limit") . " -\033[0m\n";
-    ini_set('memory_limit','-1');
+    ini_set("memory_limit", "-1");
     echo "------------------\n\n";
 }
 
 //$options = array(); // for $catadd
 if ($artadd == 1) {
-    $options['gather_art'] = true;
+    $options["gather_art"] = true;
 } else {
-    $options['gather_art'] = false;
+    $options["gather_art"] = false;
 }
 if ($plimp == 1) {
-    $options['parse_playlist'] = true;
+    $options["parse_playlist"] = true;
 } else {
-    $options['parse_playlist'] = false;
+    $options["parse_playlist"] = false;
 }
 // --------
+$where = "";
 if ($catname !== false) {
     $where = " name = '$catname' ";
 }
@@ -141,12 +163,12 @@ if ($where) {
 }
 $db_results = Dba::read($sql);
 
-ob_start("ob_html_strip",'1024',true);
+ob_start("ob_html_strip", "1024", true);
 
 while ($row = Dba::fetch_assoc($db_results)) {
-    $catalog = Catalog::create_from_id($row['id']);
+    $catalog = Catalog::create_from_id($row["id"]);
     /* HINT: Catalog Name */
-    printf(T_('Reading Catalog: "%s"'), $catalog->name);
+    printf(T_("Reading Catalog: '%s'"), $catalog->name);
     ob_flush();
     echo "\n";
 
@@ -172,30 +194,48 @@ while ($row = Dba::fetch_assoc($db_results)) {
         echo "----------------\n\n";
     } elseif ($artadd == 1) {
         // Look for media art
-        echo "- " . T_('Start searching new media art') . " - \n";
+        echo "- " . T_("Start searching new media art") . " - \n";
         echo "\n";
         $catalog->gather_art();
         echo "----------------\n\n";
     }
     if ($infoupdate == 1) {
         // Look for updated artist information. (missing or < 6 months since last update)
-        echo "- " . T_('Update artist information and fetch similar artists from last.fm') . " - \n";
+        echo "- " . T_("Update artist information and fetch similar artists from last.fm") . " - \n";
         echo "\n";
-        $artist_info = $catalog->get_artist_ids('info');
+        $artist_info = $catalog->get_artist_ids("info");
         $catalog->gather_artist_info($artist_info);
         echo "----------------\n\n";
     }
-}
-    if ($optimizetables == 1) {
-        // Optimize Database Tables
-        echo "- " . T_('Optimizing database tables') . " - \n";
-        echo "\n";
-        Dba::optimize_tables();
-        echo "------------------\n\n";
+    if ($catmove == 1) {
+        // Migrate a catalog from the current path to a new one.
+        echo "- " . T_("Moving Catalog path") . " - \n";
+        echo "\n" . $catalog->path . " -> " . $catpath . "\n\n";
+        if (is_dir($catpath) && isset($catalog->path)) {
+            if ($catalog->move_catalog_proc($catpath)) {
+                echo "- " . T_("The Catalog path has changed") . " - \n";
+            } else {
+                echo "- " . T_("There Was a Problem") . " - \n";
+            }
+        } else {
+            echo "- " . T_("There is an error with your parameters") . " - \n";
+        }
+        echo "----------------\n";
     }
+}
+if ($catclean == 1 || $catverify == 1) {
+    Catalog::garbage_collection();
+}
+if ($optimizetables == 1) {
+    // Optimize Database Tables
+    echo "- " . T_("Optimizing database tables") . " - \n";
+    echo "\n";
+    Dba::optimize_tables();
+    echo "------------------\n\n";
+}
 
 ob_end_flush();
-echo "\n";
+echo "\n\n";
 
 /**
  * ob_html_strip
@@ -204,7 +244,7 @@ echo "\n";
  */
 function ob_html_strip($string)
 {
-    $string = str_replace('<br />', "\n", $string);
+    $string = str_replace("<br />", "\n", $string);
     $string = strip_tags($string);
     $string = html_entity_decode($string);
     $string = preg_replace("/[\r\n]+[\s\t]*[\r\n]+/","\n",$string);
@@ -218,7 +258,7 @@ function usage()
     echo "\n";
     echo "----------------------------------------------------------\n\t\t";
     echo T_("Usage:") . " \n\033[32m";
-    echo T_("catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-a|-g|-u|-i|-o]") . "\033[0m (\033[31m!\033[0m)" . " \033[0m\n";
+    echo T_("catalog_update.inc [-n CATALOG NAME] [-t CATALOG TYPE] [-h|-m|-c|-v|-a|-g|-u|-i|-o|-p]") . "\033[0m (\033[31m!\033[0m)" . " \033[0m\n";
     echo "----------------------------------------------------------\n";
     echo T_("Default behavior is to do all except temporarily deactivate the php memory limit") . " \n";
     echo "----------------------------------------------------------";
@@ -233,6 +273,7 @@ function usage()
     echo "\n-u\t" . T_('Update artist information and fetch similar artists from last.fm') . " " . T_('Make sure lastfm_api_key is set in your configuration file');
     echo "\n-i\t" . T_('Imports playlists');
     echo "\n-o\t" . T_('Optimizes database tables') . " (\033[31m2\033[0m)" . " \n";
+    echo "\n-p\t" . T_('Change the path of an existing Catalog') . " " . T_('Requires a Catalog name') . " \n";
     echo "----------------------------------------------------------\033[31m\n";
     echo "1. " . T_('Use this option at your own risk! Your system could crash or become unresponsive due to huge memory consumption!') . "\n";
     echo "2. " . T_("Depending on your system's performance, this option may need a long time to finish and could greatly slow down other database processes if you have large Catalogs!") . "\n";
