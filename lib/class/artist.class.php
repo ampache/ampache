@@ -615,9 +615,6 @@ class Artist extends database_object implements library_item
 
             $this->object_cnt = $extra_info['object_cnt'];
         }
-        if ($this->time == 0) {
-            $this->time = $this->update_time();
-        }
 
         return true;
     } // format
@@ -1062,23 +1059,6 @@ class Artist extends database_object implements library_item
     {
         $sql = "UPDATE `artist` SET `last_update` = ? WHERE `id` = ?";
         Dba::write($sql, array(time(), $object_id));
-    }
-
-    /**
-     * update_time
-     *
-     * Get time for an artist and set it.
-     * @return integer
-     */
-    public function update_time()
-    {
-        $time = self::get_time((int) $this->id);
-        if ($time !== $this->time && $this->id) {
-            $sql = "UPDATE `artist` SET `time`=$time WHERE `id`=" . $this->id;
-            Dba::write($sql);
-        }
-
-        return $time;
     }
 
     /**

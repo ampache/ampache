@@ -811,10 +811,6 @@ class Album extends database_object implements library_item
             $year              = $this->year;
             $this->f_year_link = "<a href=\"$web_path/search.php?type=album&action=search&limit=0rule_1=year&rule_1_operator=2&rule_1_input=" . $year . "\">" . $year . "</a>";
         }
-
-        if ($this->time == 0) {
-            $this->time = $this->update_time();
-        }
     } // format
 
     /**
@@ -1055,23 +1051,6 @@ class Album extends database_object implements library_item
 
         return $results;
     } // get_random_songs
-
-    /**
-     * update_time
-     *
-     * Get time for an album disk and set it.
-     * @return integer
-     */
-    public function update_time()
-    {
-        $time = self::get_time((int) $this->id);
-        if ($time !== $this->time && $this->id) {
-            $sql = "UPDATE `album` SET `time`=$time WHERE `id`=" . $this->id;
-            Dba::write($sql);
-        }
-
-        return $time;
-    }
 
     /**
      * update
