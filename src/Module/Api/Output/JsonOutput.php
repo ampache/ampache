@@ -24,10 +24,22 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Model\ModelFactoryInterface;
+use Ampache\Model\Shoutbox;
+use Ampache\Model\Tag;
+use Ampache\Model\User;
 use Ampache\Module\Api\Json_Data;
 
 final class JsonOutput implements ApiOutputInterface
 {
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->modelFactory = $modelFactory;
+    }
+
     /**
      * At the moment, this method just acts as a proxy
      */
@@ -147,7 +159,7 @@ final class JsonOutput implements ApiOutputInterface
     }
 
     /**
-     * This handles creating a list of users
+     * At the moment, this method just acts as a proxy
      *
      * @param int[] $users User identifier list
      *
@@ -156,5 +168,112 @@ final class JsonOutput implements ApiOutputInterface
     public function users(array $users): string
     {
         return Json_Data::users($users);
+    }
+
+    /**
+     * This handles creating a result for a shout list
+     *
+     * @param int[] $shoutIds Shout identifier list
+     */
+    public function shouts(array $shoutIds): string
+    {
+        $result = [];
+        foreach ($shoutIds as $shoutId) {
+            $shout = $this->modelFactory->createShoutbox($shoutId);
+            $user  = $this->modelFactory->createUser((int) $shout->user);
+
+            $result[] = [
+                'id' => (string) $shoutId,
+                'date' => $shout->date,
+                'text' => $shout->text,
+                'user' => [
+                    'id' => (string) $shout->user,
+                    'username' => $user->username
+                ]
+            ];
+        }
+
+        return json_encode(['shout' => $result], JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * This handles creating an JSON document for a user
+     */
+    public function user(User $user, bool $fullinfo): string
+    {
+        $user->format();
+        if ($fullinfo) {
+            $JSON = [
+                'id' => (string) $user->id,
+                'username' => $user->username,
+                'auth' => $user->apikey,
+                'email' => $user->email,
+                'access' => (int) $user->access,
+                'fullname_public' => (int) $user->fullname_public,
+                'validation' => $user->validation,
+                'disabled' => (int) $user->disabled,
+                'create_date' => (int) $user->create_date,
+                'last_seen' => (int) $user->last_seen,
+                'website' => $user->website,
+                'state' => $user->state,
+                'city' => $user->city
+            ];
+        } else {
+            $JSON = [
+                'id' => (string) $user->id,
+                'username' => $user->username,
+                'create_date' => (int) $user->create_date,
+                'last_seen' => (int) $user->last_seen,
+                'website' => $user->website,
+                'state' => $user->state,
+                'city' => $user->city
+            ];
+        }
+
+        if ($user->fullname_public) {
+            $JSON['fullname'] = $user->fullname;
+        }
+        $output = ['user' => $JSON];
+
+        return json_encode($output, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * This returns genres to the user
+     *
+     * @param int[] $tagIds
+     * @param bool $asObject
+     * @param int $limit
+     * @param int $offset
+     */
+    public function genres(
+        array $tagIds,
+        bool $asObject = true,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
+        if ((count($tagIds) > $limit || $offset > 0) && $limit) {
+            $tagIds = array_splice($tagIds, $offset, $limit);
+        }
+
+        $result = [];
+        foreach ($tagIds as $tagId) {
+            $tag    = $this->modelFactory->createTag($tagId);
+            $counts = $tag->count();
+
+            $result[] = [
+                'id' => (string) $tagId,
+                'name' => $tag->name,
+                'albums' => (int) $counts['album'],
+                'artists' => (int) $counts['artist'],
+                'songs' => (int) $counts['song'],
+                'videos' => (int) $counts['video'],
+                'playlists' => (int) $counts['playlist'],
+                'live_streams' => (int) $counts['live_stream']
+            ];
+        }
+        $output = ($asObject) ? ['genre' => $result] : $result[0];
+
+        return json_encode($output, JSON_PRETTY_PRINT);
     }
 }

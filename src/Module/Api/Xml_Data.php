@@ -24,38 +24,37 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Album;
+use Ampache\Model\Art;
+use Ampache\Model\Artist;
 use Ampache\Model\Bookmark;
+use Ampache\Model\Catalog;
+use Ampache\Model\Democratic;
 use Ampache\Model\Label;
 use Ampache\Model\library_item;
 use Ampache\Model\License;
 use Ampache\Model\Live_Stream;
-use Ampache\Model\Shoutbox;
-use Ampache\Model\Video;
-use Ampache\Module\Playback\Stream;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Ui;
-use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
-use Ampache\Model\Artist;
-use Ampache\Model\Catalog;
-use Ampache\Module\System\Core;
-use Ampache\Model\Democratic;
-use Ampache\Repository\AlbumRepositoryInterface;
-use Ampache\Repository\SongRepositoryInterface;
-use DOMDocument;
 use Ampache\Model\Playlist;
 use Ampache\Model\Podcast;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Rating;
 use Ampache\Model\Search;
 use Ampache\Model\Share;
-use SimpleXMLElement;
 use Ampache\Model\Song;
 use Ampache\Model\Tag;
 use Ampache\Model\User;
 use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;
+use Ampache\Model\Video;
+use Ampache\Module\Playback\Stream;
+use Ampache\Module\System\Core;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Module\Util\Ui;
+use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
+use DOMDocument;
+use SimpleXMLElement;
 
 /**
  * XML_Data Class
@@ -577,38 +576,6 @@ class Xml_Data
 
         return self::output_xml($string);
     } // labels
-
-    /**
-     * genres
-     *
-     * This returns genres to the user, in a pretty xml document with the information
-     *
-     * @param  array    $tags    (description here...)
-     * @return string    return xml
-     */
-    public static function genres($tags)
-    {
-        if ((count($tags) > self::$limit || self::$offset > 0) && self::$limit) {
-            $tags = array_splice($tags, self::$offset, self::$limit);
-        }
-        $string = "<total_count>" . Catalog::get_count('tag') . "</total_count>\n";
-
-        foreach ($tags as $tag_id) {
-            $tag    = new Tag($tag_id);
-            $counts = $tag->count();
-            $string .= "<genre id=\"$tag_id\">\n" .
-                    "\t<name><![CDATA[$tag->name]]></name>\n" .
-                    "\t<albums>" . (int) ($counts['album']) . "</albums>\n" .
-                    "\t<artists>" . (int) ($counts['artist']) . "</artists>\n" .
-                    "\t<songs>" . (int) ($counts['song']) . "</songs>\n" .
-                    "\t<videos>" . (int) ($counts['video']) . "</videos>\n" .
-                    "\t<playlists>" . (int) ($counts['playlist']) . "</playlists>\n" .
-                    "\t<live_streams>" . (int) ($counts['live_stream']) . "</live_streams>\n" .
-                    "</genre>\n";
-        } // end foreach
-
-        return self::output_xml($string);
-    } // genres
 
     /**
      * artists
@@ -1135,42 +1102,6 @@ class Xml_Data
     } // democratic
 
     /**
-     * user
-     *
-     * This handles creating an xml document for a user
-     *
-     * @param User $user User
-     * @param bool $fullinfo
-     *
-     * @return string return xml
-     */
-    public static function user(User $user, $fullinfo)
-    {
-        $user->format();
-        $string = "<user id=\"" . (string)$user->id . "\">\n" . "\t<username><![CDATA[" . $user->username . "]]></username>\n";
-        if ($fullinfo) {
-            $string .= "\t<auth><![CDATA[" . $user->apikey . "]]></auth>\n" .
-                       "\t<email><![CDATA[" . $user->email . "]]></email>\n" .
-                       "\t<access>" . (int) $user->access . "</access>\n" .
-                       "\t<fullname_public>" . (int) $user->fullname_public . "</fullname_public>\n" .
-                       "\t<validation><![CDATA[" . $user->validation . "]]></validation>\n" .
-                       "\t<disabled>" . (int) $user->disabled . "</disabled>\n";
-        }
-        $string .= "\t<create_date>" . (int) $user->create_date . "</create_date>\n" .
-                "\t<last_seen>" . (int) $user->last_seen . "</last_seen>\n" .
-                "\t<link><![CDATA[" . $user->link . "]]></link>\n" .
-                "\t<website><![CDATA[" . $user->website . "]]></website>\n" .
-                "\t<state><![CDATA[" . $user->state . "]]></state>\n" .
-                "\t<city><![CDATA[" . $user->city . "]]></city>\n";
-        if ($user->fullname_public || $fullinfo) {
-            $string .= "\t<fullname><![CDATA[" . $user->fullname . "]]></fullname>\n";
-        }
-        $string .= "</user>\n";
-
-        return self::output_xml($string);
-    } // user
-
-    /**
      * users
      *
      * This handles creating an xml document for an user list
@@ -1188,30 +1119,6 @@ class Xml_Data
 
         return self::output_xml($string);
     } // users
-
-    /**
-     * shouts
-     *
-     * This handles creating an xml document for a shout list
-     *
-     * @param  integer[]    $shouts    Shout identifier list
-     * @return string    return xml
-     */
-    public static function shouts($shouts)
-    {
-        $string = "";
-        foreach ($shouts as $shout_id) {
-            $shout = new Shoutbox($shout_id);
-            $user  = new User($shout->user);
-            $string .= "\t<shout id=\"" . $shout_id . "\">\n" . "\t\t<date>" . $shout->date . "</date>\n" . "\t\t<text><![CDATA[" . $shout->text . "]]></text>\n";
-            if ($user->id) {
-                $string .= "\t\t<user id=\"" . (string)$user->id . "\">\n" . "\t\t\t<username><![CDATA[" . $user->username . "]]></username>\n" . "\t\t</user>\n";
-            }
-            $string .= "\t</shout>\n";
-        }
-
-        return self::output_xml($string);
-    } // shouts
 
     /**
      * @param  string $string

@@ -76,4 +76,46 @@ final class ShoutRepository implements ShoutRepositoryInterface
             [$shoutboxId]
         );
     }
+
+    /**
+     * This returns the top user_shouts, shoutbox objects are always shown regardless and count against the total
+     * number of objects shown
+     *
+     * @return int[]
+     */
+    public function getTop(int $limit, ?int $userId = null): array
+    {
+        $sql        = 'SELECT `id` FROM `user_shout` WHERE `sticky`=\'1\' ORDER BY `date` DESC';
+        $db_results = Dba::read($sql);
+
+        $shouts = [];
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $shouts[] = (int) $row['id'];
+        }
+
+        // If we've already got too many stop here
+        if (count($shouts) > $limit) {
+            $shouts = array_slice($shouts, 0, $limit);
+
+            return $shouts;
+        }
+
+        // Only get as many as we need
+        $limit  = (int)($limit) - count($shouts);
+        $params = [];
+        $sql    = 'SELECT `id` FROM `user_shout` WHERE `sticky`=\'0\' ';
+        if ($userId !== null) {
+            $sql .= 'AND `user` = ? ';
+            $params[] = $userId;
+        }
+        $sql .= sprintf('ORDER BY `date` DESC LIMIT %d', $limit);
+        $db_results = Dba::read($sql, $params);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $shouts[] = (int) $row['id'];
+        }
+
+        return $shouts;
+    }
 }

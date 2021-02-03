@@ -21,66 +21,77 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class GenresMethod
- * @package Lib\ApiMethods
- */
-final class GenresMethod
+final class GenresMethod implements MethodInterface
 {
-    const ACTION = 'genres';
+    public const ACTION = 'genres';
+
+    private ModelFactoryInterface $modelFactory;
+
+    private StreamFactoryInterface $streamFactory;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory,
+        StreamFactoryInterface $streamFactory
+    ) {
+        $this->modelFactory  = $modelFactory;
+        $this->streamFactory = $streamFactory;
+    }
 
     /**
-     * genres
      * MINIMUM_API_VERSION=380001
      *
      * This returns the genres (Tags) based on the specified filter
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
      */
-    public static function genres(array $input)
-    {
-        $browse = Api::getBrowse();
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $browse = $this->modelFactory->createBrowse(null);
         $browse->reset_filters();
         $browse->set_type('tag');
         $browse->set_sort('name', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter']);
+        Api::set_filter($method, $input['filter'], $browse);
+
         $tags = $browse->get_objects();
-        if (empty($tags)) {
-            Api::empty('genre', $input['api_format']);
-
-            return false;
+        if ($tags === []) {
+            $result = $output->emptyResult('genre');
+        } else {
+            $result = $output->genres(
+                array_map('intval', $tags),
+                true,
+                (int) ($input['limit'] ?? 0),
+                (int) ($input['offset'] ?? 0)
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                echo Json_Data::genres($tags);
-                break;
-            default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::genres($tags);
-        }
-        Session::extend($input['auth']);
-
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }

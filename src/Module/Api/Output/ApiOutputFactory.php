@@ -24,15 +24,29 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Model\ModelFactoryInterface;
+
 final class ApiOutputFactory implements ApiOutputFactoryInterface
 {
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->modelFactory = $modelFactory;
+    }
+
     public function createJsonOutput(): ApiOutputInterface
     {
-        return new JsonOutput();
+        return new JsonOutput(
+            $this->modelFactory
+        );
     }
 
     public function createXmlOutput(): ApiOutputInterface
     {
-        return new XmlOutput();
+        return new XmlOutput(
+            $this->modelFactory
+        );
     }
 }

@@ -184,4 +184,10 @@ final class ModelFactory implements ModelFactoryInterface
     ): Label {
         return new Label($labelId);
     }
+
+    public function createTag(
+        int $tagId
+    ): Tag {
+        return new Tag($tagId);
+    }
 }

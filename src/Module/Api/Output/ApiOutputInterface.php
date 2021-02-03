@@ -22,6 +22,8 @@
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Model\User;
+
 interface ApiOutputInterface
 {
     /**
@@ -119,5 +121,34 @@ interface ApiOutputInterface
      */
     public function users(
         array $users
+    ): string;
+
+    /**
+     * This handles creating a result for a shout list
+     *
+     * @param int[] $shouts List of shout ids
+     *
+     * @return string
+     */
+    public function shouts(array $shoutIds): string;
+
+    /**
+     * This handles creating a result for a user
+     */
+    public function user(User $user, bool $fullinfo): string;
+
+    /**
+     * This returns genres to the user
+     *
+     * @param int[] $tagIds
+     * @param bool $asObject
+     * @param int $limit
+     * @param int $offset
+     */
+    public function genres(
+        array $tagIds,
+        bool $asObject = true,
+        int $limit = 0,
+        int $offset = 0
     ): string;
 }

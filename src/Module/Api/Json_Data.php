@@ -24,32 +24,30 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Model\Album;
-use Ampache\Model\Bookmark;
-use Ampache\Model\Label;
-use Ampache\Model\Live_Stream;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Album;
 use Ampache\Model\Art;
 use Ampache\Model\Artist;
+use Ampache\Model\Bookmark;
 use Ampache\Model\Catalog;
-use Ampache\Module\System\Core;
 use Ampache\Model\Democratic;
+use Ampache\Model\Label;
 use Ampache\Model\License;
+use Ampache\Model\Live_Stream;
 use Ampache\Model\Playlist;
 use Ampache\Model\Podcast;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Rating;
 use Ampache\Model\Search;
 use Ampache\Model\Share;
-use Ampache\Model\Shoutbox;
 use Ampache\Model\Song;
-use Ampache\Module\Playback\Stream;
-use Ampache\Model\Tag;
 use Ampache\Model\User;
 use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;
 use Ampache\Model\Video;
+use Ampache\Module\Playback\Stream;
+use Ampache\Module\System\Core;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
@@ -325,41 +323,6 @@ class Json_Data
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // labels
-
-    /**
-     * genres
-     *
-     * This returns genres to the user, in a pretty JSON document with the information
-     *
-     * @param  array    $tags    (description here...)
-     * @param  boolean $object (whether to return as a named object array or regular array)
-     * @return string  JSON Object "genre"
-     */
-    public static function genres($tags, $object = true)
-    {
-        if ((count($tags) > self::$limit || self::$offset > 0) && self::$limit) {
-            $tags = array_splice($tags, self::$offset, self::$limit);
-        }
-
-        $JSON = [];
-        foreach ($tags as $tag_id) {
-            $tag    = new Tag($tag_id);
-            $counts = $tag->count();
-            array_push($JSON, array(
-                "id" => (string) $tag_id,
-                "name" => $tag->name,
-                "albums" => (int) $counts['album'],
-                "artists" => (int) $counts['artist'],
-                "songs" => (int) $counts['song'],
-                "videos" => (int) $counts['video'],
-                "playlists" => (int) $counts['playlist'],
-                "live_streams" => (int) $counts['live_stream']
-            ));
-        } // end foreach
-        $output = ($object) ? array("genre" => $JSON) : $JSON[0];
-
-        return json_encode($output, JSON_PRETTY_PRINT);
-    } // genres
 
     /**
      * artists
@@ -1045,55 +1008,6 @@ class Json_Data
     } // democratic
 
     /**
-     * user
-     *
-     * This handles creating an JSON document for a user
-     *
-     * @param  User    $user    User
-     * @param  boolean $fullinfo
-     * @param  boolean $object (whether to return as a named object array or regular array)
-     * @return string JSON Object "user"
-     */
-    public static function user(User $user, $fullinfo, $object = true)
-    {
-        $user->format();
-        if ($fullinfo) {
-            $JSON = array(
-                "id" => (string) $user->id,
-                "username" => $user->username,
-                "auth" => $user->apikey,
-                "email" => $user->email,
-                "access" => (int) $user->access,
-                "fullname_public" => (int) $user->fullname_public,
-                "validation" => $user->validation,
-                "disabled" => (int) $user->disabled,
-                "create_date" => (int) $user->create_date,
-                "last_seen" => (int) $user->last_seen,
-                "website" => $user->website,
-                "state" => $user->state,
-                "city" => $user->city
-            );
-        } else {
-            $JSON = array(
-                "id" => (string) $user->id,
-                "username" => $user->username,
-                "create_date" => $user->create_date,
-                "last_seen" => $user->last_seen,
-                "website" => $user->website,
-                "state" => $user->state,
-                "city" => $user->city
-            );
-        }
-
-        if ($user->fullname_public) {
-            $JSON['fullname'] = $user->fullname;
-        }
-        $output = ($object) ? array("user" => $JSON) : $JSON;
-
-        return json_encode($output, JSON_PRETTY_PRINT);
-    } // user
-
-    /**
      * users
      *
      * This handles creating an JSON document for an user list
@@ -1115,37 +1029,6 @@ class Json_Data
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // users
-
-    /**
-     * shouts
-     *
-     * This handles creating an JSON document for a shout list
-     *
-     * @param  integer[]    $shouts    Shout identifier list
-     * @param  boolean $object (whether to return as a named object array or regular array)
-     * @return string JSON Object "shout"
-     */
-    public static function shouts($shouts, $object = true)
-    {
-        $JSON = [];
-        foreach ($shouts as $shout_id) {
-            $shout    = new Shoutbox($shout_id);
-            $user     = new User($shout->user);
-            $ourArray = array(
-                "id" => (string)$shout_id,
-                "date" => $shout->date,
-                "text" => $shout->text,
-                "user" => array(
-                    "id" => (string) $shout->user,
-                    "username" => $user->username
-                )
-            );
-            array_push($JSON, $ourArray);
-        }
-        $output = ($object) ? array("shout" => $JSON) : $JSON[0];
-
-        return json_encode($output, JSON_PRETTY_PRINT);
-    } // shouts
 
     /**
      * timeline

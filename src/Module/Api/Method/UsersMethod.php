@@ -21,62 +21,59 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class UsersMethod
- * @package Lib\ApiMethods
- */
-final class UsersMethod
+final class UsersMethod implements MethodInterface
 {
-    const ACTION = 'users';
+    public const ACTION = 'users';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private UserRepositoryInterface $userRepository;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        UserRepositoryInterface $userRepository
+    ) {
+        $this->streamFactory  = $streamFactory;
+        $this->userRepository = $userRepository;
+    }
 
     /**
-     * users
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get ids and usernames for your site
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
-     * @return boolean
+     *
+     * @return ResponseInterface
      */
-    public static function users(array $input)
-    {
-        $users = static::getUserRepository()->getValid();
-        if (empty($users)) {
-            Api::empty('user', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $users = $this->userRepository->getValid();
+        if ($users === []) {
+            $result = $output->emptyResult('user');
+        } else {
+            $result = $output->users($users);
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json_Data::users($users);
-                break;
-            default:
-                echo Xml_Data::users($users);
-        }
-        Session::extend($input['auth']);
-
-        return true;
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }

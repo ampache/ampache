@@ -35,4 +35,9 @@ interface GatekeeperInterface
     public function getUserName(): string;
 
     public function getAuth(): string;
+
+    public function mayAccess(
+        string $access_type,
+        int $access_level
+    ): bool;
 }

@@ -36,6 +36,7 @@ use Ampache\Model\User;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\User\Authorization\UserAccessKeyGeneratorInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 
 class AmpacheRss
@@ -367,7 +368,7 @@ class AmpacheRss
      */
     public static function load_latest_shout()
     {
-        $ids = Shoutbox::get_top(10);
+        $ids = static::getShoutRepository()->getTop(10);
 
         $results = array();
 
@@ -436,5 +437,15 @@ class AmpacheRss
         global $dic;
 
         return $dic->get(UserAccessKeyGeneratorInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getShoutRepository(): ShoutRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShoutRepositoryInterface::class);
     }
 }

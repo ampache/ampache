@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Output;
 
 use Ampache\MockeryTestCase;
+use Ampache\Model\ModelFactoryInterface;
 
 class ApiOutputFactoryTest extends MockeryTestCase
 {
@@ -33,7 +34,9 @@ class ApiOutputFactoryTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->subject = new ApiOutputFactory();
+        $this->subject = new ApiOutputFactory(
+            $this->mock(ModelFactoryInterface::class)
+        );
     }
 
     public function testCreateJsonOutputReturnsInstance(): void

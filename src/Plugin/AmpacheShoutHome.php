@@ -25,9 +25,9 @@ namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Preference;
-use Ampache\Model\Shoutbox;
 use Ampache\Model\User;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\ShoutRepositoryInterface;
 
 class AmpacheShoutHome
 {
@@ -101,7 +101,7 @@ class AmpacheShoutHome
     {
         if (AmpConfig::get('sociable')) {
             echo "<div id='shout_objects'>\n";
-            $shouts = Shoutbox::get_top($this->maxitems);
+            $shouts = $this->getShoutRepository()->getTop((int) $this->maxitems);
             if (count($shouts)) {
                 require_once Ui::find_template('show_shoutbox.inc.php');
             }
@@ -127,5 +127,15 @@ class AmpacheShoutHome
         }
 
         return true;
+    }
+
+    /**
+     * @deprecated inject by constructor
+     */
+    private function getShoutRepository(): ShoutRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShoutRepositoryInterface::class);
     }
 }

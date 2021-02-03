@@ -21,58 +21,77 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\Tag;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Model\ModelFactoryInterface;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class GenreMethod
- * @package Lib\ApiMethods
- */
-final class GenreMethod
+final class GenreMethod implements MethodInterface
 {
-    private const ACTION = 'genre';
+    public const ACTION = 'genre';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->streamFactory = $streamFactory;
+        $this->modelFactory  = $modelFactory;
+    }
 
     /**
-     * genre
      * MINIMUM_API_VERSION=380001
      *
      * This returns a single genre based on UID
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of Genre
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws RequestParamMissingException
+     * @throws ResultEmptyException
      */
-    public static function genre(array $input)
-    {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-        $object_id = (int) $input['filter'];
-        $tag       = new Tag($object_id);
-        if (!$tag->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $objectId = $input['filter'] ?? null;
 
-            return false;
+        if ($objectId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
+        }
+        $objectId = (int) $input['filter'];
+        $tag      = $this->modelFactory->createTag($objectId);
+
+        if ($tag->isNew() === true) {
+            throw new ResultEmptyException((string) $objectId);
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo JSON_Data::genres(array($object_id), false);
-                break;
-            default:
-                echo Xml_Data::genres(array($object_id));
-        }
-        Session::extend($input['auth']);
-
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->genres(
+                    [$objectId],
+                    false
+                )
+            )
+        );
     }
 }
