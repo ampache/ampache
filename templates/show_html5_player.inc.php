@@ -38,6 +38,8 @@ var currentAudioElement = undefined;
             var jp_volume = 0.80;
         }
 
+        var replaygainPersist = $.cookie('replaygain');
+
         jplaylist = new jPlayerPlaylist({
             jPlayer: "#jquery_jplayer_1",
             cssSelectorAncestor: "#jp_container_1"
@@ -56,6 +58,7 @@ var currentAudioElement = undefined;
             preload: 'auto',
             audioFullScreen: true,
             smoothPlayBar: true,
+            toggleDuration: true,
             keyEnabled: true,
             solution: "<?php
 $solutions = array();
@@ -112,6 +115,9 @@ if ($isVideo) {
         });
 
     $("#jquery_jplayer_1").bind($.jPlayer.event.play, function (event) {
+        if (replaygainPersist === 'true' && replaygainEnabled === false) {
+            ToggleReplayGain();
+        }
         var current = jplaylist.current,
             playlist = jplaylist.playlist;
         var pos = $(".jp-playlist-current").position().top + $(".jp-playlist").scrollTop();
