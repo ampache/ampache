@@ -180,4 +180,33 @@ final class XmlOutput implements ApiOutputInterface
 
         return Xml_Data::output_xml($result);
     }
+
+    /**
+     * This handles creating an xml document for a user
+     */
+    public function user(User $user, bool $fullinfo): string
+    {
+        $user->format();
+        $string = "<user id=\"" . (string)$user->id . "\">\n" . "\t<username><![CDATA[" . $user->username . "]]></username>\n";
+        if ($fullinfo) {
+            $string .= "\t<auth><![CDATA[" . $user->apikey . "]]></auth>\n" .
+                "\t<email><![CDATA[" . $user->email . "]]></email>\n" .
+                "\t<access>" . (int) $user->access . "</access>\n" .
+                "\t<fullname_public>" . (int) $user->fullname_public . "</fullname_public>\n" .
+                "\t<validation><![CDATA[" . $user->validation . "]]></validation>\n" .
+                "\t<disabled>" . (int) $user->disabled . "</disabled>\n";
+        }
+        $string .= "\t<create_date>" . (int) $user->create_date . "</create_date>\n" .
+            "\t<last_seen>" . (int) $user->last_seen . "</last_seen>\n" .
+            "\t<link><![CDATA[" . $user->link . "]]></link>\n" .
+            "\t<website><![CDATA[" . $user->website . "]]></website>\n" .
+            "\t<state><![CDATA[" . $user->state . "]]></state>\n" .
+            "\t<city><![CDATA[" . $user->city . "]]></city>\n";
+        if ($user->fullname_public || $fullinfo) {
+            $string .= "\t<fullname><![CDATA[" . $user->fullname . "]]></fullname>\n";
+        }
+        $string .= "</user>\n";
+
+        return Xml_Data::output_xml($string);
+    }
 }

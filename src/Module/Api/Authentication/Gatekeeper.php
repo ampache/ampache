@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Authentication;
 
 use Ampache\Model\User;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
 use Psr\Http\Message\ServerRequestInterface;
@@ -44,12 +45,16 @@ final class Gatekeeper implements GatekeeperInterface
 
     private ?string $auth = null;
 
+    private PrivilegeCheckerInterface $privilegeChecker;
+
     public function __construct(
         ServerRequestInterface $request,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        PrivilegeCheckerInterface $privilegeChecker
     ) {
-        $this->logger  = $logger;
-        $this->request = $request;
+        $this->logger           = $logger;
+        $this->request          = $request;
+        $this->privilegeChecker = $privilegeChecker;
     }
 
     public function getUser(): User
@@ -102,5 +107,12 @@ final class Gatekeeper implements GatekeeperInterface
         }
 
         return $this->auth;
+    }
+
+    public function mayAccess(
+        string $access_type,
+        int $access_level
+    ): bool {
+        return $this->privilegeChecker->check($access_type, $access_level);
     }
 }

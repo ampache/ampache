@@ -194,4 +194,46 @@ final class JsonOutput implements ApiOutputInterface
 
         return json_encode(['shout' => $result], JSON_PRETTY_PRINT);
     }
+
+    /**
+     * This handles creating an JSON document for a user
+     */
+    public function user(User $user, bool $fullinfo): string
+    {
+        $user->format();
+        if ($fullinfo) {
+            $JSON = [
+                'id' => (string) $user->id,
+                'username' => $user->username,
+                'auth' => $user->apikey,
+                'email' => $user->email,
+                'access' => (int) $user->access,
+                'fullname_public' => (int) $user->fullname_public,
+                'validation' => $user->validation,
+                'disabled' => (int) $user->disabled,
+                'create_date' => (int) $user->create_date,
+                'last_seen' => (int) $user->last_seen,
+                'website' => $user->website,
+                'state' => $user->state,
+                'city' => $user->city
+            ];
+        } else {
+            $JSON = [
+                'id' => (string) $user->id,
+                'username' => $user->username,
+                'create_date' => (int) $user->create_date,
+                'last_seen' => (int) $user->last_seen,
+                'website' => $user->website,
+                'state' => $user->state,
+                'city' => $user->city
+            ];
+        }
+
+        if ($user->fullname_public) {
+            $JSON['fullname'] = $user->fullname;
+        }
+        $output = ['user' => $JSON];
+
+        return json_encode($output, JSON_PRETTY_PRINT);
+    }
 }

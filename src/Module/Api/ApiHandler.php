@@ -36,6 +36,7 @@ use Ampache\Module\Api\Method\PingMethod;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Psr\Container\ContainerInterface;
@@ -55,6 +56,8 @@ final class ApiHandler implements ApiHandlerInterface
 
     private NetworkCheckerInterface $networkChecker;
 
+    private PrivilegeCheckerInterface $privilegeChecker;
+
     private ContainerInterface $dic;
 
     public function __construct(
@@ -62,13 +65,15 @@ final class ApiHandler implements ApiHandlerInterface
         LoggerInterface $logger,
         ConfigContainerInterface $configContainer,
         NetworkCheckerInterface $networkChecker,
+        PrivilegeCheckerInterface $privilegeChecker,
         ContainerInterface $dic
     ) {
-        $this->streamFactory   = $streamFactory;
-        $this->logger          = $logger;
-        $this->configContainer = $configContainer;
-        $this->networkChecker  = $networkChecker;
-        $this->dic             = $dic;
+        $this->streamFactory    = $streamFactory;
+        $this->logger           = $logger;
+        $this->configContainer  = $configContainer;
+        $this->networkChecker   = $networkChecker;
+        $this->privilegeChecker = $privilegeChecker;
+        $this->dic              = $dic;
     }
 
     public function handle(
@@ -78,7 +83,8 @@ final class ApiHandler implements ApiHandlerInterface
     ): ?ResponseInterface {
         $gatekeeper = new Gatekeeper(
             $request,
-            $this->logger
+            $this->logger,
+            $this->privilegeChecker
         );
 
         $action = (string) Core::get_request('action');

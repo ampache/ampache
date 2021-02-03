@@ -22,6 +22,8 @@
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Model\User;
+
 interface ApiOutputInterface
 {
     /**
@@ -129,4 +131,9 @@ interface ApiOutputInterface
      * @return string
      */
     public function shouts(array $shoutIds): string;
+
+    /**
+     * This handles creating a result for a user
+     */
+    public function user(User $user, bool $fullinfo): string;
 }

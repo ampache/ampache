@@ -21,85 +21,96 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
+use Ampache\Model\ModelFactoryInterface;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Log\LoggerInterface;
 
-/**
- * Class UserMethod
- * @package Lib\ApiMethods
- */
-final class UserMethod
+final class UserMethod implements MethodInterface
 {
-    private const ACTION = 'user';
+    public const ACTION = 'user';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private UserRepositoryInterface $userRepository;
+
+    private LoggerInterface $logger;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        UserRepositoryInterface $userRepository,
+        LoggerInterface $logger,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->streamFactory  = $streamFactory;
+        $this->userRepository = $userRepository;
+        $this->logger         = $logger;
+        $this->modelFactory   = $modelFactory;
+    }
 
     /**
-     * user
      * MINIMUM_API_VERSION=380001
      *
      * This get a user's public information
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * username = (string) $username
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws ResultEmptyException
+     * @throws RequestParamMissingException
      */
-    public static function user(array $input)
-    {
-        if (!Api::check_parameter($input, array('username'), self::ACTION)) {
-            return false;
-        }
-        $username = (string) $input['username'];
-        if (empty($username)) {
-            debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'username', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $username = $input['username'] ?? null;
 
-            return false;
-        }
-
-        $user  = User::get_from_username($username);
-        $valid = in_array($user->id, static::getUserRepository()->getValid(true));
-        if (!$valid || !$user->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $username), '4704', self::ACTION, 'username', $input['api_format']);
-
-            return false;
+        if ($username === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'username')
+            );
         }
 
-        $apiuser  = User::get_from_username(Session::username($input['auth']));
-        $fullinfo = false;
+        $userId = $this->userRepository->findByUsername((string) $input['username']);
+        if (
+            $userId === null ||
+            in_array($userId, $this->userRepository->getValid(true)) === false
+        ) {
+            throw new ResultEmptyException(sprintf(T_('Not Found: %s'), $username));
+        }
+
+        $fullinfo  = false;
         // get full info when you're an admin or searching for yourself
-        if (($user->id == $apiuser->id) || (Access::check('interface', 100, $apiuser->id))) {
+        if (
+            $userId === $gatekeeper->getUser()->getId() ||
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+        ) {
             $fullinfo = true;
         }
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo JSON_Data::user($user, $fullinfo, false);
-                break;
-            default:
-                echo Xml_Data::user($user, $fullinfo);
-        }
-        Session::extend($input['auth']);
 
-        return true;
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->user($this->modelFactory->createUser($userId), $fullinfo)
+            )
+        );
     }
 }

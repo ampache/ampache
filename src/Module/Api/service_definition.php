@@ -47,6 +47,7 @@ return [
     Method\SongMethod::class => autowire(),
     Method\LastShoutsMethod::class => autowire(),
     Method\UsersMethod::class => autowire(),
+    Method\UserMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

@@ -1045,55 +1045,6 @@ class Json_Data
     } // democratic
 
     /**
-     * user
-     *
-     * This handles creating an JSON document for a user
-     *
-     * @param  User    $user    User
-     * @param  boolean $fullinfo
-     * @param  boolean $object (whether to return as a named object array or regular array)
-     * @return string JSON Object "user"
-     */
-    public static function user(User $user, $fullinfo, $object = true)
-    {
-        $user->format();
-        if ($fullinfo) {
-            $JSON = array(
-                "id" => (string) $user->id,
-                "username" => $user->username,
-                "auth" => $user->apikey,
-                "email" => $user->email,
-                "access" => (int) $user->access,
-                "fullname_public" => (int) $user->fullname_public,
-                "validation" => $user->validation,
-                "disabled" => (int) $user->disabled,
-                "create_date" => (int) $user->create_date,
-                "last_seen" => (int) $user->last_seen,
-                "website" => $user->website,
-                "state" => $user->state,
-                "city" => $user->city
-            );
-        } else {
-            $JSON = array(
-                "id" => (string) $user->id,
-                "username" => $user->username,
-                "create_date" => $user->create_date,
-                "last_seen" => $user->last_seen,
-                "website" => $user->website,
-                "state" => $user->state,
-                "city" => $user->city
-            );
-        }
-
-        if ($user->fullname_public) {
-            $JSON['fullname'] = $user->fullname;
-        }
-        $output = ($object) ? array("user" => $JSON) : $JSON;
-
-        return json_encode($output, JSON_PRETTY_PRINT);
-    } // user
-
-    /**
      * users
      *
      * This handles creating an JSON document for an user list

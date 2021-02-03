@@ -87,4 +87,101 @@ class JsonOutputTest extends MockeryTestCase
             $this->subject->shouts([$shoutId])
         );
     }
+
+    public function testUserReturnsFullInfo(): void
+    {
+        $user = $this->mock(User::class);
+
+        $id              = 666;
+        $username        = 'some-username';
+        $fullname        = 'some-fullname';
+        $apikey          = 'some-auth';
+        $email           = 'some-email';
+        $access          = 42;
+        $fullname_public = 21;
+        $validation      = 'some-validation';
+        $disabled        = 33;
+        $create_date     = 123;
+        $last_seen       = 456;
+        $website         = 'some-website';
+        $state           = 'some-state';
+        $city            = 'some-city';
+
+        $user->id              = (string) $id;
+        $user->username        = $username;
+        $user->fullname        = $fullname;
+        $user->apikey          = $apikey;
+        $user->email           = $email;
+        $user->access          = (string) $access;
+        $user->fullname_public = (string) $fullname_public;
+        $user->validation      = (string) $validation;
+        $user->disabled        = (string) $disabled;
+        $user->create_date     = (string) $create_date;
+        $user->last_seen       = (string) $last_seen;
+        $user->website         = $website;
+        $user->state           = $state;
+        $user->city            = $city;
+
+        $user->shouldReceive('format')
+            ->withNoArgs()
+            ->once();
+
+        $this->assertSame(
+            json_encode(['user' => [
+                'id' => (string) $id,
+                'username' => $username,
+                'auth' => $apikey,
+                'email' => $email,
+                'access' => $access,
+                'fullname_public' => $fullname_public,
+                'validation' => $validation,
+                'disabled' => $disabled,
+                'create_date' => $create_date,
+                'last_seen' => $last_seen,
+                'website' => $website,
+                'state' => $state,
+                'city' => $city,
+                'fullname' => $fullname,
+            ]], JSON_PRETTY_PRINT),
+            $this->subject->user($user, true)
+        );
+    }
+
+    public function testUserReturnsRestrictedInfo(): void
+    {
+        $user = $this->mock(User::class);
+
+        $id              = 666;
+        $username        = 'some-username';
+        $create_date     = 123;
+        $last_seen       = 456;
+        $website         = 'some-website';
+        $state           = 'some-state';
+        $city            = 'some-city';
+
+        $user->id              = (string) $id;
+        $user->username        = $username;
+        $user->create_date     = (string) $create_date;
+        $user->last_seen       = (string) $last_seen;
+        $user->website         = $website;
+        $user->state           = $state;
+        $user->city            = $city;
+
+        $user->shouldReceive('format')
+            ->withNoArgs()
+            ->once();
+
+        $this->assertSame(
+            json_encode(['user' => [
+                'id' => (string) $id,
+                'username' => $username,
+                'create_date' => $create_date,
+                'last_seen' => $last_seen,
+                'website' => $website,
+                'state' => $state,
+                'city' => $city,
+            ]], JSON_PRETTY_PRINT),
+            $this->subject->user($user, false)
+        );
+    }
 }
