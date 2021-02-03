@@ -25,7 +25,7 @@ define('CLI', 1);
 
 $path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
-require_once '../lib/init.php';
+require_once $prefix . '/lib/init.php';
 
 ob_end_flush();
 

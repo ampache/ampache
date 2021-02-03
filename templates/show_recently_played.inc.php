@@ -21,7 +21,7 @@
  */
 
 $my_id    = (isset($client)) ? $user_id : $user->id;
-$link     = AmpConfig::get('use_rss') ? ' ' . Ampache_RSS::get_display('recently_played', $my_id) :  '';
+$link     = AmpConfig::get('use_rss') ? ' ' . Ampache_RSS::get_display('recently_played') :  '';
 $is_admin = Access::check('interface', 100);
 UI::show_box_top(T_('Recently Played') . $link, 'box box_recently_played'); ?>
 <table class="tabledata">
