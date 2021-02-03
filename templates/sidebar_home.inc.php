@@ -26,6 +26,8 @@ $t_artists   = T_('Artists');
 $t_albums    = T_('Albums');
 $t_labels    = T_('Labels');
 $t_playlists = T_('Playlists');
+$t_playlist  = T_('Playlist');
+$t_videos    = T_('Videos');
 $t_tagcloud  = T_('Tag Cloud');
 $t_expander  = T_('Expand/Collapse');
 $t_search    = T_('Search'); ?>
@@ -45,9 +47,9 @@ $t_search    = T_('Search'); ?>
         <ul class="sb3" id="sb_browse_music">
             <li id="sb_home_browse_music_songTitle"><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo T_('Browse Library') ?></a></li>
             <li id="sb_home_browse_music_album"><a href="<?php echo $web_path; ?>/mashup.php?action=album"><?php echo $t_albums; ?></a></li>
-            <li id="sb_home_browse_music_artist"><a href="<?php echo $web_path; ?>/mashup.php?action=artist"><?php echo $t_artists; ?></a></li>
+            <li id="sb_home_browse_music_artist"><a href="<?php echo $web_path; ?>/mashup.php?action=album_artist"><?php echo $t_artists; ?></a></li>
             <?php if (AmpConfig::get('label')) { ?>
-            <li id="sb_home_browse_music_label"><a href="<?php echo $web_path ?>/browse.php?action=label"><?php echo T_('Labels') ?></a></li>
+            <li id="sb_home_browse_music_label"><a href="<?php echo $web_path ?>/browse.php?action=label"><?php echo $t_labels ?></a></li>
             <?php
         } ?>
             <?php if (AmpConfig::get('channel')) { ?>
@@ -73,7 +75,7 @@ $t_search    = T_('Search'); ?>
         </ul>
     </li>
     <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
-        <li class="sb2_video"><h4 class="header"><span class="sidebar-header-title"><?php echo T_('Video') ?></span><?php echo UI::get_icon('all', $t_expander, 'browse_video', 'header-img ' . (($_COOKIE['sb_browse_video'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
+        <li class="sb2_video"><h4 class="header"><span class="sidebar-header-title"><?php echo $t_videos ?></span><?php echo UI::get_icon('all', $t_expander, 'browse_video', 'header-img ' . (($_COOKIE['sb_browse_video'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
             <ul class="sb3" id="sb_home_browse_video">
           <?php if (Video::get_item_count('Clip')) { ?>
                 <li id="sb_home_browse_video_clip"><a href="<?php echo $web_path ?>/browse.php?action=clip"><?php echo T_('Music Clips') ?></a></li>
@@ -97,7 +99,7 @@ $t_search    = T_('Search'); ?>
     <?php
         } ?>
     <li class="sb2_random">
-        <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Random'); ?>"><?php echo T_('Random'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo ($_COOKIE['sb_random'] == 'expanded') ? 'expanded' : 'collapsed'; ?>" id="random" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
+        <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Random'); ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo ($_COOKIE['sb_random'] == 'expanded') ? 'expanded' : 'collapsed'; ?>" id="random" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
         <ul class="sb3" id="sb_home_random" style="<?php if (!(filter_has_var(INPUT_COOKIE, 'sb_random'))) {
             echo 'display: none;';
         } ?>">
@@ -109,7 +111,7 @@ $t_search    = T_('Search'); ?>
         </ul>
     </li>
     <li class="sb2_search">
-        <h4 class="header"><span class="sidebar-header-title" title="<?php echo $t_search; ?>"><?php echo $t_search; ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo ($_COOKIE['sb_search'] == 'expanded') ? 'expanded' : 'collapsed'; ?>" id="search" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
+        <h4 class="header"><span class="sidebar-header-title"><?php echo $t_search; ?></span><img src="<?php echo AmpConfig::get('web_path') . AmpConfig::get('theme_path'); ?>/images/icons/icon_all.png" class="header-img <?php echo ($_COOKIE['sb_search'] == 'expanded') ? 'expanded' : 'collapsed'; ?>" id="search" alt="<?php echo $t_expander; ?>" title="<?php echo $t_expander; ?>" /></h4>
         <ul class="sb3" id="sb_home_search" style="<?php if (!(filter_has_var(INPUT_COOKIE, 'sb_search'))) {
             echo 'display: none;';
         } ?>">
@@ -122,14 +124,14 @@ $t_search    = T_('Search'); ?>
             } ?>
           <li id="sb_home_search_playlist"><a href="<?php echo $web_path; ?>/search.php?type=playlist"><?php echo $t_playlists; ?></a></li>
           <?php if (AmpConfig::get('allow_video') && Video::get_item_count('Video')) { ?>
-            <li id="sb_home_search_video"><a href="<?php echo $web_path ?>/search.php?type=video"><?php echo T_('Videos') ?></a></li>
+            <li id="sb_home_search_video"><a href="<?php echo $web_path ?>/search.php?type=video"><?php echo $t_videos ?></a></li>
           <?php
         } ?>
         </ul>
     </li>
     <?php if (Access::check('interface', 25)) { ?>
     <li class="sb2_playlist">
-    <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Playlist'); ?>"><?php echo $t_playlists; ?></span><?php echo UI::get_icon('all', $t_expander, 'playlist', 'header-img ' . (($_COOKIE['sb_home_playlist'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
+    <h4 class="header"><span class="sidebar-header-title"><?php echo $t_playlist; ?></span><?php echo UI::get_icon('all', $t_expander, 'playlist', 'header-img ' . (($_COOKIE['sb_home_playlist'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
         <?php if (AmpConfig::get('home_now_playing') || AmpConfig::get('allow_democratic_playback') || Access::check('interface', 50)) { ?>
         <ul class="sb3" id="sb_home_playlist">
             <li id="sb_home_browse_music_playlist"><a href="<?php echo $web_path; ?>/browse.php?action=playlist"><?php echo $t_playlists; ?></a></li>
@@ -154,7 +156,7 @@ $t_search    = T_('Search'); ?>
     <?php
     } ?>
     <li class="sb2_information">
-        <h4 class="header"><span class="sidebar-header-title" title="<?php echo T_('Information'); ?>"><?php echo T_('Information'); ?></span><?php echo UI::get_icon('all', $t_expander, 'information', 'header-img ' . (($_COOKIE['sb_info'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
+        <h4 class="header"><span class="sidebar-header-title"><?php echo T_('Information'); ?></span><?php echo UI::get_icon('all', $t_expander, 'information', 'header-img ' . (($_COOKIE['sb_info'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
         <ul class="sb3" id="sb_home_info">
             <li id="sb_home_info_recent"><a href="<?php echo $web_path; ?>/stats.php?action=recent"><?php echo T_('Recent'); ?></a></li>
             <li id="sb_home_info_newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest"><?php echo T_('Newest'); ?></a></li>
