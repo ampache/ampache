@@ -1,4 +1,5 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -18,20 +19,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-/*****************************************************************************/
-/* Base Definitions, may be overwridden by themes
-/*****************************************************************************/
 
-/*****************
- * Tag Definitions
- *****************/
+/* ----------------------------------------------
+   Base Definitions, may be overwritten by themes
+   ---------------------------------------------- */
+
+/* --------------------------
+   Tag Definitions
+   -------------------------- */
 
 .tag_size1 {
-    font-size:.6em;
+    font-size: 0.6em;
 }
 
 .tag_size2 {
-    font-size:.8em;
+    font-size: 0.8em;
 }
 
 .tag_size3 {
@@ -42,25 +44,28 @@
     font-size: 1.2em;
 }
 
-a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
+a.tag_size1,
+a.tag_size2,
+a.tag_size3,
+a.tag_size4 { text-decoration: none; }
 
-.hover-add:hover { color: #347C17; }
-.hover-remove:hover { color: #FF0000; }
+.hover-add:hover { color: #347c17; }
+.hover-remove:hover { color: #f00; }
 
-/*****************
+/* ----------------
  * Generic / Misc
- *****************/
+ ---------------- */
 
 .hidden {
     visibility: hidden;
 }
 
 .item_on {
-    color: #347C17;
+    color: #347c17;
 }
 
 .item_off {
-    color: #FF0000;
+    color: #f00;
 }
 
 #tabs_wrapper {
@@ -118,7 +123,7 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
     display: none;
 }
 
-#aslideshow_container  {
+#aslideshow_container {
     width: 50%;
     max-height: 600px;
     height: 100%;
@@ -142,6 +147,7 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
     padding-right: 40px;
     padding-bottom: 20px;
 }
+
 .shoutbox-item {
     width: 100%;
     height: 100%;
@@ -169,7 +175,7 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 }
 
 .shoutbox-date {
-    color: #D6D6D6;
+    color: #d6d6d6;
 }
 
 .shoutbox-text {
@@ -194,19 +200,19 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 }
 
 .noty_ampache {
-    color: #ffffff;
+    color: #fff;
     background-color: #222;
 }
 
 .searchart {
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     display: block;
     height: 24px;
     width: 24px;
     margin: 1px 6px;
     padding: 1px;
-    border: 1px solid #F2F2F2;
+    border: 1px solid #f2f2f2;
     float: left;
 }
 
@@ -214,6 +220,7 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
     display: inline-block;
     vertical-align: middle;
     height: 32px;
+    color: #222;
 }
 
 #topmenu_container {
@@ -249,7 +256,7 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
 }
 
 .topmenu_item br {
-    line-height: 0px;
+    line-height: 0;
 }
 
 .topmenu_item span {
@@ -261,15 +268,12 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
     white-space: nowrap;
     display: inline-block;
 }
+
 .topmenu_item img {
     height: 50px;
     width: 50px;
     z-index: 9999;
     margin: 2px;
-}
-
-#topmenu_container img:hover {
-
 }
 
 .browse_custom_value {
@@ -311,21 +315,21 @@ a.tag_size1, a.tag_size2, a.tag_size3, a.tag_size4 { text-decoration: none; }
     margin: 0;
     background-color: #000;
     border-radius: 10px;
-    -webkit-box-shadow: 0 4px 12px rgba(0,0,0,.5);
-    box-shadow: 0 4px 12px rgba(0,0,0,.5);
-    -webkit-transition: all .5s;
-    transition: all .5s;
-    -webkit-transform: translate(-50%,0);
-    -ms-transform: translate(-50%,0);
-    transform: translate(-50%,0);
+    -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    -webkit-transition: all 0.5s;
+    transition: all 0.5s;
+    -webkit-transform: translate(-50%, 0);
+    -ms-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
 }
 
 #notification.notification-out {
     opacity: 0;
     filter: alpha(opacity=0);
-    -webkit-transform: translate(-50%,80px);
-    -ms-transform: translate(-50%,80px);
-    transform: translate(-50%,80px);
+    -webkit-transform: translate(-50%, 80px);
+    -ms-transform: translate(-50%, 80px);
+    transform: translate(-50%, 80px);
 }
 
 #notification img {

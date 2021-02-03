@@ -1,4 +1,5 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
+
 /**
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -19,12 +20,12 @@
  *
  */
 
- .requirements {
-     padding-top: 20px;
- }
+.requirements {
+    padding-top: 20px;
+}
 
 navbar-brand {
-    padding-top: 0px;
+    padding-top: 0;
 }
 
 .navbar-brand img {

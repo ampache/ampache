@@ -6,6 +6,7 @@
   * Dual licensed under the MIT or GPL Version 2 licenses.
   * http://rhinoslider.com/license/
   */
+
 .rhino-btn {
     background: url(../img/rhinoslider-sprite.png) 0 0 no-repeat;
     z-index: 10;
@@ -18,28 +19,29 @@
     user-select: none;
 }
 
-.rhino-prev, .rhino-next { bottom:-4px; }
+.rhino-prev,
+.rhino-next { bottom: -4px; }
 
 .rhino-prev {
-    left:-6px;
-    background-position:-168px 0;
+    left: -6px;
+    background-position: -168px 0;
 }
 
 .rhino-next {
-    right:-6px;
-    background-position:-106px 0;
+    right: -6px;
+    background-position: -106px 0;
 }
 
-.rhino-prev:hover { background-position:-168px -53px; }
+.rhino-prev:hover { background-position: -168px -53px; }
 
-.rhino-next:hover { background-position:-106px -53px; }
+.rhino-next:hover { background-position: -106px -53px; }
 
 .rhino-toggle {
-    top:-4px;
-    left:-6px;
+    top: -4px;
+    left: -6px;
 }
 
-.rhino-play { background-position:0 0; }
+.rhino-play { background-position: 0 0; }
 
 .rhino-play:hover { background-position: 0 -53px; }
 
@@ -74,7 +76,8 @@
     padding: 0;
 }
 
-.rhino-bullets:before, .rhino-bullets:after {
+.rhino-bullets:before,
+.rhino-bullets:after {
     position: absolute;
     display: block;
     left: -16px;
@@ -112,7 +115,8 @@
     user-select: none;
 }
 
-.rhino-bullets li a.rhino-bullet:hover, .rhino-bullets li a.rhino-bullet:focus {
+.rhino-bullets li a.rhino-bullet:hover,
+.rhino-bullets li a.rhino-bullet:focus {
     color: #999;
     background: #eee;
 }
