@@ -32,6 +32,7 @@ use Ampache\Model\Live_Stream;
 use Ampache\Model\Movie;
 use Ampache\Model\Personal_Video;
 use Ampache\Model\Playlist;
+use Ampache\Model\Podcast;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Search;
 use Ampache\Model\Share;
@@ -65,6 +66,7 @@ final class ObjectTypeToClassNameMapper
         'tvshow_episode' => TVShow_Episode::class,
         'clip' => Clip::class,
         'label' => Label::class,
+        'podcast' => Podcast::class,
     ];
 
     public const VIDEO_TYPES = [
