@@ -48,6 +48,8 @@ return [
     Method\LastShoutsMethod::class => autowire(),
     Method\UsersMethod::class => autowire(),
     Method\UserMethod::class => autowire(),
+    Method\GenreMethod::class => autowire(),
+    Method\GenresMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

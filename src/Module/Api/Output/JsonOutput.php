@@ -26,6 +26,7 @@ namespace Ampache\Module\Api\Output;
 
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Shoutbox;
+use Ampache\Model\Tag;
 use Ampache\Model\User;
 use Ampache\Module\Api\Json_Data;
 
@@ -233,6 +234,45 @@ final class JsonOutput implements ApiOutputInterface
             $JSON['fullname'] = $user->fullname;
         }
         $output = ['user' => $JSON];
+
+        return json_encode($output, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * This returns genres to the user
+     *
+     * @param int[] $tagIds
+     * @param bool $asObject
+     * @param int $limit
+     * @param int $offset
+     */
+    public function genres(
+        array $tagIds,
+        bool $asObject = true,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
+        if ((count($tagIds) > $limit || $offset > 0) && $limit) {
+            $tagIds = array_splice($tagIds, $offset, $limit);
+        }
+
+        $result = [];
+        foreach ($tagIds as $tagId) {
+            $tag    = $this->modelFactory->createTag($tagId);
+            $counts = $tag->count();
+
+            $result[] = [
+                'id' => (string) $tagId,
+                'name' => $tag->name,
+                'albums' => (int) $counts['album'],
+                'artists' => (int) $counts['artist'],
+                'songs' => (int) $counts['song'],
+                'videos' => (int) $counts['video'],
+                'playlists' => (int) $counts['playlist'],
+                'live_streams' => (int) $counts['live_stream']
+            ];
+        }
+        $output = ($asObject) ? ['genre' => $result] : $result[0];
 
         return json_encode($output, JSON_PRETTY_PRINT);
     }

@@ -24,32 +24,30 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Model\Album;
-use Ampache\Model\Bookmark;
-use Ampache\Model\Label;
-use Ampache\Model\Live_Stream;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
+use Ampache\Model\Album;
 use Ampache\Model\Art;
 use Ampache\Model\Artist;
+use Ampache\Model\Bookmark;
 use Ampache\Model\Catalog;
-use Ampache\Module\System\Core;
 use Ampache\Model\Democratic;
+use Ampache\Model\Label;
 use Ampache\Model\License;
+use Ampache\Model\Live_Stream;
 use Ampache\Model\Playlist;
 use Ampache\Model\Podcast;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Rating;
 use Ampache\Model\Search;
 use Ampache\Model\Share;
-use Ampache\Model\Shoutbox;
 use Ampache\Model\Song;
-use Ampache\Module\Playback\Stream;
-use Ampache\Model\Tag;
 use Ampache\Model\User;
 use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;
 use Ampache\Model\Video;
+use Ampache\Module\Playback\Stream;
+use Ampache\Module\System\Core;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
@@ -325,41 +323,6 @@ class Json_Data
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // labels
-
-    /**
-     * genres
-     *
-     * This returns genres to the user, in a pretty JSON document with the information
-     *
-     * @param  array    $tags    (description here...)
-     * @param  boolean $object (whether to return as a named object array or regular array)
-     * @return string  JSON Object "genre"
-     */
-    public static function genres($tags, $object = true)
-    {
-        if ((count($tags) > self::$limit || self::$offset > 0) && self::$limit) {
-            $tags = array_splice($tags, self::$offset, self::$limit);
-        }
-
-        $JSON = [];
-        foreach ($tags as $tag_id) {
-            $tag    = new Tag($tag_id);
-            $counts = $tag->count();
-            array_push($JSON, array(
-                "id" => (string) $tag_id,
-                "name" => $tag->name,
-                "albums" => (int) $counts['album'],
-                "artists" => (int) $counts['artist'],
-                "songs" => (int) $counts['song'],
-                "videos" => (int) $counts['video'],
-                "playlists" => (int) $counts['playlist'],
-                "live_streams" => (int) $counts['live_stream']
-            ));
-        } // end foreach
-        $output = ($object) ? array("genre" => $JSON) : $JSON[0];
-
-        return json_encode($output, JSON_PRETTY_PRINT);
-    } // genres
 
     /**
      * artists

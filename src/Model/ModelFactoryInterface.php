@@ -124,4 +124,8 @@ interface ModelFactoryInterface
     public function createLabel(
         int $labelId
     ): Label;
+
+    public function createTag(
+        int $tagId
+    ): Tag;
 }

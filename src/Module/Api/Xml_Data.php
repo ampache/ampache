@@ -24,38 +24,37 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Album;
+use Ampache\Model\Art;
+use Ampache\Model\Artist;
 use Ampache\Model\Bookmark;
+use Ampache\Model\Catalog;
+use Ampache\Model\Democratic;
 use Ampache\Model\Label;
 use Ampache\Model\library_item;
 use Ampache\Model\License;
 use Ampache\Model\Live_Stream;
-use Ampache\Model\Shoutbox;
-use Ampache\Model\Video;
-use Ampache\Module\Playback\Stream;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Ui;
-use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
-use Ampache\Model\Artist;
-use Ampache\Model\Catalog;
-use Ampache\Module\System\Core;
-use Ampache\Model\Democratic;
-use Ampache\Repository\AlbumRepositoryInterface;
-use Ampache\Repository\SongRepositoryInterface;
-use DOMDocument;
 use Ampache\Model\Playlist;
 use Ampache\Model\Podcast;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Model\Rating;
 use Ampache\Model\Search;
 use Ampache\Model\Share;
-use SimpleXMLElement;
 use Ampache\Model\Song;
 use Ampache\Model\Tag;
 use Ampache\Model\User;
 use Ampache\Model\Useractivity;
 use Ampache\Model\Userflag;
+use Ampache\Model\Video;
+use Ampache\Module\Playback\Stream;
+use Ampache\Module\System\Core;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Module\Util\Ui;
+use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
+use DOMDocument;
+use SimpleXMLElement;
 
 /**
  * XML_Data Class
@@ -577,38 +576,6 @@ class Xml_Data
 
         return self::output_xml($string);
     } // labels
-
-    /**
-     * genres
-     *
-     * This returns genres to the user, in a pretty xml document with the information
-     *
-     * @param  array    $tags    (description here...)
-     * @return string    return xml
-     */
-    public static function genres($tags)
-    {
-        if ((count($tags) > self::$limit || self::$offset > 0) && self::$limit) {
-            $tags = array_splice($tags, self::$offset, self::$limit);
-        }
-        $string = "<total_count>" . Catalog::get_count('tag') . "</total_count>\n";
-
-        foreach ($tags as $tag_id) {
-            $tag    = new Tag($tag_id);
-            $counts = $tag->count();
-            $string .= "<genre id=\"$tag_id\">\n" .
-                    "\t<name><![CDATA[$tag->name]]></name>\n" .
-                    "\t<albums>" . (int) ($counts['album']) . "</albums>\n" .
-                    "\t<artists>" . (int) ($counts['artist']) . "</artists>\n" .
-                    "\t<songs>" . (int) ($counts['song']) . "</songs>\n" .
-                    "\t<videos>" . (int) ($counts['video']) . "</videos>\n" .
-                    "\t<playlists>" . (int) ($counts['playlist']) . "</playlists>\n" .
-                    "\t<live_streams>" . (int) ($counts['live_stream']) . "</live_streams>\n" .
-                    "</genre>\n";
-        } // end foreach
-
-        return self::output_xml($string);
-    } // genres
 
     /**
      * artists

@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Model\Catalog;
 use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\Shoutbox;
 use Ampache\Model\User;
 use Ampache\Module\Api\Xml_Data;
 
@@ -206,6 +206,43 @@ final class XmlOutput implements ApiOutputInterface
             $string .= "\t<fullname><![CDATA[" . $user->fullname . "]]></fullname>\n";
         }
         $string .= "</user>\n";
+
+        return Xml_Data::output_xml($string);
+    }
+
+    /**
+     * This returns genres to the user
+     *
+     * @param int[] $tagIds
+     * @param bool $asObject
+     * @param int $limit
+     * @param int $offset
+     */
+    public function genres(
+        array $tagIds,
+        bool $asObject = true,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
+        if ((count($tagIds) > $limit || $offset > 0) && $limit) {
+            $tagIds = array_splice($tagIds, $offset, $limit);
+        }
+        $string = "<total_count>" . Catalog::get_count('tag') . "</total_count>\n";
+
+        foreach ($tagIds as $tag_id) {
+            $tag    = $this->modelFactory->createTag($tag_id);
+            $counts = $tag->count();
+
+            $string .= "<genre id=\"$tag_id\">\n" .
+                "\t<name><![CDATA[$tag->name]]></name>\n" .
+                "\t<albums>" . (int) ($counts['album']) . "</albums>\n" .
+                "\t<artists>" . (int) ($counts['artist']) . "</artists>\n" .
+                "\t<songs>" . (int) ($counts['song']) . "</songs>\n" .
+                "\t<videos>" . (int) ($counts['video']) . "</videos>\n" .
+                "\t<playlists>" . (int) ($counts['playlist']) . "</playlists>\n" .
+                "\t<live_streams>" . (int) ($counts['live_stream']) . "</live_streams>\n" .
+                "</genre>\n";
+        }
 
         return Xml_Data::output_xml($string);
     }

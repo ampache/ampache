@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Output;
 use Ampache\MockeryTestCase;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Shoutbox;
+use Ampache\Model\Tag;
 use Ampache\Model\User;
 use Mockery\MockInterface;
 
@@ -182,6 +183,103 @@ class JsonOutputTest extends MockeryTestCase
                 'city' => $city,
             ]], JSON_PRETTY_PRINT),
             $this->subject->user($user, false)
+        );
+    }
+
+    public function testGenresReturnsWrappedList(): void
+    {
+        $tagId           = 666;
+        $albumCount      = 111;
+        $artistCount     = 222;
+        $songCount       = 333;
+        $videoCount      = 444;
+        $playlistCount   = 555;
+        $liveStreamCount = 666;
+        $name            = 'some-name';
+
+        $tag = $this->mock(Tag::class);
+
+        $this->modelFactory->shouldReceive('createTag')
+            ->with($tagId)
+            ->once()
+            ->andReturn($tag);
+
+        $tag->shouldReceive('count')
+            ->withNoArgs()
+            ->once()
+            ->andReturn([
+                'album' => (string) $albumCount,
+                'artist' => (string) $artistCount,
+                'song' => (string) $songCount,
+                'video' => (string) $videoCount,
+                'playlist' => (string) $playlistCount,
+                'live_stream' => (string) $liveStreamCount,
+            ]);
+
+        $tag->name = $name;
+
+        $this->assertSame(
+            json_encode([
+                'genre' => [[
+                    'id' => (string) $tagId,
+                    'name' => $name,
+                    'albums' => $albumCount,
+                    'artists' => $artistCount,
+                    'songs' => $songCount,
+                    'videos' => $videoCount,
+                    'playlists' => $playlistCount,
+                    'live_streams' => $liveStreamCount
+                ]]
+            ], JSON_PRETTY_PRINT),
+            $this->subject->genres([$tagId])
+        );
+    }
+
+    public function testGenresReturnsUnWrappedSingleItem(): void
+    {
+        $tagId           = 666;
+        $albumCount      = 111;
+        $artistCount     = 222;
+        $songCount       = 333;
+        $videoCount      = 444;
+        $playlistCount   = 555;
+        $liveStreamCount = 666;
+        $name            = 'some-name';
+
+        $tag = $this->mock(Tag::class);
+
+        $this->modelFactory->shouldReceive('createTag')
+            ->with($tagId)
+            ->once()
+            ->andReturn($tag);
+
+        $tag->shouldReceive('count')
+            ->withNoArgs()
+            ->once()
+            ->andReturn([
+                'album' => (string) $albumCount,
+                'artist' => (string) $artistCount,
+                'song' => (string) $songCount,
+                'video' => (string) $videoCount,
+                'playlist' => (string) $playlistCount,
+                'live_stream' => (string) $liveStreamCount,
+            ]);
+
+        $tag->name = $name;
+
+        $this->assertSame(
+            json_encode([
+                'id' => (string) $tagId,
+                'name' => $name,
+                'albums' => $albumCount,
+                'artists' => $artistCount,
+                'songs' => $songCount,
+                'videos' => $videoCount,
+                'playlists' => $playlistCount,
+                'live_streams' => $liveStreamCount
+
+            ], JSON_PRETTY_PRINT),
+            $this->subject->genres([$tagId, 999], false, 1)
         );
     }
 }
