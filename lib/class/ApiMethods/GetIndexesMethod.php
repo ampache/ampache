@@ -79,7 +79,7 @@ final class GetIndexesMethod
         }
         $user    = User::get_from_username(Session::username($input['auth']));
         $include = (int) $input['include'] == 1;
-        $hide    = (int) $input['hide_search'] == 1;
+        $hide    = ((int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'live_stream'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);

@@ -61,7 +61,7 @@ final class PlaylistsMethod
     {
         $user   = User::get_from_username(Session::username($input['auth']));
         $method = (int) $input['exact'] == 1;
-        $hide   = (int) $input['hide_search'] == 1;
+        $hide   = ((int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         $userid = (!Access::check('interface', 100, $user->id)) ? $user->id : -1;
         $public = !Access::check('interface', 100, $user->id);
 
