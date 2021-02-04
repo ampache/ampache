@@ -59,6 +59,7 @@ return [
     Method\LicensesMethod::class => autowire(),
     Method\LicenseSongsMethod::class => autowire(),
     Method\GenreSongsMethod::class => autowire(),
+    Method\GenreArtistsMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

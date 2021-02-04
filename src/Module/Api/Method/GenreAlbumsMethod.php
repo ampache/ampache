@@ -21,72 +21,78 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\Tag;
-use Ampache\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\TagRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class GenreAlbumsMethod
- * @package Lib\ApiMethods
- */
-final class GenreAlbumsMethod
+final class GenreAlbumsMethod implements MethodInterface
 {
-    const ACTION = 'genre_albums';
+    public const ACTION = 'genre_albums';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private UserRepositoryInterface $userRepository;
+
+    private TagRepositoryInterface $tagRepository;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        UserRepositoryInterface $userRepository,
+        TagRepositoryInterface $tagRepository
+    ) {
+        $this->streamFactory  = $streamFactory;
+        $this->userRepository = $userRepository;
+        $this->tagRepository  = $tagRepository;
+    }
 
     /**
-     * genre_albums
      * MINIMUM_API_VERSION=380001
      *
      * This returns the albums associated with the genre in question
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of Genre //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
      */
-    public static function genre_albums(array $input)
-    {
-        $albums = static::getTagRepository()->getTagObjectIds('album', (int) ($input['filter'] ?? 0));
-        if (empty($albums)) {
-            Api::empty('album', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $objectIds = $this->tagRepository->getTagObjectIds(
+            'album',
+            (int) ($input['filter'] ?? 0)
+        );
 
-            return false;
+        if ($objectIds === []) {
+            $result = $output->emptyResult('album');
+        } else {
+            $result = $output->albums(
+                $objectIds,
+                [],
+                $gatekeeper->getUser()->getId(),
+                true,
+                (int) ($input['limit'] ?? 0),
+                (int) ($input['offset'] ?? 0)
+            );
         }
 
-        ob_end_clean();
-        $user = User::get_from_username(Session::username($input['auth']));
-        switch ($input['api_format']) {
-            case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                echo Json_Data::albums($albums, array(), $user->id);
-                break;
-            default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::albums($albums, array(), $user->id);
-        }
-        Session::extend($input['auth']);
-
-        return true;
-    }
-
-    /**
-     * @deprecated inject by constructor
-     */
-    private static function getTagRepository(): TagRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(TagRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }

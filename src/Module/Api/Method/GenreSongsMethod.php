@@ -62,6 +62,8 @@ final class GenreSongsMethod implements MethodInterface
      * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of Genre //optional
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      *
      * @return ResponseInterface
      */
@@ -81,7 +83,12 @@ final class GenreSongsMethod implements MethodInterface
         } else {
             $result = $output->songs(
                 $objectIds,
-                $gatekeeper->getUser()->getId()
+                $gatekeeper->getUser()->getId(),
+                true,
+                true,
+                true,
+                (int) ($input['limit'] ?? 0),
+                (int) ($input['offset'] ?? 0)
             );
         }
 

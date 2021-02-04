@@ -34,7 +34,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 
-class GenreSongsMethodTest extends MockeryTestCase
+class GenreArtistsMethodTest extends MockeryTestCase
 {
     /** @var StreamFactoryInterface|MockInterface|null */
     private MockInterface $streamFactory;
@@ -45,7 +45,7 @@ class GenreSongsMethodTest extends MockeryTestCase
     /** @var TagRepositoryInterface|MockInterface|null */
     private MockInterface $tagRepository;
 
-    private ?GenreSongsMethod $subject;
+    private ?GenreArtistsMethod $subject;
 
     public function setUp(): void
     {
@@ -53,7 +53,7 @@ class GenreSongsMethodTest extends MockeryTestCase
         $this->userRepository = $this->mock(UserRepositoryInterface::class);
         $this->tagRepository  = $this->mock(TagRepositoryInterface::class);
 
-        $this->subject = new GenreSongsMethod(
+        $this->subject = new GenreArtistsMethod(
             $this->streamFactory,
             $this->userRepository,
             $this->tagRepository
@@ -70,12 +70,12 @@ class GenreSongsMethodTest extends MockeryTestCase
         $result = 'some-result';
 
         $this->tagRepository->shouldReceive('getTagObjectIds')
-            ->with('song', 0)
+            ->with('artist', 0)
             ->once()
             ->andReturn([]);
 
         $output->shouldReceive('emptyResult')
-            ->with('song')
+            ->with('artist')
             ->once()
             ->andReturn($result);
 
@@ -112,15 +112,15 @@ class GenreSongsMethodTest extends MockeryTestCase
         $offset   = 456;
 
         $this->tagRepository->shouldReceive('getTagObjectIds')
-            ->with('song', $filterId)
+            ->with('artist', $filterId)
             ->once()
             ->andReturn($songIds);
 
-        $output->shouldReceive('songs')
+        $output->shouldReceive('artists')
             ->with(
                 $songIds,
+                [],
                 $userId,
-                true,
                 true,
                 true,
                 $limit,
