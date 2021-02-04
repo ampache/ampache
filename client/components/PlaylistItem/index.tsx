@@ -46,8 +46,6 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
         }
     };
 
-    console.log(props.playlist.name + ": " + props.playlist.id);
-
     return (
         <>
             <li className={`card-clear ${style.playlistItem}`} {...bindTrigger}>
