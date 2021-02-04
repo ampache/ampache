@@ -1706,6 +1706,7 @@ span.fatalerror {
 }
 
 #information_actions li img {
+    margin-right: 4px;
     vertical-align: top;
 }
 

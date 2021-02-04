@@ -166,6 +166,38 @@ class Ajax
     } // button
 
     /**
+     * button_with_text
+     * This prints out an img of the specified icon coupled with
+     * the text string and then sets up the required ajax for it.
+     * @param string $action
+     * @param string $icon
+     * @param string $text
+     * @param string $source
+     * @param string $post
+     * @param string $class
+     * @param string $confirm
+     * @return string
+     */
+    public static function button_with_text($action, $icon, $text, $source = '', $post = '', $class = '', $confirm = '')
+    {
+        // Get the correct action
+        $ajax_string = self::action($action, $source, $post);
+
+        // If they passed a span class
+        if ($class) {
+            $class = ' class="' . $class . '"';
+        }
+
+        $button = Ui::get_icon($icon, $text);
+
+        $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>" . $button . " " . $text . "</a>\n";
+
+        $string .= self::observe($source, 'click', $ajax_string, $confirm);
+
+        return $string;
+    } // button
+
+    /**
      * text
      * This prints out the specified text as a link and sets up the required
      * ajax for the link so it works correctly

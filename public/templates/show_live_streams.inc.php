@@ -32,7 +32,10 @@ use Ampache\Module\Util\Ui;
 <div id="information_actions">
 <ul>
 <li>
-    <a href="<?php echo AmpConfig::get('web_path'); ?>/radio.php?action=show_create"><?php echo Ui::get_icon('add', T_('Add')); ?> <?php echo T_('Add Radio Station'); ?></a>
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/radio.php?action=show_create">
+        <?php echo Ui::get_icon('add', T_('Add')); ?>
+        <?php echo T_('Add Radio Station'); ?>
+    </a>
 </li>
 </ul>
 </div>
