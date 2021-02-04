@@ -47,7 +47,7 @@ $t_search    = T_('Search'); ?>
         <ul class="sb3" id="sb_browse_music">
             <li id="sb_home_browse_music_songTitle"><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo T_('Browse Library') ?></a></li>
             <li id="sb_home_browse_music_album"><a href="<?php echo $web_path; ?>/mashup.php?action=album"><?php echo $t_albums; ?></a></li>
-            <li id="sb_home_browse_music_artist"><a href="<?php echo $web_path; ?>/mashup.php?action=album_artist"><?php echo $t_artists; ?></a></li>
+            <li id="sb_home_browse_music_artist"><a href="<?php echo $web_path; ?>/mashup.php?action=artist"><?php echo $t_artists; ?></a></li>
             <?php if (AmpConfig::get('label')) { ?>
             <li id="sb_home_browse_music_label"><a href="<?php echo $web_path ?>/browse.php?action=label"><?php echo $t_labels ?></a></li>
             <?php
