@@ -50,14 +50,15 @@ final class GetIndexesMethod
      * Added 'include' to allow indexing all song tracks (enabled for xml by default)
      *
      * @param array $input
-     * type    = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'live_stream'
-     * filter  = (string) //optional
-     * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add     = self::set_filter(date) //optional
-     * update  = self::set_filter(date) //optional
-     * include = (integer) 0,1 include songs if available for that object //optional
-     * offset  = (integer) //optional
-     * limit   = (integer) //optional
+     * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'live_stream'
+     * filter      = (string) //optional
+     * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * add         = self::set_filter(date) //optional
+     * update      = self::set_filter(date) //optional
+     * include     = (integer) 0,1 include songs if available for that object //optional
+     * offset      = (integer) //optional
+     * limit       = (integer) //optional
+     * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
      * @return boolean
      */
     public static function get_indexes(array $input)
@@ -78,6 +79,7 @@ final class GetIndexesMethod
         }
         $user    = User::get_from_username(Session::username($input['auth']));
         $include = (int) $input['include'] == 1;
+        $hide    = (int) $input['hide_search'] == 1;
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'live_stream'))) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
@@ -98,8 +100,12 @@ final class GetIndexesMethod
         }
 
         if ($type == 'playlist') {
-            Api::$browse->set_filter('playlist_type', $user->id);
-            $objects = array_merge(Api::$browse->get_objects(), Playlist::get_smartlists(true, $user->id));
+            self::$browse->set_filter('playlist_type', $user->id);
+            if (!$hide) {
+                $objects = array_merge(self::$browse->get_objects(), Playlist::get_smartlists(true, $user->id));
+            } else {
+                $objects = self::$browse->get_objects();
+            }
         } else {
             $objects = Api::$browse->get_objects();
         }
