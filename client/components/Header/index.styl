@@ -4,18 +4,18 @@
 .header
     padding 3px 0
     background-color colorGray800
-    border-bottom: 2px solid colorGray900
+    border-bottom 2px solid colorGray900
     position relative
-    flex-shrink: 0;
+    flex-shrink 0;
 
     display grid
-    column-gap: 5px;
-    grid-template-columns: 60px 1fr 60px;
+    column-gap 5px;
+    grid-template-columns 60px 1fr 60px;
 
 .logoContainer
-    display: none
+    display none
     align-self center
-    grid-column: 1;
+    grid-column 1;
     padding-left 20px
 
 
@@ -27,26 +27,26 @@
     height 36px
 
 .search
-    margin: 0 auto
-    display: flex
-    align-items: center
-    grid-column: 2;
-    width: 100%
+    margin 0 auto
+    display flex
+    align-items center
+    grid-column 2;
+    width 100%
 
     form
-        width: 100%
-        display: flex
-        justify-content: center
+        width 100%
+        display flex
+        justify-content center
 
     input
         border-radius 3px
         border none
-        line-height: 32px
+        line-height 32px
         background-color colorGray700
         color white
-        width: 100%
+        width 100%
         max-width 300px
-        margin: 0 auto
+        margin 0 auto
         background-image url('https://img.icons8.com/cotton/64/000000/search.png')
         background-repeat no-repeat
         padding-left 35px
@@ -63,7 +63,7 @@
 .account
     position absolute
     right 0
-    display none //TODO: Decide if this is to be deleted
+    display none //TODO Decide if this is to be deleted
     align-items center
     justify-content flex-end
     height 100%
@@ -121,13 +121,13 @@
             color linkColor
 
 .menuIcon
-    margin-left: 5px
-    grid-column: 1;
+    margin-left 5px
+    grid-column 1;
 
     @media all and (min-width: size-large)
-        display: none
+        display none
 
 .queueIcon
-    grid-column: 3;
-    margin-left: auto
-    margin-right: 6px
+    grid-column 3;
+    margin-left auto
+    margin-right 6px
