@@ -635,6 +635,13 @@ art_order = "db,tags,folder,spotify,musicbrainz,lastfm,google"
 ; DEFAULT: "false"
 ;show_similar = "true"
 
+; Hide Searches from the API
+; Set this to true and the get_indexes and playlists methods will not automatically include
+; searches/smart lists in the results.
+; Older versions of the Kodi Add-on will require this for playlists to work
+; DEFAULT: "false"
+;hide_search = "true"
+
 ;#########################################################
 ;      API keys                                          #
 ;#########################################################
