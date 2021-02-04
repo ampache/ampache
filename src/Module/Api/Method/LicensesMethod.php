@@ -21,73 +21,89 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class LicensesMethod
- * @package Lib\ApiMethods
- */
-final class LicensesMethod
+final class LicensesMethod implements MethodInterface
 {
-    private const ACTION = 'licenses';
+    public const ACTION = 'licenses';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->streamFactory   = $streamFactory;
+        $this->modelFactory    = $modelFactory;
+        $this->configContainer = $configContainer;
+    }
 
     /**
-     * licenses
      * MINIMUM_API_VERSION=420000
      *
      * This returns the licenses  based on the specified filter
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     * @throws FunctionDisabledException
      */
-    public static function licenses(array $input)
-    {
-        if (!AmpConfig::get('licensing')) {
-            Api::error(T_('Enable: licensing'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LICENSING) === false) {
+            throw new FunctionDisabledException(T_('Enable: licensing'));
         }
 
-        $browse = Api::getBrowse();
+        $browse = $this->modelFactory->createBrowse();
         $browse->reset_filters();
         $browse->set_type('license');
         $browse->set_sort('name', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter']);
-        $licenses = $browse->get_objects();
-        if (empty($licenses)) {
-            Api::empty('license', $input['api_format']);
+        Api::set_filter($method, $input['filter'], $browse);
 
-            return false;
+        $objectIds = $browse->get_objects();
+        if ($objectIds === []) {
+            $result = $output->emptyResult('license');
+        } else {
+            $result = $output->licenses(
+                array_map('intval', $objectIds),
+                true,
+                (int) ($input['limit'] ?? 0),
+                (int) ($input['offset'] ?? 0)
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                echo Json_Data::licenses($licenses);
-                break;
-            default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::licenses($licenses);
-        }
-        Session::extend($input['auth']);
-
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }

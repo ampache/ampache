@@ -103,8 +103,6 @@ class EditActionTest extends MockeryTestCase
             'external_link' => $external_link,
         ];
 
-        $license->id = $licenseId;
-
         $this->licenseRepository->shouldReceive('update')
             ->with(
                 $licenseId,
@@ -133,6 +131,11 @@ class EditActionTest extends MockeryTestCase
             ->with($licenseId)
             ->once()
             ->andReturn($license);
+
+        $license->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()

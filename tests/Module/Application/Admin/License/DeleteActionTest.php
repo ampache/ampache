@@ -94,8 +94,6 @@ class DeleteActionTest extends MockeryTestCase
         $licenseId = 666;
         $webPath   = 'some-path';
 
-        $license->id = $licenseId;
-
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()
             ->once()
@@ -115,6 +113,11 @@ class DeleteActionTest extends MockeryTestCase
             ->with($licenseId)
             ->once()
             ->andReturn($license);
+
+        $license->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($licenseId);
 
         $this->licenseRepository->shouldReceive('delete')
             ->with($licenseId)

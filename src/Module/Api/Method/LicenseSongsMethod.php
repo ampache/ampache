@@ -21,71 +21,92 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class LicenseSongsMethod
- * @package Lib\ApiMethods
- */
-final class LicenseSongsMethod
+final class LicenseSongsMethod implements MethodInterface
 {
-    private const ACTION = 'license_songs';
+    public const ACTION = 'license_songs';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private UserRepositoryInterface $userRepository;
+
+    private SongRepositoryInterface $songRepository;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        UserRepositoryInterface $userRepository,
+        SongRepositoryInterface $songRepository,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->streamFactory   = $streamFactory;
+        $this->userRepository  = $userRepository;
+        $this->songRepository  = $songRepository;
+        $this->configContainer = $configContainer;
+    }
 
     /**
-     * license_songs
      * MINIMUM_API_VERSION=420000
      *
      * This returns all songs attached to a license ID
      *
+     * @param GatekeeperInterface $gatekeeper ,
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of license
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws FunctionDisabledException
+     * @throws RequestParamMissingException
      */
-    public static function license_songs(array $input)
-    {
-        if (!AmpConfig::get('licensing')) {
-            Api::error(T_('Enable: licensing'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-        $user     = User::get_from_username(Session::username($input['auth']));
-        $song_ids = static::getSongRepository()->getByLicense((int) scrub_in($input['filter']));
-        if (empty($song_ids)) {
-            Api::empty('song', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LICENSING) === false) {
+            throw new FunctionDisabledException(T_('Enable: licensing'));
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json_Data::songs($song_ids, $user->id);
-                break;
-            default:
-                echo Xml_Data::songs($song_ids, $user->id);
+        $objectId = $input['filter'] ?? null;
+
+        if ($objectId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
         }
-        Session::extend($input['auth']);
 
-        return true;
-    }
+        $songIds = $this->songRepository->getByLicense((int) $objectId);
 
-    private static function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
+        if ($songIds === []) {
+            $result = $output->emptyResult('song');
+        } else {
+            $result = $output->songs(
+                $songIds,
+                $gatekeeper->getUser()->getId()
+            );
+        }
 
-        return $dic->get(SongRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }

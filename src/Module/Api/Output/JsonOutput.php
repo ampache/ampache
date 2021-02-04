@@ -296,4 +296,39 @@ final class JsonOutput implements ApiOutputInterface
 
         return json_encode($message, JSON_PRETTY_PRINT);
     }
+
+    /**
+     * This returns licenses to the user
+     *
+     * @param int[] $licenseIds
+     * @param bool $asObject
+     * @param int $limit
+     * @param int $offset
+     */
+    public function licenses(
+        array $licenseIds,
+        bool $asObject = true,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
+        if ((count($licenseIds) > $limit || $offset > 0) && $limit) {
+            $licenseIds = array_splice($licenseIds, $offset, $limit);
+        }
+
+        $result = [];
+
+        foreach ($licenseIds as $licenseId) {
+            $license = $this->modelFactory->createLicense($licenseId);
+
+            $result[] = [
+                'id' => (string) $licenseId,
+                'name' => $license->getName(),
+                'description' => $license->getDescription(),
+                'external_link' => $license->getLink()
+            ];
+        }
+        $output = ($asObject) ? ['license' => $result] : $result[0];
+
+        return json_encode($output, JSON_PRETTY_PRINT);
+    }
 }

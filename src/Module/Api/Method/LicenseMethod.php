@@ -21,64 +21,89 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Model\License;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Model\ModelFactoryInterface;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class LicenseMethod
- * @package Lib\ApiMethods
- */
-final class LicenseMethod
+final class LicenseMethod implements MethodInterface
 {
-    private const ACTION = 'license';
+    public const ACTION = 'license';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->streamFactory   = $streamFactory;
+        $this->modelFactory    = $modelFactory;
+        $this->configContainer = $configContainer;
+    }
 
     /**
-     * license
      * MINIMUM_API_VERSION=420000
      *
      * This returns a single license based on UID
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of license
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws RequestParamMissingException
+     * @throws FunctionDisabledException
+     * @throws ResultEmptyException
      */
-    public static function license(array $input)
-    {
-        if (!AmpConfig::get('licensing')) {
-            Api::error(T_('Enable: licensing'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-        $object_id = (int) $input['filter'];
-        $license   = new License($object_id);
-        if (!$license->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LICENSING) === false) {
+            throw new FunctionDisabledException(T_('Enable: licensing'));
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json_Data::licenses(array($object_id), false);
-                break;
-            default:
-                echo Xml_Data::licenses(array($object_id));
-        }
-        Session::extend($input['auth']);
+        $objectId = $input['filter'] ?? null;
 
-        return true;
+        if ($objectId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
+        }
+
+        $license = $this->modelFactory->createLicense((int) $objectId);
+
+        if ($license->isNew() === true) {
+            throw new ResultEmptyException((string) $objectId);
+        }
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->licenses(
+                    [$license->getId()],
+                    false
+                )
+            )
+        );
     }
 }

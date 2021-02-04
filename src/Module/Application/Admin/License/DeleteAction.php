@@ -70,7 +70,7 @@ final class DeleteAction implements ApplicationActionInterface
             (int) $request->getQueryParams()['license_id'] ?? 0
         );
 
-        $this->licenseRepository->delete($license->id);
+        $this->licenseRepository->delete($license->getId());
 
         $this->ui->showHeader();
         $this->ui->showConfirmation(

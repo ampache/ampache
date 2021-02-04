@@ -273,4 +273,35 @@ final class XmlOutput implements ApiOutputInterface
 
         return Xml_Data::output_xml($xml_string);
     }
+
+    /**
+     * This returns licenses to the user
+     *
+     * @param int[] $licenseIds
+     * @param bool $asObject
+     * @param int $limit
+     * @param int $offset
+     */
+    public function licenses(
+        array $licenseIds,
+        bool $asObject = true,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
+        if ((count($licenseIds) > $limit || $offset > 0) && $limit) {
+            $licenseIds = array_splice($licenseIds, $offset, $limit);
+        }
+        $string = "<total_count>" . Catalog::get_count('license') . "</total_count>\n";
+
+        foreach ($licenseIds as $licenseId) {
+            $license = $this->modelFactory->createLicense($licenseId);
+            $string .= "<license id=\"$licenseId\">\n" .
+                "\t<name><![CDATA[" . $license->getName() . "]]></name>\n" .
+                "\t<description><![CDATA[" . $license->getDescription() . "]]></description>\n" .
+                "\t<external_link><![CDATA[" . $license->getLink() . "]]></external_link>\n" .
+                "</license>\n";
+        }
+
+        return Xml_Data::output_xml($string);
+    }
 }

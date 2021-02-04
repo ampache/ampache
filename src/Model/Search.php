@@ -545,7 +545,7 @@ class Search extends playlist_object
             $licenses = array();
             foreach ($this->getLicenseRepository()->getAll() as $license_id) {
                 $license               = new License($license_id);
-                $licenses[$license_id] = $license->name;
+                $licenses[$license_id] = $license->getName();
             }
             $this->type_select('license', T_('Music License'), 'boolean_numeric', $licenses);
         }

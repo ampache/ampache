@@ -73,7 +73,7 @@ final class EditAction implements ApplicationActionInterface
         if ($licenseId > 0) {
             $license = $this->modelFactory->createLicense($licenseId);
 
-            if ($license->id) {
+            if ($license->isNew() === false) {
                 $this->licenseRepository->update(
                     $licenseId,
                     $data['name'] ?? '',
