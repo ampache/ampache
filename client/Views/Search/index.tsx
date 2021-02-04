@@ -87,7 +87,7 @@ const SearchView: React.FC<SearchProps> = (props) => {
             <div className={style.query}>
                 Search: <span className={style.queryText}>"{searchQuery}"</span>
             </div>
-            <div className={style.resultSection}>
+            <section className={style.resultSection}>
                 <h2>Songs</h2>
                 {!songResults && (
                     <ReactLoading color='#FF9D00' type={'bubbles'} />
@@ -110,8 +110,8 @@ const SearchView: React.FC<SearchProps> = (props) => {
                         );
                     })}
                 </div>
-            </div>
-            <div className={style.resultSection}>
+            </section>
+            <section className={style.resultSection}>
                 <h2>Albums</h2>
                 {!albumResults && (
                     <ReactLoading color='#FF9D00' type={'bubbles'} />
@@ -129,8 +129,8 @@ const SearchView: React.FC<SearchProps> = (props) => {
                         );
                     })}
                 </div>
-            </div>
-            <div className={style.resultSection}>
+            </section>
+            <section className={style.resultSection}>
                 <h2>Artists</h2>
                 {!artistResults && (
                     <ReactLoading color='#FF9D00' type={'bubbles'} />
@@ -148,7 +148,7 @@ const SearchView: React.FC<SearchProps> = (props) => {
                         );
                     })}
                 </div>
-            </div>
+            </section>
         </div>
     );
 };
