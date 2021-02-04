@@ -57,17 +57,17 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
                     </div>
                     <div className={style.details}>
                         {props.playlist.id.includes("smart_") // indicate if smartlist, else show rating
-                          ?
-                              <div className={style.smartlistTag}>
-                                  Smartlist
-                              </div>
-                          :
-                              <div className={style.rating}>
-                                  <Rating
-                                    value={""}
-                                    fav={""}
-                                  />
-                              </div>
+                        ?
+                        <div className={style.smartlistTag}>
+                            Smartlist
+                        </div>
+                        :
+                        <div className={style.rating}>
+                            <Rating
+                                value={""}
+                                fav={""}
+                            />
+                        </div>
                         }
                     </div>
                     <div className={style.meta}>
