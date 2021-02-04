@@ -28,6 +28,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Repository\TagRepositoryInterface;
 use PDOStatement;
 
 /**
@@ -530,48 +531,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     } // get_object_tags
 
     /**
-     * get_tag_objects
-     * This gets the objects from a specified tag and returns an array of object ids, nothing more
-     * @param string $type
-     * @param $tag_id
-     * @param string $count
-     * @param string $offset
-     * @return integer[]
-     */
-    public static function get_tag_objects($type, $tag_id, $count = '', $offset = '')
-    {
-        if (!InterfaceImplementationChecker::is_library_item($type)) {
-            return array();
-        }
-        $tag_sql   = ((int) $tag_id == 0) ? "" : "`tag_map`.`tag_id` = ? AND";
-        $sql_param = ($tag_sql == "") ? array($type) : array($tag_id, $type);
-        $limit_sql = "";
-        if ($count) {
-            $limit_sql = " LIMIT ";
-            if ($offset) {
-                $limit_sql .= (string)($offset) . ', ';
-            }
-            $limit_sql .= (string)($count);
-        }
-
-        $sql = "SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` " .
-            "WHERE $tag_sql `tag_map`.`object_type` = ? ";
-        if (AmpConfig::get('catalog_disable') && in_array($type, array('song', 'artist', 'album'))) {
-            $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
-        }
-        $sql .= $limit_sql;
-        $db_results = Dba::read($sql, $sql_param);
-
-        $results = array();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['object_id'];
-        }
-
-        return $results;
-    } // get_tag_objects
-
-    /**
      * get_tag_ids
      * This gets the objects from a specified tag and returns an array of object ids, nothing more
      * @param string $type
@@ -911,7 +870,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     {
         $medias = array();
         if ($filter_type) {
-            $ids = self::get_tag_objects($filter_type, $this->id);
+            $ids = $this->getTagRepository()->getTagObjectIds($filter_type, $this->getId());
             foreach ($ids as $object_id) {
                 $medias[] = array(
                     'object_type' => $filter_type,
@@ -984,5 +943,15 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $sql = "UPDATE IGNORE `tag_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getTagRepository(): TagRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(TagRepositoryInterface::class);
     }
 }

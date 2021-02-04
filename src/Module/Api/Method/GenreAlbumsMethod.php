@@ -31,6 +31,7 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
+use Ampache\Repository\TagRepositoryInterface;
 
 /**
  * Class GenreAlbumsMethod
@@ -54,7 +55,7 @@ final class GenreAlbumsMethod
      */
     public static function genre_albums(array $input)
     {
-        $albums = Tag::get_tag_objects('album', $input['filter']);
+        $albums = static::getTagRepository()->getTagObjectIds('album', (int) ($input['filter'] ?? 0));
         if (empty($albums)) {
             Api::empty('album', $input['api_format']);
 
@@ -77,5 +78,15 @@ final class GenreAlbumsMethod
         Session::extend($input['auth']);
 
         return true;
+    }
+
+    /**
+     * @deprecated inject by constructor
+     */
+    private static function getTagRepository(): TagRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(TagRepositoryInterface::class);
     }
 }

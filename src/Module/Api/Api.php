@@ -70,7 +70,7 @@ class Api
         Method\GenreMethod::ACTION => Method\GenreMethod::class,
         'genre_artists' => Method\GenreArtistsMethod::class,
         'genre_albums' => Method\GenreAlbumsMethod::class,
-        'genre_songs' => Method\GenreSongsMethod::class,
+        Method\GenreSongsMethod::ACTION => Method\GenreSongsMethod::class,
         'labels' => Method\LabelsMethod::class,
         'label' => Method\LabelMethod::class,
         'label_artists' => Method\LabelArtistsMethod::class,

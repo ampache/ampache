@@ -21,61 +21,72 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\Tag;
-use Ampache\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\TagRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class GenreSongsMethod
- * @package Lib\ApiMethods
- */
-final class GenreSongsMethod
+final class GenreSongsMethod implements MethodInterface
 {
-    const ACTION = 'genre_songs';
+    public const ACTION = 'genre_songs';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private UserRepositoryInterface $userRepository;
+
+    private TagRepositoryInterface $tagRepository;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        UserRepositoryInterface $userRepository,
+        TagRepositoryInterface $tagRepository
+    ) {
+        $this->streamFactory  = $streamFactory;
+        $this->userRepository = $userRepository;
+        $this->tagRepository  = $tagRepository;
+    }
 
     /**
-     * genre_songs
      * MINIMUM_API_VERSION=380001
      *
      * returns the songs for this genre
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of Genre //optional
-     * offset = (integer) //optional
-     * limit  = (integer) //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
      */
-    public static function genre_songs(array $input)
-    {
-        $songs = Tag::get_tag_objects('song', $input['filter']);
-        if (empty($songs)) {
-            Api::empty('song', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $objectIds = $this->tagRepository->getTagObjectIds(
+            'song',
+            (int) ($input['filter'] ?? 0)
+        );
 
-            return false;
+        if ($objectIds === []) {
+            $result = $output->emptyResult('song');
+        } else {
+            $result = $output->songs(
+                $objectIds,
+                $gatekeeper->getUser()->getId()
+            );
         }
 
-        ob_end_clean();
-        $user = User::get_from_username(Session::username($input['auth']));
-        switch ($input['api_format']) {
-            case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                echo Json_Data::songs($songs, $user->id);
-                break;
-            default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::songs($songs, $user->id);
-        }
-        Session::extend($input['auth']);
-
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }
