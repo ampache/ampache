@@ -217,7 +217,7 @@ class Api
     {
         switch ($format) {
             case 'json':
-                echo JSON_Data::empty($empty_type);
+                echo Json_Data::empty($empty_type);
                 break;
             default:
                 echo Xml_Data::empty();

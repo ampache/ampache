@@ -83,7 +83,7 @@ final class UserMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::user($user, $fullinfo, false);
+                echo Json_Data::user($user, $fullinfo, false);
                 break;
             default:
                 echo Xml_Data::user($user, $fullinfo);

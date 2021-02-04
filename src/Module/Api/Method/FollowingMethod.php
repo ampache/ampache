@@ -84,7 +84,7 @@ final class FollowingMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::users($users);
+                echo Json_Data::users($users);
                 break;
             default:
                 echo Xml_Data::users($users);

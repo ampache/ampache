@@ -80,7 +80,7 @@ final class TimelineMethod
                     ob_end_clean();
                     switch ($input['api_format']) {
                         case 'json':
-                            echo JSON_Data::timeline($activities);
+                            echo Json_Data::timeline($activities);
                             break;
                         default:
                             echo Xml_Data::timeline($activities);

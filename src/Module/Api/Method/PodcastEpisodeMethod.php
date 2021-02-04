@@ -73,7 +73,7 @@ final class PodcastEpisodeMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::podcast_episodes(array($object_id), false, false);
+                echo Json_Data::podcast_episodes(array($object_id), false, false);
                 break;
             default:
                 echo Xml_Data::podcast_episodes(array($object_id));

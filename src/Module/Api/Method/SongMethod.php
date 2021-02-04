@@ -68,7 +68,7 @@ final class SongMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::songs(array((int) $object_id), $user->id, true, false);
+                echo Json_Data::songs(array((int) $object_id), $user->id, true, false);
                 break;
             default:
                 echo Xml_Data::songs(array((int) $object_id), $user->id);
