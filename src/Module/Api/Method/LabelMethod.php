@@ -72,7 +72,7 @@ final class LabelMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::labels(array($object_id), false);
+                echo Json_Data::labels(array($object_id), false);
                 break;
             default:
                 echo Xml_Data::labels(array($object_id));

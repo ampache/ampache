@@ -52,7 +52,7 @@ use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
 /**
- * JSON_Data Class
+ * Json_Data Class
  *
  * This class takes care of all of the JSON document stuff in Ampache these
  * are all static calls
