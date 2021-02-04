@@ -15,14 +15,14 @@ const SongBlock = (props: SongBlockProps) => {
     return (
         <div
             onClick={() => props.playSong(props.song)}
-            className={`${props.className} ${style.songBlock} ${
-                props.currentlyPlaying ? style.playing : ''
+            className={`card ${props.className} ${style.songBlock} ${
+                props.currentlyPlaying ? 'nowPlaying' : ''
             }`}
             tabIndex={1}
         >
             <img src={props.song.art} alt='Album Cover' />
             <div className={style.details}>
-                <div className={style.title}>{props.song.title}</div>
+                <div className={`card-title ${style.title}`}>{props.song.title}</div>
                 <div className={style.bottom}>
                     <Link
                         to={`/album/${props.song.album.id}`}

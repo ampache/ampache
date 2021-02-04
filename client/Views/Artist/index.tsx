@@ -106,7 +106,7 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
                         <div className={style.rating}>
                             <Rating value={artist.rating} fav={artist.flag} />
                         </div>
-                        <div className={style.name}>{artist.name}</div>
+                        <div className={`card-title ${style.name}`}>{artist.name}</div>
                         <div className={style.summary}>{artist.summary}</div>
                         <div className={style.actions}>
                             <Button
@@ -120,7 +120,7 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
                     </div>
                 </div>
             )}
-            <div className={style.albums}>
+            <div className={`album-grid ${style.albums}`}>
                 {!artist && <ReactLoading color='#FF9D00' type={'bubbles'} />}
                 {artist &&
                     artist.albums.map((theAlbum) => {

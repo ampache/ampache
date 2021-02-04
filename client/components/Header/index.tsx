@@ -36,7 +36,7 @@ const Header = withRouter(({ history, ...props }: any) => {
             </div>
             <div className={style.menuIcon} onClick={props.toggleSideBar}>
                 <SVG
-                    className='icon-button'
+                    className='icon icon-button'
                     src={require('~images/icons/svg/hamburger.svg')}
                     title='Show menu'
                     role='button'
@@ -61,7 +61,7 @@ const Header = withRouter(({ history, ...props }: any) => {
             </div>
             <div className={style.queueIcon} onClick={props.toggleQueueBar}>
                 <SVG
-                    className='icon-button'
+                    className='icon icon-button'
                     src={require('~images/icons/svg/playlist.svg')}
                     title='Show queue'
                     role='button'

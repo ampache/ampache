@@ -1,84 +1,82 @@
-@import "~/stylus/color.styl"
-@import "~/stylus/typography.styl"
+@import "~/stylus/settings/color.styl"
+@import "~/stylus/settings/typography.styl"
 
 .button
-  outline 0
-  border 2px solid
-  border-radius 3px
-  font-weight 700
-  line-height: inherit
-  text-transform: uppercase
-  letter-spacing: 0.04em
-  padding 0 1em 1px
-  cursor: pointer
-
-  &:focus
-    box-shadow 0 0 0 2px
     outline 0
-
-
-  // Sizes
-  &.large
-    font-size 16px
-    line-height 32px
-    border 2px solid
-    border-radius 5px
-  
-  &.medium
-    font-size 13px
-    line-height 32px
     border 2px solid
     border-radius 3px
+    font-weight 700
+    line-height: inherit
+    text-transform: uppercase
+    letter-spacing: 0.04em
+    padding 0 1em 1px
+    cursor: pointer
 
-  &.small
-    font-size 11px
-    line-height 24px
-    border 1px solid
-    border-radius 2px
+    &:focus
+        box-shadow 0 0 0 2px
+        outline 0
 
+    // Sizes
+    &.large
+        font-size 16px
+        line-height 32px
+        border 2px solid
+        border-radius 5px
 
-  // Colors
-  &.gray
-    background-color colorGray900
-    border-color colorGray700
-    color colorGray400
-    @media (any-hover: hover)
-      &:hover
-        background-color colorGray700
-        color colorGray200
-      
-  &.green
-    background-color colorGray900
-    border-color colorLime900
-    color colorLime500
-    @media (any-hover: hover)
-      &:hover
-        background-color colorLime900
-        color colorLime200
+    &.medium
+        font-size 13px
+        line-height 32px
+        border 2px solid
+        border-radius 3px
 
-  &.red
-    background-color colorGray900
-    border-color colorRed900
-    color colorRed400
-    @media (any-hover: hover)
-      &:hover
-        background-color colorRed900
-        color colorRed200
+    &.small
+        font-size 11px
+        line-height 24px
+        border 1px solid
+        border-radius 2px
 
-  &.blue
-    background-color colorGray900
-    border-color colorLightBlue800
-    color colorLightBlue300
-    @media (any-hover: hover)
-      &:hover
-        background-color colorLightBlue800
-        color colorLightBlue200
+    // Colors
+    &.gray
+        background-color colorGray900
+        border-color colorGray700
+        color colorGray400
+        @media (any-hover: hover)
+            &:hover
+                background-color colorGray700
+                color colorGray200
 
-  &.yellow
-    background-color colorGray900
-    border-color colorAmber900
-    color colorAmber500
-    @media (any-hover: hover)
-      &:hover
-        background-color colorAmber900
-        color colorAmber200
+    &.green
+        background-color colorGray900
+        border-color colorLime900
+        color colorLime500
+        @media (any-hover: hover)
+            &:hover
+                background-color colorLime900
+                color colorLime200
+
+    &.red
+        background-color colorGray900
+        border-color colorRed900
+        color colorRed400
+        @media (any-hover: hover)
+            &:hover
+                background-color colorRed900
+                color colorRed200
+
+    &.blue
+        background-color colorGray900
+        border-color colorLightBlue800
+        color colorLightBlue300
+        @media (any-hover: hover)
+            &:hover
+                background-color colorLightBlue800
+                color colorLightBlue200
+
+    &.yellow
+        background-color colorGray900
+        border-color colorAmber900
+        color colorAmber500
+        @media (any-hover: hover)
+            &:hover
+                background-color colorAmber900
+                color colorAmber200

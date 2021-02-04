@@ -1,64 +1,59 @@
-@import "~/stylus/color.styl"
-@import "~/stylus/sizes.styl"
+@import "~/stylus/settings/color.styl"
+@import "~/stylus/settings/sizes.styl"
 
 .artistInfo
-  display flex
-  flex-direction: column
-  align-items: center;
-  margin-bottom 20px
+    display flex
+    flex-direction: column
+    align-items: center;
+    margin-bottom 20px
 
-  @media all and (min-width: size-small)
-    flex-direction: row
+    @media all and (min-width: size-small)
+        flex-direction: row
 
 .imageContainer
-  width: 100%
-  padding-bottom 40%
-  border-radius 3px
-  position relative
-
-  @media all and (min-width: size-micro)
-    padding-bottom 30%
-
-  @media all and (min-width: size-small)
-    padding-bottom 0
-    height: 150px
-    width 150px
-    border-radius 50%
-    overflow hidden
-    margin-right 20px
-  
-  img
     width: 100%
-    height: 100%
-    display: block
-    position absolute
-    top: 0
-    left 0
-    bottom 0
-    right 0
-    object-fit: cover
+    padding-bottom 40%
+    border-radius 3px
+    position relative
+
+    @media all and (min-width: size-micro)
+        padding-bottom 30%
+
+    @media all and (min-width: size-small)
+        padding-bottom 0
+        height: 150px
+        width 150px
+        border-radius 50%
+        overflow hidden
+        margin-right 20px
+
+    img
+        width: 100%
+        height: 100%
+        display: block
+        position absolute
+        top: 0
+        left 0
+        bottom 0
+        right 0
+        object-fit: cover
 
 .details
-  display flex
-  flex-direction column
-  align-items center
+    display flex
+    flex-direction column
+    align-items center
 
-  @media all and (min-width: size-small)
-    align-items start
+    @media all and (min-width: size-small)
+        align-items start
 
 .name
-  margin-bottom: 10px
-  font-size 22px
-  font-weight: 700
+    margin-bottom: 10px
+    font-size 22px
+    font-weight: 700
 
 .summary
-  display none
+    display none
 
-.albums
-  display: grid
-  gap: 30px;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  
 .rating
-  text-align: center 
-  padding: 5px 0 
+    text-align: center
+    padding: 5px 0

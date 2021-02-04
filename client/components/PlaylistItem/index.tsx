@@ -7,7 +7,7 @@ import HistoryShell from '~Modal/HistoryShell';
 import SVG from 'react-inlinesvg';
 import Rating from '~components/Rating/';
 
-import style from '/stylus/components/PlaylistItem.styl'; //TODO
+import style from './index.styl';
 
 interface PlaylistItemProps {
     playlist: Playlist;
@@ -46,56 +46,58 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
         }
     };
 
-    //TODO: React version of this for card link: https://codepen.io/vikas-parashar/pen/qBOwMWj
-
     return (
         <>
-            <div className={style.playlistItem} {...bindTrigger}>
-                <div className={style.details}>
-                    {props.playlist.id === 0 && <div>SMARTLIST</div>}
-                    <div className={style.name}>
-                        <Link
-                            to={`/playlist/${props.playlist.id}`}
-                            className={style.cardLink}
-                        >
+            <li className={`card-clear ${style.playlistItem}`} {...bindTrigger}>
+                <div className={style.info}>
+                    <div className={`card-title ${style.name}`}>
+                        <Link to={`/playlist/${props.playlist.id}`}>
                             {props.playlist.name}
                         </Link>
                     </div>
-                    {props.playlist.id > 0 && (
+                    <div className={style.details}>
+                        {props.playlist.id.includes("smart_") // indicate if smartlist, else show rating
+                        ?
+                        <div className={style.smartlistTag}>
+                            Smartlist
+                        </div>
+                        :
                         <div className={style.rating}>
                             <Rating
-                                value={props.playlist.rating}
-                                fav={props.playlist.flag}
+                                value={""}
+                                fav={""}
                             />
                         </div>
-                    )}
-                </div>
-                <div className={style.meta}>
-                    <span className={style.itemCount}>
-                        {props.playlist.id === 0 && `Up to `}
-                        {`${props.playlist.items} songs`}
-                    </span>
-                    <span className={style.owner}>
-                        {' '}
-                        by {props.playlist.owner}
-                    </span>
+                        }
+                    </div>
+                    <div className={style.meta}>
+                        {props.playlist.id.includes("smart_") && `Up to `}
+                        <span className={style.itemCount}>
+                            {props.playlist.items}
+                        </span>
+                        {` songs`}
+                        <span className={style.owner}>
+                            {' '}
+                            by {props.playlist.owner}
+                        </span>
+                    </div>
                 </div>
 
                 <div className={style.actions}>
                     <SVG
-                        className='icon-button-small'
+                        className='icon icon-button-small'
                         src={require('~images/icons/svg/play.svg')}
                         title='Play'
                         role='button'
                     />
                     <SVG
-                        className='icon-button-small'
+                        className='icon icon-button-small'
                         src={require('~images/icons/svg/play-next.svg')}
                         title='Play next'
                         role='button'
                     />
                     <SVG
-                        className='icon-button-small'
+                        className='icon icon-button-small'
                         src={require('~images/icons/svg/play-last.svg')}
                         title='Play last'
                         role='button'
@@ -104,13 +106,13 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
                         onClick={(e) => {
                             showContextMenu(e);
                         }}
-                        className='icon-button-small'
+                        className='icon icon-button-small'
                         src={require('~images/icons/svg/more-options-hori.svg')}
                         title='More options'
                         role='button'
                     />
                 </div>
-            </div>
+            </li>
 
             <div {...bindMenu} className='contextMenu'>
                 <div

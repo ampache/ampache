@@ -47,7 +47,7 @@ const HomeView: React.FC<HomeViewProps> = (props) => {
         <div className={style.homePage}>
             <section>
                 <h1>Random Albums</h1>
-                <div className={style.randomAlbums}>
+                <div className={`album-grid ${style.randomAlbums}`}>
                     {!randomAlbums && (
                         <ReactLoading color='#FF9D00' type={'bubbles'} />
                     )}

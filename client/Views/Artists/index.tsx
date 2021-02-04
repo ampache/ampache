@@ -53,7 +53,7 @@ const ArtistsView: React.FC<ArtistsViewProps> = (props: ArtistsViewProps) => {
                 {/*Name: {this.state.theArtist.name}*/}
             </div>
             <h1>Artists</h1>
-            <div className={style.artists}>
+            <div className='artist-grid'>
                 {artists.map((theArtist) => {
                     return (
                         <ArtistDisplay

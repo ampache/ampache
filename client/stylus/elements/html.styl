@@ -1,0 +1,78 @@
+@import "~stylus/settings/color.styl"
+@import "~stylus/settings/typography.styl"
+
+:root
+    --initial-text-color: colorGray400;
+
+html
+    height 100%
+    overflow hidden
+
+#root
+    height 100%
+
+body
+    height 100%
+    background-color colorGray900
+    color: var(--initial-text-color)
+    font-family fontBody
+    font-size 12px
+    font-weight 400
+    line-height: 1.4
+
+h1, h2, h3, h4, h5, h6
+    color colorAmber500
+    font-family fontHeading
+    font-weight 700
+    text-transform uppercase
+    letter-spacing 0.05em
+    line-height 1.2
+    padding-bottom 1.2em
+
+h1
+    font-size 26px
+
+h2
+    font-size 20px
+
+h3
+    font-size 16px
+
+h4
+    font-size 14px
+
+svg
+    fill currentColor
+
+a
+    text-decoration none
+    cursor pointer
+    color inherit
+
+    &.disabled
+        pointer-events none
+
+    @media (any-hover: hover)
+        &:hover
+            color colorAmber500
+
+/* W3C spec */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: colorAmber900 colorGray900;
+}
+
+/* Chrome, Edge, and Safari */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: colorGray900;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: colorAmber900;
+    border-radius: 20px;
+    border: 3px solid colorGray900;
+}

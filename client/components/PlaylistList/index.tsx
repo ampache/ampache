@@ -7,7 +7,7 @@ import {
     Playlist,
     renamePlaylist
 } from '~logic/Playlist';
-import PlaylistItem from './PlaylistItem';
+import PlaylistItem from '~components/PlaylistItem';
 import { AuthKey } from '~logic/Auth';
 import AmpacheError from '~logic/AmpacheError';
 import { Modal } from 'react-async-popup';
@@ -17,7 +17,7 @@ import InputModal from '~Modal/types/InputModal';
 import { useHistory } from 'react-router-dom';
 import HistoryShell from '~Modal/HistoryShell';
 
-import style from '/stylus/components/PlaylistList.styl';
+import style from './index.styl';
 
 interface PlaylistListProps {
     authKey?: AuthKey;
@@ -147,13 +147,13 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
     return (
         <div className='playlistList'>
             <SVG
-                className='icon-button'
+                className='icon icon-button'
                 src={require('~images/icons/svg/plus.svg')}
                 title='Add to playlist'
                 role='button'
                 onClick={handleNewPlaylist}
             />
-            <div className={style.playlistListContainer}>
+            <ul className={`striped-list ${style.playlistListContainer}`}>
                 {playlists.map((playlist: Playlist) => {
                     return (
                         <PlaylistItem
@@ -164,7 +164,7 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                         />
                     );
                 })}
-            </div>
+            </ul>
         </div>
     );
 };

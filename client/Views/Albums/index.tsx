@@ -54,7 +54,7 @@ const AlbumsView: React.FC<AlbumsViewProps> = (props: AlbumsViewProps) => {
                 {/*Name: {this.state.theAlbum.name}*/}
             </div>
             <h1>Albums</h1>
-            <div className={style.albums}>
+            <div className='album-grid'>
                 {albums.map((theAlbum) => {
                     return (
                         <AlbumDisplay

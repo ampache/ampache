@@ -11,6 +11,7 @@ import NotFound from './Views/404/';
 import handshake, { AuthKey } from './logic/Auth';
 import { getUser, User } from '~logic/User';
 import AlbumView from './Views/Album';
+import AlbumsView from './Views/Albums';
 import ArtistView from './Views/Artist';
 import { MusicContextProvider } from '~Contexts/MusicContext';
 import ArtistsView from './Views/Artists';

@@ -1,18 +1,19 @@
-@import "~/stylus/color.styl"
+@import "~/stylus/settings/color.styl"
 
 .contextMenu
-  background-color colorGray700
-  outline none
-  z-index 999
-  border-radius 3px
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06)
-  padding 3px 0
+    background-color colorGray700
+    outline none
+    z-index 999
+    border-radius 3px
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)
+    padding 3px 0
 
-  [role="menuitem"]
-    padding 10px 15px
-    display block
-    cursor pointer
+    [role="menuitem"]
+        padding 10px 15px
+        display block
+        cursor pointer
+        color colorGray300
 
-    @media (any-hover: hover)
-      &:hover 
-        color: colorAmber500
+        @media (any-hover: hover)
+            &:hover
+                color: colorAmber500
