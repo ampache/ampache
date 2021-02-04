@@ -67,6 +67,7 @@ class CatalogStatsTest extends MockeryTestCase
             ['getCatalogSize', 'formatted_size', 'some-size', ''],
             ['getPlayTime', 'time_text', 'some-time', ''],
             ['getItemCount', 'items', 666, 0],
+            ['getVideoCount', 'video', 666, 0],
         ];
     }
 }
