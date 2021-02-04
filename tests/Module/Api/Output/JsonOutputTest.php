@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Output;
 
 use Ampache\MockeryTestCase;
+use Ampache\Model\License;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Shoutbox;
 use Ampache\Model\Tag;
@@ -280,6 +281,96 @@ class JsonOutputTest extends MockeryTestCase
 
             ], JSON_PRETTY_PRINT),
             $this->subject->genres([$tagId, 999], false, 1)
+        );
+    }
+
+    public function testSuccessReturnsData(): void
+    {
+        $value = 'some-value';
+        $title = 'some-title';
+        $data  = 'some-data';
+
+        $this->assertSame(
+            json_encode(['success' => $value, $title => $data], JSON_PRETTY_PRINT),
+            $this->subject->success($value, [$title => $data])
+        );
+    }
+
+    public function testLicensesReturnsList(): void
+    {
+        $licenseId   = 666;
+        $name        = 'some-name';
+        $description = 'some-description';
+        $link        = 'some-link';
+
+        $license = $this->mock(License::class);
+
+        $this->modelFactory->shouldReceive('createLicense')
+            ->with($licenseId)
+            ->once()
+            ->andReturn($license);
+
+        $license->shouldReceive('getName')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($name);
+        $license->shouldReceive('getDescription')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($description);
+        $license->shouldReceive('getLink')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($link);
+
+        $this->assertSame(
+            json_encode([
+                'license' => [[
+                    'id' => (string) $licenseId,
+                    'name' => $name,
+                    'description' => $description,
+                    'external_link' => $link,
+                ]]
+            ], JSON_PRETTY_PRINT),
+            $this->subject->licenses([$licenseId])
+        );
+    }
+
+    public function testLicensesReturnsSingleItem(): void
+    {
+        $licenseId   = 666;
+        $name        = 'some-name';
+        $description = 'some-description';
+        $link        = 'some-link';
+
+        $license = $this->mock(License::class);
+
+        $this->modelFactory->shouldReceive('createLicense')
+            ->with($licenseId)
+            ->once()
+            ->andReturn($license);
+
+        $license->shouldReceive('getName')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($name);
+        $license->shouldReceive('getDescription')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($description);
+        $license->shouldReceive('getLink')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($link);
+
+        $this->assertSame(
+            json_encode([
+                'id' => (string) $licenseId,
+                'name' => $name,
+                'description' => $description,
+                'external_link' => $link,
+            ], JSON_PRETTY_PRINT),
+            $this->subject->licenses([$licenseId, 42], false, 1)
         );
     }
 }

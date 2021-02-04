@@ -33,7 +33,6 @@ use Ampache\Model\Catalog;
 use Ampache\Model\Democratic;
 use Ampache\Model\Label;
 use Ampache\Model\library_item;
-use Ampache\Model\License;
 use Ampache\Model\Live_Stream;
 use Ampache\Model\Playlist;
 use Ampache\Model\Podcast;
@@ -518,29 +517,6 @@ class Xml_Data
 
         return self::output_xml($string, $full_xml);
     } // indexes
-
-    /**
-     * licenses
-     *
-     * This returns licenses to the user, in a pretty xml document with the information
-     *
-     * @param integer[] $licenses (description here...)
-     * @return string return xml
-     */
-    public static function licenses($licenses)
-    {
-        if ((count($licenses) > self::$limit || self::$offset > 0) && self::$limit) {
-            $licenses = array_splice($licenses, self::$offset, self::$limit);
-        }
-        $string = "<total_count>" . Catalog::get_count('license') . "</total_count>\n";
-
-        foreach ($licenses as $license_id) {
-            $license = new license($license_id);
-            $string .= "<license id=\"$license_id\">\n" . "\t<name><![CDATA[$license->name]]></name>\n" . "\t<description><![CDATA[$license->description]]></description>\n" . "\t<external_link><![CDATA[$license->external_link]]></external_link>\n" . "</license>\n";
-        } // end foreach
-
-        return self::output_xml($string);
-    } // licenses
 
     /**
      * labels

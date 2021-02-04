@@ -20,35 +20,19 @@
  *
  */
 
-namespace Ampache\Config\Init;
+namespace Ampache\Repository;
 
-use Ampache\Model\Preference;
-use Ampache\Module\System\SessionInterface;
-use Ampache\Module\Util\EnvironmentInterface;
-
-final class InitializationHandlerAuth implements InitializationHandlerInterface
+interface TagRepositoryInterface
 {
-    private EnvironmentInterface $environment;
-
-    private SessionInterface $session;
-
-    public function __construct(
-        EnvironmentInterface $environment,
-        SessionInterface $session
-    ) {
-        $this->environment = $environment;
-        $this->session     = $session;
-    }
-
-    public function init(): void
-    {
-        $this->session->setup();
-
-        $this->environment->setUp();
-
-        $this->session->auth();
-
-        // Load the Preferences from the database
-        Preference::init();
-    }
+    /**
+     * This gets the objects from a specified tag and returns an array of object ids, nothing more
+     *
+     * @return int[]
+     */
+    public function getTagObjectIds(
+        string $type,
+        int $tagId,
+        ?int $limit = null,
+        int $offset = 0
+    ): array;
 }

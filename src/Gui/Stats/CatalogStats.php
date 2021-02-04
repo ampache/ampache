@@ -88,4 +88,9 @@ final class CatalogStats implements CatalogStatsInterface
     {
         return $this->stats['items'] ?? 0;
     }
+
+    public function getVideoCount(): int
+    {
+        return $this->stats['video'] ?? 0;
+    }
 }

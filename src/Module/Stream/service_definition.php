@@ -20,35 +20,12 @@
  *
  */
 
-namespace Ampache\Config\Init;
+declare(strict_types=1);
 
-use Ampache\Model\Preference;
-use Ampache\Module\System\SessionInterface;
-use Ampache\Module\Util\EnvironmentInterface;
+namespace Ampache\Module\Stream;
 
-final class InitializationHandlerAuth implements InitializationHandlerInterface
-{
-    private EnvironmentInterface $environment;
+use function DI\autowire;
 
-    private SessionInterface $session;
-
-    public function __construct(
-        EnvironmentInterface $environment,
-        SessionInterface $session
-    ) {
-        $this->environment = $environment;
-        $this->session     = $session;
-    }
-
-    public function init(): void
-    {
-        $this->session->setup();
-
-        $this->environment->setUp();
-
-        $this->session->auth();
-
-        // Load the Preferences from the database
-        Preference::init();
-    }
-}
+return [
+    Url\StreamUrlParserInterface::class => autowire(Url\StreamUrlParser::class),
+];

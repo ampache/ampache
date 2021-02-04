@@ -115,7 +115,7 @@ final class BookmarkEditMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::bookmarks($bookmark);
+                echo Json_Data::bookmarks($bookmark);
                 break;
             default:
                 echo Xml_Data::bookmarks($bookmark);

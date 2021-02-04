@@ -31,22 +31,22 @@ class License
     /**
      * @var integer $id
      */
-    public $id;
+    private $id;
+
     /**
      * @var string $name
      */
-    public $name;
+    private $name;
     /**
      * @var string $description
      */
-    public $description;
+    private $description;
     /**
      * @var string $external_link
      */
-    public $external_link;
+    private $external_link;
 
     /**
-     * Constructor
      * This pulls the license information from the database and returns
      * a constructed object
      * @param integer $license_id
@@ -64,8 +64,12 @@ class License
         return (int) $this->id;
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
-     * has_info
      * does the db call, reads from the license table
      * @param integer $license_id
      * @return boolean
@@ -95,5 +99,20 @@ class License
         }
 
         return $this->name;
+    }
+
+    public function getName(): string
+    {
+        return (string) $this->name;
+    }
+
+    public function getLink(): string
+    {
+        return (string) $this->external_link;
+    }
+
+    public function getDescription(): string
+    {
+        return (string) $this->description;
     }
 }

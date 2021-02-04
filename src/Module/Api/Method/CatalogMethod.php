@@ -65,7 +65,7 @@ final class CatalogMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::catalogs(array($catalog->id), false);
+                echo Json_Data::catalogs(array($catalog->id), false);
                 break;
             default:
                 echo Xml_Data::catalogs(array($catalog->id));

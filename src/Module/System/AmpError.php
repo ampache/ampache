@@ -132,17 +132,4 @@ class AmpError
         
         return '';
     }
-
-    /**
-     * This loads the errors from the session back into Ampache
-     */
-    public static function init()
-    {
-        if (is_array($_SESSION['errors'])) {
-            // Re-insert them
-            foreach ($_SESSION['errors'] as $key => $error) {
-                self::add($key, $error);
-            }
-        }
-    }
 }

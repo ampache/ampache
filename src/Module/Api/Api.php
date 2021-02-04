@@ -46,7 +46,7 @@ class Api
         'handshake' => Method\HandshakeMethod::class,
         'ping' => Method\PingMethod::class,
         'goodbye' => Method\GoodbyeMethod::class,
-        'url_to_song' => Method\UrlToSongMethod::class,
+        Method\UrlToSongMethod::ACTION => Method\UrlToSongMethod::class,
         'get_indexes' => Method\GetIndexesMethod::class,
         'get_bookmark' => Method\GetBookmarkMethod::class,
         'get_similar' => Method\GetSimilarMethod::class,
@@ -58,14 +58,14 @@ class Api
         Method\AlbumsMethod::ACTION => Method\AlbumsMethod::class,
         Method\AlbumMethod::ACTION => Method\AlbumMethod::class,
         Method\AlbumSongsMethod::ACTION => Method\AlbumSongsMethod::class,
-        'licenses' => Method\LicensesMethod::class,
-        'license' => Method\LicenseMethod::class,
-        'license_songs' => Method\LicenseSongsMethod::class,
+        Method\LicensesMethod::ACTION => Method\LicensesMethod::class,
+        Method\LicenseMethod::ACTION => Method\LicenseMethod::class,
+        Method\LicenseSongsMethod::ACTION => Method\LicenseSongsMethod::class,
         Method\GenresMethod::ACTION => Method\GenresMethod::class,
         Method\GenreMethod::ACTION => Method\GenreMethod::class,
-        'genre_artists' => Method\GenreArtistsMethod::class,
-        'genre_albums' => Method\GenreAlbumsMethod::class,
-        'genre_songs' => Method\GenreSongsMethod::class,
+        Method\GenreArtistsMethod::ACTION => Method\GenreArtistsMethod::class,
+        Method\GenreAlbumsMethod::ACTION => Method\GenreAlbumsMethod::class,
+        Method\GenreSongsMethod::ACTION => Method\GenreSongsMethod::class,
         'labels' => Method\LabelsMethod::class,
         'label' => Method\LabelMethod::class,
         'label_artists' => Method\LabelArtistsMethod::class,
@@ -111,7 +111,7 @@ class Api
         'user_delete' => Method\UserDeleteMethod::class,
         Method\FollowersMethod::ACTION => Method\FollowersMethod::class,
         'following' => Method\FollowingMethod::class,
-        'toggle_follow' => Method\ToggleFollowMethod::class,
+        Method\ToggleFollowMethod::ACTION => Method\ToggleFollowMethod::class,
         Method\LastShoutsMethod::ACTION => Method\LastShoutsMethod::class,
         'rate' => Method\RateMethod::class,
         'flag' => Method\FlagMethod::class,
@@ -212,7 +212,7 @@ class Api
     {
         switch ($format) {
             case 'json':
-                echo JSON_Data::empty($empty_type);
+                echo Json_Data::empty($empty_type);
                 break;
             default:
                 echo Xml_Data::empty();

@@ -21,62 +21,79 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\Tag;
-use Ampache\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\TagRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class GenreArtistsMethod
- * @package Lib\ApiMethods
- */
-final class GenreArtistsMethod
+final class GenreArtistsMethod implements MethodInterface
 {
-    const ACTION = 'genre_artists';
+    public const ACTION = 'genre_artists';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private UserRepositoryInterface $userRepository;
+
+    private TagRepositoryInterface $tagRepository;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        UserRepositoryInterface $userRepository,
+        TagRepositoryInterface $tagRepository
+    ) {
+        $this->streamFactory  = $streamFactory;
+        $this->userRepository = $userRepository;
+        $this->tagRepository  = $tagRepository;
+    }
 
     /**
-     * genre_artists
      * MINIMUM_API_VERSION=380001
      *
      * This returns the artists associated with the genre in question as defined by the UID
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of Album //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
      */
-    public static function genre_artists(array $input)
-    {
-        $artists = Tag::get_tag_objects('artist', $input['filter']);
-        if (empty($artists)) {
-            Api::empty('artist', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $objectIds = $this->tagRepository->getTagObjectIds(
+            'artist',
+            (int) ($input['filter'] ?? 0)
+        );
 
-            return false;
+        if ($objectIds === []) {
+            $result = $output->emptyResult('artist');
+        } else {
+            $result = $output->artists(
+                $objectIds,
+                [],
+                $gatekeeper->getUser()->getId(),
+                true,
+                true,
+                (int) ($input['limit'] ?? 0),
+                (int) ($input['offset'] ?? 0)
+            );
         }
 
-        ob_end_clean();
-        $user = User::get_from_username(Session::username($input['auth']));
-        switch ($input['api_format']) {
-            case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                echo Json_Data::artists($artists, array(), $user->id);
-                break;
-            default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::artists($artists, array(), $user->id);
-        }
-
-        Session::extend($input['auth']);
-
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }

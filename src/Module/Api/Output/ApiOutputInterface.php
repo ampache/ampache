@@ -164,4 +164,21 @@ interface ApiOutputInterface
         ?int $userId = null,
         bool $asObject = true
     ): string;
+
+    public function success(string $string, array $return_data = []): string;
+
+    /**
+     * This returns licenses to the user
+     *
+     * @param int[] $licenseIds
+     * @param bool $asObject
+     * @param int $limit
+     * @param int $offset
+     */
+    public function licenses(
+        array $licenseIds,
+        bool $asObject = true,
+        int $limit = 0,
+        int $offset = 0
+    ): string;
 }

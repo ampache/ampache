@@ -213,7 +213,7 @@ class Upload
 
                 return false;
             }
-            if ((int) $artist_id > 1) {
+            if ((int) $artist_id < 0) {
                 debug_event(self::class, 'Artist information required, uploaded song skipped.', 3);
 
                 return false;
@@ -239,7 +239,7 @@ class Upload
         debug_event(self::class, 'check_album: looking for ' . $album_name, 5);
         if ($album_name !== '') {
             $album_id = Album::check(Core::get_request('album_name'), 0, 0, null, null, $album_name);
-            if ((int) $album_id > 1) {
+            if ((int) $album_id < 0) {
                 debug_event(self::class, 'Album information required, uploaded song skipped.', 3);
 
                 return false;

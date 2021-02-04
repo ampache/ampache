@@ -26,6 +26,7 @@ namespace Ampache\Module\Playback;
 
 use Ampache\Model\Media;
 use Ampache\Module\Playback\Localplay\LocalPlay;
+use Ampache\Module\Stream\Url\StreamUrlParserInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Art;
@@ -603,7 +604,7 @@ class Stream_Playlist
                 $size              = (($soffset + $ssize) <= $url->time) ? $ssize : ($url->time - $soffset);
                 $additional_params = '&transcode_to=ts&segment=' . $segment;
                 $ret .= "#EXTINF:" . $size . ",\n";
-                $purl = Stream_Url::parse($url->url);
+                $purl = $this->getStreamUrlParser()->parse($url->url);
                 $id   = $purl['id'];
 
                 unset($purl['id']);
@@ -705,7 +706,7 @@ class Stream_Playlist
         $items = array();
 
         foreach ($this->urls as $url) {
-            $data    = Stream_Url::parse($url->url);
+            $data    = $this->getStreamUrlParser()->parse($url->url);
             $items[] = array($data['type'], $data['id']);
         }
         if (!empty($items)) {
@@ -744,4 +745,14 @@ class Stream_Playlist
             echo $url->url . "\n";
         }
     } // create_ram
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getStreamUrlParser(): StreamUrlParserInterface
+    {
+        global $dic;
+
+        return $dic->get(StreamUrlParserInterface::class);
+    }
 }

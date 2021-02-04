@@ -20,35 +20,15 @@
  *
  */
 
-namespace Ampache\Config\Init;
+namespace Ampache\Module\Stream\Url;
 
-use Ampache\Model\Preference;
-use Ampache\Module\System\SessionInterface;
-use Ampache\Module\Util\EnvironmentInterface;
-
-final class InitializationHandlerAuth implements InitializationHandlerInterface
+/**
+ * Splits a stream url (http://some.tld/play/...) into its components
+ */
+interface StreamUrlParserInterface
 {
-    private EnvironmentInterface $environment;
-
-    private SessionInterface $session;
-
-    public function __construct(
-        EnvironmentInterface $environment,
-        SessionInterface $session
-    ) {
-        $this->environment = $environment;
-        $this->session     = $session;
-    }
-
-    public function init(): void
-    {
-        $this->session->setup();
-
-        $this->environment->setUp();
-
-        $this->session->auth();
-
-        // Load the Preferences from the database
-        Preference::init();
-    }
+    /**
+     * Takes an url and parses out all the chewy goodness.
+     */
+    public function parse(string $url): array;
 }

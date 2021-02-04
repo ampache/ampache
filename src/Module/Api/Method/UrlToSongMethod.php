@@ -25,53 +25,76 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\Playback\Stream_Url;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Stream\Url\StreamUrlParserInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class UrlToSongMethod
- * @package Lib\ApiMethods
- */
-final class UrlToSongMethod
+final class UrlToSongMethod implements MethodInterface
 {
-    private const ACTION = 'url_to_song';
+    public const ACTION = 'url_to_song';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private StreamUrlParserInterface $streamUrlParser;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        StreamUrlParserInterface $streamUrlParser
+    ) {
+        $this->streamFactory   = $streamFactory;
+        $this->streamUrlParser = $streamUrlParser;
+    }
 
     /**
-     * url_to_song
      * MINIMUM_API_VERSION=380001
      *
      * This takes a url and returns the song object in question
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * url = (string) $url
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws RequestParamMissingException
      */
-    public static function url_to_song(array $input)
-    {
-        if (!Api::check_parameter($input, array('url'), self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $url = $input['url'] ?? null;
+
+        if ($url === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'url')
+            );
         }
+
         // Don't scrub, the function needs her raw and juicy
-        $data = Stream_URL::parse($input['url']);
-        if (empty($data['id'])) {
-            Api::error(T_('Bad Request'), '4710', self::ACTION, 'url', $input['api_format']);
+        $data = $this->streamUrlParser->parse($url);
 
-            return false;
-        }
-        $user = User::get_from_username(Session::username($input['auth']));
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo JSON_Data::songs(array($data['id']), $user->id, true, false);
-                break;
-            default:
-                echo Xml_Data::songs(array($data['id']), $user->id);
+        if (array_key_exists('id', $data) === false) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'url')
+            );
         }
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->songs(
+                    [(int) $data['id']],
+                    $gatekeeper->getUser()->getId(),
+                    true,
+                    false
+                )
+            )
+        );
     }
 }

@@ -32,7 +32,6 @@ use Ampache\Model\Bookmark;
 use Ampache\Model\Catalog;
 use Ampache\Model\Democratic;
 use Ampache\Model\Label;
-use Ampache\Model\License;
 use Ampache\Model\Live_Stream;
 use Ampache\Model\Playlist;
 use Ampache\Model\Podcast;
@@ -52,7 +51,7 @@ use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
 /**
- * JSON_Data Class
+ * Json_Data Class
  *
  * This class takes care of all of the JSON document stuff in Ampache these
  * are all static calls
@@ -254,37 +253,6 @@ class Json_Data
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // live_streams
-
-    /**
-     * licenses
-     *
-     * This returns licenses to the user, in a pretty JSON document with the information
-     *
-     * @param  integer[] $licenses
-     * @param  boolean $object (whether to return as a named object array or regular array)
-     * @return string JSON Object "license"
-     */
-    public static function licenses($licenses, $object = true)
-    {
-        if ((count($licenses) > self::$limit || self::$offset > 0) && self::$limit) {
-            $licenses = array_splice($licenses, self::$offset, self::$limit);
-        }
-
-        $JSON = [];
-
-        foreach ($licenses as $license_id) {
-            $license = new License($license_id);
-            array_push($JSON, array(
-                "id" => (string)$license_id,
-                "name" => $license->name,
-                "description" => $license->description,
-                "external_link" => $license->external_link
-            ));
-        } // end foreach
-        $output = ($object) ? array("license" => $JSON) : $JSON[0];
-
-        return json_encode($output, JSON_PRETTY_PRINT);
-    } // licenses
 
     /**
      * labels
