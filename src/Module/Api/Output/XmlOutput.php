@@ -304,4 +304,25 @@ final class XmlOutput implements ApiOutputInterface
 
         return Xml_Data::output_xml($string);
     }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param int[] $labelIds
+     * @param bool $asObject
+     * @param int $limit
+     * @param int $offset
+     */
+    public function labels(
+        array $labelIds,
+        bool $asObject = true,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
+        return Xml_Data::labels(
+            $labelIds,
+            $limit,
+            $offset
+        );
+    }
 }

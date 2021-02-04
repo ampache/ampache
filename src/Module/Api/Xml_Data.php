@@ -526,10 +526,13 @@ class Xml_Data
      * @param  integer[] $labels
      * @return string return xml
      */
-    public static function labels($labels)
-    {
-        if ((count($labels) > self::$limit || self::$offset > 0) && self::$limit) {
-            $labels = array_splice($labels, self::$offset, self::$limit);
+    public static function labels(
+        $labels,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
+        if ((count($labels) > $limit || $offset > 0) && $limit) {
+            $labels = array_splice($labels, $offset, $limit);
         }
         $string = "<total_count>" . Catalog::get_count('license') . "</total_count>\n";
 

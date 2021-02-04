@@ -331,4 +331,26 @@ final class JsonOutput implements ApiOutputInterface
 
         return json_encode($output, JSON_PRETTY_PRINT);
     }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param int[] $labelIds
+     * @param bool $asObject
+     * @param int $limit
+     * @param int $offset
+     */
+    public function labels(
+        array $labelIds,
+        bool $asObject = true,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
+        return Json_Data::labels(
+            $labelIds,
+            $asObject,
+            $limit,
+            $offset
+        );
+    }
 }

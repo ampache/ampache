@@ -263,10 +263,14 @@ class Json_Data
      * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string JSON Object "label"
      */
-    public static function labels($labels, $object = true)
-    {
-        if ((count($labels) > self::$limit || self::$offset > 0) && self::$limit) {
-            $labels = array_splice($labels, self::$offset, self::$limit);
+    public static function labels(
+        $labels,
+        $object = true,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
+        if ((count($labels) > $limit || $offset > 0) && $limit) {
+            $labels = array_splice($labels, $offset, $limit);
         }
 
         $JSON = [];

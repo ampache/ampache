@@ -181,4 +181,19 @@ interface ApiOutputInterface
         int $limit = 0,
         int $offset = 0
     ): string;
+
+    /**
+     * This returns labels to the user
+     *
+     * @param int[] $labelIds
+     * @param bool $asObject
+     * @param int $limit
+     * @param int $offset
+     */
+    public function labels(
+        array $labelIds,
+        bool $asObject = true,
+        int $limit = 0,
+        int $offset = 0
+    ): string;
 }

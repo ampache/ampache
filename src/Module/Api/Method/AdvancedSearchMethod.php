@@ -113,7 +113,11 @@ final class AdvancedSearchMethod
                         echo Json_Data::playlists($results);
                         break;
                     case 'label':
-                        echo Json_Data::labels($results);
+                        echo Json_Data::labels(
+                            $results,
+                            (int) ($input['limit'] ?? 0),
+                            (int) ($input['offset'] ?? 0)
+                        );
                         break;
                     case 'user':
                         echo Json_Data::users($results);

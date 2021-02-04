@@ -21,67 +21,91 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Model\Label;
-use Ampache\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Model\ModelFactoryInterface;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class LabelArtistsMethod
- * @package Lib\ApiMethods
- */
-final class LabelArtistsMethod
+final class LabelArtistsMethod implements MethodInterface
 {
-    private const ACTION = 'label_artists';
+    public const ACTION = 'label_artists';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->streamFactory   = $streamFactory;
+        $this->modelFactory    = $modelFactory;
+        $this->configContainer = $configContainer;
+    }
 
     /**
-     * label_artists
      * MINIMUM_API_VERSION=420000
      *
      * This returns all artists attached to a label ID
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of label
      * include = (array|string) 'albums', 'songs' //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     * @throws FunctionDisabledException
+     * @throws RequestParamMissingException
      */
-    public static function label_artists(array $input)
-    {
-        if (!AmpConfig::get('label')) {
-            Api::error(T_('Enable: label'), '4703', self::ACTION, 'system', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL) === false) {
+            throw new FunctionDisabledException(T_('Enable: label'));
+        }
 
-            return false;
+        $objectId = $input['filter'] ?? null;
+
+        if ($objectId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
         }
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-        $user    = User::get_from_username(Session::username($input['auth']));
+
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
-        $label   = new Label((int) scrub_in($input['filter']));
-        $artists = $label->get_artists();
-        if (empty($artists)) {
-            Api::empty('artist', $input['api_format']);
 
-            return false;
+        $label = $this->modelFactory->createLabel((int) $input['filter']);
+
+        $artistIds = $label->get_artists();
+        if ($artistIds === []) {
+            $result = $output->emptyResult('artist');
+        } else {
+            $result = $output->artists(
+                $artistIds,
+                $include,
+                $gatekeeper->getUser()->getId()
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json_Data::artists($artists, $include, $user->id);
-                break;
-            default:
-                echo Xml_Data::artists($artists, $include, $user->id);
-        }
-        Session::extend($input['auth']);
-
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }
