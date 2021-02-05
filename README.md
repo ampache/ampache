@@ -7,6 +7,8 @@
 
 **News:**
 
+* The Ampache kodi plugin has merged into the official Kodi addons repo!
+ * Make sure you enable **hide_search** in your config to enable playlists in this initial version.
 * Develop changes
   * **DATABASE CHANGES** You can now force a default collation and charset on your database. (Read the changelog!)
   * Develop branch now has a **mandatory** requirement of php-intl for date formatting.
