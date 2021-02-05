@@ -68,8 +68,8 @@ if (!empty($link)) {
 
 $results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluff nothing more... **/
-$results['version']            = '4.2.6-release';
-$results['int_config_version'] = '45';
+$results['version']            = '4.3.0-release';
+$results['int_config_version'] = '46';
 
 if (!empty($results['force_ssl'])) {
     $http_type = 'https://';
@@ -209,9 +209,8 @@ if (!defined('NO_SESSION') && AmpConfig::get('use_auth')) {
         }
         Core::get_global('user')->update_last_seen();
     }
-}
-// If Auth, but no session is set
-else {
+} else {
+    // If Auth, but no session is set
     if (isset($_REQUEST['sid'])) {
         session_name(AmpConfig::get('session_name'));
         session_id(scrub_in((string) $_REQUEST['sid']));

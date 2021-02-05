@@ -39,7 +39,7 @@ class Api
     /**
      *  @var string $version
      */
-    public static $version = '425000';
+    public static $version = '430000';
 
     /**
      *  @var Browse $browse
@@ -469,12 +469,13 @@ class Api
      * This takes a collection of inputs and returns ID + name for the object type
      *
      * @param array $input
-     * type   = (string) 'song'|'album'|'artist'|'playlist'
-     * filter = (string) //optional
-     * add    = self::set_filter(date) //optional
-     * update = self::set_filter(date) //optional
-     * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * type        = (string) 'song'|'album'|'artist'|'playlist'
+     * filter      = (string) //optional
+     * add         = self::set_filter(date) //optional
+     * update      = self::set_filter(date) //optional
+     * offset      = (integer) //optional
+     * limit       = (integer) //optional
+     * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
      * @return boolean
      */
     public static function get_indexes($input)
@@ -484,6 +485,7 @@ class Api
         }
         $user = User::get_from_username(Session::username($input['auth']));
         $type = (string) $input['type'];
+        $hide = ((int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         // confirm the correct data
         if (!in_array($type, array('song', 'album', 'artist', 'playlist'))) {
             self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
@@ -501,7 +503,11 @@ class Api
 
         if ($type == 'playlist') {
             self::$browse->set_filter('playlist_type', $user->id);
-            $objects = array_merge(self::$browse->get_objects(), Playlist::get_smartlists(true, $user->id));
+            if (!$hide) {
+                $objects = array_merge(self::$browse->get_objects(), Playlist::get_smartlists(true, $user->id));
+            } else {
+                $objects = self::$browse->get_objects();
+            }
         } else {
             $objects = self::$browse->get_objects();
         }
@@ -1327,24 +1333,28 @@ class Api
      * This returns playlists based on the specified filter
      *
      * @param array $input
-     * filter = (string) Alpha-numeric search term (match all if missing) //optional
-     * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add    = self::set_filter(date) //optional
-     * update = self::set_filter(date) //optional
-     * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * filter      = (string) Alpha-numeric search term (match all if missing) //optional
+     * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * add         = self::set_filter(date) //optional
+     * update      = self::set_filter(date) //optional
+     * offset      = (integer) //optional
+     * limit       = (integer) //optional
+     * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
      */
     public static function playlists($input)
     {
         $user   = User::get_from_username(Session::username($input['auth']));
-        $method = $input['exact'] ? false : true;
+        $like   = ((int) $input['exact'] == 1) ? false : true;
+        $hide   = ((int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         $userid = (!Access::check('interface', 100, $user->id)) ? $user->id : -1;
         $public = !Access::check('interface', 100, $user->id);
 
         // regular playlists
-        $playlist_ids = Playlist::get_playlists($public, $userid, (string) $input['filter'], $method);
+        $playlist_ids = Playlist::get_playlists($public, $userid, (string) $input['filter'], $like);
         // merge with the smartlists
-        $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($public, $userid, (string) $input['filter'], $method));
+        if (!$hide) {
+            $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($public, $userid, (string) $input['filter'], $like));
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -3166,7 +3176,7 @@ class Api
      *
      * @param array $input
      * id     = (integer) $object_id
-     * user   = (integer) $user_id //optional
+     * user   = (integer|string) $user_id OR $username //optional
      * client = (string) $agent //optional
      * date   = (integer) UNIXTIME() //optional
      * @return boolean
@@ -3176,16 +3186,18 @@ class Api
         if (!self::check_parameter($input, array('id', 'user'), 'record_play')) {
             return false;
         }
-        $api_user = User::get_from_username(Session::username($input['auth']));
+        $api_user  = User::get_from_username(Session::username($input['auth']));
+        $play_user = (isset($input['user']) && (int) $input['user'] > 0)
+            ? new User((int) $input['user'])
+            : User::get_from_username((string) $input['user']);
+
         // If you are setting plays for other users make sure we have an admin
-        if (isset($input['user']) && ((int) $input['user'] !== $api_user->id && !self::check_access('interface', 100, $api_user->id, 'record_play', $input['api_format']))) {
+        if ($play_user->id !== $api_user->id && !self::check_access('interface', 100, $api_user->id, 'record_play', $input['api_format'])) {
             return false;
         }
         ob_end_clean();
         $object_id = (int) $input['id'];
-        $user_id   = (isset($input['user'])) ? (int) $input['user'] : $api_user->id;
-        $user      = (isset($input['user'])) ? new User($user_id) : $api_user;
-        $valid     = in_array($user->id, User::get_valid_users());
+        $valid     = in_array($play_user->id, User::get_valid_users());
         $date      = (is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
 
         // validate supplied user
@@ -3206,15 +3218,15 @@ class Api
 
             return false;
         }
-        debug_event('api.class', 'record_play: ' . $media->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
+        debug_event('api.class', 'record_play: ' . $media->id . ' for ' . $play_user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
         // internal scrobbling (user_activity and object_count tables)
-        if ($media->set_played($user_id, $agent, array(), $date)) {
+        if ($media->set_played($play_user->id, $agent, array(), $date)) {
             // scrobble plugins
-            User::save_mediaplay($user, $media);
+            User::save_mediaplay($play_user, $media);
         }
 
-        self::message('success', 'successfully recorded play: ' . $media->id, null, $input['api_format']);
+        self::message('success', 'successfully recorded play: ' . $media->id . ' for: ' . $play_user->username, null, $input['api_format']);
         Session::extend($input['auth']);
 
         return true;

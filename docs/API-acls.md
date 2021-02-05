@@ -1,4 +1,8 @@
-## Access Control Lists Ampache 4.2.2
+---
+title: "Access Control Lists 4.3"
+metaTitle: "Access Control Lists 4.3"
+metaDescription: "API documentation 4.3"
+---
 
 Ampache supports internal Access Control Lists, these are IP/DNS based restrictions on different actions and interactions with Ampache. By Default Access Controls lists are turned off in Ampache. In order to turn them on you must modify the _/config/ampache.cfg.php_ and set access_control to true
 

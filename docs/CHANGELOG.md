@@ -1,5 +1,79 @@
 # CHANGELOG
 
+## Ampache 4.3.0-release
+
+This version of Ampache seeks to bring in some of the great changes going on in develop while we work on v5.
+There also a few API changes to enable a bit better control for older clients.
+
+### Added
+
+* Check limits on democratic playlists (> 0 && < 3000000000)
+* Show an error for out of range democratic cooldowns
+* jPlayer - Disable fullscreen on f key
+* SubSonic - Force a default format (xml) instead of none
+* Added back the agent string in recently played (for admins)
+* Replace 'Admin' icon with padlock in sidebar when access check fails. (Hide this new icon with 'simple_user_mode')
+* Disable API/Subsonic password resets in 'simple_user_mode'
+* New option -m 'move_catalog' added to catalog_update.inc
+* More default preferences to the refill/check functions
+* More functions to search (album artist, mbid)
+* Config version 46
+* NEW config options
+  * hide_search: If true do not include searches/smartlists in playlist results for Api::get_indexes, Api::playlists
+* NEW plugin:
+  * 'Personal Favorites'. Show a shortcut to a favorite smartlist or playlist on the homepage
+  * 'RatingMatch'. Raise the minimum star rating (and song loves) of artists and albums when you rate/love the song
+
+### Changed
+
+* Scrobble plugins fire after stat recording
+* Split art search by 5 instead of 4
+* Increase autoupdate check time and don't force it on each logon
+* Updated CSS and separated mashup covers from other types
+* Don't use mail_enabled for registration checks
+* WebUI - Browse by album_artist instead of single artists
+* Better sorting for playlists using sort_tracks
+* Don't allow duplicate podcast feeds
+* Updated the gather art process
+* Searches will order by file/name instead of id (unless random)
+* Updated amapche.sql
+* Updated composer requirements
+* Default false config option text changed to true (no more typing, just uncomment!)
+
+### Removed
+
+* Stop setting open_basedir from fs.ajax
+* Concert/Event pages (dead Last.fm API)
+* Don't run reset_db_charset on DB updates
+* Disabled browse_filter for new user accounts
+
+### Fixed
+
+* Speed up the playlist dialog boxes (Add to playlist)
+* Fix SQL query for Stats::get_newest_sql
+* Session cookie creation
+* Multiple auth attempts in the same second would not return a session
+* Mail auth was not checked correctly
+* Gather art correctly for update_file.inc
+* set bitrate correctly if using a maxbitrate in play/index
+* MP3's would not get a waveform without editing the config
+* Recently played respects your privacy settings
+* Graph class sql grouping
+
+### API 4.3.0
+
+### Changed
+
+* Api::record_play
+  * Make 'user' parameter optional
+  * Allow 'user' to the be user_id **or** the username string
+  * Add 'date' parameter (optional)
+  * Require 100 (Admin) permission to record plays for other users
+* Api::get_indexes
+  * Add 'hide_search' parameter (optional)
+* Api::playlists
+  * Add 'hide_search' parameter (optional)
+
 ## Ampache 4.2.6-release
 
 ### Changed
@@ -23,6 +97,7 @@
 * Duplicate downloads recorded in play/index
 * Subsonic video HLS stream and json values
 * Block more password resets when using simple_user_mode
+* Upload catalog rename logic
 
 ### API 4.2.6
 

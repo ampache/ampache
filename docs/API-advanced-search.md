@@ -1,4 +1,8 @@
-# advanced_search Ampache 4.2.2
+---
+title: "advanced_search 4.3"
+metaTitle: "advanced_search 4.3"
+metaDescription: "API documentation"
+---
 
 Advanced search is the API method to access the search rules used in the WEB UI. It can be confusing to process how the rules are generated so this has been split into it's own page.
 
