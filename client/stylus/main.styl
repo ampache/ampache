@@ -1,43 +1,22 @@
-@import "reset"
-@import "sizes"
-@import "color.styl"
-
-html
-  height 100%
-  
-#root
-  height 100%
-  overflow-x hidden  
-  
-body
-  height 100%
-  background-color colorGray900
-
-svg 
-  fill currentColor
-
-a
-  text-decoration none
-  cursor pointer
-  color inherit
-  &.disabled
-   pointer-events none
-
 :global
-  //Pages
-  @import "./pages/Playlists"
-  @import "./pages/Account"
+    @import "reset"
 
-  //Components
-  @import './components/MusicControl'
-  @import './components/PlaylistItem'
-  @import './components/PlaylistList'
-  @import './components/ContextMenu'
-  @import './components/InputModal'
-  @import './components/Seekbar'
-  @import './components/React-Async-Popup'
-  @import './components/Toastify'
+    // Settings
+    @import './settings/color'
+    @import './settings/sizes'
+    @import './settings/typography'
 
-  //Elements
-  @import './icons'
-  @import './presentation'
+    //Elements
+    @import './elements/fonts'
+    @import './elements/html'
+    @import './elements/icons'
+    @import './elements/cards'
+    @import './elements/lists'
+    @import './elements/now-playing'
+
+    //Components
+    @import './components/ContextMenu'
+    @import './components/React-Async-Popup'
+    @import './components/Toastify'
+
+

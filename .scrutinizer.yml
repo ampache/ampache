@@ -1,19 +1,29 @@
+build:
+    environment:
+        php:
+            version: "7.4"
+    nodes:
+        coverage:
+            tests:
+                override:
+                    - command: XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-clover build/coverage-clover.xml tests
+                      coverage:
+                        file: build/coverage-clover.xml
+                        format: clover
 filter:
     excluded_paths:
-        - 'lib/components/*'
-        - 'lib/vendor/*'
-        - 'modules/*'
+        - 'public/lib/components/*'
+        - 'vendor/*'
+        - 'tests'
     paths: {  }
-
 tools:
     php_mess_detector:
         enabled: true
         filter:
             excluded_paths:
-                - 'lib/components/*'
-                - 'lib/vendor/*'
-                - 'modules/*'
-                - 'themes/*'
+                - 'public/lib/components/*'
+                - 'vendor/*'
+                - 'public/themes/*'
                 - '.github.*'
             paths: {  }
     php_code_sniffer:
@@ -26,24 +36,21 @@ tools:
         excluded_dirs: {  }
         filter:
             excluded_paths:
-                - 'lib/components/*'
-                - 'lib/vendor/*'
-                - 'modules/*'
+                - 'public/lib/components/*'
+                - 'vendor/*'
             paths: {  }
     php_analyzer:
         enabled: true
         extensions:
             - php
         dependency_paths:
-            - 'lib/components/*'
-            - 'lib/vendor/*'
-            - 'modules/*'
+            - 'public/lib/components/*'
+            - 'vendor/*'
         filter:
             excluded_paths:
-                - 'lib/components/*'
-                - 'lib/vendor/*'
-                - 'modules/*'
-                - 'themes/*'
+                - 'public/lib/components/*'
+                - 'vendor/*'
+                - 'public/themes/*'
             paths: {  }
         path_configs: {  }
     php_changetracking:
@@ -55,22 +62,19 @@ tools:
             - '\bimplement(?:s|ed)?\b'
         filter:
             excluded_paths:
-                - 'lib/components/*'
-                - 'lib/vendor/*'
-                - 'modules/*'
+                - 'public/lib/components/*'
+                - 'vendor/*'
             paths: {  }
     php_loc:
         enabled: true
         excluded_dirs:
-            - 'lib/components/*'
-            - 'lib/vendor/*'
-            - 'modules/*'
+            - 'public/lib/components/*'
+            - 'vendor/*'
     php_cpd:
         enabled: true
         excluded_dirs: {  }
         filter:
             excluded_paths:
-                - 'lib/components/*'
-                - 'lib/vendor/*'
-                - 'modules/*'
+                - 'public/lib/components/*'
+                - 'vendor/*'
             paths: {  }

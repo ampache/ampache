@@ -1,21 +1,21 @@
-@import "~/stylus/sizes.styl"
-@import "~/stylus/color.styl"
+@import "~/stylus/settings/sizes.styl"
+@import "~/stylus/settings/color.styl"
 
 .currentPlayingArt
-  display inline-block
-  margin-right 10px
-  grid-column: 1;
-  grid-row: 1;
+    display inline-block
+    margin-right 10px
+    grid-column 1;
+    grid-row 1;
 
-  @media all and (min-width: size-small)
-    grid-column: 1 / 2;
-    grid-row: 1 / 3;
+    @media all and (min-width: size-small)
+        grid-column 1 / 2;
+        grid-row 1 / 3;
 
-  @media all and (min-width: size-large)
-    grid-column: 2;
-    grid-row: 1 / 3;
+    @media all and (min-width: size-large)
+        grid-column 2;
+        grid-row 1 / 3;
 
-  .albumArt
+.albumArt
     display block
     width 64px
     height 64px
@@ -24,18 +24,15 @@
     overflow hidden
 
     @media all and (min-width: size-small)
-      width 96px
-      height 96px
-      margin: 3px
-      border-radius 2px
+        width 96px
+        height 96px
+        margin 3px
+        border-radius 2px
 
     @media all and (min-width: size-large)
-      width 80px
-      height 80px
-      margin-left 0
+        width 80px
+        height 80px
+        margin-left 0
 
     img
-      height 100%
-  
-
-
+        height 100%

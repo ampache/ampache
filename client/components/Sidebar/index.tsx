@@ -48,9 +48,6 @@ const Sidebar: React.FC<SideBarProps> = (props) => {
                                     <Link to='/playlists'>Playlists</Link>
                                 </li>
                                 <li>
-                                    <Link to='/smartlists'>Smartlists</Link>
-                                </li>
-                                <li>
                                     <Link to='/favorites'>Favorites</Link>
                                 </li>
                                 <li>
@@ -110,7 +107,7 @@ const Sidebar: React.FC<SideBarProps> = (props) => {
                                     onClick={() => {
                                         // TODO: open more options menu;
                                     }}
-                                    className='icon-inline'
+                                    className='icon icon-inline'
                                 />
                             </Link>
                         </li>

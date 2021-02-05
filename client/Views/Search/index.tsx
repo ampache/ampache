@@ -84,13 +84,15 @@ const SearchView: React.FC<SearchProps> = (props) => {
 
     return (
         <div className={style.searchPage}>
-            Search: {searchQuery}
-            <div className={style.resultSection}>
-                <h1>Songs</h1>
+            <div className={style.query}>
+                Search: <span className={style.queryText}>"{searchQuery}"</span>
+            </div>
+            <section className={style.resultSection}>
+                <h2>Songs</h2>
                 {!songResults && (
                     <ReactLoading color='#FF9D00' type={'bubbles'} />
                 )}
-                <div className={style.resultList}>
+                <div className={`song-list ${style.resultList}`}>
                     {songResults?.length === 0 && 'No results :('}
 
                     {songResults?.map((song) => {
@@ -108,13 +110,13 @@ const SearchView: React.FC<SearchProps> = (props) => {
                         );
                     })}
                 </div>
-            </div>
-            <div className={style.resultSection}>
-                <h1>Albums</h1>
+            </section>
+            <section className={style.resultSection}>
+                <h2>Albums</h2>
                 {!albumResults && (
                     <ReactLoading color='#FF9D00' type={'bubbles'} />
                 )}
-                <div className={style.resultList}>
+                <div className={`album-grid ${style.resultList}`}>
                     {albumResults?.length === 0 && 'No results :('}
 
                     {albumResults?.map((album) => {
@@ -127,13 +129,13 @@ const SearchView: React.FC<SearchProps> = (props) => {
                         );
                     })}
                 </div>
-            </div>
-            <div className={style.resultSection}>
-                <h1>Artist</h1>
+            </section>
+            <section className={style.resultSection}>
+                <h2>Artists</h2>
                 {!artistResults && (
                     <ReactLoading color='#FF9D00' type={'bubbles'} />
                 )}
-                <div className={style.resultList}>
+                <div className={`artist-grid ${style.resultList}`}>
                     {artistResults?.length === 0 && 'No results :('}
 
                     {artistResults?.map((artist) => {
@@ -146,7 +148,7 @@ const SearchView: React.FC<SearchProps> = (props) => {
                         );
                     })}
                 </div>
-            </div>
+            </section>
         </div>
     );
 };

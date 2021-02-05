@@ -1,0 +1,21 @@
+<?php
+/**
+ * To put your Ampache website in maintenance, just rename this file to .maintenance
+ * This example redirect your visitors to a default maintenance information page hosted in ampache.org
+*/
+
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST");
+
+$domain = Core::get_server('HTTP_HOST');
+if (empty($domain)) {
+    $domain = $_SERVER['SERVER_NAME'];
+}
+$scheme = "http";
+if (filter_has_var(INPUT_SERVER, 'HTTPS') && Core::get_server('HTTPS') == 'on') {
+    $scheme = "https";
+}
+$fromurl = rawurlencode($scheme . "://" . $domain . $_SERVER[REQUEST_URI]);
+
+header("Location: http://ampache.org/maintenance/?from=" . $fromurl);
+exit; ?>

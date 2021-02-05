@@ -9,6 +9,7 @@ Look here for the code to change your 'custom_datetime' string [(<http://usergui
 This means Ampache now **requires** php-intl module/dll to be enabled.
 
 ### Added
+
 * Write metadata to mp3, flac and ogg files. Requires metaflac and vorbiscomment installed on Linux.
 * Write images to mp3 and flac files. Also requires metaflac on linux.
 * File tags can be updated from catalog management page.
@@ -30,10 +31,12 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Add time and duration to albums, artists instead of calculating from songs each time
 * Allow browsing by album_artist instead of artist
 * Allow setting a custom background on the login page
+* Musicbrainz search icon on Artist, Album and Song pages
+* Add some missing default preferences in set_defaults
 
 ### Changed
 
-* config version 47
+* config version 48
 * get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
 * Renamed 'Tag' strings to 'Genre'
 * 'Sort Tracks by Artist, Album, Song' sorting done by 'Album_Artist, Album, Disk, Track Title'
@@ -42,16 +45,19 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Don't block playlist information actions when you own the playlist
 * Add date parameter to Api::record_play
 * Changed sidebar back to browse for artist/album
+* Compressed PNG and JPG images
 
 ### Removed
 
 * Disabled the jPlayer fullscreen shortcut (ctrl + f)
+* Remove system preferences from the user that aren't classified as a system preference
 
 ### Fixed
 
 * Escape filepaths when removing from database
 * Check for mail_auth config correctly
-* Sublime Music requires ints for json data to be cast correctly
+* Regex in config for additional_genre_delimiters
+* **MAJOR** UPnP fixes
 
 ### API develop
 
@@ -121,6 +127,34 @@ All API code that used 'Tag' now references 'Genre' instead
 * Api::democratic was using action from localplay in the return responses
 * Setting a limit of 'none' would slice away all the results
 * get_indexes for XML didn't include podcast indexes
+
+## Ampache 4.2.6-release
+
+### Changed
+
+* Ignore ALL tagged releases (e.g. 4.2.6-preview 4.2.6-beta)
+* Don't check the times in save_mediaplay plugins
+* Plugins should only have 1 category
+* Update Composer requirements
+
+### Removed
+
+* Some system preferences were added as user preferences
+
+### Fixed
+
+* Search original_year query
+* Replaygain was missing from the webplayer
+* Check albumartist in get_album_suite queries
+* Recently played queries check for privacy options
+* Headphones plugin fix for missing mbid's
+* Duplicate downloads recorded in play/index
+* Subsonic video HLS stream and json values
+* Block more password resets when using simple_user_mode
+
+### API 4.2.6
+
+**NO CHANGE**
 
 ## Ampache 4.2.5-release
 

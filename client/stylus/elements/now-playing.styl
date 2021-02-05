@@ -1,0 +1,17 @@
+body .nowPlaying.nowPlaying // increase specificity without resorting to !important
+    background-color colorAmber900
+
+    &,
+    .card-title
+        color colorAmber100
+
+    @media (any-hover: hover)
+        a:hover
+            color colorAmber300
+
+        .icon:hover
+            fill colorAmber300
+
+        &:hover
+            .card-title
+                color colorAmber300

@@ -15,14 +15,12 @@ const PlaylistView: React.FC<PlaylistViewProps> = (props) => {
     return (
         <div className='playlistPage'>
             <h1>Playlist - {props.match.params.playlistID}</h1>
-            <ul>
-                <SongList
-                    showArtist={true}
-                    showAlbum={true}
-                    inPlaylistID={props.match.params.playlistID}
-                    authKey={props.user.authKey}
-                />
-            </ul>
+            <SongList
+              showArtist={true}
+              showAlbum={true}
+              inPlaylistID={props.match.params.playlistID}
+              authKey={props.user.authKey}
+            />
         </div>
     );
 };

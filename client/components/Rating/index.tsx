@@ -46,7 +46,6 @@ export default function SimpleRating(props) {
                     setValue(newValue);
                 }}
             />
-            <span className={style.divider} />
             <SVG
                 src={
                     props.fav

@@ -36,7 +36,7 @@ const getUser = (username: string, authKey: AuthKey) => {
                     return;
                 throw new AmpacheError(JSONData.error);
             }
-            return JSONData.user as User;
+            return JSONData as User;
         });
 };
 export { getUser, User };

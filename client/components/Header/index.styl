@@ -1,104 +1,108 @@
-@import "~/stylus/color.styl"
-@import "~/stylus/sizes.styl"
+@import "~/stylus/settings/color.styl"
+@import "~/stylus/settings/sizes.styl"
 
 .header
-  padding 3px 0
-  background-color colorGray800
-  border-bottom: 2px solid colorGray900
-  position relative
-  flex-shrink: 0;
+    padding 3px 0
+    background-color colorGray800
+    border-bottom 2px solid colorGray900
+    position relative
+    flex-shrink 0;
 
-  display grid
-  column-gap: 5px;
-  grid-template-columns: 60px 1fr 60px;
+    display grid
+    column-gap 5px;
+    grid-template-columns 60px 1fr 60px;
 
-  .logoContainer
-    display: none
+.logoContainer
+    display none
     align-self center
-    grid-column: 1;
+    grid-column 1;
     padding-left 20px
-    
+
 
     @media all and (min-width: size-large)
-      display block
+        display block
 
-    .logo
-      img
-        width 36px
-        height 36px
+.logo img
+    width 36px
+    height 36px
 
-  .search
-    margin: 0 auto
-    display: flex
-    align-items: center
-    grid-column: 2;
-    width: 100%
+.search
+    margin 0 auto
+    display flex
+    align-items center
+    grid-column 2;
+    width 100%
 
     form
-      width: 100%
-      display: flex
-      justify-content: center
-      
-      input
+        width 100%
+        display flex
+        justify-content center
+
+    input
         border-radius 3px
         border none
-        line-height: 32px
+        line-height 32px
         background-color colorGray700
         color white
-        width: 100%
+        width 100%
         max-width 300px
-        margin: 0 auto
+        margin 0 auto
         background-image url('https://img.icons8.com/cotton/64/000000/search.png')
         background-repeat no-repeat
         padding-left 35px
         background-size 24px
         background-position-y center
         background-position-x 5px
-        &:focus
-          box-shadow 0 0 0 2px colorAmber800
-        &::placeholder
-          color colorGray300
 
-  .account
+        &:focus
+            box-shadow 0 0 0 2px colorAmber800
+
+        &::placeholder
+            color colorGray300
+
+.account
     position absolute
     right 0
-    display none //TODO: Decide if this is to be deleted
+    display none //TODO Decide if this is to be deleted
     align-items center
     justify-content flex-end
     height 100%
     z-index 2
 
     @keyframes fadeInFromNone
-      0%
-        display none
-        opacity 0
-      1%
-        display block
-        opacity 0
-      100%
-        display block
-        opacity 1
+        0%
+            display none
+            opacity 0
+        1%
+            display block
+            opacity 0
+        100%
+            display block
+            opacity 1
 
     &:hover
-      & > img
-        filter invert(56%) sepia(96%) saturate(1211%) hue-rotate(0deg) brightness(103%) contrast(104%) //make orange
-      & > .options
-        display block
-        opacity 1
-        animation fadeInFromNone 0.15s easeOut
+        & > img
+            filter invert(56%) sepia(96%) saturate(1211%) hue-rotate(0deg) brightness(103%) contrast(104%)
 
-    .options
-      animation-direction reverse
-      color white
-      background-color #3d3d3d
-      position absolute
-      top headerHeight
-      padding 10px
-      padding-right 0
-      display none
-      font-size 18px
-      width 150px
-      &:after
+        //make orange
+
+        & > .options
+            display block
+            opacity 1
+            animation fadeInFromNone 0.15s easeOut
+
+.options
+    animation-direction reverse
+    color white
+    background-color #3d3d3d
+    position absolute
+    top headerHeight
+    padding 10px
+    padding-right 0
+    display none
+    width 150px
+
+    &:after
         content ''
         display block
         position absolute
@@ -110,20 +114,20 @@
         border-left 10px solid transparent
         border-right 10px solid transparent
 
-      li
+    li
         color gray
 
         a
-          color linkColor
+            color linkColor
 
-  .menuIcon 
-    margin-left: 5px
-    grid-column: 1;
+.menuIcon
+    margin-left 5px
+    grid-column 1;
 
     @media all and (min-width: size-large)
-      display: none      
+        display none
 
-  .queueIcon
-    grid-column: 3;
-    margin-left: auto
-    margin-right: 6px
+.queueIcon
+    grid-column 3;
+    margin-left auto
+    margin-right 6px

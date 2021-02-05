@@ -146,40 +146,38 @@ const SongList: React.FC<SongListProps> = (props) => {
         );
     }
     return (
-        <div>
-            <ul>
-                {songs.map((song: Song) => {
-                    return (
-                        <SongRow
-                            song={song}
-                            showArtist={props.showArtist}
-                            showAlbum={props.showAlbum}
-                            {...(props.inPlaylistID && {
-                                removeFromPlaylist: handleRemoveFromPlaylist
-                            })}
-                            {...(!props.inPlaylistID && {
-                                addToPlaylist: handleAddToPlaylist
-                            })}
-                            isCurrentlyPlaying={
-                                musicContext.currentPlayingSong?.id === song.id
-                            }
-                            addToQueue={(next) =>
-                                musicContext.addToQueue(song, next)
-                            }
-                            startPlaying={() =>
-                                musicContext.startPlayingWithNewQueue(
-                                    song,
-                                    songs
-                                )
-                            }
-                            flagSong={handleFlagSong}
-                            key={song.playlisttrack}
-                            className={style.songRow}
-                        />
-                    );
-                })}
-            </ul>
-        </div>
+      <ul className={'striped-list'}>
+          {songs.map((song: Song) => {
+              return (
+                <SongRow
+                  song={song}
+                  showArtist={props.showArtist}
+                  showAlbum={props.showAlbum}
+                  {...(props.inPlaylistID && {
+                      removeFromPlaylist: handleRemoveFromPlaylist
+                  })}
+                  {...(!props.inPlaylistID && {
+                      addToPlaylist: handleAddToPlaylist
+                  })}
+                  isCurrentlyPlaying={
+                      musicContext.currentPlayingSong?.id === song.id
+                  }
+                  addToQueue={(next) =>
+                    musicContext.addToQueue(song, next)
+                  }
+                  startPlaying={() =>
+                    musicContext.startPlayingWithNewQueue(
+                      song,
+                      songs
+                    )
+                  }
+                  flagSong={handleFlagSong}
+                  key={song.playlisttrack}
+                  className={style.songRow}
+                />
+              );
+          })}
+      </ul>
     );
 };
 

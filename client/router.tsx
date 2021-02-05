@@ -14,6 +14,7 @@ import AlbumView from './Views/Album';
 import ArtistView from './Views/Artist';
 import { MusicContextProvider } from '~Contexts/MusicContext';
 import ArtistsView from './Views/Artists';
+import AlbumsView from './Views/Albums';
 import AmpacheError from './logic/AmpacheError';
 import PlaylistsView from './Views/Playlists';
 import PlaylistView from './Views/Playlist';

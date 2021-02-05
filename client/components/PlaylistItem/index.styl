@@ -1,0 +1,43 @@
+@import "~/stylus/settings/color.styl"
+@import "~/stylus/settings/typography.styl"
+
+.playlistItem
+    display flex
+    flex-direction row
+    position relative
+    border-radius 3px
+    padding-left 15px
+    justify-content space-between
+
+.info
+    display flex
+    flex-direction row
+    width 100%
+    align-items center
+
+.name
+    font-weight 700
+    display block
+
+.itemCount
+    font-weight 700
+
+.actions
+    display flex
+
+.smartlistTag
+    font-family fontHeading
+    border-radius 2px
+    text-transform uppercase
+    letter-spacing 0.03em
+    font-weight 700
+    background-color rgba(colorGray700, 0.5)
+    color colorAmber500
+    display inline-block
+    padding 3px 7px
+
+.name,
+.details,
+.meta
+    flex 1
+    margin-right 10px

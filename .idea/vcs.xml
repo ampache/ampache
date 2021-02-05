@@ -2,5 +2,16 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/public/lib/components/datetimepicker" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/public/lib/components/jQuery-File-Upload" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/public/lib/components/jQuery-Knob" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/public/lib/components/jQuery-contextMenu" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/public/lib/components/jquery-cookie" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/public/lib/components/jquery-qrcode" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/public/lib/components/jscroll" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/public/lib/components/noty" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/public/lib/components/prettyphoto" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/public/lib/components/responsive-elements" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/public/lib/components/tag-it" vcs="Git" />
   </component>
 </project>
