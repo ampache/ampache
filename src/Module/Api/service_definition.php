@@ -63,6 +63,8 @@ return [
     Method\LabelArtistsMethod::class => autowire(),
     Method\LabelsMethod::class => autowire(),
     Method\LabelMethod::class => autowire(),
+    Method\PodcastMethod::class => autowire(),
+    Method\PodcastsMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

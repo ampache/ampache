@@ -196,4 +196,20 @@ interface ApiOutputInterface
         int $limit = 0,
         int $offset = 0
     ): string;
+
+    /**
+     * This returns podcasts to the user
+     *
+     * @param int[] $podcasts
+     * @param boolean $episodes include the episodes of the podcast
+     * @param int $limit
+     * @param int $offset
+     */
+    public function podcasts(
+        array $podcasts,
+        bool $episodes = false,
+        bool $asObject = true,
+        int $limit = 0,
+        int $offset = 0
+    ): string;
 }

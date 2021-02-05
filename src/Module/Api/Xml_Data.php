@@ -821,12 +821,18 @@ class Xml_Data
      *
      * @param array $podcasts (description here...)
      * @param boolean $episodes include the episodes of the podcast // optional
+     * @param int $limit
+     * @param int $offset
      * @return string  return xml
      */
-    public static function podcasts($podcasts, $episodes = false)
-    {
-        if ((count($podcasts) > self::$limit || self::$offset > 0) && self::$limit) {
-            $podcasts = array_splice($podcasts, self::$offset, self::$limit);
+    public static function podcasts(
+        $podcasts,
+        $episodes = false,
+        $limit = 0,
+        $offset = 0
+    ) {
+        if ((count($podcasts) > $limit || $offset > 0) && $limit) {
+            $podcasts = array_splice($podcasts, $offset, $limit);
         }
         $string = "<total_count>" . Catalog::get_count('podcast') . "</total_count>\n";
 

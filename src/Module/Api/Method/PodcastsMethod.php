@@ -21,76 +21,92 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class PodcastsMethod
- * @package Lib\ApiMethods
- */
-final class PodcastsMethod
+final class PodcastsMethod implements MethodInterface
 {
-    private const ACTION = 'podcasts';
+    public const ACTION = 'podcasts';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->streamFactory   = $streamFactory;
+        $this->modelFactory    = $modelFactory;
+        $this->configContainer = $configContainer;
+    }
 
     /**
-     * podcasts
      * MINIMUM_API_VERSION=420000
      *
      * Get information about podcasts.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter  = (string) Alpha-numeric search term
      * include = (string) 'episodes' (include episodes in the response) //optional
      * offset  = (integer) //optional
      * limit   = (integer) //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws FunctionDisabledException
      */
-    public static function podcasts(array $input)
-    {
-        if (!AmpConfig::get('podcast')) {
-            Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PODCAST) === false) {
+            throw new FunctionDisabledException(T_('Enable: podcast'));
         }
-        $browse = Api::getBrowse();
+        $browse = $this->modelFactory->createBrowse();
         $browse->reset_filters();
         $browse->set_type('podcast');
         $browse->set_sort('title', 'ASC');
 
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter']);
-        Api::set_filter('add', $input['add']);
-        Api::set_filter('update', $input['update']);
+        $method = ($input['exact'] ?? '') ? 'exact_match' : 'alpha_match';
+        Api::set_filter($method, ($input['filter'] ?? ''), $browse);
+        Api::set_filter('add', ($input['add'] ?? ''), $browse);
+        Api::set_filter('update', ($input['update'] ?? ''), $browse);
 
-        $podcasts = $browse->get_objects();
-        if (empty($podcasts)) {
-            Api::empty('podcast', $input['api_format']);
-
-            return false;
+        $podcastIds = $browse->get_objects();
+        if ($podcastIds === []) {
+            $result = $output->emptyResult('podcast');
+        } else {
+            $result = $output->podcasts(
+                array_map('intval', $podcastIds),
+                ($input['include'] ?? '') === 'episodes',
+                true,
+                (int) ($input['limit'] ?? 0),
+                (int) ($input['offset'] ?? 0)
+            );
         }
 
-        ob_end_clean();
-        $episodes = $input['include'] == 'episodes';
-        switch ($input['api_format']) {
-            case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                echo Json_Data::podcasts($podcasts, $episodes);
-                break;
-            default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::podcasts($podcasts, $episodes);
-        }
-        Session::extend($input['auth']);
-
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }

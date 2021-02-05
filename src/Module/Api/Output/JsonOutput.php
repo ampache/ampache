@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Output;
 
 use Ampache\Model\ModelFactoryInterface;
+use Ampache\Model\Podcast;
 use Ampache\Model\User;
 use Ampache\Module\Api\Json_Data;
 
@@ -348,6 +349,31 @@ final class JsonOutput implements ApiOutputInterface
     ): string {
         return Json_Data::labels(
             $labelIds,
+            $asObject,
+            $limit,
+            $offset
+        );
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param int[] $podcasts
+     * @param bool $episodes include the episodes of the podcast
+     * @param bool $asObject
+     * @param int $limit
+     * @param int $offset
+     */
+    public function podcasts(
+        array $podcasts,
+        bool $episodes = false,
+        bool $asObject = true,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
+        return Json_Data::podcasts(
+            $podcasts,
+            $episodes,
             $asObject,
             $limit,
             $offset

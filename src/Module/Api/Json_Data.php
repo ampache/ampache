@@ -683,15 +683,23 @@ class Json_Data
      *
      * This returns podcasts to the user, in a pretty json document with the information
      *
-     * @param  array $podcasts (description here...)
-     * @param  boolean $episodes include the episodes of the podcast
-     * @param  boolean $object (whether to return as a named object array or regular array)
+     * @param array $podcasts (description here...)
+     * @param boolean $episodes include the episodes of the podcast
+     * @param boolean $object (whether to return as a named object array or regular array)
+     * @param int $limit
+     * @param int $offset
+     *
      * @return string JSON Object "podcast"
      */
-    public static function podcasts($podcasts, $episodes = false, $object = true)
-    {
-        if ((count($podcasts) > self::$limit || self::$offset > 0) && self::$limit) {
-            $podcasts = array_splice($podcasts, self::$offset, self::$limit);
+    public static function podcasts(
+        $podcasts,
+        $episodes = false,
+        $object = true,
+        int $limit = 0,
+        int $offset = 0
+    ) {
+        if ((count($podcasts) > $limit || $offset > 0) && $limit) {
+            $podcasts = array_splice($podcasts, $offset, $limit);
         }
 
         $JSON = [];
