@@ -21,178 +21,120 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\User;
 use Ampache\Module\Api\Api;
+use Ampache\Module\Api\Authentication\Exception\HandshakeException;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Authentication\HandshakeInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
-use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
-use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class HandshakeMethod
- * @package Lib\ApiMethods
- */
-final class HandshakeMethod
+final class HandshakeMethod implements MethodInterface
 {
     public const ACTION = 'handshake';
 
+    private StreamFactoryInterface $streamFactory;
+
+    private HandshakeInterface $handshake;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        HandshakeInterface $handshake
+    ) {
+        $this->streamFactory = $streamFactory;
+        $this->handshake     = $handshake;
+    }
+
     /**
-     * handshake
      * MINIMUM_API_VERSION=380001
      *
      * This is the function that handles verifying a new handshake
      * Takes a timestamp, auth key, and username.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * auth      = (string) $passphrase
      * user      = (string) $username //optional
      * timestamp = (integer) UNIXTIME() //Required if login/password authentication
      * version   = (string) $version //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws Exception\HandshakeFailedException
      */
-    public static function handshake(array $input)
-    {
-        $timestamp  = preg_replace('/[^0-9]/', '', $input['timestamp']);
-        $passphrase = $input['auth'];
-        if (empty($passphrase)) {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $passphrase = $input['auth'] ?? '';
+        if ($passphrase === '') {
             $passphrase = Core::get_post('auth');
         }
-        $username = trim((string) $input['user']);
-        $user_ip  = Core::get_user_ip();
-        $version  = (isset($input['version'])) ? $input['version'] : Api::$version;
-        // set the version to the old string for old api clients
-        Api::$version = ((int) $version[0] >= 350001) ? '500000' : Api::$version;
+        $version   = (isset($input['version'])) ? $input['version'] : Api::$version;
+        $timestamp = (int) preg_replace('/[^0-9]/', '', $input['timestamp'] ?? time());
 
-        // Log the attempt
-        debug_event(self::class, "Handshake Attempt, IP:$user_ip User:$username Version:$version", 5);
-
-        // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
-        if ((int) ($version) < Api::$auth_version && $version !== '5.0.0') {
-            debug_event(self::class, 'Login Failed: Version too old', 1);
-            AmpError::add('api', T_('Login failed, API version is too old'));
-
-            return false;
+        try {
+            $user = $this->handshake->handshake(
+                trim((string) $input['user']),
+                trim($passphrase),
+                $timestamp,
+                $version,
+                Core::get_user_ip()
+            );
+        } catch (HandshakeException $e) {
+            throw new Exception\HandshakeFailedException($e->getMessage());
         }
 
-        $user_id = -1;
-        // Grab the correct userid
-        if (!$username) {
-            $client = static::getUserRepository()->findByApiKey(trim($passphrase));
-            if ($client) {
-                $user_id = $client->id;
-            }
+        // Create the session
+        $data             = [];
+        $data['username'] = $user->username;
+        $data['type']     = 'api';
+        $data['apikey']   = $user->apikey;
+        $data['value']    = $timestamp;
+        if (isset($input['client'])) {
+            $data['agent'] = $input['client'];
+        }
+        if (isset($input['geo_latitude'])) {
+            $data['geo_latitude'] = $input['geo_latitude'];
+        }
+        if (isset($input['geo_longitude'])) {
+            $data['geo_longitude'] = $input['geo_longitude'];
+        }
+        if (isset($input['geo_name'])) {
+            $data['geo_name'] = $input['geo_name'];
+        }
+        //Session might not exist or has expired
+        if (!Session::read($data['apikey'])) {
+            Session::destroy($data['apikey']);
+            $token = Session::create($data);
         } else {
-            $client  = User::get_from_username($username);
-            $user_id = $client->id;
+            Session::extend($data['apikey']);
+            $token = $data['apikey'];
         }
 
-        // Log this attempt
-        debug_event(self::class, "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
+        $outarray = Api::server_details($token);
 
-        // @todo replace by constructor injection
-        global $dic;
-        $networkAccessChecker = $dic->get(NetworkCheckerInterface::class);
+        switch ($input['api_format']) {
+            case 'json':
+                $result = json_encode($outarray, JSON_PRETTY_PRINT);
+                break;
+            default:
+                $result = Xml_Data::keyed_array($outarray);
+        }
 
-        if (
-            $user_id > 0 && $networkAccessChecker->check(AccessLevelEnum::TYPE_API, $user_id, AccessLevelEnum::LEVEL_GUEST)
-        ) {
-            // Authentication with user/password, we still need to check the password
-            if ($username) {
-                // If the timestamp isn't within 30 minutes sucks to be them
-                if (($timestamp < (time() - 1800)) ||
-                    ($timestamp > (time() + 1800))) {
-                    debug_event(self::class, 'Login failed, timestamp is out of range ' . $timestamp . '/' . time(), 1);
-                    AmpError::add('api', T_('Login failed, timestamp is out of range'));
-                    Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '4701', self::ACTION, 'account', $input['api_format']);
-
-                    return false;
-                }
-
-                // Now we're sure that there is an ACL line that matches
-                // this user or ALL USERS, pull the user's password and
-                // then see what we come out with
-                $realpwd = static::getUserRepository()->retrievePasswordFromUser($client->getId());
-
-                if (!$realpwd) {
-                    debug_event(self::class, 'Unable to find user with userid of ' . $user_id, 1);
-                    AmpError::add('api', T_('Incorrect username or password'));
-                    Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '4701', self::ACTION, 'account', $input['api_format']);
-
-                    return false;
-                }
-
-                $sha1pass = hash('sha256', $timestamp . $realpwd);
-
-                if ($sha1pass !== $passphrase) {
-                    $client = null;
-                }
-            } else {
-                $timestamp = time();
-            }
-
-            if ($client) {
-                // Create the session
-                $data             = array();
-                $data['username'] = $client->username;
-                $data['type']     = 'api';
-                $data['apikey']   = $client->apikey;
-                $data['value']    = $timestamp;
-                if (isset($input['client'])) {
-                    $data['agent'] = $input['client'];
-                }
-                if (isset($input['geo_latitude'])) {
-                    $data['geo_latitude'] = $input['geo_latitude'];
-                }
-                if (isset($input['geo_longitude'])) {
-                    $data['geo_longitude'] = $input['geo_longitude'];
-                }
-                if (isset($input['geo_name'])) {
-                    $data['geo_name'] = $input['geo_name'];
-                }
-                //Session might not exist or has expired
-                if (!Session::read($data['apikey'])) {
-                    Session::destroy($data['apikey']);
-                    $token = Session::create($data);
-                } else {
-                    Session::extend($data['apikey']);
-                    $token = $data['apikey'];
-                }
-
-                debug_event(self::class, 'Login Success, passphrase matched', 1);
-                $outarray = Api::server_details($token);
-
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo json_encode($outarray, JSON_PRETTY_PRINT);
-                        break;
-                    default:
-                        echo Xml_Data::keyed_array($outarray);
-                }
-
-                return true;
-            } // match
-        } // end while
-
-        debug_event(self::class, 'Login Failed, unable to match passphrase', 1);
-        Api::error(T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), '4701', self::ACTION, 'account', $input['api_format']);
-
-        return false;
-    }
-
-    /**
-     * @deprecated inject by constructor
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }

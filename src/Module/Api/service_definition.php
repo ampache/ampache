@@ -68,8 +68,10 @@ return [
     Method\PodcastEpisodesMethod::class => autowire(),
     Method\PodcastEpisodeMethod::class => autowire(),
     Method\PlaylistMethod::class => autowire(),
+    Method\HandshakeMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),
     Edit\ShowEditPlaylistAction::class => autowire(),
+    Authentication\HandshakeInterface::class => autowire(Authentication\Handshake::class),
 ];

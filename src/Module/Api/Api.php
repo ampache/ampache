@@ -43,7 +43,7 @@ class Api
      * This dict contains all known api-methods (key) and their respective handler (value)
      */
     public const METHOD_LIST = [
-        'handshake' => Method\HandshakeMethod::class,
+        Method\HandshakeMethod::ACTION => Method\HandshakeMethod::class,
         'ping' => Method\PingMethod::class,
         'goodbye' => Method\GoodbyeMethod::class,
         Method\UrlToSongMethod::ACTION => Method\UrlToSongMethod::class,
