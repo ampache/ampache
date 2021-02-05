@@ -110,7 +110,11 @@ final class AdvancedSearchMethod
                         echo Json_Data::albums($results, array(), $user->id);
                         break;
                     case 'playlist':
-                        echo Json_Data::playlists($results);
+                        echo Json_Data::playlists(
+                            $results,
+                            (int) ($input['limit'] ?? 0),
+                            (int) ($input['offset'] ?? 0)
+                        );
                         break;
                     case 'label':
                         echo Json_Data::labels(
@@ -141,10 +145,18 @@ final class AdvancedSearchMethod
                         echo Xml_Data::albums($results, array(), $user->id);
                         break;
                     case 'playlist':
-                        echo Xml_Data::playlists($results);
+                        echo Xml_Data::playlists(
+                            $results,
+                            (int) ($input['limit'] ?? 0),
+                            (int) ($input['offset'] ?? 0)
+                        );
                         break;
                     case 'label':
-                        echo Xml_Data::labels($results);
+                        echo Xml_Data::labels(
+                            $results,
+                            (int) ($input['limit'] ?? 0),
+                            (int) ($input['offset'] ?? 0)
+                        );
                         break;
                     case 'user':
                         echo Xml_Data::users($results);

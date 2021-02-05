@@ -21,70 +21,106 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\Playlist;
-use Ampache\Model\Search;
-use Ampache\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
+use Ampache\Model\ModelFactoryInterface;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class PlaylistMethod
- * @package Lib\ApiMethods
- */
-final class PlaylistMethod
+final class PlaylistMethod implements MethodInterface
 {
-    private const ACTION = 'playlist';
+    public const ACTION = 'playlist';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private UserRepositoryInterface $userRepository;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory,
+        UserRepositoryInterface $userRepository
+    ) {
+        $this->streamFactory  = $streamFactory;
+        $this->modelFactory   = $modelFactory;
+        $this->userRepository = $userRepository;
+    }
 
     /**
-     * playlist
      * MINIMUM_API_VERSION=380001
      *
      * This returns a single playlist
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of playlist
-     * @return boolean
+     *
+     * @return ResponseInterface
+     * @throws RequestParamMissingException
+     * @throws ResultEmptyException
+     * @throws AccessDeniedException
      */
-    public static function playlist(array $input)
-    {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-        $user      = User::get_from_username(Session::username($input['auth']));
-        $object_id = $input['filter'];
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $objectId = $input['filter'] ?? null;
 
-        $playlist = ((int) $object_id === 0)
-            ? new Search((int) str_replace('smart_', '', $object_id), 'song', $user)
-            : new Playlist((int) $object_id);
-        if (!$playlist->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
-
-            return false;
-        }
-        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
-            Api::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
-
-            return false;
+        if ($objectId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json_Data::playlists(array($object_id), false, false);
-                break;
-            default:
-                echo Xml_Data::playlists(array($object_id));
-        }
-        Session::extend($input['auth']);
+        $user   = $gatekeeper->getUser();
 
-        return true;
+        if ((int) $objectId === 0) {
+            $playlist = $this->modelFactory->createSearch(
+                (int) str_replace('smart_', '', $objectId),
+                'song',
+                $user
+            );
+        } else {
+            $playlist = $this->modelFactory->createPlaylist((int) $objectId);
+        }
+
+        if ($playlist->isNew()) {
+            throw new ResultEmptyException($objectId);
+        }
+
+        $userId = $user->getId();
+
+        if (
+            $playlist->type !== 'public' && (
+                !$playlist->has_access($userId) &&
+                !$gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            )
+        ) {
+            throw new AccessDeniedException(T_('Require: 100'));
+        }
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->playlists(
+                    [$playlist->getId()],
+                    false,
+                    false
+                )
+            )
+        );
     }
 }

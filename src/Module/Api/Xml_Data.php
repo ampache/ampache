@@ -700,10 +700,13 @@ class Xml_Data
      * @param  array    $playlists    (description here...)
      * @return string    return xml
      */
-    public static function playlists($playlists)
-    {
-        if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
-            $playlists = array_slice($playlists, self::$offset, self::$limit);
+    public static function playlists(
+        array $playlists,
+        int $limit = 0,
+        int $offset = 0
+    ) {
+        if ((count($playlists) > $limit || $offset > 0) && $limit) {
+            $playlists = array_slice($playlists, $offset, $limit);
         }
         $string = "<total_count>" . Catalog::get_count('playlist') . "</total_count>\n";
 

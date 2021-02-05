@@ -405,4 +405,29 @@ final class JsonOutput implements ApiOutputInterface
             $offset
         );
     }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param int[] $playlistIds
+     * @param bool $songs
+     * @param bool $asObject
+     * @param int $limit
+     * @param int $offset
+     */
+    public function playlists(
+        array $playlists,
+        bool $songs = false,
+        bool $asObject = true,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
+        return Json_Data::playlists(
+            $playlists,
+            $songs,
+            $asObject,
+            $limit,
+            $offset
+        );
+    }
 }

@@ -214,7 +214,7 @@ interface ApiOutputInterface
     ): string;
 
     /**
-     * This returns podcasts to the user, in a pretty json document with the information
+     * This returns podcasts to the user
      *
      * @param int[] $podcastEpisodeIds
      * @param bool $simple just return the data as an array for pretty somewhere else
@@ -231,4 +231,21 @@ interface ApiOutputInterface
         int $limit = 0,
         int $offset = 0
     );
+
+    /**
+     * This returns the playlists to the user
+     *
+     * @param int[] $playlistIds
+     * @param bool $songs
+     * @param bool $asObject
+     * @param int $limit
+     * @param int $offset
+     */
+    public function playlists(
+        array $playlists,
+        bool $songs = false,
+        bool $asObject = true,
+        int $limit = 0,
+        int $offset = 0
+    ): string;
 }

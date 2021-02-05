@@ -66,10 +66,6 @@ class Playlist extends playlist_object
         }
     } // Playlist
 
-    public function getId(): int
-    {
-        return (int) $this->id;
-    }
 
     /**
      * garbage_collection

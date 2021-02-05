@@ -71,6 +71,16 @@ abstract class playlist_object extends database_object implements library_item
      */
     abstract public function get_items();
 
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * format
      * This takes the current playlist object and gussies it up a little

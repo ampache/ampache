@@ -463,15 +463,23 @@ class Json_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty JSON document
      *
-     * @param  array $playlists (description here...)
-     * @param  boolean $songs
-     * @param  boolean $object (whether to return as a named object array or regular array)
+     * @param array $playlists (description here...)
+     * @param boolean $songs
+     * @param boolean $object (whether to return as a named object array or regular array)
+     * @param int $limit
+     * @param int $offset
+     *
      * @return string JSON Object "playlist"
      */
-    public static function playlists($playlists, $songs = false, $object = true)
-    {
-        if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
-            $playlists = array_slice($playlists, self::$offset, self::$limit);
+    public static function playlists(
+        array $playlists,
+        $songs = false,
+        $object = true,
+        int $limit = 0,
+        int $offset = 0
+    ) {
+        if ((count($playlists) > $limit || $offset > 0) && $limit) {
+            $playlists = array_slice($playlists, $offset, $limit);
         }
 
         $JSON = [];
