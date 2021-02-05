@@ -125,7 +125,7 @@ if ($limit > 0 && $total > $limit) {
         }
     } ?>
     <span class="browse-options">
-        <a href="#" onClick="showFilters(this);" class="browse-options-link"><?php echo T_("View"); ?></a>
+        <a href="javascript:showFilters(this);" class="browse-options-link"><?php echo T_("View"); ?></a>
         <span class="browse-options-content">
             <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_pages_<?php echo $is_header; ?>" value="true" <?php echo(($browse->is_use_pages()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_pages&value=' + $('#browse_" . $browse->id . "_use_pages_" . $is_header . "').is(':checked') + '" . $argument_param, "browse_" . $browse->id . "_use_pages_" . $is_header); ?>"><?php echo T_('Pages'); ?></span>
             <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_scroll_<?php echo $is_header; ?>" value="true" <?php echo((!$browse->is_use_pages()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_pages&value=' + !($('#browse_" . $browse->id . "_use_scroll_" . $is_header . "').is(':checked')) + '" . $argument_param, "browse_" . $browse->id . "_use_scroll_" . $is_header); ?>"><?php echo T_('Infinite Scroll'); ?></span>
