@@ -212,4 +212,23 @@ interface ApiOutputInterface
         int $limit = 0,
         int $offset = 0
     ): string;
+
+    /**
+     * This returns podcasts to the user, in a pretty json document with the information
+     *
+     * @param int[] $podcastEpisodeIds
+     * @param bool $simple just return the data as an array for pretty somewhere else
+     * @param bool $asObject
+     * @param int $limit
+     * @param int $offset
+     *
+     * @return array|string
+     */
+    public function podcast_episodes(
+        array $podcastEpisodeIds,
+        bool $simple = false,
+        bool $asObject = true,
+        int $limit = 0,
+        int $offset = 0
+    );
 }

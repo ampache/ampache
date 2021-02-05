@@ -107,7 +107,7 @@ class Podcast extends database_object implements library_item
      * get_episodes
      * gets all episodes for this podcast
      * @param string $state_filter
-     * @return array
+     * @return int[]
      */
     public function get_episodes($state_filter = '')
     {
@@ -130,7 +130,7 @@ class Podcast extends database_object implements library_item
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;

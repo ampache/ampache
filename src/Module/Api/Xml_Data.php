@@ -861,10 +861,14 @@ class Xml_Data
      * @param boolean $full_xml whether to return a full XML document or just the node.
      * @return string  return xml
      */
-    public static function podcast_episodes($podcast_episodes, $full_xml = true)
-    {
-        if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && self::$limit) {
-            $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
+    public static function podcast_episodes(
+        array $podcast_episodes,
+        bool $full_xml = true,
+        int $limit = 0,
+        int $offset = 0
+    ) {
+        if ((count($podcast_episodes) > $limit || $offset > 0) && $limit) {
+            $podcast_episodes = array_splice($podcast_episodes, $offset, $limit);
         }
         $string = ($full_xml) ? "<total_count>" . Catalog::get_count('podcast_episode') . "</total_count>\n" : '';
 

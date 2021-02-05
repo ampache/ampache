@@ -21,65 +21,95 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Podcast_Episode;
 use Ampache\Module\Api\Api;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Exception\ApiException;
 use Ampache\Module\Api\Json_Data;
+use Ampache\Module\Api\Method\Exception\ApiMethodException;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class PodcastEpisodeMethod
- * @package Lib\ApiMethods
- */
-final class PodcastEpisodeMethod
+final class PodcastEpisodeMethod implements MethodInterface
 {
-    private const ACTION = 'podcast_episode';
+    public const ACTION = 'podcast_episode';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->streamFactory   = $streamFactory;
+        $this->modelFactory    = $modelFactory;
+        $this->configContainer = $configContainer;
+    }
 
     /**
-     * podcast_episode
      * MINIMUM_API_VERSION=420000
      *
      * Get the podcast_episode from it's id.
      *
      * @param array $input
      * filter  = (integer) podcast_episode ID number
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws ResultEmptyException
+     * @throws RequestParamMissingException
+     * @throws FunctionDisabledException
      */
-    public static function podcast_episode(array $input)
-    {
-        if (!AmpConfig::get('podcast')) {
-            Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-        $object_id = (int) $input['filter'];
-        $episode   = new Podcast_Episode($object_id);
-
-        if (!$episode->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PODCAST) === false) {
+            throw new FunctionDisabledException(T_('Enable: podcast'));
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json_Data::podcast_episodes(array($object_id), false, false);
-                break;
-            default:
-                echo Xml_Data::podcast_episodes(array($object_id));
-        }
-        Session::extend($input['auth']);
+        $objectId = $input['filter'] ?? null;
 
-        return true;
+        if ($objectId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
+        }
+
+        $podcast = $this->modelFactory->createPodcastEpisode((int) $objectId);
+
+        if ($podcast->isNew()) {
+            throw new ResultEmptyException((string) $objectId);
+        }
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->podcast_episodes(
+                    [$objectId],
+                    false,
+                    false
+                )
+            )
+        );
     }
 }

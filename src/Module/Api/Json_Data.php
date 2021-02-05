@@ -719,7 +719,7 @@ class Json_Data
             $podcast_episodes    = array();
             if ($episodes) {
                 $items            = $podcast->get_episodes();
-                $podcast_episodes = self::podcast_episodes($items, true);
+                $podcast_episodes = self::podcast_episodes($items, true, $limit, $offset);
             }
             // Build this element
             array_push($JSON, [
@@ -752,10 +752,15 @@ class Json_Data
      * @param  boolean $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "podcast_episode"
      */
-    public static function podcast_episodes($podcast_episodes, $simple = false, $object = true)
-    {
-        if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && self::$limit) {
-            $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
+    public static function podcast_episodes(
+        array $podcast_episodes,
+        bool $simple = false,
+        bool $object = true,
+        int $limit = 0,
+        int $offset = 0
+    ) {
+        if ((count($podcast_episodes) > $limit || $offset > 0) && $limit) {
+            $podcast_episodes = array_splice($podcast_episodes, $offset, $limit);
         }
         $JSON = array();
         foreach ($podcast_episodes as $episode_id) {

@@ -65,6 +65,8 @@ return [
     Method\LabelMethod::class => autowire(),
     Method\PodcastMethod::class => autowire(),
     Method\PodcastsMethod::class => autowire(),
+    Method\PodcastEpisodesMethod::class => autowire(),
+    Method\PodcastEpisodeMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),
