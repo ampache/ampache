@@ -430,4 +430,15 @@ final class JsonOutput implements ApiOutputInterface
             $offset
         );
     }
+
+    public function dict(
+        array $data,
+        bool $xmlOutput = true,
+        ?string $tagName = null
+    ): string {
+        return json_encode(
+            $data,
+            JSON_PRETTY_PRINT
+        );
+    }
 }

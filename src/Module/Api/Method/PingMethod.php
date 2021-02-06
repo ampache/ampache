@@ -20,57 +20,95 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\EnvironmentInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Log\LoggerInterface;
 
-/**
- * Class PingMethod
- * @package Lib\ApiMethods
- */
-final class PingMethod
+final class PingMethod implements MethodInterface
 {
     public const ACTION = 'ping';
 
+    private StreamFactoryInterface $streamFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    private LoggerInterface $logger;
+
+    private EnvironmentInterface $environment;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ConfigContainerInterface $configContainer,
+        LoggerInterface $logger,
+        EnvironmentInterface $environment
+    ) {
+        $this->streamFactory   = $streamFactory;
+        $this->configContainer = $configContainer;
+        $this->logger          = $logger;
+        $this->environment     = $environment;
+    }
+
     /**
-     * ping
      * MINIMUM_API_VERSION=380001
      *
      * This can be called without being authenticated, it is useful for determining if what the status
      * of the server is, and what version it is running/compatible with
      *
+     * @param GatekeeperInterface
+     * @param ResponseInterface
+     * @param ApiOutputInterface
      * @param array $input
      * auth = (string) //optional
+     *
+     * @return ResponseInterface
      */
-    public static function ping(array $input)
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
         // set the version to the old string for old api clients
         $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
         Api::$version = ($version[0] === '4' || $version[0] === '3') ? '500000' : Api::$version;
 
-        $xmldata = array('server' => AmpConfig::get('version'), 'version' => Api::$version, 'compatible' => '350001');
+        $data = [
+            'server' => $this->configContainer->get(ConfigurationKeyEnum::VERSION),
+            'version' => Api::$version,
+            'compatible' => '350001'
+        ];
 
         // Check and see if we should extend the api sessions (done if valid session is passed)
-        if (Session::exists('api', $input['auth'])) {
-            Session::extend($input['auth']);
-            $xmldata = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length') - 60)), $xmldata, Api::server_details($input['auth']));
+        if ($gatekeeper->sessionExists()) {
+            $gatekeeper->extendSession();
+
+            $data = array_merge(
+                ['session_expire' => date('c', time() + $this->configContainer->getSessionLength() - 60)],
+                $data,
+                Api::server_details($input['auth'])
+            );
         }
 
-        debug_event(self::class, 'Ping Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
+        $this->logger->debug(
+            sprintf('Ping Received from %s :: %s', $this->environment->getClientIp(), $input['auth'] ?? ''),
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo json_encode($xmldata, JSON_PRETTY_PRINT);
-                break;
-            default:
-                echo Xml_Data::keyed_array($xmldata);
-        }
-    } // ping
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->dict($data)
+            )
+        );
+    }
 }

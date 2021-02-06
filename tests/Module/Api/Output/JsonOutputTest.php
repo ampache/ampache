@@ -373,4 +373,14 @@ class JsonOutputTest extends MockeryTestCase
             $this->subject->licenses([$licenseId, 42], false, 1)
         );
     }
+
+    public function testDictReturnsEncodedResult(): void
+    {
+        $data = ['key' => 'value'];
+
+        $this->assertSame(
+            json_encode($data, JSON_PRETTY_PRINT),
+            $this->subject->dict($data)
+        );
+    }
 }

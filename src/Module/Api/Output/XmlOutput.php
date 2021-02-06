@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Output;
 use Ampache\Model\Catalog;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\User;
-use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 
 final class XmlOutput implements ApiOutputInterface
@@ -394,5 +393,36 @@ final class XmlOutput implements ApiOutputInterface
         int $offset = 0
     ): string {
         return Xml_Data::playlists($playlists, $limit, $offset);
+    }
+
+    public function dict(
+        array $data,
+        bool $xmlOutput = true,
+        ?string $tagName = null
+    ): string {
+        $string = '';
+        // Foreach it
+        foreach ($data as $key => $value) {
+            $attribute = '';
+            // See if the key has attributes
+            if (is_array($value) && isset($value['attributes'])) {
+                $attribute = ' ' . $value['attributes'];
+                $key       = $value['value'];
+            }
+
+            // If it's an array, run again
+            if (is_array($value)) {
+                $value = $this->dict($value, true);
+                $string .= ($tagName) ? "<$tagName>\n$value\n</$tagName>\n" : "<$key$attribute>\n$value\n</$key>\n";
+            } else {
+                $string .= ($tagName) ? "\t<$tagName index=\"" . $key . "\"><![CDATA[$value]]></$tagName>\n" : "\t<$key$attribute><![CDATA[$value]]></$key>\n";
+            }
+        } // end foreach
+
+        if ($xmlOutput) {
+            $string = Xml_Data::output_xml($string);
+        }
+
+        return $string;
     }
 }

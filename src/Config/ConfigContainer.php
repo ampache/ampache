@@ -59,6 +59,11 @@ final class ConfigContainer implements ConfigContainerInterface
         return $this->configuration[ConfigurationKeyEnum::SESSION_NAME] ?? '';
     }
 
+    public function getSessionLength(): int
+    {
+        return (int) ($this->configuration[ConfigurationKeyEnum::SESSION_LENGTH] ?? 0);
+    }
+
     public function isWebDavBackendEnabled(): bool
     {
         return (bool) ($this->configuration[ConfigurationKeyEnum::BACKEND_WEBDAV] ?? false);

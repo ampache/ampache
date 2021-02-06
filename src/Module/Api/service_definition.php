@@ -69,6 +69,7 @@ return [
     Method\PodcastEpisodeMethod::class => autowire(),
     Method\PlaylistMethod::class => autowire(),
     Method\HandshakeMethod::class => autowire(),
+    Method\PingMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

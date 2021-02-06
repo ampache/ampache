@@ -126,4 +126,9 @@ interface EnvironmentInterface
     public function getHttpPort(): int;
 
     public function setUp(): void;
+
+    /**
+     * Returns the ip of the client
+     */
+    public function getClientIp(): string;
 }

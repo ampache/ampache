@@ -48,6 +48,11 @@ interface ConfigContainerInterface
     public function getSessionName(): string;
 
     /**
+     * Returns the length of the PHP session in seconds
+     */
+    public function getSessionLength(): int;
+
+    /**
      * Returns the webdav config state
      */
     public function isWebDavBackendEnabled(): bool;

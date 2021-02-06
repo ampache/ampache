@@ -248,4 +248,13 @@ interface ApiOutputInterface
         int $limit = 0,
         int $offset = 0
     ): string;
+
+    /**
+     * This returns a dict to the user
+     */
+    public function dict(
+        array $data,
+        bool $xmlOutput = true,
+        ?string $tagName = null
+    ): string;
 }

@@ -108,4 +108,5 @@ final class ConfigurationKeyEnum
     public const ALBUM_GROUP                   = 'album_group';
     public const POPULAR_THRESHOLD             = 'popular_threshold';
     public const STREAM_BEAUTIFUL_URL          = 'stream_beautiful_url';
+    public const SESSION_LENGTH                = 'session_length';
 }

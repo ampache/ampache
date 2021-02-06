@@ -296,6 +296,19 @@ final class Environment implements EnvironmentInterface
     }
 
     /**
+     * Returns the ip of the client
+     */
+    public function getClientIp(): string
+    {
+        // get the x forward if it's valid
+        if (filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP)) {
+            return filter_var(Core::get_server('HTTP_X_FORWARDED_FOR'), FILTER_VALIDATE_IP);
+        }
+
+        return filter_var(Core::get_server('REMOTE_ADDR'), FILTER_VALIDATE_IP);
+    }
+
+    /**
      * check for required modules
      */
     private function check_php(): bool

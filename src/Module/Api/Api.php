@@ -44,7 +44,7 @@ class Api
      */
     public const METHOD_LIST = [
         Method\HandshakeMethod::ACTION => Method\HandshakeMethod::class,
-        'ping' => Method\PingMethod::class,
+        Method\PingMethod::ACTION => Method\PingMethod::class,
         'goodbye' => Method\GoodbyeMethod::class,
         Method\UrlToSongMethod::ACTION => Method\UrlToSongMethod::class,
         'get_indexes' => Method\GetIndexesMethod::class,
