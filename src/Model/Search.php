@@ -28,6 +28,7 @@ use Ampache\Model\Metadata\Repository\MetadataField;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 
@@ -602,7 +603,7 @@ class Search extends playlist_object
         $this->type_numeric('recent_updated', T_('Recently updated'), 'recent_updated');
 
         $catalogs = array();
-        foreach (Catalog::get_catalogs() as $catid) {
+        foreach ($this->getCatalogRepository()->getList() as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
             $catalogs[$catid] = $catalog->f_name;
@@ -719,7 +720,7 @@ class Search extends playlist_object
         $this->type_select('other_user', T_('Another User'), 'user_numeric', $users);
 
         $catalogs = array();
-        foreach (Catalog::get_catalogs() as $catid) {
+        foreach ($this->getCatalogRepository()->getList() as $catid) {
             $catalog = Catalog::create_from_id($catid);
             $catalog->format();
             $catalogs[$catid] = $catalog->f_name;
@@ -2542,5 +2543,15 @@ class Search extends playlist_object
         global $dic;
 
         return $dic->get(UserRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getCatalogRepository(): CatalogRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(CatalogRepositoryInterface::class);
     }
 }

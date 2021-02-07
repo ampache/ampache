@@ -20,62 +20,71 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\Catalog;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\CatalogRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class CatalogsMethod
- * @package Lib\ApiMethods
- */
-final class CatalogsMethod
+final class CatalogsMethod implements MethodInterface
 {
-    const ACTION = 'catalogs';
+    public const ACTION = 'catalogs';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private CatalogRepositoryInterface $catalogRepository;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        CatalogRepositoryInterface $catalogRepository
+    ) {
+        $this->streamFactory     = $streamFactory;
+        $this->catalogRepository = $catalogRepository;
+    }
 
     /**
-     * catalogs
      * MINIMUM_API_VERSION=420000
      *
      * Get information about catalogs this user is allowed to manage.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) set $filter_type //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
      */
-    public static function catalogs(array $input)
-    {
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $filterValue = (string) ($input['filter'] ?? '');
+        $filter      = null;
+
         // filter for specific catalog types
-        $filter   = (in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
-        $catalogs = Catalog::get_catalogs($filter);
-
-        if (empty($catalogs)) {
-            Api::empty('catalog', $input['api_format']);
-
-            return false;
+        if (in_array($filterValue, ['music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'])) {
+            $filter = $filterValue;
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                echo Json_Data::catalogs($catalogs);
-                break;
-            default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::catalogs($catalogs);
-        }
-        Session::extend($input['auth']);
+        $catalogIds = $this->catalogRepository->getList($filter);
 
-        return true;
+        if ($catalogIds === []) {
+            $result = $output->emptyResult('catalog');
+        } else {
+            $result = $output->catalogs($catalogIds);
+        }
+
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }

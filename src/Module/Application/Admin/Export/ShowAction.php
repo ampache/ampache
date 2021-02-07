@@ -30,6 +30,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -39,10 +40,14 @@ final class ShowAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private CatalogRepositoryInterface $catalogRepository;
+
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
+        CatalogRepositoryInterface $catalogRepository
     ) {
-        $this->ui = $ui;
+        $this->ui                = $ui;
+        $this->catalogRepository = $catalogRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -52,7 +57,12 @@ final class ShowAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        $this->ui->show('show_export.inc.php');
+        $this->ui->show(
+            'show_export.inc.php',
+            [
+                'catalogIds' => $this->catalogRepository->getList()
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

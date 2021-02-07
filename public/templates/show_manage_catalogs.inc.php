@@ -21,9 +21,10 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
 use Ampache\Model\Browse;
 use Ampache\Module\Util\Ui;
+
+/** @var int[] $catalogIds */
 
 ?>
 <?php Ui::show_box_top(T_('Show Catalogs'), 'box box_manage_catalogs') ?>
@@ -72,10 +73,9 @@ use Ampache\Module\Util\Ui;
 </div>
 <?php
     Ui::show_box_bottom();
-    $catalog_ids = Catalog::get_catalogs();
     $browse      = new Browse();
     $browse->set_type('catalog');
     $browse->set_static_content(true);
-    $browse->save_objects($catalog_ids);
-    $browse->show_objects($catalog_ids);
+    $browse->save_objects($catalogIds);
+    $browse->show_objects($catalogIds);
     $browse->store(); ?>

@@ -39,6 +39,7 @@ use Ampache\Model\Song;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Mockery\MockInterface;
 
@@ -58,24 +59,29 @@ class GuiFactoryTest extends MockeryTestCase
 
     /** @var MockInterface|VideoRepositoryInterface|null */
     private MockInterface $videoRepository;
+
+    /** @var MockInterface|CatalogRepositoryInterface|null */
+    private MockInterface $catalogRepository;
     
     /** @var GuiFactory|null */
     private GuiFactory $subject;
     
     public function setUp(): void
     {
-        $this->configContainer  = $this->mock(ConfigContainerInterface::class);
-        $this->modelFactory     = $this->mock(ModelFactoryInterface::class);
-        $this->ajaxUriRetriever = $this->mock(AjaxUriRetrieverInterface::class);
-        $this->playlistLoader   = $this->mock(PlaylistLoaderInterface::class);
-        $this->videoRepository  = $this->mock(VideoRepositoryInterface::class);
+        $this->configContainer   = $this->mock(ConfigContainerInterface::class);
+        $this->modelFactory      = $this->mock(ModelFactoryInterface::class);
+        $this->ajaxUriRetriever  = $this->mock(AjaxUriRetrieverInterface::class);
+        $this->playlistLoader    = $this->mock(PlaylistLoaderInterface::class);
+        $this->videoRepository   = $this->mock(VideoRepositoryInterface::class);
+        $this->catalogRepository = $this->mock(CatalogRepositoryInterface::class);
         
         $this->subject = new GuiFactory(
             $this->configContainer,
             $this->modelFactory,
             $this->ajaxUriRetriever,
             $this->playlistLoader,
-            $this->videoRepository
+            $this->videoRepository,
+            $this->catalogRepository
         );
     }
 

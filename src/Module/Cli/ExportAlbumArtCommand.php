@@ -31,6 +31,7 @@ use Ampache\Module\Album\Export\AlbumArtExporterInterface;
 use Ampache\Module\Album\Export\Exception\AlbumArtExportException;
 use Ampache\Module\Album\Export\Writer\MetadataWriterTypeEnum;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Psr\Container\ContainerInterface;
 
 final class ExportAlbumArtCommand extends Command
@@ -39,18 +40,22 @@ final class ExportAlbumArtCommand extends Command
 
     private AlbumArtExporterInterface $albumArtExporter;
 
+    private CatalogRepositoryInterface $catalogRepository;
+
     private ContainerInterface $dic;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
         AlbumArtExporterInterface $albumArtExporter,
+        CatalogRepositoryInterface $catalogRepository,
         ContainerInterface $dic
     ) {
         parent::__construct('export:albumArt', 'Exports the album art');
 
-        $this->configContainer  = $configContainer;
-        $this->albumArtExporter = $albumArtExporter;
-        $this->dic              = $dic;
+        $this->configContainer   = $configContainer;
+        $this->albumArtExporter  = $albumArtExporter;
+        $this->catalogRepository = $catalogRepository;
+        $this->dic               = $dic;
 
         $this
             ->argument('[type]', 'Metadata write mode (`linux` or `windows`)', 'linux')
@@ -64,7 +69,7 @@ final class ExportAlbumArtCommand extends Command
 
         $metadataWriterType = MetadataWriterTypeEnum::MAP[$type] ?? MetadataWriterTypeEnum::EXPORT_DRIVER_LINUX;
 
-        $catalogs = Catalog::get_catalogs();
+        $catalogs = $this->catalogRepository->getList();
 
         $interactor->info(
             T_('Start Album Art Dump'),

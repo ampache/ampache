@@ -39,6 +39,7 @@ use Ampache\Model\Song;
 use Ampache\Model\Tag;
 use Ampache\Model\User;
 use Ampache\Model\Userflag;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 
 final class Cron
@@ -88,8 +89,10 @@ final class Cron
     public static function run_cron_cache(int $user_id = 0): void
     {
         if (AmpConfig::get('memory_cache')) {
+            global $dic;
+            $catalogs = $dic->get(CatalogRepositoryInterface::class)->getList();
+
             debug_event('cron', 'Filling memory cache', 4);
-            $catalogs = Catalog::get_catalogs();
             // run for a single user if they've logged on to speed things up
             if ($user_id > 0) {
                 $users = array($user_id);

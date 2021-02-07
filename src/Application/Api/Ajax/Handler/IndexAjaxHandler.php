@@ -41,6 +41,7 @@ use Ampache\Module\Util\SlideshowInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Model\Wanted;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
@@ -62,6 +63,8 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
     private VideoRepositoryInterface $videoRepository;
 
+    private CatalogRepositoryInterface $catalogRepository;
+
     public function __construct(
         ArtCollectorInterface $artCollector,
         SlideshowInterface $slideshow,
@@ -69,15 +72,17 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         LabelRepositoryInterface $labelRepository,
         SongRepositoryInterface $songRepository,
         WantedRepositoryInterface $wantedRepository,
-        VideoRepositoryInterface $videoRepository
+        VideoRepositoryInterface $videoRepository,
+        CatalogRepositoryInterface $catalogRepository
     ) {
-        $this->artCollector     = $artCollector;
-        $this->slideshow        = $slideshow;
-        $this->albumRepository  = $albumRepository;
-        $this->labelRepository  = $labelRepository;
-        $this->songRepository   = $songRepository;
-        $this->wantedRepository = $wantedRepository;
-        $this->videoRepository  = $videoRepository;
+        $this->artCollector      = $artCollector;
+        $this->slideshow         = $slideshow;
+        $this->albumRepository   = $albumRepository;
+        $this->labelRepository   = $labelRepository;
+        $this->songRepository    = $songRepository;
+        $this->wantedRepository  = $wantedRepository;
+        $this->videoRepository   = $videoRepository;
+        $this->catalogRepository = $catalogRepository;
     }
     
     public function handle(): void
@@ -106,7 +111,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $results['random_selection'] = '<!-- None found -->';
 
                     if (Access::check('interface', 75)) {
-                        $catalogs = Catalog::get_catalogs();
+                        $catalogs = $this->catalogRepository->getList();
                         if (count($catalogs) == 0) {
                             /* HINT: %1 and %2 surround "add a Catalog" to make it into a link */
                             $results['random_selection'] = sprintf(T_('No Catalog configured yet. To start streaming your media, you now need to %1$s add a Catalog %2$s'), '<a href="' . AmpConfig::get('web_path') . '/admin/catalog.php?action=show_add_catalog">', '</a>.<br /><br />');

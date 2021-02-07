@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Catalog;
 
@@ -28,8 +28,8 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -39,10 +39,14 @@ final class ShowCatalogsAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private CatalogRepositoryInterface $catalogRepository;
+
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
+        CatalogRepositoryInterface $catalogRepository
     ) {
-        $this->ui = $ui;
+        $this->ui                = $ui;
+        $this->catalogRepository = $catalogRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -52,9 +56,12 @@ final class ShowCatalogsAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-
-        require_once Ui::find_template('show_manage_catalogs.inc.php');
-
+        $this->ui->show(
+            'show_manage_catalogs.inc.php',
+            [
+                'catalogIds' => $this->catalogRepository->getList()
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

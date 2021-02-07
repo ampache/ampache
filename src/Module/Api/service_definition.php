@@ -70,6 +70,8 @@ return [
     Method\PlaylistMethod::class => autowire(),
     Method\HandshakeMethod::class => autowire(),
     Method\PingMethod::class => autowire(),
+    Method\CatalogMethod::class => autowire(),
+    Method\CatalogsMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

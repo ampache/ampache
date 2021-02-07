@@ -17,13 +17,16 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Application\Admin\Export;
+namespace Ampache\Module\Application\Admin\Index;
 
 use Ampache\MockeryTestCase;
+use Ampache\Model\Browse;
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -34,10 +37,13 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
-    /** @var MockInterface|UiInterface|null */
+    /** @var UiInterface|MockInterface|null */
     private MockInterface $ui;
 
-    /** @var MockInterface|CatalogRepositoryInterface|null */
+    /** @var ModelFactoryInterface|MockInterface|null */
+    private MockInterface $modelFactory;
+
+    /** @var CatalogRepositoryInterface|MockInterface|null */
     private MockInterface $catalogRepository;
 
     private ?ShowAction $subject;
@@ -45,20 +51,22 @@ class ShowActionTest extends MockeryTestCase
     public function setUp(): void
     {
         $this->ui                = $this->mock(UiInterface::class);
+        $this->modelFactory      = $this->mock(ModelFactoryInterface::class);
         $this->catalogRepository = $this->mock(CatalogRepositoryInterface::class);
 
         $this->subject = new ShowAction(
             $this->ui,
+            $this->modelFactory,
             $this->catalogRepository
         );
     }
 
     public function testRunThrowsExceptionIfAccessIsDenied(): void
     {
-        $this->expectException(AccessDeniedException::class);
-
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $this->expectException(AccessDeniedException::class);
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
@@ -71,10 +79,11 @@ class ShowActionTest extends MockeryTestCase
         );
     }
 
-    public function testRunRenders(): void
+    public function testRunRendersObjects(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $browse     = $this->mock(Browse::class);
 
         $catalogIds = [1, 2, 3];
 
@@ -88,16 +97,29 @@ class ShowActionTest extends MockeryTestCase
             ->once()
             ->andReturn($catalogIds);
 
-        $this->ui->shouldReceive('showHeader')
+        $this->modelFactory->shouldReceive('createBrowse')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($browse);
+
+        $browse->shouldReceive('set_type')
+            ->with('catalog')
+            ->once();
+        $browse->shouldReceive('set_static_content')
+            ->with(true)
+            ->once();
+        $browse->shouldReceive('save_objects')
+            ->with($catalogIds)
+            ->once();
+        $browse->shouldReceive('show_objects')
+            ->with($catalogIds)
+            ->once();
+        $browse->shouldReceive('store')
             ->withNoArgs()
             ->once();
-        $this->ui->shouldReceive('show')
-            ->with(
-                'show_export.inc.php',
-                [
-                    'catalogIds' => $catalogIds
-                ]
-            )
+
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
             ->once();
         $this->ui->shouldReceive('showQueryStats')
             ->withNoArgs()
@@ -106,11 +128,9 @@ class ShowActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-        $this->assertNull(
-            $this->subject->run(
-                $request,
-                $gatekeeper
-            )
+        $this->subject->run(
+            $request,
+            $gatekeeper
         );
     }
 }

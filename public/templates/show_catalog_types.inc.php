@@ -22,7 +22,10 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
+use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
 use Ampache\Module\Util\Ui;
+
+/** @var CatalogLoaderInterface $catalogLoader */
 
 $web_path = AmpConfig::get('web_path'); ?>
 <!-- Plugin we've found -->
@@ -38,7 +41,7 @@ $web_path = AmpConfig::get('web_path'); ?>
     <tbody>
         <?php
         foreach ($catalogs as $type) {
-            $catalog = Catalog::create_catalog_type($type);
+            $catalog = $catalogLoader->byType($type);
             if ($catalog === null) {
                 continue;
             }

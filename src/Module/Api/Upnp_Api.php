@@ -32,6 +32,7 @@ use Ampache\Model\Artist;
 use Ampache\Model\Catalog;
 use Ampache\Model\Clip;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use DateTime;
@@ -864,7 +865,7 @@ class Upnp_Api
             case 'songs':
                 switch (count($pathreq)) {
                     case 1: // Get songs list
-                        $catalogs = Catalog::get_catalogs();
+                        $catalogs = static::getCatalogRepository()->getList();
                         foreach ($catalogs as $catalog_id) {
                             $catalog                = Catalog::create_from_id($catalog_id);
                             $songs                  = $catalog->get_songs();
@@ -1957,5 +1958,15 @@ class Upnp_Api
         global $dic;
 
         return $dic->get(LiveStreamRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getCatalogRepository(): CatalogRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(CatalogRepositoryInterface::class);
     }
 }

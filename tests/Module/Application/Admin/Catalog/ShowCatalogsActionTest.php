@@ -17,11 +17,12 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Application\Admin\Export;
+namespace Ampache\Module\Application\Admin\Catalog;
 
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -32,22 +33,22 @@ use Ampache\Repository\CatalogRepositoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class ShowActionTest extends MockeryTestCase
+class ShowCatalogsActionTest extends MockeryTestCase
 {
-    /** @var MockInterface|UiInterface|null */
+    /** @var UiInterface|MockInterface|null */
     private MockInterface $ui;
 
-    /** @var MockInterface|CatalogRepositoryInterface|null */
+    /** @var CatalogRepositoryInterface|MockInterface|null */
     private MockInterface $catalogRepository;
 
-    private ?ShowAction $subject;
+    private ?ShowCatalogsAction $subject;
 
     public function setUp(): void
     {
         $this->ui                = $this->mock(UiInterface::class);
         $this->catalogRepository = $this->mock(CatalogRepositoryInterface::class);
 
-        $this->subject = new ShowAction(
+        $this->subject = new ShowCatalogsAction(
             $this->ui,
             $this->catalogRepository
         );
@@ -55,10 +56,10 @@ class ShowActionTest extends MockeryTestCase
 
     public function testRunThrowsExceptionIfAccessIsDenied(): void
     {
-        $this->expectException(AccessDeniedException::class);
-
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $this->expectException(AccessDeniedException::class);
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
@@ -93,7 +94,7 @@ class ShowActionTest extends MockeryTestCase
             ->once();
         $this->ui->shouldReceive('show')
             ->with(
-                'show_export.inc.php',
+                'show_manage_catalogs.inc.php',
                 [
                     'catalogIds' => $catalogIds
                 ]

@@ -22,17 +22,8 @@
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Catalog;
+namespace Ampache\Module\Catalog\Loader\Exception;
 
-use Ampache\Module\Catalog\Update\UpdateCatalog;
-use Ampache\Module\Catalog\Update\UpdateCatalogInterface;
-use Ampache\Module\Catalog\Update\UpdateSingleCatalogFile;
-use Ampache\Module\Catalog\Update\UpdateSingleCatalogFileInterface;
-use function DI\autowire;
-
-return [
-    UpdateSingleCatalogFileInterface::class => autowire(UpdateSingleCatalogFile::class),
-    UpdateCatalogInterface::class => autowire(UpdateCatalog::class),
-    GarbageCollector\CatalogGarbageCollectorInterface::class => autowire(GarbageCollector\CatalogGarbageCollector::class),
-    Loader\CatalogLoaderInterface::class => autowire(Loader\CatalogLoader::class),
-];
+abstract class CatalogLoadingException extends \Exception
+{
+}

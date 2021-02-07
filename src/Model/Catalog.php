@@ -36,7 +36,6 @@ use Ampache\Module\Catalog\Catalog_Seafile;
 use Ampache\Module\Catalog\Catalog_soundcloud;
 use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
-use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Stream\Url\StreamUrlParserInterface;
@@ -48,6 +47,7 @@ use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -290,6 +290,8 @@ abstract class Catalog extends database_object
     } // uninstall
 
     /**
+     * @deprecated See CatalogLoader
+     *
      * Create a catalog from its id.
      * @param integer $catalog_id
      * @return Catalog|null
@@ -310,7 +312,7 @@ abstract class Catalog extends database_object
      * @param integer $catalog_id
      * @return Catalog|null
      */
-    public static function create_catalog_type($type, $catalog_id = 0)
+    private static function create_catalog_type($type, $catalog_id = 0)
     {
         if (!$type) {
             return null;
@@ -343,45 +345,6 @@ abstract class Catalog extends database_object
         }
 
         return $catalog;
-    }
-
-    /**
-     * Show dropdown catalog types.
-     * @param string $divback
-     */
-    public static function show_catalog_types($divback = 'catalog_type_fields')
-    {
-        echo '<script>' . "var type_fields = new Array();" . "type_fields['none'] = '';";
-        $seltypes = '<option value="none">[' . T_("Select") . ']</option>';
-        $types    = self::get_catalog_types();
-        foreach ($types as $type) {
-            $catalog = self::create_catalog_type($type);
-            if ($catalog->is_installed()) {
-                $seltypes .= '<option value="' . $type . '">' . $type . '</option>';
-                echo "type_fields['" . $type . "'] = \"";
-                $fields = $catalog->catalog_fields();
-                $help   = $catalog->get_create_help();
-                if (!empty($help)) {
-                    echo "<tr><td></td><td>" . $help . "</td></tr>";
-                }
-                foreach ($fields as $key => $field) {
-                    echo "<tr><td style='width: 25%;'>" . $field['description'] . ":</td><td>";
-
-                    switch ($field['type']) {
-                        case 'checkbox':
-                            echo "<input type='checkbox' name='" . $key . "' value='1' " . (($field['value']) ? 'checked' : '') . "/>";
-                            break;
-                        default:
-                            echo "<input type='" . $field['type'] . "' name='" . $key . "' value='" . $field['value'] . "' />";
-                            break;
-                    }
-                    echo "</td></tr>";
-                }
-                echo "\";";
-            }
-        }
-
-        echo "function catalogTypeChanged() {" . "var sel = document.getElementById('catalog_type');" . "var seltype = sel.options[sel.selectedIndex].value;" . "var ftbl = document.getElementById('" . $divback . "');" . "ftbl.innerHTML = '<table class=\"tabledata\">' + type_fields[seltype] + '</table>';" . "} </script>" . "<select name=\"type\" id=\"catalog_type\" onChange=\"catalogTypeChanged();\">" . $seltypes . "</select>";
     }
 
     /**
@@ -598,34 +561,6 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * get_catalogs
-     *
-     * Pull all the current catalogs and return an array of ids
-     * of what you find
-     * @param string $filter_type
-     * @return integer[]
-     */
-    public static function get_catalogs($filter_type = '')
-    {
-        $params = array();
-        $sql    = "SELECT `id` FROM `catalog` ";
-        if (!empty($filter_type)) {
-            $sql .= "WHERE `gather_types` = ? ";
-            $params[] = $filter_type;
-        }
-        $sql .= "ORDER BY `name`";
-        $db_results = Dba::read($sql, $params);
-
-        $results = array();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
-    }
-
-    /**
      * Get last catalogs update.
      * @param integer[]|null $catalogs
      * @return integer
@@ -634,7 +569,7 @@ abstract class Catalog extends database_object
     {
         $last_update = 0;
         if ($catalogs == null || !is_array($catalogs)) {
-            $catalogs = self::get_catalogs();
+            $catalogs = static::getCatalogRepository()->getList();
         }
         foreach ($catalogs as $catalogid) {
             $catalog = self::create_from_id($catalogid);
@@ -967,7 +902,7 @@ abstract class Catalog extends database_object
     public static function get_videos($catalogs = null, $type = '')
     {
         if (!$catalogs) {
-            $catalogs = self::get_catalogs();
+            $catalogs = static::getCatalogRepository()->getList();
         }
 
         $results = array();
@@ -1038,7 +973,7 @@ abstract class Catalog extends database_object
     public static function get_tvshows($catalogs = null)
     {
         if (!$catalogs) {
-            $catalogs = self::get_catalogs();
+            $catalogs = static::getCatalogRepository()->getList();
         }
 
         $results = array();
@@ -1280,7 +1215,7 @@ abstract class Catalog extends database_object
     public static function get_podcasts($catalogs = null)
     {
         if (!$catalogs) {
-            $catalogs = self::get_catalogs('podcast');
+            $catalogs = static::getCatalogRepository()->getList('podcast');
         }
 
         $results = array();
@@ -1325,7 +1260,7 @@ abstract class Catalog extends database_object
      */
     public static function get_newest_podcasts($count)
     {
-        $catalogs = self::get_catalogs('podcast');
+        $catalogs = static::getCatalogRepository()->getList('podcast');
         $results  = array();
 
         foreach ($catalogs as $catalog_id) {
@@ -2791,7 +2726,7 @@ abstract class Catalog extends database_object
 
         switch ($action) {
             case 'add_to_all_catalogs':
-                $catalogs = self::get_catalogs();
+                $catalogs = static::getCatalogRepository()->getList();
                 // Intentional break fall-through
             case 'add_to_catalog':
                 if ($catalogs) {
@@ -2808,7 +2743,7 @@ abstract class Catalog extends database_object
                 }
                 break;
             case 'update_all_catalogs':
-                $catalogs = self::get_catalogs();
+                $catalogs = static::getCatalogRepository()->getList();
                 // Intentional break fall-through
             case 'update_catalog':
                 if ($catalogs) {
@@ -2822,7 +2757,7 @@ abstract class Catalog extends database_object
                 break;
             case 'full_service':
                 if (!$catalogs) {
-                    $catalogs = self::get_catalogs();
+                    $catalogs = static::getCatalogRepository()->getList();
                 }
 
                 /* This runs the clean/verify/add in that order */
@@ -2837,7 +2772,7 @@ abstract class Catalog extends database_object
                 Dba::optimize_tables();
                 break;
             case 'clean_all_catalogs':
-                $catalogs = self::get_catalogs();
+                $catalogs = static::getCatalogRepository()->getList();
                 // Intentional break fall-through
             case 'clean_catalog':
                 if ($catalogs) {
@@ -2879,7 +2814,7 @@ abstract class Catalog extends database_object
                 break;
             case 'gather_media_art':
                 if (!$catalogs) {
-                    $catalogs = self::get_catalogs();
+                    $catalogs = static::getCatalogRepository()->getList();
                 }
 
                 // Iterate throughout the catalogs and gather as needed
@@ -2893,7 +2828,7 @@ abstract class Catalog extends database_object
                 }
                 break;
             case 'update_all_file_tags':
-                $catalogs = self::get_catalogs();
+                $catalogs = static::getCatalogRepository()->getList();
                 // Intentional break fall-through
             case 'update_file_tags':
                 $write_id3 = AmpConfig::get('write_id3', false);
@@ -3072,5 +3007,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(StreamUrlParserInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private static function getCatalogRepository(): CatalogRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(CatalogRepositoryInterface::class);
     }
 }

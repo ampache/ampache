@@ -25,11 +25,12 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Admin\Modules;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Model\Catalog;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
+use Ampache\Module\Catalog\Loader\Exception\CatalogLoadingException;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -43,12 +44,16 @@ final class InstallCatalogTypeAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private CatalogLoaderInterface $catalogLoader;
+
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        CatalogLoaderInterface $catalogLoader
     ) {
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
+        $this->catalogLoader   = $catalogLoader;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -59,9 +64,10 @@ final class InstallCatalogTypeAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $type    = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
-        $catalog = Catalog::create_catalog_type($type);
-        if ($catalog == null) {
+        $type = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
+        try {
+            $catalog = $this->catalogLoader->byType($type);
+        } catch (CatalogLoadingException $e) {
             AmpError::add('general', T_('Failed to enable the Catalog module'));
             echo AmpError::display('general');
 

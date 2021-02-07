@@ -27,6 +27,7 @@ namespace Ampache\Module\Util;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use CpChart;
 use CpChart\Data;
@@ -297,7 +298,7 @@ class Graph
 
         // Only display other users if the graph is not for a specific catalog
         if (!$catalog) {
-            $catalog_ids = Catalog::get_catalogs();
+            $catalog_ids = $this->getCatalogRepository()->getList();
             foreach ($catalog_ids as $catalog_id) {
                 $catalog        = Catalog::create_from_id($catalog_id);
                 $catalog_values = $this->get_all_type_pts($fct, $catalog_id, $object_type, $object_id, $start_date,
@@ -830,5 +831,15 @@ class Graph
         global $dic;
 
         return $dic->get(UserRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getCatalogRepository(): CatalogRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(CatalogRepositoryInterface::class);
     }
 }

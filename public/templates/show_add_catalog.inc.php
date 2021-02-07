@@ -22,9 +22,52 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Catalog;
+use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+
+/**
+ * Show dropdown catalog types.
+ */
+function showCatalogTypes(string $divback = 'catalog_type_fields'): void
+{
+    global $dic;
+
+    $catalogLoader = $dic->get(CatalogLoaderInterface::class);
+
+    echo '<script>' . "var type_fields = new Array();" . "type_fields['none'] = '';";
+    $seltypes = '<option value="none">[' . T_("Select") . ']</option>';
+    $types    = Catalog::get_catalog_types();
+    foreach ($types as $type) {
+        $catalog = $catalogLoader->byType($type);
+        if ($catalog->is_installed()) {
+            $seltypes .= '<option value="' . $type . '">' . $type . '</option>';
+            echo "type_fields['" . $type . "'] = \"";
+            $fields = $catalog->catalog_fields();
+            $help   = $catalog->get_create_help();
+            if (!empty($help)) {
+                echo "<tr><td></td><td>" . $help . "</td></tr>";
+            }
+            foreach ($fields as $key => $field) {
+                echo "<tr><td style='width: 25%;'>" . $field['description'] . ":</td><td>";
+
+                switch ($field['type']) {
+                    case 'checkbox':
+                        echo "<input type='checkbox' name='" . $key . "' value='1' " . (($field['value']) ? 'checked' : '') . "/>";
+                        break;
+                    default:
+                        echo "<input type='" . $field['type'] . "' name='" . $key . "' value='" . $field['value'] . "' />";
+                        break;
+                }
+                echo "</td></tr>";
+            }
+            echo "\";";
+        }
+    }
+
+    echo "function catalogTypeChanged() {" . "var sel = document.getElementById('catalog_type');" . "var seltype = sel.options[sel.selectedIndex].value;" . "var ftbl = document.getElementById('" . $divback . "');" . "ftbl.innerHTML = '<table class=\"tabledata\">' + type_fields[seltype] + '</table>';" . "} </script>" . "<select name=\"type\" id=\"catalog_type\" onChange=\"catalogTypeChanged();\">" . $seltypes . "</select>";
+};
 
 $default_rename = "%T - %t";
 $default_sort   = "%a/%A"; ?>
@@ -64,7 +107,7 @@ $default_sort   = "%a/%A"; ?>
         </tr>
         <tr>
             <td><?php echo T_('Catalog Type'); ?>: </td>
-            <td><?php Catalog::show_catalog_types(); ?></td>
+            <td><?php showCatalogTypes(); ?></td>
         </tr>
         <tr>
             <td><?php echo T_('Filename Pattern'); ?>: </td>

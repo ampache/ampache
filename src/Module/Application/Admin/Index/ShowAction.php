@@ -21,17 +21,17 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Index;
 
-use Ampache\Model\Catalog;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -43,12 +43,16 @@ final class ShowAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private CatalogRepositoryInterface $catalogRepository;
+
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        CatalogRepositoryInterface $catalogRepository
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
+        $this->ui                = $ui;
+        $this->modelFactory      = $modelFactory;
+        $this->catalogRepository = $catalogRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -59,14 +63,13 @@ final class ShowAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        // Show Catalogs
-        $catalog_ids = Catalog::get_catalogs();
+        $catalogIds = $this->catalogRepository->getList();
 
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type('catalog');
         $browse->set_static_content(true);
-        $browse->save_objects($catalog_ids);
-        $browse->show_objects($catalog_ids);
+        $browse->save_objects($catalogIds);
+        $browse->show_objects($catalogIds);
         $browse->store();
 
         $this->ui->showQueryStats();

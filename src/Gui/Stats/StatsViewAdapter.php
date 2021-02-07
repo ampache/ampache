@@ -30,6 +30,7 @@ use Ampache\Gui\Catalog\CatalogDetailsInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Model\Catalog;
 use Ampache\Model\Video;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 
 final class StatsViewAdapter implements StatsViewAdapterInterface
@@ -40,14 +41,18 @@ final class StatsViewAdapter implements StatsViewAdapterInterface
 
     private VideoRepositoryInterface $videoRepository;
 
+    private CatalogRepositoryInterface $catalogRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         GuiFactoryInterface $guiFactory,
-        VideoRepositoryInterface $videoRepository
+        VideoRepositoryInterface $videoRepository,
+        CatalogRepositoryInterface $catalogRepository
     ) {
-        $this->configContainer = $configContainer;
-        $this->guiFactory      = $guiFactory;
-        $this->videoRepository = $videoRepository;
+        $this->configContainer   = $configContainer;
+        $this->guiFactory        = $guiFactory;
+        $this->videoRepository   = $videoRepository;
+        $this->catalogRepository = $catalogRepository;
     }
 
     public function displayVideo(): bool
@@ -70,8 +75,8 @@ final class StatsViewAdapter implements StatsViewAdapterInterface
      */
     public function getCatalogDetails(): array
     {
-        $catalogs = Catalog::get_catalogs();
-        
+        $catalogs = $this->catalogRepository->getList();
+
         $result = [];
         
         foreach ($catalogs as $catalog_id) {

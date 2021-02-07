@@ -20,19 +20,15 @@
  *
  */
 
-declare(strict_types=1);
+namespace Ampache\Repository;
 
-namespace Ampache\Module\Catalog;
-
-use Ampache\Module\Catalog\Update\UpdateCatalog;
-use Ampache\Module\Catalog\Update\UpdateCatalogInterface;
-use Ampache\Module\Catalog\Update\UpdateSingleCatalogFile;
-use Ampache\Module\Catalog\Update\UpdateSingleCatalogFileInterface;
-use function DI\autowire;
-
-return [
-    UpdateSingleCatalogFileInterface::class => autowire(UpdateSingleCatalogFile::class),
-    UpdateCatalogInterface::class => autowire(UpdateCatalog::class),
-    GarbageCollector\CatalogGarbageCollectorInterface::class => autowire(GarbageCollector\CatalogGarbageCollector::class),
-    Loader\CatalogLoaderInterface::class => autowire(Loader\CatalogLoader::class),
-];
+interface CatalogRepositoryInterface
+{
+    /**
+     * Pull all the current catalogs and return a list of ids
+     * of what you find
+     *
+     * @return int[]
+     */
+    public function getList(?string $filterType = null): array;
+}

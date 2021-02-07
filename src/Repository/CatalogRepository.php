@@ -22,17 +22,35 @@
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Catalog;
+namespace Ampache\Repository;
 
-use Ampache\Module\Catalog\Update\UpdateCatalog;
-use Ampache\Module\Catalog\Update\UpdateCatalogInterface;
-use Ampache\Module\Catalog\Update\UpdateSingleCatalogFile;
-use Ampache\Module\Catalog\Update\UpdateSingleCatalogFileInterface;
-use function DI\autowire;
+use Ampache\Module\System\Dba;
 
-return [
-    UpdateSingleCatalogFileInterface::class => autowire(UpdateSingleCatalogFile::class),
-    UpdateCatalogInterface::class => autowire(UpdateCatalog::class),
-    GarbageCollector\CatalogGarbageCollectorInterface::class => autowire(GarbageCollector\CatalogGarbageCollector::class),
-    Loader\CatalogLoaderInterface::class => autowire(Loader\CatalogLoader::class),
-];
+final class CatalogRepository implements CatalogRepositoryInterface
+{
+    /**
+     * Pull all the current catalogs and return a list of ids
+     * of what you find
+     *
+     * @return int[]
+     */
+    public function getList(?string $filterType = null): array
+    {
+        $params = array();
+        $sql    = "SELECT `id` FROM `catalog` ";
+        if ($filterType !== null) {
+            $sql .= "WHERE `gather_types` = ? ";
+            $params[] = $filterType;
+        }
+        $sql .= "ORDER BY `name`";
+        $db_results = Dba::read($sql, $params);
+
+        $results = array();
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['id'];
+        }
+
+        return $results;
+    }
+}

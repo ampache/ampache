@@ -20,19 +20,24 @@
  *
  */
 
-declare(strict_types=1);
+namespace Ampache\Module\Catalog\Loader;
 
-namespace Ampache\Module\Catalog;
+use Ampache\Model\Catalog;
+use Ampache\Module\Catalog\Loader\Exception\CatalogNotFoundException;
 
-use Ampache\Module\Catalog\Update\UpdateCatalog;
-use Ampache\Module\Catalog\Update\UpdateCatalogInterface;
-use Ampache\Module\Catalog\Update\UpdateSingleCatalogFile;
-use Ampache\Module\Catalog\Update\UpdateSingleCatalogFileInterface;
-use function DI\autowire;
+interface CatalogLoaderInterface
+{
+    /**
+     * Create a catalog by id
+     *
+     * @throws CatalogNotFoundException
+     */
+    public function byId(int $catalogId): Catalog;
 
-return [
-    UpdateSingleCatalogFileInterface::class => autowire(UpdateSingleCatalogFile::class),
-    UpdateCatalogInterface::class => autowire(UpdateCatalog::class),
-    GarbageCollector\CatalogGarbageCollectorInterface::class => autowire(GarbageCollector\CatalogGarbageCollector::class),
-    Loader\CatalogLoaderInterface::class => autowire(Loader\CatalogLoader::class),
-];
+    /**
+     * Attempts to create a catalog by type
+     *
+     * @throws Exception\InvalidCatalogTypeException
+     */
+    public function byType(string $catalogType, int $catalogId = 0, bool $enabled = false): Catalog;
+}

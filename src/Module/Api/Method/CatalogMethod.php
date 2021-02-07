@@ -20,58 +20,75 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\Catalog;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
+use Ampache\Module\Catalog\Loader\Exception\CatalogLoadingException;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class CatalogMethod
- * @package Lib\ApiMethods
- */
-final class CatalogMethod
+final class CatalogMethod implements MethodInterface
 {
-    private const ACTION = 'catalog';
+    public const ACTION = 'catalog';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private CatalogLoaderInterface $catalogLoader;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        CatalogLoaderInterface $catalogLoader
+    ) {
+        $this->streamFactory = $streamFactory;
+        $this->catalogLoader = $catalogLoader;
+    }
 
     /**
-     * catalog
      * MINIMUM_API_VERSION=420000
      *
      * Get the catalogs from it's id.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (integer) Catalog ID number
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws ResultEmptyException
+     * @throws RequestParamMissingException
      */
-    public static function catalog(array $input)
-    {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-        $object_id = (int) $input['filter'];
-        $catalog   = Catalog::create_from_id($object_id);
-        if (!$catalog->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $objectId = $input['filter'] ?? null;
 
-            return false;
+        if ($objectId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json_Data::catalogs(array($catalog->id), false);
-                break;
-            default:
-                echo Xml_Data::catalogs(array($catalog->id));
+        try {
+            $catalog = $this->catalogLoader->byId((int) $objectId);
+        } catch (CatalogLoadingException $e) {
+            throw new ResultEmptyException((string) $objectId);
         }
-        Session::extend($input['auth']);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->catalogs([$catalog->getId()], false)
+            )
+        );
     }
 }

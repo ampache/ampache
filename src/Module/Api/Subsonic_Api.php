@@ -44,6 +44,7 @@ use Ampache\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -443,7 +444,7 @@ class Subsonic_Api
     public static function getmusicfolders($input)
     {
         $response = Subsonic_Xml_Data::createSuccessResponse('getmusicfolders');
-        Subsonic_Xml_Data::addMusicFolders($response, Catalog::get_catalogs());
+        Subsonic_Xml_Data::addMusicFolders($response, static::getCatalogRepository()->getList());
         self::apiOutput($input, $response);
     }
 
@@ -464,7 +465,7 @@ class Subsonic_Api
         if (!empty($musicFolderId) && $musicFolderId != '-1') {
             $catalogs[] = $musicFolderId;
         } else {
-            $catalogs = Catalog::get_catalogs();
+            $catalogs = static::getCatalogRepository()->getList();
         }
 
         $lastmodified = 0;
@@ -547,7 +548,7 @@ class Subsonic_Api
     public static function getartists($input)
     {
         $response = Subsonic_Xml_Data::createSuccessResponse('getartists');
-        $artists  = Catalog::get_artists(Catalog::get_catalogs());
+        $artists  = Catalog::get_artists(static::getCatalogRepository()->getList());
         Subsonic_Xml_Data::addArtistsRoot($response, $artists, true);
         self::apiOutput($input, $response);
     }
@@ -2280,7 +2281,7 @@ class Subsonic_Api
         $url = self::check_parameter($input, 'url');
 
         if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
-            $catalogs = Catalog::get_catalogs('podcast');
+            $catalogs = static::getCatalogRepository()->getList('podcast');
             if (count($catalogs) > 0) {
                 $data            = array();
                 $data['feed']    = $url;
@@ -2630,5 +2631,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(TagRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getCatalogRepository(): CatalogRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(CatalogRepositoryInterface::class);
     }
 }

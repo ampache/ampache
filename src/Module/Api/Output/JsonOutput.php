@@ -441,4 +441,15 @@ final class JsonOutput implements ApiOutputInterface
             JSON_PRETTY_PRINT
         );
     }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param int[] $catalogIds group of catalog id's
+     * @param bool $asObject (whether to return as a named object array or regular array)
+     */
+    public function catalogs(array $catalogIds, bool $asObject = true): string
+    {
+        return Json_Data::catalogs($catalogIds, $asObject);
+    }
 }

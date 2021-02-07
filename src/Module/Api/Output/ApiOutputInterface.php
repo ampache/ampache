@@ -257,4 +257,15 @@ interface ApiOutputInterface
         bool $xmlOutput = true,
         ?string $tagName = null
     ): string;
+
+    /**
+     * This returns catalogs to the user
+     *
+     * @param int[] $catalogIds group of catalog id's
+     * @param bool $asObject (whether to return as a named object array or regular array)
+     */
+    public function catalogs(
+        array $catalogIds,
+        bool $asObject = true
+    ): string;
 }

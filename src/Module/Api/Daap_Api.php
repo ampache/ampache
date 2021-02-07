@@ -34,6 +34,7 @@ use Ampache\Model\Rating;
 use Ampache\Model\Search;
 use Ampache\Model\Song;
 use Ampache\Model\Tag;
+use Ampache\Repository\CatalogRepositoryInterface;
 
 /**
  * DAAP Class
@@ -344,7 +345,7 @@ class Daap_Api
         $output .= self::tlv('dmap.updatetype', 0);
 
         $songs    = array();
-        $catalogs = Catalog::get_catalogs();
+        $catalogs = static::getCatalogRepository()->getList();
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
             $songs   = array_merge($songs, $catalog->get_songs());
@@ -961,5 +962,15 @@ class Daap_Api
         self::apiOutput($output);
 
         return false;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getCatalogRepository(): CatalogRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(CatalogRepositoryInterface::class);
     }
 }

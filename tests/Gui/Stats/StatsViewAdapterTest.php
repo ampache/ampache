@@ -29,6 +29,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Model\Video;
+use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Mockery\MockInterface;
 
@@ -43,18 +44,23 @@ class StatsViewAdapterTest extends MockeryTestCase
     /** @var MockInterface|VideoRepositoryInterface|null */
     private ?MockInterface $videoRepository;
 
+    /** @var MockInterface|CatalogRepositoryInterface|null */
+    private MockInterface $catalogRepository;
+
     private ?StatsViewAdapter $subject;
 
     public function setUp(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->guiFactory      = $this->mock(GuiFactoryInterface::class);
-        $this->videoRepository = $this->mock(VideoRepositoryInterface::class);
+        $this->configContainer   = $this->mock(ConfigContainerInterface::class);
+        $this->guiFactory        = $this->mock(GuiFactoryInterface::class);
+        $this->videoRepository   = $this->mock(VideoRepositoryInterface::class);
+        $this->catalogRepository = $this->mock(CatalogRepositoryInterface::class);
 
         $this->subject = new StatsViewAdapter(
             $this->configContainer,
             $this->guiFactory,
-            $this->videoRepository
+            $this->videoRepository,
+            $this->catalogRepository
         );
     }
 
