@@ -25,23 +25,18 @@ namespace Ampache\Module\Cache\ObjectCacheAdapter;
 
 final class SimpleArrayCacheAdapter implements ObjectCacheAdapterInterface
 {
-    private $cache = [];
+    private array $cache = [];
 
     /**
      * This adds the specified object to the specified index in the cache
      *
      * @param string $index
-     * @param integer|string $object_id
+     * @param integer|string $objectId
      * @param array $data
      */
-    public function add(string $index, $object_id, array $data): bool
+    public function add(string $index, $objectId, array $data): bool
     {
-        $value = false;
-        if (!empty($data)) {
-            $value = $data;
-        }
-
-        $this->cache[$index][$object_id] = $value;
+        $this->cache[$index][$objectId] = $data;
 
         return true;
     }
@@ -50,16 +45,16 @@ final class SimpleArrayCacheAdapter implements ObjectCacheAdapterInterface
      * This function clears something from the cache, there are a few places we need to do this
      * in order to have things display correctly
      * @param string $index
-     * @param integer $object_id
+     * @param integer $objectId
      */
-    public function remove(string $index, $object_id): void
+    public function remove(string $index, $objectId): void
     {
-        if (isset($this->cache[$index]) && isset($this->cache[$index][$object_id])) {
-            unset($this->cache[$index][$object_id]);
+        if (isset($this->cache[$index]) && isset($this->cache[$index][$objectId])) {
+            unset($this->cache[$index][$objectId]);
         }
     }
 
-    public function clear()
+    public function clear(): void
     {
         $this->cache = [];
     }
@@ -68,29 +63,29 @@ final class SimpleArrayCacheAdapter implements ObjectCacheAdapterInterface
      * this checks the cache to see if the specified object is there
      *
      * @param string $index
-     * @param string $object_id
+     * @param string $objectId
      */
-    public function exists(string $index, $object_id): bool
+    public function exists(string $index, $objectId): bool
     {
         // Make sure we've got some parents here before we dive below
         if (!isset($this->cache[$index])) {
             return false;
         }
 
-        return isset($this->cache[$index][$object_id]);
+        return isset($this->cache[$index][$objectId]);
     }
 
     /**
      * This attempts to retrieve the specified object from the cache we've got here
      *
      * @param string $index
-     * @param integer|string $object_id
+     * @param integer|string $objectId
      */
-    public function retrieve(string $index, $object_id): array
+    public function retrieve(string $index, $objectId): array
     {
         // Check if the object is set
-        if (isset($this->cache[$index]) && isset($this->cache[$index][$object_id])) {
-            return $this->cache[$index][$object_id];
+        if (isset($this->cache[$index]) && isset($this->cache[$index][$objectId])) {
+            return $this->cache[$index][$objectId];
         }
 
         return [];

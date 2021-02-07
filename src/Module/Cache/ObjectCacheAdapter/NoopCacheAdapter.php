@@ -29,10 +29,10 @@ final class NoopCacheAdapter implements ObjectCacheAdapterInterface
      * This adds the specified object to the specified index in the cache
      *
      * @param string $index
-     * @param integer|string $object_id
+     * @param integer|string $objectId
      * @param array $data
      */
-    public function add(string $index, $object_id, array $data): bool
+    public function add(string $index, $objectId, array $data): bool
     {
         return false;
     }
@@ -40,14 +40,15 @@ final class NoopCacheAdapter implements ObjectCacheAdapterInterface
     /**
      * This function clears something from the cache, there are a few places we need to do this
      * in order to have things display correctly
+     *
      * @param string $index
-     * @param integer $object_id
+     * @param integer $objectId
      */
-    public function remove(string $index, $object_id): void
+    public function remove(string $index, $objectId): void
     {
     }
 
-    public function clear()
+    public function clear(): void
     {
     }
 
@@ -55,9 +56,9 @@ final class NoopCacheAdapter implements ObjectCacheAdapterInterface
      * this checks the cache to see if the specified object is there
      *
      * @param string $index
-     * @param string $object_id
+     * @param string $objectId
      */
-    public function exists(string $index, $object_id): bool
+    public function exists(string $index, $objectId): bool
     {
         return false;
     }
@@ -66,9 +67,9 @@ final class NoopCacheAdapter implements ObjectCacheAdapterInterface
      * This attempts to retrieve the specified object from the cache we've got here
      *
      * @param string $index
-     * @param integer|string $object_id
+     * @param integer|string $objectId
      */
-    public function retrieve(string $index, $object_id): array
+    public function retrieve(string $index, $objectId): array
     {
         return [];
     }

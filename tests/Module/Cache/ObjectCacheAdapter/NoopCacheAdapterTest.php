@@ -17,29 +17,42 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Cache;
+namespace Ampache\Module\Cache\ObjectCacheAdapter;
 
-use Ampache\Config\ConfigContainerInterface;
-use Psr\Container\ContainerInterface;
-use function DI\autowire;
-use function DI\create;
-use function DI\factory;
-use function DI\get;
+use Ampache\MockeryTestCase;
 
-return [
-    ObjectCacheInterface::class => autowire(ObjectCache::class),
-    DatabaseObjectCacheInterface::class => factory(static function (ContainerInterface $c): DatabaseObjectCache {
-        return new DatabaseObjectCache(
-            $c->get(ConfigContainerInterface::class),
-            [
-                '0' => $c->get(ObjectCacheAdapter\NoopCacheAdapter::class),
-                '1' => $c->get(ObjectCacheAdapter\SimpleArrayCacheAdapter::class),
-                'simple' => $c->get(ObjectCacheAdapter\SimpleArrayCacheAdapter::class),
-            ]);
-    }),
-];
+class NoopCacheAdapterTest extends MockeryTestCase
+{
+    private ?NoopCacheAdapter $subject;
+
+    public function setUp(): void
+    {
+        $this->subject = new NoopCacheAdapter();
+    }
+
+    public function testAddReturnsFalse(): void
+    {
+        $this->assertFalse(
+            $this->subject->add('index', 'object-id', [])
+        );
+    }
+
+    public function testExistsReturnsFalse(): void
+    {
+        $this->assertFalse(
+            $this->subject->exists('index', 'object-id')
+        );
+    }
+
+    public function testRetrieveReturnsEmptyArray(): void
+    {
+        $this->assertSame(
+            [],
+            $this->subject->retrieve('index', 'object-id')
+        );
+    }
+}

@@ -27,12 +27,12 @@ interface ObjectCacheAdapterInterface
      * This adds the specified object to the specified index in the cache
      *
      * @param string $index
-     * @param integer|string $object_id
+     * @param integer|string $objectId
      * @param array $data
      */
     public function add(
         string $index,
-        $object_id,
+        $objectId,
         array $data
     ): bool;
 
@@ -40,34 +40,37 @@ interface ObjectCacheAdapterInterface
      * This function clears something from the cache, there are a few places we need to do this
      * in order to have things display correctly
      * @param string $index
-     * @param integer $object_id
+     * @param integer $objectId
      */
     public function remove(
         string $index,
-        $object_id
+        $objectId
     ): void;
 
-    public function clear();
+    /**
+     * Completely wipes the cache
+     */
+    public function clear(): void;
 
     /**
-     * this checks the cache to see if the specified object is there
+     * This checks the cache to see if the specified object is there
      *
      * @param string $index
-     * @param string $object_id
+     * @param string $objectId
      */
     public function exists(
         string $index,
-        $object_id
+        $objectId
     ): bool;
 
     /**
      * This attempts to retrieve the specified object from the cache we've got here
      *
      * @param string $index
-     * @param integer|string $object_id
+     * @param integer|string $objectId
      */
     public function retrieve(
         string $index,
-        $object_id
+        $objectId
     ): array;
 }

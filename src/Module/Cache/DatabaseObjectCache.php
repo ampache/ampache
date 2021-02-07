@@ -34,75 +34,74 @@ final class DatabaseObjectCache implements DatabaseObjectCacheInterface
 
     private int $hits = 0;
 
-    private const ADAPTER_LIST = [
-        '0' => ObjectCacheAdapter\NoopCacheAdapter::class,
-        '1' => ObjectCacheAdapter\SimpleArrayCacheAdapter::class,
-        'simple' => ObjectCacheAdapter\SimpleArrayCacheAdapter::class,
-    ];
+    private array $adapterList;
 
     public function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        array $adapterList
     ) {
         $this->configContainer = $configContainer;
+        $this->adapterList     = $adapterList;
     }
 
     /**
      * This adds the specified object to the specified index in the cache
      *
      * @param string $index
-     * @param integer|string $object_id
+     * @param integer|string $objectId
      * @param array $data
      */
-    public function add(string $index, $object_id, array $data): bool
+    public function add(string $index, $objectId, array $data): bool
     {
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::MEMORY_CACHE) === false) {
             return false;
         }
 
-        return $this->getAdapter()->add($index, $object_id, $data);
+        return $this->getAdapter()->add($index, $objectId, $data);
     }
 
     /**
      * This function clears something from the cache, there are a few places we need to do this
      * in order to have things display correctly
+     *
      * @param string $index
-     * @param integer $object_id
+     * @param integer $objectId
      */
-    public function remove(string $index, $object_id): void
+    public function remove(string $index, $objectId): void
     {
-        $this->getAdapter()->remove($index, $object_id);
+        $this->getAdapter()->remove($index, $objectId);
     }
 
-    public function clear()
+    public function clear(): void
     {
         $this->getAdapter()->clear();
     }
 
     /**
-     * this checks the cache to see if the specified object is there
+     * This checks the cache to see if the specified object is there
      *
      * @param string $index
-     * @param string $object_id
+     * @param string $objectId
      */
-    public function exists(string $index, $object_id): bool
+    public function exists(string $index, $objectId): bool
     {
-        return $this->getAdapter()->exists($index, $object_id);
+        return $this->getAdapter()->exists($index, $objectId);
     }
 
     /**
      * This attempts to retrieve the specified object from the cache we've got here
      *
      * @param string $index
-     * @param integer|string $object_id
+     * @param integer|string $objectId
      */
-    public function retrieve(string $index, $object_id): array
+    public function retrieve(string $index, $objectId): array
     {
         $adapter = $this->getAdapter();
 
-        if ($adapter->exists($index, $object_id)) {
+        if ($adapter->exists($index, $objectId)) {
             $this->hits++;
 
-            return $adapter->retrieve($index, $object_id);
+            return $adapter->retrieve($index, $objectId);
         }
 
         return [];
@@ -118,9 +117,7 @@ final class DatabaseObjectCache implements DatabaseObjectCacheInterface
         if ($this->adapter === null) {
             $cacheSetting = (string) $this->configContainer->get(ConfigurationKeyEnum::MEMORY_CACHE_ADAPTER);
 
-            $adapterClass  = static::ADAPTER_LIST[$cacheSetting] ?? ObjectCacheAdapter\NoopCacheAdapter::class;
-
-            $this->adapter = new $adapterClass();
+            $this->adapter = $this->adapterList[$cacheSetting] ?? new ObjectCacheAdapter\NoopCacheAdapter();
         }
 
         return $this->adapter;
