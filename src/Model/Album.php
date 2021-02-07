@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
+use Ampache\Module\Cache\DatabaseObjectCache;
 use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Config\AmpConfig;
@@ -317,8 +318,10 @@ class Album extends database_object implements library_item
         $sql        = "SELECT * FROM `album` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
+        $cache = static::getDatabaseObjectCache();
+
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('album', $row['id'], $row);
+            $cache->add('album', $row['id'], $row);
         }
 
         return true;
@@ -336,8 +339,12 @@ class Album extends database_object implements library_item
         if (!$this->id) {
             return array();
         }
-        if (parent::is_cached('album_extra', $this->id)) {
-            return parent::get_from_cache('album_extra', $this->id);
+
+        $cache = $this->getDatabaseObjectCache();
+
+        $cacheItem = $cache->retrieve('album_extra', $this->getId());
+        if ($cacheItem !== []) {
+            return $cacheItem;
         }
 
         $full_name    = Dba::escape($this->full_name);
@@ -417,7 +424,7 @@ class Album extends database_object implements library_item
             $results['object_cnt'] = Stats::get_object_count('album', $this->id, $limit_threshold);
         }
 
-        parent::add_to_cache('album_extra', $this->id, $results);
+        $cache->add('album_extra', $this->id, $results);
 
         return $results;
     } // _get_extra_info

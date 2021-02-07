@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Cache\DatabaseObjectCache;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
@@ -92,8 +93,10 @@ class Playlist extends playlist_object
             $sql        = "SELECT * FROM `playlist` WHERE `id` IN $idlist";
             $db_results = Dba::read($sql);
 
+            $cache = static::getDatabaseObjectCache();
+
             while ($row = Dba::fetch_assoc($db_results)) {
-                parent::add_to_cache('playlist', $row['id'], $row);
+                $cache->add('playlist', $row['id'], $row);
             }
         }
     } // build_cache

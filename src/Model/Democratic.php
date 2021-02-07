@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
+use Ampache\Module\Cache\DatabaseObjectCache;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
@@ -96,8 +97,10 @@ class Democratic extends Tmp_Playlist
 
         $db_results = Dba::read($sql);
 
+        $cache = static::getDatabaseObjectCache();
+
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('democratic_vote', $row['object_id'], array($row['count']));
+            $cache->add('democratic_vote', $row['object_id'], array($row['count']));
         }
 
         return true;
@@ -618,15 +621,18 @@ class Democratic extends Tmp_Playlist
      */
     public function get_vote($id)
     {
-        if (parent::is_cached('democratic_vote', $id)) {
-            return (int)(parent::get_from_cache('democratic_vote', $id))[0];
+        $cache     = static::getDatabaseObjectCache();
+        $cacheItem = $cache->retrieve('democratic_vote', (int) $id);
+        if ($cacheItem !== []) {
+            return (int) $cacheItem[0];
         }
 
         $sql        = 'SELECT COUNT(`user`) AS `count` FROM `user_vote` ' . "WHERE `object_id` = ?";
         $db_results = Dba::read($sql, array($id));
 
         $results = Dba::fetch_assoc($db_results);
-        parent::add_to_cache('democratic_vote', $id, $results);
+
+        $cache->add('democratic_vote', (int) $id, $results);
 
         return (int)$results['count'];
     } // get_vote

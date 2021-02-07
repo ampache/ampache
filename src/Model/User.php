@@ -26,6 +26,7 @@ namespace Ampache\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Cache\DatabaseObjectCache;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
@@ -225,10 +226,13 @@ class User extends database_object
      */
     private function has_info()
     {
-        $user_id = (int)($this->id);
+        $user_id = $this->getId();
 
-        if (User::is_cached('user', $user_id)) {
-            return User::get_from_cache('user', $user_id);
+        $cache      = static::getDatabaseObjectCache();
+        $cacheValue = $cache->retrieve('user', $user_id);
+
+        if ($cacheValue !== []) {
+            return $cacheValue;
         }
 
         $data = array();
@@ -246,7 +250,7 @@ class User extends database_object
 
         $data = Dba::fetch_assoc($db_results);
 
-        User::add_to_cache('user', $user_id, $data);
+        $cache->add('user', $user_id, $data);
 
         return $data;
     } // has_info
@@ -287,8 +291,11 @@ class User extends database_object
      */
     public function get_catalogs()
     {
-        if (parent::is_cached('user_catalog', $this->id)) {
-            return parent::get_from_cache('user_catalog', $this->id);
+        $cache     = static::getDatabaseObjectCache();
+        $cacheItem = $cache->retrieve('user_catalog', $this->id);
+
+        if ($cacheItem !== []) {
+            return $cacheItem;
         }
 
         $sql        = "SELECT * FROM `user_catalog` WHERE `user` = ?";
@@ -299,7 +306,7 @@ class User extends database_object
             $catalogs[] = (int)$row['catalog'];
         }
 
-        parent::add_to_cache('user_catalog', $this->id, $catalogs);
+        $cache->add('user_catalog', $this->id, $catalogs);
 
         return $catalogs;
     } // get_catalogs

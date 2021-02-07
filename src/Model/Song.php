@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
+use Ampache\Module\Cache\DatabaseObjectCache;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
@@ -600,6 +601,8 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $albums  = array();
         $tags    = array();
 
+        $cache = static::getDatabaseObjectCache();
+
         while ($row = Dba::fetch_assoc($db_results)) {
             if (AmpConfig::get('show_played_times')) {
                 $row['object_cnt'] = Stats::get_object_count('song', $row['id'], $limit_threshold);
@@ -607,7 +610,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
             if (AmpConfig::get('show_skipped_times')) {
                 $row['skip_cnt'] = Stats::get_object_count('song', $row['id'], $limit_threshold, 'skip');
             }
-            parent::add_to_cache('song', $row['id'], $row);
+            $cache->add('song', $row['id'], $row);
             $artists[$row['artist']] = $row['artist'];
             $albums[$row['album']]   = $row['album'];
             if ($row['tag_id']) {
@@ -634,7 +637,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('song_data', $row['song_id'], $row);
+            $cache->add('song_data', $row['song_id'], $row);
         }
 
         return true;
@@ -649,8 +652,11 @@ class Song extends database_object implements Media, library_item, GarbageCollec
     {
         $song_id = $this->id;
 
-        if (parent::is_cached('song', $song_id)) {
-            return parent::get_from_cache('song', $song_id);
+        $cache     = static::getDatabaseObjectCache();
+        $cacheItem = $cache->retrieve('song', $song_id);
+
+        if ($cacheItem !== []) {
+            return $cacheItem;
         }
 
         $sql = 'SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `album`.`album_artist` AS `albumartist`, `song`.`year`, `song`.`artist`, ' .
@@ -671,7 +677,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
                 $results['skip_cnt'] = Stats::get_object_count('song', $results['id'], $limit_threshold, 'skip');
             }
 
-            parent::add_to_cache('song', $song_id, $results);
+            $cache->add('song', $song_id, $results);
 
             return $results;
         }
@@ -732,8 +738,11 @@ class Song extends database_object implements Media, library_item, GarbageCollec
         $song_id = (int) ($this->id);
         $columns = (!empty($select)) ? Dba::escape($select) : '*';
 
-        if (parent::is_cached('song_data', $song_id)) {
-            return parent::get_from_cache('song_data', $song_id);
+        $cache     = static::getDatabaseObjectCache();
+        $cacheItem = $cache->retrieve('song_data', $song_id);
+
+        if ($cacheItem !== []) {
+            return $cacheItem;
         }
 
         $sql        = "SELECT $columns FROM `song_data` WHERE `song_id` = ?";
@@ -741,7 +750,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
 
         $results = Dba::fetch_assoc($db_results);
 
-        parent::add_to_cache('song_data', $song_id, $results);
+        $cache->add('song_data', $song_id, $results);
 
         return $results;
     } // _get_ext_info

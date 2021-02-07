@@ -35,6 +35,8 @@ use Ampache\Model\Rating;
 use Ampache\Model\Song;
 use Ampache\Model\Song_Preview;
 use Ampache\Model\Video;
+use Ampache\Module\Cache\DatabaseObjectCache;
+use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -573,7 +575,7 @@ class Catalog_local extends Catalog
             foreach (range(0, $chunks) as $chunk) {
                 // Try to be nice about memory usage
                 if ($chunk > 0) {
-                    $media_type::clear_cache();
+                    $this->getDatabaseObjectCache()->clear();
                 }
                 $total_updated += $this->_verify_chunk(ObjectTypeToClassNameMapper::reverseMap($media_type), $chunk, 10000);
             }
@@ -1056,4 +1058,11 @@ class Catalog_local extends Catalog
 
         return true;
     } // move_catalog_proc
+
+    private function getDatabaseObjectCache(): DatabaseObjectCacheInterface
+    {
+        global $dic;
+
+        return $dic->get(DatabaseObjectCacheInterface::class);
+    }
 }

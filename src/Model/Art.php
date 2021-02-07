@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Cache\DatabaseObjectCache;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -135,8 +136,10 @@ class Art extends database_object
         }
         $db_results = Dba::read($sql);
 
+        $cache = static::getDatabaseObjectCache();
+
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('art', $row['object_type'] . $row['object_id'] . $row['size'], $row);
+            $cache->add('art', $row['object_type'] . $row['object_id'] . $row['size'], $row);
         }
 
         return true;
@@ -972,12 +975,17 @@ class Art extends database_object
 
         $key = $type . $uid;
 
-        if (parent::is_cached('art', $key . '275x275') && AmpConfig::get('resize_images')) {
-            $row  = parent::get_from_cache('art', $key . '275x275');
+        $objectCache = static::getDatabaseObjectCache();
+
+        if (
+            $objectCache->exists('art', $key . '275x275') &&
+            AmpConfig::get('resize_images')
+        ) {
+            $row  = $objectCache->retrieve('art', $key . '275x275');
             $mime = $row['mime'];
         }
-        if (parent::is_cached('art', $key . 'original')) {
-            $row        = parent::get_from_cache('art', $key . 'original');
+        if ($objectCache->exists('art', $key . 'original')) {
+            $row        = $objectCache->retrieve('art', $key . 'original');
             $thumb_mime = $row['mime'];
         }
         if (!isset($mime) && !isset($thumb_mime)) {
@@ -985,7 +993,7 @@ class Art extends database_object
             $db_results = Dba::read($sql, array($type, $uid));
 
             while ($row = Dba::fetch_assoc($db_results)) {
-                parent::add_to_cache('art', $key . $row['size'], $row);
+                $objectCache->add('art', $key . $row['size'], $row);
                 if ($row['size'] == 'original') {
                     $mime = $row['mime'];
                 } else {

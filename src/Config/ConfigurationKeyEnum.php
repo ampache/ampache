@@ -109,4 +109,6 @@ final class ConfigurationKeyEnum
     public const POPULAR_THRESHOLD             = 'popular_threshold';
     public const STREAM_BEAUTIFUL_URL          = 'stream_beautiful_url';
     public const SESSION_LENGTH                = 'session_length';
+    public const MEMORY_CACHE                  = 'memory_cache';
+    public const MEMORY_CACHE_ADAPTER          = 'memory_cache_adapter';
 }

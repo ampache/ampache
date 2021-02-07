@@ -25,6 +25,8 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Cache\DatabaseObjectCache;
+use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
@@ -166,8 +168,11 @@ class Preference extends database_object
         $pref_name = Dba::escape($pref_name);
         $pref_id   = self::id_from_name($pref_name);
 
-        if (parent::is_cached('get_by_user', $user_id)) {
-            return (int)(parent::get_from_cache('get_by_user', $user_id))[0];
+        $cache     = static::getDatabaseObjectCache();
+        $cacheItem = $cache->retrieve('get_by_user', (int) $user_id);
+
+        if ($cacheItem !== []) {
+            return (int) $cacheItem[0];
         }
 
         $sql        = "SELECT `value` FROM `user_preference` WHERE `preference`='$pref_id' AND `user`='$user_id'";
@@ -178,7 +183,7 @@ class Preference extends database_object
         }
         $data = Dba::fetch_assoc($db_results);
 
-        parent::add_to_cache('get_by_user', $user_id, $data);
+        $cache->add('get_by_user', (int) $user_id, $data);
 
         return $data['value'];
     } // get_by_user
@@ -226,7 +231,7 @@ class Preference extends database_object
             Dba::write($sql);
             self::clear_from_session();
 
-            parent::remove_from_cache('get_by_user', $user_id);
+            static::getDatabaseObjectCache()->remove('get_by_user', $user_id);
 
             return true;
         } else {
@@ -276,7 +281,7 @@ class Preference extends database_object
         $sql = "UPDATE `user_preference` SET `value`='$value' WHERE `preference`='$preference_id'";
         Dba::write($sql);
 
-        parent::clear_cache();
+        static::getDatabaseObjectCache()->clear();
 
         return true;
     } // update_all
@@ -334,15 +339,18 @@ class Preference extends database_object
     {
         $name = Dba::escape($name);
 
-        if (parent::is_cached('id_from_name', $name)) {
-            return (int)(parent::get_from_cache('id_from_name', $name))[0];
+        $cache     = static::getDatabaseObjectCache();
+        $cacheItem = $cache->retrieve('id_from_name', $name);
+
+        if ($cacheItem !== []) {
+            return (int) $cacheItem[0];
         }
 
         $sql        = "SELECT `id` FROM `preference` WHERE `name`='$name'";
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_assoc($db_results);
 
-        parent::add_to_cache('id_from_name', $name, $row);
+        $cache->add('id_from_name', $name, $row);
 
         return (int)$row['id'];
     } // id_from_name

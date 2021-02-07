@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
-use Ampache\Config\AmpConfig;
+use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use Ampache\Module\System\Dba;
 
 /**
@@ -35,12 +35,6 @@ use Ampache\Module\System\Dba;
 abstract class database_object
 {
     protected const DB_TABLENAME = null;
-
-    private static $object_cache = array();
-
-    // Statistics for debugging
-    public static $cache_hit       = 0;
-    private static ?bool $_enabled = null;
 
     /**
      * get_info
@@ -59,8 +53,11 @@ abstract class database_object
             return array();
         }
 
-        if (self::is_cached($table, $object_id)) {
-            return self::get_from_cache($table, $object_id);
+        $cache     = static::getDatabaseObjectCache();
+        $cacheItem = $cache->retrieve($table, $object_id);
+
+        if ($cacheItem !== []) {
+            return $cacheItem;
         }
 
         $params     = array($object_id);
@@ -73,7 +70,7 @@ abstract class database_object
 
         $row = Dba::fetch_assoc($db_results);
 
-        self::add_to_cache($table, $object_id, $row);
+        $cache->add($table, $object_id, $row);
 
         return $row;
     } // get_info
@@ -91,92 +88,10 @@ abstract class database_object
         return Dba::escape($table_name);
     }
 
-    /**
-     * clear_cache
-     */
-    public static function clear_cache()
+    protected static function getDatabaseObjectCache(): DatabaseObjectCacheInterface
     {
-        self::$object_cache = array();
+        global $dic;
+
+        return $dic->get(DatabaseObjectCacheInterface::class);
     }
-
-    /**
-     * is_cached
-     * this checks the cache to see if the specified object is there
-     * @param string $index
-     * @param string $object_id
-     * @return boolean
-     */
-    public static function is_cached($index, $object_id)
-    {
-        // Make sure we've got some parents here before we dive below
-        if (!isset(self::$object_cache[$index])) {
-            return false;
-        }
-
-        return isset(self::$object_cache[$index][$object_id]);
-    } // is_cached
-
-    /**
-     * get_from_cache
-     * This attempts to retrieve the specified object from the cache we've got here
-     * @param string $index
-     * @param integer|string $object_id
-     * @return array
-     */
-    public static function get_from_cache($index, $object_id)
-    {
-        // Check if the object is set
-        if (isset(self::$object_cache[$index]) && isset(self::$object_cache[$index][$object_id])) {
-            self::$cache_hit++;
-
-            return self::$object_cache[$index][$object_id];
-        }
-
-        return array();
-    } // get_from_cache
-
-    /**
-     * add_to_cache
-     * This adds the specified object to the specified index in the cache
-     * @param string $index
-     * @param integer|string $object_id
-     * @param array $data
-     * @return boolean
-     */
-    public static function add_to_cache($index, $object_id, $data)
-    {
-        /**
-         * Lazy load the cache setting to avoid some magic auto_init logic
-         */
-        if (self::$_enabled === null) {
-            self::$_enabled = AmpConfig::get('memory_cache');
-        }
-        if (!self::$_enabled) {
-            return false;
-        }
-
-        $value = false;
-        if (!empty($data)) {
-            $value = $data;
-        }
-
-        self::$object_cache[$index][$object_id] = $value;
-
-        return true;
-    }
-    // add_to_cache
-
-    /**
-     * remove_from_cache
-     * This function clears something from the cache, there are a few places we need to do this
-     * in order to have things display correctly
-     * @param string $index
-     * @param integer $object_id
-     */
-    public static function remove_from_cache($index, $object_id)
-    {
-        if (isset(self::$object_cache[$index]) && isset(self::$object_cache[$index][$object_id])) {
-            unset(self::$object_cache[$index][$object_id]);
-        }
-    } // remove_from_cache
 }

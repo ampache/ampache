@@ -26,6 +26,8 @@ namespace Ampache\Model;
 
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Cache\DatabaseObjectCache;
+use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\AlbumRepositoryInterface;
@@ -165,7 +167,8 @@ class Wanted extends database_object
         } else {
             $wartist['mbid'] = $mbid;
             $wartist['name'] = $martist->name;
-            parent::add_to_cache('missing_artist', $mbid, $wartist);
+
+            static::getDatabaseObjectCache()->add('missing_artist', $mbid, $wartist);
             $wartist = self::get_missing_artist($mbid);
         }
 
@@ -230,8 +233,11 @@ class Wanted extends database_object
     {
         $wartist = array();
 
-        if (parent::is_cached('missing_artist', $mbid)) {
-            $wartist = parent::get_from_cache('missing_artist', $mbid);
+        $cache     = static::getDatabaseObjectCache();
+        $cacheItem = $cache->retrieve('missing_artist', $mbid);
+
+        if ($cacheItem !== []) {
+            $wartist = $cacheItem;
         } else {
             $mbrainz         = new MusicBrainz(new RequestsHttpAdapter());
             $wartist['mbid'] = $mbid;
@@ -244,7 +250,8 @@ class Wanted extends database_object
             }
 
             $wartist['name'] = $martist->name;
-            parent::add_to_cache('missing_artist', $mbid, $wartist);
+
+            $cache->add('missing_artist', $mbid, $wartist);
         }
 
         $wartist['link'] = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show_missing&mbid=" . $wartist['mbid'] . "\" title=\"" . $wartist['name'] . "\">" . $wartist['name'] . "</a>";
@@ -328,7 +335,7 @@ class Wanted extends database_object
             $wanted    = new Wanted($wanted_id);
             $wanted->accept();
 
-            database_object::remove_from_cache('wanted', $wanted_id);
+            static::getDatabaseObjectCache()->remove('wanted', $wanted_id);
         }
     }
 
@@ -464,5 +471,12 @@ class Wanted extends database_object
         global $dic;
 
         return $dic->get(WantedRepositoryInterface::class);
+    }
+
+    private static function getDatabaseObjectCache(): DatabaseObjectCacheInterface
+    {
+        global $dic;
+
+        return $dic->get(DatabaseObjectCacheInterface::class);
     }
 }

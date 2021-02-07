@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
+use Ampache\Module\Cache\DatabaseObjectCache;
 use Ampache\Module\System\Dba;
 use PDOStatement;
 
@@ -81,8 +82,10 @@ class Useractivity extends database_object
         $sql        = "SELECT * FROM `user_activity` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
+        $cache = static::getDatabaseObjectCache();
+
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('user_activity', $row['id'], $row);
+            $cache->add('user_activity', $row['id'], $row);
         }
 
         return true;

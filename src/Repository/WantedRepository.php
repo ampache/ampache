@@ -23,11 +23,19 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Model\database_object;
+use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use Ampache\Module\System\Dba;
 
 final class WantedRepository implements WantedRepositoryInterface
 {
+    private DatabaseObjectCacheInterface $databaseObjectCache;
+
+    public function __construct(
+        DatabaseObjectCacheInterface $databaseObjectCache
+    ) {
+        $this->databaseObjectCache = $databaseObjectCache;
+    }
+
     /**
      * Get wanted list.
      *
@@ -109,8 +117,10 @@ final class WantedRepository implements WantedRepositoryInterface
             return [];
         }
 
-        if (database_object::is_cached('wanted', $wantedId)) {
-            return database_object::get_from_cache('wanted', $wantedId);
+        $cacheItem = $this->databaseObjectCache->retrieve('wanted', $wantedId);
+
+        if ($cacheItem !== []) {
+            return $cacheItem;
         }
 
         $params     = [$wantedId];
@@ -123,7 +133,7 @@ final class WantedRepository implements WantedRepositoryInterface
 
         $row = Dba::fetch_assoc($db_results);
 
-        database_object::add_to_cache('wanted', $wantedId, $row);
+        $this->databaseObjectCache->add('wanted', $wantedId, $row);
 
         return $row;
     }

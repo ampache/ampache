@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Cache\DatabaseObjectCache;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
@@ -90,12 +91,13 @@ class Userflag extends database_object
             $userflags[$row['object_id']] = $row['date'];
         }
 
+        $cache = static::getDatabaseObjectCache();
+
         foreach ($ids as $object_id) {
             if (isset($userflags[$object_id])) {
-                parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $object_id,
-                    array(1, $userflags[$object_id]));
+                $cache->add('userflag_' . $type . '_user' . $user_id, $object_id, array(1, $userflags[$object_id]));
             } else {
-                parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $object_id, array(false));
+                $cache->add('userflag_' . $type . '_user' . $user_id, $object_id, array(false));
             }
         }
 
@@ -148,15 +150,17 @@ class Userflag extends database_object
         if ($user_id === null) {
             $user_id = Core::get_global('user')->id;
         }
-
         $key = 'userflag_' . $this->type . '_user' . $user_id;
-        if (parent::is_cached($key, $this->id)) {
-            $object = parent::get_from_cache($key, $this->id);
-            if (empty($object) || !$object[0]) {
+
+        $cache     = static::getDatabaseObjectCache();
+        $cacheItem = $cache->retrieve($key, $this->id);
+
+        if ($cacheItem !== []) {
+            if (empty($cacheItem) || !$cacheItem[0]) {
                 return false;
             }
 
-            return $object;
+            return $cacheItem;
         }
 
         $sql        = "SELECT `id`, `date` FROM `user_flag` WHERE `user` = ? " . "AND `object_id` = ? AND `object_type` = ?";
@@ -169,7 +173,8 @@ class Userflag extends database_object
             } else {
                 $flagged = array(1);
             }
-            parent::add_to_cache($key, $this->id, $flagged);
+
+            $cache->add($key, $this->id, $flagged);
         }
 
         return $flagged;
@@ -205,12 +210,12 @@ class Userflag extends database_object
         if (!$flagged) {
             $sql    = "DELETE FROM `user_flag` WHERE " . "`object_id` = ? AND " . "`object_type` = ? AND " . "`user` = ?";
             $params = array($this->id, $this->type, $user_id);
-            parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, array(false));
+            static::getDatabaseObjectCache()->add('userflag_' . $this->type . '_user' . $user_id, $this->id, array(false));
         } else {
             $date   = time();
             $sql    = "REPLACE INTO `user_flag` " . "(`object_id`, `object_type`, `user`, `date`) " . "VALUES (?, ?, ?, ?)";
             $params = array($this->id, $this->type, $user_id, $date);
-            parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, array(1, $date));
+            static::getDatabaseObjectCache()->add('userflag_' . $this->type . '_user' . $user_id, $this->id, array(1, $date));
 
             static::getUserActivityPoster()->post((int) $user_id, 'userflag', $this->type, (int) $this->id, time());
         }
@@ -281,6 +286,9 @@ class Userflag extends database_object
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['id'];
         }
+
+        $cache = static::getDatabaseObjectCache();
+
         foreach ($results as $album_id) {
             if (!$flagged) {
                 $sql = "DELETE FROM `user_flag` WHERE " . "`object_id` = " . $album_id . " AND " . "`object_type` = 'album' AND " . "`user` = " . $user_id;
@@ -293,7 +301,7 @@ class Userflag extends database_object
                 Dba::write($sql, $params);
             }
 
-            parent::add_to_cache('userflag_album_user' . $user_id, $album_id, array($flagged));
+            $cache->add('userflag_album_user' . $user_id, $album_id, array($flagged));
         }
 
         return true;

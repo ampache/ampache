@@ -26,13 +26,11 @@ namespace Ampache\Module\Application\Admin\System;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Model\Album;
-use Ampache\Model\Artist;
-use Ampache\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -50,12 +48,16 @@ final class ClearCacheAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private DatabaseObjectCacheInterface $databaseObjectCache;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        DatabaseObjectCacheInterface $databaseObjectCache
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
+        $this->configContainer     = $configContainer;
+        $this->ui                  = $ui;
+        $this->databaseObjectCache = $databaseObjectCache;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -67,26 +69,14 @@ final class ClearCacheAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
+        $this->databaseObjectCache->clear();
+
         $this->ui->showHeader();
-
-        switch ($_REQUEST['type']) {
-            case 'song':
-                Song::clear_cache();
-                break;
-            case 'artist':
-                Artist::clear_cache();
-                break;
-            case 'album':
-                Album::clear_cache();
-                break;
-        }
-
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Your cache has been cleared successfully'),
             sprintf('%s/admin/system.php?action=show_debug', $this->configContainer->getWebPath())
         );
-
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
+use Ampache\Module\Cache\DatabaseObjectCache;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Recommendation;
@@ -140,9 +141,12 @@ class TvShow extends database_object implements library_item
      */
     private function _get_extra_info()
     {
+        $cache     = static::getDatabaseObjectCache();
+        $cacheItem = $cache->retrieve('tvshow_extra', $this->id);
+
         // Try to find it in the cache and save ourselves the trouble
-        if (parent::is_cached('tvshow_extra', $this->id)) {
-            $row = parent::get_from_cache('tvshow_extra', $this->id);
+        if ($cacheItem !== []) {
+            $row = $cacheItem;
         } else {
             $sql        = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` as `catalog_id` FROM `tvshow_season` " . "LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` " . "LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` " . "WHERE `tvshow_season`.`tvshow` = ? " . "GROUP BY `catalog_id`";
             $db_results = Dba::read($sql, array($this->id));
@@ -153,7 +157,7 @@ class TvShow extends database_object implements library_item
             $row2                = Dba::fetch_assoc($db_results);
             $row['season_count'] = $row2['season_count'];
 
-            parent::add_to_cache('tvshow_extra', $this->id, $row);
+            $cache->add('tvshow_extra', $this->id, $row);
         }
 
         /* Set Object Vars */

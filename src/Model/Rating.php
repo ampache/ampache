@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Cache\DatabaseObjectCache;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
@@ -135,6 +136,8 @@ class Rating extends database_object
             $ratings[$row['object_id']] = $row['rating'];
         }
 
+        $cache = static::getDatabaseObjectCache();
+
         foreach ($ids as $object_id) {
             // First store the user-specific rating
             if (!isset($user_ratings[$object_id])) {
@@ -142,7 +145,7 @@ class Rating extends database_object
             } else {
                 $rating = (int)$user_ratings[$object_id];
             }
-            parent::add_to_cache('rating_' . $type . '_user' . $user_id, $object_id, array((int)$rating));
+            $cache->add('rating_' . $type . '_user' . $user_id, $object_id, array((int)$rating));
 
             // Then store the average
             if (!isset($ratings[$object_id])) {
@@ -150,7 +153,7 @@ class Rating extends database_object
             } else {
                 $rating = round($ratings[$object_id], 1);
             }
-            parent::add_to_cache('rating_' . $type . '_all', $object_id, array((int)$rating));
+            $cache->add('rating_' . $type . '_all', $object_id, array((int)$rating));
         }
 
         return true;
@@ -170,8 +173,12 @@ class Rating extends database_object
         }
 
         $key = 'rating_' . $this->type . '_user' . $user_id;
-        if (parent::is_cached($key, $this->id)) {
-            return (double)parent::get_from_cache($key, $this->id)[0];
+
+        $cache     = static::getDatabaseObjectCache();
+        $cacheItem = $cache->retrieve($key, $this->id);
+
+        if ($cacheItem !== []) {
+            return (double) $cacheItem[0];
         }
 
         $sql        = "SELECT `rating` FROM `rating` WHERE `user` = ? " . "AND `object_id` = ? AND `object_type` = ?";
@@ -182,7 +189,7 @@ class Rating extends database_object
             $rating = $results['rating'];
         }
 
-        parent::add_to_cache($key, $this->id, array((int)$rating));
+        $cache->add($key, $this->id, array((int)$rating));
 
         return (double)$rating;
     } // get_user_rating
@@ -195,8 +202,11 @@ class Rating extends database_object
      */
     public function get_average_rating()
     {
-        if (parent::is_cached('rating_' . $this->type . '_all', $this->id)) {
-            return (double)parent::get_from_cache('rating_' . $this->type . '_user', $this->id)[0];
+        $cache     = static::getDatabaseObjectCache();
+        $cacheItem = $cache->retrieve('rating_' . $this->type . '_all', $this->id);
+
+        if ($cacheItem !== []) {
+            return (double) $cacheItem[0];
         }
 
         $sql        = "SELECT AVG(`rating`) as `rating` FROM `rating` WHERE " . "`object_id` = ? AND `object_type` = ? " . "HAVING COUNT(object_id) > 1";
@@ -204,7 +214,7 @@ class Rating extends database_object
 
         $results = Dba::fetch_assoc($db_results);
 
-        parent::add_to_cache('rating_' . $this->type . '_all', $this->id, $results);
+        $cache->add('rating_' . $this->type . '_all', $this->id, $results);
 
         return (double)$results['rating'];
     } // get_average_rating
@@ -302,7 +312,7 @@ class Rating extends database_object
         }
         Dba::write($sql, $params);
 
-        parent::add_to_cache('rating_' . $this->type . '_user' . $user_id, $this->id, array($rating));
+        static::getDatabaseObjectCache()->add('rating_' . $this->type . '_user' . $user_id, $this->id, array($rating));
 
         self::save_rating($this->id, $this->type, (int)$rating, (int)$user_id);
 
@@ -352,7 +362,7 @@ class Rating extends database_object
                 $params = array($album_id, 'album', $rating, $user_id);
                 Dba::write($sql, $params);
 
-                parent::add_to_cache('rating_' . 'album' . '_user' . (int)$user_id, $album_id, array($rating));
+                static::getDatabaseObjectCache()->add('rating_' . 'album' . '_user' . (int)$user_id, $album_id, array($rating));
             }
             self::save_rating($album_id, 'album', (int)$rating, (int)$user_id);
         }

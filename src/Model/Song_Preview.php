@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
+use Ampache\Module\Cache\DatabaseObjectCache;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Dba;
@@ -155,9 +156,11 @@ class Song_Preview extends database_object implements Media, playable_item
         $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` ' . 'FROM `song_preview` ' . "WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
+        $cache = static::getDatabaseObjectCache();
+
         $artists = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('song_preview', $row['id'], $row);
+            $cache->add('song_preview', $row['id'], $row);
             if ($row['artist']) {
                 $artists[$row['artist']] = $row['artist'];
             }
@@ -176,8 +179,11 @@ class Song_Preview extends database_object implements Media, playable_item
     {
         $preview_id = $this->id;
 
-        if (parent::is_cached('song_preview', $preview_id)) {
-            return parent::get_from_cache('song_preview', $preview_id);
+        $cache     = static::getDatabaseObjectCache();
+        $cacheItem = $cache->retrieve('song_preview', $preview_id);
+
+        if ($cacheItem !== []) {
+            return $cacheItem;
         }
 
         $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` ' . 'FROM `song_preview` WHERE `id` = ?';
@@ -192,7 +198,7 @@ class Song_Preview extends database_object implements Media, playable_item
                     $results['artist_mbid'] = $artist_res['mbid'];
                 }
             }
-            parent::add_to_cache('song_preview', $preview_id, $results);
+            $cache->add('song_preview', $preview_id, $results);
 
             return $results;
         }

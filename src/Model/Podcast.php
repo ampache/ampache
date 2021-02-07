@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
+use Ampache\Module\Cache\DatabaseObjectCache;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
@@ -143,15 +144,17 @@ class Podcast extends database_object implements library_item
      */
     private function _get_extra_info()
     {
+        $cache = static::getDatabaseObjectCache();
         // Try to find it in the cache and save ourselves the trouble
-        if (parent::is_cached('podcast_extra', $this->id)) {
-            $row = parent::get_from_cache('podcast_extra', $this->id);
+        $cacheItem = $cache->retrieve('podcast_extra', $this->getId());
+        if ($cacheItem !== []) {
+            $row = $cacheItem;
         } else {
             $sql        = "SELECT COUNT(`podcast_episode`.`id`) AS `episode_count` FROM `podcast_episode` " . "WHERE `podcast_episode`.`podcast` = ?";
             $db_results = Dba::read($sql, array($this->id));
             $row        = Dba::fetch_assoc($db_results);
 
-            parent::add_to_cache('podcast_extra', $this->id, $row);
+            $cache->add('podcast_extra', $this->getId(), $row);
         }
 
         /* Set Object Vars */

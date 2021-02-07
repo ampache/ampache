@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
+use Ampache\Module\Cache\DatabaseObjectCache;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
@@ -280,8 +281,10 @@ class Video extends database_object implements Media, library_item, GarbageColle
         $sql        = "SELECT * FROM `video` WHERE `video`.`id` IN $idlist";
         $db_results = Dba::read($sql);
 
+        $cache = static::getDatabaseObjectCache();
+
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('video', $row['id'], $row);
+            $cache->add('video', $row['id'], $row);
         }
 
         return true;

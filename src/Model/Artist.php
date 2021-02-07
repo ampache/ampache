@@ -25,6 +25,8 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Module\Artist\Tag\ArtistTagUpdaterInterface;
+use Ampache\Module\Cache\DatabaseObjectCache;
+use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use Ampache\Module\Label\LabelListUpdaterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
@@ -255,8 +257,10 @@ class Artist extends database_object implements library_item, GarbageCollectible
         $sql        = "SELECT * FROM `artist` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
+        $cache = static::getDatabaseObjectCache();
+
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('artist', $row['id'], $row);
+            $cache->add('artist', $row['id'], $row);
         }
 
         // If we need to also pull the extra information, this is normally only used when we are doing the human display
@@ -270,7 +274,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
                 if (AmpConfig::get('show_played_times')) {
                     $row['object_cnt'] = Stats::get_object_count('artist', $row['artist'], $limit_threshold);
                 }
-                parent::add_to_cache('artist_extra', $row['artist'], $row);
+                $cache->add('artist_extra', $row['artist'], $row);
             }
         } // end if extra
 
@@ -319,9 +323,12 @@ class Artist extends database_object implements library_item, GarbageCollectible
      */
     private function _get_extra_info($catalog = 0, $limit_threshold = '')
     {
+        $cache = static::getDatabaseObjectCache();
+
         // Try to find it in the cache and save ourselves the trouble
-        if (parent::is_cached('artist_extra', $this->id)) {
-            $row = parent::get_from_cache('artist_extra', $this->id);
+        $cacheItem = $cache->retrieve('artist_extra', $this->getId());
+        if ($cacheItem !== []) {
+            $row = $cacheItem;
         } else {
             $params = array($this->id);
             // Calculation
@@ -353,7 +360,7 @@ class Artist extends database_object implements library_item, GarbageCollectible
             if (AmpConfig::get('show_played_times')) {
                 $row['object_cnt'] = Stats::get_object_count('artist', $row['artist'], $limit_threshold);
             }
-            parent::add_to_cache('artist_extra', $row['artist'], $row);
+            $cache->add('artist_extra', (int) $row['artist'], $row);
         }
 
         /* Set Object Vars */

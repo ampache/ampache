@@ -25,6 +25,8 @@ declare(strict_types=0);
 namespace Ampache\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Cache\DatabaseObjectCache;
+use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
@@ -108,8 +110,10 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $sql        = "SELECT * FROM `tag` WHERE `id` IN $idlist";
         $db_results = Dba::read($sql);
 
+        $cache = static::getDatabaseObjectCache();
+
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('tag', $row['id'], $row);
+            $cache->add('tag', $row['id'], $row);
         }
 
         return true;
@@ -156,6 +160,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             );
         }
 
+        $cache = static::getDatabaseObjectCache();
+
         // Run through our original ids as we also want to cache NULL
         // results
         foreach ($ids as $tagid) {
@@ -163,8 +169,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                 $tags[$tagid]    = null;
                 $tag_map[$tagid] = null;
             }
-            parent::add_to_cache('tag_top_' . $type, $tagid, array($tags[$tagid]));
-            parent::add_to_cache('tag_map_' . $type, $tagid, array($tag_map[$tagid]));
+            $cache->add('tag_top_' . $type, $tagid, array($tags[$tagid]));
+            $cache->add('tag_map_' . $type, $tagid, array($tag_map[$tagid]));
         }
 
         return true;
@@ -238,7 +244,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         Dba::write($sql, array($value));
         $insert_id = (int)Dba::insert_id();
 
-        parent::add_to_cache('tag_name', $value, array($insert_id));
+        static::getDatabaseObjectCache()->add('tag_name', $value, array($insert_id));
 
         return $insert_id;
     } // add_tag
@@ -369,7 +375,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
         $insert_id = (int)Dba::insert_id();
 
-        parent::add_to_cache('tag_map_' . $type, $insert_id,
+        static::getDatabaseObjectCache()->add('tag_map_' . $type, $insert_id,
             array('tag_id' => $tag_id, 'user' => $uid, 'object_type' => $type, 'object_id' => $item_id));
 
         return $insert_id;
@@ -420,7 +426,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         // Call the garbage collector to clean everything
         self::garbage_collection();
 
-        parent::clear_cache();
+        static::getDatabaseObjectCache()->clear();
     }
 
     /**
@@ -431,8 +437,11 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      */
     public static function tag_exists($value)
     {
-        if (parent::is_cached('tag_name', $value)) {
-            return (int)(parent::get_from_cache('tag_name', $value))[0];
+        $cache     = static::getDatabaseObjectCache();
+        $cacheItem = $cache->retrieve('tag_name', $value);
+
+        if ($cacheItem !== []) {
+            return (int) $cacheItem[0];
         }
 
         $sql        = "SELECT `id` FROM `tag` WHERE `name` = ?";
@@ -440,7 +449,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         $results = Dba::fetch_assoc($db_results);
 
-        parent::add_to_cache('tag_name', $results['name'], $results);
+        $cache->add('tag_name', $results['name'], $results);
 
         return (int)$results['id'];
     } // tag_exists
@@ -580,10 +589,13 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      */
     public static function get_tags($type = '', $limit = 0, $order = 'count')
     {
-        //debug_event(self::class, 'Get tags list called...', 5);
-        if (parent::is_cached('tags_list', 'no_name')) {
-            //debug_event(self::class, 'Tags list found into cache memory!', 5);
-            return parent::get_from_cache('tags_list', 'no_name');
+        $cache     = static::getDatabaseObjectCache();
+        $cacheItem = $cache->retrieve('tags_list', 'no_name');
+
+        //debug_event('tag.class', 'Get tags list called...', 5);
+        if ($cacheItem !== []) {
+            //debug_event('tag.class', 'Tags list found into cache memory!', 5);
+            return $cacheItem;
         }
 
         $results = array();
@@ -612,7 +624,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             );
         }
 
-        parent::add_to_cache('tags_list', 'no_name', $results);
+        $cache->add('tags_list', 'no_name', $results);
 
         return $results;
     } // get_tags
