@@ -32,6 +32,8 @@ interface GatekeeperInterface
 
     public function extendSession(): void;
 
+    public function endSession(): void;
+
     public function getUserName(): string;
 
     public function getAuth(): string;

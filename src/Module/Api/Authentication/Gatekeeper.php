@@ -72,6 +72,11 @@ final class Gatekeeper implements GatekeeperInterface
         Session::extend($this->getAuth());
     }
 
+    public function endSession(): void
+    {
+        Session::destroy($this->getAuth());
+    }
+
     public function getUserName(): string
     {
         return Session::username($this->getAuth());

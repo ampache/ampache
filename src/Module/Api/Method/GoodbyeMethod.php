@@ -20,51 +20,85 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Module\Api\Api;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\Util\EnvironmentInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Log\LoggerInterface;
 
-/**
- * Class GoodbyeMethod
- * @package Lib\ApiMethods
- */
-final class GoodbyeMethod
+final class GoodbyeMethod implements MethodInterface
 {
-    private const ACTION = 'goodbye';
+    public const ACTION = 'goodbye';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private LoggerInterface $logger;
+
+    private EnvironmentInterface $environment;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        LoggerInterface $logger,
+        EnvironmentInterface $environment
+    ) {
+        $this->streamFactory = $streamFactory;
+        $this->logger        = $logger;
+        $this->environment   = $environment;
+    }
 
     /**
-     * goodbye
      * MINIMUM_API_VERSION=400001
      *
      * Destroy session for auth key.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * auth = (string))
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws Exception\RequestParamMissingException
      */
-    public static function goodbye(array $input)
-    {
-        if (!Api::check_parameter($input, array('auth'), self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $auth = $input['auth'] ?? null;
+
+        if ($auth === null) {
+            throw new Exception\RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'auth')
+            );
         }
+
         // Check and see if we should destroy the api session (done if valid session is passed)
-        if (Session::exists('api', $input['auth'])) {
-            Session::destroy($input['auth']);
+        if ($gatekeeper->sessionExists()) {
+            $gatekeeper->endSession();
 
-            debug_event(self::class, 'Goodbye Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
-            ob_end_clean();
-            Api::message($input['auth'], $input['api_format']);
+            $this->logger->debug(
+                sprintf('Goodbye Received from %s', $this->environment->getClientIp()),
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
 
-            return true;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->success($auth)
+                )
+            );
         }
-        ob_end_clean();
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(sprintf(T_('Bad Request: %s'), $input['auth']), '4710', self::ACTION, 'account', $input['api_format']);
 
-        return false;
+        throw new Exception\RequestParamMissingException(
+            sprintf(T_('Bad Request: %s'), 'auth')
+        );
     }
 }
