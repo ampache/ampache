@@ -223,7 +223,7 @@ class UPnPPlayer
         $song = new song($songId);
         $song->format();
         $songItem = Upnp_Api::_itemSong($song, '');
-        $domDIDL  = Upnp_Api::createDIDL($songItem);
+        $domDIDL  = Upnp_Api::createDIDL($songItem, '');
         $xmlDIDL  = $domDIDL->saveXML();
 
         return array(
