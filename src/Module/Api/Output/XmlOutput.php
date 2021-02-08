@@ -436,4 +436,14 @@ final class XmlOutput implements ApiOutputInterface
     {
         return Xml_Data::catalogs($catalogIds);
     }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param int[] $activityIds Activity identifier list
+     */
+    public function timeline(array $activityIds): string
+    {
+        return Xml_Data::timeline($activityIds);
+    }
 }

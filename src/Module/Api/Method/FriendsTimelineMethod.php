@@ -20,76 +20,79 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class FriendsTimelineMethod
- * @package Lib\ApiMethods
- */
-final class FriendsTimelineMethod
+final class FriendsTimelineMethod implements MethodInterface
 {
-    const ACTION = 'friends_timeline';
+    public const ACTION = 'friends_timeline';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private UserActivityRepositoryInterface $userActivityRepository;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        UserActivityRepositoryInterface $userActivityRepository,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->streamFactory          = $streamFactory;
+        $this->userActivityRepository = $userActivityRepository;
+        $this->configContainer        = $configContainer;
+    }
 
     /**
-     * friends_timeline
      * MINIMUM_API_VERSION=380001
      *
      * This get current user friends timeline
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * limit = (integer) //optional
      * since = (integer) UNIXTIME() //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws FunctionDisabledException
      */
-    public static function friends_timeline(array $input)
-    {
-        if (!AmpConfig::get('sociable')) {
-            Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false) {
+            throw new FunctionDisabledException(T_('Enable: sociable'));
         }
-        $limit = (int) ($input['limit']);
-        $since = (int) ($input['since']);
-        $user  = User::get_from_username(Session::username($input['auth']))->getId();
 
-        $activities = static::getUseractivityRepository()->getFriendsActivities(
-            $user,
-            $limit,
-            $since
+        $activityIds = $this->userActivityRepository->getFriendsActivities(
+            $gatekeeper->getUser()->getId(),
+            (int) ($input['limit'] ?? 0),
+            (int) ($input['since'] ?? 0)
         );
-        if (empty($activities)) {
-            Api::empty('activity', $input['api_format']);
 
-            return false;
+        if ($activityIds === []) {
+            $result = $output->emptyResult('activity');
+        } else {
+            $result = $output->timeline($activityIds);
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json_Data::timeline($activities);
-                break;
-            default:
-                echo Xml_Data::timeline($activities);
-        }
-        Session::extend($input['auth']);
-
-        return true;
-    }
-
-    private static function getUseractivityRepository(): UserActivityRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserActivityRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }

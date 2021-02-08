@@ -268,4 +268,13 @@ interface ApiOutputInterface
         array $catalogIds,
         bool $asObject = true
     ): string;
+
+    /**
+     * This return user activity to the user
+     *
+     * @param int[] $activityIds Activity identifier list
+     */
+    public function timeline(
+        array $activityIds
+    ): string;
 }

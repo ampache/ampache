@@ -452,4 +452,14 @@ final class JsonOutput implements ApiOutputInterface
     {
         return Json_Data::catalogs($catalogIds, $asObject);
     }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param int[] $activityIds Activity identifier list
+     */
+    public function timeline(array $activityIds): string
+    {
+        return Json_Data::timeline($activityIds);
+    }
 }

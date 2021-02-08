@@ -127,7 +127,7 @@ class Api
         'catalog_action' => Method\CatalogActionMethod::class,
         'catalog_file' => Method\CatalogFileMethod::class,
         'timeline' => Method\TimelineMethod::class,
-        'friends_timeline' => Method\FriendsTimelineMethod::class,
+        Method\FriendsTimelineMethod::ACTION => Method\FriendsTimelineMethod::class,
         'update_from_tags' => Method\UpdateFromTagsMethod::class,
         'update_artist_info' => Method\UpdateArtistInfoMethod::class,
         'update_art' => Method\UpdateArtMethod::class,
