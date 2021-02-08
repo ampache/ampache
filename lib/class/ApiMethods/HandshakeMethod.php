@@ -92,7 +92,7 @@ final class HandshakeMethod
         }
 
         // Log this attempt
-        debug_event(self::class, "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
+        debug_event(self::class, "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id)", 1);
 
         if ($user_id > 0 && Access::check_network('api', $user_id, 5)) {
             // Authentication with user/password, we still need to check the password
