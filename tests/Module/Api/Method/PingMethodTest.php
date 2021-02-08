@@ -97,7 +97,7 @@ class PingMethodTest extends MockeryTestCase
 
         $this->logger->shouldReceive('debug')
             ->with(
-                sprintf('Ping Received from %s :: %s', $clientIp, ''),
+                sprintf('Ping Received from %s', $clientIp),
                 [LegacyLogger::CONTEXT_TYPE => PingMethod::class]
             )
             ->once();

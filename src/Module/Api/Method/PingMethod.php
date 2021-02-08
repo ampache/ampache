@@ -101,7 +101,7 @@ final class PingMethod implements MethodInterface
         }
 
         $this->logger->debug(
-            sprintf('Ping Received from %s :: %s', $this->environment->getClientIp(), $input['auth'] ?? ''),
+            sprintf('Ping Received from %s', $this->environment->getClientIp()),
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
 
