@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Lib\ApiMethods;
 
 use Access;
+use AmpConfig;
 use Api;
 use JSON_Data;
 use Playlist;
