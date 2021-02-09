@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Lib\ApiMethods;
 
+use Album;
 use Api;
 use Catalog;
 use Session;

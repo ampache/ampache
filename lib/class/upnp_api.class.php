@@ -1695,7 +1695,6 @@ class Upnp_Api
             'bitrate' => $song->bitrate,
             'sampleFrequency' => $song->rate,
             'nrAudioChannels' => '2',  // Just say its stereo as we don't have the real info
-            'protocolInfo' => $arrFileType['mime'],
             'description' => self::_replaceSpecialSymbols($song->comment),
         );
     }

@@ -100,11 +100,11 @@ final class GetIndexesMethod
         }
 
         if ($type == 'playlist') {
-            self::$browse->set_filter('playlist_type', $user->id);
+            Api::$browse->set_filter('playlist_type', $user->id);
             if (!$hide) {
-                $objects = array_merge(self::$browse->get_objects(), Playlist::get_smartlists(true, $user->id));
+                $objects = array_merge(Api::$browse->get_objects(), Playlist::get_smartlists(true, $user->id));
             } else {
-                $objects = self::$browse->get_objects();
+                $objects = Api::$browse->get_objects();
             }
         } else {
             $objects = Api::$browse->get_objects();

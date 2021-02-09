@@ -1262,6 +1262,9 @@ class Song extends database_object implements media, library_item
     /**
      * write_id3
      * Write the current song id3 metadata to the file
+     * @param array $data
+     * @param array $changed
+     * @throws Exception
      */
     public function write_id3($data = null, $changed = null)
     {

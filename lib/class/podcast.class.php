@@ -286,6 +286,7 @@ class Podcast extends database_object implements library_item
      * update
      * This takes a key'd array of data and updates the current podcast
      * @param array $data
+     * @return mixed
      */
     public function update(array $data)
     {

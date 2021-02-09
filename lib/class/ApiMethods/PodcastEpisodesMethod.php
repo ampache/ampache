@@ -30,7 +30,6 @@ use Api;
 use JSON_Data;
 use Podcast;
 use Session;
-use User;
 use XML_Data;
 
 /**

@@ -349,6 +349,7 @@ class TVShow_Season extends database_object implements library_item
      * update
      * This takes a key'd array of data and updates the current tv show
      * @param array $data
+     * @return mixed
      */
     public function update(array $data)
     {

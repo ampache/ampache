@@ -1006,7 +1006,6 @@ class Artist extends database_object implements library_item
      * @param string $tags_comma
      * @param boolean $override_childs
      * @param boolean $add_to_childs
-     * @param integer|null $current_id
      * @param boolean $force_update
      */
     public function update_tags($tags_comma, $override_childs, $add_to_childs, $force_update = false)
