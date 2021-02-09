@@ -355,6 +355,17 @@ class Catalog_remote extends Catalog
     }
 
     /**
+     * move_catalog_proc
+     * This function updates the file path of the catalog to a new location (unsupported)
+     * @param string $new_path
+     * @return boolean
+     */
+    public function move_catalog_proc($new_path)
+    {
+        return false;
+    }
+
+    /**
      * check_remote_song
      *
      * checks to see if a remote song exists in the database or not

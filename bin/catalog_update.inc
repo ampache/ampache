@@ -41,7 +41,7 @@ $optimizetables = 0;
 $catmove        = 0;
 $cattype        = false;
 $catname        = false;
-$catpath        = false;
+$catpath        = '';
 $options        = getopt("hn:t:mvcaguiop:");
 
 if (count($options) == 0) {
