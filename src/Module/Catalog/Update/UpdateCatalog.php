@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Catalog\Update;
 
 use Ahc\Cli\IO\Interactor;
+use Ampache\Model\Album;
 use Ampache\Model\Catalog;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\System\Dba;
@@ -103,6 +104,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     true
                 );
                 $catalog->add_to_catalog($options);
+                Album::update_album_artist();
                 $interactor->info('------------------', true);
             } elseif ($addArt === true) {
                 // Look for media art

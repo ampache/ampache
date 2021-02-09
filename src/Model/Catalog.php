@@ -2804,6 +2804,7 @@ abstract class Catalog extends database_object
                     if (!defined('SSE_OUTPUT') && !defined('CLI')) {
                         echo AmpError::display('catalog_add');
                     }
+                    Album::update_album_artist();
                 }
                 break;
             case 'update_all_catalogs':
@@ -2833,6 +2834,7 @@ abstract class Catalog extends database_object
                         $catalog->add_to_catalog();
                     }
                 }
+                Album::update_album_artist();
                 Dba::optimize_tables();
                 break;
             case 'clean_all_catalogs':
@@ -2857,6 +2859,7 @@ abstract class Catalog extends database_object
                         $catalog = self::create_from_id($catalog_id);
                         if ($catalog !== null) {
                             $catalog->add_to_catalog(array('subdirectory' => $options['add_path']));
+                            Album::update_album_artist();
                         }
                     }
                 } // end if add
