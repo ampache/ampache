@@ -21,8 +21,8 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Playlist;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;

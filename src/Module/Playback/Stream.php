@@ -25,15 +25,15 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
-use Ampache\Model\Video;
+use Ampache\Repository\Model\Video;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Model\Preference;
+use Ampache\Repository\Model\Preference;
 use Ampache\Module\System\Session;
-use Ampache\Model\User;
+use Ampache\Repository\Model\User;
 
 class Stream
 {

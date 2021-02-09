@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Album;
 
-use Ampache\Model\Song;
+use Ampache\Repository\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;

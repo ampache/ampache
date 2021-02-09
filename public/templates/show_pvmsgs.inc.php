@@ -21,7 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\PrivateMsg;
+use Ampache\Repository\Model\PrivateMsg;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 

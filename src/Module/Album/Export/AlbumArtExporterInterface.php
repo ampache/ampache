@@ -22,7 +22,7 @@
 namespace Ampache\Module\Album\Export;
 
 use Ahc\Cli\IO\Interactor;
-use Ampache\Model\Catalog;
+use Ampache\Repository\Model\Catalog;
 
 interface AlbumArtExporterInterface
 {

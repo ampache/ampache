@@ -27,10 +27,10 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Browse;
+use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
-use Ampache\Model\Label;
-use Ampache\Model\Tag;
+use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\Tag;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\LabelRepositoryInterface;

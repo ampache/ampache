@@ -22,9 +22,9 @@
 
 namespace Ampache\Repository;
 
-use Ampache\Model\DatabaseObject;
+use Ampache\Repository\Model\DatabaseObject;
 use Ampache\Module\System\Dba;
-use Ampache\Model\Model;
+use Ampache\Repository\Model\Model;
 use ReflectionClass;
 use ReflectionException;
 

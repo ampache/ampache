@@ -20,7 +20,7 @@
  *
  */
 
-use Ampache\Model\Broadcast;
+use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\System\Core;
 
 ?>

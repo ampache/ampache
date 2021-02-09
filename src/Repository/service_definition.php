@@ -43,4 +43,5 @@ return [
     BookmarkRepositoryInterface::class => autowire(BookmarkRepository::class),
     PrivateMessageRepositoryInterface::class => autowire(PrivateMessageRepository::class),
     VideoRepositoryInterface::class => autowire(VideoRepository::class),
+    Model\ModelFactoryInterface::class => autowire(Model\ModelFactory::class),
 ];

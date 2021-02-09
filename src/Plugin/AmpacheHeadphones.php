@@ -23,9 +23,9 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use Ampache\Model\Preference;
-use Ampache\Model\User;
-use Ampache\Model\Wanted;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Wanted;
 use Exception;
 use Requests;
 

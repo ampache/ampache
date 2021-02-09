@@ -26,12 +26,12 @@ namespace Ampache\Module\Util;
 
 use Ampache\Module\Playback\Stream;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use PDOStatement;
 use RuntimeException;
-use Ampache\Model\Song;
+use Ampache\Repository\Model\Song;
 
 /**
  * Waveform code generation license:

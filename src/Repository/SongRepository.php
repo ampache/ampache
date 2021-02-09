@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Artist;
+use Ampache\Repository\Model\Artist;
 use Ampache\Module\System\Dba;
 
 final class SongRepository implements SongRepositoryInterface

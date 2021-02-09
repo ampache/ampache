@@ -26,7 +26,7 @@ namespace Ampache\Module\Application\Song;
 
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
-use Ampache\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;

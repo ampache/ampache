@@ -21,7 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Preference;
+use Ampache\Repository\Model\Preference;
 use Ampache\Module\Api\Ajax;
 
 ?>

@@ -26,7 +26,7 @@ namespace Ampache\Module\Util\FileSystem;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Model\Catalog;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 

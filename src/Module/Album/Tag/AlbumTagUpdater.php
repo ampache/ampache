@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Album\Tag;
 
-use Ampache\Model\Album;
-use Ampache\Model\Tag;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Tag;
 use Ampache\Repository\SongRepositoryInterface;
 
 final class AlbumTagUpdater implements AlbumTagUpdaterInterface

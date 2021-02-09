@@ -24,10 +24,10 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Plugin;
-use Ampache\Model\Preference;
-use Ampache\Model\User;
-use Ampache\Model\Userflag;
+use Ampache\Repository\Model\Plugin;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;

@@ -22,7 +22,7 @@
 
 /** @var Share $libitem */
 
-use Ampache\Model\Share;
+use Ampache\Repository\Model\Share;
 
 ?>
 

@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\SearchData;
 
-use Ampache\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;

@@ -25,13 +25,13 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
-use Ampache\Model\Album;
+use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Artist;
-use Ampache\Model\Browse;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
-use Ampache\Model\Playlist;
-use Ampache\Model\Random;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Random;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;

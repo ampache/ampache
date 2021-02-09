@@ -25,8 +25,8 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Preference;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Horde_Browser;
 use Exception;
 

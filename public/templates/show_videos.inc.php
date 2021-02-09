@@ -21,9 +21,9 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
-use Ampache\Model\User;
-use Ampache\Model\Video;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Video;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;

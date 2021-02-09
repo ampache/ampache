@@ -25,12 +25,12 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
-use Ampache\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Share\ShareUiLinkRendererInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\System\Core;
-use Ampache\Model\Playlist;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 

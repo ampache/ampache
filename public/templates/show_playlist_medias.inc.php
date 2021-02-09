@@ -22,8 +22,8 @@
 
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;

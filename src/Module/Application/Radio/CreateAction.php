@@ -26,7 +26,7 @@ namespace Ampache\Module\Application\Radio;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Model\Live_Stream;
+use Ampache\Repository\Model\Live_Stream;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;

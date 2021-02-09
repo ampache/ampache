@@ -27,17 +27,17 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Playlist;
-use Ampache\Model\Rating;
-use Ampache\Model\Search;
-use Ampache\Model\User;
-use Ampache\Model\Userflag;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\RefreshReordered\RefreshPlaylistMediasAction;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
-use Ampache\Model\Browse;
+use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 

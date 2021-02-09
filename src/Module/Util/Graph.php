@@ -25,14 +25,14 @@ declare(strict_types=1);
 namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Repository\UserRepositoryInterface;
 use CpChart;
 use CpChart\Data;
 use Ampache\Module\System\Dba;
-use Ampache\Model\Plugin;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Plugin;
+use Ampache\Repository\Model\User;
 
 class Graph
 {

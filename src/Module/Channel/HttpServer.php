@@ -26,8 +26,8 @@ namespace Ampache\Module\Channel;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Model\Channel;
-use Ampache\Model\Song;
+use Ampache\Repository\Model\Channel;
+use Ampache\Repository\Model\Song;
 use RuntimeException;
 
 final class HttpServer implements HttpServerInterface

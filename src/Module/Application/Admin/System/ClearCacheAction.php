@@ -26,9 +26,9 @@ namespace Ampache\Module\Application\Admin\System;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Model\Album;
-use Ampache\Model\Artist;
-use Ampache\Model\Song;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;

@@ -25,8 +25,8 @@ namespace Ampache\Module\Application\Admin\Shout;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\Shoutbox;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;

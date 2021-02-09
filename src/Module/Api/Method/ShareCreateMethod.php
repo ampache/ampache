@@ -26,8 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
-use Ampache\Model\Share;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Share;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;

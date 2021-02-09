@@ -23,9 +23,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Artist\Tag;
 
-use Ampache\Model\Artist;
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\Tag;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Tag;
 use Ampache\Module\Album\Tag\AlbumTagUpdaterInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 

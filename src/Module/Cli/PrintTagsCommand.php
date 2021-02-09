@@ -26,7 +26,7 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Model\Catalog;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Channel\ChannelRunnerInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\VaInfo;

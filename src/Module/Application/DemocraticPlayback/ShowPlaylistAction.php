@@ -26,9 +26,9 @@ namespace Ampache\Module\Application\DemocraticPlayback;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Model\Democratic;
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\Song;
+use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;

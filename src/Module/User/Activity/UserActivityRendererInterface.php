@@ -22,7 +22,7 @@
 
 namespace Ampache\Module\User\Activity;
 
-use Ampache\Model\Useractivity;
+use Ampache\Repository\Model\Useractivity;
 
 interface UserActivityRendererInterface
 {

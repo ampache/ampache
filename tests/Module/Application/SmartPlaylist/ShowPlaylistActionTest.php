@@ -25,8 +25,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\SmartPlaylist;
 
 use Ampache\MockeryTestCase;
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\Search;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Search;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;

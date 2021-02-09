@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\Access;
 
 use Ampache\MockeryTestCase;
-use Ampache\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Admin\Access\Lib\AccessListItem;
 use Ampache\Module\Application\Admin\Access\Lib\AccessListItemInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;

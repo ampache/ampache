@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Album;
-use Ampache\Model\Artist;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
 use Ampache\Module\System\Dba;
 
 final class AlbumRepository implements AlbumRepositoryInterface

@@ -25,8 +25,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\License;
 
 use Ampache\MockeryTestCase;
-use Ampache\Model\License;
-use Ampache\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\License;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;

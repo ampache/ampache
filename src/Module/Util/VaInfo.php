@@ -24,9 +24,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Model\Plugin;
+use Ampache\Repository\Model\Plugin;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Repository\UserRepositoryInterface;
 use Exception;

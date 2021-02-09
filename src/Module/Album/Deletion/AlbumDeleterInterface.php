@@ -22,7 +22,7 @@
 
 namespace Ampache\Module\Album\Deletion;
 
-use Ampache\Model\Album;
+use Ampache\Repository\Model\Album;
 use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
 
 interface AlbumDeleterInterface

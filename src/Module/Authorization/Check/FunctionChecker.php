@@ -25,7 +25,7 @@ namespace Ampache\Module\Authorization\Check;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Model\User;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;

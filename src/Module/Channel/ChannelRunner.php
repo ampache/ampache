@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Channel;
 
 use Ahc\Cli\IO\Interactor;
-use Ampache\Model\Channel;
+use Ampache\Repository\Model\Channel;
 
 final class ChannelRunner implements ChannelRunnerInterface
 {

@@ -25,9 +25,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Access;
-use Ampache\Model\Browse;
+use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Dba;
 
 /**

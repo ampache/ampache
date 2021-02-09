@@ -27,7 +27,7 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
-use Ampache\Model\Plugin;
+use Ampache\Repository\Model\Plugin;
 use Ampache\Module\System\Session;
 use Ampache\Module\Statistics\Stats;
 

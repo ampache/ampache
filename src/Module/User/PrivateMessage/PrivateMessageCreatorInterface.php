@@ -22,7 +22,7 @@
 
 namespace Ampache\Module\User\PrivateMessage;
 
-use Ampache\Model\User;
+use Ampache\Repository\Model\User;
 
 interface PrivateMessageCreatorInterface
 {

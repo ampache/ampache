@@ -25,11 +25,11 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Model\Album;
+use Ampache\Repository\Model\Album;
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Artist;
-use Ampache\Model\Catalog;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\System\Core;
 use RuntimeException;

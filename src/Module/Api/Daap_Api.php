@@ -24,16 +24,16 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Model\Album;
+use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Model\Playlist;
-use Ampache\Model\Rating;
-use Ampache\Model\Search;
-use Ampache\Model\Song;
-use Ampache\Model\Tag;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Tag;
 
 /**
  * DAAP Class

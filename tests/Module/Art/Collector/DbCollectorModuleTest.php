@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Art\Collector;
 
-use Ampache\Model\Art;
+use Ampache\Repository\Model\Art;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

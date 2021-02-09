@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\User;
+use Ampache\Repository\Model\User;
 
 /**
  * Update Class

@@ -21,8 +21,8 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Artist;
-use Ampache\Model\Song;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Song;
 
 ?>
 

@@ -20,8 +20,8 @@
  *
  */
 
-use Ampache\Model\Tag;
-use Ampache\Model\TvShow;
+use Ampache\Repository\Model\Tag;
+use Ampache\Repository\Model\TvShow;
 
 /** @var TvShow $libitem */
 

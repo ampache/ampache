@@ -25,9 +25,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Playlist;
 
 use Ahc\Cli\IO\Interactor;
-use Ampache\Model\Album;
-use Ampache\Model\Catalog;
-use Ampache\Model\Playlist;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Playback\Stream_Playlist;
 
 final class PlaylistExporter implements PlaylistExporterInterface

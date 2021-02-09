@@ -24,8 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Model\Album;
-use Ampache\Model\Random;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Random;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream;
@@ -37,10 +37,10 @@ use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
-use Ampache\Model\Artist;
-use Ampache\Model\Bookmark;
-use Ampache\Model\Catalog;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Bookmark;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
@@ -49,20 +49,20 @@ use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use DOMDocument;
-use Ampache\Model\Playlist;
-use Ampache\Model\Podcast;
-use Ampache\Model\Podcast_Episode;
-use Ampache\Model\Preference;
-use Ampache\Model\PrivateMsg;
-use Ampache\Model\Rating;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\PrivateMsg;
+use Ampache\Repository\Model\Rating;
 use Requests;
-use Ampache\Model\Search;
-use Ampache\Model\Share;
+use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Share;
 use SimpleXMLElement;
-use Ampache\Model\Song;
-use Ampache\Model\Tag;
-use Ampache\Model\User;
-use Ampache\Model\Userflag;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Tag;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Userflag;
 
 /**
  * Subsonic Class

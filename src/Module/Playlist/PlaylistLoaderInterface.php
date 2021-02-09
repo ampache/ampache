@@ -21,7 +21,7 @@
 
 namespace Ampache\Module\Playlist;
 
-use Ampache\Model\Playlist;
+use Ampache\Repository\Model\Playlist;
 
 interface PlaylistLoaderInterface
 {

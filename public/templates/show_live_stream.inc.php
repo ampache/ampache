@@ -21,7 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
+use Ampache\Repository\Model\Art;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;

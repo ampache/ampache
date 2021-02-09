@@ -29,9 +29,9 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Model\Browse;
+use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
-use Ampache\Model\Playlist;
+use Ampache\Repository\Model\Playlist;
 
 final class PlaylistAjaxHandler implements AjaxHandlerInterface
 {
