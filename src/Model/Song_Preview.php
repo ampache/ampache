@@ -30,6 +30,7 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\Wanted\MissingArtistLookupInterface;
 use PDOStatement;
 
 class Song_Preview extends database_object implements Media, playable_item
@@ -241,7 +242,7 @@ class Song_Preview extends database_object implements Media, playable_item
             $this->f_artist_full = $this->get_artist_name();
             $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist_full) . "\"> " . scrub_out($this->f_artist_full) . "</a>";
         } else {
-            $wartist             = Wanted::get_missing_artist($this->artist_mbid);
+            $wartist             = $this->getMissingArtistLookup()->lookup($this->artist_mbid);
             $this->f_artist_link = $wartist['link'];
             $this->f_artist_full = $wartist['name'];
         }
@@ -452,5 +453,15 @@ class Song_Preview extends database_object implements Media, playable_item
 
     public function remove()
     {
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getMissingArtistLookup(): MissingArtistLookupInterface
+    {
+        global $dic;
+
+        return $dic->get(MissingArtistLookupInterface::class);
     }
 }

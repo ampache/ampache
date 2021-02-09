@@ -17,16 +17,14 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Wanted;
 
-use function DI\autowire;
-
-return [
-    MissingArtistFinderInterface::class => autowire(MissingArtistFinder::class),
-    MissingArtistLookupInterface::class => autowire(MissingArtistLookup::class),
-];
+interface MissingArtistLookupInterface
+{
+    /**
+     * Get missing artist data.
+     */
+    public function lookup(string $musicbrainzId): array;
+}

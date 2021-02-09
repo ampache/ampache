@@ -20,15 +20,14 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Artist;
 
-use Ampache\Model\Wanted;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Wanted\MissingArtistLookupInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -38,22 +37,27 @@ final class ShowMissingAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private MissingArtistLookupInterface $missingArtistLookup;
+
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
+        MissingArtistLookupInterface $missingArtistLookup
     ) {
-        $this->ui = $ui;
+        $this->ui                  = $ui;
+        $this->missingArtistLookup = $missingArtistLookup;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
-        
-        set_time_limit(600);
-        $mbid    = $_REQUEST['mbid'];
-        $wartist = Wanted::get_missing_artist($mbid);
-
-        require Ui::find_template('show_missing_artist.inc.php');
-        
+        $this->ui->show(
+            'show_missing_artist.inc.php',
+            [
+                'wartist' => $this->missingArtistLookup->lookup(
+                    $request->getQueryParams()['mbid'] ?? ''
+                )
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
         
