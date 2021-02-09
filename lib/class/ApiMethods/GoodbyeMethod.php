@@ -26,7 +26,6 @@ namespace Lib\ApiMethods;
 
 use Api;
 use Core;
-use Dba;
 use Session;
 
 /**
@@ -56,7 +55,7 @@ final class GoodbyeMethod
         if (Session::exists('api', $input['auth'])) {
             Session::destroy($input['auth']);
 
-            debug_event(self::class, 'Goodbye Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
+            debug_event(self::class, 'Goodbye Received from ' . Core::get_server('REMOTE_ADDR'), 5);
             ob_end_clean();
             Api::message($input['auth'], $input['api_format']);
 

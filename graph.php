@@ -28,7 +28,7 @@ require_once $a_root . '/lib/init.php';
 
 // Check to see if they've got an interface session or a valid API session, if not GTFO
 if (!Session::exists('interface', $_COOKIE[AmpConfig::get('session_name')]) && !Session::exists('api', $_REQUEST['auth'])) {
-    debug_event('graph', 'Access denied, checked cookie session:' . $_COOKIE[AmpConfig::get('session_name')] . ' and auth:' . $_REQUEST['auth'], 1);
+    debug_event('graph', 'Access denied, checked cookie session:' . $_COOKIE[AmpConfig::get('session_name')], 1);
     exit;
 }
 
