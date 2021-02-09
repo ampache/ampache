@@ -1268,7 +1268,6 @@ class Album extends database_object implements library_item
             if (!empty($artists)) {
                 debug_event(self::class, 'Found album_artist {' . $artists[0] . '} for: ' . $album_id, 5);
                 Album::update_field('album_artist', $artists[0], $album_id);
-                break;
             }
         }
     }
