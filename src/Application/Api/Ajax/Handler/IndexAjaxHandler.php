@@ -25,13 +25,14 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
 use Ampache\Model\Artist;
 use Ampache\Model\Browse;
-use Ampache\Model\Catalog;
 use Ampache\Model\Channel;
 use Ampache\Module\System\Core;
 use Ampache\Model\Label;
@@ -65,6 +66,8 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
     private CatalogRepositoryInterface $catalogRepository;
 
+    private ConfigContainerInterface $configContainer;
+
     public function __construct(
         ArtCollectorInterface $artCollector,
         SlideshowInterface $slideshow,
@@ -73,7 +76,8 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         SongRepositoryInterface $songRepository,
         WantedRepositoryInterface $wantedRepository,
         VideoRepositoryInterface $videoRepository,
-        CatalogRepositoryInterface $catalogRepository
+        CatalogRepositoryInterface $catalogRepository,
+        ConfigContainerInterface $configContainer
     ) {
         $this->artCollector      = $artCollector;
         $this->slideshow         = $slideshow;
@@ -83,6 +87,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         $this->wantedRepository  = $wantedRepository;
         $this->videoRepository   = $videoRepository;
         $this->catalogRepository = $catalogRepository;
+        $this->configContainer   = $configContainer;
     }
     
     public function handle(): void
@@ -225,10 +230,22 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $name = $_REQUEST['name'];
                     $year = $_REQUEST['year'];
 
-                    if (!$this->wantedRepository->find($mbid, Core::get_global('user')->id)) {
-                        Wanted::add_wanted($mbid, $artist, $artist_mbid, $name, $year);
+                    $user = Core::get_global('user');
+
+                    if (!$this->wantedRepository->find($mbid, $user->id)) {
+                        $this->wantedRepository->add(
+                            (int) $mbid,
+                            $artist,
+                            $artist_mbid,
+                            $name,
+                            (int) $year,
+                            $user->id,
+                            $user->has_access('75') ?
+                                true :
+                                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WANTED_AUTO_ACCEPT)
+                        );
                         ob_start();
-                        $walbum = new Wanted(Wanted::get_wanted($mbid));
+                        $walbum = new Wanted($this->wantedRepository->getByMusicbrainzId($mbid));
                         $walbum->show_action_buttons();
                         $results['wanted_action_' . $mbid] = ob_get_clean();
                     } else {
@@ -241,7 +258,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $mbid = $_REQUEST['mbid'];
 
                     $userId = Core::get_global('user')->has_access('75') ? null : Core::get_global('user')->id;
-                    $walbum = new Wanted(Wanted::get_wanted($mbid));
+                    $walbum = new Wanted($this->wantedRepository->getByMusicbrainzId($mbid));
 
                     $this->wantedRepository->deleteByMusicbrainzId($mbid, $userId);
                     ob_start();
@@ -255,7 +272,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 if (AmpConfig::get('wanted') && isset($_REQUEST['mbid'])) {
                     $mbid = $_REQUEST['mbid'];
 
-                    $walbum = new Wanted(Wanted::get_wanted($mbid));
+                    $walbum = new Wanted($this->wantedRepository->getByMusicbrainzId($mbid));
                     $walbum->accept();
                     ob_start();
                     $walbum->show_action_buttons();

@@ -52,4 +52,22 @@ interface WantedRepositoryInterface
      * retrieves the info from the database and puts it in the cache
      */
     public function getById(int $wantedId): array;
+
+    /**
+     * Adds a new wanted entry
+     */
+    public function add(
+        string $mbid,
+        int $artist,
+        string $artist_mbid,
+        string $name,
+        int $year,
+        int $userId,
+        bool $accept
+    ): void;
+
+    /**
+     * Get wanted release by mbid.
+     */
+    public function getByMusicbrainzId(string $musicbrainzId): int;
 }

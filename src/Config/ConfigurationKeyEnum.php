@@ -111,4 +111,5 @@ final class ConfigurationKeyEnum
     public const SESSION_LENGTH                = 'session_length';
     public const MEMORY_CACHE                  = 'memory_cache';
     public const MEMORY_CACHE_ADAPTER          = 'memory_cache_adapter';
+    public const WANTED_AUTO_ACCEPT            = 'wanted_auto_accept';
 }

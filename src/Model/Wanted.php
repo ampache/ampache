@@ -185,7 +185,7 @@ class Wanted extends database_object
                 if ($add) {
                     debug_event(self::class, 'get_missing_albums ADDING: ' . $group->title, 5);
                     if (!in_array($group->id, $owngroups)) {
-                        $wantedid = self::get_wanted($group->id);
+                        $wantedid = static::getWantedRepository()->getByMusicbrainzId($group->id);
                         $wanted   = new Wanted($wantedid);
                         if ($wanted->id) {
                             $wanted->format();
@@ -260,22 +260,6 @@ class Wanted extends database_object
     }
 
     /**
-     * Get wanted release by mbid.
-     * @param string $mbid
-     * @return integer
-     */
-    public static function get_wanted($mbid)
-    {
-        $sql        = "SELECT `id` FROM `wanted` WHERE `mbid` = ?";
-        $db_results = Dba::read($sql, array($mbid));
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return $row['id'];
-        }
-
-        return 0;
-    }
-
-    /**
      * Delete a wanted release by mbid.
      * @param string $mbid
      * @throws \MusicBrainz\Exception
@@ -312,30 +296,6 @@ class Wanted extends database_object
                     $plugin->_plugin->process_wanted($this);
                 }
             }
-        }
-    }
-
-    /**
-     * Add a new wanted release.
-     * @param string $mbid
-     * @param integer $artist
-     * @param string $artist_mbid
-     * @param string $name
-     * @param integer $year
-     */
-    public static function add_wanted($mbid, $artist, $artist_mbid, $name, $year)
-    {
-        $sql    = "INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        $accept = Core::get_global('user')->has_access('75') ? true : AmpConfig::get('wanted_auto_accept');
-        $params = array(Core::get_global('user')->id, $artist, $artist_mbid, $mbid, $name, (int) $year, time(), '0');
-        Dba::write($sql, $params);
-
-        if ($accept) {
-            $wanted_id = (int)Dba::insert_id();
-            $wanted    = new Wanted($wanted_id);
-            $wanted->accept();
-
-            static::getDatabaseObjectCache()->remove('wanted', $wanted_id);
         }
     }
 
@@ -473,7 +433,7 @@ class Wanted extends database_object
         return $dic->get(WantedRepositoryInterface::class);
     }
 
-    private static function getDatabaseObjectCache(): DatabaseObjectCacheInterface
+    protected static function getDatabaseObjectCache(): DatabaseObjectCacheInterface
     {
         global $dic;
 

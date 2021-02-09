@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\WantedRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,14 +45,18 @@ final class ShowMissingAction implements ApplicationActionInterface
 
     private ArtCollectorInterface $artCollector;
 
+    private WantedRepositoryInterface $wantedRepository;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
         UiInterface $ui,
-        ArtCollectorInterface $artCollector
+        ArtCollectorInterface $artCollector,
+        WantedRepositoryInterface $wantedRepository
     ) {
-        $this->modelFactory = $modelFactory;
-        $this->ui           = $ui;
-        $this->artCollector = $artCollector;
+        $this->modelFactory     = $modelFactory;
+        $this->ui               = $ui;
+        $this->artCollector     = $artCollector;
+        $this->wantedRepository = $wantedRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -60,7 +65,7 @@ final class ShowMissingAction implements ApplicationActionInterface
         
         set_time_limit(600);
         $mbid   = $_REQUEST['mbid'];
-        $walbum = $this->modelFactory->createWanted(Wanted::get_wanted($mbid));
+        $walbum = $this->modelFactory->createWanted($this->wantedRepository->getByMusicbrainzId($mbid));
 
         if (!$walbum->id) {
             $walbum->mbid = $mbid;

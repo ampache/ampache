@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use Ampache\Module\System\Dba;
 
@@ -30,10 +31,14 @@ final class WantedRepository implements WantedRepositoryInterface
 {
     private DatabaseObjectCacheInterface $databaseObjectCache;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
-        DatabaseObjectCacheInterface $databaseObjectCache
+        DatabaseObjectCacheInterface $databaseObjectCache,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->databaseObjectCache = $databaseObjectCache;
+        $this->modelFactory        = $modelFactory;
     }
 
     /**
@@ -136,5 +141,44 @@ final class WantedRepository implements WantedRepositoryInterface
         $this->databaseObjectCache->add('wanted', $wantedId, $row);
 
         return $row;
+    }
+
+    /**
+     * Adds a new wanted entry
+     */
+    public function add(
+        string $mbid,
+        int $artist,
+        string $artist_mbid,
+        string $name,
+        int $year,
+        int $userId,
+        bool $accept
+    ): void {
+        $sql    = "INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $params = array($userId, $artist, $artist_mbid, $mbid, $name, $year, time(), '0');
+        Dba::write($sql, $params);
+
+        if ($accept) {
+            $wanted_id = (int)Dba::insert_id();
+            $wanted    = $this->modelFactory->createWanted($wanted_id);
+            $wanted->accept();
+
+            $this->databaseObjectCache->remove('wanted', $wanted_id);
+        }
+    }
+
+    /**
+     * Get wanted release by mbid.
+     */
+    public function getByMusicbrainzId(string $musicbrainzId): int
+    {
+        $sql        = "SELECT `id` FROM `wanted` WHERE `mbid` = ?";
+        $db_results = Dba::read($sql, array($musicbrainzId));
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return (int) $row['id'];
+        }
+
+        return 0;
     }
 }
