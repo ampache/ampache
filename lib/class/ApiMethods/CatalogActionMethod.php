@@ -88,6 +88,7 @@ final class CatalogActionMethod
                         'parse_playlist' => false
                     );
                     $catalog->add_to_catalog($options);
+                    Album::update_album_artist();
                     break;
             }
             Api::message('successfully started: ' . $task, $input['api_format']);

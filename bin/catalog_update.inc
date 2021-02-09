@@ -192,6 +192,7 @@ while ($row = Dba::fetch_assoc($db_results)) {
         echo "- " . T_("Start adding new media") . " - \n";
         echo "\n";
         $catalog->add_to_catalog($options);
+        Album::update_album_artist();
         echo "----------------\n\n";
     } elseif ($artadd == 1) {
         // Look for media art
