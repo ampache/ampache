@@ -283,6 +283,17 @@ abstract class Catalog extends \Ampache\Model\Catalog
     }
 
     /**
+     * move_catalog_proc
+     * This function updates the file path of the catalog to a new location (unsupported)
+     * @param string $new_path
+     * @return boolean
+     */
+    public function move_catalog_proc($new_path)
+    {
+        return false;
+    }
+
+    /**
      * Remove a song from the "to be deleted"-list if it was found.
      * @param array $song
      */

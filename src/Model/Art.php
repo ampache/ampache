@@ -431,7 +431,9 @@ class Art extends database_object
     /**
      * replace_apic
      * @param array $apics
-     * @param string $mime, description, $source
+     * @param string $mime
+     * @param string $description
+     * @param string $source
      * @param integer $picturetypeid
      * @return array
      */

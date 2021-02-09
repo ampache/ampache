@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Model\Album;
 use Ampache\Model\Catalog;
 use Ampache\Model\User;
 use Ampache\Module\Api\Api;
@@ -88,6 +89,7 @@ final class CatalogActionMethod
                         'parse_playlist' => false
                     );
                     $catalog->add_to_catalog($options);
+                    Album::update_album_artist();
                     break;
             }
             Api::message('successfully started: ' . $task, $input['api_format']);

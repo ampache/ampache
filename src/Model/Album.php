@@ -1005,6 +1005,51 @@ class Album extends database_object implements library_item
     }
 
     /**
+     * update_album_artist
+     *
+     * find albums that are missing an album_artist and generate one.
+     * @param array $album_ids
+     */
+    public static function update_album_artist($album_ids = array())
+    {
+        $results = $album_ids;
+        if (empty($results)) {
+            // Find all albums that are missing an album artist
+            $sql        = "SELECT `id` FROM `album` WHERE `album_artist` IS NULL AND `name` != 'Unknown (Orphaned)'";
+            $db_results = Dba::read($sql);
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $results[] = (int) $row['id'];
+            }
+        }
+        foreach ($results as $album_id) {
+            $artists    = array();
+            $sql        = "SELECT `artist` FROM `song` WHERE `album` = ? GROUP BY `artist` HAVING COUNT(DISTINCT `artist`) = 1 LIMIT 1";
+            $db_results = Dba::read($sql, array($album_id));
+
+            // these are albums that only have 1 artist
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $artists[] = (int) $row['artist'];
+            }
+
+            // if there isn't a distinct artist, sort by the count with another fall back to id order
+            if (empty($artists)) {
+                $sql        = "SELECT `artist` FROM `song` WHERE `album` = ? GROUP BY `artist`, `id` ORDER BY COUNT(`id`) DESC, `id` ASC LIMIT 1";
+                $db_results = Dba::read($sql, array($album_id));
+
+                // these are album pick the artist by majority count
+                while ($row = Dba::fetch_assoc($db_results)) {
+                    $artists[] = (int) $row['artist'];
+                }
+            }
+            // Update the album
+            if (!empty($artists)) {
+                debug_event(self::class, 'Found album_artist {' . $artists[0] . '} for: ' . $album_id, 5);
+                Album::update_field('album_artist', $artists[0], $album_id);
+            }
+        }
+    }
+
+    /**
      * sanitize_disk
      * Change letter disk numbers (like vinyl/cassette) to an integer
      * @param string|integer $disk

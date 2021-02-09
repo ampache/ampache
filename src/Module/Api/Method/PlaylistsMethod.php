@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Model\Playlist;
 use Ampache\Model\User;
 use Ampache\Module\Api\Api;
