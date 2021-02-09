@@ -226,6 +226,12 @@ abstract class Catalog extends database_object
     abstract public function clean_catalog_proc();
 
     /**
+     * @param string $new_path
+     * @return boolean
+     */
+    abstract public function move_catalog_proc($new_path);
+
+    /**
      * @return array
      */
     abstract public function catalog_fields();
