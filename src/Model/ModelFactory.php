@@ -196,4 +196,10 @@ final class ModelFactory implements ModelFactoryInterface
     ): Video {
         return new Video($videoId);
     }
+
+    public function createBookmark(
+        int $bookmarkId
+    ): Bookmark {
+        return new Bookmark($bookmarkId);
+    }
 }

@@ -92,7 +92,7 @@ class Api
         'share_create' => Method\ShareCreateMethod::class,
         'share_delete' => Method\ShareDeleteMethod::class,
         'share_edit' => Method\ShareEditMethod::class,
-        'bookmarks' => Method\BookmarksMethod::class,
+        Method\BookmarksMethod::ACTION => Method\BookmarksMethod::class,
         'bookmark_create' => Method\BookmarkCreateMethod::class,
         'bookmark_edit' => Method\BookmarkEditMethod::class,
         'bookmark_delete' => Method\BookmarkDeleteMethod::class,

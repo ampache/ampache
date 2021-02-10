@@ -73,6 +73,7 @@ return [
     Method\CatalogMethod::class => autowire(),
     Method\CatalogsMethod::class => autowire(),
     Method\FriendsTimelineMethod::class => autowire(),
+    Method\BookmarksMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

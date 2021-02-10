@@ -21,60 +21,60 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\Bookmark;
-use Ampache\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class BookmarksMethod
- * @package Lib\ApiMethods
- */
-final class BookmarksMethod
+final class BookmarksMethod implements MethodInterface
 {
+    public const ACTION = 'bookmarks';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private BookmarkRepositoryInterface $bookmarkRepository;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        BookmarkRepositoryInterface $bookmarkRepository
+    ) {
+        $this->streamFactory      = $streamFactory;
+        $this->bookmarkRepository = $bookmarkRepository;
+    }
+
     /**
-     * bookmarks
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get information about bookmarked media this user is allowed to manage.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
-     * @return boolean
+     *
+     * @return ResponseInterface
      */
-    public static function bookmarks(array $input)
-    {
-        $user      = User::get_from_username(Session::username($input['auth']));
-        $bookmarks = static::getBookmarkRepository()->getBookmarks($user->getId());
-        if (empty($bookmarks)) {
-            Api::empty('bookmark', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $bookmarkIds = $this->bookmarkRepository->getBookmarks($gatekeeper->getUser()->getId());
 
-            return false;
+        if ($bookmarkIds === []) {
+            $result = $output->emptyResult('bookmark');
+        } else {
+            $result = $output->bookmarks($bookmarkIds);
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json_Data::bookmarks($bookmarks);
-                break;
-            default:
-                echo Xml_Data::bookmarks($bookmarks);
-        }
-        Session::extend($input['auth']);
-
-        return true;
-    }
-
-    private static function getBookmarkRepository(): BookmarkRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(BookmarkRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }

@@ -277,4 +277,17 @@ interface ApiOutputInterface
     public function timeline(
         array $activityIds
     ): string;
+
+    /**
+     * This returns bookmarks to the user
+     *
+     * @param int[] $bookmarkIds
+     * @param int $limit
+     * @param int $offset
+     */
+    public function bookmarks(
+        array $bookmarkIds,
+        int $limit = 0,
+        int $offset = 0
+    ): string;
 }

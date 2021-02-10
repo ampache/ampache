@@ -132,4 +132,8 @@ interface ModelFactoryInterface
     public function createVideo(
         int $videoId
     ): Video;
+
+    public function createBookmark(
+        int $bookmarkId
+    ): Bookmark;
 }

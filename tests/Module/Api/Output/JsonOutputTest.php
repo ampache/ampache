@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Output;
 
 use Ampache\MockeryTestCase;
+use Ampache\Model\Bookmark;
 use Ampache\Model\License;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\Shoutbox;
@@ -381,6 +382,50 @@ class JsonOutputTest extends MockeryTestCase
         $this->assertSame(
             json_encode($data, JSON_PRETTY_PRINT),
             $this->subject->dict($data)
+        );
+    }
+
+    public function testBookmarksReturnsList(): void
+    {
+        $bookmarkId   = 666;
+        $userName     = 'some-user-name';
+        $objectType   = 'some-object-type';
+        $objectId     = 'some-object-id';
+        $position     = 'some-position';
+        $comment      = 'some-comment';
+        $creationDate = 12345;
+        $updateDate   = 67890;
+
+        $bookmark = $this->mock(Bookmark::class);
+
+        $this->modelFactory->shouldReceive('createBookmark')
+            ->with($bookmarkId)
+            ->once()
+            ->andReturn($bookmark);
+
+        $bookmark->shouldReceive('getUserName')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($userName);
+        $bookmark->object_type   = $objectType;
+        $bookmark->object_id     = $objectId;
+        $bookmark->position      = $position;
+        $bookmark->comment       = $comment;
+        $bookmark->creation_date = $creationDate;
+        $bookmark->update_date   = $updateDate;
+
+        $this->assertSame(
+            json_encode(['bookmark' => [[
+                'id' => (string) $bookmarkId,
+                'owner' => $userName,
+                'object_type' => $objectType,
+                'object_id' => $objectId,
+                'position' => $position,
+                'client' => $comment,
+                'creation_date' => $creationDate,
+                'update_date' => $updateDate
+            ]]], JSON_PRETTY_PRINT),
+            $this->subject->bookmarks([42, $bookmarkId], 1, 1)
         );
     }
 }

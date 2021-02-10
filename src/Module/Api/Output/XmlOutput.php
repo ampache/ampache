@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Model\Bookmark;
 use Ampache\Model\Catalog;
 use Ampache\Model\ModelFactoryInterface;
 use Ampache\Model\User;
@@ -445,5 +446,35 @@ final class XmlOutput implements ApiOutputInterface
     public function timeline(array $activityIds): string
     {
         return Xml_Data::timeline($activityIds);
+    }
+
+    /**
+     * This returns bookmarks to the user
+     *
+     * @param int[] $bookmarkIds
+     * @param int $limit
+     * @param int $offset
+     */
+    public function bookmarks(
+        array $bookmarkIds,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
+        $string = "";
+        foreach ($bookmarkIds as $bookmark_id) {
+            $bookmark = $this->modelFactory->createBookmark($bookmark_id);
+
+            $string .= "<bookmark id=\"$bookmark_id\">\n" .
+                "\t<user><![CDATA[" . $bookmark->getUserName() . "]]></user>\n" .
+                "\t<object_type><![CDATA[" . $bookmark->object_type . "]]></object_type>\n" .
+                "\t<object_id>" . $bookmark->object_id . "</object_id>\n" .
+                "\t<position>" . $bookmark->position . "</position>\n" .
+                "\t<client><![CDATA[" . $bookmark->comment . "]]></client>\n" .
+                "\t<creation_date>" . $bookmark->creation_date . "</creation_date>\n" .
+                "\t<update_date><![CDATA[" . $bookmark->update_date . "]]></update_date>\n" .
+                "</bookmark>\n";
+        }
+
+        return Xml_Data::output_xml($string);
     }
 }

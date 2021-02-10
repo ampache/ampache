@@ -462,4 +462,46 @@ final class JsonOutput implements ApiOutputInterface
     {
         return Json_Data::timeline($activityIds);
     }
+
+    /**
+     * This returns bookmarks to the user
+     *
+     * @param int[] $bookmarkIds
+     * @param int $limit
+     * @param int $offset
+     */
+    public function bookmarks(
+        array $bookmarkIds,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
+        if ((count($bookmarkIds) > $limit || $offset > 0) && $limit) {
+            $bookmarkIds = array_splice($bookmarkIds, $offset, $limit);
+        }
+
+        $result = [];
+        foreach ($bookmarkIds as $bookmarkId) {
+            $bookmark               = $this->modelFactory->createBookmark($bookmarkId);
+            $bookmark_user          = $bookmark->getUserName();
+            $bookmark_object_type   = $bookmark->object_type;
+            $bookmark_object_id     = $bookmark->object_id;
+            $bookmark_position      = $bookmark->position;
+            $bookmark_comment       = $bookmark->comment;
+            $bookmark_creation_date = $bookmark->creation_date;
+            $bookmark_update_date   = $bookmark->update_date;
+
+            $result[] = [
+                'id' => (string) $bookmarkId,
+                'owner' => $bookmark_user,
+                'object_type' => $bookmark_object_type,
+                'object_id' => $bookmark_object_id,
+                'position' => $bookmark_position,
+                'client' => $bookmark_comment,
+                'creation_date' => $bookmark_creation_date,
+                'update_date' => $bookmark_update_date
+            ];
+        }
+
+        return json_encode(['bookmark' => $result], JSON_PRETTY_PRINT);
+    }
 }
