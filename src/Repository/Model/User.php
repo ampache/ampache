@@ -910,7 +910,7 @@ class User extends database_object
             $this->f_usage = Ui::format_bytes($total);
 
             /* Get Users Last ip */
-            if (count($data = $this->getIpHistoryRepository()->getHistory($this->getId(), 1))) {
+            if (count($data = $this->getIpHistoryRepository()->getHistory($this->getId()))) {
                 $user_ip          = inet_ntop($data['0']['ip']);
                 $this->ip_history = (!empty($user_ip) && filter_var($user_ip, FILTER_VALIDATE_IP)) ? $user_ip : T_('Invalid');
             } else {

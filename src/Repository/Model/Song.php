@@ -1990,8 +1990,7 @@ class Song extends database_object implements Media, library_item, GarbageCollec
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
-     * @param integer|bool $uid
-     * @param boolean $original
+     * @param bool $uid
      * @return string
      */
     public function play_url($additional_params = '', $player = '', $local = false, $uid = false)

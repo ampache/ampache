@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -52,6 +51,7 @@ final class BookmarksMethod
     {
         $user      = User::get_from_username(Session::username($input['auth']));
         $bookmarks = static::getBookmarkRepository()->getBookmarks($user->getId());
+
         if (empty($bookmarks)) {
             Api::empty('bookmark', $input['api_format']);
 

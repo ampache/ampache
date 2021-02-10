@@ -31,6 +31,7 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class PodcastEpisodesMethod
@@ -77,17 +78,18 @@ final class PodcastEpisodesMethod
             return false;
         }
 
+        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                echo Json_Data::podcast_episodes($items);
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
+                echo JSON_Data::podcast_episodes($items, $user->id);
                 break;
             default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::podcast_episodes($items);
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+                echo XML_Data::podcast_episodes($items, $user->id);
         }
         Session::extend($input['auth']);
 

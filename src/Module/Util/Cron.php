@@ -107,11 +107,11 @@ final class Cron
 
                 // cache artist details
                 $artists = $catalog->get_artist_ids();
-                Artist::build_cache($artists, true, '');
+                Artist::build_cache($artists, true);
 
                 // cache song details
                 $songs = $catalog->get_song_ids();
-                Song::build_cache($songs, '');
+                Song::build_cache($songs);
 
                 // cache playlist details
                 $playlists = Playlist::get_playlists(true, -1);
