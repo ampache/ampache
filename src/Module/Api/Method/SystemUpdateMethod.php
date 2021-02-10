@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\AutoUpdate;
@@ -56,7 +57,7 @@ final class SystemUpdateMethod
         if (AutoUpdate::is_update_available(true)) {
             // run the update
             AutoUpdate::update_files(true);
-            AutoUpdate::update_dependencies(true);
+            AutoUpdate::update_dependencies(static::getConfigContainer(), true);
             // check that the update completed or failed failed.
             if (AutoUpdate::is_update_available(true)) {
                 Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
@@ -75,5 +76,12 @@ final class SystemUpdateMethod
         Session::extend($input['auth']);
 
         return true;
+    }
+
+    private static function getConfigContainer(): ConfigContainerInterface
+    {
+        global $dic;
+
+        return $dic->get(ConfigContainerInterface::class);
     }
 }

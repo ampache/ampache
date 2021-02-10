@@ -93,6 +93,11 @@ final class ConfigContainer implements ConfigContainerInterface
         );
     }
 
+    public function getComposerBinaryPath(): string
+    {
+        return $this->configuration[ConfigurationKeyEnum::COMPOSER_BINARY_PATH] ?? 'composer';
+    }
+
     public function isFeatureEnabled(string $feature): bool
     {
         $value = $this->configuration[$feature] ?? false;

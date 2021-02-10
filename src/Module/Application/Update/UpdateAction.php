@@ -76,7 +76,7 @@ final class UpdateAction implements ApplicationActionInterface
 
             set_time_limit(300);
             AutoUpdate::update_files();
-            AutoUpdate::update_dependencies();
+            AutoUpdate::update_dependencies($this->configContainer);
 
             return $this->responseFactory
                 ->createResponse(StatusCode::FOUND)

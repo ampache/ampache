@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
 use Exception;
 use Ampache\Repository\Model\Preference;
 use Requests;
@@ -305,11 +306,15 @@ class AutoUpdate
 
     /**
      * Update project dependencies.
-     * @param boolean $api
      */
-    public static function update_dependencies($api = false)
-    {
-        $cmd = 'composer install --no-dev --prefer-source --no-interaction';
+    public static function update_dependencies(
+        ConfigContainerInterface $config,
+        bool $api = false
+    ): void {
+        $cmd = sprintf(
+            '%s install --no-dev --prefer-source --no-interaction',
+            $config->getComposerBinaryPath()
+        );
         if (!$api) {
             echo T_('Updating dependencies with `' . $cmd . '` ...') . '<br />';
         }
