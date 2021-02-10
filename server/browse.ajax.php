@@ -179,7 +179,11 @@ switch ($_REQUEST['action']) {
                 }
                 break;
             case 'grid_view':
-                $value = ($value == 'true');
+                /**
+                 * The `grid view` is implemented inverted, so apply an inverted logic.
+                 * This ensures the `grid view` checkbox behaves as expected
+                 */
+                $value = ($value == 'false');
                 $browse->set_grid_view($value);
                 break;
             case 'limit':
