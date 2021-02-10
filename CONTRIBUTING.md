@@ -36,7 +36,7 @@ A good tip when searching is to use in:title, in:body or in:comments when search
 
 * ```warning in:title``` matches issues with "warning" in their title.
 * ```error in:title,body``` matches issues with "error" in their title or body.
-* ```shipit in:comments`` matches issues mentioning "shipit" in their comments.
+* ```shipit in:comments``` matches issues mentioning "shipit" in their comments.
 
 Check out [docs.github.com](https://docs.github.com/en/github/searching-for-information-on-github/searching-issues-and-pull-requests) for more info about searching.
 
