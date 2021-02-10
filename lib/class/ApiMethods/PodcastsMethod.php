@@ -29,6 +29,7 @@ use AmpConfig;
 use Api;
 use JSON_Data;
 use Session;
+use User;
 use XML_Data;
 
 /**
@@ -75,18 +76,19 @@ final class PodcastsMethod
             return false;
         }
 
+        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $episodes = $input['include'] == 'episodes';
         switch ($input['api_format']) {
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::podcasts($podcasts, $episodes);
+                echo JSON_Data::podcasts($podcasts, $user->id, $episodes);
                 break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::podcasts($podcasts, $episodes);
+                echo XML_Data::podcasts($podcasts, $user->id, $episodes);
         }
         Session::extend($input['auth']);
 

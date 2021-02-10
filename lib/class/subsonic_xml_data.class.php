@@ -648,7 +648,7 @@ class Subsonic_XML_Data
         $results = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
             if (AmpConfig::get('show_played_times')) {
-                $results['object_cnt'] = Stats::get_object_count('song', (string) $results['id'], null);
+                $results['object_cnt'] = Stats::get_object_count('song', (string) $results['id']);
             }
         }
         $extension       = pathinfo((string) $results['file'], PATHINFO_EXTENSION);
@@ -921,7 +921,7 @@ class Subsonic_XML_Data
         foreach ($tags as $tag) {
             $otag   = new Tag($tag['id']);
             $xgenre = $xgenres->addChild('genre', htmlspecialchars($otag->name));
-            $counts = $otag->count('', 0);
+            $counts = $otag->count();
             $xgenre->addAttribute('songCount', (string) $counts['song']);
             $xgenre->addAttribute('albumCount', (string) $counts['album']);
         }

@@ -269,7 +269,7 @@ class LDAP
                 throw new LDAPException('Required configuration value missing: ldap_search_dn');
             }
 
-            $user_entry = self::search($link, $base_dn, $search, true);
+            $user_entry = self::search($link, $base_dn, $search);
             $user_dn    = $user_entry['dn'];
 
             self::bind($link, $user_dn, $password);

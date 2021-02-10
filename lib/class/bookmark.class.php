@@ -106,25 +106,21 @@ class Bookmark extends database_object
     }
 
     /**
-     * get_bookmarks_ids
+     * get_bookmark_ids
      *
-     * @param User|null $user
+     * @param User $user
      * @return array
      */
-    public static function get_bookmarks_ids($user = null)
+    public static function get_bookmark_ids($user)
     {
-        $ids = array();
-        if ($user === null) {
-            $user = Core::get_global('user');
-        }
-
+        $bookmarks  = array();
         $sql        = "SELECT `id` FROM `bookmark` WHERE `user` = ?";
         $db_results = Dba::read($sql, array($user->id));
         while ($results = Dba::fetch_assoc($db_results)) {
-            $ids[] = $results['id'];
+            $bookmarks[] = $results['id'];
         }
 
-        return $ids;
+        return $bookmarks;
     }
 
     /**
@@ -132,10 +128,10 @@ class Bookmark extends database_object
      * @param User $user
      * @return array
      */
-    public static function get_bookmarks($user = null)
+    public static function get_bookmarks($user)
     {
         $bookmarks = array();
-        $ids       = self::get_bookmarks_ids($user);
+        $ids       = self::get_bookmarks_id($user);
         foreach ($ids as $bookmarkid) {
             $bookmarks[] = new Bookmark($bookmarkid);
         }

@@ -322,7 +322,7 @@ class Graph
      */
     protected function get_user_bandwidth_pts($user = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
-        return $this->get_user_object_count_pts($user, $object_type, $object_id, $start_date, $end_date, $zoom, 'size');
+        return $this->get_user_object_count_pts($user, $object_type, $object_id, $start_date, $end_date, $zoom);
     }
 
     /**

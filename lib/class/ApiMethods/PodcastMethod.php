@@ -30,6 +30,7 @@ use Api;
 use JSON_Data;
 use Podcast;
 use Session;
+use User;
 use XML_Data;
 
 /**
@@ -70,14 +71,15 @@ final class PodcastMethod
             return false;
         }
 
+        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $episodes = $input['include'] == 'episodes';
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::podcasts(array($object_id), $episodes, false);
+                echo JSON_Data::podcasts(array($object_id), $user->id, $episodes, false);
                 break;
             default:
-                echo XML_Data::podcasts(array($object_id), $episodes);
+                echo XML_Data::podcasts(array($object_id), $user->id, $episodes);
         }
         Session::extend($input['auth']);
 

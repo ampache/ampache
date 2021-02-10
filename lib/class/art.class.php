@@ -1594,7 +1594,7 @@ class Art extends database_object
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 // look in the directory name of the files (e.g. /mnt/Music/%artistName%/%album%)
-                $dirs[] = Core::conv_lc_file(dirname($song->file, 1));
+                $dirs[] = Core::conv_lc_file(dirname($song->file));
                 // look one level up (e.g. /mnt/Music/%artistName%)
                 $dirs[] = Core::conv_lc_file(dirname($song->file, 2));
             }
@@ -1843,7 +1843,7 @@ class Art extends database_object
             $query = Requests::get($url, $headers, Core::requests_options());
             $html  = $query->body;
 
-            if (preg_match_all('/"ou":"(http.+?)"/', $html, $matches, PREG_PATTERN_ORDER)) {
+            if (preg_match_all('/"ou":"(http.+?)"/', $html, $matches)) {
                 foreach ($matches[1] as $match) {
                     if (preg_match('/lookaside\.fbsbx\.com/', $match)) {
                         break;

@@ -120,12 +120,12 @@ final class GetIndexesMethod
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::indexes($objects, $type, $include);
+                echo JSON_Data::indexes($objects, $type, $user->id, $include);
                 break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::indexes($objects, $type, true, $include);
+                echo XML_Data::indexes($objects, $type, $user->id, true, $include);
         }
         Session::extend($input['auth']);
 

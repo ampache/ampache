@@ -30,6 +30,7 @@ use Api;
 use JSON_Data;
 use Podcast;
 use Session;
+use User;
 use XML_Data;
 
 /**
@@ -77,17 +78,18 @@ final class PodcastEpisodesMethod
             return false;
         }
 
+        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::podcast_episodes($items);
+                echo JSON_Data::podcast_episodes($items, $user->id);
                 break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::podcast_episodes($items);
+                echo XML_Data::podcast_episodes($items, $user->id);
         }
         Session::extend($input['auth']);
 

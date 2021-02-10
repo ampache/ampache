@@ -2047,7 +2047,7 @@ class Song extends database_object implements media, library_item
         $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
         $media_name = rawurlencode($media_name);
 
-        $url = Stream::get_base_url(false) . "type=song&oid=" . $this->id . "&uid=" . (string) $uid;
+        $url = Stream::get_base_url() . "type=song&oid=" . $this->id . "&uid=" . (string) $uid;
         if ($player !== '') {
             $url .= "&client=" . $player;
         }
@@ -2064,8 +2064,7 @@ class Song extends database_object implements media, library_item
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
-     * @param integer $uid
-     * @param boolean $original
+     * @param bool $uid
      * @return string
      */
     public function play_url($additional_params = '', $player = '', $local = false, $uid = false)

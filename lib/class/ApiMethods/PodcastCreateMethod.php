@@ -75,13 +75,15 @@ final class PodcastCreateMethod
 
             return false;
         }
+
+        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::podcasts(array($podcast), false, false);
+                echo JSON_Data::podcasts(array($podcast), $user->id, false, false);
                 break;
             default:
-                echo XML_Data::podcasts(array($podcast));
+                echo XML_Data::podcasts(array($podcast), $user->id);
         }
         Catalog::count_table('podcast');
         Session::extend($input['auth']);

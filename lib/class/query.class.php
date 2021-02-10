@@ -942,7 +942,7 @@ class Query
     {
         // First we need to get the SQL statement we are going to run
         // This has to run against any possible filters (dependent on type)
-        $sql        = $this->get_sql(true);
+        $sql        = $this->get_sql();
         $db_results = Dba::read($sql);
 
         $results = array();
@@ -1983,7 +1983,7 @@ class Query
                 } // end switch
                 break;
             case 'video':
-                $sql = $this->sql_sort_video($field, 'video');
+                $sql = $this->sql_sort_video($field);
                 break;
             case 'wanted':
                 switch ($field) {
@@ -2209,7 +2209,7 @@ class Query
         // and the vollmer way, hopefully we don't have to
         // do it the vollmer way
         if ($this->is_simple()) {
-            $sql = $this->get_sql(true);
+            $sql = $this->get_sql();
         } else {
             // FIXME: this is fragile for large browses
             // First pull the objects
