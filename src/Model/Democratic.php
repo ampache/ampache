@@ -32,6 +32,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Repository\PreferenceRepositoryInterface;
 use PDOStatement;
 
 /**
@@ -147,15 +148,17 @@ class Democratic extends Tmp_Playlist
      */
     public static function set_user_preferences()
     {
+        $preferenceRepostory = static::getPreferenceRepository();
+
         // FIXME: Code in single user stuff
-        $preference_id = Preference::id_from_name('play_type');
+        $preference_id = $preferenceRepostory->getIdByName('play_type');
         Preference::update_level($preference_id, '75');
         Preference::update_all($preference_id, 'democratic');
 
-        $allow_demo = Preference::id_from_name('allow_democratic_playback');
+        $allow_demo = $preferenceRepostory->getIdByName('allow_democratic_playback');
         Preference::update_all($allow_demo, '1');
 
-        $play_method = Preference::id_from_name('playlist_method');
+        $play_method = $preferenceRepostory->getIdByName('playlist_method');
         Preference::update_all($play_method, 'clear');
 
         return true;
@@ -636,4 +639,14 @@ class Democratic extends Tmp_Playlist
 
         return (int)$results['count'];
     } // get_vote
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPreferenceRepository(): PreferenceRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PreferenceRepositoryInterface::class);
+    }
 }

@@ -24,12 +24,11 @@ declare(strict_types=0);
 
 namespace Ampache\Model;
 
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\Cache\DatabaseObjectCache;
-use Ampache\Module\Cache\DatabaseObjectCacheInterface;
-use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
+use Ampache\Repository\PreferenceRepositoryInterface;
 
 /**
  * This handles all of the preference stuff for Ampache
@@ -166,13 +165,13 @@ class Preference extends database_object
         //debug_event(self::class, 'Getting preference {'.$pref_name.'} for user identifier {'.$user_id.'}...', 5);
         $user_id   = (int) Dba::escape($user_id);
         $pref_name = Dba::escape($pref_name);
-        $pref_id   = self::id_from_name($pref_name);
+        $pref_id   = static::getPreferenceRepository()->getIdByName($pref_name);
 
         $cache     = static::getDatabaseObjectCache();
         $cacheItem = $cache->retrieve('get_by_user', (int) $user_id);
 
         if ($cacheItem !== []) {
-            return (int) $cacheItem[0];
+            return $cacheItem[0];
         }
 
         $sql        = "SELECT `value` FROM `user_preference` WHERE `preference`='$pref_id' AND `user`='$user_id'";
@@ -202,7 +201,7 @@ class Preference extends database_object
     {
         // First prepare
         if (!is_numeric($preference)) {
-            $pref_id = self::id_from_name($preference);
+            $pref_id = static::getPreferenceRepository()->getIdByName($preference);
             $name    = $preference;
         } else {
             $pref_id = $preference;
@@ -252,7 +251,7 @@ class Preference extends database_object
     {
         // First prepare
         if (!is_numeric($preference)) {
-            $preference_id = self::id_from_name($preference);
+            $preference_id = static::getPreferenceRepository()->getIdByName($preference);
         } else {
             $preference_id = $preference;
         }
@@ -328,32 +327,6 @@ class Preference extends database_object
 
         return false;
     } // has_access
-
-    /**
-     * id_from_name
-     * This takes a name and returns the id
-     * @param string $name
-     * @return array|integer
-     */
-    public static function id_from_name($name)
-    {
-        $name = Dba::escape($name);
-
-        $cache     = static::getDatabaseObjectCache();
-        $cacheItem = $cache->retrieve('id_from_name', $name);
-
-        if ($cacheItem !== []) {
-            return (int) $cacheItem[0];
-        }
-
-        $sql        = "SELECT `id` FROM `preference` WHERE `name`='$name'";
-        $db_results = Dba::read($sql);
-        $row        = Dba::fetch_assoc($db_results);
-
-        $cache->add('id_from_name', $name, $row);
-
-        return (int)$row['id'];
-    } // id_from_name
 
     /**
      * name_from_id
@@ -837,4 +810,14 @@ class Preference extends database_object
 
         return true;
     } // init
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPreferenceRepository(): PreferenceRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PreferenceRepositoryInterface::class);
+    }
 }
