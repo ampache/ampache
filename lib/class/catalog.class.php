@@ -456,7 +456,7 @@ abstract class Catalog extends database_object
      */
     public function get_info($object_id, $table_name = 'catalog')
     {
-        $info = parent::get_info($object_id, $table);
+        $info = parent::get_info($object_id, $table_name);
 
         $table      = 'catalog_' . $this->get_type();
         $sql        = "SELECT `id` FROM $table WHERE `catalog_id` = ?";
