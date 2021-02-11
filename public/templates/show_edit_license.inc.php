@@ -21,8 +21,8 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\License;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\License;
 
 /** @var License $license */
 
