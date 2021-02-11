@@ -154,6 +154,8 @@ class Preference extends database_object
     } // __construct
 
     /**
+     * @deprecated See UserPreferenceRetriever
+     *
      * get_by_user
      * Return a preference for specific user identifier
      * @param integer $user_id

@@ -74,6 +74,7 @@ return [
     Method\CatalogsMethod::class => autowire(),
     Method\FriendsTimelineMethod::class => autowire(),
     Method\BookmarksMethod::class => autowire(),
+    Method\TimelineMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

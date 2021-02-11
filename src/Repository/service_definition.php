@@ -46,4 +46,5 @@ return [
     TagRepositoryInterface::class => autowire(TagRepository::class),
     CatalogRepositoryInterface::class => autowire(CatalogRepository::class),
     PreferenceRepositoryInterface::class => autowire(PreferenceRepository::class),
+    UserPreferenceRepositoryInterface::class => autowire(UserPreferenceRepository::class),
 ];

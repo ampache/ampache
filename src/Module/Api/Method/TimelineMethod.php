@@ -20,83 +20,108 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Model\Preference;
-use Ampache\Model\User;
-use Ampache\Model\Useractivity;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Preference\UserPreferenceRetrieverInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class TimelineMethod
- * @package Lib\ApiMethods
- */
-final class TimelineMethod
+final class TimelineMethod implements MethodInterface
 {
-    private const ACTION = 'timeline';
+    public const ACTION = 'timeline';
+
+    private ConfigContainerInterface $configContainer;
+
+    private UserRepositoryInterface $userRepository;
+
+    private UserActivityRepositoryInterface $userActivityRepository;
+
+    private UserPreferenceRetrieverInterface $userPreferenceRetriever;
+
+    private StreamFactoryInterface $streamFactory;
+
+    public function __construct(
+        ConfigContainerInterface $configContainer,
+        UserRepositoryInterface $userRepository,
+        UserActivityRepositoryInterface $userActivityRepository,
+        UserPreferenceRetrieverInterface $userPreferenceRetriever,
+        StreamFactoryInterface $streamFactory
+    ) {
+        $this->configContainer         = $configContainer;
+        $this->userRepository          = $userRepository;
+        $this->userActivityRepository  = $userActivityRepository;
+        $this->userPreferenceRetriever = $userPreferenceRetriever;
+        $this->streamFactory           = $streamFactory;
+    }
 
     /**
-     * timeline
      * MINIMUM_API_VERSION=380001
      *
      * This gets a user timeline from their username
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * username = (string)
      * limit    = (integer) //optional
      * since    = (integer) UNIXTIME() //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws AccessDeniedException
+     * @throws ResultEmptyException
+     * @throws RequestParamMissingException
+     * @throws FunctionDisabledException
      */
-    public static function timeline(array $input)
-    {
-        if (!AmpConfig::get('sociable')) {
-            Api::error(T_('Enable: sociable'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false) {
+            throw new FunctionDisabledException(T_('Enable: sociable'));
         }
-        if (!Api::check_parameter($input, array('username'), self::ACTION)) {
-            return false;
+
+        $username = $input['username'] ?? null;
+
+        if ($username === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'username')
+            );
         }
-        $username = $input['username'];
-        $limit    = (int) ($input['limit']);
-        $since    = (int) ($input['since']);
 
-        if (!empty($username)) {
-            $user = User::get_from_username($username);
-            if ($user !== null) {
-                if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
-                    $activities = static::getUseractivityRepository()->getActivities(
-                        $user->getId(),
-                        $limit,
-                        $since
-                    );
-                    ob_end_clean();
-                    switch ($input['api_format']) {
-                        case 'json':
-                            echo Json_Data::timeline($activities);
-                            break;
-                        default:
-                            echo Xml_Data::timeline($activities);
-                    }
-                }
-            }
+
+        $userId = $this->userRepository->findByUsername($username);
+        if ($userId === null) {
+            throw new ResultEmptyException($username);
         }
-        Session::extend($input['auth']);
+        if (!$this->userPreferenceRetriever->retrieve($userId, 'allow_personal_info_recent')) {
+            throw new AccessDeniedException();
+        }
+        $activityIds = $this->userActivityRepository->getActivities(
+            $userId,
+            (int) ($input['limit'] ?? 0),
+            (int) ($input['since'] ?? 0)
+        );
 
-        return true;
-    }
-
-    private static function getUseractivityRepository(): UserActivityRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserActivityRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->timeline($activityIds)
+            )
+        );
     }
 }
