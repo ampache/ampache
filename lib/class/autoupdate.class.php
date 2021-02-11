@@ -256,6 +256,20 @@ class AutoUpdate
     }
 
     /**
+     * Display information from the Ampache Project as a message. (Develop branch only)
+     */
+    public static function show_ampache_message()
+    {
+        if (self::is_develop()) {
+            echo '<div id="autoupdate">';
+            echo '<span>' . T_("WARNING") . '</span>';
+            echo ' (Ampache Develop is about to go through a major change!)<br />';
+            echo '<a href="https://github.com/ampache/ampache/wiki/Ampache-Next-Changes' . '" target="_blank">' . T_('View changes') . '</a><br /> ';
+            echo '</div>';
+        }
+    }
+
+    /**
      * Display new version information and update link if possible.
      */
     public static function show_new_version()

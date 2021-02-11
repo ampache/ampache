@@ -7,13 +7,18 @@
 ; if this config file is up to date
 ; this is compared against a value hard-coded
 ; into the init script
-config_version = 48
+config_version = 49
 
 ; Allow you to hard code a default git branch for Ampache
 ; If you set this value the inbuilt updater will use this branch for updates.
 ; POSSIBLE VALUES: master develop
 ; DEFAULT: none
 ;github_force_branch = "develop"
+
+; We sometimes need to talk and will show a warning to admin users
+; Enable this setting if you don't want to see warnings (When we enable them)
+; DEFAULT: false
+;hide_ampache_messages = "true"
 
 ;#########################################################
 ; Path Vars                                              #

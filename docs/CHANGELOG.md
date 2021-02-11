@@ -2,6 +2,8 @@
 
 ## Ampache develop
 
+Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
+
 **IMPORTANT** instead of using date() we are now using IntlDateFormatter and your locale to identify formats.
 This means that 'custom_datetime' based on the date() format is incorrect and will look weird.
 Look here for the code to change your 'custom_datetime' string [(<http://userguide.icu-project.org/formatparse/datetime>)]
@@ -26,18 +28,34 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Add time and duration to albums, artists instead of calculating from songs each time
 * Allow setting a custom background on the login page
 * Musicbrainz search icon on Artist, Album and Song pages
+* Update missing album artists on catalog add
+* Add R128 Gain adjustments
+* Persist replaygain setting as a cookie
+* Support for image per song
+* Config version 49
+* NEW config options
+  * hide_ampache_messages: We sometimes need to talk and will show a warning to admin users. Allow hiding this
+* NEW search options (also available in Api::advanced_search)
+  * last_skip (artist, album, song)
+  * last_play_or_skip (artist, album, song)
+  * played_or_skipped_times (song)
 
 ### Changed
-
-* config version 48
 * get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
 * Renamed 'Tag' strings to 'Genre'
 * Changed sidebar back to browse for artist/album
+* Stop logging auth/passphrase strings
+* Add Y scrolling to the current playlist box (rightbar)
 
 ### Fixed
 
 * Escape filepaths when removing from database
 * Regex in config for additional_genre_delimiters
+* Grid View option was backwards
+* Replaygain issues in the webplayer
+* Per disk actions for grouped albums (e.g. play just that disk)
+* Catalog removal needs to run garbage collection
+* Recognize opus when reading tags
 
 ### API develop
 
@@ -96,6 +114,9 @@ All API code that used 'Tag' now references 'Genre' instead
 * stats: Removed back compat from older versions. Only 'type' is mandatory
 * Return empty objects when the request was correct but the results were empty
 * record_play: Require 100 (Admin) permission to record plays for other users
+* podcast_episodes
+  * "url" is now a play url (instead of a link to the episode)
+  * "public_url" is now the old episode link
 
 ### Deprecated
 
