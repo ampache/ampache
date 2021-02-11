@@ -75,6 +75,7 @@ return [
     Method\FriendsTimelineMethod::class => autowire(),
     Method\BookmarksMethod::class => autowire(),
     Method\TimelineMethod::class => autowire(),
+    Method\PlaylistAddSongMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

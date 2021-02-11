@@ -112,4 +112,5 @@ final class ConfigurationKeyEnum
     public const MEMORY_CACHE                  = 'memory_cache';
     public const MEMORY_CACHE_ADAPTER          = 'memory_cache_adapter';
     public const WANTED_AUTO_ACCEPT            = 'wanted_auto_accept';
+    public const UNIQUE_PLAYLIST               = 'unique_playlist';
 }

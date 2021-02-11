@@ -21,61 +21,105 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Model\Playlist;
-use Ampache\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Model\ModelFactoryInterface;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\DuplicateItemException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class PlaylistAddSongMethod
- * @package Lib\ApiMethods
- */
-final class PlaylistAddSongMethod
+final class PlaylistAddSongMethod implements MethodInterface
 {
-    private const ACTION = 'playlist_add_song';
+    public const ACTION = 'playlist_add_song';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->streamFactory   = $streamFactory;
+        $this->modelFactory    = $modelFactory;
+        $this->configContainer = $configContainer;
+    }
 
     /**
-     * playlist_add_song
      * MINIMUM_API_VERSION=380001
      *
      * This adds a song to a playlist
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of playlist
      * song   = (string) UID of song to add to playlist
      * check  = (integer) 0,1 Check for duplicates //optional, default = 0
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws DuplicateItemException
+     * @throws AccessDeniedException
+     * @throws RequestParamMissingException
      */
-    public static function playlist_add_song(array $input)
-    {
-        if (!Api::check_parameter($input, array('filter', 'song'), self::ACTION)) {
-            return false;
-        }
-        $user = User::get_from_username(Session::username($input['auth']));
-        ob_end_clean();
-        $playlist = new Playlist($input['filter']);
-        $song     = $input['song'];
-        if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
-            Api::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $playlistId = $input['filter'] ?? null;
+        $songId     = $input['song'] ?? null;
 
-            return false;
+        if ($playlistId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
         }
-        if ((AmpConfig::get('unique_playlist') || (int) $input['check'] == 1) && in_array($song, $playlist->get_songs())) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $song), '4710', self::ACTION, 'duplicate', $input['api_format']);
-
-            return false;
+        if ($songId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'song')
+            );
         }
-        $playlist->add_songs(array($song), true);
-        Api::message('song added to playlist', $input['api_format']);
-        Session::extend($input['auth']);
 
-        return true;
+        $playlist = $this->modelFactory->createPlaylist((int) $playlistId);
+        if (
+            !$playlist->has_access($gatekeeper->getUser()->getId()) &&
+            !$gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+        ) {
+            throw new AccessDeniedException(T_('Require: 100'));
+        }
+        if (
+            (
+                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UNIQUE_PLAYLIST) ||
+                (int) ($input['check'] ?? 0) == 1
+            ) &&
+            in_array($songId, $playlist->get_songs())
+        ) {
+            throw new DuplicateItemException(
+                sprintf(T_('Bad Request: %s'), $songId)
+            );
+        }
+        $playlist->add_songs([(int) $songId], true);
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->success('song added to playlist')
+            )
+        );
     }
 }
