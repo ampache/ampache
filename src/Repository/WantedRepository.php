@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Cache\DatabaseObjectCacheInterface;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\ModelFactoryInterface;
 
 final class WantedRepository implements WantedRepositoryInterface
 {

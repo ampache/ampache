@@ -21,11 +21,11 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
-use Ampache\Model\Rating;
-use Ampache\Model\TVShow_Season;
-use Ampache\Model\User;
-use Ampache\Model\Userflag;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\TVShow_Season;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 

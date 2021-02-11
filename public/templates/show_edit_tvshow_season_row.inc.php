@@ -21,7 +21,7 @@
  */
 /** @var TVShow_Season $libitem */
 
-use Ampache\Model\TVShow_Season;
+use Ampache\Repository\Model\TVShow_Season;
 
 ?>
 <div>

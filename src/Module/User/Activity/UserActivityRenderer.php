@@ -26,8 +26,8 @@ namespace Ampache\Module\User\Activity;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\Useractivity;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Useractivity;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 final class UserActivityRenderer implements UserActivityRendererInterface

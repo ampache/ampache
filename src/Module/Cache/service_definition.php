@@ -27,9 +27,7 @@ namespace Ampache\Module\Cache;
 use Ampache\Config\ConfigContainerInterface;
 use Psr\Container\ContainerInterface;
 use function DI\autowire;
-use function DI\create;
 use function DI\factory;
-use function DI\get;
 
 return [
     ObjectCacheInterface::class => autowire(ObjectCache::class),

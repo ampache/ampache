@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog\Loader;
 
-use Ampache\Model\Catalog;
 use Ampache\Module\Catalog\Catalog_beets;
 use Ampache\Module\Catalog\Catalog_beetsremote;
 use Ampache\Module\Catalog\Catalog_dropbox;
@@ -36,6 +35,7 @@ use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Catalog\Loader\Exception\CatalogNotFoundException;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\Model\Catalog;
 use Psr\Log\LoggerInterface;
 
 /**

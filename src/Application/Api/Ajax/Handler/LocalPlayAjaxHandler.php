@@ -27,10 +27,10 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Browse;
+use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Module\Playback\Localplay\LocalPlay;
-use Ampache\Model\Preference;
+use Ampache\Repository\Model\Preference;
 use Ampache\Module\Util\Ui;
 
 final class LocalPlayAjaxHandler implements AjaxHandlerInterface

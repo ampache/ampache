@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Album\Export\Writer;
 
 use Ampache\MockeryTestCase;
-use Ampache\Model\Album;
+use Ampache\Repository\Model\Album;
 use org\bovigo\vfs\vfsStream;
 
 class WindowsMetadataWriterTest extends MockeryTestCase

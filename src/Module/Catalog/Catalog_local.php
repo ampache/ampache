@@ -23,20 +23,18 @@
 namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Album;
-use Ampache\Model\Art;
-use Ampache\Model\Artist;
-use Ampache\Model\Catalog;
-use Ampache\Model\Media;
-use Ampache\Model\Metadata\Repository\Metadata;
-use Ampache\Model\Metadata\Repository\MetadataField;
-use Ampache\Model\Podcast_Episode;
-use Ampache\Model\Rating;
-use Ampache\Model\Song;
-use Ampache\Model\Song_Preview;
-use Ampache\Model\Video;
-use Ampache\Module\Cache\DatabaseObjectCache;
-use Ampache\Module\Cache\DatabaseObjectCacheInterface;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\Metadata\Repository\Metadata;
+use Ampache\Repository\Model\Metadata\Repository\MetadataField;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Song_Preview;
+use Ampache\Repository\Model\Video;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -575,7 +573,7 @@ class Catalog_local extends Catalog
             foreach (range(0, $chunks) as $chunk) {
                 // Try to be nice about memory usage
                 if ($chunk > 0) {
-                    $this->getDatabaseObjectCache()->clear();
+                    static::getDatabaseObjectCache()->clear();
                 }
                 $total_updated += $this->_verify_chunk(ObjectTypeToClassNameMapper::reverseMap($media_type), $chunk, 10000);
             }
@@ -1058,11 +1056,4 @@ class Catalog_local extends Catalog
 
         return true;
     } // move_catalog_proc
-
-    private function getDatabaseObjectCache(): DatabaseObjectCacheInterface
-    {
-        global $dic;
-
-        return $dic->get(DatabaseObjectCacheInterface::class);
-    }
 }

@@ -23,17 +23,17 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Catalog\GarbageCollector;
 
-use Ampache\Model\Art;
-use Ampache\Model\Artist;
-use Ampache\Model\Metadata\Repository\Metadata;
-use Ampache\Model\Metadata\Repository\MetadataField;
-use Ampache\Model\Playlist;
-use Ampache\Model\Rating;
-use Ampache\Model\Song;
-use Ampache\Model\Tag;
-use Ampache\Model\Tmp_Playlist;
-use Ampache\Model\Userflag;
-use Ampache\Model\Video;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Metadata\Repository\Metadata;
+use Ampache\Repository\Model\Metadata\Repository\MetadataField;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Tag;
+use Ampache\Repository\Model\Tmp_Playlist;
+use Ampache\Repository\Model\Userflag;
+use Ampache\Repository\Model\Video;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;

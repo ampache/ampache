@@ -28,8 +28,8 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\MockeryTestCase;
-use Ampache\Model\Video;
 use Ampache\Repository\CatalogRepositoryInterface;
+use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 use Mockery\MockInterface;
 

@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\TvShowSeason;
 
-use Ampache\Model\TVShow_Season;
+use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;

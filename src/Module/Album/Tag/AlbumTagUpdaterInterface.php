@@ -21,7 +21,7 @@
 
 namespace Ampache\Module\Album\Tag;
 
-use Ampache\Model\Album;
+use Ampache\Repository\Model\Album;
 
 interface AlbumTagUpdaterInterface
 {

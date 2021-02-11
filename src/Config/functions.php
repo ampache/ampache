@@ -23,15 +23,14 @@
 declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Artist;
-use Ampache\Model\Catalog;
-use Ampache\Model\Metadata\Repository\MetadataField;
-use Ampache\Model\Playlist;
-use Ampache\Model\Plugin;
-use Ampache\Model\Preference;
-use Ampache\Model\TVShow_Season;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Metadata\Repository\MetadataField;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Plugin;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Playback\Localplay\LocalPlay;

@@ -24,8 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Shout;
 
-use Ampache\Model\Shoutbox;
-use Ampache\Model\Song;
+use Ampache\Repository\Model\Shoutbox;
+use Ampache\Repository\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;

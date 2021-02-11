@@ -21,7 +21,7 @@
  */
 /** @var Wanted $libitem */
 
-use Ampache\Model\Wanted;
+use Ampache\Repository\Model\Wanted;
 
 ?>
 

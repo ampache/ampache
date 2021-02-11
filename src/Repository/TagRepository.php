@@ -26,9 +26,9 @@ namespace Ampache\Repository;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Model\Catalog;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
+use Ampache\Repository\Model\Catalog;
 
 final class TagRepository implements TagRepositoryInterface
 {

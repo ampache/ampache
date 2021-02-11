@@ -26,7 +26,7 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Model\User;
+use Ampache\Repository\Model\User;
 
 final class AdminAddUserCommand extends Command
 {

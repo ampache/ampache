@@ -22,7 +22,7 @@
 
 namespace Ampache\Repository;
 
-use Ampache\Model\Artist;
+use Ampache\Repository\Model\Artist;
 
 interface SongRepositoryInterface
 {

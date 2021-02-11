@@ -22,7 +22,7 @@
 
 // Gotta do some math here!
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
+use Ampache\Repository\Model\Art;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 

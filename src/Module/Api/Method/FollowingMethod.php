@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
@@ -38,10 +38,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class FollowingMethod
- * @package Lib\ApiMethods
- */
 final class FollowingMethod implements MethodInterface
 {
     public const ACTION = 'following';
@@ -84,6 +80,10 @@ final class FollowingMethod implements MethodInterface
      * username = (string) $username
      *
      * @return ResponseInterface
+     *
+     * @throws ResultEmptyException
+     * @throws RequestParamMissingException
+     * @throws FunctionDisabledException
      */
     public function handle(
         GatekeeperInterface $gatekeeper,

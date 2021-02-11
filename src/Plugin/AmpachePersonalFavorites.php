@@ -23,11 +23,10 @@
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Playlist;
-use Ampache\Model\Plugin;
-use Ampache\Model\Preference;
-use Ampache\Model\Search;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;

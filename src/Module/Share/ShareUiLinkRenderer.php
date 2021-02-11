@@ -25,7 +25,7 @@ namespace Ampache\Module\Share;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Model\Plugin;
+use Ampache\Repository\Model\Plugin;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Playback\Stream;

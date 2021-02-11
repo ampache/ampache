@@ -25,9 +25,9 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\RefreshReordered;
 
 use Ampache\MockeryTestCase;
-use Ampache\Model\Browse;
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\Playlist;
+use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Mockery\MockInterface;

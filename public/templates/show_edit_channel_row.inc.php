@@ -20,9 +20,9 @@
  *
  */
 
-use Ampache\Model\Channel;
-use Ampache\Model\Playlist;
-use Ampache\Model\Tag;
+use Ampache\Repository\Model\Channel;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Tag;
 
 /** @var Channel $libitem */
 ?>

@@ -24,10 +24,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
-use Ampache\Model\Bookmark;
-use Ampache\Model\Catalog;
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Xml_Data;
 
 final class XmlOutput implements ApiOutputInterface

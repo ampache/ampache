@@ -21,9 +21,9 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Metadata\Model\Metadata;
-use Ampache\Model\Song;
-use Ampache\Model\Tag;
+use Ampache\Repository\Model\Metadata\Model\Metadata;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Tag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 

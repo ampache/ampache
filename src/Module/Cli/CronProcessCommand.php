@@ -26,9 +26,8 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Model\Bookmark;
-use Ampache\Model\Podcast_Episode;
-use Ampache\Model\Share;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Share;
 use Ampache\Module\Cache\ObjectCacheInterface;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Playback\Stream;

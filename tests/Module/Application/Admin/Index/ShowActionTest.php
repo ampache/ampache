@@ -25,13 +25,13 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\Index;
 
 use Ampache\MockeryTestCase;
-use Ampache\Model\Browse;
-use Ampache\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
+use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

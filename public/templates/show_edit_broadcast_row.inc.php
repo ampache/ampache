@@ -20,8 +20,8 @@
  *
  */
 
-use Ampache\Model\Broadcast;
-use Ampache\Model\Tag;
+use Ampache\Repository\Model\Broadcast;
+use Ampache\Repository\Model\Tag;
 
 /** @var Broadcast $libitem */
 ?>

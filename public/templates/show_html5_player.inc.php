@@ -1,7 +1,7 @@
 <?php
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Broadcast;
+use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\WebPlayer;
 use Ampache\Module\System\Core;

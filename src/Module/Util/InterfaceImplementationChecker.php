@@ -24,9 +24,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Model\library_item;
-use Ampache\Model\Media;
-use Ampache\Model\playable_item;
+use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\playable_item;
 
 /**
  * Provides utility methods to check whether an object implements a certain interface

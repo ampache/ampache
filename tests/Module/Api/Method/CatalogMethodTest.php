@@ -25,13 +25,13 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\MockeryTestCase;
-use Ampache\Model\Catalog;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
 use Ampache\Module\Catalog\Loader\Exception\CatalogNotFoundException;
+use Ampache\Repository\Model\Catalog;
 use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;

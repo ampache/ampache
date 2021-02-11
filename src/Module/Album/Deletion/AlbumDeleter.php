@@ -24,11 +24,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Album\Deletion;
 
-use Ampache\Model\Album;
-use Ampache\Model\Art;
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\Rating;
-use Ampache\Model\Userflag;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Module\System\LegacyLogger;

@@ -23,9 +23,9 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use Ampache\Model\Art;
-use Ampache\Model\Preference;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\User;
 use Exception;
 use Moinax;
 

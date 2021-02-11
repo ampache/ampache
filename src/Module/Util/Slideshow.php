@@ -24,10 +24,10 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\Plugin;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Plugin;
 use Ampache\Module\System\Core;
-use Ampache\Model\Song;
+use Ampache\Repository\Model\Song;
 
 final class Slideshow implements SlideshowInterface
 {

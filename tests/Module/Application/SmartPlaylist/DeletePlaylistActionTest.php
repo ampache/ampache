@@ -26,8 +26,8 @@ namespace Ampache\Module\Application\SmartPlaylist;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\Search;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Search;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Mockery\MockInterface;

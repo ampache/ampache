@@ -21,7 +21,6 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
 use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
 use Ampache\Module\Util\Ui;
 

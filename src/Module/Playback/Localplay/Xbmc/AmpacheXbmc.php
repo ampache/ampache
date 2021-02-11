@@ -26,8 +26,8 @@ namespace Ampache\Module\Playback\Localplay\Xbmc;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Localplay\localplay_controller;
-use Ampache\Model\Preference;
-use Ampache\Model\Song;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\Song;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;

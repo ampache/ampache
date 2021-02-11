@@ -29,8 +29,8 @@ use Ampache\Gui\Stats\CatalogStatsInterface;
 use Ampache\Gui\Stats\StatsViewAdapterInterface;
 use Ampache\Gui\System\ConfigViewAdapterInterface;
 use Ampache\Gui\System\UpdateViewAdapterInterface;
-use Ampache\Model\Catalog;
-use Ampache\Model\Song;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Song;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 
 interface GuiFactoryInterface

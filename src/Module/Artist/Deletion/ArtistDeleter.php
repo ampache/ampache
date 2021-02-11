@@ -21,12 +21,11 @@
 
 namespace Ampache\Module\Artist\Deletion;
 
-use Ampache\Model\Art;
-use Ampache\Model\Artist;
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\Rating;
-use Ampache\Model\Useractivity;
-use Ampache\Model\Userflag;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Album\Deletion\AlbumDeleterInterface;
 use Ampache\Module\Album\Deletion\Exception\AlbumDeletionException;
 use Ampache\Module\Artist\Deletion\Exception\ArtistDeletionException;

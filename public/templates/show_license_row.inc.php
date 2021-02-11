@@ -20,7 +20,7 @@
  *
  */
 
-use Ampache\Model\License;
+use Ampache\Repository\Model\License;
 use Ampache\Module\Util\Ui;
 
 /** @var License $libitem */

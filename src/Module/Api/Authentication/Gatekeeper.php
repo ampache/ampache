@@ -25,8 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Authentication;
 
-use Ampache\Model\User;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
 use Psr\Http\Message\ServerRequestInterface;

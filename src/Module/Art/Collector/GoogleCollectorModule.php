@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Art\Collector;
 
-use Ampache\Model\Art;
+use Ampache\Repository\Model\Art;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Exception;

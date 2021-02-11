@@ -20,26 +20,24 @@
  *
  */
 
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Model\Album;
-use Ampache\Model\Video;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Video;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
-use Ampache\Model\Artist;
-use Ampache\Model\Catalog;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Dba;
-use Ampache\Model\Playlist;
-use Ampache\Model\Podcast;
-use Ampache\Model\Rating;
-use Ampache\Model\Song;
-use Ampache\Model\Tag;
-use Ampache\Model\User;
-use Ampache\Model\Userflag;
 use Ampache\Repository\CatalogRepositoryInterface;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Tag;
+use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\UserRepositoryInterface;
 
 final class Cron

@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\Catalog;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Session;
 

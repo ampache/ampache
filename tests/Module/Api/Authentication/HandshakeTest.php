@@ -25,11 +25,11 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Authentication;
 
 use Ampache\MockeryTestCase;
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\User;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use Mockery;
 use Mockery\MockInterface;

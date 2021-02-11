@@ -21,7 +21,7 @@
 
 namespace Ampache\Module\Song\Tag;
 
-use Ampache\Model\Song;
+use Ampache\Repository\Model\Song;
 
 interface SongId3TagWriterInterface
 {

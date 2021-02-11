@@ -21,8 +21,8 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Song;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\AmpacheRss;

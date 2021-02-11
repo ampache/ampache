@@ -21,8 +21,8 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Browse;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Browse;
 
 /** @var int[] $catalogIds */
 

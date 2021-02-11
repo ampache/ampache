@@ -26,7 +26,7 @@ namespace Ampache\Gui\Catalog;
 
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\Stats\CatalogStatsInterface;
-use Ampache\Model\Catalog;
+use Ampache\Repository\Model\Catalog;
 
 final class CatalogDetails implements CatalogDetailsInterface
 {

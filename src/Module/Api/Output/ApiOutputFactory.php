@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
-use Ampache\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 
 final class ApiOutputFactory implements ApiOutputFactoryInterface
 {

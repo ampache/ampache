@@ -21,7 +21,7 @@
 
 namespace Ampache\Module\Artist\Tag;
 
-use Ampache\Model\Artist;
+use Ampache\Repository\Model\Artist;
 
 interface ArtistTagUpdaterInterface
 {

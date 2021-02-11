@@ -25,11 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Model\Channel;
-use Ampache\Model\library_item;
-use Ampache\Model\Media;
-use Ampache\Model\playable_item;
-use Ampache\Model\Song_Preview;
+use Ampache\Repository\Model\Channel;
+use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\playable_item;
+use Ampache\Repository\Model\Song_Preview;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use stdClass;

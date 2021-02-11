@@ -21,7 +21,7 @@
  */
 /** @var Podcast $libitem */
 
-use Ampache\Model\Podcast;
+use Ampache\Repository\Model\Podcast;
 
 ?>
 <div>

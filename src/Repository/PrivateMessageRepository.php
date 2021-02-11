@@ -24,9 +24,8 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\PrivateMessageInterface;
-use Ampache\Model\PrivateMsg;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\PrivateMessageInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Exception\ItemNotFoundException;
 

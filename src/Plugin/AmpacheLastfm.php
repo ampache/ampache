@@ -24,12 +24,11 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Plugin;
-use Ampache\Model\Preference;
-use Ampache\Model\Song;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Plugin;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Scrobble\Scrobbler;
-use Ampache\Module\Statistics\Stats;
 
 class AmpacheLastfm
 {

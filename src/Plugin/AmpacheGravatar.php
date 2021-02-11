@@ -24,7 +24,7 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\User;
+use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 
 class AmpacheGravatar

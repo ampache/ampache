@@ -26,8 +26,8 @@ namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\Playlist;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Mockery\MockInterface;

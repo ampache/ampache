@@ -22,8 +22,8 @@
 
 namespace Ampache\Module\Application\Art;
 
-use Ampache\Model\Art;
-use Ampache\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;

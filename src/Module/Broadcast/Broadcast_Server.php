@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Broadcast;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Broadcast;
+use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\System\Core;
 use Exception;
 use Ratchet\MessageComponentInterface;

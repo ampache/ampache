@@ -22,8 +22,8 @@
 
 namespace Ampache\Module\Catalog\Loader;
 
-use Ampache\Model\Catalog;
 use Ampache\Module\Catalog\Loader\Exception\CatalogNotFoundException;
+use Ampache\Repository\Model\Catalog;
 
 interface CatalogLoaderInterface
 {

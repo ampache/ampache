@@ -22,7 +22,7 @@
 
 namespace Ampache\Config\Init;
 
-use Ampache\Model\Preference;
+use Ampache\Repository\Model\Preference;
 use Ampache\Module\System\SessionInterface;
 use Ampache\Module\Util\EnvironmentInterface;
 

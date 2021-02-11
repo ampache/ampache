@@ -21,7 +21,7 @@
 
 namespace Ampache\Module\Song\Deletion;
 
-use Ampache\Model\Song;
+use Ampache\Repository\Model\Song;
 
 interface SongDeleterInterface
 {

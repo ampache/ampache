@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Label\Deletion;
 
-use Ampache\Model\Art;
-use Ampache\Model\Label;
-use Ampache\Model\Rating;
-use Ampache\Model\Userflag;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;

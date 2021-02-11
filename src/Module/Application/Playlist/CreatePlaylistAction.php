@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Playlist;
 
-use Ampache\Model\Playlist;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;

@@ -25,12 +25,12 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Output;
 
 use Ampache\MockeryTestCase;
-use Ampache\Model\Bookmark;
-use Ampache\Model\License;
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\Shoutbox;
-use Ampache\Model\Tag;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Bookmark;
+use Ampache\Repository\Model\License;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Shoutbox;
+use Ampache\Repository\Model\Tag;
+use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 
 class JsonOutputTest extends MockeryTestCase

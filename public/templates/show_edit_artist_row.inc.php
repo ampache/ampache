@@ -21,9 +21,9 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Artist;
-use Ampache\Model\Label;
-use Ampache\Model\Tag;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\Tag;
 use Ampache\Module\Authorization\Access;
 
 /** @var Artist $libitem */

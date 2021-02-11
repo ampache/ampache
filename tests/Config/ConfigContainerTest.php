@@ -1,7 +1,7 @@
 <?php
 
-/* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 /**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright 2001 - 2020 Ampache.org
@@ -267,6 +267,26 @@ class ConfigContainerTest extends MockeryTestCase
         $this->assertSame(
             $value,
             $this->createSubject([ConfigurationKeyEnum::POPULAR_THRESHOLD => (string) $value])->getPopularThreshold(42)
+        );
+    }
+
+    public function testGetComposerBinaryPathReturnsDefault(): void
+    {
+        $this->assertSame(
+            'composer',
+            $this->createSubject([])->getComposerBinaryPath()
+        );
+    }
+
+    public function testGetComposerBinaryPathReturnsValue(): void
+    {
+        $value = 'some-value';
+
+        $this->assertSame(
+            $value,
+            $this->createSubject([
+                ConfigurationKeyEnum::COMPOSER_BINARY_PATH => $value
+            ])->getComposerBinaryPath()
         );
     }
 

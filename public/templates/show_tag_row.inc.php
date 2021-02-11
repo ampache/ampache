@@ -22,6 +22,6 @@
 
 /** @var Tag $libitem */
 
-use Ampache\Model\Tag;
+use Ampache\Repository\Model\Tag;
 
 echo $libitem->name;

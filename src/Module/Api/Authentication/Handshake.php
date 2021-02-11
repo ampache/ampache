@@ -22,12 +22,12 @@
 
 namespace Ampache\Module\Api\Authentication;
 
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Log\LoggerInterface;
 

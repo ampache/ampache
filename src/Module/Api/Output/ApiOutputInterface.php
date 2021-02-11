@@ -22,7 +22,7 @@
 
 namespace Ampache\Module\Api\Output;
 
-use Ampache\Model\User;
+use Ampache\Repository\Model\User;
 
 interface ApiOutputInterface
 {

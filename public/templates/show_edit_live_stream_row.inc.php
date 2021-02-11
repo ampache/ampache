@@ -21,7 +21,7 @@
  */
 /** @var Live_Stream $libitem */
 
-use Ampache\Model\Live_Stream;
+use Ampache\Repository\Model\Live_Stream;
 
 ?>
 <div>

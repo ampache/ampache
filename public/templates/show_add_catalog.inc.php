@@ -21,11 +21,11 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
 use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Catalog;
 
 /**
  * Show dropdown catalog types.

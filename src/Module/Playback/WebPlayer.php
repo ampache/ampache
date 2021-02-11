@@ -24,14 +24,14 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
-use Ampache\Model\Media;
 use Ampache\Module\Stream\Url\StreamUrlParserInterface;
+use Ampache\Repository\Model\Media;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Democratic;
-use Ampache\Model\Song;
-use Ampache\Model\Song_Preview;
+use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Song_Preview;
 
 class WebPlayer
 {

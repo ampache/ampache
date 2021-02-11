@@ -24,9 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\User;
 
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\IpHistoryRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;

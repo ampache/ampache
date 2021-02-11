@@ -28,8 +28,8 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Song;
-use Ampache\Model\Video;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Video;
 use Ampache\Module\Util\AmpacheRss;
 use Ampache\Module\Util\Ui;
 

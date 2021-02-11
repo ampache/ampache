@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback\Localplay\Upnp;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Song;
+use Ampache\Repository\Model\Song;
 use Ampache\Module\Api\Upnp_Api;
 use Ampache\Module\System\Session;
 use SimpleXMLElement;

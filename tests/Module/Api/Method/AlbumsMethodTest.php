@@ -25,9 +25,9 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\MockeryTestCase;
-use Ampache\Model\Album;
-use Ampache\Model\Browse;
-use Ampache\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;

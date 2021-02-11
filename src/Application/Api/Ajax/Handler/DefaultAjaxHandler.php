@@ -28,13 +28,13 @@ namespace Ampache\Application\Api\Ajax\Handler;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Browse;
+use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
-use Ampache\Model\Playlist;
-use Ampache\Model\Rating;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Rating;
 use Ampache\Module\Util\Ui;
-use Ampache\Model\User;
-use Ampache\Model\Userflag;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 

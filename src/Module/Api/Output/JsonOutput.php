@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\User;
 use Ampache\Module\Api\Json_Data;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\User;
 
 final class JsonOutput implements ApiOutputInterface
 {

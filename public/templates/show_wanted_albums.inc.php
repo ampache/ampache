@@ -20,7 +20,7 @@
  *
  */
 
-use Ampache\Model\Wanted;
+use Ampache\Repository\Model\Wanted;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 

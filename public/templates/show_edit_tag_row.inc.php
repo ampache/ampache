@@ -20,7 +20,7 @@
  *
  */
 
-use Ampache\Model\Tag;
+use Ampache\Repository\Model\Tag;
 
 /** @var Tag $libitem */
 

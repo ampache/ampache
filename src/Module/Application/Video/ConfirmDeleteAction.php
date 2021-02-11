@@ -26,8 +26,8 @@ namespace Ampache\Module\Application\Video;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Model\Catalog;
-use Ampache\Model\Video;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;

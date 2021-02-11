@@ -25,8 +25,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\MockeryTestCase;
-use Ampache\Model\Album;
-use Ampache\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;

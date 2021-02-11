@@ -76,7 +76,12 @@ interface ConfigContainerInterface
      * Return a list of types which are zip-able
      */
     public function getTypesAllowedForZip(): array;
-    
+
+    /**
+     * Return the path to the composer binary
+     */
+    public function getComposerBinaryPath(): string;
+
     /**
      * Check if a certain feature is enabled
      */

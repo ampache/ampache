@@ -24,10 +24,6 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Clip;
-use Ampache\Model\Movie;
-use Ampache\Model\Personal_Video;
-use Ampache\Model\TVShow_Episode;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
