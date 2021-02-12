@@ -36,6 +36,9 @@ final class UserPreferenceRepository implements UserPreferenceRepositoryInterfac
         $this->databaseObjectCache = $databaseObjectCache;
     }
 
+    /**
+     * @return mixed
+     */
     public function getByUserAndPreference(
         int $userId,
         int $preferenceId

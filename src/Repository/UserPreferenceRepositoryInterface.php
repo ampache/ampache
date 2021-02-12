@@ -23,6 +23,10 @@ namespace Ampache\Repository;
 
 interface UserPreferenceRepositoryInterface
 {
+
+    /**
+     * @return mixed
+     */
     public function getByUserAndPreference(
         int $userId,
         int $preferenceId

@@ -78,6 +78,7 @@
         "php-di/php-di": "^6.0",
         "php-tmdb/api": "2.*",
         "phpmailer/phpmailer": "6.1.*",
+        "phpstan/phpstan": "^0.12.75",
         "pklauzinski/jscroll": "2.*",
         "psr/log": "^1",
         "rmccue/requests": "1.7.*",
@@ -403,6 +404,7 @@
         "codestyle": "resources/scripts/tests/codestyle.sh",
         "syntax": "resources/scripts/tests/syntax.sh",
         "fix-cs": "vendor/bin/php-cs-fixer fix -v .",
+        "stan": "vendor/bin/phpstan analyse",
 	"post-autoload-dump": [
 	    "@php resources/scripts/composer/check_tag_tools.php"
 	]
