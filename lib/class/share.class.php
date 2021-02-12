@@ -172,7 +172,7 @@ class Share extends database_object
                     }
                 }
             } catch (Exception $error) {
-                debug_event('share.class', 'Share plugin error: ' . $error->getMessage(), 1);
+                debug_event(self::class, 'Share plugin error: ' . $error->getMessage(), 1);
             }
         }
         $sql = "UPDATE `share` SET `public_url` = ? WHERE `id` = ?";
@@ -277,9 +277,8 @@ class Share extends database_object
         }
         $this->f_allow_stream   = $this->allow_stream;
         $this->f_allow_download = $this->allow_download;
-        $time_format            = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i:s';
-        $this->f_creation_date  = get_datetime($time_format, (int) $this->creation_date);
-        $this->f_lastvisit_date = ($this->lastvisit_date > 0) ? get_datetime($time_format, (int) $this->creation_date) : '';
+        $this->f_creation_date  = get_datetime((int) $this->creation_date);
+        $this->f_lastvisit_date = ($this->lastvisit_date > 0) ? get_datetime((int) $this->creation_date) : '';
     }
 
     /**
@@ -327,43 +326,43 @@ class Share extends database_object
     public function is_valid($secret, $action)
     {
         if (!$this->id) {
-            debug_event('share.class', 'Access Denied: Invalid share.', 3);
+            debug_event(self::class, 'Access Denied: Invalid share.', 3);
 
             return false;
         }
 
         if (!AmpConfig::get('share')) {
-            debug_event('share.class', 'Access Denied: share feature disabled.', 3);
+            debug_event(self::class, 'Access Denied: share feature disabled.', 3);
 
             return false;
         }
 
         if ($this->expire_days > 0 && ($this->creation_date + ($this->expire_days * 86400)) < time()) {
-            debug_event('share.class', 'Access Denied: share expired.', 3);
+            debug_event(self::class, 'Access Denied: share expired.', 3);
 
             return false;
         }
 
         if ($this->max_counter > 0 && $this->counter >= $this->max_counter) {
-            debug_event('share.class', 'Access Denied: max counter reached.', 3);
+            debug_event(self::class, 'Access Denied: max counter reached.', 3);
 
             return false;
         }
 
         if (!empty($this->secret) && $secret != $this->secret) {
-            debug_event('share.class', 'Access Denied: secret requires to access share ' . $this->id . '.', 3);
+            debug_event(self::class, 'Access Denied: secret requires to access share ' . $this->id . '.', 3);
 
             return false;
         }
 
         if ($action == 'download' && (!AmpConfig::get('download') || !$this->allow_download)) {
-            debug_event('share.class', 'Access Denied: download unauthorized.', 3);
+            debug_event(self::class, 'Access Denied: download unauthorized.', 3);
 
             return false;
         }
 
         if ($action == 'stream' && !$this->allow_stream) {
-            debug_event('share.class', 'Access Denied: stream unauthorized.', 3);
+            debug_event(self::class, 'Access Denied: stream unauthorized.', 3);
 
             return false;
         }

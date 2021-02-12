@@ -94,7 +94,6 @@ class AmpacheRSSView
     {
         $xmlstr      = file_get_contents($this->feed_url, false, stream_context_create(Core::requests_options()));
         $xml         = simplexml_load_string($xmlstr);
-        $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
         if ($xml->channel) {
             UI::show_box_top($xml->channel->title);
             $count = 0;
@@ -103,7 +102,7 @@ class AmpacheRSSView
                 echo '<tr class="' . ((($count % 2) == 0) ? 'even' : 'odd') . '"><td>';
                 echo '<div>';
                 echo '<div style="float: left; font-weight: bold;"><a href="' . $item->link . '" target="_blank">' . $item->title . '</a></div>';
-                echo '<div style="float: right;">' . get_datetime($time_format, strtotime($item->pubDate)) . '</div>';
+                echo '<div style="float: right;">' . get_datetime(strtotime($item->pubDate), 'short', 'short', "m/d/Y H:i") . '</div>';
                 echo '</div><br />';
                 echo '<div style="margin-left: 30px;">';
                 if (isset($item->image)) {
@@ -138,7 +137,7 @@ class AmpacheRSSView
         if (strlen(trim($data['rssview_feed_url']))) {
             $this->feed_url = trim($data['rssview_feed_url']);
         } else {
-            debug_event('rssview.plugin', 'No rss feed url, home plugin skipped', 3);
+            debug_event(self::class, 'No rss feed url, home plugin skipped', 3);
 
             return false;
         }

@@ -475,10 +475,10 @@ class Democratic extends Tmp_Playlist
     {
         $row_id = $this->get_uid_from_object_id($object_id, $object_type);
         if ($row_id) {
-            debug_event('democratic.class', 'Removing Votes for ' . $object_id . ' of type ' . $object_type, 5);
+            debug_event(self::class, 'Removing Votes for ' . $object_id . ' of type ' . $object_type, 5);
             $this->delete_votes($row_id);
         } else {
-            debug_event('democratic.class', 'Unable to find Votes for ' . $object_id . ' of type ' . $object_type, 3);
+            debug_event(self::class, 'Unable to find Votes for ' . $object_id . ' of type ' . $object_type, 3);
         }
 
         return true;

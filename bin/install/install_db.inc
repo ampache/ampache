@@ -27,10 +27,11 @@ if(php_sapi_name() != 'cli') {
 define('NO_SESSION', 1);
 define('CLI', 1);
 
-$path = dirname(__FILE__);
-$prefix = realpath($path . '/../../');
-require_once $prefix . '/lib/init-tiny.php';
-require_once $prefix . '/lib/install.lib.php';
+$path   = dirname(__FILE__);
+$prefix = realpath(__DIR__ . '/../../');
+$a_root = realpath(__DIR__ . '/../../');
+require_once $a_root . '/lib/init-tiny.php';
+require_once $a_root . '/lib/install.lib.php';
 
 $options = getopt(
     'h:d:fp:P:u:U:w:',

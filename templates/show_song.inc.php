@@ -138,22 +138,27 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
         } ?>
     </dd>
     <?php
-    $songprops[T_('Title')]  = scrub_out($song->title);
-    $songprops[T_('Artist')] = $song->f_artist_link;
+    $songprops[T_('Title')]        = scrub_out($song->title);
+    $songprops[T_('Song Artist')]  = $song->f_artist_link;
     if (!empty($song->f_albumartist_link)) {
         $songprops[T_('Album Artist')] = $song->f_albumartist_link;
     }
     $songprops[T_('Album')]         = $song->f_album_link . ($song->year ? " (" . scrub_out($song->year) . ")" : "");
     $songprops[T_('Composer')]      = scrub_out($song->composer);
-    $songprops[T_('Genre')]         = $song->f_tags;
+    $songprops[T_('Genres')]        = $song->f_tags;
     $songprops[T_('Year')]          = $song->year;
     $songprops[T_('Original Year')] = scrub_out($song->get_album_original_year($song->album));
     $songprops[T_('Links')]         = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>";
     $songprops[T_('Links')] .= "&nbsp;<a href=\"https://www.duckduckgo.com/?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
     $songprops[T_('Links')] .= "&nbsp;<a href=\"http://www.last.fm/search?q=%22" . rawurlencode($song->f_artist) . "%22+%22" . rawurlencode($song->f_title) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
-    $songprops[T_('Length')]         = scrub_out($song->f_time);
-    $songprops[T_('Comment')]        = scrub_out($song->comment);
-    $label_string                    = '';
+    if ($song->mbid) {
+        $songprops[T_('Links')] .= "&nbsp;<a href=\"https://musicbrainz.org/recording/" . $song->mbid . "\" target=\"_blank\">" . UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
+    } else {
+        $songprops[T_('Links')] .= "&nbsp;<a href=\"https://musicbrainz.org/taglookup?tag-lookup.artist=%22" . rawurlencode($song->f_artist) . "%22&tag-lookup.track=%22" . rawurlencode($song->f_title) . "%22\" target=\"_blank\">" . UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
+    }
+    $songprops[T_('Length')]        = scrub_out($song->f_time);
+    $songprops[T_('Comment')]       = scrub_out($song->comment);
+    $label_string                   = '';
     foreach (array_map('trim', explode(';', $song->label)) as $label_name) {
         $label_string .= "<a href=\"" . AmpConfig::get('web_path') . "/labels.php?action=show&name=" . scrub_out($label_name) . "\">" . scrub_out($label_name) . "</a> ";
     }
@@ -171,6 +176,12 @@ $button_flip_state_id = 'button_flip_state_' . $song->id; ?>
     }
     if ($song->replaygain_album_gain !== null) {
         $songprops[T_('ReplayGain Album Gain')] = scrub_out($song->replaygain_album_gain);
+    }
+    if ($song->r128_track_gain !== null) {
+        $songprops[T_('R128 Track Gain')] = scrub_out($song->r128_track_gain);
+    }
+    if ($song->r128_album_gain !== null) {
+        $songprops[T_('R128 Album Gain')] = scrub_out($song->r128_album_gain);
     }
     if (Access::check('interface', 75)) {
         $songprops[T_('Filename')] = scrub_out($song->file) . " " . $song->f_size;

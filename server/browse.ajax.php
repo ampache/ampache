@@ -23,7 +23,8 @@
 /**
  * Sub-Ajax page, requires AJAX_INCLUDE
  */
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 if (!Core::is_session_started()) {
     session_start();
@@ -178,7 +179,11 @@ switch ($_REQUEST['action']) {
                 }
                 break;
             case 'grid_view':
-                $value = ($value == 'true');
+                /**
+                 * The `grid view` is implemented inverted, so apply an inverted logic.
+                 * This ensures the `grid view` checkbox behaves as expected
+                 */
+                $value = ($value == 'false');
                 $browse->set_grid_view($value);
                 break;
             case 'limit':

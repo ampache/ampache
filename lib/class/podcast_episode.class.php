@@ -128,8 +128,7 @@ class Podcast_Episode extends database_object implements media, library_item
         $this->f_author      = scrub_out($this->author);
         $this->f_artist_full = $this->f_author;
         $this->f_website     = scrub_out($this->website);
-        $time_format         = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
-        $this->f_pubdate     = get_datetime($time_format, (int) $this->pubdate);
+        $this->f_pubdate     = get_datetime((int) $this->pubdate);
         $this->f_state       = ucfirst($this->state);
 
         // Format the Time
@@ -207,7 +206,7 @@ class Podcast_Episode extends database_object implements media, library_item
      */
     public function search_childrens($name)
     {
-        debug_event('podcast_episode.class', 'search_childrens ' . $name, 5);
+        debug_event(self::class, 'search_childrens ' . $name, 5);
 
         return array();
     }
@@ -409,8 +408,7 @@ class Podcast_Episode extends database_object implements media, library_item
      * @param string $additional_params
      * @param string $player
      * @param boolean $local
-     * @param integer $uid
-     * @param boolean $original
+     * @param string $uid
      * @return string
      */
     public function play_url($additional_params = '', $player = '', $local = false, $uid = false)
@@ -459,11 +457,11 @@ class Podcast_Episode extends database_object implements media, library_item
      */
     public function remove()
     {
-        debug_event('podcast_episode.class', 'Removing podcast episode ' . $this->id, 5);
+        debug_event(self::class, 'Removing podcast episode ' . $this->id, 5);
 
         if (AmpConfig::get('delete_from_disk') && !empty($this->file)) {
             if (!unlink($this->file)) {
-                debug_event('podcast_episode.class', 'Cannot delete file ' . $this->file, 3);
+                debug_event(self::class, 'Cannot delete file ' . $this->file, 3);
             }
         }
 
@@ -496,9 +494,9 @@ class Podcast_Episode extends database_object implements media, library_item
             if (!empty($file)) {
                 $pinfo = pathinfo($this->source);
                 $file .= DIRECTORY_SEPARATOR . $this->pubdate . '-' . str_replace(array('?', '<', '>', '\\', '/'), '_', $this->title) . '-' . strtok($pinfo['basename'], '?');
-                debug_event('podcast_episode.class', 'Downloading ' . $this->source . ' to ' . $file . ' ...', 4);
+                debug_event(self::class, 'Downloading ' . $this->source . ' to ' . $file . ' ...', 4);
                 if (file_put_contents($file, fopen($this->source, 'r')) !== false) {
-                    debug_event('podcast_episode.class', 'Download completed.', 4);
+                    debug_event(self::class, 'Download completed.', 4);
                     $this->file = $file;
 
                     $vainfo = new vainfo($this->file);
@@ -514,11 +512,11 @@ class Podcast_Episode extends database_object implements media, library_item
                     $sql = "UPDATE `podcast_episode` SET `file` = ?, `size` = ?, `time` = ?, `state` = 'completed' WHERE `id` = ?";
                     Dba::write($sql, array($this->file, $this->size, $this->time, $this->id));
                 } else {
-                    debug_event('podcast_episode.class', 'Error when downloading podcast episode.', 1);
+                    debug_event(self::class, 'Error when downloading podcast episode.', 1);
                 }
             }
         } else {
-            debug_event('podcast_episode.class', 'Cannot download podcast episode ' . $this->id . ', empty source.', 3);
+            debug_event(self::class, 'Cannot download podcast episode ' . $this->id . ', empty source.', 3);
         }
     }
 

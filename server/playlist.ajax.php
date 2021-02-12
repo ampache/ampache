@@ -63,8 +63,7 @@ switch ($_REQUEST['action']) {
 
             $name        = $_REQUEST['name'];
             if (empty($name)) {
-                $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
-                $name        = Core::get_global('user')->username . ' - ' . get_datetime($time_format, time());
+                $name = Core::get_global('user')->username . ' - ' . get_datetime(time());
             }
             $playlist_id = (int) Playlist::create($name, 'private');
             if ($playlist_id < 1) {

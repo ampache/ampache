@@ -63,7 +63,7 @@ class Dba
     {
         // json_encode throws errors about UTF-8 cleanliness, which we don't
         // care about here.
-        debug_event('dba.class', $sql . ' ' . json_encode($params), 6);
+        debug_event(self::class, $sql . ' ' . json_encode($params), 6);
 
         // Be aggressive, be strong, be dumb
         $tries = 0;
@@ -84,7 +84,7 @@ class Dba
     {
         $dbh = self::dbh();
         if (!$dbh) {
-            debug_event('dba.class', 'Error: failed to get database handle', 1);
+            debug_event(self::class, 'Error: failed to get database handle', 1);
 
             return false;
         }
@@ -103,14 +103,14 @@ class Dba
 
         if (!$stmt) {
             self::$_error = json_encode($dbh->errorInfo());
-            debug_event('dba.class', 'Error_query SQL: ' . $sql, 5);
-            debug_event('dba.class', 'Error_query MSG: ' . json_encode($dbh->errorInfo()), 1);
+            debug_event(self::class, 'Error_query SQL: ' . $sql, 5);
+            debug_event(self::class, 'Error_query MSG: ' . json_encode($dbh->errorInfo()), 1);
             self::disconnect();
         } else {
             if ($stmt->errorCode() && $stmt->errorCode() != '00000') {
                 self::$_error = json_encode($stmt->errorInfo());
-                debug_event('dba.class', 'Error_query SQL: ' . $sql, 5);
-                debug_event('dba.class', 'Error_query MSG: ' . json_encode($stmt->errorInfo()), 1);
+                debug_event(self::class, 'Error_query SQL: ' . $sql, 5);
+                debug_event(self::class, 'Error_query MSG: ' . json_encode($stmt->errorInfo()), 1);
                 self::finish($stmt);
                 self::disconnect();
 
@@ -155,7 +155,7 @@ class Dba
     {
         $dbh = self::dbh();
         if (!$dbh) {
-            debug_event('dba.class', 'Wrong dbh.', 1);
+            debug_event(self::class, 'Wrong dbh.', 1);
 
             return '';
         }
@@ -326,11 +326,11 @@ class Dba
         }
 
         try {
-            debug_event('dba.class', 'Database connection...', 6);
+            debug_event(self::class, 'Database connection...', 6);
             $dbh = new PDO($dsn, $username, $password);
         } catch (PDOException $error) {
             self::$_error = $error->getMessage();
-            debug_event('dba.class', 'Connection failed: ' . $error->getMessage(), 1);
+            debug_event(self::class, 'Connection failed: ' . $error->getMessage(), 1);
 
             return null;
         }
@@ -353,12 +353,12 @@ class Dba
         $charset = self::translate_to_mysqlcharset(AmpConfig::get('site_charset'));
         $charset = $charset['charset'];
         if ($dbh->exec('SET NAMES ' . $charset) === false) {
-            debug_event('dba.class', 'Unable to set connection charset to ' . $charset, 1);
+            debug_event(self::class, 'Unable to set connection charset to ' . $charset, 1);
         }
 
         if ($dbh->exec('USE `' . $database . '`') === false) {
             self::$_error = json_encode($dbh->errorInfo());
-            debug_event('dba.class', 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()), 1);
+            debug_event(self::class, 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()), 1);
         }
 
         if (AmpConfig::get('sql_profiling')) {
@@ -477,7 +477,7 @@ class Dba
         $handle = 'dbh_' . $database;
 
         // Nuke it
-        debug_event('dba.class', 'Database disconnection.', 6);
+        debug_event(self::class, 'Database disconnection.', 6);
         AmpConfig::set($handle, null, true);
 
         return true;
@@ -606,7 +606,7 @@ class Dba
                     $sql             = "ALTER TABLE `" . $row['0'] . "` MODIFY `" . $table['Field'] . "` " . $table['Type'] . " CHARACTER SET " . $target_charset;
                     $charset_results = self::write($sql);
                     if (!$charset_results) {
-                        debug_event('dba.class', 'Unable to update the charset of ' . $table['Field'] . '.' . $table['Type'] . ' to ' . $target_charset, 3);
+                        debug_event(self::class, 'Unable to update the charset of ' . $table['Field'] . '.' . $table['Type'] . ' to ' . $target_charset, 3);
                     } // if it fails
                 }
             }
@@ -780,6 +780,7 @@ class Dba
         self::write("ALTER TABLE `user` MODIFY COLUMN `validation` varchar(128) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         self::write("ALTER TABLE `user` MODIFY COLUMN `state` varchar(64) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         self::write("ALTER TABLE `user` MODIFY COLUMN `city` varchar(64) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
+        self::write("ALTER TABLE `user` MODIFY COLUMN `rsstoken` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         self::write("ALTER TABLE `user_activity` MODIFY COLUMN `action` varchar(20) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         self::write("ALTER TABLE `user_activity` MODIFY COLUMN `object_type` varchar(32) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");
         self::write("ALTER TABLE `user_activity` MODIFY COLUMN `name_track` varchar(255) CHARACTER SET $target_charset COLLATE $target_collation DEFAULT NULL;");

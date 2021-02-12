@@ -1,5 +1,134 @@
 # CHANGELOG
 
+## Ampache develop
+
+Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
+
+**IMPORTANT** instead of using date() we are now using IntlDateFormatter and your locale to identify formats.
+This means that 'custom_datetime' based on the date() format is incorrect and will look weird.
+Look here for the code to change your 'custom_datetime' string [(<http://userguide.icu-project.org/formatparse/datetime>)]
+
+This means Ampache now **requires** php-intl module/dll to be enabled.
+
+### Added
+
+* Write metadata to mp3, flac and ogg files. Requires metaflac and vorbiscomment installed on Linux.
+* Write images to mp3 and flac files. Also requires metaflac on linux.
+* File tags can be updated from catalog management page.
+* Configurable settings for "Gather Art".
+* Configurable art search limit.
+* User selectable artist and year filter for Spotify album searches
+* User selectable limit for art searches.
+* php-intl is now required for translation of date formats into your locale
+* Generate rsstokens for each user allowing unique feed URLs
+* Allow setting custom database collation and charset without overwriting your changes
+  * rsstoken: Identify users by token when generating RSS feeds
+* Run garbage collection after catalog_update.inc 'clean' or 'verify'
+* Add duration to the table headers when browsing playlists and smartlists
+* Add time and duration to albums, artists instead of calculating from songs each time
+* Allow setting a custom background on the login page
+* Musicbrainz search icon on Artist, Album and Song pages
+* Update missing album artists on catalog add
+* Add R128 Gain adjustments
+* Persist replaygain setting as a cookie
+* Support for image per song
+* Config version 49
+* NEW config options
+  * hide_ampache_messages: We sometimes need to talk and will show a warning to admin users. Allow hiding this
+* NEW search options (also available in Api::advanced_search)
+  * last_skip (artist, album, song)
+  * last_play_or_skip (artist, album, song)
+  * played_or_skipped_times (song)
+
+### Changed
+* get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
+* Renamed 'Tag' strings to 'Genre'
+* Changed sidebar back to browse for artist/album
+* Stop logging auth/passphrase strings
+* Add Y scrolling to the current playlist box (rightbar)
+
+### Fixed
+
+* Escape filepaths when removing from database
+* Regex in config for additional_genre_delimiters
+* Grid View option was backwards
+* Replaygain issues in the webplayer
+* Per disk actions for grouped albums (e.g. play just that disk)
+* Catalog removal needs to run garbage collection
+* Recognize opus when reading tags
+
+### API develop
+
+All API code that used 'Tag' now references 'Genre' instead
+
+### Added
+
+* Api::localplay added new options to 'command' ('pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip')
+* Api::localplay added parameters:
+  * 'oid' (integer) object_id to add //optional
+  * 'type' (string) Default: 'Song' ('Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream') //optional
+  * 'clear' (integer) 0|1 clear the current playlist on add //optional
+* API::playlist_edit added new parameter 'sort': (0,1) sort the playlist by 'Artist, Album, Song' //optional
+* Api::indexes added parameter 'include': (0,1) include song details with playlists
+* Add time to artist and album objects. (total time of all songs in seconds)
+* NEW API functions
+  * Api::users (ID and Username of the site users)
+  * Api::song_delete (Delete files when you are allowed to)
+  * Api::user_preferences (Get your user preferences)
+  * Api::user_preference (Get your preference by name)
+  * Api::system_update (Check Ampache for updates and run the update if there is one.)
+  * Api::system_preferences (Preferences for the system user)
+  * Api::system_preference (Get a system preference by name)
+  * Api::preference_create (Add a new preference to Ampache)
+  * Api::preference_edit (Edit a preference value by name; optionally apply to all users)
+  * Api::preference_delete (Delete a preference by name)
+  * Api::labels (list your record labels)
+  * Api::label (get a label by id)
+  * Api::label_artists (get all artists attached to that label)
+  * Api::get_bookmark (See if you've previously played the file)
+  * Api::bookmarks (List all bookmarks created by your account)
+  * Api::bookmark_create (Create a bookmark to allow revisting later)
+  * Api::bookmark_edit (Edit a bookmark)
+  * Api::bookmark_delete (Delete a bookmark by object id, type, user and client name)
+
+### Changed
+
+* Renamed functions:
+  * tags => genres
+  * tag => genre
+  * tag_artists => genre_artists
+  * tag_albums => genre_albums
+  * tag_songs => genre_songs
+* Don't allow duplicate podcast feeds
+* Make filter optional in shares, genre_artists, genre_albums, genre_songs (Used as a general catch all method like genres)
+* Error Codes and response structure has changed
+  * 4700 Access Control not Enabled
+  * 4701 Received Invalid Handshake
+  * 4703 Access Denied
+  * 4704 Not Found
+  * 4705 Missing Method
+  * 4706 Depreciated Method
+  * 4710 Bad Request
+  * 4742 Failed Access Check
+* get_indexes: 'playlist' now requires include=1 for xml calls if you want the tracks
+* stats: Removed back compat from older versions. Only 'type' is mandatory
+* Return empty objects when the request was correct but the results were empty
+* record_play: Require 100 (Admin) permission to record plays for other users
+* podcast_episodes
+  * "url" is now a play url (instead of a link to the episode)
+  * "public_url" is now the old episode link
+
+### Deprecated
+
+* Api::get_indexes; stop including playlist track and id in xml by default
+
+### Fixed
+
+* Api::podcast_edit wasn't able to edit a podcast...
+* Api::democratic was using action from localplay in the return responses
+* Setting a limit of 'none' would slice away all the results
+* get_indexes for XML didn't include podcast indexes
+
 ## Ampache 4.3.0-release
 
 This version of Ampache seeks to bring in some of the great changes going on in develop while we work on v5.
@@ -59,6 +188,8 @@ There also a few API changes to enable a bit better control for older clients.
 * MP3's would not get a waveform without editing the config
 * Recently played respects your privacy settings
 * Graph class sql grouping
+* **MAJOR** UPnP fixes
+* Upload catalog rename logic
 
 ### API 4.3.0
 
@@ -135,7 +266,7 @@ There also a few API changes to enable a bit better control for older clients.
 
 ### Changed
 
-* Fall back to year when using original year in search
+* Searching 'original_year' will now fall back to 'year' if no release year is present
 
 ### Fixed
 
@@ -325,7 +456,7 @@ The API changelog for this version has been separated into a new sub-heading bel
 * Add 250 for search form limits in the web UI. (Jump from 100 to 500 is pretty big)
 * Add Recently updated/added to search rules
 * Add regex searching to text fields. ([<https://mariadb.com/kb/en/regexp/>])
-  * Refer to the wiki for information about search rules. (<https://github.com/ampache/ampache/wiki/advanced-search>)
+  * Refer to the wiki for information about search rules. (<http://ampache.org/api/api-advanced-search>)
 * When labels are enabled, automatically generate and associate artists with their publisher/label tag values.
 * Enforced stat recording for videos. (podcasts and episodes to be added later)
 * Add tags (Genres) to "Anywhere" text searches.
@@ -564,7 +695,7 @@ Bump API version to 400003 (4.0.0 build 003)
 
 #### Added
 
-* user_numeric searches also available in the API. ([<https://github.com/ampache/ampache/wiki/XML-methods>])
+* user_numeric searches also available in the API. ([<http://ampache.org/api/api-xml-methods>])
 
 #### Changed
 
@@ -754,7 +885,7 @@ Notes about this release that can't be summed up in a log line
 
 #### Added
 
-* Documented the Ampache API [<https://github.com/ampache/ampache/wiki/XML-methods>]
+* Documented the Ampache API [<http://ampache.org/api/api-xml-methods>]
 * Include smartlists in the API playlist calls.
 * Authentication: allow sha256 encrypted apikey for auth
   * You must send an encrypted api key in the following fashion. (Hash key joined with username)

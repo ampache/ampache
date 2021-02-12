@@ -2,7 +2,8 @@
 // No event subscribe support but avoid few players error (e.g. Windows Media Player).
 
 define('NO_SESSION', '1');
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 $headers = getallheaders();
 //$callback = $headers['Callback'];

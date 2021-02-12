@@ -34,7 +34,7 @@ $t_play      = T_('Play');
 $t_artists   = T_('Artists');
 $t_albums    = T_('Albums');
 $t_playlists = T_('Playlists');
-$t_tagcloud  = T_('Tag Cloud');
+$t_tagcloud  = T_('Genres');
 $t_favorites = T_('Favorites');
 $t_upload    = T_('Upload');
 $t_logout    = T_('Log out'); ?>
@@ -514,6 +514,9 @@ $t_logout    = T_('Log out'); ?>
                 <?php
                     if (Access::check('interface', 100)) {
                         echo '<div id=update_notify>';
+                        if (!AmpConfig::get('hide_ampache_messages', false)) {
+                            AutoUpdate::show_ampache_message();
+                        }
                         if (AmpConfig::get('autoupdate') && AutoUpdate::is_update_available()) {
                             AutoUpdate::show_new_version();
                             echo '<br />';

@@ -26,7 +26,7 @@ class Graph
     public function __construct()
     {
         if (!AmpConfig::get('statistical_graphs') || !is_dir(AmpConfig::get('prefix') . '/lib/vendor/szymach/c-pchart/src/Chart/')) {
-            debug_event('graph', 'Access denied, statistical graph disabled.', 1);
+            debug_event(self::class, 'Access denied, statistical graph disabled.', 1);
 
             return false;
         }
@@ -322,7 +322,7 @@ class Graph
      */
     protected function get_user_bandwidth_pts($user = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
     {
-        return $this->get_user_object_count_pts($user, $object_type, $object_id, $start_date, $end_date, $zoom, 'size');
+        return $this->get_user_object_count_pts($user, $object_type, $object_id, $start_date, $end_date, $zoom);
     }
 
     /**

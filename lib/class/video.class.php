@@ -303,8 +303,7 @@ class Video extends database_object implements media, library_item
         $this->f_length = floor($this->time / 60) . ' ' . T_('minutes');
         $this->f_file   = $this->f_title . '.' . $this->type;
         if ($this->release_date) {
-            $time_format          = AmpConfig::get('custom_datetime') ? preg_replace("/[^dmY\s]/", "", (string) AmpConfig::get('custom_datetime')) : "m-d-Y";
-            $this->f_release_date = get_datetime($time_format, (int) $this->release_date);
+            $this->f_release_date = get_datetime((int) $this->release_date, 'short', 'none');
         }
     } // format
 
@@ -356,7 +355,7 @@ class Video extends database_object implements media, library_item
      */
     public function search_childrens($name)
     {
-        debug_event('video.class', 'search_childrens ' . $name, 5);
+        debug_event(self::class, 'search_childrens ' . $name, 5);
 
         return array();
     }
@@ -1099,7 +1098,7 @@ class Video extends database_object implements media, library_item
                 Useractivity::garbage_collection('video', $this->id);
             }
         } else {
-            debug_event('video.class', 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);
+            debug_event(self::class, 'Cannot delete ' . $this->file . 'file. Please check permissions.', 1);
         }
 
         return $deleted;

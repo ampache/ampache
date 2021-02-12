@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "06ea2787232ab2b7c25ef879b2a08247",
+    "content-hash": "5b07e47fa44d33ba4482b84beb91d7e1",
     "packages": [
         {
             "name": "aehlke/tag-it",
@@ -210,6 +210,69 @@
                 "websocket"
             ],
             "time": "2020-07-07T15:50:14+00:00"
+        },
+        {
+            "name": "clue/multicast-react",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/clue/reactphp-multicast.git",
+                "reference": "a81d0b945a453548e573b2b644077036fa4e5601"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/clue/reactphp-multicast/zipball/a81d0b945a453548e573b2b644077036fa4e5601",
+                "reference": "a81d0b945a453548e573b2b644077036fa4e5601",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3",
+                "react/datagram": "~1.0",
+                "react/event-loop": "^1.0 || ^0.5 || ^0.4 || ^0.3"
+            },
+            "require-dev": {
+                "clue/hexdump": "0.2.*",
+                "phpunit/phpunit": "^9.3 ||^6.0 || ^5.7 || ^4.8.35"
+            },
+            "suggest": {
+                "ext-sockets": "Requires PHP 5.4+ and the low level socket API for listening on multicast addresses (socket options to send IGMP announcements)"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Clue\\React\\Multicast\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christian Lück",
+                    "email": "christian@clue.engineering"
+                }
+            ],
+            "description": "Simple, event-driven multicast UDP message client and server for ReactPHP.",
+            "homepage": "https://github.com/clue/reactphp-multicast",
+            "keywords": [
+                "async",
+                "mcast",
+                "multicast",
+                "reactphp",
+                "udp"
+            ],
+            "funding": [
+                {
+                    "url": "https://clue.engineering/support",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/clue",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-12-06T15:24:48+00:00"
         },
         {
             "name": "components/bootstrap",
@@ -2076,16 +2139,16 @@
         },
         {
             "name": "react/cache",
-            "version": "v1.1.1",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/reactphp/cache.git",
-                "reference": "4bf736a2cccec7298bdf745db77585966fc2ca7e"
+                "reference": "44a568925556b0bd8cacc7b49fb0f1cf0d706a0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reactphp/cache/zipball/4bf736a2cccec7298bdf745db77585966fc2ca7e",
-                "reference": "4bf736a2cccec7298bdf745db77585966fc2ca7e",
+                "url": "https://api.github.com/repos/reactphp/cache/zipball/44a568925556b0bd8cacc7b49fb0f1cf0d706a0c",
+                "reference": "44a568925556b0bd8cacc7b49fb0f1cf0d706a0c",
                 "shasum": ""
             },
             "require": {
@@ -2144,7 +2207,62 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-02-02T06:47:52+00:00"
+            "time": "2020-09-18T12:12:35+00:00"
+        },
+        {
+            "name": "react/datagram",
+            "version": "v1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/reactphp/datagram.git",
+                "reference": "e4c5bf8daf44630f0a938f40fe2104b2b76ad2ff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/reactphp/datagram/zipball/e4c5bf8daf44630f0a938f40fe2104b2b76ad2ff",
+                "reference": "e4c5bf8daf44630f0a938f40fe2104b2b76ad2ff",
+                "shasum": ""
+            },
+            "require": {
+                "evenement/evenement": "^3.0 || ^2.0 || ^1.0",
+                "php": ">=5.3",
+                "react/dns": "^1.0 || ^0.4.13",
+                "react/event-loop": "^1.0 || ^0.5 || ^0.4 || ^0.3",
+                "react/promise": "~2.1|~1.2"
+            },
+            "require-dev": {
+                "clue/block-react": "~1.0",
+                "phpunit/phpunit": "^5.0 || ^4.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "React\\Datagram\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christian Lück",
+                    "email": "christian@lueck.tv"
+                }
+            ],
+            "description": "Event-driven UDP datagram socket client and server for ReactPHP",
+            "homepage": "https://github.com/reactphp/datagram",
+            "keywords": [
+                "Socket",
+                "async",
+                "client",
+                "datagram",
+                "dgram",
+                "reactphp",
+                "server",
+                "udp"
+            ],
+            "time": "2019-07-10T10:04:15+00:00"
         },
         {
             "name": "react/dns",
@@ -3289,16 +3407,16 @@
         },
         {
             "name": "symfony/options-resolver",
-            "version": "v4.4.19",
+            "version": "v4.4.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
-                "reference": "cd8c6a2778d5f8b5e8fc4b7abdf126790b5d5095"
+                "reference": "157a252222251310fe50c71012b4e72f01325850"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/cd8c6a2778d5f8b5e8fc4b7abdf126790b5d5095",
-                "reference": "cd8c6a2778d5f8b5e8fc4b7abdf126790b5d5095",
+                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/157a252222251310fe50c71012b4e72f01325850",
+                "reference": "157a252222251310fe50c71012b4e72f01325850",
                 "shasum": ""
             },
             "require": {
@@ -3327,7 +3445,7 @@
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
-            "description": "Provides an improved replacement for the array_replace PHP function",
+            "description": "Symfony OptionsResolver Component",
             "homepage": "https://symfony.com",
             "keywords": [
                 "config",
@@ -3348,7 +3466,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-27T09:09:26+00:00"
+            "time": "2020-10-24T11:50:19+00:00"
         },
         {
             "name": "symfony/polyfill-intl-idn",
@@ -3874,70 +3992,6 @@
             "time": "2020-10-24T10:57:07+00:00"
         },
         {
-            "name": "szymach/c-pchart",
-            "version": "v2.0.12",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/szymach/c-pchart.git",
-                "reference": "f5fad68b303f65225db1a3d3f4bb58aea7a418b4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/szymach/c-pchart/zipball/f5fad68b303f65225db1a3d3f4bb58aea7a418b4",
-                "reference": "f5fad68b303f65225db1a3d3f4bb58aea7a418b4",
-                "shasum": ""
-            },
-            "require": {
-                "ext-gd": "*",
-                "php": ">=5.4"
-            },
-            "require-dev": {
-                "codeception/codeception": "^2.3",
-                "phpunit/phpunit": "^4.8|6.1",
-                "squizlabs/php_codesniffer": "^2.8|3.0"
-            },
-            "type": "project",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "CpChart\\": "src/"
-                },
-                "files": [
-                    "src/Resources/data/constants.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0-only"
-            ],
-            "authors": [
-                {
-                    "name": "Jean-Damien Pogolotti",
-                    "homepage": "http://www.pchart.net",
-                    "role": "Creator of the original pChart library"
-                },
-                {
-                    "name": "Piotr Szymaszek",
-                    "homepage": "https://github.com/szymach",
-                    "role": "Developer of the CpChart wrapper package"
-                }
-            ],
-            "description": "Port of \"pChart\" library into PHP 5",
-            "homepage": "https://github.com/szymach/c-pchart",
-            "keywords": [
-                "CpChart",
-                "c-pChart",
-                "charts",
-                "pchart",
-                "statistics"
-            ],
-            "time": "2019-07-26T22:48:01+00:00"
-        },
-        {
             "name": "tightenco/collect",
             "version": "v5.2.43",
             "source": {
@@ -4135,6 +4189,7 @@
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.1.0",
+        "ext-intl": "*",
         "ext-json": "*",
         "ext-openssl": "*",
         "ext-pdo": "*",

@@ -86,7 +86,7 @@ class Shoutbox
                 $sql = "DELETE FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ?";
                 Dba::write($sql, array($object_type, $object_id));
             } else {
-                debug_event('shoutbox.class', 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+                debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
             }
         } else {
             foreach ($types as $type) {
@@ -133,7 +133,7 @@ class Shoutbox
     } // get_top
 
     /**
-     * @param $time
+     * @param integer $time
      * @return array
      */
     public static function get_shouts_since($time)
@@ -268,6 +268,7 @@ class Shoutbox
      * update
      * This takes a key'd array of data as input and updates a shoutbox entry
      * @param array $data
+     * @return mixed
      */
     public function update(array $data)
     {
@@ -285,8 +286,7 @@ class Shoutbox
     public function format()
     {
         $this->sticky = ($this->sticky == "0") ? 'No' : 'Yes';
-        $time_format  = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i:s';
-        $this->f_date = get_datetime($time_format, (int) $this->date);
+        $this->f_date = get_datetime((int) $this->date);
         $this->f_text = preg_replace('/(\r\n|\n|\r)/', '<br />', $this->text);
 
         return true;
@@ -323,9 +323,8 @@ class Shoutbox
         }
         $html .= "<div class='shoutbox-info'>";
         if ($details) {
-            $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i:s';
             $html .= "<div class='shoutbox-object'>" . $object->f_link . "</div>";
-            $html .= "<div class='shoutbox-date'>" . get_datetime($time_format, (int) $this->date) . "</div>";
+            $html .= "<div class='shoutbox-date'>" . get_datetime((int) $this->date) . "</div>";
         }
         $html .= "<div class='shoutbox-text'>" . $this->f_text . "</div>";
         $html .= "</div>";

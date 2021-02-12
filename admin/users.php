@@ -20,7 +20,8 @@
  *
  */
 
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 if (!Access::check('interface', 100)) {
     UI::access_denied();
@@ -298,12 +299,36 @@ switch ($_REQUEST['action']) {
 
         $next_url = AmpConfig::get('web_path') . '/admin/users.php';
         show_confirmation(T_('No Problem'), T_('A new user API Key has been generated'), $next_url);
-    break;
+        break;
+    case 'show_generate_rsstoken':
+        $user_id = Core::get_request('user_id');
+
+        $next_url = AmpConfig::get('web_path') . '/admin/users.php?action=generate_rsstoken&user_id=' . scrub_out($user_id);
+        show_confirmation(T_('Are You Sure?'), T_('This will replace your existing RSS token. Feeds with the old token might not work properly'), $next_url, 1, 'generate_rsstoken');
+        break;
+    case 'generate_rsstoken':
+        if (AmpConfig::get('demo_mode')) {
+            break;
+        }
+
+        if (!Core::form_verify('generate_rsstoken', 'post')) {
+            UI::access_denied();
+
+            return false;
+        }
+
+        $client = new User((int) Core::get_request('user_id'));
+        if ($client->id) {
+            $client->generate_rsstoken();
+        }
+
+        $next_url = AmpConfig::get('web_path') . '/admin/users.php';
+        show_confirmation(T_('No Problem'), T_('A new user RSS token has been generated'), $next_url);
+        break;
     /* Show IP History for the Specified User */
     case 'show_ip_history':
         /* get the user and their history */
         $working_user = new User((int) Core::get_request('user_id'));
-        $time_format  = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
 
         if (!isset($_REQUEST['all'])) {
             $history = $working_user->get_ip_history(0, true);

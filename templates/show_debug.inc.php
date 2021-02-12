@@ -18,7 +18,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+use Lib\Cron;
+
+?>
 <?php UI::show_box_top(T_('Ampache Debug'), 'box box_debug_tools'); ?>
     <div id="information_actions">
         <ul>
@@ -59,7 +63,7 @@
 
 <?php if ((string) AmpConfig::get('cron_cache') !== '') { ?>
     <?php UI::show_box_top(T_('Ampache Cron'), 'box'); ?>
-        <div><?php echo T_('The last cron was completed'); ?>: <?php echo get_datetime($time_format, get_cron_date()); ?></div>
+        <div><?php echo T_('The last cron was completed'); ?>: <?php echo get_datetime(Cron::get_cron_date()); ?></div>
         <br />
     <?php UI::show_box_bottom();
 } ?>
@@ -107,6 +111,10 @@
             <tr class="<?php echo UI::flip_class(); ?>">
                 <td><?php echo T_('Gettext Support'); ?></td>
                 <td><?php echo print_bool(function_exists('bindtextdomain')); ?></td>
+            </tr>
+            <tr class="<?php echo UI::flip_class(); ?>">
+                <td><?php echo T_('PHP intl extension'); ?></td>
+                <td><?php echo print_bool(check_php_intl()); ?></td>
             </tr>
             </tbody>
         </table>

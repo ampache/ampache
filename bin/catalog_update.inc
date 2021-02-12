@@ -25,7 +25,8 @@ define('CLI', 1);
 
 $path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
-require_once $prefix . '/lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 ob_end_flush();
 
@@ -40,7 +41,7 @@ $optimizetables = 0;
 $catmove        = 0;
 $cattype        = false;
 $catname        = false;
-$catpath        = false;
+$catpath        = '';
 $options        = getopt("hn:t:mvcaguiop:");
 
 if (count($options) == 0) {
@@ -191,6 +192,7 @@ while ($row = Dba::fetch_assoc($db_results)) {
         echo "- " . T_("Start adding new media") . " - \n";
         echo "\n";
         $catalog->add_to_catalog($options);
+        Album::update_album_artist();
         echo "----------------\n\n";
     } elseif ($artadd == 1) {
         // Look for media art

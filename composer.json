@@ -30,6 +30,7 @@
     },
     "require": {
         "php": ">=7.1.0",
+        "ext-intl": "*",
         "ext-json": "*",
         "ext-openssl": "*",
         "ext-pdo": "*",
@@ -40,6 +41,7 @@
         "blueimp/jquery-file-upload": "10.2.0",
         "carhartl/jquery-cookie": "1.*",
         "cboden/ratchet": "0.4.*",
+        "clue/multicast-react": "^1.1.0",
         "components/bootstrap": "3.*",
         "components/jquery": "2.2.*",
         "components/jqueryui": "1.*",
@@ -68,7 +70,6 @@
         "symfony/http-foundation": "^3.0",
         "symfony/process": "^3.0",
         "symfony/routing": "^3.0",
-        "szymach/c-pchart": "2.*",
         "tightenco/collect": "5.2.*",
         "vakata/jstree": "3.*",
         "wikimedia/composer-merge-plugin": "1.*",
@@ -88,6 +89,10 @@
                 }
             }
         },
+            {
+                 "type": "composer",
+                "url": "https:\/\/www.phpclasses.org\/"
+            },
         {
             "type": "package",
             "package": {
@@ -331,7 +336,12 @@
             "merge-extra": false
         }
     },
-    "autoload": {
+   "scripts": {
+        "post-autoload-dump": [
+            "@php scripts/composer/check_tag_tools.php"
+        ]
+     },
+   "autoload": {
         "psr-4": {
             "Lib\\": "lib/class",
             "Beets\\": "modules/Beets"

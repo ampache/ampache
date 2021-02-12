@@ -97,6 +97,16 @@ function check_php_curl()
 }
 
 /**
+ * check_php_intl
+ * check for required module
+ * @return boolean
+ */
+function check_php_intl()
+{
+    return (extension_loaded('intl'));
+}
+
+/**
  * check_php_session
  * check for required function exists
  * @return boolean
@@ -315,10 +325,10 @@ function return_bytes($val)
         // The 'G' modifier is available since PHP 5.1.0
         case 'g':
             $val *= 1024;
-            // intentional fall through
+            // Intentional break fall-through
         case 'm':
             $val *= 1024;
-            // intentional fall through
+            // Intentional break fall-through
         case 'k':
             $val *= 1024;
             break;

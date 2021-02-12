@@ -942,7 +942,7 @@ class Query
     {
         // First we need to get the SQL statement we are going to run
         // This has to run against any possible filters (dependent on type)
-        $sql        = $this->get_sql(true);
+        $sql        = $this->get_sql();
         $db_results = Dba::read($sql);
 
         $results = array();
@@ -1268,7 +1268,7 @@ class Query
             $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
         }
         $final_sql .= $order_sql . $limit_sql;
-        //debug_event('query.class', "get_sql: " . $final_sql, 5);
+        //debug_event(self::class, "get_sql: " . $final_sql, 5);
 
         return $final_sql;
     } // get_sql
@@ -1983,7 +1983,7 @@ class Query
                 } // end switch
                 break;
             case 'video':
-                $sql = $this->sql_sort_video($field, 'video');
+                $sql = $this->sql_sort_video($field);
                 break;
             case 'wanted':
                 switch ($field) {
@@ -2209,7 +2209,7 @@ class Query
         // and the vollmer way, hopefully we don't have to
         // do it the vollmer way
         if ($this->is_simple()) {
-            $sql = $this->get_sql(true);
+            $sql = $this->get_sql();
         } else {
             // FIXME: this is fragile for large browses
             // First pull the objects
@@ -2248,7 +2248,7 @@ class Query
         } // if not simple
 
         $db_results = Dba::read($sql);
-        //debug_event('query.class', "resort_objects: " . $sql, 5);
+        //debug_event(self::class, "resort_objects: " . $sql, 5);
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {

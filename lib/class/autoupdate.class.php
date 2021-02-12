@@ -101,14 +101,14 @@ class AutoUpdate
 
             // Not connected / API rate limit exceeded: just ignore, it will pass next time
             if ($request->status_code != 200) {
-                debug_event('autoupdate.class', 'Github API request ' . $url . ' failed with http code ' . $request->status_code, 1);
+                debug_event(self::class, 'Github API request ' . $url . ' failed with http code ' . $request->status_code, 1);
 
                 return null;
             }
 
             return json_decode((string) $request->body);
         } catch (Exception $error) {
-            debug_event('autoupdate.class', 'Request error: ' . $error->getMessage(), 1);
+            debug_event(self::class, 'Request error: ' . $error->getMessage(), 1);
 
             return null;
         }
@@ -225,7 +225,7 @@ class AutoUpdate
             return AmpConfig::get('autoupdate_lastversion_new');
         }
 
-        debug_event('autoupdate.class', 'Checking latest version online...', 5);
+        debug_event(self::class, 'Checking latest version online...', 5);
 
         $available  = false;
         $git_branch = self::is_force_git_branch();
@@ -253,6 +253,20 @@ class AutoUpdate
         }
 
         return $available;
+    }
+
+    /**
+     * Display information from the Ampache Project as a message. (Develop branch only)
+     */
+    public static function show_ampache_message()
+    {
+        if (self::is_develop()) {
+            echo '<div id="autoupdate">';
+            echo '<span>' . T_("WARNING") . '</span>';
+            echo ' (Ampache Develop is about to go through a major change!)<br />';
+            echo '<a href="https://github.com/ampache/ampache/wiki/Ampache-Next-Changes' . '" target="_blank">' . T_('View changes') . '</a><br /> ';
+            echo '</div>';
+        }
     }
 
     /**

@@ -121,7 +121,7 @@ class AmpacheHeadphones
     protected function headphones_call($command, $params)
     {
         if (empty($this->api_url) || empty($this->api_key)) {
-            debug_event('headphones.plugin', 'Headphones url or api key missing', 3);
+            debug_event(self::class, 'Headphones url or api key missing', 3);
 
             return false;
         }
@@ -131,14 +131,14 @@ class AmpacheHeadphones
             $url .= '&' . $key . '=' . urlencode($value);
         }
 
-        debug_event('headphones.plugin', 'Headphones api call: ' . $url, 5);
+        debug_event(self::class, 'Headphones api call: ' . $url, 5);
         try {
             // We assume Headphone server is local, don't use proxy here
             $request = Requests::get($url, array(), array(
                 'timeout' => 600
             ));
         } catch (Exception $error) {
-            debug_event('headphones.plugin', 'Headphones api http exception: ' . $error->getMessage(), 1);
+            debug_event(self::class, 'Headphones api http exception: ' . $error->getMessage(), 1);
 
             return false;
         }
@@ -167,14 +167,14 @@ class AmpacheHeadphones
         if (strlen(trim($data['headphones_api_url']))) {
             $this->api_url = rtrim(trim($data['headphones_api_url']), '/');
         } else {
-            debug_event('headphones.plugin', 'No Headphones url, auto download skipped', 3);
+            debug_event(self::class, 'No Headphones url, auto download skipped', 3);
 
             return false;
         }
         if (strlen(trim($data['headphones_api_key']))) {
             $this->api_key = trim($data['headphones_api_key']);
         } else {
-            debug_event('headphones.plugin', 'No Headphones api key, auto download skipped', 3);
+            debug_event(self::class, 'No Headphones api key, auto download skipped', 3);
 
             return false;
         }

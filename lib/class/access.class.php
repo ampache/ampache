@@ -223,7 +223,7 @@ class Access
 
         // Check existing ACLs to make sure we're not duplicating values here
         if (self::exists($data)) {
-            debug_event('access.class', 'Error: An ACL entry equal to the created one already exists. Not adding duplicate: ' . $data['start'] . ' - ' . $data['end'], 1);
+            debug_event(self::class, 'Error: An ACL entry equal to the created one already exists. Not adding duplicate: ' . $data['start'] . ' - ' . $data['end'], 1);
             AmpError::add('general', T_('Duplicate ACL entry defined'));
 
             return false;
@@ -295,7 +295,7 @@ class Access
                 return make_bool(AmpConfig::get('download'));
             case 'batch_download':
                 if (!function_exists('gzcompress')) {
-                    debug_event('access.class', 'ZLIB extension not loaded, batch download disabled', 3);
+                    debug_event(self::class, 'ZLIB extension not loaded, batch download disabled', 3);
 
                     return false;
                 }
@@ -319,10 +319,9 @@ class Access
      * @param string $type
      * @param integer|string $user
      * @param integer $level
-     * @param string $apikey
      * @return boolean
      */
-    public static function check_network($type, $user = null, $level = 25, $apikey = null)
+    public static function check_network($type, $user = null, $level = 25)
     {
         if (!AmpConfig::get('access_control')) {
             switch ($type) {
@@ -339,14 +338,11 @@ class Access
                 if ($user) {
                     $user = User::get_from_username($user);
                     $user = $user->id;
-                } elseif ($apikey) {
-                    $user = User::get_from_apikey($apikey);
-                    $user = $user->id;
                 }
-            // Intentional break fall-through
+                // Intentional break fall-through
             case 'api':
                 $type = 'rpc';
-            // Intentional break fall-through
+                // Intentional break fall-through
             case 'network':
             case 'interface':
             case 'stream':
@@ -372,11 +368,11 @@ class Access
         $db_results = Dba::read($sql, $params);
 
         if (Dba::fetch_row($db_results)) {
-            debug_event('access.class', 'check_network ' . $type . ': ip matched ACL ' . $user_ip, 5);
+            debug_event(self::class, 'check_network ' . $type . ': ip matched ACL ' . $user_ip, 5);
 
             return true;
         }
-        debug_event('access.class', 'check_network ' . $type . ': ip not found in ACL ' . $user_ip, 3);
+        debug_event(self::class, 'check_network ' . $type . ': ip not found in ACL ' . $user_ip, 3);
 
         return false;
     }

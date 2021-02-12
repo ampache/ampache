@@ -50,7 +50,7 @@ class WebDAV_Directory extends DAV\Collection
      */
     public function getChildren()
     {
-        debug_event('webdav_directory.class', 'Directory getChildren', 5);
+        debug_event(self::class, 'Directory getChildren', 5);
         $children = array();
         $childs   = $this->libitem->get_childrens();
         foreach ($childs as $key => $child) {
@@ -81,7 +81,7 @@ class WebDAV_Directory extends DAV\Collection
             $nameinfo  = pathinfo($name);
             $name      = $nameinfo['filename'];
         }
-        debug_event('webdav_directory.class', 'Directory getChild: ' . $name, 5);
+        debug_event(self::class, 'Directory getChild: ' . $name, 5);
         $matches = $this->libitem->search_childrens($name);
         // Always return first match
         // Warning: this means that two items with the same name will not be supported for now

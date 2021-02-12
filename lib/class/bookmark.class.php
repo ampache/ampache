@@ -96,7 +96,7 @@ class Bookmark extends database_object
                 $sql = "DELETE FROM `bookmark` WHERE `object_type` = ? AND `object_id` = ?";
                 Dba::write($sql, array($object_type, $object_id));
             } else {
-                debug_event('bookmark.class', 'Garbage collect on type `' . $object_type . '` is not supported.', 3);
+                debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 3);
             }
         } else {
             foreach ($types as $type) {
@@ -106,23 +106,21 @@ class Bookmark extends database_object
     }
 
     /**
-     * @param User|null $user
+     * get_bookmark_ids
+     *
+     * @param User $user
      * @return array
      */
-    public static function get_bookmarks_ids($user = null)
+    public static function get_bookmark_ids($user)
     {
-        $ids = array();
-        if ($user === null) {
-            $user = Core::get_global('user');
-        }
-
+        $bookmarks  = array();
         $sql        = "SELECT `id` FROM `bookmark` WHERE `user` = ?";
         $db_results = Dba::read($sql, array($user->id));
         while ($results = Dba::fetch_assoc($db_results)) {
-            $ids[] = $results['id'];
+            $bookmarks[] = $results['id'];
         }
 
-        return $ids;
+        return $bookmarks;
     }
 
     /**
@@ -130,12 +128,30 @@ class Bookmark extends database_object
      * @param User $user
      * @return array
      */
-    public static function get_bookmarks($user = null)
+    public static function get_bookmarks($user)
     {
         $bookmarks = array();
-        $ids       = self::get_bookmarks_ids($user);
+        $ids       = self::get_bookmarks_id($user);
         foreach ($ids as $bookmarkid) {
             $bookmarks[] = new Bookmark($bookmarkid);
+        }
+
+        return $bookmarks;
+    }
+
+    /**
+     * get_bookmark
+     * @param array $data
+     * @return integer[]
+     */
+    public static function get_bookmark($data)
+    {
+        $bookmarks   = array();
+        $comment_sql = isset($data['comment']) ? "AND `comment` = '" . scrub_in($data['comment']) . "'" : "";
+        $sql         = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `object_type` = ? AND `object_id` = ? " . $comment_sql;
+        $db_results  = Dba::read($sql, array($data['user'], $data['object_type'], $data['object_id']));
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $bookmarks[] = (int) $results['id'];
         }
 
         return $bookmarks;
@@ -156,6 +172,24 @@ class Bookmark extends database_object
         $sql = "INSERT INTO `bookmark` (`user`, `position`, `comment`, `object_type`, `object_id`, `creation_date`, `update_date`) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         return Dba::write($sql, array($user, $position, $comment, $data['object_type'], $data['object_id'], time(), $updated));
+
+    }
+
+    /**
+     * edit
+     * @param array $data
+     * @return PDOStatement|boolean
+     */
+    public static function edit($data)
+    {
+        $user     = $data['user'] ?: Core::get_global('user')->id;
+        $position = $data['position'] ?: 0;
+        $comment  = scrub_in($data['comment']);
+        $updated  = $data['update_date'] ? (int) $data['update_date'] : time();
+        $sql      = "UPDATE `bookmark` SET `position` = ?, `update_date` = ? " .
+               "WHERE `user` = ? AND `comment` = ? AND `object_type` = ? AND `object_id` = ?";
+
+        return Dba::write($sql, array($position, $updated, $user, $comment,  $data['object_type'], $data['object_id']));
     }
 
     /**
@@ -179,6 +213,21 @@ class Bookmark extends database_object
         $sql = "DELETE FROM `bookmark` WHERE `id` = ?";
 
         return Dba::write($sql, array($this->id));
+    }
+
+    /**
+     * delete
+     *
+     * Delete the bookmark when you're done
+     *
+     * @param array $data
+     * @return PDOStatement|boolean
+     */
+    public static function delete(array $data)
+    {
+        $sql = "DELETE FROM `bookmark` WHERE `user` = ? AND `comment` = ? AND `object_type` = ? AND `object_id` = ?";
+
+        return Dba::write($sql, array($data['user'], $data['comment'], $data['object_type'], $data['object_id']));
     }
 
     public function format()

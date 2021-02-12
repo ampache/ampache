@@ -76,7 +76,7 @@ class UPnPPlayer
         require_once AmpConfig::get('prefix') . '/modules/localplay/upnp/UPnPDevice.php';
         require_once AmpConfig::get('prefix') . '/modules/localplay/upnp/UPnPPlaylist.php';
 
-        debug_event('upnpplayer.class', 'constructor: ' . $name . ' | ' . $description_url, 5);
+        debug_event(self::class, 'constructor: ' . $name . ' | ' . $description_url, 5);
         $this->_description_url = $description_url;
 
         $this->ReadIndState();
@@ -148,7 +148,7 @@ class UPnPPlayer
         $responseXML = simplexml_load_string($response);
         list($state) = $responseXML->xpath('//CurrentTransportState');
 
-        //!!debug_event('upnpplayer.class', 'GetState = ' . $state, 5);
+        //!!debug_event(self::class, 'GetState = ' . $state, 5);
 
         return $state;
     }
@@ -223,7 +223,7 @@ class UPnPPlayer
         $song = new song($songId);
         $song->format();
         $songItem = Upnp_Api::_itemSong($song, '');
-        $domDIDL  = Upnp_Api::createDIDL($songItem);
+        $domDIDL  = Upnp_Api::createDIDL($songItem, '');
         $xmlDIDL  = $domDIDL->saveXML();
 
         return array(
@@ -301,7 +301,7 @@ class UPnPPlayer
     public function Pause()
     {
         $state = $this->GetState();
-        debug_event('upnpplayer.class', 'Pause. prev state = ' . $state, 5);
+        debug_event(self::class, 'Pause. prev state = ' . $state, 5);
 
         if ($state == 'PLAYING') {
             $response = $this->Device()->instanceOnly('Pause');
@@ -404,7 +404,7 @@ class UPnPPlayer
 
         $responseXML  = simplexml_load_string($response);
         list($volume) = ($responseXML->xpath('//CurrentVolume'));
-        debug_event('upnpplayer.class', 'GetVolume:' . $volume, 5);
+        debug_event(self::class, 'GetVolume:' . $volume, 5);
 
         return $volume;
     }
@@ -423,7 +423,7 @@ class UPnPPlayer
         } else {
             Session::write($sid, $data);
         }
-        debug_event('upnpplayer.class', 'SetIntState:' . $this->_intState, 5);
+        debug_event(self::class, 'SetIntState:' . $this->_intState, 5);
     }
 
     private function ReadIndState()
@@ -432,6 +432,6 @@ class UPnPPlayer
         $data = Session::read($sid);
 
         $this->_intState = json_decode($data, true);
-        debug_event('upnpplayer.class', 'ReadIndState:' . $this->_intState, 5);
+        debug_event(self::class, 'ReadIndState:' . $this->_intState, 5);
     }
 } // End UPnPPlayer Class

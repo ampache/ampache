@@ -28,7 +28,8 @@
  */
 
 define('NO_SESSION', '1');
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 ob_end_clean();
 
 set_time_limit(0);

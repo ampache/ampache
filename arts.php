@@ -20,7 +20,8 @@
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 require_once AmpConfig::get('prefix') . UI::find_template('header.inc.php');
 
@@ -159,7 +160,8 @@ switch ($_REQUEST['action']) {
         // Prevent the script from timing out
         set_time_limit(0);
 
-        $image      = Art::get_from_source($_SESSION['form']['images'][$image_id], 'album');
+        $art_type   = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
+        $image      = Art::get_from_source($_SESSION['form']['images'][$image_id], $art_type);
         $dimensions = Core::image_dimensions($image);
         $mime       = $_SESSION['form']['images'][$image_id]['mime'];
         if (!Art::check_dimensions($dimensions)) {

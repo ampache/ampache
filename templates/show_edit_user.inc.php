@@ -126,6 +126,22 @@
                 </span>
             </td>
         </tr>
+        <?php if ($client->rsstoken) { ?>
+        <tr>
+            <td>
+                <?php echo T_('RSS Token'); ?>
+                <?php if (Access::check('interface', 100)) { ?>
+                    <a href="<?php echo AmpConfig::get('web_path'); ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo UI::get_icon('random', T_('Generate new RSS token')); ?></a>
+                <?php } ?>
+            </td>
+            <td>
+                <span>
+                    <?php echo $client->rsstoken; ?>
+                </span>
+            </td>
+        </tr>
+        <?php } ?>
+
         <tr>
             <td><?php echo T_('Config Preset'); ?></td>
             <td>

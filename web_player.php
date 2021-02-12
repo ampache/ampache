@@ -20,6 +20,7 @@
  *
  */
 
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 require_once AmpConfig::get('prefix') . UI::find_template('show_web_player.inc.php');

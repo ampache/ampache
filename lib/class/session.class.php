@@ -75,7 +75,7 @@ class Session
         $sql    = 'UPDATE `session` SET `value` = ?, `expire` = ? WHERE `id` = ?';
         Dba::write($sql, array($value, $expire, $key));
 
-        debug_event('session.class', 'Writing to ' . $key . ' with expiration ' . $expire, 5);
+        debug_event(self::class, 'Writing to ' . $key . ' with expiration ' . $expire, 5);
 
         return true;
     }
@@ -96,7 +96,7 @@ class Session
         $sql = 'DELETE FROM `session` WHERE `id` = ?';
         Dba::write($sql, array($key));
 
-        debug_event('session.class', 'Deleting Session with key:' . $key, 6);
+        debug_event(self::class, 'Deleting Session with key:' . $key, 6);
 
         $session_name  = AmpConfig::get('session_name');
         $cookie_path   = AmpConfig::get('cookie_path');
@@ -157,11 +157,11 @@ class Session
         $db_results = Dba::read($sql, array($key, time()));
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            // debug_event('session.class', 'Read session from key ' . $key . ' ' . $results[$column], 3);
+            // debug_event(self::class, 'Read session from key ' . $key . ' ' . $results[$column], 3);
             return $results[$column];
         }
 
-        debug_event('session.class', 'Unable to read session from key ' . $key . ' no data found', 3);
+        debug_event(self::class, 'Unable to read session from key ' . $key . ' no data found', 3);
 
         return '';
     }
@@ -257,12 +257,12 @@ class Session
         $db_results = Dba::write($sql, array($key, $username, $s_ip, $type, $agent, $value, $expire, $latitude, $longitude, $geoname));
 
         if (!$db_results) {
-            debug_event('session.class', 'Session creation failed', 1);
+            debug_event(self::class, 'Session creation failed', 1);
 
             return '';
         }
 
-        debug_event('session.class', 'Session created: ' . $key, 5);
+        debug_event(self::class, 'Session created: ' . $key, 5);
 
         return $key;
     }
@@ -280,7 +280,7 @@ class Session
 
         // No cookie no go!
         if (!filter_has_var(INPUT_COOKIE, $session_name)) {
-            debug_event('session.class', 'Existing session NOT found', 5);
+            debug_event(self::class, 'Existing session NOT found', 5);
 
             return false;
         }
@@ -373,7 +373,7 @@ class Session
 
         $sql = 'UPDATE `session` SET `expire` = ? WHERE `id`= ?';
         if ($db_results = Dba::write($sql, array($expire, $sid))) {
-            debug_event('session.class', $sid . ' has been extended to ' . @date('r', $expire) . ' extension length ' . ($expire - $time), 5);
+            debug_event(self::class, $sid . ' has been extended to ' . @date('r', $expire) . ' extension length ' . ($expire - $time), 5);
         }
 
         return $db_results;

@@ -438,7 +438,7 @@ class HttpQPlayer
         $fsock = fsockopen($this->host, (int) $this->port, $errno, $errstr);
 
         if (!$fsock) {
-            debug_event('httpqplayer.class', "HttpQPlayer: $errstr ($errno)", 1);
+            debug_event(self::class, "HttpQPlayer: $errstr ($errno)", 1);
 
             return null;
         }

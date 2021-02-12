@@ -28,9 +28,10 @@ define('NO_SESSION', 1);
 define('OUTDATED_DATABASE_OK', 1);
 define('CLI', 1);
 
-$path = dirname(__FILE__);
+$path   = dirname(__FILE__);
 $prefix = realpath($path . '/../../');
-require_once $prefix . '/lib/init.php';
+$a_root = realpath(__DIR__ . "/../../");
+require_once $a_root . '/lib/init.php';
 
 $options = getopt('u', array('update'));
 

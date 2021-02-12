@@ -22,7 +22,8 @@
 
 define('NO_SESSION', '1');
 define('OUTDATED_DATABASE_OK', 1);
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 if (!AmpConfig::get('subsonic_backend')) {
     echo T_("Disabled");

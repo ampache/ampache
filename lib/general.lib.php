@@ -417,7 +417,7 @@ function generate_config($current)
                 }
                 // Else, unable to generate a cryptographically secure token, use the default one
             } elseif (isset($current[$key])) {
-                $line = $key . ' = "' . escape_ini($current[$key]) . '"';
+                $line = $key . ' = "' . escape_ini((string) $current[$key]) . '"';
                 unset($current[$key]);
             }
         }
@@ -519,15 +519,23 @@ function get_web_path()
 
 /**
  * get_datetime
- * @param string $date
  * @param integer $time
+ * @param string $date_format
+ * @param string $time_format
+ * @param string $overwrite
  * @return string
  */
-function get_datetime($date, $time)
+function get_datetime($time, $date_format = 'short', $time_format = 'short', $overwrite = '')
 {
-    if (empty($date)) {
-        $date = 'm/d/Y H:i';
-    }
+    // allow time or date only
+    $date_type = ($date_format == 'none') ? IntlDateFormatter::NONE : IntlDateFormatter::SHORT;
+    $time_type = ($time_format == 'none') ? IntlDateFormatter::NONE : IntlDateFormatter::SHORT;
+    // if no override is set but you have a custom_datetime
+    $pattern = ($overwrite == '') ? (string) AmpConfig::get('custom_datetime', '') : $overwrite;
 
-    return date($date, $time);
+    // get your locale and set the date based on that, unless you have 'custom_datetime set'
+    $locale = AmpConfig::get('lang', 'en_US');
+    $format = new IntlDateFormatter($locale, $date_type, $time_type, null, null, $pattern);
+
+    return $format->format($time);
 }

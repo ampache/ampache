@@ -20,7 +20,8 @@
  *
  */
 
-require_once '../lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 if (!Access::check('interface', 100) || AmpConfig::get('demo_mode')) {
     UI::access_denied();
@@ -55,7 +56,6 @@ switch ($_REQUEST['action']) {
         break;
     case 'show_debug':
         $configuration = AmpConfig::get_all();
-        $time_format   = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
         if (Core::get_request('autoupdate') == 'force') {
             $version = AutoUpdate::get_latest_version(true);
         }

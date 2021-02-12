@@ -25,7 +25,8 @@ if (!isset($_REQUEST['type']) || (string) filter_input(INPUT_GET, 'type', FILTER
     define('NO_SESSION', 1);
     define('OUTDATED_DATABASE_OK', 1);
 }
-require_once 'lib/init.php';
+$a_root = realpath(__DIR__);
+require_once $a_root . '/lib/init.php';
 
 // Get the version and format it
 $version = Update::get_version();

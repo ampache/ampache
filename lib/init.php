@@ -24,13 +24,13 @@
 // fixes some CSS issues
 ob_start();
 
-$ampache_path = dirname(__FILE__);
-$prefix       = realpath($ampache_path . "/../");
-require_once $prefix . '/lib/init-tiny.php';
+$prefix = realpath(__DIR__ . "/../");
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init-tiny.php';
 
 // Explicitly load and enable the custom session handler.
 // Relying on autoload may not always load it before sessiony things are done.
-require_once $prefix . '/lib/class/session.class.php';
+require_once $a_root . '/lib/class/session.class.php';
 Session::_auto_init();
 
 // Set up for redirection on important error cases
@@ -68,8 +68,8 @@ if (!empty($link)) {
 
 $results['load_time_begin'] = $load_time_begin;
 /** This is the version.... fluff nothing more... **/
-$results['version']            = '4.3.0-release';
-$results['int_config_version'] = '46';
+$results['version']            = '4.4.0-develop';
+$results['int_config_version'] = '49';
 
 if (!empty($results['force_ssl'])) {
     $http_type = 'https://';
@@ -124,7 +124,7 @@ AmpConfig::set_by_array($results, true);
 
 // Modules (These are conditionally included depending upon config values)
 if (AmpConfig::get('ratings')) {
-    require_once $prefix . '/lib/rating.lib.php';
+    require_once $a_root . '/lib/rating.lib.php';
 }
 
 // Set a new Error Handler

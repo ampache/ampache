@@ -32,6 +32,7 @@ class Playlist extends playlist_object
     public $genre;
     public $date;
     public $last_update;
+    public $last_duration;
 
     public $link;
     public $f_link;
@@ -128,7 +129,7 @@ class Playlist extends playlist_object
             }
         }
         $sql .= ' ORDER BY `name`';
-        //debug_event('playlist.class', 'get_playlists query: ' . $sql, 5);
+        //debug_event(self::class, 'get_playlists query: ' . $sql, 5);
 
         $db_results = Dba::read($sql, $params);
         $results    = array();
@@ -180,7 +181,7 @@ class Playlist extends playlist_object
             }
         }
         $sql .= ' ORDER BY `name`';
-        //debug_event('playlist.class', 'get_smartlists ' . $sql, 5);
+        //debug_event(self::class, 'get_smartlists ' . $sql, 5);
 
         $db_results = Dba::read($sql, $params);
         $results    = array();
@@ -309,7 +310,7 @@ class Playlist extends playlist_object
 
         $sql         = "SELECT * FROM `playlist_data` WHERE `playlist` = ? AND `object_type` = 'song' ORDER BY `track`";
         $db_results  = Dba::read($sql, array($this->id));
-        //debug_event('playlist.class', 'get_songs ' . $sql . ' ' . $this->id, 5);
+        //debug_event(self::class, 'get_songs ' . $sql . ' ' . $this->id, 5);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['object_id'];
@@ -432,6 +433,7 @@ class Playlist extends playlist_object
         if ($this->_update_item('last_update', $last_update, 50)) {
             $this->last_update = $last_update;
         }
+        $this->set_last($this->get_total_duration(), 'last_duration');
     } // update_last_update
 
     /**
@@ -508,7 +510,7 @@ class Playlist extends playlist_object
          * append, rather then integrate take end track # and add it to
          * $song->track add one to make sure it really is 'next'
          */
-        debug_event('playlist.class', "add_medias to: " . $this->id, 5);
+        debug_event(self::class, "add_medias to: " . $this->id, 5);
         $track_data = $this->get_songs();
         $base_track = count($track_data);
         $track      = 0;
@@ -518,7 +520,7 @@ class Playlist extends playlist_object
         $unique     = AmpConfig::get('unique_playlist');
         foreach ($medias as $data) {
             if ($unique && in_array($data['object_id'], $track_data)) {
-                debug_event('playlist.class', "Can't add a duplicate " . $data['object_type'] . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
+                debug_event(self::class, "Can't add a duplicate " . $data['object_type'] . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
             } else {
                 $count++;
                 $track = $base_track + $count;
@@ -530,7 +532,7 @@ class Playlist extends playlist_object
             } // if valid id
         } // end foreach medias
         Dba::write(rtrim($sql, ', '), $values);
-        debug_event('playlist.class', "Added $track tracks to playlist: " . $this->id, 5);
+        debug_event(self::class, "Added $track tracks to playlist: " . $this->id, 5);
 
         $this->update_last_update();
     }
@@ -580,6 +582,20 @@ class Playlist extends playlist_object
     } // set_items
 
     /**
+     * set_last
+     *
+     * @param integer $count
+     * @param string $column
+     */
+    private function set_last($count, $column)
+    {
+        if ($this->id && in_array($column, array('last_count', 'last_duration')) && $count >= 0) {
+            $sql = "UPDATE `playlist` SET `" . Dba::escape($column) . "` = " . $count . " WHERE `id` = " . Dba::escape($this->id);
+            Dba::write($sql);
+        }
+    }
+
+    /**
      * delete_all
      *
      * this deletes all tracks from a playlist, you specify the playlist.id here
@@ -589,7 +605,7 @@ class Playlist extends playlist_object
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ?";
         Dba::write($sql, array($this->id));
-        debug_event('playlist.class', 'Delete all tracks from: ' . $this->id, 5);
+        debug_event(self::class, 'Delete all tracks from: ' . $this->id, 5);
 
         $this->update_last_update();
 
@@ -606,7 +622,7 @@ class Playlist extends playlist_object
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? LIMIT 1";
         Dba::write($sql, array($this->id, $object_id));
-        debug_event('playlist.class', 'Delete object_id: ' . $object_id . ' from ' . $this->id, 5);
+        debug_event(self::class, 'Delete object_id: ' . $object_id . ' from ' . $this->id, 5);
 
         $this->update_last_update();
 
@@ -623,7 +639,7 @@ class Playlist extends playlist_object
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`id` = ? LIMIT 1";
         Dba::write($sql, array($this->id, $item_id));
-        debug_event('playlist.class', 'Delete item_id: ' . $item_id . ' from ' . $this->id, 5);
+        debug_event(self::class, 'Delete item_id: ' . $item_id . ' from ' . $this->id, 5);
 
         $this->update_last_update();
 
@@ -640,7 +656,7 @@ class Playlist extends playlist_object
     {
         $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? LIMIT 1";
         Dba::write($sql, array($this->id, $track));
-        debug_event('playlist.class', 'Delete track: ' . $track . ' from ' . $this->id, 5);
+        debug_event(self::class, 'Delete track: ' . $track . ' from ' . $this->id, 5);
 
         $this->update_last_update();
 
@@ -659,7 +675,7 @@ class Playlist extends playlist_object
         $sql = "UPDATE `playlist_data` SET `object_id` = ? " .
                "WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ?";
         Dba::write($sql, array($object_id, $this->id, $track));
-        debug_event('playlist.class', 'Set track ' . $track . ' to ' . $object_id . ' for playlist: ' . $this->id, 5);
+        debug_event(self::class, 'Set track ' . $track . ' to ' . $object_id . ' for playlist: ' . $this->id, 5);
 
         $this->update_last_update();
 
@@ -686,7 +702,7 @@ class Playlist extends playlist_object
             $results    = Dba::fetch_assoc($db_results);
         }
         if (isset($results['object_id']) || isset($results['track'])) {
-            debug_event('playlist.class', 'has_item results: ' . $results['object_id'], 5);
+            debug_event(self::class, 'has_item results: ' . $results['object_id'], 5);
 
             return true;
         }

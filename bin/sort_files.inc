@@ -36,7 +36,8 @@
 define('NO_SESSION', '1');
 $path   = dirname(__FILE__);
 $prefix = realpath($path . '/../');
-require_once $prefix . '/lib/init.php';
+$a_root = realpath(__DIR__ . "/../");
+require_once $a_root . '/lib/init.php';
 
 // default various artist album name.
 $various_artist = "Various Artists";
@@ -283,7 +284,7 @@ function sort_move_file($song, $fullname, $test_mode)
 
         debug_event('sort_files', 'Copied ' . $old_art . ' to ' . $folder_art, 4);
         if (copy($old_art, $folder_art) === false) {
-            throw new \RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
+            throw new RuntimeException('Unable to copy ' . $old_art . ' to ' . $folder_art);
         }
 
         /* HINT: filename (File path) */

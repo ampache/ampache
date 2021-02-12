@@ -287,7 +287,7 @@ class Subsonic_XML_Data
     {
         $version  = self::API_VERSION;
         $response = self::createResponse($version, 'failed');
-        debug_event('subsonic_xml_data.class', 'API fail in function ' . $function . '-' . $version, 3);
+        debug_event(self::class, 'API fail in function ' . $function . '-' . $version, 3);
 
         return $response;
     }
@@ -301,7 +301,7 @@ class Subsonic_XML_Data
     {
         $version  = self::API_VERSION;
         $response = self::createResponse($version);
-        debug_event('subsonic_xml_data.class', 'API success in function ' . $function . '-' . $version, 5);
+        debug_event(self::class, 'API success in function ' . $function . '-' . $version, 5);
 
         return $response;
     }
@@ -648,7 +648,7 @@ class Subsonic_XML_Data
         $results = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
             if (AmpConfig::get('show_played_times')) {
-                $results['object_cnt'] = Stats::get_object_count('song', (string) $results['id'], null);
+                $results['object_cnt'] = Stats::get_object_count('song', (string) $results['id']);
             }
         }
         $extension       = pathinfo((string) $results['file'], PATHINFO_EXTENSION);
@@ -755,7 +755,8 @@ class Subsonic_XML_Data
         // $artist->format();
         $xsong->addAttribute('artistId', (string) self::getArtistId($songData['artist']));
         $xsong->addAttribute('artist', (string) self::checkName($artistData['f_full_name']));
-        $xsong->addAttribute('coverArt', (string) self::getAlbumId($albumData['id']));
+        $art_object = (AmpConfig::get('show_song_art')) ? self::getSongId($songData['id']) : self::getAlbumId($albumData['id']);
+        $xsong->addAttribute('coverArt', (string) $art_object);
         $xsong->addAttribute('duration', (string) $songData['time']);
         $xsong->addAttribute('bitRate', (string) ((int) ($songData['bitrate'] / 1000)));
         if ($addAmpacheInfo) {
@@ -920,7 +921,7 @@ class Subsonic_XML_Data
         foreach ($tags as $tag) {
             $otag   = new Tag($tag['id']);
             $xgenre = $xgenres->addChild('genre', htmlspecialchars($otag->name));
-            $counts = $otag->count('', 0);
+            $counts = $otag->count();
             $xgenre->addAttribute('songCount', (string) $counts['song']);
             $xgenre->addAttribute('albumCount', (string) $counts['album']);
         }
@@ -1041,7 +1042,7 @@ class Subsonic_XML_Data
     public static function addSmartPlaylist($xml, $playlist, $songs = false)
     {
         $xplaylist = $xml->addChild('playlist');
-        debug_event('subsonic_xml_data.class', 'addsmartplaylist ' . $playlist->id, 5);
+        debug_event(self::class, 'addsmartplaylist ' . $playlist->id, 5);
         $xplaylist->addAttribute('id', (string) self::getSmartPlId($playlist->id));
         $xplaylist->addAttribute('name', (string) self::checkName($playlist->name));
         $user = new User($playlist->user);
@@ -1360,8 +1361,7 @@ class Subsonic_XML_Data
     public static function addLyrics($xml, $artist, $title, $song_id)
     {
         $song = new Song($song_id);
-        $song->format();
-        $song->fill_ext_info();
+        $song->fill_ext_info('lyrics');
         $lyrics = $song->get_lyrics();
 
         if (!empty($lyrics) && $lyrics['text']) {

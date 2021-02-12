@@ -190,7 +190,7 @@ class mpd
         $this->host     = $server;
         $this->port     = $port;
         $this->password = $password;
-        debug_event('mpd.class', "Connecting to: " . $server . ":" . $port, 5);
+        debug_event(self::class, "Connecting to: " . $server . ":" . $port, 5);
 
         if (is_callable($debug_callback)) {
             $this->_debug_callback = $debug_callback;
@@ -250,7 +250,7 @@ class mpd
      */
     public function Connect()
     {
-        $this->_debug('mpd.class', "host: " . $this->host . ", port: " . $this->port, 5);
+        $this->_debug(self::class, "host: " . $this->host . ", port: " . $this->port, 5);
         $this->_mpd_sock = fsockopen($this->host, (int) $this->port, $err, $err_str, 6);
         // Vollmerize this bizatch
         /* Set the timeout on the connection */

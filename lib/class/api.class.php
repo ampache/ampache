@@ -39,7 +39,7 @@ class Api
     /**
      *  @var string $version
      */
-    public static $version = '430000';
+    public static $version = '440000';
 
     /**
      *  @var Browse $browse
@@ -169,7 +169,7 @@ class Api
                 continue;
             }
             if (empty($input[$parameter])) {
-                debug_event('api.class', "'" . $parameter . "' required on " . $method . " function call.", 2);
+                debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
                 self::message('error', T_('Missing mandatory parameter') . " '" . $parameter . "'", '401', $input['api_format']);
 
                 return false;
@@ -195,7 +195,7 @@ class Api
     private static function check_access($type, $level, $user_id, $method = '', $format = 'xml')
     {
         if (!Access::check($type, $level, $user_id)) {
-            debug_event('api.class', $type . " '" . $level . "' required on " . $method . " function call.", 2);
+            debug_event(self::class, $type . " '" . $level . "' required on " . $method . " function call.", 2);
             self::message('error', 'User does not have access to this function', '400', $format);
 
             return false;
@@ -236,11 +236,11 @@ class Api
         }
 
         // Log the attempt
-        debug_event('api.class', "Handshake Attempt, IP:$user_ip User:$username Version:$version", 5);
+        debug_event(self::class, "Handshake Attempt, IP:$user_ip User:$username Version:$version", 5);
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
         if ((int) ($version) < self::$auth_version) {
-            debug_event('api.class', 'Login Failed: Version too old', 1);
+            debug_event(self::class, 'Login Failed: Version too old', 1);
             AmpError::add('api', T_('Login failed, API version is too old'));
 
             return false;
@@ -259,7 +259,7 @@ class Api
         }
 
         // Log this attempt
-        debug_event('api.class', "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
+        debug_event(self::class, "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
 
         if ($user_id > 0 && Access::check_network('api', $user_id, 5)) {
             // Authentication with user/password, we still need to check the password
@@ -267,7 +267,7 @@ class Api
                 // If the timestamp isn't within 30 minutes sucks to be them
                 if (($timestamp < (time() - 1800)) ||
                     ($timestamp > (time() + 1800))) {
-                    debug_event('api.class', 'Login failed, timestamp is out of range ' . $timestamp . '/' . time(), 1);
+                    debug_event(self::class, 'Login failed, timestamp is out of range ' . $timestamp . '/' . time(), 1);
                     AmpError::add('api', T_('Login failed, timestamp is out of range'));
                     self::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '401', $input['api_format']);
 
@@ -280,7 +280,7 @@ class Api
                 $realpwd = $client->get_password();
 
                 if (!$realpwd) {
-                    debug_event('api.class', 'Unable to find user with userid of ' . $user_id, 1);
+                    debug_event(self::class, 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Incorrect username or password'));
                     self::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '401', $input['api_format']);
 
@@ -325,7 +325,7 @@ class Api
                     $token = $data['apikey'];
                 }
 
-                debug_event('api.class', 'Login Success, passphrase matched', 1);
+                debug_event(self::class, 'Login Success, passphrase matched', 1);
 
                 // We need to also get the 'last update' of the
                 // catalog information in an RFC 2822 Format
@@ -361,7 +361,7 @@ class Api
             } // match
         } // end while
 
-        debug_event('api.class', 'Login Failed, unable to match passphrase', 1);
+        debug_event(self::class, 'Login Failed, unable to match passphrase', 1);
         self::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), '401', $input['api_format']);
 
         return false;
@@ -387,7 +387,7 @@ class Api
             $xmldata = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length') - 60)), $xmldata);
         }
 
-        debug_event('api.class', 'Ping Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
+        debug_event(self::class, 'Ping Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
 
         ob_end_clean();
         switch ($input['api_format']) {
@@ -420,7 +420,7 @@ class Api
             $sql .= " AND `type` = 'api'";
             Dba::write($sql, array($input['auth']));
 
-            debug_event('api.class', 'Goodbye Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
+            debug_event(self::class, 'Goodbye Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
             ob_end_clean();
             self::message('success', 'goodbye: ' . $input['auth'], null, $input['api_format']);
 
@@ -1433,7 +1433,7 @@ class Api
         }
         $user = User::get_from_username(Session::username($input['auth']));
         $uid  = scrub_in($input['filter']);
-        debug_event('api.class', 'User ' . $user->id . ' loading playlist: ' . $input['filter'], 5);
+        debug_event(self::class, 'User ' . $user->id . ' loading playlist: ' . $input['filter'], 5);
         if (str_replace('smart_', '', $uid) === $uid) {
             // Playlists
             $playlist = new Playlist((int) $uid);
@@ -1737,7 +1737,7 @@ class Api
 
         $array['type'] = 'song';
         if (in_array($mode, array('forgotten', 'recent'), true)) {
-            debug_event('api.class', 'playlist_generate ' . $mode, 5);
+            debug_event(self::class, 'playlist_generate ' . $mode, 5);
             // played songs
             $array['rule_' . $rule_count]               = 'myplayed';
             $array['rule_' . $rule_count . '_operator'] = 0;
@@ -1749,13 +1749,13 @@ class Api
             $array['rule_' . $rule_count . '_operator'] = ($mode == 'recent') ? 0 : 1;
             $rule_count++;
         } elseif ($mode == 'unplayed') {
-            debug_event('api.class', 'playlist_generate unplayed', 5);
+            debug_event(self::class, 'playlist_generate unplayed', 5);
             // unplayed songs
             $array['rule_' . $rule_count]               = 'myplayed';
             $array['rule_' . $rule_count . '_operator'] = 1;
             $rule_count++;
         } else {
-            debug_event('api.class', 'playlist_generate random', 5);
+            debug_event(self::class, 'playlist_generate random', 5);
             // random / anywhere
             $array['rule_' . $rule_count]               = 'anywhere';
             $array['rule_' . $rule_count . '_input']    = '%';
@@ -1764,7 +1764,7 @@ class Api
         }
         // additional rules
         if ((int) $input['flag'] == 1) {
-            debug_event('api.class', 'playlist_generate flagged', 5);
+            debug_event(self::class, 'playlist_generate flagged', 5);
             $array['rule_' . $rule_count]               = 'favorite';
             $array['rule_' . $rule_count . '_input']    = '%';
             $array['rule_' . $rule_count . '_operator'] = 0;
@@ -2229,21 +2229,21 @@ class Api
         $results = array();
         switch ($input['filter']) {
             case 'newest':
-                debug_event('api.class', 'stats newest', 5);
+                debug_event(self::class, 'stats newest', 5);
                 $results = Stats::get_newest($type, $limit, $offset);
                 break;
             case 'highest':
-                debug_event('api.class', 'stats highest', 4);
+                debug_event(self::class, 'stats highest', 4);
                 $results = Rating::get_highest($type, $limit, $offset);
                 break;
             case 'frequent':
-                debug_event('api.class', 'stats frequent', 4);
+                debug_event(self::class, 'stats frequent', 4);
                 $threshold = AmpConfig::get('stats_threshold');
                 $results   = Stats::get_top($type, $limit, $threshold, $offset);
                 break;
             case 'recent':
             case 'forgotten':
-                debug_event('api.class', 'stats ' . $input['filter'], 4);
+                debug_event(self::class, 'stats ' . $input['filter'], 4);
                 $newest = $input['filter'] == 'recent';
                 if ($user->id) {
                     $results = $user->get_recently_played($limit, $type, $newest);
@@ -2252,12 +2252,12 @@ class Api
                 }
                 break;
             case 'flagged':
-                debug_event('api.class', 'stats flagged', 4);
+                debug_event(self::class, 'stats flagged', 4);
                 $results = Userflag::get_latest($type, $user_id, $limit, $offset);
                 break;
             case 'random':
             default:
-                debug_event('api.class', 'stats random ' . $type, 4);
+                debug_event(self::class, 'stats random ' . $type, 4);
                 switch ($type) {
                     case 'song':
                         $results = Random::get_default($limit, $user_id);
@@ -2272,7 +2272,7 @@ class Api
 
         if (!empty($results)) {
             ob_end_clean();
-            debug_event('api.class', 'stats found results searching for ' . $type, 5);
+            debug_event(self::class, 'stats found results searching for ' . $type, 5);
             if ($type === 'song') {
                 switch ($input['api_format']) {
                     case 'json':
@@ -2565,7 +2565,7 @@ class Api
         }
         $user = User::get_from_username(Session::username($input['auth']));
         $uid  = (int) scrub_in($input['filter']);
-        debug_event('api.class', 'User ' . $user->id . ' loading podcast: ' . $input['filter'], 5);
+        debug_event(self::class, 'User ' . $user->id . ' loading podcast: ' . $input['filter'], 5);
         $podcast = new Podcast($uid);
         $items   = $podcast->get_episodes();
 
@@ -2699,7 +2699,7 @@ class Api
                         echo XML_Data::user($user, $fullinfo);
                 }
             } else {
-                debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
+                debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
             }
         }
         Session::extend($input['auth']);
@@ -2907,7 +2907,7 @@ class Api
                     }
                 }
             } else {
-                debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
+                debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
                 self::message('error', 'User `' . $username . '` cannot be found.', '400', $input['api_format']);
             }
         }
@@ -2946,7 +2946,7 @@ class Api
                 if (!count($users)) {
                     self::message('error', 'User `' . $username . '` does not follow anyone.', '400', $input['api_format']);
                 } else {
-                    debug_event('api.class', 'User is following:  ' . print_r($users), 1);
+                    debug_event(self::class, 'User is following:  ' . print_r($users), 1);
                     ob_end_clean();
                     switch ($input['api_format']) {
                         case 'json':
@@ -2957,7 +2957,7 @@ class Api
                     }
                 }
             } else {
-                debug_event('api.class', 'User `' . $username . '` cannot be found.', 1);
+                debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
                 self::message('error', 'User `' . $username . '` cannot be found.', '400', $input['api_format']);
             }
         }
@@ -3218,7 +3218,7 @@ class Api
 
             return false;
         }
-        debug_event('api.class', 'record_play: ' . $media->id . ' for ' . $play_user->username . ' using ' . $agent . ' ' . (string) time(), 5);
+        debug_event(self::class, 'record_play: ' . $media->id . ' for ' . $play_user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
         // internal scrobbling (user_activity and object_count tables)
         if ($media->set_played($play_user->id, $agent, array(), $date)) {
@@ -3276,7 +3276,7 @@ class Api
         }
 
         // validate minimum required options
-        debug_event('api.class', 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 4);
+        debug_event(self::class, 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 4);
         if (!$song_name || !$album_name || !$artist_name) {
             self::message('error', T_('Invalid input options'), '401', $input['api_format']);
 
@@ -3300,7 +3300,7 @@ class Api
 
                 return false;
             }
-            debug_event('api.class', 'scrobble: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
+            debug_event(self::class, 'scrobble: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
             // internal scrobbling (user_activity and object_count tables)
             $item->set_played($user_id, $agent, array(), $date);
@@ -3569,7 +3569,7 @@ class Api
                 }
             }
         } else {
-            debug_event('api.class', 'Sociable feature is not enabled.', 3);
+            debug_event(self::class, 'Sociable feature is not enabled.', 3);
         }
         Session::extend($input['auth']);
 
@@ -3605,7 +3605,7 @@ class Api
                 }
             }
         } else {
-            debug_event('api.class', 'Sociable feature is not enabled.', 3);
+            debug_event(self::class, 'Sociable feature is not enabled.', 3);
         }
         Session::extend($input['auth']);
     } // friends_timeline

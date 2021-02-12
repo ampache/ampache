@@ -52,7 +52,7 @@
     <?php
         if (!empty($media->f_tags)) { ?>
             <div id="np_song_tags_<?php echo $media->id?>" class="np_cell cel_artist">
-                <label><?php echo T_('Tags'); ?></label>
+                <label><?php echo T_('Genres'); ?></label>
                 <?php echo $media->f_tags; ?>
             </div>
         <?php
@@ -63,11 +63,11 @@
 <div class="np_group" id="np_group_3">
   <div id="album_<?php echo $media->album ?>" class="np_cell cel_albumart libitem_menu">
       <?php
-      $album = new Album($media->album);
-        if ($album->id) {
-            $album->format();
-            $album->display_art(1);
-        } ?>
+      $playing = (AmpConfig::get('show_song_art')) ? new Song($media->id) : new Album($media->album);
+      if ($playing->id) {
+          $playing->format();
+          $playing->display_art(1);
+      } ?>
   </div>
 </div>
 <?php
