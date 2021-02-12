@@ -154,6 +154,7 @@ class PodcastEpisodeMethodTest extends MockeryTestCase
 
         $objectId = 666;
         $result   = 'some-result';
+        $userId   = 42;
 
         $this->configContainer->shouldReceive('isFeatureEnabled')
             ->with(ConfigurationKeyEnum::PODCAST)
@@ -170,9 +171,15 @@ class PodcastEpisodeMethodTest extends MockeryTestCase
             ->once()
             ->andReturnFalse();
 
+        $gatekeeper->shouldReceive('getUser->getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($userId);
+
         $output->shouldReceive('podcast_episodes')
             ->with(
                 [$objectId],
+                $userId,
                 false,
                 false
             )

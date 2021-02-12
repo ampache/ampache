@@ -76,11 +76,14 @@ final class PodcastCreateMethod
 
             return false;
         }
+
+        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
                 echo Json_Data::podcasts(
                     array($podcast),
+                    (int) $user->id,
                     false,
                     false,
                     (int) ($input['limit'] ?? 0),
@@ -90,6 +93,8 @@ final class PodcastCreateMethod
             default:
                 echo Xml_Data::podcasts(
                     array($podcast),
+                    (int) $user->id,
+                    false,
                     (int) ($input['limit'] ?? 0),
                     (int) ($input['offset'] ?? 0)
                 );

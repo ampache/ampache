@@ -201,12 +201,14 @@ interface ApiOutputInterface
      * This returns podcasts to the user
      *
      * @param int[] $podcasts
+     * @param int $userId
      * @param boolean $episodes include the episodes of the podcast
      * @param int $limit
      * @param int $offset
      */
     public function podcasts(
         array $podcasts,
+        int $userId,
         bool $episodes = false,
         bool $asObject = true,
         int $limit = 0,
@@ -217,6 +219,7 @@ interface ApiOutputInterface
      * This returns podcasts to the user
      *
      * @param int[] $podcastEpisodeIds
+     * @param int $userId
      * @param bool $simple just return the data as an array for pretty somewhere else
      * @param bool $asObject
      * @param int $limit
@@ -226,6 +229,7 @@ interface ApiOutputInterface
      */
     public function podcast_episodes(
         array $podcastEpisodeIds,
+        int $userId,
         bool $simple = false,
         bool $asObject = true,
         int $limit = 0,

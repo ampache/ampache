@@ -937,7 +937,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     public function display_art($thumb = 2, $force = false)
     {
         if (Art::has_db($this->id, 'tag') || $force) {
-            Art::display('tag', $this->id, $this->get_fullname(), $thumb, null);
+            Art::display('tag', $this->id, $this->get_fullname(), $thumb);
         }
     }
 

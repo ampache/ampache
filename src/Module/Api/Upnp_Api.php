@@ -292,7 +292,7 @@ class Upnp_Api
     {
         $retArr = array();
         $reader = new XMLReader();
-        $result = $reader->XML($prmRequest);
+        $result = XMLReader::XML($prmRequest);
         if (!$result) {
             debug_event(self::class, 'XML reader failed', 5);
         }

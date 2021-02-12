@@ -101,6 +101,7 @@ final class PodcastMethod implements MethodInterface
             $this->streamFactory->createStream(
                 $output->podcasts(
                     [$objectId],
+                    $gatekeeper->getUser()->getId(),
                     ($input['include'] ?? '') === 'episodes',
                     false
                 )

@@ -916,8 +916,8 @@ class Daap_Api
             header("Content-length: " . strlen((string)$string));
             echo $string;
         } else {
-            header("Content-type: text/plain", true);
-            header("Content-length: 0", true);
+            header("Content-type: text/plain");
+            header("Content-length: 0");
         }
     }
 
@@ -937,7 +937,7 @@ class Daap_Api
                 $error = "Unauthorized";
                 break;
         }
-        header("Content-type: text/html", true);
+        header("Content-type: text/html");
         header("HTTP/1.0 " . $code . " " . $error, true, $code);
 
         $html = "<html><head><title>" . $error . "</title></head><body><h1>" . $code . " " . $error . "</h1></body></html>";

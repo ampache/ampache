@@ -358,6 +358,7 @@ final class JsonOutput implements ApiOutputInterface
      * At the moment, this method just acts as a proxy
      *
      * @param int[] $podcasts
+     * @param int $userId
      * @param bool $episodes include the episodes of the podcast
      * @param bool $asObject
      * @param int $limit
@@ -365,6 +366,7 @@ final class JsonOutput implements ApiOutputInterface
      */
     public function podcasts(
         array $podcasts,
+        int $userId,
         bool $episodes = false,
         bool $asObject = true,
         int $limit = 0,
@@ -372,6 +374,7 @@ final class JsonOutput implements ApiOutputInterface
     ): string {
         return Json_Data::podcasts(
             $podcasts,
+            $userId,
             $episodes,
             $asObject,
             $limit,
@@ -383,6 +386,7 @@ final class JsonOutput implements ApiOutputInterface
      * At the moment, this method just acts as a proxy
      *
      * @param int[] $podcastEpisodeIds
+     * @param int $userId
      * @param bool $simple just return the data as an array for pretty somewhere else
      * @param bool $asObject
      * @param int $limit
@@ -392,6 +396,7 @@ final class JsonOutput implements ApiOutputInterface
      */
     public function podcast_episodes(
         array $podcastEpisodeIds,
+        int $userId,
         bool $simple = false,
         bool $asObject = true,
         int $limit = 0,
@@ -399,6 +404,7 @@ final class JsonOutput implements ApiOutputInterface
     ) {
         return Json_Data::podcast_episodes(
             $podcastEpisodeIds,
+            $userId,
             $simple,
             $asObject,
             $limit,

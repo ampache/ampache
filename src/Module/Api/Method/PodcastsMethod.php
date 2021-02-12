@@ -98,6 +98,7 @@ final class PodcastsMethod implements MethodInterface
         } else {
             $result = $output->podcasts(
                 array_map('intval', $podcastIds),
+                $gatekeeper->getUser()->getId(),
                 ($input['include'] ?? '') === 'episodes',
                 true,
                 (int) ($input['limit'] ?? 0),
