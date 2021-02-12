@@ -21,52 +21,91 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class PlaylistDeleteMethod
- * @package Lib\ApiMethods
- */
-final class PlaylistDeleteMethod
+final class PlaylistDeleteMethod implements MethodInterface
 {
-    private const ACTION = 'playlist_delete';
+    public const ACTION = 'playlist_delete';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private MediaDeletionCheckerInterface $mediaDeletionChecker;
+
+    private UpdateInfoRepositoryInterface $updateInfoRepository;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory,
+        MediaDeletionCheckerInterface $mediaDeletionChecker,
+        UpdateInfoRepositoryInterface $updateInfoRepository
+    ) {
+        $this->streamFactory        = $streamFactory;
+        $this->modelFactory         = $modelFactory;
+        $this->mediaDeletionChecker = $mediaDeletionChecker;
+        $this->updateInfoRepository = $updateInfoRepository;
+    }
 
     /**
-     * playlist_delete
      * MINIMUM_API_VERSION=380001
      *
      * This deletes a playlist
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of playlist
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws AccessDeniedException
+     * @throws RequestParamMissingException
      */
-    public static function playlist_delete(array $input)
-    {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-        $user = User::get_from_username(Session::username($input['auth']));
-        ob_end_clean();
-        $playlist = new Playlist($input['filter']);
-        if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
-            Api::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
-        } else {
-            $playlist->delete();
-            Api::message('playlist deleted', $input['api_format']);
-            Catalog::count_table('playlist');
-        }
-        Session::extend($input['auth']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $objectId = $input['filter'] ?? null;
 
-        return true;
+        if ($objectId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
+        }
+        $playlist = $this->modelFactory->createPlaylist((int) $objectId);
+
+        if (
+            !$playlist->has_access($gatekeeper->getUser()->getId()) &&
+            !$gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+        ) {
+            throw new AccessDeniedException(T_('Require: 100'));
+        }
+
+        $playlist->delete();
+
+        $this->updateInfoRepository->updateCountByTableName('playlist');
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->success('playlist deleted')
+            )
+        );
     }
 }
