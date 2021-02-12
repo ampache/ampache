@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Module\Api\Json_Data;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
@@ -481,5 +482,18 @@ final class XmlOutput implements ApiOutputInterface
         }
 
         return Xml_Data::output_xml($string);
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param int[] $shareIds Share id's to include
+     * @param bool  $asAsOject
+     */
+    public function shares(array $shareIds, bool $asOject = true): string
+    {
+        return Xml_Data::shares(
+            $shareIds
+        );
     }
 }

@@ -294,4 +294,15 @@ interface ApiOutputInterface
         int $limit = 0,
         int $offset = 0
     ): string;
+
+    /**
+     * This returns shares to the user
+     *
+     * @param int[] $shareIds Share id's to include
+     * @param bool  $asAsOject
+     */
+    public function shares(
+        array $shareIds,
+        bool $asAsOject = true
+    ): string;
 }

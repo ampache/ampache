@@ -76,6 +76,7 @@ return [
     Method\BookmarksMethod::class => autowire(),
     Method\TimelineMethod::class => autowire(),
     Method\PlaylistAddSongMethod::class => autowire(),
+    Method\ShareMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

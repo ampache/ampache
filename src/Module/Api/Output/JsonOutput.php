@@ -510,4 +510,18 @@ final class JsonOutput implements ApiOutputInterface
 
         return json_encode(['bookmark' => $result], JSON_PRETTY_PRINT);
     }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param int[] $shareIds Share id's to include
+     * @param bool  $asAsOject
+     */
+    public function shares(array $shareIds, bool $asOject = true): string
+    {
+        return Json_Data::shares(
+            $shareIds,
+            $asOject
+        );
+    }
 }

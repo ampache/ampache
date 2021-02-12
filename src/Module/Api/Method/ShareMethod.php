@@ -21,56 +21,73 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class ShareMethod
- * @package Lib\ApiMethods
- */
-final class ShareMethod
+final class ShareMethod implements MethodInterface
 {
-    private const ACTION = 'share';
+    public const ACTION = 'share';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->streamFactory   = $streamFactory;
+        $this->configContainer = $configContainer;
+    }
 
     /**
-     * share
      * MINIMUM_API_VERSION=420000
      *
      * Get the share from it's id.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (integer) Share ID number
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws RequestParamMissingException
+     * @throws FunctionDisabledException
      */
-    public static function share(array $input)
-    {
-        if (!AmpConfig::get('share')) {
-            Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE) === false) {
+            throw new FunctionDisabledException(T_('Enable: share'));
         }
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-        $share = array((int) $input['filter']);
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json_Data::shares($share, false);
-                break;
-            default:
-                echo Xml_Data::shares($share);
-        }
-        Session::extend($input['auth']);
+        $shareId = $input['filter'] ?? null;
 
-        return true;
+        if ($shareId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
+        }
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->shares([(int) $shareId], false)
+            )
+        );
     }
 }
