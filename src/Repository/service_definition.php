@@ -48,4 +48,5 @@ return [
     PreferenceRepositoryInterface::class => autowire(PreferenceRepository::class),
     UserPreferenceRepositoryInterface::class => autowire(UserPreferenceRepository::class),
     Model\ModelFactoryInterface::class => autowire(Model\ModelFactory::class),
+    UpdateInfoRepositoryInterface::class => autowire(UpdateInfoRepository::class),
 ];

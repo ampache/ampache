@@ -21,74 +21,107 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
-use Ampache\Module\System\Session;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class SongDeleteMethod
- * @package Lib\ApiMethods
- */
-final class SongDeleteMethod
+final class SongDeleteMethod implements MethodInterface
 {
-    private const ACTION = 'song_delete';
+    public const ACTION = 'song_delete';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private MediaDeletionCheckerInterface $mediaDeletionChecker;
+
+    private SongDeleterInterface $songDeleter;
+
+    private UpdateInfoRepositoryInterface $updateInfoRepository;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory,
+        MediaDeletionCheckerInterface $mediaDeletionChecker,
+        SongDeleterInterface $songDeleter,
+        UpdateInfoRepositoryInterface $updateInfoRepository
+    ) {
+        $this->streamFactory        = $streamFactory;
+        $this->modelFactory         = $modelFactory;
+        $this->mediaDeletionChecker = $mediaDeletionChecker;
+        $this->songDeleter          = $songDeleter;
+        $this->updateInfoRepository = $updateInfoRepository;
+    }
 
     /**
-     * song_delete
      * MINIMUM_API_VERSION=5.0.0
      *
      * Delete an existing song.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of song to delete
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws AccessDeniedException
+     * @throws ResultEmptyException
+     * @throws RequestParamMissingException
      */
-    public static function song_delete(array $input)
-    {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-        $object_id = (int) $input['filter'];
-        $song      = new Song($object_id);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $objectId = $input['filter'] ?? null;
 
-        if (!$song->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
-
-            return false;
+        if ($objectId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
         }
-        $user = User::get_from_username(Session::username($input['auth']));
-        if (!Catalog::can_remove($song, $user->id)) {
-            Api::error(T_('Require: 75'), '4742', self::ACTION, 'account', $input['api_format']);
 
-            return false;
+        $song = $this->modelFactory->createSong((int) $objectId);
+
+        if ($song->isNew() === true) {
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %d'), $objectId)
+            );
         }
-        if (static::getSongDeleter()->delete($song)) {
-            Api::message('song ' . $object_id . ' deleted', $input['api_format']);
+
+        if ($this->mediaDeletionChecker->mayDelete($song, $gatekeeper->getUser()->getId()) === false) {
+            throw new AccessDeniedException(T_('Require: 75'));
+        }
+
+        if ($this->songDeleter->delete($song) === true) {
+            $this->updateInfoRepository->updateCountByTableName('song');
+
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->success(
+                        sprintf('song %d deleted', $song->getId())
+                    )
+                )
+            );
         } else {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %d'), $song->getId())
+            );
         }
-        Catalog::count_table('song');
-        Session::extend($input['auth']);
-
-        return true;
-    }
-
-    /**
-     * @deprecated
-     */
-    public static function getSongDeleter(): SongDeleterInterface
-    {
-        global $dic;
-
-        return $dic->get(SongDeleterInterface::class);
     }
 }

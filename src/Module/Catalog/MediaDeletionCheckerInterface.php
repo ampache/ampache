@@ -17,23 +17,16 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\Catalog;
 
-use Ampache\Module\Catalog\Update\UpdateCatalog;
-use Ampache\Module\Catalog\Update\UpdateCatalogInterface;
-use Ampache\Module\Catalog\Update\UpdateSingleCatalogFile;
-use Ampache\Module\Catalog\Update\UpdateSingleCatalogFileInterface;
-use function DI\autowire;
+use Ampache\Repository\Model\library_item;
 
-return [
-    UpdateSingleCatalogFileInterface::class => autowire(UpdateSingleCatalogFile::class),
-    UpdateCatalogInterface::class => autowire(UpdateCatalog::class),
-    GarbageCollector\CatalogGarbageCollectorInterface::class => autowire(GarbageCollector\CatalogGarbageCollector::class),
-    Loader\CatalogLoaderInterface::class => autowire(Loader\CatalogLoader::class),
-    MediaDeletionCheckerInterface::class => autowire(MediaDeletionChecker::class),
-];
+interface MediaDeletionCheckerInterface
+{
+    public function mayDelete(
+        library_item $libItem,
+        int $userId
+    ): bool;
+}

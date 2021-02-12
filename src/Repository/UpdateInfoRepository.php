@@ -17,23 +17,33 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Ampache\Module\Catalog;
+namespace Ampache\Repository;
 
-use Ampache\Module\Catalog\Update\UpdateCatalog;
-use Ampache\Module\Catalog\Update\UpdateCatalogInterface;
-use Ampache\Module\Catalog\Update\UpdateSingleCatalogFile;
-use Ampache\Module\Catalog\Update\UpdateSingleCatalogFileInterface;
-use function DI\autowire;
+use Ampache\Module\System\Dba;
 
-return [
-    UpdateSingleCatalogFileInterface::class => autowire(UpdateSingleCatalogFile::class),
-    UpdateCatalogInterface::class => autowire(UpdateCatalog::class),
-    GarbageCollector\CatalogGarbageCollectorInterface::class => autowire(GarbageCollector\CatalogGarbageCollector::class),
-    Loader\CatalogLoaderInterface::class => autowire(Loader\CatalogLoader::class),
-    MediaDeletionCheckerInterface::class => autowire(MediaDeletionChecker::class),
-];
+final class UpdateInfoRepository implements UpdateInfoRepositoryInterface
+{
+    /**
+     * Updates the count of item by table name
+     */
+    public function updateCountByTableName(string $tableName): void
+    {
+        $db_results = Dba::read(
+            sprintf('SELECT COUNT(`id`) FROM `%s`', Dba::escape($tableName))
+        );
+
+        $data = Dba::fetch_row($db_results);
+
+        Dba::write(
+            'REPLACE INTO `update_info` SET `key`= ?, `value`= ?',
+            [
+                $tableName,
+                (int) $data[0]
+            ]
+        );
+    }
+}

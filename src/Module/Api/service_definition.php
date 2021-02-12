@@ -78,6 +78,7 @@ return [
     Method\PlaylistAddSongMethod::class => autowire(),
     Method\ShareMethod::class => autowire(),
     Method\SharesMethod::class => autowire(),
+    Method\SongDeleteMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

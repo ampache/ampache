@@ -71,7 +71,7 @@ class Api
         Method\LabelArtistsMethod::ACTION => Method\LabelArtistsMethod::class,
         Method\SongsMethod::ACTION => Method\SongsMethod::class,
         Method\SongMethod::ACTION => Method\SongMethod::class,
-        'song_delete' => Method\SongDeleteMethod::class,
+        Method\SongDeleteMethod::ACTION => Method\SongDeleteMethod::class,
         'playlists' => Method\PlaylistsMethod::class,
         Method\PlaylistMethod::ACTION => Method\PlaylistMethod::class,
         'playlist_songs' => Method\PlaylistSongsMethod::class,

@@ -114,4 +114,6 @@ final class ConfigurationKeyEnum
     public const WANTED_AUTO_ACCEPT            = 'wanted_auto_accept';
     public const UNIQUE_PLAYLIST               = 'unique_playlist';
     public const COMPOSER_BINARY_PATH          = 'composer_binary_path';
+    public const DELETE_FROM_DISK              = 'delete_from_disk';
+    public const UPLOAD_ALLOW_REMOVE           = 'upload_allow_remove';
 }
