@@ -21,70 +21,110 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Podcast_Episode;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Catalog\MediaDeletionCheckerInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class PodcastEpisodeDeleteMethod
- * @package Lib\ApiMethods
- */
-final class PodcastEpisodeDeleteMethod
+final class PodcastEpisodeDeleteMethod implements MethodInterface
 {
-    private const ACTION = 'podcast_episode_delete';
+    public const ACTION = 'podcast_episode_delete';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private MediaDeletionCheckerInterface $mediaDeletionChecker;
+
+    private UpdateInfoRepositoryInterface $updateInfoRepository;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ConfigContainerInterface $configContainer,
+        ModelFactoryInterface $modelFactory,
+        MediaDeletionCheckerInterface $mediaDeletionChecker,
+        UpdateInfoRepositoryInterface $updateInfoRepository
+    ) {
+        $this->streamFactory        = $streamFactory;
+        $this->configContainer      = $configContainer;
+        $this->modelFactory         = $modelFactory;
+        $this->mediaDeletionChecker = $mediaDeletionChecker;
+        $this->updateInfoRepository = $updateInfoRepository;
+    }
 
     /**
-     * podcast_episode_delete
      * MINIMUM_API_VERSION=420000
      *
      * Delete an existing podcast_episode.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of podcast_episode to delete
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws AccessDeniedException
+     * @throws ResultEmptyException
+     * @throws RequestParamMissingException
+     * @throws FunctionDisabledException
      */
-    public static function podcast_episode_delete(array $input)
-    {
-        if (!AmpConfig::get('podcast')) {
-            Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PODCAST) === false) {
+            throw new FunctionDisabledException(T_('Enable: podcast'));
         }
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
+
+        $objectId = $input['filter'] ?? null;
+
+        if ($objectId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
         }
-        $object_id = (int) $input['filter'];
-        $episode   = new Podcast_Episode($object_id);
 
-        if (!$episode->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+        $episode = $this->modelFactory->createPodcastEpisode((int) $objectId);
 
-            return false;
+        if ($episode->isNew() === true) {
+            throw new ResultEmptyException(sprintf(T_('Not Found: %d'), $objectId));
         }
-        $user = User::get_from_username(Session::username($input['auth']));
-        if (!Catalog::can_remove($episode, $user->id)) {
-            Api::error(T_('Require: 75'), '4742', self::ACTION, 'account', $input['api_format']);
 
-            return false;
+        if ($this->mediaDeletionChecker->mayDelete($episode, $gatekeeper->getUser()->getId()) === false) {
+            throw new AccessDeniedException(T_('Require: 75'));
         }
 
         if ($episode->remove()) {
-            Api::message('podcast_episode ' . $object_id . ' deleted', $input['api_format']);
-        } else {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
-        }
-        Catalog::count_table('podcast_episode');
-        Session::extend($input['auth']);
+            $this->updateInfoRepository->updateCountByTableName('podcast_episode');
 
-        return true;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->success(
+                        sprintf('podcast_episode %d deleted', $episode->getId())
+                    )
+                )
+            );
+        } else {
+            throw new RequestParamMissingException(sprintf(T_('Bad Request: %d'), $episode->getId()));
+        }
     }
 }

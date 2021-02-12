@@ -101,7 +101,7 @@ class Api
         'podcast_edit' => Method\PodcastEditMethod::class,
         Method\PodcastEpisodesMethod::ACTION => Method\PodcastEpisodesMethod::class,
         Method\PodcastEpisodeMethod::ACTION => Method\PodcastEpisodeMethod::class,
-        'podcast_episode_delete' => Method\PodcastEpisodeDeleteMethod::class,
+        Method\PodcastEpisodeDeleteMethod::ACTION => Method\PodcastEpisodeDeleteMethod::class,
         Method\UsersMethod::ACTION => Method\UsersMethod::class,
         Method\UserMethod::ACTION => Method\UserMethod::class,
         'user_preferences' => Method\UserPreferencesMethod::class,

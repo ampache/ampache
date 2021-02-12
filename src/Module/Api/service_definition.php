@@ -79,6 +79,7 @@ return [
     Method\ShareMethod::class => autowire(),
     Method\SharesMethod::class => autowire(),
     Method\SongDeleteMethod::class => autowire(),
+    Method\PodcastEpisodeDeleteMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),
