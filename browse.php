@@ -98,7 +98,7 @@ switch ($_REQUEST['action']) {
         $object_ids = $browse->get_saved();
         $keys       = array_keys($object_ids);
         Tag::build_cache($keys);
-        UI::show_box_top(T_('Genres'), 'box box_tag_cloud');
+        UI::show_box_top(T_('Tag Cloud'), 'box box_tag_cloud');
         $browse2 = new Browse();
         $browse2->set_type($browse_type);
         $browse2->store();

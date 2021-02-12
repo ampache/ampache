@@ -519,23 +519,15 @@ function get_web_path()
 
 /**
  * get_datetime
+ * @param string $date
  * @param integer $time
- * @param string $date_format
- * @param string $time_format
- * @param string $overwrite
  * @return string
  */
-function get_datetime($time, $date_format = 'short', $time_format = 'short', $overwrite = '')
+function get_datetime($date, $time)
 {
-    // allow time or date only
-    $date_type = ($date_format == 'none') ? IntlDateFormatter::NONE : IntlDateFormatter::SHORT;
-    $time_type = ($time_format == 'none') ? IntlDateFormatter::NONE : IntlDateFormatter::SHORT;
-    // if no override is set but you have a custom_datetime
-    $pattern = ($overwrite == '') ? (string) AmpConfig::get('custom_datetime', '') : $overwrite;
+    if (empty($date)) {
+        $date = 'm/d/Y H:i';
+    }
 
-    // get your locale and set the date based on that, unless you have 'custom_datetime set'
-    $locale = AmpConfig::get('lang', 'en_US');
-    $format = new IntlDateFormatter($locale, $date_type, $time_type, null, null, $pattern);
-
-    return $format->format($time);
+    return date($date, $time);
 }

@@ -97,16 +97,6 @@ function check_php_curl()
 }
 
 /**
- * check_php_intl
- * check for required module
- * @return boolean
- */
-function check_php_intl()
-{
-    return (extension_loaded('intl'));
-}
-
-/**
  * check_php_session
  * check for required function exists
  * @return boolean

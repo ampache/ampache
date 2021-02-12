@@ -75,6 +75,7 @@ switch ($_REQUEST['action']) {
             debug_event('song', 'Requested a song that does not exist', 2);
             echo T_("You have requested a Song that does not exist.");
         } else {
+            $time_format = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
             require_once AmpConfig::get('prefix') . UI::find_template('show_song.inc.php');
         }
         break;

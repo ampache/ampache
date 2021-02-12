@@ -20,8 +20,8 @@
  *
  */
 
-$last_seen   = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');
-$create_date = $client->create_date ? get_datetime((int) $client->create_date) : T_('Unknown');
+$last_seen   = $client->last_seen ? get_datetime($time_format, (int) $client->last_seen) : T_('Never');
+$create_date = $client->create_date ? get_datetime($time_format, (int) $client->create_date) : T_('Unknown');
 $client->format(); ?>
 <?php UI::show_box_top($client->f_name); ?>
 <div class="user_avatar">

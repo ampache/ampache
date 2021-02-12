@@ -122,7 +122,8 @@ class PrivateMsg extends database_object
         unset($details); //dead code but called from other format calls
         $this->f_subject       = scrub_out($this->subject);
         $this->f_message       = scrub_out($this->message);
-        $this->f_creation_date = get_datetime((int) $this->creation_date);
+        $time_format           = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i:s';
+        $this->f_creation_date = get_datetime($time_format, (int) $this->creation_date);
         $from_user             = new User($this->from_user);
         $from_user->format();
         $this->f_from_user_link = $from_user->f_link;

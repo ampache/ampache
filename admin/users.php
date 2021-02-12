@@ -329,6 +329,7 @@ switch ($_REQUEST['action']) {
     case 'show_ip_history':
         /* get the user and their history */
         $working_user = new User((int) Core::get_request('user_id'));
+        $time_format  = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
 
         if (!isset($_REQUEST['all'])) {
             $history = $working_user->get_ip_history(0, true);

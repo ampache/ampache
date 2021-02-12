@@ -46,7 +46,7 @@ if (isset($video_type) && $video_type != 'video') {
             <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
             <?php
 } ?>
-            <th class="cel_tags optional"><?php echo T_('Genres'); ?></th>
+            <th class="cel_tags optional"><?php echo T_('Tags'); ?></th>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) { ?>
                     <th class="cel_rating optional"><?php echo T_('Rating'); ?></th>
@@ -104,7 +104,7 @@ if (isset($video_type) && $video_type != 'video') {
             <th class="cel_counter optional"><?php echo T_('# Played'); ?></th>
             <?php
 } ?>
-            <th class="cel_tags"><?php echo T_('Genres'); ?></th>
+            <th class="cel_tags"><?php echo T_('Tags'); ?></th>
             <?php if (User::is_registered()) { ?>
                 <?php if (AmpConfig::get('ratings')) { ?>
                     <th class="cel_rating"><?php echo T_('Rating'); ?></th>

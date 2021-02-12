@@ -128,7 +128,8 @@ class Podcast_Episode extends database_object implements media, library_item
         $this->f_author      = scrub_out($this->author);
         $this->f_artist_full = $this->f_author;
         $this->f_website     = scrub_out($this->website);
-        $this->f_pubdate     = get_datetime((int) $this->pubdate);
+        $time_format         = AmpConfig::get('custom_datetime') ? (string) AmpConfig::get('custom_datetime') : 'm/d/Y H:i';
+        $this->f_pubdate     = get_datetime($time_format, (int) $this->pubdate);
         $this->f_state       = ucfirst($this->state);
 
         // Format the Time
