@@ -21,70 +21,83 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class SharesMethod
- * @package Lib\ApiMethods
- */
-final class SharesMethod
+final class SharesMethod implements MethodInterface
 {
-    private const ACTION = 'shares';
+    public const ACTION = 'shares';
+
+    private ConfigContainerInterface $configContainer;
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ConfigContainerInterface $configContainer,
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->configContainer = $configContainer;
+        $this->streamFactory   = $streamFactory;
+        $this->modelFactory    = $modelFactory;
+    }
 
     /**
-     * shares
      * MINIMUM_API_VERSION=420000
      *
      * Get information about shared media this user is allowed to manage.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) Alpha-numeric search term //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws FunctionDisabledException
      */
-    public static function shares(array $input)
-    {
-        if (!AmpConfig::get('share')) {
-            Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE) === false) {
+            throw new FunctionDisabledException(T_('Enable: share'));
         }
 
-        $browse = Api::getBrowse();
+        $browse = $this->modelFactory->createBrowse();
         $browse->reset_filters();
         $browse->set_type('share');
         $browse->set_sort('title', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter']);
-        Api::set_filter('add', $input['add']);
-        Api::set_filter('update', $input['update']);
+        Api::set_filter($method, ($input['filter'] ?? ''), $browse);
+        Api::set_filter('add', ($input['add'] ?? ''), $browse);
+        Api::set_filter('update', ($input['update'] ?? ''), $browse);
 
-        $shares = $browse->get_objects();
-
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                echo Json_Data::shares($shares);
-                break;
-            default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::shares($shares);
-        }
-        Session::extend($input['auth']);
-
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->shares(
+                    array_map('intval', $browse->get_objects())
+                )
+            )
+        );
     }
 }

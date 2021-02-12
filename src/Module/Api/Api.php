@@ -82,7 +82,7 @@ class Api
         'playlist_remove_song' => Method\PlaylistRemoveSongMethod::class,
         'playlist_generate' => Method\PlaylistGenerateMethod::class,
         'search_songs' => Method\SearchSongsMethod::class,
-        'shares' => Method\SharesMethod::class,
+        Method\SharesMethod::ACTION => Method\SharesMethod::class,
         Method\ShareMethod::ACTION => Method\ShareMethod::class,
         'share_create' => Method\ShareCreateMethod::class,
         'share_delete' => Method\ShareDeleteMethod::class,
