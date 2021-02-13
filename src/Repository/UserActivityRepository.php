@@ -225,7 +225,7 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
         Dba::write(
             'INSERT INTO `user_activity`
                 (`user`, `action`, `object_type`, `object_id`, `activity_date`, `name_artist`, `name_album`, `mbid_artist`, `mbid_album`)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
             [
                 $userId,
                 $action,
