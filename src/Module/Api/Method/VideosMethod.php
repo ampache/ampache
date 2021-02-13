@@ -58,14 +58,15 @@ final class VideosMethod
 
             return false;
         }
-        Api::$browse->reset_filters();
-        Api::$browse->set_type('video');
-        Api::$browse->set_sort('title', 'ASC');
+        $browse = Api::getBrowse();
+        $browse->reset_filters();
+        $browse->set_type('video');
+        $browse->set_sort('title', 'ASC');
 
         $method = $input['exact'] ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter']);
 
-        $video_ids = Api::$browse->get_objects();
+        $video_ids = $browse->get_objects();
         $user      = User::get_from_username(Session::username($input['auth']));
         if (empty($video_ids)) {
             Api::empty('video', $input['api_format']);
