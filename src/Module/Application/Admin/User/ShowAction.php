@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\User;
 
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -45,8 +46,10 @@ final class ShowAction extends AbstractUserAction
         $this->modelFactory = $modelFactory;
     }
 
-    protected function handle(ServerRequestInterface $request): ?ResponseInterface
-    {
+    protected function handle(
+        ServerRequestInterface $request,
+        GuiGatekeeperInterface $gatekeeper
+    ): ?ResponseInterface {
         $this->ui->showHeader();
 
         $browse = $this->modelFactory->createBrowse();

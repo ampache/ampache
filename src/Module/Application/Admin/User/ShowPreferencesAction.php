@@ -20,15 +20,14 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Preference;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\PreferenceRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -40,23 +39,33 @@ final class ShowPreferencesAction extends AbstractUserAction
 
     private ModelFactoryInterface $modelFactory;
 
+    private PreferenceRepositoryInterface $preferenceRepository;
+
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        PreferenceRepositoryInterface $preferenceRepository
     ) {
-        $this->ui           = $ui;
-        $this->modelFactory = $modelFactory;
+        $this->ui                   = $ui;
+        $this->modelFactory         = $modelFactory;
+        $this->preferenceRepository = $preferenceRepository;
     }
 
-    protected function handle(ServerRequestInterface $request): ?ResponseInterface
-    {
+    protected function handle(
+        ServerRequestInterface $request,
+        GuiGatekeeperInterface $gatekeeper
+    ): ?ResponseInterface {
+        $userId = $gatekeeper->getUserId();
+        $user   = $this->modelFactory->createUser($userId);
+
         $this->ui->showHeader();
-
-        $client = $this->modelFactory->createUser((int) Core::get_request('user_id'));
-
-        $preferences = Preference::get_all($client->id);
-        require_once Ui::find_template('show_user_preferences.inc.php');
-
+        $this->ui->show(
+            'show_user_preferences.inc.php',
+            [
+                'client' => $user,
+                'preferences' => $this->preferenceRepository->getAll($userId)
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

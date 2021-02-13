@@ -21,44 +21,63 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\PreferenceRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class UserPreferencesMethod
- * @package Lib\ApiMethods
- */
-final class UserPreferencesMethod
+final class UserPreferencesMethod implements MethodInterface
 {
+    public const ACTION = 'user_preferences';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private PreferenceRepositoryInterface $preferenceRepository;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        PreferenceRepositoryInterface $preferenceRepository
+    ) {
+        $this->streamFactory        = $streamFactory;
+        $this->preferenceRepository = $preferenceRepository;
+    }
+
     /**
-     * user_preferences
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get your user preferences
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
+     *
      * @param array $input
+     *
+     * @return ResponseInterface
      */
-    public static function user_preferences(array $input)
-    {
-        $user = User::get_from_username(Session::username($input['auth']));
-        // fix preferences that are missing for user
-        User::fix_preferences($user->id);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $user = $gatekeeper->getUser();
 
-        $preferences  = Preference::get_all($user->id);
-        $output_array =  array('preference' => $preferences);
-        switch ($input['api_format']) {
-            case 'json':
-                echo json_encode($output_array, JSON_PRETTY_PRINT);
-                break;
-            default:
-                echo Xml_Data::object_array($output_array['preference'], 'preference');
-        }
-        Session::extend($input['auth']);
+        $user->fixPreferences();
+
+        $preferences = $this->preferenceRepository->getAll($user->getId());
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->object_array(
+                    $preferences, 'preference'
+                )
+            )
+        );
     }
 }

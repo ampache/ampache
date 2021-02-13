@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -45,8 +46,10 @@ final class ShowGenerateRsstokenAction extends AbstractUserAction
         $this->configContainer = $configContainer;
     }
 
-    protected function handle(ServerRequestInterface $request): ?ResponseInterface
-    {
+    protected function handle(
+        ServerRequestInterface $request,
+        GuiGatekeeperInterface $gatekeeper
+    ): ?ResponseInterface {
         $this->ui->showHeader();
 
         $userId = (int) $request->getQueryParams()['user_id'] ?? 0;

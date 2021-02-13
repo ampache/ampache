@@ -362,12 +362,11 @@ class Xml_Data
      *
      * @param  array  $array
      * @param  string $item
-     * @param  string $object_type
      * @return string return xml
      */
-    public static function object_array($array, $item, $object_type = '')
+    public static function object_array($array, $item)
     {
-        $string = ($object_type == '') ? '' : "<$object_type>\n";
+        $string = '';
         // Foreach it
         foreach ($array as $object) {
             $string .= "\t<$item id=\"" . $object['id'] . "\">\n";
@@ -377,7 +376,6 @@ class Xml_Data
             }
             $string .= "\t</$item>\n";
         } // end foreach
-        $string .= ($object_type == '') ? '' : "</$object_type>";
 
         return self::output_xml($string);
     } // object_array

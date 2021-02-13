@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\User;
 
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\IpHistoryRepositoryInterface;
@@ -50,8 +51,10 @@ final class ShowIpHistoryAction extends AbstractUserAction
         $this->ipHistoryRepository = $ipHistoryRepository;
     }
 
-    protected function handle(ServerRequestInterface $request): ?ResponseInterface
-    {
+    protected function handle(
+        ServerRequestInterface $request,
+        GuiGatekeeperInterface $gatekeeper
+    ): ?ResponseInterface {
         $queryParams = $request->getQueryParams();
 
         $userId = (int) $queryParams['user_id'] ?? 0;

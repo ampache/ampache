@@ -59,4 +59,39 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
 
         return (int) $row['id'];
     }
+
+    /**
+     * This returns a nice flat array of all of the possible preferences for the specified user
+     *
+     * @return array<string, mixed>
+     */
+    public function getAll($userId): array
+    {
+        $userId     = Dba::escape($userId);
+        $user_limit = ($userId != -1) ? "AND `preference`.`catagory` != 'system'" : "";
+
+        $sql = "SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`," .
+            " `preference`.`type`, `preference`.`catagory`, `preference`.`subcatagory`, `user_preference`.`value`" .
+            " FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` " .
+            " WHERE `user_preference`.`user` = ? AND `preference`.`catagory` != 'internal' $user_limit " .
+            " ORDER BY `preference`.`subcatagory`, `preference`.`description`";
+
+        $db_results = Dba::read($sql, [$userId]);
+        $results    = [];
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = [
+                'id' => $row['id'],
+                'name' => $row['name'],
+                'level' => $row['level'],
+                'description' => $row['description'],
+                'value' => $row['value'],
+                'type' => $row['type'],
+                'category' => $row['catagory'],
+                'subcategory' => $row['subcatagory']
+            ];
+        }
+
+        return $results;
+    }
 }

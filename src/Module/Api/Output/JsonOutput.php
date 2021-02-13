@@ -524,4 +524,17 @@ final class JsonOutput implements ApiOutputInterface
             $asOject
         );
     }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param array  $array
+     * @param string $item
+     */
+    public function object_array(
+        array $array,
+        string $item
+    ): string {
+        return json_encode([$item => $array], JSON_PRETTY_PRINT);
+    }
 }

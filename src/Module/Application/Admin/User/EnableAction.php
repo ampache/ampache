@@ -25,6 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Module\Util\UiInterface;
@@ -55,8 +56,10 @@ final class EnableAction extends AbstractUserAction
         $this->userStateToggler = $userStateToggler;
     }
 
-    protected function handle(ServerRequestInterface $request): ?ResponseInterface
-    {
+    protected function handle(
+        ServerRequestInterface $request,
+        GuiGatekeeperInterface $gatekeeper
+    ): ?ResponseInterface {
         $this->ui->showHeader();
 
         $user = $this->modelFactory->createUser((int) $request->getQueryParams()['user_id'] ?? 0);

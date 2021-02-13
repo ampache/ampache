@@ -27,4 +27,11 @@ interface PreferenceRepositoryInterface
      * This takes a name and returns the id
      */
     public function getIdByName(string $name): int;
+
+    /**
+     * This returns a nice flat array of all of the possible preferences for the specified user
+     *
+     * @return array<string, mixed>
+     */
+    public function getAll($userId): array;
 }

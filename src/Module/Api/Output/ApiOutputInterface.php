@@ -305,4 +305,12 @@ interface ApiOutputInterface
         array $shareIds,
         bool $asAsOject = true
     ): string;
+
+    /**
+     * Formats a list of arrays
+     *
+     * @param array  $array
+     * @param string $item
+     */
+    public function object_array(array $array, string $item): string;
 }

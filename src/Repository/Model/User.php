@@ -1063,6 +1063,14 @@ class User extends database_object
     } // fix_preferences
 
     /**
+     * @see fix_preferences
+     */
+    public function fixPreferences(): void
+    {
+        static::fix_preferences($this->getId());
+    }
+
+    /**
      * delete
      * deletes this user and everything associated with it. This will affect
      * ratings and total stats

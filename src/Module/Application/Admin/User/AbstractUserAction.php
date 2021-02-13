@@ -42,11 +42,19 @@ abstract class AbstractUserAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        return $this->handle($request);
+        return $this->handle($request, $gatekeeper);
     }
 
     /**
+     * @param ServerRequestInterface $request
+     * @param GuiGatekeeperInterface $gatekeeper
+     *
+     * @return ResponseInterface|null
+     *
      * @throws ApplicationException
      */
-    abstract protected function handle(ServerRequestInterface $request): ?ResponseInterface;
+    abstract protected function handle(
+        ServerRequestInterface $request,
+        GuiGatekeeperInterface $gatekeeper
+    ): ?ResponseInterface;
 }
