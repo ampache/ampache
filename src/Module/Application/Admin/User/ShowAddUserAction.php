@@ -20,14 +20,13 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -57,9 +56,7 @@ final class ShowAddUserAction extends AbstractUserAction
         }
 
         $this->ui->showHeader();
-
-        require_once Ui::find_template('show_add_user.inc.php');
-
+        $this->ui->show('show_add_user.inc.php');
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

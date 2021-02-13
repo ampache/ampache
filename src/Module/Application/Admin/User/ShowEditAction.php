@@ -20,17 +20,15 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -62,13 +60,16 @@ final class ShowEditAction extends AbstractUserAction
             return null;
         }
 
-        $this->ui->showHeader();
-
-        $client = $this->modelFactory->createUser((int) Core::get_request('user_id'));
+        $client = $this->modelFactory->createUser($gatekeeper->getUserId());
         $client->format();
 
-        require_once Ui::find_template('show_edit_user.inc.php');
-
+        $this->ui->showHeader();
+        $this->ui->show(
+            'show_edit_user.inc.php',
+            [
+                'client' => $client
+            ]
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
