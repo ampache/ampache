@@ -3,6 +3,7 @@ import { Song } from './Song';
 import { AuthKey } from './Auth';
 import { Album } from './Album';
 import { Artist } from '~logic/Artist';
+import AmpacheError from '~logic/AmpacheError';
 
 const searchSongs = (searchQuery: string, authKey: AuthKey, limit = 100) => {
     return axios
@@ -15,7 +16,7 @@ const searchSongs = (searchQuery: string, authKey: AuthKey, limit = 100) => {
                 throw new Error('Server Error');
             }
             if (JSONData.error) {
-                throw new Error(JSONData.error);
+                throw new AmpacheError(JSONData.error);
             }
             return JSONData.song as Song[];
         });
@@ -34,7 +35,7 @@ const searchAlbums = (searchQuery: string, authKey: AuthKey, limit = 100) => {
                 throw new Error('Server Error');
             }
             if (JSONData.error) {
-                throw new Error(JSONData.error);
+                throw new AmpacheError(JSONData.error);
             }
             return JSONData.album as Album[];
         });
@@ -53,7 +54,7 @@ const searchArtists = (searchQuery: string, authKey: AuthKey, limit = 100) => {
                 throw new Error('Server Error');
             }
             if (JSONData.error) {
-                throw new Error(JSONData.error);
+                throw new AmpacheError(JSONData.error);
             }
             return JSONData.artist as Artist[];
         });

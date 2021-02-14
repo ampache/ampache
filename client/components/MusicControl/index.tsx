@@ -32,7 +32,11 @@ const MusicControl: React.FC = () => {
     ];
 
     return (
-        <div className={`${style.musicControl} ${ratingToggle ? style.ratingShown : null}`}>
+        <div
+            className={`${style.musicControl} ${
+                ratingToggle ? style.ratingShown : null
+            }`}
+        >
             <CurrentPlayingArt />
 
             <CurrentPlaying />
@@ -174,7 +178,11 @@ const MusicControl: React.FC = () => {
             </div>
 
             <div className={style.secondaryControls}>
-                <div className={`${style.rating} ${ratingToggle ? style.active : null}`}>
+                <div
+                    className={`${style.rating} ${
+                        ratingToggle ? style.active : null
+                    }`}
+                >
                     <SVG
                         src={require('~images/icons/svg/star-full.svg')}
                         title='Show ratings'

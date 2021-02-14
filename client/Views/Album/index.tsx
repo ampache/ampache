@@ -16,7 +16,7 @@ interface AlbumViewProps {
     user: User;
     match: {
         params: {
-            albumID: number;
+            albumID: string;
         };
     };
 }
@@ -74,7 +74,9 @@ const AlbumView: React.FC<AlbumViewProps> = (props: AlbumViewProps) => {
                     <div className={style.rating}>
                         <Rating value={theAlbum.rating} fav={theAlbum.flag} />
                     </div>
-                    <div className={`card-title ${style.albumName}`}>{theAlbum.name}</div>
+                    <div className={`card-title ${style.albumName}`}>
+                        {theAlbum.name}
+                    </div>
                     <div className={style.artistName}>
                         <Link
                             to={`/artist/${theAlbum.artist.id}`}

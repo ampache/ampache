@@ -4,20 +4,23 @@ import { AuthKey } from './Auth';
 import AmpacheError from './AmpacheError';
 
 type Album = {
-    id: number;
+    id: string;
     name: string;
     artist: {
-        id: number;
+        id: string;
         name: string;
     };
     time: number;
     year: number;
-    tracks?: Song[];
+    tracks: Song[];
+    songcount: number;
     disk: number;
-    genre: {
-        id: number;
-        name: string;
-    };
+    genre: [
+        {
+            id: string;
+            name: string;
+        }
+    ];
     art: string;
     flag: boolean;
     preciserating: number;
@@ -43,7 +46,7 @@ const getRandomAlbums = (username: string, count: number, authKey: AuthKey) => {
         });
 };
 
-const getAlbumSongs = (albumID: number, authKey: AuthKey) => {
+const getAlbumSongs = (albumID: string, authKey: AuthKey) => {
     return axios
         .get(
             `${process.env.ServerURL}/server/json.server.php?action=album_songs&filter=${albumID}&auth=${authKey}&version=400001`
@@ -78,7 +81,7 @@ const getAlbums = (authKey: AuthKey, includeSongs = false) => {
     });
 };
 
-const getAlbum = (albumID: number, authKey: AuthKey, includeSongs = false) => {
+const getAlbum = (albumID: string, authKey: AuthKey, includeSongs = false) => {
     let includeString = '';
     if (includeSongs) {
         includeString += '&include[]=songs';

@@ -5,13 +5,18 @@ import { Album } from '~logic/Album';
 import { Song } from '~logic/Song';
 
 export type Artist = {
-    id: number;
+    id: string;
     name: string;
-    tags: []; //TODO: Did this change into genre?
     albums: Album[];
     albumcount: number;
     songs: Song[];
     songcount: number;
+    genre: [
+        {
+            id: string;
+            name: string;
+        }
+    ];
     art: string;
     flag: boolean;
     preciserating: number;

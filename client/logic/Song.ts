@@ -3,20 +3,20 @@ import axios from 'axios';
 import AmpacheError from './AmpacheError';
 
 type Song = {
-    id: number;
+    id: string;
     title: string;
     name: string;
     artist: {
-        id: number;
+        id: string;
         name: string;
     };
     album: {
-        id: number;
+        id: string;
         name: string;
     };
-    genre: { id: number; name: string };
+    genre: [{ id: number; name: string }];
     albumartist: {
-        id: number;
+        id: string;
         name: string;
     };
     filename: string;
@@ -47,14 +47,16 @@ type Song = {
     license?: string;
     publiser: string;
     language: string;
-    replaygain_album_gain: number;
-    replaygain_album_peak: number;
-    replaygain_track_gain: number;
-    replaygain_track_peak: number;
+    replaygain_album_gain: string;
+    replaygain_album_peak: string;
+    replaygain_track_gain: string;
+    replaygain_track_peak: string;
+    r128_album_gain: string;
+    r128_track_gain: string;
 };
 
 export const flagSong = (
-    songID: number,
+    songID: string,
     favorite: boolean,
     authKey: AuthKey
 ) => {

@@ -4,15 +4,7 @@ import { MusicContext } from '~Contexts/MusicContext';
 import QueueSong from './components/QueueSong';
 
 import style from './index.styl';
-import { useDrag } from 'react-use-gesture';
-import { useSpring, useTransition, animated } from 'react-spring';
-import { RemoveScroll } from 'react-remove-scroll';
-import {
-    BrowserView,
-    MobileView,
-    isBrowser,
-    isMobile
-} from 'react-device-detect';
+import { useSpring, animated } from 'react-spring';
 
 interface QueueBarProps {
     visible: boolean;

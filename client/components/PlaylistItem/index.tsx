@@ -11,8 +11,8 @@ import style from './index.styl';
 
 interface PlaylistItemProps {
     playlist: Playlist;
-    deletePlaylist?: (playlistID: number) => void;
-    editPlaylist?: (playlistID: number, playlistCurrentName: string) => void;
+    deletePlaylist?: (playlistID: string) => void;
+    editPlaylist?: (playlistID: string, playlistCurrentName: string) => void;
 }
 
 const PlaylistItem: React.FC<PlaylistItemProps> = (
@@ -56,22 +56,16 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
                         </Link>
                     </div>
                     <div className={style.details}>
-                        {props.playlist.id.includes("smart_") // indicate if smartlist, else show rating
-                        ?
-                        <div className={style.smartlistTag}>
-                            Smartlist
-                        </div>
-                        :
-                        <div className={style.rating}>
-                            <Rating
-                                value={""}
-                                fav={""}
-                            />
-                        </div>
-                        }
+                        {props.playlist.id.includes('smart_') ? ( // indicate if smartlist, else show rating
+                            <div className={style.smartlistTag}>Smartlist</div>
+                        ) : (
+                            <div className={style.rating}>
+                                <Rating value={''} fav={''} />
+                            </div>
+                        )}
                     </div>
                     <div className={style.meta}>
-                        {props.playlist.id.includes("smart_") && `Up to `}
+                        {props.playlist.id.includes('smart_') && `Up to `}
                         <span className={style.itemCount}>
                             {props.playlist.items}
                         </span>

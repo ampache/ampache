@@ -22,12 +22,12 @@ import style from './index.styl';
 interface SongListProps {
     showArtist?: boolean;
     showAlbum?: boolean;
-    inPlaylistID?: number;
-    inAlbumID?: number;
+    inPlaylistID?: string;
+    inAlbumID?: string;
     songData?: Song[];
     authKey?: AuthKey;
 }
-
+//TODO: This is doing way to much, clean me
 const SongList: React.FC<SongListProps> = (props) => {
     const musicContext = useContext(MusicContext);
     const [songs, setSongs] = useState<Song[]>(null);
@@ -68,7 +68,7 @@ const SongList: React.FC<SongListProps> = (props) => {
         }
     }, [props.authKey, props.inAlbumID, props.inPlaylistID, props.songData]);
 
-    const handleRemoveFromPlaylist = (songID: number) => {
+    const handleRemoveFromPlaylist = (songID: string) => {
         removeFromPlaylistWithSongID(
             props.inPlaylistID,
             songID,
@@ -80,7 +80,7 @@ const SongList: React.FC<SongListProps> = (props) => {
         });
     };
 
-    const handleAddToPlaylist = async (songID: number) => {
+    const handleAddToPlaylist = async (songID: string) => {
         const { show } = await Modal.new({
             title: 'Add To Playlist',
             content: (
@@ -102,7 +102,7 @@ const SongList: React.FC<SongListProps> = (props) => {
         }
     };
 
-    const handleFlagSong = (songID: number, favorite: boolean) => {
+    const handleFlagSong = (songID: string, favorite: boolean) => {
         flagSong(songID, favorite, props.authKey)
             .then(() => {
                 const newSongs = songs.map((song) => {
@@ -146,38 +146,35 @@ const SongList: React.FC<SongListProps> = (props) => {
         );
     }
     return (
-      <ul className={'striped-list'}>
-          {songs.map((song: Song) => {
-              return (
-                <SongRow
-                  song={song}
-                  showArtist={props.showArtist}
-                  showAlbum={props.showAlbum}
-                  {...(props.inPlaylistID && {
-                      removeFromPlaylist: handleRemoveFromPlaylist
-                  })}
-                  {...(!props.inPlaylistID && {
-                      addToPlaylist: handleAddToPlaylist
-                  })}
-                  isCurrentlyPlaying={
-                      musicContext.currentPlayingSong?.id === song.id
-                  }
-                  addToQueue={(next) =>
-                    musicContext.addToQueue(song, next)
-                  }
-                  startPlaying={() =>
-                    musicContext.startPlayingWithNewQueue(
-                      song,
-                      songs
-                    )
-                  }
-                  flagSong={handleFlagSong}
-                  key={song.playlisttrack}
-                  className={style.songRow}
-                />
-              );
-          })}
-      </ul>
+        <ul className={'striped-list'}>
+            {songs.map((song: Song) => {
+                return (
+                    <SongRow
+                        song={song}
+                        showArtist={props.showArtist}
+                        showAlbum={props.showAlbum}
+                        {...(props.inPlaylistID && {
+                            removeFromPlaylist: handleRemoveFromPlaylist
+                        })}
+                        {...(!props.inPlaylistID && {
+                            addToPlaylist: handleAddToPlaylist
+                        })}
+                        isCurrentlyPlaying={
+                            musicContext.currentPlayingSong?.id === song.id
+                        }
+                        addToQueue={(next) =>
+                            musicContext.addToQueue(song, next)
+                        }
+                        startPlaying={() =>
+                            musicContext.startPlayingWithNewQueue(song, songs)
+                        }
+                        flagSong={handleFlagSong}
+                        key={song.playlisttrack}
+                        className={style.songRow}
+                    />
+                );
+            })}
+        </ul>
     );
 };
 

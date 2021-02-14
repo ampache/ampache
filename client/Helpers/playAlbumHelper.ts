@@ -2,7 +2,7 @@ import { getAlbumSongs } from '~logic/Album';
 import { AuthKey } from '~logic/Auth';
 
 export const playSongFromAlbum = (
-    albumID: number,
+    albumID: string,
     randomSong: boolean,
     authKey: AuthKey,
     musicContext

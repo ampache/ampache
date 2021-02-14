@@ -4,10 +4,10 @@ export default class AmpacheError extends Error {
     private errorMessage: string;
     private errorType: string;
     constructor(error: {
+        errorCode: string;
         errorAction: string;
-        errorCode: string; //TODO: Ask if this shouldn't be number
-        errorMessage: string;
         errorType: string;
+        errorMessage: string;
     }) {
         super();
         this.errorAction = error.errorAction;

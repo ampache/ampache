@@ -10,11 +10,11 @@ interface SongRowProps {
     isCurrentlyPlaying: boolean;
     showArtist?: boolean;
     showAlbum?: boolean;
-    removeFromPlaylist?: (trackID: number) => void;
-    addToPlaylist?: (trackID: number) => void;
+    removeFromPlaylist?: (trackID: string) => void;
+    addToPlaylist?: (trackID: string) => void;
     addToQueue: (next: boolean) => void;
     startPlaying: () => void;
-    flagSong: (songID: number, favorite: boolean) => void;
+    flagSong: (songID: string, favorite: boolean) => void;
     className?: string;
 }
 import style from './index.styl';
@@ -53,10 +53,10 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                 tabIndex={1}
             >
                 <div className={style.songDetails}>
-                    <div className={style.trackNumber}>
-                        {props.song.track}
+                    <div className={style.trackNumber}>{props.song.track}</div>
+                    <div className={`card-title ${style.title}`}>
+                        {props.song.title}
                     </div>
-                    <div className={`card-title ${style.title}`}>{props.song.title}</div>
                     {props.showArtist && (
                         <div
                             className={style.artistContainer}
@@ -91,30 +91,33 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
 
                 <div className={style.songActions}>
                     <div
-                      className={style.options}
-                      onClick={(e) => {
-                          showContextMenu(e);
-                      }}
+                        className={style.options}
+                        onClick={(e) => {
+                            showContextMenu(e);
+                        }}
                     >
                         <SVG
-                          className='icon icon-button-smallest'
-                          src={require("~images/icons/svg/more-options-hori.svg")}
-                          title='More options'
-                          role='button'
+                            className='icon icon-button-smallest'
+                            src={require('~images/icons/svg/more-options-hori.svg')}
+                            title='More options'
+                            role='button'
                         />
                     </div>
 
                     <div className={style.rating}>
-                        <Rating value={props.song.rating} fav={props.song.flag} />
+                        <Rating
+                            value={props.song.rating}
+                            fav={props.song.flag}
+                        />
                     </div>
 
                     <div className={style.remove}>
                         <SVG
-                          className='icon icon-button-smallest'
-                          src={require("~images/icons/svg/cross.svg")}
-                          title='Delete'
-                          description='Delete this song'
-                          role='button'
+                            className='icon icon-button-smallest'
+                            src={require('~images/icons/svg/cross.svg')}
+                            title='Delete'
+                            description='Delete this song'
+                            role='button'
                         />
                     </div>
                 </div>

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Song } from './Song';
 import { AuthKey } from './Auth';
+import AmpacheError from '~logic/AmpacheError';
 
 //Broken
 export const generateSongsFromArtist = (artistID: number, authKey: AuthKey) => {
@@ -31,7 +32,7 @@ export const generateSongsFromAlbum = (albumID: number, authKey: AuthKey) => {
                 throw new Error('Server Error');
             }
             if (JSONData.error) {
-                throw new Error(JSONData.error);
+                throw new AmpacheError(JSONData.error);
             }
             return JSONData.song as Song[];
         });

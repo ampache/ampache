@@ -6,7 +6,7 @@ interface PlaylistViewProps {
     user: User;
     match: {
         params: {
-            playlistID: number;
+            playlistID: string;
         };
     };
 }
@@ -16,10 +16,10 @@ const PlaylistView: React.FC<PlaylistViewProps> = (props) => {
         <div className='playlistPage'>
             <h1>Playlist - {props.match.params.playlistID}</h1>
             <SongList
-              showArtist={true}
-              showAlbum={true}
-              inPlaylistID={props.match.params.playlistID}
-              authKey={props.user.authKey}
+                showArtist={true}
+                showAlbum={true}
+                inPlaylistID={props.match.params.playlistID}
+                authKey={props.user.authKey}
             />
         </div>
     );

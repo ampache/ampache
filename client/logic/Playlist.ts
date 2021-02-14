@@ -4,7 +4,7 @@ import AmpacheError from './AmpacheError';
 import { Song } from './Song';
 
 export type Playlist = {
-    id: number;
+    id: string;
     name: string;
     owner: string;
     items: number;
@@ -28,7 +28,7 @@ export const getPlaylists = (authKey: AuthKey) => {
         });
 };
 
-export const getPlaylistSongs = (playlistID: number, authKey: AuthKey) => {
+export const getPlaylistSongs = (playlistID: string, authKey: AuthKey) => {
     return axios
         .get(
             `${process.env.ServerURL}/server/json.server.php?action=playlist_songs&filter=${playlistID}&auth=${authKey}&version=400001`
@@ -46,8 +46,8 @@ export const getPlaylistSongs = (playlistID: number, authKey: AuthKey) => {
 };
 
 export const addToPlaylist = (
-    playlistID: number,
-    songID: number,
+    playlistID: string,
+    songID: string,
     authKey: AuthKey
 ) => {
     return axios
@@ -67,8 +67,8 @@ export const addToPlaylist = (
 };
 
 export const removeFromPlaylistWithSongID = (
-    playlistID: number,
-    songID: number,
+    playlistID: string,
+    songID: string,
     authKey: AuthKey
 ) => {
     return axios
@@ -109,7 +109,7 @@ export const createPlaylist = (
 };
 
 export const renamePlaylist = (
-    playlistID: number,
+    playlistID: string,
     newName: string,
     authKey: AuthKey
 ) => {
@@ -129,7 +129,7 @@ export const renamePlaylist = (
         });
 };
 
-export const deletePlaylist = (playlistID: number, authKey: AuthKey) => {
+export const deletePlaylist = (playlistID: string, authKey: AuthKey) => {
     return axios
         .get(
             `${process.env.ServerURL}/server/json.server.php?action=playlist_delete&filter=${playlistID}&auth=${authKey}&version=400001`

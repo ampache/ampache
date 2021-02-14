@@ -3,8 +3,12 @@ import axios from 'axios';
 import AmpacheError from './AmpacheError';
 
 enum artType {
+    'song' = 'song',
     'artist' = 'artist',
-    'album' = 'album'
+    'album' = 'album',
+    'playlist' = 'playlist',
+    'search' = 'search',
+    'podcast' = 'podcast'
 }
 
 const updateArt = (
