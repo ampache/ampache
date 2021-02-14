@@ -23,7 +23,7 @@
 namespace Ampache\Module\Application\Installation;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Preference;
+use Ampache\Repository\Model\Preference;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;

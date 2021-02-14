@@ -21,20 +21,20 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Album;
-use Ampache\Model\Art;
-use Ampache\Model\Catalog;
-use Ampache\Model\Rating;
-use Ampache\Model\Share;
-use Ampache\Model\User;
-use Ampache\Model\Userflag;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\RefreshReordered\RefreshAlbumSongsAction;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AmpacheRss;
 use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Model\Browse;
+use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
@@ -177,8 +177,10 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) {
         $postshout = T_('Post Shout'); ?>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>"><?php echo Ui::get_icon('comment', $postshout); ?></a>
+            <li>
+                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>"><?php echo UI::get_icon('comment', $postshout); ?></a>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>"><?php echo $postshout; ?></a>
+            </li>
             <?php
     } ?>
         <?php

@@ -21,12 +21,12 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Clip;
-use Ampache\Model\Movie;
-use Ampache\Model\Personal_Video;
-use Ampache\Model\TVShow_Episode;
-use Ampache\Model\User;
-use Ampache\Model\Video;
+use Ampache\Repository\Model\Clip;
+use Ampache\Repository\Model\Movie;
+use Ampache\Repository\Model\Personal_Video;
+use Ampache\Repository\Model\TVShow_Episode;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Video;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Localplay\LocalPlay;

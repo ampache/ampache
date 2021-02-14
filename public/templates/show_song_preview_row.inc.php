@@ -22,7 +22,7 @@
 
 /** @var Song $libitem */
 
-use Ampache\Model\Song;
+use Ampache\Repository\Model\Song;
 
 ?>
 <td class="cel_song"><?php echo $libitem->title; ?></td>

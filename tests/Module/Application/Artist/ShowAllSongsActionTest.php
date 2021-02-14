@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Artist;
 
 use Ampache\MockeryTestCase;
-use Ampache\Model\Artist;
-use Ampache\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\SongRepositoryInterface;

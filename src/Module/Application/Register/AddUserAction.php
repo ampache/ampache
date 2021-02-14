@@ -26,8 +26,8 @@ namespace Ampache\Module\Application\Register;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\User;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;

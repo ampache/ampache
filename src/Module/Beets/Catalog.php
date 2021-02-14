@@ -23,22 +23,22 @@
 /* vim:set softtabstop=4 shiftwidth=4 expandtab: */
 namespace Ampache\Module\Beets;
 
-use Ampache\Model\Album;
+use Ampache\Repository\Model\Album;
 use Ampache\Module\System\AmpError;
-use Ampache\Model\Metadata\Repository\Metadata;
-use Ampache\Model\Metadata\Repository\MetadataField;
-use Ampache\Model\library_item;
-use Ampache\Model\Media;
+use Ampache\Repository\Model\Metadata\Repository\Metadata;
+use Ampache\Repository\Model\Metadata\Repository\MetadataField;
+use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\Media;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\System\Dba;
-use Ampache\Model\Song;
+use Ampache\Repository\Model\Song;
 
 /**
  * Catalog parent for local and remote beets catalog
  *
  * @author raziel
  */
-abstract class Catalog extends \Ampache\Model\Catalog
+abstract class Catalog extends \Ampache\Repository\Model\Catalog
 {
     /**
      * Added Songs counter
@@ -280,6 +280,17 @@ abstract class Catalog extends \Ampache\Model\Catalog
         $this->updateUi('clean', $this->cleanCounter, null, true);
 
         return $count;
+    }
+
+    /**
+     * move_catalog_proc
+     * This function updates the file path of the catalog to a new location (unsupported)
+     * @param string $new_path
+     * @return boolean
+     */
+    public function move_catalog_proc($new_path)
+    {
+        return false;
     }
 
     /**

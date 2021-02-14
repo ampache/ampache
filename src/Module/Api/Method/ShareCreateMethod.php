@@ -26,8 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
-use Ampache\Model\Share;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Share;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
@@ -81,12 +81,15 @@ final class ShareCreateMethod
 
             return false;
         }
+
+        $className = ObjectTypeToClassNameMapper::map($type);
+
         $share = array();
-        if (!ObjectTypeToClassNameMapper::map($type) || !$object_id) {
+        if (!$className || !$object_id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
         } else {
-            $item = new $type($object_id);
+            $item = new $className($object_id);
             if (!$item->id) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
@@ -118,7 +121,7 @@ final class ShareCreateMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::shares($share, false);
+                echo Json_Data::shares($share, false);
                 break;
             default:
                 echo Xml_Data::shares($share);

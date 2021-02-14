@@ -26,7 +26,7 @@ namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Model\database_object;
+use Ampache\Repository\Model\database_object;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;

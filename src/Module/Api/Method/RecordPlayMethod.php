@@ -24,8 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\Song;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Session;
 use Ampache\Repository\UserRepositoryInterface;
@@ -48,7 +48,7 @@ final class RecordPlayMethod
      *
      * @param array $input
      * id     = (integer) $object_id
-     * user   = (integer) $user_id //optional
+     * user   = (integer|string) $user_id OR $username //optional
      * client = (string) $agent //optional
      * date   = (integer) UNIXTIME() //optional
      * @return boolean
@@ -58,22 +58,23 @@ final class RecordPlayMethod
         if (!Api::check_parameter($input, array('id', 'user'), self::ACTION)) {
             return false;
         }
-        $api_user = User::get_from_username(Session::username($input['auth']));
+        $api_user  = User::get_from_username(Session::username($input['auth']));
+        $play_user = (isset($input['user']) && (int) $input['user'] > 0)
+            ? new User((int) $input['user'])
+            : User::get_from_username((string) $input['user']);
         // If you are setting plays for other users make sure we have an admin
-        if (isset($input['user']) && ((int) $input['user'] !== $api_user->id && !Api::check_access('interface', 100, $api_user->id, self::ACTION, $input['api_format']))) {
+        if ($play_user->id !== $api_user->id && !Api::check_access('interface', 100, $api_user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         ob_end_clean();
         $object_id = (int) $input['id'];
-        $user_id   = (isset($input['user'])) ? (int) $input['user'] : $api_user->id;
-        $user      = (isset($input['user'])) ? new User($user_id) : $api_user;
-        $valid     = in_array($user->id, static::getUserRepository()->getValid());
+        $valid     = in_array($play_user->id, static::getUserRepository()->getValid());
         $date      = (is_numeric(scrub_in($input['date']))) ? (int) scrub_in($input['date']) : time(); //optional
 
         // validate supplied user
         if ($valid === false) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $user_id), '4704', self::ACTION, 'user', $input['api_format']);
+            Api::error(sprintf(T_('Not Found: %s'), $play_user->id), '4704', self::ACTION, 'user', $input['api_format']);
 
             return false;
         }
@@ -90,15 +91,15 @@ final class RecordPlayMethod
 
             return false;
         }
-        debug_event(self::class, 'record_play: ' . $media->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
+        debug_event(self::class, 'record_play: ' . $media->id . ' for ' . $play_user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
         // internal scrobbling (user_activity and object_count tables)
-        if ($media->set_played($user_id, $agent, array(), $date)) {
+        if ($media->set_played($play_user->id, $agent, array(), $date)) {
             // scrobble plugins
-            User::save_mediaplay($user, $media);
+            User::save_mediaplay($play_user, $media);
         }
 
-        Api::message('successfully recorded play: ' . $media->id, $input['api_format']);
+        Api::message('successfully recorded play: ' . $media->id . ' for: ' . $play_user->username, $input['api_format']);
         Session::extend($input['auth']);
 
         return true;

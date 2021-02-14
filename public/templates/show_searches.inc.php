@@ -21,7 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Search;
+use Ampache\Repository\Model\Search;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;

@@ -25,9 +25,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Preference;
-use Ampache\Model\User;
-use Ampache\Model\Useractivity;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Useractivity;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
@@ -80,7 +80,7 @@ final class TimelineMethod
                     ob_end_clean();
                     switch ($input['api_format']) {
                         case 'json':
-                            echo JSON_Data::timeline($activities);
+                            echo Json_Data::timeline($activities);
                             break;
                         default:
                             echo Xml_Data::timeline($activities);

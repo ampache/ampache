@@ -24,16 +24,16 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Model\Album;
+use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Model\Playlist;
-use Ampache\Model\Rating;
-use Ampache\Model\Search;
-use Ampache\Model\Song;
-use Ampache\Model\Tag;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Tag;
 
 /**
  * DAAP Class
@@ -915,8 +915,8 @@ class Daap_Api
             header("Content-length: " . strlen((string)$string));
             echo $string;
         } else {
-            header("Content-type: text/plain", true);
-            header("Content-length: 0", true);
+            header("Content-type: text/plain");
+            header("Content-length: 0");
         }
     }
 
@@ -936,7 +936,7 @@ class Daap_Api
                 $error = "Unauthorized";
                 break;
         }
-        header("Content-type: text/html", true);
+        header("Content-type: text/html");
         header("HTTP/1.0 " . $code . " " . $error, true, $code);
 
         $html = "<html><head><title>" . $error . "</title></head><body><h1>" . $code . " " . $error . "</h1></body></html>";

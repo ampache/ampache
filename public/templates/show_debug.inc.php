@@ -21,7 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Preference;
+use Ampache\Repository\Model\Preference;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\Util\Cron;
 use Ampache\Module\Util\EnvironmentInterface;

@@ -21,7 +21,7 @@
 
 namespace Ampache\Repository;
 
-use Ampache\Model\PrivateMessageInterface;
+use Ampache\Repository\Model\PrivateMessageInterface;
 use Ampache\Repository\Exception\ItemNotFoundException;
 
 interface PrivateMessageRepositoryInterface

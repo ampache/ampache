@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Art\Collector;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Model\Art;
+use Ampache\Repository\Model\Art;
 use Ampache\Module\System\LegacyLogger;
 use Psr\Log\LoggerInterface;
 use SpotifyWebAPI\Session as SpotifySession;

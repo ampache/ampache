@@ -24,8 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Browse;
 
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\Tag;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Tag;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;

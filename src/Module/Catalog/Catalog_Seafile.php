@@ -25,12 +25,12 @@ declare(strict_types=0);
 namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
-use Ampache\Model\Media;
-use Ampache\Model\Podcast_Episode;
-use Ampache\Model\Song;
-use Ampache\Model\Song_Preview;
-use Ampache\Model\Video;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Song_Preview;
+use Ampache\Repository\Model\Video;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -509,6 +509,17 @@ class Catalog_Seafile extends Catalog
         }
 
         return $dead;
+    }
+
+    /**
+     * move_catalog_proc
+     * This function updates the file path of the catalog to a new location (unsupported)
+     * @param string $new_path
+     * @return boolean
+     */
+    public function move_catalog_proc($new_path)
+    {
+        return false;
     }
 
     /**

@@ -26,10 +26,10 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Album;
-use Ampache\Model\Artist;
-use Ampache\Model\Search;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
@@ -178,10 +178,10 @@ final class PlaylistGenerateMethod
             case 'index':
                 switch ($input['api_format']) {
                     case 'json':
-                        echo Json_Data::indexes($song_ids, 'song');
+                        echo JSON_Data::indexes($song_ids, 'song', $user->id);
                         break;
                     default:
-                        echo Xml_Data::indexes($song_ids, 'song');
+                        echo XML_Data::indexes($song_ids, 'song', $user->id);
                 }
                 break;
             case 'song':

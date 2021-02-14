@@ -24,11 +24,11 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\Song;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Session;
-use Ampache\Model\Podcast_Episode;
+use Ampache\Repository\Model\Podcast_Episode;
 
 /**
  * Class StreamMethod

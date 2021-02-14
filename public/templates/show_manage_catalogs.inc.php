@@ -21,8 +21,8 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
-use Ampache\Model\Browse;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 
 ?>

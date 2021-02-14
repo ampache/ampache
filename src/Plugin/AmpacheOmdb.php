@@ -23,8 +23,8 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use Ampache\Model\Art;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use Exception;
 use Requests;

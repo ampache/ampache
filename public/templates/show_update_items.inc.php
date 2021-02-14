@@ -21,8 +21,8 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
-use Ampache\Model\Catalog;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
 Ui::show_box_top(T_('Starting Update from Tags'), 'box box_update_items');

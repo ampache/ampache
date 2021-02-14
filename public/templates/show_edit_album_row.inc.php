@@ -20,8 +20,8 @@
  *
  */
 
-use Ampache\Model\Album;
-use Ampache\Model\Tag;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Tag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 

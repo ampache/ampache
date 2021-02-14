@@ -21,8 +21,8 @@
 
 namespace Ampache\Module\Label;
 
-use Ampache\Model\Label;
-use Ampache\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 
 final class LabelListUpdater implements LabelListUpdaterInterface

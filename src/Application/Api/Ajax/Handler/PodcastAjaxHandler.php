@@ -27,8 +27,8 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
-use Ampache\Model\Podcast;
-use Ampache\Model\Podcast_Episode;
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Podcast_Episode;
 
 final class PodcastAjaxHandler implements AjaxHandlerInterface
 {

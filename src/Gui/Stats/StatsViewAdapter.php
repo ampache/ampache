@@ -28,8 +28,8 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Catalog\CatalogDetailsInterface;
 use Ampache\Gui\GuiFactoryInterface;
-use Ampache\Model\Catalog;
-use Ampache\Model\Video;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 
 final class StatsViewAdapter implements StatsViewAdapterInterface

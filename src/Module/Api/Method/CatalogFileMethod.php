@@ -25,11 +25,11 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
-use Ampache\Model\Podcast_Episode;
-use Ampache\Model\Song;
-use Ampache\Model\User;
-use Ampache\Model\Video;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Video;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Module\System\Session;

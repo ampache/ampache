@@ -27,7 +27,7 @@ namespace Ampache\Module\Api\Edit;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
-use Ampache\Model\database_object;
+use Ampache\Repository\Model\database_object;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;

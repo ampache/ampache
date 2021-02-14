@@ -25,8 +25,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\User;
-use Ampache\Model\Userflag;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -79,10 +79,12 @@ final class FlagMethod
             return false;
         }
 
-        if (!ObjectTypeToClassNameMapper::map($type) || !$object_id) {
+        $className = ObjectTypeToClassNameMapper::map($type);
+
+        if (!$className || !$object_id) {
             Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
         } else {
-            $item = new $type($object_id);
+            $item = new $className($object_id);
             if (!$item->id) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);

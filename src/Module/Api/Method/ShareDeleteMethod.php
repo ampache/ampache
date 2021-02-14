@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
-use Ampache\Model\Share;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Session;
 

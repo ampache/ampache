@@ -21,17 +21,17 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
-use Ampache\Model\Playlist;
-use Ampache\Model\Plugin;
-use Ampache\Model\Preference;
-use Ampache\Model\Song;
-use Ampache\Model\Tmp_Playlist;
-use Ampache\Model\User;
-use Ampache\Model\Useractivity;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Plugin;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Tmp_Playlist;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Useractivity;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
-use Ampache\Model\Browse;
+use Ampache\Repository\Model\Browse;
 use Ampache\Module\User\Activity\UserActivityRendererInterface;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;

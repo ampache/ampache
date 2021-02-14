@@ -22,7 +22,7 @@
 
 namespace Ampache\Module\Application\Art;
 
-use Ampache\Model\database_object;
+use Ampache\Repository\Model\database_object;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;

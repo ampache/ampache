@@ -25,16 +25,16 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Model\Query;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Query;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\UserRepositoryInterface;
 use PDOStatement;
-use Ampache\Model\Song_Preview;
-use Ampache\Model\Tmp_Playlist;
+use Ampache\Repository\Model\Song_Preview;
+use Ampache\Repository\Model\Tmp_Playlist;
 
 /**
  * This class handles all of the session related stuff in Ampache

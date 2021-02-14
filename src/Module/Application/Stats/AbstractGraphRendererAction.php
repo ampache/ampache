@@ -22,7 +22,7 @@
 
 namespace Ampache\Module\Application\Stats;
 
-use Ampache\Model\User;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ApplicationException;

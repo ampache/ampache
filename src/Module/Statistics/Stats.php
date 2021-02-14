@@ -25,10 +25,10 @@ declare(strict_types=0);
 namespace Ampache\Module\Statistics;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
-use Ampache\Model\Podcast_Episode;
-use Ampache\Model\Song;
-use Ampache\Model\Video;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Video;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
@@ -222,7 +222,7 @@ class Stats
             $threshold = 0;
         }
 
-        if (AmpConfig::get('cron_cache') && !defined('NO_CRON_CACHE')) {
+        if (AmpConfig::get('cron_cache')) {
             $sql = "SELECT `count` AS `object_cnt` FROM `cache_object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ? AND `threshold` = " . $threshold;
         } else {
             $sql = "SELECT COUNT(*) AS `object_cnt` FROM `object_count` WHERE `object_type`= ? AND `object_id` = ? AND `count_type` = ?";
@@ -432,6 +432,7 @@ class Stats
      * @param string $count_type
      * @param integer $user_id
      * @param boolean $random
+     * @param boolean $addAdditionalColumns
      * @return string
      */
     public static function get_top_sql(
@@ -439,7 +440,8 @@ class Stats
         $threshold,
         $count_type = 'stream',
         $user_id = null,
-        $random = false
+        $random = false,
+        bool $addAdditionalColumns = false
     ) {
         $type = self::validate_type($input_type);
         $date = time() - (86400 * (int)$threshold);
@@ -453,14 +455,14 @@ class Stats
 
             return $sql;
         }
-        if ($user_id === null && AmpConfig::get('cron_cache') && !defined('NO_CRON_CACHE')) {
+        if ($user_id === null && AmpConfig::get('cron_cache') && !$addAdditionalColumns) {
             $sql = "SELECT `object_id` as `id`, MAX(`count`) AS `count` FROM `cache_object_count` " . "WHERE `object_type` = '" . $type . "' AND `count_type` = '" . $count_type . "' AND `threshold` = '" . $threshold . "' " . "GROUP BY `object_id`, `object_type`";
         } else {
             $allow_group_disks = (AmpConfig::get('album_group')) ? true : false;
             // Select Top objects counting by # of rows for you only
             $sql = "SELECT MAX(`object_id`) as `id`, COUNT(*) AS `count`";
             // Add additional columns to use the select query as insert values directly
-            if (defined('NO_CRON_CACHE')) {
+            if ($addAdditionalColumns) {
                 $sql .= ", `object_type`, `count_type`, " . $threshold . " AS `threshold`";
             }
             $sql .= " FROM `object_count`";
@@ -709,7 +711,7 @@ class Stats
         }
         if ($allow_group_disks && $type == 'album') {
             $sql .= $multi_where . " `album`.`id` IS NOT NULL GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`mbid`, `album`.`year` ORDER BY `real_atime` DESC ";
-        } elseif ($type === 'song' || $type === 'video') {
+        } elseif ($type === 'song' || $base_type === 'video') {
             $sql .= "GROUP BY `$sql_type`, `real_atime` ORDER BY `real_atime` DESC ";
         } else {
             $sql .= "GROUP BY `$sql_type` ORDER BY `real_atime` DESC ";

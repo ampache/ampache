@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback\Localplay\Upnp;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Song;
+use Ampache\Repository\Model\Song;
 use Ampache\Module\Api\Upnp_Api;
 use Ampache\Module\System\Session;
 use SimpleXMLElement;
@@ -231,7 +231,7 @@ class UPnPPlayer
         $song = new song($songId);
         $song->format();
         $songItem = Upnp_Api::_itemSong($song, '');
-        $domDIDL  = Upnp_Api::createDIDL($songItem);
+        $domDIDL  = Upnp_Api::createDIDL($songItem, '');
         $xmlDIDL  = $domDIDL->saveXML();
 
         return array(

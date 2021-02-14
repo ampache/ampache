@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\User;
+use Ampache\Repository\Model\User;
 
 /**
  * Update Class
@@ -214,6 +214,9 @@ class Update
 
         $update_string = "* Add r128 gain columns to song_data.<br/ > ";
         $version[]     = array('version' => '400021', 'description' => $update_string);
+
+        $update_string = "* Extend allowed time for podcast_episodes.<br/ > ";
+        $version[]     = array('version' => '400022', 'description' => $update_string);
 
         return $version;
     }
@@ -1116,6 +1119,21 @@ class Update
         $sql = "ALTER TABLE `song_data` " .
             "ADD `r128_track_gain` smallint(5) DEFAULT NULL, " .
             "ADD `r128_album_gain` smallint(5) DEFAULT NULL;";
+        $retval &= Dba::write($sql);
+
+        return $retval;
+    }
+
+    /**
+     * update_400022
+     *
+     * Extend allowed time for podcast_episodes
+     */
+    public static function update_400022()
+    {
+        $retval = true;
+
+        $sql = "ALTER TABLE `podcast_episode` MODIFY COLUMN `time` int(11) unsigned DEFAULT 0 NOT NULL; ";
         $retval &= Dba::write($sql);
 
         return $retval;

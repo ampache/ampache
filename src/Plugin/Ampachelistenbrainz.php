@@ -23,11 +23,11 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use Ampache\Model\Album;
-use Ampache\Model\Artist;
-use Ampache\Model\Preference;
-use Ampache\Model\Song;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Statistics\Stats;
 
 class Ampachelistenbrainz

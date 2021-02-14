@@ -21,9 +21,9 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
-use Ampache\Model\Plugin;
-use Ampache\Model\Song;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Plugin;
+use Ampache\Repository\Model\Song;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;

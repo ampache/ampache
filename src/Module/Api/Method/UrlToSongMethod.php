@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\User;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
@@ -66,7 +66,7 @@ final class UrlToSongMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::songs(array($data['id']), $user->id, true, false);
+                echo Json_Data::songs(array($data['id']), $user->id, true, false);
                 break;
             default:
                 echo Xml_Data::songs(array($data['id']), $user->id);

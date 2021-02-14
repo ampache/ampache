@@ -29,8 +29,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\System\Core;
-use Ampache\Model\Preference;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\User;
 
 final class SubsonicApiApplication implements ApiApplicationInterface
 {

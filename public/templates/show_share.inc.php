@@ -21,7 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Share;
+use Ampache\Repository\Model\Share;
 use Ampache\Module\Util\Ui;
 
 /** @var Share $share */

@@ -250,6 +250,26 @@ class ConfigContainerTest extends MockeryTestCase
         );
     }
 
+    public function testGetComposerBinaryPathReturnsDefault(): void
+    {
+        $this->assertSame(
+            'composer',
+            $this->createSubject([])->getComposerBinaryPath()
+        );
+    }
+
+    public function testGetComposerBinaryPathReturnsValue(): void
+    {
+        $value = 'some-value';
+
+        $this->assertSame(
+            $value,
+            $this->createSubject([
+                ConfigurationKeyEnum::COMPOSER_BINARY_PATH => $value
+            ])->getComposerBinaryPath()
+        );
+    }
+
     private function createSubject(array $configuration = []): ConfigContainerInterface
     {
         return new ConfigContainer($configuration);

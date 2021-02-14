@@ -26,8 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Art\Collector;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Model\Art;
-use Ampache\Model\Plugin;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Plugin;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Psr\Container\ContainerInterface;

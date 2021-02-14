@@ -27,7 +27,7 @@ namespace Ampache\Module\Application\PrivateMessage;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
-use Ampache\Model\PrivateMessageInterface;
+use Ampache\Repository\Model\PrivateMessageInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;

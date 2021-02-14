@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Playback;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Channel;
-use Ampache\Model\Preference;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Channel;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;

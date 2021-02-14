@@ -21,12 +21,12 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
-use Ampache\Model\Artist;
-use Ampache\Model\Catalog;
-use Ampache\Model\Rating;
-use Ampache\Model\User;
-use Ampache\Model\Userflag;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;

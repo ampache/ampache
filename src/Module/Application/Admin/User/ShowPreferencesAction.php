@@ -24,8 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Admin\User;
 
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\Preference;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Preference;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;

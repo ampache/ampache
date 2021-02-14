@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access\Lib;
 
-use Ampache\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\Access;
 
 final class AccessListItem implements AccessListItemInterface

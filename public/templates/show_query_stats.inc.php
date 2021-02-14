@@ -21,7 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\database_object;
+use Ampache\Repository\Model\database_object;
 use Ampache\Module\System\Dba;
 
 ?>

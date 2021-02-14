@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Ampache\Gui\Playlist;
 
 use Ampache\MockeryTestCase;
-use Ampache\Model\Playlist;
+use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;

@@ -26,11 +26,11 @@ namespace Ampache\Module\Catalog\Update;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
-use Ampache\Model\Catalog;
-use Ampache\Model\Podcast_Episode;
-use Ampache\Model\Song;
-use Ampache\Model\Video;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Video;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 

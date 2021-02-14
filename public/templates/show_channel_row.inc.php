@@ -21,7 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Channel;
+use Ampache\Repository\Model\Channel;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 

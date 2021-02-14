@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\User;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -68,7 +68,7 @@ final class HandshakeMethod
         $user_ip  = Core::get_user_ip();
         $version  = (isset($input['version'])) ? $input['version'] : Api::$version;
         // set the version to the old string for old api clients
-        Api::$version = ($version[0] === '4' || $version[0] === '3') ? '500000' : Api::$version;
+        Api::$version = ((int) $version[0] >= 350001) ? '500000' : Api::$version;
 
         // Log the attempt
         debug_event(self::class, "Handshake Attempt, IP:$user_ip User:$username Version:$version", 5);
@@ -94,7 +94,7 @@ final class HandshakeMethod
         }
 
         // Log this attempt
-        debug_event(self::class, "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id) Auth:$passphrase", 1);
+        debug_event(self::class, "Login Attempt, IP:$user_ip Time: $timestamp User:$username ($user_id)", 1);
 
         // @todo replace by constructor injection
         global $dic;

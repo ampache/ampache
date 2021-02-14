@@ -21,9 +21,9 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
-use Ampache\Model\Catalog;
-use Ampache\Model\Label;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Label;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Util\Ui;
 

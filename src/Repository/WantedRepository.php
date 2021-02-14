@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Model\database_object;
+use Ampache\Repository\Model\database_object;
 use Ampache\Module\System\Dba;
 
 final class WantedRepository implements WantedRepositoryInterface

@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\Tag;
+use Ampache\Repository\Model\Tag;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
@@ -66,7 +66,7 @@ final class GenreMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::genres(array($object_id), false);
+                echo Json_Data::genres(array($object_id), false);
                 break;
             default:
                 echo Xml_Data::genres(array($object_id));

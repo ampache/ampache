@@ -25,15 +25,15 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
-use Ampache\Model\Album;
+use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
-use Ampache\Model\Artist;
-use Ampache\Model\Label;
-use Ampache\Model\Playlist;
-use Ampache\Model\Search;
-use Ampache\Model\Song;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Wanted\MissingArtistFinderInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 

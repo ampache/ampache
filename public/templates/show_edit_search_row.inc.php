@@ -21,7 +21,7 @@
  */
 /** @var Search $libitem */
 
-use Ampache\Model\Search;
+use Ampache\Repository\Model\Search;
 
 ?>
 <div>

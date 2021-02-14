@@ -21,43 +21,23 @@ This means Ampache now **requires** php-intl module/dll to be enabled.
 * Generate rsstokens for each user allowing unique feed URLs
 * Allow setting custom database collation and charset without overwriting your changes
   * rsstoken: Identify users by token when generating RSS feeds
-* Replace 'Admin' icon with padlock in sidebar when access check fails. (Hide this new icon with 'simple_user_mode')
-* Disable API/Subsonic password resets in 'simple_user_mode'
-* NEW plugin:
-  * 'Personal Favorites'. Show a shortcut to a favorite smartlist or playlist on the homepage
-  * 'RatingMatch'. Raise the minimum star rating (and song loves) of artists and albums when you rate/love the song
 * Run garbage collection after catalog_update.inc 'clean' or 'verify'
 * Add duration to the table headers when browsing playlists and smartlists
 * Add time and duration to albums, artists instead of calculating from songs each time
-* Allow browsing by album_artist instead of artist
 * Allow setting a custom background on the login page
 * Musicbrainz search icon on Artist, Album and Song pages
-* Add some missing default preferences in set_defaults
 
 ### Changed
 
 * config version 48
 * get_datetime(): use IntlDateFormatter to format based on locale. [(<https://www.php.net/manual/en/intldateformatter.format.php>)]
 * Renamed 'Tag' strings to 'Genre'
-* 'Sort Tracks by Artist, Album, Song' sorting done by 'Album_Artist, Album, Disk, Track Title'
-* Extend democratic cooldown past 255 and show an error when out of range
-* Sort smartlists by file when random is unticked
-* Don't block playlist information actions when you own the playlist
-* Add date parameter to Api::record_play
 * Changed sidebar back to browse for artist/album
-* Compressed PNG and JPG images
-
-### Removed
-
-* Disabled the jPlayer fullscreen shortcut (ctrl + f)
-* Remove system preferences from the user that aren't classified as a system preference
 
 ### Fixed
 
 * Escape filepaths when removing from database
-* Check for mail_auth config correctly
 * Regex in config for additional_genre_delimiters
-* **MAJOR** UPnP fixes
 
 ### API develop
 
@@ -127,6 +107,84 @@ All API code that used 'Tag' now references 'Genre' instead
 * Api::democratic was using action from localplay in the return responses
 * Setting a limit of 'none' would slice away all the results
 * get_indexes for XML didn't include podcast indexes
+
+## Ampache 4.3.0-release
+
+This version of Ampache seeks to bring in some of the great changes going on in develop while we work on v5.
+There also a few API changes to enable a bit better control for older clients.
+
+### Added
+
+* Check limits on democratic playlists (> 0 && < 3000000000)
+* Show an error for out of range democratic cooldowns
+* SubSonic - Force a default format (xml) instead of none
+* Added back the agent string in recently played (for admins)
+* Replace 'Admin' icon with padlock in sidebar when access check fails. (Hide this new icon with 'simple_user_mode')
+* Disable API/Subsonic password resets in 'simple_user_mode'
+* New option -m 'move_catalog' added to catalog_update.inc
+* More default preferences to the refill/check functions
+* More functions to search (album artist, mbid)
+* Config version 46
+* NEW config options
+  * hide_search: If true do not include searches/smartlists in playlist results for Api::get_indexes, Api::playlists
+* NEW plugin:
+  * 'Personal Favorites'. Show a shortcut to a favorite smartlist or playlist on the homepage
+  * 'RatingMatch'. Raise the minimum star rating (and song loves) of artists and albums when you rate/love the song
+
+### Changed
+
+* Scrobble plugins fire after stat recording
+* Split art search by 5 instead of 4
+* Increase autoupdate check time and don't force it on each logon
+* Updated CSS and separated mashup covers from other types
+* Don't use mail_enabled for registration checks
+* WebUI - Browse by album_artist instead of single artists
+* Better sorting for playlists using sort_tracks
+* Don't allow duplicate podcast feeds
+* Updated the gather art process
+* Searches will order by file/name instead of id (unless random)
+* Updated amapche.sql
+* Updated composer requirements
+* Default false config option text changed to true (no more typing, just uncomment!)
+* Compressed PNG and JPG images
+
+### Removed
+
+* Disabled the jPlayer fullscreen shortcut (ctrl + f)
+* Remove system preferences from the user that aren't classified as a system preference
+* Stop setting open_basedir from fs.ajax
+* Concert/Event pages (dead Last.fm API)
+* Don't run reset_db_charset on DB updates
+* Disabled browse_filter for new user accounts
+
+### Fixed
+
+* Speed up the playlist dialog boxes (Add to playlist)
+* Fix SQL query for Stats::get_newest_sql
+* Session cookie creation
+* Multiple auth attempts in the same second would not return a session
+* Mail auth was not checked correctly
+* Gather art correctly for update_file.inc
+* set bitrate correctly if using a maxbitrate in play/index
+* MP3's would not get a waveform without editing the config
+* Recently played respects your privacy settings
+* Graph class sql grouping
+* **MAJOR** UPnP fixes
+* Upload catalog rename logic
+
+### API 4.3.0
+
+### Changed
+
+* Api::record_play
+  * Make 'user' parameter optional
+  * Allow 'user' to the be user_id **or** the username string
+  * Add 'date' parameter (optional)
+  * Require 100 (Admin) permission to record plays for other users
+* Api::get_indexes
+  * Add 'hide_search' parameter (optional)
+* Api::playlists
+  * Add 'hide_search' parameter (optional)
 
 ## Ampache 4.2.6-release
 
@@ -325,7 +383,7 @@ Minor bugfixes
 
 ## 4.2.1-release
 
-**NOTICE** Ampache 4.3.0 will require **php-intl** module/dll to be enabled.
+**NOTICE** Ampache 5.0.0 will require **php-intl** module/dll to be enabled.
 
 ### Added
 
@@ -737,7 +795,8 @@ Notes about this release that can't be summed up in a log line
   * Add: rating_browse_filter, rating_browse_minimum_stars - filter based on a star rating.
   * Add: send_full_stream - allow pushing the full track instead of segmenting
   * Add: github_force_branch - Allow any official Ampache git branch set in config
-  * Add: subsonic_stream_scrobble - set to false to force all caching to count as a download. This is to be used with the subsonic client set to scrobble. (Ampache will now scrobble to itself over subsonic.)
+  * Add: subsonic_stream_scrobble - set to false to force all caching to count as a download.
+    This is to be used with the subsonic client set to scrobble. (Ampache will now scrobble to itself over subsonic.)
   * Add: waveform_height, waveform_width - customize waveform size
   * Add: of_the_moment - set custom amount of albums/videos in "of the moment areas"
   * Add: use_now_playing_embedded, now_playing_refresh_limit, now_playing_css_file - Show a user forum tag "Now playing / last played"
@@ -751,7 +810,8 @@ Notes about this release that can't be summed up in a log line
 * Move some $_GET, POST, $_REQUEST calls to Core
 * HTML5 doctype across the board. (DOCTYPE html)
 * Lots of HTML and UI fixes courtesy of @kuzi-moto
-* If you are using charts/graphs there has been a change regarding c-pchart [chart-faq](https://github.com/ampache/ampache/wiki/chart-faq)
+* If you are using charts/graphs there has been a change regarding c-pchart
+  * [chart-faq](https://github.com/ampache/ampache/wiki/chart-faq)
 * Numerous catalog updates to allow data migration when updating file tags meaning faster tag updates/catalog verify! (Updating an album would update each file multiple times)
   * UserActivity::migrate, Userflag::migrate, Rating::migrate, Catalog::migrate,
   * Shoutbox::migrate, Recommendation::migrate, Tag::migrate, Share::migrate
@@ -833,8 +893,10 @@ Notes about this release that can't be summed up in a log line
 
 * Authentication: Require a handshake and generate unique sessions at all times
 * advanced_search
-  * 'is not' has been added shifting values down the list. (0=contains, 1=does not contain, 2=starts with, 3=ends with, 4=is, 5=is not, 6=sounds like, 7=does not sound like)
-  * rule_1['name'] is depreciated. Instead of multiple searches for the same thing rule_1'name' has been replaced with 'title' (I have put a temp workaround into the search rules to alleviate this change)
+  * 'is not' has been added shifting values down the list.
+    (0=contains, 1=does not contain, 2=starts with, 3=ends with, 4=is, 5=is not, 6=sounds like, 7=does not sound like)
+  * rule_1['name'] is depreciated. Instead of multiple searches for the same thing rule_1'name'
+    has been replaced with 'title' (I have put a temp workaround into the search rules to alleviate this change)
 * stats
   * allow songs|artists|albums (instead of just albums)
 * playlists
@@ -1049,7 +1111,8 @@ Notes about this release that can't be summed up in a log line
 * Added track number on streaming playlist (thanks Fondor1)
 * Fixed catalog export (thanks shellshocker)
 * Fixed file change detection
-* Improved XML API with more information and new functions (advanced_search, toggle_follow, last_shouts, rate, timeline, friends_timeline)
+* Improved XML API with more information and new functions
+  * (advanced_search, toggle_follow, last_shouts, rate, timeline, friends_timeline)
 * Fixed 'Next' button when browsing start offset is aligned to offset limit (thanks wagnered)
 * Fixed stream kill OS detection (thanks nan4k7)
 * Fixed calculate_art_size script to support storage on disk (thanks nan4k7)

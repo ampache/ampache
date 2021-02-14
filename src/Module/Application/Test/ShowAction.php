@@ -26,7 +26,7 @@ namespace Ampache\Module\Application\Test;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Model\Preference;
+use Ampache\Repository\Model\Preference;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Exception;

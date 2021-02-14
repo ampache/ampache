@@ -20,11 +20,11 @@
  *
  */
 
-use Ampache\Model\Art;
+use Ampache\Repository\Model\Art;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Model\Browse;
+use Ampache\Repository\Model\Browse;
 
 if (!Core::is_session_started()) {
     session_start();

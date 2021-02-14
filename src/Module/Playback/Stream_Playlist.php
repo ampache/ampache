@@ -24,14 +24,14 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
-use Ampache\Model\Media;
+use Ampache\Repository\Model\Media;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
+use Ampache\Repository\Model\Art;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Model\Democratic;
+use Ampache\Repository\Model\Democratic;
 use PDOStatement;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
