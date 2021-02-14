@@ -98,7 +98,7 @@ const Sidebar: React.FC<SideBarProps> = (props) => {
                     <h4>Settings</h4>
                     <ul>
                         <li>
-                            <Link to='/user'>
+                            <Link to='/account'>
                                 User profile
                                 <SVG
                                     src={require('~images/icons/svg/more-options-hori.svg')}
