@@ -21,57 +21,109 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class UserDeleteMethod
- * @package Lib\ApiMethods
- */
-final class UserDeleteMethod
+final class UserDeleteMethod implements MethodInterface
 {
-    private const ACTION = 'user_delete';
+    public const ACTION = 'user_delete';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private UserRepositoryInterface $userRepository;
+
+    private PrivilegeCheckerInterface $privilegeChecker;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private UpdateInfoRepositoryInterface $updateInfoRepository;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        UserRepositoryInterface $userRepository,
+        PrivilegeCheckerInterface $privilegeChecker,
+        ModelFactoryInterface $modelFactory,
+        UpdateInfoRepositoryInterface $updateInfoRepository
+    ) {
+        $this->streamFactory        = $streamFactory;
+        $this->userRepository       = $userRepository;
+        $this->privilegeChecker     = $privilegeChecker;
+        $this->modelFactory         = $modelFactory;
+        $this->updateInfoRepository = $updateInfoRepository;
+    }
 
     /**
-     * user_delete
      * MINIMUM_API_VERSION=400001
      *
      * Delete an existing user.
      * Takes the username in parameter.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * username = (string) $username)
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws AccessDeniedException
+     * @throws RequestParamMissingException
      */
-    public static function user_delete(array $input)
-    {
-        if (!Api::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
+            throw new AccessDeniedException(T_('Require: 100'));
         }
-        if (!Api::check_parameter($input, array('username'), self::ACTION)) {
-            return false;
+
+        $username = $input['username'] ?? null;
+
+        if ($username === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'username')
+            );
         }
-        $username = $input['username'];
-        $user     = User::get_from_username($username);
+
+        $userId = $this->userRepository->findByUsername($username);
+
         // don't delete yourself or admins
-        if ($user->id && Session::username($input['auth']) != $username && !Access::check('interface', 100, $user->id)) {
+        if (
+            $userId !== null &&
+            $userId !== $gatekeeper->getUser()->getId() &&
+            $this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN, $userId) === false
+        ) {
+            $user = $this->modelFactory->createUser($userId);
             $user->delete();
-            Api::message('successfully deleted: ' . $username, $input['api_format']);
-            Catalog::count_table('user');
 
-            return true;
+            $this->updateInfoRepository->updateCountByTableName('user');
+
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->success(
+                        sprintf('successfully deleted: %s', $username)
+                    )
+                )
+            );
         }
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
-        Session::extend($input['auth']);
 
-        return false;
+        throw new RequestParamMissingException(
+            sprintf(T_('Bad Request: %s'), $username)
+        );
     }
 }

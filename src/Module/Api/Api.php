@@ -108,7 +108,7 @@ class Api
         'user_preference' => Method\UserPreferenceMethod::class,
         'user_create' => Method\UserCreateMethod::class,
         'user_update' => Method\UserUpdateMethod::class,
-        'user_delete' => Method\UserDeleteMethod::class,
+        Method\UserDeleteMethod::ACTION => Method\UserDeleteMethod::class,
         Method\FollowersMethod::ACTION => Method\FollowersMethod::class,
         'following' => Method\FollowingMethod::class,
         Method\ToggleFollowMethod::ACTION => Method\ToggleFollowMethod::class,
