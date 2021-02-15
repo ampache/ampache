@@ -133,7 +133,7 @@ class Api
         'localplay' => Method\LocalplayMethod::class,
         'democratic' => Method\DemocraticMethod::class,
         'system_update' => Method\SystemUpdateMethod::class,
-        'system_preferences' => Method\SystemPreferencesMethod::class,
+        Method\SystemPreferencesMethod::ACTION => Method\SystemPreferencesMethod::class,
         'system_preference' => Method\SystemPreferenceMethod::class,
         'preference_create' => Method\PreferenceCreateMethod::class,
         'preference_edit' => Method\PreferenceEditMethod::class,

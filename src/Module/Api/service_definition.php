@@ -81,6 +81,7 @@ return [
     Method\SongDeleteMethod::class => autowire(),
     Method\PodcastEpisodeDeleteMethod::class => autowire(),
     Method\UserPreferencesMethod::class => autowire(),
+    Method\SystemPreferencesMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

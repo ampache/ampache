@@ -20,51 +20,65 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Repository\PreferenceRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class SystemPreferencesMethod
- * @package Lib\ApiMethods
- */
-final class SystemPreferencesMethod
+final class SystemPreferencesMethod implements MethodInterface
 {
-    private const ACTION = 'system_preferences';
+    public const ACTION = 'system_preferences';
+
+    private PreferenceRepositoryInterface $preferenceRepository;
+
+    private StreamFactoryInterface $streamFactory;
+
+    public function __construct(
+        PreferenceRepositoryInterface $preferenceRepository,
+        StreamFactoryInterface $streamFactory
+    ) {
+        $this->preferenceRepository = $preferenceRepository;
+        $this->streamFactory        = $streamFactory;
+    }
 
     /**
-     * system_preferences
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get your system preferences
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws AccessDeniedException
      */
-    public static function system_preferences(array $input)
-    {
-        $user = User::get_from_username(Session::username($input['auth']));
-
-        if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
+            throw new AccessDeniedException('Require: 100');
         }
-        $preferences  = Preference::get_all(-1);
-        $output_array = array('preference' => $preferences);
-        switch ($input['api_format']) {
-            case 'json':
-                echo json_encode($output_array, JSON_PRETTY_PRINT);
-                break;
-            default:
-                echo Xml_Data::object_array($output_array['preference'], 'preference');
-        }
-        Session::extend($input['auth']);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->object_array(
+                    $this->preferenceRepository->getAll(-1),
+                    'preference'
+                )
+            )
+        );
     }
 }
