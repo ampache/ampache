@@ -95,7 +95,8 @@ final class ShowAction implements ApplicationActionInterface
                     'isAlbumEditable' => $this->isEditable(
                         $gatekeeper,
                         $album
-                    )
+                    ),
+                    'albumRepository' => $this->albumRepository,
                 ]
             );
         } else {

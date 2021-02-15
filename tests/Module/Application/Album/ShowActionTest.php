@@ -320,7 +320,8 @@ class ShowActionTest extends MockeryTestCase
                 'show_album.inc.php',
                 [
                     'album' => $album,
-                    'isAlbumEditable' => $isEditAble
+                    'isAlbumEditable' => $isEditAble,
+                    'albumRepository' => $this->albumRepository,
                 ]
             )
             ->once();
