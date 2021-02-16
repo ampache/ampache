@@ -193,7 +193,7 @@ class Json_Data
      * @param  array   $objects Array of object_ids (Mixed string|int)
      * @param  string  $type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
      * @param  integer $user_id
-     * @param  boolean $include (add the extra songs details if a playlist)
+     * @param  boolean $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
      * @return string  JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
      */
     public static function indexes($objects, $type, $user_id = null, $include = false)
@@ -211,7 +211,7 @@ class Json_Data
             case 'share':
                 return self::shares($objects);
             case 'podcast':
-                return self::podcasts($objects, $user_id);
+                return self::podcasts($objects, $user_id, $include);
             case 'podcast_episode':
                 return self::podcast_episodes($objects, $user_id);
             case 'video':
