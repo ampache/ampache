@@ -63,9 +63,9 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
     /**
      * This returns a nice flat array of all of the possible preferences for the specified user
      *
-     * @return array<string, mixed>
+     * @return array<array<string, mixed>>
      */
-    public function getAll($userId): array
+    public function getAll(int $userId): array
     {
         $userId     = Dba::escape($userId);
         $user_limit = ($userId != -1) ? "AND `preference`.`catagory` != 'system'" : "";
@@ -77,6 +77,41 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
             " ORDER BY `preference`.`subcatagory`, `preference`.`description`";
 
         $db_results = Dba::read($sql, [$userId]);
+        $results    = [];
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = [
+                'id' => $row['id'],
+                'name' => $row['name'],
+                'level' => $row['level'],
+                'description' => $row['description'],
+                'value' => $row['value'],
+                'type' => $row['type'],
+                'category' => $row['catagory'],
+                'subcategory' => $row['subcatagory']
+            ];
+        }
+
+        return $results;
+    }
+
+    /**
+     * This returns a nice flat array of all of the possible preferences for the specified user
+     *
+     * @return array<array<string, mixed>>
+     */
+    public function get(string $preferenceName, int $userId): array
+    {
+        $userId    = Dba::escape($userId);
+        $userLimit = ($userId != -1) ? 'AND `preference`.`catagory` != \'system\'' : "";
+
+        $sql = 'SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`,' .
+            ' `preference`.`type`, `preference`.`catagory`, `preference`.`subcatagory`, `user_preference`.`value`' .
+            ' FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` ' .
+            ' WHERE `preference`.`name` = ? AND `user_preference`.`user`= ? AND `preference`.`catagory` != \'internal\' ' . $userLimit .
+            ' ORDER BY `preference`.`subcatagory`, `preference`.`description`';
+
+        $db_results = Dba::read($sql, [$preferenceName, $userId]);
         $results    = [];
 
         while ($row = Dba::fetch_assoc($db_results)) {

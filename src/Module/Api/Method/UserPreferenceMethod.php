@@ -21,57 +21,76 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\PreferenceRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class UserPreferenceMethod
- * @package Lib\ApiMethods
- */
-final class UserPreferenceMethod
+final class UserPreferenceMethod implements MethodInterface
 {
-    private const ACTION = 'user_preference';
+    public const ACTION = 'user_preference';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private PreferenceRepositoryInterface $preferenceRepository;
+
+    public function __construct(
+         StreamFactoryInterface $streamFactory,
+         PreferenceRepositoryInterface $preferenceRepository
+     ) {
+        $this->streamFactory        = $streamFactory;
+        $this->preferenceRepository = $preferenceRepository;
+    }
 
     /**
-     * user_preference
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get your user preference by name
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws ResultEmptyException
      */
-    public static function user_preference(array $input)
-    {
-        $user = User::get_from_username(Session::username($input['auth']));
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $user = $gatekeeper->getUser();
+
         // fix preferences that are missing for user
-        User::fix_preferences($user->id);
+        $user->fixPreferences();
 
-        $pref_name  = (string) $input['filter'];
-        $preference = Preference::get($pref_name, $user->id);
-        if (empty($preference)) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $pref_name), '4704', self::ACTION, 'filter', $input['api_format']);
+        $preferenceName = (string) ($input['filter'] ?? '');
 
-            return false;
+        $preference = $this->preferenceRepository->get(
+            $preferenceName,
+            $user->getId()
+        );
+
+        if ($preference === []) {
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %s'), $preferenceName)
+            );
         }
-        switch ($input['api_format']) {
-            case 'json':
-                echo json_encode($preference, JSON_PRETTY_PRINT);
-                break;
-            default:
-                echo Xml_Data::object_array($preference, 'preference');
-        }
-        Session::extend($input['auth']);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->object_array($preference, 'preference')
+            )
+        );
     }
 }

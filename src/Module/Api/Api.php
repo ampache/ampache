@@ -105,7 +105,7 @@ class Api
         Method\UsersMethod::ACTION => Method\UsersMethod::class,
         Method\UserMethod::ACTION => Method\UserMethod::class,
         Method\UserPreferencesMethod::ACTION => Method\UserPreferencesMethod::class,
-        'user_preference' => Method\UserPreferenceMethod::class,
+        Method\UserPreferenceMethod::ACTION => Method\UserPreferenceMethod::class,
         'user_create' => Method\UserCreateMethod::class,
         'user_update' => Method\UserUpdateMethod::class,
         Method\UserDeleteMethod::ACTION => Method\UserDeleteMethod::class,

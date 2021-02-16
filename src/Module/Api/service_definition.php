@@ -83,6 +83,7 @@ return [
     Method\UserPreferencesMethod::class => autowire(),
     Method\SystemPreferencesMethod::class => autowire(),
     Method\UserDeleteMethod::class => autowire(),
+    Method\UserPreferenceMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

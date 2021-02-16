@@ -386,7 +386,7 @@ class Preference extends database_object
             " `preference`.`type`, `preference`.`catagory`, `preference`.`subcatagory`, `user_preference`.`value`" .
             " FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` " .
             " WHERE `preference`.`name` = ? AND `user_preference`.`user`= ? AND `preference`.`catagory` != 'internal' $user_limit " .
-            " ORDER BY `preference`.`subcatagory`, `preference`.`description`";
+            " ORDER BY `preference`.`subcatuser_deleteagory`, `preference`.`description`";
 
         $db_results = Dba::read($sql, array($pref_name, $user_id));
         $results    = array();

@@ -31,7 +31,14 @@ interface PreferenceRepositoryInterface
     /**
      * This returns a nice flat array of all of the possible preferences for the specified user
      *
-     * @return array<string, mixed>
+     * @return array<array<string, mixed>>
      */
-    public function getAll($userId): array;
+    public function getAll(int $userId): array;
+
+    /**
+     * This returns a nice flat array of all of the possible preferences for the specified user
+     *
+     * @return array<array<string, mixed>>
+     */
+    public function get(string $preferenceName, int $userId): array;
 }
