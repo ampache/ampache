@@ -2697,6 +2697,37 @@ class Api
     } // podcast_episode_delete
 
     /**
+     * users
+     * MINIMUM_API_VERSION=440000
+     *
+     * Get ids and usernames for your site
+     *
+     * @param array $input
+     * @return boolean
+     */
+    public static function users(array $input)
+    {
+        $users = User::get_valid_users();
+        if (empty($users)) {
+            Api::empty('user', $input['api_format']);
+
+            return false;
+        }
+
+        ob_end_clean();
+        switch ($input['api_format']) {
+            case 'json':
+                echo JSON_Data::users($users);
+                break;
+            default:
+                echo XML_Data::users($users);
+        }
+        Session::extend($input['auth']);
+
+        return true;
+    }
+
+    /**
      * user
      * MINIMUM_API_VERSION=380001
      *

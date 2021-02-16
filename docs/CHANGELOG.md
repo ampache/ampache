@@ -25,7 +25,6 @@ All API code that used 'Tag' now references 'Genre' instead
 ### Added
 
 * NEW API functions
-  * Api::users (ID and Username of the site users)
   * Api::song_delete (Delete files when you are allowed to)
   * Api::user_preferences (Get your user preferences)
   * Api::user_preference (Get your preference by name)
@@ -123,6 +122,8 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 
 ### Added
 
+* NEW API functions
+  * Api::users (ID and Username of the site users)
 * Api::localplay added new options to 'command' ('pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip')
 * Api::localplay added parameters:
   * 'oid' (integer) object_id to add //optional
