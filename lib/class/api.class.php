@@ -4056,7 +4056,9 @@ class Api
         }
         // Load their Localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
-        $localplay->connect();
+        if (!$localplay->connect()) {
+            self::message('error', T_('Error Unable to connect to localplay controller'), '405', $input['api_format']);
+        }
 
         $result = false;
         $status = false;

@@ -14,12 +14,12 @@ Remember that Binary data methods will not return xml; just the file/data you ha
 
 This is the function that handles verifying a new handshake Takes a timestamp, auth key, and username.
 
-|Input      |Type   |Description|Optional|
-|-----------|-------|-----------|-------:|
-|'auth'     |string |$passphrase (Timestamp . Password SHA hash) OR (API Key)|NO      |
-|'user'     |string |$username (Required if login/password authentication)|YES     |
-|'timestamp'|integer|UNIXTIME() (Timestamp used in seed of password hash. Required if login/password authentication)|YES     |
-|'version'  |string |$version (API Version that the application understands)|YES     |
+| Input       | Type    | Description                                                                                     | Optional |
+|-------------|---------|-------------------------------------------------------------------------------------------------|---------:|
+| 'auth'      | string  | $passphrase (Timestamp . Password SHA hash) OR (API Key)                                        |       NO |
+| 'user'      | string  | $username (Required if login/password authentication)                                           |      YES |
+| 'timestamp' | integer | UNIXTIME() (Timestamp used in seed of password hash. Required if login/password authentication) |      YES |
+| 'version'   | string  | $version (API Version that the application understands)                                         |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/handshake.xml)
 
@@ -27,9 +27,9 @@ This is the function that handles verifying a new handshake Takes a timestamp, a
 
 This can be called without being authenticated, it is useful for determining if what the status of the server is, and what version it is running/compatible with
 
-|Input |Type  |Description|Optional|
-|------|------|-----------|-------:|
-|'auth'|string|(Session ID) destroys the session if it exists|YES      |
+| Input  | Type   | Description                                    | Optional |
+|--------|--------|------------------------------------------------|---------:|
+| 'auth' | string | (Session ID) destroys the session if it exists |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/ping.xml)
 
@@ -37,9 +37,9 @@ This can be called without being authenticated, it is useful for determining if 
 
 Destroy a session using the auth parameter.
 
-|Input |Type  |Description|Optional|
-|------|------|-----------|-------:|
-|'auth'|string|(Session ID) returns version information and extends the session if passed|NO     |
+| Input  | Type   | Description                                                                | Optional |
+|--------|--------|----------------------------------------------------------------------------|---------:|
+| 'auth' | string | (Session ID) returns version information and extends the session if passed |       NO |
 
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/goodbye.xml)
@@ -49,9 +49,9 @@ Destroy a session using the auth parameter.
 
 This takes a url and returns the song object in question
 
-|Input|Type|Description|Optional|
-|-----|----|-----------|-------:|
-|'url'|string|Full Ampache URL from server, translates back into a song XML|NO      |
+| Input | Type   | Description                                                   | Optional |
+|-------|--------|---------------------------------------------------------------|---------:|
+| 'url' | string | Full Ampache URL from server, translates back into a song XML |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/url_to_song.xml)
 
@@ -61,33 +61,35 @@ This takes a url and returns the song object in question
 
 This takes a collection of inputs and returns ID + name for the object type
 
-|Input        |Type      |Description                          |Optional|
-|-------------|----------|-------------------------------------|-------:|
-|'type'       |string    |'song', 'album', 'artist', 'playlist'|NO      |
-|'filter'     |string    |                                     |YES     |
-|'add'        |set_filter|ISO 8601 Date Format assumed filter method is newer then specified date, however [START]/[END] can be specified to receive only results added between two dates|YES     |
-|'update'     |set_filter|ISO 8601 Date Format assumed filter method is newer then specified date, however [START]/[END] can be specified to receive only results updated between two dates|YES     |
-|'offset'     |integer   |                                     |YES     |
-|'limit'      |integer   |                                     |YES     |
-|'hide_search'|integer   | 0,1, if true do not include searches/smartlists in the result |YES     |
+| Input         | Type       | Description                                                      | Optional |
+|---------------|------------|------------------------------------------------------------------|---------:|
+| 'type'        | string     | 'song', 'album', 'artist', 'playlist'                            |       NO |
+| 'filter'      | string     |                                                                  |      YES |
+| 'add'         | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
+|               |            | Find objects with an 'add' date newer than the specified date    |          |
+| 'update'      | set_filter | ISO 8601 Date Format (2020-09-16)                                |      YES |
+|               |            | Find objects with an 'update' time newer than the specified date |          |
+| 'offset'      | integer    | Return results starting from this index position                 |      YES |
+| 'limit'       | integer    | Maximum results for the chosen type                              |      YES |
+| 'hide_search' | integer    | 0,1, if true do not include searches/smartlists in the result    |      YES |
 
 SONGS
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/get_indexes%20(songs).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/get_indexes%20\(song\).xml)
 
 ARTIST
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/get_indexes%20(artists).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/get_indexes%20\(artist\).xml)
 
 
 ALBUM
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/get_indexes%20(albums).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/get_indexes%20\(album\).xml)
 
 
 PLAYLIST
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/get_indexes%20(playlists).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/get_indexes%20\(playlist\).xml)
 
 ## advanced_search
 
@@ -121,29 +123,31 @@ Refer to the [Advanced Search](API-advanced-search.md) page for details about cr
 
 SONG
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/advanced_search%20(song).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/advanced_search%20\(song\).xml)
 
 ARTIST
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/advanced_search%20(artist).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/advanced_search%20\(artist\).xml)
 
 ALBUM
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/advanced_search%20(album).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/advanced_search%20\(album\).xml)
 
 ## artists
 
 This takes a collection of inputs and returns artist objects.
 
-|Input    |Type|Description|Optional|
-|---------|----|-----------|-------:|
-|'filter' |    |Value is Alpha Match for returned results, may be more than one letter/number|YES     |
-|'exact'  |boolean|if true filter is exact rather then fuzzy|YES     |
-|'add'    |set_filter|ISO 8601 Date Format assumed filter method is newer then specified date, however [START]/[END] can be specified to receive only results added between two dates|YES     |
-|'update' |set_filter|ISO 8601 Date Format assumed filter method is newer then specified date, however [START]/[END] can be specified to receive only results updated between two dates|YES     |
-|'offset' |    |           |YES     |
-|'limit'  |    |           |YES     |
-|'include'|array|Array specified using GET convention, can contain `albums` or `songs` and will include the corresponding XML nested in the artist XML|NO      |
+| Input     | Type       | Description                                                                   | Optional |
+|-----------|------------|-------------------------------------------------------------------------------|---------:|
+| 'filter'  | string     | Value is Alpha Match for returned results, may be more than one letter/number |      YES |
+| 'exact'   | boolean    | if true filter is exact rather then fuzzy                                     |      YES |
+| 'add'     | set_filter | ISO 8601 Date Format (2020-09-16)                                             |      YES |
+|           |            | Find objects with an 'add' date newer than the specified date                 |          |
+| 'update'  | set_filter | ISO 8601 Date Format (2020-09-16)                                             |      YES |
+|           |            | Find objects with an 'update' time newer than the specified date              |          |
+| 'offset'  | integer    | Return results starting from this index position                              |      YES |
+| 'limit'   | integer    | Maximum number of results to return                                           |      YES |
+| 'include' | string     | 'albums', 'songs' and will include the corresponding XML                      |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/artists.xml)
 
@@ -151,10 +155,10 @@ This takes a collection of inputs and returns artist objects.
 
 This returns a single artist based on the UID of said artist
 
-|Input    |Type|Description|Optional|
-|---------|----|-----------|-------:|
-|'filter' |    |UID of Artist, returns artist XML|NO      |
-|'include'|array|Array specified using GET convention, can contain `albums` or `songs` and will include the corresponding XML nested in the artist XML|NO      |
+| Input     | Type   | Description                                                                                                                           | Optional |
+|-----------|--------|---------------------------------------------------------------------------------------------------------------------------------------|---------:|
+| 'filter'  | string | UID of Artist, returns artist XML                                                                                                     |       NO |
+| 'include' | array  | Array specified using GET convention, can contain `albums` or `songs` and will include the corresponding XML nested in the artist XML |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/artist.xml)
 
@@ -162,11 +166,11 @@ This returns a single artist based on the UID of said artist
 
 This returns the albums of an artist
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of Artist, returns Album XML|NO      |
-|'offset'|    |           |YES     |
-|'limit' |    |           |YES     |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|---------:|
+| 'filter' | integer | UID of Artist, returns Album XML                 |       NO |
+| 'offset' | integer | Return results starting from this index position |      YES |
+| 'limit'  | integer | Maximum number of results to return              |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/artist_albums.xml)
 
@@ -174,11 +178,11 @@ This returns the albums of an artist
 
 This returns the songs of the specified artist
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of Artist, returns Song XML|NO      |
-|'offset'|    |           |YES     |
-|'limit' |    |           |YES     |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|---------:|
+| 'filter' | integer | UID of Artist, returns Song XML                  |       NO |
+| 'offset' | integer | Return results starting from this index position |      YES |
+| 'limit'  | integer | Maximum number of results to return              |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/artist_songs.xml)
 
@@ -186,15 +190,17 @@ This returns the songs of the specified artist
 
 This returns albums based on the provided search filters
 
-|Input    |Type|Description|Optional|
-|---------|----|-----------|-------:|
-|'filter' |string|Value is Alpha Match for returned results, may be more than one letter/number|YES     |
-|'exact'  |boolean|if true filter is exact rather then fuzzy|NO      |
-|'add'    |set_filter|ISO 8601 Date Format assumed filter method is newer then specified date, however [START]/[END] can be specified to receive only results added between two dates|YES     |
-|'update' |set_filter|ISO 8601 Date Format assumed filter method is newer then specified date, however [START]/[END] can be specified to receive only results updated between two dates|YES     |
-|'offset' |    |           |YES     |
-|'limit'  |    |           |YES     |
-|'include'|array|Array specified using GET convention, can contain `songs` and will include the corresponding XML nested in the album XML|YES     |
+| Input     | Type       | Description                                                                   | Optional |
+|-----------|------------|-------------------------------------------------------------------------------|---------:|
+| 'filter'  | string     | Value is Alpha Match for returned results, may be more than one letter/number |      YES |
+| 'exact'   | boolean    | if true filter is exact rather then fuzzy                                     |       NO |
+| 'add'     | set_filter | ISO 8601 Date Format (2020-09-16)                                             |      YES |
+|           |            | Find objects with an 'add' date newer than the specified date                 |          |
+| 'update'  | set_filter | ISO 8601 Date Format (2020-09-16)                                             |      YES |
+|           |            | Find objects with an 'update' time newer than the specified date              |          |
+| 'offset'  | integer    | Return results starting from this index position                              |      YES |
+| 'limit'   | integer    |                                                                               |      YES |
+| 'include' | string     | 'albums', 'songs' will include nested in the album XML                        |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/albums.xml)
 
@@ -202,10 +208,10 @@ This returns albums based on the provided search filters
 
 This returns a single album based on the UID provided
 
-|Input    |Type|Description|Optional|
-|---------|----|-----------|-------:|
-|'filter' |    |UID of Album, returns album XML|NO      |
-|'include'|array|Array specified using GET convention, can contain `songs` and will include the corresponding XML nested in the album XML|NO      |
+| Input     | Type    | Description                                                                                                              | Optional |
+|-----------|---------|--------------------------------------------------------------------------------------------------------------------------|---------:|
+| 'filter'  | integer | UID of Album, returns album XML                                                                                          |       NO |
+| 'include' | array   | Array specified using GET convention, can contain `songs` and will include the corresponding XML nested in the album XML |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/album.xml)
 
@@ -213,11 +219,11 @@ This returns a single album based on the UID provided
 
 This returns the songs of a specified album
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of Album, returns song XML|NO      |
-|'offset'|    |           |YES     |
-|'limit' |    |           |YES     |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|---------:|
+| 'filter' | integer | UID of Album, returns song XML                   |       NO |
+| 'offset' | integer | Return results starting from this index position |      YES |
+| 'limit'  | integer | Maximum number of results to return              |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/album_songs.xml)
 
@@ -227,12 +233,12 @@ This returns the songs of a specified album
 
 This returns the licenses based on the specified filter
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |Value is Alpha Match for returned results, may be more than one letter/number|YES     |
-|'exact' |boolean|if true filter is exact rather then fuzzy|YES     |
-|'offset'|    |           |YES     |
-|'limit' |    |           |YES     |
+| Input    | Type    | Description                                                                   | Optional |
+|----------|---------|-------------------------------------------------------------------------------|---------:|
+| 'filter' | string  | Value is Alpha Match for returned results, may be more than one letter/number |      YES |
+| 'exact'  | boolean | if true filter is exact rather then fuzzy                                     |      YES |
+| 'offset' | integer | Return results starting from this index position                              |      YES |
+| 'limit'  | integer | Maximum number of results to return                                           |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/licenses.xml)
 
@@ -242,9 +248,9 @@ This returns the licenses based on the specified filter
 
 This returns a single license based on UID
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of license, returns license XML|NO      |
+| Input    | Type    | Description                         | Optional |
+|----------|---------|-------------------------------------|---------:|
+| 'filter' | integer | UID of license, returns license XML |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/license.xml)
 
@@ -254,9 +260,9 @@ This returns a single license based on UID
 
 This returns a list of songs based on the filter ID
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of license, returns song XML|NO      |
+| Input    | Type    | Description                      | Optional |
+|----------|---------|----------------------------------|---------:|
+| 'filter' | integer | UID of license, returns song XML |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/license_songs.xml)
 
@@ -264,12 +270,12 @@ This returns a list of songs based on the filter ID
 
 This returns the tags (Genres) based on the specified filter
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |Value is Alpha Match for returned results, may be more than one letter/number|YES     |
-|'exact' |boolean|if true filter is exact rather then fuzzy|YES     |
-|'offset'|    |           |YES     |
-|'limit' |    |           |YES     |
+| Input    | Type    | Description                                                                   | Optional |
+|----------|---------|-------------------------------------------------------------------------------|---------:|
+| 'filter' | string  | Value is Alpha Match for returned results, may be more than one letter/number |      YES |
+| 'exact'  | boolean | if true filter is exact rather then fuzzy                                     |      YES |
+| 'offset' | integer | Return results starting from this index position                              |      YES |
+| 'limit'  | integer | Maximum number of results to return                                           |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/tags.xml)
 
@@ -277,9 +283,9 @@ This returns the tags (Genres) based on the specified filter
 
 This returns a single tag based on UID
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of tag, returns tag XML|NO      |
+| Input    | Type    | Description                 | Optional |
+|----------|---------|-----------------------------|---------:|
+| 'filter' | integer | UID of tag, returns tag XML |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/tag.xml)
 
@@ -287,11 +293,11 @@ This returns a single tag based on UID
 
 This returns the artists associated with the tag in question as defined by the UID
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of tag, returns artist XML|NO      |
-|'offset'|    |           |YES     |
-|'limit' |    |           |YES     |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|---------:|
+| 'filter' | integer | UID of tag, returns artist XML                   |       NO |
+| 'offset' | integer | Return results starting from this index position |      YES |
+| 'limit'  | integer | Maximum number of results to return              |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/tag_artists.xml)
 
@@ -299,11 +305,11 @@ This returns the artists associated with the tag in question as defined by the U
 
 This returns the albums associated with the tag in question
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of tag, returns album XML|NO      |
-|'offset'|    |           |YES     |
-|'limit' |    |           |YES     |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|---------:|
+| 'filter' | integer | UID of tag, returns album XML                    |       NO |
+| 'offset' | integer | Return results starting from this index position |      YES |
+| 'limit'  | integer | Maximum number of results to return              |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/tag_albums.xml)
 
@@ -311,11 +317,11 @@ This returns the albums associated with the tag in question
 
 returns the songs for this tag
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of tag, returns song XML|NO      |
-|'offset'|    |           |YES     |
-|'limit' |    |           |YES     |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|---------:|
+| 'filter' | integer | UID of tag, returns song XML                     |       NO |
+| 'offset' | integer | Return results starting from this index position |      YES |
+| 'limit'  | integer | Maximum number of results to return              |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/tag_songs.xml)
 
@@ -323,14 +329,16 @@ returns the songs for this tag
 
 Returns songs based on the specified filter
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |Value is Alpha Match for returned results, may be more than one letter/number|NO      |
-|'add'    |set_filter|ISO 8601 Date Format assumed filter method is newer then specified date, however [START]/[END] can be specified to receive only results added between two dates|YES     |
-|'update' |set_filter|ISO 8601 Date Format assumed filter method is newer then specified date, however [START]/[END] can be specified to receive only results updated between two dates|YES     |
-|'exact' |boolean|if true filter is exact rather then fuzzy|NO      |
-|'offset'|    |           |YES     |
-|'limit' |    |           |YES     |
+| Input    | Type       | Description                                                                   | Optional |
+|----------|------------|-------------------------------------------------------------------------------|---------:|
+| 'filter' | string     | Value is Alpha Match for returned results, may be more than one letter/number |       NO |
+| 'add'    | set_filter | ISO 8601 Date Format (2020-09-16)                                             |      YES |
+|          |            | Find objects with an 'add' date newer than the specified date                 |          |
+| 'update' | set_filter | ISO 8601 Date Format (2020-09-16)                                             |      YES |
+|          |            | Find objects with an 'update' time newer than the specified date              |          |
+| 'exact'  | boolean    | if true filter is exact rather then fuzzy                                     |       NO |
+| 'offset' | integer    | Return results starting from this index position                              |      YES |
+| 'limit'  | integer    | Maximum number of results to return                                           |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/songs.xml)
 
@@ -338,9 +346,9 @@ Returns songs based on the specified filter
 
 returns a single song
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of Song, returns song XML|NO      |
+| Input    | Type    | Description                   | Optional |
+|----------|---------|-------------------------------|---------:|
+| 'filter' | integer | UID of Song, returns song XML |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/song.xml)
 
@@ -348,15 +356,17 @@ returns a single song
 
 This returns playlists based on the specified filter
 
-|Input        |Type      |Description|Optional|
-|-------------|----------|-----------|-------:|
-|'filter'     |string    |Value is Alpha Match for returned results, may be more than one letter/number|YES     |
-|'exact'      |boolean   |if true filter is exact rather then fuzzy|YES     |
-|'add'        |set_filter|ISO 8601 Date Format assumed filter method is newer then specified date, however [START]/[END] can be specified to receive only results added between two dates|YES     |
-|'update'     |set_filter|ISO 8601 Date Format assumed filter method is newer then specified date, however [START]/[END] can be specified to receive only results updated between two dates|YES     |
-|'offset'     |integer   |           |YES     |
-|'limit'      |integer   |           |YES     |
-|'hide_search'|integer   | 0,1, if true do not include searches/smartlists in the result |YES     |
+| Input         | Type       | Description                                                                   | Optional |
+|---------------|------------|-------------------------------------------------------------------------------|---------:|
+| 'filter'      | string     | Value is Alpha Match for returned results, may be more than one letter/number |      YES |
+| 'exact'       | boolean    | if true filter is exact rather then fuzzy                                     |      YES |
+| 'add'         | set_filter | ISO 8601 Date Format (2020-09-16)                                             |      YES |
+|               |            | Find objects with an 'add' date newer than the specified date                 |          |
+| 'update'      | set_filter | ISO 8601 Date Format (2020-09-16)                                             |      YES |
+|               |            | Find objects with an 'update' time newer than the specified date              |          |
+| 'offset'      | integer    | Return results starting from this index position                              |      YES |
+| 'limit'       | integer    | Maximum number of results to return                                           |      YES |
+| 'hide_search' | integer    | 0,1, if true do not include searches/smartlists in the result                 |      YES |
 
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/playlists.xml)
@@ -365,9 +375,9 @@ This returns playlists based on the specified filter
 
 This returns a single playlist
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of playlist, returns playlist XML|NO      |
+| Input    | Type   | Description                           | Optional |
+|----------|--------|---------------------------------------|---------:|
+| 'filter' | string | UID of playlist, returns playlist XML |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/playlist.xml)
 
@@ -375,11 +385,11 @@ This returns a single playlist
 
 This returns the songs for a playlist
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of Playlist, returns song XML|NO      |
-|'offset'|    |           |YES     |
-|'limit' |    |           |YES     |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|---------:|
+| 'filter' | string  | UID of Playlist, returns song XML                |       NO |
+| 'offset' | integer | Return results starting from this index position |      YES |
+| 'limit'  | integer | Maximum number of results to return              |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/playlist_songs.xml)
 
@@ -387,10 +397,10 @@ This returns the songs for a playlist
 
 This create a new playlist and return it
 
-|Input |Type|Description|Optional|
-|------|----|-----------|-------:|
-|'name'|    |Playlist name|NO      |
-|'type'|    |Playlist type 'public', 'private'|YES     |
+| Input  | Type   | Description                       | Optional |
+|--------|--------|-----------------------------------|---------:|
+| 'name' | string | Playlist name                     |       NO |
+| 'type' | string | Playlist type 'public', 'private' |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/playlist_create.xml)
 
@@ -399,13 +409,13 @@ This create a new playlist and return it
 This modifies name and type of a playlist
 Previously name and type were mandatory while filter wasn't. this has been reversed.
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of Playlist|NO     |
-|'name'|    |Playlist name|YES     |
-|'type'|    |Playlist type 'public', 'private'|YES     |
-|'items'|    |comma-separated song_id's (replace existing items with a new object_id)|YES     |
-|'tracks'|    |comma-separated playlisttrack numbers matched to items in order|YES     |
+| Input    | Type   | Description                                                             | Optional |
+|----------|--------|-------------------------------------------------------------------------|---------:|
+| 'filter' | string | UID of Playlist                                                         |       NO |
+| 'name'   | string | Playlist name                                                           |      YES |
+| 'type'   | string | Playlist type 'public', 'private'                                       |      YES |
+| 'items'  | string | comma-separated song_id's (replace existing items with a new object_id) |      YES |
+| 'tracks' | string | comma-separated playlisttrack numbers matched to items in order         |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/playlist_edit.xml)
 
@@ -413,9 +423,9 @@ Previously name and type were mandatory while filter wasn't. this has been rever
 
 This deletes a playlist
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of Playlist|NO      |
+| Input    | Type   | Description     | Optional |
+|----------|--------|-----------------|---------:|
+| 'filter' | string | UID of Playlist |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/playlist_delete.xml)
 
@@ -423,11 +433,11 @@ This deletes a playlist
 
 This adds a song to a playlist. setting check=1 will not add duplicates to the playlist
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|integer|UID of Playlist|NO      |
-|'song'  |integer|UID of song to add to playlist|NO      |
-|'check' |boolean|0, 1 Whether to check and ignore duplicates (default = 0)|YES     |
+| Input    | Type    | Description                                               | Optional |
+|----------|---------|-----------------------------------------------------------|---------:|
+| 'filter' | integer | UID of Playlist                                           |       NO |
+| 'song'   | integer | UID of song to add to playlist                            |       NO |
+| 'check'  | boolean | 0, 1 Whether to check and ignore duplicates (default = 0) |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/.xml)
 
@@ -436,11 +446,11 @@ This adds a song to a playlist. setting check=1 will not add duplicates to the p
 This remove a song from a playlist.
 Previous versions required 'track' instead of 'song'.
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of Playlist|NO      |
-|'song'  |    |UID of song to remove from playlist|YES     |
-|'track' |    |Track number to remove from playlist|YES     |
+| Input    | Type    | Description                          | Optional |
+|----------|---------|--------------------------------------|---------:|
+| 'filter' | string  | UID of Playlist                      |       NO |
+| 'song'   | integer | UID of song to remove from playlist  |      YES |
+| 'track'  | integer | Track number to remove from playlist |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/playlist_remove_song.xml)
 
@@ -451,28 +461,28 @@ Get a list of song XML, indexes or id's based on some simple search criteria
 'forgotten' will search for tracks played before 'Popular Threshold' days
 'unplayed' added in 400002 for searching unplayed tracks
 
-|Input   |Type   |Description|Optional|
-|--------|-------|-----------|-------:|
-|'mode'  |string |'recent', 'forgotten', 'unplayed', 'random' (default = 'random')|YES     |
-|'filter'|string |string LIKE matched to song title|YES     |
-|'album' |integer|$album_id |YES     |
-|'artist'|integer|$artist_id |YES     |
-|'flag'  |integer|get flagged songs only 0, 1 (default = 0)|YES     |
-|'format'|string |'song', 'index','id' (default = 'song')|YES     |
-|'offset'|integer|          |YES     |
-|'limit' |integer|          |YES     |
+| Input    | Type    | Description                                                      | Optional |
+|----------|---------|------------------------------------------------------------------|---------:|
+| 'mode'   | string  | 'recent', 'forgotten', 'unplayed', 'random' (default = 'random') |      YES |
+| 'filter' | string  | string LIKE matched to song title                                |      YES |
+| 'album'  | integer | $album_id                                                        |      YES |
+| 'artist' | integer | $artist_id                                                       |      YES |
+| 'flag'   | integer | get flagged songs only 0, 1 (default = 0)                        |      YES |
+| 'format' | string  | 'song', 'index','id' (default = 'song')                          |      YES |
+| 'offset' | integer | Return results starting from this index position                 |      YES |
+| 'limit'  | integer | Maximum number of results to return                              |      YES |
 
 SONG
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/playlist_generate%20(song).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/playlist_generate%20\(song\).xml)
 
 INDEX
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/playlist_generate%20(index).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/playlist_generate%20\(index\).xml)
 
 ID
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/playlist_generate%20(id).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/playlist_generate%20\(id\).xml)
 
 ## shares
 
@@ -480,12 +490,12 @@ ID
 
 This searches the shares and returns... shares
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |Value is Alpha Match for Song Title, Artist Name, Album Name, Genre Name returns song XML|YES     |
-|'exact' |    |0, 1 boolean to match the exact filter string|YES     |
-|'offset'|    |           |YES     |
-|'limit' |    |           |YES     |
+| Input    | Type    | Description                                                                               | Optional |
+|----------|---------|-------------------------------------------------------------------------------------------|---------:|
+| 'filter' | string  | Value is Alpha Match for Song Title, Artist Name, Album Name, Genre Name returns song XML |      YES |
+| 'exact'  | integer | 0, 1 boolean to match the exact filter string                                             |      YES |
+| 'offset' | integer | Return results starting from this index position                                          |      YES |
+| 'limit'  | integer | Maximum number of results to return                                                       |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/shares.xml)
 
@@ -495,9 +505,9 @@ This searches the shares and returns... shares
 
 Return shares by UID
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of Share, returns song XML|NO      |
+| Input    | Type    | Description                    | Optional |
+|----------|---------|--------------------------------|---------:|
+| 'filter' | integer | UID of Share, returns song XML |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/share.xml)
 
@@ -508,12 +518,12 @@ Return shares by UID
 Create a public url that can be used by anyone to stream media.
 Takes the file id with optional description and expires parameters.
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of object you are sharing| NO      |
-|'type'  |string|object_type|NO|
-|'description'|string|description (will be filled for you if empty)|YES|
-|'expires'|integer|days to keep active|YES|
+| Input         | Type    | Description                                   | Optional |
+|---------------|---------|-----------------------------------------------|---------:|
+| 'filter'      | string  | UID of object you are sharing                 |       NO |
+| 'type'        | string  | object_type                                   |       NO |
+| 'description' | string  | description (will be filled for you if empty) |      YES |
+| 'expires'     | integer | days to keep active                           |      YES |
 
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/share_create.xml)
@@ -525,13 +535,13 @@ Takes the file id with optional description and expires parameters.
 Update the description and/or expiration date for an existing share.
 Takes the share id to update with optional description and expires parameters.
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|string|Alpha-numeric search term| NO      |
-|'stream'|boolean|0, 1|YES|
-|'download'|boolean|0, 1|YES|
-|'expires'|integer|number of whole days before expiry|YES|
-|'description'|string|update description|YES|
+| Input         | Type    | Description                        | Optional |
+|---------------|---------|------------------------------------|---------:|
+| 'filter'      | string  | Alpha-numeric search term          |       NO |
+| 'stream'      | boolean | 0, 1                               |      YES |
+| 'download'    | boolean | 0, 1                               |      YES |
+| 'expires'     | integer | number of whole days before expiry |      YES |
+| 'description' | string  | update description                 |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/share_edit.xml)
 
@@ -541,9 +551,9 @@ Takes the share id to update with optional description and expires parameters.
 
 Delete an existing share.
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of Share to delete|NO      |
+| Input    | Type    | Description            | Optional |
+|----------|---------|------------------------|---------:|
+| 'filter' | integer | UID of Share to delete |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/share_delete.xml)
 
@@ -553,12 +563,12 @@ Delete an existing share.
 
 Return similar artist id's or similar song ids compared to the input filter
 
-|Input   |Type   |Description|Optional|
-|--------|-------|-----------|-------:|
-|'type'  |string |'song' or 'artist'|NO|
-|'filter'|integer|artist id or song id|NO|
-|'offset'|integer|                |YES|
-|'limit' |integer|                |YES|
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|---------:|
+| 'type'   | string  | 'song' or 'artist'                               |       NO |
+| 'filter' | integer | artist id or song id                             |       NO |
+| 'offset' | integer | Return results starting from this index position |      YES |
+| 'limit'  | integer | Maximum number of results to return              |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/get_similar.xml)
 
@@ -566,11 +576,11 @@ Return similar artist id's or similar song ids compared to the input filter
 
 This searches the songs and returns... songs
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |Value is Alpha Match for Name returns share XML|NO      |
-|'offset'|    |           |YES     |
-|'limit' |    |           |YES     |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|---------:|
+| 'filter' | string  | Value is Alpha Match for Name returns share XML  |       NO |
+| 'offset' | integer | Return results starting from this index position |      YES |
+| 'limit'  | integer | Maximum number of results to return              |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/search_songs.xml)
 
@@ -578,12 +588,12 @@ This searches the songs and returns... songs
 
 This returns video objects!
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |Value is Alpha Match for returned results, may be more than one letter/number|NO      |
-|'exact' |boolean|if true filter is exact rather then fuzzy|YES     |
-|'offset'|    |           |YES     |
-|'limit' |    |           |YES     |
+| Input    | Type    | Description                                                                   | Optional |
+|----------|---------|-------------------------------------------------------------------------------|---------:|
+| 'filter' | string  | Value is Alpha Match for returned results, may be more than one letter/number |       NO |
+| 'exact'  | boolean | if true filter is exact rather then fuzzy                                     |      YES |
+| 'offset' | integer | Return results starting from this index position                              |      YES |
+| 'limit'  | integer | Maximum number of results to return                                           |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/videos.xml)
 
@@ -591,9 +601,9 @@ This returns video objects!
 
 This returns a single video
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of video, returns video XML|NO      |
+| Input    | Type    | Description                     | Optional |
+|----------|---------|---------------------------------|---------:|
+| 'filter' | integer | UID of video, returns video XML |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/video.xml)
 
@@ -603,26 +613,26 @@ Get some items based on some simple search types and filters.
 This method has partial backwards compatibility with older api versions but should be updated to follow the current input values.
 (Changed in 400001 `filter` added)
 
-|Input     |Type   |Description                                               |Optional|
-|----------|-------|----------------------------------------------------------|-------:|
-|'type'    |string |'song', 'album', 'artist'                                 |NO      |
-|'filter'  |string |'newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged', 'random'|NO      |
-|'user_id' |integer|                                                          |YES     |
-|'username'|string |                                                          |YES     |
-|'offset'  |integer|                                                          |YES     |
-|'limit'   |integer|                                                          |YES     |
+| Input      | Type    | Description                                                                 | Optional |
+|------------|---------|-----------------------------------------------------------------------------|---------:|
+| 'type'     | string  | 'song', 'album', 'artist'                                                   |       NO |
+| 'filter'   | string  | 'newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged', 'random' |       NO |
+| 'user_id'  | integer |                                                                             |      YES |
+| 'username' | string  |                                                                             |      YES |
+| 'offset'   | integer | Return results starting from this index position                            |      YES |
+| 'limit'    | integer | Maximum number of results to return                                         |      YES |
 
 SONG
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/stats%20(song).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/stats%20\(song\).xml)
 
 ARTIST
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/stats%20(artist).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/stats%20\(artist\).xml)
 
 ALBUM
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/stats%20(album).xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/stats%20\(album\).xml)
 
 ## podcasts
 
@@ -630,9 +640,12 @@ ALBUM
 
 Get information about podcasts
 
-|Input  |Type|Description|Optional|
-|-------|----|-----------|-------:|
-|''     |    |           |NO      |
+| Input     | Type    | Description                                                                   | Optional |
+|-----------|---------|-------------------------------------------------------------------------------|---------:|
+| 'filter'  | string  | Value is Alpha Match for returned results, may be more than one letter/number |      YES |
+| 'offset'  | integer | Return results starting from this index position                              |      YES |
+| 'limit'   | integer | Maximum number of results to return                                           |      YES |
+| 'include' | string  | 'episodes' (include episodes in the response)                                 |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/podcasts.xml)
 
@@ -642,9 +655,10 @@ Get information about podcasts
 
 Get the podcast from it's id.
 
-|Input  |Type|Description|Optional|
-|-------|----|-----------|-------:|
-|''     |    |           |NO      |
+| Input     | Type   | Description                                   | Optional |
+|-----------|--------|-----------------------------------------------|---------:|
+| 'filter'  | string | UID of podcast, returns podcast XML           |       NO |
+| 'include' | string | 'episodes' (include episodes in the response) |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/podcast.xml)
 
@@ -655,9 +669,10 @@ Get the podcast from it's id.
 Create a podcast that can be used by anyone to stream media.
 Takes the url and catalog parameters.
 
-|Input  |Type|Description|Optional|
-|-------|----|-----------|-------:|
-|''     |    |           |NO      |
+| Input     | Type   | Description         | Optional |
+|-----------|--------|---------------------|---------:|
+| 'url'     | string | rss url for podcast |       NO |
+| 'catalog' | string | podcast catalog     |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/podcast_create.xml)
 
@@ -668,9 +683,15 @@ Takes the url and catalog parameters.
 Update the description and/or expiration date for an existing podcast.
 Takes the podcast id to update with optional description and expires parameters.
 
-|Input  |Type|Description|Optional|
-|-------|----|-----------|-------:|
-|''     |    |           |NO      |
+| Input         | Type   | Description               | Optional |
+|---------------|--------|---------------------------|---------:|
+| 'filter'      | string | Alpha-numeric search term |       NO |
+| 'feed'        | string | feed rss xml url          |      YES |
+| 'title'       | string | title string              |      YES |
+| 'website'     | string | source website url        |      YES |
+| 'description' | string |                           |      YES |
+| 'generator'   | string |                           |      YES |
+| 'copyright'   | string |                           |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/podcast_edit.xml)
 
@@ -680,9 +701,9 @@ Takes the podcast id to update with optional description and expires parameters.
 
 Delete an existing podcast.
 
-|Input  |Type|Description|Optional|
-|-------|----|-----------|-------:|
-|''     |    |           |NO      |
+| Input    | Type   | Description              | Optional |
+|----------|--------|--------------------------|---------:|
+| 'filter' | string | UID of podcast to delete |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/podcast_delete.xml)
 
@@ -692,9 +713,11 @@ Delete an existing podcast.
 
 This returns the episodes for a podcast
 
-|Input  |Type|Description|Optional|
-|-------|----|-----------|-------:|
-|''     |    |           |NO      |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|---------:|
+| 'filter' | string  | UID of podcast                                   |       NO |
+| 'offset' | integer | Return results starting from this index position |      YES |
+| 'limit'  | integer | Maximum number of results to return              |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/podcast_episodes.xml)
 
@@ -704,9 +727,9 @@ This returns the episodes for a podcast
 
 Get the podcast_episode from it's id.
 
-|Input  |Type|Description|Optional|
-|-------|----|-----------|-------:|
-|''     |    |           |NO      |
+| Input    | Type   | Description               | Optional |
+|----------|--------|---------------------------|---------:|
+| 'filter' | string | podcast_episode ID number |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/podcast_episode.xml)
 
@@ -716,9 +739,9 @@ Get the podcast_episode from it's id.
 
 Delete an existing podcast_episode.
 
-|Input  |Type|Description|Optional|
-|-------|----|-----------|-------:|
-|''     |    |           |NO      |
+| Input    | Type   | Description                      | Optional |
+|----------|--------|----------------------------------|---------:|
+| 'filter' | string | UID of podcast_episode to delete |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/podcast_episode_delete.xml)
 
@@ -726,9 +749,9 @@ Delete an existing podcast_episode.
 
 This get an user public information
 
-|Input     |Type|Description|Optional|
-|----------|----|-----------|-------:|
-|'username'|    |Username of the user for who to get details|NO      |
+| Input      | Type   | Description                                 | Optional |
+|------------|--------|---------------------------------------------|---------:|
+| 'username' | string | Username of the user for who to get details |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/user.xml)
 
@@ -736,13 +759,13 @@ This get an user public information
 
 Create a new user. (Requires the username, password and email.)
 
-|Input       |Type   |Description               |Optional|
-|------------|-------|--------------------------|-------:|
-|'username'  |string |$username                 |NO      |
-|'password'  |string |hash('sha256', $password))|NO      |
-|'email'     |string |'user@gmail.com'          |NO      |
-|'fullname'  |string |                          |YES     |
-|'disable'   |boolean|0, 1                      |YES     |
+| Input      | Type    | Description                | Optional |
+|------------|---------|----------------------------|---------:|
+| 'username' | string  | $username                  |       NO |
+| 'password' | string  | hash('sha256', $password)) |       NO |
+| 'email'    | string  | 'user@gmail.com'           |       NO |
+| 'fullname' | string  |                            |      YES |
+| 'disable'  | boolean | 0, 1                       |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/user_create.xml)
 
@@ -750,17 +773,17 @@ Create a new user. (Requires the username, password and email.)
 
 Update an existing user.
 
-|Input       |Type   |Description               |Optional|
-|------------|-------|--------------------------|-------:|
-|'username'  |string |$username                 |NO      |
-|'password'  |string |hash('sha256', $password))|YES     |
-|'email'     |string |'user@gmail.com'          |YES     |
-|'fullname'  |string |                          |YES     |
-|'website'   |string |                          |YES     |
-|'state'     |string |                          |YES     |
-|'city'      |string |                          |YES     |
-|'disable'   |boolean|0, 1                      |YES     |
-|'maxbitrate'|string |                          |YES     |
+| Input        | Type    | Description                | Optional |
+|--------------|---------|----------------------------|---------:|
+| 'username'   | string  | $username                  |       NO |
+| 'password'   | string  | hash('sha256', $password)) |      YES |
+| 'email'      | string  | 'user@gmail.com'           |      YES |
+| 'fullname'   | string  |                            |      YES |
+| 'website'    | string  |                            |      YES |
+| 'state'      | string  |                            |      YES |
+| 'city'       | string  |                            |      YES |
+| 'disable'    | boolean | 0, 1                       |      YES |
+| 'maxbitrate' | string  |                            |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/user_update.xml)
 
@@ -768,9 +791,9 @@ Update an existing user.
 
 Delete an existing user.
 
-|Input     |Type|Description|Optional|
-|----------|----|-----------|-------:|
-|'username'|string|           |NO      |
+| Input      | Type   | Description | Optional |
+|------------|--------|-------------|---------:|
+| 'username' | string |             |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/user_delete.xml)
 
@@ -780,14 +803,16 @@ Delete an existing user.
 
 This returns licenses based on the specified filter
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |Value is Alpha Match for returned results, may be more than one letter/number|YES     |
-|'exact' |boolean|if true filter is exact rather then fuzzy|YES     |
-|'add'    |set_filter|ISO 8601 Date Format assumed filter method is newer then specified date, however [START]/[END] can be specified to receive only results added between two dates|YES     |
-|'update' |set_filter|ISO 8601 Date Format assumed filter method is newer then specified date, however [START]/[END] can be specified to receive only results updated between two dates|YES     |
-|'offset'|    |           |YES     |
-|'limit' |    |           |YES     |
+| Input    | Type       | Description                                                                   | Optional |
+|----------|------------|-------------------------------------------------------------------------------|---------:|
+| 'filter' | string     | Value is Alpha Match for returned results, may be more than one letter/number |      YES |
+| 'exact'  | boolean    | if true filter is exact rather then fuzzy                                     |      YES |
+| 'add'    | set_filter | ISO 8601 Date Format (2020-09-16)                                             |      YES |
+|          |            | Find objects with an 'add' date newer than the specified date                 |          |
+| 'update' | set_filter | ISO 8601 Date Format (2020-09-16)                                             |      YES |
+|          |            | Find objects with an 'update' time newer than the specified date              |          |
+| 'offset' | integer    | Return results starting from this index position                              |      YES |
+| 'limit'  | integer    | Maximum number of results to return                                           |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/licenses.xml)
 
@@ -797,9 +822,9 @@ This returns licenses based on the specified filter
 
 This returns a single license
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of license, returns license XML|NO      |
+| Input    | Type    | Description                         | Optional |
+|----------|---------|-------------------------------------|---------:|
+| 'filter' | integer | UID of license, returns license XML |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/license.xml)
 
@@ -809,11 +834,11 @@ This returns a single license
 
 This returns the songs for a license
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of license, returns song XML|NO      |
-|'offset'|    |           |YES     |
-|'limit' |    |           |YES     |
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|---------:|
+| 'filter' | integer | UID of license, returns song XML                 |       NO |
+| 'offset' | integer | Return results starting from this index position |      YES |
+| 'limit'  | integer | Maximum number of results to return              |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/license_songs.xml)
 
@@ -821,9 +846,9 @@ This returns the songs for a license
 
 This get an user followers
 
-|Input     |Type|Description|Optional|
-|----------|----|-----------|-------:|
-|'username'|string|Username of the user for who to get followers list|NO      |
+| Input      | Type   | Description                                        | Optional |
+|------------|--------|----------------------------------------------------|---------:|
+| 'username' | string | Username of the user for who to get followers list |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/followers.xml)
 
@@ -831,9 +856,9 @@ This get an user followers
 
 This get the user list followed by an user
 
-|Input     |Type|Description|Optional|
-|----------|----|-----------|-------:|
-|'username'|string|(Username of the user for who to get following list|NO      |
+| Input      | Type   | Description                                         | Optional |
+|------------|--------|-----------------------------------------------------|---------:|
+| 'username' | string | (Username of the user for who to get following list |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/following.xml)
 
@@ -841,9 +866,9 @@ This get the user list followed by an user
 
 This follow/unfollow an user
 
-|Input     |Type|Description|Optional|
-|----------|----|-----------|-------:|
-|'username'|string|Username of the user to follow/unfollow|NO      |
+| Input      | Type   | Description                             | Optional |
+|------------|--------|-----------------------------------------|---------:|
+| 'username' | string | Username of the user to follow/unfollow |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/toggle_follow.xml)
 
@@ -851,10 +876,10 @@ This follow/unfollow an user
 
 This get the latest posted shouts
 
-|Input     |Type|Description|Optional|
-|----------|----|-----------|-------:|
-|'username'|    |Username of the user for who to get latest shouts|YES     |
-|'limit'   |    |           |YES     |
+| Input      | Type    | Description                                       | Optional |
+|------------|---------|---------------------------------------------------|---------:|
+| 'username' | string  | Username of the user for who to get latest shouts |      YES |
+| 'limit'    | integer | Maximum number of results to return               |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/last_shouts.xml)
 
@@ -862,11 +887,11 @@ This get the latest posted shouts
 
 This rates a library item
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'type'  |    |library item type, album, artist, song, video|NO      |
-|'id'    |    |library item id|NO      |
-|'rating'|    |rating between 0-5|NO      |
+| Input    | Type    | Description                                   | Optional |
+|----------|---------|-----------------------------------------------|---------:|
+| 'type'   | integer | library item type, album, artist, song, video |       NO |
+| 'id'     | string  | library item id                               |       NO |
+| 'rating' | integer | rating between 0-5                            |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/rate.xml)
 
@@ -877,11 +902,11 @@ This flags a library item as a favorite
 * Setting flag to true (1) will set the flag
 * Setting flag to false (0) will remove the flag
 
-|Input |Type   |Description               |Optional|
-|------|-------|--------------------------|-------:|
-|'type'|string |'song', 'album', 'artist', 'video' |NO      |
-|'id'  |integer|$object_id                |NO      |
-|'flag'|boolean|0, 1                      |NO      |
+| Input  | Type    | Description                        | Optional |
+|--------|---------|------------------------------------|---------:|
+| 'type' | string  | 'song', 'album', 'artist', 'video' |       NO |
+| 'id'   | integer | $object_id                         |       NO |
+| 'flag' | boolean | 0, 1                               |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/flag.xml)
 
@@ -895,12 +920,12 @@ Take a song_id and update the object_count and user_activity table with a play. 
 * 'user' can be the user id (e.g 20) **or** the username (e.g generic_user)
 * 'date' has also been added as an optional parameter
 
-|Input   |Type          |Description          |Optional|
-|--------|--------------|---------------------|-------:|
-|'id'    |integer       |$object_id           |NO      |
-|'user'  |integer,string|$user_id OR $username|YES     |
-|'client'|string        |$agent               |YES     |
-|'date'  |string        |UNIXTIME()           |YES     |
+| Input    | Type           | Description           | Optional |
+|----------|----------------|-----------------------|---------:|
+| 'id'     | integer        | $object_id            |       NO |
+| 'user'   | integer,string | $user_id OR $username |      YES |
+| 'client' | string         | $agent                |      YES |
+| 'date'   | string         | UNIXTIME()            |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/record_play.xml)
 
@@ -908,16 +933,16 @@ Take a song_id and update the object_count and user_activity table with a play. 
 
 Search for a song using text info and then record a play if found. This allows other sources to record play history to ampache
 
-|Input       |Type   |Description |Optional|
-|------------|-------|------------|-------:|
-|'song'      |string |$song_name  |NO      |
-|'artist'    |string |$artist_name|NO      |
-|'album'     |string |$album_name |NO      |
-|'songmbid'  |string |$song_mbid  |YES     |
-|'artistmbid'|string |$artist_mbid|YES     |
-|'albummbid' |string |$album_mbid |YES     |
-|'date'      |integer|UNIXTIME()  |YES     |
-|'client'    |string |$agent      |YES     |
+| Input        | Type    | Description  | Optional |
+|--------------|---------|--------------|---------:|
+| 'song'       | string  | $song_name   |       NO |
+| 'artist'     | string  | $artist_name |       NO |
+| 'album'      | string  | $album_name  |       NO |
+| 'songmbid'   | string  | $song_mbid   |      YES |
+| 'artistmbid' | string  | $artist_mbid |      YES |
+| 'albummbid'  | string  | $album_mbid  |      YES |
+| 'date'       | integer | UNIXTIME()   |      YES |
+| 'client'     | string  | $agent       |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/scrobble.xml)
 
@@ -927,9 +952,9 @@ Search for a song using text info and then record a play if found. This allows o
 
 This searches the catalogs and returns... catalogs
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |Catalog type music, clip, tvshow, movie, personal_video, podcast|YES     |
+| Input    | Type   | Description                                                      | Optional |
+|----------|--------|------------------------------------------------------------------|---------:|
+| 'filter' | string | Catalog type music, clip, tvshow, movie, personal_video, podcast |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/catalogs.xml)
 
@@ -939,9 +964,9 @@ This searches the catalogs and returns... catalogs
 
 Return catalog by UID
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'filter'|    |UID of Catalog|NO      |
+| Input    | Type    | Description    | Optional |
+|----------|---------|----------------|---------:|
+| 'filter' | integer | UID of Catalog |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/catalog.xml)
 
@@ -949,14 +974,14 @@ Return catalog by UID
 
 Kick off a catalog update or clean for the selected catalog
 
-|Input    |Type   |Description                      |Optional|
-|---------|-------|---------------------------------|-------:|
-|'task'   |string |'add_to_catalog', 'clean_catalog'|NO      |
-|'catalog'|integer|$catalog_id                      |NO      |
+| Input     | Type    | Description                       | Optional |
+|-----------|---------|-----------------------------------|---------:|
+| 'task'    | string  | 'add_to_catalog', 'clean_catalog' |       NO |
+| 'catalog' | integer | $catalog_id                       |       NO |
 
-[Example: clean_catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/catalog_action%20(clean_catalog.xml))
+[Example: clean_catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/catalog_action%20\(clean_catalog.xml))
 
-[Example: add_to_catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/catalog_action%20(add_to_catalog.xml))
+[Example: add_to_catalog](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/catalog_action%20\(add_to_catalog.xml))
 
 ## catalog_file
 
@@ -966,11 +991,11 @@ Perform actions on local catalog files.
 Single file versions of catalog add, clean, verify and remove (delete)
 Make sure you remember to urlencode those file names!
 
-|Input    |Type   |Description            |Optional|
-|---------|-------|-----------------------|-------:|
-|'file'   |string |FULL path to local file|NO      |
-|'task'   |string |'add','clean','verify', 'remove' |NO      |
-|'catalog'|integer|$catalog_id            |NO      |
+| Input     | Type    | Description                      | Optional |
+|-----------|---------|----------------------------------|---------:|
+| 'file'    | string  | FULL path to local file          |       NO |
+| 'task'    | string  | 'add','clean','verify', 'remove' |       NO |
+| 'catalog' | integer | $catalog_id                      |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/catalog_file.xml)
 
@@ -978,11 +1003,11 @@ Make sure you remember to urlencode those file names!
 
 This get an user timeline
 
-|Input     |Type   |Description|Optional|
-|----------|-------|-----------|-------:|
-|'username'|string |Username of the user for whom to get the timeline|NO      |
-|'limit'   |integer|           |YES     |
-|'since'   |integer|UNIXTIME() |YES     |
+| Input      | Type    | Description                                       | Optional |
+|------------|---------|---------------------------------------------------|---------:|
+| 'username' | string  | Username of the user for whom to get the timeline |       NO |
+| 'limit'    | integer | Maximum number of results to return               |      YES |
+| 'since'    | integer | UNIXTIME()                                        |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/timeline.xml)
 
@@ -990,10 +1015,10 @@ This get an user timeline
 
 This get current user friends timeline
 
-|Input  |Type   |Description|Optional|
-|-------|-------|-----------|-------:|
-|'limit'|integer|           |YES     |
-|'since'|integer|UNIXTIME() |NO      |
+| Input   | Type    | Description                         | Optional |
+|---------|---------|-------------------------------------|---------:|
+| 'limit' | integer | Maximum number of results to return |      YES |
+| 'since' | integer | UNIXTIME()                          |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/friends_timeline.xml)
 
@@ -1001,10 +1026,10 @@ This get current user friends timeline
 
 Update a single album, artist, song from the tag data
 
-|Input |Type   |Description                    |Optional|
-|------|-------|-------------------------------|-------:|
-|'type'|string |'artist', 'album', 'song'      |NO      |
-|'id'  |integer|$artist_id, $album_id, $song_id|NO      |
+| Input  | Type    | Description                     | Optional |
+|--------|---------|---------------------------------|---------:|
+| 'type' | string  | 'artist', 'album', 'song'       |       NO |
+| 'id'   | integer | $artist_id, $album_id, $song_id |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/update_from_tags.xml)
 
@@ -1013,9 +1038,9 @@ Update a single album, artist, song from the tag data
 Update artist information and fetch similar artists from last.fm
 Make sure lastfm_API_key is set in your configuration file
 
-|Input    |Type   |Description                |Optional|
-|---------|-------|---------------------------|-------:|
-|'id'     |integer|$artist_id                 |NO      |
+| Input | Type    | Description | Optional |
+|-------|---------|-------------|---------:|
+| 'id'  | integer | $artist_id  |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/update_artist_info.xml)
 
@@ -1024,11 +1049,11 @@ Make sure lastfm_API_key is set in your configuration file
 Updates a single album, artist, song running the gather_art process
 Doesn't overwrite existing art by default.
 
-|Input      |Type   |Description      |Optional|
-|-----------|-------|-----------------|-------:|
-|'id'       |integer|$object_id       |NO      |
-|'type'     |string |'song', 'podcast'|NO      |
-|'overwrite'|boolean|0, 1             |YES     |
+| Input       | Type    | Description       | Optional |
+|-------------|---------|-------------------|---------:|
+| 'id'        | integer | $object_id        |       NO |
+| 'type'      | string  | 'song', 'podcast' |       NO |
+| 'overwrite' | boolean | 0, 1              |      YES |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/update_art.xml)
 
@@ -1036,9 +1061,9 @@ Doesn't overwrite existing art by default.
 
 Sync and download new podcast episodes
 
-|Input      |Type   |Description      |Optional|
-|-----------|-------|-----------------|-------:|
-|'id'       |integer|$object_id       |NO      |
+| Input | Type    | Description | Optional |
+|-------|---------|-------------|---------:|
+| 'id'  | integer | $object_id  |       NO |
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/update_podcast.xml)
 
@@ -1048,28 +1073,33 @@ Sync and download new podcast episodes
 
 Streams a given media file. Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
 
-|Input    |Type   |Description                |Optional|
-|---------|-------|---------------------------|-------:|
-|'id'     |integer|$object_id                 |NO      |
-|'type'   |string |'song', 'podcast'          |NO      |
-|'bitrate'|integer|max bitrate for transcoding|YES     |
-|'format' |string |'mp3', 'ogg', 'raw', etc   |YES     |
-|'offset' |integer|time offset in seconds     |YES     |
-|'length' |boolean|0, 1                       |YES     |
+| Input     | Type    | Description                 | Optional |
+|-----------|---------|-----------------------------|---------:|
+| 'id'      | integer | $object_id                  |       NO |
+| 'type'    | string  | 'song', 'podcast'           |       NO |
+| 'bitrate' | integer | max bitrate for transcoding |      YES |
+| 'format'  | string  | 'mp3', 'ogg', 'raw', etc    |      YES |
+| 'offset'  | integer | time offset in seconds      |      YES |
+| 'length'  | boolean | 0, 1                        |      YES |
 
 ## download
 
 Downloads a given media file. set format=raw to download the full file
 
-|Input   |Type   |Description             |Optional|
-|--------|-------|------------------------|-------:|
-|'id'    |integer|$object_id              |NO      |
-|'type'  |string |'song', 'podcast'       |NO      |
-|'format'|string |'mp3', 'ogg', 'raw', etc|YES     |
+| Input    | Type    | Description              | Optional |
+|----------|---------|--------------------------|---------:|
+| 'id'     | integer | $object_id               |       NO |
+| 'type'   | string  | 'song', 'podcast'        |       NO |
+| 'format' | string  | 'mp3', 'ogg', 'raw', etc |      YES |
 
 ## get_art
 
 Get an art image.
+
+| Input    | Type    | Description                                                | Optional |
+|----------|---------|------------------------------------------------------------|---------:|
+| 'id'     | integer | $object_id                                                 |       NO |
+| 'type'   | string  | 'song', 'artist', 'album', 'playlist', 'search', 'podcast' |       NO |
 
 ## Control Methods
 
@@ -1077,9 +1107,37 @@ Get an art image.
 
 This is for controlling localplay
 
+
+| Input     | Type    | Description                                                  | Optional |
+|-----------|---------|--------------------------------------------------------------|----------|
+| 'command' | string  | 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', | NO       |
+|           |         | 'volume_down', 'volume_mute', 'delete_all', 'skip', 'status' |          |
+| 'oid'     | integer | object_id                                                    | YES      |
+| 'type'    | string  | 'Song', 'Video', 'Podcast_Episode', 'Channel',               | YES      |
+|           |         | 'Broadcast', 'Democratic', 'Live_Stream'                     |          |
+| 'clear'   | boolean | 0,1 Clear the current playlist before adding                 | YES      |
+
+* return
+
 ```XML
-TBC
+<root>
+    <localplay>
+        <command>
+            <next>|<prev>|<stop>|<play>|<pause>|<add>|<volume_up>|<volume_down>|<volume_mute>|<delete_all>|<skip>|<status>
+        </command>
+    </localplay>
+</root>
 ```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/localplay.xml)
+
+[Example (status)](https://raw.githubusercontent.com/ampache/python3-ampache/api4/docs/xml-responses/localplay%20\(status\).xml)
 
 ## democratic
 
@@ -1096,17 +1154,17 @@ This is for controlling democratic play
     * playlist (Returns an array of song items with an additional \<vote>[VOTE COUNT]\</vote> element)
     * play (Returns the URL for playing democratic play)
 
-|Input   |Type|Description|Optional|
-|--------|----|-----------|-------:|
-|'oid'   |integer|           |NO      |
-|'method'|string|           |NO      |
-|'action'|string|           |NO      |
+| Input    | Type    | Description | Optional |
+|----------|---------|-------------|---------:|
+| 'oid'    | integer |             |       NO |
+| 'method' | string  |             |       NO |
+| 'action' | string  |             |       NO |
 
 ```XML
 TBC
 ```
 
-All XML Documents that have a \<tag> element may have 0 or more tag elements associated with them. Each tag element has an attribute "count" that indicates the number of people who have specified this tag.
+All XML Documents that have a ```<tag></tag>``` element may have 0 or more tag elements associated with them. Each tag element has an attribute "count" that indicates the number of people who have specified this tag.
 
 Artists XML Document. ID's are Ampache's unique Identifier for the artist.
 

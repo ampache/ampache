@@ -130,33 +130,6 @@ For JSON
 
 All future interactions with the Ampache API must include the `AUTHENTICATION_TOKEN` as a `GET` variable named `auth`.
 
-## Errors
-
-Ampache's XML errors are loosely based around the HTTP status codes. All errors are returned in the form of an XML Document however the string error message provided is translated into the language of the Ampache server in question. All services should only use the code value.
-
-## Example Error
-
-```xml
-<root>
-      <error code="501">Access Control Not Enabled</error>
-</root>
-```
-
-## Current Error Codes
-
-All error codes are accompanied by a string value for the error and derived from the [HTTP/1.1 Status Codes](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)
-
-* **501**
-  * This is a fatal error, the Ampache server you have requested does not currently have access control enabled. The API is disabled.
-* **400**
-  * Used when you have specified a valid method but something about the input is incorrect / invalid. See Error message for details, but do not re-attempt the exact same request.
-* **401**
-  * This is a temporary error, this means no valid session was passed or the handshake failed. This should be an indication for services to attempt another handshake
-* **403**
-  * This is a fatal error, the ACL on the Ampache server prevents access from the current source IP Address.
-* **405**
-  * This is a fatal error, the service requested a method that the API does not implement.
-
 ## Methods
 
 All methods must be passed as `action=METHODNAME`. All methods except the `handshake` can take an optional `offset=XXX` and `limit=XXX`. The limit determines the maximum number of results returned. The offset will tell Ampache where to start in the result set. For example if there are 100 total results and you set the offset to 50, and the limit to 50 Ampache will return results between 50 and 100. The default limit is 5000. The default offset is 0.
