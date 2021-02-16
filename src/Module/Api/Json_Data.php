@@ -190,7 +190,7 @@ class Json_Data
      * @param  array   $objects Array of object_ids (Mixed string|int)
      * @param  string  $type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
      * @param  integer $user_id
-     * @param  boolean $include (add the extra songs details if a playlist)
+     * @param  boolean $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
      * @return string  JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
      */
     public static function indexes($objects, $type, $user_id = null, $include = false)
@@ -208,7 +208,7 @@ class Json_Data
             case 'share':
                 return self::shares($objects);
             case 'podcast':
-                return self::podcasts($objects, $user_id);
+                return self::podcasts($objects, $user_id, $include);
             case 'podcast_episode':
                 return self::podcast_episodes($objects, $user_id);
             case 'video':
@@ -861,34 +861,32 @@ class Json_Data
                 "name" => $song->get_album_artist_name()
             );
 
-            $ourSong['filename']         = $song->file;
-            $ourSong['track']            = (int)$song->track;
-            $ourSong['playlisttrack']    = $playlist_track;
-            $ourSong['time']             = (int)$song->time;
-            $ourSong['year']             = (int)$song->year;
-            $ourSong['bitrate']          = (int)$song->bitrate;
-            $ourSong['rate']             = (int)$song->rate;
-            $ourSong['mode']             = $song->mode;
-            $ourSong['mime']             = $song->mime;
-            $ourSong['url']              = $song->play_url('', 'api', false, $user_id);
-            $ourSong['size']             = (int) $song->size;
-            $ourSong['mbid']             = $song->mbid;
-            $ourSong['album_mbid']       = $song->album_mbid;
-            $ourSong['artist_mbid']      = $song->artist_mbid;
-            $ourSong['albumartist_mbid'] = $song->albumartist_mbid;
-            $ourSong['art']              = $art_url;
-            $ourSong['flag']             = (!$flag->get_flag($user_id, false) ? 0 : 1);
-            $ourSong['preciserating']    = ($rating->get_user_rating() ?: null);
-            $ourSong['rating']           = ($rating->get_user_rating() ?: null);
-            $ourSong['averagerating']    = ($rating->get_average_rating() ?: null);
-            $ourSong['playcount']        = (int)$song->played;
-            $ourSong['catalog']          = (int)$song->catalog;
-            $ourSong['composer']         = $song->composer;
-            $ourSong['channels']         = $song->channels;
-            $ourSong['comment']          = $song->comment;
-            if (AmpConfig::get('licensing') && $song->f_license) {
-                $ourSong['license'] = $song->f_license;
-            }
+            $ourSong['filename']              = $song->file;
+            $ourSong['track']                 = (int)$song->track;
+            $ourSong['playlisttrack']         = $playlist_track;
+            $ourSong['time']                  = (int)$song->time;
+            $ourSong['year']                  = (int)$song->year;
+            $ourSong['bitrate']               = (int)$song->bitrate;
+            $ourSong['rate']                  = (int)$song->rate;
+            $ourSong['mode']                  = $song->mode;
+            $ourSong['mime']                  = $song->mime;
+            $ourSong['url']                   = $song->play_url('', 'api', false, $user_id);
+            $ourSong['size']                  = (int) $song->size;
+            $ourSong['mbid']                  = $song->mbid;
+            $ourSong['album_mbid']            = $song->album_mbid;
+            $ourSong['artist_mbid']           = $song->artist_mbid;
+            $ourSong['albumartist_mbid']      = $song->albumartist_mbid;
+            $ourSong['art']                   = $art_url;
+            $ourSong['flag']                  = (!$flag->get_flag($user_id, false) ? 0 : 1);
+            $ourSong['preciserating']         = ($rating->get_user_rating() ?: null);
+            $ourSong['rating']                = ($rating->get_user_rating() ?: null);
+            $ourSong['averagerating']         = ($rating->get_average_rating() ?: null);
+            $ourSong['playcount']             = (int)$song->played;
+            $ourSong['catalog']               = (int)$song->catalog;
+            $ourSong['composer']              = $song->composer;
+            $ourSong['channels']              = $song->channels;
+            $ourSong['comment']               = $song->comment;
+            $ourSong['license']               = $song->f_license;
             $ourSong['publisher']             = $song->label;
             $ourSong['language']              = $song->language;
             $ourSong['replaygain_album_gain'] = $song->replaygain_album_gain;

@@ -995,6 +995,10 @@ span#sidebar-header-content::after {
     text-decoration: none;
 }
 
+.ui-sortable-helper {
+    display: table; /* maintain column widths during move */
+}
+
 table.gatherart,
 table.tabledata {
     width: 100%;
@@ -1706,6 +1710,7 @@ span.fatalerror {
 }
 
 #information_actions li img {
+    margin-right: 4px;
     vertical-align: top;
 }
 

@@ -31,7 +31,12 @@ $thcount = 6; ?>
 <?php if (Access::check('interface', 50) || AmpConfig::get('upload_allow_edit')) { ?>
 <div id="information_actions">
     <ul>
-        <li><?php echo Ui::get_icon('add', T_('Add')); ?> <a href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=show_add_label"><?php echo T_('Create Label'); ?></a></li>
+        <li>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=show_add_label">
+                <?php echo Ui::get_icon('add', T_('Add')); ?>
+                <?php echo T_('Create Label'); ?>
+            </a>
+        </li>
     </ul>
 </div>
 <?php
