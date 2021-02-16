@@ -137,7 +137,7 @@ class Api
         'system_preference' => Method\SystemPreferenceMethod::class,
         'preference_create' => Method\PreferenceCreateMethod::class,
         'preference_edit' => Method\PreferenceEditMethod::class,
-        'preference_delete' => Method\PreferenceDeleteMethod::class,
+        Method\PreferenceDeleteMethod::ACTION => Method\PreferenceDeleteMethod::class,
     ];
 
     /**

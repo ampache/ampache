@@ -129,4 +129,39 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
 
         return $results;
     }
+
+    /**
+     * This deletes the specified preference by id
+     */
+    public function deleteById(int $preferenceId): void
+    {
+        Dba::write(
+            'DELETE FROM `preference` WHERE `id` = ?',
+            [$preferenceId]
+        );
+
+        $this->cleanPreferences();
+    }
+
+    /**
+     * This deletes the specified preference by name
+     */
+    public function deleteByName(string $preferenceName): void
+    {
+        Dba::write(
+            'DELETE FROM `preference` WHERE `name` = ?',
+            [$preferenceName]
+        );
+
+        $this->cleanPreferences();
+    }
+
+    /**
+     * This removes any garbage
+     */
+    public function cleanPreferences(): void
+    {
+        // First remove garbage
+        Dba::write('DELETE FROM `user_preference` USING `user_preference` LEFT JOIN `preference` ON `preference`.`id`=`user_preference`.`preference` WHERE `preference`.`id` IS NULL');
+    }
 }

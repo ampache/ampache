@@ -84,6 +84,7 @@ return [
     Method\SystemPreferencesMethod::class => autowire(),
     Method\UserDeleteMethod::class => autowire(),
     Method\UserPreferenceMethod::class => autowire(),
+    Method\PreferenceDeleteMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

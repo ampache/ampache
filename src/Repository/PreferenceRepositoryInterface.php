@@ -41,4 +41,19 @@ interface PreferenceRepositoryInterface
      * @return array<array<string, mixed>>
      */
     public function get(string $preferenceName, int $userId): array;
+
+    /**
+     * This deletes the specified preference by id
+     */
+    public function deleteById(int $preferenceId): void;
+
+    /**
+     * This deletes the specified preference by name
+     */
+    public function deleteByName(string $preferenceName): void;
+
+    /**
+     * This removes any garbage
+     */
+    public function cleanPreferences(): void;
 }

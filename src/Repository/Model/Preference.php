@@ -446,6 +446,9 @@ class Preference extends database_object
      * delete
      * This deletes the specified preference, a name or a ID can be passed
      * @param string|integer $preference
+     *
+     * @see PreferenceRepositoryInterface::deleteByName()
+     * @see PreferenceRepositoryInterface::deleteById()
      */
     public static function delete($preference)
     {
