@@ -233,7 +233,7 @@ class UPnPPlayer
         $songUrl = $song['link'];
         $songId  = preg_replace('/(.+)\/oid\/(\d+)\/(.+)/i', '${2}', $songUrl);
 
-        $song = new song($songId);
+        $song = new Song($songId);
         $song->format();
         $songItem = Upnp_Api::_itemSong($song, '');
         $domDIDL  = Upnp_Api::createDIDL($songItem, '');
