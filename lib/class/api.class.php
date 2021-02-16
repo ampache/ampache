@@ -2709,7 +2709,7 @@ class Api
     {
         $users = User::get_valid_users();
         if (empty($users)) {
-            Api::empty('user', $input['api_format']);
+            self::message('error', 'No Results', '404', $input['api_format']);
 
             return false;
         }
@@ -2742,27 +2742,25 @@ class Api
         if (!self::check_parameter($input, array('username'), 'user')) {
             return false;
         }
-        $username = $input['username'];
-        if (!empty($username)) {
-            $user = User::get_from_username($username);
-            if ($user !== null) {
-                $apiuser  = User::get_from_username(Session::username($input['auth']));
-                $fullinfo = false;
-                // get full info when you're an admin or searching for yourself
-                if (($user->id == $apiuser->id) || (Access::check('interface', 100, $apiuser->id))) {
-                    $fullinfo = true;
-                }
-                ob_end_clean();
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo JSON_Data::user($user, $fullinfo);
-                    break;
-                    default:
-                        echo XML_Data::user($user, $fullinfo);
-                }
-            } else {
-                debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
+        $username = (string) $input['username'];
+        $user     = User::get_from_username($username);
+        if ($user->id) {
+            $apiuser  = User::get_from_username(Session::username($input['auth']));
+            $fullinfo = false;
+            // get full info when you're an admin or searching for yourself
+            if (($user->id == $apiuser->id) || (Access::check('interface', 100, $apiuser->id))) {
+                $fullinfo = true;
             }
+            ob_end_clean();
+            switch ($input['api_format']) {
+                case 'json':
+                    echo JSON_Data::user($user, $fullinfo);
+                break;
+                default:
+                    echo XML_Data::user($user, $fullinfo);
+            }
+        } else {
+            self::message('error', T_('User_id not found'), '404', $input['api_format']);
         }
         Session::extend($input['auth']);
 
