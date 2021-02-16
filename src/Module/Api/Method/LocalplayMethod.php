@@ -59,17 +59,20 @@ final class LocalplayMethod
             return false;
         }
         // Load their Localplay instance
-
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
-        $localplay->connect();
+        if (!$localplay->connect()) {
+            Api::error(T_('Unable to connect to localplay controller'), '4710', self::ACTION, 'account', $input['api_format']);
+
+            return false;
+        }
 
         $result = false;
         $status = false;
         switch ($input['command']) {
             case 'add':
                 // for add commands get the object details
-                $object_id   = (int) $input['oid'];
-                $type        = $input['type'] ? (string) $input['type'] : 'Song';
+                $object_id = (int) $input['oid'];
+                $type      = $input['type'] ? (string) $input['type'] : 'Song';
                 if (!AmpConfig::get('allow_video') && $type == 'Video') {
                     Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
 

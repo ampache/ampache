@@ -23,9 +23,9 @@ namespace Ampache\Module\Song\Tag;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Model\Art;
-use Ampache\Model\Catalog;
-use Ampache\Model\Song;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Song;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\VaInfo;
 use Psr\Log\LoggerInterface;

@@ -24,14 +24,14 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
-use Ampache\Model\Media;
+use Ampache\Repository\Model\Media;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
+use Ampache\Repository\Model\Art;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Model\Democratic;
+use Ampache\Repository\Model\Democratic;
 use PDOStatement;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
@@ -713,6 +713,26 @@ class Stream_Playlist
             display_notification(T_('Vote added'));
         }
     }
+
+    /**
+     * create_download
+     * This prompts for a download of the song
+     */
+    private function create_download()
+    {
+        // There should only be one here...
+        if (count($this->urls) != 1) {
+            debug_event(self::class, 'Download called, but $urls contains ' . json_encode($this->urls), 2);
+        }
+
+        // Header redirect baby!
+        $url = current($this->urls);
+        $url = Stream_URL::add_options($url->url, '&action=download');
+        header('Location: ' . $url);
+
+        return false;
+    } // create_download
+
 
     /**
      * create_ram

@@ -22,7 +22,7 @@
 
 namespace Ampache\Module\User;
 
-use Ampache\Model\User;
+use Ampache\Repository\Model\User;
 
 interface UserStateTogglerInterface
 {

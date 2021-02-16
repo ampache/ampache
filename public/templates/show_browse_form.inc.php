@@ -21,7 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Video;
+use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 
 global $dic;

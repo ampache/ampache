@@ -21,8 +21,8 @@
 
 namespace Ampache\Repository;
 
-use Ampache\Model\Album;
-use Ampache\Model\Artist;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
 
 interface AlbumRepositoryInterface
 {

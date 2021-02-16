@@ -25,8 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\Artist;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
@@ -69,7 +69,7 @@ final class ArtistMethod
         $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string) $input['include']);
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::artists(array($object_id), $include, $user->id, true, false);
+                echo Json_Data::artists(array($object_id), $include, $user->id, true, false);
                 break;
             default:
                 echo Xml_Data::artists(array($object_id), $include, $user->id);

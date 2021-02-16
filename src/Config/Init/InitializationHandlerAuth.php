@@ -22,8 +22,7 @@
 
 namespace Ampache\Config\Init;
 
-use Ampache\Model\Preference;
-use Ampache\Module\System\AmpError;
+use Ampache\Repository\Model\Preference;
 use Ampache\Module\System\SessionInterface;
 use Ampache\Module\Util\EnvironmentInterface;
 
@@ -51,7 +50,5 @@ final class InitializationHandlerAuth implements InitializationHandlerInterface
 
         // Load the Preferences from the database
         Preference::init();
-
-        AmpError::init();
     }
 }

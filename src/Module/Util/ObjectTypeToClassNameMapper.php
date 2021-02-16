@@ -24,22 +24,23 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Model\Album;
-use Ampache\Model\Artist;
-use Ampache\Model\Clip;
-use Ampache\Model\Label;
-use Ampache\Model\Live_Stream;
-use Ampache\Model\Movie;
-use Ampache\Model\Personal_Video;
-use Ampache\Model\Playlist;
-use Ampache\Model\Podcast_Episode;
-use Ampache\Model\Search;
-use Ampache\Model\Share;
-use Ampache\Model\Song;
-use Ampache\Model\Art;
-use Ampache\Model\TVShow_Episode;
-use Ampache\Model\User;
-use Ampache\Model\Video;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Clip;
+use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\Movie;
+use Ampache\Repository\Model\Personal_Video;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\TVShow_Episode;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Video;
 
 /**
  * This class maps object types like `album` to their corresponding php class name (if known)
@@ -62,9 +63,10 @@ final class ObjectTypeToClassNameMapper
         'user' => User::class,
         'live_stream' => Live_Stream::class,
         'podcast_episode' => Podcast_Episode::class,
-        'tvshow_episore' => TVShow_Episode::class,
+        'tvshow_episode' => TVShow_Episode::class,
         'clip' => Clip::class,
         'label' => Label::class,
+        'podcast' => Podcast::class,
     ];
 
     public const VIDEO_TYPES = [

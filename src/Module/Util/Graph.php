@@ -25,14 +25,14 @@ declare(strict_types=1);
 namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Repository\UserRepositoryInterface;
 use CpChart;
 use CpChart\Data;
 use Ampache\Module\System\Dba;
-use Ampache\Model\Plugin;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Plugin;
+use Ampache\Repository\Model\User;
 
 class Graph
 {
@@ -385,15 +385,9 @@ class Graph
      * @param string $zoom
      * @return array
      */
-    protected function get_user_bandwidth_pts(
-        $user = 0,
-        $object_type = 'song',
-        $object_id = 0,
-        $start_date = null,
-        $end_date = null,
-        $zoom = 'day'
-    ) {
-        return $this->get_user_object_count_pts($user, $object_type, $object_id, $start_date, $end_date, $zoom, 'size');
+    protected function get_user_bandwidth_pts($user = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day')
+    {
+        return $this->get_user_object_count_pts($user, $object_type, $object_id, $start_date, $end_date, $zoom);
     }
 
     /**
@@ -501,7 +495,7 @@ class Graph
         if ($object_type === '') {
             $where .= " AND `object_type` IN ('song', 'video')";
         }
-        $sql        = "SELECT `geo_latitude`, `geo_longitude`, `geo_name`, MAX(`date`) AS `last_date`, COUNT(`id`) AS `hits` FROM `object_count` " . $where . " AND `geo_latitude` IS NOT NULL AND `geo_longitude` IS NOT NULL " . "GROUP BY `geo_latitude`, `geo_longitude` ORDER BY `last_date`, `geo_name` DESC"; // TODO mysql8 test
+        $sql        = "SELECT `geo_latitude`, `geo_longitude`, `geo_name`, MAX(`date`) AS `last_date`, COUNT(`id`) AS `hits` FROM `object_count` " . $where . " AND `geo_latitude` IS NOT NULL AND `geo_longitude` IS NOT NULL " . "GROUP BY `geo_latitude`, `geo_longitude`, `geo_name` ORDER BY `last_date`, `geo_name` DESC"; // TODO mysql8 test
         $db_results = Dba::read($sql);
         while ($results = Dba::fetch_assoc($db_results)) {
             $pts[] = array(

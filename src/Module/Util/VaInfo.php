@@ -24,9 +24,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Util;
 
-use Ampache\Model\Plugin;
+use Ampache\Repository\Model\Plugin;
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Repository\UserRepositoryInterface;
 use Exception;
@@ -264,7 +264,7 @@ class VaInfo
     /**
      * write_id3
      * This function runs the various steps to gathering the metadata
-     * @param $data
+     * @param $tag_data
      * @throws Exception
      */
     public function write_id3($tag_data)

@@ -25,7 +25,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback\Localplay\Upnp;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Song;
+use Ampache\Repository\Model\Song;
 use Ampache\Module\Api\Upnp_Api;
 use Ampache\Module\System\Session;
 use SimpleXMLElement;
@@ -148,12 +148,17 @@ class UPnPPlayer
     }
 
     /**
-     * @return SimpleXMLElement
+     * GetState
+     *
+     * @return SimpleXMLElement|string
      */
     public function GetState()
     {
         $response    = $this->Device()->instanceOnly('GetTransportInfo');
         $responseXML = simplexml_load_string($response);
+        if (empty($responseXML)) {
+            return '';
+        }
         list($state) = $responseXML->xpath('//CurrentTransportState');
 
         //!!debug_event(self::class, 'GetState = ' . $state, 5);
@@ -231,7 +236,7 @@ class UPnPPlayer
         $song = new song($songId);
         $song->format();
         $songItem = Upnp_Api::_itemSong($song, '');
-        $domDIDL  = Upnp_Api::createDIDL($songItem);
+        $domDIDL  = Upnp_Api::createDIDL($songItem, '');
         $xmlDIDL  = $domDIDL->saveXML();
 
         return array(
@@ -399,6 +404,8 @@ class UPnPPlayer
 
     /**
      * GetVolume
+     *
+     * @return SimpleXMLElement|string
      */
     public function GetVolume()
     {
@@ -411,6 +418,9 @@ class UPnPPlayer
         ));
 
         $responseXML  = simplexml_load_string($response);
+        if (empty($responseXML)) {
+            return '';
+        }
         list($volume) = ($responseXML->xpath('//CurrentVolume'));
         debug_event(self::class, 'GetVolume:' . $volume, 5);
 

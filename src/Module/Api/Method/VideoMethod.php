@@ -26,8 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\User;
-use Ampache\Model\Video;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Video;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
@@ -71,7 +71,7 @@ final class VideoMethod
         $user = User::get_from_username(Session::username($input['auth']));
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::videos(array($object_id), $user->id, false);
+                echo Json_Data::videos(array($object_id), $user->id, false);
                 break;
             default:
                 echo Xml_Data::videos(array($object_id), $user->id);

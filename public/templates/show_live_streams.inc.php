@@ -21,7 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Live_Stream;
+use Ampache\Repository\Model\Live_Stream;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
@@ -32,7 +32,10 @@ use Ampache\Module\Util\Ui;
 <div id="information_actions">
 <ul>
 <li>
-    <a href="<?php echo AmpConfig::get('web_path'); ?>/radio.php?action=show_create"><?php echo Ui::get_icon('add', T_('Add')); ?> <?php echo T_('Add Radio Station'); ?></a>
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/radio.php?action=show_create">
+        <?php echo Ui::get_icon('add', T_('Add')); ?>
+        <?php echo T_('Add Radio Station'); ?>
+    </a>
 </li>
 </ul>
 </div>

@@ -21,7 +21,7 @@
  */
 /** @var Label $libitem */
 
-use Ampache\Model\Label;
+use Ampache\Repository\Model\Label;
 
 ?>
 <div>

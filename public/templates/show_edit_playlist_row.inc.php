@@ -21,7 +21,7 @@
  */
 /** @var Playlist $libitem */
 
-use Ampache\Model\Playlist;
+use Ampache\Repository\Model\Playlist;
 
 ?>
 <div>

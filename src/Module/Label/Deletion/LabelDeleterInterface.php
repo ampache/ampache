@@ -21,7 +21,7 @@
 
 namespace Ampache\Module\Label\Deletion;
 
-use Ampache\Model\Label;
+use Ampache\Repository\Model\Label;
 
 interface LabelDeleterInterface
 {

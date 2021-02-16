@@ -683,6 +683,22 @@ div#autoupdate > span {
     height: 25px;
 }
 
+#sidebar-tabs .active > a {
+    position: relative;
+}
+
+#sidebar-tabs .active > a:after {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    background-color: currentColor;
+    border-radius: 2px;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+}
+
 /* Tabs content */
 #sidebar-page {
     width: 148px;
@@ -979,6 +995,10 @@ span#sidebar-header-content::after {
     text-decoration: none;
 }
 
+.ui-sortable-helper {
+    display: table; /* maintain column widths during move */
+}
+
 table.gatherart,
 table.tabledata {
     width: 100%;
@@ -1104,6 +1124,11 @@ table.tabledata tbody td.cel_userflag {
     max-width: 40px;
 }
 
+table.tabledata tbody .cel_cover {
+    overflow: visible;
+    padding-top: 10px;
+}
+
 table.tabledata tbody .cel_cover,
 table.tabledata tbody .cel_tags,
 table.tabledata tbody .cel_license {
@@ -1113,6 +1138,7 @@ table.tabledata tbody .cel_license {
 
 table.tabledata tbody td.mash_cover {
     height: auto;
+    overflow: visible;
 }
 
 table.tabledata tbody td.mash_userflag {
@@ -1125,14 +1151,7 @@ table.tabledata tbody .cel_cover img {
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
-    margin: 2px;
     object-fit: cover;
-}
-
-table.tabledata tbody .mash_cover img:hover,
-table.tabledata tbody .cel_cover img:hover {
-    border: 2px solid;
-    margin: 0;
 }
 
 table.tabledata .cel_drag {
@@ -1146,6 +1165,7 @@ table.tabledata .cel_drag img:hover {
 
 table.tabledata .cel_agent {
     text-align: right;
+    width: 45px;
 }
 
 table.tabledata .cel_agent img:hover {
@@ -1292,6 +1312,12 @@ table.disablegv td.cel_rating {
 
 .upload_select {
     display: grid;
+    width: 50%;
+}
+
+.vakata-context,
+.vakata-context ul {
+    z-index: 3000001;
 }
 
 /* --------------------------
@@ -1326,7 +1352,6 @@ table.disablegv td.cel_rating {
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
-    margin: 2px;
 }
 
 .random_selection .random_video .art_album img {
@@ -1337,11 +1362,6 @@ table.disablegv td.cel_rating {
     width: 100px;
     height: 150px;
     margin: 2px;
-}
-
-.random_selection .random_album .art_album img:hover {
-    border: 2px solid;
-    margin: 0;
 }
 
 .random_selection .random_album .star-rating,
@@ -1392,6 +1412,7 @@ div.box.box_rules {
     text-overflow: ellipsis;
     overflow: hidden;
 }
+
 .cel_counter,
 .cel_songs,
 .cel_year {
@@ -1592,7 +1613,6 @@ span.fatalerror {
 }
 
 .item_art {
-    border: 2px solid transparent;
     display: inline-block;
     position: relative;
 }
@@ -1641,16 +1661,20 @@ span.fatalerror {
     -moz-border-radius: 2px;
     border-radius: 2px;
     float: left;
-    margin: 2px;
 }
 
-.item_art_actions img {
-    float: none;
+.item_art > a {
+    display: block;
 }
 
 .item_art:hover {
-    border: 2px solid;
-    margin: 0;
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+.item_art_actions img {
+    margin: 2px;
+    float: none;
 }
 
 .item_art:hover  .item_art_actions {
@@ -1686,6 +1710,7 @@ span.fatalerror {
 }
 
 #information_actions li img {
+    margin-right: 4px;
     vertical-align: top;
 }
 
@@ -1728,6 +1753,7 @@ span.fatalerror {
 .star-rating {
     position: relative;
 }
+
 .dynamic-star-rating {
     width: 95px;
 }
@@ -1737,6 +1763,7 @@ span.fatalerror {
 .star-rating .current-rating {
     background: url(../images/ratings/star_rating.png) left -1000px repeat-x;
 }
+
 .star-rating ul {
     position: relative;
     width: 80px;
@@ -1747,6 +1774,7 @@ span.fatalerror {
     padding: 0;
     background-position: left top;
 }
+
 .star-rating li {
     display: inline;
 }
@@ -1785,6 +1813,7 @@ span.fatalerror {
 .dynamic-star-rating a:hover.star0 {
     background: url(../../../images/ratings/x.gif) left top;
 }
+
 .dynamic-star-rating ul {
     left: 16px;
 }

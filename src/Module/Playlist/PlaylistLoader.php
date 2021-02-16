@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Playlist;
 
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\Playlist;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Playlist;
 
 final class PlaylistLoader implements PlaylistLoaderInterface
 {

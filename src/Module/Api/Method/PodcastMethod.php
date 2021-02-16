@@ -26,11 +26,12 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Podcast;
+use Ampache\Repository\Model\Podcast;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class PodcastMethod
@@ -71,14 +72,15 @@ final class PodcastMethod
             return false;
         }
 
+        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $episodes = $input['include'] == 'episodes';
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::podcasts(array($object_id), $episodes, false);
+                echo JSON_Data::podcasts(array($object_id), $user->id, $episodes, false);
                 break;
             default:
-                echo Xml_Data::podcasts(array($object_id), $episodes);
+                echo XML_Data::podcasts(array($object_id), $user->id, $episodes);
         }
         Session::extend($input['auth']);
 

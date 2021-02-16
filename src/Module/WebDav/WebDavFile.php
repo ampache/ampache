@@ -24,8 +24,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\WebDav;
 
-use Ampache\Model\Media;
-use Ampache\Model\Catalog;
+use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Sabre\DAV;
 

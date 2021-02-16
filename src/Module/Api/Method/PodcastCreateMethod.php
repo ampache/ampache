@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Catalog;
-use Ampache\Model\Podcast;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
@@ -76,13 +76,16 @@ final class PodcastCreateMethod
 
             return false;
         }
+
+        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::podcasts(array($podcast), false, false);
+
+                echo JSON_Data::podcasts(array($podcast), $user->id, false, false);
                 break;
             default:
-                echo Xml_Data::podcasts(array($podcast));
+                echo XML_Data::podcasts(array($podcast), $user->id);
         }
         Catalog::count_table('podcast');
         Session::extend($input['auth']);

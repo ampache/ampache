@@ -50,7 +50,7 @@ final class ObjectCache implements ObjectCacheInterface
             foreach ($count_types as $count_type) {
                 foreach ($object_types as $object_type) {
                     $sql = "INSERT INTO `cache_object_count_run` ( `object_id`, `count`, `object_type`, `count_type`, `threshold` ) ";
-                    $sql .= Stats::get_top_sql($object_type, $threshold, $count_type, null);
+                    $sql .= Stats::get_top_sql($object_type, $threshold, $count_type, null, false, true);
                     $sql .= " ON DUPLICATE KEY UPDATE `count` = VALUES ( `count` )";
                     Dba::write($sql);
                 }

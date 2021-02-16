@@ -21,7 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Search;
+use Ampache\Repository\Model\Search;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
@@ -31,7 +31,10 @@ use Ampache\Module\Util\Ui;
     <ul>
         <?php if (Access::check('interface', 25)) { ?>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=song"><?php echo Ui::get_icon('add', T_('Add')); ?> <?php echo T_('Add Smart Playlist'); ?></a>
+            <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=song">
+                <?php echo Ui::get_icon('add', T_('Add')); ?>
+                <?php echo T_('Add Smart Playlist'); ?>
+            </a>
         </li>
         <?php
 } ?>

@@ -25,8 +25,9 @@ namespace Ampache\Module\Application\Login;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Model\Preference;
-use Ampache\Model\User;
+use Ampache\Module\Util\EnvironmentInterface;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -59,18 +60,22 @@ final class DefaultAction implements ApplicationActionInterface
 
     private NetworkCheckerInterface $networkChecker;
 
+    private EnvironmentInterface $environment;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         AuthenticationManagerInterface $authenticationManager,
         ResponseFactoryInterface $responseFactory,
         LoggerInterface $logger,
-        NetworkCheckerInterface $networkChecker
+        NetworkCheckerInterface $networkChecker,
+        EnvironmentInterface $environment
     ) {
         $this->configContainer       = $configContainer;
         $this->authenticationManager = $authenticationManager;
         $this->responseFactory       = $responseFactory;
         $this->logger                = $logger;
         $this->networkChecker        = $networkChecker;
+        $this->environment           = $environment;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

@@ -25,8 +25,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\Access\Lib;
 
 use Ampache\MockeryTestCase;
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\User;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\Access;
 use Mockery\MockInterface;
 

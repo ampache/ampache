@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\User;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
@@ -83,7 +83,7 @@ final class UserMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::user($user, $fullinfo, false);
+                echo Json_Data::user($user, $fullinfo, false);
                 break;
             default:
                 echo Xml_Data::user($user, $fullinfo);

@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\License;
+use Ampache\Repository\Model\License;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
@@ -72,7 +72,7 @@ final class LicenseMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::licenses(array($object_id), false);
+                echo Json_Data::licenses(array($object_id), false);
                 break;
             default:
                 echo Xml_Data::licenses(array($object_id));

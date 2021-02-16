@@ -31,6 +31,7 @@ use Psr\Container\ContainerInterface;
 // This file is a little weird it needs to allow API session
 // this needs to be done a little better, but for now... eah
 define('NO_SESSION', '1');
+define('OUTDATED_DATABASE_OK', 1);
 
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../src/Config/Init.php';

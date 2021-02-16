@@ -25,9 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\Catalog;
-use Ampache\Model\Playlist;
-use Ampache\Model\User;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Session;

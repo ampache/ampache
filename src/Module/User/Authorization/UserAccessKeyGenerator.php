@@ -22,7 +22,7 @@
 
 namespace Ampache\Module\User\Authorization;
 
-use Ampache\Model\User;
+use Ampache\Repository\Model\User;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\UserRepositoryInterface;
 use Exception;

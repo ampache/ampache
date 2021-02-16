@@ -20,14 +20,16 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Model\database_object;
+use Ampache\Gui\GuiFactoryInterface;
+use Ampache\Gui\TalFactoryInterface;
+use Ampache\Repository\Model\database_object;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\Ui;
+use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -42,15 +44,27 @@ final class RefreshUpdatedAction extends AbstractEditAction
 
     private StreamFactoryInterface $streamFactory;
 
+    private TalFactoryInterface $talFactory;
+
+    private GuiFactoryInterface $guiFactory;
+
+    private UiInterface $ui;
+
     public function __construct(
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
         ConfigContainerInterface $configContainer,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        TalFactoryInterface $talFactory,
+        GuiFactoryInterface $guiFactory,
+        UiInterface $ui
     ) {
         parent::__construct($configContainer, $logger);
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
+        $this->talFactory      = $talFactory;
+        $this->guiFactory      = $guiFactory;
+        $this->ui              = $ui;
     }
 
     protected function handle(
@@ -60,13 +74,38 @@ final class RefreshUpdatedAction extends AbstractEditAction
         database_object $libitem,
         int $object_id
     ): ?ResponseInterface {
-        ob_start();
+        /**
+         * @todo Every editable itemtype will need some sort of special handling here
+         */
+        if ($object_type === 'song_row') {
+            $results = preg_replace(
+                '/<\/?html(.|\s)*?>/',
+                '',
+                $this->talFactory->createTalView()
+                    ->setContext('BROWSE_ARGUMENT', '')
+                    ->setContext('USER_IS_REGISTERED', true)
+                    ->setContext('SONG', $this->guiFactory->createSongViewAdapter($gatekeeper, $libitem))
+                    ->setContext('CONFIG', $this->guiFactory->createConfigViewAdapter())
+                    ->setContext('IS_TABLE_VIEW', true)
+                    ->setTemplate('song_row.xhtml')
+                    ->render()
+            );
+        } else {
+            ob_start();
 
-        require Ui::find_template('show_' . $object_type . '.inc.php');
+            $this->ui->show(
+                'show_' . $object_type . '.inc.php',
+                [
+                    'libitem' => $libitem,
+                    'object_type' => $object_type,
+                    'object_id' => $object_id,
+                ]
+            );
 
-        $results = ob_get_contents();
+            $results = ob_get_contents();
 
-        ob_end_clean();
+            ob_end_clean();
+        }
 
         return $this->responseFactory->createResponse()
             ->withBody(

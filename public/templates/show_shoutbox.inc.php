@@ -20,7 +20,7 @@
  *
  */
 
-use Ampache\Model\Shoutbox;
+use Ampache\Repository\Model\Shoutbox;
 use Ampache\Module\Util\Ui;
 
 ?>

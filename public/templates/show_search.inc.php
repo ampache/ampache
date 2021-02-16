@@ -21,11 +21,11 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Playlist;
-use Ampache\Model\Search;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Search;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
-use Ampache\Model\Browse;
+use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
@@ -46,21 +46,22 @@ Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title .
         $zipHandler = $dic->get(ZipHandlerInterface::class);
         if (Access::check_function('batch_download') && $zipHandler->isZipable('search')) { ?>
         <li>
-            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>"><?php echo Ui::get_icon('batch_download', T_('Batch Download')); ?></a>
-            <?php echo T_('Batch Download'); ?>
+            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>">
+                <?php echo Ui::get_icon('batch_download', T_('Batch Download')); ?>
+                <?php echo T_('Batch Download'); ?>
+            </a>
         </li>
             <?php
 } ?>
         <li>
-            <?php echo Ajax::button('?action=basket&type=search&id=' . $playlist->id, 'add', T_('Add All'), 'play_playlist'); ?>
-            <?php echo T_('Add All'); ?>
+            <?php echo Ajax::button_with_text('?action=basket&type=search&id=' . $playlist->id, 'add', T_('Add All'), 'play_playlist'); ?>
         </li>
         <?php if ($playlist->has_access()) { ?>
         <li>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/smartplaylist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>">
                 <?php echo Ui::get_icon('delete'); ?>
+                <?php echo T_('Delete'); ?>
             </a>
-            <?php echo T_('Delete'); ?>
         </li>
         <?php
     } ?>

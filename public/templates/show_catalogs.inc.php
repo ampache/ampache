@@ -20,7 +20,7 @@
  *
  */
 
-use Ampache\Model\Catalog;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
 ?>

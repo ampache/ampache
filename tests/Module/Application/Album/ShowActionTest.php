@@ -27,8 +27,8 @@ namespace Ampache\Module\Application\Album;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
-use Ampache\Model\Album;
-use Ampache\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -320,7 +320,8 @@ class ShowActionTest extends MockeryTestCase
                 'show_album.inc.php',
                 [
                     'album' => $album,
-                    'isAlbumEditable' => $isEditAble
+                    'isAlbumEditable' => $isEditAble,
+                    'albumRepository' => $this->albumRepository,
                 ]
             )
             ->once();

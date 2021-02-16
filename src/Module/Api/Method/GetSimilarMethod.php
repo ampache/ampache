@@ -30,6 +30,7 @@ use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Recommendation;
+use Ampache\Repository\Model\User;
 
 /**
  * Class GetSimilarMethod
@@ -84,17 +85,18 @@ final class GetSimilarMethod
             return false;
         }
 
+        $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                echo Json_Data::indexes($objects, $type);
+                JSON_Data::set_offset($input['offset']);
+                JSON_Data::set_limit($input['limit']);
+                echo JSON_Data::indexes($objects, $type, $user->id);
                 break;
             default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::indexes($objects, $type);
+                XML_Data::set_offset($input['offset']);
+                XML_Data::set_limit($input['limit']);
+                echo XML_Data::indexes($objects, $type, $user->id);
         }
         Session::extend($input['auth']);
 

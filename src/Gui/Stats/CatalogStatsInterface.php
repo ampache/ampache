@@ -45,4 +45,6 @@ interface CatalogStatsInterface
     public function getPlayTime(): string;
 
     public function getItemCount(): int;
+
+    public function getVideoCount(): int;
 }

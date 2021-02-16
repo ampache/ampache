@@ -20,8 +20,8 @@
  *
  */
 
-use Ampache\Model\Tag;
-use Ampache\Model\Video;
+use Ampache\Repository\Model\Tag;
+use Ampache\Repository\Model\Video;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 

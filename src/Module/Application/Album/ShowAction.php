@@ -26,8 +26,8 @@ namespace Ampache\Module\Application\Album;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Model\Album;
-use Ampache\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
@@ -95,7 +95,8 @@ final class ShowAction implements ApplicationActionInterface
                     'isAlbumEditable' => $this->isEditable(
                         $gatekeeper,
                         $album
-                    )
+                    ),
+                    'albumRepository' => $this->albumRepository,
                 ]
             );
         } else {

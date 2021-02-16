@@ -1,7 +1,7 @@
 <?php
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Broadcast;
+use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Playback\WebPlayer;
 use Ampache\Module\System\Core;
@@ -488,7 +488,7 @@ if ($isVideo) { ?>
 <?php if ($iframed) { ?>
         <?php if (Access::check('interface', 25)) { ?>
             <div class="action_button">
-                <a onclick="javascript:SaveToExistingPlaylist(event);">
+                <a href="javascript:SaveToExistingPlaylist(event);">
                     <?php echo Ui::get_icon('playlist_add_all', T_('Add All to playlist')) ?>
                 </a>
             </div>
@@ -506,7 +506,7 @@ if ($isVideo) { ?>
             <a href="javascript:ShowVisualizer();"><?php echo Ui::get_icon('visualizer', T_('Visualizer')) ?></a>
         </div>
         <div class="action_button">
-            <a onClick="ShowVisualizerFullScreen();" href="#"><?php echo Ui::get_icon('fullscreen', T_('Visualizer full-screen')) ?></a>
+            <a href="javascript:ShowVisualizerFullScreen();"><?php echo Ui::get_icon('fullscreen', T_('Visualizer full-screen')) ?></a>
         </div>
         <div id="replaygainbtn" class="action_button">
             <a href="javascript:ToggleReplayGain();"><?php echo Ui::get_icon('replaygain', T_('ReplayGain')) ?></a>

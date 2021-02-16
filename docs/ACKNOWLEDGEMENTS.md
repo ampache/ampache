@@ -49,3 +49,4 @@
 * stebe
 * manuelglez86
 * theTendo
+* lusum: Our official Kodi addon developer

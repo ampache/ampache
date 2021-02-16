@@ -21,7 +21,7 @@
 
 namespace Ampache\Module\Album\Export\Writer;
 
-use Ampache\Model\Album;
+use Ampache\Repository\Model\Album;
 
 interface MetadataWriterInterface
 {

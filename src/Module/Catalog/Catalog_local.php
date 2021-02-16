@@ -23,18 +23,18 @@
 namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Album;
-use Ampache\Model\Art;
-use Ampache\Model\Artist;
-use Ampache\Model\Catalog;
-use Ampache\Model\Media;
-use Ampache\Model\Metadata\Repository\Metadata;
-use Ampache\Model\Metadata\Repository\MetadataField;
-use Ampache\Model\Podcast_Episode;
-use Ampache\Model\Rating;
-use Ampache\Model\Song;
-use Ampache\Model\Song_Preview;
-use Ampache\Model\Video;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Media;
+use Ampache\Repository\Model\Metadata\Repository\Metadata;
+use Ampache\Repository\Model\Metadata\Repository\MetadataField;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Song_Preview;
+use Ampache\Repository\Model\Video;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -588,28 +588,28 @@ class Catalog_local extends Catalog
      * _verify_chunk
      * This verifies a chunk of the catalog, done to save
      * memory
-     * @param $media_type
+     * @param $tableName
      * @param $chunk
      * @param $chunk_size
      * @return integer
      */
-    private function _verify_chunk($media_type, $chunk, $chunk_size)
+    private function _verify_chunk($tableName, $chunk, $chunk_size)
     {
         debug_event('local.catalog', "Verify starting chunk $chunk", 5);
         $count   = $chunk * $chunk_size;
         $changed = 0;
 
-        $tableName = ObjectTypeToClassNameMapper::reverseMap($media_type);
-
         $sql        = "SELECT `id`, `file` FROM `$tableName` " . "WHERE `catalog`='$this->id' ORDER BY `$tableName`.`update_time` ASC, `$tableName`.`file` LIMIT $count, $chunk_size";
         $db_results = Dba::read($sql);
+
+        $class_name = ObjectTypeToClassNameMapper::map($tableName);
 
         if (AmpConfig::get('memory_cache')) {
             $media_ids = array();
             while ($row = Dba::fetch_assoc($db_results, false)) {
                 $media_ids[] = $row['id'];
             }
-            $media_type::build_cache($media_ids);
+            $class_name::build_cache($media_ids);
             $db_results = Dba::read($sql);
         }
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -627,7 +627,6 @@ class Catalog_local extends Catalog
                 continue;
             }
 
-            $class_name = ObjectTypeToClassNameMapper::map($media_type);
             $media      = new $class_name($row['id']);
             $info       = self::update_media_from_tags($media, $this->get_gather_types(), $this->sort_pattern,
                 $this->rename_pattern);

@@ -21,10 +21,10 @@
 
 namespace Ampache\Module\Song\Deletion;
 
-use Ampache\Model\Art;
-use Ampache\Model\Rating;
-use Ampache\Model\Song;
-use Ampache\Model\Userflag;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;

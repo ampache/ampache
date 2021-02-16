@@ -26,12 +26,12 @@ namespace Ampache\Gui\Song;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Model\Catalog;
-use Ampache\Model\ModelFactoryInterface;
-use Ampache\Model\Rating;
-use Ampache\Model\Share;
-use Ampache\Model\Song;
-use Ampache\Model\Userflag;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Application\Song\DeleteAction;
 use Ampache\Module\Authorization\AccessLevelEnum;

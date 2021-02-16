@@ -25,8 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\Playlist;
-use Ampache\Model\User;
+use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
@@ -48,25 +49,29 @@ final class PlaylistsMethod
      * This returns playlists based on the specified filter
      *
      * @param array $input
-     * filter = (string) Alpha-numeric search term (match all if missing) //optional
-     * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add    = self::set_filter(date) //optional
-     * update = self::set_filter(date) //optional
-     * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * filter      = (string) Alpha-numeric search term (match all if missing) //optional
+     * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * add         = self::set_filter(date) //optional
+     * update      = self::set_filter(date) //optional
+     * offset      = (integer) //optional
+     * limit       = (integer) //optional
+     * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
      * @return boolean
      */
     public static function playlists(array $input)
     {
         $user   = User::get_from_username(Session::username($input['auth']));
-        $method = ($input['exact']) ? false : true;
+        $like   = ((int) $input['exact'] == 1) ? false : true;
+        $hide   = ((int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         $userid = (!Access::check('interface', 100, $user->id)) ? $user->id : -1;
         $public = !Access::check('interface', 100, $user->id);
 
         // regular playlists
-        $playlist_ids = Playlist::get_playlists($public, $userid, (string) $input['filter'], $method);
+        $playlist_ids = Playlist::get_playlists($public, $userid, (string) $input['filter'], $like);
         // merge with the smartlists
-        $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($public, $userid, (string) $input['filter'], $method));
+        if (!$hide) {
+            $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($public, $userid, (string) $input['filter'], $like));
+        }
         if (empty($playlist_ids)) {
             Api::empty('playlist', $input['api_format']);
 

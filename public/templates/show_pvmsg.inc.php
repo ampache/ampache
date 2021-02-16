@@ -21,7 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\PrivateMsg;
+use Ampache\Repository\Model\PrivateMsg;
 use Ampache\Module\Util\Ui;
 
 /** @var PrivateMsg $pvmsg */
@@ -36,7 +36,8 @@ Ui::show_box_top($pvmsg->getSubjectFormatted(), 'info-box'); ?>
     <ul>
         <li>
             <a id="<?php echo 'reply_pvmsg_' . $pvmsg->getId() ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&reply_to=<?php echo $pvmsg->getId(); ?>">
-                <?php echo Ui::get_icon('mail', T_('Reply')); ?> <?php echo T_('Reply'); ?>
+                <?php echo Ui::get_icon('mail', T_('Reply')); ?>
+                <?php echo T_('Reply'); ?>
             </a>
         </li>
     </ul>

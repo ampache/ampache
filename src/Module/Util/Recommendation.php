@@ -25,14 +25,14 @@ declare(strict_types=0);
 namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
-use Ampache\Model\Artist;
-use Ampache\Model\Catalog;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Module\LastFm\LastFmQueryInterface;
 use Ampache\Module\System\Dba;
 use PDOStatement;
 use SimpleXMLElement;
-use Ampache\Model\Song;
+use Ampache\Repository\Model\Song;
 
 class Recommendation
 {

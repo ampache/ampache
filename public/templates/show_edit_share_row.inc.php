@@ -20,7 +20,7 @@
  *
  */
 
-use Ampache\Model\Share;
+use Ampache\Repository\Model\Share;
 use Ampache\Module\Authorization\Access;
 
 /** @var Share $libitem */

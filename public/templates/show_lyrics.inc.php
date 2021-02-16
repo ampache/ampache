@@ -21,7 +21,7 @@
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Model\Art;
+use Ampache\Repository\Model\Art;
 use Ampache\Module\Util\Ui;
 
 $web_path = AmpConfig::get('web_path');

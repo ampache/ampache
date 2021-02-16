@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Model\Catalog;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
@@ -65,7 +65,7 @@ final class CatalogMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::catalogs(array($catalog->id), false);
+                echo Json_Data::catalogs(array($catalog->id), false);
                 break;
             default:
                 echo Xml_Data::catalogs(array($catalog->id));

@@ -27,7 +27,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Ui;
 
-/** @var \Ampache\Model\User $client */
+/** @var \Ampache\Repository\Model\User $client */
 $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
 <?php echo AmpError::display('general'); ?>
     <table class="tabledata">

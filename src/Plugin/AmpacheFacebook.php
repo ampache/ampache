@@ -23,7 +23,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
-use Ampache\Model\User;
+use Ampache\Repository\Model\User;
 
 class AmpacheFacebook
 {

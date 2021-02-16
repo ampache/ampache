@@ -22,7 +22,7 @@
 
 namespace Ampache\Module\Art\Collector;
 
-use Ampache\Model\Art;
+use Ampache\Repository\Model\Art;
 
 interface ArtCollectorInterface
 {

@@ -9,11 +9,20 @@
 ; into the init script
 config_version = 48
 
+;#########################################################
+; Auto Update                                            #
+;#########################################################
+
 ; Allow you to hard code a default git branch for Ampache
 ; If you set this value the inbuilt updater will use this branch for updates.
 ; POSSIBLE VALUES: master develop
 ; DEFAULT: none
 ;github_force_branch = "develop"
+
+; This value allows to override the composer binary path to distinguish between multiple composer versions
+; Either a binary name in $PATH as well as a fully qualified path is possible
+; DEFAULT: composer
+;composer_binary_path = "composer"
 
 ;#########################################################
 ; Path Vars                                              #
@@ -635,6 +644,13 @@ art_order = "db,tags,folder,spotify,musicbrainz,lastfm,google"
 ; DEFAULT: "false"
 ;show_similar = "true"
 
+; Hide Searches from the API
+; Set this to true and the get_indexes and playlists methods will not automatically include
+; searches/smart lists in the results.
+; Older versions of the Kodi Add-on will require this for playlists to work
+; DEFAULT: "false"
+;hide_search = "true"
+
 ;#########################################################
 ;      API keys                                          #
 ;#########################################################
@@ -1057,7 +1073,7 @@ registration_mandatory_fields = "fullname"
 ;transcode_aiff = "required"
 ;transcode_ape  = "required"
 ;transcode_shn  = "required"
-;transcode_mp3  = "allowed"
+transcode_mp3  = "allowed"
 ;;; Video
 ;transcode_avi  = "allowed"
 ;transcode_mkv  = "allowed"
