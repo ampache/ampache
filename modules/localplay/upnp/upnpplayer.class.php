@@ -140,12 +140,17 @@ class UPnPPlayer
     }
 
     /**
-     * @return SimpleXMLElement
+     * GetState
+     *
+     * @return SimpleXMLElement|string
      */
     public function GetState()
     {
         $response    = $this->Device()->instanceOnly('GetTransportInfo');
         $responseXML = simplexml_load_string($response);
+        if (empty($responseXML)) {
+            return '';
+        }
         list($state) = $responseXML->xpath('//CurrentTransportState');
 
         //!!debug_event(self::class, 'GetState = ' . $state, 5);
@@ -391,6 +396,8 @@ class UPnPPlayer
 
     /**
      * GetVolume
+     *
+     * @return SimpleXMLElement|string
      */
     public function GetVolume()
     {
@@ -403,6 +410,9 @@ class UPnPPlayer
         ));
 
         $responseXML  = simplexml_load_string($response);
+        if (empty($responseXML)) {
+            return '';
+        }
         list($volume) = ($responseXML->xpath('//CurrentVolume'));
         debug_event(self::class, 'GetVolume:' . $volume, 5);
 
