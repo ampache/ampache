@@ -50,7 +50,7 @@ final class GetIndexesMethod
      * Added 'include' to allow indexing all song tracks (enabled for xml by default)
      *
      * @param array $input
-     * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'live_stream'
+     * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share' 'video', 'live_stream'
      * filter      = (string) //optional
      * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add         = self::set_filter(date) //optional
@@ -74,6 +74,16 @@ final class GetIndexesMethod
         }
         if (!AmpConfig::get('podcast') && ($type == 'podcast' || $type == 'podcast_episode')) {
             Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+        if (!AmpConfig::get('share') && $type == 'share') {
+            Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+        if (!AmpConfig::get('live_stream') && $type == 'live_stream') {
+            Api::error(T_('Enable: live_stream'), '4703', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
