@@ -54,7 +54,6 @@ class AutoUpdate
         }
 
         return false;
-
     }
 
     /**

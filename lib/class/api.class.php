@@ -469,10 +469,12 @@ class Api
      * This takes a collection of inputs and returns ID + name for the object type
      *
      * @param array $input
-     * type        = (string) 'song'|'album'|'artist'|'playlist'
+     * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video'
      * filter      = (string) //optional
+     * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add         = self::set_filter(date) //optional
      * update      = self::set_filter(date) //optional
+     * include     = (integer) 0,1 include songs if available for that object //optional
      * offset      = (integer) //optional
      * limit       = (integer) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
@@ -483,11 +485,27 @@ class Api
         if (!self::check_parameter($input, array('type'), 'get_indexes')) {
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
-        $type = (string) $input['type'];
-        $hide = ((int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
+        $type = ((string) $input['type'] == 'album_artist') ? 'artist' : (string) $input['type'];
+        if (!AmpConfig::get('allow_video') && $type == 'video') {
+            self::message('error', T_('Access Denied: allow_video is not enabled.'), '400', $input['api_format']);
+
+            return false;
+        }
+        if (!AmpConfig::get('podcast') && ($type == 'podcast' || $type == 'podcast_episode')) {
+            self::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);
+
+            return false;
+        }
+        if (!AmpConfig::get('share') && $type == 'share') {
+            self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['api_format']);
+
+            return false;
+        }
+        $user    = User::get_from_username(Session::username($input['auth']));
+        $include = (int) $input['include'] == 1;
+        $hide    = ((int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist', 'playlist'))) {
+        if (!in_array($type, array('song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video'))) {
             self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;
@@ -500,6 +518,10 @@ class Api
         self::set_filter($method, $input['filter']);
         self::set_filter('add', $input['add']);
         self::set_filter('update', $input['update']);
+        // set the album_artist filter (if enabled)
+        if ((string) $input['type'] == 'album_artist') {
+            self::set_filter('album_artist', true);
+        }
 
         if ($type == 'playlist') {
             self::$browse->set_filter('playlist_type', $user->id);
@@ -517,12 +539,12 @@ class Api
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::indexes($objects, $type);
-            break;
+                echo JSON_Data::indexes($objects, $type, $user->id, $include);
+                break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::indexes($objects, $type);
+                echo XML_Data::indexes($objects, $type, $user->id, true, $include);
         }
         Session::extend($input['auth']);
 
@@ -1522,6 +1544,7 @@ class Api
      * type   = (string) 'public', 'private' //optional
      * items  = (string) comma-separated song_id's (replace existing items with a new object_id) //optional
      * tracks = (string) comma-separated playlisttrack numbers matched to items in order //optional
+     * sort   = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
      * @return boolean
      */
     public static function playlist_edit($input)
@@ -1531,8 +1554,9 @@ class Api
         }
         $name  = $input['name'];
         $type  = $input['type'];
-        $items = explode(',', $input['items']);
-        $order = explode(',', $input['tracks']);
+        $items = explode(',', (string) $input['items']);
+        $order = explode(',', (string) $input['tracks']);
+        $sort  = (int) $input['sort'];
         // calculate whether we are editing the track order too
         $playlist_edit = array();
         if (count($items) == count($order) && count($items) > 0) {
@@ -1566,6 +1590,10 @@ class Api
                     $change_made = true;
                 }
             }
+        }
+        if ($sort > 0) {
+            $playlist->sort_tracks();
+            $change_made = true;
         }
         Session::extend($input['auth']);
         // if you didn't make any changes; tell me
@@ -1888,7 +1916,7 @@ class Api
      * Get information about shared media this user is allowed to manage.
      *
      * @param array $input
-     * filter = (string) Alpha-numeric search term
+     * filter = (string) Alpha-numeric search term //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
@@ -1898,9 +1926,6 @@ class Api
         if (!AmpConfig::get('share')) {
             self::message('error', T_('Access Denied: sharing features are not enabled.'), '400', $input['api_format']);
 
-            return false;
-        }
-        if (!self::check_parameter($input, array('filter'), 'shares')) {
             return false;
         }
         self::$browse->reset_filters();
@@ -2492,11 +2517,13 @@ class Api
      * Takes the podcast id to update with optional description and expires parameters.
      *
      * @param array $input
-     * filter      = (string) Alpha-numeric search term //optional
-     * stream      = (boolean) 0,1 // optional
-     * download    = (boolean) 0,1 // optional
-     * expires     = (integer) number of whole days before expiry // optional
-     * description = (string) update description // optional
+     * filter      = (string) Alpha-numeric search term
+     * feed        = (string) feed url (xml!) //optional
+     * title       = (string) title string //optional
+     * website     = (string) source website url //optional
+     * description = (string) //optional
+     * generator   = (string) //optional
+     * copyright   = (string) //optional
      * @return boolean
      */
     public static function podcast_edit($input)
@@ -2506,35 +2533,39 @@ class Api
 
             return false;
         }
-        if (!self::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, 'edit_podcast', $input['api_format'])) {
+        $user = User::get_from_username(Session::username($input['auth']));
+        if (!self::check_access('interface', 50, $user->id, 'edit_podcast', $input['api_format'])) {
             return false;
         }
         if (!self::check_parameter($input, array('filter'), 'podcast_edit')) {
             return false;
         }
         $podcast_id = $input['filter'];
-        if (in_array($podcast_id, Share::get_share_list())) {
-            $user          = User::get_from_username(Session::username($input['auth']));
-            $podcast       = new Share($podcast_id);
-            $description   = isset($input['description']) ? $input['description'] : $podcast->description;
-            $stream        = isset($input['stream']) ? $input['stream'] : $podcast->allow_stream;
-            $download      = isset($input['download']) ? $input['download'] : $podcast->allow_download;
-            $expires       = isset($input['expires']) ? Share::get_expiry($input['expires']) : $podcast->expire_days;
-
-            $data = array(
-                'max_counter' => $podcast->max_counter,
-                'expire' => $expires,
-                'allow_stream' => $stream,
-                'allow_download' => $download,
-                'description' => $description
-            );
-            if ($podcast->update($data, $user)) {
-                self::message('success', 'podcast ' . $podcast_id . ' updated', null, $input['api_format']);
-            } else {
-                self::message('error', 'podcast ' . $podcast_id . ' was not updated', '401', $input['api_format']);
-            }
-        } else {
+        $podcast    = new Podcast($podcast_id);
+        if (!$podcast->id) {
             self::message('error', 'podcast ' . $podcast_id . ' was not found', '404', $input['api_format']);
+
+            return false;
+        }
+
+        $feed           = filter_var($input['feed'], FILTER_VALIDATE_URL) ? $input['feed'] : $podcast->feed;
+        $title          = isset($input['title']) ? scrub_in($input['title']) : $podcast->title;
+        $website        = filter_var($input['website'], FILTER_VALIDATE_URL) ? scrub_in($input['website']) : $podcast->website;
+        $description    = isset($input['description']) ? scrub_in($input['description']) : $podcast->description;
+        $generator      = isset($input['generator']) ? scrub_in($input['generator']) : $podcast->generator;
+        $copyright      = isset($input['copyright']) ? scrub_in($input['copyright']) : $podcast->copyright;
+        $data           = array(
+            'feed' => $feed,
+            'title' => $title,
+            'website' => $website,
+            'description' => $description,
+            'generator' => $generator,
+            'copyright' => $copyright
+        );
+        if ($podcast->update($data)) {
+            self::message('success', 'podcast ' . $podcast_id . ' updated', null, $input['api_format']);
+        } else {
+            self::message('error', 'podcast ' . $podcast_id . ' was not updated', '401', $input['api_format']);
         }
         Session::extend($input['auth']);
 
@@ -3983,34 +4014,95 @@ class Api
      * This is for controlling Localplay
      *
      * @param array $input
-     * command   = (string) 'next', 'prev', 'stop', 'play'
+     * command = (string) 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip', 'status'
+     * oid     = (integer) object_id //optional
+     * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream' //optional
+     * clear   = (integer) 0,1 Clear the current playlist before adding //optional
+     * @return boolean
      */
     public static function localplay($input)
     {
+        if (!self::check_parameter($input, array('command'), 'localplay')) {
+            return false;
+        }
         // Load their Localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         $localplay->connect();
 
+        $result = false;
+        $status = false;
         switch ($input['command']) {
-            case 'next':
-            case 'prev':
-            case 'play':
-            case 'stop':
-                $result_status = $localplay->$input['command']();
-                $xml_array     = array('localplay' => array('command' => array($input['command'] => make_bool($result_status))));
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo json_encode($xml_array, JSON_PRETTY_PRINT);
-                    break;
-                    default:
-                        echo XML_Data::keyed_array($xml_array);
+            case 'add':
+                // for add commands get the object details
+                $object_id   = (int) $input['oid'];
+                $type        = $input['type'] ? (string) $input['type'] : 'Song';
+                if (!AmpConfig::get('allow_video') && $type == 'Video') {
+                    self::message('error', T_('Access Denied: allow_video is not enabled.'), '400', $input['api_format']);
+
+                    return false;
                 }
-            break;
+                $clear       = (int) $input['clear'];
+                // clear before the add
+                if ($clear == 1) {
+                    $localplay->delete_all();
+                }
+                $media = array(
+                    'object_type' => $type,
+                    'object_id' => $object_id,
+                );
+                $playlist = new Stream_Playlist();
+                $playlist->add(array($media));
+                foreach ($playlist->urls as $streams) {
+                    $result = $localplay->add_url($streams);
+                }
+                break;
+            case 'next':
+            case 'skip':
+                $result = $localplay->next();
+                break;
+            case 'prev':
+                $result = $localplay->prev();
+                break;
+            case 'stop':
+                $result = $localplay->stop();
+                break;
+            case 'play':
+                $result = $localplay->play();
+                break;
+            case 'pause':
+                $result = $localplay->pause();
+                break;
+            case 'volume_up':
+                $result = $localplay->volume_up();
+                break;
+            case 'volume_down':
+                $result = $localplay->volume_down();
+                break;
+            case 'volume_mute':
+                $result = $localplay->volume_mute();
+                break;
+            case 'delete_all':
+                $result = $localplay->delete_all();
+                break;
+            case 'status':
+                $status = $localplay->status();
+                break;
             default:
                 // They are doing it wrong
                 self::message('error', T_('Invalid request'), '405', $input['api_format']);
-            break;
+
+                return false;
         } // end switch on command
+        $output_array = (!empty($status))
+            ? array('localplay' => array('command' => array($input['command'] => $status)))
+            : array('localplay' => array('command' => array($input['command'] => make_bool($result))));
+        switch ($input['api_format']) {
+            case 'json':
+                echo json_encode($output_array, JSON_PRETTY_PRINT);
+                break;
+            default:
+                echo XML_Data::keyed_array($output_array);
+        }
         Session::extend($input['auth']);
     } // localplay
 
@@ -4021,19 +4113,24 @@ class Api
      * This is for controlling democratic play
      *
      * @param array $input
-     * oid    = (integer)
-     * method = (string)
+     * method = (string) 'vote', 'devote', 'playlist', 'play'
+     * oid    = (integer) //optional
+     * @return boolean
      */
     public static function democratic($input)
     {
+        if (!self::check_parameter($input, array('method'), 'democratic')) {
+            return false;
+        }
         // Load up democratic information
         $democratic = Democratic::get_current_playlist();
         $democratic->set_parent();
 
         switch ($input['method']) {
             case 'vote':
-                $type  = 'song';
-                $media = new Song($input['oid']);
+                $type      = 'song';
+                $object_id = (int) $input['oid'];
+                $media     = new Song($object_id);
                 if (!$media->id) {
                     self::message('error', T_('Media object invalid or not specified'), '400', $input['api_format']);
                     break;
@@ -4046,7 +4143,7 @@ class Api
                 ));
 
                 // If everything was ok
-                $xml_array = array('action' => $input['action'], 'method' => $input['method'], 'result' => true);
+                $xml_array = array('method' => $input['method'], 'result' => true);
                 switch ($input['api_format']) {
                     case 'json':
                         echo json_encode($xml_array, JSON_PRETTY_PRINT);
@@ -4056,21 +4153,23 @@ class Api
                 }
                 break;
             case 'devote':
-                $type  = 'song';
-                $media = new Song($input['oid']);
+                $type      = 'song';
+                $object_id = (int) $input['oid'];
+                $media     = new Song($object_id);
                 if (!$media->id) {
                     self::message('error', T_('Media object invalid or not specified'), '400', $input['api_format']);
+                    break;
                 }
 
-                $uid = $democratic->get_uid_from_object_id($media->id, $type);
-                $democratic->remove_vote($uid);
+                $object_id = $democratic->get_uid_from_object_id($media->id, $type);
+                $democratic->remove_vote($object_id);
 
                 // Everything was ok
-                $xml_array = array('action' => $input['action'], 'method' => $input['method'], 'result' => true);
+                $xml_array = array('method' => $input['method'], 'result' => true);
                 switch ($input['api_format']) {
                     case 'json':
                         echo json_encode($xml_array, JSON_PRETTY_PRINT);
-                    break;
+                        break;
                     default:
                         echo XML_Data::keyed_array($xml_array);
                 }
@@ -4083,7 +4182,7 @@ class Api
                 switch ($input['api_format']) {
                     case 'json':
                         echo JSON_Data::democratic($objects, $user->id);
-                    break;
+                        break;
                     default:
                         echo XML_Data::democratic($objects, $user->id);
                 }
@@ -4094,7 +4193,7 @@ class Api
                 switch ($input['api_format']) {
                     case 'json':
                         echo json_encode($xml_array, JSON_PRETTY_PRINT);
-                    break;
+                        break;
                     default:
                         echo XML_Data::keyed_array($xml_array);
                 }
@@ -4104,5 +4203,7 @@ class Api
                 break;
         } // switch on method
         Session::extend($input['auth']);
+
+        return true;
     } // democratic
 } // end api.class
