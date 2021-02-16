@@ -479,6 +479,9 @@ class Xml_Data
                     }
                     $string .= "</$object_type>\n";
                     break;
+                case 'share':
+                    $string .= self::shares($objects);
+                    break;
                 case 'podcast':
                     $podcast = new Podcast($object_id);
                     $podcast->format();
@@ -1023,18 +1026,16 @@ class Xml_Data
                     "\t<catalog>" . $song->catalog . "</catalog>\n" .
                     "\t<composer><![CDATA[" . $song->composer . "]]></composer>\n" .
                     "\t<channels>" . $song->channels . "</channels>\n" .
-                    "\t<comment><![CDATA[" . $song->comment . "]]></comment>\n";
-            if (AmpConfig::get('licensing')) {
-                $string .= "\t<license><![CDATA[" . $song->f_license . "]]></license>\n";
-            }
-            $string .= "\t<publisher><![CDATA[" . $song->label . "]]></publisher>\n"
-                    . "\t<language>" . $song->language . "</language>\n"
-                    . "\t<replaygain_album_gain>" . $song->replaygain_album_gain . "</replaygain_album_gain>\n"
-                    . "\t<replaygain_album_peak>" . $song->replaygain_album_peak . "</replaygain_album_peak>\n"
-                    . "\t<replaygain_track_gain>" . $song->replaygain_track_gain . "</replaygain_track_gain>\n"
-                    . "\t<replaygain_track_peak>" . $song->replaygain_track_peak . "</replaygain_track_peak>\n"
-                    . "\t<r128_album_gain>" . $song->r128_album_gain . "</r128_album_gain>\n"
-                    . "\t<r128_track_gain>" . $song->r128_track_gain . "</r128_track_gain>\n";
+                    "\t<comment><![CDATA[" . $song->comment . "]]></comment>\n" .
+                    "\t<license><![CDATA[" . $song->f_license . "]]></license>\n" .
+                    "\t<publisher><![CDATA[" . $song->label . "]]></publisher>\n" .
+                    "\t<language>" . $song->language . "</language>\n" .
+                    "\t<replaygain_album_gain>" . $song->replaygain_album_gain . "</replaygain_album_gain>\n" .
+                    "\t<replaygain_album_peak>" . $song->replaygain_album_peak . "</replaygain_album_peak>\n" .
+                    "\t<replaygain_track_gain>" . $song->replaygain_track_gain . "</replaygain_track_gain>\n" .
+                    "\t<replaygain_track_peak>" . $song->replaygain_track_peak . "</replaygain_track_peak>\n" .
+                    "\t<r128_album_gain>" . $song->r128_album_gain . "</r128_album_gain>\n" .
+                    "\t<r128_track_gain>" . $song->r128_track_gain . "</r128_track_gain>\n";
             if (Song::isCustomMetadataEnabled()) {
                 foreach ($song->getMetadata() as $metadata) {
                     $meta_name = str_replace(array(' ', '(', ')', '/', '\\', '#'), '_',
