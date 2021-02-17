@@ -20,60 +20,87 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Repository\PreferenceRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class SystemPreferenceMethod
- * @package Lib\ApiMethods
- */
-final class SystemPreferenceMethod
+final class SystemPreferenceMethod implements MethodInterface
 {
-    private const ACTION = 'system_preference';
+    public const ACTION = 'system_preference';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private PreferenceRepositoryInterface $preferenceRepository;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        PreferenceRepositoryInterface $preferenceRepository
+    ) {
+        $this->streamFactory        = $streamFactory;
+        $this->preferenceRepository = $preferenceRepository;
+    }
 
     /**
-     * system_preference
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get your system preferences by name
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws ResultEmptyException
+     * @throws AccessDeniedException
+     * @throws RequestParamMissingException
      */
-    public static function system_preference(array $input)
-    {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-        $user = User::get_from_username(Session::username($input['auth']));
-        if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
-        }
-        $pref_name  = (string) $input['filter'];
-        $preference = Preference::get($pref_name, -1);
-        if (empty($preference)) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $pref_name), '4704', self::ACTION, 'filter', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $filter = $input['filter'] ?? null;
 
-            return false;
+        if ($filter === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
         }
-        switch ($input['api_format']) {
-            case 'json':
-                echo json_encode($preference, JSON_PRETTY_PRINT);
-                break;
-            default:
-                echo Xml_Data::object_array($preference, 'preference');
-        }
-        Session::extend($input['auth']);
 
-        return true;
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
+            throw new AccessDeniedException(
+                T_('Require: 100')
+            );
+        }
+
+        $preferenceName = (string) $input['filter'];
+
+        $preference = $this->preferenceRepository->get($preferenceName, -1);
+
+        if ($preference === []) {
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %s'), $preferenceName)
+            );
+        }
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->object_array($preference, 'preference')
+            )
+        );
     }
 }

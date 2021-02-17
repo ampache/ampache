@@ -134,7 +134,7 @@ class Api
         'democratic' => Method\DemocraticMethod::class,
         'system_update' => Method\SystemUpdateMethod::class,
         Method\SystemPreferencesMethod::ACTION => Method\SystemPreferencesMethod::class,
-        'system_preference' => Method\SystemPreferenceMethod::class,
+        Method\SystemPreferenceMethod::ACTION => Method\SystemPreferenceMethod::class,
         'preference_create' => Method\PreferenceCreateMethod::class,
         'preference_edit' => Method\PreferenceEditMethod::class,
         Method\PreferenceDeleteMethod::ACTION => Method\PreferenceDeleteMethod::class,
