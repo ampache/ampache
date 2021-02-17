@@ -64,7 +64,8 @@ const SearchView: React.FC<SearchProps> = (props) => {
     }, [searchQuery, props.user.authKey]);
 
     const playSong = (song: Song) => {
-        musicContext.startPlayingWithNewQueue(song, songResults);
+        const songIndex = songResults.findIndex((o) => o.id === song.id);
+        musicContext.startPlayingWithNewQueue(songResults, songIndex);
     };
 
     if (!searchQuery) {

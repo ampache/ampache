@@ -18,7 +18,7 @@ interface ArtistViewProps {
     user: User;
     match: {
         params: {
-            artistID: number;
+            artistID: string;
         };
     };
 }
@@ -50,7 +50,7 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
                 console.log(songs);
                 songs.sort(() => Math.random() - 0.5);
 
-                musicContext.startPlayingWithNewQueue(songs[0], songs);
+                musicContext.startPlayingWithNewQueue(songs);
                 //TODO: When working
             })
             .catch((error) => {
@@ -137,7 +137,6 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
                                         musicContext
                                     );
                                 }}
-                                showGoToAlbum={false}
                                 key={theAlbum.id}
                                 className={style.albumDisplayContainer}
                             />

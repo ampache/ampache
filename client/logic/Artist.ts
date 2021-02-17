@@ -29,7 +29,7 @@ export type Artist = {
     placeformed: string;
 };
 
-export const updateArtistInfo = (artistID: number, authKey: AuthKey) => {
+export const updateArtistInfo = (artistID: string, authKey: AuthKey) => {
     return axios
         .get(
             `${process.env.ServerURL}/server/json.server.php?action=update_artist_info&id=${artistID}&auth=${authKey}&version=400001`
@@ -89,7 +89,7 @@ export const getArtists = (
 };
 
 export const getArtist = (
-    artistID: number,
+    artistID: string,
     authKey: AuthKey,
     includeAlbums = false,
     includeSongs = false

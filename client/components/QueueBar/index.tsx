@@ -53,9 +53,12 @@ const QueueBar: React.FC<QueueBarProps> = (props) => {
                                                 ?.id === song.id
                                         }
                                         onClick={() => {
+                                            const queueIndex = musicContext.songQueue.findIndex(
+                                                (o) => o.id === song.id
+                                            );
                                             musicContext.startPlayingWithNewQueue(
-                                                song,
-                                                musicContext.songQueue
+                                                musicContext.songQueue,
+                                                queueIndex
                                             );
                                         }}
                                     />

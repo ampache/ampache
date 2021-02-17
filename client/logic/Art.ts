@@ -12,7 +12,7 @@ enum artType {
 }
 
 const updateArt = (
-    ID: number,
+    ID: string,
     type: artType,
     overwrite: boolean,
     authKey: AuthKey
@@ -38,14 +38,14 @@ const updateArt = (
 };
 
 export const updateArtistArt = (
-    ID: number,
+    ID: string,
     overwrite: boolean,
     authKey: AuthKey
 ) => {
     return updateArt(ID, artType.artist, overwrite, authKey);
 };
 export const updateAlbumArt = (
-    ID: number,
+    ID: string,
     overwrite: boolean,
     authKey: AuthKey
 ) => {

@@ -165,9 +165,15 @@ const SongList: React.FC<SongListProps> = (props) => {
                         addToQueue={(next) =>
                             musicContext.addToQueue(song, next)
                         }
-                        startPlaying={() =>
-                            musicContext.startPlayingWithNewQueue(song, songs)
-                        }
+                        startPlaying={() => {
+                            const queueIndex = songs.findIndex(
+                                (o) => o.id === song.id
+                            );
+                            musicContext.startPlayingWithNewQueue(
+                                songs,
+                                queueIndex
+                            );
+                        }}
                         flagSong={handleFlagSong}
                         key={song.playlisttrack}
                         className={style.songRow}

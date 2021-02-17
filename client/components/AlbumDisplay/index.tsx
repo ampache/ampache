@@ -9,8 +9,7 @@ import style from './index.styl';
 
 interface AlbumDisplayProps {
     album: Album;
-    showGoToAlbum?: boolean;
-    playSongFromAlbum?: (albumID: number, random: boolean) => void;
+    playSongFromAlbum?: (albumID: string, random: boolean) => void;
     className?: string;
 }
 

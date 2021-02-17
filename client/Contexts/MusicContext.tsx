@@ -19,7 +19,7 @@ interface MusicContext {
     playPause: () => void;
     playPrevious: () => void;
     playNext: () => void;
-    startPlayingWithNewQueue: (song: Song, newQueue: Song[]) => void;
+    startPlayingWithNewQueue: (newQueue: Song[], startPosition?) => void;
     addToQueue: (song: Song, next: boolean) => void;
     seekSongTo: (newPosition: number) => void;
     setVolume: (newVolume: number) => void;
@@ -133,15 +133,18 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
         playNext();
     };
 
-    const startPlayingWithNewQueue = async (song: Song, newQueue: Song[]) => {
-        //TODO: can't we simplify this by removing the first parameter, and just adding an optional starting position
-        if (song.id === currentPlayingSongRef.current?.id) return;
+    const startPlayingWithNewQueue = async (
+        newQueue: Song[],
+        startPosition = 0
+    ) => {
+        if (newQueue[startPosition].id === currentPlayingSongRef.current?.id)
+            return;
 
-        const queueIndex = newQueue.findIndex((o) => o.id === song.id);
+        setUserQCount(0);
 
         setSongQueue(newQueue);
-        setSongQueueIndex(queueIndex); // TODO Reduce these two sets?
-        _playSong(song);
+        setSongQueueIndex(startPosition); // TODO Reduce these two sets?
+        _playSong(newQueue[startPosition]);
     };
 
     const addToQueue = (song: Song, next: boolean) => {

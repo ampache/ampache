@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import SVG from 'react-inlinesvg';
 import {
     createPlaylist,
     deletePlaylist,
     getPlaylists,
+    getPlaylistSongs,
     Playlist,
     renamePlaylist
 } from '~logic/Playlist';
@@ -18,14 +19,27 @@ import { useHistory } from 'react-router-dom';
 import HistoryShell from '~Modal/HistoryShell';
 
 import style from './index.styl';
+import { Menu, MenuItem } from '~node_modules/@material-ui/core';
+import { MusicContext } from '~Contexts/MusicContext';
 
 interface PlaylistListProps {
     authKey?: AuthKey;
 }
 
+const contextDefaultState = {
+    mouseX: null,
+    mouseY: null,
+    playlistID: null
+};
+
 const PlaylistList: React.FC<PlaylistListProps> = (props) => {
+    const musicContext = useContext(MusicContext);
+
     const [playlists, setPlaylists] = useState<Playlist[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
+
+    const [contextState, setContextState] = React.useState(contextDefaultState);
+
     const history = useHistory();
 
     useEffect(() => {
@@ -39,7 +53,7 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
             });
     }, [props.authKey]);
 
-    const handleDeletePlaylist = (playlistID: number) => {
+    const handleDeletePlaylist = (playlistID: string) => {
         deletePlaylist(playlistID, props.authKey)
             .then(() => {
                 let newPlaylists = [...playlists];
@@ -92,7 +106,7 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
     };
 
     const handleEditPlaylist = async (
-        playlistID: number,
+        playlistID: string,
         playlistCurrentName: string
     ) => {
         const { show } = await Modal.new({
@@ -130,6 +144,24 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
         }
     };
 
+    const handleContextClose = () => {
+        setContextState(contextDefaultState);
+    };
+    const handleContext = (event: React.MouseEvent, playlistID: string) => {
+        event.preventDefault();
+        setContextState({
+            mouseX: event.clientX - 2,
+            mouseY: event.clientY - 4,
+            playlistID
+        });
+    };
+
+    const startPlayingPlaylist = async (playlistID: string) => {
+        const songs = await getPlaylistSongs(playlistID, props.authKey);
+
+        musicContext.startPlayingWithNewQueue(songs);
+    };
+
     if (error) {
         return (
             <div className='playlistList'>
@@ -144,6 +176,10 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
             </div>
         );
     }
+
+    //There is an issue where if you right click an item the context menu blocks everything behind it
+    //This seems to go away if I have make 'playlistList' div be the one listening for onContextMenu
+    //But then that holds the issue of I can't tell what item we are dealing with. For now let's leave this be.
     return (
         <div className='playlistList'>
             <SVG
@@ -158,13 +194,49 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                     return (
                         <PlaylistItem
                             playlist={playlist}
-                            deletePlaylist={handleDeletePlaylist}
-                            editPlaylist={handleEditPlaylist}
+                            startPlaying={startPlayingPlaylist}
+                            showContext={handleContext}
                             key={playlist.id}
                         />
                     );
                 })}
             </ul>
+            <Menu
+                open={contextState.mouseY !== null}
+                onClose={handleContextClose}
+                anchorReference='anchorPosition'
+                anchorPosition={
+                    contextState.mouseY !== null && contextState.mouseX !== null
+                        ? {
+                              top: contextState.mouseY,
+                              left: contextState.mouseX
+                          }
+                        : undefined
+                }
+            >
+                <MenuItem onClick={handleContextClose}>Play Playlist</MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        handleContextClose();
+                        handleEditPlaylist(
+                            contextState.playlistID,
+                            playlists.filter(
+                                (p) => p.id === contextState.playlistID
+                            )[0].name
+                        );
+                    }}
+                >
+                    Edit Playlist
+                </MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        handleContextClose();
+                        handleDeletePlaylist(contextState.playlistID);
+                    }}
+                >
+                    Delete Playlist
+                </MenuItem>
+            </Menu>
         </div>
     );
 };
