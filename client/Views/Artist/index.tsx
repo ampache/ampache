@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Artist, getArtist, updateArtistInfo } from '~logic/Artist';
+import { Artist, flagArtist, getArtist, updateArtistInfo } from '~logic/Artist';
 import { User } from '~logic/User';
 import AmpacheError from '~logic/AmpacheError';
 import AlbumDisplay from '~components/AlbumDisplay/';
@@ -10,9 +10,10 @@ import { toast } from 'react-toastify';
 import { generateSongsFromArtist } from '~logic/Playlist_Generate';
 import { updateArtistArt } from '~logic/Art';
 import Button, { ButtonColors, ButtonSize } from '~components/Button';
-import Rating from '~components/Rating/';
+import SimpleRating from '~components/SimpleRating';
 
 import style from './index.styl';
+import { flagAlbum } from '~logic/Album';
 
 interface ArtistViewProps {
     user: User;
@@ -83,6 +84,60 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
             });
     };
 
+    const handleFlagArtist = (artistID: string, favorite: boolean) => {
+        flagArtist(artistID, favorite, props.user.authKey)
+            .then(() => {
+                const newArtist = { ...artist };
+                newArtist.flag = favorite;
+                setArtist(newArtist);
+                if (favorite) {
+                    return toast.success('Artist added to favorites');
+                }
+                toast.success('Artist removed from favorites');
+            })
+            .catch((err) => {
+                if (favorite) {
+                    toast.error(
+                        '😞 Something went wrong adding the artist to favorites.'
+                    );
+                } else {
+                    toast.error(
+                        '😞 Something went wrong removing the artist from favorites.'
+                    );
+                }
+                setError(err);
+            });
+    };
+
+    const handleFlagAlbum = (albumID: string, favorite: boolean) => {
+        flagAlbum(albumID, favorite, props.user.authKey)
+            .then(() => {
+                const newArtist = { ...artist };
+                newArtist.albums = newArtist.albums.map((album) => {
+                    if (album.id === albumID) {
+                        album.flag = favorite;
+                    }
+                    return album;
+                });
+                setArtist(newArtist);
+                if (favorite) {
+                    return toast.success('Album added to favorites');
+                }
+                toast.success('Album removed from favorites');
+            })
+            .catch(() => {
+                if (favorite) {
+                    toast.error(
+                        '😞 Something went wrong adding album to favorites.'
+                    );
+                } else {
+                    toast.error(
+                        '😞 Something went wrong removing album from favorites.'
+                    );
+                }
+            });
+    };
+
     if (error) {
         return (
             <div className={style.artistPage}>
@@ -104,7 +159,12 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
                     </div>
                     <div className={style.details}>
                         <div className={style.rating}>
-                            <Rating value={artist.rating} fav={artist.flag} />
+                            <SimpleRating
+                                value={artist.rating}
+                                fav={artist.flag}
+                                itemID={artist.id}
+                                setFlag={handleFlagArtist}
+                            />
                         </div>
                         <div className={`card-title ${style.name}`}>
                             {artist.name}
@@ -137,6 +197,7 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
                                         musicContext
                                     );
                                 }}
+                                flagAlbum={handleFlagAlbum}
                                 key={theAlbum.id}
                                 className={style.albumDisplayContainer}
                             />

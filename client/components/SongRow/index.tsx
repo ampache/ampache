@@ -3,7 +3,7 @@ import SVG from 'react-inlinesvg';
 import useContextMenu from 'react-use-context-menu';
 import { Song } from '~logic/Song';
 import { Link } from 'react-router-dom';
-import Rating from '~components/Rating/';
+import SimpleRating from '~components/SimpleRating';
 
 interface SongRowProps {
     song: Song;
@@ -105,11 +105,11 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                     </div>
 
                     <div className={style.rating}>
-                        <Rating
+                        <SimpleRating
                             value={props.song.rating}
                             fav={props.song.flag}
-                            song={props.song}
-                            flagSong={props.flagSong}
+                            itemID={props.song.id}
+                            setFlag={props.flagSong}
                         />
                     </div>
 

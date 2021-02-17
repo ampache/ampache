@@ -55,11 +55,7 @@ type Song = {
     r128_track_gain: string;
 };
 
-export const flagSong = (
-    songID: string,
-    favorite: boolean,
-    authKey: AuthKey
-) => {
+const flagSong = (songID: string, favorite: boolean, authKey: AuthKey) => {
     return axios
         .get(
             `${
@@ -80,4 +76,4 @@ export const flagSong = (
         });
 };
 
-export { Song };
+export { Song, flagSong };

@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
-import App from './Views/App';
+import App from './Views/App/';
 import Home from './Views/Home/';
 import Account from './Views/Account/';
 import SearchView from './Views/Search/';
@@ -122,7 +122,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
                             return <Redirect to='/login' />;
                         }}
                     />
-                    <MusicContextProvider authKey={this.state.authKey}>
+                    <MusicContextProvider>
                         <App user={this.state.user}>
                             <Switch>
                                 <Route

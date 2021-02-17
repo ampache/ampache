@@ -5,16 +5,21 @@ import SVG from 'react-inlinesvg';
 
 import style from './index.styl';
 
-//TODO: Props interface
+interface SimpleRatingProps {
+    value: number;
+    fav: boolean;
+    itemID: string;
+    setFlag: (id: string, newValue: boolean) => void;
+}
 
-export default function SimpleRating(props) {
+const SimpleRating: React.FC<SimpleRatingProps> = (props) => {
     const [value, setValue] = React.useState(props.value);
 
     const StyledRating = withStyles({
         icon: {
             color: 'currentColor'
         }
-    })(Rating);
+    })(Rating); //TODO: Put this into index.styl for consistency
 
     return (
         <div className={style.ratings}>
@@ -53,8 +58,11 @@ export default function SimpleRating(props) {
                         : require('~images/icons/svg/heart-empty.svg')
                 }
                 title='Toggle favorite'
-                onClick={() => {
-                    props.flagSong(props.song.id, !props.fav);
+                aria-label={props.fav ? 'Favorited' : 'Not Favorited'}
+                onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    props.setFlag(props.itemID, !props.fav);
                 }}
                 className={`icon ${style.heartIcon} ${
                     props.fav ? style.active : null
@@ -62,4 +70,6 @@ export default function SimpleRating(props) {
             />
         </div>
     );
-}
+};
+
+export default SimpleRating;

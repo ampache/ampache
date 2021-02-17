@@ -2,7 +2,7 @@ import React from 'react';
 import SVG from 'react-inlinesvg';
 import { Link } from 'react-router-dom';
 import { Album } from '~logic/Album';
-import Rating from '~components/Rating/';
+import SimpleRating from '~components/SimpleRating';
 import useContextMenu from 'react-use-context-menu';
 
 import style from './index.styl';
@@ -10,6 +10,7 @@ import style from './index.styl';
 interface AlbumDisplayProps {
     album: Album;
     playSongFromAlbum?: (albumID: string, random: boolean) => void;
+    flagAlbum: (artistID: string, favorite: boolean) => void;
     className?: string;
 }
 
@@ -105,7 +106,12 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (
                 </div>
             </div>
             <div className={style.rating} onClick={(e) => e.preventDefault()}>
-                <Rating value={props.album.rating} fav={props.album.flag} />
+                <SimpleRating
+                    value={props.album.rating}
+                    fav={props.album.flag}
+                    itemID={props.album.id}
+                    setFlag={props.flagAlbum}
+                />
             </div>
             <div className={style.details}>
                 <div className={style.albumInfo}>

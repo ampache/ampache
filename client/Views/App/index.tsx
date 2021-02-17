@@ -5,7 +5,7 @@ import Sidebar from '~components/Sidebar';
 import { User } from '~logic/User';
 import Header from '~components/Header';
 import ReactLoading from 'react-loading';
-import MusicControl from '~components/MusicControl';
+import MusicControl from '~components/MusicControl/';
 import QueueBar from '~components/QueueBar/';
 
 import style from './index.styl';
@@ -98,7 +98,7 @@ class AppView extends Component<AppViewProps, AppViewStates> {
                         setQueueBarVisibility={this.setQueueBarVisibility}
                     />
                 </div>
-                <MusicControl />
+                <MusicControl authKey={this.props.user.authKey} />
             </NavigationBlock>
         );
     }

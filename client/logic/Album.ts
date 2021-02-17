@@ -99,4 +99,32 @@ const getAlbum = (albumID: string, authKey: AuthKey, includeSongs = false) => {
     });
 };
 
-export { getRandomAlbums, Album, getAlbums, getAlbum, getAlbumSongs };
+const flagAlbum = (albumID: string, favorite: boolean, authKey: AuthKey) => {
+    return axios
+        .get(
+            `${
+                process.env.ServerURL
+            }/server/json.server.php?action=flag&type=album&id=${albumID}&flag=${Number(
+                favorite
+            )}&auth=${authKey}&version=400001`
+        )
+        .then((response) => {
+            const JSONData = response.data;
+            if (!JSONData) {
+                throw new Error('Server Error');
+            }
+            if (JSONData.error) {
+                throw new AmpacheError(JSONData.error);
+            }
+            return true;
+        });
+};
+
+export {
+    getRandomAlbums,
+    Album,
+    getAlbums,
+    getAlbum,
+    getAlbumSongs,
+    flagAlbum
+};

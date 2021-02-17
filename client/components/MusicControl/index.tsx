@@ -5,11 +5,18 @@ import { MusicContext } from '~Contexts/MusicContext';
 import Slider from '@material-ui/core/Slider';
 import CurrentPlaying from '~components/CurrentPlaying';
 import CurrentPlayingArt from '~components/CurrentPlayingArt';
-import Rating from '~components/Rating';
+import SimpleRating from '~components/SimpleRating';
+import { AuthKey } from '~logic/Auth';
 
 import style from './index.styl';
+import { flagSong } from '~logic/Song';
+import { toast } from '~node_modules/react-toastify';
 
-const MusicControl: React.FC = () => {
+interface MusicControlProps {
+    authKey: AuthKey;
+}
+
+const MusicControl: React.FC<MusicControlProps> = (props) => {
     const musicContext = useContext(MusicContext);
 
     const [ratingToggle, setRatingToggle] = useState(false);
@@ -31,6 +38,28 @@ const MusicControl: React.FC = () => {
         //https://stackoverflow.com/a/37770048
     ];
 
+    const handleFlagSong = (songID: string, favorite: boolean) => {
+        flagSong(songID, favorite, props.authKey)
+            .then(() => {
+                musicContext.currentPlayingSong.flag = favorite;
+                if (favorite) {
+                    return toast.success('Song added to favorites');
+                }
+                toast.success('Song removed from favorites');
+            })
+            .catch(() => {
+                if (favorite) {
+                    toast.error(
+                        '😞 Something went wrong adding song to favorites.'
+                    );
+                } else {
+                    toast.error(
+                        '😞 Something went wrong removing song from favorites.'
+                    );
+                }
+            });
+    };
+
     return (
         <div
             className={`${style.musicControl} ${
@@ -43,7 +72,7 @@ const MusicControl: React.FC = () => {
 
             <div className={style.ratingBarContainer}>
                 <div className={style.ratingBar}>
-                    <Rating
+                    <SimpleRating
                         value={
                             musicContext.currentPlayingSong
                                 ? musicContext.currentPlayingSong.rating
@@ -52,8 +81,10 @@ const MusicControl: React.FC = () => {
                         fav={
                             musicContext.currentPlayingSong
                                 ? musicContext.currentPlayingSong.flag
-                                : 0
+                                : false
                         }
+                        itemID={musicContext.currentPlayingSong?.id}
+                        setFlag={handleFlagSong}
                     />
                 </div>
             </div>

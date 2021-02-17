@@ -2,7 +2,7 @@ import React from 'react';
 import { Playlist } from '~logic/Playlist';
 import { Link } from 'react-router-dom';
 import SVG from 'react-inlinesvg';
-import Rating from '~components/Rating/';
+import SimpleRating from '~components/SimpleRating';
 
 import style from './index.styl';
 
@@ -31,7 +31,13 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
                         <div className={style.smartlistTag}>Smartlist</div>
                     ) : (
                         <div className={style.rating}>
-                            <Rating value={''} fav={''} />
+                            {/*TODO NOT AVAILABLE IN API*/}
+                            <SimpleRating
+                                value={0}
+                                fav={false}
+                                itemID={''}
+                                setFlag={() => {}}
+                            />
                         </div>
                     )}
                 </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Artist } from '~logic/Artist';
-import Rating from '~components/Rating/';
+import SimpleRating from '~components/SimpleRating';
 
 import style from './index.styl';
 
@@ -9,6 +9,7 @@ interface ArtistDisplayProps {
     artist: Artist;
     playSongFromAlbum?: (albumID: number) => void;
     className?: string;
+    flagArtist: (artistID: string, favorite: boolean) => void;
 }
 
 const ArtistDisplay: React.FC<ArtistDisplayProps> = (
@@ -28,9 +29,11 @@ const ArtistDisplay: React.FC<ArtistDisplayProps> = (
                         />
                     </div>
                     <div className={style.rating}>
-                        <Rating
+                        <SimpleRating
                             value={props.artist.rating}
                             fav={props.artist.flag}
+                            itemID={props.artist.id}
+                            setFlag={props.flagArtist}
                         />
                     </div>
                     <span className={`card-title ${style.artistName}`}>

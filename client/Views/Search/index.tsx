@@ -8,9 +8,9 @@ import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 
 import style from './index.styl';
-import { Album } from '~logic/Album';
+import { Album, flagAlbum } from '~logic/Album';
 import AlbumDisplay from '~components/AlbumDisplay';
-import { Artist } from '~logic/Artist';
+import { Artist, flagArtist } from '~logic/Artist';
 import ArtistDisplay from '~components/ArtistDisplay';
 
 interface SearchProps {
@@ -68,6 +68,62 @@ const SearchView: React.FC<SearchProps> = (props) => {
         musicContext.startPlayingWithNewQueue(songResults, songIndex);
     };
 
+    const handleFlagArtist = (artistID: string, favorite: boolean) => {
+        flagArtist(artistID, favorite, props.user.authKey)
+            .then(() => {
+                const newArtists = artistResults.map((artist) => {
+                    if (artist.id === artistID) {
+                        artist.flag = favorite;
+                    }
+                    return artist;
+                });
+                setArtistResults(newArtists);
+                if (favorite) {
+                    return toast.success('Artist added to favorites');
+                }
+                toast.success('Artist removed from favorites');
+            })
+            .catch(() => {
+                if (favorite) {
+                    toast.error(
+                        '😞 Something went wrong adding artist to favorites.'
+                    );
+                } else {
+                    toast.error(
+                        '😞 Something went wrong removing artist from favorites.'
+                    );
+                }
+            });
+    };
+
+    const handleFlagAlbum = (albumID: string, favorite: boolean) => {
+        flagAlbum(albumID, favorite, props.user.authKey)
+            .then(() => {
+                const newAlbums = albumResults.map((album) => {
+                    if (album.id === albumID) {
+                        album.flag = favorite;
+                    }
+                    return album;
+                });
+                setAlbumResults(newAlbums);
+                if (favorite) {
+                    return toast.success('Album added to favorites');
+                }
+                toast.success('Album removed from favorites');
+            })
+            .catch(() => {
+                if (favorite) {
+                    toast.error(
+                        '😞 Something went wrong adding album to favorites.'
+                    );
+                } else {
+                    toast.error(
+                        '😞 Something went wrong removing album from favorites.'
+                    );
+                }
+            });
+    };
+
     if (!searchQuery) {
         return (
             <div className={style.searchPage}>
@@ -119,6 +175,7 @@ const SearchView: React.FC<SearchProps> = (props) => {
                             <AlbumDisplay
                                 album={album}
                                 className={style.album}
+                                flagAlbum={handleFlagAlbum}
                                 key={album.id}
                             />
                         );
@@ -138,6 +195,7 @@ const SearchView: React.FC<SearchProps> = (props) => {
                             <ArtistDisplay
                                 artist={artist}
                                 className={style.artist}
+                                flagArtist={handleFlagArtist}
                                 key={artist.id}
                             />
                         );
