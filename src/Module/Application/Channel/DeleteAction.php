@@ -59,7 +59,7 @@ final class DeleteAction implements ApplicationActionInterface
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CHANNEL) === false) {
             return null;
         }
-        
+
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
             throw new AccessDeniedException();
         }

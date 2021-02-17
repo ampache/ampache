@@ -54,10 +54,10 @@ class ShowSongActionTest extends MockeryTestCase
 
     /** @var LoggerInterface|MockInterface|null */
     private MockInterface $logger;
-    
+
     /** @var ShowSongAction|null */
     private ShowSongAction $subject;
-    
+
     public function setUp(): void
     {
         $this->ui           = $this->mock(UiInterface::class);
@@ -65,7 +65,7 @@ class ShowSongActionTest extends MockeryTestCase
         $this->guiFactory   = $this->mock(GuiFactoryInterface::class);
         $this->talFactory   = $this->mock(TalFactoryInterface::class);
         $this->logger       = $this->mock(LoggerInterface::class);
-        
+
         $this->subject = new ShowSongAction(
             $this->ui,
             $this->modelFactory,
@@ -74,24 +74,24 @@ class ShowSongActionTest extends MockeryTestCase
             $this->logger
         );
     }
-    
+
     public function testRunEchoesErrorIfSongDoesNotExist(): void
     {
         $request = $this->mock(ServerRequestInterface::class);
         $song    = $this->mock(Song::class);
-        
+
         $song_id = 666;
-        
+
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
             ->once()
             ->andReturn(['song_id' => (string) $song_id]);
-        
+
         $this->modelFactory->shouldReceive('createSong')
             ->with($song_id)
             ->once()
             ->andReturn($song);
-        
+
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
@@ -101,23 +101,23 @@ class ShowSongActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showFooter')
             ->withNoArgs()
             ->once();
-        
+
         $song->shouldReceive('format')
             ->withNoArgs()
             ->once();
         $song->shouldReceive('fill_ext_info')
             ->withNoArgs()
             ->once();
-        
+
         $this->logger->shouldReceive('warning')
             ->with(
                 'Requested a song that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => ShowSongAction::class]
             )
             ->once();
-        
+
         $this->expectOutputString('You have requested a Song that does not exist.');
-        
+
         $this->assertNull(
             $this->subject->run(
                 $request,
@@ -137,7 +137,7 @@ class ShowSongActionTest extends MockeryTestCase
         $song_id = 666;
         $title   = 'some-song-title';
         $content = 'some-content';
-        
+
         $song->id    = $song_id;
         $song->title = $title;
 
@@ -176,7 +176,7 @@ class ShowSongActionTest extends MockeryTestCase
         $song->shouldReceive('fill_ext_info')
             ->withNoArgs()
             ->once();
-        
+
         $this->guiFactory->shouldReceive('createSongViewAdapter')
             ->with($gatekeeper, $song)
             ->once()
@@ -195,7 +195,7 @@ class ShowSongActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn($content);
-        
+
         $this->expectOutputString($content);
 
         $this->assertNull(

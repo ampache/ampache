@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final class DeleteAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'delete';
-    
+
     private UiInterface $ui;
 
     private ConfigContainerInterface $configContainer;
@@ -50,7 +50,7 @@ final class DeleteAction implements ApplicationActionInterface
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
     }
-    
+
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         /* Make sure they have access to this */
@@ -73,10 +73,10 @@ final class DeleteAction implements ApplicationActionInterface
                 $this->configContainer->getWebPath()
             )
         );
-        
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
-        
+
         return null;
     }
 }

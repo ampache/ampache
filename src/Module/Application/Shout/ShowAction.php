@@ -34,7 +34,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
-    
+
     private ResponseFactoryInterface $responseFactory;
 
     private ConfigContainerInterface $configContainer;

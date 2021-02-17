@@ -69,7 +69,7 @@ final class ShowDeleteAction implements ApplicationActionInterface
             'delete_channel'
         );
         $this->ui->showFooter();
-        
+
         return null;
     }
 }

@@ -56,7 +56,7 @@ final class ShowPlaylistAction implements ApplicationActionInterface
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
     }
-    
+
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         /* Make sure they have access to this */
@@ -68,22 +68,22 @@ final class ShowPlaylistAction implements ApplicationActionInterface
         $democratic = Democratic::get_current_playlist();
         if (!$democratic->id) {
             require_once Ui::find_template('show_democratic.inc.php');
-            
+
             $this->ui->showQueryStats();
             $this->ui->showFooter();
-            
+
             return null;
         }
 
         $democratic->set_parent();
         $democratic->format();
-        
+
         require_once Ui::find_template('show_democratic.inc.php');
-        
+
         $objects = $democratic->get_items();
         Song::build_cache($democratic->object_ids);
         Democratic::build_vote_cache($democratic->vote_ids);
-        
+
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type('democratic');
         $browse->set_static_content(false);
@@ -93,7 +93,7 @@ final class ShowPlaylistAction implements ApplicationActionInterface
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();
-        
+
         return null;
     }
 }

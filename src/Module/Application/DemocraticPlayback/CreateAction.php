@@ -42,7 +42,7 @@ use Teapot\StatusCode;
 final class CreateAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'create';
-    
+
     private ConfigContainerInterface $configContainer;
 
     private ResponseFactoryInterface $responseFactory;
@@ -58,7 +58,7 @@ final class CreateAction implements ApplicationActionInterface
         $this->responseFactory = $responseFactory;
         $this->ui              = $ui;
     }
-    
+
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         /* Make sure they have access to this */
@@ -69,7 +69,7 @@ final class CreateAction implements ApplicationActionInterface
         ) {
             throw new AccessDeniedException();
         }
-        
+
         $democratic = Democratic::get_current_playlist();
 
         // If we don't have anything currently create something

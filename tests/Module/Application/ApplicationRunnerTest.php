@@ -54,17 +54,17 @@ class ApplicationRunnerTest extends MockeryTestCase
 
     /** @var MockInterface|UiInterface|null  */
     private ?MockInterface $ui;
-    
+
     /** @var ApplicationRunner|null */
     private ApplicationRunner $subject;
-    
+
     public function setUp(): void
     {
         $this->dic               = $this->mock(ContainerInterface::class);
         $this->logger            = $this->mock(LoggerInterface::class);
         $this->gatekeeperFactory = $this->mock(GatekeeperFactoryInterface::class);
         $this->ui                = $this->mock(UiInterface::class);
-        
+
         $this->subject = new ApplicationRunner(
             $this->dic,
             $this->logger,
@@ -72,11 +72,11 @@ class ApplicationRunnerTest extends MockeryTestCase
             $this->ui
         );
     }
-    
+
     public function testRunFailsWithMissingAction(): void
     {
         $request = $this->mock(ServerRequestInterface::class);
-        
+
         $request->shouldReceive('getParsedBody')
             ->withNoArgs()
             ->once()
@@ -85,26 +85,26 @@ class ApplicationRunnerTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn([]);
-        
+
         $this->dic->shouldReceive('get')
             ->with('')
             ->once()
             ->andThrow(new NotFoundException());
-        
+
         $this->logger->shouldReceive('critical')
             ->with(
                 'No handler found for action ""',
                 [LegacyLogger::CONTEXT_TYPE => ApplicationRunner::class]
             )
             ->once();
-        
+
         $this->subject->run($request, [], '');
     }
 
     public function testRunFailsWithActionFromQueryParams(): void
     {
         $request = $this->mock(ServerRequestInterface::class);
-        
+
         $action  = 'some-action';
         $handler = 'some-handler';
 
@@ -146,7 +146,7 @@ class ApplicationRunnerTest extends MockeryTestCase
 
         $action       = 'some-action';
         $handler_name = 'some-handler';
-        
+
         $emitter->shouldReceive('emit')
             ->with($response)
             ->once();
@@ -176,7 +176,7 @@ class ApplicationRunnerTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn($gatekeeper);
-        
+
         $handler->shouldReceive('run')
             ->with($request, $gatekeeper)
             ->once()

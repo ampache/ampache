@@ -36,7 +36,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final class ShowAddLabelAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_add_label';
-    
+
     private ConfigContainerInterface $configContainer;
 
     private UiInterface $ui;
@@ -52,7 +52,7 @@ final class ShowAddLabelAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
-        
+
         if (
             $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === true ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
@@ -61,10 +61,10 @@ final class ShowAddLabelAction implements ApplicationActionInterface
         } else {
             echo T_('The Label cannot be found');
         }
-        
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
-        
+
         return null;
     }
 }

@@ -89,7 +89,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
         $this->catalogRepository = $catalogRepository;
         $this->configContainer   = $configContainer;
     }
-    
+
     public function handle(): void
     {
         $results = array();

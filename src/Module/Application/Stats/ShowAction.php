@@ -74,13 +74,13 @@ final class ShowAction extends AbstractGraphRendererAction
 
         if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === true) {
             $this->ui->showBoxTop(T_('Statistics'), 'box box_stats');
-            
+
             echo $this->talFactory
                 ->createTalView()
                 ->setTemplate('stats.xhtml')
                 ->setContext('STATS', $this->guiFactory->createStatsViewAdapter())
                 ->render();
-            
+
             $this->ui->showBoxBottom();
 
             if (

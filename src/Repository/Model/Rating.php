@@ -415,7 +415,7 @@ class Rating extends database_object
 
         $base_url = '?action=set_rating&rating_type=' . $rating->type . '&object_id=' . $rating->id;
         $rate     = ($rating->get_user_rating() ?: 0);
-        
+
         $globalStarRatingCss = '';
         if ($global_rating) {
             $rate                = $rating->get_average_rating();

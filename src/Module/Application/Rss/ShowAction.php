@@ -38,7 +38,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
-    
+
     private ConfigContainerInterface $configContainer;
 
     private ResponseFactoryInterface $responseFactory;
@@ -69,13 +69,13 @@ final class ShowAction implements ApplicationActionInterface
         $rsstoken = Core::get_request('rsstoken');
         $rss      = new AmpacheRss($type, $rsstoken);
         $params   = null;
-        
+
         if ($type === 'podcast') {
             $params                = [];
             $params['object_type'] = Core::get_request('object_type');
             $params['object_id']   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
         }
-        
+
         return $this->responseFactory->createResponse()
             ->withHeader(
                 'Content-Type',

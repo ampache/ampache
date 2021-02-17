@@ -56,7 +56,7 @@ interface ModelFactoryInterface
     public function createArtist(
         ?int $artistId = null
     ): Artist;
-    
+
     public function createWanted(
         ?int $wantedId = null
     ): Wanted;

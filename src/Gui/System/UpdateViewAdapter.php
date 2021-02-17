@@ -29,12 +29,12 @@ final class UpdateViewAdapter implements UpdateViewAdapterInterface
             $this->configContainer->get(ConfigurationKeyEnum::LANG)
         );
     }
-    
+
     public function getCharset(): string
     {
         return $this->configContainer->get(ConfigurationKeyEnum::SITE_CHARSET);
     }
-    
+
     public function getTitle(): string
     {
         return sprintf(
@@ -42,17 +42,17 @@ final class UpdateViewAdapter implements UpdateViewAdapterInterface
             $this->configContainer->get(ConfigurationKeyEnum::SITE_TITLE)
         );
     }
-    
+
     public function getLogoUrl(): string
     {
         return Ui::get_logo_url('dark');
     }
-    
+
     public function getInstallationTitle(): string
     {
         return T_('Ampache :: For the Love of Music - Installation');
     }
-    
+
     public function getUpdateInfoText(): string
     {
         /* HINT: %1 Displays 3.3.3.5, %2 shows current Ampache version, %3 shows current database version */
@@ -63,17 +63,17 @@ final class UpdateViewAdapter implements UpdateViewAdapterInterface
             '<strong>' . Update::get_version() . '</strong>'
         );
     }
-    
+
     public function getErrorText(): string
     {
         return AmpError::getErrorsFormatted('general');
     }
-    
+
     public function hasUpdate(): bool
     {
         return Update::need_update();
     }
-    
+
     public function getUpdateActionUrl(): string
     {
         return sprintf(
@@ -82,12 +82,12 @@ final class UpdateViewAdapter implements UpdateViewAdapterInterface
             UpdateAction::REQUEST_KEY
         );
     }
-    
+
     public function getUpdateInfo(): array
     {
         $updates = Update::display_update();
         $result  = [];
-        
+
         foreach ($updates as $update) {
             $result[] = [
                 'title' => sprintf(
@@ -100,7 +100,7 @@ final class UpdateViewAdapter implements UpdateViewAdapterInterface
 
         return $result;
     }
-    
+
     public function getWebPath(): string
     {
         return $this->configContainer->getWebPath();

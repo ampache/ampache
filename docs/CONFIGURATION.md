@@ -59,8 +59,6 @@ This sections contains preferences for different features that can be enabled, d
 
 * **Allow Downloads** - If this is enabled then you can download individual songs by clicking on their download link. If you have allow zip downloads in the config file this Option will also enable the Full Album, Full Artist, Selected, Playlist downloads. Default is disabled.
 
-* **Allow Direct Links** - This puts a raw 'stream' URL link on every song line. This can be used to effectivly enqueue songs by dragging the raw URL into your audio player. This is also disabled by default.
-
 * **Localplay Access Level** - This defines what type of access you have to Localplay. Global tells Ampache to use the settings defined in Admin --> Config for this user and to ignore any locally set settings. Local tells Ampache to first check the local settings. If they do not exist then fall back on the global settings. Disabled prevents all access to Localplay, this is the default value.
 
 ### System

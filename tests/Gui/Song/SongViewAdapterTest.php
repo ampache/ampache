@@ -48,17 +48,17 @@ class SongViewAdapterTest extends MockeryTestCase
 
     /** @var Song|MockInterface|null */
     private MockInterface $song;
-    
+
     /** @var SongViewAdapter|null */
     private SongViewAdapter $subject;
-    
+
     public function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
         $this->gatekeeper      = $this->mock(GuiGatekeeperInterface::class);
         $this->song            = $this->mock(Song::class);
-        
+
         $this->subject = new SongViewAdapter(
             $this->configContainer,
             $this->modelFactory,
@@ -66,16 +66,16 @@ class SongViewAdapterTest extends MockeryTestCase
             $this->song
         );
     }
-    
+
     public function testGetIdReturnsSongId(): void
     {
         $id = 666;
-        
+
         $this->song->shouldReceive('getId')
             ->withNoArgs()
             ->once()
             ->andReturn($id);
-        
+
         $this->assertSame(
             $id,
             $this->subject->getId()
@@ -86,12 +86,12 @@ class SongViewAdapterTest extends MockeryTestCase
     {
         $songId  = 666;
         $webPath = 'some-path';
-        
+
         $this->song->shouldReceive('getId')
             ->withNoArgs()
             ->once()
             ->andReturn($songId);
-        
+
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()
             ->once()
@@ -131,7 +131,7 @@ class SongViewAdapterTest extends MockeryTestCase
             $this->subject->getDisplayStatsUrl()
         );
     }
-    
+
     public function testGetEditButtonTitleReturnsValue(): void
     {
         $this->assertSame(
@@ -139,29 +139,29 @@ class SongViewAdapterTest extends MockeryTestCase
             $this->subject->getEditButtonTitle()
         );
     }
-    
+
     public function testGetAverageRatingReturnsValue(): void
     {
         $songId        = 666;
         $averageRating = '7.89';
-        
+
         $rating = $this->mock(Rating::class);
-        
+
         $this->song->shouldReceive('getId')
             ->withNoArgs()
             ->once()
             ->andReturn($songId);
-        
+
         $this->modelFactory->shouldReceive('createRating')
             ->with($songId, 'song')
             ->once()
             ->andReturn($rating);
-        
+
         $rating->shouldReceive('get_average_rating')
             ->withNoArgs()
             ->once()
             ->andReturn($averageRating);
-        
+
         $this->assertSame(
             (string) $averageRating,
             $this->subject->getAverageRating()

@@ -81,10 +81,10 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
                 $this->configContainer->getWebPath()
             );
         }
-        
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
-        
+
         return null;
     }
 }

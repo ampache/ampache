@@ -30,7 +30,7 @@ $environment = $dic->get(EnvironmentInterface::class);
 <?php
 $t_search = T_('Search'); ?>
 <div id="sb_Subsearch">
-    <form name="search" method="post" action="<?php echo $web_path; ?>/search.php?type=song" enctype="multipart/form-data" style="Display:inline">
+    <form name="search" method="post" action="<?php echo $web_path; ?>/search.php" enctype="multipart/form-data" style="Display:inline">
         <input type="text" name="rule_1_input" id="searchString" placeholder="<?php echo $t_search; ?>" />
         <input type="hidden" name="action" value="search" />
         <input type="hidden" name="rule_1_operator" value="0" />

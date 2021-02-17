@@ -96,7 +96,7 @@ final class GuiFactory implements GuiFactoryInterface
             $this->configContainer
         );
     }
-    
+
     public function createStatsViewAdapter(): StatsViewAdapterInterface
     {
         return new StatsViewAdapter(
@@ -106,7 +106,7 @@ final class GuiFactory implements GuiFactoryInterface
             $this->catalogRepository
         );
     }
-    
+
     public function createCatalogDetails(
         Catalog $catalog
     ): CatalogDetailsInterface {
@@ -115,12 +115,12 @@ final class GuiFactory implements GuiFactoryInterface
             $catalog
         );
     }
-    
+
     public function createCatalogStats(array $stats): CatalogStatsInterface
     {
         return new CatalogStats($stats);
     }
-    
+
     public function createUpdateViewAdapter(): UpdateViewAdapterInterface
     {
         return new UpdateViewAdapter(

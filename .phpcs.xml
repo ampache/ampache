@@ -38,6 +38,8 @@
   <file>.</file>
   <exclude-pattern>*public/lib/components/*</exclude-pattern>
   <exclude-pattern>*public/templates/*</exclude-pattern>
+  <exclude-pattern>*public/client/*</exclude-pattern>
+  <exclude-pattern>*public/newclient/*</exclude-pattern>
   <exclude-pattern>*vendor/*</exclude-pattern>
   <exclude-pattern>*.js</exclude-pattern>
   <exclude-pattern>*.min.css</exclude-pattern>

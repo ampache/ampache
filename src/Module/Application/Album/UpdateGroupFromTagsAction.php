@@ -38,7 +38,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final class UpdateGroupFromTagsAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'update_group_from_tags';
-    
+
     private ConfigContainerInterface $configContainer;
 
     private ModelFactoryInterface $modelFactory;
@@ -87,7 +87,7 @@ final class UpdateGroupFromTagsAction implements ApplicationActionInterface
         );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
-        
+
         return null;
     }
 }

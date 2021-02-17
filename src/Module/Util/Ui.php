@@ -458,12 +458,12 @@ class Ui implements UiInterface
 
         require_once self::find_template($template);
     }
-    
+
     public function showFooter(): void
     {
         static::show_footer();
     }
-    
+
     public function showHeader(): void
     {
         require_once self::find_template('header.inc.php');
@@ -495,12 +495,12 @@ class Ui implements UiInterface
             Dba::show_profile();
         }
     }
-    
+
     public function showBoxTop(string $title = '', string $class = ''): void
     {
         static::show_box_top($title, $class);
     }
-    
+
     public function showBoxBottom(): void
     {
         static::show_box_bottom();

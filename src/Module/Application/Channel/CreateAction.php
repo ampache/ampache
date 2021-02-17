@@ -58,7 +58,7 @@ final class CreateAction implements ApplicationActionInterface
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CHANNEL) === false) {
             return null;
         }
-        
+
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) ||
             !Core::form_verify('add_channel', 'post')
@@ -94,7 +94,7 @@ final class CreateAction implements ApplicationActionInterface
                 AmpConfig::get('web_path') . '/browse.php?action=channel'
             );
         }
-        
+
         $this->ui->showFooter();
 
         return null;

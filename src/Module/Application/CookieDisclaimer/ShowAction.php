@@ -33,7 +33,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
-    
+
     private UiInterface $ui;
 
     public function __construct(
@@ -47,7 +47,7 @@ final class ShowAction implements ApplicationActionInterface
         $this->ui->showHeader();
         $this->ui->show('cookie_disclaimer.inc.php');
         $this->ui->showFooter();
-        
+
         return null;
     }
 }

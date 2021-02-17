@@ -49,6 +49,8 @@ final class ShowMissingAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        set_time_limit(600);
+
         $this->ui->showHeader();
         $this->ui->show(
             'show_missing_artist.inc.php',
@@ -60,7 +62,7 @@ final class ShowMissingAction implements ApplicationActionInterface
         );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
-        
+
         return null;
     }
 }
