@@ -74,7 +74,7 @@ class Api
         Method\SongDeleteMethod::ACTION => Method\SongDeleteMethod::class,
         'playlists' => Method\PlaylistsMethod::class,
         Method\PlaylistMethod::ACTION => Method\PlaylistMethod::class,
-        'playlist_songs' => Method\PlaylistSongsMethod::class,
+        Method\PlaylistSongsMethod::ACTION => Method\PlaylistSongsMethod::class,
         'playlist_create' => Method\PlaylistCreateMethod::class,
         'playlist_edit' => Method\PlaylistEditMethod::class,
         'playlist_delete' => Method\PlaylistDeleteMethod::class,

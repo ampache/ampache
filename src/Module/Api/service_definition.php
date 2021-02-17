@@ -87,6 +87,7 @@ return [
     Method\PreferenceDeleteMethod::class => autowire(),
     Method\CatalogActionMethod::class => autowire(),
     Method\SystemPreferenceMethod::class => autowire(),
+    Method\PlaylistSongsMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),
