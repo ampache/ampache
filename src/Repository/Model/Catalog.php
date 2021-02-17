@@ -51,6 +51,7 @@ use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\UpdateInfoRepository;
 use Exception;
 use PDOStatement;
 use ReflectionException;
@@ -705,6 +706,9 @@ abstract class Catalog extends database_object
      * @param boolean $enabled
      * @param string $table
      * @return array
+     *
+     * @deprecated
+     * @see UpdateInfoRepository::countServer()
      */
     public static function count_server($enabled = false, $table = '')
     {

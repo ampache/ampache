@@ -119,7 +119,7 @@ class Api
         'scrobble' => Method\ScrobbleMethod::class,
         Method\CatalogsMethod::ACTION => Method\CatalogsMethod::class,
         Method\CatalogMethod::ACTION => Method\CatalogMethod::class,
-        'catalog_action' => Method\CatalogActionMethod::class,
+        Method\CatalogActionMethod::ACTION => Method\CatalogActionMethod::class,
         'catalog_file' => Method\CatalogFileMethod::class,
         Method\TimelineMethod::ACTION => Method\TimelineMethod::class,
         Method\FriendsTimelineMethod::ACTION => Method\FriendsTimelineMethod::class,

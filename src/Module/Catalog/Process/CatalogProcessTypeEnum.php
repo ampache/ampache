@@ -19,20 +19,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Ampache\Repository;
+declare(strict_types=1);
 
-interface UpdateInfoRepositoryInterface
+namespace Ampache\Module\Catalog\Process;
+
+final class CatalogProcessTypeEnum
 {
-    /**
-     * Updates the count of item by table name
-     */
-    public function updateCountByTableName(string $tableName): int;
-
-    /**
-     * This returns the current number of songs, videos, albums, and artists
-     * across all catalogs on the server
-     *
-     * @return array<string, int>
-     */
-    public function countServer(bool $enabled = false, string $table = ''): array;
+    public const ADD        = 'add_to_catalog';
+    public const CLEAN      = 'clean_catalog';
+    public const GATHER_ART = 'gather_art';
+    public const VERIFY     = 'verify_catalog';
 }

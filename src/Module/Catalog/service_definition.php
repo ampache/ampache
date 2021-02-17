@@ -36,4 +36,5 @@ return [
     GarbageCollector\CatalogGarbageCollectorInterface::class => autowire(GarbageCollector\CatalogGarbageCollector::class),
     Loader\CatalogLoaderInterface::class => autowire(Loader\CatalogLoader::class),
     MediaDeletionCheckerInterface::class => autowire(MediaDeletionChecker::class),
+    Process\CatalogProcessTypeMapperInterface::class => autowire(Process\CatalogProcessTypeMapper::class),
 ];

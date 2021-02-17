@@ -19,20 +19,30 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Ampache\Repository;
+declare(strict_types=1);
 
-interface UpdateInfoRepositoryInterface
+namespace Ampache\Module\Catalog\Process;
+
+use Ampache\MockeryTestCase;
+use Ampache\Repository\Model\Catalog;
+
+class GatherArtProcessTest extends MockeryTestCase
 {
-    /**
-     * Updates the count of item by table name
-     */
-    public function updateCountByTableName(string $tableName): int;
+    private GatherArtProcess $subject;
 
-    /**
-     * This returns the current number of songs, videos, albums, and artists
-     * across all catalogs on the server
-     *
-     * @return array<string, int>
-     */
-    public function countServer(bool $enabled = false, string $table = ''): array;
+    public function setUp(): void
+    {
+        $this->subject = new GatherArtProcess();
+    }
+
+    public function testProcessGathers(): void
+    {
+        $catalog = $this->mock(Catalog::class);
+
+        $catalog->shouldReceive('gather_art')
+            ->withNoArgs()
+            ->once();
+
+        $this->subject->process($catalog);
+    }
 }

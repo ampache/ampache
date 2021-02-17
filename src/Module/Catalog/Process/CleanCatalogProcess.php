@@ -19,20 +19,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Ampache\Repository;
+namespace Ampache\Module\Catalog\Process;
 
-interface UpdateInfoRepositoryInterface
+use Ampache\Repository\Model\Catalog;
+
+final class CleanCatalogProcess implements CatalogProcessInterface
 {
-    /**
-     * Updates the count of item by table name
-     */
-    public function updateCountByTableName(string $tableName): int;
-
-    /**
-     * This returns the current number of songs, videos, albums, and artists
-     * across all catalogs on the server
-     *
-     * @return array<string, int>
-     */
-    public function countServer(bool $enabled = false, string $table = ''): array;
+    public function process(Catalog $catalog): void
+    {
+        $catalog->clean_catalog_proc();
+        Catalog::clean_empty_albums();
+    }
 }

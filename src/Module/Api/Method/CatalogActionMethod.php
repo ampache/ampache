@@ -20,85 +20,112 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
+use Ampache\Module\Catalog\Loader\Exception\CatalogNotFoundException;
+use Ampache\Module\Catalog\Process\CatalogProcessTypeMapperInterface;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class CatalogActionMethod
- * @package Lib\ApiMethods
- */
-final class CatalogActionMethod
+final class CatalogActionMethod implements MethodInterface
 {
-    private const ACTION = 'catalog_action';
+    public const ACTION = 'catalog_action';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private CatalogProcessTypeMapperInterface $catalogProcessTypeMapper;
+
+    private CatalogLoaderInterface $catalogLoader;
+
+    private UpdateInfoRepositoryInterface $updateInfoRepository;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        CatalogProcessTypeMapperInterface $catalogProcessTypeMapper,
+        CatalogLoaderInterface $catalogLoader,
+        UpdateInfoRepositoryInterface $updateInfoRepository
+    ) {
+        $this->streamFactory            = $streamFactory;
+        $this->catalogProcessTypeMapper = $catalogProcessTypeMapper;
+        $this->catalogLoader            = $catalogLoader;
+        $this->updateInfoRepository     = $updateInfoRepository;
+    }
 
     /**
-     * catalog_action
      * MINIMUM_API_VERSION=400001
      * CHANGED_IN_API_VERSION=420000
      *
      * Kick off a catalog update or clean for the selected catalog
      * Added 'verify_catalog', 'gather_art'
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * task    = (string) 'add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'
      * catalog = (integer) $catalog_id)
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws ResultEmptyException
+     * @throws RequestParamMissingException
+     * @throws AccessDeniedException
      */
-    public static function catalog_action(array $input)
-    {
-        if (!Api::check_parameter($input, array('catalog', 'task'), self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $task = $input['task'] ?? null;
+
+        if ($task === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'task')
+            );
         }
-        if (!Api::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
-            return false;
+
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
+            throw new AccessDeniedException(T_('Require: 75'));
         }
-        $task = (string) $input['task'];
+
+        $processType = $this->catalogProcessTypeMapper->map((string) $task);
         // confirm the correct data
-        if (!in_array($task, array('add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'))) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $task), '4710', self::ACTION, 'task', $input['api_format']);
-
-            return false;
+        if ($processType === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), $task)
+            );
         }
 
-        $catalog = Catalog::create_from_id((int) $input['catalog']);
-        if ($catalog) {
-            define('API', true);
-            unset($SSE_OUTPUT);
-            switch ($task) {
-                case 'clean_catalog':
-                    $catalog->clean_catalog_proc();
-                    Catalog::clean_empty_albums();
-                    break;
-                case 'verify_catalog':
-                    $catalog->verify_catalog_proc();
-                    break;
-                case 'gather_art':
-                    $catalog->gather_art();
-                    break;
-                case 'add_to_catalog':
-                    $options = array(
-                        'gather_art' => false,
-                        'parse_playlist' => false
-                    );
-                    $catalog->add_to_catalog($options);
-                    Album::update_album_artist();
-                    break;
-            }
-            Api::message('successfully started: ' . $task, $input['api_format']);
-            Catalog::count_server();
-        } else {
-            Api::error(T_('Not Found'), '4704', self::ACTION, 'catalog', $input['api_format']);
+        try {
+            $catalog = $this->catalogLoader->byId((int) ($input['catalog'] ?? 0));
+        } catch (CatalogNotFoundException $e) {
+            throw new ResultEmptyException(T_('Not Found'));
         }
-        Session::extend($input['auth']);
 
-        return true;
+        /** @todo remove constant definition */
+        define('API', true);
+
+        $processType->process($catalog);
+
+        $this->updateInfoRepository->countServer();
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->success(
+                    sprintf('successfully started: %s', $task)
+                )
+            )
+        );
     }
 }
