@@ -26,9 +26,13 @@ namespace Ampache\Gui\Stats;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\Catalog\CatalogDetailsInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
+use Ampache\Module\Catalog\Loader\Exception\CatalogNotFoundException;
 use Ampache\Repository\CatalogRepositoryInterface;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 use Mockery\MockInterface;
@@ -47,6 +51,9 @@ class StatsViewAdapterTest extends MockeryTestCase
     /** @var MockInterface|CatalogRepositoryInterface|null */
     private MockInterface $catalogRepository;
 
+    /** @var MockInterface|CatalogLoaderInterface|null */
+    private MockInterface $catalogLoader;
+
     private ?StatsViewAdapter $subject;
 
     public function setUp(): void
@@ -55,12 +62,14 @@ class StatsViewAdapterTest extends MockeryTestCase
         $this->guiFactory        = $this->mock(GuiFactoryInterface::class);
         $this->videoRepository   = $this->mock(VideoRepositoryInterface::class);
         $this->catalogRepository = $this->mock(CatalogRepositoryInterface::class);
+        $this->catalogLoader     = $this->mock(CatalogLoaderInterface::class);
 
         $this->subject = new StatsViewAdapter(
             $this->configContainer,
             $this->guiFactory,
             $this->videoRepository,
-            $this->catalogRepository
+            $this->catalogRepository,
+            $this->catalogLoader
         );
     }
 
@@ -85,6 +94,43 @@ class StatsViewAdapterTest extends MockeryTestCase
 
         $this->assertTrue(
             $this->subject->displayPodcast()
+        );
+    }
+
+    public function testGetCatalogDetailsReturnsListOfCatalogDetailInstances(): void
+    {
+        $catalogId1 = 666;
+        $catalogId2 = 42;
+
+        $catalog        = $this->mock(Catalog::class);
+        $catalogDetails = $this->mock(CatalogDetailsInterface::class);
+
+        $this->catalogRepository->shouldReceive('getList')
+            ->withNoArgs()
+            ->once()
+            ->andReturn([$catalogId1, $catalogId2]);
+
+        $this->catalogLoader->shouldReceive('byId')
+            ->with($catalogId1)
+            ->once()
+            ->andThrow(new CatalogNotFoundException());
+        $this->catalogLoader->shouldReceive('byId')
+            ->with($catalogId2)
+            ->once()
+            ->andReturn($catalog);
+
+        $catalog->shouldReceive('format')
+            ->withNoArgs()
+            ->once();
+
+        $this->guiFactory->shouldReceive('createCatalogDetails')
+            ->with($catalog)
+            ->once()
+            ->andReturn($catalogDetails);
+
+        $this->assertSame(
+            [$catalogDetails],
+            $this->subject->getCatalogDetails()
         );
     }
 }

@@ -28,6 +28,8 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\Catalog\CatalogDetailsInterface;
 use Ampache\Gui\GuiFactoryInterface;
+use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
+use Ampache\Module\Catalog\Loader\Exception\CatalogNotFoundException;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Video;
@@ -43,16 +45,20 @@ final class StatsViewAdapter implements StatsViewAdapterInterface
 
     private CatalogRepositoryInterface $catalogRepository;
 
+    private CatalogLoaderInterface $catalogLoader;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         GuiFactoryInterface $guiFactory,
         VideoRepositoryInterface $videoRepository,
-        CatalogRepositoryInterface $catalogRepository
+        CatalogRepositoryInterface $catalogRepository,
+        CatalogLoaderInterface $catalogLoader
     ) {
         $this->configContainer   = $configContainer;
         $this->guiFactory        = $guiFactory;
         $this->videoRepository   = $videoRepository;
         $this->catalogRepository = $catalogRepository;
+        $this->catalogLoader     = $catalogLoader;
     }
 
     public function displayVideo(): bool
@@ -79,8 +85,12 @@ final class StatsViewAdapter implements StatsViewAdapterInterface
 
         $result = [];
 
-        foreach ($catalogs as $catalog_id) {
-            $catalog = Catalog::create_from_id($catalog_id);
+        foreach ($catalogs as $catalogId) {
+            try {
+                $catalog = $this->catalogLoader->byId($catalogId);
+            } catch (CatalogNotFoundException $e) {
+                continue;
+            }
             $catalog->format();
 
             $result[] = $this->guiFactory->createCatalogDetails($catalog);

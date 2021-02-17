@@ -33,6 +33,7 @@ use Ampache\Gui\Stats\StatsViewAdapter;
 use Ampache\Gui\System\ConfigViewAdapter;
 use Ampache\Gui\System\UpdateViewAdapter;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
@@ -62,6 +63,9 @@ class GuiFactoryTest extends MockeryTestCase
 
     /** @var MockInterface|CatalogRepositoryInterface|null */
     private MockInterface $catalogRepository;
+
+    /** @var MockInterface|CatalogLoaderInterface|null */
+    private MockInterface $catalogLoader;
     
     /** @var GuiFactory|null */
     private GuiFactory $subject;
@@ -74,6 +78,7 @@ class GuiFactoryTest extends MockeryTestCase
         $this->playlistLoader    = $this->mock(PlaylistLoaderInterface::class);
         $this->videoRepository   = $this->mock(VideoRepositoryInterface::class);
         $this->catalogRepository = $this->mock(CatalogRepositoryInterface::class);
+        $this->catalogLoader     = $this->mock(CatalogLoaderInterface::class);
 
         $this->subject = new GuiFactory(
             $this->configContainer,
@@ -81,7 +86,8 @@ class GuiFactoryTest extends MockeryTestCase
             $this->ajaxUriRetriever,
             $this->playlistLoader,
             $this->videoRepository,
-            $this->catalogRepository
+            $this->catalogRepository,
+            $this->catalogLoader
         );
     }
 

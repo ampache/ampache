@@ -39,6 +39,7 @@ use Ampache\Gui\System\ConfigViewAdapter;
 use Ampache\Gui\System\ConfigViewAdapterInterface;
 use Ampache\Gui\System\UpdateViewAdapter;
 use Ampache\Gui\System\UpdateViewAdapterInterface;
+use Ampache\Module\Catalog\Loader\CatalogLoaderInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
@@ -62,13 +63,16 @@ final class GuiFactory implements GuiFactoryInterface
 
     private CatalogRepositoryInterface $catalogRepository;
 
+    private CatalogLoaderInterface $catalogLoader;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
         AjaxUriRetrieverInterface $ajaxUriRetriever,
         PlaylistLoaderInterface $playlistLoader,
         VideoRepositoryInterface $videoRepository,
-        CatalogRepositoryInterface $catalogRepository
+        CatalogRepositoryInterface $catalogRepository,
+        CatalogLoaderInterface $catalogLoader
     ) {
         $this->configContainer   = $configContainer;
         $this->modelFactory      = $modelFactory;
@@ -76,6 +80,7 @@ final class GuiFactory implements GuiFactoryInterface
         $this->playlistLoader    = $playlistLoader;
         $this->videoRepository   = $videoRepository;
         $this->catalogRepository = $catalogRepository;
+        $this->catalogLoader     = $catalogLoader;
     }
 
     public function createSongViewAdapter(
@@ -103,7 +108,8 @@ final class GuiFactory implements GuiFactoryInterface
             $this->configContainer,
             $this,
             $this->videoRepository,
-            $this->catalogRepository
+            $this->catalogRepository,
+            $this->catalogLoader
         );
     }
 
