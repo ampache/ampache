@@ -1,13 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { PLAYERSTATUS } from '~enum/PlayerStatus';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { AuthKey } from '~logic/Auth';
 import { Song } from '~logic/Song';
 import ReactAudioPlayer from 'react-audio-player';
-
-interface MusicContextProps {
-    authKey: AuthKey;
-}
 
 interface MusicContext {
     playerStatus: PLAYERSTATUS;
@@ -19,6 +14,7 @@ interface MusicContext {
     playPause: () => void;
     playPrevious: () => void;
     playNext: () => void;
+    toggleFlag: () => void;
     startPlayingWithNewQueue: (newQueue: Song[], startPosition?) => void;
     addToQueue: (song: Song, next: boolean) => void;
     seekSongTo: (newPosition: number) => void;
@@ -29,7 +25,7 @@ export const MusicContext = React.createContext({
     playerStatus: PLAYERSTATUS.STOPPED
 } as MusicContext);
 
-export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
+export const MusicContextProvider: React.FC = (props) => {
     const [playerStatus, setPlayerStatus] = useState(PLAYERSTATUS.STOPPED);
     const currentPlayingSongRef: React.MutableRefObject<Song> = useRef(null);
     const [songQueue, setSongQueue]: [
