@@ -111,7 +111,8 @@ export const MusicContextProvider: React.FC<MusicContextProps> = (props) => {
     }, [_playSong, songQueue, songQueueIndex, userQCount]);
 
     const toggleFlag = () => {
-        currentPlayingSongRef.current.flag = !currentPlayingSongRef.current.flag;
+        currentPlayingSongRef.current.flag = !currentPlayingSongRef.current
+            .flag;
     };
 
     useEffect(() => {
