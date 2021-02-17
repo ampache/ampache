@@ -106,8 +106,10 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
 
                     <div className={style.rating}>
                         <Rating
-                            value={props.song.rating}
-                            fav={props.song.flag}
+                          value={props.song.rating}
+                          fav={props.song.flag}
+                          song={props.song}
+                          flagSong={props.flagSong}
                         />
                     </div>
 

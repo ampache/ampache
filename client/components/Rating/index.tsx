@@ -54,7 +54,7 @@ export default function SimpleRating(props) {
                 }
                 title='Toggle favorite'
                 onClick={() => {
-                    // TODO: toggle favourite;
+                    props.flagSong(props.song.id, !props.fav);
                 }}
                 className={`icon ${style.heartIcon} ${
                     props.fav ? style.active : null
