@@ -73,9 +73,9 @@ final class SongAjaxHandler implements AjaxHandlerInterface
             case 'shouts':
                 ob_start();
                 $type   = Core::get_request('object_type');
-                $songid = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+                $songid = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
-                if ($type == "song") {
+                if ($type == "song" && $songid > 0) {
                     $media  = new Song($songid);
                     $shouts = $this->shoutRepository->getBy($type, $songid);
                     echo "<script>\r\n";

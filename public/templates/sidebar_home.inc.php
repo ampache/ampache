@@ -36,6 +36,7 @@ use Ampache\Repository\VideoRepositoryInterface;
 
 global $dic;
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
+$allowVideo      = AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class);
 
 // strings for the main page and templates
 $t_songs     = T_('Songs');
@@ -85,6 +86,10 @@ $t_search    = T_('Search'); ?>
             <li id="sb_home_browse_music_podcast"><a href="<?php echo $web_path ?>/browse.php?action=podcast"><?php echo T_('Podcasts') ?></a></li>
             <?php
         } ?>
+            <?php if ($allowVideo) { ?>
+                <li id="sb_home_browse_video_video"><a href="<?php echo $web_path ?>/browse.php?action=video"><?php echo $t_videos ?></a></li>
+                <?php
+            } ?>
         <li id="sb_home_browse_music_tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag"><?php echo $t_tagcloud; ?></a></li>
             <?php if (AmpConfig::get('allow_upload')) { ?>
             <li id="sb_home_info_upload"><a href="<?php echo $web_path ?>/stats.php?action=upload"><?php echo T_('Uploads') ?></a></li>
@@ -92,7 +97,7 @@ $t_search    = T_('Search'); ?>
         } ?>
         </ul>
     </li>
-    <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
+    <?php if ($allowVideo) { ?>
         <li class="sb2_video"><h4 class="header"><span class="sidebar-header-title"><?php echo $t_videos ?></span><?php echo UI::get_icon('all', $t_expander, 'browse_video', 'header-img ' . (($_COOKIE['sb_browse_video'] == 'collapsed') ? 'collapsed' : 'expanded')); ?></h4>
             <ul class="sb3" id="sb_home_browse_video">
           <?php if ($videoRepository->getItemCount(Clip::class)) { ?>
@@ -108,7 +113,7 @@ $t_search    = T_('Search'); ?>
           <?php
             } ?>
           <?php if ($videoRepository->getItemCount(Personal_Video::class)) { ?>
-                <li id="sb_home_browse_video_video"><a href="<?php echo $web_path ?>/browse.php?action=personal_video"><?php echo T_('Personal Videos') ?></a></li>
+                <li id="sb_home_browse_video_personal"><a href="<?php echo $web_path ?>/browse.php?action=personal_video"><?php echo T_('Personal Videos') ?></a></li>
           <?php
             } ?>
                 <li id="sb_home_browse_video_tagsVideo"><a href="<?php echo $web_path ?>/browse.php?action=tag&type=video"><?php echo $t_tagcloud ?></a></li>
@@ -141,7 +146,7 @@ $t_search    = T_('Search'); ?>
                 <?php
             } ?>
           <li id="sb_home_search_playlist"><a href="<?php echo $web_path; ?>/search.php?type=playlist"><?php echo $t_playlists; ?></a></li>
-          <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
+          <?php if ($allowVideo) { ?>
             <li id="sb_home_search_video"><a href="<?php echo $web_path ?>/search.php?type=video"><?php echo $t_videos ?></a></li>
           <?php
         } ?>
