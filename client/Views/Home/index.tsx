@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Album, getRandomAlbums } from '~logic/Album';
+import { Album, flagAlbum, getRandomAlbums } from '~logic/Album';
 import AlbumDisplay from '~components/AlbumDisplay/';
 import { User } from '~logic/User';
 import AmpacheError from '../../logic/AmpacheError';
@@ -33,6 +33,35 @@ const HomeView: React.FC<HomeViewProps> = (props) => {
             });
     }, [props.user.authKey, props.user.username]);
 
+    const handleFlagAlbum = (albumID: string, favorite: boolean) => {
+        flagAlbum(albumID, favorite, props.user.authKey)
+            .then(() => {
+                const newRandomAlbums = randomAlbums.map((album) => {
+                    if (album.id === albumID) {
+                        album.flag = favorite;
+                    }
+                    return album;
+                });
+                setRandomAlbums(newRandomAlbums);
+                if (favorite) {
+                    return toast.success('Album added to favorites');
+                }
+                toast.success('Album removed from favorites');
+            })
+            .catch((err) => {
+                if (favorite) {
+                    toast.error(
+                        '😞 Something went wrong adding the album to favorites.'
+                    );
+                } else {
+                    toast.error(
+                        '😞 Something went wrong removing the album from favorites.'
+                    );
+                }
+                setError(err);
+            });
+    };
+
     if (error) {
         return (
             <div className={style.homePage}>
@@ -63,6 +92,7 @@ const HomeView: React.FC<HomeViewProps> = (props) => {
                                         musicContext
                                     );
                                 }}
+                                flagAlbum={handleFlagAlbum}
                                 key={theAlbum.id}
                                 className={style.albumDisplayContainer}
                             />
