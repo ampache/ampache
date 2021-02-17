@@ -49,6 +49,7 @@ use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
+use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 use PDOStatement;
@@ -2417,7 +2418,11 @@ abstract class Catalog extends database_object
             $playlist_search = Playlist::get_playlists(true, null, $name);
             if (empty($playlist_search)) {
                 // New playlist
-                $playlist_id   = Playlist::create($name, 'public');
+                $playlist_id = static::getPlaylistRepository()->create(
+                    $name,
+                    'public',
+                    Core::get_global('user')->getId()
+                );
                 $current_songs = array();
                 $playlist      = ((int)$playlist_id > 0) ? new Playlist((int)$playlist_id) : null;
             } else {
@@ -3025,5 +3030,15 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(CatalogRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPlaylistRepository(): PlaylistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PlaylistRepositoryInterface::class);
     }
 }

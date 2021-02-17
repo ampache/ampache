@@ -46,6 +46,7 @@ use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
+use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\TagRepositoryInterface;
@@ -1007,7 +1008,11 @@ class Subsonic_Api
             $response = Subsonic_Xml_Data::createSuccessResponse('createplaylist');
         } else {
             if (!empty($name)) {
-                $playlistId = Playlist::create($name, 'private');
+                $playlistId = static::getPlaylistRepository()->create(
+                    $name,
+                    'private',
+                    Core::get_global('user')->getId()
+                );
                 if (count($songId) > 0) {
                     self::_updatePlaylist($playlistId, "", $songId);
                 }
@@ -2640,5 +2645,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(CatalogRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPlaylistRepository(): PlaylistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PlaylistRepositoryInterface::class);
     }
 }

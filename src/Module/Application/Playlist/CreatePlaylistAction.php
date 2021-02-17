@@ -24,12 +24,12 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Playlist;
 
-use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\PlaylistRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -39,10 +39,14 @@ final class CreatePlaylistAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private PlaylistRepositoryInterface $playlistRepository;
+
     public function __construct(
-        UiInterface $ui
+        UiInterface $ui,
+        PlaylistRepositoryInterface $playlistRepository
     ) {
-        $this->ui = $ui;
+        $this->ui                 = $ui;
+        $this->playlistRepository = $playlistRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -56,7 +60,12 @@ final class CreatePlaylistAction implements ApplicationActionInterface
         $playlist_name = (string) scrub_in($_REQUEST['playlist_name']);
         $playlist_type = (string) scrub_in(filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 
-        $playlist_id                     = Playlist::create($playlist_name, $playlist_type);
+        $playlist_id = $this->playlistRepository->create(
+            $playlist_name,
+            $playlist_type,
+            $gatekeeper->getUserId()
+        );
+
         $_SESSION['data']['playlist_id'] = $playlist_id;
 
         $this->ui->showConfirmation(

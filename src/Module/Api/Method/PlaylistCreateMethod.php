@@ -21,65 +21,86 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\PlaylistRepositoryInterface;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class PlaylistCreateMethod
- * @package Lib\ApiMethods
- */
-final class PlaylistCreateMethod
+final class PlaylistCreateMethod implements MethodInterface
 {
-    private const ACTION = 'playlist_create';
+    public const ACTION = 'playlist_create';
+
+    private UpdateInfoRepositoryInterface $updateInfoRepository;
+
+    private StreamFactoryInterface $streamFactory;
+
+    private PlaylistRepositoryInterface $playlistRepository;
+
+    public function __construct(
+        UpdateInfoRepositoryInterface $updateInfoRepository,
+        StreamFactoryInterface $streamFactory,
+        PlaylistRepositoryInterface $playlistRepository
+    ) {
+        $this->updateInfoRepository = $updateInfoRepository;
+        $this->streamFactory        = $streamFactory;
+        $this->playlistRepository   = $playlistRepository;
+    }
 
     /**
-     * playlist_create
      * MINIMUM_API_VERSION=380001
      *
      * This create a new playlist and return it
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
-     * name = (string) Alpha-numeric search term
+     * name = (string) Alpha-numeric Object name
      * type = (string) 'public', 'private'
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws RequestParamMissingException
      */
-    public static function playlist_create(array $input)
-    {
-        if (!Api::check_parameter($input, array('name'), self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $name = $input['name'] ?? null;
+
+        if ($name === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'name')
+            );
         }
-        $name = $input['name'];
-        $type = (isset($input['type'])) ? $input['type'] : 'private';
-        $user = User::get_from_username(Session::username($input['auth']));
+
+        $type = $input['type'] ?? 'private';
         if ($type != 'private') {
             $type = 'public';
         }
 
-        $object_id = Playlist::create($name, $type, $user->id);
-        if (!$object_id) {
-            Api::error(T_('Bad Request'), '4710', self::ACTION, 'input', $input['api_format']);
-
-            return false;
+        $object_id = $this->playlistRepository->create($name, $type, $gatekeeper->getUser()->getId());
+        if ($object_id === 0) {
+            throw new RequestParamMissingException(
+                T_('Bad Request')
+            );
         }
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json_Data::playlists(array($object_id), false, false);
-                break;
-            default:
-                echo Xml_Data::playlists(array($object_id));
-        }
-        Catalog::count_table('playlist');
-        Session::extend($input['auth']);
 
-        return true;
+        $this->updateInfoRepository->updateCountByTableName('playlist');
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->playlists([$object_id], false, false)
+            )
+        );
     }
 }

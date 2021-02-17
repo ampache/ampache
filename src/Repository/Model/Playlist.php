@@ -534,39 +534,6 @@ class Playlist extends playlist_object
     }
 
     /**
-     * create
-     * This function creates an empty playlist, gives it a name and type
-     * @param string $name
-     * @param string $type
-     * @param integer $user_id
-     * @return string|null
-     */
-    public static function create($name, $type, $user_id = null)
-    {
-        if ($user_id === null) {
-            $user_id = Core::get_global('user')->id;
-        }
-        // check for duplicates
-        $results    = array();
-        $sql        = "SELECT `id` FROM `playlist` WHERE `name` = '" . Dba::escape($name) . "'" . " AND `user` = " . $user_id . " AND `type` = '" . Dba::escape($type) . "'";
-        $db_results = Dba::read($sql);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-        // return the duplicate ID
-        if (!empty($results)) {
-            return $results[0];
-        }
-
-        $date = time();
-        $sql  = "INSERT INTO `playlist` (`name`, `user`, `type`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($name, $user_id, $type, $date, $date));
-
-        return Dba::insert_id();
-    } // create
-
-    /**
      * set_items
      * This calls the get_items function and sets it to $this->items which is an array in this object
      */

@@ -32,9 +32,18 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\PlaylistRepositoryInterface;
 
 final class PlaylistAjaxHandler implements AjaxHandlerInterface
 {
+    private PlaylistRepositoryInterface $playlistRepository;
+
+    public function __construct(
+        PlaylistRepositoryInterface $playlistRepository
+    ) {
+        $this->playlistRepository = $playlistRepository;
+    }
+
     public function handle(): void
     {
         $results = array();
@@ -75,7 +84,11 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                     if (empty($name)) {
                         $name = Core::get_global('user')->username . ' - ' . get_datetime(time());
                     }
-                    $playlist_id = (int) Playlist::create($name, 'private');
+                    $playlist_id = $this->playlistRepository->create(
+                        $name,
+                        'private',
+                        Core::get_global('user')->getId()
+                    );
                     if ($playlist_id < 1) {
                         break;
                     }
