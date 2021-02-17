@@ -51,7 +51,7 @@ final class ManagePlaylistsAction implements ApplicationActionInterface
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
     }
-    
+
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         /* Make sure they have access to this */
@@ -63,12 +63,12 @@ final class ManagePlaylistsAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        
+
         // Get all of the non-user playlists
         $playlists = Democratic::get_playlists();
 
         require_once Ui::find_template('show_manage_democratic.inc.php');
-        
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

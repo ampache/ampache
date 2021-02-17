@@ -33,7 +33,7 @@ use SimpleXMLElement;
 final class LastFmQuery implements LastFmQueryInterface
 {
     private const API_URL = 'http://ws.audioscrobbler.com/2.0/?method=';
-    
+
     private ConfigContainerInterface $configContainer;
 
     public function __construct(

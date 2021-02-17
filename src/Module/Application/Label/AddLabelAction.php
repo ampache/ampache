@@ -40,7 +40,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final class AddLabelAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'add_label';
-    
+
     private UiInterface $ui;
 
     private ConfigContainerInterface $configContainer;
@@ -87,7 +87,7 @@ final class AddLabelAction implements ApplicationActionInterface
                 )
             );
         }
-        
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

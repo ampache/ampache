@@ -46,7 +46,7 @@ final class ModelFactory implements ModelFactoryInterface
             $cached
         );
     }
-    
+
     public function createSong(
         ?int $songId = null,
         string $limitThreshold = ''
@@ -56,7 +56,7 @@ final class ModelFactory implements ModelFactoryInterface
             $limitThreshold
         );
     }
-    
+
     public function createRating(
         int $objectId,
         string $typeId
@@ -66,31 +66,31 @@ final class ModelFactory implements ModelFactoryInterface
             $typeId
         );
     }
-    
+
     public function createUser(
         ?int $userId = null
     ): User {
         return new User($userId);
     }
-    
+
     public function createAlbum(
         ?int $albumId = null
     ): Album {
         return new Album($albumId);
     }
-    
+
     public function createArtist(
         ?int $artistId = null
     ): Artist {
         return new Artist($artistId);
     }
-    
+
     public function createWanted(
         ?int $wantedId = null
     ): Wanted {
         return new Wanted($wantedId);
     }
-    
+
     public function createArt(
         ?int $artId = null,
         string $type = 'album',
@@ -110,7 +110,7 @@ final class ModelFactory implements ModelFactoryInterface
     ): Live_Stream {
         return new Live_Stream($liveStreamId);
     }
-    
+
     public function createChannel(
         int $channelId
     ): Channel {

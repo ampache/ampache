@@ -82,7 +82,7 @@ final class CreatePlaylistAction implements ApplicationActionInterface
         $playlist->logic_operator = $operator;
         $playlist->name           = $playlist_name;
         $playlist->save();
-        
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

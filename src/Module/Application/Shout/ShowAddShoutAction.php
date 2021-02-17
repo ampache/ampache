@@ -57,16 +57,16 @@ final class ShowAddShoutAction implements ApplicationActionInterface
     {
         // Get our object first
         $object = Shoutbox::get_object($_REQUEST['type'], (int) Core::get_request('id'));
-        
+
         $this->ui->showHeader();
 
         if (!$object || !$object->id) {
             AmpError::add('general', T_('Invalid object selected'));
             echo AmpError::display('general');
-            
+
             $this->ui->showQueryStats();
             $this->ui->showHeader();
-            
+
             return null;
         }
 
@@ -82,7 +82,7 @@ final class ShowAddShoutAction implements ApplicationActionInterface
 
         $this->ui->showQueryStats();
         $this->ui->showHeader();
-        
+
         return null;
     }
 }

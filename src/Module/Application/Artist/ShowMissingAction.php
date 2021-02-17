@@ -47,16 +47,16 @@ final class ShowMissingAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
-        
+
         set_time_limit(600);
         $mbid    = $_REQUEST['mbid'];
         $wartist = Wanted::get_missing_artist($mbid);
 
         require Ui::find_template('show_missing_artist.inc.php');
-        
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
-        
+
         return null;
     }
 }

@@ -482,12 +482,12 @@ class Share extends database_object
             $object_id,
             Ui::get_icon('share', T_('Share'))
         );
-        
+
         if ($show_text) {
             $result .= sprintf('&nbsp;%s', T_('Share'));
         }
         $result .= '</a>';
-        
+
         return $result;
     }
 

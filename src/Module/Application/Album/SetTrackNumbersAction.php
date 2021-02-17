@@ -40,7 +40,7 @@ use Psr\Log\LoggerInterface;
 final class SetTrackNumbersAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'set_track_numbers';
-    
+
     private UiInterface $ui;
 
     private LoggerInterface $logger;
@@ -56,7 +56,7 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         require_once Ui::find_template('header.inc.php');
-        
+
         $response = null;
 
         $this->logger->debug(
@@ -71,7 +71,7 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
         // Retrieving final song order from url
         foreach ($_GET as $key => $data) {
             $_GET[$key] = unhtmlentities((string) scrub_in($data));
-            
+
             $this->logger->debug(
                 sprintf('%d=%s', $key, Core::get_get($key)),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -91,7 +91,7 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();
-        
+
         return $response;
     }
 }

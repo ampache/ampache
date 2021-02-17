@@ -33,7 +33,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final class DeleteAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'delete';
-    
+
     private ConfigContainerInterface $configContainer;
 
     private UiInterface $ui;
@@ -67,7 +67,7 @@ final class DeleteAction implements ApplicationActionInterface
             1,
             'delete_tvshow_season'
         );
-        
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

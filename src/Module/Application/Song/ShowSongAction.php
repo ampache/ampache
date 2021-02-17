@@ -38,7 +38,7 @@ use Psr\Log\LoggerInterface;
 final class ShowSongAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_song';
-    
+
     private UiInterface $ui;
 
     private ModelFactoryInterface $modelFactory;
@@ -68,11 +68,11 @@ final class ShowSongAction implements ApplicationActionInterface
         GuiGatekeeperInterface $gatekeeper
     ): ?ResponseInterface {
         $this->ui->showHeader();
-        
+
         $song = $this->modelFactory->createSong((int) $request->getQueryParams()['song_id'] ?? 0);
         $song->format();
         $song->fill_ext_info();
-        
+
         if (!$song->id) {
             $this->logger->warning(
                 'Requested a song that does not exist',

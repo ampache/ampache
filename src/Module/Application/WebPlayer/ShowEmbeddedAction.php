@@ -33,13 +33,13 @@ use Psr\Http\Message\ServerRequestInterface;
 final class ShowEmbeddedAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
-    
+
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $iframed = true;
-        
+
         require_once Ui::find_template('show_web_player.inc.php');
-        
+
         return null;
     }
 }

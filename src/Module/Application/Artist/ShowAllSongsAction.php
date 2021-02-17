@@ -69,10 +69,10 @@ final class ShowAllSongsAction implements ApplicationActionInterface
                 'gatekeeper' => $gatekeeper
             ]
         );
-        
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
-        
+
         return null;
     }
 }

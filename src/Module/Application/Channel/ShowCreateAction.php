@@ -57,9 +57,9 @@ final class ShowCreateAction implements ApplicationActionInterface
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CHANNEL) === false) {
             return null;
         }
-        
+
         $this->ui->showHeader();
-        
+
         $type = Channel::format_type(Core::get_request('type'));
         if (!empty($type) && !empty($_REQUEST['id'])) {
             $class_name = ObjectTypeToClassNameMapper::map($type);
@@ -69,9 +69,9 @@ final class ShowCreateAction implements ApplicationActionInterface
                 require_once Ui::find_template('show_add_channel.inc.php');
             }
         }
-        
+
         $this->ui->showFooter();
-        
+
         return null;
     }
 }

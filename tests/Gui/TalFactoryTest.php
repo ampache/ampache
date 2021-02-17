@@ -39,7 +39,7 @@ class TalFactoryTest extends MockeryTestCase
 
     /** @var TalFactory|null */
     private TalFactory $subject;
-    
+
     public function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
@@ -50,7 +50,7 @@ class TalFactoryTest extends MockeryTestCase
             $this->guiFactory
         );
     }
-    
+
     public function testCreatePhpTalReturnsInstance(): void
     {
         $this->assertInstanceOf(
@@ -66,7 +66,7 @@ class TalFactoryTest extends MockeryTestCase
             $this->subject->createTalView()
         );
     }
-    
+
     public function testCreateTalTranslationSeviceReturnsInstance(): void
     {
         $this->assertInstanceOf(

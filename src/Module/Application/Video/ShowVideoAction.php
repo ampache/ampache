@@ -35,7 +35,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final class ShowVideoAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_video';
-    
+
     private UiInterface $ui;
 
     public function __construct(
@@ -47,15 +47,15 @@ final class ShowVideoAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
-        
+
         $video = Video::create_from_id(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $video->format();
-        
+
         require_once Ui::find_template('show_video.inc.php');
-        
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
-        
+
         return null;
     }
 }

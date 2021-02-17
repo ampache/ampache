@@ -32,7 +32,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final class LogoutAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'logout';
-    
+
     private ConfigContainerInterface $configContainer;
 
     private AuthenticationManagerInterface $authenticationManager;
@@ -51,7 +51,7 @@ final class LogoutAction implements ApplicationActionInterface
         setcookie($this->configContainer->getSessionName() . '_remember', null, -1);
 
         $this->authenticationManager->logout('', false);
-        
+
         return null;
     }
 }

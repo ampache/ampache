@@ -42,7 +42,7 @@ use Psr\Log\LoggerInterface;
 final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
-    
+
     private ModelFactoryInterface $modelFactory;
 
     private UiInterface $ui;
@@ -111,7 +111,7 @@ final class ShowAction implements ApplicationActionInterface
         // Show the Footer
         $this->ui->showQueryStats();
         $this->ui->showFooter();
-        
+
         return null;
     }
 

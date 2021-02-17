@@ -39,7 +39,7 @@ use Teapot\StatusCode;
 final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
-    
+
     private ResponseFactoryInterface $responseFactory;
 
     public function __construct(
@@ -72,7 +72,7 @@ final class ShowAction implements ApplicationActionInterface
         if (isset($_SESSION['iframe']['target'])) {
             $target = $_SESSION['iframe']['target'];
             unset($_SESSION['iframe']['target']);
-            
+
             $response = $response->withHeader(
                 'Location',
                 $target
@@ -81,7 +81,7 @@ final class ShowAction implements ApplicationActionInterface
             // Prevent the update query as it's pointless
             define('NO_SESSION_UPDATE', '1');
         }
-        
+
         return $response;
     }
 }

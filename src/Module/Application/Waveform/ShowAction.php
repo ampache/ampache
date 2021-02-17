@@ -37,7 +37,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
-    
+
     private ResponseFactoryInterface $responseFactory;
 
     private ConfigContainerInterface $configContainer;
@@ -71,11 +71,11 @@ final class ShowAction implements ApplicationActionInterface
 
         $id       = (int) $_REQUEST['song_id'];
         $waveform = Waveform::get($id);
-        
+
         if (!$waveform) {
             return null;
         }
-        
+
         return $this->responseFactory
             ->createResponse()
             ->withHeader(

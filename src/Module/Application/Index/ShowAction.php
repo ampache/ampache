@@ -37,7 +37,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
-    
+
     private UiInterface $ui;
 
     private ConfigContainerInterface $configContainer;
@@ -62,7 +62,7 @@ final class ShowAction implements ApplicationActionInterface
         $_SESSION['catalog'] = 0;
 
         $refreshLimit = $this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT);
-        
+
         /**
          * Check for the refresh mojo, if it's there then require the
          * refresh_javascript include. Must be greater then 5, I'm not
@@ -82,7 +82,7 @@ final class ShowAction implements ApplicationActionInterface
         // Show the Footer
         $this->ui->showQueryStats();
         $this->ui->showFooter();
-        
+
         return null;
     }
 }

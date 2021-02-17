@@ -78,7 +78,7 @@ final class AddShoutAction implements ApplicationActionInterface
         }
 
         Shoutbox::create($_POST);
-        
+
         return $this->responseFactory
             ->createResponse(StatusCode::FOUND)
             ->withHeader(

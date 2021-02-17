@@ -38,7 +38,7 @@ use Symfony\Component\Finder\Exception\AccessDeniedException;
 final class ConfirmDeleteAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'confirm_delete';
-    
+
     private UiInterface $ui;
 
     private ConfigContainerInterface $configContainer;
@@ -79,7 +79,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
                 $this->configContainer->getWebPath()
             );
         }
-        
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
