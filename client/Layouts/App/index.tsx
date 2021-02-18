@@ -9,7 +9,6 @@ import MusicControl from '~components/MusicControl/';
 import QueueBar from '~components/QueueBar/';
 
 import style from './index.styl';
-import NavigationBlock from '~Pages/NavigationBlock';
 
 interface AppLayoutProps {
     user: User;
@@ -71,12 +70,7 @@ class AppLayout extends Component<AppLayoutProps, AppLayoutStates> {
         }
 
         return (
-            <NavigationBlock
-                enabled={this.state.QueueBarVisible}
-                navigationAttempt={() => {
-                    this.setState({ QueueBarVisible: false });
-                }}
-            >
+            <>
                 <Header
                     username={this.props.user.username}
                     toggleQueueBar={this.toggleQueueBarVisible}
@@ -99,7 +93,7 @@ class AppLayout extends Component<AppLayoutProps, AppLayoutStates> {
                     />
                 </div>
                 <MusicControl authKey={this.props.user.authKey} />
-            </NavigationBlock>
+            </>
         );
     }
 }
