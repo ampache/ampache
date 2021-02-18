@@ -680,7 +680,7 @@ class XML_Data
                 $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
                 $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
                 $playlist_type  = $playlist->type;
-                $object_type    = 'smart_playlist';
+                $object_type    = 'search';
             } else {
                 $playlist    = new Playlist($playlist_id);
                 $playlist_id = $playlist->id;
