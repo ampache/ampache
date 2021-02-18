@@ -153,8 +153,8 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 
 ### Deprecated
 
-* Api::get_indexes; stop including playlist track and id in xml by default
 * Dropped in API 5.0.0
+  * Api::get_indexes; stop including playlist track and id in xml by default
   * Album objects: "tracks" will only include track details. Use "songcount"
   * Artist objects: "albums", "songs" will only include track details Use "albumcount" and "songcount"
 

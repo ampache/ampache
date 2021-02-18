@@ -544,7 +544,7 @@ class Api
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::indexes($objects, $type, $user->id, true, $include);
+                echo XML_Data::indexes($objects, $type, $user->id, true, true);
         }
         Session::extend($input['auth']);
 
