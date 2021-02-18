@@ -88,6 +88,7 @@ return [
     Method\CatalogActionMethod::class => autowire(),
     Method\SystemPreferenceMethod::class => autowire(),
     Method\PlaylistSongsMethod::class => autowire(),
+    Method\StreamMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

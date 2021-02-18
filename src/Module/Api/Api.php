@@ -127,7 +127,7 @@ class Api
         'update_artist_info' => Method\UpdateArtistInfoMethod::class,
         'update_art' => Method\UpdateArtMethod::class,
         'update_podcast' => Method\UpdatePodcastMethod::class,
-        'stream' => Method\StreamMethod::class,
+        Method\StreamMethod::ACTION => Method\StreamMethod::class,
         'download' => Method\DownloadMethod::class,
         'get_art' => Method\GetArtMethod::class,
         'localplay' => Method\LocalplayMethod::class,

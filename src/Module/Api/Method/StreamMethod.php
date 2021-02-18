@@ -20,26 +20,34 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
-use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Teapot\StatusCode;
 
-/**
- * Class StreamMethod
- * @package Lib\ApiMethods
- */
-final class StreamMethod
+final class StreamMethod implements MethodInterface
 {
-    private const ACTION = 'stream';
+    public const ACTION = 'stream';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->streamFactory = $streamFactory;
+        $this->modelFactory  = $modelFactory;
+    }
 
     /**
-     * stream
      * MINIMUM_API_VERSION=400001
      *
      * Streams a given media file.
@@ -54,31 +62,34 @@ final class StreamMethod
      * length  = (integer) 0,1
      * @return boolean
      */
-    public static function stream(array $input)
-    {
-        if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
-            http_response_code(400);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $type     = (string) ($input['type'] ?? '');
+        $objectId = (int) ($input['id'] ?? 0);
 
-            return false;
+        if ($type === '' || $objectId === 0) {
+            return $response->withStatus(StatusCode::NOT_FOUND);
         }
-        $type      = (string) $input['type'];
-        $object_id = (int) $input['id'];
-        $user_id   = User::get_from_username(Session::username($input['auth']))->id;
+        $userId = $gatekeeper->getUser()->getId();
 
-        $maxBitRate    = $input['bitrate'];
-        $format        = $input['format']; // mp3, flv or raw
+        $maxBitRate    = (int) ($input['bitrate'] ?? 0);
+        $format        = (string) ($input['format'] ?? ''); // mp3, flv or raw
         $original      = $format && $format != 'raw';
-        $timeOffset    = $input['offset'];
-        $contentLength = (int) $input['length']; // Force content-length guessing if transcode
+        $timeOffset    = (int) ($input['offset'] ?? 0);
+        $contentLength = (int) ($input['length'] ?? 0); // Force content-length guessing if transcode
 
         $params = '&client=api';
-        if ($contentLength == 1) {
+        if ($contentLength === 1) {
             $params .= '&content_length=required';
         }
         if ($original) {
             $params .= '&transcode_to=' . $format;
         }
-        if ((int) $maxBitRate > 0) {
+        if ($maxBitRate > 0) {
             $params .= '&bitrate=' . $maxBitRate;
         }
         if ($timeOffset) {
@@ -87,23 +98,22 @@ final class StreamMethod
 
         $url = '';
         if ($type == 'song') {
-            $media = new Song($object_id);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $media = $this->modelFactory->createSong($objectId);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $userId);
         }
         if ($type == 'podcast') {
-            $media = new Podcast_Episode($object_id);
-            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
+            $media = $this->modelFactory->createPodcastEpisode($objectId);
+            $url   = $media->play_url($params, 'api', function_exists('curl_version'), $userId);
         }
-        if (!empty($url)) {
-            Session::extend($input['auth']);
-            header('Location: ' . str_replace(':443/play', '/play', $url));
-
-            return true;
+        if ($url !== '') {
+            return $response
+                ->withStatus(StatusCode::FOUND)
+                ->withHeader(
+                    'Location',
+                    str_replace(':443/play', '/play', $url)
+                );
         }
 
-        // stream not found
-        http_response_code(404);
-
-        return false;
+        return $response->withStatus(StatusCode::NOT_FOUND);
     }
 }
