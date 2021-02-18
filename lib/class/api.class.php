@@ -658,6 +658,15 @@ class Api
                     case 'album':
                         echo JSON_Data::albums($results, array(), $user->id);
                         break;
+                    case 'playlist':
+                        echo JSON_Data::playlists($results, $user->id);
+                        break;
+                    case 'user':
+                        echo JSON_Data::users($results);
+                        break;
+                    case 'video':
+                        echo JSON_Data::videos($results, $user->id);
+                        break;
                     default:
                         echo JSON_Data::songs($results, $user->id);
                         break;
@@ -666,17 +675,26 @@ class Api
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-            switch ($type) {
-                case 'artist':
-                    echo XML_Data::artists($results, array(), $user->id);
-                    break;
-                case 'album':
-                    echo XML_Data::albums($results, array(), $user->id);
-                    break;
-                default:
-                    echo XML_Data::songs($results, $user->id);
-                    break;
-            }
+                switch ($type) {
+                    case 'artist':
+                        echo Xml_Data::artists($results, array(), $user->id);
+                        break;
+                    case 'album':
+                        echo Xml_Data::albums($results, array(), $user->id);
+                        break;
+                    case 'playlist':
+                        echo Xml_Data::playlists($results, $user->id);
+                        break;
+                    case 'user':
+                        echo Xml_Data::users($results);
+                        break;
+                    case 'video':
+                        echo Xml_Data::videos($results, $user->id);
+                        break;
+                    default:
+                        echo Xml_Data::songs($results, $user->id);
+                        break;
+                }
         }
         Session::extend($input['auth']);
     } // advanced_search

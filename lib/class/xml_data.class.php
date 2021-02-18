@@ -877,11 +877,11 @@ class XML_Data
                 "\t\t<public_url><![CDATA[" . $episode->link . "]]></public_url>\n" .
                 "\t\t<catalog><![CDATA[" . $episode->catalog . "]]></catalog>\n" .
                 "\t\t<url><![CDATA[" . $episode->play_url('', 'api', false, $user_id) . "]]></url>\n" .
-                "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
-                "\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n" .
-                "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
-                "\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" .
-                "\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
+                "\t\t<art><![CDATA[" . $art_url . "]]></art>\n" .
+                "\t\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n" .
+                "\t\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
+                "\t\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" .
+                "\t\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
                 "\t\t<played>" . $episode->played . "</played>\n";
             $string .= "\t</podcast_episode>\n";
         } // end foreach

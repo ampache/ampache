@@ -135,6 +135,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Add songcount, albumcount to artist objects. (time in seconds)
 * Add songcount to album objects. (time in seconds)
 * Add mime, catalog to podcast_episodes
+* Api::advanced_search Add 'playlist', 'user' and 'video' to search types
 
 ### Changed
 
