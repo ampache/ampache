@@ -359,8 +359,7 @@ class Api
         $autharray = (!empty($token)) ? array('auth' => $token) : array();
 
         // send the totals
-        $outarray = array('auth' => $token,
-            'api' => Api::$version,
+        $outarray = array('api' => Api::$version,
             'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
             'update' => date("c", (int) $details['update']),
             'add' => date("c", (int) $details['add']),
