@@ -5,11 +5,11 @@ import { toast } from 'react-toastify';
 
 import style from './index.styl';
 
-interface AccountProps {
+interface AccountPageProps {
     user: User;
 }
 
-const AccountView: React.FC<AccountProps> = (props) => {
+const AccountPage: React.FC<AccountPageProps> = (props) => {
     const [fullName, setFullName] = useState(''); //TODO: https://github.com/ampache/ampache/issues/2234
     const [email, setEmail] = useState(''); //TODO: https://github.com/ampache/ampache/issues/2234
     const [website, setWebsite] = useState(''); //TODO: https://github.com/ampache/ampache/issues/2234
@@ -90,4 +90,4 @@ const AccountView: React.FC<AccountProps> = (props) => {
     );
 };
 
-export default AccountView;
+export default AccountPage;

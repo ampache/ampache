@@ -4,11 +4,11 @@ import PlaylistList from '~components/PlaylistList';
 
 import style from './index.styl';
 
-interface PlaylistsViewProps {
+interface PlaylistsPageProps {
     user: User;
 }
 
-const PlaylistsView: React.FC<PlaylistsViewProps> = (props) => {
+const PlaylistsPage: React.FC<PlaylistsPageProps> = (props) => {
     return (
         <div className={style.playlistsPage}>
             <h1>Playlists</h1>
@@ -17,4 +17,4 @@ const PlaylistsView: React.FC<PlaylistsViewProps> = (props) => {
     );
 };
 
-export default PlaylistsView;
+export default PlaylistsPage;

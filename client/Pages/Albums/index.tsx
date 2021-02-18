@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { Album, getAlbums } from '~logic/Album';
 import { User } from '~logic/User';
 import AmpacheError from '~logic/AmpacheError';
-import AlbumDisplay from '~components/AlbumDisplay/';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
+import AlbumDisplayView from '~Views/AlbumDisplayView';
 
 import style from './index.styl';
 
-interface AlbumsViewProps {
+interface AlbumsPageProps {
     user: User;
 }
 
-const AlbumsView: React.FC<AlbumsViewProps> = (props: AlbumsViewProps) => {
+const AlbumsPage: React.FC<AlbumsPageProps> = (props: AlbumsPageProps) => {
     const [albums, setAlbums] = useState<Album[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
 
@@ -55,18 +55,13 @@ const AlbumsView: React.FC<AlbumsViewProps> = (props: AlbumsViewProps) => {
             </div>
             <h1>Albums</h1>
             <div className='album-grid'>
-                {albums.map((theAlbum) => {
-                    return (
-                        <AlbumDisplay
-                            album={theAlbum}
-                            key={theAlbum.id}
-                            className={style.albumDisplayContainer}
-                        />
-                    );
-                })}
+                <AlbumDisplayView
+                    albums={albums}
+                    authKey={props.user.authKey}
+                />
             </div>
         </div>
     );
 };
 
-export default AlbumsView;
+export default AlbumsPage;

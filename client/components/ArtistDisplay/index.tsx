@@ -7,7 +7,6 @@ import style from './index.styl';
 
 interface ArtistDisplayProps {
     artist: Artist;
-    playSongFromAlbum?: (albumID: number) => void;
     className?: string;
     flagArtist: (artistID: string, favorite: boolean) => void;
 }

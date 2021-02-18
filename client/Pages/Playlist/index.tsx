@@ -2,7 +2,7 @@ import React from 'react';
 import { User } from '~logic/User';
 import SongList from '~components/SongList';
 
-interface PlaylistViewProps {
+interface PlaylistPageProps {
     user: User;
     match: {
         params: {
@@ -11,7 +11,7 @@ interface PlaylistViewProps {
     };
 }
 
-const PlaylistView: React.FC<PlaylistViewProps> = (props) => {
+const PlaylistPage: React.FC<PlaylistPageProps> = (props) => {
     return (
         <div className='playlistPage'>
             <h1>Playlist - {props.match.params.playlistID}</h1>
@@ -25,4 +25,4 @@ const PlaylistView: React.FC<PlaylistViewProps> = (props) => {
     );
 };
 
-export default PlaylistView;
+export default PlaylistPage;

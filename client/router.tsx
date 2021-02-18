@@ -2,22 +2,22 @@ import React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
-import App from './Views/App/';
-import Home from './Views/Home/';
-import Account from './Views/Account/';
-import SearchView from './Views/Search/';
-import LoginView from './Views/Login/';
-import NotFound from './Views/404/';
+import AppLayout from './Layouts/App/';
+import HomePage from './Pages/Home/';
+import AccountPage from './Pages/Account/';
+import SearchPage from './Pages/Search/';
+import LoginPage from './Pages/Login/';
+import NotFound from './Pages/404/';
 import handshake, { AuthKey } from './logic/Auth';
 import { getUser, User } from '~logic/User';
-import AlbumView from './Views/Album';
-import AlbumsView from './Views/Albums';
-import ArtistView from './Views/Artist';
+import AlbumPage from './Pages/Album';
+import AlbumsPage from './Pages/Albums';
+import ArtistPage from './Pages/Artist';
 import { MusicContextProvider } from '~Contexts/MusicContext';
-import ArtistsView from './Views/Artists';
+import ArtistsPage from './Pages/Artists';
 import AmpacheError from './logic/AmpacheError';
-import PlaylistsView from './Views/Playlists';
-import PlaylistView from './Views/Playlist';
+import PlaylistsPage from './Pages/Playlists';
+import PlaylistPage from './Pages/Playlist';
 import ReactLoading from 'react-loading';
 
 interface RouterState {
@@ -98,7 +98,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
                 <BrowserRouter basename='/newclient'>
                     <Route
                         render={(props) => (
-                            <LoginView
+                            <LoginPage
                                 {...props}
                                 handleLogin={this.handleLogin}
                             />
@@ -123,13 +123,13 @@ export default class Root extends React.PureComponent<void, RouterState> {
                         }}
                     />
                     <MusicContextProvider>
-                        <App user={this.state.user}>
+                        <AppLayout user={this.state.user}>
                             <Switch>
                                 <Route
                                     exact
                                     path='/'
                                     render={(props) => (
-                                        <Home
+                                        <HomePage
                                             {...props}
                                             user={this.state.user}
                                         />
@@ -139,7 +139,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
                                     exact
                                     path='/account'
                                     render={(props) => (
-                                        <Account
+                                        <AccountPage
                                             {...props}
                                             user={this.state.user}
                                         />
@@ -149,7 +149,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
                                     exact
                                     path='/album/:albumID'
                                     render={(props) => (
-                                        <AlbumView
+                                        <AlbumPage
                                             {...props}
                                             user={this.state.user}
                                         />
@@ -159,7 +159,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
                                     exact
                                     path='/albums'
                                     render={(props) => (
-                                        <AlbumsView
+                                        <AlbumsPage
                                             {...props}
                                             user={this.state.user}
                                         />
@@ -169,7 +169,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
                                     exact
                                     path='/artist/:artistID'
                                     render={(props) => (
-                                        <ArtistView
+                                        <ArtistPage
                                             {...props}
                                             user={this.state.user}
                                         />
@@ -179,7 +179,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
                                     exact
                                     path='/artists'
                                     render={(props) => (
-                                        <ArtistsView
+                                        <ArtistsPage
                                             {...props}
                                             user={this.state.user}
                                         />
@@ -189,7 +189,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
                                     exact
                                     path='/playlists'
                                     render={(props) => (
-                                        <PlaylistsView
+                                        <PlaylistsPage
                                             {...props}
                                             user={this.state.user}
                                         />
@@ -199,7 +199,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
                                     exact
                                     path='/playlist/:playlistID'
                                     render={(props) => (
-                                        <PlaylistView
+                                        <PlaylistPage
                                             {...props}
                                             user={this.state.user}
                                         />
@@ -209,7 +209,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
                                     exact
                                     path='/search/:searchQuery?'
                                     render={(props) => (
-                                        <SearchView
+                                        <SearchPage
                                             {...props}
                                             user={this.state.user}
                                         />
@@ -220,7 +220,7 @@ export default class Root extends React.PureComponent<void, RouterState> {
                                     render={(props) => <NotFound {...props} />}
                                 />
                             </Switch>
-                        </App>
+                        </AppLayout>
                     </MusicContextProvider>
                 </Switch>
             </BrowserRouter>

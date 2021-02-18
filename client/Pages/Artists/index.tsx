@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { Artist, getArtists } from '~logic/Artist';
 import { User } from '~logic/User';
 import AmpacheError from '~logic/AmpacheError';
-import ArtistDisplay from '~components/ArtistDisplay/';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
+import ArtistDisplayView from '~Views/ArtistDisplayView';
 
 import style from './index.styl';
 
-interface ArtistsViewProps {
+interface ArtistsPageProps {
     user: User;
 }
 
-const ArtistsView: React.FC<ArtistsViewProps> = (props: ArtistsViewProps) => {
+const ArtistsPage: React.FC<ArtistsPageProps> = (props: ArtistsPageProps) => {
     const [artists, setArtists] = useState<Artist[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
 
@@ -54,18 +54,13 @@ const ArtistsView: React.FC<ArtistsViewProps> = (props: ArtistsViewProps) => {
             </div>
             <h1>Artists</h1>
             <div className='artist-grid'>
-                {artists.map((theArtist) => {
-                    return (
-                        <ArtistDisplay
-                            artist={theArtist}
-                            key={theArtist.id}
-                            className={style.artistDisplayContainer}
-                        />
-                    );
-                })}
+                <ArtistDisplayView
+                    artists={artists}
+                    authKey={props.user.authKey}
+                />
             </div>
         </div>
     );
 };
 
-export default ArtistsView;
+export default ArtistsPage;

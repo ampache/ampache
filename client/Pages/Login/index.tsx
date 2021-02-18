@@ -5,14 +5,14 @@ import AmpacheError from '~logic/AmpacheError';
 import style from './index.styl';
 import ReactLoading from 'react-loading';
 
-interface LoginProps {
+interface LoginPageProps {
     handleLogin: (
         apiKey: string,
         username: string
     ) => Promise<void | AmpacheError | Error>;
 }
 
-const LoginView: React.FC<LoginProps> = (props) => {
+const LoginPage: React.FC<LoginPageProps> = (props) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -59,4 +59,4 @@ const LoginView: React.FC<LoginProps> = (props) => {
     );
 };
 
-export default LoginView;
+export default LoginPage;

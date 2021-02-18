@@ -1,12 +1,11 @@
-import React, { FormEvent, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import SVG from 'react-inlinesvg';
 import { Link, withRouter } from 'react-router-dom';
 import logo from '~images/ampache-dark.png';
-
-import style from './index.styl';
 import { DebounceInput } from 'react-debounce-input';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { User } from '~logic/User';
+
+import style from './index.styl';
 
 interface HeaderProps {
     username: string;

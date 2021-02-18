@@ -2,8 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Artist, flagArtist, getArtist, updateArtistInfo } from '~logic/Artist';
 import { User } from '~logic/User';
 import AmpacheError from '~logic/AmpacheError';
-import AlbumDisplay from '~components/AlbumDisplay/';
-import { playSongFromAlbum } from '~Helpers/playAlbumHelper';
 import { MusicContext } from '~Contexts/MusicContext';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
@@ -11,11 +9,11 @@ import { generateSongsFromArtist } from '~logic/Playlist_Generate';
 import { updateArtistArt } from '~logic/Art';
 import Button, { ButtonColors, ButtonSize } from '~components/Button';
 import SimpleRating from '~components/SimpleRating';
+import AlbumDisplayView from '~Views/AlbumDisplayView';
 
 import style from './index.styl';
-import { flagAlbum } from '~logic/Album';
 
-interface ArtistViewProps {
+interface ArtistPageProps {
     user: User;
     match: {
         params: {
@@ -24,7 +22,7 @@ interface ArtistViewProps {
     };
 }
 
-const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
+const ArtistPage: React.FC<ArtistPageProps> = (props: ArtistPageProps) => {
     const musicContext = useContext(MusicContext);
 
     const [artist, setArtist] = useState<Artist>(null);
@@ -109,35 +107,6 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
             });
     };
 
-    const handleFlagAlbum = (albumID: string, favorite: boolean) => {
-        flagAlbum(albumID, favorite, props.user.authKey)
-            .then(() => {
-                const newArtist = { ...artist };
-                newArtist.albums = newArtist.albums.map((album) => {
-                    if (album.id === albumID) {
-                        album.flag = favorite;
-                    }
-                    return album;
-                });
-                setArtist(newArtist);
-                if (favorite) {
-                    return toast.success('Album added to favorites');
-                }
-                toast.success('Album removed from favorites');
-            })
-            .catch(() => {
-                if (favorite) {
-                    toast.error(
-                        '😞 Something went wrong adding album to favorites.'
-                    );
-                } else {
-                    toast.error(
-                        '😞 Something went wrong removing album from favorites.'
-                    );
-                }
-            });
-    };
-
     if (error) {
         return (
             <div className={style.artistPage}>
@@ -184,28 +153,15 @@ const ArtistView: React.FC<ArtistViewProps> = (props: ArtistViewProps) => {
             )}
             <div className={`album-grid ${style.albums}`}>
                 {!artist && <ReactLoading color='#FF9D00' type={'bubbles'} />}
-                {artist &&
-                    artist.albums.map((theAlbum) => {
-                        return (
-                            <AlbumDisplay
-                                album={theAlbum}
-                                playSongFromAlbum={(albumID, random) => {
-                                    playSongFromAlbum(
-                                        theAlbum.id,
-                                        random,
-                                        props.user.authKey,
-                                        musicContext
-                                    );
-                                }}
-                                flagAlbum={handleFlagAlbum}
-                                key={theAlbum.id}
-                                className={style.albumDisplayContainer}
-                            />
-                        );
-                    })}
+                {artist && (
+                    <AlbumDisplayView
+                        albums={artist.albums}
+                        authKey={props.user.authKey}
+                    />
+                )}
             </div>
         </div>
     );
 };
 
-export default ArtistView;
+export default ArtistPage;

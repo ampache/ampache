@@ -12,7 +12,7 @@ import SimpleRating from '~components/SimpleRating';
 
 import style from './index.styl';
 
-interface AlbumViewProps {
+interface AlbumPageProps {
     user: User;
     match: {
         params: {
@@ -21,7 +21,7 @@ interface AlbumViewProps {
     };
 }
 
-const AlbumView: React.FC<AlbumViewProps> = (props: AlbumViewProps) => {
+const AlbumPage: React.FC<AlbumPageProps> = (props: AlbumPageProps) => {
     const musicContext = useContext(MusicContext);
 
     const [album, setAlbum] = useState<Album>(null);
@@ -129,4 +129,4 @@ const AlbumView: React.FC<AlbumViewProps> = (props: AlbumViewProps) => {
     );
 };
 
-export default AlbumView;
+export default AlbumPage;

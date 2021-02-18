@@ -38,7 +38,7 @@ const SongList: React.FC<SongListProps> = (props) => {
         if (props.songData) {
             setSongs(props.songData);
         }
-    }, []);
+    }, [props.songData]);
 
     useEffect(() => {
         if (props.inPlaylistID) {

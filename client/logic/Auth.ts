@@ -39,7 +39,7 @@ const handshake = async (username: string, password: string) => {
             if (JSONData.auth) {
                 return JSONData.auth as AuthKey;
             }
-            throw new Error('Missing Auth Key'); //TOOD: Is this needed?
+            throw new Error('Missing Auth Key');
         });
 };
 

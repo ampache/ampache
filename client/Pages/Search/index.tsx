@@ -6,14 +6,14 @@ import { MusicContext } from '~Contexts/MusicContext';
 import SongBlock from '~components/SongBlock';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
+import { Album } from '~logic/Album';
+import { Artist } from '~logic/Artist';
+import ArtistDisplayView from '~Views/ArtistDisplayView';
 
 import style from './index.styl';
-import { Album, flagAlbum } from '~logic/Album';
-import AlbumDisplay from '~components/AlbumDisplay';
-import { Artist, flagArtist } from '~logic/Artist';
-import ArtistDisplay from '~components/ArtistDisplay';
+import AlbumDisplayView from '~Views/AlbumDisplayView';
 
-interface SearchProps {
+interface SearchPageProps {
     user: User;
     match: {
         params: {
@@ -22,7 +22,7 @@ interface SearchProps {
     };
 }
 
-const SearchView: React.FC<SearchProps> = (props) => {
+const SearchPage: React.FC<SearchPageProps> = (props) => {
     const musicContext = useContext(MusicContext);
 
     const [songResults, setSongResults] = useState<Song[]>([]);
@@ -66,62 +66,6 @@ const SearchView: React.FC<SearchProps> = (props) => {
     const playSong = (song: Song) => {
         const songIndex = songResults.findIndex((o) => o.id === song.id);
         musicContext.startPlayingWithNewQueue(songResults, songIndex);
-    };
-
-    const handleFlagArtist = (artistID: string, favorite: boolean) => {
-        flagArtist(artistID, favorite, props.user.authKey)
-            .then(() => {
-                const newArtists = artistResults.map((artist) => {
-                    if (artist.id === artistID) {
-                        artist.flag = favorite;
-                    }
-                    return artist;
-                });
-                setArtistResults(newArtists);
-                if (favorite) {
-                    return toast.success('Artist added to favorites');
-                }
-                toast.success('Artist removed from favorites');
-            })
-            .catch(() => {
-                if (favorite) {
-                    toast.error(
-                        '😞 Something went wrong adding artist to favorites.'
-                    );
-                } else {
-                    toast.error(
-                        '😞 Something went wrong removing artist from favorites.'
-                    );
-                }
-            });
-    };
-
-    const handleFlagAlbum = (albumID: string, favorite: boolean) => {
-        flagAlbum(albumID, favorite, props.user.authKey)
-            .then(() => {
-                const newAlbums = albumResults.map((album) => {
-                    if (album.id === albumID) {
-                        album.flag = favorite;
-                    }
-                    return album;
-                });
-                setAlbumResults(newAlbums);
-                if (favorite) {
-                    return toast.success('Album added to favorites');
-                }
-                toast.success('Album removed from favorites');
-            })
-            .catch(() => {
-                if (favorite) {
-                    toast.error(
-                        '😞 Something went wrong adding album to favorites.'
-                    );
-                } else {
-                    toast.error(
-                        '😞 Something went wrong removing album from favorites.'
-                    );
-                }
-            });
     };
 
     if (!searchQuery) {
@@ -168,18 +112,10 @@ const SearchView: React.FC<SearchProps> = (props) => {
                     <ReactLoading color='#FF9D00' type={'bubbles'} />
                 )}
                 <div className={`album-grid ${style.resultList}`}>
-                    {albumResults.length === 0 && 'No results :('}
-
-                    {albumResults.map((album) => {
-                        return (
-                            <AlbumDisplay
-                                album={album}
-                                className={style.album}
-                                flagAlbum={handleFlagAlbum}
-                                key={album.id}
-                            />
-                        );
-                    })}
+                    <AlbumDisplayView
+                        albums={albumResults}
+                        authKey={props.user.authKey}
+                    />
                 </div>
             </section>
             <section className={style.resultSection}>
@@ -188,22 +124,14 @@ const SearchView: React.FC<SearchProps> = (props) => {
                     <ReactLoading color='#FF9D00' type={'bubbles'} />
                 )}
                 <div className={`artist-grid ${style.resultList}`}>
-                    {artistResults.length === 0 && 'No results :('}
-
-                    {artistResults.map((artist) => {
-                        return (
-                            <ArtistDisplay
-                                artist={artist}
-                                className={style.artist}
-                                flagArtist={handleFlagArtist}
-                                key={artist.id}
-                            />
-                        );
-                    })}
+                    <ArtistDisplayView
+                        artists={artistResults}
+                        authKey={props.user.authKey}
+                    />
                 </div>
             </section>
         </div>
     );
 };
 
-export default SearchView;
+export default SearchPage;

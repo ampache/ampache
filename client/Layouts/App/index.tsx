@@ -9,19 +9,19 @@ import MusicControl from '~components/MusicControl/';
 import QueueBar from '~components/QueueBar/';
 
 import style from './index.styl';
-import NavigationBlock from '~Views/NavigationBlock';
+import NavigationBlock from '~Pages/NavigationBlock';
 
-interface AppViewProps {
+interface AppLayoutProps {
     user: User;
 }
 
-interface AppViewStates {
+interface AppLayoutStates {
     error: Error;
     QueueBarVisible: boolean;
     SideBarVisible: boolean;
 }
 
-class AppView extends Component<AppViewProps, AppViewStates> {
+class AppLayout extends Component<AppLayoutProps, AppLayoutStates> {
     private readonly toggleQueueBarVisible: () => void;
     private readonly setQueueBarVisibility: (visible: boolean) => void;
     private readonly toggleSideBarVisible: () => void;
@@ -104,4 +104,4 @@ class AppView extends Component<AppViewProps, AppViewStates> {
     }
 }
 
-export default AppView;
+export default AppLayout;

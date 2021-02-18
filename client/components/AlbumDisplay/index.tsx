@@ -3,13 +3,12 @@ import SVG from 'react-inlinesvg';
 import { Link } from 'react-router-dom';
 import { Album } from '~logic/Album';
 import SimpleRating from '~components/SimpleRating';
-import useContextMenu from 'react-use-context-menu';
 
 import style from './index.styl';
 
 interface AlbumDisplayProps {
     album: Album;
-    playSongFromAlbum?: (albumID: string, random: boolean) => void;
+    playSongFromAlbum: (albumID: string, random: boolean) => void;
     flagAlbum: (artistID: string, favorite: boolean) => void;
     className?: string;
 }
@@ -17,47 +16,8 @@ interface AlbumDisplayProps {
 const AlbumDisplay: React.FC<AlbumDisplayProps> = (
     props: AlbumDisplayProps
 ) => {
-    const [
-        bindMenu,
-        bindMenuItems,
-        useContextTrigger,
-        { setVisible }
-    ] = useContextMenu();
-    const [bindTrigger] = useContextTrigger({
-        mouseButton: 0 // left click
-    });
-
     return (
         <div className={`card ${style.albumDisplay} ${props.className}`}>
-            <div {...bindMenu} className='contextMenu'>
-                <div
-                    {...bindMenuItems}
-                    onClick={() => {
-                        setVisible(false);
-                        props.playSongFromAlbum(props.album.id, false);
-                    }}
-                >
-                    Play first song
-                </div>
-                {props.album.tracks.length > 1 && (
-                    <div
-                        {...bindMenuItems}
-                        onClick={() => {
-                            setVisible(false);
-                            props.playSongFromAlbum(props.album.id, true);
-                        }}
-                    >
-                        Play random song
-                    </div>
-                )}
-                <Link
-                    {...bindMenuItems}
-                    to={`/artist/${props.album.artist.id}`}
-                >
-                    Go to artist
-                </Link>
-            </div>
-
             <div className={style.imageContainer}>
                 <img src={props.album.art} alt='Album cover' />
                 <div
@@ -72,7 +32,7 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (
                     </Link>
                     <span
                         onClick={() => {
-                            props.playSongFromAlbum(props.album.id, false); //TODO: Make playSongFromAlbum actually optional without errors. Also investigate if this click is being registered twice
+                            props.playSongFromAlbum(props.album.id, false);
                         }}
                         className={style.action}
                     >
@@ -96,7 +56,7 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (
                         />
                         Add to queue
                     </span>
-                    <span {...bindTrigger} className={style.action}>
+                    <span className={style.action}>
                         <SVG
                             className='icon icon-inline'
                             src={require('~images/icons/svg/more-options-hori.svg')}
