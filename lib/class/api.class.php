@@ -3113,7 +3113,7 @@ class Api
      * This rates a library item
      *
      * @param array $input
-     * type   = (string) 'song'|'album'|'artist' $type
+     * type   = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
      * id     = (integer) $object_id
      * rating = (integer) 0,1|2|3|4|5 $rating
      * @return boolean|void
@@ -3134,7 +3134,7 @@ class Api
         $rating    = $input['rating'];
         $user      = User::get_from_username(Session::username($input['auth']));
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist'))) {
+        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video'))) {
             self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;
@@ -3172,7 +3172,7 @@ class Api
      * Setting flag to false (0) will remove the flag
      *
      * @param array $input
-     * type = (string) 'song'|'album'|'artist'|'playlist' $type
+     * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
      * id   = (integer) $object_id
      * flag = (integer) 0,1 $flag
      * @return boolean
@@ -3197,7 +3197,7 @@ class Api
             $user_id = $user->id;
         }
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist', 'playlist'))) {
+        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video'))) {
             self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;

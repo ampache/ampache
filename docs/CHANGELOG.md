@@ -65,10 +65,6 @@ All API code that used 'Tag' now references 'Genre' instead
 * stats: Removed back compat from older versions. Only 'type' is mandatory
 * Return empty objects when the request was correct but the results were empty
 
-### Deprecated
-
-* Api::get_indexes; stop including playlist track and id in xml by default
-
 ## Ampache 4.4.0-develop
 
 Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https://github.com/ampache/ampache/wiki/Ampache-Next-Changes)
@@ -129,10 +125,12 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
   * 'oid' (integer) object_id to add //optional
   * 'type' (string) Default: 'Song' ('Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream') //optional
   * 'clear' (integer) 0|1 clear the current playlist on add //optional
-* API::playlist_edit added new parameter 'sort': (0,1) sort the playlist by 'Artist, Album, Song' //optional
+* Api::playlist_edit added new parameter 'sort': (0,1) sort the playlist by 'Artist, Album, Song' //optional
 * Api::get_indexes
   * New type options: 'album_artist', 'podcast', 'podcast_episode', 'share', 'video'
   * Added parameter 'include': (0,1) (add the extra songs details if a playlist or podcast_episodes if a podcast)
+* Api::rate - Added types 'playlist', 'podcast', 'podcast_episode', 'video'
+* Api::flag - Added types 'podcast', 'podcast_episode', 'video'
 * Add time to artist and album objects. (total time of all songs in seconds)
 * Add songcount, albumcount to artist objects. (time in seconds)
 * Add songcount to album objects. (time in seconds)
@@ -155,6 +153,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 
 ### Deprecated
 
+* Api::get_indexes; stop including playlist track and id in xml by default
 * Dropped in API 5.0.0
   * Album objects: "tracks" will only include track details. Use "songcount"
   * Artist objects: "albums", "songs" will only include track details Use "albumcount" and "songcount"
