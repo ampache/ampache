@@ -706,7 +706,7 @@ class XML_Data
                 "\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n" .
                 "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
                 "\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" .
-                "\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n";
+                "\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
             "</playlist>\n";
         } // end foreach
 
