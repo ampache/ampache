@@ -129,8 +129,8 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Api::get_indexes
   * New type options: 'album_artist', 'podcast', 'podcast_episode', 'share', 'video'
   * Added parameter 'include': (0,1) (add the extra songs details if a playlist or podcast_episodes if a podcast)
-* Api::rate - Added types 'playlist', 'podcast', 'podcast_episode', 'video'
-* Api::flag - Added types 'podcast', 'podcast_episode', 'video'
+* Api::rate - Added types 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'
+* Api::flag - Added types 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'
 * Add time to artist and album objects. (total time of all songs in seconds)
 * Add songcount, albumcount to artist objects. (time in seconds)
 * Add songcount to album objects. (time in seconds)

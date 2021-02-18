@@ -96,7 +96,7 @@ class Userflag extends database_object
      */
     public static function garbage_collection($object_type = null, $object_id = null)
     {
-        $types = array('song', 'album', 'artist', 'video', 'playlist', 'tvshow', 'tvshow_season', 'podcast', 'podcast_episode');
+        $types = array('song', 'album', 'artist', 'video', 'tvshow', 'tvshow_season', 'playlist', 'podcast', 'podcast_episode');
 
         if ($object_type !== null) {
             if (in_array($object_type, $types)) {

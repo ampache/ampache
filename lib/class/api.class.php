@@ -1365,17 +1365,17 @@ class Api
      */
     public static function playlists($input)
     {
-        $user   = User::get_from_username(Session::username($input['auth']));
-        $like   = ((int) $input['exact'] == 1) ? false : true;
-        $hide   = ((int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
-        $userid = (!Access::check('interface', 100, $user->id)) ? $user->id : -1;
-        $public = !Access::check('interface', 100, $user->id);
+        $user    = User::get_from_username(Session::username($input['auth']));
+        $like    = ((int) $input['exact'] == 1) ? false : true;
+        $hide    = ((int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
+        $user_id = (!Access::check('interface', 100, $user->id)) ? $user->id : -1;
+        $public  = !Access::check('interface', 100, $user->id);
 
         // regular playlists
-        $playlist_ids = Playlist::get_playlists($public, $userid, (string) $input['filter'], $like);
+        $playlist_ids = Playlist::get_playlists($public, $user_id, (string) $input['filter'], $like);
         // merge with the smartlists
         if (!$hide) {
-            $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($public, $userid, (string) $input['filter'], $like));
+            $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($public, $user_id, (string) $input['filter'], $like));
         }
 
         ob_end_clean();
@@ -1383,12 +1383,12 @@ class Api
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::playlists($playlist_ids);
+                echo JSON_Data::playlists($playlist_ids, $user_id);
             break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::playlists($playlist_ids);
+                echo XML_Data::playlists($playlist_ids, $user_id);
         }
         Session::extend($input['auth']);
     } // playlists
@@ -1408,15 +1408,16 @@ class Api
         if (!self::check_parameter($input, array('filter'), 'playlist')) {
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
-        $uid  = scrub_in($input['filter']);
+        $user    = User::get_from_username(Session::username($input['auth']));
+        $user_id = $user->id;
+        $list_id = scrub_in($input['filter']);
 
-        if (str_replace('smart_', '', $uid) === $uid) {
+        if (str_replace('smart_', '', $list_id) === $list_id) {
             // Playlists
-            $playlist = new Playlist((int) $uid);
+            $playlist = new Playlist((int) $list_id);
         } else {
             // Smartlists
-            $playlist = new Search((int) str_replace('smart_', '', $uid), 'song', $user);
+            $playlist = new Search((int) str_replace('smart_', '', $list_id), 'song', $user);
         }
         if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id))) {
             self::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
@@ -1426,10 +1427,10 @@ class Api
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::playlists(array($uid));
+                echo JSON_Data::playlists(array($list_id), $user_id);
             break;
             default:
-                echo XML_Data::playlists(array($uid));
+                echo XML_Data::playlists(array($list_id), $user_id);
         }
         Session::extend($input['auth']);
 
@@ -1510,9 +1511,10 @@ class Api
         if (!self::check_parameter($input, array('name', 'type'), 'playlist_create')) {
             return false;
         }
-        $name = $input['name'];
-        $type = $input['type'];
-        $user = User::get_from_username(Session::username($input['auth']));
+        $name    = $input['name'];
+        $type    = $input['type'];
+        $user    = User::get_from_username(Session::username($input['auth']));
+        $user_id = $user->id;
         if ($type != 'private') {
             $type = 'public';
         }
@@ -1520,10 +1522,10 @@ class Api
         $uid = Playlist::create($name, $type, $user->id);
         switch ($input['api_format']) {
             case 'json':
-                echo JSON_Data::playlists(array($uid));
+                echo JSON_Data::playlists(array($uid), $user_id);
             break;
             default:
-                echo XML_Data::playlists(array($uid));
+                echo XML_Data::playlists(array($uid), $user_id);
         }
         Session::extend($input['auth']);
 
@@ -2365,18 +2367,20 @@ class Api
 
         $podcasts = self::$browse->get_objects();
         $episodes = $input['include'] == 'episodes';
+        $user     = User::get_from_username(Session::username($input['auth']));
+        $user_id  = $user->id;
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::podcasts($podcasts, $episodes);
+                echo JSON_Data::podcasts($podcasts, $user_id, $episodes);
                 break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::podcasts($podcasts, $episodes);
+                echo XML_Data::podcasts($podcasts, $user_id, $episodes);
         }
         Session::extend($input['auth']);
 
@@ -2407,15 +2411,17 @@ class Api
         $object_id = (int) $input['filter'];
         $podcast   = new Podcast($object_id);
         if ($podcast->id > 0) {
+            $user     = User::get_from_username(Session::username($input['auth']));
+            $user_id  = $user->id;
             $episodes = $input['include'] == 'episodes';
 
             ob_end_clean();
             switch ($input['api_format']) {
                 case 'json':
-                    echo JSON_Data::podcasts(array($object_id), $episodes);
+                    echo JSON_Data::podcasts(array($object_id), $user_id, $episodes);
                     break;
                 default:
-                    echo XML_Data::podcasts(array($object_id), $episodes);
+                    echo XML_Data::podcasts(array($object_id), $user_id, $episodes);
             }
         } else {
             self::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['api_format']);
@@ -2454,13 +2460,15 @@ class Api
         $data['catalog'] = $input['catalog'];
         $podcast         = Podcast::create($data, true);
         if ($podcast) {
+            $user    = User::get_from_username(Session::username($input['auth']));
+            $user_id = $user->id;
             ob_end_clean();
             switch ($input['api_format']) {
                 case 'json':
-                    echo JSON_Data::podcasts(array($podcast));
+                    echo JSON_Data::podcasts(array($podcast), $user_id);
                     break;
                 default:
-                    echo XML_Data::podcasts(array($podcast));
+                    echo XML_Data::podcasts(array($podcast), $user_id);
             }
         } else {
             self::message('error', T_('Failed: podcast was not created.'), '401', $input['api_format']);
@@ -2594,10 +2602,11 @@ class Api
         if (!self::check_parameter($input, array('filter'), 'podcast_episodes')) {
             return false;
         }
-        $user = User::get_from_username(Session::username($input['auth']));
-        $uid  = (int) scrub_in($input['filter']);
-        debug_event(self::class, 'User ' . $user->id . ' loading podcast: ' . $input['filter'], 5);
-        $podcast = new Podcast($uid);
+        $user       = User::get_from_username(Session::username($input['auth']));
+        $user_id    = $user->id;
+        $podcast_id = (int) scrub_in($input['filter']);
+        debug_event(self::class, 'User ' . $user->id . ' loading podcast: ' . $podcast_id, 5);
+        $podcast = new Podcast($podcast_id);
         $items   = $podcast->get_episodes();
 
         ob_end_clean();
@@ -2605,12 +2614,12 @@ class Api
             case 'json':
                 JSON_Data::set_offset($input['offset']);
                 JSON_Data::set_limit($input['limit']);
-                echo JSON_Data::podcast_episodes($items);
+                echo JSON_Data::podcast_episodes($items, $user_id);
                 break;
             default:
                 XML_Data::set_offset($input['offset']);
                 XML_Data::set_limit($input['limit']);
-                echo XML_Data::podcast_episodes($items);
+                echo XML_Data::podcast_episodes($items, $user_id);
         }
         Session::extend($input['auth']);
 
@@ -2637,16 +2646,18 @@ class Api
         if (!self::check_parameter($input, array('filter'), 'podcast')) {
             return false;
         }
+        $user      = User::get_from_username(Session::username($input['auth']));
+        $user_id   = $user->id;
         $object_id = (int) $input['filter'];
         $episode   = new Podcast_Episode($object_id);
         if ($episode->id > 0) {
             ob_end_clean();
             switch ($input['api_format']) {
                 case 'json':
-                    echo JSON_Data::podcast_episodes(array($object_id));
+                    echo JSON_Data::podcast_episodes(array($object_id), $user_id);
                     break;
                 default:
-                    echo XML_Data::podcast_episodes(array($object_id));
+                    echo XML_Data::podcast_episodes(array($object_id), $user_id);
             }
         } else {
             self::message('error', 'podcast_episode ' . $object_id . ' was not found', '404', $input['api_format']);
@@ -3113,7 +3124,7 @@ class Api
      * This rates a library item
      *
      * @param array $input
-     * type   = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
+     * type   = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season' $type
      * id     = (integer) $object_id
      * rating = (integer) 0,1|2|3|4|5 $rating
      * @return boolean|void
@@ -3134,7 +3145,7 @@ class Api
         $rating    = $input['rating'];
         $user      = User::get_from_username(Session::username($input['auth']));
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video'))) {
+        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'))) {
             self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;
@@ -3172,7 +3183,7 @@ class Api
      * Setting flag to false (0) will remove the flag
      *
      * @param array $input
-     * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
+     * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season' $type
      * id   = (integer) $object_id
      * flag = (integer) 0,1 $flag
      * @return boolean
@@ -3197,7 +3208,7 @@ class Api
             $user_id = $user->id;
         }
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video'))) {
+        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'))) {
             self::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;
