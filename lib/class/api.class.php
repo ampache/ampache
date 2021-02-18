@@ -227,13 +227,7 @@ class Api
         }
         $username = trim((string) $input['user']);
         $user_ip  = Core::get_user_ip();
-        if (isset($input['version'])) {
-            // If version is provided, use it
-            $version = $input['version'];
-        } else {
-            // Else, just use the latest version available
-            $version = self::$version;
-        }
+        $version  = (isset($input['version'])) ? (string) $input['version'] : self::$version;
 
         // Log the attempt
         debug_event(self::class, "Handshake Attempt, IP:$user_ip User:$username Version:$version", 5);
@@ -327,8 +321,8 @@ class Api
 
                 debug_event(self::class, 'Login Success, passphrase matched', 1);
 
-                // We need to also get the 'last update' of the
-                // catalog information in an RFC 2822 Format
+
+                // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
                 $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';
                 $db_results = Dba::read($sql);
                 $row        = Dba::fetch_assoc($db_results);
@@ -348,7 +342,15 @@ class Api
                                   'artists' => (int) $counts['artist'],
                                   'playlists' => ((int) $counts['playlist'] + (int) $counts['search']),
                                   'videos' => (int) $counts['video'],
-                                  'catalogs' => (int) $counts['catalog']);
+                                  'catalogs' => (int) $counts['catalog'],
+                                  'users' => ((int) $counts['user'] + (int) $counts['user']),
+                                  'tags' => (int) $counts['tag'],
+                                  'podcasts' => (int) $counts['podcast'],
+                                  'podcast_episodes' => (int) $counts['podcast_episode'],
+                                  'shares' => (int) $counts['share'],
+                                  'licenses' => (int) $counts['license'],
+                                  'live_streams' => (int) $counts['live_stream'],
+                                  'labels' => (int) $counts['label']);
                 switch ($input['api_format']) {
                     case 'json':
                         echo json_encode($outarray, JSON_PRETTY_PRINT);
@@ -379,15 +381,42 @@ class Api
      */
     public static function ping($input)
     {
+        $token   = (string) $input['auth'];
         $xmldata = array('server' => AmpConfig::get('version'), 'version' => self::$version, 'compatible' => '350001');
 
         // Check and see if we should extend the api sessions (done if valid session is passed)
-        if (Session::exists('api', $input['auth'])) {
-            Session::extend($input['auth']);
-            $xmldata = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length') - 60)), $xmldata);
+        if (Session::exists('api', $token)) {
+            Session::extend($token);
+            // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
+            $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';
+            $db_results = Dba::read($sql);
+            $row        = Dba::fetch_assoc($db_results);
+            // Now we need to quickly get the totals
+            $counts = Catalog::count_server(true);
+            // now add it all together
+            $countarray = array('api' => self::$version,
+                'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
+                'update' => date("c", (int) $row['update']),
+                'add' => date("c", (int) $row['add']),
+                'clean' => date("c", (int) $row['clean']),
+                'songs' => (int) $counts['song'],
+                'albums' => (int) $counts['album'],
+                'artists' => (int) $counts['artist'],
+                'playlists' => ((int) $counts['playlist'] + (int) $counts['search']),
+                'videos' => (int) $counts['video'],
+                'catalogs' => (int) $counts['catalog'],
+                'users' => ((int) $counts['user'] + (int) $counts['user']),
+                'tags' => (int) $counts['tag'],
+                'podcasts' => (int) $counts['podcast'],
+                'podcast_episodes' => (int) $counts['podcast_episode'],
+                'shares' => (int) $counts['share'],
+                'licenses' => (int) $counts['license'],
+                'live_streams' => (int) $counts['live_stream'],
+                'labels' => (int) $counts['label']);
+            $xmldata = array_merge(array('session_expire' => date("c", time() + (int) AmpConfig::get('session_length') - 60)), $xmldata, $countarray);
         }
 
-        debug_event(self::class, 'Ping Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $input['auth'], 5);
+        debug_event(self::class, 'Ping Received from ' . Core::get_server('REMOTE_ADDR') . ' :: ' . $token, 5);
 
         ob_end_clean();
         switch ($input['api_format']) {

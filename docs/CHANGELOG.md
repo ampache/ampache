@@ -136,6 +136,9 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Add songcount to album objects. (time in seconds)
 * Add mime, catalog to podcast_episodes
 * Api::advanced_search Add 'playlist', 'user' and 'video' to search types
+* Api::handshake added extra total counts to the response
+  * users, tags, podcasts, podcast_episodes, shares, licenses, live_streams, labels
+* Api::ping match the handshake response (excluding the auth token)
 
 ### Changed
 
