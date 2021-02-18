@@ -1,4 +1,4 @@
-name: tests
+name: unittest
 
 on:
   push:
@@ -13,9 +13,14 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-20.04]
-        php: [7.40]
+        php: [7.4]
     steps:
       - uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
 
       - name: Validate composer.json and composer.lock
         run: composer validate
