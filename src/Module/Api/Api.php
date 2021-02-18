@@ -342,7 +342,7 @@ class Api
      * @param string $token
      * @return array
      */
-    public static function server_details($token)
+    public static function server_details($token = '')
     {
         // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
         $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';
@@ -350,11 +350,11 @@ class Api
         $details    = Dba::fetch_assoc($db_results);
 
         // Now we need to quickly get the totals
-        $counts = Catalog::count_server(true);
+        $counts    = Catalog::count_server(true);
+        $autharray = (!empty($token)) ? array('auth' => $token) : array();
 
         // send the totals
-        $outarray = array('auth' => $token,
-            'api' => Api::$version,
+        $outarray = array('api' => Api::$version,
             'session_expire' => date("c", time() + AmpConfig::get('session_length') - 60),
             'update' => date("c", (int) $details['update']),
             'add' => date("c", (int) $details['add']),
@@ -365,27 +365,15 @@ class Api
             'genres' => (int) $counts['tag'],
             'playlists' => ((int) $counts['playlist'] + (int) $counts['search']),
             'users' => ((int) $counts['user'] + (int) $counts['user']),
-            'catalogs' => (int) $counts['catalog']);
-        if (AmpConfig::get('allow_video') && $counts['video']) {
-            $outarray['videos'] = (int) $counts['video'];
-        }
-        if (AmpConfig::get('podcast') && $counts['podcast']) {
-            $outarray['podcasts']         = (int) $counts['podcast'];
-            $outarray['podcast_episodes'] = (int) $counts['podcast_episode'];
-        }
-        if (AmpConfig::get('share') && $counts['share']) {
-            $outarray['shares'] = (int) $counts['share'];
-        }
-        if (AmpConfig::get('licensing') && $counts['license']) {
-            $outarray['licenses'] = (int) $counts['license'];
-        }
-        if (AmpConfig::get('live_stream') && $counts['live_stream']) {
-            $outarray['live_streams'] = (int) $counts['live_stream'];
-        }
-        if (AmpConfig::get('label') && $counts['label']) {
-            $outarray['labels'] = (int) $counts['label'];
-        }
+            'catalogs' => (int) $counts['catalog'],
+            'videos' => (int) $counts['video'],
+            'podcasts' => (int) $counts['podcast'],
+            'podcast_episodes' => (int) $counts['podcast_episode'],
+            'shares' => (int) $counts['share'],
+            'licenses' => (int) $counts['license'],
+            'live_streams' => (int) $counts['live_stream'],
+            'labels' => (int) $counts['label']);
 
-        return $outarray;
-    } // check_access
+        return array_merge($autharray, $outarray);
+    } // server_details
 }

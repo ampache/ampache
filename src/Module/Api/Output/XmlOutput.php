@@ -386,6 +386,7 @@ final class XmlOutput implements ApiOutputInterface
      * At the moment, this method just acts as a proxy
      *
      * @param int[] $playlistIds
+     * @param int $userId
      * @param bool $songs
      * @param bool $asObject
      * @param int $limit
@@ -393,12 +394,13 @@ final class XmlOutput implements ApiOutputInterface
      */
     public function playlists(
         array $playlists,
+        int $userId,
         bool $songs = false,
         bool $asObject = true,
         int $limit = 0,
         int $offset = 0
     ): string {
-        return Xml_Data::playlists($playlists, $limit, $offset);
+        return Xml_Data::playlists($playlists, $userId, $limit, $offset);
     }
 
     public function dict(

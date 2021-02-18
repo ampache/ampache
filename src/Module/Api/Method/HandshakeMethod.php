@@ -33,6 +33,7 @@ use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
+use Ampache\Module\Util\EnvironmentInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
@@ -44,12 +45,16 @@ final class HandshakeMethod implements MethodInterface
 
     private HandshakeInterface $handshake;
 
+    private EnvironmentInterface $environment;
+
     public function __construct(
         StreamFactoryInterface $streamFactory,
-        HandshakeInterface $handshake
+        HandshakeInterface $handshake,
+        EnvironmentInterface $environment
     ) {
         $this->streamFactory = $streamFactory;
         $this->handshake     = $handshake;
+        $this->environment   = $environment;
     }
 
     /**
@@ -90,7 +95,7 @@ final class HandshakeMethod implements MethodInterface
                 trim($passphrase),
                 $timestamp,
                 $version,
-                Core::get_user_ip()
+                $this->environment->getClientIp()
             );
         } catch (HandshakeException $e) {
             throw new Exception\HandshakeFailedException($e->getMessage());

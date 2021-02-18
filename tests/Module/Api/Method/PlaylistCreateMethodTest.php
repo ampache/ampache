@@ -135,7 +135,7 @@ class PlaylistCreateMethodTest extends MockeryTestCase
             ->once();
 
         $output->shouldReceive('playlists')
-            ->with([$playlistId], false, false)
+            ->with([$playlistId], $userId, false, false)
             ->once()
             ->andReturn($result);
 

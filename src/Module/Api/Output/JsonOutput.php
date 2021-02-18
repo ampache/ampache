@@ -416,6 +416,7 @@ final class JsonOutput implements ApiOutputInterface
      * At the moment, this method just acts as a proxy
      *
      * @param int[] $playlistIds
+     * @param int $userId
      * @param bool $songs
      * @param bool $asObject
      * @param int $limit
@@ -423,6 +424,7 @@ final class JsonOutput implements ApiOutputInterface
      */
     public function playlists(
         array $playlists,
+        int $userId,
         bool $songs = false,
         bool $asObject = true,
         int $limit = 0,
@@ -430,6 +432,7 @@ final class JsonOutput implements ApiOutputInterface
     ): string {
         return Json_Data::playlists(
             $playlists,
+            $userId,
             $songs,
             $asObject,
             $limit,

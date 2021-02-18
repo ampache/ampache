@@ -88,8 +88,10 @@ final class PlaylistCreateMethod implements MethodInterface
             $type = 'public';
         }
 
-        $object_id = $this->playlistRepository->create($name, $type, $gatekeeper->getUser()->getId());
-        if ($object_id === 0) {
+        $userId   = $gatekeeper->getUser()->getId();
+        $objectId = $this->playlistRepository->create($name, $type, $userId);
+
+        if ($objectId === 0) {
             throw new RequestParamMissingException(
                 T_('Bad Request')
             );
@@ -99,7 +101,7 @@ final class PlaylistCreateMethod implements MethodInterface
 
         return $response->withBody(
             $this->streamFactory->createStream(
-                $output->playlists([$object_id], false, false)
+                $output->playlists([$objectId], $userId, false, false)
             )
         );
     }

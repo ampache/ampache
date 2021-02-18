@@ -96,7 +96,7 @@ final class PingMethod implements MethodInterface
             $data = array_merge(
                 ['session_expire' => date('c', time() + $this->configContainer->getSessionLength() - 60)],
                 $data,
-                Api::server_details($input['auth'])
+                Api::server_details()
             );
         }
 

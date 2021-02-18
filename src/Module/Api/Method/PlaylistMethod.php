@@ -117,6 +117,7 @@ final class PlaylistMethod implements MethodInterface
             $this->streamFactory->createStream(
                 $output->playlists(
                     [$playlist->getId()],
+                    $userId,
                     false,
                     false
                 )

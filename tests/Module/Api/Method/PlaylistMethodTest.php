@@ -214,6 +214,7 @@ class PlaylistMethodTest extends MockeryTestCase
         $output->shouldReceive('playlists')
             ->with(
                 [$objectId],
+                $userId,
                 false,
                 false
             )

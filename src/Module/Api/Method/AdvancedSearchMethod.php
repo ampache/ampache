@@ -112,6 +112,7 @@ final class AdvancedSearchMethod
                     case 'playlist':
                         echo Json_Data::playlists(
                             $results,
+                            $user->getId(),
                             (int) ($input['limit'] ?? 0),
                             (int) ($input['offset'] ?? 0)
                         );
@@ -147,6 +148,7 @@ final class AdvancedSearchMethod
                     case 'playlist':
                         echo Xml_Data::playlists(
                             $results,
+                            $user->getId(),
                             (int) ($input['limit'] ?? 0),
                             (int) ($input['offset'] ?? 0)
                         );

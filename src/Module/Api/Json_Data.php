@@ -204,7 +204,7 @@ class Json_Data
             case 'artist':
                 return self::artists($objects, array(), $user_id);
             case 'playlist':
-                return self::playlists($objects, $include);
+                return self::playlists($objects, $user_id, $include);
             case 'share':
                 return self::shares($objects);
             case 'podcast':
@@ -463,6 +463,7 @@ class Json_Data
      * This takes an array of playlist ids and then returns a nice pretty JSON document
      *
      * @param  array   $playlists Playlist id's to include
+     * @param  integer $user_id
      * @param  boolean $songs
      * @param  boolean $object (whether to return as a named object array or regular array)
      * @return string  JSON Object "playlist"
@@ -471,6 +472,7 @@ class Json_Data
      */
     public static function playlists(
         array $playlists,
+        int $userId,
         $songs = false,
         $object = true,
         int $limit = 0,
@@ -501,6 +503,7 @@ class Json_Data
                 $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
                 $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
                 $playlist_type  = $playlist->type;
+                $object_type    = 'search';
             } else {
                 $playlist    = new Playlist($playlist_id);
                 $playlist_id = $playlist->id;
@@ -510,6 +513,7 @@ class Json_Data
                 $playlist_user  = $playlist->f_user;
                 $playitem_total = $playlist->get_media_count('song');
                 $playlist_type  = $playlist->type;
+                $object_type    = 'playlist';
             }
 
             if ($songs) {
@@ -523,6 +527,9 @@ class Json_Data
             } else {
                 $items = ($playitem_total ?: 0);
             }
+            $rating  = new Rating($playlist_id, $object_type);
+            $flag    = new Userflag($playlist_id, $object_type);
+            $art_url = Art::url($playlist_id, $object_type, Core::get_request('auth'));
 
             // Build this element
             array_push($JSON, [
@@ -530,7 +537,12 @@ class Json_Data
                 "name" => $playlist_name,
                 "owner" => $playlist_user,
                 "items" => $items,
-                "type" => $playlist_type]
+                "type" => $playlist_type,
+                "art" => $art_url,
+                "flag" => (!$flag->get_flag($userId, false) ? 0 : 1),
+                "preciserating" => ($rating->get_user_rating($userId) ?: null),
+                "rating" => ($rating->get_user_rating($userId) ?: null),
+                "averagerating" => (string) ($rating->get_average_rating() ?: null)]
             );
         } // end foreach
         $output = ($object) ? array("playlist" => $JSON) : $JSON[0];
@@ -714,6 +726,9 @@ class Json_Data
         foreach ($podcasts as $podcast_id) {
             $podcast = new Podcast($podcast_id);
             $podcast->format();
+            $rating              = new Rating($podcast_id, 'podcast');
+            $flag                = new Userflag($podcast_id, 'podcast');
+            $art_url             = Art::url($podcast_id, 'podcast', Core::get_request('auth'));
             $podcast_name        = $podcast->f_title;
             $podcast_description = $podcast->description;
             $podcast_language    = $podcast->f_language;
@@ -742,6 +757,11 @@ class Json_Data
                 "build_date" => $podcast_build_date,
                 "sync_date" => $podcast_sync_date,
                 "public_url" => $podcast_public_url,
+                "art" => $art_url,
+                "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
+                "preciserating" => ($rating->get_user_rating($user_id) ?: null),
+                "rating" => ($rating->get_user_rating($user_id) ?: null),
+                "averagerating" => (string) ($rating->get_average_rating() ?: null),
                 "podcast_episode" => $podcast_episodes
             ]);
         } // end foreach
@@ -779,6 +799,9 @@ class Json_Data
         foreach ($podcast_episodes as $episode_id) {
             $episode = new Podcast_Episode($episode_id);
             $episode->format();
+            $rating  = new Rating($episode_id, 'podcast_episode');
+            $flag    = new Userflag($episode_id, 'podcast_episode');
+            $art_url = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
             array_push($JSON, [
                 "id" => (string) $episode_id,
                 "name" => $episode->f_title,
@@ -794,6 +817,11 @@ class Json_Data
                 "filename" => $episode->f_file,
                 "public_url" => $episode->link,
                 "url" => $episode->play_url('', 'api', false, $user_id),
+                "art" => $art_url,
+                "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
+                "preciserating" => ($rating->get_user_rating($user_id) ?: null),
+                "rating" => ($rating->get_user_rating($user_id) ?: null),
+                "averagerating" => (string) ($rating->get_average_rating() ?: null),
                 "played" => $episode->played]);
         }
         if ($simple) {
@@ -936,6 +964,9 @@ class Json_Data
         foreach ($videos as $video_id) {
             $video = new Video($video_id);
             $video->format();
+            $rating  = new Rating($video_id, 'video');
+            $flag    = new Userflag($video_id, 'video');
+            $art_url = Art::url($video_id, 'video', Core::get_request('auth'));
             array_push($JSON, array(
                 "id" => (string)$video->id,
                 "title" => $video->title,
@@ -943,7 +974,12 @@ class Json_Data
                 "resolution" => $video->f_resolution,
                 "size" => (int) $video->size,
                 "genre" => self::genre_array($video->tags),
-                "url" => $video->play_url('', 'api', false, $user_id)
+                "url" => $video->play_url('', 'api', false, $user_id),
+                "art" => $art_url,
+                "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
+                "preciserating" => ($rating->get_user_rating($user_id) ?: null),
+                "rating" => ($rating->get_user_rating($user_id) ?: null),
+                "averagerating" => (string) ($rating->get_average_rating() ?: null)
             ));
         } // end foreach
         $output = ($object) ? array("video" => $JSON) : $JSON[0];

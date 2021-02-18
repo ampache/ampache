@@ -240,6 +240,7 @@ interface ApiOutputInterface
      * This returns the playlists to the user
      *
      * @param int[] $playlistIds
+     * @param int $userId
      * @param bool $songs
      * @param bool $asObject
      * @param int $limit
@@ -247,6 +248,7 @@ interface ApiOutputInterface
      */
     public function playlists(
         array $playlists,
+        int $userId,
         bool $songs = false,
         bool $asObject = true,
         int $limit = 0,
