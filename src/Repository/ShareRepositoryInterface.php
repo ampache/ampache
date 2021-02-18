@@ -17,27 +17,21 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\Authorization;
+namespace Ampache\Repository;
 
 use Ampache\Repository\Model\User;
 
-interface GuiGatekeeperInterface
+interface ShareRepositoryInterface
 {
     /**
-     * Checks if the user may access the requested resource
+     * @return int[]
      */
-    public function mayAccess(string $access_type, int $access_level): bool;
+    public function getList(User $user): array;
 
-    /**
-     * Returns the id of the current logged in user
-     */
-    public function getUserId(): int;
-
-    /**
-     * Returns the current logged in user
-     */
-    public function getUser(): User;
+    public function delete(
+        int $shareId,
+        User $user
+    ): int;
 }

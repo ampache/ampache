@@ -48,6 +48,7 @@ use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
+use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\TagRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
@@ -1596,7 +1597,9 @@ class Subsonic_Api
     public static function getshares($input)
     {
         $response = Subsonic_Xml_Data::createSuccessResponse('getshares');
-        $shares   = Share::get_share_list();
+        $shares   = static::getShareRepository()->getList(
+            Core::get_global('user')
+        );
         Subsonic_Xml_Data::addShares($response, $shares);
         self::apiOutput($input, $response);
     }
@@ -1674,7 +1677,7 @@ class Subsonic_Api
         $user     = User::get_from_username((string)$username);
         $id       = self::check_parameter($input, 'id');
         if (AmpConfig::get('share')) {
-            if (Share::delete_share($id, $user)) {
+            if (static::getShareRepository()->delete((int) $id, $user)) {
                 $response = Subsonic_Xml_Data::createSuccessResponse('deleteshare');
             } else {
                 $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'deleteshare');
@@ -2655,5 +2658,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(PlaylistRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getShareRepository(): ShareRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShareRepositoryInterface::class);
     }
 }

@@ -26,6 +26,7 @@ namespace Ampache\Module\Authorization;
 
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\User;
 
 /**
  * Routes access checks and other authorization related calls to its static versions
@@ -49,6 +50,11 @@ final class GuiGatekeeper implements GuiGatekeeperInterface
 
     public function getUserId(): int
     {
-        return (int) Core::get_global('user')->id;
+        return (int) $this->getUser()->id;
+    }
+
+    public function getUser(): User
+    {
+        return Core::get_global('user');
     }
 }

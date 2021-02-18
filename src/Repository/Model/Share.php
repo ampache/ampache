@@ -80,24 +80,6 @@ class Share extends database_object
     }
 
     /**
-     * delete_share
-     * @param $share_id
-     * @param User $user
-     * @return PDOStatement|boolean
-     */
-    public static function delete_share($share_id, $user)
-    {
-        $sql    = "DELETE FROM `share` WHERE `id` = ?";
-        $params = array($share_id);
-        if (!$user->has_access('75')) {
-            $sql .= " AND `user` = ?";
-            $params[] = $user->id;
-        }
-
-        return Dba::write($sql, $params);
-    }
-
-    /**
      * garbage_collection
      */
     public static function garbage_collection()
@@ -219,38 +201,6 @@ class Share extends database_object
         }
 
         return $url;
-    }
-
-    /**
-     * get_share_list_sql
-     * @return string
-     */
-    public static function get_share_list_sql()
-    {
-        $sql = "SELECT `id` FROM `share` ";
-
-        if (!Core::get_global('user')->has_access('75')) {
-            $sql .= "WHERE `user` = '" . (string)Core::get_global('user')->id . "'";
-        }
-
-        return $sql;
-    }
-
-    /**
-     * get_share_list
-     * @return array
-     */
-    public static function get_share_list()
-    {
-        $sql        = self::get_share_list_sql();
-        $db_results = Dba::read($sql);
-        $results    = array();
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
     }
 
     public function show_action_buttons()

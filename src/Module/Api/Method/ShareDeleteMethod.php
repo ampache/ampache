@@ -21,61 +21,105 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Share;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\ShareRepositoryInterface;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class ShareDeleteMethod
- * @package Lib\ApiMethods
- */
-final class ShareDeleteMethod
+final class ShareDeleteMethod implements MethodInterface
 {
-    private const ACTION = 'share_delete';
+    public const ACTION = 'share_delete';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ShareRepositoryInterface $shareRepository;
+
+    private UpdateInfoRepositoryInterface $updateInfoRepository;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ShareRepositoryInterface $shareRepository,
+        UpdateInfoRepositoryInterface $updateInfoRepository,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->streamFactory        = $streamFactory;
+        $this->shareRepository      = $shareRepository;
+        $this->updateInfoRepository = $updateInfoRepository;
+        $this->configContainer      = $configContainer;
+    }
 
     /**
-     * share_delete
      * MINIMUM_API_VERSION=420000
      *
      * Delete an existing share.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of share to delete
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws FunctionDisabledException
+     * @throws RequestParamMissingException
+     * @throws ResultEmptyException
      */
-    public static function share_delete(array $input)
-    {
-        if (!AmpConfig::get('share')) {
-            Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE) === false) {
+            throw new FunctionDisabledException(
+                T_('Enable: share')
+            );
+        }
 
-            return false;
+        $objectId = (int) ($input['filter'] ?? 0);
+
+        if ($objectId === 0) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
         }
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
-        }
-        $user      = User::get_from_username(Session::username($input['auth']));
-        $object_id = $input['filter'];
-        if (in_array($object_id, Share::get_share_list())) {
-            if (Share::delete_share($object_id, $user)) {
-                Api::message('share ' . $object_id . ' deleted', $input['api_format']);
-                Catalog::count_table('share');
+
+        $user = $gatekeeper->getUser();
+
+        if (in_array($objectId, $this->shareRepository->getList($user))) {
+            if ($this->shareRepository->delete($objectId, $user)) {
+                $this->updateInfoRepository->updateCountByTableName('share');
+
+                return $response->withBody(
+                    $this->streamFactory->createStream(
+                        $output->success(
+                            sprintf('share %d deleted', $objectId)
+                        )
+                    )
+                );
             } else {
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
+                throw new RequestParamMissingException(
+                    sprintf(T_('Bad Request: %s'), $objectId)
+                );
             }
         } else {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %d'), $objectId)
+            );
         }
-        Session::extend($input['auth']);
-
-        return true;
-    } // share_delete
+    }
 }

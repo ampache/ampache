@@ -31,6 +31,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\ShareRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,14 +45,18 @@ final class ShareAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private ShareRepositoryInterface $shareRepository;
+
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        ShareRepositoryInterface $shareRepository
     ) {
         $this->ui              = $ui;
         $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
+        $this->shareRepository = $shareRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -82,7 +87,9 @@ final class ShareAction implements ApplicationActionInterface
             T_('Clean Expired Shared Objects')
         );
 
-        $object_ids = Share::get_share_list();
+        $object_ids = $this->shareRepository->getList(
+            $gatekeeper->getUser()
+        );
 
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type('share');

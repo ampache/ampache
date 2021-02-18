@@ -50,4 +50,5 @@ return [
     Model\ModelFactoryInterface::class => autowire(Model\ModelFactory::class),
     UpdateInfoRepositoryInterface::class => autowire(UpdateInfoRepository::class),
     PlaylistRepositoryInterface::class => autowire(PlaylistRepository::class),
+    ShareRepositoryInterface::class => autowire(ShareRepository::class),
 ];

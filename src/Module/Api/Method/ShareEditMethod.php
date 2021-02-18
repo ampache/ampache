@@ -30,6 +30,7 @@ use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Session;
+use Ampache\Repository\ShareRepositoryInterface;
 
 /**
  * Class ShareEditMethod
@@ -64,13 +65,15 @@ final class ShareEditMethod
             return false;
         }
         $share_id = $input['filter'];
-        if (in_array($share_id, Share::get_share_list())) {
+
+        $user = User::get_from_username(Session::username($input['auth']));
+
+        if (in_array($share_id, static::getShareRepository()->getList($user))) {
             $share       = new Share($share_id);
             $description = isset($input['description']) ? $input['description'] : $share->description;
             $stream      = isset($input['stream']) ? $input['stream'] : $share->allow_stream;
             $download    = isset($input['download']) ? $input['download'] : $share->allow_download;
             $expires     = isset($input['expires']) ? Share::get_expiry($input['expires']) : $share->expire_days;
-            $user        = User::get_from_username(Session::username($input['auth']));
 
             $data = array(
                 'max_counter' => $share->max_counter,
@@ -92,5 +95,15 @@ final class ShareEditMethod
         Session::extend($input['auth']);
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getShareRepository(): ShareRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShareRepositoryInterface::class);
     }
 }

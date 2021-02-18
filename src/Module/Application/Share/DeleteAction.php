@@ -27,12 +27,12 @@ namespace Ampache\Module\Application\Share;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\ShareRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,12 +44,16 @@ final class DeleteAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private ShareRepositoryInterface $shareRepository;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        ShareRepositoryInterface $shareRepository
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
+        $this->shareRepository = $shareRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -63,8 +67,9 @@ final class DeleteAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $share_id = Core::get_request('id');
-        if (Share::delete_share($share_id, Core::get_global('user'))) {
+        $share_id = (int) Core::get_request('id');
+
+        if ($this->shareRepository->delete($share_id, Core::get_global('user'))) {
             $next_url = AmpConfig::get('web_path') . '/stats.php?action=share';
             $this->ui->showConfirmation(
                 T_('No Problem'),

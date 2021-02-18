@@ -106,7 +106,7 @@ class StreamMethodTest extends MockeryTestCase
             ->with(
                 '&client=api',
                 'api',
-                false,
+                function_exists('curl_version'),
                 $userId
             )
             ->once()
@@ -172,7 +172,7 @@ class StreamMethodTest extends MockeryTestCase
                     $offset
                 ),
                 'api',
-                false,
+                function_exists('curl_version'),
                 $userId
             )
             ->once()
