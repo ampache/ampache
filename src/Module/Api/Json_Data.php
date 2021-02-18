@@ -33,7 +33,6 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Live_Stream;
@@ -45,7 +44,6 @@ use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Useractivity;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\SongRepositoryInterface;
@@ -648,55 +646,6 @@ class Json_Data
     } // bookmarks
 
     /**
-     * catalogs
-     *
-     * This returns catalogs to the user, in a pretty json document with the information
-     *
-     * @param  integer[] $catalogs group of catalog id's
-     * @param  boolean   $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "catalog"
-     */
-    public static function catalogs($catalogs, $object = true)
-    {
-        if ((count($catalogs) > self::$limit || self::$offset > 0) && self::$limit) {
-            $catalogs = array_splice($catalogs, self::$offset, self::$limit);
-        }
-
-        $JSON = [];
-        foreach ($catalogs as $catalog_id) {
-            $catalog = Catalog::create_from_id($catalog_id);
-            $catalog->format();
-            $catalog_name           = $catalog->name;
-            $catalog_type           = $catalog->catalog_type;
-            $catalog_gather_types   = $catalog->gather_types;
-            $catalog_enabled        = (int) $catalog->enabled;
-            $catalog_last_add       = $catalog->f_add;
-            $catalog_last_clean     = $catalog->f_clean;
-            $catalog_last_update    = $catalog->f_update;
-            $catalog_path           = $catalog->f_info;
-            $catalog_rename_pattern = $catalog->rename_pattern;
-            $catalog_sort_pattern   = $catalog->sort_pattern;
-            // Build this element
-            array_push($JSON, [
-                "id" => (string) $catalog_id,
-                "name" => $catalog_name,
-                "type" => $catalog_type,
-                "gather_types" => $catalog_gather_types,
-                "enabled" => $catalog_enabled,
-                "last_add" => $catalog_last_add,
-                "last_clean" => $catalog_last_clean,
-                "last_update" => $catalog_last_update,
-                "path" => $catalog_path,
-                "rename_pattern" => $catalog_rename_pattern,
-                "sort_pattern" => $catalog_sort_pattern
-            ]);
-        } // end foreach
-        $output = ($object) ? array("catalog" => $JSON) : $JSON[0];
-
-        return json_encode($output, JSON_PRETTY_PRINT);
-    } // catalogs
-
-    /**
      * podcasts
      *
      * This returns podcasts to the user, in a pretty json document with the information
@@ -1061,40 +1010,6 @@ class Json_Data
 
         return json_encode($output, JSON_PRETTY_PRINT);
     } // users
-
-    /**
-     * timeline
-     *
-     * This handles creating an JSON document for an activity list
-     *
-     * @param  integer[] $activities Activity id list
-     * @param  boolean   $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "activity"
-     */
-    public static function timeline($activities, $object = true)
-    {
-        $JSON = array();
-        foreach ($activities as $activity_id) {
-            $activity = new Useractivity($activity_id);
-            $user     = new User($activity->user);
-            $ourArray = array(
-                "id" => (string) $activity_id,
-                "date" => $activity->activity_date,
-                "object_type" => $activity->object_type,
-                "object_id" => $activity->object_id,
-                "action" => $activity->action,
-                "user" => array(
-                    "id" => (string) $activity->user,
-                    "username" => $user->username
-                )
-            );
-
-            array_push($JSON, $ourArray);
-        }
-        $output = ($object) ? array("activity" => $JSON) : $JSON[0];
-
-        return json_encode($output, JSON_PRETTY_PRINT);
-    } // timeline
 
     /**
      * @deprecated Inject by constructor

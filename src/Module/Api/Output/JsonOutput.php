@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Output;
 
 use Ampache\Module\Api\Json_Data;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 
@@ -457,9 +458,48 @@ final class JsonOutput implements ApiOutputInterface
      * @param int[] $catalogIds group of catalog id's
      * @param bool $asObject (whether to return as a named object array or regular array)
      */
-    public function catalogs(array $catalogIds, bool $asObject = true): string
-    {
-        return Json_Data::catalogs($catalogIds, $asObject);
+    public function catalogs(
+        array $catalogIds,
+        bool $asObject = true,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
+        if ((count($catalogIds) > $limit || $offset > 0) && $limit) {
+            $catalogIds = array_splice($catalogs, $offset, $limit);
+        }
+
+        $result = [];
+        foreach ($catalogIds as $catalog_id) {
+            $catalog = Catalog::create_from_id($catalog_id);
+            $catalog->format();
+            $catalog_name           = $catalog->name;
+            $catalog_type           = $catalog->catalog_type;
+            $catalog_gather_types   = $catalog->gather_types;
+            $catalog_enabled        = (int) $catalog->enabled;
+            $catalog_last_add       = $catalog->f_add;
+            $catalog_last_clean     = $catalog->f_clean;
+            $catalog_last_update    = $catalog->f_update;
+            $catalog_path           = $catalog->f_info;
+            $catalog_rename_pattern = $catalog->rename_pattern;
+            $catalog_sort_pattern   = $catalog->sort_pattern;
+
+            $result[] = [
+                'id' => (string) $catalog_id,
+                'name' => $catalog_name,
+                'type' => $catalog_type,
+                'gather_types' => $catalog_gather_types,
+                'enabled' => $catalog_enabled,
+                'last_add' => $catalog_last_add,
+                'last_clean' => $catalog_last_clean,
+                'last_update' => $catalog_last_update,
+                'path' => $catalog_path,
+                'rename_pattern' => $catalog_rename_pattern,
+                'sort_pattern' => $catalog_sort_pattern
+            ];
+        }
+        $output = ($asObject) ? ['catalog' => $result] : $result[0];
+
+        return json_encode($output, JSON_PRETTY_PRINT);
     }
 
     /**
@@ -469,7 +509,25 @@ final class JsonOutput implements ApiOutputInterface
      */
     public function timeline(array $activityIds): string
     {
-        return Json_Data::timeline($activityIds);
+        $result = [];
+        foreach ($activityIds as $activityId) {
+            $activity = $this->modelFactory->createUseractivity($activityId);
+            $user     = $this->modelFactory->createUser((int) $activity->user);
+
+            $result[] = [
+                'id' => (string) $activityId,
+                'date' => $activity->activity_date,
+                'object_type' => $activity->object_type,
+                'object_id' => $activity->object_id,
+                'action' => $activity->action,
+                'user' => [
+                    'id' => (string) $activity->user,
+                    'username' => $user->username
+                ]
+            ];
+        }
+
+        return json_encode(['activity' => $result], JSON_PRETTY_PRINT);
     }
 
     /**

@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Module\Api\Xml_Data;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Xml_Data;
 
 final class XmlOutput implements ApiOutputInterface
 {
@@ -439,10 +439,27 @@ final class XmlOutput implements ApiOutputInterface
      *
      * @param int[] $catalogIds group of catalog id's
      * @param bool $asObject (whether to return as a named object array or regular array)
+     * @param int $limit
+     * @param int $offset
      */
-    public function catalogs(array $catalogIds, bool $asObject = true): string
-    {
-        return Xml_Data::catalogs($catalogIds);
+    public function catalogs(
+        array $catalogIds,
+        bool $asObject = true,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
+        if ((count($catalogIds) > $limit || $offset > 0) && $limit) {
+            $catalogIds = array_splice($catalogs, $offset, $limit);
+        }
+        $string = "<total_count>" . Catalog::get_count('catalog') . "</total_count>\n";
+
+        foreach ($catalogIds as $catalogId) {
+            $catalog = Catalog::create_from_id($catalogId);
+            $catalog->format();
+            $string .= "<catalog id=\"$catalogId\">\n" . "\t<name><![CDATA[" . $catalog->name . "]]></name>\n" . "\t<type><![CDATA[" . $catalog->catalog_type . "]]></type>\n" . "\t<gather_types><![CDATA[" . $catalog->gather_types . "]]></gather_types>\n" . "\t<enabled>" . $catalog->enabled . "</enabled>\n" . "\t<last_add><![CDATA[" . $catalog->f_add . "]]></last_add>\n" . "\t<last_clean><![CDATA[" . $catalog->f_clean . "]]></last_clean>\n" . "\t<last_update><![CDATA[" . $catalog->f_update . "]]></last_update>\n" . "\t<path><![CDATA[" . $catalog->f_info . "]]></path>\n" . "\t<rename_pattern><![CDATA[" . $catalog->rename_pattern . "]]></rename_pattern>\n" . "\t<sort_pattern><![CDATA[" . $catalog->sort_pattern . "]]></sort_pattern>\n" . "</catalog>\n";
+        }
+
+        return Xml_Data::output_xml($string);
     }
 
     /**
@@ -452,7 +469,18 @@ final class XmlOutput implements ApiOutputInterface
      */
     public function timeline(array $activityIds): string
     {
-        return Xml_Data::timeline($activityIds);
+        $string = '';
+        foreach ($activityIds as $activityId) {
+            $activity = $this->modelFactory->createUseractivity($activityId);
+            $user     = $this->modelFactory->createUser((int) $activity->user);
+            $string .= "\t<activity id=\"" . $activityId . "\">\n" . "\t\t<date>" . $activity->activity_date . "</date>\n" . "\t\t<object_type><![CDATA[" . $activity->object_type . "]]></object_type>\n" . "\t\t<object_id>" . $activity->object_id . "</object_id>\n" . "\t\t<action><![CDATA[" . $activity->action . "]]></action>\n";
+            if ($user->id) {
+                $string .= "\t\t<user id=\"" . (string)$user->id . "\">\n" . "\t\t\t<username><![CDATA[" . $user->username . "]]></username>\n" . "\t\t</user>\n";
+            }
+            $string .= "\t</activity>\n";
+        }
+
+        return Xml_Data::_header() . $string . Xml_Data::_footer();
     }
 
     /**

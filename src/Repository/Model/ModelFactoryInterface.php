@@ -136,4 +136,8 @@ interface ModelFactoryInterface
     public function createBookmark(
         int $bookmarkId
     ): Bookmark;
+
+    public function createUseractivity(
+        int $useractivityId
+    ): Useractivity;
 }

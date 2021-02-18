@@ -202,4 +202,10 @@ final class ModelFactory implements ModelFactoryInterface
     ): Bookmark {
         return new Bookmark($bookmarkId);
     }
+
+    public function createUseractivity(
+        int $useractivityId
+    ): Useractivity {
+        return new Useractivity($useractivityId);
+    }
 }

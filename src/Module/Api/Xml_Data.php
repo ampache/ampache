@@ -817,30 +817,6 @@ class Xml_Data
     } // bookmarks
 
     /**
-     * catalogs
-     *
-     * This returns catalogs to the user, in a pretty xml document with the information
-     *
-     * @param  integer[] $catalogs group of catalog id's
-     * @return string    return xml
-     */
-    public static function catalogs($catalogs)
-    {
-        if ((count($catalogs) > self::$limit || self::$offset > 0) && self::$limit) {
-            $catalogs = array_splice($catalogs, self::$offset, self::$limit);
-        }
-        $string = "<total_count>" . Catalog::get_count('catalog') . "</total_count>\n";
-
-        foreach ($catalogs as $catalog_id) {
-            $catalog = Catalog::create_from_id($catalog_id);
-            $catalog->format();
-            $string .= "<catalog id=\"$catalog_id\">\n" . "\t<name><![CDATA[" . $catalog->name . "]]></name>\n" . "\t<type><![CDATA[" . $catalog->catalog_type . "]]></type>\n" . "\t<gather_types><![CDATA[" . $catalog->gather_types . "]]></gather_types>\n" . "\t<enabled>" . $catalog->enabled . "</enabled>\n" . "\t<last_add><![CDATA[" . $catalog->f_add . "]]></last_add>\n" . "\t<last_clean><![CDATA[" . $catalog->f_clean . "]]></last_clean>\n" . "\t<last_update><![CDATA[" . $catalog->f_update . "]]></last_update>\n" . "\t<path><![CDATA[" . $catalog->f_info . "]]></path>\n" . "\t<rename_pattern><![CDATA[" . $catalog->rename_pattern . "]]></rename_pattern>\n" . "\t<sort_pattern><![CDATA[" . $catalog->sort_pattern . "]]></sort_pattern>\n" . "</catalog>\n";
-        } // end foreach
-
-        return self::output_xml($string);
-    } // catalogs
-
-    /**
      * podcasts
      *
      * This returns podcasts to the user, in a pretty xml document with the information
@@ -1190,30 +1166,6 @@ class Xml_Data
     }
 
     /**
-     * timeline
-     *
-     * This handles creating an xml document for an activity list
-     *
-     * @param  integer[] $activities Activity identifier list
-     * @return string    return xml
-     */
-    public static function timeline($activities)
-    {
-        $string = "";
-        foreach ($activities as $activity_id) {
-            $activity = new Useractivity($activity_id);
-            $user     = new User($activity->user);
-            $string .= "\t<activity id=\"" . $activity_id . "\">\n" . "\t\t<date>" . $activity->activity_date . "</date>\n" . "\t\t<object_type><![CDATA[" . $activity->object_type . "]]></object_type>\n" . "\t\t<object_id>" . $activity->object_id . "</object_id>\n" . "\t\t<action><![CDATA[" . $activity->action . "]]></action>\n";
-            if ($user->id) {
-                $string .= "\t\t<user id=\"" . (string)$user->id . "\">\n" . "\t\t\t<username><![CDATA[" . $user->username . "]]></username>\n" . "\t\t</user>\n";
-            }
-            $string .= "\t</activity>\n";
-        }
-
-        return self::_header() . $string . self::_footer();
-    } // timeline
-
-    /**
      * rss_feed
      *
      * returns xml for rss types that aren't podcasts (Feed generation of plays/albums/etc)
@@ -1248,7 +1200,7 @@ class Xml_Data
      * @param  string $title
      * @return string Header xml tag.
      */
-    private static function _header($title = null)
+    public static function _header($title = null)
     {
         switch (self::$type) {
             case 'xspf':
@@ -1277,7 +1229,7 @@ class Xml_Data
      *
      * @return string Footer xml tag.
      */
-    private static function _footer()
+    public static function _footer()
     {
         switch (self::$type) {
             case 'itunes':

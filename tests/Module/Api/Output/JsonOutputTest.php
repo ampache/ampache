@@ -31,6 +31,7 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Useractivity;
 use Mockery\MockInterface;
 
 class JsonOutputTest extends MockeryTestCase
@@ -426,6 +427,54 @@ class JsonOutputTest extends MockeryTestCase
                 'update_date' => $updateDate
             ]]], JSON_PRETTY_PRINT),
             $this->subject->bookmarks([42, $bookmarkId], 1, 1)
+        );
+    }
+
+    public function testTimelineReturnsData(): void
+    {
+        $activityId   = 666;
+        $userId       = 42;
+        $activityDate = 123456;
+        $objectType   = 'some-object-type';
+        $objectId     = 33;
+        $action       = 'some-action';
+        $username     = 'some-username';
+
+        $useractivity = $this->mock(Useractivity::class);
+        $user         = $this->mock(User::class);
+
+        $this->modelFactory->shouldReceive('createUseractivity')
+            ->with($activityId)
+            ->once()
+            ->andReturn($useractivity);
+        $this->modelFactory->shouldReceive('createUser')
+            ->with($userId)
+            ->once()
+            ->andReturn($user);
+
+        $useractivity->user          = $userId;
+        $useractivity->activity_date = $activityDate;
+        $useractivity->object_type   = $objectType;
+        $useractivity->object_id     = $objectId;
+        $useractivity->action        = $action;
+
+        $user->username = $username;
+
+        $this->assertSame(
+            json_encode([
+                'activity' => [[
+                    'id' => (string) $activityId,
+                    'date' => $activityDate,
+                    'object_type' => $objectType,
+                    'object_id' => $objectId,
+                    'action' => $action,
+                    'user' => [
+                        'id' => (string) $userId,
+                        'username' => $username
+                    ]
+                ]]
+            ], JSON_PRETTY_PRINT),
+            $this->subject->timeline([$activityId])
         );
     }
 }

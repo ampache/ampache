@@ -269,10 +269,14 @@ interface ApiOutputInterface
      *
      * @param int[] $catalogIds group of catalog id's
      * @param bool $asObject (whether to return as a named object array or regular array)
+     * @param int $limit
+     * @param int $offset
      */
     public function catalogs(
         array $catalogIds,
-        bool $asObject = true
+        bool $asObject = true,
+        int $limit = 0,
+        int $offset = 0
     ): string;
 
     /**
