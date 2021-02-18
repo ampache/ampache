@@ -14,6 +14,8 @@ import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import { Modal } from 'react-async-popup';
 import PlaylistSelector from '~Modal/types/PlaylistSelector';
+import { Menu, MenuItem } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 import style from './index.styl';
 
@@ -25,11 +27,21 @@ interface SongListProps {
     songData?: Song[];
     authKey?: AuthKey;
 }
-//TODO: This is doing way to much, clean me
+
+const contextMenuDefaultState = {
+    mouseX: null,
+    mouseY: null,
+    song: null
+};
+
 const SongList: React.FC<SongListProps> = (props) => {
     const musicContext = useContext(MusicContext);
     const [songs, setSongs] = useState<Song[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
+
+    const [contextMenuState, setContextMenuState] = React.useState(
+        contextMenuDefaultState
+    );
 
     useEffect(() => {
         if (props.songData) {
@@ -77,22 +89,24 @@ const SongList: React.FC<SongListProps> = (props) => {
         });
     };
 
-    const handleAddToPlaylist = async (songID: string) => {
-        const { show } = await Modal.new({
-            title: 'Add To Playlist',
-            content: <PlaylistSelector authKey={props.authKey} />,
-            footer: null
-        });
-        const playlistID = await show();
+    const handleAddToPlaylist = (songID: string) => {
+        (async () => {
+            const { show } = await Modal.new({
+                title: 'Add To Playlist',
+                content: <PlaylistSelector authKey={props.authKey} />,
+                footer: null
+            });
+            const playlistID = await show();
 
-        if (playlistID) {
-            try {
-                await addToPlaylist(playlistID, songID, props.authKey);
-                toast.success('Added song to playlist');
-            } catch (e) {
-                toast.error('😞 Something went wrong adding to playlist.');
+            if (playlistID) {
+                try {
+                    await addToPlaylist(playlistID, songID, props.authKey);
+                    toast.success('Added song to playlist');
+                } catch (e) {
+                    toast.error('😞 Something went wrong adding to playlist.');
+                }
             }
-        }
+        })();
     };
 
     const handleFlagSong = (songID: string, favorite: boolean) => {
@@ -124,6 +138,24 @@ const SongList: React.FC<SongListProps> = (props) => {
             });
     };
 
+    const handleStartPlaying = (song: Song) => {
+        const queueIndex = songs.findIndex((o) => o.id === song.id);
+        musicContext.startPlayingWithNewQueue(songs, queueIndex);
+    };
+
+    const handleContext = (event: React.MouseEvent, song: Song) => {
+        event.preventDefault();
+        setContextMenuState({
+            mouseX: event.clientX - 2,
+            mouseY: event.clientY - 4,
+            song
+        });
+    };
+
+    const handleContextClose = () => {
+        setContextMenuState(contextMenuDefaultState);
+    };
+
     if (error) {
         return (
             <div>
@@ -139,41 +171,88 @@ const SongList: React.FC<SongListProps> = (props) => {
         );
     }
     return (
-        <ul className={'striped-list'}>
-            {songs.map((song: Song) => {
-                return (
-                    <SongRow
-                        song={song}
-                        showArtist={props.showArtist}
-                        showAlbum={props.showAlbum}
-                        {...(props.inPlaylistID && {
-                            removeFromPlaylist: handleRemoveFromPlaylist
-                        })}
-                        {...(!props.inPlaylistID && {
-                            addToPlaylist: handleAddToPlaylist
-                        })}
-                        isCurrentlyPlaying={
-                            musicContext.currentPlayingSong?.id === song.id
-                        }
-                        addToQueue={(next) =>
-                            musicContext.addToQueue(song, next)
-                        }
-                        startPlaying={() => {
-                            const queueIndex = songs.findIndex(
-                                (o) => o.id === song.id
-                            );
-                            musicContext.startPlayingWithNewQueue(
-                                songs,
-                                queueIndex
-                            );
+        <>
+            <ul className={'striped-list'}>
+                {songs.map((song: Song) => {
+                    return (
+                        <SongRow
+                            song={song}
+                            showArtist={props.showArtist}
+                            showAlbum={props.showAlbum}
+                            isCurrentlyPlaying={
+                                musicContext.currentPlayingSong?.id === song.id
+                            }
+                            startPlaying={handleStartPlaying}
+                            showContext={handleContext}
+                            flagSong={handleFlagSong}
+                            key={song.playlisttrack}
+                            className={style.songRow}
+                        />
+                    );
+                })}
+            </ul>
+            <Menu
+                open={contextMenuState.mouseY !== null}
+                onClose={handleContextClose}
+                anchorReference='anchorPosition'
+                anchorPosition={
+                    contextMenuState.mouseY !== null &&
+                    contextMenuState.mouseX !== null
+                        ? {
+                              top: contextMenuState.mouseY,
+                              left: contextMenuState.mouseX
+                          }
+                        : undefined
+                }
+            >
+                <MenuItem
+                    onClick={() => {
+                        handleContextClose();
+                        musicContext.addToQueue(contextMenuState.song, true);
+                    }}
+                >
+                    Play Next
+                </MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        handleContextClose();
+                        musicContext.addToQueue(contextMenuState.song, false);
+                    }}
+                >
+                    Add to Queue
+                </MenuItem>
+                <MenuItem onClick={handleContextClose}>
+                    <Link to={`/artist/${contextMenuState.song?.artist.id}`}>
+                        Go to Artist
+                    </Link>
+                </MenuItem>
+                <MenuItem onClick={handleContextClose}>
+                    <Link to={`/album/${contextMenuState.song?.album.id}`}>
+                        Go to Album
+                    </Link>
+                </MenuItem>
+                {props.inPlaylistID && (
+                    <MenuItem
+                        onClick={() => {
+                            handleContextClose();
+                            handleRemoveFromPlaylist(contextMenuState.song?.id);
                         }}
-                        flagSong={handleFlagSong}
-                        key={song.playlisttrack}
-                        className={style.songRow}
-                    />
-                );
-            })}
-        </ul>
+                    >
+                        Remove From Playlist
+                    </MenuItem>
+                )}
+                {!props.inPlaylistID && (
+                    <MenuItem
+                        onClick={() => {
+                            handleContextClose();
+                            handleAddToPlaylist(contextMenuState.song?.id);
+                        }}
+                    >
+                        Add to Playlist
+                    </MenuItem>
+                )}
+            </Menu>
+        </>
     );
 };
 

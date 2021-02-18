@@ -1,44 +1,27 @@
 import React from 'react';
 import SVG from 'react-inlinesvg';
-import useContextMenu from 'react-use-context-menu';
 import { Song } from '~logic/Song';
 import { Link } from 'react-router-dom';
 import SimpleRating from '~components/SimpleRating';
+
+import style from './index.styl';
 
 interface SongRowProps {
     song: Song;
     isCurrentlyPlaying: boolean;
     showArtist?: boolean;
     showAlbum?: boolean;
-    removeFromPlaylist?: (trackID: string) => void;
-    addToPlaylist?: (trackID: string) => void;
-    addToQueue: (next: boolean) => void;
-    startPlaying: () => void;
+    startPlaying: (song: Song) => void;
+    showContext: (event: React.MouseEvent, song: Song) => void;
     flagSong: (songID: string, favorite: boolean) => void;
     className?: string;
 }
-import style from './index.styl';
 
 const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
-    const [
-        bindMenu,
-        bindMenuItems,
-        useContextTrigger,
-        { setVisible, setCoords }
-    ] = useContextMenu();
-    const [bindTrigger] = useContextTrigger();
-
     const formatLabel = (s) => [
         (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s
         //https://stackoverflow.com/a/37770048
     ];
-
-    const showContextMenu = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setCoords([e.clientX, e.clientY]);
-        setVisible(true);
-    };
 
     return (
         <>
@@ -48,8 +31,10 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                         ? `nowPlaying ${style.songRow} card-clear ${props.className}`
                         : `${style.songRow} card-clear ${props.className} `
                 }
-                {...bindTrigger}
-                onClick={props.startPlaying}
+                onContextMenu={(e) => props.showContext(e, props.song)}
+                onClick={() => {
+                    props.startPlaying(props.song);
+                }}
                 tabIndex={1}
             >
                 <div className={style.songDetails}>
@@ -93,7 +78,9 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                     <div
                         className={style.options}
                         onClick={(e) => {
-                            showContextMenu(e);
+                            e.preventDefault();
+                            e.stopPropagation();
+                            props.showContext(e, props.song);
                         }}
                     >
                         <SVG
@@ -124,64 +111,6 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                     </div>
                 </div>
             </li>
-            <div {...bindMenu} className='contextMenu'>
-                <div
-                    {...bindMenuItems}
-                    onClick={() => {
-                        setVisible(false);
-                        props.addToQueue(true);
-                    }}
-                >
-                    Play Next
-                </div>
-                <div
-                    {...bindMenuItems}
-                    onClick={() => {
-                        setVisible(false);
-                        props.addToQueue(false);
-                    }}
-                >
-                    Add to Queue
-                </div>
-                {props.showArtist && (
-                    <Link
-                        {...bindMenuItems}
-                        to={`/artist/${props.song.artist.id}`}
-                    >
-                        Go To Artist
-                    </Link>
-                )}
-                {props.showAlbum && (
-                    <Link
-                        {...bindMenuItems}
-                        to={`/album/${props.song.album.id}`}
-                    >
-                        Go To Album
-                    </Link>
-                )}
-                {props.removeFromPlaylist && (
-                    <div
-                        {...bindMenuItems}
-                        onClick={() => {
-                            setVisible(false);
-                            props.removeFromPlaylist(props.song.id);
-                        }}
-                    >
-                        Remove From Playlist
-                    </div>
-                )}
-                {props.addToPlaylist && (
-                    <div
-                        {...bindMenuItems}
-                        onClick={() => {
-                            setVisible(false);
-                            props.addToPlaylist(props.song.id);
-                        }}
-                    >
-                        Add to Playlist
-                    </div>
-                )}
-            </div>
         </>
     );
 };

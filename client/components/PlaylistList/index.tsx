@@ -24,7 +24,7 @@ interface PlaylistListProps {
     authKey?: AuthKey;
 }
 
-const contextDefaultState = {
+const contextMenuDefaultState = {
     mouseX: null,
     mouseY: null,
     playlistID: null
@@ -36,7 +36,9 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
     const [playlists, setPlaylists] = useState<Playlist[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
 
-    const [contextState, setContextState] = React.useState(contextDefaultState);
+    const [contextMenuState, setContextMenuState] = React.useState(
+        contextMenuDefaultState
+    );
 
     useEffect(() => {
         getPlaylists(props.authKey)
@@ -137,11 +139,11 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
     };
 
     const handleContextClose = () => {
-        setContextState(contextDefaultState);
+        setContextMenuState(contextMenuDefaultState);
     };
     const handleContext = (event: React.MouseEvent, playlistID: string) => {
         event.preventDefault();
-        setContextState({
+        setContextMenuState({
             mouseX: event.clientX - 2,
             mouseY: event.clientY - 4,
             playlistID
@@ -194,14 +196,15 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                 })}
             </ul>
             <Menu
-                open={contextState.mouseY !== null}
+                open={contextMenuState.mouseY !== null}
                 onClose={handleContextClose}
                 anchorReference='anchorPosition'
                 anchorPosition={
-                    contextState.mouseY !== null && contextState.mouseX !== null
+                    contextMenuState.mouseY !== null &&
+                    contextMenuState.mouseX !== null
                         ? {
-                              top: contextState.mouseY,
-                              left: contextState.mouseX
+                              top: contextMenuState.mouseY,
+                              left: contextMenuState.mouseX
                           }
                         : undefined
                 }
@@ -211,9 +214,9 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                     onClick={() => {
                         handleContextClose();
                         handleEditPlaylist(
-                            contextState.playlistID,
+                            contextMenuState.playlistID,
                             playlists.filter(
-                                (p) => p.id === contextState.playlistID
+                                (p) => p.id === contextMenuState.playlistID
                             )[0].name
                         );
                     }}
@@ -223,7 +226,7 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                 <MenuItem
                     onClick={() => {
                         handleContextClose();
-                        handleDeletePlaylist(contextState.playlistID);
+                        handleDeletePlaylist(contextMenuState.playlistID);
                     }}
                 >
                     Delete Playlist
