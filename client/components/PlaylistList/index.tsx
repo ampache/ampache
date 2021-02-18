@@ -15,12 +15,10 @@ import { Modal } from 'react-async-popup';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import InputModal from '~Modal/types/InputModal';
-import { useHistory } from 'react-router-dom';
-import HistoryShell from '~Modal/HistoryShell';
-
-import style from './index.styl';
 import { Menu, MenuItem } from '~node_modules/@material-ui/core';
 import { MusicContext } from '~Contexts/MusicContext';
+
+import style from './index.styl';
 
 interface PlaylistListProps {
     authKey?: AuthKey;
@@ -39,8 +37,6 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
     const [error, setError] = useState<Error | AmpacheError>(null);
 
     const [contextState, setContextState] = React.useState(contextDefaultState);
-
-    const history = useHistory();
 
     useEffect(() => {
         getPlaylists(props.authKey)
@@ -75,13 +71,11 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
         const { show } = await Modal.new({
             title: 'Create new playlist',
             content: (
-                <HistoryShell history={history}>
-                    <InputModal
-                        inputLabel='Name'
-                        inputPlaceholder='Rock & Roll...'
-                        submitButtonText='Create'
-                    />
-                </HistoryShell>
+                <InputModal
+                    inputLabel='Name'
+                    inputPlaceholder='Rock & Roll...'
+                    submitButtonText='Create'
+                />
             ),
             footer: null
         });
@@ -112,14 +106,12 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
         const { show } = await Modal.new({
             title: `Editing ${playlistCurrentName}`,
             content: (
-                <HistoryShell history={history}>
-                    <InputModal
-                        inputLabel='New Playlist Name'
-                        inputInitialValue={playlistCurrentName}
-                        inputPlaceholder={playlistCurrentName}
-                        submitButtonText='Save'
-                    />
-                </HistoryShell>
+                <InputModal
+                    inputLabel='New Playlist Name'
+                    inputInitialValue={playlistCurrentName}
+                    inputPlaceholder={playlistCurrentName}
+                    submitButtonText='Save'
+                />
             ),
             footer: null
         });

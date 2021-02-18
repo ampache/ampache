@@ -14,8 +14,6 @@ import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import { Modal } from 'react-async-popup';
 import PlaylistSelector from '~Modal/types/PlaylistSelector';
-import { useHistory } from 'react-router-dom';
-import HistoryShell from '~Modal/HistoryShell';
 
 import style from './index.styl';
 
@@ -32,7 +30,6 @@ const SongList: React.FC<SongListProps> = (props) => {
     const musicContext = useContext(MusicContext);
     const [songs, setSongs] = useState<Song[]>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
-    const history = useHistory();
 
     useEffect(() => {
         if (props.songData) {
@@ -83,11 +80,7 @@ const SongList: React.FC<SongListProps> = (props) => {
     const handleAddToPlaylist = async (songID: string) => {
         const { show } = await Modal.new({
             title: 'Add To Playlist',
-            content: (
-                <HistoryShell history={history}>
-                    <PlaylistSelector authKey={props.authKey} />
-                </HistoryShell>
-            ),
+            content: <PlaylistSelector authKey={props.authKey} />,
             footer: null
         });
         const playlistID = await show();
