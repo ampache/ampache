@@ -756,10 +756,11 @@ class Xml_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
-     * @param  array  $playlists Playlist id's to include
-     * @return string return xml
+     * @param  array   $playlists Playlist id's to include
+     * @param  integer $user_id
+     * @return string  return xml
      */
-    public static function playlists($playlists)
+    public static function playlists($playlists, $user_id = null)
     {
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
@@ -782,6 +783,7 @@ class Xml_Data
                 $last_count     = ((int) $playlist->last_count > 0) ? $playlist->last_count : 5000;
                 $playitem_total = ($playlist->limit == 0) ? $last_count : $playlist->limit;
                 $playlist_type  = $playlist->type;
+                $object_type    = 'smart_playlist';
             } else {
                 $playlist    = new Playlist($playlist_id);
                 $playlist_id = $playlist->id;
@@ -791,9 +793,24 @@ class Xml_Data
                 $playlist_user  = $playlist->f_user;
                 $playitem_total = $playlist->get_media_count('song');
                 $playlist_type  = $playlist->type;
+                $object_type    = 'playlist';
             }
+            $rating  = new Rating($playlist_id, $object_type);
+            $flag    = new Userflag($playlist_id, $object_type);
+            $art_url = Art::url($playlist_id, $object_type, Core::get_request('auth'));
+
             // Build this element
-            $string .= "<playlist id=\"$playlist_id\">\n" . "\t<name><![CDATA[$playlist_name]]></name>\n" . "\t<owner><![CDATA[$playlist_user]]></owner>\n" . "\t<items>$playitem_total</items>\n" . "\t<type>$playlist_type</type>\n" . "</playlist>\n";
+            $string .= "<playlist id=\"$playlist_id\">\n" .
+                "\t<name><![CDATA[$playlist_name]]></name>\n" .
+                "\t<owner><![CDATA[$playlist_user]]></owner>\n" .
+                "\t<items>$playitem_total</items>\n" .
+                "\t<type>$playlist_type</type>\n" .
+                "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
+                "\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n" .
+                "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
+                "\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" .
+                "\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
+                "</playlist>\n";
         } // end foreach
 
         return self::output_xml($string);
@@ -893,7 +910,25 @@ class Xml_Data
         foreach ($podcasts as $podcast_id) {
             $podcast = new Podcast($podcast_id);
             $podcast->format();
-            $string .= "<podcast id=\"$podcast_id\">\n" . "\t<name><![CDATA[" . $podcast->f_title . "]]></name>\n" . "\t<description><![CDATA[" . $podcast->description . "]]></description>\n" . "\t<language><![CDATA[" . $podcast->f_language . "]]></language>\n" . "\t<copyright><![CDATA[" . $podcast->f_copyright . "]]></copyright>\n" . "\t<feed_url><![CDATA[" . $podcast->feed . "]]></feed_url>\n" . "\t<generator><![CDATA[" . $podcast->f_generator . "]]></generator>\n" . "\t<website><![CDATA[" . $podcast->f_website . "]]></website>\n" . "\t<build_date><![CDATA[" . $podcast->f_lastbuilddate . "]]></build_date>\n" . "\t<sync_date><![CDATA[" . $podcast->f_lastsync . "]]></sync_date>\n" . "\t<public_url><![CDATA[" . $podcast->link . "]]></public_url>\n";
+            $rating  = new Rating($podcast_id, 'podcast');
+            $flag    = new Userflag($podcast_id, 'podcast');
+            $art_url = Art::url($podcast_id, 'podcast', Core::get_request('auth'));
+            $string .= "<podcast id=\"$podcast_id\">\n" .
+                "\t<name><![CDATA[" . $podcast->f_title . "]]></name>\n" .
+                "\t<description><![CDATA[" . $podcast->description . "]]></description>\n" .
+                "\t<language><![CDATA[" . $podcast->f_language . "]]></language>\n" .
+                "\t<copyright><![CDATA[" . $podcast->f_copyright . "]]></copyright>\n" .
+                "\t<feed_url><![CDATA[" . $podcast->feed . "]]></feed_url>\n" .
+                "\t<generator><![CDATA[" . $podcast->f_generator . "]]></generator>\n" .
+                "\t<website><![CDATA[" . $podcast->f_website . "]]></website>\n" .
+                "\t<build_date><![CDATA[" . $podcast->f_lastbuilddate . "]]></build_date>\n" .
+                "\t<sync_date><![CDATA[" . $podcast->f_lastsync . "]]></sync_date>\n" .
+                "\t<public_url><![CDATA[" . $podcast->link . "]]></public_url>\n" .
+                "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
+                "\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n" .
+                "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
+                "\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" .
+                "\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n";
             if ($episodes) {
                 $items = $podcast->get_episodes();
                 if (count($items) > 0) {
@@ -926,6 +961,9 @@ class Xml_Data
         foreach ($podcast_episodes as $episode_id) {
             $episode = new Podcast_Episode($episode_id);
             $episode->format();
+            $rating  = new Rating($episode_id, 'podcast_episode');
+            $flag    = new Userflag($episode_id, 'podcast_episode');
+            $art_url = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
             $string .= "\t<podcast_episode id=\"$episode_id\">\n" .
                 "\t\t<name><![CDATA[" . $episode->f_title . "]]></name>\n" .
                 "\t\t<description><![CDATA[" . $episode->f_description . "]]></description>\n" .
@@ -940,6 +978,11 @@ class Xml_Data
                 "\t\t<filename><![CDATA[" . $episode->f_file . "]]></filename>\n" .
                 "\t\t<public_url><![CDATA[" . $episode->link . "]]></public_url>\n" .
                 "\t\t<url><![CDATA[" . $episode->play_url('', 'api', false, $user_id) . "]]></url>\n" .
+                "\t\t<art><![CDATA[" . $art_url . "]]></art>\n" .
+                "\t\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n" .
+                "\t\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
+                "\t\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" .
+                "\t\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
                 "\t\t<played>" . $episode->played . "</played>\n";
             $string .= "\t</podcast_episode>\n";
         } // end foreach
@@ -1069,17 +1112,24 @@ class Xml_Data
         foreach ($videos as $video_id) {
             $video = new Video($video_id);
             $video->format();
+            $rating  = new Rating($video_id, 'video');
+            $flag    = new Userflag($video_id, 'video');
+            $art_url = Art::url($video_id, 'video', Core::get_request('auth'));
 
             $string .= "<video id=\"" . $video->id . "\">\n" .
-                    // Title is an alias for name
-                    "\t<title><![CDATA[" . $video->title . "]]></title>\n" .
-                    "\t<name><![CDATA[" . $video->title . "]]></name>\n" .
-                    "\t<mime><![CDATA[" . $video->mime . "]]></mime>\n" .
-                    "\t<resolution><![CDATA[" . $video->f_resolution . "]]></resolution>\n" .
-                    "\t<size>" . $video->size . "</size>\n" .
-                    self::genre_string($video->tags) .
-                    "\t<url><![CDATA[" . $video->play_url('', 'api', false, $user_id) . "]]></url>\n" .
-                    "</video>\n";
+                "\t<title><![CDATA[" . $video->title . "]]></title>\n" .
+                "\t<name><![CDATA[" . $video->title . "]]></name>\n" .
+                "\t<mime><![CDATA[" . $video->mime . "]]></mime>\n" .
+                "\t<resolution><![CDATA[" . $video->f_resolution . "]]></resolution>\n" .
+                "\t<size>" . $video->size . "</size>\n" .
+                self::genre_string($video->tags) .
+                "\t<url><![CDATA[" . $video->play_url('', 'api', false, $user_id) . "]]></url>\n" .
+                "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
+                "\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n" .
+                "\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
+                "\t<rating>" . ($rating->get_user_rating($user_id) ?: null) . "</rating>\n" .
+                "\t<averagerating>" . (string) ($rating->get_average_rating() ?: null) . "</averagerating>\n" .
+                "</video>\n";
         } // end foreach
 
         return self::output_xml($string);

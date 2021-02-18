@@ -60,17 +60,17 @@ final class PlaylistsMethod
      */
     public static function playlists(array $input)
     {
-        $user   = User::get_from_username(Session::username($input['auth']));
-        $like   = ((int) $input['exact'] == 1) ? false : true;
-        $hide   = ((int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
-        $userid = (!Access::check('interface', 100, $user->id)) ? $user->id : -1;
-        $public = !Access::check('interface', 100, $user->id);
+        $user    = User::get_from_username(Session::username($input['auth']));
+        $like    = ((int) $input['exact'] == 1) ? false : true;
+        $hide    = ((int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
+        $user_id = (!Access::check('interface', 100, $user->id)) ? $user->id : -1;
+        $public  = !Access::check('interface', 100, $user->id);
 
         // regular playlists
-        $playlist_ids = Playlist::get_playlists($public, $userid, (string) $input['filter'], $like);
+        $playlist_ids = Playlist::get_playlists($public, $user_id, (string) $input['filter'], $like);
         // merge with the smartlists
         if (!$hide) {
-            $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($public, $userid, (string) $input['filter'], $like));
+            $playlist_ids = array_merge($playlist_ids, Playlist::get_smartlists($public, $user_id, (string) $input['filter'], $like));
         }
         if (empty($playlist_ids)) {
             Api::empty('playlist', $input['api_format']);
@@ -83,12 +83,12 @@ final class PlaylistsMethod
             case 'json':
                 Json_Data::set_offset($input['offset']);
                 Json_Data::set_limit($input['limit']);
-                echo Json_Data::playlists($playlist_ids);
+                echo Json_Data::playlists($playlist_ids, $user_id);
                 break;
             default:
                 Xml_Data::set_offset($input['offset']);
                 Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::playlists($playlist_ids);
+                echo Xml_Data::playlists($playlist_ids, $user_id);
         }
         Session::extend($input['auth']);
 

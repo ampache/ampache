@@ -116,9 +116,9 @@ class Userflag extends database_object
             'album',
             'artist',
             'video',
-            'playlist',
             'tvshow',
             'tvshow_season',
+            'playlist',
             'podcast',
             'podcast_episode'
         );
