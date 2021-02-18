@@ -86,7 +86,7 @@ final class PlaylistMethod implements MethodInterface
             );
         }
 
-        $user   = $gatekeeper->getUser();
+        $user = $gatekeeper->getUser();
 
         if ((int) $objectId === 0) {
             $playlist = $this->modelFactory->createSearch(
