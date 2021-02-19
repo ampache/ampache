@@ -38,6 +38,7 @@ use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\Userflag;
+use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 
 final class Cron
@@ -99,6 +100,8 @@ final class Cron
                 $users = $dic->get(UserRepositoryInterface::class)->getValid();
             }
 
+            $playlistRepository = static::getPlaylistRepository();
+
             foreach ($catalogs as $catalog_id) {
                 debug_event('cron', 'Catalog memory cache for catalog ' . (string) $catalog_id, 4);
                 $catalog = Catalog::create_from_id($catalog_id);
@@ -115,7 +118,7 @@ final class Cron
                 Song::build_cache($songs);
 
                 // cache playlist details
-                $playlists = Playlist::get_playlists(true, -1);
+                $playlists = $playlistRepository->getPlaylists();
                 Playlist::build_cache($playlists);
 
                 // cache art details
@@ -148,7 +151,7 @@ final class Cron
                         Userflag::build_cache('video', $videos, $user_id);
                     }
                     // playlists
-                    $user_playlist = Playlist::get_playlists(true, $user_id);
+                    $user_playlist = $playlistRepository->getPlaylists(true, (int) $user_id);
                     Rating::build_cache('playlist', $user_playlist, $user_id);
                     Userflag::build_cache('playlist', $user_playlist, $user_id);
                     // podcasts
@@ -182,5 +185,15 @@ final class Cron
 
             debug_event('cron', 'Completed filling memory cache', 5);
         }
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPlaylistRepository(): PlaylistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PlaylistRepositoryInterface::class);
     }
 }

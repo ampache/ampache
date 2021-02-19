@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
+use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 
 /**
@@ -555,8 +556,13 @@ class Search extends playlist_object
             $this->type_select('license', T_('Music License'), 'boolean_numeric', $licenses);
         }
 
+        $playlistIds = $this->getPlaylistRepository()->getPlaylists(
+            true,
+            (int) Core::get_global('user')->id
+        );
+
         $playlists = array();
-        foreach (Playlist::get_playlists() as $playlistid) {
+        foreach ($playlistIds as $playlistid) {
             $playlist = new Playlist($playlistid);
             $playlist->format(false);
             $playlists[$playlistid] = $playlist->f_name;
@@ -2552,5 +2558,15 @@ class Search extends playlist_object
         global $dic;
 
         return $dic->get(CatalogRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private function getPlaylistRepository(): PlaylistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PlaylistRepositoryInterface::class);
     }
 }

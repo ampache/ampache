@@ -2419,7 +2419,11 @@ abstract class Catalog extends database_object
         if (count($songs)) {
             $name = $pinfo['extension'] . " - " . $pinfo['filename'];
             // Search for existing playlist
-            $playlist_search = Playlist::get_playlists(true, null, $name);
+            $playlist_search = static::getPlaylistRepository()->getPlaylists(
+                true,
+                -1,
+                $name
+            );
             if (empty($playlist_search)) {
                 // New playlist
                 $playlist_id = static::getPlaylistRepository()->create(

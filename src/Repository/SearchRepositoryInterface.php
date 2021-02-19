@@ -17,24 +17,23 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 namespace Ampache\Repository;
 
-interface PlaylistRepositoryInterface
+interface SearchRepositoryInterface
 {
-    /**
-     * This function creates an empty playlist, gives it a name and type
-     */
-    public function create(string $name, string $type, int $userId): int;
-
     /**
      * Returns a list of playlists accessible by the user.
      *
+     * @param bool $includePublic
+     * @param int $userId
+     * @param string $playlistName
+     * @param bool $like
+     *
      * @return int[]
      */
-    public function getPlaylists(
+    public function getSmartlists(
         bool $includePublic = true,
         int $userId = -1,
         string $playlistName = '',

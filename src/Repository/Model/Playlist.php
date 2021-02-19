@@ -101,56 +101,6 @@ class Playlist extends playlist_object
     } // build_cache
 
     /**
-     * get_playlists
-     * Returns a list of playlists accessible by the user.
-     * @param boolean $incl_public
-     * @param integer $user_id
-     * @param string $playlist_name
-     * @param boolean $like
-     * @return integer[]
-     */
-    public static function get_playlists($incl_public = true, $user_id = -1, $playlist_name = '', $like = true)
-    {
-        if (!$user_id) {
-            $user_id = Core::get_global('user')->id;
-        }
-
-        $sql    = 'SELECT `id` FROM `playlist`';
-        $params = array();
-
-        if ($user_id > -1 && $incl_public) {
-            $sql .= " WHERE (`user` = ? OR `type` = 'public')";
-            $params[] = $user_id;
-        }
-        if ($user_id > -1 && !$incl_public) {
-            $sql .= ' WHERE `user` = ?';
-            $params[] = $user_id;
-        }
-        if (!$user_id > -1 && $incl_public) {
-            $sql .= " WHERE `type` = 'public'";
-        }
-
-        if ($playlist_name !== '') {
-            $playlist_name = (!$like) ? "= '" . $playlist_name . "'" : "LIKE  '%" . $playlist_name . "%' ";
-            if (count($params) > 0 || $incl_public) {
-                $sql .= " AND `name` " . $playlist_name;
-            } else {
-                $sql .= " WHERE `name` " . $playlist_name;
-            }
-        }
-        $sql .= ' ORDER BY `name`';
-        //debug_event(self::class, 'get_playlists query: ' . $sql, 5);
-
-        $db_results = Dba::read($sql, $params);
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
-        }
-
-        return $results;
-    } // get_playlists
-
-    /**
      * get_details
      * Returns a keyed array of playlist id and name accessible by the user.
      * @param string $type
@@ -172,57 +122,6 @@ class Playlist extends playlist_object
 
         return $results;
     } // get_playlists
-
-    /**
-     * get_smartlists
-     * Returns a list of playlists accessible by the user.
-     * @param boolean $incl_public
-     * @param integer $user_id
-     * @param string $playlist_name
-     * @param boolean $like
-     * @return array
-     */
-    public static function get_smartlists($incl_public = true, $user_id = -1, $playlist_name = '', $like = true)
-    {
-        if (!$user_id) {
-            $user_id = Core::get_global('user')->id;
-        }
-
-        // Search for smartplaylists
-        $sql    = "SELECT CONCAT('smart_', `id`) AS `id` FROM `search`";
-        $params = array();
-
-        if ($user_id > -1 && $incl_public) {
-            $sql .= " WHERE (`user` = ? OR `type` = 'public')";
-            $params[] = $user_id;
-        }
-        if ($user_id > -1 && !$incl_public) {
-            $sql .= ' WHERE `user` = ?';
-            $params[] = $user_id;
-        }
-        if (!$user_id > -1 && $incl_public) {
-            $sql .= " WHERE `type` = 'public'";
-        }
-
-        if ($playlist_name !== '') {
-            $playlist_name = (!$like) ? "= '" . $playlist_name . "'" : "LIKE  '%" . $playlist_name . "%' ";
-            if (count($params) > 0 || $incl_public) {
-                $sql .= " AND `name` " . $playlist_name;
-            } else {
-                $sql .= " WHERE `name` " . $playlist_name;
-            }
-        }
-        $sql .= ' ORDER BY `name`';
-        //debug_event(self::class, 'get_smartlists ' . $sql, 5);
-
-        $db_results = Dba::read($sql, $params);
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        return $results;
-    } // get_smartlists
 
     /**
      * format

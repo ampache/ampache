@@ -116,4 +116,5 @@ final class ConfigurationKeyEnum
     public const COMPOSER_BINARY_PATH          = 'composer_binary_path';
     public const DELETE_FROM_DISK              = 'delete_from_disk';
     public const UPLOAD_ALLOW_REMOVE           = 'upload_allow_remove';
+    public const HIDE_SEARCH                   = 'hide_search';
 }

@@ -72,7 +72,7 @@ class Api
         Method\SongsMethod::ACTION => Method\SongsMethod::class,
         Method\SongMethod::ACTION => Method\SongMethod::class,
         Method\SongDeleteMethod::ACTION => Method\SongDeleteMethod::class,
-        'playlists' => Method\PlaylistsMethod::class,
+        Method\PlaylistsMethod::ACTION => Method\PlaylistsMethod::class,
         Method\PlaylistMethod::ACTION => Method\PlaylistMethod::class,
         Method\PlaylistSongsMethod::ACTION => Method\PlaylistSongsMethod::class,
         'playlist_create' => Method\PlaylistCreateMethod::class,

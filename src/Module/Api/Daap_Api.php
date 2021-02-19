@@ -35,6 +35,7 @@ use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
+use Ampache\Repository\PlaylistRepositoryInterface;
 
 /**
  * DAAP Class
@@ -365,6 +366,8 @@ class Daap_Api
      */
     public static function databases($input)
     {
+        $playlistRepository = static::getPlaylistRepository();
+
         $output = '';
         // Database list
         if (count($input) == 0) {
@@ -380,7 +383,7 @@ class Daap_Api
             $tlv .= self::tlv('dmap.itemname', 'Ampache');
             $counts = Catalog::count_server();
             $tlv .= self::tlv('dmap.itemcount', $counts['song']);
-            $tlv .= self::tlv('dmap.containercount', count(Playlist::get_playlists()));
+            $tlv .= self::tlv('dmap.containercount', count($playlistRepository->getPlaylists()));
             $tlv = self::tlv('dmap.listingitem', $tlv);
             $output .= self::tlv('dmap.listing', $tlv);
 
@@ -399,7 +402,7 @@ class Daap_Api
                 $output = self::tlv('dmap.status', 200);
                 $output .= self::tlv('dmap.updatetype', 0);
 
-                $playlists = Playlist::get_playlists();
+                $playlists = $playlistRepository->getPlaylists();
                 $searches  = Search::get_searches();
                 $output .= self::tlv('dmap.specifiedtotalcount', count($playlists) + count($searches) + 1);
                 $output .= self::tlv('dmap.returnedcount', count($playlists) + count($searches) + 1);
@@ -972,5 +975,15 @@ class Daap_Api
         global $dic;
 
         return $dic->get(CatalogRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPlaylistRepository(): PlaylistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PlaylistRepositoryInterface::class);
     }
 }

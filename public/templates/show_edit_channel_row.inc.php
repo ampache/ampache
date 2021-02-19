@@ -23,6 +23,10 @@
 use Ampache\Repository\Model\Channel;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Tag;
+use Ampache\Repository\PlaylistRepositoryInterface;
+
+global $dic;
+$playlistRepository = $dic->get(PlaylistRepositoryInterface::class);
 
 /** @var Channel $libitem */
 ?>
@@ -33,7 +37,7 @@ use Ampache\Repository\Model\Tag;
                 <td class="edit_dialog_content_header"><?php echo T_('Stream Source') ?></td>
                 <td><select name="object_id" autofocus>
 <?php
-                        $playlists = Playlist::get_playlists();
+                        $playlists = $playlistRepository->getPlaylists();
                         foreach ($playlists as $playlist_id) {
                             $playlist = new Playlist($playlist_id);
                             $playlist->format();

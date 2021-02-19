@@ -29,10 +29,19 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Repository\PlaylistRepositoryInterface;
 
 final class PlaylistExporter implements PlaylistExporterInterface
 {
     public const VALID_FILE_EXTENSIONS = ['m3u', 'xspf', 'pls'];
+
+    private PlaylistRepositoryInterface $playlistRepository;
+
+    public function __construct(
+        PlaylistRepositoryInterface $playlistRepository
+    ) {
+        $this->playlistRepository = $playlistRepository;
+    }
 
     public function export(
         Interactor $interactor,
@@ -62,7 +71,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 $items = Catalog::get_artists();
                 break;
             default:
-                $ids   = Playlist::get_playlists(false, -1);
+                $ids   = $this->playlistRepository->getPlaylists(false);
                 $items = array();
                 foreach ($ids as $playlistid) {
                     $items[] = new Playlist($playlistid);

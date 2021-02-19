@@ -51,4 +51,5 @@ return [
     UpdateInfoRepositoryInterface::class => autowire(UpdateInfoRepository::class),
     PlaylistRepositoryInterface::class => autowire(PlaylistRepository::class),
     ShareRepositoryInterface::class => autowire(ShareRepository::class),
+    SearchRepositoryInterface::class => autowire(SearchRepository::class),
 ];

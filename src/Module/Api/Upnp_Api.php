@@ -34,6 +34,7 @@ use Ampache\Repository\Model\Clip;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
+use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use DateTime;
 use DOMDocument;
@@ -881,7 +882,7 @@ class Upnp_Api
             case 'playlists':
                 switch (count($pathreq)) {
                     case 1: // Get playlists list
-                        $pl_ids                  = Playlist::get_playlists();
+                        $pl_ids                  = static::getPlaylistRepository();
                         [$maxCount, $pl_ids]     = self::_slice($pl_ids, $start, $count);
                         foreach ($pl_ids as $pl_id) {
                             $playlist = new Playlist($pl_id);
@@ -1967,5 +1968,15 @@ class Upnp_Api
         global $dic;
 
         return $dic->get(CatalogRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPlaylistRepository(): PlaylistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PlaylistRepositoryInterface::class);
     }
 }

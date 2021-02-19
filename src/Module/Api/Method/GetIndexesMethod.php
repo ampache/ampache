@@ -26,12 +26,12 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\SearchRepositoryInterface;
 
 /**
  * Class GetIndexesMethod
@@ -113,7 +113,10 @@ final class GetIndexesMethod
         if ($type == 'playlist') {
             $browse->set_filter('playlist_type', $user->id);
             if (!$hide) {
-                $objects = array_merge($browse->get_objects(), Playlist::get_smartlists(true, $user->id));
+                $objects = array_merge(
+                    $browse->get_objects(),
+                    static::getSearchRepository()->getSmartlists(true, $user->getId())
+                );
             } else {
                 $objects = $browse->get_objects();
             }
@@ -141,5 +144,15 @@ final class GetIndexesMethod
         Session::extend($input['auth']);
 
         return true;
+    }
+
+    /**
+     * @deprecated inject by constructor
+     */
+    private static function getSearchRepository(): SearchRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SearchRepositoryInterface::class);
     }
 }

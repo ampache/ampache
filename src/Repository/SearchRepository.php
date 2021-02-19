@@ -17,67 +17,35 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 
-final class PlaylistRepository implements PlaylistRepositoryInterface
+final class SearchRepository implements SearchRepositoryInterface
 {
-    /**
-     * This function creates an empty playlist, gives it a name and type
-     */
-    public function create(
-        string $name,
-        string $type,
-        int $userId
-    ): int {
-        // check for duplicates
-        $results    = [];
-        $db_results = Dba::read(
-            'SELECT `id` FROM `playlist` WHERE `name` = ? AND `user` = ? AND `type` = ?',
-            [$name, $userId, $type]
-        );
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
-        }
-        // return the duplicate ID
-        if ($results !== []) {
-            return $results[0];
-        }
-
-        $date = time();
-        Dba::write(
-            'INSERT INTO `playlist` (`name`, `user`, `type`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?)',
-            [$name, $userId, $type, $date, $date]
-        );
-
-        return (int) Dba::insert_id();
-    }
-
     /**
      * Returns a list of playlists accessible by the user.
      *
+     * @param bool $includePublic
+     * @param int $userId
+     * @param string $playlistName
+     * @param bool $like
+     *
      * @return int[]
      */
-    public function getPlaylists(
+    public function getSmartlists(
         bool $includePublic = true,
         int $userId = -1,
         string $playlistName = '',
         bool $like = true
     ): array {
-        if (!$userId) {
-            $userId = Core::get_global('user')->id;
-        }
-
-        $sql    = 'SELECT `id` FROM `playlist`';
-        $params = array();
+        // Search for smartplaylists
+        $sql    = "SELECT CONCAT('smart_', `id`) AS `id` FROM `search`";
+        $params = [];
 
         if ($userId > -1 && $includePublic) {
             $sql .= " WHERE (`user` = ? OR `type` = 'public')";
@@ -100,14 +68,13 @@ final class PlaylistRepository implements PlaylistRepositoryInterface
             }
         }
         $sql .= ' ORDER BY `name`';
-        //debug_event(self::class, 'get_playlists query: ' . $sql, 5);
 
         $db_results = Dba::read($sql, $params);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
-    } // get_playlists
+    }
 }

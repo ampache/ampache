@@ -49,6 +49,7 @@ use Ampache\Repository\CatalogRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
+use Ampache\Repository\SearchRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\TagRepositoryInterface;
@@ -962,8 +963,11 @@ class Subsonic_Api
         $public   = !Access::check('interface', 100);
 
         // Don't allow playlist listing for another user
-        Subsonic_Xml_Data::addPlaylists($response, Playlist::get_playlists($public, $userid),
-            Playlist::get_smartlists($public, $userid));
+        Subsonic_Xml_Data::addPlaylists(
+            $response,
+            static::getPlaylistRepository()->getPlaylists((bool) $public, (int) $userid),
+            static::getSearchRepository()->getSmartlists((bool) $public, (int) $userid)
+        );
         self::apiOutput($input, $response);
     }
 
@@ -2683,5 +2687,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(PodcastCreatorInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getSearchRepository(): SearchRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SearchRepositoryInterface::class);
     }
 }

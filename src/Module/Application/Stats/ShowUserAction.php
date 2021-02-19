@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\User\Activity\UserActivityRendererInterface;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\UserFollowerRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -51,13 +52,16 @@ final class ShowUserAction implements ApplicationActionInterface
 
     private UserFollowStateRendererInterface $userFollowStateRenderer;
 
+    private PlaylistRepositoryInterface $playlistRepository;
+
     public function __construct(
         UiInterface $ui,
         ModelFactoryInterface $modelFactory,
         UserActivityRepositoryInterface $useractivityRepository,
         UserActivityRendererInterface $userActivityRenderer,
         UserFollowerRepositoryInterface $userFollowerRepository,
-        UserFollowStateRendererInterface $userFollowStateRenderer
+        UserFollowStateRendererInterface $userFollowStateRenderer,
+        PlaylistRepositoryInterface $playlistRepository
     ) {
         $this->ui                      = $ui;
         $this->modelFactory            = $modelFactory;
@@ -65,6 +69,7 @@ final class ShowUserAction implements ApplicationActionInterface
         $this->userActivityRenderer    = $userActivityRenderer;
         $this->userFollowerRepository  = $userFollowerRepository;
         $this->userFollowStateRenderer = $userFollowStateRenderer;
+        $this->playlistRepository      = $playlistRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -88,7 +93,8 @@ final class ShowUserAction implements ApplicationActionInterface
                 'followers' => $this->userFollowerRepository->getFollowers($userId),
                 'following' => $this->userFollowerRepository->getFollowing($userId),
                 'userFollowStateRenderer' => $this->userFollowStateRenderer,
-                'userActivityRenderer' => $this->userActivityRenderer
+                'userActivityRenderer' => $this->userActivityRenderer,
+                'playlistRepository' => $this->playlistRepository
             ]
         );
 
