@@ -965,6 +965,7 @@ class Xml_Data
             $flag    = new Userflag($episode_id, 'podcast_episode');
             $art_url = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
             $string .= "\t<podcast_episode id=\"$episode_id\">\n" .
+                "\t\t<title><![CDATA[" . $episode->f_title . "]]></title>\n" .
                 "\t\t<name><![CDATA[" . $episode->f_title . "]]></name>\n" .
                 "\t\t<description><![CDATA[" . $episode->f_description . "]]></description>\n" .
                 "\t\t<category><![CDATA[" . $episode->f_category . "]]></category>\n" .
@@ -976,8 +977,10 @@ class Xml_Data
                 "\t\t<filelength><![CDATA[" . $episode->f_time_h . "]]></filelength>\n" .
                 "\t\t<filesize><![CDATA[" . $episode->f_size . "]]></filesize>\n" .
                 "\t\t<filename><![CDATA[" . $episode->f_file . "]]></filename>\n" .
+                "\t\t<mime><![CDATA[" . $episode->mime . "]]></mime>\n" .
                 "\t\t<public_url><![CDATA[" . $episode->link . "]]></public_url>\n" .
                 "\t\t<url><![CDATA[" . $episode->play_url('', 'api', false, $user_id) . "]]></url>\n" .
+                "\t\t<catalog><![CDATA[" . $episode->catalog . "]]></catalog>\n" .
                 "\t\t<art><![CDATA[" . $art_url . "]]></art>\n" .
                 "\t\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n" .
                 "\t\t<preciserating>" . ($rating->get_user_rating($user_id) ?: null) . "</preciserating>\n" .
