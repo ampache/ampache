@@ -21,26 +21,37 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class PlaylistRemoveSongMethod
- * @package Lib\ApiMethods
- */
-final class PlaylistRemoveSongMethod
+final class PlaylistRemoveSongMethod implements MethodInterface
 {
-    private const ACTION = 'playlist_remove_song';
+    public const ACTION = 'playlist_remove_song';
+
+    private ModelFactoryInterface $modelFactory;
+
+    private StreamFactoryInterface $streamFactory;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory,
+        StreamFactoryInterface $streamFactory
+    ) {
+        $this->modelFactory  = $modelFactory;
+        $this->streamFactory = $streamFactory;
+    }
 
     /**
-     * playlist_remove_song
      * MINIMUM_API_VERSION=380001
      * CHANGED_IN_API_VERSION=400001
      * CHANGED_IN_API_VERSION=420000
@@ -49,51 +60,63 @@ final class PlaylistRemoveSongMethod
      * Pre-400001 the api required 'track' instead of 'song'.
      * 420000+: added clear to allow you to clear a playlist without getting all the tracks.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of playlist
      * song   = (string) UID of song to remove from the playlist //optional
      * track  = (string) track number to remove from the playlist //optional
      * clear  = (integer) 0,1 Clear the whole playlist //optional, default = 0
-     * @return boolean
+     *
+     * @return ResponseInterface
+     * @throws RequestParamMissingException
+     * @throws AccessDeniedException
+     * @throws ResultEmptyException
      */
-    public static function playlist_remove_song(array $input)
-    {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $filter = $input['filter'] ?? null;
+
+        if ($filter === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
         }
-        $user = User::get_from_username(Session::username($input['auth']));
-        ob_end_clean();
-        $playlist = new Playlist($input['filter']);
-        if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
-            Api::error(T_('Require: 100'), '4742', self::ACTION, 'account', $input['api_format']);
+
+        $playlist = $this->modelFactory->createPlaylist((int) $filter);
+        $userId   = $gatekeeper->getUser()->getId();
+
+        if (
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false &&
+            $playlist->has_access($userId) === false
+        ) {
+            throw new AccessDeniedException(
+                T_('Require: 100')
+            );
+        }
+
+        if ((int) ($input['clear'] ?? 0) === 1) {
+            $playlist->delete_all();
+
+            $result = $output->success(T_('all songs removed from playlist'));
         } else {
-            if ((int) $input['clear'] === 1) {
-                $playlist->delete_all();
-                Api::message('all songs removed from playlist', $input['api_format']);
-            } elseif ($input['song']) {
-                $track = (int) scrub_in($input['song']);
-                if (!$playlist->has_item($track)) {
-                    Api::error(T_('Not Found'), '4704', self::ACTION, 'song', $input['api_format']);
-
-                    return false;
-                }
-                $playlist->delete_song($track);
-                $playlist->regenerate_track_numbers();
-                Api::message('song removed from playlist', $input['api_format']);
-            } elseif ($input['track']) {
-                $track = (int) scrub_in($input['track']);
-                if (!$playlist->has_item(null, $track)) {
-                    Api::error(T_('Not Found'), '4704', self::ACTION, 'track', $input['api_format']);
-
-                    return false;
-                }
-                $playlist->delete_track_number($track);
-                $playlist->regenerate_track_numbers();
-                Api::message('song removed from playlist', $input['api_format']);
+            $track = (int) ($input['song'] ?? $input['track'] ?? 0);
+            if (!$playlist->has_item($track)) {
+                throw new ResultEmptyException(T_('Not Found'));
             }
-        }
-        Session::extend($input['auth']);
+            $playlist->delete_song($track);
+            $playlist->regenerate_track_numbers();
 
-        return true;
+            $result = $output->success(T_('song removed from playlist'));
+        }
+
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }
