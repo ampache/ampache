@@ -283,6 +283,28 @@ class Stats
     } // get_last_play
 
     /**
+     * shift_last_play
+     * When you play or pause the song, shift the start time to allow better skip recording
+     *
+     * @param string $user_id
+     * @param string $agent
+     * @param integer $original_date
+     * @param integer $new_date
+     */
+    public static function shift_last_play($user_id, $agent, $original_date, $new_date)
+    {
+        // update the object_count table
+        $sql = "UPDATE `object_count` SET `object_count`.`date` = ? " .
+            "WHERE `object_count`.`user` = ? AND `object_count`.`agent` = ? AND `object_count`.`date` = ?";
+        Dba::write($sql, array($new_date, $user_id, $agent, $original_date));
+
+        // update the user_activity table
+        $sql = "UPDATE `user_activity` SET `user_activity`.`activity_date` = ? " .
+            "WHERE `user_activity`.`user` = ? AND `user_activity`.`activity_date` = ?";
+        Dba::write($sql, array($new_date, $user_id, $original_date));
+    } // shift_last_play
+
+    /**
      * get_time
      *
      * get the time for the object (song, video, podcast_episode)

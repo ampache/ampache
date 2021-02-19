@@ -140,6 +140,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Api::handshake added extra total counts to the response
   * users, tags, podcasts, podcast_episodes, shares, licenses, live_streams, labels
 * Api::ping match the handshake response (excluding the auth token)
+* SubSonic - shift the current track start time when you pause/resume
 
 ### Changed
 
