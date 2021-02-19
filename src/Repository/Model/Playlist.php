@@ -129,9 +129,7 @@ class Playlist extends playlist_object
             $params[] = $user_id;
         }
         if (!$user_id > -1 && $incl_public) {
-            if (count($params) === 0) {
-                $sql .= " WHERE `type` = 'public'";
-            }
+            $sql .= " WHERE `type` = 'public'";
         }
 
         if ($playlist_name !== '') {
@@ -193,20 +191,19 @@ class Playlist extends playlist_object
         }
 
         // Search for smartplaylists
-        $sql    = "SELECT CONCAT('smart_', `id`) AS id FROM `search`";
+        $sql    = "SELECT CONCAT('smart_', `id`) AS `id` FROM `search`";
         $params = array();
-        if ($user_id > -1) {
+
+        if ($user_id > -1 && $incl_public) {
+            $sql .= " WHERE (`user` = ? OR `type` = 'public')";
+            $params[] = $user_id;
+        }
+        if ($user_id > -1 && !$incl_public) {
             $sql .= ' WHERE `user` = ?';
             $params[] = $user_id;
         }
-
-        if ($incl_public) {
-            if (count($params) > 0) {
-                $sql .= ' OR ';
-            } else {
-                $sql .= ' WHERE ';
-            }
-            $sql .= "`type` = 'public'";
+        if (!$user_id > -1 && $incl_public) {
+            $sql .= " WHERE `type` = 'public'";
         }
 
         if ($playlist_name !== '') {
