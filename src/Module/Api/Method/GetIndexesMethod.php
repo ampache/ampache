@@ -101,7 +101,7 @@ final class GetIndexesMethod
         $browse->set_type($type);
         $browse->set_sort('name', 'ASC');
 
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'], $browse);
         Api::set_filter('add', $input['add'], $browse);
         Api::set_filter('update', $input['update'], $browse);
