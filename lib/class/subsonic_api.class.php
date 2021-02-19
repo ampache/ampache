@@ -195,7 +195,7 @@ class Subsonic_Api
      * @param SimpleXMLElement $xml
      * @param array $alwaysArray
      */
-    public static function apiOutput($input, $xml, $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share'))
+    public static function apiOutput($input, $xml, $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share', 'entry'))
     {
         $format   = ($input['f']) ? strtolower((string) $input['f']) : 'xml';
         $callback = $input['callback'];
@@ -209,7 +209,7 @@ class Subsonic_Api
      * @param string $callback
      * @param array $alwaysArray
      */
-    public static function apiOutput2($format, $xml, $callback = '', $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share'))
+    public static function apiOutput2($format, $xml, $callback = '', $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share', 'entry'))
     {
         $conf = array('alwaysArray' => $alwaysArray);
         if ($format == "json") {

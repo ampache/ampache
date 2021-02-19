@@ -156,6 +156,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Api::democratic was using action from localplay in the return responses
 * get_indexes for XML didn't include podcast indexes
 * Set OUTDATED_DATABASE_OK on image.php, play/index.php and share.php to stop blocking requests
+* SubSonic - Json clients need their playlist entry to always array (single item lists)
 
 ### Deprecated
 
