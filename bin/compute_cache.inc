@@ -42,7 +42,7 @@ foreach ($thresholds as $threshold) {
     foreach ($count_types as $count_type) {
         foreach ($object_types as $object_type) {
             $sql = "INSERT INTO `cache_object_count_run` ( `object_id`, `count`, `object_type`, `count_type`, `threshold` ) ";
-            $sql .= Stats::get_top_sql($object_type, $threshold, $count_type, null);
+            $sql .= Stats::get_top_sql($object_type, $threshold, $count_type);
             $sql .= " ON DUPLICATE KEY UPDATE `count` = VALUES ( `count` )";
             Dba::write($sql);
         }

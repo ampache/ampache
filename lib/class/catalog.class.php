@@ -451,7 +451,7 @@ abstract class Catalog extends database_object
     /**
      * Get catalog info from table.
      * @param integer $object_id
-     * @param string $table
+     * @param string $table_name
      * @return array
      */
     public function get_info($object_id, $table_name = 'catalog')

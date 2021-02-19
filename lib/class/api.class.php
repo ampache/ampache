@@ -543,7 +543,7 @@ class Api
         self::$browse->set_type($type);
         self::$browse->set_sort('name', 'ASC');
 
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
         self::set_filter($method, $input['filter']);
         self::set_filter('add', $input['add']);
         self::set_filter('update', $input['update']);
@@ -750,7 +750,7 @@ class Api
         self::$browse->set_type('artist');
         self::$browse->set_sort('name', 'ASC');
 
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
         self::set_filter($method, $input['filter']);
         self::set_filter('add', $input['add']);
         self::set_filter('update', $input['update']);
@@ -904,7 +904,7 @@ class Api
         self::$browse->reset_filters();
         self::$browse->set_type('album');
         self::$browse->set_sort('name', 'ASC');
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
         self::set_filter($method, $input['filter']);
         self::set_filter('add', $input['add']);
         self::set_filter('update', $input['update']);
@@ -1039,7 +1039,7 @@ class Api
         self::$browse->set_type('license');
         self::$browse->set_sort('name', 'ASC');
 
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
         self::set_filter($method, $input['filter']);
         $licenses = self::$browse->get_objects();
 
@@ -1147,7 +1147,7 @@ class Api
         self::$browse->set_type('tag');
         self::$browse->set_sort('name', 'ASC');
 
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
         self::set_filter($method, $input['filter']);
         $tags = self::$browse->get_objects();
 
@@ -1339,7 +1339,7 @@ class Api
         self::$browse->set_type('song');
         self::$browse->set_sort('title', 'ASC');
 
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
         self::set_filter($method, $input['filter']);
         self::set_filter('add', $input['add']);
         self::set_filter('update', $input['update']);
@@ -1981,7 +1981,7 @@ class Api
         self::$browse->set_type('share');
         self::$browse->set_sort('title', 'ASC');
 
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
         self::set_filter($method, $input['filter']);
         self::set_filter('add', $input['add']);
         self::set_filter('update', $input['update']);
@@ -2205,7 +2205,7 @@ class Api
         self::$browse->set_type('video');
         self::$browse->set_sort('title', 'ASC');
 
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
         self::set_filter($method, $input['filter']);
 
         $video_ids = self::$browse->get_objects();
@@ -2407,7 +2407,7 @@ class Api
         self::$browse->set_type('podcast');
         self::$browse->set_sort('title', 'ASC');
 
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        $method = ($input['exact']) ? 'exact_match' : 'alpha_match';
         self::set_filter($method, $input['filter']);
         self::set_filter('add', $input['add']);
         self::set_filter('update', $input['update']);
@@ -4193,6 +4193,8 @@ class Api
                 echo XML_Data::keyed_array($output_array);
         }
         Session::extend($input['auth']);
+
+        return true;
     } // localplay
 
     /**

@@ -269,7 +269,7 @@ class AmpacheHttpq extends localplay_controller
     public function add_url(Stream_URL $url)
     {
         if ($this->_httpq->add($url->title, $url->url) === null) {
-            debug_event('httpq.controller', 'add_url failed to add ' . (string) $url, 1);
+            debug_event('httpq.controller', 'add_url failed to add ' . $url->url, 1);
 
             return false;
         }

@@ -258,7 +258,7 @@ while (true) {
                             $metadata = "StreamTitle='" . str_replace('-', ' ', $channel->media->f_artist) . "-" . $channel->media->f_title . "';";
                             $metadata .= chr(0x00);
                             $metadatalen = ceil(strlen($metadata) / 16);
-                            $metadata    = str_pad($metadata, $metadatalen * 16, chr(0x00), STR_PAD_RIGHT);
+                            $metadata    = str_pad($metadata, $metadatalen * 16, chr(0x00));
                             //debug_event('channel_run', 'Sending metadata to client...', 5);
                             fwrite($sock, chr($metadatalen) . $metadata);
                             $client['metadata_lastsong'] = $channel->media->id;
