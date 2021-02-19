@@ -90,6 +90,7 @@ return [
     Method\PlaylistSongsMethod::class => autowire(),
     Method\StreamMethod::class => autowire(),
     Method\ShareDeleteMethod::class => autowire(),
+    Method\PodcastCreateMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

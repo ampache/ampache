@@ -96,7 +96,7 @@ class Api
         'stats' => Method\StatsMethod::class,
         Method\PodcastsMethod::ACTION => Method\PodcastsMethod::class,
         Method\PodcastMethod::ACTION => Method\PodcastMethod::class,
-        'podcast_create' => Method\PodcastCreateMethod::class,
+        Method\PodcastCreateMethod::ACTION => Method\PodcastCreateMethod::class,
         'podcast_delete' => Method\PodcastDeleteMethod::class,
         'podcast_edit' => Method\PodcastEditMethod::class,
         Method\PodcastEpisodesMethod::ACTION => Method\PodcastEpisodesMethod::class,

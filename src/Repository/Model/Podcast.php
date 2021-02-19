@@ -23,10 +23,9 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Dba;
 use PDOStatement;
 use SimpleXMLElement;
 
@@ -329,122 +328,6 @@ class Podcast extends database_object implements library_item
         $this->copyright   = $copyright;
 
         return $this->id;
-    }
-
-    /**
-     * create
-     * @param array $data
-     * @param boolean $return_id
-     * @return boolean|integer
-     */
-    public static function create(array $data, $return_id = false)
-    {
-        $feed = (string) $data['feed'];
-        // Feed must be http/https
-        if (strpos($feed, "http://") !== 0 && strpos($feed, "https://") !== 0) {
-            AmpError::add('feed', T_('Feed URL is invalid'));
-        }
-
-        $catalog_id = (int)($data['catalog']);
-        if ($catalog_id < 1) {
-            AmpError::add('catalog', T_('Target Catalog is required'));
-        } else {
-            $catalog = Catalog::create_from_id($catalog_id);
-            if ($catalog->gather_types !== "podcast") {
-                AmpError::add('catalog', T_('Wrong target Catalog type'));
-            }
-        }
-
-        if (AmpError::occurred()) {
-            return false;
-        }
-
-        $title         = T_('Unknown');
-        $website       = null;
-        $description   = null;
-        $language      = null;
-        $copyright     = null;
-        $generator     = null;
-        $lastbuilddate = 0;
-        $episodes      = false;
-        $arturl        = '';
-
-        // don't allow duplicate podcasts
-        $sql        = "SELECT `id` FROM `podcast` WHERE `feed`= '" . Dba::escape($feed) . "'";
-        $db_results = Dba::read($sql);
-        while ($row = Dba::fetch_assoc($db_results, false)) {
-            if ((int) $row['id'] > 0) {
-                return (int) $row['id'];
-            }
-        }
-
-        $xmlstr = file_get_contents($feed, false, stream_context_create(Core::requests_options()));
-        if ($xmlstr === false) {
-            AmpError::add('feed', T_('Can not access the feed'));
-        } else {
-            $xml = simplexml_load_string($xmlstr);
-            if ($xml === false) {
-                AmpError::add('feed', T_('Can not read the feed'));
-            } else {
-                $title            = html_entity_decode((string)$xml->channel->title);
-                $website          = (string)$xml->channel->link;
-                $description      = html_entity_decode((string)$xml->channel->description);
-                $language         = (string)$xml->channel->language;
-                $copyright        = html_entity_decode((string)$xml->channel->copyright);
-                $generator        = html_entity_decode((string)$xml->channel->generator);
-                $lastbuilddatestr = (string)$xml->channel->lastBuildDate;
-                if ($lastbuilddatestr) {
-                    $lastbuilddate = strtotime($lastbuilddatestr);
-                }
-
-                if ($xml->channel->image) {
-                    $arturl = (string)$xml->channel->image->url;
-                }
-
-                $episodes = $xml->channel->item;
-            }
-        }
-
-        if (AmpError::occurred()) {
-            return false;
-        }
-
-        $sql        = "INSERT INTO `podcast` (`feed`, `catalog`, `title`, `website`, `description`, `language`, `copyright`, `generator`, `lastbuilddate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array(
-            $feed,
-            $catalog_id,
-            $title,
-            $website,
-            $description,
-            $language,
-            $copyright,
-            $generator,
-            $lastbuilddate
-        ));
-        if ($db_results) {
-            $podcast_id = (int)Dba::insert_id();
-            $podcast    = new Podcast($podcast_id);
-            $dirpath    = $podcast->get_root_path();
-            if (!is_dir($dirpath)) {
-                if (mkdir($dirpath) === false) {
-                    debug_event(self::class, 'Cannot create directory ' . $dirpath, 1);
-                }
-            }
-            if (!empty($arturl)) {
-                $art = new Art((int)$podcast_id, 'podcast');
-                $art->insert_url($arturl);
-            }
-            if ($episodes) {
-                $podcast->add_episodes($episodes);
-            }
-            if ($return_id) {
-                return (int)$podcast_id;
-            }
-
-            return true;
-        }
-
-        return false;
     }
 
     /**

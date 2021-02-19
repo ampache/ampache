@@ -26,13 +26,12 @@ namespace Ampache\Module\Application\Podcast;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Repository\Model\Podcast;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Podcast\PodcastCreatorInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -45,12 +44,16 @@ final class CreateAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
+    private PodcastCreatorInterface $podcastCreator;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        UiInterface $ui
+        UiInterface $ui,
+        PodcastCreatorInterface $podcastCreator
     ) {
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
+        $this->podcastCreator  = $podcastCreator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -70,10 +73,10 @@ final class CreateAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         // Try to create the sucker
-        $results = Podcast::create($_POST);
+        $results = $this->podcastCreator->create((string) $_POST['feed'], (int) $_POST['catalog']);
 
-        if (!$results) {
-            require_once Ui::find_template('show_add_podcast.inc.php');
+        if ($results === null) {
+            $this->ui->show('show_add_podcast.inc.php');
         } else {
             $title  = T_('No Problem');
             $body   = T_('Subscribed to the Podcast');

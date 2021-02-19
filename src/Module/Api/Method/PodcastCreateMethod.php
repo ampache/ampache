@@ -21,87 +21,122 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Podcast;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Podcast\PodcastCreatorInterface;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class PodcastCreateMethod
- * @package Lib\ApiMethods
- */
-final class PodcastCreateMethod
+final class PodcastCreateMethod implements MethodInterface
 {
-    private const ACTION = 'podcast_create';
+    public const ACTION = 'podcast_create';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    private UpdateInfoRepositoryInterface $updateInfoRepository;
+
+    private PodcastCreatorInterface $podcastCreator;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ConfigContainerInterface $configContainer,
+        UpdateInfoRepositoryInterface $updateInfoRepository,
+        PodcastCreatorInterface $podcastCreator
+    ) {
+        $this->streamFactory        = $streamFactory;
+        $this->configContainer      = $configContainer;
+        $this->updateInfoRepository = $updateInfoRepository;
+        $this->podcastCreator       = $podcastCreator;
+    }
 
     /**
-     * podcast_create
      * MINIMUM_API_VERSION=420000
+     *
      * Create a public url that can be used by anyone to stream media.
      * Takes the file id with optional description and expires parameters.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * url     = (string) rss url for podcast
      * catalog = (string) podcast catalog
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws FunctionDisabledException
+     * @throws AccessDeniedException
+     * @throws ResultEmptyException
+     * @throws RequestParamMissingException
      */
-    public static function podcast_create(array $input)
-    {
-        if (!AmpConfig::get('podcast')) {
-            Api::error(T_('Enable: podcast'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-        if (!Api::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
-            return false;
-        }
-        if (!Api::check_parameter($input, array('url', 'catalog'), self::ACTION)) {
-            return false;
-        }
-        $data            = array();
-        $data['feed']    = urldecode($input['url']);
-        $data['catalog'] = $input['catalog'];
-        $podcast         = Podcast::create($data, true);
-
-        if (!$podcast) {
-            Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PODCAST) === false) {
+            throw new FunctionDisabledException(
+                T_('Enable: podcast')
+            );
         }
 
-        $user = User::get_from_username(Session::username($input['auth']));
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json_Data::podcasts(
-                    array($podcast),
-                    (int) $user->id,
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
+            throw new AccessDeniedException(T_('Require: 75'));
+        }
+
+        $url       = $input['url'] ?? null;
+        $catalogId = $input['catalog'] ?? null;
+
+        if ($url === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'url')
+            );
+        }
+        if ($catalogId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'catalog')
+            );
+        }
+
+        $podcast = $this->podcastCreator->create(
+            urldecode((string) $url),
+            (int) $catalogId
+        );
+
+        if ($podcast === null) {
+            throw new ResultEmptyException(
+                T_('Bad Request')
+            );
+        }
+
+        $this->updateInfoRepository->updateCountByTableName('podcast');
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->podcasts(
+                    [$podcast->getId()],
+                    $gatekeeper->getUser()->getId(),
                     false,
                     false,
                     (int) ($input['limit'] ?? 0),
                     (int) ($input['offset'] ?? 0)
-                );
-                break;
-            default:
-                echo Xml_Data::podcasts(
-                    array($podcast),
-                    (int) $user->id,
-                    false,
-                    (int) ($input['limit'] ?? 0),
-                    (int) ($input['offset'] ?? 0)
-                );
-        }
-        Catalog::count_table('podcast');
-        Session::extend($input['auth']);
-
-        return true;
+                )
+            )
+        );
     }
 }

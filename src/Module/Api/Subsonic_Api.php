@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\Podcast\PodcastCreatorInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Random;
 use Ampache\Module\Authorization\Access;
@@ -2290,10 +2291,7 @@ class Subsonic_Api
         if (AmpConfig::get('podcast') && Access::check('interface', 75)) {
             $catalogs = static::getCatalogRepository()->getList('podcast');
             if (count($catalogs) > 0) {
-                $data            = array();
-                $data['feed']    = $url;
-                $data['catalog'] = $catalogs[0];
-                if (Podcast::create($data)) {
+                if (static::getPodcastCreator()->create($url, $catalogs[0])) {
                     $response = Subsonic_Xml_Data::createSuccessResponse('createpodcastchannel');
                 } else {
                     $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_GENERIC, '',
@@ -2675,5 +2673,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(ShareRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastCreator(): PodcastCreatorInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastCreatorInterface::class);
     }
 }
