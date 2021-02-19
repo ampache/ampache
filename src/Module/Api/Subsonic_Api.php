@@ -235,7 +235,7 @@ class Subsonic_Api
      * @param array $alwaysArray
      */
 
-    public static function apiOutput($input, $xml, $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share'))
+    public static function apiOutput($input, $xml, $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share', 'entry'))
     {
         $format   = ($input['f']) ? strtolower((string) $input['f']) : 'xml';
         $callback = $input['callback'];
@@ -249,7 +249,7 @@ class Subsonic_Api
      * @param string $callback
      * @param array $alwaysArray
      */
-    public static function apiOutput2($format, $xml, $callback = '', $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share'))
+    public static function apiOutput2($format, $xml, $callback = '', $alwaysArray = array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share', 'entry'))
     {
         $conf = array('alwaysArray' => $alwaysArray);
         if ($format == "json") {
@@ -2536,19 +2536,26 @@ class Subsonic_Api
     public static function saveplayqueue($input)
     {
         $current  = (int)$input['current'];
-        $position = (int)$input['position'];
-        $username = (string)$input['u'];
+        $position = (int) $input['position'] / 1000;
+        $username = (string) $input['u'];
         $user_id  = User::get_from_username($username)->id;
         $media    = Subsonic_XML_Data::getAmpacheObject($current);
         $time     = time();
-        if ($position < 1 && $media->id) {
-            $previous = Stats::get_last_play($user_id, (string)$input['c']);
-            $type     = Subsonic_Xml_Data::getAmpacheType($current);
-            Stream::garbage_collection();
-            Stream::insert_now_playing((int) $media->id, (int) $user_id, (int) $media->time, $username, $type);
-            // repeated plays aren't called by scrobble so make sure we call this too
-            if ($previous['object_id'] == $media->id && ($time - $previous['time']) > 5) {
-                $media->set_played((int) $user_id, (string) $input['c'], array(), $time);
+        if ($media->id) {
+            $previous = Stats::get_last_play($user_id, (string) $input['c']);
+            $type     = Subsonic_XML_Data::getAmpacheType($current);
+            // track has just started
+            if ($position < 1) {
+                Stream::garbage_collection();
+                Stream::insert_now_playing((int) $media->id, (int) $user_id, (int) $media->time, $username, $type);
+                // repeated plays aren't called by scrobble so make sure we call this too
+                if ($previous['object_id'] == $media->id && ($time - $previous['date']) > 5) {
+                    $media->set_played((int) $user_id, (string) $input['c'], array(), $time);
+                }
+            }
+            // paused or played after 5 seconds so shift the start time
+            if ($position > 5 && $previous['object_id'] == $media->id) {
+                Stats::shift_last_play($user_id, (string) $input['c'], $previous['date'], ($time - $position));
             }
         }
         // continue to fail saving the queue

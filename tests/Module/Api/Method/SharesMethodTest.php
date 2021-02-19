@@ -96,6 +96,8 @@ class SharesMethodTest extends MockeryTestCase
         $result      = 'some-result';
         $shareId     = 666;
         $filterValue = 'some-value';
+        $limit       = 42;
+        $offset      = 21;
 
         $this->configContainer->shouldReceive('isFeatureEnabled')
             ->with(ConfigurationKeyEnum::SHARE)
@@ -125,7 +127,7 @@ class SharesMethodTest extends MockeryTestCase
             ->andReturn([(string) $shareId]);
 
         $output->shouldReceive('shares')
-            ->with([$shareId])
+            ->with([$shareId], true, $limit, $offset)
             ->once()
             ->andReturn($result);
 
@@ -145,7 +147,7 @@ class SharesMethodTest extends MockeryTestCase
                 $gatekeeper,
                 $response,
                 $output,
-                ['exact' => 1, 'filter' => $filterValue]
+                ['exact' => 1, 'filter' => $filterValue, 'limit' => (string) $limit, 'offset' => (string) $offset]
             )
         );
     }

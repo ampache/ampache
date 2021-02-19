@@ -753,6 +753,7 @@ class Json_Data
             $art_url = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
             array_push($JSON, [
                 "id" => (string) $episode_id,
+                "title" => $episode->f_title,
                 "name" => $episode->f_title,
                 "description" => $episode->f_description,
                 "category" => $episode->f_category,
@@ -764,8 +765,10 @@ class Json_Data
                 "filelength" => $episode->f_time_h,
                 "filesize" => $episode->f_size,
                 "filename" => $episode->f_file,
+                "mime" => $episode->mime,
                 "public_url" => $episode->link,
                 "url" => $episode->play_url('', 'api', false, $user_id),
+                "catalog" => $episode->catalog,
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),
                 "preciserating" => ($rating->get_user_rating($user_id) ?: null),

@@ -75,7 +75,7 @@ final class GenresMethod implements MethodInterface
         $browse->set_type('tag');
         $browse->set_sort('name', 'ASC');
 
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        $method = ($input['exact'] ?? '') ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'], $browse);
 
         $tags = $browse->get_objects();

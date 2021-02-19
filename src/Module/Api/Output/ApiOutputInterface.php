@@ -306,10 +306,14 @@ interface ApiOutputInterface
      *
      * @param int[] $shareIds Share id's to include
      * @param bool  $asAsOject
+     * @param int   $limit
+     * @param int   $offset
      */
     public function shares(
         array $shareIds,
-        bool $asAsOject = true
+        bool $asAsOject = true,
+        int $limit = 0,
+        int $offset = 0
     ): string;
 
     /**

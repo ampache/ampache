@@ -577,12 +577,20 @@ final class JsonOutput implements ApiOutputInterface
      *
      * @param int[] $shareIds Share id's to include
      * @param bool  $asAsOject
+     * @param int   $limit
+     * @param int   $offset
      */
-    public function shares(array $shareIds, bool $asOject = true): string
-    {
+    public function shares(
+        array $shareIds,
+        bool $asOject = true,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
         return Json_Data::shares(
             $shareIds,
-            $asOject
+            $asOject,
+            $limit,
+            $offset
         );
     }
 

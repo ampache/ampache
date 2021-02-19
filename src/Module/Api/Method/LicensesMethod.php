@@ -87,7 +87,7 @@ final class LicensesMethod implements MethodInterface
         $browse->set_type('license');
         $browse->set_sort('name', 'ASC');
 
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        $method = ($input['exact'] ?? '') ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'], $browse);
 
         $objectIds = $browse->get_objects();

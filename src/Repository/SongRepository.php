@@ -128,7 +128,7 @@ final class SongRepository implements SongRepositoryInterface
         Artist $artist,
         int $count = 50
     ): array {
-        $sql = "SELECT `song`.`id`, COUNT(`object_count`.`object_id`) AS counting FROM `song` ";
+        $sql = "SELECT `song`.`id`, COUNT(`object_count`.`object_id`) AS `counting` FROM `song` ";
         $sql .= "LEFT JOIN `object_count` ON `object_count`.`object_id` = `song`.`id` AND `object_type` = 'song' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";

@@ -83,7 +83,7 @@ final class VideosMethod implements MethodInterface
         $browse->set_type('video');
         $browse->set_sort('title', 'ASC');
 
-        $method = $input['exact'] ? 'exact_match' : 'alpha_match';
+        $method = ($input['exact'] ?? '') ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
 
         $videoIds = $browse->get_objects();
