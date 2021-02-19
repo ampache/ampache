@@ -2252,7 +2252,7 @@ class Search extends playlist_object
                     "WHERE `tag_map`.`object_type`='album' " .
                     "$value" .
                     "GROUP BY `object_id`" .
-                    ") AS realtag_$key " .
+                    ") AS `realtag_$key` " .
                     "ON `album`.`id`=`realtag_$key`.`object_id`";
             }
         }
@@ -2266,7 +2266,7 @@ class Search extends playlist_object
                     "WHERE `tag_map`.`object_type`='artist' " .
                     "$value" .
                     "GROUP BY `object_id`" .
-                    ") AS realtag_$key " .
+                    ") AS `realtag_$key` " .
                     "ON `artist`.`id`=`realtag_$key`.`object_id`";
             }
         }

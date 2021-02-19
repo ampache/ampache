@@ -385,7 +385,7 @@ class Artist extends database_object implements library_item
      */
     public static function get_top_songs($artist, $count = 50)
     {
-        $sql = "SELECT `song`.`id`, COUNT(`object_count`.`object_id`) AS counting FROM `song` ";
+        $sql = "SELECT `song`.`id`, COUNT(`object_count`.`object_id`) AS `counting` FROM `song` ";
         $sql .= "LEFT JOIN `object_count` ON `object_count`.`object_id` = `song`.`id` AND `object_type` = 'song' ";
         if (AmpConfig::get('catalog_disable')) {
             $sql .= "LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` ";

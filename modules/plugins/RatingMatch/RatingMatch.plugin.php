@@ -181,7 +181,7 @@ class AmpacheRatingMatch
             return false;
         }
 
-        $sql = "SELECT COUNT(*) AS counting " .
+        $sql = "SELECT COUNT(*) AS `counting` " .
             "FROM object_count WHERE object_type = 'song' AND " .
             "`count_type` = ? AND object_id = ? AND user = ?;";
 

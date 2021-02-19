@@ -113,6 +113,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Catalog removal needs to run garbage collection
 * Recognize opus when reading tags
 * Regex in config for additional_genre_delimiters
+* SQL query for smartlists not joining the OR correctly
 
 ### API 4.4.0-develop
 
