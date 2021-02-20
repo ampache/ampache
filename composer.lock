@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eb7529fb72427eb084b0a67747b4f94e",
+    "content-hash": "2e47cd96a0c0722f0b5fca9cf4eb26c7",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -1875,16 +1875,6 @@
                 "source": "https://github.com/narrowspark/http-emitter"
             },
             "time": "2019-09-12T21:29:46+00:00"
-        },
-        {
-            "name": "needim/noty",
-            "version": "2.4.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/needim/noty",
-                "reference": "v2.4.1"
-            },
-            "type": "component"
         },
         {
             "name": "nyholm/psr7",

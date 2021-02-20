@@ -239,11 +239,7 @@ if (AmpConfig::get('song_page_title') && !$is_share) {
             last_int_position = int_position;
             if (shouts[int_position] != undefined) {
                 shouts[int_position].forEach(function(e) {
-                    noty({text: e,
-                            type: 'alert', layout: 'topRight',
-                            template: '<div class="noty_message noty_ampache"><span class="noty_text noty_ampache"></span><div class="noty_close noty_ampache"></div></div>',
-                            timeout: 2500,
-                        });
+                    console.log(e);
                 });
             }
         }

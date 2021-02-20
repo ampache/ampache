@@ -87,7 +87,6 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
         <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/prettyphoto/js/jquery.prettyPhoto.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/tag-it/js/tag-it.js"></script>
-        <script src="<?php echo $web_path; ?>/lib/components/noty/js/noty/packaged/jquery.noty.packaged.min.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/components/jquery-cookie/jquery.cookie.js"></script>
         <script src="<?php echo $web_path; ?>/lib/components/jscroll/jquery.jscroll.min.js" defer></script>
         <script src="<?php echo $web_path; ?>/lib/components/jquery-qrcode/jquery-qrcode-built.js" defer></script>
@@ -314,28 +313,6 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
         </script>
 
         <?php
-            if (AmpConfig::get('cookie_disclaimer') && !filter_has_var(INPUT_COOKIE, 'cookie_disclaimer')) { ?>
-
-        <script>
-        noty({text: '<?php
-                        printf(json_encode(nl2br(
-                            /* HINT: Translator, "%s" is replaced by "cookie settings" */
-                            T_("We have placed cookies on your computer to help make this website better. You can change your %s at any time.\nOtherwise, we will assume you are OK to continue.\n\nClick on this message to not display it again."))),
-                            "<a href=\"" . AmpConfig::get('web_path') . "/cookie_disclaimer.php\">" . T_('cookie settings') . "</a>"
-                        ); ?>',
-                type: 'warning',
-                layout: 'bottom',
-                timeout: false,
-                callback: {
-                    afterClose: function() {
-                        $.cookie('cookie_disclaimer', '1', { expires: 365 });
-                    }
-                },
-            });
-        </script>
-
-        <?php
-            }
             if (AmpConfig::get('libitem_contextmenu')) { ?>
 
         <script>
