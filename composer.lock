@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a24c01d98d2a8c639e2092ffd5104367",
+    "content-hash": "65f73a4af9d2bd34594350bbca33fd48",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -1530,7 +1530,12 @@
                 "url": "https://github.com/krixon/xbmc-php-rpc.git",
                 "reference": "master"
             },
-            "type": "library"
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "."
+                ]
+            }
         },
         {
             "name": "kumailht/responsive-elements",

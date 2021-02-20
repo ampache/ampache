@@ -126,13 +126,12 @@
                     "url": "https://github.com/krixon/xbmc-php-rpc.git",
                     "type": "git",
                     "reference": "master"
+                },
+                "autoload": {
+                    "classmap": ["."]
                 }
             }
         },
-            {
-                 "type": "composer",
-                "url": "https:\/\/www.phpclasses.org\/"
-            },
         {
             "type": "package",
             "package": {
@@ -373,7 +372,7 @@
             "public/lib/components/{$name}/": ["type:component"]
         }
     },
-   "autoload": {
+    "autoload": {
         "psr-4": {
             "Ampache\\": "src/"
         }
@@ -390,9 +389,9 @@
         "syntax": "resources/scripts/tests/syntax.sh",
         "fix-cs": "vendor/bin/php-cs-fixer fix -v .",
         "stan": "vendor/bin/phpstan analyse",
-	"post-autoload-dump": [
-	    "@php resources/scripts/composer/check_tag_tools.php"
-	]
+        "post-autoload-dump": [
+            "@php resources/scripts/composer/check_tag_tools.php"
+        ]
     },
     "suggest": {
         "szymach/c-pchart": "Enable graphical statistics",
