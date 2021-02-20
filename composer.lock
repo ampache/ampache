@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "69ae8b301cd701b682b8c81da503254f",
+    "content-hash": "a24c01d98d2a8c639e2092ffd5104367",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -1232,12 +1232,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "ac3d425dd1ca3828aaa5303568bfa18253a86a5d"
+                "reference": "811a266a18c540c133114c8823c717a99f1a7b6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/ac3d425dd1ca3828aaa5303568bfa18253a86a5d",
-                "reference": "ac3d425dd1ca3828aaa5303568bfa18253a86a5d",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/811a266a18c540c133114c8823c717a99f1a7b6a",
+                "reference": "811a266a18c540c133114c8823c717a99f1a7b6a",
                 "shasum": ""
             },
             "require": {
@@ -1292,7 +1292,7 @@
                 "issues": "https://github.com/JamesHeinrich/getID3/issues",
                 "source": "https://github.com/JamesHeinrich/getID3/tree/master"
             },
-            "time": "2021-01-15T13:43:56+00:00"
+            "time": "2021-02-20T02:49:36+00:00"
         },
         {
             "name": "jeromeetienne/jquery-qrcode",
@@ -1877,27 +1877,17 @@
             "time": "2019-09-12T21:29:46+00:00"
         },
         {
-            "name": "needim/noty",
-            "version": "2.4.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/needim/noty",
-                "reference": "v2.4.1"
-            },
-            "type": "component"
-        },
-        {
             "name": "nyholm/psr7",
-            "version": "1.3.2",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nyholm/psr7.git",
-                "reference": "a272953743c454ac4af9626634daaf5ab3ce1173"
+                "reference": "23ae1f00fbc6a886cbe3062ca682391b9cc7c37b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nyholm/psr7/zipball/a272953743c454ac4af9626634daaf5ab3ce1173",
-                "reference": "a272953743c454ac4af9626634daaf5ab3ce1173",
+                "url": "https://api.github.com/repos/Nyholm/psr7/zipball/23ae1f00fbc6a886cbe3062ca682391b9cc7c37b",
+                "reference": "23ae1f00fbc6a886cbe3062ca682391b9cc7c37b",
                 "shasum": ""
             },
             "require": {
@@ -1919,7 +1909,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0-dev"
+                    "dev-master": "1.4-dev"
                 }
             },
             "autoload": {
@@ -1949,7 +1939,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Nyholm/psr7/issues",
-                "source": "https://github.com/Nyholm/psr7/tree/1.3.2"
+                "source": "https://github.com/Nyholm/psr7/tree/1.4.0"
             },
             "funding": [
                 {
@@ -1961,7 +1951,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-11-14T17:35:34+00:00"
+            "time": "2021-02-18T15:41:32+00:00"
         },
         {
             "name": "nyholm/psr7-server",
