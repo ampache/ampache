@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**
  * This class is used to intantiate model objects (like Playlist, Song, ...)
@@ -207,5 +208,15 @@ final class ModelFactory implements ModelFactoryInterface
         int $useractivityId
     ): Useractivity {
         return new Useractivity($useractivityId);
+    }
+
+    /**
+     * Maps an object type name like `song` to its corresponding model class
+     */
+    public function mapObjectType(string $objectType, int $objectId): database_object
+    {
+        $className = ObjectTypeToClassNameMapper::map($objectType);
+
+        return new $className($objectId);
     }
 }

@@ -27,8 +27,10 @@ namespace Ampache\Module\Util;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Clip;
+use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Movie;
 use Ampache\Repository\Model\Personal_Video;
 use Ampache\Repository\Model\Playlist;
@@ -46,6 +48,7 @@ use Ampache\Repository\Model\Video;
  * This class maps object types like `album` to their corresponding php class name (if known)
  *
  * @deprecated Remove after every usage has been removed
+ * @see ModelFactoryInterface::mapObjectType()
  */
 final class ObjectTypeToClassNameMapper
 {
@@ -77,7 +80,7 @@ final class ObjectTypeToClassNameMapper
         Video::class => 'video',
     ];
 
-    public static function map(string $object_type)
+    public static function map(string $object_type): string
     {
         return self::OBJECT_TYPE_MAPPING[strtolower($object_type)] ?? $object_type;
     }

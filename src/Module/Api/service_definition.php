@@ -93,6 +93,7 @@ return [
     Method\PodcastCreateMethod::class => autowire(),
     Method\PlaylistsMethod::class => autowire(),
     Method\PlaylistRemoveSongMethod::class => autowire(),
+    Method\DownloadMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

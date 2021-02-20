@@ -20,71 +20,87 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\User;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
+use Psr\Http\Message\ResponseInterface;
+use Teapot\StatusCode;
 
-/**
- * Class DownloadMethod
- * @package Lib\ApiMethods
- */
-final class DownloadMethod
+final class DownloadMethod implements MethodInterface
 {
-    private const ACTION = 'download';
+    public const ACTION = 'download';
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->modelFactory = $modelFactory;
+    }
 
     /**
-     * download
      * MINIMUM_API_VERSION=400001
      *
      * Downloads a given media file. set format=raw to download the full file
      *
-     * @param array $input
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
+     * @param array<string, mixed> $input
      * id     = (string) $song_id| $podcast_episode_id
      * type   = (string) 'song', 'podcast_episode'
      * format = (string) 'mp3', 'ogg', etc //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
      */
-    public static function download(array $input)
-    {
-        if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
-            http_response_code(400);
-
-            return false;
-        }
-        $object_id = (int) $input['id'];
-        $type      = (string) $input['type'];
-        $format    = $input['format'];
-        $original  = $format && $format != 'raw';
-        $user_id   = User::get_from_username(Session::username($input['auth']))->id;
-
-        $params = '&action=download' . '&client=api' . '&cache=1';
-        if ($original) {
-            $params .= '&transcode_to=' . $format;
-        }
-        if ($format) {
-            $params .= '&format=' . $format;
-        }
-        $url = '';
-        if (in_array($type, ['song', 'podcast_episode', 'podcast'])) {
-            $className = ObjectTypeToClassNameMapper::map($type);
-            $media     = new $className($object_id);
-            $url       = $media->play_url($params, 'api', function_exists('curl_version'), $user_id);
-        }
-        if (!empty($url)) {
-            Session::extend($input['auth']);
-            header('Location: ' . str_replace(':443/play', '/play', $url));
-
-            return true;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if (count(array_diff(['id', 'type'], array_keys($input))) !== 0) {
+            return $response->withStatus(StatusCode::NOT_FOUND);
         }
 
-        // download not found
-        http_response_code(404);
+        $type = (string) $input['type'];
 
-        return false;
+        if (in_array($type, ['song', 'podcast_episode'])) {
+            $format    = $input['format'] ?? '';
+            $original  = $format && $format != 'raw';
+
+            $params = '&action=download&client=api&cache=1';
+            if ($original) {
+                $params .= '&transcode_to=' . $format;
+            }
+            if ($format) {
+                $params .= '&format=' . $format;
+            }
+
+            /** @var Song|Podcast_Episode $media */
+            $media = $this->modelFactory->mapObjectType($type, (int) $input['id']);
+            $url   = $media->play_url(
+                $params,
+                'api',
+                function_exists('curl_version'),
+                $gatekeeper->getUser()->getId()
+            );
+
+            if ($url !== '') {
+                return $response->withStatus(StatusCode::FOUND)
+                    ->withHeader(
+                        'Location',
+                        str_replace(':443/play', '/play', $url)
+                    );
+            }
+        }
+
+        return $response->withStatus(StatusCode::NOT_FOUND);
     }
 }
