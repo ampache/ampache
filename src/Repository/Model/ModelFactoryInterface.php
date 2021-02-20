@@ -141,6 +141,11 @@ interface ModelFactoryInterface
         int $useractivityId
     ): Useractivity;
 
+    public function createUserflag(
+        int $userFlagId,
+        string $type
+    ): Userflag;
+
     /**
      * Maps an object type name like `song` to its corresponding model class
      */

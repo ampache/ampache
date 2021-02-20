@@ -114,7 +114,7 @@ class Api
         Method\ToggleFollowMethod::ACTION => Method\ToggleFollowMethod::class,
         Method\LastShoutsMethod::ACTION => Method\LastShoutsMethod::class,
         'rate' => Method\RateMethod::class,
-        'flag' => Method\FlagMethod::class,
+        Method\FlagMethod::ACTION => Method\FlagMethod::class,
         'record_play' => Method\RecordPlayMethod::class,
         'scrobble' => Method\ScrobbleMethod::class,
         Method\CatalogsMethod::ACTION => Method\CatalogsMethod::class,

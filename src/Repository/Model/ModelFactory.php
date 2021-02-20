@@ -210,6 +210,16 @@ final class ModelFactory implements ModelFactoryInterface
         return new Useractivity($useractivityId);
     }
 
+    public function createUserflag(
+        int $userFlagId,
+        string $type
+    ): Userflag {
+        return new Userflag(
+            $userFlagId,
+            $type
+        );
+    }
+
     /**
      * Maps an object type name like `song` to its corresponding model class
      */

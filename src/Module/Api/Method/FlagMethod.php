@@ -20,27 +20,42 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Userflag;
-use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class FlagMethod
- * @package Lib\ApiMethods
- */
-final class FlagMethod
+final class FlagMethod implements MethodInterface
 {
-    private const ACTION = 'flag';
+    public const ACTION = 'flag';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ConfigContainerInterface $configContainer,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->streamFactory   = $streamFactory;
+        $this->configContainer = $configContainer;
+        $this->modelFactory    = $modelFactory;
+    }
 
     /**
-     * flag
      * MINIMUM_API_VERSION=400001
      *
      * This flags a library item as a favorite
@@ -51,57 +66,68 @@ final class FlagMethod
      * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season' $type
      * id   = (integer) $object_id
      * flag = (integer) 0,1 $flag
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws RequestParamMissingException
+     * @throws ResultEmptyException
+     * @throws FunctionDisabledException
      */
-    public static function flag(array $input)
-    {
-        if (!AmpConfig::get('userflags')) {
-            Api::error(T_('Enable: userflags'), '4703', self::ACTION, 'system', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_FLAGS) === false) {
+            throw new FunctionDisabledException(
+                T_('Enable: userflags')
+            );
+        }
 
-            return false;
+        foreach (['type', 'id', 'flag'] as $key) {
+            if (!array_key_exists($key, $input)) {
+                throw new RequestParamMissingException(
+                   sprintf(T_('Bad Request: %s'), $key)
+               );
+            }
         }
-        if (!Api::check_parameter($input, array('type', 'id', 'flag'), self::ACTION)) {
-            return false;
-        }
-        ob_end_clean();
-        $type      = (string) $input['type'];
-        $object_id = (int) $input['id'];
-        $flag      = (bool) $input['flag'];
-        $user      = User::get_from_username(Session::username($input['auth']));
-        $user_id   = null;
-        if ((int) $user->id > 0) {
-            $user_id = $user->id;
-        }
+
+        $type     = (string) $input['type'];
+        $objectId = (int) $input['id'];
+        $flag     = (bool) $input['flag'];
+
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
-
-            return false;
+        if (!in_array($type, ['song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'])) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), $type)
+            );
         }
 
-        $className = ObjectTypeToClassNameMapper::map($type);
+        $item = $this->modelFactory->mapObjectType($type, $objectId);
 
-        if (!$className || !$object_id) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
-        } else {
-            $item = new $className($object_id);
-            if (!$item->id) {
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
-
-                return false;
-            }
-            $userflag = new Userflag($object_id, $type);
-            if ($userflag->set_flag($flag, $user_id)) {
-                $message = ($flag) ? 'flag ADDED to ' : 'flag REMOVED from ';
-                Api::message($message . $object_id, $input['api_format']);
-
-                return true;
-            }
-            Api::error('flag failed ' . $object_id, '4710', self::ACTION, 'system', $input['api_format']);
+        if (!$item->id) {
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %d'), $objectId)
+            );
         }
-        Session::extend($input['auth']);
 
-        return true;
+        $userflag = $this->modelFactory->createUserflag(
+            $objectId,
+            $type
+        );
+        if ($userflag->set_flag($flag, $gatekeeper->getUser()->getId())) {
+            $message = ($flag) ? 'flag ADDED to ' : 'flag REMOVED from ';
+
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->success($message . $objectId)
+                )
+            );
+        }
+
+        throw new RequestParamMissingException(
+            sprintf(T_('flag failed %d'), $objectId)
+        );
     }
 }
