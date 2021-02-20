@@ -83,4 +83,25 @@ final class TagRepository implements TagRepositoryInterface
 
         return $result;
     }
+
+    /**
+     * Get all tags from all Songs from [type] (artist, album, ...)
+     *
+     * @return string[]
+     */
+    public function getSongTags(string $type, int $objectId): array
+    {
+        $tags       = [];
+        $db_results = Dba::read(
+            'SELECT `tag`.`name` FROM `tag` JOIN `tag_map` ON `tag`.`id` = `tag_map`.`tag_id`
+                JOIN `song` ON `tag_map`.`object_id` = `song`.`id` WHERE
+                `song`.`%s` = ? AND `tag_map`.`object_type` = ? GROUP BY `tag`.`id`, `tag`.`name`',
+            [$objectId, $type]
+        );
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $tags[] = $row['name'];
+        }
+
+        return $tags;
+    }
 }

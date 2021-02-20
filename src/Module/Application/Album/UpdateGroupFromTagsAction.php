@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Album;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Catalog\SingleItemUpdaterInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -47,16 +48,20 @@ final class UpdateGroupFromTagsAction implements ApplicationActionInterface
 
     private AlbumRepositoryInterface $albumRepository;
 
+    private SingleItemUpdaterInterface $singleItemUpdater;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory,
         UiInterface $ui,
-        AlbumRepositoryInterface $albumRepository
+        AlbumRepositoryInterface $albumRepository,
+        SingleItemUpdaterInterface $singleItemUpdater
     ) {
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-        $this->ui              = $ui;
-        $this->albumRepository = $albumRepository;
+        $this->configContainer   = $configContainer;
+        $this->modelFactory      = $modelFactory;
+        $this->ui                = $ui;
+        $this->albumRepository   = $albumRepository;
+        $this->singleItemUpdater = $singleItemUpdater;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -71,18 +76,28 @@ final class UpdateGroupFromTagsAction implements ApplicationActionInterface
         $album = $this->modelFactory->createAlbum($albumId);
         $album->format();
 
+        $objects = $this->albumRepository->getAlbumSuite($album);
+
+        // update from high to low so you return to the first disk in a group album
+        rsort($objects);
+
+        $return_id = 0;
+        foreach ($objects as $objectId) {
+            $return_id = $this->singleItemUpdater->update('album', $objectId);
+        }
+
         $this->ui->showHeader();
         $this->ui->show(
             'show_update_item_group.inc.php',
             [
                 'catalog_id' => $album->get_catalogs(),
                 'type' => 'album',
-                'objects' => $this->albumRepository->getAlbumSuite($album),
                 'target_url' => sprintf(
                     '%s/albums.php?action=show&amp;album=%d',
                     $this->configContainer->getWebPath(),
                     $albumId
-                )
+                ),
+                'return_id' => $return_id
             ]
         );
         $this->ui->showQueryStats();

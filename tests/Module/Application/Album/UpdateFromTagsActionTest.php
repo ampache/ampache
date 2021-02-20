@@ -25,6 +25,7 @@ namespace Ampache\Module\Application\Album;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Catalog\SingleItemUpdaterInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -45,18 +46,23 @@ class UpdateFromTagsActionTest extends MockeryTestCase
     /** @var ConfigContainerInterface|MockInterface|null */
     private MockInterface $configContainer;
 
+    /** @var SingleItemUpdaterInterface|MockInterface|null */
+    private MockInterface $singleItemUpdater;
+
     private ?UpdateFromTagsAction $subject;
 
     public function setUp(): void
     {
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-        $this->ui              = $this->mock(UiInterface::class);
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->modelFactory      = $this->mock(ModelFactoryInterface::class);
+        $this->ui                = $this->mock(UiInterface::class);
+        $this->configContainer   = $this->mock(ConfigContainerInterface::class);
+        $this->singleItemUpdater = $this->mock(SingleItemUpdaterInterface::class);
 
         $this->subject = new UpdateFromTagsAction(
             $this->modelFactory,
             $this->ui,
-            $this->configContainer
+            $this->configContainer,
+            $this->singleItemUpdater
         );
     }
 
@@ -84,6 +90,7 @@ class UpdateFromTagsActionTest extends MockeryTestCase
         $albumId   = 666;
         $catalogId = [42];
         $webPath   = 'some-web-path';
+        $returnId  = 33;
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
@@ -113,6 +120,11 @@ class UpdateFromTagsActionTest extends MockeryTestCase
             ->once()
             ->andReturn($catalogId);
 
+        $this->singleItemUpdater->shouldReceive('update')
+            ->with('album', $albumId)
+            ->once()
+            ->andReturn($returnId);
+
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
@@ -127,7 +139,8 @@ class UpdateFromTagsActionTest extends MockeryTestCase
                         '%s/albums.php?action=show&amp;album=%d',
                         $webPath,
                         $albumId
-                    )
+                    ),
+                    'return_id' => $returnId
                 ]
             )
             ->once();

@@ -35,6 +35,7 @@ use Ampache\Module\Catalog\Catalog_Seafile;
 use Ampache\Module\Catalog\Catalog_soundcloud;
 use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
+use Ampache\Module\Catalog\SingleItemUpdaterInterface;
 use Ampache\Module\Song\Tag\SongId3TagWriterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Stream\Url\StreamUrlParserInterface;
@@ -51,6 +52,7 @@ use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Ampache\Repository\TagRepositoryInterface;
 use Ampache\Repository\UpdateInfoRepository;
 use Exception;
 use PDOStatement;
@@ -1595,92 +1597,6 @@ abstract class Catalog extends database_object
     } // update_settings
 
     /**
-     * update_single_item
-     * updates a single album,artist,song from the tag data
-     * this can be done by 75+
-     * @param string $type
-     * @param integer $object_id
-     * @param boolean $api
-     * @return integer
-     */
-    public static function update_single_item($type, $object_id, $api = false)
-    {
-        // Because single items are large numbers of things too
-        set_time_limit(0);
-
-        $songs   = array();
-        $result  = $object_id;
-        $libitem = 0;
-
-        switch ($type) {
-            case 'album':
-                $libitem = new Album($object_id);
-                $songs   = static::getSongRepository()->getByAlbum($libitem->getId());
-                break;
-            case 'artist':
-                $libitem = new Artist($object_id);
-                $songs   = static::getSongRepository()->getByArtist($libitem);
-                break;
-            case 'song':
-                $songs[] = $object_id;
-                break;
-        } // end switch type
-
-        if (!$api) {
-            echo '<table class="tabledata">' . "\n";
-            echo '<thead><tr class="th-top">' . "\n";
-            echo "<th>" . T_("Song") . "</th><th>" . T_("Status") . "</th>\n";
-            echo "<tbody>\n";
-        }
-        foreach ($songs as $song_id) {
-            $song = new Song($song_id);
-            $info = self::update_media_from_tags($song);
-            // don't echo useless info when using api
-            if (($info['change']) && (!$api)) {
-                if ($info['element'][$type]) {
-                    $change = explode(' --> ', (string)$info['element'][$type]);
-                    $result = (int)$change[1];
-                }
-                $file = scrub_out($song->file);
-                echo '<tr class="' . Ui::flip_class() . '">' . "\n";
-                echo "<td>$file</td><td>" . T_('Updated') . "</td>\n";
-                echo $info['text'];
-                echo "</td>\n</tr>\n";
-                flush();
-            } else {
-                if (!$api) {
-                    echo '<tr class="' . Ui::flip_class() . '"><td>' . scrub_out($song->file) . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
-                }
-                flush();
-            }
-        } // foreach songs
-        if (!$api) {
-            echo "</tbody></table>\n";
-        }
-        // Update the tags for
-        switch ($type) {
-            case 'album':
-                $tags = self::getSongTags('album', $libitem->id);
-                Tag::update_tag_list(implode(',', $tags), 'album', $libitem->id, false);
-                static::getAlbumRepository()->updateTime($libitem);
-                break;
-            case 'artist':
-                $tags = self::getSongTags('artist', $libitem->id);
-                Tag::update_tag_list(implode(',', $tags), 'artist', $libitem->id, false);
-                $libitem->update_time();
-                break;
-        } // end switch type
-
-        // Cleanup old objects that are no longer needed
-        if (!AmpConfig::get('cron_cache')) {
-            static::getAlbumRepository()->collectGarbage();
-            Artist::garbage_collection();
-        }
-
-        return $result;
-    } // update_single_item
-
-    /**
      * update_media_from_tags
      * This is a 'wrapper' function calls the update function for the media
      * type in question
@@ -2673,7 +2589,7 @@ abstract class Catalog extends database_object
      */
     protected static function updateAlbumTags(Song $song)
     {
-        $tags = self::getSongTags('album', $song->album);
+        $tags = static::getTagRepository()->getSongTags('album', $song->album);
         Tag::update_tag_list(implode(',', $tags), 'album', $song->album, true);
     }
 
@@ -2683,26 +2599,8 @@ abstract class Catalog extends database_object
      */
     protected static function updateArtistTags(Song $song)
     {
-        $tags = self::getSongTags('artist', $song->artist);
+        $tags = static::getTagRepository()->getSongTags('artist', $song->artist);
         Tag::update_tag_list(implode(',', $tags), 'artist', $song->artist, true);
-    }
-
-    /**
-     * Get all tags from all Songs from [type] (artist, album, ...)
-     * @param string $type
-     * @param integer $object_id
-     * @return array
-     */
-    protected static function getSongTags($type, $object_id)
-    {
-        $tags       = array();
-        $db_results = Dba::read('SELECT `tag`.`name` FROM `tag`' . ' JOIN `tag_map` ON `tag`.`id` = `tag_map`.`tag_id`' . ' JOIN `song` ON `tag_map`.`object_id` = `song`.`id`' . ' WHERE `song`.`' . $type . '` = ? AND `tag_map`.`object_type` = "song"' . ' GROUP BY `tag`.`id`, `tag`.`name`',
-            array($object_id));
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $tags[] = $row['name'];
-        }
-
-        return $tags;
     }
 
     /**
@@ -2823,7 +2721,7 @@ abstract class Catalog extends database_object
                     if ($catalog_id = Catalog_local::get_from_path($options['update_path'])) {
                         $songs = Song::get_from_path($options['update_path']);
                         foreach ($songs as $song_id) {
-                            self::update_single_item('song', $song_id);
+                            static::getSingleItemUpdater()->update('song', (int) $song_id);
                         }
                     }
                 } // end if update
@@ -2963,26 +2861,6 @@ abstract class Catalog extends database_object
     /**
      * @deprecated
      */
-    private static function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SongRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated
-     */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated
-     */
     private static function getCatalogGarbageCollector(): CatalogGarbageCollectorInterface
     {
         global $dic;
@@ -3048,5 +2926,25 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(PlaylistRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getTagRepository(): TagRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(TagRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getSingleItemUpdater(): SingleItemUpdaterInterface
+    {
+        global $dic;
+
+        return $dic->get(SingleItemUpdaterInterface::class);
     }
 }

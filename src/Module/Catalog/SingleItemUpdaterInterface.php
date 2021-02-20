@@ -17,29 +17,25 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Repository;
+namespace Ampache\Module\Catalog;
 
-interface TagRepositoryInterface
+interface SingleItemUpdaterInterface
 {
     /**
-     * This gets the objects from a specified tag and returns an array of object ids, nothing more
+     * updates a single album,artist,song from the tag data
+     * this can be done by 75+
      *
-     * @return int[]
+     * @param string $type
+     * @param int $objectId
+     * @param bool $api
+     *
+     * @return int
      */
-    public function getTagObjectIds(
+    public function update(
         string $type,
-        int $tagId,
-        ?int $limit = null,
-        int $offset = 0
-    ): array;
-
-    /**
-     * Get all tags from all Songs from [type] (artist, album, ...)
-     *
-     * @return string[]
-     */
-    public function getSongTags(string $type, int $objectId): array;
+        int $objectId,
+        bool $api = false
+    ): int;
 }

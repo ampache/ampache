@@ -20,11 +20,12 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Application\Album;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Catalog\SingleItemUpdaterInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -44,14 +45,18 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
+    private SingleItemUpdaterInterface $singleItemUpdater;
+
     public function __construct(
         ModelFactoryInterface $modelFactory,
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        SingleItemUpdaterInterface $singleItemUpdater
     ) {
-        $this->modelFactory    = $modelFactory;
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
+        $this->modelFactory      = $modelFactory;
+        $this->ui                = $ui;
+        $this->configContainer   = $configContainer;
+        $this->singleItemUpdater = $singleItemUpdater;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -77,7 +82,8 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
                     '%s/albums.php?action=show&amp;album=%d',
                     $this->configContainer->getWebPath(),
                     $albumId
-                )
+                ),
+                'return_id' => $this->singleItemUpdater->update('album', $albumId)
             ]
         );
         $this->ui->showQueryStats();

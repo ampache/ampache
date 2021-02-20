@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Artist;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Catalog\SingleItemUpdaterInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -43,18 +44,23 @@ class UpdateFromTagsActionTest extends MockeryTestCase
     /** @var ModelFactoryInterface|MockInterface|null */
     private MockInterface $modelFactory;
 
+    /** @var SingleItemUpdaterInterface|MockInterface|null */
+    private MockInterface $singleItemUpdater;
+
     private ?UpdateFromTagsAction $subject;
 
     public function setUp(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->ui              = $this->mock(UiInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->configContainer   = $this->mock(ConfigContainerInterface::class);
+        $this->ui                = $this->mock(UiInterface::class);
+        $this->modelFactory      = $this->mock(ModelFactoryInterface::class);
+        $this->singleItemUpdater = $this->mock(SingleItemUpdaterInterface::class);
 
         $this->subject = new UpdateFromTagsAction(
             $this->configContainer,
             $this->ui,
-            $this->modelFactory
+            $this->modelFactory,
+            $this->singleItemUpdater
         );
     }
 
@@ -65,6 +71,7 @@ class UpdateFromTagsActionTest extends MockeryTestCase
 
         $artistId = 666;
         $webPath  = 'some-web-path';
+        $returnId = 33;
 
         $request->shouldReceive('getQueryPArams')
             ->withNoArgs()
@@ -85,7 +92,8 @@ class UpdateFromTagsActionTest extends MockeryTestCase
                         '%s/artists.php?action=show&amp;artist=%d',
                         $webPath,
                         $artistId
-                    )
+                    ),
+                    'return_id' => $returnId
                 ]
             )
             ->once();
@@ -95,6 +103,11 @@ class UpdateFromTagsActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showFooter')
             ->withNoArgs()
             ->once();
+
+        $this->singleItemUpdater->shouldReceive('update')
+            ->with('artist', $artistId)
+            ->once()
+            ->andReturn($returnId);
 
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()

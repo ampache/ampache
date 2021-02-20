@@ -27,12 +27,6 @@ use Ampache\Module\Util\Ui;
 
 Ui::show_box_top(T_('Starting Update from Tags'), 'box box_update_items');
 
-// update from high to low so you return to the first disk in a group album
-rsort($objects);
-foreach ($objects as $object) {
-    $return_id = Catalog::update_single_item($type, $object);
-}
-
 //The target URL has changed so it needs to be updated
 if ($object_id != $return_id) {
     $object_id  = $return_id;

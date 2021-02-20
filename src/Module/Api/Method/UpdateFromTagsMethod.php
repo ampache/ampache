@@ -24,7 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Catalog;
+use Ampache\Module\Catalog\SingleItemUpdaterInterface;
 use Ampache\Module\Api\Api;
 use Ampache\Module\System\Session;
 
@@ -69,11 +69,18 @@ final class UpdateFromTagsMethod
             return false;
         }
         // update your object
-        Catalog::update_single_item($type, $object_id, true);
+        static::getSingleItemUpdater()->update($type, (int) $object_id, true);
 
         Api::message('Updated tags for: ' . (string) $object_id . ' (' . $type . ')', $input['api_format']);
         Session::extend($input['auth']);
 
         return true;
+    }
+
+    private static function getSingleItemUpdater(): SingleItemUpdaterInterface
+    {
+        global $dic;
+
+        return $dic->get(SingleItemUpdaterInterface::class);
     }
 }

@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Artist;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Catalog\SingleItemUpdaterInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -42,14 +43,18 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private SingleItemUpdaterInterface $singleItemUpdater;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        SingleItemUpdaterInterface $singleItemUpdater
     ) {
-        $this->configContainer = $configContainer;
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
+        $this->configContainer   = $configContainer;
+        $this->ui                = $ui;
+        $this->modelFactory      = $modelFactory;
+        $this->singleItemUpdater = $singleItemUpdater;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -67,7 +72,8 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
                     '%s/artists.php?action=show&amp;artist=%d',
                     $this->configContainer->getWebPath(),
                     $artistId
-                )
+                ),
+                'return_id' => $this->singleItemUpdater->update('artist', $artistId)
             ]
         );
         $this->ui->showQueryStats();
