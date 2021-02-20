@@ -48,4 +48,16 @@ interface BookmarkRepositoryInterface
         int $userId,
         int $updateDate
     ): int;
+
+    /**
+     * Searches for certain bookmarks
+     *
+     * @return int[]
+     */
+    public function lookup(
+        string $objectType,
+        int $objectId,
+        int $userId,
+        ?string $comment
+    ): array;
 }

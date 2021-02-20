@@ -90,7 +90,7 @@ class Api
         Method\BookmarksMethod::ACTION => Method\BookmarksMethod::class,
         Method\BookmarkCreateMethod::ACTION => Method\BookmarkCreateMethod::class,
         'bookmark_edit' => Method\BookmarkEditMethod::class,
-        'bookmark_delete' => Method\BookmarkDeleteMethod::class,
+        Method\BookmarkDeleteMethod::ACTION => Method\BookmarkDeleteMethod::class,
         Method\VideosMethod::ACTION => Method\VideosMethod::class,
         Method\VideoMethod::ACTION => Method\VideoMethod::class,
         'stats' => Method\StatsMethod::class,

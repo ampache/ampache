@@ -88,4 +88,30 @@ final class BookmarkRepository implements BookmarkRepositoryInterface
 
         return (int) Dba::insert_id();
     }
+
+    /**
+     * Searches for certain bookmarks
+     *
+     * @return int[]
+     */
+    public function lookup(
+        string $objectType,
+        int $objectId,
+        int $userId,
+        ?string $comment
+    ): array {
+        $bookmarks   = [];
+        $comment_sql = $comment !== null ? "AND `comment` = '" . $comment . "'" : "";
+        $sql         = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `object_type` = ? AND `object_id` = ? " . $comment_sql;
+        $db_results  = Dba::read(
+            $sql,
+            [$userId, $objectType, $objectId]
+        );
+
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $bookmarks[] = (int) $results['id'];
+        }
+
+        return $bookmarks;
+    }
 }

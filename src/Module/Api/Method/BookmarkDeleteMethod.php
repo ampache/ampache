@@ -21,107 +21,143 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Bookmark;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Video;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class BookmarkDeleteMethod
- * @package Lib\ApiMethods
- */
-final class BookmarkDeleteMethod
+final class BookmarkDeleteMethod implements MethodInterface
 {
-    private const ACTION = 'bookmark_delete';
+    public const ACTION = 'bookmark_delete';
+
+    private BookmarkRepositoryInterface $bookmarkRepository;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    private UiInterface $ui;
+
+    public function __construct(
+        BookmarkRepositoryInterface $bookmarkRepository,
+        ModelFactoryInterface $modelFactory,
+        StreamFactoryInterface $streamFactory,
+        ConfigContainerInterface $configContainer,
+        UiInterface $ui
+    ) {
+        $this->bookmarkRepository = $bookmarkRepository;
+        $this->modelFactory       = $modelFactory;
+        $this->streamFactory      = $streamFactory;
+        $this->configContainer    = $configContainer;
+        $this->ui                 = $ui;
+    }
 
     /**
-     * bookmark_delete
      * MINIMUM_API_VERSION=5.0.0
      *
      * Delete an existing bookmark. (if it exists)
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) object_id to delete
      * type   = (string) object_type  ('song', 'video', 'podcast_episode')
      * client = (string) Agent string Default: 'AmpacheAPI' // optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     * @throws RequestParamMissingException
+     * @throws FunctionDisabledException
+     * @throws ResultEmptyException
      */
-    public static function bookmark_delete(array $input)
-    {
-        if (!Api::check_parameter($input, array('filter','type'), self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        foreach (['filter', 'type',] as $key) {
+            if (!array_key_exists($key, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf(T_('Bad Request: %s'), $key)
+                );
+            }
         }
-        $user      = User::get_from_username(Session::username($input['auth']));
-        $object_id = $input['filter'];
-        $type      = $input['type'];
-        $comment   = (isset($input['client'])) ? (string) $input['client'] : 'AmpacheAPI';
-        if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
 
-            return false;
+        $objectId = (int) $input['filter'];
+        $type     = $input['type'];
+
+        if (
+            $type == 'video' &&
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) === false
+        ) {
+            throw new FunctionDisabledException(
+                T_('Enable: video')
+            );
         }
+
         // confirm the correct data
-        if (!in_array($type, array('song', 'video', 'podcast_episode'))) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
-
-            return false;
+        if (!in_array($type, ['song', 'video', 'podcast_episode'])) {
+            throw new RequestParamMissingException(
+                T_('Bad Request')
+            );
         }
 
-        $className = ObjectTypeToClassNameMapper::map($type);
+        $comment = $input['client'] ?? 'AmpacheAPI';
 
-        if ($className === $type || !$object_id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
+        /** @var Song|Video|Podcast_Episode $item */
+        $item = $this->modelFactory->mapObjectType($type, $objectId);
 
-            return false;
-        }
-
-        $item = new $className($object_id);
         if (!$item->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %s'), $objectId)
+            );
         }
-        $object = array(
-            'user' => $user->id,
-            'object_id' => $object_id,
-            'object_type' => $type,
-            'comment' => $comment
+
+        $find = $this->bookmarkRepository->lookup(
+            $type,
+            $objectId,
+            $gatekeeper->getUser()->getId(),
+            $this->ui->scrubIn($comment)
         );
-
-        $find = Bookmark::get_bookmark($object);
-        if (empty($find)) {
-            Api::empty('bookmark', $input['api_format']);
-
-            return false;
+        if ($find === []) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->emptyResult('bookmark')
+                )
+            );
         }
 
-        $bookmark = static::getBookmarkRepository()->delete(current($find));
+        $bookmark = $this->bookmarkRepository->delete(current($find));
         if (!$bookmark) {
-            Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
-
-            return false;
+            throw new RequestParamMissingException(
+                T_('Bad Request')
+            );
         }
 
-        Api::message('Deleted Bookmark: ' . $object_id, $input['api_format']);
-        Session::extend($input['auth']);
-
-        return true;
-    } // bookmark_delete
-
-    private static function getBookmarkRepository(): BookmarkRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(BookmarkRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->success(
+                    sprintf('Deleted Bookmark: %d', $objectId)
+                )
+            )
+        );
     }
 }
