@@ -94,6 +94,7 @@ return [
     Method\PlaylistsMethod::class => autowire(),
     Method\PlaylistRemoveSongMethod::class => autowire(),
     Method\DownloadMethod::class => autowire(),
+    Method\BookmarkCreateMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

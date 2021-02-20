@@ -69,6 +69,9 @@ function set_memory_limit($new_limit)
  * Run on inputs, stuff that might get stuck in our db
  * @param string|array $input
  * @return string|array
+ *
+ * @deprecated
+ * @see Ui::scrubIn()
  */
 function scrub_in($input)
 {
@@ -92,7 +95,8 @@ function scrub_in($input)
  * @param string|null $string
  * @return string
  *
- * @deprecated see Ui::scrubOut
+ * @deprecated
+ * @see Ui::scrubOut()
  */
 function scrub_out($string)
 {

@@ -667,4 +667,24 @@ class Ui implements UiInterface
 
         return htmlentities((string) $string, ENT_NOQUOTES, AmpConfig::get('site_charset'));
     }
+
+    /**
+     * Run on inputs, stuff that might get stuck in our db
+     *
+     * @param string|array $input
+     * @return string|array
+     */
+    public function scrubIn($input)
+    {
+        if (!is_array($input)) {
+            return stripslashes(htmlspecialchars(strip_tags((string) $input), ENT_NOQUOTES, AmpConfig::get('site_charset')));
+        } else {
+            $results = array();
+            foreach ($input as $item) {
+                $results[] = scrub_in((string) $item);
+            }
+
+            return $results;
+        }
+    }
 }

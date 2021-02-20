@@ -36,4 +36,16 @@ interface BookmarkRepositoryInterface
     public function collectGarbage(): void;
 
     public function update(int $userId, int $position): void;
+
+    /**
+     * Creates a new bookmark entry and returns the id of the new dataset
+     */
+    public function create(
+        int $position,
+        string $comment,
+        string $objectType,
+        int $objectId,
+        int $userId,
+        int $updateDate
+    ): int;
 }

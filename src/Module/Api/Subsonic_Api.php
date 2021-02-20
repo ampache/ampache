@@ -2438,14 +2438,12 @@ class Subsonic_Api
             if ($bookmark->id) {
                 static::getBookmarkRepository()->update($bookmark->getId(), (int) $position);
             } else {
-                Bookmark::create(
-                    [
-                        'object_id' => Subsonic_Xml_Data::getAmpacheId($object_id),
-                        'object_type' => $type,
-                        'comment' => $comment,
-                        'position' => $position
-                    ],
-                    Core::get_global('user')->id,
+                static::getBookmarkRepository()->create(
+                    (int) $position,
+                    $comment,
+                    $type,
+                    (int) Subsonic_Xml_Data::getAmpacheId($object_id),
+                    Core::get_global('user')->getId(),
                     time()
                 );
             }

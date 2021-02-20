@@ -73,4 +73,12 @@ interface UiInterface
     ): void;
 
     public function scrubOut(?string $string): string;
+
+    /**
+     * Run on inputs, stuff that might get stuck in our db
+     *
+     * @param string|array $input
+     * @return string|array
+     */
+    public function scrubIn($input);
 }

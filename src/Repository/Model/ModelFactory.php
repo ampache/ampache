@@ -213,9 +213,13 @@ final class ModelFactory implements ModelFactoryInterface
     /**
      * Maps an object type name like `song` to its corresponding model class
      */
-    public function mapObjectType(string $objectType, int $objectId): database_object
+    public function mapObjectType(string $objectType, int $objectId): ?database_object
     {
         $className = ObjectTypeToClassNameMapper::map($objectType);
+
+        if ($className === $objectType) {
+            return null;
+        }
 
         return new $className($objectId);
     }

@@ -108,20 +108,6 @@ class Bookmark extends database_object
     }
 
     /**
-     * create
-     * @param array $data
-     * @param int $userId
-     * @param int $updateDate
-     * @return PDOStatement|boolean
-     */
-    public static function create(array $data, int $userId, int $updateDate)
-    {
-        $sql = "INSERT INTO `bookmark` (`user`, `position`, `comment`, `object_type`, `object_id`, `creation_date`, `update_date`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-        return Dba::write($sql, array($userId, $data['position'], scrub_in($data['comment']), $data['object_type'], $data['object_id'], time(), $updateDate));
-    }
-
-    /**
      * edit
      * @param array $data
      * @param int $userId

@@ -69,4 +69,23 @@ final class BookmarkRepository implements BookmarkRepositoryInterface
             [$position, time(), $userId]
         );
     }
+
+    /**
+     * Creates a new bookmark entry and returns the id of the new dataset
+     */
+    public function create(
+        int $position,
+        string $comment,
+        string $objectType,
+        int $objectId,
+        int $userId,
+        int $updateDate
+    ): int {
+        Dba::write(
+            'INSERT INTO `bookmark` (`user`, `position`, `comment`, `object_type`, `object_id`, `creation_date`, `update_date`) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [$userId, $position, $comment, $objectType, $objectId, time(), $updateDate]
+        );
+
+        return (int) Dba::insert_id();
+    }
 }
