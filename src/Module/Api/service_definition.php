@@ -97,6 +97,7 @@ return [
     Method\BookmarkCreateMethod::class => autowire(),
     Method\FlagMethod::class => autowire(),
     Method\BookmarkDeleteMethod::class => autowire(),
+    Method\UpdateFromTagsMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

@@ -20,67 +20,95 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Catalog\SingleItemUpdaterInterface;
-use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class UpdateFromTagsMethod
- * @package Lib\ApiMethods
- */
-final class UpdateFromTagsMethod
+final class UpdateFromTagsMethod implements MethodInterface
 {
-    private const ACTION = 'update_from_tags';
+    public const ACTION = 'update_from_tags';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private SingleItemUpdaterInterface $singleItemUpdater;
+
+    private ModelFactoryInterface $modelFactory;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        SingleItemUpdaterInterface $singleItemUpdater,
+        ModelFactoryInterface $modelFactory
+    ) {
+        $this->streamFactory     = $streamFactory;
+        $this->singleItemUpdater = $singleItemUpdater;
+        $this->modelFactory      = $modelFactory;
+    }
 
     /**
-     * update_from_tags
      * MINIMUM_API_VERSION=400001
      *
      * updates a single album, artist, song from the tag data
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * type = (string) 'artist', 'album', 'song'
      * id   = (integer) $artist_id, $album_id, $song_id)
-     * @return boolean
+     *
+     * @return ResponseInterface
+     * @throws RequestParamMissingException
+     * @throws ResultEmptyException
      */
-    public static function update_from_tags(array $input)
-    {
-        if (!Api::check_parameter($input, array('type', 'id'), self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        foreach (['type', 'id'] as $key) {
+            if (!array_key_exists($key, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf(T_('Bad Request: %s'), $key)
+                );
+            }
         }
+
         $type      = (string) $input['type'];
-        $object_id = (int) $input['id'];
+        $objectId  = (int) $input['id'];
 
         // confirm the correct data
-        if (!in_array($type, array('artist', 'album', 'song'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
-
-            return false;
+        if (!in_array($type, ['artist', 'album', 'song'])) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), $type)
+            );
         }
-        $item = new $type($object_id);
-        if (!$item->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
 
-            return false;
+        $item = $this->modelFactory->mapObjectType($type, $objectId);
+
+        if (!$item->id) {
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %s'), $objectId)
+            );
         }
         // update your object
-        static::getSingleItemUpdater()->update($type, (int) $object_id, true);
+        $this->singleItemUpdater->update($type, $objectId, true);
 
-        Api::message('Updated tags for: ' . (string) $object_id . ' (' . $type . ')', $input['api_format']);
-        Session::extend($input['auth']);
-
-        return true;
-    }
-
-    private static function getSingleItemUpdater(): SingleItemUpdaterInterface
-    {
-        global $dic;
-
-        return $dic->get(SingleItemUpdaterInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->success(
+                    sprintf('Updated tags for: %d (%s)', $objectId, $type)
+                )
+            )
+        );
     }
 }

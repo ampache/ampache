@@ -123,7 +123,7 @@ class Api
         'catalog_file' => Method\CatalogFileMethod::class,
         Method\TimelineMethod::ACTION => Method\TimelineMethod::class,
         Method\FriendsTimelineMethod::ACTION => Method\FriendsTimelineMethod::class,
-        'update_from_tags' => Method\UpdateFromTagsMethod::class,
+        Method\UpdateFromTagsMethod::ACTION => Method\UpdateFromTagsMethod::class,
         'update_artist_info' => Method\UpdateArtistInfoMethod::class,
         'update_art' => Method\UpdateArtMethod::class,
         'update_podcast' => Method\UpdatePodcastMethod::class,
