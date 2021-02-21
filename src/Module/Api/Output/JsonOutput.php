@@ -283,9 +283,20 @@ final class JsonOutput implements ApiOutputInterface
      * @param int|null $userId
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public function videos(array $videoIds, ?int $userId = null, $object = true): string
-    {
-        return Json_Data::videos($videoIds, $userId, $object);
+    public function videos(
+        array $videoIds,
+        ?int $userId = null,
+        $object = true,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
+        return Json_Data::videos(
+            $videoIds,
+            $userId,
+            $object,
+            $limit,
+            $offset
+        );
     }
 
     public function success(string $string, array $return_data = []): string

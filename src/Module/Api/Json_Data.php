@@ -901,15 +901,23 @@ class Json_Data
      *
      * This builds the JSON document for displaying video objects
      *
-     * @param  integer[] $videos Video id's to include
-     * @param  integer   $user_id
-     * @param  boolean   $object (whether to return as a named object array or regular array)
+     * @param int[] $videos Video id's to include
+     * @param int $user_id
+     * @param bool $object (whether to return as a named object array or regular array)
+     * @param int $limit
+     * @param int $offset
+     *
      * @return string    JSON Object "video"
      */
-    public static function videos($videos, $user_id = null, $object = true)
-    {
-        if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
-            $videos = array_slice($videos, self::$offset, self::$limit);
+    public static function videos(
+        $videos,
+        $user_id = null,
+        $object = true,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
+        if ((count($videos) > $limit || $offset > 0) && $limit) {
+            $videos = array_slice($videos, $offset, $limit);
         }
 
         $JSON = [];

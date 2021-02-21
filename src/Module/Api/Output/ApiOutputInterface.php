@@ -158,11 +158,15 @@ interface ApiOutputInterface
      * @param int[] $videoIds
      * @param int|null $userId
      * @param bool $asObject
+     * @param int $limit
+     * @param int $offset
      */
     public function videos(
         array $videoIds,
         ?int $userId = null,
-        bool $asObject = true
+        bool $asObject = true,
+        int $limit = 0,
+        int $offset = 0
     ): string;
 
     public function success(string $string, array $return_data = []): string;

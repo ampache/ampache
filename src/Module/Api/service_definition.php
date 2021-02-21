@@ -104,6 +104,7 @@ return [
     Method\UpdateArtistInfoMethod::class => autowire(),
     Method\SystemUpdateMethod::class => autowire(),
     Method\SearchSongsMethod::class => autowire(),
+    Method\AdvancedSearchMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

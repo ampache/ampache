@@ -50,7 +50,7 @@ class Api
         'get_indexes' => Method\GetIndexesMethod::class,
         'get_bookmark' => Method\GetBookmarkMethod::class,
         'get_similar' => Method\GetSimilarMethod::class,
-        'advanced_search' => Method\AdvancedSearchMethod::class,
+        Method\AdvancedSearchMethod::ACTION => Method\AdvancedSearchMethod::class,
         Method\ArtistsMethod::ACTION => Method\ArtistsMethod::class,
         Method\ArtistMethod::ACTION => Method\ArtistMethod::class,
         Method\ArtistAlbumsMethod::ACTION => Method\ArtistAlbumsMethod::class,

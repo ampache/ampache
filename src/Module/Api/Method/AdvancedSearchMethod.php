@@ -21,28 +21,41 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Search;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class AdvancedSearchMethod
- * @package Lib\ApiMethods
- */
-final class AdvancedSearchMethod
+final class AdvancedSearchMethod implements MethodInterface
 {
-    private const ACTION = 'advanced_search';
+    public const ACTION = 'advanced_search';
+
+    private ModelFactoryInterface $modelFactory;
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory,
+        StreamFactoryInterface $streamFactory,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->modelFactory    = $modelFactory;
+        $this->streamFactory   = $streamFactory;
+        $this->configContainer = $configContainer;
+    }
 
     /**
-     * advanced_search
      * MINIMUM_API_VERSION=380001
      *
      * Perform an advanced search given passed rules. This works in a similar way to the web/UI search pages.
@@ -60,6 +73,9 @@ final class AdvancedSearchMethod
      * http://ampache.org/api/api-xml-methods
      * http://ampache.org/api/api-json-methods
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * operator        = (string) 'and', 'or' (whether to match one rule or all)
      * rule_1          = (string)
@@ -69,110 +85,123 @@ final class AdvancedSearchMethod
      * random          = (boolean)  0, 1 (random order of results; default to 0) //optional
      * offset          = (integer) //optional
      * limit           = (integer) //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     * @throws RequestParamMissingException
+     * @throws FunctionDisabledException
      */
-    public static function advanced_search(array $input)
-    {
-        if (!Api::check_parameter($input, array('rule_1', 'rule_1_operator', 'rule_1_input'), self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        foreach (['rule_1', 'rule_1_operator', 'rule_1_input'] as $key) {
+            if (!array_key_exists($key, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf(T_('Bad Request: %s'), $key)
+                );
+            }
         }
 
-        $type = (isset($input['type'])) ? (string) $input['type'] : 'song';
-        if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
+        $type = $input['type'] ?? 'song';
 
-            return false;
+        if ($type === 'video' && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) === false) {
+            throw new FunctionDisabledException(
+                T_('Enable: video')
+            );
         }
         // confirm the correct data
-        if (!in_array($type, array('song', 'album', 'artist', 'playlist', 'label', 'user', 'video'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
-
-            return false;
-        }
-        $user    = User::get_from_username(Session::username($input['auth']));
-        $results = Search::run($input, $user);
-        if (empty($results)) {
-            Api::empty($type, $input['api_format']);
-
-            return false;
+        if (!in_array($type, ['song', 'album', 'artist', 'playlist', 'label', 'user', 'video'])) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), $type)
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                switch ($type) {
-                    case 'artist':
-                        echo Json_Data::artists($results, array(), $user->id);
-                        break;
-                    case 'album':
-                        echo Json_Data::albums($results, array(), $user->id);
-                        break;
-                    case 'playlist':
-                        echo Json_Data::playlists(
-                            $results,
-                            $user->getId(),
-                            (int) ($input['limit'] ?? 0),
-                            (int) ($input['offset'] ?? 0)
-                        );
-                        break;
-                    case 'label':
-                        echo Json_Data::labels(
-                            $results,
-                            (int) ($input['limit'] ?? 0),
-                            (int) ($input['offset'] ?? 0)
-                        );
-                        break;
-                    case 'user':
-                        echo Json_Data::users($results);
-                        break;
-                    case 'video':
-                        echo Json_Data::videos($results, $user->id);
-                        break;
-                    default:
-                        echo Json_Data::songs($results, $user->id);
-                        break;
-                }
+        $user = $gatekeeper->getUser();
+
+        $results = $this->modelFactory->createSearch()->runSearch($input, $user);
+        if ($results === []) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->emptyResult($type)
+                )
+            );
+        }
+
+        $userId = $user->getId();
+        $limit  = (int) ($input['limit'] ?? 0);
+        $offset = (int) ($input['offset'] ?? 0);
+
+        switch ($type) {
+            case 'artist':
+                $result = $output->artists(
+                    $results,
+                    [],
+                    $userId,
+                    true,
+                    true,
+                    $limit,
+                    $offset
+                );
+                break;
+            case 'album':
+                $result = $output->albums(
+                    $results,
+                    [],
+                    $userId,
+                    true,
+                    $limit,
+                    $offset
+                );
+                break;
+            case 'playlist':
+                $result = $output->playlists(
+                    $results,
+                    $userId,
+                    false,
+                    true,
+                    $limit,
+                    $offset
+                );
+                break;
+            case 'label':
+                $result = $output->labels(
+                    $results,
+                    true,
+                    $limit,
+                    $offset
+                );
+                break;
+            case 'user':
+                $result = $output->users(
+                    $results,
+                );
+                break;
+            case 'video':
+                $result = $output->videos(
+                    $results,
+                    $userId,
+                    true,
+                    $limit,
+                    $offset
+                );
                 break;
             default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-                switch ($type) {
-                    case 'artist':
-                        echo Xml_Data::artists($results, array(), $user->id);
-                        break;
-                    case 'album':
-                        echo Xml_Data::albums($results, array(), $user->id);
-                        break;
-                    case 'playlist':
-                        echo Xml_Data::playlists(
-                            $results,
-                            $user->getId(),
-                            (int) ($input['limit'] ?? 0),
-                            (int) ($input['offset'] ?? 0)
-                        );
-                        break;
-                    case 'label':
-                        echo Xml_Data::labels(
-                            $results,
-                            (int) ($input['limit'] ?? 0),
-                            (int) ($input['offset'] ?? 0)
-                        );
-                        break;
-                    case 'user':
-                        echo Xml_Data::users($results);
-                        break;
-                    case 'video':
-                        echo Xml_Data::videos($results, $user->id);
-                        break;
-                    default:
-                        echo Xml_Data::songs($results, $user->id);
-                        break;
-                }
+                $result = $output->songs(
+                    $results,
+                    $userId,
+                    true,
+                    true,
+                    true,
+                    $limit,
+                    $offset
+                );
+                break;
         }
-        Session::extend($input['auth']);
 
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }

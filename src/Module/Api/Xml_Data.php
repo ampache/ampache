@@ -1045,14 +1045,21 @@ class Xml_Data
      *
      * This builds the xml document for displaying video objects
      *
-     * @param  integer[] $videos Video id's to include
-     * @param  integer   $user_id
+     * @param int[] $videos Video id's to include
+     * @param int$user_id
+     * @param int $limit
+     * @param int $offset
+     *
      * @return string    return xml
      */
-    public static function videos($videos, $user_id = null)
-    {
-        if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
-            $videos = array_slice($videos, self::$offset, self::$limit);
+    public static function videos(
+        $videos,
+        $user_id = null,
+        int $limit = 0,
+        int $offset = 0
+    ): string {
+        if ((count($videos) > $limit || $offset > 0) && $limit) {
+            $videos = array_slice($videos, $offset, $limit);
         }
         $string = "<total_count>" . Catalog::get_count('video') . "</total_count>\n";
 
