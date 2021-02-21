@@ -287,7 +287,7 @@ class Update
             if ($version['version'] > $current_version) {
                 $update_function = "update_" . $version['version'];
                 if (in_array($update_function, $methods)) {
-                    $success = call_user_func(array('Ampache\Module\System\Update', $update_function));
+                    $success = call_user_func(array(Update::class, $update_function));
 
                     // If the update fails drop out
                     if ($success) {

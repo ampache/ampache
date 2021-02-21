@@ -20,68 +20,84 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\System\AutoUpdate;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\System\AutoUpdateInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class SystemUpdateMethod
- * @package Lib\ApiMethods
- */
-final class SystemUpdateMethod
+final class SystemUpdateMethod implements MethodInterface
 {
-    private const ACTION = 'system_update';
+    public const ACTION = 'system_update';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    private AutoUpdateInterface $autoUpdate;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ConfigContainerInterface $configContainer,
+        AutoUpdateInterface $autoUpdate
+    ) {
+        $this->streamFactory   = $streamFactory;
+        $this->configContainer = $configContainer;
+        $this->autoUpdate      = $autoUpdate;
+    }
 
     /**
-     * system_update
      * MINIMUM_API_VERSION=400001
      *
      * Check Ampache for updates and run the update if there is one.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
-     * @return boolean
+     *
+     * @return ResponseInterface
+     * @throws RequestParamMissingException
+     * @throws AccessDeniedException
      */
-    public static function system_update(array $input)
-    {
-        $user = User::get_from_username(Session::username($input['auth']));
-
-        if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
+            throw new AccessDeniedException(
+                T_('Require: 100')
+            );
         }
-        if (AutoUpdate::is_update_available(true)) {
+
+        if ($this->autoUpdate->isUpdateAvailable(true)) {
             // run the update
-            AutoUpdate::update_files(true);
-            AutoUpdate::update_dependencies(static::getConfigContainer(), true);
+            $this->autoUpdate->updatefiles(true);
+            $this->autoUpdate->updateDependencies(true);
+
             // check that the update completed or failed failed.
-            if (AutoUpdate::is_update_available(true)) {
-                Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
-                Session::extend($input['auth']);
-
-                return false;
+            if ($this->autoUpdate->isUpdateAvailable(true)) {
+                throw new RequestParamMissingException(
+                    T_('Bad Request')
+                );
             }
-            // there was an update and it was successful
-            Api::message('update successful', $input['api_format']);
-            Session::extend($input['auth']);
-
-            return true;
+            $result = $output->success(T_('update successful'));
+        } else {
+            $result = $output->success(T_('no update available'));
         }
-        //no update available but you are an admin so tell them
-        Api::message('No update available', $input['api_format']);
-        Session::extend($input['auth']);
 
-        return true;
-    }
-
-    private static function getConfigContainer(): ConfigContainerInterface
-    {
-        global $dic;
-
-        return $dic->get(ConfigContainerInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }

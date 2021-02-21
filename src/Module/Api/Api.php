@@ -132,7 +132,7 @@ class Api
         'get_art' => Method\GetArtMethod::class,
         'localplay' => Method\LocalplayMethod::class,
         'democratic' => Method\DemocraticMethod::class,
-        'system_update' => Method\SystemUpdateMethod::class,
+        Method\SystemUpdateMethod::ACTION => Method\SystemUpdateMethod::class,
         Method\SystemPreferencesMethod::ACTION => Method\SystemPreferencesMethod::class,
         Method\SystemPreferenceMethod::ACTION => Method\SystemPreferenceMethod::class,
         'preference_create' => Method\PreferenceCreateMethod::class,

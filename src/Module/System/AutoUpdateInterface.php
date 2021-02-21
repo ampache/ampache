@@ -17,20 +17,27 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
-
-declare(strict_types=1);
 
 namespace Ampache\Module\System;
 
-use Psr\Log\LoggerInterface;
-use function DI\autowire;
+/**
+ * This class handles autoupdate check from Github.
+ */
+interface AutoUpdateInterface
+{
+    /**
+     * Proxy for is_update_available
+     */
+    public function isUpdateAvailable(bool $force = false): bool;
 
-return [
-    LoggerInterface::class => autowire(LegacyLogger::class),
-    SessionInterface::class => autowire(Session::class),
-    InstallationHelperInterface::class => autowire(InstallationHelper::class),
-    PreferencesFromRequestUpdaterInterface::class => autowire(PreferencesFromRequestUpdater::class),
-    AutoUpdateInterface::class => autowire(AutoUpdate::class),
-];
+    /**
+     * Proxy for update_files
+     */
+    public function updatefiles(bool $api = false): void;
+
+    /**
+     * Proxy for update_dependencies
+     */
+    public function updateDependencies(bool $api = false): void;
+}

@@ -102,6 +102,7 @@ return [
     Method\UserUpdateMethod::class => autowire(),
     Method\UpdatePodcastMethod::class => autowire(),
     Method\UpdateArtistInfoMethod::class => autowire(),
+    Method\SystemUpdateMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

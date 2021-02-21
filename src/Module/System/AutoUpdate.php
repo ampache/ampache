@@ -35,8 +35,16 @@ use Requests;
  *
  * This class handles autoupdate check from Github.
  */
-class AutoUpdate
+class AutoUpdate implements AutoUpdateInterface
 {
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->configContainer = $configContainer;
+    }
+
     /**
      * Check if current version is a development version.
      * @return boolean
@@ -213,6 +221,14 @@ class AutoUpdate
     }
 
     /**
+     * Proxy for is_update_available
+     */
+    public function isUpdateAvailable(bool $force = false): bool
+    {
+        return static::is_update_available($force);
+    }
+
+    /**
      * Check if an update is available.
      * @param boolean $force
      * @return boolean
@@ -279,6 +295,14 @@ class AutoUpdate
     }
 
     /**
+     * Proxy for update_files
+     */
+    public function updatefiles(bool $api = false): void
+    {
+        static::update_files($api);
+    }
+
+    /**
      * Update local git repository.
      * @param boolean $api
      */
@@ -302,6 +326,17 @@ class AutoUpdate
         }
         ob_flush();
         self::get_latest_version(true);
+    }
+
+    /**
+     * Proxy for update_dependencies
+     */
+    public function updateDependencies(bool $api = false): void
+    {
+        static::update_dependencies(
+            $this->configContainer,
+            $api
+        );
     }
 
     /**
