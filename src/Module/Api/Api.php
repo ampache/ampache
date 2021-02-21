@@ -126,7 +126,7 @@ class Api
         Method\UpdateFromTagsMethod::ACTION => Method\UpdateFromTagsMethod::class,
         'update_artist_info' => Method\UpdateArtistInfoMethod::class,
         'update_art' => Method\UpdateArtMethod::class,
-        'update_podcast' => Method\UpdatePodcastMethod::class,
+        Method\UpdatePodcastMethod::ACTION => Method\UpdatePodcastMethod::class,
         Method\StreamMethod::ACTION => Method\StreamMethod::class,
         Method\DownloadMethod::ACTION => Method\DownloadMethod::class,
         'get_art' => Method\GetArtMethod::class,

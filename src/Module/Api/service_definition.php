@@ -100,6 +100,7 @@ return [
     Method\UpdateFromTagsMethod::class => autowire(),
     Method\UserCreateMethod::class => autowire(),
     Method\UserUpdateMethod::class => autowire(),
+    Method\UpdatePodcastMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

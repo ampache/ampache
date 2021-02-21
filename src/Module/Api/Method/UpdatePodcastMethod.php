@@ -20,57 +20,89 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Podcast;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class UpdatePodcastMethod
- * @package Lib\ApiMethods
- */
-final class UpdatePodcastMethod
+final class UpdatePodcastMethod implements MethodInterface
 {
-    private const ACTION = 'update_podcast';
+    public const ACTION = 'update_podcast';
+
+    private ModelFactoryInterface $modelFactory;
+
+    private StreamFactoryInterface $streamFactory;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory,
+        StreamFactoryInterface $streamFactory
+    ) {
+        $this->modelFactory  = $modelFactory;
+        $this->streamFactory = $streamFactory;
+    }
 
     /**
-     * update_podcast
      * MINIMUM_API_VERSION=420000
      *
      * Sync and download new podcast episodes
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of podcast
-     * @return boolean
+     *
+     * @return ResponseInterface
+     * @throws RequestParamMissingException
+     * @throws AccessDeniedException
+     * @throws ResultEmptyException
      */
-    public static function update_podcast(array $input)
-    {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $objectId = $input['filter'] ?? null;
+
+        if ($objectId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
         }
 
-        if (!Api::check_access('interface', 50, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
-            return false;
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === false) {
+            throw new AccessDeniedException(
+                T_('Require: 50')
+            );
         }
-        $object_id = (int) $input['filter'];
-        $podcast   = new Podcast($object_id);
-        if ($podcast->id > 0) {
-            if ($podcast->sync_episodes(true)) {
-                Api::message('Synced episodes for podcast: ' . (string) $object_id, $input['api_format']);
-                Session::extend($input['auth']);
-            } else {
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'podcast', $input['api_format']);
-            }
+
+        $podcast = $this->modelFactory->createPodcast((int) $objectId);
+
+        if ($podcast->isNew()) {
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %d'), $objectId)
+            );
+        }
+        if ($podcast->sync_episodes(true)) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->success(sprintf(T_('Synced episodes for podcast: %d'), $objectId))
+                )
+            );
         } else {
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %d'), $objectId)
+            );
         }
-        Session::extend($input['auth']);
-
-        return true;
     }
 }
