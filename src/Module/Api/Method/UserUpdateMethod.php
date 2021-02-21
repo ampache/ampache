@@ -21,34 +21,66 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Preference\UserPreferenceUpdaterInterface;
 use Ampache\Module\User\UserStateTogglerInterface;
 use Ampache\Module\Util\Mailer;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class UserUpdateMethod
- * @package Lib\ApiMethods
- */
-final class UserUpdateMethod
+final class UserUpdateMethod implements MethodInterface
 {
-    private const ACTION = 'user_update';
+    public const ACTION = 'user_update';
+
+    private UserStateTogglerInterface $userStateToggler;
+
+    private StreamFactoryInterface $streamFactory;
+
+    private UserRepositoryInterface $userRepository;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    private UserPreferenceUpdaterInterface $userPreferenceUpdater;
+
+    public function __construct(
+        UserStateTogglerInterface $userStateToggler,
+        StreamFactoryInterface $streamFactory,
+        UserRepositoryInterface $userRepository,
+        ModelFactoryInterface $modelFactory,
+        ConfigContainerInterface $configContainer,
+        UserPreferenceUpdaterInterface $userPreferenceUpdater
+    ) {
+        $this->userStateToggler         = $userStateToggler;
+        $this->streamFactory            = $streamFactory;
+        $this->userRepository           = $userRepository;
+        $this->modelFactory             = $modelFactory;
+        $this->configContainer          = $configContainer;
+        $this->userPreferenceUpdater    = $userPreferenceUpdater;
+    }
 
     /**
-     * user_update
      * MINIMUM_API_VERSION=400001
      *
      * Update an existing user.
      * Takes the username with optional parameters.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * username   = (string) $username
      * password   = (string) hash('sha256', $password)) //optional
@@ -59,84 +91,89 @@ final class UserUpdateMethod
      * city       = (string) $city //optional
      * disable    = (integer) 0,1 true to disable, false to enable //optional
      * maxbitrate = (integer) $maxbitrate //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws AccessDeniedException
+     * @throws RequestParamMissingException
      */
-    public static function user_update(array $input)
-    {
-        if (!Api::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
-            return false;
-        }
-        if (!Api::check_parameter($input, array('username'), self::ACTION)) {
-            return false;
-        }
-        $username   = $input['username'];
-        $fullname   = $input['fullname'];
-        $email      = $input['email'];
-        $website    = $input['website'];
-        $password   = $input['password'];
-        $state      = $input['state'];
-        $city       = $input['city'];
-        $disable    = $input['disable'];
-        $maxbitrate = $input['maxbitrate'];
-
-        // identify the user to modify
-        $user    = User::get_from_username($username);
-        $user_id = $user->getId();
-
-        if ($password && Access::check('interface', 100, $user_id)) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
+            throw new AccessDeniedException(
+                T_('Require: 100')
+            );
         }
 
-        $userStateToggler = static::getUserStateToggler();
+        $username = $input['username'] ?? null;
 
-        if ($user_id > 0) {
-            if ($password && !AmpConfig::get('simple_user_mode')) {
-                $user->update_password('', $password);
-            }
-            if ($fullname) {
-                $user->update_fullname($fullname);
-            }
-            if (Mailer::validate_address($email)) {
-                $user->update_email($email);
-            }
-            if ($website) {
-                $user->update_website($website);
-            }
-            if ($state) {
-                $user->update_state($state);
-            }
-            if ($city) {
-                $user->update_city($city);
-            }
-            if ($disable === '1') {
-                $userStateToggler->disable($user);
-            } elseif ($disable === '0') {
-                $userStateToggler->enable($user);
-            }
-            if ((int) $maxbitrate > 0) {
-                Preference::update('transcode_bitrate', $user_id, $maxbitrate);
-            }
-            Api::message('successfully updated: ' . $username, $input['api_format']);
-
-            return true;
+        if ($username === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'username')
+            );
         }
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
-        Session::extend($input['auth']);
 
-        return false;
-    }
+        $userId = $this->userRepository->findByUsername($username);
 
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getUserStateToggler(): UserStateTogglerInterface
-    {
-        global $dic;
+        if ($userId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), $username)
+            );
+        }
+        $user = $this->modelFactory->createUser($userId);
 
-        return $dic->get(UserStateTogglerInterface::class);
+        $fullname   = $input['fullname'] ?? null;
+        $email      = $input['email'] ?? null;
+        $website    = $input['website'] ?? null;
+        $password   = $input['password'] ?? null;
+        $state      = $input['state'] ?? null;
+        $city       = $input['city'] ?? null;
+        $disable    = $input['disable'] ?? null;
+        $maxbitrate = $input['maxbitrate'] ?? null;
+
+        if ($password && $user->access >= AccessLevelEnum::LEVEL_ADMIN) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), $username)
+            );
+        }
+
+        if ($password && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SIMPLE_USER_MODE) === false) {
+            $user->update_password('', $password);
+        }
+        if ($fullname) {
+            $user->update_fullname($fullname);
+        }
+        if (Mailer::validate_address($email)) {
+            $user->update_email($email);
+        }
+        if ($website) {
+            $user->update_website($website);
+        }
+        if ($state) {
+            $user->update_state($state);
+        }
+        if ($city) {
+            $user->update_city($city);
+        }
+        if ($disable === '1') {
+            $this->userStateToggler->disable($user);
+        } elseif ($disable === '0') {
+            $this->userStateToggler->enable($user);
+        }
+        if ((int) $maxbitrate > 0) {
+            $this->userPreferenceUpdater->update('transcode_bitrate', $userId, (int) $maxbitrate);
+        }
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->success(
+                    sprintf('successfully updated: %s', $username)
+                )
+            )
+        );
     }
 }

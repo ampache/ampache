@@ -24,9 +24,35 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Preference;
 
-use function DI\autowire;
+use Ampache\Repository\Model\Preference;
 
-return [
-    UserPreferenceRetrieverInterface::class => autowire(UserPreferenceRetriever::class),
-    UserPreferenceUpdaterInterface::class => autowire(UserPreferenceUpdater::class),
-];
+/**
+ * Currently just acts as a proxy for Preference::update
+ */
+final class UserPreferenceUpdater implements UserPreferenceUpdaterInterface
+{
+    /**
+     * This updates a single preference from the given name or id
+     *
+     * @param string $preferenceName
+     * @param integer $userId
+     * @param array|string|int $value
+     * @param bool $applyToAll
+     * @param bool $applyToDefault
+     */
+    public function update(
+        string $preferenceName,
+        int $userId,
+        $value,
+        bool $applyToAll = false,
+        bool $applyToDefault = false
+    ): void {
+        Preference::update(
+            $preferenceName,
+            $userId,
+            $value,
+            $applyToAll,
+            $applyToDefault
+        );
+    }
+}
