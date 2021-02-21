@@ -617,7 +617,9 @@ class Stream_Playlist
                     $additional_params .= '&' . $key . '=' . $value;
                 }
 
-                $item = new $type($id);
+                $className = ObjectTypeToClassNameMapper::map($type);
+
+                $item = new $className($id);
                 $hu   = $item->play_url($additional_params);
                 $ret .= $hu . "\n";
                 $soffset += $size;
