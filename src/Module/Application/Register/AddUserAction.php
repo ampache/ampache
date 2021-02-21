@@ -26,8 +26,10 @@ namespace Ampache\Module\Application\Register;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\User\Management\Exception\UserCreationFailedException;
+use Ampache\Module\User\Management\UserCreatorInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -48,22 +50,22 @@ final class AddUserAction implements ApplicationActionInterface
 
     private ConfigContainerInterface $configContainer;
 
-    private ModelFactoryInterface $modelFactory;
-
     private UiInterface $ui;
 
     private UserRepositoryInterface $userRepository;
 
+    private UserCreatorInterface $userCreator;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
         UiInterface $ui,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
+        UserCreatorInterface $userCreator
     ) {
         $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
         $this->ui              = $ui;
         $this->userRepository  = $userRepository;
+        $this->userCreator     = $userCreator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -182,33 +184,33 @@ final class AddUserAction implements ApplicationActionInterface
         }
 
         /* Attempt to create the new user */
-        $access = 5;
+        $access = AccessLevelEnum::LEVEL_GUEST;
         switch ($this->configContainer->get(ConfigurationKeyEnum::AUTO_USER)) {
             case 'admin':
-                $access = 100;
+                $access = AccessLevelEnum::LEVEL_ADMIN;
                 break;
             case 'user':
-                $access = 25;
+                $access = AccessLevelEnum::LEVEL_USER;
                 break;
             case 'guest':
             default:
-                $access = 5;
+                $access = AccessLevelEnum::LEVEL_GUEST;
                 break;
         } // auto-user level
 
-        $userId = User::create(
-            $username,
-            $fullname,
-            $email,
-            (string) $website,
-            $pass1,
-            $access,
-            (string) $state,
-            (string) $city,
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ADMIN_ENABLE_REQUIRED)
-        );
-
-        if ($userId <= 0) {
+        try {
+            $user = $this->userCreator->create(
+                $username,
+                $fullname,
+                $email,
+                (string) $website,
+                $pass1,
+                $access,
+                (string) $state,
+                (string) $city,
+                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ADMIN_ENABLE_REQUIRED)
+            );
+        } catch (UserCreationFailedException $e) {
             AmpError::add('duplicate_user', T_("Failed to create user"));
             require_once Ui::find_template('show_user_registration.inc.php');
 
@@ -216,9 +218,8 @@ final class AddUserAction implements ApplicationActionInterface
         }
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_NO_EMAIL_CONFIRM) === false) {
-            $client     = $this->modelFactory->createUser($userId);
             $validation = md5(uniqid((string) rand(), true));
-            $client->update_validation($validation);
+            $user->update_validation($validation);
 
             // Notify user and/or admins
             Registration::send_confirmation($username, $fullname, $email, $website, $validation);

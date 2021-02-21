@@ -25,6 +25,9 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\User\Management\Exception\UserCreationFailedException;
+use Ampache\Module\User\Management\UserCreatorInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Horde_Browser;
@@ -32,6 +35,13 @@ use Exception;
 
 final class InstallationHelper implements InstallationHelperInterface
 {
+    private UserCreatorInterface $userCreator;
+
+    public function __construct(
+        UserCreatorInterface $userCreator
+    ) {
+        $this->userCreator = $userCreator;
+    }
 
     /**
      * splits up a standard SQL dump file into distinct sql queries
@@ -423,9 +433,16 @@ final class InstallationHelper implements InstallationHelperInterface
         $username = Dba::escape($username);
         $password = Dba::escape($password);
 
-        $user_id = User::create($username, 'Administrator', '', '', $password, '100');
-
-        if ($user_id < 1) {
+        try {
+            $this->userCreator->create(
+                $username,
+                'Administrator',
+                '',
+                '',
+                $password,
+                AccessLevelEnum::LEVEL_ADMIN
+            );
+        } catch (UserCreationFailedException $e) {
             /* HINT: Database error message */
             AmpError::add('general', sprintf(T_('Administrative user creation failed: %s'), Dba::error()));
 

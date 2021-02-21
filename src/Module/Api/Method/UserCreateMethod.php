@@ -25,6 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\User\Management\Exception\UserCreationFailedException;
+use Ampache\Module\User\Management\UserCreatorInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -66,19 +69,39 @@ final class UserCreateMethod
         $email    = $input['email'];
         $password = $input['password'];
         $disable  = (bool) $input['disable'];
-        $access   = 25;
-        $user_id  = User::create($username, $fullname, $email, null, $password, $access, null, null, $disable, true);
+        $access   = AccessLevelEnum::LEVEL_USER;
 
-        if ($user_id > 0) {
+        try {
+            static::getUserCreator()->create(
+                $username,
+                $fullname,
+                $email,
+                null,
+                $password,
+                $access,
+                null,
+                null,
+                $disable,
+                true
+            );
+
             Api::message('successfully created: ' . $username, $input['api_format']);
             Catalog::count_table('user');
 
             return true;
-        }
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
-        Session::extend($input['auth']);
+        } catch (UserCreationFailedException $e) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
+            Session::extend($input['auth']);
 
-        return false;
+            return false;
+        }
+    }
+
+    private static function getUserCreator(): UserCreatorInterface
+    {
+        global $dic;
+
+        return $dic->get(UserCreatorInterface::class);
     }
 }

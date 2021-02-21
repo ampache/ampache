@@ -24,7 +24,10 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
+use Ampache\Module\User\Management\Exception\UserCreationFailedException;
+use Ampache\Module\User\Management\UserCreatorInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Random;
 use Ampache\Module\Authorization\Access;
@@ -1774,26 +1777,34 @@ class Subsonic_Api
         }
 
         if (Access::check('interface', 100)) {
-            $access = 25;
+            $access = AccessLevelEnum::LEVEL_USER;
             if ($adminRole) {
-                $access = 100;
+                $access = AccessLevelEnum::LEVEL_ADMIN;
             } elseif ($coverArtRole) {
-                $access = 75;
+                $access = AccessLevelEnum::LEVEL_MANAGER;
             }
             $password = self::decrypt_password($password);
-            $user_id  = User::create($username, $username, $email, null, $password, $access);
-            if ($user_id > 0) {
+
+            try {
+                $user = static::getUserCreator()->create(
+                    $username,
+                    $username,
+                    $email,
+                    '',
+                    $password,
+                    $access
+                );
                 if ($downloadRole) {
-                    Preference::update('download', $user_id, 1);
+                    Preference::update('download', $user->getId(), 1);
                 }
                 if ($uploadRole) {
-                    Preference::update('allow_upload', $user_id, 1);
+                    Preference::update('allow_upload', $user->getId(), 1);
                 }
                 if ($shareRole) {
-                    Preference::update('share', $user_id, 1);
+                    Preference::update('share', $user->getId(), 1);
                 }
                 $response = Subsonic_Xml_Data::createSuccessResponse('createuser');
-            } else {
+            } catch (UserCreationFailedException $e) {
                 $response = Subsonic_Xml_Data::createError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, '', 'createuser');
             }
         } else {
@@ -2695,5 +2706,15 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(SearchRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getUserCreator(): UserCreatorInterface
+    {
+        global $dic;
+
+        return $dic->get(UserCreatorInterface::class);
     }
 }

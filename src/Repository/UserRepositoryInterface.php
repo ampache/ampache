@@ -21,6 +21,7 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\User;
 
 interface UserRepositoryInterface
@@ -88,7 +89,6 @@ interface UserRepositoryInterface
      */
     public function updateRssToken(int $userId, string $rssToken): void;
 
-
     /**
      * Updates a users api key
      */
@@ -98,4 +98,19 @@ interface UserRepositoryInterface
      * Get the current hashed user password
      */
     public function retrievePasswordFromUser(int $userId): string;
+
+    /**
+     * Inserts a new user into the database
+     */
+    public function create(
+        string $username,
+        string $fullname,
+        string $email,
+        string $website,
+        string $password,
+        int $access,
+        string $state,
+        string $city,
+        bool $disabled
+    ): ?int;
 }

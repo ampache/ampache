@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User;
 
+use Ampache\Module\User\Management\UserCreatorInterface;
+use Ampache\Repository\Model\User;
 use function DI\autowire;
 
 return [
@@ -37,4 +39,5 @@ return [
     Following\UserFollowStateRendererInterface::class => autowire(Following\UserFollowStateRenderer::class),
     Authorization\UserAccessKeyGeneratorInterface::class => autowire(Authorization\UserAccessKeyGenerator::class),
     PrivateMessage\PrivateMessageCreatorInterface::class => autowire(PrivateMessage\PrivateMessageCreator::class),
+    UserCreatorInterface::class => autowire(User::class),
 ];

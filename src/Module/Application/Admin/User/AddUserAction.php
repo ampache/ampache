@@ -27,8 +27,8 @@ namespace Ampache\Module\Application\Admin\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\User;
+use Ampache\Module\User\Management\Exception\UserCreationFailedException;
+use Ampache\Module\User\Management\UserCreatorInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
@@ -45,22 +45,22 @@ final class AddUserAction extends AbstractUserAction
 
     private UiInterface $ui;
 
-    private ModelFactoryInterface $modelFactory;
-
     private ConfigContainerInterface $configContainer;
 
     private UserRepositoryInterface $userRepository;
 
+    private UserCreatorInterface $userCreator;
+
     public function __construct(
         UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
+        UserCreatorInterface $userCreator
     ) {
         $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
         $this->userRepository  = $userRepository;
+        $this->userCreator     = $userCreator;
     }
 
     protected function handle(
@@ -116,12 +116,22 @@ final class AddUserAction extends AbstractUserAction
         }
 
         /* Attempt to create the user */
-        $user_id = User::create($username, $fullname, $email, $website, $pass1, $access, $state, $city);
-        if ($user_id < 1) {
+        try {
+            $user = $this->userCreator->create(
+                $username,
+                $fullname,
+                $email,
+                $website,
+                $pass1,
+                $access,
+                $state,
+                $city
+            );
+        } catch (UserCreationFailedException $e) {
             AmpError::add('general', T_("The new User was not created"));
-        }
 
-        $user = $this->modelFactory->createUser($user_id);
+            return null;
+        }
         $user->upload_avatar();
 
         $useraccess = '';

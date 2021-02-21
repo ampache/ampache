@@ -25,6 +25,8 @@ namespace Ampache\Module\Application\Login;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\User\Management\Exception\UserCreationFailedException;
+use Ampache\Module\User\Management\UserCreatorInterface;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
@@ -62,13 +64,16 @@ final class DefaultAction implements ApplicationActionInterface
 
     private EnvironmentInterface $environment;
 
+    private UserCreatorInterface $userCreator;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         AuthenticationManagerInterface $authenticationManager,
         ResponseFactoryInterface $responseFactory,
         LoggerInterface $logger,
         NetworkCheckerInterface $networkChecker,
-        EnvironmentInterface $environment
+        EnvironmentInterface $environment,
+        UserCreatorInterface $userCreator
     ) {
         $this->configContainer       = $configContainer;
         $this->authenticationManager = $authenticationManager;
@@ -76,6 +81,7 @@ final class DefaultAction implements ApplicationActionInterface
         $this->logger                = $logger;
         $this->networkChecker        = $networkChecker;
         $this->environment           = $environment;
+        $this->userCreator           = $userCreator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -232,16 +238,23 @@ final class DefaultAction implements ApplicationActionInterface
                 $state    = array_key_exists('state', $auth) ? $auth['state']   : '';
                 $city     = array_key_exists('city', $auth) ? $auth['city']    : '';
 
-                // Attempt to create the user
-                if (User::create($username, $fullname, $email, $website, hash('sha256', mt_rand()), $access, $state, $city) > 0) {
-                    $user = User::get_from_username($username);
-
-                    if (array_key_exists('avatar', $auth)) {
-                        $user->update_avatar($auth['avatar']['data'], $auth['avatar']['mime']);
-                    }
-                } else {
+                try {
+                    $user = $this->userCreator->create(
+                        $username,
+                        $fullname,
+                        $email,
+                        $website,
+                        hash('sha256', mt_rand()),
+                        (int) $access,
+                        $state,
+                        $city
+                    );
+                } catch (UserCreationFailedException $e) {
                     $auth['success'] = false;
                     AmpError::add('general', T_('Unable to create a local account'));
+                }
+                if (array_key_exists('avatar', $auth)) {
+                    $user->update_avatar($auth['avatar']['data'], $auth['avatar']['mime']);
                 }
             } // end if auto_create
 

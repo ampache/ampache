@@ -26,25 +26,32 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\User\Management\Exception\UserCreationFailedException;
+use Ampache\Module\User\Management\UserCreatorInterface;
 use Ampache\Repository\Model\User;
 
 final class AdminAddUserCommand extends Command
 {
     private ConfigContainerInterface $configContainer;
 
+    private UserCreatorInterface $userCreator;
+
     public function __construct(
-        ConfigContainerInterface $configContainer
+        ConfigContainerInterface $configContainer,
+        UserCreatorInterface $userCreator
     ) {
         parent::__construct('admin:addUser', 'Adds a user');
 
         $this->configContainer = $configContainer;
+        $this->userCreator     = $userCreator;
 
         $this
             ->option('-p|--password', 'Password', 'strval', mt_rand())
             ->option('-e|--email', 'E-Mail', 'strval', '')
             ->option('-w|--website', 'Website', 'strval', '')
             ->option('-n|--name', 'Name', 'strval', '')
-            ->option('-l|--level', 'Access Level', 'intval', $this->configContainer->get('auto_user') ?? 5)
+            ->option('-l|--level', 'Access Level', 'intval', $this->configContainer->get('auto_user') ?? AccessLevelEnum::LEVEL_GUEST)
             ->argument('<username>', 'The name of the new user')
             ->usage('<bold>  admin:addUser some-user</end> <comment> ## Add the user `some-user`</end><eol/>');
     }
@@ -55,30 +62,32 @@ final class AdminAddUserCommand extends Command
         $values     = $this->values();
         $interactor = $this->io();
 
-        $result = (int) User::create(
-            $username,
-            $values['name'],
-            $values['email'],
-            $values['website'],
-            $values['password'],
-            $values['level']
-        );
-
-        if ($result !== null) {
-            $interactor->ok(
-                sprintf(
-                    T_('Created %s user %s with password %s'),
-                    User::access_level_to_name((string) $values['level']),
-                    $username,
-                    $values['password']
-                ),
-                true
+        try {
+            $this->userCreator->create(
+                $username,
+                $values['name'],
+                $values['email'],
+                $values['website'],
+                $values['password'],
+                (int) $values['level']
             );
-            echo "\n";
-
-            User::fix_preferences('-1');
-        } else {
+        } catch (UserCreationFailedException $e) {
             $interactor->error(T_('User creation failed'), true);
+
+            return;
         }
+
+        $interactor->ok(
+            sprintf(
+                T_('Created %s user %s with password %s'),
+                User::access_level_to_name((string) $values['level']),
+                $username,
+                $values['password']
+            ),
+            true
+        );
+        $interactor->eol();
+
+        User::fix_preferences('-1');
     }
 }

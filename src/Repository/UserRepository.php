@@ -235,4 +235,60 @@ final class UserRepository implements UserRepositoryInterface
 
         return $row['password'] ?? '';
     }
+
+    /**
+     * Inserts a new user into the database
+     */
+    public function create(
+        string $username,
+        string $fullname,
+        string $email,
+        string $website,
+        string $password,
+        int $access,
+        string $state,
+        string $city,
+        bool $disabled
+    ): ?int {
+        $disabled = $disabled ? 1 : 0;
+
+        /* Now Insert this new user */
+        $sql    = 'INSERT INTO `user` (`username`, `disabled`, `fullname`, `email`, `password`, `access`, `create_date`';
+        $params = [$username, $disabled, $fullname, $email, $password, $access, time()];
+
+        if (!empty($website)) {
+            $sql .= ", `website`";
+            $params[] = $website;
+        }
+        if (!empty($state)) {
+            $sql .= ", `state`";
+            $params[] = $state;
+        }
+        if (!empty($city)) {
+            $sql .= ", `city`";
+            $params[] = $city;
+        }
+
+        $sql .= ") VALUES(?, ?, ?, ?, ?, ?, ?";
+
+        if (!empty($website)) {
+            $sql .= ", ?";
+        }
+        if (!empty($state)) {
+            $sql .= ", ?";
+        }
+        if (!empty($city)) {
+            $sql .= ", ?";
+        }
+
+        $sql .= ")";
+        $db_results = Dba::write($sql, $params);
+
+        if (!$db_results) {
+            return null;
+        }
+
+        // Get the insert_id
+        return (int) Dba::insert_id();
+    }
 }
