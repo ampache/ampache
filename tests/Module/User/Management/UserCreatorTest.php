@@ -28,6 +28,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\User\Management\Exception\UserCreationFailedException;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Mockery\MockInterface;
 
@@ -39,16 +40,21 @@ class UserCreatorTest extends MockeryTestCase
     /** @var ModelFactoryInterface|MockInterface|null */
     private MockInterface $modelFactory;
 
+    /** @var UpdateInfoRepositoryInterface|MockInterface|null */
+    private MockInterface $updateInfoRepository;
+
     private UserCreator $subject;
 
     public function setUp(): void
     {
-        $this->userRepository = $this->mock(UserRepositoryInterface::class);
-        $this->modelFactory   = $this->mock(ModelFactoryInterface::class);
+        $this->userRepository       = $this->mock(UserRepositoryInterface::class);
+        $this->modelFactory         = $this->mock(ModelFactoryInterface::class);
+        $this->updateInfoRepository = $this->mock(UpdateInfoRepositoryInterface::class);
 
         $this->subject = new UserCreator(
             $this->userRepository,
-            $this->modelFactory
+            $this->modelFactory,
+            $this->updateInfoRepository
         );
     }
 
@@ -89,6 +95,10 @@ class UserCreatorTest extends MockeryTestCase
 
         $user->shouldReceive('fixPreferences')
             ->withNoArgs()
+            ->once();
+
+        $this->updateInfoRepository->shouldReceive('updateCountByTableName')
+            ->with('user')
             ->once();
 
         $this->assertSame(

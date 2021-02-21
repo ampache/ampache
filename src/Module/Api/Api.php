@@ -106,7 +106,7 @@ class Api
         Method\UserMethod::ACTION => Method\UserMethod::class,
         Method\UserPreferencesMethod::ACTION => Method\UserPreferencesMethod::class,
         Method\UserPreferenceMethod::ACTION => Method\UserPreferenceMethod::class,
-        'user_create' => Method\UserCreateMethod::class,
+        Method\UserCreateMethod::ACTION => Method\UserCreateMethod::class,
         'user_update' => Method\UserUpdateMethod::class,
         Method\UserDeleteMethod::ACTION => Method\UserDeleteMethod::class,
         Method\FollowersMethod::ACTION => Method\FollowersMethod::class,

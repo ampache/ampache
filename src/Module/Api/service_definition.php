@@ -98,6 +98,7 @@ return [
     Method\FlagMethod::class => autowire(),
     Method\BookmarkDeleteMethod::class => autowire(),
     Method\UpdateFromTagsMethod::class => autowire(),
+    Method\UserCreateMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

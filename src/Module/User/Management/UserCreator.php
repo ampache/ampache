@@ -24,6 +24,7 @@ namespace Ampache\Module\User\Management;
 
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 
 final class UserCreator implements UserCreatorInterface
@@ -32,12 +33,16 @@ final class UserCreator implements UserCreatorInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private UpdateInfoRepositoryInterface $updateInfoRepository;
+
     public function __construct(
         UserRepositoryInterface $userRepository,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        UpdateInfoRepositoryInterface $updateInfoRepository
     ) {
-        $this->userRepository = $userRepository;
-        $this->modelFactory   = $modelFactory;
+        $this->userRepository       = $userRepository;
+        $this->modelFactory         = $modelFactory;
+        $this->updateInfoRepository = $updateInfoRepository;
     }
 
     /**
@@ -77,6 +82,8 @@ final class UserCreator implements UserCreatorInterface
         if ($userId === null) {
             throw new Exception\UserCreationFailedException();
         }
+
+        $this->updateInfoRepository->updateCountByTableName('user');
 
         $user = $this->modelFactory->createUser($userId);
         $user->fixPreferences();

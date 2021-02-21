@@ -21,87 +21,106 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\User\Management\Exception\UserCreationFailedException;
 use Ampache\Module\User\Management\UserCreatorInterface;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class UserCreateMethod
- * @package Lib\ApiMethods
- */
-final class UserCreateMethod
+final class UserCreateMethod implements MethodInterface
 {
-    private const ACTION = 'user_create';
+    public const ACTION = 'user_create';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private UserCreatorInterface $userCreator;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        UserCreatorInterface $userCreator
+    ) {
+        $this->streamFactory = $streamFactory;
+        $this->userCreator   = $userCreator;
+    }
 
     /**
-     * user_create
      * MINIMUM_API_VERSION=400001
      *
      * Create a new user.
      * Requires the username, password and email.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * username = (string) $username
      * fullname = (string) $fullname //optional
      * password = (string) hash('sha256', $password))
      * email    = (string) $email
      * disable  = (integer) 0,1 //optional, default = 0
-     * @return boolean
+     *
+     * @return ResponseInterface
+     * @throws RequestParamMissingException
+     * @throws AccessDeniedException
      */
-    public static function user_create(array $input)
-    {
-        if (!Api::check_access('interface', 100, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
+            throw new AccessDeniedException(
+                T_('Require: 100')
+            );
         }
-        if (!Api::check_parameter($input, array('username', 'password', 'email'), self::ACTION)) {
-            return false;
+
+        foreach (['username', 'password', 'email'] as $key) {
+            if (!array_key_exists($key, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf(T_('Bad Request: %s'), $key)
+                );
+            }
         }
+
         $username = $input['username'];
-        $fullname = $input['fullname'] ?: $username;
+        $fullname = $input['fullname'] ?? $username;
         $email    = $input['email'];
         $password = $input['password'];
-        $disable  = (bool) $input['disable'];
-        $access   = AccessLevelEnum::LEVEL_USER;
 
         try {
-            static::getUserCreator()->create(
+            $this->userCreator->create(
                 $username,
                 $fullname,
                 $email,
-                null,
+                '',
                 $password,
-                $access,
-                null,
-                null,
-                $disable,
+                AccessLevelEnum::LEVEL_USER,
+                '',
+                '',
+                (bool) ($input['disable'] ?? 0),
                 true
             );
 
-            Api::message('successfully created: ' . $username, $input['api_format']);
-            Catalog::count_table('user');
-
-            return true;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->success(
+                        sprintf(T_('successfully created: %s'), $username)
+                    )
+                )
+            );
         } catch (UserCreationFailedException $e) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $username), '4710', self::ACTION, 'system', $input['api_format']);
-            Session::extend($input['auth']);
-
-            return false;
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), $username)
+            );
         }
-    }
-
-    private static function getUserCreator(): UserCreatorInterface
-    {
-        global $dic;
-
-        return $dic->get(UserCreatorInterface::class);
     }
 }
