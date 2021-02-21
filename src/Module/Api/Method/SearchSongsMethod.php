@@ -21,65 +21,78 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Search;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class SearchSongsMethod
- * @package Lib\ApiMethods
- */
-final class SearchSongsMethod
+final class SearchSongsMethod implements MethodInterface
 {
-    private const ACTION = 'search_songs';
+    public const ACTION = 'search_songs';
+
+    private ModelFactoryInterface $modelFactory;
+
+    private StreamFactoryInterface $streamFactory;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory,
+        StreamFactoryInterface $streamFactory
+    ) {
+        $this->modelFactory  = $modelFactory;
+        $this->streamFactory = $streamFactory;
+    }
 
     /**
-     * search_songs
      * MINIMUM_API_VERSION=380001
      *
      * This searches the songs and returns... songs
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) Alpha-numeric search term
      * offset = (integer) //optional
      * limit  = (integer) //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws RequestParamMissingException
      */
-    public static function search_songs(array $input)
-    {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $filter = $input['filter'] ?? null;
+
+        if ($filter === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
         }
-        $array                    = array();
-        $array['type']            = 'song';
-        $array['rule_1']          = 'anywhere';
-        $array['rule_1_input']    = $input['filter'];
-        $array['rule_1_operator'] = 0;
 
-        $results = Search::run($array);
-        $user    = User::get_from_username(Session::username($input['auth']));
+        $search = [
+            'type' => 'song',
+            'rule_1' => 'anywhere',
+            'rule_1_input' => $filter,
+            'rule_1_operator' => 0,
+        ];
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json_Data::set_offset($input['offset']);
-                Json_Data::set_limit($input['limit']);
-                echo Json_Data::songs($results, $user->id);
-                break;
-            default:
-                Xml_Data::set_offset($input['offset']);
-                Xml_Data::set_limit($input['limit']);
-                echo Xml_Data::songs($results, $user->id);
-        }
-        Session::extend($input['auth']);
-
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->songs(
+                    $this->modelFactory->createSearch()->runSearch($search),
+                    $gatekeeper->getUser()->getId()
+                )
+            )
+        );
     }
 }

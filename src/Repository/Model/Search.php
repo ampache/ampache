@@ -866,6 +866,19 @@ class Search extends playlist_object
     }
 
     /**
+     * @param array $data
+     * @param User|null $user
+     *
+     * @return int[]
+     */
+    public function runSearch(
+        array $data,
+        ?User $user = null
+    ): array {
+        return static::run($data, $user);
+    }
+
+    /**
      * run
      *
      * This function actually runs the search and returns an array of the
