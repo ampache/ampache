@@ -546,7 +546,7 @@ class UI
     public static function show_custom_style()
     {
         if (AmpConfig::get('custom_login_background')) {
-            echo "<style> body { background-image: url('" . AmpConfig::get('custom_login_background') . "') !important; }</style>";
+            echo "<style> body { background-position: center; background-size: cover; background-image: url('" . AmpConfig::get('custom_login_background') . "') !important; }</style>";
         }
 
         if (AmpConfig::get('custom_login_logo')) {
