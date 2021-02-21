@@ -20,63 +20,102 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
-use Ampache\Module\Util\Recommendation;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Util\RecommendationInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class UpdateArtistInfoMethod
- * @package Lib\ApiMethods
- */
-final class UpdateArtistInfoMethod
+final class UpdateArtistInfoMethod implements MethodInterface
 {
-    private const ACTION = 'update_artist_info';
+    public const ACTION = 'update_artist_info';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private RecommendationInterface $recommendation;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory,
+        RecommendationInterface $recommendation
+    ) {
+        $this->streamFactory  = $streamFactory;
+        $this->modelFactory   = $modelFactory;
+        $this->recommendation = $recommendation;
+    }
 
     /**
-     * update_artist_info
      * MINIMUM_API_VERSION=400001
      *
      * Update artist information and fetch similar artists from last.fm
      * Make sure lastfm_api_key is set in your configuration file
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * id = (integer) $artist_id)
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws RequestParamMissingException
+     * @throws AccessDeniedException
+     * @throws ResultEmptyException
      */
-    public static function update_artist_info(array $input)
-    {
-        if (!Api::check_parameter($input, array('id'), self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $objectId = $input['id'] ?? null;
+
+        if ($objectId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'id')
+            );
         }
 
-        if (!Api::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
-            return false;
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
+            throw new AccessDeniedException(
+                T_('Require: 75')
+            );
         }
-        $object_id = (int) $input['id'];
-        $item      = new Artist($object_id);
-        if (!$item->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
 
-            return false;
+        $objectId = (int) $input['id'];
+
+        $artist = $this->modelFactory->createArtist($objectId);
+
+        if ($artist->isNew()) {
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %d'), $objectId)
+            );
         }
 
         // update your object, you need at least catalog_manager access to the db
-        if (!empty(Recommendation::get_artist_info($object_id) || !empty(Recommendation::get_artists_like($object_id)))) {
-            Api::message('Updated artist info: ' . (string) $object_id, $input['api_format']);
-
-            return true;
+        if (
+            $this->recommendation->getArtistInfo($objectId) !== [] ||
+            $this->recommendation->getArtistsLike($objectId) !== []
+        ) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->success(sprintf('Updated artist info: %d', $objectId))
+                )
+            );
         }
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
-        Session::extend($input['auth']);
-
-        return true;
+        throw new RequestParamMissingException(
+            sprintf(T_('Bad Request: %d'), $objectId)
+        );
     }
 }

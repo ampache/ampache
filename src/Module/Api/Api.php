@@ -124,7 +124,7 @@ class Api
         Method\TimelineMethod::ACTION => Method\TimelineMethod::class,
         Method\FriendsTimelineMethod::ACTION => Method\FriendsTimelineMethod::class,
         Method\UpdateFromTagsMethod::ACTION => Method\UpdateFromTagsMethod::class,
-        'update_artist_info' => Method\UpdateArtistInfoMethod::class,
+        Method\UpdateArtistInfoMethod::ACTION => Method\UpdateArtistInfoMethod::class,
         'update_art' => Method\UpdateArtMethod::class,
         Method\UpdatePodcastMethod::ACTION => Method\UpdatePodcastMethod::class,
         Method\StreamMethod::ACTION => Method\StreamMethod::class,

@@ -34,7 +34,7 @@ use PDOStatement;
 use SimpleXMLElement;
 use Ampache\Repository\Model\Song;
 
-class Recommendation
+class Recommendation implements RecommendationInterface
 {
 
     /**
@@ -225,6 +225,17 @@ class Recommendation
     }
 
     /**
+     * Just a proxy for get_artists_like
+     */
+    public function getArtistsLike(
+        int $artistId,
+        int $limit = 10,
+        bool $localOnly = true
+    ): array {
+        return static::get_artists_like($artistId, $limit, $localOnly);
+    }
+
+    /**
      * get_artists_like
      * Returns a list of similar artists
      * @param integer $artist_id
@@ -325,6 +336,19 @@ class Recommendation
 
         return array();
     } // get_artists_like
+
+    /**
+     * Just a proxy for get_artist_info
+     */
+    public function getArtistInfo(
+        int $artistId,
+        string $fullname = ''
+    ): array {
+        return static::get_artist_info(
+            $artistId,
+            $fullname
+        );
+    }
 
     /**
      * get_artist_info
