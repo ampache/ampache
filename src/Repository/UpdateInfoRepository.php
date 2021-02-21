@@ -108,9 +108,8 @@ final class UpdateInfoRepository implements UpdateInfoRepositoryInterface
         }
 
         foreach ($list_tables as $table) {
-            $data = $this->updateCountByTableName($table);
             // save the object count
-            $results[$table] = $data[0];
+            $results[$table] = $this->updateCountByTableName($table);
         }
 
         return $results;

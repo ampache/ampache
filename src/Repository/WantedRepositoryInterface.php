@@ -50,6 +50,8 @@ interface WantedRepositoryInterface
 
     /**
      * retrieves the info from the database and puts it in the cache
+     *
+     * @return array<string, mixed>
      */
     public function getById(int $wantedId): array;
 

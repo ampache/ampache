@@ -41,8 +41,6 @@ final class PrivateMessageRepository implements PrivateMessageRepositoryInterfac
 
     /**
      * Get the user received private messages.
-     *
-     * @return int[]
      */
     public function getUnreadCount(
         int $userId
