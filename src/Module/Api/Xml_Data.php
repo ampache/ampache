@@ -796,33 +796,6 @@ class Xml_Data
     } // shares
 
     /**
-     * bookmarks
-     *
-     * This returns bookmarks to the user, in a pretty xml document with the information
-     *
-     * @param  integer[] $bookmarks Bookmark id's to include
-     * @return string    return xml
-     */
-    public static function bookmarks($bookmarks)
-    {
-        $string = "";
-        foreach ($bookmarks as $bookmark_id) {
-            $bookmark = new Bookmark($bookmark_id);
-            $string .= "<bookmark id=\"$bookmark_id\">\n" .
-                "\t<user><![CDATA[" . $bookmark->getUserName() . "]]></user>\n" .
-                "\t<object_type><![CDATA[" . $bookmark->object_type . "]]></object_type>\n" .
-                "\t<object_id>" . $bookmark->object_id . "</object_id>\n" .
-                "\t<position>" . $bookmark->position . "</position>\n" .
-                "\t<client><![CDATA[" . $bookmark->comment . "]]></client>\n" .
-                "\t<creation_date>" . $bookmark->creation_date . "</creation_date>\n" .
-                "\t<update_date><![CDATA[" . $bookmark->update_date . "]]></update_date>\n" .
-                "</bookmark>\n";
-        } // end foreach
-
-        return self::output_xml($string);
-    } // bookmarks
-
-    /**
      * podcasts
      *
      * This returns podcasts to the user, in a pretty xml document with the information

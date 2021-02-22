@@ -48,7 +48,7 @@ class Api
         Method\GoodbyeMethod::ACTION => Method\GoodbyeMethod::class,
         Method\UrlToSongMethod::ACTION => Method\UrlToSongMethod::class,
         'get_indexes' => Method\GetIndexesMethod::class,
-        'get_bookmark' => Method\GetBookmarkMethod::class,
+        Method\GetBookmarkMethod::ACTION => Method\GetBookmarkMethod::class,
         'get_similar' => Method\GetSimilarMethod::class,
         Method\AdvancedSearchMethod::ACTION => Method\AdvancedSearchMethod::class,
         Method\ArtistsMethod::ACTION => Method\ArtistsMethod::class,

@@ -58,7 +58,7 @@ interface BookmarkRepositoryInterface
         string $objectType,
         int $objectId,
         int $userId,
-        ?string $comment
+        ?string $comment = null
     ): array;
 
     /**

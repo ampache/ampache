@@ -26,7 +26,6 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use PDOStatement;
 
 /**
  * This manage bookmark on playable items
@@ -87,24 +86,6 @@ class Bookmark extends database_object
     public function getId(): int
     {
         return (int) $this->id;
-    }
-
-    /**
-     * get_bookmark
-     * @param array $data
-     * @return integer[]
-     */
-    public static function get_bookmark($data)
-    {
-        $bookmarks   = array();
-        $comment_sql = isset($data['comment']) ? "AND `comment` = '" . scrub_in($data['comment']) . "'" : "";
-        $sql         = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `object_type` = ? AND `object_id` = ? " . $comment_sql;
-        $db_results  = Dba::read($sql, array($data['user'], $data['object_type'], $data['object_id']));
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $bookmarks[] = (int) $results['id'];
-        }
-
-        return $bookmarks;
     }
 
     public function getUserName(): string

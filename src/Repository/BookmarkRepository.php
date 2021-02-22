@@ -98,7 +98,7 @@ final class BookmarkRepository implements BookmarkRepositoryInterface
         string $objectType,
         int $objectId,
         int $userId,
-        ?string $comment
+        ?string $comment = null
     ): array {
         $bookmarks   = [];
         $comment_sql = $comment !== null ? "AND `comment` = '" . $comment . "'" : "";

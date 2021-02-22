@@ -107,6 +107,7 @@ return [
     Method\AdvancedSearchMethod::class => autowire(),
     Method\BookmarkEditMethod::class => autowire(),
     Method\UpdateArtMethod::class => autowire(),
+    Method\GetBookmarkMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),

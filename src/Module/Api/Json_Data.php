@@ -605,47 +605,6 @@ class Json_Data
     } // shares
 
     /**
-     * bookmarks
-     *
-     * This returns bookmarks to the user, in a pretty json document with the information
-     *
-     * @param  integer[] $bookmarks Bookmark id's to include
-     * @param  boolean   $object (whether to return as a named object array or regular array)
-     * @return string    JSON Object "bookmark"
-     */
-    public static function bookmarks($bookmarks, $object = true)
-    {
-        if ((count($bookmarks) > self::$limit || self::$offset > 0) && self::$limit) {
-            $bookmarks = array_splice($bookmarks, self::$offset, self::$limit);
-        }
-
-        $JSON = [];
-        foreach ($bookmarks as $bookmark_id) {
-            $bookmark               = new Bookmark($bookmark_id);
-            $bookmark_user          = $bookmark->getUserName();
-            $bookmark_object_type   = $bookmark->object_type;
-            $bookmark_object_id     = $bookmark->object_id;
-            $bookmark_position      = $bookmark->position;
-            $bookmark_comment       = $bookmark->comment;
-            $bookmark_creation_date = $bookmark->creation_date;
-            $bookmark_update_date   = $bookmark->update_date;
-            // Build this element
-            array_push($JSON, [
-                "id" => (string) $bookmark_id,
-                "owner" => $bookmark_user,
-                "object_type" => $bookmark_object_type,
-                "object_id" => $bookmark_object_id,
-                "position" => $bookmark_position,
-                "client" => $bookmark_comment,
-                "creation_date" => $bookmark_creation_date,
-                "update_date" => $bookmark_update_date]);
-        } // end foreach
-        $output = ($object) ? array("bookmark" => $JSON) : $JSON[0];
-
-        return json_encode($output, JSON_PRETTY_PRINT);
-    } // bookmarks
-
-    /**
      * podcasts
      *
      * This returns podcasts to the user, in a pretty json document with the information

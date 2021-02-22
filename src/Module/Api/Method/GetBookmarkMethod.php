@@ -21,98 +21,116 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Bookmark;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class GetBookmarkMethod
- * @package Lib\ApiMethods
- */
-final class GetBookmarkMethod
+final class GetBookmarkMethod implements MethodInterface
 {
-    private const ACTION = 'get_bookmark';
+    public const ACTION = 'get_bookmark';
+
+    private ModelFactoryInterface $modelFactory;
+
+    private BookmarkRepositoryInterface $bookmarkRepository;
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        ModelFactoryInterface $modelFactory,
+        BookmarkRepositoryInterface $bookmarkRepository,
+        StreamFactoryInterface $streamFactory,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->modelFactory       = $modelFactory;
+        $this->bookmarkRepository = $bookmarkRepository;
+        $this->streamFactory      = $streamFactory;
+        $this->configContainer    = $configContainer;
+    }
 
     /**
-     * get_bookmark
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get the bookmark from it's object_id and object_type.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) object_id to find
      * type   = (string) object_type ('song', 'video', 'podcast_episode')
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws RequestParamMissingException
+     * @throws FunctionDisabledException
+     * @throws ResultEmptyException
      */
-    public static function get_bookmark(array $input)
-    {
-        if (!Api::check_parameter($input, array('filter', 'type'), self::ACTION)) {
-            return false;
-        }
-        $user      = User::get_from_username(Session::username($input['auth']));
-        $object_id = (int) $input['filter'];
-        $type      = $input['type'];
-        if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-        // confirm the correct data
-        if (!in_array($type, array('song', 'video', 'podcast_episode'))) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        foreach (['type', 'filter'] as $key) {
+            if (!array_key_exists($key, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf(T_('Bad Request: %s'), $key)
+                );
+            }
         }
 
-        $className = ObjectTypeToClassNameMapper::map($type);
+        $type = $input['type'];
 
-        if ($className === $type || !$object_id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
-
-            return false;
+        if ($type === 'video' && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) === false) {
+            throw new FunctionDisabledException(
+                T_('Enable: video')
+            );
         }
 
-        $item = new $className($object_id);
+        if (!in_array($type, ['song', 'video', 'podcast_episode'])) {
+            throw new RequestParamMissingException(
+                T_('Bad Request')
+            );
+        }
+
+        $objectId = (int) $input['filter'];
+
+        $item = $this->modelFactory->mapObjectType($type, $objectId);
+
         if (!$item->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %d'), $objectId)
+            );
         }
 
-        $object = array(
-            'user' => $user->id,
-            'object_id' => $object_id,
-            'object_type' => $type
+        $bookmarkIds = $this->bookmarkRepository->lookup(
+            $type,
+            $objectId,
+            $gatekeeper->getUser()->getId()
         );
-        $bookmark = Bookmark::get_bookmark($object);
-        if (empty($bookmark)) {
-            Api::empty('bookmark', $input['api_format']);
 
-            return false;
+        if ($bookmarkIds === []) {
+            $result = $output->emptyResult('bookmark');
+        } else {
+            $result = $output->bookmarks($bookmarkIds);
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json_Data::bookmarks($bookmark);
-                break;
-            default:
-                echo Xml_Data::bookmarks($bookmark);
-        }
-        Session::extend($input['auth']);
-
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }
