@@ -3965,7 +3965,7 @@ class Api
      * @param array $input
      * id     = (string) $song_id| $podcast_episode_id
      * type   = (string) 'song'|'podcast'
-     * format = (string) 'mp3'|'ogg', etc //optional
+     * format = (string) 'mp3'|'ogg', etc //optional SONG ONLY
      * @return boolean
      */
     public static function download($input)
@@ -3981,10 +3981,10 @@ class Api
 
         $url    = '';
         $params = '&action=download' . '&client=api' . '&cache=1';
-        if ($original) {
+        if ($original && $type == 'song') {
             $params .= '&transcode_to=' . $format;
         }
-        if ($format) {
+        if ($format && $type == 'song') {
             $params .= '&format=' . $format;
         }
         if ($type == 'song') {
