@@ -611,6 +611,7 @@ class vainfo
                         break;
                     case 'asf':
                     case 'wmv':
+                    case 'wma':
                         $key = 'asf';
                         debug_event(self::class, 'Cleaning WMV/WMA/ASF', 5);
                         $parsed = $this->_cleanup_generic($tag_array);
@@ -767,13 +768,14 @@ class vainfo
             case 'vorbis':
             case 'opus':
                 return 'ogg';
+            case 'asf':
+            case 'wmv':
+            case 'wma':
+                return 'asf';
             case 'flac':
             case 'flv':
             case 'mpg':
             case 'mpeg':
-            case 'asf':
-            case 'wma':
-            case 'wmv':
             case 'avi':
             case 'quicktime':
                 return $type;
