@@ -772,6 +772,7 @@ class vainfo
             case 'mpg':
             case 'mpeg':
             case 'asf':
+            case 'wma':
             case 'wmv':
             case 'avi':
             case 'quicktime':
@@ -796,10 +797,14 @@ class vainfo
     {
         $parsed = array();
         foreach ($tags as $tagname => $data) {
+            //debug_event(self::class, 'generic tag: ' . strtolower($tagname) . ' value: ' . $data[0], 5);
             switch (strtolower($tagname)) {
                 case 'genre':
                     // Pass the array through
-                    $parsed[$tagname] = $this->parseGenres($data);
+                    $parsed['genre'] = $this->parseGenres($data);
+                    break;
+                case 'track_number':
+                    $parsed['track'] = $data[0];
                     break;
                 case 'musicbrainz_artistid':
                     $parsed['mb_artistid'] = $data[0];
