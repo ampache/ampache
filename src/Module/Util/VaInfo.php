@@ -620,6 +620,7 @@ class VaInfo
                         break;
                     case 'asf':
                     case 'wmv':
+                    case 'wma':
                         $key = 'asf';
                         debug_event(self::class, 'Cleaning WMV/WMA/ASF', 5);
                         $parsed = $this->_cleanup_generic($tag_array);
@@ -778,12 +779,14 @@ class VaInfo
             case 'vorbis':
             case 'opus':
                 return 'ogg';
+            case 'asf':
+            case 'wmv':
+            case 'wma':
+                return 'asf';
             case 'flac':
             case 'flv':
             case 'mpg':
             case 'mpeg':
-            case 'asf':
-            case 'wmv':
             case 'avi':
             case 'quicktime':
                 return $type;
@@ -807,11 +810,14 @@ class VaInfo
     {
         $parsed = array();
         foreach ($tags as $tagname => $data) {
+            //debug_event(self::class, 'generic tag: ' . strtolower($tagname) . ' value: ' . $data[0], 5);
             switch (strtolower($tagname)) {
                 case 'genre':
                     // Pass the array through
-                    $parsed[$tagname] = $this->parseGenres($data);
+                    $parsed['genre'] = $this->parseGenres($data);
                     break;
+                case 'track_number':
+                    $parsed['track'] = $data[0];
                 case 'musicbrainz_artistid':
                     $parsed['mb_artistid'] = $data[0];
                     break;
