@@ -1270,6 +1270,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -1528,6 +1531,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -1758,6 +1764,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -2205,6 +2214,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -2271,6 +2283,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -2349,6 +2364,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -2403,6 +2421,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
@@ -2456,6 +2477,9 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             $type     = $this->name_to_basetype($rule[0]);
             $operator = array();
+            if (!$type) {
+                return array();
+            }
             foreach ($this->basetypes[$type] as $op) {
                 if ($op['name'] == $rule[1]) {
                     $operator = $op;
