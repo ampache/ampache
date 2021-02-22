@@ -114,6 +114,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Recognize opus when reading tags
 * Regex in config for additional_genre_delimiters
 * SQL query for smartlists not joining the OR correctly
+* Searching with bad rules will return no results instead of everything
 
 ### API 4.4.0-develop
 
