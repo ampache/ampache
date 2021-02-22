@@ -3901,7 +3901,7 @@ class Api
      * id      = (string) $song_id|$podcast_episode_id
      * type    = (string) 'song'|'podcast'
      * bitrate = (integer) max bitrate for transcoding
-     * format  = (string) 'mp3'|'ogg', etc use 'raw' to skip transcoding
+     * format  = (string) 'mp3'|'ogg', etc use 'raw' to skip transcoding SONG ONLY
      * offset  = (integer) time offset in seconds
      * length  = (integer) 0,1
      * @return boolean
@@ -3925,7 +3925,7 @@ class Api
         if ($contentLength == 1) {
             $params .= '&content_length=required';
         }
-        if ($original) {
+        if ($original && $type == 'song') {
             $params .= '&transcode_to=' . $format;
         }
         if ((int) $maxBitRate > 0) {
