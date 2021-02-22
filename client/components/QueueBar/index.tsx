@@ -24,6 +24,19 @@ const QueueBar: React.FC<QueueBarProps> = (props) => {
 
     set({ x: props.visible ? queueBarEnd : queueBarStart });
 
+    const handlePlaySong = (songID: string) => {
+        const queueIndex = musicContext.songQueue.findIndex(
+            (o) => o.id === songID
+        );
+        musicContext.startPlayingWithNewQueue(
+            musicContext.songQueue,
+            queueIndex
+        );
+    };
+    const handleRemoveSong = (queueIndex: number) => {
+        musicContext.removeFromQueue(queueIndex);
+    };
+
     return (
         <>
             <animated.div
@@ -43,24 +56,18 @@ const QueueBar: React.FC<QueueBarProps> = (props) => {
                                     Nothing in the queue
                                 </div>
                             )}
-                            {musicContext.songQueue.map((song: Song) => {
+                            {musicContext.songQueue.map((song: Song, index) => {
                                 return (
                                     <QueueSong
-                                        key={song.id}
+                                        key={index}
                                         song={song}
                                         currentlyPlaying={
                                             musicContext.currentPlayingSong
                                                 ?.id === song.id
                                         }
-                                        onClick={() => {
-                                            const queueIndex = musicContext.songQueue.findIndex(
-                                                (o) => o.id === song.id
-                                            );
-                                            musicContext.startPlayingWithNewQueue(
-                                                musicContext.songQueue,
-                                                queueIndex
-                                            );
-                                        }}
+                                        queueIndex={index}
+                                        playSong={handlePlaySong}
+                                        removeSong={handleRemoveSong}
                                     />
                                 );
                             })}

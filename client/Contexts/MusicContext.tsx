@@ -17,6 +17,7 @@ interface MusicContext {
     toggleFlag: () => void;
     startPlayingWithNewQueue: (newQueue: Song[], startPosition?) => void;
     addToQueue: (song: Song, next: boolean) => void;
+    removeFromQueue: (queueIndex: number) => void;
     seekSongTo: (newPosition: number) => void;
     setVolume: (newVolume: number) => void;
 }
@@ -164,6 +165,19 @@ export const MusicContextProvider: React.FC = (props) => {
         setSongQueue(newQueue);
     };
 
+    const removeFromQueue = (queueIndex: number) => {
+        const newQueue = [...songQueue];
+
+        newQueue.splice(queueIndex, 1);
+        setSongQueue(newQueue);
+
+        //If we remove something from the queue that's behind the current playing song
+        //the order will get messed up without this
+        if (queueIndex < songQueueIndex) {
+            setSongQueueIndex(songQueueIndex - 1);
+        }
+    };
+
     const durationChange = (elapsed) => {
         setSongPosition(~~elapsed);
     };
@@ -191,6 +205,7 @@ export const MusicContextProvider: React.FC = (props) => {
                 toggleFlag,
                 startPlayingWithNewQueue,
                 addToQueue,
+                removeFromQueue,
                 seekSongTo,
                 setVolume
             }}
