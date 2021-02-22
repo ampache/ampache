@@ -114,4 +114,28 @@ final class BookmarkRepository implements BookmarkRepositoryInterface
 
         return $bookmarks;
     }
+
+    /**
+     * Updates existing items matching the values
+     */
+    public function edit(
+        int $position,
+        string $comment,
+        string $objectType,
+        int $objectId,
+        int $userId,
+        int $updateDate
+    ): void {
+        Dba::write(
+            'UPDATE `bookmark` SET `position` = ?, `update_date` = ? WHERE `user` = ? AND `comment` = ? AND `object_type` = ? AND `object_id` = ?',
+            [
+                $position,
+                $updateDate,
+                $userId,
+                $comment,
+                $objectType,
+                $objectId,
+            ]
+        );
+    }
 }

@@ -60,4 +60,16 @@ interface BookmarkRepositoryInterface
         int $userId,
         ?string $comment
     ): array;
+
+    /**
+     * Updates existing items matching the values
+     */
+    public function edit(
+        int $position,
+        string $comment,
+        string $objectType,
+        int $objectId,
+        int $userId,
+        int $updateDate
+    ): void;
 }

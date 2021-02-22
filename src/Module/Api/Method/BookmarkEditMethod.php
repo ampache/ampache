@@ -21,29 +21,52 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Bookmark;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\System\Session;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class BookmarkEditMethod
- * @package Lib\ApiMethods
- */
-final class BookmarkEditMethod
+final class BookmarkEditMethod implements MethodInterface
 {
-    private const ACTION = 'bookmark_edit';
+    public const ACTION = 'bookmark_edit';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    private BookmarkRepositoryInterface $bookmarkRepository;
+
+    private UiInterface $ui;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory,
+        ConfigContainerInterface $configContainer,
+        BookmarkRepositoryInterface $bookmarkRepository,
+        UiInterface $ui
+    ) {
+        $this->streamFactory      = $streamFactory;
+        $this->modelFactory       = $modelFactory;
+        $this->configContainer    = $configContainer;
+        $this->bookmarkRepository = $bookmarkRepository;
+        $this->ui                 = $ui;
+    }
 
     /**
-     * bookmark_edit
      * MINIMUM_API_VERSION=5.0.0
      *
      * Edit a placeholder for the current media that you can return to later.
@@ -54,74 +77,80 @@ final class BookmarkEditMethod
      * position = (integer) current track time in seconds
      * client   = (string) Agent string Default: 'AmpacheAPI' // optional
      * date     = (integer) UNIXTIME() //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws FunctionDisabledException
+     * @throws RequestParamMissingException
+     * @throws ResultEmptyException
      */
-    public static function bookmark_edit(array $input)
-    {
-        if (!Api::check_parameter($input, array('filter', 'position'), self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        foreach (['filter', 'position', 'type'] as $key) {
+            if (!array_key_exists($key, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf(T_('Bad Request: %s'), $key)
+                );
+            }
         }
-        $user      = User::get_from_username(Session::username($input['auth']));
-        $object_id = $input['filter'];
-        $type      = $input['type'];
-        $position  = $input['position'];
-        $comment   = (isset($input['client'])) ? $input['client'] : 'AmpacheAPI';
-        $time      = (isset($input['date'])) ? (int) $input['date'] : time();
-        if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
 
-            return false;
+        $type = $input['type'];
+
+        if ($type === 'video' && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) === false) {
+            throw new FunctionDisabledException(
+                T_('Enable: video')
+            );
         }
+
         // confirm the correct data
-        if (!in_array($type, array('song', 'video', 'podcast_episode'))) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
-
-            return false;
-        }
-        $className = ObjectTypeToClassNameMapper::map($type);
-
-        if ($className === $type || !$object_id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(T_('Bad Request'), '4710', self::ACTION, $type, $input['api_format']);
-
-            return false;
+        if (!in_array($type, ['song', 'video', 'podcast_episode'])) {
+            throw new RequestParamMissingException(
+                T_('Bad Request')
+            );
         }
 
-        $item = new $className($object_id);
+        $objectId  = (int) $input['filter'];
+        $position  = (int) $input['position'];
+        $comment   = $this->ui->scrubIn($input['client'] ?? 'AmpacheAPI');
+        $time      = (int) ($input['date'] ?? time());
+
+        $item = $this->modelFactory->mapObjectType($type, $objectId);
+
         if (!$item->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'filter', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %d'), $objectId)
+            );
         }
-        $object = array(
-            'object_id' => $object_id,
-            'object_type' => $type,
-            'comment' => $comment,
-            'position' => $position,
+        $userId = $gatekeeper->getUser()->getId();
+
+        $bookmarkIds = $this->bookmarkRepository->lookup(
+            $type,
+            $objectId,
+            $userId,
+            $comment
         );
 
-        // check for the bookmark first
-        $bookmark = Bookmark::get_bookmark($object);
-        if (empty($bookmark)) {
-            Api::empty('bookmark', $input['api_format']);
+        if ($bookmarkIds === []) {
+            $result = $output->emptyResult('bookmark');
+        } else {
+            $this->bookmarkRepository->edit(
+                $position,
+                $comment,
+                $type,
+                $objectId,
+                $userId,
+                $time
+            );
 
-            return false;
+            $result = $output->bookmarks($bookmarkIds);
         }
-        // edit it
-        Bookmark::edit($object, $user->id, $time);
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json_Data::bookmarks($bookmark);
-                break;
-            default:
-                echo Xml_Data::bookmarks($bookmark);
-        }
-        Session::extend($input['auth']);
-
-        return true;
+        return $response->withBody(
+            $this->streamFactory->createStream($result)
+        );
     }
 }

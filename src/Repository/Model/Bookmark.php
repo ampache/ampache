@@ -107,21 +107,6 @@ class Bookmark extends database_object
         return $bookmarks;
     }
 
-    /**
-     * edit
-     * @param array $data
-     * @param int $userId
-     * @param int $updateDate
-     * @return PDOStatement|boolean
-     */
-    public static function edit($data, int $userId, int $updateDate)
-    {
-        $sql      = "UPDATE `bookmark` SET `position` = ?, `update_date` = ? " .
-               "WHERE `user` = ? AND `comment` = ? AND `object_type` = ? AND `object_id` = ?";
-
-        return Dba::write($sql, array($data['position'], $updateDate, $userId, scrub_in($data['comment']),  $data['object_type'], $data['object_id']));
-    }
-
     public function getUserName(): string
     {
         $user = new User($this->user);

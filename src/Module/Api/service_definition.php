@@ -105,6 +105,7 @@ return [
     Method\SystemUpdateMethod::class => autowire(),
     Method\SearchSongsMethod::class => autowire(),
     Method\AdvancedSearchMethod::class => autowire(),
+    Method\BookmarkEditMethod::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),
