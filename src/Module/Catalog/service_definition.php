@@ -38,4 +38,5 @@ return [
     MediaDeletionCheckerInterface::class => autowire(MediaDeletionChecker::class),
     Process\CatalogProcessTypeMapperInterface::class => autowire(Process\CatalogProcessTypeMapper::class),
     SingleItemUpdaterInterface::class => autowire(SingleItemUpdater::class),
+    ArtItemGathererInterface::class => autowire(ArtItemGatherer::class),
 ];

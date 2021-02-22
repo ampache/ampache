@@ -26,6 +26,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Collector\ArtCollectorInterface;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Catalog\ArtItemGatherer;
 use Ampache\Module\Catalog\Catalog_beets;
 use Ampache\Module\Catalog\Catalog_beetsremote;
 use Ampache\Module\Catalog\Catalog_dropbox;
@@ -1293,6 +1294,9 @@ abstract class Catalog extends database_object
      * @param boolean $db_art_first
      * @param boolean $api
      * @return boolean
+     *
+     * @deprecated
+     * @see ArtItemGatherer::gather()
      */
     public static function gather_art_item($type, $object_id, $db_art_first = false, $api = false)
     {

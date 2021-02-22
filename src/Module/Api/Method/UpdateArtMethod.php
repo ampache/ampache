@@ -20,79 +20,126 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Catalog\ArtItemGathererInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class UpdateArtMethod
- * @package Lib\ApiMethods
- */
-final class UpdateArtMethod
+final class UpdateArtMethod implements MethodInterface
 {
-    private const ACTION = 'update_art';
+    public const ACTION = 'update_art';
+
+    private ArtItemGathererInterface $artItemGatherer;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    public function __construct(
+        ArtItemGathererInterface $artItemGatherer,
+        ModelFactoryInterface $modelFactory,
+        StreamFactoryInterface $streamFactory,
+        ConfigContainerInterface $configContainer
+    ) {
+        $this->artItemGatherer = $artItemGatherer;
+        $this->modelFactory    = $modelFactory;
+        $this->streamFactory   = $streamFactory;
+        $this->configContainer = $configContainer;
+    }
 
     /**
-     * update_art
      * MINIMUM_API_VERSION=400001
      *
      * updates a single album, artist, song running the gather_art process
      * Doesn't overwrite existing art by default.
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * type      = (string) 'artist', 'album'
      * id        = (integer) $artist_id, $album_id)
      * overwrite = (integer) 0,1 //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws RequestParamMissingException
+     * @throws AccessDeniedException
+     * @throws ResultEmptyException
      */
-    public static function update_art(array $input)
-    {
-        if (!Api::check_parameter($input, array('type', 'id'), self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        foreach (['type', 'id'] as $key) {
+            if (!array_key_exists($key, $input)) {
+                throw new RequestParamMissingException(
+                    sprintf(T_('Bad Request: %s'), $key)
+                );
+            }
         }
 
-        if (!Api::check_access('interface', 75, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
-            return false;
+        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
+            throw new AccessDeniedException(
+                T_('Require: 75')
+            );
         }
-        $type      = (string) $input['type'];
-        $object_id = (int) $input['id'];
-        $overwrite = (int) $input['overwrite'] == 0;
-        $art_url   = AmpConfig::get('web_path') . '/image.php?object_id=' . $object_id . '&object_type=artist&auth=' . $input['auth'];
+
+        $type = (string) $input['type'];
 
         // confirm the correct data
-        if (!in_array($type, array('artist', 'album'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), '4710', self::ACTION, 'type', $input['api_format']);
-
-            return true;
+        if (!in_array($type, ['artist', 'album'])) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), $type)
+            );
         }
 
-        $className = ObjectTypeToClassNameMapper::map($type);
+        $objectId  = (int) $input['id'];
+        $overwrite = (int) ($input['overwrite'] ?? 0) == 0;
 
-        $item = new $className($object_id);
+        $item = $this->modelFactory->mapObjectType($type, $objectId);
+
         if (!$item->id) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), '4704', self::ACTION, 'id', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %d'), $objectId)
+            );
         }
-        // update your object
 
-        if (Catalog::gather_art_item($type, $object_id, $overwrite, true)) {
-            Api::message('Gathered new art for: ' . (string) $object_id . ' (' . $type . ')', $input['api_format'], array('art' => $art_url));
+        if ($this->artItemGatherer->gather($type, $objectId, $overwrite, true)) {
+            $art_url = sprintf(
+                '%s/image.php?object_id=%d&object_type=artist&auth=%s',
+                $this->configContainer->getWebPath(),
+                $objectId,
+                $input['auth']
+            );
 
-            return true;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->success(
+                        sprintf('Gathered new art for: %d (%s)', $objectId, $type),
+                        ['art' => $art_url]
+                    )
+                )
+            );
         }
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(sprintf(T_('Bad Request: %s'), $object_id), '4710', self::ACTION, 'system', $input['api_format']);
-        Session::extend($input['auth']);
 
-        return true;
+        throw new RequestParamMissingException(
+            sprintf(T_('Bad Request: %d'), $objectId)
+        );
     }
 }
