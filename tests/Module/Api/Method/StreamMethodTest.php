@@ -27,18 +27,15 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 use Teapot\StatusCode;
 
 class StreamMethodTest extends MockeryTestCase
 {
-    /** @var StreamFactoryInterface|MockInterface|null */
-    private MockInterface $streamFactory;
-
     /** @var ModelFactoryInterface|MockInterface|null */
     private MockInterface $modelFactory;
 
@@ -46,11 +43,9 @@ class StreamMethodTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->streamFactory = $this->mock(StreamFactoryInterface::class);
         $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
 
         $this->subject = new StreamMethod(
-            $this->streamFactory,
             $this->modelFactory
         );
     }
@@ -82,7 +77,7 @@ class StreamMethodTest extends MockeryTestCase
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
-        $song       = $this->mock(Song::class);
+        $podcast    = $this->mock(Podcast_Episode::class);
 
         $userId = 666;
         $songId = 42;
@@ -97,12 +92,12 @@ class StreamMethodTest extends MockeryTestCase
             ->once()
             ->andReturn($userId);
 
-        $this->modelFactory->shouldReceive('createSong')
+        $this->modelFactory->shouldReceive('createPodcastEpisode')
             ->with($songId)
             ->once()
-            ->andReturn($song);
+            ->andReturn($podcast);
 
-        $song->shouldReceive('play_url')
+        $podcast->shouldReceive('play_url')
             ->with(
                 '&client=api',
                 'api',
@@ -119,7 +114,7 @@ class StreamMethodTest extends MockeryTestCase
                 $response,
                 $output,
                 [
-                    'type' => 'song',
+                    'type' => 'podcast',
                     'id' => (string) $songId
                 ]
             )
@@ -131,7 +126,7 @@ class StreamMethodTest extends MockeryTestCase
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
-        $song       = $this->mock(Podcast_Episode::class);
+        $song       = $this->mock(Song::class);
 
         $userId  = 666;
         $songId  = 42;
@@ -158,7 +153,7 @@ class StreamMethodTest extends MockeryTestCase
             ->once()
             ->andReturn($userId);
 
-        $this->modelFactory->shouldReceive('createPodcastEpisode')
+        $this->modelFactory->shouldReceive('createSong')
             ->with($songId)
             ->once()
             ->andReturn($song);
@@ -185,7 +180,7 @@ class StreamMethodTest extends MockeryTestCase
                 $response,
                 $output,
                 [
-                    'type' => 'podcast',
+                    'type' => 'song',
                     'id' => (string) $songId,
                     'bitrate' => $bitrate,
                     'format' => $format,

@@ -26,11 +26,6 @@ use Ampache\Config\AmpConfig;
     </thead>
     <tbody>
         <tr>
-            <td>Cookie Disclaimer</td>
-            <td>cookie_disclaimer</td>
-            <td><?php echo T_('Hide the cookie disclaimer message'); ?></td>
-        </tr>
-        <tr>
             <td>Session</td>
             <td><?php echo AmpConfig::get('session_name'); ?></td>
             <td><?php echo T_('Ampache session'); ?></td>

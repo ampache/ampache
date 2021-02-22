@@ -76,10 +76,10 @@ final class DownloadMethod implements MethodInterface
             $original  = $format && $format != 'raw';
 
             $params = '&action=download&client=api&cache=1';
-            if ($original) {
+            if ($original && $type === 'song') {
                 $params .= '&transcode_to=' . $format;
             }
-            if ($format) {
+            if ($format && $type === 'song') {
                 $params .= '&format=' . $format;
             }
 

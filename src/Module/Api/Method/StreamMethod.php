@@ -28,22 +28,17 @@ use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 use Teapot\StatusCode;
 
 final class StreamMethod implements MethodInterface
 {
     public const ACTION = 'stream';
 
-    private StreamFactoryInterface $streamFactory;
-
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
-        StreamFactoryInterface $streamFactory,
         ModelFactoryInterface $modelFactory
     ) {
-        $this->streamFactory = $streamFactory;
         $this->modelFactory  = $modelFactory;
     }
 
@@ -56,8 +51,8 @@ final class StreamMethod implements MethodInterface
      * @param array $input
      * id      = (string) $song_id|$podcast_episode_id
      * type    = (string) 'song', 'podcast'
-     * bitrate = (integer) max bitrate for transcoding
-     * format  = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding
+     * bitrate = (integer) max bitrate for transcoding // Song only
+     * format  = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding // Song only
      * offset  = (integer) time offset in seconds
      * length  = (integer) 0,1
      * @return boolean
@@ -86,10 +81,10 @@ final class StreamMethod implements MethodInterface
         if ($contentLength === 1) {
             $params .= '&content_length=required';
         }
-        if ($original) {
+        if ($original && $type == 'song') {
             $params .= '&transcode_to=' . $format;
         }
-        if ($maxBitRate > 0) {
+        if ($maxBitRate > 0 && $type == 'song') {
             $params .= '&bitrate=' . $maxBitRate;
         }
         if ($timeOffset) {
