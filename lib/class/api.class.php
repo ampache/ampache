@@ -3928,7 +3928,7 @@ class Api
         if ($original && $type == 'song') {
             $params .= '&transcode_to=' . $format;
         }
-        if ((int) $maxBitRate > 0) {
+        if ((int) $maxBitRate > 0 && $type == 'song') {
             $params .= '&bitrate=' . $maxBitRate;
         }
         if ($timeOffset) {
