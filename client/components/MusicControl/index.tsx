@@ -41,7 +41,7 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
     const handleFlagSong = (songID: string, favorite: boolean) => {
         flagSong(songID, favorite, props.authKey)
             .then(() => {
-                musicContext.currentPlayingSong.flag = favorite;
+                musicContext.flagCurrentSong(favorite);
                 if (favorite) {
                     return toast.success('Song added to favorites');
                 }
@@ -73,16 +73,8 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
             <div className={style.ratingBarContainer}>
                 <div className={style.ratingBar}>
                     <SimpleRating
-                        value={
-                            musicContext.currentPlayingSong
-                                ? musicContext.currentPlayingSong.rating
-                                : 0
-                        }
-                        fav={
-                            musicContext.currentPlayingSong
-                                ? musicContext.currentPlayingSong.flag
-                                : false
-                        }
+                        value={musicContext.currentPlayingSong?.rating}
+                        fav={musicContext.currentPlayingSong?.flag}
                         itemID={musicContext.currentPlayingSong?.id}
                         setFlag={handleFlagSong}
                     />

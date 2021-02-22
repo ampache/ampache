@@ -114,11 +114,16 @@ const SongList: React.FC<SongListProps> = (props) => {
             .then(() => {
                 const newSongs = songs.map((song) => {
                     if (song.id === songID) {
-                        song.flag = !song.flag;
+                        song.flag = favorite;
                     }
                     return song;
                 });
                 setSongs(newSongs);
+                /*TODO: Oddly whenever a song is liked from a SongRow, the heart in MusicControl also changes
+                   The songQueue state in MusicContext gets changed as well, and I have no idea why or how!
+                   This is actually the ideal functionality, but it is a little delayed, and also odd...
+                   Also to note, the change only happens on a re-render, like while the song is playing.
+                   If the music is paused, the heart won't change until the music resumes.*/
                 if (favorite) {
                     return toast.success('Song added to favorites');
                 }
