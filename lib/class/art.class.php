@@ -999,7 +999,13 @@ class Art extends database_object
         if (isset($data['song'])) {
             // If we find a good one, stop looking
             $getID3 = new getID3();
-            $id3    = $getID3->analyze($data['song']);
+            try {
+                $id3 = $getID3->analyze($data['song']);
+            } catch (Exception $error) {
+                debug_event(self::class, 'getid3' . $error->getMessage(), 1);
+
+                return '';
+            }
 
             if ($id3['format_name'] == "WMA") {
                 return $id3['asf']['extended_content_description_object']['content_descriptors']['13']['data'];
