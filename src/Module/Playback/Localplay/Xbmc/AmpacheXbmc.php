@@ -208,10 +208,10 @@ class AmpacheXbmc extends localplay_controller
      */
     public function get_instance($instance = '')
     {
-        $instance = $instance ? $instance : AmpConfig::get('xbmc_active');
+        $instance = is_numeric($instance) ? (int) $instance : (int) AmpConfig::get('xbmc_active', 0);
         $sql      = "SELECT * FROM `localplay_xbmc` WHERE `id` = ?";
         // if you only have one instance just default to that!
-        if (!is_numeric($instance) && count(self::get_instances()) === 1) {
+        if ($instance < 1) {
             $sql = "SELECT * FROM `localplay_xbmc`";
         }
         $db_results = Dba::query($sql, array($instance));
