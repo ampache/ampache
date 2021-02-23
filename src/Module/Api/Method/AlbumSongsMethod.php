@@ -49,6 +49,7 @@ class AlbumSongsMethod
      *
      * @param array $input
      * filter = (string) UID of Album
+     * exact  = (integer) 0,1, if true don't group songs from different disks //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * @return boolean
@@ -71,7 +72,8 @@ class AlbumSongsMethod
         // songs for all disks
         $songs = array();
         $user  = User::get_from_username(Session::username($input['auth']));
-        if (AmpConfig::get('album_group')) {
+        $exact = (int) $input['exact'] == 1;
+        if (AmpConfig::get('album_group') && !$exact) {
             $disc_ids = $album->get_group_disks_ids();
             foreach ($disc_ids as $discid) {
                 $disc     = new Album($discid);
