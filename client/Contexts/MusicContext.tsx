@@ -75,6 +75,7 @@ export const MusicContextProvider: React.FC = (props) => {
             audioRef.audioEl.current.play();
 
             if ('mediaSession' in navigator) {
+                // eslint-disable-next-line immutable/no-mutation
                 navigator.mediaSession.metadata = new MediaMetadata({
                     title: song.title,
                     artist: song.artist.name,

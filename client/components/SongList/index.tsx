@@ -122,6 +122,9 @@ const SongList: React.FC<SongListProps> = (props) => {
                     return song;
                 });
                 setSongs(newSongs);
+                if (musicContext.currentPlayingSong?.id === songID) {
+                    musicContext.flagCurrentSong(favorite);
+                }
                 if (favorite) {
                     return toast.success('Song added to favorites');
                 }

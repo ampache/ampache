@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import SVG from 'react-inlinesvg';
 import { Song } from '~logic/Song';
 import { Link } from 'react-router-dom';
 import SimpleRating from '~components/SimpleRating';
+import { MusicContext } from '~Contexts/MusicContext';
 
 import style from './index.styl';
 
@@ -18,6 +19,8 @@ interface SongRowProps {
 }
 
 const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
+    const musicContext = useContext(MusicContext);
+
     const formatLabel = (s) => [
         (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s
         //https://stackoverflow.com/a/37770048
@@ -94,7 +97,11 @@ const SongRow: React.FC<SongRowProps> = (props: SongRowProps) => {
                     <div className={style.rating}>
                         <SimpleRating
                             value={props.song.rating}
-                            fav={props.song.flag}
+                            fav={
+                                props.isCurrentlyPlaying
+                                    ? musicContext.currentPlayingSong?.flag
+                                    : props.song.flag
+                            }
                             itemID={props.song.id}
                             setFlag={props.flagSong}
                         />
