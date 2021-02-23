@@ -1,3 +1,4 @@
+/* eslint-disable immutable/no-mutation */
 export default class AmpacheError extends Error {
     private errorAction: string;
     private errorCode: string;

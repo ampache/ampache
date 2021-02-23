@@ -28,10 +28,7 @@ const QueueBar: React.FC<QueueBarProps> = (props) => {
         const queueIndex = musicContext.songQueue.findIndex(
             (o) => o.id === songID
         );
-        musicContext.startPlayingWithNewQueue(
-            musicContext.songQueue,
-            queueIndex
-        );
+        musicContext.changeQueuePosition(queueIndex);
     };
     const handleRemoveSong = (queueIndex: number) => {
         musicContext.removeFromQueue(queueIndex);
@@ -51,7 +48,7 @@ const QueueBar: React.FC<QueueBarProps> = (props) => {
                 <div className={style.queueList}>
                     <div className={style.queueListInner}>
                         <ul className={`striped-list ${style.songs}`}>
-                            {musicContext.songQueue.length == 0 && (
+                            {musicContext.songQueue.size == 0 && (
                                 <div className={style.emptyQueue}>
                                     Nothing in the queue
                                 </div>

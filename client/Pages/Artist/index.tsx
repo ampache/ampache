@@ -85,8 +85,7 @@ const ArtistPage: React.FC<ArtistPageProps> = (props: ArtistPageProps) => {
     const handleFlagArtist = (artistID: string, favorite: boolean) => {
         flagArtist(artistID, favorite, props.user.authKey)
             .then(() => {
-                const newArtist = { ...artist };
-                newArtist.flag = favorite;
+                const newArtist = { ...artist, flag: favorite };
                 setArtist(newArtist);
                 if (favorite) {
                     return toast.success('Artist added to favorites');

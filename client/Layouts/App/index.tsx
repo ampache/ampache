@@ -1,3 +1,4 @@
+/* eslint-disable immutable/no-mutation */
 import React, { Component } from 'react';
 import '/stylus/main.styl';
 import 'react-toastify/dist/ReactToastify.css';

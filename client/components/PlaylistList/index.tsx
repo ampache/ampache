@@ -124,8 +124,7 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
 
                 const newPlaylists = playlists.map((playlist) => {
                     if (playlist.id === playlistID) {
-                        playlist.name = newName;
-                        return playlist;
+                        return { ...playlist, name: newName };
                     }
                     return playlist;
                 });

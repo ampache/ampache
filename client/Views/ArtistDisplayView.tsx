@@ -22,7 +22,7 @@ const ArtistDisplayView: React.FC<ArtistDisplayViewProps> = (props) => {
             .then(() => {
                 const newArtists = artistsState.map((artist) => {
                     if (artist.id === artistID) {
-                        artist.flag = favorite;
+                        return { ...artist, flag: favorite };
                     }
                     return artist;
                 });

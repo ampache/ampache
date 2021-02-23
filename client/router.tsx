@@ -1,3 +1,4 @@
+/* eslint-disable immutable/no-mutation */
 import React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Cookies from 'js-cookie';

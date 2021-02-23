@@ -27,7 +27,7 @@ const AlbumDisplayView: React.FC<AlbumDisplayViewProps> = (props) => {
             .then(() => {
                 const newAlbums = albumsState.map((album) => {
                     if (album.id === albumID) {
-                        album.flag = favorite;
+                        return { ...album, flag: favorite };
                     }
                     return album;
                 });

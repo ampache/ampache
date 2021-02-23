@@ -43,8 +43,7 @@ const AlbumPage: React.FC<AlbumPageProps> = (props: AlbumPageProps) => {
     const handleFlagAlbum = (albumID: string, favorite: boolean) => {
         flagAlbum(albumID, favorite, props.user.authKey)
             .then(() => {
-                const newAlbum = { ...album };
-                newAlbum.flag = favorite;
+                const newAlbum = { ...album, flag: favorite };
                 setAlbum(newAlbum);
                 if (favorite) {
                     return toast.success('Album added to favorites');
