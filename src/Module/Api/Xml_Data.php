@@ -437,12 +437,11 @@ class Xml_Data
                     $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                             "\t<title><![CDATA[" . $song->title . "]]></title>\n" .
                             "\t<name><![CDATA[" . $song->f_title . "]]></name>\n" .
-                            "\t<artist id=\"" . $song->artist .
-                            '"><![CDATA[' . $song->get_artist_name() .
-                            "]]></artist>\n" .
-                            "\t<album id=\"" . $song->album .
-                            '"><![CDATA[' . $song->get_album_name() .
-                            "]]></album>\n" .
+                            "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_name() . "]]></artist>\n" .
+                            "\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->get_album_name() . "]]></album>\n" .
+                            "\t<albumartist id=\"" . $song->albumartist . "\"><![CDATA[" . $song->get_album_artist_name() . "]]></albumartist>\n" .
+                            "\t<disk><![CDATA[" . $song->disk . "]]></disk>\n" .
+                            "\t<track>" . $song->track . "</track>\n";
                             "</$object_type>\n";
                     break;
                 case 'playlist':
@@ -1038,18 +1037,13 @@ class Xml_Data
                     // Title is an alias for name
                     "\t<title><![CDATA[" . $song->title . "]]></title>\n" .
                     "\t<name><![CDATA[" . $song->title . "]]></name>\n" .
-                    "\t<artist id=\"" . $song->artist .
-                    '"><![CDATA[' . $song->get_artist_name() .
-                    "]]></artist>\n" .
-                    "\t<album id=\"" . $song->album .
-                    '"><![CDATA[' . $song->get_album_name() .
-                    "]]></album>\n" .
-                    "\t<albumartist id=\"" . $song->albumartist .
-                    "\"><![CDATA[" . $song->get_album_artist_name() .
-                    "]]></albumartist>\n";
+                    "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_name() . "]]></artist>\n" .
+                    "\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->get_album_name() . "]]></album>\n" .
+                    "\t<albumartist id=\"" . $song->albumartist . "\"><![CDATA[" . $song->get_album_artist_name() . "]]></albumartist>\n" .
+                    "\t<disk><![CDATA[" . $song->disk . "]]></disk>\n" .
+                    "\t<track>" . $song->track . "</track>\n";
             $string .= $tag_string .
                     "\t<filename><![CDATA[" . $song->file . "]]></filename>\n" .
-                    "\t<track>" . $song->track . "</track>\n" .
                     "\t<playlisttrack>" . $playlist_track . "</playlisttrack>\n" .
                     "\t<time>" . $song->time . "</time>\n" .
                     "\t<year>" . $song->year . "</year>\n" .

@@ -917,22 +917,21 @@ class Json_Data
                 "title" => $song->title,
                 "name" => $song->title,
                 "artist" => array(
-                    "id" => (string)$song->artist,
-                    "name" => $song->get_artist_name()
-                ),
+                    "id" => (string) $song->artist,
+                    "name" => $song->get_artist_name()),
                 "album" => array(
                     "id" => (string) $song->album,
                     "name" => $song->get_album_name()),
-                "genre" => self::genre_array($song->tags)
-            );
-            //always get album artist
-            $ourSong['albumartist'] = array(
-                "id" => (string) $song->albumartist,
-                "name" => $song->get_album_artist_name()
+                'albumartist' => array(
+                    "id" => (string) $song->albumartist,
+                    "name" => $song->get_album_artist_name()
+                )
             );
 
+            $ourSong['disk']                  = (int) $song->disk;
+            $ourSong['track']                 = (int) $song->track;
             $ourSong['filename']              = $song->file;
-            $ourSong['track']                 = (int)$song->track;
+            $ourSong['genre']                 = self::genre_array($song->tags, true);
             $ourSong['playlisttrack']         = $playlist_track;
             $ourSong['time']                  = (int)$song->time;
             $ourSong['year']                  = (int)$song->year;
