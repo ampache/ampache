@@ -66,8 +66,8 @@ final class HandshakeMethod
         }
         $username = trim((string) $input['user']);
         $user_ip  = Core::get_user_ip();
-        $version  = (isset($input['version'])) ? $input['version'] : Api::$version;
         // set the version to the old string for old api clients
+        $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
         Api::$version = ((int) $version >= 350001) ? '500000' : Api::$version;
 
         // Log the attempt
