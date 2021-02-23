@@ -441,7 +441,7 @@ class Xml_Data
                             "\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->get_album_name() . "]]></album>\n" .
                             "\t<albumartist id=\"" . $song->albumartist . "\"><![CDATA[" . $song->get_album_artist_name() . "]]></albumartist>\n" .
                             "\t<disk><![CDATA[" . $song->disk . "]]></disk>\n" .
-                            "\t<track>" . $song->track . "</track>\n";
+                            "\t<track>" . $song->track . "</track>\n" .
                             "</$object_type>\n";
                     break;
                 case 'playlist':
