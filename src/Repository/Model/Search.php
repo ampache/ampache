@@ -513,15 +513,12 @@ class Search extends playlist_object
 
         /* HINT: Number of times object has been played */
         $this->type_numeric('played_times', T_('# Played'));
-        $show_skip = AmpConfig::get('show_skipped_times');
-        if ($show_skip) {
-            /* HINT: Number of times object has been skipped */
-            $this->type_numeric('skipped_times', T_('# Skipped'));
-            /* HINT: Number of times object has been played OR skipped */
-            $this->type_numeric('played_or_skipped_times', T_('# Played or Skipped'));
-            /* HINT: Percentage of (Times Played / Times skipped) * 100 */
-            $this->type_numeric('play_skip_ratio', T_('Played/Skipped ratio'));
-        }
+        /* HINT: Number of times object has been skipped */
+        $this->type_numeric('skipped_times', T_('# Skipped'));
+        /* HINT: Number of times object has been played OR skipped */
+        $this->type_numeric('played_or_skipped_times', T_('# Played or Skipped'));
+        /* HINT: Percentage of (Times Played / Times skipped) * 100 */
+        $this->type_numeric('play_skip_ratio', T_('Played/Skipped ratio'));
         $this->type_numeric('last_play', T_('My Last Play'), 'days');
         $this->type_numeric('last_skip', T_('My Last Skip'), 'days');
         $this->type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days');
@@ -651,7 +648,6 @@ class Search extends playlist_object
 
         /* HINT: Number of times object has been played */
         $this->type_numeric('played_times', T_('# Played'));
-
         $this->type_numeric('last_play', T_('My Last Play'), 'days');
         $this->type_numeric('last_skip', T_('My Last Skip'), 'days');
         $this->type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days');
@@ -700,7 +696,6 @@ class Search extends playlist_object
 
         /* HINT: Number of times object has been played */
         $this->type_numeric('played_times', T_('# Played'));
-
         $this->type_numeric('last_play', T_('My Last Play'), 'days');
         $this->type_numeric('last_skip', T_('My Last Skip'), 'days');
         $this->type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days');
