@@ -69,6 +69,7 @@ final class AlbumSongsMethod implements MethodInterface
      * @param ApiOutputInterface $output
      * @param array $input
      * filter = (string) UID of Album
+     * exact  = (integer) 0,1, if true don't group songs from different disks //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      *
@@ -97,7 +98,10 @@ final class AlbumSongsMethod implements MethodInterface
         }
 
         // songs for all disks
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP)) {
+        if (
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) &&
+            (int) ($input['exact'] ?? 0) === 0
+        ) {
             $songs = [];
 
             $discIds = $album->get_group_disks_ids();

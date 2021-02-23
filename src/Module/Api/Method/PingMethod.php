@@ -69,9 +69,8 @@ final class PingMethod implements MethodInterface
      * @param ResponseInterface
      * @param ApiOutputInterface
      * @param array $input
-     * auth = (string) //optional
-     *
-     * @return ResponseInterface
+     * auth    = (string) //optional
+     * version = (string) $version //optional
      */
     public function handle(
         GatekeeperInterface $gatekeeper,
@@ -81,7 +80,7 @@ final class PingMethod implements MethodInterface
     ): ResponseInterface {
         // set the version to the old string for old api clients
         $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
-        Api::$version = ($version[0] === '4' || $version[0] === '3') ? '500000' : Api::$version;
+        Api::$version = ((int) $version >= 350001) ? '500000' : Api::$version;
 
         $data = [
             'server' => $this->configContainer->get(ConfigurationKeyEnum::VERSION),

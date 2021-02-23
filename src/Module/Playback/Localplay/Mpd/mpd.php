@@ -276,42 +276,38 @@ class mpd
     {
         $this->_debug(self::class, "host: " . $this->host . ", port: " . $this->port, 5);
         $this->_mpd_sock = fsockopen($this->host, (int) $this->port, $err, $err_str, 6);
-        // Vollmerize this bizatch
-        /* Set the timeout on the connection */
-        stream_set_timeout($this->_mpd_sock, 6);
-
-        /* We want blocking, cause otherwise it doesn't
-         * timeout, and feof just keeps on spinning
-         */
-        stream_set_blocking($this->_mpd_sock, true);
-        $status = socket_get_status($this->_mpd_sock);
 
         if (!$this->_mpd_sock) {
             $this->_error('Connect', "Socket Error: $err_str ($err)");
 
             return false;
-        } else {
-            while (!feof($this->_mpd_sock) && !$status['timed_out']) {
-                $response = fgets($this->_mpd_sock, 1024);
-                if (function_exists('socket_get_status')) {
-                    $status = socket_get_status($this->_mpd_sock);
-                }
-                if (strncmp(self::RESPONSE_OK, $response, strlen(self::RESPONSE_OK)) == 0) {
-                    $this->connected = true;
-
-                    return $response;
-                }
-                if (strncmp(self::RESPONSE_ERR, $response, strlen(self::RESPONSE_ERR)) == 0) {
-                    $this->_error('Connect', "Server responded with: $response");
-
-                    return false;
-                }
-            } // end while
-            // Generic response
-            $this->_error('Connect', "Connection not available");
-
-            return false;
         }
+        // Set the timeout on the connection */
+        stream_set_timeout($this->_mpd_sock, 6);
+
+        // We want blocking, cause otherwise it doesn't timeout, and feof just keeps on spinning
+        stream_set_blocking($this->_mpd_sock, true);
+        $status = socket_get_status($this->_mpd_sock);
+        while (!feof($this->_mpd_sock) && !$status['timed_out']) {
+            $response = fgets($this->_mpd_sock, 1024);
+            if (function_exists('socket_get_status')) {
+                $status = socket_get_status($this->_mpd_sock);
+            }
+            if (strncmp(self::RESPONSE_OK, $response, strlen(self::RESPONSE_OK)) == 0) {
+                $this->connected = true;
+
+                return $response;
+            }
+            if (strncmp(self::RESPONSE_ERR, $response, strlen(self::RESPONSE_ERR)) == 0) {
+                $this->_error('Connect', "Server responded with: $response");
+
+                return false;
+            }
+        } // end while
+        // Generic response
+        $this->_error('Connect', "Connection not available");
+
+        return false;
     } // connect
 
     /**
