@@ -26,6 +26,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Share\ExpirationDateCalculator;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -396,6 +397,9 @@ class Share extends database_object
      * get_expiry
      * @param integer $days
      * @return integer
+     *
+     * @deprecated
+     * @see ExpirationDateCalculator::calculate()
      */
     public static function get_expiry($days = null)
     {

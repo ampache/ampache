@@ -21,28 +21,54 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Share;
-use Ampache\Repository\Model\User;
-use Ampache\Module\Api\Api;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\FunctionDisabledException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Share\ExpirationDateCalculatorInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class ShareEditMethod
- * @package Lib\ApiMethods
- */
-final class ShareEditMethod
+final class ShareEditMethod implements MethodInterface
 {
-    private const ACTION = 'share_edit';
+    public const ACTION = 'share_edit';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ShareRepositoryInterface $shareRepository;
+
+    private ConfigContainerInterface $configContainer;
+
+    private ModelFactoryInterface $modelFactory;
+
+    private ExpirationDateCalculatorInterface $expirationDateCalculator;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ShareRepositoryInterface $shareRepository,
+        ConfigContainerInterface $configContainer,
+        ModelFactoryInterface $modelFactory,
+        ExpirationDateCalculatorInterface $expirationDateCalculator
+    ) {
+        $this->streamFactory            = $streamFactory;
+        $this->shareRepository          = $shareRepository;
+        $this->configContainer          = $configContainer;
+        $this->modelFactory             = $modelFactory;
+        $this->expirationDateCalculator = $expirationDateCalculator;
+    }
 
     /**
-     * share_edit
      * MINIMUM_API_VERSION=420000
+     *
      * Update the description and/or expiration date for an existing share.
      * Takes the share id to update with optional description and expires parameters.
      *
@@ -52,58 +78,71 @@ final class ShareEditMethod
      * download    = (boolean) 0,1 //optional
      * expires     = (integer) number of whole days before expiry //optional
      * description = (string) update description //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     * @throws ResultEmptyException
+     * @throws RequestParamMissingException
+     * @throws FunctionDisabledException
      */
-    public static function share_edit(array $input)
-    {
-        if (!AmpConfig::get('share')) {
-            Api::error(T_('Enable: share'), '4703', self::ACTION, 'system', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE) === false) {
+            throw new FunctionDisabledException(
+                T_('Enable: share')
+            );
         }
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
-            return false;
+
+        $shareId = $input['filter'] ?? null;
+
+        if ($shareId === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
         }
-        $share_id = $input['filter'];
 
-        $user = User::get_from_username(Session::username($input['auth']));
+        $user = $gatekeeper->getUser();
 
-        if (in_array($share_id, static::getShareRepository()->getList($user))) {
-            $share       = new Share($share_id);
-            $description = isset($input['description']) ? $input['description'] : $share->description;
-            $stream      = isset($input['stream']) ? $input['stream'] : $share->allow_stream;
-            $download    = isset($input['download']) ? $input['download'] : $share->allow_download;
-            $expires     = isset($input['expires']) ? Share::get_expiry($input['expires']) : $share->expire_days;
+        if (in_array((int) $shareId, $this->shareRepository->getList($user))) {
+            $share = $this->modelFactory->createShare((int) $shareId);
 
-            $data = array(
+            $description = $input['description'] ?? $share->description;
+            $stream      = $input['stream'] ?? $share->allow_stream;
+            $download    = $input['download'] ?? $share->allow_download;
+
+            if (array_key_exists('expires', $input)) {
+                $expires = $this->expirationDateCalculator->calculate((int) $input['expires']);
+            } else {
+                $expires = $share->expire_days;
+            }
+
+            $data = [
                 'max_counter' => $share->max_counter,
                 'expire' => $expires,
                 'allow_stream' => $stream,
                 'allow_download' => $download,
                 'description' => $description
-            );
+            ];
             if ($share->update($data, $user)) {
-                Api::message('share ' . $share_id . ' updated', $input['api_format']);
+                return $response->withBody(
+                    $this->streamFactory->createStream(
+                        $output->success(
+                            sprintf('share %d updated', $shareId)
+                        )
+                    )
+                );
             } else {
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Bad Request: %s'), $share_id), '4710', self::ACTION, 'system', $input['api_format']);
+                throw new RequestParamMissingException(
+                    sprintf(T_('Bad Request: %d'), $shareId)
+                );
             }
         } else {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $share_id), '4704', self::ACTION, 'filter', $input['api_format']);
+            throw new ResultEmptyException(
+                sprintf(T_('Not Found: %d'), $shareId)
+            );
         }
-        Session::extend($input['auth']);
-
-        return true;
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getShareRepository(): ShareRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(ShareRepositoryInterface::class);
     }
 }

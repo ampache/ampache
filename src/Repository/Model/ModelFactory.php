@@ -220,6 +220,11 @@ final class ModelFactory implements ModelFactoryInterface
         );
     }
 
+    public function createShare(int $shareId): Share
+    {
+        return new Share($shareId);
+    }
+
     /**
      * Maps an object type name like `song` to its corresponding model class
      */
