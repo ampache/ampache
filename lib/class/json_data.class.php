@@ -760,17 +760,16 @@ class JSON_Data
                 "album" => array(
                     "id" => (string) $song->album,
                     "name" => $song->get_album_name()),
-                "tag" => self::tags_array($song->tags),
-            );
-            if ($song->albumartist) {
-                $ourSong['albumartist'] = array(
+                'albumartist' => array(
                     "id" => (string) $song->albumartist,
                     "name" => $song->get_album_artist_name()
-                );
-            }
+                )
+            );
 
-            $ourSong['filename']              = $song->file;
+            $ourSong['disk']                  = (int) $song->disk;
             $ourSong['track']                 = (int) $song->track;
+            $ourSong['filename']              = $song->file;
+            $ourSong['tag']                   = self::tags_array($song->tags);
             $ourSong['playlisttrack']         = $playlist_track;
             $ourSong['time']                  = (int) $song->time;
             $ourSong['year']                  = (int) $song->year;
