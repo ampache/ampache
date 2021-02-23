@@ -1015,6 +1015,7 @@ class XML_Data
                 "\t<resolution><![CDATA[" . $video->f_resolution . "]]></resolution>\n" .
                 "\t<size>" . $video->size . "</size>\n" .
                 self::tags_string($video->tags) .
+                "\t<time><![CDATA[" . $video->time . "]]></time>\n" .
                 "\t<url><![CDATA[" . $video->play_url('', 'api', false, $user_id) . "]]></url>\n" .
                 "\t<art><![CDATA[" . $art_url . "]]></art>\n" .
                 "\t<flag>" . (!$flag->get_flag($user_id, false) ? 0 : 1) . "</flag>\n" .

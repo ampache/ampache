@@ -848,6 +848,7 @@ class JSON_Data
                 "resolution" => $video->f_resolution,
                 "size" => (int) $video->size,
                 "tag" => self::tags_array($video->tags),
+                "time" => (int) $video->time,
                 "url" => $video->play_url('', 'api', false, $user_id),
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user_id, false) ? 0 : 1),

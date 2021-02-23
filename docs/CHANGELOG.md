@@ -137,6 +137,8 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Add time to artist and album objects. (total time of all songs in seconds)
 * Add songcount, albumcount to artist objects. (time in seconds)
 * Add songcount to album objects. (time in seconds)
+* Add disk to song objects
+* Add time to video objects. (time in seconds)
 * Add title, mime, catalog to podcast_episodes
 * Api::advanced_search Add 'playlist', 'user' and 'video' to search types
 * Api::handshake added extra total counts to the response
