@@ -33,10 +33,9 @@ use Ampache\Config\Init\InitializationHandlerGetText;
 use Ampache\Config\Init\InitializationHandlerGlobals;
 use Ampache\Module\Util\EnvironmentInterface;
 use getID3;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use MusicBrainz\MusicBrainz;
-use Narrowspark\HttpEmitter\AbstractSapiEmitter;
-use Narrowspark\HttpEmitter\SapiEmitter;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
@@ -84,7 +83,6 @@ return [
     StreamFactoryInterface::class => autowire(Psr17Factory::class),
     UriFactoryInterface::class => autowire(Psr17Factory::class),
     UploadedFileFactoryInterface::class => autowire(Psr17Factory::class),
-    AbstractSapiEmitter::class => autowire(SapiEmitter::class),
     ServerRequestCreatorInterface::class => autowire(ServerRequestCreator::class),
     ServerRequestFactoryInterface::class => autowire(Psr17Factory::class),
     PhpTalInterface::class => autowire(PHPTAL::class),

@@ -27,7 +27,7 @@ namespace Ampache\Module\Api;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Output\ApiOutputFactoryInterface;
-use Narrowspark\HttpEmitter\AbstractSapiEmitter;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 
@@ -41,7 +41,7 @@ final class JsonApiApplication implements ApiApplicationInterface
 
     private ResponseFactoryInterface $responseFactory;
 
-    private AbstractSapiEmitter $sapiEmitter;
+    private SapiEmitter $sapiEmitter;
 
     private ServerRequestCreatorInterface $serverRequestCreator;
 
@@ -50,7 +50,7 @@ final class JsonApiApplication implements ApiApplicationInterface
         ApiHandlerInterface $apiHandler,
         ConfigContainerInterface $configContainer,
         ResponseFactoryInterface $responseFactory,
-        AbstractSapiEmitter $sapiEmitter,
+        SapiEmitter $sapiEmitter,
         ServerRequestCreatorInterface $serverRequestCreator
     ) {
         $this->apiOutputFactory     = $apiOutputFactory;

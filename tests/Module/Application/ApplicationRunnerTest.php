@@ -34,7 +34,6 @@ use DI\NotFoundException;
 use Exception;
 use Mockery;
 use Mockery\MockInterface;
-use Narrowspark\HttpEmitter\AbstractSapiEmitter;
 use Narrowspark\HttpEmitter\SapiEmitter;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -141,7 +140,7 @@ class ApplicationRunnerTest extends MockeryTestCase
         $request    = $this->mock(ServerRequestInterface::class);
         $handler    = $this->mock(ApplicationActionInterface::class);
         $response   = $this->mock(ResponseInterface::class);
-        $emitter    = $this->mock(AbstractSapiEmitter::class);
+        $emitter    = $this->mock(SapiEmitter::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
         $action       = 'some-action';
@@ -194,7 +193,7 @@ class ApplicationRunnerTest extends MockeryTestCase
         $request    = $this->mock(ServerRequestInterface::class);
         $handler    = $this->mock(ApplicationActionInterface::class);
         $response   = $this->mock(ResponseInterface::class);
-        $emitter    = $this->mock(AbstractSapiEmitter::class);
+        $emitter    = $this->mock(SapiEmitter::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
         $action         = 'some-action';
