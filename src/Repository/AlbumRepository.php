@@ -194,7 +194,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         );
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
+            $results[$row['disk']] = (int) $row['id'];
         }
 
         return $results;
