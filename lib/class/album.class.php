@@ -667,8 +667,7 @@ class Album extends database_object implements library_item
      * get_album_suite
      * gets the album ids with the same musicbrainz identifier
      * @param integer $catalog
-     * return integer[]
-     * @return array
+     * @return integer[]
      */
     public function get_album_suite($catalog = 0)
     {
@@ -709,7 +708,7 @@ class Album extends database_object implements library_item
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[$row['disk']] = $row['id'];
         }
 
         return $results;
