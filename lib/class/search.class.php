@@ -876,6 +876,7 @@ class Search extends playlist_object
         $data   = self::clean_request($data);
         $search = new Search(null, $data['type'], $user);
         unset($data['type']);
+        //debug_event(self::class, 'run: ' . print_r($data, true), 5);
         $search->parse_rules($data);
 
         // Generate BASE SQL
@@ -1093,6 +1094,7 @@ class Search extends playlist_object
                 return $type['type'];
             }
         }
+        debug_event(self::class, 'ERROR: ' . $name . ' name_to_basetype: ' . $type['name'], 5);
 
         return false;
     }
@@ -1109,7 +1111,7 @@ class Search extends playlist_object
         $this->rules = array();
         foreach ($data as $rule => $value) {
             //debug_event(self::class, 'parse_rules: ' . $rule . ' - ' . $value, 5);
-            if ($value == 'name' && preg_match('/^rule_[0123456789]*$/', $rule)) {
+            if ((($this->searchtype == 'artist' && $value == 'artist') || $value == 'name') && preg_match('/^rule_[0123456789]*$/', $rule)) {
                 $value = 'title';
             }
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {
