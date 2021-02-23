@@ -31,7 +31,7 @@
         "sort-packages": true
     },
     "require": {
-        "php": ">=7.4 || >=8.0",
+        "php": "^7.4 || ^8.0",
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-gd": "*",
@@ -61,7 +61,7 @@
         "happyworm/jplayer": "2.*",
         "james-heinrich/getid3": "dev-master",
         "jeromeetienne/jquery-qrcode": "dev-master",
-        "jwilsson/spotify-web-api-php": "^3.5",
+        "jwilsson/spotify-web-api-php": "^4.2",
         "krixon/xbmc-php-rpc": "dev-master",
         "kumailht/responsive-elements": "dev-master",
         "kunalvarma05/dropbox-php-sdk": "^0.2.1",

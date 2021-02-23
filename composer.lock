@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "65f73a4af9d2bd34594350bbca33fd48",
+    "content-hash": "ffba08a13c108a8b4b3c1ac5e3d8349d",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -1232,12 +1232,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "811a266a18c540c133114c8823c717a99f1a7b6a"
+                "reference": "49d52509fbb696cebde9878f1459b1c168b57a4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/811a266a18c540c133114c8823c717a99f1a7b6a",
-                "reference": "811a266a18c540c133114c8823c717a99f1a7b6a",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/49d52509fbb696cebde9878f1459b1c168b57a4d",
+                "reference": "49d52509fbb696cebde9878f1459b1c168b57a4d",
                 "shasum": ""
             },
             "require": {
@@ -1292,7 +1292,7 @@
                 "issues": "https://github.com/JamesHeinrich/getID3/issues",
                 "source": "https://github.com/JamesHeinrich/getID3/tree/master"
             },
-            "time": "2021-02-20T02:49:36+00:00"
+            "time": "2021-02-22T23:07:10+00:00"
         },
         {
             "name": "jeromeetienne/jquery-qrcode",
@@ -1314,25 +1314,25 @@
         },
         {
             "name": "jwilsson/spotify-web-api-php",
-            "version": "3.6.2",
+            "version": "4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jwilsson/spotify-web-api-php.git",
-                "reference": "0d259539545726fa6ba2b2bda36b427496157602"
+                "reference": "88a0186e652a7e4689251bda8b4602e7c04b67ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jwilsson/spotify-web-api-php/zipball/0d259539545726fa6ba2b2bda36b427496157602",
-                "reference": "0d259539545726fa6ba2b2bda36b427496157602",
+                "url": "https://api.github.com/repos/jwilsson/spotify-web-api-php/zipball/88a0186e652a7e4689251bda8b4602e7c04b67ab",
+                "reference": "88a0186e652a7e4689251bda8b4602e7c04b67ab",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
-                "php": "^7.0"
+                "php": "^7.2 || ^8.0"
             },
             "require-dev": {
                 "php-coveralls/php-coveralls": "^2.0",
-                "phpunit/phpunit": "^6.0",
+                "phpunit/phpunit": "^8.5",
                 "squizlabs/php_codesniffer": "^3.0"
             },
             "type": "library",
@@ -1358,9 +1358,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jwilsson/spotify-web-api-php/issues",
-                "source": "https://github.com/jwilsson/spotify-web-api-php/tree/3.6.2"
+                "source": "https://github.com/jwilsson/spotify-web-api-php/tree/4.2.1"
             },
-            "time": "2020-10-19T19:41:24+00:00"
+            "time": "2021-01-31T18:14:53+00:00"
         },
         {
             "name": "kevinrob/guzzle-cache-middleware",
@@ -6087,16 +6087,16 @@
         },
         {
             "name": "phar-io/version",
-            "version": "3.0.4",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phar-io/version.git",
-                "reference": "e4782611070e50613683d2b9a57730e9a3ba5451"
+                "reference": "bae7c545bef187884426f042434e561ab1ddb182"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phar-io/version/zipball/e4782611070e50613683d2b9a57730e9a3ba5451",
-                "reference": "e4782611070e50613683d2b9a57730e9a3ba5451",
+                "url": "https://api.github.com/repos/phar-io/version/zipball/bae7c545bef187884426f042434e561ab1ddb182",
+                "reference": "bae7c545bef187884426f042434e561ab1ddb182",
                 "shasum": ""
             },
             "require": {
@@ -6132,9 +6132,9 @@
             "description": "Library for handling version information and constraints",
             "support": {
                 "issues": "https://github.com/phar-io/version/issues",
-                "source": "https://github.com/phar-io/version/tree/3.0.4"
+                "source": "https://github.com/phar-io/version/tree/3.1.0"
             },
-            "time": "2020-12-13T23:18:30+00:00"
+            "time": "2021-02-23T14:00:09+00:00"
         },
         {
             "name": "php-cs-fixer/diff",
@@ -8524,7 +8524,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.4 || >=8.0",
+        "php": "^7.4 || ^8.0",
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-gd": "*",
