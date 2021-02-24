@@ -268,7 +268,7 @@ class JSON_Data
      */
     public static function artists($artists, $include = [], $user_id = null, $encode = true)
     {
-        if ((count($artists) > self::$limit || self::$offset > 0) && self::$limit) {
+        if ((count($artists) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $artists = array_splice($artists, self::$offset, self::$limit);
         }
 
@@ -340,7 +340,7 @@ class JSON_Data
      */
     public static function albums($albums, $include = [], $user_id = null, $encode = true)
     {
-        if ((count($albums) > self::$limit || self::$offset > 0) && self::$limit) {
+        if ((count($albums) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $albums = array_splice($albums, self::$offset, self::$limit);
         }
 
@@ -635,7 +635,7 @@ class JSON_Data
             $podcast_episodes    = array();
             if ($episodes) {
                 $items            = $podcast->get_episodes();
-                $podcast_episodes = self::podcast_episodes($items, $user_id, true);
+                $podcast_episodes = self::podcast_episodes($items, $user_id, false);
             }
             // Build this element
             array_push($allPodcasts, [
@@ -668,13 +668,13 @@ class JSON_Data
      *
      * @param  integer[]    $podcast_episodes Podcast_Episode id's to include
      * @param  integer      $user_id
-     * @param  boolean      $simple just return the data as an array for pretty somewhere else
+     * @param  boolean      $encode
      * @param  boolean      $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "podcast_episode"
      */
-    public static function podcast_episodes($podcast_episodes, $user_id = null, $simple = false, $object = true)
+    public static function podcast_episodes($podcast_episodes, $user_id = null, $encode = true, $object = true)
     {
-        if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && self::$limit) {
+        if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
         }
         $JSON = array();
@@ -709,7 +709,7 @@ class JSON_Data
                 "averagerating" => (string) ($rating->get_average_rating() ?: null),
                 "played" => $episode->played]);
         }
-        if ($simple) {
+        if (!$encode) {
             return $JSON;
         }
         $output = ($object) ? array("podcast_episode" => $JSON) : $JSON[0];
@@ -729,7 +729,7 @@ class JSON_Data
      */
     public static function songs($songs, $user_id = null, $encode = true)
     {
-        if ((count($songs) > self::$limit || self::$offset > 0) && self::$limit) {
+        if ((count($songs) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $songs = array_slice($songs, self::$offset, self::$limit);
         }
 
