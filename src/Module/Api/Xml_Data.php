@@ -1289,8 +1289,12 @@ class Xml_Data
         if ($full_xml) {
             $xml .= self::_footer();
         }
+        $dom = new DOMDocument;
+        $dom->preserveWhiteSpace = false;
+        $dom->loadXML($xml);
+        $dom->formatOutput = true;
 
-        return $xml;
+        return $dom->saveXML();
     }
 
     /**
