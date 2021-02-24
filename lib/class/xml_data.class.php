@@ -208,68 +208,68 @@ class XML_Data
 
         // The type is used for the different XML docs we pass
         switch ($type) {
-    case 'itunes':
-        foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                $value = xoutput_from_array($value, true, $type);
-                $string .= "\t\t<$key>\n$value\t\t</$key>\n";
-            } else {
-                if ($key == "key") {
-                    $string .= "\t\t<$key>$value</$key>\n";
-                } elseif (is_int($value)) {
-                    $string .= "\t\t\t<key>$key</key><integer>$value</integer>\n";
-                } elseif ($key == "Date Added") {
-                    $string .= "\t\t\t<key>$key</key><date>$value</date>\n";
-                } elseif (is_string($value)) {
-                    /* We need to escape the value */
-                    $string .= "\t\t\t<key>$key</key><string><![CDATA[$value]]></string>\n";
+            case 'itunes':
+                foreach ($array as $key => $value) {
+                    if (is_array($value)) {
+                        $value = xoutput_from_array($value, true, $type);
+                        $string .= "\t\t<$key>\n$value\t\t</$key>\n";
+                    } else {
+                        if ($key == "key") {
+                            $string .= "\t\t<$key>$value</$key>\n";
+                        } elseif (is_int($value)) {
+                            $string .= "\t\t\t<key>$key</key><integer>$value</integer>\n";
+                        } elseif ($key == "Date Added") {
+                            $string .= "\t\t\t<key>$key</key><date>$value</date>\n";
+                        } elseif (is_string($value)) {
+                            /* We need to escape the value */
+                            $string .= "\t\t\t<key>$key</key><string><![CDATA[$value]]></string>\n";
+                        }
+                    }
+                } // end foreach
+
+                return $string;
+            case 'xspf':
+                foreach ($array as $key => $value) {
+                    if (is_array($value)) {
+                        $value = xoutput_from_array($value, true, $type);
+                        $string .= "\t\t<$key>\n$value\t\t</$key>\n";
+                    } else {
+                        if ($key == "key") {
+                            $string .= "\t\t<$key>$value</$key>\n";
+                        } elseif (is_numeric($value)) {
+                            $string .= "\t\t\t<$key>$value</$key>\n";
+                        } elseif (is_string($value)) {
+                            /* We need to escape the value */
+                            $string .= "\t\t\t<$key><![CDATA[$value]]></$key>\n";
+                        }
+                    }
+                } // end foreach
+
+                return $string;
+            default:
+                foreach ($array as $key => $value) {
+                    // No numeric keys
+                    if (is_numeric($key)) {
+                        $key = 'item';
+                    }
+
+                    if (is_array($value)) {
+                        // Call ourself
+                        $value = xoutput_from_array($value, true);
+                        $string .= "\t<content div=\"$key\">$value</content>\n";
+                    } else {
+                        /* We need to escape the value */
+                        $string .= "\t<content div=\"$key\"><![CDATA[$value]]></content>\n";
+                    }
+                    // end foreach elements
                 }
-            }
-        } // end foreach
-
-        return $string;
-    case 'xspf':
-        foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                $value = xoutput_from_array($value, true, $type);
-                $string .= "\t\t<$key>\n$value\t\t</$key>\n";
-            } else {
-                if ($key == "key") {
-                    $string .= "\t\t<$key>$value</$key>\n";
-                } elseif (is_numeric($value)) {
-                    $string .= "\t\t\t<$key>$value</$key>\n";
-                } elseif (is_string($value)) {
-                    /* We need to escape the value */
-                    $string .= "\t\t\t<$key><![CDATA[$value]]></$key>\n";
+                if (!$callback) {
+                    $string = '<?xml version="1.0" encoding="utf-8" ?>' .
+                        "\n<root>\n" . $string . "</root>\n";
                 }
-            }
-        } // end foreach
 
-        return $string;
-    default:
-        foreach ($array as $key => $value) {
-            // No numeric keys
-            if (is_numeric($key)) {
-                $key = 'item';
+                return UI::clean_utf8($string);
             }
-
-            if (is_array($value)) {
-                // Call ourself
-                $value = xoutput_from_array($value, true);
-                $string .= "\t<content div=\"$key\">$value</content>\n";
-            } else {
-                /* We need to escape the value */
-                $string .= "\t<content div=\"$key\"><![CDATA[$value]]></content>\n";
-            }
-            // end foreach elements
-        }
-        if (!$callback) {
-            $string = '<?xml version="1.0" encoding="utf-8" ?>' .
-                "\n<root>\n" . $string . "</root>\n";
-        }
-
-        return UI::clean_utf8($string);
-    }
     } // output_from_array
 
     /**
@@ -1193,8 +1193,12 @@ class XML_Data
         if ($full_xml) {
             $xml .= self::_footer();
         }
+        $dom = new DOMDocument;
+        $dom->preserveWhiteSpace = false;
+        $dom->loadXML($xml);
+        $dom->formatOutput = true;
 
-        return $xml;
+        return $dom->saveXML();
     }
 
     /**
