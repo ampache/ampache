@@ -3,6 +3,7 @@ import { Song } from './Song';
 import { AuthKey } from './Auth';
 import AmpacheError from './AmpacheError';
 import flagItem from '~logic/Methods/Flag';
+import updateArt from '~logic/Methods/Update_Art';
 
 type Album = {
     id: string;
@@ -104,11 +105,16 @@ const flagAlbum = (albumID: string, favorite: boolean, authKey: AuthKey) => {
     return flagItem('album', albumID, favorite, authKey);
 };
 
+const updateAlbumArt = (ID: string, overwrite: boolean, authKey: AuthKey) => {
+    return updateArt('album', ID, overwrite, authKey);
+};
+
 export {
     getRandomAlbums,
     Album,
     getAlbums,
     getAlbum,
     getAlbumSongs,
-    flagAlbum
+    flagAlbum,
+    updateAlbumArt
 };

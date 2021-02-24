@@ -1,19 +1,10 @@
-import { AuthKey } from './Auth';
-import axios from 'axios';
-import AmpacheError from './AmpacheError';
-
-enum artType {
-    'song' = 'song',
-    'artist' = 'artist',
-    'album' = 'album',
-    'playlist' = 'playlist',
-    'search' = 'search',
-    'podcast' = 'podcast'
-}
+import { AuthKey } from '~logic/Auth';
+import axios from '~node_modules/axios';
+import AmpacheError from '~logic/AmpacheError';
 
 const updateArt = (
+    type: 'song' | 'artist' | 'album' | 'playlist' | 'search' | 'podcast',
     ID: string,
-    type: artType,
     overwrite: boolean,
     authKey: AuthKey
 ) => {
@@ -37,17 +28,4 @@ const updateArt = (
         });
 };
 
-export const updateArtistArt = (
-    ID: string,
-    overwrite: boolean,
-    authKey: AuthKey
-) => {
-    return updateArt(ID, artType.artist, overwrite, authKey);
-};
-export const updateAlbumArt = (
-    ID: string,
-    overwrite: boolean,
-    authKey: AuthKey
-) => {
-    return updateArt(ID, artType.album, overwrite, authKey);
-};
+export default updateArt;

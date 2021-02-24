@@ -4,6 +4,7 @@ import AmpacheError from '~logic/AmpacheError';
 import { Album } from '~logic/Album';
 import { Song } from '~logic/Song';
 import flagItem from '~logic/Methods/Flag';
+import updateArt from '~logic/Methods/Update_Art';
 
 export type Artist = {
     id: string;
@@ -122,4 +123,12 @@ export const flagArtist = (
     authKey: AuthKey
 ) => {
     return flagItem('artist', artistID, favorite, authKey);
+};
+
+export const updateArtistArt = (
+    ID: string,
+    overwrite: boolean,
+    authKey: AuthKey
+) => {
+    return updateArt('artist', ID, overwrite, authKey);
 };

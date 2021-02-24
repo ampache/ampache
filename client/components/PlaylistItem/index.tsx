@@ -34,7 +34,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
                         <div className={style.rating}>
                             <SimpleRating
                                 value={0}
-                                fav={false}
+                                fav={props.playlist.flag}
                                 itemID={props.playlist.id}
                                 setFlag={props.flagPlaylist}
                             />

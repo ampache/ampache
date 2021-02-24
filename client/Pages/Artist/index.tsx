@@ -1,12 +1,17 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Artist, flagArtist, getArtist, updateArtistInfo } from '~logic/Artist';
+import {
+    Artist,
+    flagArtist,
+    getArtist,
+    updateArtistInfo,
+    updateArtistArt
+} from '~logic/Artist';
 import { User } from '~logic/User';
 import AmpacheError from '~logic/AmpacheError';
 import { MusicContext } from '~Contexts/MusicContext';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import { generateSongsFromArtist } from '~logic/Playlist_Generate';
-import { updateArtistArt } from '~logic/Art';
 import Button, { ButtonColors, ButtonSize } from '~components/Button';
 import SimpleRating from '~components/SimpleRating';
 import AlbumDisplayView from '~Views/AlbumDisplayView';

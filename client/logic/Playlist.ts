@@ -10,6 +10,11 @@ export type Playlist = {
     owner: string;
     items: number;
     type: string;
+    art: string;
+    flag: boolean;
+    preciserating: number;
+    rating: number;
+    averagerating: number;
 };
 
 export const getPlaylists = (authKey: AuthKey) => {

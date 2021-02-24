@@ -170,18 +170,18 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                 });
                 setPlaylists(newPlaylists);
                 if (favorite) {
-                    return toast.success('Song added to favorites');
+                    return toast.success('Playlist added to favorites');
                 }
-                toast.success('Song removed from favorites');
+                toast.success('Playlist removed from favorites');
             })
             .catch((err) => {
                 if (favorite) {
                     toast.error(
-                        '😞 Something went wrong adding song to favorites.'
+                        '😞 Something went wrong adding playlist to favorites.'
                     );
                 } else {
                     toast.error(
-                        '😞 Something went wrong removing song from favorites.'
+                        '😞 Something went wrong removing playlist from favorites.'
                     );
                 }
                 setError(err);
