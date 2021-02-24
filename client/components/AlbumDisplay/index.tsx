@@ -1,38 +1,68 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import SVG from 'react-inlinesvg';
 import { Link } from 'react-router-dom';
-import { Album } from '~logic/Album';
+import { Album, flagAlbum } from '~logic/Album';
 import SimpleRating from '~components/SimpleRating';
+import { toast } from '~node_modules/react-toastify';
+import { AuthKey } from '~logic/Auth';
 
 import style from './index.styl';
 
 interface AlbumDisplayProps {
     album: Album;
     playSongFromAlbum: (albumID: string, random: boolean) => void;
-    flagAlbum: (artistID: string, favorite: boolean) => void;
+    authKey: AuthKey;
     className?: string;
 }
 
 const AlbumDisplay: React.FC<AlbumDisplayProps> = (
     props: AlbumDisplayProps
 ) => {
+    const [album, setAlbum] = useState(props.album);
+
+    const handleFlagAlbum = useCallback(
+        (albumID: string, favorite: boolean) => {
+            flagAlbum(albumID, favorite, props.authKey)
+                .then(() => {
+                    const newAlbum = { ...album, flag: favorite };
+                    setAlbum(newAlbum);
+                    if (favorite) {
+                        return toast.success('Album added to favorites');
+                    }
+                    toast.success('Album removed from favorites');
+                })
+                .catch(() => {
+                    if (favorite) {
+                        toast.error(
+                            '😞 Something went wrong adding album to favorites.'
+                        );
+                    } else {
+                        toast.error(
+                            '😞 Something went wrong removing album from favorites.'
+                        );
+                    }
+                });
+        },
+        [album, props.authKey]
+    );
+
     return (
         <div className={`card ${style.albumDisplay} ${props.className}`}>
             <div className={style.imageContainer}>
-                <img src={props.album.art} alt='Album cover' />
+                <img src={album.art} alt='Album cover' />
                 <div
                     className={`${style.albumActions}`}
                     onClick={(e) => e.preventDefault()}
                 >
                     <Link
-                        to={`/album/${props.album.id}`}
+                        to={`/album/${album.id}`}
                         className={`${style.action} ${style.viewAlbum}`}
                     >
                         View album
                     </Link>
                     <span
                         onClick={() => {
-                            props.playSongFromAlbum(props.album.id, false);
+                            props.playSongFromAlbum(album.id, false);
                         }}
                         className={style.action}
                     >
@@ -67,28 +97,28 @@ const AlbumDisplay: React.FC<AlbumDisplayProps> = (
             </div>
             <div className={style.rating} onClick={(e) => e.preventDefault()}>
                 <SimpleRating
-                    value={props.album.rating}
-                    fav={props.album.flag}
-                    itemID={props.album.id}
-                    setFlag={props.flagAlbum}
+                    value={album.rating}
+                    fav={album.flag}
+                    itemID={album.id}
+                    setFlag={handleFlagAlbum}
                 />
             </div>
             <div className={style.details}>
                 <div className={style.albumInfo}>
                     <Link
-                        to={`/album/${props.album.id}`}
+                        to={`/album/${album.id}`}
                         className={`card-title ${style.albumName}`}
                     >
-                        {props.album.name}
+                        {album.name}
                     </Link>
                     <Link
-                        to={`/artist/${props.album.artist.id}`}
+                        to={`/artist/${album.artist.id}`}
                         className={style.albumArtist}
                     >
-                        {props.album.artist.name}
+                        {album.artist.name}
                     </Link>
                     <div className={style.albumMeta}>
-                        {props.album.year} - {props.album.tracks} tracks
+                        {album.year} - {album.tracks} tracks
                     </div>
                 </div>
             </div>

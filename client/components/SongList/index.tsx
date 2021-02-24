@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { MusicContext } from '~Contexts/MusicContext';
 import { flagSong, Song } from '~logic/Song';
 import SongRow from '~components/SongRow';
@@ -109,40 +109,51 @@ const SongList: React.FC<SongListProps> = (props) => {
         })();
     };
 
-    const handleFlagSong = (songID: string, favorite: boolean) => {
-        flagSong(songID, favorite, props.authKey)
-            .then(() => {
-                const newSongs = songs.map((song) => {
-                    if (song.id === songID) {
-                        return {
-                            ...song,
-                            flag: favorite
-                        };
-                    }
-                    return song;
-                });
-                setSongs(newSongs);
-                if (musicContext.currentPlayingSong?.id === songID) {
-                    musicContext.flagCurrentSong(favorite);
-                }
-                if (favorite) {
-                    return toast.success('Song added to favorites');
-                }
-                toast.success('Song removed from favorites');
-            })
-            .catch((err) => {
-                if (favorite) {
-                    toast.error(
-                        '😞 Something went wrong adding song to favorites.'
-                    );
-                } else {
-                    toast.error(
-                        '😞 Something went wrong removing song from favorites.'
-                    );
-                }
-                setError(err);
-            });
+    const doContextUpdate = (songID, favorite) => {
+        if (musicContext.currentPlayingSong?.id === songID) {
+            musicContext.flagCurrentSong(favorite);
+        }
     };
+
+    const handleFlagSong = useCallback(
+        (songID: string, favorite: boolean) => {
+            flagSong(songID, favorite, props.authKey)
+                .then(() => {
+                    const newSongs = songs.map((song) => {
+                        if (song.id === songID) {
+                            doContextUpdate(songID, favorite);
+
+                            return {
+                                ...song,
+                                flag: favorite
+                            };
+                        }
+                        return song;
+                    });
+                    setSongs(newSongs);
+                    // if (musicContext.currentPlayingSong?.id === songID) {
+                    //     musicContext.flagCurrentSong(favorite);
+                    // }
+                    if (favorite) {
+                        return toast.success('Song added to favorites');
+                    }
+                    toast.success('Song removed from favorites');
+                })
+                .catch((err) => {
+                    if (favorite) {
+                        toast.error(
+                            '😞 Something went wrong adding song to favorites.'
+                        );
+                    } else {
+                        toast.error(
+                            '😞 Something went wrong removing song from favorites.'
+                        );
+                    }
+                    setError(err);
+                });
+        },
+        [props.authKey, songs]
+    );
 
     const handleStartPlaying = (song: Song) => {
         const queueIndex = songs.findIndex((o) => o.id === song.id);

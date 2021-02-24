@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { AuthKey } from '~logic/Auth';
 import { toast } from 'react-toastify';
 import ReactLoading from 'react-loading';
@@ -22,33 +22,6 @@ const AlbumDisplayView: React.FC<AlbumDisplayViewProps> = (props) => {
         setAlbumsState(props.albums);
     }, [props.albums]);
 
-    const handleFlagAlbum = (albumID: string, favorite: boolean) => {
-        flagAlbum(albumID, favorite, props.authKey)
-            .then(() => {
-                const newAlbums = albumsState.map((album) => {
-                    if (album.id === albumID) {
-                        return { ...album, flag: favorite };
-                    }
-                    return album;
-                });
-                setAlbumsState(newAlbums);
-                if (favorite) {
-                    return toast.success('Album added to favorites');
-                }
-                toast.success('Album removed from favorites');
-            })
-            .catch(() => {
-                if (favorite) {
-                    toast.error(
-                        '😞 Something went wrong adding album to favorites.'
-                    );
-                } else {
-                    toast.error(
-                        '😞 Something went wrong removing album from favorites.'
-                    );
-                }
-            });
-    };
     if (albumsState === null) {
         return (
             <>
@@ -70,8 +43,8 @@ const AlbumDisplayView: React.FC<AlbumDisplayViewProps> = (props) => {
                     <AlbumDisplay
                         album={album}
                         className={style.album}
-                        flagAlbum={handleFlagAlbum}
                         playSongFromAlbum={handlePlaySong}
+                        authKey={props.authKey}
                         key={album.id}
                     />
                 );

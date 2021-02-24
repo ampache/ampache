@@ -17,6 +17,7 @@ import SimpleRating from '~components/SimpleRating';
 import AlbumDisplayView from '~Views/AlbumDisplayView';
 
 import style from './index.styl';
+import useTraceUpdate from '~Debug/useTraceUpdate';
 
 interface ArtistPageProps {
     user: User;
@@ -32,7 +33,7 @@ const ArtistPage: React.FC<ArtistPageProps> = (props: ArtistPageProps) => {
 
     const [artist, setArtist] = useState<Artist>(null);
     const [error, setError] = useState<Error | AmpacheError>(null);
-
+    useTraceUpdate(props, 'Artist');
     useEffect(() => {
         if (props.match.params.artistID != null) {
             getArtist(props.match.params.artistID, props.user.authKey, true)
@@ -47,7 +48,7 @@ const ArtistPage: React.FC<ArtistPageProps> = (props: ArtistPageProps) => {
                 });
         }
     }, [props.match.params.artistID, props.user.authKey]);
-
+    console.log('ARTISTPAGE');
     const playRandomArtistSongs = () => {
         generateSongsFromArtist(artist.id, props.user.authKey)
             .then((songs) => {

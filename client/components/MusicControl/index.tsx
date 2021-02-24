@@ -1,4 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, {
+    useCallback,
+    useContext,
+    useEffect,
+    useRef,
+    useState
+} from 'react';
 import SVG from 'react-inlinesvg';
 import { PLAYERSTATUS } from '~enum/PlayerStatus';
 import { MusicContext } from '~Contexts/MusicContext';
@@ -9,6 +15,7 @@ import SimpleRating from '~components/SimpleRating';
 import { AuthKey } from '~logic/Auth';
 import { flagSong } from '~logic/Song';
 import { toast } from 'react-toastify';
+import SliderControl from '~components/MusicControl/components/SliderControl';
 
 import style from './index.styl';
 
@@ -21,14 +28,10 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
 
     const [ratingToggle, setRatingToggle] = useState(false);
 
-    const [isSeeking, setIsSeeking] = useState(false);
-    const [seekPosition, setSeekPosition] = useState(-1);
+    const [currentTime, setCurrentTime] = useState('');
 
     const handleRatingToggle = () => {
-        if (
-            musicContext.currentPlayingSong !== undefined &&
-            musicContext.currentPlayingSong !== null
-        ) {
+        if (musicContext.currentPlayingSong) {
             setRatingToggle(!ratingToggle);
         }
     };
@@ -80,31 +83,9 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                 </div>
             </div>
 
-            <div className={style.seekbar}>
-                <Slider
-                    min={0}
-                    max={musicContext.currentPlayingSong?.time ?? 0}
-                    value={isSeeking ? seekPosition : musicContext.songPosition}
-                    onChangeCommitted={(_, value: number) => {
-                        // setIsSeeking(true);
-                        // setValue(value);
-                        // setSeekPosition(value);
-                        musicContext.seekSongTo(value);
-                        setIsSeeking(false);
-                    }}
-                    onChange={(_, value: number) => {
-                        setIsSeeking(true);
-                        setSeekPosition(value);
-                    }}
-                    disabled={musicContext.currentPlayingSong == undefined}
-                    aria-labelledby='continuous-slider'
-                />
-            </div>
-
+            <SliderControl />
             <div className={style.seekTimes}>
-                <span className={style.seekStart}>
-                    {formatLabel(musicContext.songPosition)}
-                </span>
+                <span className={style.seekStart}>{currentTime}</span>
                 <span className={style.seekEnd}>
                     {formatLabel(musicContext.currentPlayingSong?.time ?? 0)}
                 </span>

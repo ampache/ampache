@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import SVG from 'react-inlinesvg';
 
 import style from './index.styl';
+import useTraceUpdate from '~Debug/useTraceUpdate';
 
 interface SimpleRatingProps {
     value: number;
@@ -20,6 +21,7 @@ const SimpleRating: React.FC<SimpleRatingProps> = (props) => {
             color: 'currentColor'
         }
     })(Rating); //TODO: Put this into index.styl for consistency
+    useTraceUpdate(props, `Simple Rating ${props.itemID}`);
 
     return (
         <div className={style.ratings}>

@@ -7,7 +7,7 @@ import ReactAudioPlayer from 'react-audio-player';
 export interface MusicContextInterface {
     playerStatus: PLAYERSTATUS;
     currentPlayingSong: Song;
-    songPosition: number;
+    // songPosition: number;
     volume: number;
     songQueueIndex: number;
     songQueue: Song[];
@@ -189,7 +189,7 @@ export const MusicContextProvider: React.FC = (props) => {
     };
 
     const durationChange = (elapsed) => {
-        setSongPosition(~~elapsed);
+        // setSongPosition(~~elapsed);
     };
 
     const seekSongTo = (newPosition: number) => {
@@ -205,7 +205,6 @@ export const MusicContextProvider: React.FC = (props) => {
                 currentPlayingSong,
                 songQueueIndex,
                 songQueue,
-                songPosition, //TODO: Performance concern?
                 volume,
                 playPause,
                 playPrevious,

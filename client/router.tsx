@@ -37,7 +37,6 @@ export default class Root extends React.PureComponent<void, RouterState> {
     ) => Promise<void | AmpacheError | Error>;
     constructor(props) {
         super(props);
-
         this.state = {
             authKey: Cookies.get('authKey'),
             username: Cookies.get('username'),
