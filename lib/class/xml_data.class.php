@@ -345,9 +345,7 @@ class XML_Data
                         foreach ($albums as $album_id) {
                             if ($album_id) {
                                 $album = new Album($album_id[0]);
-                                $string .= "\t<album id=\"" . $album_id[0] .
-                                    '"><![CDATA[' . $album->full_name .
-                                    "]]></album>\n";
+                                $string .= "\t<album id=\"" . $album_id[0] . '"><![CDATA[' . $album->full_name . "]]></album>\n";
                             }
                         }
                         $string .= "</$object_type>\n";
@@ -1193,12 +1191,17 @@ class XML_Data
         if ($full_xml) {
             $xml .= self::_footer();
         }
-        $dom = new DOMDocument;
-        $dom->preserveWhiteSpace = false;
-        $dom->loadXML($xml);
-        $dom->formatOutput = true;
+        //return formatted xml when asking for full
+        if ($full_xml) {
+            $dom = new DOMDocument;
+            $dom->preserveWhiteSpace = false;
+            $dom->loadXML($xml);
+            $dom->formatOutput = true;
 
-        return $dom->saveXML();
+            return $dom->saveXML();
+        }
+
+        return $xml;
     }
 
     /**
