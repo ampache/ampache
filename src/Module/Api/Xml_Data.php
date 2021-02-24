@@ -399,7 +399,7 @@ class Xml_Data
      */
     public static function indexes($objects, $object_type, $user_id = null, $full_xml = true, $include = false)
     {
-        if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+        if ((count($objects) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
         $string = ($full_xml) ? "<total_count>" . Catalog::get_count($object_type) . "</total_count>\n" : '';
@@ -635,7 +635,7 @@ class Xml_Data
      */
     public static function artists($artists, $include = [], $user_id = null, $full_xml = true)
     {
-        if ((count($artists) > self::$limit || self::$offset > 0) && self::$limit) {
+        if ((count($artists) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $artists = array_splice($artists, self::$offset, self::$limit);
         }
         $string = ($full_xml) ? "<total_count>" . Catalog::get_count('artist') . "</total_count>\n" : '';
@@ -701,7 +701,7 @@ class Xml_Data
             $include = array();
         }
 
-        if ((count($albums) > self::$limit || self::$offset > 0) && self::$limit) {
+        if ((count($albums) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $albums = array_splice($albums, self::$offset, self::$limit);
         }
         $string = ($full_xml) ? "<total_count>" . Catalog::get_count('album') . "</total_count>\n" : '';
@@ -960,7 +960,7 @@ class Xml_Data
      */
     public static function podcast_episodes($podcast_episodes, $user_id = null, $full_xml = true)
     {
-        if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && self::$limit) {
+        if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
         }
         $string = ($full_xml) ? "<total_count>" . Catalog::get_count('podcast_episode') . "</total_count>\n" : '';
@@ -1012,7 +1012,7 @@ class Xml_Data
      */
     public static function songs($songs, $user_id = null, $full_xml = true)
     {
-        if ((count($songs) > self::$limit || self::$offset > 0) && self::$limit) {
+        if ((count($songs) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $songs = array_slice($songs, self::$offset, self::$limit);
         }
         $string = ($full_xml) ? "<total_count>" . Catalog::get_count('song') . "</total_count>\n" : '';
