@@ -504,15 +504,15 @@ class Xml_Data
                         "\t<sync_date><![CDATA[" . $podcast->f_lastsync . "]]></sync_date>\n" .
                         "\t<public_url><![CDATA[" . $podcast->link . "]]></public_url>\n";
                     if ($include) {
-                        $items = $podcast->get_episodes();
-                        if (count($items) > 0) {
-                            $string .= self::podcast_episodes($items, $user_id, false);
+                        $episodes = $podcast->get_episodes();
+                        foreach ($episodes as $episode_id) {
+                            $string .= self::podcast_episodes(array($episode_id), $user_id, false);
                         }
                     }
                     $string .= "\t</podcast>\n";
                     break;
                 case 'podcast_episode':
-                    $string .= self::podcast_episodes($objects, $user_id, false);
+                    $string .= self::podcast_episodes($objects, $user_id);
                     break;
                 case 'video':
                     $string .= self::videos($objects, $user_id);
