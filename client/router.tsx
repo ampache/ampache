@@ -8,7 +8,7 @@ import HomePage from './Pages/Home/';
 import AccountPage from './Pages/Account/';
 import SearchPage from './Pages/Search/';
 import LoginPage from './Pages/Login/';
-import NotFound from './Pages/404/';
+import NotFound from './Pages/Errors/404/';
 import handshake, { AuthKey } from './logic/Auth';
 import { getUser, User } from '~logic/User';
 import AlbumPage from './Pages/Album';
@@ -20,12 +20,14 @@ import AmpacheError from './logic/AmpacheError';
 import PlaylistsPage from './Pages/Playlists';
 import PlaylistPage from './Pages/Playlist';
 import ReactLoading from 'react-loading';
+import GenericError from '~Pages/Errors/GenericError';
 
 interface RouterState {
     authKey: AuthKey;
     username: string;
     user: User;
     loading: boolean;
+    error: Error;
 }
 
 export default class Root extends React.PureComponent<void, RouterState> {
@@ -40,7 +42,8 @@ export default class Root extends React.PureComponent<void, RouterState> {
             authKey: Cookies.get('authKey'),
             username: Cookies.get('username'),
             user: null,
-            loading: true
+            loading: true,
+            error: null
         };
 
         this.handleLogin = (username: string, password: string) => {
@@ -82,6 +85,17 @@ export default class Root extends React.PureComponent<void, RouterState> {
         }
     }
 
+    // componentDidCatch(error: Error, errorInfo) {
+    //     console.log('EERERRR');
+    //     //TODO: Server log?
+    // }
+
+    static getDerivedStateFromError(error) {
+        // Update state so the next render will show the fallback UI.
+        console.log('DERIVED', error);
+        return { error };
+    }
+
     private handleLogout() {
         Cookies.remove('authKey');
         Cookies.remove('username');
@@ -89,6 +103,9 @@ export default class Root extends React.PureComponent<void, RouterState> {
     }
 
     render() {
+        if (this.state.error) {
+            return <GenericError message={this.state.error.message} />;
+        }
         console.log(this.state);
         if (this.state.loading) {
             return <ReactLoading />;

@@ -4,7 +4,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { Song } from '~logic/Song';
 import ReactAudioPlayer from 'react-audio-player';
 
-interface MusicContext {
+export interface MusicContextInterface {
     playerStatus: PLAYERSTATUS;
     currentPlayingSong: Song;
     songPosition: number;
@@ -25,7 +25,7 @@ interface MusicContext {
 
 export const MusicContext = React.createContext({
     playerStatus: PLAYERSTATUS.STOPPED
-} as MusicContext);
+} as MusicContextInterface);
 
 export const MusicContextProvider: React.FC = (props) => {
     const [playerStatus, setPlayerStatus] = useState(PLAYERSTATUS.STOPPED);

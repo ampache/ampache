@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Artist, flagArtist } from '~logic/Artist';
 import ArtistDisplay from '~components/ArtistDisplay';
 import { AuthKey } from '~logic/Auth';
-import { toast } from '~node_modules/react-toastify';
-import ReactLoading from '~node_modules/react-loading';
+import { toast } from 'react-toastify';
+import ReactLoading from 'react-loading';
 
 interface ArtistDisplayViewProps {
     artists: Artist[];

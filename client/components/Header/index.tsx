@@ -1,25 +1,20 @@
 import React, { useRef, useState } from 'react';
 import SVG from 'react-inlinesvg';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import logo from '~images/ampache-dark.png';
 import { DebounceInput } from 'react-debounce-input';
 import { useHotkeys } from 'react-hotkeys-hook';
 
 import style from './index.styl';
 
-interface HeaderProps {
+interface HeaderProps extends RouteComponentProps<never> {
     username: string;
     toggleQueueBar: () => void;
     toggleSideBar: () => void;
-    match: {
-        params: {
-            searchQuery: string;
-        };
-    };
 }
 
 //TODO: Figure out how to use HeaderProps type here
-const Header = withRouter(({ history, ...props }: any) => {
+const Header: React.FC<HeaderProps> = (props) => {
     const [query, setQuery] = useState('');
     const searchBox = useRef(null);
 
@@ -29,7 +24,7 @@ const Header = withRouter(({ history, ...props }: any) => {
     });
 
     const searchSubmit = (value) => {
-        history.push(`/search/${value}`);
+        props.history.push(`/search/${value}`);
     };
 
     return (
@@ -117,6 +112,6 @@ const Header = withRouter(({ history, ...props }: any) => {
             </div>
         </header>
     );
-});
+};
 
-export default Header;
+export default withRouter(Header);

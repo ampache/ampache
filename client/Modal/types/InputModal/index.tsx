@@ -7,8 +7,8 @@ interface InputModalParams {
     inputPlaceholder?: string;
     inputInitialValue?: string;
     inputLabel: string;
-    ok?: any; //TODO
-    cancel?: any;
+    ok?: (inputValue: string) => void;
+    cancel?: () => void;
 }
 
 const InputModal = (props: InputModalParams) => {

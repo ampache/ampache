@@ -7,10 +7,10 @@ import CurrentPlaying from '~components/CurrentPlaying';
 import CurrentPlayingArt from '~components/CurrentPlayingArt';
 import SimpleRating from '~components/SimpleRating';
 import { AuthKey } from '~logic/Auth';
+import { flagSong } from '~logic/Song';
+import { toast } from 'react-toastify';
 
 import style from './index.styl';
-import { flagSong } from '~logic/Song';
-import { toast } from '~node_modules/react-toastify';
 
 interface MusicControlProps {
     authKey: AuthKey;

@@ -1,6 +1,5 @@
 import { AuthKey } from './Auth';
-import axios from 'axios';
-import AmpacheError from './AmpacheError';
+import flagItem from '~logic/Methods/Flag';
 
 type Song = {
     id: string;
@@ -56,24 +55,7 @@ type Song = {
 };
 
 const flagSong = (songID: string, favorite: boolean, authKey: AuthKey) => {
-    return axios
-        .get(
-            `${
-                process.env.ServerURL
-            }/server/json.server.php?action=flag&type=song&id=${songID}&flag=${Number(
-                favorite
-            )}&auth=${authKey}&version=400001`
-        )
-        .then((response) => {
-            const JSONData = response.data;
-            if (!JSONData) {
-                throw new Error('Server Error');
-            }
-            if (JSONData.error) {
-                throw new AmpacheError(JSONData.error);
-            }
-            return true;
-        });
+    return flagItem('song', songID, favorite, authKey);
 };
 
 export { Song, flagSong };

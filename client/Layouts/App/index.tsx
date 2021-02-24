@@ -16,7 +16,6 @@ interface AppLayoutProps {
 }
 
 interface AppLayoutStates {
-    error: Error;
     QueueBarVisible: boolean;
     SideBarVisible: boolean;
 }
@@ -30,7 +29,6 @@ class AppLayout extends Component<AppLayoutProps, AppLayoutStates> {
     constructor(props) {
         super(props);
         this.state = {
-            error: null,
             QueueBarVisible: false,
             SideBarVisible: false
         };
@@ -50,22 +48,7 @@ class AppLayout extends Component<AppLayoutProps, AppLayoutStates> {
         };
     }
 
-    componentDidCatch(error: Error, errorInfo) {
-        console.log('EERERRR');
-        //TODO: Server log?
-    }
-
-    static getDerivedStateFromError(error) {
-        // Update state so the next render will show the fallback UI.
-        console.log('DERIVED', error);
-        return { error };
-    }
-
     render() {
-        if (this.state.error) {
-            return <span>An Error Occured: {this.state.error.message}</span>;
-        }
-
         if (this.props.user == null) {
             return <ReactLoading color='#FF9D00' type={'bubbles'} />;
         }

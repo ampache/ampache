@@ -10,6 +10,7 @@ interface PlaylistItemProps {
     playlist: Playlist;
     showContext?: (event: React.MouseEvent, playlistID: string) => void;
     startPlaying: (playlistID: string) => void;
+    flagPlaylist: (playlistID: string, favorite: boolean) => void;
 }
 
 const PlaylistItem: React.FC<PlaylistItemProps> = (
@@ -31,12 +32,11 @@ const PlaylistItem: React.FC<PlaylistItemProps> = (
                         <div className={style.smartlistTag}>Smartlist</div>
                     ) : (
                         <div className={style.rating}>
-                            {/*TODO NOT AVAILABLE IN API*/}
                             <SimpleRating
                                 value={0}
                                 fav={false}
-                                itemID={''}
-                                setFlag={() => {}}
+                                itemID={props.playlist.id}
+                                setFlag={props.flagPlaylist}
                             />
                         </div>
                     )}

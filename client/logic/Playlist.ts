@@ -2,6 +2,7 @@ import { AuthKey } from './Auth';
 import axios from 'axios';
 import AmpacheError from './AmpacheError';
 import { Song } from './Song';
+import flagItem from '~logic/Methods/Flag';
 
 export type Playlist = {
     id: string;
@@ -144,4 +145,12 @@ export const deletePlaylist = (playlistID: string, authKey: AuthKey) => {
             }
             return true;
         });
+};
+
+export const flagPlaylist = (
+    playlistID: string,
+    favorite: boolean,
+    authKey: AuthKey
+) => {
+    return flagItem('playlist', playlistID, favorite, authKey);
 };

@@ -3,6 +3,7 @@ import SVG from 'react-inlinesvg';
 import {
     createPlaylist,
     deletePlaylist,
+    flagPlaylist,
     getPlaylists,
     getPlaylistSongs,
     Playlist,
@@ -15,7 +16,7 @@ import { Modal } from 'react-async-popup';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import InputModal from '~Modal/types/InputModal';
-import { Menu, MenuItem } from '~node_modules/@material-ui/core';
+import { Menu, MenuItem } from '@material-ui/core';
 import { MusicContext } from '~Contexts/MusicContext';
 
 import style from './index.styl';
@@ -155,6 +156,38 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
         musicContext.startPlayingWithNewQueue(songs);
     };
 
+    const handleFlagPlaylist = (playlistID: string, favorite: boolean) => {
+        flagPlaylist(playlistID, favorite, props.authKey)
+            .then(() => {
+                const newPlaylists = playlists.map((playlist) => {
+                    if (playlist.id === playlistID) {
+                        return {
+                            ...playlist,
+                            flag: favorite
+                        };
+                    }
+                    return playlist;
+                });
+                setPlaylists(newPlaylists);
+                if (favorite) {
+                    return toast.success('Song added to favorites');
+                }
+                toast.success('Song removed from favorites');
+            })
+            .catch((err) => {
+                if (favorite) {
+                    toast.error(
+                        '😞 Something went wrong adding song to favorites.'
+                    );
+                } else {
+                    toast.error(
+                        '😞 Something went wrong removing song from favorites.'
+                    );
+                }
+                setError(err);
+            });
+    };
+
     if (error) {
         return (
             <div className='playlistList'>
@@ -189,6 +222,7 @@ const PlaylistList: React.FC<PlaylistListProps> = (props) => {
                             playlist={playlist}
                             startPlaying={startPlayingPlaylist}
                             showContext={handleContext}
+                            flagPlaylist={handleFlagPlaylist}
                             key={playlist.id}
                         />
                     );

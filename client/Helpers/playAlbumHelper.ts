@@ -1,13 +1,14 @@
 import { getAlbumSongs } from '~logic/Album';
 import { AuthKey } from '~logic/Auth';
+import { toast } from 'react-toastify';
+import { MusicContextInterface } from '~Contexts/MusicContext';
 
 export const playSongFromAlbum = (
     albumID: string,
     randomSong: boolean,
     authKey: AuthKey,
-    musicContext
+    musicContext: MusicContextInterface
 ) => {
-    //TODO: MusicContext type
     getAlbumSongs(albumID, authKey)
         .then((songs) => {
             let songIndex = 0;
@@ -17,6 +18,7 @@ export const playSongFromAlbum = (
             musicContext.startPlayingWithNewQueue(songs, songIndex);
         })
         .catch((error) => {
-            //TODO
+            toast.error('😞 Something went playing song from album.');
+            console.error(error);
         });
 };

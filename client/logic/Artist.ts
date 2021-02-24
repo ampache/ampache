@@ -3,6 +3,7 @@ import { AuthKey } from '~logic/Auth';
 import AmpacheError from '~logic/AmpacheError';
 import { Album } from '~logic/Album';
 import { Song } from '~logic/Song';
+import flagItem from '~logic/Methods/Flag';
 
 export type Artist = {
     id: string;
@@ -120,22 +121,5 @@ export const flagArtist = (
     favorite: boolean,
     authKey: AuthKey
 ) => {
-    return axios
-        .get(
-            `${
-                process.env.ServerURL
-            }/server/json.server.php?action=flag&type=artist&id=${artistID}&flag=${Number(
-                favorite
-            )}&auth=${authKey}&version=400001`
-        )
-        .then((response) => {
-            const JSONData = response.data;
-            if (!JSONData) {
-                throw new Error('Server Error');
-            }
-            if (JSONData.error) {
-                throw new AmpacheError(JSONData.error);
-            }
-            return true;
-        });
+    return flagItem('artist', artistID, favorite, authKey);
 };
