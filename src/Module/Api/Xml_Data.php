@@ -413,7 +413,7 @@ class Xml_Data
                     } else {
                         $artist = new Artist($object_id);
                         $artist->format();
-                        $albums = $artist->get_albums(null, true);
+                        $albums = static::getAlbumRepository()->getByArtist($artist, null, true);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                             "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n";
                         foreach ($albums as $album_id) {
