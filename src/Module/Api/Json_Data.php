@@ -203,9 +203,13 @@ class Json_Data
             case 'song':
                 return self::songs($objects, $user_id);
             case 'album':
-                return self::albums($objects, array(), $user_id);
+                $include_array = ($include) ? array('songs') : array();
+
+                return self::albums($objects, $include_array, $user_id);
             case 'artist':
-                return self::artists($objects, array(), $user_id);
+                $include_array = ($include) ? array('songs', 'albums') : array();
+
+                return self::artists($objects, $include_array, $user_id);
             case 'playlist':
                 return self::playlists($objects, $user_id, $include);
             case 'share':
@@ -216,8 +220,6 @@ class Json_Data
                 return self::podcast_episodes($objects, $user_id);
             case 'video':
                 return self::videos($objects, $user_id);
-            case 'live_stream':
-                return self::live_streams($objects);
             default:
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 return self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
@@ -535,7 +537,7 @@ class Json_Data
      */
     public static function playlists($playlists, $user_id = null, $songs = false, $object = true)
     {
-        if ((count($playlists) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
+        if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
         }
 

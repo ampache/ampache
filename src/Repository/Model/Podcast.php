@@ -515,7 +515,7 @@ class Podcast extends database_object implements library_item
         // process "HH:MM:SS" time OR fall back to a seconds duration string e.g "24325"
         $time = (is_array($ptime))
             ? (int) $ptime['hour'] * 3600 + (int) $ptime['minute'] * 60 + (int) $ptime['second']
-            : (int) $duration;
+            : (int) $ptime;
 
 
         $pubdate    = 0;
