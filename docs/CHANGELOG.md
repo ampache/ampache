@@ -121,6 +121,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * When you haven't set an active localplay nothing was picked
 * Set time for artists that are only albums
 * Don't hide rss generation when you haven't got a key
+* Podcast episode durations that use seconds were converting into crazy lengths
 
 ### API 4.4.0-develop
 
