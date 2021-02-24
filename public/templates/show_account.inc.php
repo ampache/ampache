@@ -112,7 +112,6 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
                 </span>
             </td>
         </tr>
-        <?php if ($client->rsstoken) { ?>
         <tr>
             <td>
                 <?php echo T_('RSS Token'); ?>
@@ -122,11 +121,12 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
             </td>
             <td>
                 <span>
-                    <?php echo $client->rsstoken; ?>
+                    <?php if ($client->rsstoken) {
+                    echo $client->rsstoken;
+                } ?>
                 </span>
             </td>
         </tr>
-        <?php } ?>
         <tr>
             <td><?php echo T_('Clear Stats'); ?>:</td>
             <td><input type="checkbox" name="clear_stats" value="1" /></td>
