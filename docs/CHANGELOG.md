@@ -91,6 +91,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Add R128 Gain adjustments
 * Persist replaygain setting as a cookie
 * Support for image per song
+* Format XML output using DOMDocument
 * Config version 49
 * NEW config options
   * hide_ampache_messages: We sometimes need to talk and will show a warning to admin users. Allow hiding this
@@ -116,6 +117,9 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Regex in config for additional_genre_delimiters
 * SQL query for smartlists not joining the OR correctly
 * Searching with bad rules will return no results instead of everything
+* Check the 'unique_playlist' option in more places
+* When you haven't set an active localplay nothing was picked
+* time for artists that are only album artists
 
 ### API 4.4.0-develop
 
@@ -161,6 +165,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * get_indexes for XML didn't include podcast indexes
 * Set OUTDATED_DATABASE_OK on image.php, play/index.php and share.php to stop blocking requests
 * SubSonic - Json clients need their playlist entry to always array (single item lists)
+* Don't limit sub items when using a limit (e.g return all podcast episodes when selecting a podcast)
 
 ### Deprecated
 
