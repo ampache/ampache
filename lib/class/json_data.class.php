@@ -163,11 +163,15 @@ class JSON_Data
             case 'song':
                 return self::songs($objects, $user_id);
             case 'album':
-                return self::albums($objects, array(), $user_id);
+                $include_array = ($include) ? array('songs') : array();
+
+                return self::albums($objects, $include_array, $user_id);
             case 'artist':
-                return self::artists($objects, array(), $user_id);
+                $include_array = ($include) ? array('songs', 'albums') : array();
+
+                return self::artists($objects, $include_array, $user_id);
             case 'playlist':
-                return self::playlists($objects, $include, $user_id);
+                return self::playlists($objects, $user_id, $include);
             case 'share':
                 return self::shares($objects);
             case 'podcast':
@@ -394,7 +398,7 @@ class JSON_Data
             $theArray['tracks']        = $songs;
             $theArray['songcount']     = (int) $album->song_count;
             $theArray['disk']          = (int) $disk;
-            $theArray['genre']         = self::tags_array($album->tags);
+            $theArray['tag']           = self::tags_array($album->tags);
             $theArray['art']           = $art_url;
             $theArray['flag']          = (!$flag->get_flag($user_id, false) ? 0 : 1);
             $theArray['preciserating'] = ($rating->get_user_rating() ?: null);
