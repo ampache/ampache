@@ -1705,18 +1705,19 @@ class Api
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        $song     = $input['song'];
+        $song     = (int) $input['song'];
         if (!$playlist->has_access($user->id) && !Access::check('interface', 100, $user->id)) {
             self::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
 
             return false;
         }
-        if ((AmpConfig::get('unique_playlist') || (int) $input['check'] == 1) && in_array($song, $playlist->get_songs())) {
+        $unique = ((bool) AmpConfig::get('unique_playlist') || (int) $input['check'] == 1);
+        if (($unique) && in_array($song, $playlist->get_songs())) {
             self::message('error', T_("Can't add a duplicate item when check is enabled"), '400', $input['api_format']);
 
             return false;
         }
-        $playlist->add_songs(array($song), true);
+        $playlist->add_songs(array($song), $unique);
         self::message('success', 'song added to playlist', null, $input['api_format']);
         Session::extend($input['auth']);
 
@@ -3855,6 +3856,7 @@ class Api
 
         return true;
     } // update_art
+
     /**
      * update_podcast
      * MINIMUM_API_VERSION=420000

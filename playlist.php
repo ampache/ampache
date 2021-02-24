@@ -128,7 +128,7 @@ switch ($_REQUEST['action']) {
             break;
         }
 
-        $playlist->add_songs(array($_REQUEST['song_id']), true);
+        $playlist->add_songs(array($_REQUEST['song_id']), (bool) AmpConfig::get('unique_playlist'));
         break;
     case 'remove_duplicates':
         debug_event('playlist', 'Remove duplicates called.', 4);
