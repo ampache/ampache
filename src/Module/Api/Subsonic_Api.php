@@ -1044,7 +1044,7 @@ class Subsonic_Api
             for ($i = 0; $i < $songsIdToAdd_count; ++$i) {
                 $songsIdToAdd[$i] = Subsonic_Xml_Data::getAmpacheId($songsIdToAdd[$i]);
             }
-            $playlist->add_songs($songsIdToAdd);
+            $playlist->add_songs($songsIdToAdd, (bool) AmpConfig::get('unique_playlist'));
         }
         if (count($songIndexToRemove) > 0) {
             $playlist->regenerate_track_numbers(); // make sure track indexes are in order

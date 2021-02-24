@@ -79,7 +79,7 @@ final class PodcastsMethod
 
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
-        $episodes = $input['include'] == 'episodes';
+        $episodes = ($input['include'] == 'episodes' || (int) $input['include'] == 1);
         switch ($input['api_format']) {
             case 'json':
                 JSON_Data::set_offset($input['offset']);

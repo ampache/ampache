@@ -480,10 +480,10 @@ class Playlist extends playlist_object
     /**
      * add_songs
      * @param array $song_ids
-     * @param boolean $ordered
+     * @param boolean $unique
      * This takes an array of song_ids and then adds it to the playlist
      */
-    public function add_songs($song_ids = array(), $ordered = false)
+    public function add_songs($song_ids = array(), $unique = false)
     {
         $medias = array();
         foreach ($song_ids as $song_id) {
@@ -492,14 +492,15 @@ class Playlist extends playlist_object
                 'object_id' => $song_id,
             );
         }
-        $this->add_medias($medias);
+        $this->add_medias($medias, $unique);
     } // add_songs
 
     /**
      * add_medias
      * @param array $medias
+     * @param bool $unique
      */
-    public function add_medias($medias)
+    public function add_medias($medias, $unique)
     {
         /* We need to pull the current 'end' track and then use that to
          * append, rather then integrate take end track # and add it to
@@ -512,7 +513,6 @@ class Playlist extends playlist_object
         $count      = 0;
         $sql        = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) VALUES ";
         $values     = array();
-        $unique     = AmpConfig::get('unique_playlist');
         foreach ($medias as $data) {
             if ($unique && in_array($data['object_id'], $track_data)) {
                 debug_event(self::class, "Can't add a duplicate " . $data['object_type'] . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);

@@ -74,7 +74,7 @@ final class PodcastMethod
 
         $user = User::get_from_username(Session::username($input['auth']));
         ob_end_clean();
-        $episodes = $input['include'] == 'episodes';
+        $episodes = ($input['include'] == 'episodes' || (int) $input['include'] == 1);
         switch ($input['api_format']) {
             case 'json':
                 echo JSON_Data::podcasts(array($object_id), $user->id, $episodes, false);
