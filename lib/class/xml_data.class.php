@@ -334,28 +334,36 @@ class XML_Data
         foreach ($objects as $object_id) {
             switch ($object_type) {
                 case 'artist':
-                    $artist = new Artist($object_id);
-                    $artist->format();
-                    $albums = $artist->get_albums(null, true);
-                    $string .= "<$object_type id=\"" . $object_id . "\">\n" .
-                        "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n";
-                    foreach ($albums as $album_id) {
-                        if ($album_id) {
-                            $album = new Album($album_id[0]);
-                            $string .= "\t<album id=\"" . $album_id[0] .
-                                '"><![CDATA[' . $album->full_name .
-                                "]]></album>\n";
+                    if ($include) {
+                        $string .= self::artists(array($object_id), array('songs', 'albums'), $user_id, false);
+                    } else {
+                        $artist = new Artist($object_id);
+                        $artist->format();
+                        $albums = $artist->get_albums(null, true);
+                        $string .= "<$object_type id=\"" . $object_id . "\">\n" .
+                            "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n";
+                        foreach ($albums as $album_id) {
+                            if ($album_id) {
+                                $album = new Album($album_id[0]);
+                                $string .= "\t<album id=\"" . $album_id[0] .
+                                    '"><![CDATA[' . $album->full_name .
+                                    "]]></album>\n";
+                            }
                         }
+                        $string .= "</$object_type>\n";
                     }
-                    $string .= "</$object_type>\n";
                     break;
                 case 'album':
-                    $album = new Album($object_id);
-                    $album->format();
-                    $string .= "<$object_type id=\"" . $object_id . "\">\n" .
-                        "\t<name><![CDATA[" . $album->f_name . "]]></name>\n" .
-                        "\t\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->album_artist_name . "]]></artist>\n" .
-                        "</$object_type>\n";
+                    if ($include) {
+                        $string .= self::albums(array($object_id), array('songs'), $user_id, false);
+                    } else {
+                        $album = new Album($object_id);
+                        $album->format();
+                        $string .= "<$object_type id=\"" . $object_id . "\">\n" .
+                            "\t<name><![CDATA[" . $album->f_name . "]]></name>\n" .
+                            "\t\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->album_artist_name . "]]></artist>\n" .
+                            "</$object_type>\n";
+                    }
                     break;
                 case 'song':
                     $song = new Song($object_id);
