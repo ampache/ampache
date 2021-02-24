@@ -328,7 +328,7 @@ class XML_Data
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . count($objects) . "</total_count>\n";
+        $string = ($full_xml) ? "<total_count>" . count($objects) . "</total_count>\n": '';
 
         // here is where we call the object type
         foreach ($objects as $object_id) {
@@ -525,7 +525,7 @@ class XML_Data
         if ((count($artists) > self::$limit || self::$offset > 0) && self::$limit) {
             $artists = array_splice($artists, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . count($artists) . "</total_count>\n";
+        $string = ($full_xml) ? "<total_count>" . count($artists) . "</total_count>\n" : '';
 
         Rating::build_cache('artist', $artists);
 
@@ -598,7 +598,7 @@ class XML_Data
         if ((count($albums) > self::$limit || self::$offset > 0) && self::$limit) {
             $albums = array_splice($albums, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . count($albums) . "</total_count>\n";
+        $string = ($full_xml) ? "<total_count>" . count($albums) . "</total_count>\n" : '';
 
         Rating::build_cache('album', $albums);
 
@@ -912,7 +912,7 @@ class XML_Data
         if ((count($songs) > self::$limit || self::$offset > 0) && self::$limit) {
             $songs = array_slice($songs, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . count($songs) . "</total_count>\n";
+        $string = ($full_xml) ? "<total_count>" . count($songs) . "</total_count>\n" : '';
 
         Song::build_cache($songs);
         Stream::set_session(Core::get_request('auth'));
