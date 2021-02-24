@@ -20,128 +20,105 @@
  *
  */
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Xml_Data;
-use Ampache\Module\Playback\Localplay\LocalPlay;
-use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\System\Session;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Lib\LocalPlayCommandMapperInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Playback\Localplay\LocalPlayControllerFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class LocalplayMethod
- * @package Lib\ApiMethods
- */
-final class LocalplayMethod
+final class LocalplayMethod implements MethodInterface
 {
-    private const ACTION = 'localplay';
+    public const ACTION = 'localplay';
+
+    private StreamFactoryInterface $streamFactory;
+
+    private ConfigContainerInterface $configContainer;
+
+    private LocalPlayCommandMapperInterface $localPlayCommandMapper;
+
+    private LocalPlayControllerFactoryInterface $localPlayControllerFactory;
+
+    public function __construct(
+        StreamFactoryInterface $streamFactory,
+        ConfigContainerInterface $configContainer,
+        LocalPlayCommandMapperInterface $localPlayCommandMapper,
+        LocalPlayControllerFactoryInterface $localPlayControllerFactory
+    ) {
+        $this->streamFactory              = $streamFactory;
+        $this->configContainer            = $configContainer;
+        $this->localPlayCommandMapper     = $localPlayCommandMapper;
+        $this->localPlayControllerFactory = $localPlayControllerFactory;
+    }
 
     /**
-     * localplay
      * MINIMUM_API_VERSION=380001
      * CHANGED_IN_API_VERSION=5.0.0
      *
      * This is for controlling Localplay
      *
+     * @param GatekeeperInterface $gatekeeper
+     * @param ResponseInterface $response
+     * @param ApiOutputInterface $output
      * @param array $input
      * command = (string) 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip', 'status'
      * oid     = (integer) object_id //optional
      * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Channel', 'Broadcast', 'Democratic', 'Live_Stream' //optional
      * clear   = (integer) 0,1 Clear the current playlist before adding //optional
-     * @return boolean
+     *
+     * @return ResponseInterface
+     *
+     * @throws RequestParamMissingException
      */
-    public static function localplay(array $input)
-    {
-        if (!Api::check_parameter($input, array('command'), self::ACTION)) {
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input
+    ): ResponseInterface {
+        $command = $input['command'] ?? null;
+
+        if ($command === null) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'command')
+            );
         }
+
         // Load their Localplay instance
-        $localplay = new Localplay(AmpConfig::get('localplay_controller'));
-        if (!$localplay->connect()) {
-            Api::error(T_('Unable to connect to localplay controller'), '4710', self::ACTION, 'account', $input['api_format']);
-
-            return false;
+        $localPlay = $this->localPlayControllerFactory->create();
+        if (!$localPlay->connect()) {
+            throw new RequestParamMissingException(
+                T_('Unable to connect to localplay controller')
+            );
         }
 
-        $result = false;
-        $status = false;
-        switch ($input['command']) {
-            case 'add':
-                // for add commands get the object details
-                $object_id = (int) $input['oid'];
-                $type      = $input['type'] ? (string) $input['type'] : 'Song';
-                if (!AmpConfig::get('allow_video') && $type == 'Video') {
-                    Api::error(T_('Enable: video'), '4703', self::ACTION, 'system', $input['api_format']);
+        $commandCallable = $this->localPlayCommandMapper->map($command);
 
-                    return false;
-                }
-                $clear       = (int) $input['clear'];
-                // clear before the add
-                if ($clear == 1) {
-                    $localplay->delete_all();
-                }
-                $media = array(
-                    'object_type' => $type,
-                    'object_id' => $object_id,
-                );
-                $playlist = new Stream_Playlist();
-                $playlist->add(array($media));
-                foreach ($playlist->urls as $streams) {
-                    $result = $localplay->add_url($streams);
-                }
-                break;
-            case 'next':
-            case 'skip':
-                $result = $localplay->next();
-                break;
-            case 'prev':
-                $result = $localplay->prev();
-                break;
-            case 'stop':
-                $result = $localplay->stop();
-                break;
-            case 'play':
-                $result = $localplay->play();
-                break;
-            case 'pause':
-                $result = $localplay->pause();
-                break;
-            case 'volume_up':
-                $result = $localplay->volume_up();
-                break;
-            case 'volume_down':
-                $result = $localplay->volume_down();
-                break;
-            case 'volume_mute':
-                $result = $localplay->volume_mute();
-                break;
-            case 'delete_all':
-                $result = $localplay->delete_all();
-                break;
-            case 'status':
-                $status = $localplay->status();
-                break;
-            default:
-                // They are doing it wrong
-                Api::error(T_('Bad Request'), '4710', self::ACTION, 'command', $input['api_format']);
-
-                return false;
-        } // end switch on command
-        $output_array = (!empty($status))
-            ? array('localplay' => array('command' => array($input['command'] => $status)))
-            : array('localplay' => array('command' => array($input['command'] => make_bool($result))));
-        switch ($input['api_format']) {
-            case 'json':
-                echo json_encode($output_array, JSON_PRETTY_PRINT);
-                break;
-            default:
-                echo Xml_Data::keyed_array($output_array);
+        if ($commandCallable === null) {
+            throw new RequestParamMissingException(
+                T_('Bad Request')
+            );
         }
-        Session::extend($input['auth']);
 
-        return true;
+        $result = $commandCallable(
+            $localPlay,
+            $object_id = (int) ($input['oid'] ?? 0),
+            (string) ($input['type'] ?? 'Song'),
+            (int) ($input['clear'] ?? 0)
+        );
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->dict(
+                    ['localplay' => ['command' => [$command => $result]]]
+                )
+            )
+        );
     }
 }

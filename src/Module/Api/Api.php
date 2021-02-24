@@ -130,7 +130,7 @@ class Api
         Method\StreamMethod::ACTION => Method\StreamMethod::class,
         Method\DownloadMethod::ACTION => Method\DownloadMethod::class,
         'get_art' => Method\GetArtMethod::class,
-        'localplay' => Method\LocalplayMethod::class,
+        Method\LocalplayMethod::ACTION => Method\LocalplayMethod::class,
         'democratic' => Method\DemocraticMethod::class,
         Method\SystemUpdateMethod::ACTION => Method\SystemUpdateMethod::class,
         Method\SystemPreferencesMethod::ACTION => Method\SystemPreferencesMethod::class,
