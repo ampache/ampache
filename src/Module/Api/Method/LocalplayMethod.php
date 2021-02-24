@@ -30,6 +30,7 @@ use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Session;
+use Ampache\Repository\Model\User;
 
 /**
  * Class LocalplayMethod
@@ -56,6 +57,11 @@ final class LocalplayMethod
     public static function localplay(array $input)
     {
         if (!Api::check_parameter($input, array('command'), self::ACTION)) {
+            return false;
+        }
+        // localplay is actually meant to be behind permissions
+        $level = AmpConfig::get('localplay_level', 100);
+        if (!Api::check_access('localplay', $level, User::get_from_username(Session::username($input['auth']))->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         // Load their Localplay instance
