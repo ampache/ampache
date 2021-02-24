@@ -402,34 +402,42 @@ class Xml_Data
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_count($object_type) . "</total_count>\n";
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_count($object_type) . "</total_count>\n" : '';
 
         // here is where we call the object type
         foreach ($objects as $object_id) {
             switch ($object_type) {
                 case 'artist':
-                    $artist = new Artist($object_id);
-                    $artist->format();
-                    $albums = static::getAlbumRepository()->getByArtist($artist, null, true);
-                    $string .= "<$object_type id=\"" . $object_id . "\">\n" .
+                    if ($include) {
+                        $string .= self::artists(array($object_id), array('songs', 'albums'), $user_id, false);
+                    } else {
+                        $artist = new Artist($object_id);
+                        $artist->format();
+                        $albums = $artist->get_albums(null, true);
+                        $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                             "\t<name><![CDATA[" . $artist->f_full_name . "]]></name>\n";
-                    foreach ($albums as $album_id) {
-                        if ($album_id) {
-                            $album = new Album($album_id[0]);
-                            $string .= "\t<album id=\"" . $album_id[0] .
+                        foreach ($albums as $album_id) {
+                            if ($album_id) {
+                                $album = new Album($album_id[0]);
+                                $string .= "\t<album id=\"" . $album_id[0] .
                                     '"><![CDATA[' . $album->full_name .
                                     "]]></album>\n";
+                            }
                         }
+                        $string .= "</$object_type>\n";
                     }
-                    $string .= "</$object_type>\n";
                     break;
                 case 'album':
-                    $album = new Album($object_id);
-                    $album->format();
-                    $string .= "<$object_type id=\"" . $object_id . "\">\n" .
+                    if ($include) {
+                        $string .= self::albums(array($object_id), array('songs'), $user_id, false);
+                    } else {
+                        $album = new Album($object_id);
+                        $album->format();
+                        $string .= "<$object_type id=\"" . $object_id . "\">\n" .
                             "\t<name><![CDATA[" . $album->f_name . "]]></name>\n" .
                             "\t\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->album_artist_name . "]]></artist>\n" .
                             "</$object_type>\n";
+                    }
                     break;
                 case 'song':
                     $song = new Song($object_id);
@@ -630,7 +638,7 @@ class Xml_Data
         if ((count($artists) > self::$limit || self::$offset > 0) && self::$limit) {
             $artists = array_splice($artists, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_count('artist') . "</total_count>\n";
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_count('artist') . "</total_count>\n" : '';
 
         Rating::build_cache('artist', $artists);
 
@@ -696,7 +704,7 @@ class Xml_Data
         if ((count($albums) > self::$limit || self::$offset > 0) && self::$limit) {
             $albums = array_splice($albums, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_count('album') . "</total_count>\n";
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_count('album') . "</total_count>\n" : '';
 
         Rating::build_cache('album', $albums);
 
@@ -1007,7 +1015,7 @@ class Xml_Data
         if ((count($songs) > self::$limit || self::$offset > 0) && self::$limit) {
             $songs = array_slice($songs, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_count('song') . "</total_count>\n";
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_count('song') . "</total_count>\n" : '';
 
         Song::build_cache($songs);
         Stream::set_session(Core::get_request('auth'));
