@@ -181,7 +181,7 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                         role='button'
                         aria-disabled={
                             musicContext.songQueueIndex ==
-                            musicContext.songQueue.size - 1
+                            musicContext.songQueue.length - 1
                         }
                         onClick={() => {
                             musicContext.playNext();
@@ -190,7 +190,7 @@ const MusicControl: React.FC<MusicControlProps> = (props) => {
                             icon icon-button 
                             ${
                                 musicContext.songQueueIndex ==
-                                musicContext.songQueue.size - 1
+                                musicContext.songQueue.length - 1
                                     ? style.disabled
                                     : ''
                             }

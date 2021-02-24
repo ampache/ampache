@@ -48,7 +48,7 @@ const QueueBar: React.FC<QueueBarProps> = (props) => {
                 <div className={style.queueList}>
                     <div className={style.queueListInner}>
                         <ul className={`striped-list ${style.songs}`}>
-                            {musicContext.songQueue.size == 0 && (
+                            {musicContext.songQueue.length == 0 && (
                                 <div className={style.emptyQueue}>
                                     Nothing in the queue
                                 </div>
