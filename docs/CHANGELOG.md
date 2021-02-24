@@ -119,7 +119,8 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Searching with bad rules will return no results instead of everything
 * Check the 'unique_playlist' option in more places
 * When you haven't set an active localplay nothing was picked
-* time for artists that are only album artists
+* Set time for artists that are only albums
+* Don't hide rss generation when you haven't got a key
 
 ### API 4.4.0-develop
 
