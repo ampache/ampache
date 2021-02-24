@@ -683,7 +683,7 @@ class AmpacheXbmc extends localplay_controller
                     'properties' => array('repeat', 'shuffled')
                 ));
                 $array['repeat']    = ($playprop['repeat'] != "off");
-                $array['random']    = (strtolower($playprop['shuffled']) == 1) ;
+                $array['random']    = (strtolower($playprop['shuffled']) == 1);
                 $array['track']     = $currentplay['file'];
 
                 $url_data = $this->parse_url($array['track']);

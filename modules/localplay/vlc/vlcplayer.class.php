@@ -528,7 +528,8 @@ class VlcPlayer
                         $current[$tag]                           = array($current[$tag], $result); // This will combine the existing item and the new item together to make an array
                         $repeated_tag_index[$tag . '_' . $level] = 2;
 
-                        if (isset($current[$tag . '_attr'])) { // The attribute of the last(0th) tag must be moved as well
+                        if (isset($current[$tag . '_attr'])) {
+                            // The attribute of the last(0th) tag must be moved as well
                             $current[$tag]['0_attr'] = $current[$tag . '_attr'];
                             unset($current[$tag . '_attr']);
                         }
@@ -539,7 +540,8 @@ class VlcPlayer
             } elseif ($type == "complete") {
                 // Tags that ends in 1 line '<tag />'
                 // See if the key is already taken.
-                if (!isset($current[$tag])) { //New Key
+                if (!isset($current[$tag])) {
+                    //New Key
                     $current[$tag]                           = $result;
                     $repeated_tag_index[$tag . '_' . $level] = 1;
                     if ($priority == 'tag' && $attributes_data) {
@@ -560,8 +562,8 @@ class VlcPlayer
                         $current[$tag]                           = array($current[$tag], $result); // ...Make it an array using using the existing value and the new value
                         $repeated_tag_index[$tag . '_' . $level] = 1;
                         if ($priority == 'tag' && $get_attributes) {
-                            if (isset($current[$tag . '_attr'])) { // The attribute of the last(0th) tag must be moved as well
-
+                            if (isset($current[$tag . '_attr'])) {
+                                // The attribute of the last(0th) tag must be moved as well
                                 $current[$tag]['0_attr'] = $current[$tag . '_attr'];
                                 unset($current[$tag . '_attr']);
                             }
@@ -573,7 +575,8 @@ class VlcPlayer
                         $repeated_tag_index[$tag . '_' . $level]++; // 0 and 1 index is already taken
                     }
                 }
-            } elseif ($type == 'close') { // End of tag '</tag>'
+            } elseif ($type == 'close') {
+                // End of tag '</tag>'
                 $current = &$parent[$level - 1];
             }
         }

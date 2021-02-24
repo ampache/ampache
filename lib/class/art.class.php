@@ -1804,14 +1804,11 @@ class Art extends database_object
         if (isset($id3['id3v2']['APIC'])) {
             // Foreach in case they have more than one
             foreach ($id3['id3v2']['APIC'] as $image) {
-                $this_picturetypeid = ($this->type == 'artist') ? 8 : 3;
-                if ($image['picturetypeid'] == $this_picturetypeid) {
-                    $data[] = array(
-                        $mtype => $media->file,
-                        'raw' => $image['data'],
-                        'mime' => $image['mime'],
-                        'title' => 'ID3');
-                }
+                $data[] = array(
+                    $mtype => $media->file,
+                    'raw' => $image['data'],
+                    'mime' => $image['mime'],
+                    'title' => 'ID3');
             }
         }
 

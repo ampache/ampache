@@ -210,7 +210,8 @@ var MP3Demuxer = AV.Demuxer.extend(function() {
             // Check for VBRI tag (always 32 bytes after end of mpegaudio header)
             stream.seek(offset + 4 + 32);
             tag = stream.readString(4);
-            if (tag == 'VBRI' && stream.readUInt16() === 1) { // Check tag version
+            if (tag == 'VBRI' && stream.readUInt16() === 1) {
+                // Check tag version
                 stream.advance(4); // skip delay and quality
                 stream.advance(4); // skip size
                 frames = stream.readUInt32();
@@ -4990,7 +4991,8 @@ Layer3.prototype.decode = function(stream, frame) {
     peek.seek(stream.next_frame * 8);
 
     var nextHeader = peek.read(16);
-    if ((nextHeader & 0xffe6) === 0xffe2) { // syncword | layer
+    if ((nextHeader & 0xffe6) === 0xffe2) {
+        // syncword | layer
         if ((nextHeader & 1) === 0) // protection bit
             peek.advance(16); // crc check
 

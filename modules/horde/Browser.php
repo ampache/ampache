@@ -1064,40 +1064,34 @@ class Horde_Browser
 
         $filesize = ini_get('upload_max_filesize');
         switch (strtolower(substr($filesize, -1, 1))) {
-        case 'k':
-            $filesize = (int) (floatval($filesize) * 1024);
-            break;
-
-        case 'm':
-            $filesize = (int) (floatval($filesize) * 1024 * 1024);
-            break;
-
-        case 'g':
-            $filesize = (int) (floatval($filesize) * 1024 * 1024 * 1024);
-            break;
-
-        default:
-            $filesize = (int) ($filesize);
-            break;
+            case 'k':
+                $filesize = (int) (floatval($filesize) * 1024);
+                break;
+            case 'm':
+                $filesize = (int) (floatval($filesize) * 1024 * 1024);
+                break;
+            case 'g':
+                $filesize = (int) (floatval($filesize) * 1024 * 1024 * 1024);
+                break;
+            default:
+                $filesize = (int) ($filesize);
+                break;
         }
 
         $postsize = ini_get('post_max_size');
         switch (strtolower(substr($postsize, -1, 1))) {
-        case 'k':
-            $postsize = (int) (floatval($postsize) * 1024);
-            break;
-
-        case 'm':
-            $postsize = (int) (floatval($postsize) * 1024 * 1024);
-            break;
-
-        case 'g':
-            $postsize = (int) (floatval($postsize) * 1024 * 1024 * 1024);
-            break;
-
-        default:
-            $postsize = (int) ($postsize);
-            break;
+            case 'k':
+                $postsize = (int) (floatval($postsize) * 1024);
+                break;
+            case 'm':
+                $postsize = (int) (floatval($postsize) * 1024 * 1024);
+                break;
+            case 'g':
+                $postsize = (int) (floatval($postsize) * 1024 * 1024 * 1024);
+                break;
+            default:
+                $postsize = (int) ($postsize);
+                break;
         }
 
         return min($filesize, $postsize);

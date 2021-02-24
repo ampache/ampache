@@ -71,7 +71,7 @@ var Bars = (function() {
         groupHolder.rotation.z = Math.PI/4 * Math.floor(ATUtil.getRand(0,4));
 
         //slight Y rotate
-        groupHolder.rotation.y = ATUtil.getRand(-Math.PI/4,Math.PI/4) ;
+        groupHolder.rotation.y = ATUtil.getRand(-Math.PI/4,Math.PI/4);
 
 
         displaceMesh();

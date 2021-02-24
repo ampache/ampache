@@ -71,7 +71,8 @@ abstract class Catalog extends \Catalog
      * @param integer $catalog_id
      */
     public function __construct($catalog_id = null)
-    { // TODO: Basic constructor should be provided from parent
+    {
+        // TODO: Basic constructor should be provided from parent
         if ($catalog_id) {
             $this->id = (int) $catalog_id;
             $info     = $this->get_info($catalog_id);

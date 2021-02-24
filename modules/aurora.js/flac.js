@@ -511,7 +511,8 @@ var FLACDecoder = AV.Decoder.extend(function() {
         var output = 0,
             curbyte = 0;
 
-        while(true) { // emulate goto in JS using the break statement :D
+        while(true) {
+            // emulate goto in JS using the break statement :D
             curbyte = input >>> 24;
             if (curbyte) break;
             output += 8;
@@ -704,7 +705,8 @@ var FLACDemuxer = AV.Demuxer.extend(function() {
 
                 case PICTURE:
                     var type = stream.readUInt32();
-                    if (type !== 3) { // make sure this is album art (type 3)
+                    if (type !== 3) {
+                        // make sure this is album art (type 3)
                         stream.advance(this.size - 4);
                     } else {
                         var mimeLen = stream.readUInt32(),
