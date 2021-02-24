@@ -1739,6 +1739,9 @@ class Song extends database_object implements media, library_item
         $album             = new Album($this->album);
         $this->albumartist = (!empty($this->albumartist)) ? $this->albumartist : $album->album_artist;
 
+        // fix missing song disk (where is this coming from?)
+        $this->disk = ($this->disk) ? $this->disk : $album->disk;
+
         // Format the album name
         $this->f_album_full = $this->get_album_name();
         $this->f_album      = $this->f_album_full;
